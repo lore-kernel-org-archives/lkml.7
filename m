@@ -2,227 +2,139 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8193BC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0814CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB9C2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D8921479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfIJNw5 (ORCPT
+        id S1730390AbfIJNyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:52:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39996 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfIJNw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:52:57 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E6454C049E32
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 13:52:55 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id b1so19928313qtj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:52:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vKjBadJZsVZtUGd3WVckVL2DIAFF4FA1DCNgRycmkBI=;
-        b=CMrZK/Fs87GSIpp4iKDxpSpPVAIvIKvm5bHh/nskF+/aRsxTgq+53yGfk5+NSYw0wx
-         pYRVYjW170QSJ3pGDwU+O3ZaLlXkg/+3UAXxefWbkf73mPn7yp6ouKvjzctqW5h3g+qb
-         tdw1Pj1vch/QUMXL8jMJZPYIvRx8ycJY6K1LbMsLbQ+KPVzk80SEshtY518WzvANZx1C
-         CW5PttdbY7fdBG5bryTfagr9I88xq+5/9sC15rBdWLh14wQfBnate01N9zqbhHnpB2Ez
-         3O9f8jPOAm5LLLr2RCEdRw/Iqhd3r4dlek1DG2GrLBKs++W8E+2qIGe8dlHJu6edO1a8
-         AKHQ==
-X-Gm-Message-State: APjAAAU9KGbMTbojNF4HPzfrnEzYdc3gxlEUfxbziDBYldjCkyK4RLUZ
-        ZAILQGqkVPfwiEcWh+Xlc9DQQ4fiVKf5o2wyy0JnyzUu6q8+vM3gmSqy7STEIW+ZID+riay2CEP
-        u5EQ2WQ3sR2OmiP5Mgn9Zh/yE
-X-Received: by 2002:a0c:e811:: with SMTP id y17mr7641986qvn.68.1568123575198;
-        Tue, 10 Sep 2019 06:52:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy87Xk8h9CwEg4tdqy4DXt/JFYQLpQHouOJ6fOEiaMkub6yelg6yVSS11xTwQ5fJFutl2Pk0A==
-X-Received: by 2002:a0c:e811:: with SMTP id y17mr7641951qvn.68.1568123574950;
-        Tue, 10 Sep 2019 06:52:54 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id n42sm10807604qta.31.2019.09.10.06.52.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 06:52:53 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 09:52:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, idos@mellanox.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com
-Subject: Re: [RFC PATCH 3/4] virtio: introudce a mdev based transport
-Message-ID: <20190910094807-mutt-send-email-mst@kernel.org>
-References: <20190910081935.30516-1-jasowang@redhat.com>
- <20190910081935.30516-4-jasowang@redhat.com>
- <20190910055744-mutt-send-email-mst@kernel.org>
- <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
+        Tue, 10 Sep 2019 09:54:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63760 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726032AbfIJNyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:54:05 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8ADksOi026953
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:54:04 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uxbmukstw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:53:53 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
+        Tue, 10 Sep 2019 14:53:50 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 14:53:47 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8ADrLQw40173978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 13:53:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0ADAF42041;
+        Tue, 10 Sep 2019 13:53:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDBC442047;
+        Tue, 10 Sep 2019 13:53:45 +0000 (GMT)
+Received: from bahia.tls.ibm.com (unknown [9.101.4.41])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Sep 2019 13:53:45 +0000 (GMT)
+Subject: [PATCH] powerpc/xive: Fix bogus error code returned by OPAL
+From:   Greg Kurz <groug@kaod.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Tue, 10 Sep 2019 15:53:45 +0200
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091013-0012-0000-0000-00000349863E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091013-0013-0000-0000-00002183EB19
+Message-Id: <156812362556.1866243.7399893138425681517.stgit@bahia.tls.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=796 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 09:13:02PM +0800, Jason Wang wrote:
-> 
-> On 2019/9/10 下午6:01, Michael S. Tsirkin wrote:
-> > > +#ifndef _LINUX_VIRTIO_MDEV_H
-> > > +#define _LINUX_VIRTIO_MDEV_H
-> > > +
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/vringh.h>
-> > > +#include <uapi/linux/virtio_net.h>
-> > > +
-> > > +/*
-> > > + * Ioctls
-> > > + */
-> > Pls add a bit more content here. It's redundant to state these
-> > are ioctls. Much better to document what does each one do.
-> 
-> 
-> Ok.
-> 
-> 
-> > 
-> > > +
-> > > +struct virtio_mdev_callback {
-> > > +	irqreturn_t (*callback)(void *);
-> > > +	void *private;
-> > > +};
-> > > +
-> > > +#define VIRTIO_MDEV 0xAF
-> > > +#define VIRTIO_MDEV_SET_VQ_CALLBACK _IOW(VIRTIO_MDEV, 0x00, \
-> > > +					 struct virtio_mdev_callback)
-> > > +#define VIRTIO_MDEV_SET_CONFIG_CALLBACK _IOW(VIRTIO_MDEV, 0x01, \
-> > > +					struct virtio_mdev_callback)
-> > Function pointer in an ioctl parameter? How does this ever make sense?
-> 
-> 
-> I admit this is hacky (casting).
-> 
-> 
-> > And can't we use a couple of registers for this, and avoid ioctls?
-> 
-> 
-> Yes, how about something like interrupt numbers for each virtqueue and
-> config?
+There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+Unfortunatelty, OPAL return values are signed 64-bit entities and
+errors are supposed to be negative. If that happens, the linux code
+confusingly treats 0xffffffff as a valid IRQ number and panics at some
+point.
 
-Should we just reuse VIRTIO_PCI_COMMON_Q_XXX then?
+A fix was recently merged in skiboot:
 
+e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
 
-> 
-> > 
-> > > +
-> > > +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
-> > > +
-> > > +/*
-> > > + * Control registers
-> > > + */
-> > > +
-> > > +/* Magic value ("virt" string) - Read Only */
-> > > +#define VIRTIO_MDEV_MAGIC_VALUE		0x000
-> > > +
-> > > +/* Virtio device version - Read Only */
-> > > +#define VIRTIO_MDEV_VERSION		0x004
-> > > +
-> > > +/* Virtio device ID - Read Only */
-> > > +#define VIRTIO_MDEV_DEVICE_ID		0x008
-> > > +
-> > > +/* Virtio vendor ID - Read Only */
-> > > +#define VIRTIO_MDEV_VENDOR_ID		0x00c
-> > > +
-> > > +/* Bitmask of the features supported by the device (host)
-> > > + * (32 bits per set) - Read Only */
-> > > +#define VIRTIO_MDEV_DEVICE_FEATURES	0x010
-> > > +
-> > > +/* Device (host) features set selector - Write Only */
-> > > +#define VIRTIO_MDEV_DEVICE_FEATURES_SEL	0x014
-> > > +
-> > > +/* Bitmask of features activated by the driver (guest)
-> > > + * (32 bits per set) - Write Only */
-> > > +#define VIRTIO_MDEV_DRIVER_FEATURES	0x020
-> > > +
-> > > +/* Activated features set selector - Write Only */
-> > > +#define VIRTIO_MDEV_DRIVER_FEATURES_SEL	0x024
-> > > +
-> > > +/* Queue selector - Write Only */
-> > > +#define VIRTIO_MDEV_QUEUE_SEL		0x030
-> > > +
-> > > +/* Maximum size of the currently selected queue - Read Only */
-> > > +#define VIRTIO_MDEV_QUEUE_NUM_MAX	0x034
-> > > +
-> > > +/* Queue size for the currently selected queue - Write Only */
-> > > +#define VIRTIO_MDEV_QUEUE_NUM		0x038
-> > > +
-> > > +/* Ready bit for the currently selected queue - Read Write */
-> > > +#define VIRTIO_MDEV_QUEUE_READY		0x044
-> > Is this same as started?
-> 
-> 
-> Do you mean "status"?
+but we need a workaround anyway to support older skiboots already
+on the field.
 
-I really meant "enabled", didn't remember the correct name.
-As in:  VIRTIO_PCI_COMMON_Q_ENABLE
+Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+returned upon resource exhaustion.
 
-> 
-> > 
-> > > +
-> > > +/* Alignment of virtqueue - Read Only */
-> > > +#define VIRTIO_MDEV_QUEUE_ALIGN		0x048
-> > > +
-> > > +/* Queue notifier - Write Only */
-> > > +#define VIRTIO_MDEV_QUEUE_NOTIFY	0x050
-> > > +
-> > > +/* Device status register - Read Write */
-> > > +#define VIRTIO_MDEV_STATUS		0x060
-> > > +
-> > > +/* Selected queue's Descriptor Table address, 64 bits in two halves */
-> > > +#define VIRTIO_MDEV_QUEUE_DESC_LOW	0x080
-> > > +#define VIRTIO_MDEV_QUEUE_DESC_HIGH	0x084
-> > > +
-> > > +/* Selected queue's Available Ring address, 64 bits in two halves */
-> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_LOW	0x090
-> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_HIGH	0x094
-> > > +
-> > > +/* Selected queue's Used Ring address, 64 bits in two halves */
-> > > +#define VIRTIO_MDEV_QUEUE_USED_LOW	0x0a0
-> > > +#define VIRTIO_MDEV_QUEUE_USED_HIGH	0x0a4
-> > > +
-> > > +/* Configuration atomicity value */
-> > > +#define VIRTIO_MDEV_CONFIG_GENERATION	0x0fc
-> > > +
-> > > +/* The config space is defined by each driver as
-> > > + * the per-driver configuration space - Read Write */
-> > > +#define VIRTIO_MDEV_CONFIG		0x100
-> > Mixing device and generic config space is what virtio pci did,
-> > caused lots of problems with extensions.
-> > It would be better to reserve much more space.
-> 
-> 
-> I see, will do this.
-> 
-> Thanks
-> 
-> 
-> > 
-> > 
-> > > +
-> > > +#endif
-> > > +
-> > > +
-> > > +/* Ready bit for the currently selected queue - Read Write */
-> > > -- 
-> > > 2.19.1
+Signed-off-by: Greg Kurz <groug@kaod.org>
+---
+ arch/powerpc/sysdev/xive/native.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 37987c815913..c35583f84f9f 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -231,6 +231,15 @@ static bool xive_native_match(struct device_node *node)
+ 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+ }
+ 
++static int64_t opal_xive_allocate_irq_fixup(uint32_t chip_id)
++{
++	s64 irq = opal_xive_allocate_irq(chip_id);
++
++#define XIVE_ALLOC_NO_SPACE	0xffffffff /* No possible space */
++	return
++		irq == XIVE_ALLOC_NO_SPACE ? OPAL_RESOURCE : irq;
++}
++
+ #ifdef CONFIG_SMP
+ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
+@@ -238,7 +247,7 @@ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ 
+ 	/* Allocate an IPI and populate info about it */
+ 	for (;;) {
+-		irq = opal_xive_allocate_irq(xc->chip_id);
++		irq = opal_xive_allocate_irq_fixup(xc->chip_id);
+ 		if (irq == OPAL_BUSY) {
+ 			msleep(OPAL_BUSY_DELAY_MS);
+ 			continue;
+@@ -259,7 +268,7 @@ u32 xive_native_alloc_irq(void)
+ 	s64 rc;
+ 
+ 	for (;;) {
+-		rc = opal_xive_allocate_irq(OPAL_XIVE_ANY_CHIP);
++		rc = opal_xive_allocate_irq_fixup(OPAL_XIVE_ANY_CHIP);
+ 		if (rc != OPAL_BUSY)
+ 			break;
+ 		msleep(OPAL_BUSY_DELAY_MS);
+
