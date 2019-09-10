@@ -2,117 +2,112 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36476C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5969C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1419321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67C621670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9agNx71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388176AbfIJOju (ORCPT
+        id S1731207AbfIJOkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:39:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44416 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731623AbfIJOjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:39:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A888930832E1;
-        Tue, 10 Sep 2019 14:39:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 83EA76012C;
-        Tue, 10 Sep 2019 14:39:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 10 Sep 2019 16:39:48 +0200 (CEST)
-Date:   Tue, 10 Sep 2019 16:39:44 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH] fork: fail on non-zero higher 32 bits of args.exit_signal
-Message-ID: <20190910143943.GC25647@redhat.com>
-References: <20190910115711.GA3755@asgard.redhat.com>
- <20190910124440.GA25647@redhat.com>
- <20190910130935.jxqxbt7wop3ostob@wittgenstein>
- <20190910131048.e7xr52az2zej4p4v@wittgenstein>
- <20190910132701.s5o5nidewyo5zl7h@wittgenstein>
+        Tue, 10 Sep 2019 10:40:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43001 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfIJOkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:40:45 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so19043828otd.9;
+        Tue, 10 Sep 2019 07:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ieZnycxFN+JerYiY3rxoFtjLzkHguz7iRH/hDZcmIw=;
+        b=d9agNx71wVkpHR2XTIIiwTL0XH2EGudfPc7dYtC1KajHCIqFTXUVoYq1bMB3s4rntp
+         i0LCeyM+gEtprb+7CQJEMcJs2U5EGJPotnQ5fxb12skLyXd7NWJYX/HNOwZy1/TohFeK
+         vBmJRtCgB9dmMLVVavsIZBAr7DoB7hn6uH+eR++EtyctbPQZ3A2EHeRu71gfbszWswDC
+         JtRNdoAzFAJgHM79H7pyblqejEHy3V3bP5JuQt9IE66iP2xABt5GaML+442VeF9mg6FQ
+         P4YwPxQuDiFloO0+UJG1g7kzYcRsg6fx65SJ2BsppR7/580JiCYIVmI2uTS3yRFapIZV
+         AdQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ieZnycxFN+JerYiY3rxoFtjLzkHguz7iRH/hDZcmIw=;
+        b=ds+xfTl3Va3jhfnt+yFDiEDrkSt6sduVIuX71pw2772zA+MRGQhGTpIno1cvC3nFA+
+         TsITuFxiI5UHQprhw60CvzZD+5xSZxyPDjmLmswl/Vy91SUJlTMUCluXfn+YDkoDDqKL
+         C6EAB7t1i1YQ2zqmeGLylgl+Rk8rTjEZDy9BseLGypqWs4WtqfQQulDPAeoOhMa9Spdb
+         22BuAJDtAxs8aG8qHI1kymHOfkG+3XtuuKBbwPPMGiLupv52jLuRAzK/KZM9//vYwh8M
+         1d5H/OE2G1XClMZS5PkjOv4Q8o3XA1oV8uzA5UNZkbP0RhEN7b4C9mN0tdV7CitjK/Bv
+         mKpw==
+X-Gm-Message-State: APjAAAVuLWgS7zvbk5msLfWIfW5Uzgq6M+lN8Bi8Slwm5SK6HISzVV6X
+        8AzAHxNl6D6zz2MDiSSQ9jRZTPtRo6lguooO+w==
+X-Google-Smtp-Source: APXvYqzkLM0vlrL0Fi3NtmzLQzUZlEbzuQcjjOXQEGD286xMohRCfpSOgOJKC3SNtRcwSNPzq/3jeBi8bsajctzPCns=
+X-Received: by 2002:a05:6830:10c5:: with SMTP id z5mr7849959oto.366.1568126444139;
+ Tue, 10 Sep 2019 07:40:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910132701.s5o5nidewyo5zl7h@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 10 Sep 2019 14:39:49 +0000 (UTC)
+References: <20190910131836.114058-1-george.mccollister@gmail.com>
+ <20190910131836.114058-2-george.mccollister@gmail.com> <20190910140304.GA4683@lunn.ch>
+In-Reply-To: <20190910140304.GA4683@lunn.ch>
+From:   George McCollister <george.mccollister@gmail.com>
+Date:   Tue, 10 Sep 2019 09:40:32 -0500
+Message-ID: <CAFSKS=O9nDMk-ytxkFhTuZNT-QDmJ_twDdk2o2u0R4Y_YZ0z8A@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] net: dsa: microchip: add KSZ9477 I2C driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marek Vasut <marex@denx.de>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/10, Christian Brauner wrote:
-> On Tue, Sep 10, 2019 at 03:10:48PM +0200, Christian Brauner wrote:
-> > On Tue, Sep 10, 2019 at 03:09:35PM +0200, Christian Brauner wrote:
-> > > On Tue, Sep 10, 2019 at 02:44:41PM +0200, Oleg Nesterov wrote:
-> > > > On 09/10, Eugene Syromiatnikov wrote:
-> > > > >
-> > > > > --- a/kernel/fork.c
-> > > > > +++ b/kernel/fork.c
-> > > > > @@ -2562,6 +2562,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> > > > >  	if (copy_from_user(&args, uargs, size))
-> > > > >  		return -EFAULT;
-> > > > >  
-> > > > > +	if (unlikely(((unsigned int)args.exit_signal) != args.exit_signal))
-> > > > > +		return -EINVAL;
-> > > > 
-> > > > Hmm. Unless I am totally confused you found a serious bug...
-> > > > 
-> > > > Without CLONE_THREAD/CLONE_PARENT copy_process() blindly does
-> > > > 
-> > > > 	p->exit_signal = args->exit_signal;
-> > > > 
-> > > > the valid_signal(sig) check in do_notify_parent() mostly saves us, but we
-> > > > must not allow child->exit_signal < 0, if nothing else this breaks
-> > > > thread_group_leader().
-> > > > 
-> > > > And afaics this patch doesn't fix this? I think we need the valid_signal()
-> > > > check...
-> > > 
-> > > Thanks for sending this patch so quickly after our conversation
-> > > yesterday, Eugene!
-> > > We definitely want valid_signal() to verify the signal is ok.
-> 
-> So we could do your check in copy_clone_args_from_user(), and then we do
-> another valid_signal() check in clone3_args_valid()? We could do the
-> latter in copy_clone_args_from_user() too but it's nicer to do it along
-> the other checks in clone3_args_valid().
+Andrew,
 
-I am fine either way. Sure, we can add valid_signal() into clone3_args_valid(),
-but then I'd ask to simplify the "overflow" check above. Something like
+On Tue, Sep 10, 2019 at 9:03 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> Hi George
+>
+> > +KSZ_REGMAP_TABLE(ksz9477, not_used, 16, 0, 0);
+> > +
+> > @@ -294,6 +294,8 @@ static inline void ksz_pwrite32(struct ksz_device *dev, int port, int offset,
+> >  #define KSZ_SPI_OP_RD                3
+> >  #define KSZ_SPI_OP_WR                2
+> >
+> > +#define swabnot_used(x)              0
+>
+> > +
+> >  #define KSZ_SPI_OP_FLAG_MASK(opcode, swp, regbits, regpad)           \
+> >       swab##swp((opcode) << ((regbits) + (regpad)))
+>
+> There seems to be quite a lot of macro magic here which is not
+> obvious. Can this be simplified or made more obvious?
 
-	if (args.exit_signal > UINT_MAX)
-		return -EINVAL;
+I thought about this for quite some time. To reduce the "macro magic"
+the SPI specific parts will need to be removed from the common macro
+and arguments for read_flag_mask and write_flag_mask would need to be
+added to both KSZ_REGMAP_TABLE and KSZ_REGMAP_TABLE. That would leave
+us with two macros that have 7 arguments. Not really an improvement
+IMHO. Alternatively we could have different macros for SPI and I2C (or
+not use the macros at all and define the i2c regmaps in ksz9477_i2c.c)
+at the cost of ~20 lines of duplication. I prefer the "macro magic"
+approach, however if you won't let the patch through the way it is
+I'll respect your decision, just let me know which of the three
+proposed approaches you want to go with.
 
-looks much more readable to me.
+>
+>          Andrew
 
-
-Or we can simply do
-
-	if (args.exit_signal & ~((u64)CSIGNAL))
-		return -EINVAL;
-
-in copy_clone_args_from_user() and forget about all problems.
-
-Up to Eugene and you.
-
-Oleg.
-
+Cheers,
+George
