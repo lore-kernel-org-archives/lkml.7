@@ -2,100 +2,126 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6D3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569BCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8162084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3556D2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfIJHsX (ORCPT
+        id S1728885AbfIJHwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:48:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41155 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbfIJHsX (ORCPT
+        Tue, 10 Sep 2019 03:52:32 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37868 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfIJHwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:48:23 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i7asq-0002ke-3N; Tue, 10 Sep 2019 09:48:16 +0200
-Message-ID: <1568101695.3062.1.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Date:   Tue, 10 Sep 2019 09:48:15 +0200
-In-Reply-To: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Tue, 10 Sep 2019 03:52:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so13131587qkd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 00:52:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u9GytuQLzyYATbhV+IjgAeDxZXKzpVILhMpRGkoLMn0=;
+        b=D+laph0HAW3LL7Cn7tr3nQwem8/i5L+nkMBTDoNcj/4ejhkSQS6u9WQLZrdzc0TkQ9
+         M5gEATxmb4HO7SFmImjWgi98gSYfqGnEMQ5Psj83Psrlqpw6q7q/WF1UO1+Ld9xhvURw
+         4hUFmEBr9goOq2ocUklKklyEbHPwXP2OrDcspwfSGJjAgNrMjdwJT3W7l8bwUvfhkIv0
+         pHbiRrreQ9ibVEPS+SrwJaIlNE5+levUiPSQufQ3E8ZUkpn8MQozEGcVHgi3kciTjGKh
+         yTVuAg0lW+XbEh1RtF2QjXZWS1vl33LsMH7yFYvOMhHYOeE4AZDOHS2ALjGkEROz4cBw
+         1c3A==
+X-Gm-Message-State: APjAAAVuJE81ApN15Vn0NfM58OXBk+Waz5q9Y6G7OLSHRSBeyyXQZ9q6
+        Nkp61sf7rO/w8iGFArXjphrgidQkOChtUeWmmTE=
+X-Google-Smtp-Source: APXvYqxln7Q1Hrqv0ev3shLxwwtKOqlgoIIxBQOyHa8+xJM7nUB9taTaEV46rFMYCch7AxGOs2gefPx1RVZCtak+A8o=
+X-Received: by 2002:ae9:ee06:: with SMTP id i6mr7307279qkg.3.1568101949751;
+ Tue, 10 Sep 2019 00:52:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190909195159.3326134-1-arnd@arndb.de> <3b69e0ec-63cb-4888-9faa-acb7638d71dc@linux.intel.com>
+ <CAK8P3a0WDB_UvAnwfPDyR_maEefE4Qh++fHxAP61=8JfOFmy6w@mail.gmail.com> <s5hef0oaav5.wl-tiwai@suse.de>
+In-Reply-To: <s5hef0oaav5.wl-tiwai@suse.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 09:52:13 +0200
+Message-ID: <CAK8P3a2-gMbuN-17MC6ZsDwvPGCHmbJojKYGnrUshxhazATPRg@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Intel: work around
+ snd_hdac_aligned_read link failure
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Evan Green <evgreen@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kunihiko,
+On Tue, Sep 10, 2019 at 9:06 AM Takashi Iwai <tiwai@suse.de> wrote:
+> On Mon, 09 Sep 2019 22:51:23 +0200, Arnd Bergmann wrote:
+> >
+> > On Mon, Sep 9, 2019 at 10:39 PM Pierre-Louis Bossart
+> > <pierre-louis.bossart@linux.intel.com> wrote:
+> > >
+> > > On 9/9/19 2:51 PM, Arnd Bergmann wrote:
+> > > > When CONFIG_SND_HDA_ALIGNED_MMIO is selected by another driver
+> > > > (i.e. Tegra) that selects CONFIG_SND_HDA_CORE as a loadable
+> > > > module, but SND_SOC_SOF_HDA_COMMON is built-in, we get a
+> > > > link failure from some functions that access the hda register:
+> > > >
+> > > > sound/soc/sof/intel/hda.o: In function `hda_ipc_irq_dump':
+> > > > hda.c:(.text+0x784): undefined reference to `snd_hdac_aligned_read'
+> > > > sound/soc/sof/intel/hda-stream.o: In function `hda_dsp_stream_threaded_handler':
+> > > > hda-stream.c:(.text+0x12e4): undefined reference to `snd_hdac_aligned_read'
+> > > > hda-stream.c:(.text+0x12f8): undefined reference to `snd_hdac_aligned_write'
+> > > >
+> > > > Add an explicit 'select' statement as a workaround. This is
+> > > > not a great solution, but it's the easiest way I could come
+> > > > up with.
+> > >
+> > > Thanks for spotting this, I don't think anyone on the SOF team looked at
+> > > this. Maybe we can filter with depends on !TEGRA or
+> > > !SND_HDA_ALIGNED_MMIO at the SOF Intel top-level instead?
+> >
+> > That doesn't sound much better than my approach, but could also work.
+> > One idea that I had but did not manage to implement was to move out
+> > the snd_hdac_aligned_read/write functions from the core hda code
+> > into a separate file. I think that would be the cleanest solution,
+> > as it decouples the problem from any drivers.
+>
+> Yeah, that's a tricky problem because of the reverse-selection, as
+> usual...
+>
+> Another solution would be to just avoid byte/word access but use only
+> long access, i.e. replace snd_hdac_chip_readb() with
+> snd_hdac_chip_readl() with the aligned register and bit shift.
+> The aligned access helper is needed only for the register that isn't
+> aligned with 4 bytes offset.
 
-On Tue, 2019-09-10 at 10:55 +0900, Kunihiko Hayashi wrote:
-> Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
-> equivalent to Pro4.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Ok, so basically open-coding the aligned access to RIRBSTS?
+That sounds like a much nicer workaround. So in place of
 
-If it is exactly the same, you could keep using the same compatible:
+                        sd_status = snd_hdac_stream_readb(s, SD_STS);
+                        dev_vdbg(bus->dev, "stream %d status 0x%x\n",
+                                 s->index, sd_status);
+                        snd_hdac_stream_writeb(s, SD_STS, sd_status);
 
-> ---
->  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
->  drivers/reset/reset-uniphier-glue.c                        | 4 ++++
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> index ea00517..e320a8c 100644
-> --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> @@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
->  Required properties:
->  - compatible: Should be
->      "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
-> +    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
+I suppose one could just readl/writel SOF_HDA_ADSP_REG_CL_SD_CTL
+and print the shifted value, right?
 
-+    "socionext,uniphier-pro5-usb3-reset", "socionext,uniphier-pro4-usb3-reset" - for Pro5 SoC USB3
+While I know nothing about the underlying requirements, I wonder
+about two things that stick out to me:
 
-[...]
-> diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
-> index a45923f..2b188b3bb 100644
-> --- a/drivers/reset/reset-uniphier-glue.c
-> +++ b/drivers/reset/reset-uniphier-glue.c
-> @@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
->  		.data = &uniphier_pro4_data,
->  	},
->  	{
-> +		.compatible = "socionext,uniphier-pro5-usb3-reset",
-> +		.data = &uniphier_pro4_data,
-> +	},
-> +	{
->  		.compatible = "socionext,uniphier-pxs2-usb3-reset",
->  		.data = &uniphier_pxs2_data,
->  	},
+1. the existing code just writes back the same byte it has read. If
+    this write has no side-effects, why write it at all? OTOH, if it has
+    side-effects, isn't the aligned implementation of writing the whole
+    word in snd_hdac_aligned_write()  fundamentally flawed?
 
-And this change would not be necessary.
+2. Doesn't the read-modify-write cycle in snd_hdac_aligned_write()
+   need locking to work correctly?
 
-regards
-Philipp
+          Arnd
