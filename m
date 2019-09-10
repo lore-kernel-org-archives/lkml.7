@@ -2,140 +2,194 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF98C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EBFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914BF2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="T+NRfThN"
+	by mail.kernel.org (Postfix) with ESMTP id D9BAF21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfIJTNM (ORCPT
+        id S1728124AbfIJTSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 15:13:12 -0400
-Received: from mail-eopbgr60050.outbound.protection.outlook.com ([40.107.6.50]:28206
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbfIJTNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 15:13:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BgLbLG/biZMrQi49L3UwGKG63AxJI9/qpd9yV6ZcLqqdJbBmkoO1yjgG/Z94c8Qov1dTjJlANm5+7rlPe6/wTOtwdh07+PzyQIrN7/6Wb0ceP7r0+WAiWyXwyJR5rBJQXoHv85RKcqgHDpg9xyNgWuVfH1gligriw87/qU7cn0e4nFxh4/0HJaCQTv2oGRqm/97dg9ShjJSvteQqefvYNwDJ/Q6VBihLKlHAKOC+n9CX5K/2Mg2VUb0LPd/0mQwsO9BboRmzs7ngHTDfQYXm7xV2EP+pVebVKjNPiUpNVkzAiWcQ72YmFN1pAcSJMX8XjDTXYRn8bgxvZBwvzAiHYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PHQjhAjp6Kdlr7PVyYJ9stL5uspQDuoAYEXTs1fY8lw=;
- b=SY3BqTBvFek0IQsMNE6vHVuYe3Z0Xnj8V6HU6jdQUfMKxscpXPORBmDIZTJ5l4utpCUEWwKJtWEq5+4LgXG+ysTy8p/8ho+BQSHEgW7f0cQXW/xzdWnXqwJM6ThPRBPoBYHDCx33MMReihPznzf+x39PuLYBJ6b45xOxLshbhtdBfeamzjRqh6Xb4QAds6cfioZhWkTHaefgGb55eM2d79sxg3MtNgz/StIx0zxohJ1tQw9TiPBuSxryE/dJ16Ei6rKtNfgCNpKCvFQc0cpFpCwpRkv+uUs7ciu/1V8PenHA3uaO+TNNCH530GxuaQZPXdaA32ozRybjQAKJu4ZbvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PHQjhAjp6Kdlr7PVyYJ9stL5uspQDuoAYEXTs1fY8lw=;
- b=T+NRfThNHti6QsOVVg9zPJu1h54iSBPtI3kj8CBko17XLyzrJDPSUoGf2rZyRm5riGXJY/ho1ld54/35CnY2QGFPTi0qEscfrxdLnnysIBXex/bslX1VVBWz816fl8MXvqgipP8frMoY07Rozr80y8egGxevDsLIDnBVOLQENqQ=
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
- DB6PR0501MB2472.eurprd05.prod.outlook.com (10.168.77.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Tue, 10 Sep 2019 19:13:05 +0000
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::f839:378:4972:3e43]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::f839:378:4972:3e43%12]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 19:13:04 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
-        "arnd@arndb.de" <arnd@arndb.de>
-CC:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Erez Shitrit <erezsh@mellanox.com>
-Subject: Re: [PATCH] net/mlx5: reduce stack usage in FW tracer
-Thread-Topic: [PATCH] net/mlx5: reduce stack usage in FW tracer
-Thread-Index: AQHVZMVcvjrXfAAg+0q1zHGyRVHFvqcjwxGAgAAK9wCAABpwgIAAraKAgAB774CAADv0AA==
-Date:   Tue, 10 Sep 2019 19:13:04 +0000
-Message-ID: <005fe3efd5ce73ed0179cec8d743362ef0fd4f85.camel@mellanox.com>
-References: <20190906151123.1088455-1-arnd@arndb.de>
-         <383db08b6001503ac45c2e12ac514208dc5a4bba.camel@mellanox.com>
-         <CAK8P3a0_VhZ9hYmc6P3Qx+Z6WSHh3PVZ7JZh7Tr=R1CAKvqWmA@mail.gmail.com>
-         <5abccf6452a9d4efa2a1593c0af6d41703d4f16f.camel@mellanox.com>
-         <CAK8P3a3q4NqiU-OydMqU3J=gT-8eBmsiL5tPsyJb1PNgR+48hA@mail.gmail.com>
-         <d50f78334e64476bad033862035c734c@AcuMS.aculab.com>
-In-Reply-To: <d50f78334e64476bad033862035c734c@AcuMS.aculab.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c878586a-67aa-4d63-4ad6-08d73622e844
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2472;
-x-ms-traffictypediagnostic: DB6PR0501MB2472:|DB6PR0501MB2472:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0501MB247203337165C3F55E395378BEB60@DB6PR0501MB2472.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(189003)(26005)(8936002)(66066001)(11346002)(91956017)(36756003)(4326008)(7736002)(6436002)(2616005)(5660300002)(186003)(305945005)(86362001)(6486002)(99286004)(66446008)(25786009)(229853002)(6512007)(14454004)(118296001)(54906003)(110136005)(8676002)(53936002)(76116006)(81156014)(81166006)(446003)(2906002)(256004)(6246003)(102836004)(486006)(6506007)(476003)(107886003)(316002)(478600001)(58126008)(3846002)(64756008)(66556008)(66476007)(71200400001)(2501003)(6116002)(66946007)(71190400001)(14444005)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2472;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ml0CQ3bonegsMSxbiglGfSjBK8PZfzY2Idw1k7nT0EFJYX0OrtKQ8MlIojD64ZHNsNBL1sK5VhDOJudQYohy3Ri2521goLMc45cyUtL5sgsmyT6GhPfkiyBcmkIpSriVnMGkjY0fg13uLVw1R5ZhYdL0R4F5akG+dWZiIi8mMpY3rpCmX6qX8SYic/UVxkFsyDfWH4mF8+ADT2vhBXIa9jkTPf7IGq/Bo7t5Doo9K7lRwMcn8wNowTgY2LLMbHQxBECRYeXvY8BNmYThQvGLMIhynQyOhk5IoOCPz9kicbzEWjgpeC/J+DmZ8Nri0oK7slZuezA4+UgEGeqjHPu3k7bYmHznyFbFqUpNGfJBzrMHGac4y3sA3utLqgGzQFo59SxycMOhdg4bNiZAuNh0HfdAFhnoqhIL9DKOputZxbc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D35C1BEC9A701C468C71D14E5CC80014@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Sep 2019 15:18:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:44921 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfIJTSK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 15:18:10 -0400
+Received: by mail-io1-f69.google.com with SMTP id f5so24425773ioo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 12:18:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=KICzFkLeQqtEwysB2QmS9o7mzKO9jXpOrCeO4D7f/cI=;
+        b=HONuWvBZRQ11hLrwiirhlu1Ts9C4lgl69041g18bzqnnS0b1SwUSLI8/c2+tPF6ekT
+         C7pbrKFlGCNLmb4cDyft5K65n2FFYCiRBm1t+9Mys0+BHdm+5xhJa+zAAAPRLuuOQe0r
+         qJRbpIqtBWD7DP9od6ycHQMKEcEMH+TRcjy9HyWxVpP3SoLaDwZpJmvgwDvNUFZptgLV
+         reI+uiEPDzFP6S/bfXrIoW/+hrCYyCiK3tRv/hsyu1ZhQineRMMPczVJlLbAy08l04qM
+         Zrc/kXFRr2k3HaIIdEEAhukjH2R+nrTmQNLeeNJEwYpHvygrGIj3wQbB3ceHVrH2lo6w
+         d/zg==
+X-Gm-Message-State: APjAAAXf2Fvf4OKGrUvPV6dfnpjJqs/qOvPwGHzTe+AgTg/taBJpGF/4
+        9DXXxdGr6Kb4O3O7m6X5G7edjwlRbctwjCzyNAoYSdQq7K53
+X-Google-Smtp-Source: APXvYqxPzKg6GbeoH6yRm1PjX2izZMuz0ieNKYMovQHrdeRH4rFXfA13QHVvWiKOqCtfYE2/LBdKRcjOVwklvTsHVCfIvW8qlWT4
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c878586a-67aa-4d63-4ad6-08d73622e844
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 19:13:04.8452
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jl1fCmwuhP+ZtRfcwnlJmt2F59BcN51bNjbw5KjPp2iV7yk/jzbDIaw8z6fSucKNFncX3FpM0cUYCZUcBh0LGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2472
+X-Received: by 2002:a5d:888b:: with SMTP id d11mr26874923ioo.236.1568143088331;
+ Tue, 10 Sep 2019 12:18:08 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 12:18:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bcb83d059237c30a@google.com>
+Subject: INFO: rcu detected stall in br_handle_frame
+From:   syzbot <syzbot+2addc1f058bd021b0a40@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTEwIGF0IDE1OjM4ICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+
-IEZyb206IEFybmQgQmVyZ21hbm4NCj4gPiBTZW50OiAxMCBTZXB0ZW1iZXIgMjAxOSAwOToxNQ0K
-PiAuLi4NCj4gPiA+IEkgYW0gbm90IHN1cmUgaG93IHRoaXMgd291bGQgd29yaywgc2luY2UgdGhl
-IGZvcm1hdCBwYXJhbWV0ZXJzDQo+ID4gPiBjYW4NCj4gPiA+IGNoYW5nZXMgZGVwZW5kaW5nIG9u
-IHRoZSBGVyBzdHJpbmcgYW5kIHRoZSBzcGVjaWZpYyB0cmFjZXMuDQo+ID4gDQo+ID4gQWgsIHNv
-IHRoZSBmb3JtYXQgc3RyaW5nIGNvbWVzIGZyb20gdGhlIGZpcm13YXJlPyBJIGRpZG4ndCBsb29r
-DQo+ID4gYXQgdGhlIGNvZGUgaW4gZW5vdWdoIGRldGFpbCB0byB1bmRlcnN0YW5kIHdoeSBpdCdz
-IGRvbmUgbGlrZSB0aGlzLA0KPiA+IG9ubHkgZW5vdWdoIHRvIG5vdGljZSB0aGF0IGl0J3MgcmF0
-aGVyIHVudXN1YWwuDQo+IA0KPiBJZiB0aGUgZm9ybWF0IHN0cmluZyBjb21lcyBmcm9tIHRoZSBm
-aXJtd2FyZSB5b3UgcmVhbGx5IHNob3VsZG4ndA0KPiBwYXNzIGl0IHRvIGFueSBzdGFuZGFyZCBw
-cmludGYgZnVuY3Rpb24uDQo+IFlvdSBtdXN0IGVuc3VyZSB0aGF0IGl0IGRvZXNuJ3QgY29udGFp
-biBhbnkgZm9ybWF0IGVmZmVjdG9ycw0KPiB0aGF0IG1pZ2h0IGRlcmVmZXJlbmNlIHBhcmFtZXRl
-cnMuDQo+IChUaGUgY29kZSBtaWdodCB0cnkgdG8gZG8gdGhhdC4pDQo+IA0KPiBHaXZlbiB0aGF0
-ICdwb2ludGVyJyBmb3JtYXQgZWZmZWN0b3JzIGNhbid0IGJlIHVzZWQsIHRoZSBmaXJtd2FyZQ0K
-PiBtdXN0IGFsc28gc3VwcGx5IHRoZSByZWxldmFudCBpbnRlZ2VyIG9uZXM/DQo+IFRoaXMgc2hv
-dWxkIG1lYW4gdGhhdCBhbGwgdGhlIHByb2Nlc3NpbmcgaXMgZGVmZXJyYWJsZSB1bnRpbCB0aGUN
-Cj4gdHJhY2UgcmVjb3JkIGlzIHJlYWQuDQo+IA0KDQpQb2ludCB0YWtlbiwgaSB3aWxsIGRpc2N1
-c3MgdGhpcyB3aXRoIHRoZSB0ZWFtIG5leHQgd2Vlaywgc2luY2UgaSBhbQ0KdHJhdmVsaW5nIHRo
-aXMgd2Vlay4gYW5kIHdlIHdpbGwgcHJvdmlkZSBhIHByb3BlciBzb2x1dGlvbi4gZm9yIG5vdywN
-Cm9mZiB0aGUgdG9wIG9mIG15IGhlYWQsIEZXIHN0cmluZ3MgYW5kIHBhcmFtZXRlcnMgYXJlIHdl
-bGwgZGVmaW5lZCBhbmQNCnZlcnkgc2ltcGxlLCBtYW55IG9mIHRoZSBwcm9ibGVtcyBoZXJlIGRv
-IG5vdCBhcHBseSwgYnV0IHdpbGwgdmVyaWZ5Lg0KDQo+ICdub2lubGluZScganVzdCBwYXBlcnMg
-b3ZlciB0aGUgY3JhY2tzLg0KPiBFc3BlY2lhbGx5IHNpbmNlIHZhc3ByaW50ZigpIGlzIGxpa2Vs
-eSB0byB1c2UgYSBsb3Qgb2Ygc3RhY2suDQoNClJpZ2h0IGkgYWxzbyB0ZW5kIHRvIGFncmVlIHdp
-dGggbm9pbmxpbmUgYXMgYSB0ZW1wb3Jhcnkgc29sdXRpb24gdW50aWwNCndlIGFkZHJlc3MgYWxs
-IHRoZSBwb2ludHMgcHJvdmlkZWQgaGVyZS4NCg0KPiANCj4gCURhdmlkDQo+IA0KPiAtDQo+IFJl
-Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
-b24gS2V5bmVzLA0KPiBNSzEgMVBULCBVSw0KPiBSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
-bGVzKQ0K
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12983001600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
+dashboard link: https://syzkaller.appspot.com/bug?extid=2addc1f058bd021b0a40
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d8afae600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1253d1fa600000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109dcfc6600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=149dcfc6600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2addc1f058bd021b0a40@syzkaller.appspotmail.com
+
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	0-...!: (10500 ticks this GP) idle=c4e/1/0x4000000000000002  
+softirq=10445/10445 fqs=0
+	(t=10500 jiffies g=10669 q=248)
+rcu: rcu_preempt kthread starved for 10500 jiffies! g10669 f0x0  
+RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     I29392    10      2 0x80004000
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x755/0x1580 kernel/sched/core.c:3880
+  schedule+0xd9/0x260 kernel/sched/core.c:3947
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
+  rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+NMI backtrace for cpu 0
+CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
+  rcu_pending kernel/rcu/tree.c:2736 [inline]
+  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1106 [inline]
+  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1131
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:write_comp_data+0x68/0x70 kernel/kcov.c:147
+Code: 00 00 4e 8d 14 dd 28 00 00 00 4d 39 d0 72 1b 49 83 c1 01 4a 89 7c 10  
+e0 4a 89 74 10 e8 4a 89 54 10 f0 4a 89 4c d8 20 4c 89 08 <c3> 0f 1f 80 00  
+00 00 00 55 40 0f b6 d6 40 0f b6 f7 31 ff 48 89 e5
+RSP: 0018:ffff8880a98be990 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000301 RBX: ffff88808c6eb0b8 RCX: ffffffff85c64b39
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: ffff8880a98be998 R08: ffff8880a98b2240 R09: 0000000000000000
+R10: fffffbfff134af8f R11: ffff8880a98b2240 R12: dffffc0000000000
+R13: ffff88808c6eadc0 R14: ffff88808c6eb150 R15: 0000000000000000
+  hhf_dequeue+0xb9/0xa20 net/sched/sch_hhf.c:434
+  dequeue_skb net/sched/sch_generic.c:258 [inline]
+  qdisc_restart net/sched/sch_generic.c:361 [inline]
+  __qdisc_run+0x1e7/0x19d0 net/sched/sch_generic.c:379
+  __dev_xmit_skb net/core/dev.c:3533 [inline]
+  __dev_queue_xmit+0x16f1/0x3650 net/core/dev.c:3838
+  dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
+  br_dev_queue_push_xmit+0x3f3/0x5c0 net/bridge/br_forward.c:52
+  br_nf_dev_queue_xmit+0x34e/0x1470 net/bridge/br_netfilter_hooks.c:796
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  br_nf_post_routing+0x1502/0x1d30 net/bridge/br_netfilter_hooks.c:844
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
+  nf_hook include/linux/netfilter.h:260 [inline]
+  NF_HOOK include/linux/netfilter.h:303 [inline]
+  br_forward_finish+0x215/0x400 net/bridge/br_forward.c:65
+  br_nf_hook_thresh+0x2e9/0x370 net/bridge/br_netfilter_hooks.c:1015
+  br_nf_forward_finish+0x66c/0xa90 net/bridge/br_netfilter_hooks.c:560
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  br_nf_forward_ip net/bridge/br_netfilter_hooks.c:630 [inline]
+  br_nf_forward_ip+0xc74/0x21e0 net/bridge/br_netfilter_hooks.c:571
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
+  nf_hook include/linux/netfilter.h:260 [inline]
+  NF_HOOK include/linux/netfilter.h:303 [inline]
+  __br_forward+0x393/0xb00 net/bridge/br_forward.c:109
+  deliver_clone+0x61/0xc0 net/bridge/br_forward.c:125
+  br_flood+0x325/0x3d0 net/bridge/br_forward.c:232
+  br_handle_frame_finish+0xb46/0x1670 net/bridge/br_input.c:162
+  br_nf_hook_thresh+0x2e9/0x370 net/bridge/br_netfilter_hooks.c:1015
+  br_nf_pre_routing_finish_ipv6+0x6fb/0xd80  
+net/bridge/br_netfilter_ipv6.c:206
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  br_nf_pre_routing_ipv6+0x456/0x832 net/bridge/br_netfilter_ipv6.c:236
+  br_nf_pre_routing+0x1743/0x2355 net/bridge/br_netfilter_hooks.c:501
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_bridge_pre net/bridge/br_input.c:223 [inline]
+  br_handle_frame+0x806/0x133e net/bridge/br_input.c:348
+  __netif_receive_skb_core+0xfc1/0x3060 net/core/dev.c:4905
+  __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5002
+  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5118
+  process_backlog+0x206/0x750 net/core/dev.c:5929
+  napi_poll net/core/dev.c:6352 [inline]
+  net_rx_action+0x4d6/0x1030 net/core/dev.c:6418
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  run_ksoftirqd kernel/softirq.c:603 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
+  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
