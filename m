@@ -2,90 +2,144 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F957C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A32AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C999621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B9E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUggaBf9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okO7qHCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394027AbfIJPsB (ORCPT
+        id S2394038AbfIJPsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:48:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43270 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfIJPsA (ORCPT
+        Tue, 10 Sep 2019 11:48:42 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35013 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729802AbfIJPsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:48:00 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u72so9942796pgb.10;
-        Tue, 10 Sep 2019 08:48:00 -0700 (PDT)
+        Tue, 10 Sep 2019 11:48:41 -0400
+Received: by mail-io1-f65.google.com with SMTP id f4so37895271ion.2;
+        Tue, 10 Sep 2019 08:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T0c9t1ysaQZfOfoAJ9kXidNtKg/M5DR/wmAFIZcRfSE=;
-        b=gUggaBf9CrnACdRNJU4fi0N3ksiSeh0S+fddegeSVQPNvQ9LbK/mvPp6FNtQ8B/0YA
-         f5obiejwArr7YxXhWgdxajXCPOyE+RLk8h1c7WEVokp1c8hP5vpNka9gJNpOAX6AO0Bw
-         7NtkyDlfQOZBVevO4zmN//Xym/m4Z2C/aDu95QHA5ryBxEuqsfftFluUvWVB4aoYQqi8
-         oTLkpxUigHGVMal5HBAOM21bEVPIp20FOybtg9cX0gvtQlL94Wlv2lnkwVlTVOv/sDc3
-         TuRgxwB+8/zGDF8UhV1yBY1UxnIwHzlSxzGdWDYCnVQYIRYmMpwgEAtKaumQnlBmuFjV
-         xoog==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=coLUn/mFfKhtEGTZkfKU7iKSONi2SChdAx43tZsS4uk=;
+        b=okO7qHCmIYGdIBDffowQ8Wck3DnmwENwiHbs8BFei3qdB7cleA0izNjAMyKE2F7+ef
+         wtmYj5wqOoXNY0lHRjg92QCpCFjXB2/0JUrhu6PR8cBkoiE51XWVpfLfqECQ90lNNcO1
+         Q/WD65oXGV9FQBMNEOOEgnk+vaPsuJ7oq95iEELrpo3/BtsaKCYITkhhqxUVRCLvxCtg
+         UxwoBknPo+HoYtYnbnyJfa5cbrMp+vNdrdjtZ/W6g2bBYgWxdtskZeJyZylvf0Rp+QvX
+         x3b1Yuaow7UlwiWtHw5E7iczZuMN0tTZAxA+3+iR3M+lHhxQH5p08KYR9wqt3wDoyqn5
+         +t8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T0c9t1ysaQZfOfoAJ9kXidNtKg/M5DR/wmAFIZcRfSE=;
-        b=Fd+uDqj/SPeYZeo8cPrZ3I4f8jgha7CNzj16wyTWPDi+0um9iBSUpOfAFF7X/NUg2u
-         44jX+nrFQY8pHwZ/lryvyOi1bcRHZdEnYqdqpK79kkdhm55hR+/J5MZIzech/6Sgcx4p
-         zQD3ja+TPkAWHRzkT9zxjGpsBevNc9eQiuiLge9Rl6npEcuA8XL2GZCa2MVBL/mfNp9j
-         AwzdWBlTTE9tJHZMwkbt9rgi8HA3hKCZ4CmWFtIexH25kCuhsohf+8HgcguAUk3w97wA
-         WLA8UDLNFt3ZiyTyOIWAbYgzmOrTLJ4dTRAuaMyQ5D3d3lccWwIjz9kNOQdwO1uOPMkr
-         BsYw==
-X-Gm-Message-State: APjAAAWLoa7X+LrY74sRKRNV3w9HnqHBhxLrraPw4MSOm/4tdfTzbQyy
-        RzswyZfoUke91qpvboeFFoY=
-X-Google-Smtp-Source: APXvYqxTgehaC8pLNfPoMA0zrAlo17oTECcp4HZpebr2fzzWuAhNnaxRpzxVWRL/gOsUSyZyaHugrg==
-X-Received: by 2002:aa7:8edd:: with SMTP id b29mr36483870pfr.138.1568130479923;
-        Tue, 10 Sep 2019 08:47:59 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id w13sm19882621pfi.30.2019.09.10.08.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 08:47:59 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 08:47:57 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PTP: add support for one-shot output
-Message-ID: <20190910154757.GC4016@localhost>
-References: <20190909075940.12843-1-felipe.balbi@linux.intel.com>
- <20190909075940.12843-2-felipe.balbi@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=coLUn/mFfKhtEGTZkfKU7iKSONi2SChdAx43tZsS4uk=;
+        b=QObwHCamkCWnyo9jvI50Pw7J9x1ryfmbm+BoPG+8sYfNm6p3s8VCpivPHHQqaMMaAo
+         CtDn5n6S8iE/whxsigve8O/TyudPa8qVMGaaAoFlIqPD+gwTmCWdQvYfj0+h86VYLZ9p
+         I4aOwlLHU2qPAsDqNTkcR29cuIh6DZlQ8jREow5xS4+9pymKrX5fgq15Q616Aq102slI
+         trAfhgTHk7W8uJETLqP1xNE23VH2f7BYoy9t41pnPq/Mwrd7vAFiYrn4y7yBdZoeSGer
+         hBPluTlnEkh+nPPQGJjDa+AOwaA1/E6VnGiWlB4FThPsJ82lyHG08vKFoBnFF5b8VZYH
+         CSKA==
+X-Gm-Message-State: APjAAAWQVA+JMOjOfww7MSyJqnq9+rMiMSTsFE5AtxNutG6YaPyptnbu
+        KOJvw7iz9KN/x+t0UffWiNNt1b4I3ekIjoynBv4=
+X-Google-Smtp-Source: APXvYqyNK2KpMgOp5yFAwKzmIl05wi6Oom/MmgyrjpQIHsqWHE02/1onqF5gDO4XoszLJOEPF4gT+Ma3ZxxXzdKWHOo=
+X-Received: by 2002:a5e:de47:: with SMTP id e7mr899998ioq.127.1568130520830;
+ Tue, 10 Sep 2019 08:48:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909075940.12843-2-felipe.balbi@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
+ <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+ <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+ <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
+In-Reply-To: <20190909163543.GQ52127@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 10 Sep 2019 10:48:29 -0500
+Message-ID: <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 10:59:40AM +0300, Felipe Balbi wrote:
+On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
+> > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
+> > > I applied this on 5.3 and it is working.  I assume the same is true i=
+n for-next.
+>
+> Hmm I noticed I stopped getting RNG data after several rmmod modprobe
+> cycles, or several hd /dev/random reads. Anybody else seeing that?
+>
+> > > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
+> > > This really helps speed up the startup sequence on boards with sshd
+> > > because it delays for nearly 80 seconds waiting for entropy without
+> > > the hwrng.
+> >
+> > Hi! When applying a patch, could you please disable this rng for n900?
+> >
+> > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony alre=
+ady
+> > wrote), similarly like for aes.
+>
+> Yeah I'll post a proper patch after -rc1.
 
->  /*
->   * Bits of the ptp_perout_request.flags field:
->   */
-> -#define PTP_PEROUT_VALID_FLAGS (~0)
-> -
-> +#define PTP_PEROUT_ONE_SHOT (1<<0)
-> +#define PTP_PEROUT_VALID_FLAGS	(~PTP_PEROUT_ONE_SHOT)
+FYI,
 
-Here also, the bitwise not is backwards. ^
+By putting your node into omap34xx.dtsi and omap36xx.dtsi along with
+the following, I can get the RNG to work on an OMAP3530 and a DM3730.
 
-Thanks,
-Richard
+
+diff --git a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+index 5e9d1afcd422..73f351e6d132 100644
+--- a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+@@ -259,7 +259,7 @@
+                         <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_i=
+ck>,
+                         <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+                         <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&icr_=
+ick>,
+-                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
++                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
+<&rng_ick>,
+                         <&mspro_fck>;
+        };
+ };
+
+I tried doing the same for am3517, but it doesn't appear to work.  In
+fact, the board hangs at boot with no splat, so I assume that some
+clock isn't running and causing a hang.  Figure 4-50 in the AM3517 TRM
+shows the security_l4_iclk2, so I wonder if the HW mods for AES, SHA,
+etc are doing something to enable this clock.  Those HWmods are
+disabled on AM3517.  I tried turning on the hwmods for them before
+without success, but I'll try it again.
+
+adam
+>
+> Regards,
+>
+> Tony
