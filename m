@@ -2,113 +2,112 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A89C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CEC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F040E20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2B020872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393317AbfIJOqT (ORCPT
+        id S2393603AbfIJOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:46:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42673 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfIJOqT (ORCPT
+        Tue, 10 Sep 2019 10:46:36 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:13162 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726066AbfIJOqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:46:19 -0400
-Received: from [148.69.85.38] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i7hPM-0004H9-Dd; Tue, 10 Sep 2019 14:46:16 +0000
-Date:   Tue, 10 Sep 2019 16:46:15 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
+        Tue, 10 Sep 2019 10:46:35 -0400
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AEfanc010707;
+        Tue, 10 Sep 2019 14:46:23 GMT
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2ux1w0r7fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 14:46:23 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 27A8A9B;
+        Tue, 10 Sep 2019 14:46:22 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
+        id 64D7B201FCF26; Tue, 10 Sep 2019 09:46:21 -0500 (CDT)
+Message-Id: <20190910144610.632763542@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190910144609.909602978@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: quilt/0.46-1
+Date:   Tue, 10 Sep 2019 09:46:15 -0500
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH] fork: fail on non-zero higher 32 bits of args.exit_signal
-Message-ID: <20190910144614.qsisdvm46vlc4bl7@wittgenstein>
-References: <20190910115711.GA3755@asgard.redhat.com>
- <20190910124440.GA25647@redhat.com>
- <20190910130935.jxqxbt7wop3ostob@wittgenstein>
- <20190910131048.e7xr52az2zej4p4v@wittgenstein>
- <20190910132701.s5o5nidewyo5zl7h@wittgenstein>
- <20190910143943.GC25647@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190910143943.GC25647@redhat.com>
-User-Agent: NeoMutt/20180716
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 6/8] x86/platform/uv: Decode UVsystab Info
+Content-Disposition: inline; filename=decode-hubless-uvst
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-10_10:2019-09-10,2019-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909100142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 04:39:44PM +0200, Oleg Nesterov wrote:
-> On 09/10, Christian Brauner wrote:
-> > On Tue, Sep 10, 2019 at 03:10:48PM +0200, Christian Brauner wrote:
-> > > On Tue, Sep 10, 2019 at 03:09:35PM +0200, Christian Brauner wrote:
-> > > > On Tue, Sep 10, 2019 at 02:44:41PM +0200, Oleg Nesterov wrote:
-> > > > > On 09/10, Eugene Syromiatnikov wrote:
-> > > > > >
-> > > > > > --- a/kernel/fork.c
-> > > > > > +++ b/kernel/fork.c
-> > > > > > @@ -2562,6 +2562,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> > > > > >  	if (copy_from_user(&args, uargs, size))
-> > > > > >  		return -EFAULT;
-> > > > > >  
-> > > > > > +	if (unlikely(((unsigned int)args.exit_signal) != args.exit_signal))
-> > > > > > +		return -EINVAL;
-> > > > > 
-> > > > > Hmm. Unless I am totally confused you found a serious bug...
-> > > > > 
-> > > > > Without CLONE_THREAD/CLONE_PARENT copy_process() blindly does
-> > > > > 
-> > > > > 	p->exit_signal = args->exit_signal;
-> > > > > 
-> > > > > the valid_signal(sig) check in do_notify_parent() mostly saves us, but we
-> > > > > must not allow child->exit_signal < 0, if nothing else this breaks
-> > > > > thread_group_leader().
-> > > > > 
-> > > > > And afaics this patch doesn't fix this? I think we need the valid_signal()
-> > > > > check...
-> > > > 
-> > > > Thanks for sending this patch so quickly after our conversation
-> > > > yesterday, Eugene!
-> > > > We definitely want valid_signal() to verify the signal is ok.
-> > 
-> > So we could do your check in copy_clone_args_from_user(), and then we do
-> > another valid_signal() check in clone3_args_valid()? We could do the
-> > latter in copy_clone_args_from_user() too but it's nicer to do it along
-> > the other checks in clone3_args_valid().
-> 
-> I am fine either way. Sure, we can add valid_signal() into clone3_args_valid(),
-> but then I'd ask to simplify the "overflow" check above. Something like
-> 
-> 	if (args.exit_signal > UINT_MAX)
-> 		return -EINVAL;
-> 
-> looks much more readable to me.
-> 
-> 
-> Or we can simply do
-> 
-> 	if (args.exit_signal & ~((u64)CSIGNAL))
-> 		return -EINVAL;
-> 
-> in copy_clone_args_from_user() and forget about all problems.
+Decode the hubless UVsystab passed from BIOS to the kernel saving
+pertinent info in a similar manner that hubbed UVsystabs are decoded.
 
-Both are fine with me. The latter might have the advantage that we catch
-both legacy clone and clone3. I think Eugene prefers this as well.
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+---
+V2: Removed redundant error message after call to uv_bios_init.
+    Removed redundant error message after call to decode_uv_systab.
+    Clarify selection of UV4 and higher when checking for extended UVsystab
+    in decode_uv_systab().
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Christian
+--- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
++++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
+ 	struct uv_systab *st;
+ 	int i;
+ 
+-	if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
++	/* If system is uv3 or lower, there is no extended UVsystab */
++	if (is_uv_hubbed(0xfffffe) < uv(4) && is_uv_hubless(0xfffffe) < uv(4))
+ 		return 0;	/* No extended UVsystab required */
+ 
+ 	st = uv_systab;
+@@ -1554,8 +1555,15 @@ static __init int uv_system_init_hubless
+ 
+ 	/* Init kernel/BIOS interface */
+ 	rc = uv_bios_init();
++	if (rc < 0)
++		return rc;
+ 
+-	/* Create user access node if UVsystab available */
++	/* Process UVsystab */
++	rc = decode_uv_systab();
++	if (rc < 0)
++		return rc;
++
++	/* Create user access node */
+ 	if (rc >= 0)
+ 		uv_setup_proc_files(1);
+ 
+
+-- 
+
