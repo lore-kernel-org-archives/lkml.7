@@ -2,205 +2,126 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD3AC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478B8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82882089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGVn97TT"
+	by mail.kernel.org (Postfix) with ESMTP id 235CB2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394212AbfIJRLD (ORCPT
+        id S2394233AbfIJROL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:11:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41595 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731510AbfIJRLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:11:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z9so17815475edq.8;
-        Tue, 10 Sep 2019 10:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iuWQbHX+PMmNOYmd/8pxmVPIKdIed7YlISeGMgRidgc=;
-        b=nGVn97TTZhK0PPPfJL9dl6WBhPT2YLeqSt3p+U7yVwjN5WBJDYwgKSOc1NbPrCdimp
-         +jFNz7Grhyg+FrsoHamdre2gg4lQ1KAh8/MamoeZAraCi06wUTgRTi8DknjKoLQ76fke
-         6WP/46MkYH+188U0fEj/iwGNh+L+E8hcVZ3A7e0ROH7WowUWLEICs/dkWSVdQJ8MsTOZ
-         g9tjXofI2V9D49kezB8GYV1VdthPv7Yd6dZO94FeMzDOsp1HyILdtrJIhI9/dl9Mp4QP
-         vl1VA0XHL8OZtRUblScbQfNTHWOkd+9bzr6/O5+MlhfATeHSX9LxnWbvp71P6++vzL0Z
-         vTaw==
+        Tue, 10 Sep 2019 13:14:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43254 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394158AbfIJROL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:14:11 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B73E11A28
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 17:14:10 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id t185so134209wmg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:14:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iuWQbHX+PMmNOYmd/8pxmVPIKdIed7YlISeGMgRidgc=;
-        b=BnmzDw2oOrx6w4+kGPJN0Z/WovMeZkG08xTVcw0RRKPeAXyzbSYhsw1wt+kCNhQV4q
-         yeby7Ol2Ik7xxwNSNVJjMgfBnsALnwu0zAuA1cPigujC1xPeiwoc9VAWxXM6bvJ5jlTb
-         9JxgStNPoE+T28hYqdGIsCEcSc21iRDCXtKPmck+ffPya5jxPyMfz7JTXje4fElnuVnc
-         QQkn2nyAhfZI8aVSR69nVYaT1EZz6V1mIuwiqfJ0bmOauMXH8dlHmnUyA3NU1/Er9Sa7
-         KlWZuUVUTXsvUMJ4ORmyNXqytGARvk1wuhUJ/z19xshTwaGGvQ0P4CGn+PhSjDHqm4Yp
-         eacg==
-X-Gm-Message-State: APjAAAVPkFBzh7nLhWQD6sA9aV9B4YGy2y9Qzemo9II365HGDVvcxIOz
-        nJbMd82j1ZHbvTzjpWOmyADaGd+cUoDsRgtClnM=
-X-Google-Smtp-Source: APXvYqxiIVIycVxvEEUmiCW5coXzW8/2YE/GZpopAwpb2E0GVaAmfqW3+sFpN7JvdeaqLP5yP2YwvFPlBP2u18+UK6I=
-X-Received: by 2002:a17:906:3293:: with SMTP id 19mr25728734ejw.265.1568135460497;
- Tue, 10 Sep 2019 10:11:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BCqrYLSI1x2vXUSlIGEoq1ChjiQwc4Zws90ZJqi8ccI=;
+        b=m9MdEcOqWaVCj5tiYbN90vDM8yEWBOTbUwYJY7KH7mFqGl7yuH5/NS+h+h8b6gt9mf
+         xX2KQcbhb/6AoyN4kNLhl+pFcykDXoSOaNpNc2g7W/gEJvTV1Q5Si6QPUYyYCKdbdSJp
+         2XnuKS65+GEuJZGWpF/qcMdMhf7as9T/Rk3nBfs701jk3AZLRGd9BXusMkfInlS8Wl3Q
+         WiODeRV4uOnlscF45QJOej7YQGu5eC9zDlb8QeinQbyfGdL+ij5H6hf7JY+jl5wm98hO
+         RMUVNdCcppGS2Phi4cvz5V8GENJ52UQxEXHwOmR/l+HQFqx1VS75kj9yRYOxIiK8dVl1
+         aAmw==
+X-Gm-Message-State: APjAAAWygQPyiEJw9x109uo3+l7RO3zxhuZy32p2qmIkoKt9GYuCOrjm
+        Tx8o+kQHuQyYcIpdAFpOZHstAN7RouOFMcPIGedlqFYYAEr2H/o6nvFsEjUrcD24ns8t1/U+dTm
+        gcS61S0l4AlVXOg9+j71SrXkd
+X-Received: by 2002:adf:ec49:: with SMTP id w9mr21262645wrn.130.1568135649157;
+        Tue, 10 Sep 2019 10:14:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwxuHBW8Sghnoq2IMRwlRuvA2mK/kxks8RiqabkQT0RFMAX/1ZPWVVqWjntSC5HdNc7inQLdg==
+X-Received: by 2002:adf:ec49:: with SMTP id w9mr21262621wrn.130.1568135648872;
+        Tue, 10 Sep 2019 10:14:08 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1435:25df:c911:3338? ([2001:b07:6468:f312:1435:25df:c911:3338])
+        by smtp.gmail.com with ESMTPSA id l1sm21635551wrb.1.2019.09.10.10.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2019 10:14:08 -0700 (PDT)
+Subject: Re: [PATCH v3] doc: kvm: Fix return description of KVM_SET_MSRS
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190905005737.131067-1-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0f4d8b77-2c42-f5b5-1cba-9cc26c5fd935@redhat.com>
+Date:   Tue, 10 Sep 2019 19:14:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190906214409.26677-1-robdclark@gmail.com> <c43de10f-7768-592c-0fd8-6fb64b3fd43e@arm.com>
-In-Reply-To: <c43de10f-7768-592c-0fd8-6fb64b3fd43e@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 10 Sep 2019 10:10:49 -0700
-Message-ID: <CAF6AEGv5WtwOuUE-+koL3SxuoXxcT5n=EooD7G_4YRh34HFTwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] iommu: handle drivers that manage iommu directly
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Joe Perches <joe@perches.com>, Joerg Roedel <jroedel@suse.de>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190905005737.131067-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 9:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/09/2019 22:44, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > One of the challenges we have to enable the aarch64 laptops upstream
-> > is dealing with the fact that the bootloader enables the display and
-> > takes the corresponding SMMU context-bank out of BYPASS.  Unfortunately,
-> > currently, the IOMMU framework attaches a DMA (or potentially an
-> > IDENTITY) domain before the driver is probed and has a chance to
-> > intervene and shutdown scanout.  Which makes things go horribly wrong.
->
-> Nope, things already went horribly wrong in arm_smmu_device_reset() -
-> sure, sometimes for some configurations it might *seem* like they didn't
-> and that you can fudge the context bank state at arm's length from core
-> code later, but the truth is that impl->cfg_probe is your last chance to
-> guarantee that any necessary SMMU state is preserved.
+On 05/09/19 02:57, Xiaoyao Li wrote:
+> Userspace can use ioctl KVM_SET_MSRS to update a set of MSRs of guest.
+> This ioctl set specified MSRs one by one. If it fails to set an MSR,
+> e.g., due to setting reserved bits, the MSR is not supported/emulated by
+> KVM, etc..., it stops processing the MSR list and returns the number of
+> MSRs have been set successfully.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 
-cfg_probe is where Bjorn's patch is preserving the SMMU state.  So I
-think that should ensure device_reset() preserves the configuration..
-or at least if something is missing, that seems fixable.
+Queued, thanks.
 
-> The remainder of the problem involves reworking default domain
-> allocation such that we can converge on what iommu_request_dm_for_dev()
-> currently does but without the momentary attachment to a translation
-> domain to cause hiccups. That's starting here:
->
-> https://lore.kernel.org/linux-iommu/cover.1566353521.git.sai.praneeth.prakhya@intel.com/
+Paolo
 
-I suppose if the stream-match state and bootloader chosen context bank
-is preserved, then keeping it direct-mapped would avoid things
-starting to fault before display driver is probed.  That plus some
-solution for GPU default domain would narrow the scope of what I need
-to just avoiding getting iommu dma_ops installed.
+> ---
+> v3:
+>   refine the description based on Sean's comment.  
+> 
+> v2:
+>   elaborate the changelog and description of ioctl KVM_SET_MSRS based on
+>   Sean's comments.
+> ---
+>  Documentation/virt/kvm/api.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+> index 2d067767b617..24541e52e96e 100644
+> --- a/Documentation/virt/kvm/api.txt
+> +++ b/Documentation/virt/kvm/api.txt
+> @@ -586,7 +586,7 @@ Capability: basic
+>  Architectures: x86
+>  Type: vcpu ioctl
+>  Parameters: struct kvm_msrs (in)
+> -Returns: 0 on success, -1 on error
+> +Returns: number of msrs successfully set (see below), -1 on error
+>  
+>  Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
+>  data structures.
+> @@ -595,6 +595,11 @@ Application code should set the 'nmsrs' member (which indicates the
+>  size of the entries array), and the 'index' and 'data' members of each
+>  array entry.
+>  
+> +It tries to set the MSRs in array entries[] one by one. If setting an MSR
+> +fails, e.g., due to setting reserved bits, the MSR isn't supported/emulated
+> +by KVM, etc..., it stops processing the MSR list and returns the number of
+> +MSRs that have been set successfully.
+> +
+>  
+>  4.20 KVM_SET_CPUID
+>  
+> 
 
-> > But in this case, drm/msm is already directly managing it's IOMMUs
-> > directly, the DMA API attached iommu_domain simply gets in the way.
-> > This series adds a way that a driver can indicate to drivers/iommu
-> > that it does not wish to have an DMA managed iommu_domain attached.
-> > This way, drm/msm can shut down scanout cleanly before attaching it's
-> > own iommu_domain.
-> >
-> > NOTE that to get things working with arm-smmu on the aarch64 laptops,
-> > you also need a patchset[1] from Bjorn Andersson to inherit SMMU config
-> > at boot, when it is already enabled.
-> >
-> > [1] https://www.spinics.net/lists/arm-kernel/msg732246.html
-> >
-> > NOTE that in discussion of previous revisions, RMRR came up.  This is
-> > not really a replacement for RMRR (nor does RMRR really provide any
-> > more information than we already get from EFI GOP, or DT in the
-> > simplefb case).  I also don't see how RMRR could help w/ SMMU handover
-> > of CB/SMR config (Bjorn's patchset[1]) without defining new tables.
->
-> The point of RMRR-like-things is that they identify not just the memory
-> region but also the specific device accessing them, which means the
-> IOMMU driver knows up-front which IDs etc. it must be careful not to
-> disrupt. Obviously for SMMU that *would* be some new table (designed to
-> encompass everything relevant) since literal RMRRs are specifically an
-> Intel VT-d thing.
-
-Perhaps I'm not looking in the right place, but the extent of what I
-could find about RMRR tables was:
-
-https://github.com/tianocore/edk2/blob/master/MdePkg/Include/IndustryStandard/DmaRemappingReportingTable.h#L122
-
-I couldn't really see how that specifies the device.  But entirely
-possible that I'm not seeing the whole picture.
-
-I am a bit curious about how windows handles this, since they must
-have the same problem on these laptops.
-
-> > This perhaps doesn't solve the more general case of bootloader enabled
-> > display for drivers that actually want to use DMA API managed IOMMU.
-> > But it does also happen to avoid a related problem with GPU, caused by
-> > the DMA domain claiming the context bank that the GPU firmware expects
-> > to use.
->
-> Careful bringing that up again, or I really will rework the context bank
-> allocator to avoid this default domain problem entirely... ;)
-
-That doesn't seem like a bad outcome ;-)
-
-BR,
--R
-
-> Robin.
->
-> >  And it avoids spurious TLB invalidation coming from the unused
-> > DMA domain.  So IMHO this is a useful and necessary change.
-> >
-> > Rob Clark (2):
-> >    iommu: add support for drivers that manage iommu explicitly
-> >    drm/msm: mark devices where iommu is managed by driver
-> >
-> >   drivers/gpu/drm/msm/adreno/adreno_device.c | 1 +
-> >   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 1 +
-> >   drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   | 1 +
-> >   drivers/gpu/drm/msm/msm_drv.c              | 1 +
-> >   drivers/iommu/iommu.c                      | 2 +-
-> >   drivers/iommu/of_iommu.c                   | 3 +++
-> >   include/linux/device.h                     | 3 ++-
-> >   7 files changed, 10 insertions(+), 2 deletions(-)
-> >
