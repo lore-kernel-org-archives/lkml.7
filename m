@@ -2,173 +2,140 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DD0C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E59C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3260A20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmHftRBV"
+	by mail.kernel.org (Postfix) with ESMTP id 0959220872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394182AbfIJQVs (ORCPT
+        id S2394198AbfIJQVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:21:48 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46685 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394113AbfIJQVr (ORCPT
+        Tue, 10 Sep 2019 12:21:54 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:45440 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394159AbfIJQVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:21:47 -0400
-Received: by mail-io1-f66.google.com with SMTP id d17so16959864ios.13;
-        Tue, 10 Sep 2019 09:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zfak0oamvqR0wlkWdro1v2MEWig7UToX5bvVAqdDtOo=;
-        b=bmHftRBVG3UesIvZiqDbiuOA72BylSogyhaiKS/wsP0AEjtZYtvMHOLsoute6sQZ5m
-         xIpo4gwZiwWDF9NooW5VDBFoxQRjUbyuPu83ukqlsJCxANwMV2lX6+qwjxFIUr6BKnq3
-         NfSd+thBNxcRljHIBEfSFJfnX7Q/CYPMHBuJo7QT+nvrZD7tMejiXPX4Zs/CkfDsqBOY
-         LGQ4DWvRummpLuvyn5+fQh6ES61QTQ1cEyqouvQ1C/hgnOdTAA8wQ5nVUanyJCpycTeh
-         pUe2RixtytadF7XaVfarQuRIZRWLNta0DZH6FwCIudQOeAh9XLLfxyWfqlD0aJ0kin47
-         bl5w==
+        Tue, 10 Sep 2019 12:21:53 -0400
+Received: by mail-yb1-f196.google.com with SMTP id u32so6310430ybi.12;
+        Tue, 10 Sep 2019 09:21:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zfak0oamvqR0wlkWdro1v2MEWig7UToX5bvVAqdDtOo=;
-        b=GyX477TlhyWib5JtJq+IojEWdR6yb62pnhKvQI0ZlEWOR2QjP8RU2u3ccwKcT6sWUJ
-         JGveHMF07yiH6VY8qf06IZRyaSsuNoUfc3xYqpJKNTq8aMs1ptOomSGPWl4R8gATdxY7
-         MwLAIE+cgOyAoHHrVIxRakNEatHCQNLkseHNcqiF/zGaPQNgc2trp5kUo0Tw9cJHXwaz
-         XTPtdPOPkKcrVg6oysHmpeERDzdrI6gxTfl+GAh5gcO9rg0DgjkOECC86tKjc8nDwwkp
-         U8rWLWd7vhtVhr3DtKTu1j2L0Q4Atq0ZlCJIwauoitg0aXyVeBCxf8hFJDqmAtR85HBQ
-         Lp7g==
-X-Gm-Message-State: APjAAAUZ2eSxYTAPXjqJvjYMKweSrkKfQMKtv3hEHn42Xo14Rksr2I2z
-        LZ4q2+Qx6f91VGMG5d3GiwujUAU7BlpGFEyggTI=
-X-Google-Smtp-Source: APXvYqzn3tHPt7okLee/JSPLqAibKWmQEQwC+Yi3HLUftPevSq/bxBvLHOKp4243JzzRNVWIktQJsyVQUxI79CU3IR4=
-X-Received: by 2002:a5e:de47:: with SMTP id e7mr1078126ioq.127.1568132506319;
- Tue, 10 Sep 2019 09:21:46 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=3EFG8GMdoWm20YXUmdUc6sNlJ41b0YnBqTWjjuYQ4/s=;
+        b=QdFBV7YRAWNNhYpMK0eB/qNvC7NgXODYdXUbQKw7FmaL+LkvmDXOiG4PzXLEGi/add
+         hB/6CH/z5zlqs0maskH4TWI3942fjOa4MLFigJUAktlUo40FcgsUVsSRTOEDm0XS6jL0
+         vfDZgnaI2+4LntOz1tvF1uozglJYM2L3r05c5QHcrIPfcuXg/cusUp6y40DVrcsUiYoH
+         +4FiyNEytQGrez/aObzgq+UekOyf5/d8uBabgU9uDp+AJokxGkzVZ/6qPy8Qy6ME8qw8
+         YkFDKyhvxM10+VEfcGL8zTdyD79CEN+RfXF+BNq5DunBrxO0TlLHAkCQXR70sET1WADp
+         CxhQ==
+X-Gm-Message-State: APjAAAWVGf33FQVSr1Pn1BfhF5bYaRd9EhKBr1Fj+X9JGb65162w4ROm
+        HdfhbusD2wS5B0ibB/9ICSH9EskaMzdTcEkZG2Y=
+X-Google-Smtp-Source: APXvYqyF3P9idq9zDTrvwWz84GVFga/Fi7j8wWBkRUutPwTrSqHwy0A+Nquvmx/x12REHS9GnaJGK0BdinGOVMfYFUE=
+X-Received: by 2002:a5b:645:: with SMTP id o5mr21428343ybq.175.1568132512518;
+ Tue, 10 Sep 2019 09:21:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com> <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
-In-Reply-To: <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 10 Sep 2019 11:21:34 -0500
-Message-ID: <CAHCN7xLaGQMM67VC-2_G8XC7UuG4c+TbbYb4z=ibJwZsQF4YVw@mail.gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
+References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
+ <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com> <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
+From:   Pankaj Dubey <pankaj.dubey@samsung.com>
+Date:   Tue, 10 Sep 2019 21:51:41 +0530
+Message-ID: <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase 2
+ and 3
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Anvesh Salveru <anvesh.s@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:48 AM Adam Ford <aford173@gmail.com> wrote:
+On Tue, 10 Sep 2019 at 19:59, Andrew Murray <andrew.murray@arm.com> wrote:
 >
-> On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
+> On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
+> > From: Anvesh Salveru <anvesh.s@samsung.com>
 > >
-> > * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
-> > > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> > > > I applied this on 5.3 and it is working.  I assume the same is true=
- in for-next.
+> > In some platforms, PCIe PHY may have issues which will prevent linkup
+> > to happen in GEN3 or high speed. In case equalization fails, link will
+> > fallback to GEN1.
 > >
-> > Hmm I noticed I stopped getting RNG data after several rmmod modprobe
-> > cycles, or several hd /dev/random reads. Anybody else seeing that?
+> > Designware controller gives flexibility to disable GEN3 equalization
+> > completely or only phase 2 and 3.
+>
+> Do some platforms have issues conducting phase 2 and 3 when they successfully
+> conduct phase 0 and 1?
+>
+
+Yes, it is possible.
+
 > >
-> > > > Do you want to submit a formal patch?  I  can mark it as 'tested-by=
-'
-> > > > This really helps speed up the startup sequence on boards with sshd
-> > > > because it delays for nearly 80 seconds waiting for entropy without
-> > > > the hwrng.
-> > >
-> > > Hi! When applying a patch, could you please disable this rng for n900=
-?
-> > >
-> > > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony al=
-ready
-> > > wrote), similarly like for aes.
+> > Platform drivers can disable equalization phase 2 and 3, by setting
+> > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
 > >
-> > Yeah I'll post a proper patch after -rc1.
->
-> FYI,
->
-> By putting your node into omap34xx.dtsi and omap36xx.dtsi along with
-> the following, I can get the RNG to work on an OMAP3530 and a DM3730.
->
->
-> diff --git a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-> b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-> index 5e9d1afcd422..73f351e6d132 100644
-> --- a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-> @@ -259,7 +259,7 @@
->                          <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11=
-_ick>,
->                          <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
->                          <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&ic=
-r_ick>,
-> -                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
-> +                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
-> <&rng_ick>,
->                          <&mspro_fck>;
->         };
->  };
->
-> I tried doing the same for am3517, but it doesn't appear to work.  In
-> fact, the board hangs at boot with no splat, so I assume that some
-> clock isn't running and causing a hang.  Figure 4-50 in the AM3517 TRM
-> shows the security_l4_iclk2, so I wonder if the HW mods for AES, SHA,
-> etc are doing something to enable this clock.  Those HWmods are
-> disabled on AM3517.  I tried turning on the hwmods for them before
-> without success, but I'll try it again.
-
-According to a note in omap_hwmod_3xxx_data.c,
-
-/*
- * Apparently the SHA/MD5 and AES accelerator IP blocks are
- * only present on some AM35xx chips, and no one knows which
- * ones.  See
- * http://www.spinics.net/lists/arm-kernel/msg215466.html So
- * if you need these IP blocks on an AM35xx, try uncommenting
- * the following lines.
- */
-
-I decided to uncomment the hwmod entries, and I got the following:
-
-[    0.263222] omap_hwmod: sham: _wait_target_ready failed: -16
-[    0.263248] omap_hwmod: sham: cannot be enabled for reset (3)
-[    0.265837] omap_hwmod: aes: _wait_target_ready failed: -16
-[    0.265851] omap_hwmod: aes: cannot be enabled for reset (3)
-[    6.208866] omap_hwmod: sham: _wait_target_ready failed: -16
-[    6.287732] omap_hwmod: aes: _wait_target_ready failed: -16
-
-Based on this, I wonder if the sham and aes modules are not present.
-If this is the case, it might explain why I cannot use the rng either.
-
-adam
->
-> adam
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
+> >  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+> >  2 files changed, 5 insertions(+)
 > >
-> > Regards,
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index bf82091..97a8268 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> >       if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> >               val |= PORT_LOGIC_GEN3_EQ_DISABLE;
 > >
-> > Tony
+> > +     if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
+> > +             val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+> > +
+> >       dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> >  }
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index a1453c5..b541508 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -31,6 +31,7 @@
+> >
+> >  /* Parameters for PCIe Quirks */
+> >  #define DWC_EQUALIZATION_DISABLE     0x1
+> > +#define DWC_EQ_PHASE_2_3_DISABLE     0x2
+>
+> It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
+> to be specified, though if dwc_pci_quirk intends to hold other quirks should these
+> be numbers and not bit fields?
+>
+Yes, you are right in a given platform it will be either
+DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE.
+
+Intention behind making it bit-field was to add other quirks in future.
+
+> Thanks,
+>
+> Andrew Murray
+>
+> >
+> >  /* Synopsys-specific PCIe configuration registers */
+> >  #define PCIE_PORT_LINK_CONTROL               0x710
+> > @@ -65,6 +66,7 @@
+> >
+> >  #define PCIE_PORT_GEN3_RELATED               0x890
+> >  #define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE BIT(9)
+> >
+> >  #define PCIE_ATU_VIEWPORT            0x900
+> >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> > --
+> > 2.7.4
+> >
