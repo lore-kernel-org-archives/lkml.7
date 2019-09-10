@@ -2,90 +2,134 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1A4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B117FC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B23120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E7820872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hazzpvv9"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="j3cSCDAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbfIJIjo (ORCPT
+        id S1732700AbfIJIkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:39:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60134 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728050AbfIJIjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:39:44 -0400
-Received: from zn.tnic (p200300EC2F0ABE0090E5501BEA8F5D7A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:be00:90e5:501b:ea8f:5d7a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3B7141EC0688;
-        Tue, 10 Sep 2019 10:39:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568104782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l97Dgc6UO+XybIZTHRbhH95m+YBa35xzZTNLVyu64qY=;
-        b=hazzpvv9pfkJoLEIwtHcJBKqJVCibsEHxikWcNJhrABmf1gxh74nOrHot1KD4xHpnTCR+u
-        v8MPiXBjCOv50dGhM6dNUl2ZXecicj5fSNyL03C7OO/J7kL33rwvcmYM1OszhWYodsPecX
-        k0v9wLTWude61QxhP7U4uN9boVaj8O8=
-Date:   Tue, 10 Sep 2019 10:39:40 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     tiantao6 <tiantao6@huawei.com>
-Cc:     tony.luck@intel.com, linux-edac@vger.kernel.org,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ras: debugfs: Fix warning: no previous prototype
-Message-ID: <20190910083940.GC23931@zn.tnic>
-References: <1568103739-36667-1-git-send-email-tiantao6@huawei.com>
+        Tue, 10 Sep 2019 04:40:41 -0400
+Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:29658
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfIJIkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:40:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TvB+NSgcPJ88BkjVU05pCryNFLcaZ8KcRUj65Bzn5K9jLMxvAn6eYDik9HJjgMkdclvj92Te4lxyLSWDzcFuBV7BvFca+6mT+XwyOsDGGTt4UzjWz3Pz4BgSL7yfkC1YkSb8OC54A9OwmLgKwWSQeWnC965/29DD2/MHmZQNdvOue3uv9cFQQ/dTk7IdGtDwQfCKtX+4r3RR0mdU3lsP/n99RSvL1pa+U8REp4u2+ejXhhfEFp4GgzEOY7iQx7vr4GhXLR1jK/XzelDH3YLzGMBd+xKju2IjSPBIozSRT9Qb/5fdljptHLwUixBqK1LK2enP0wbSRT5y8/sZj20TWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F1QQ9djeLKJ6XYuuU005tEADhQxNoCFe597rl/FVTwA=;
+ b=RH4PhRPTBz12je0bymb4Vi5DvJtL6sADD7LHq3cHcysul6V8vPz5V4+oEf5olwnf/KV/UhhWNLJ340y/ENUHaldxUjF3+RMWR8p/tAwF1cNtDBPKCDBqsChlX6B3FvikgSu/ZFbiZVnT+4AjGniyM0j4q5xrrtIyMzSW9a8MrqPFkdg/dMcfdlx5P3C7uNm6hhXKOiAqr4NOxOXXAro2YmTYSZR5VRd4f8qecZoxvZuR57Ju49ZKCfcUC+f5h9TdkRwUPM0BNHeWKF729Vht5CZIeKQBbAgFTW8hv7n+AanHZl53+5msRNOYFkdG8SzWoEx9kL946YX7ITNR7v6u7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F1QQ9djeLKJ6XYuuU005tEADhQxNoCFe597rl/FVTwA=;
+ b=j3cSCDADh8FuvTjwr1oqeO7CRHMfJEdRkrMU2yzWAMMjZfqBF1CAOyJC6Ka9+UzTA0QWewS+zKgqSm49nZ68UUncr9DyyKZJdsVxWpaZFMBNHpPLwksa7SSn0uhybzu3AkVkiqjlGek3OkelYYG+LYhWe2CvhC4/8/hU/kK3wmM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5581.eurprd05.prod.outlook.com (20.177.202.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.20; Tue, 10 Sep 2019 08:40:37 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
+ 08:40:37 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: add dummy can_do_mlock() helper
+Thread-Topic: [PATCH] mm: add dummy can_do_mlock() helper
+Thread-Index: AQHVZ08q5wbucvrEOU+F8Ef7pGgfzKckfwoAgAAZK4A=
+Date:   Tue, 10 Sep 2019 08:40:37 +0000
+Message-ID: <20190910084035.GB2835@mellanox.com>
+References: <20190909204201.931830-1-arnd@arndb.de>
+ <20190910071030.GG2063@dhcp22.suse.cz>
+In-Reply-To: <20190910071030.GG2063@dhcp22.suse.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MR2P264CA0044.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500::32)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [148.69.85.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2c104742-f0b7-4dc6-5191-08d735ca8d8c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5581;
+x-ms-traffictypediagnostic: VI1PR05MB5581:
+x-microsoft-antispam-prvs: <VI1PR05MB55816868514870A19F39B7E1CFB60@VI1PR05MB5581.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01565FED4C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(189003)(199004)(4326008)(102836004)(14454004)(6916009)(316002)(2906002)(478600001)(6486002)(6116002)(3846002)(7736002)(33656002)(305945005)(6436002)(81156014)(8676002)(229853002)(81166006)(66946007)(66476007)(66556008)(66446008)(36756003)(64756008)(2616005)(6512007)(5660300002)(25786009)(256004)(476003)(486006)(8936002)(66066001)(6246003)(53936002)(71190400001)(1076003)(99286004)(52116002)(71200400001)(76176011)(86362001)(6506007)(386003)(54906003)(4744005)(186003)(26005)(446003)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5581;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LCm8xoH/HMTZXB9FJb0zmT+VXaZ5Ql18F7IE2Tz3wLhVAhgW/65eTmgJHHnQpY8xK8zJyvUfMlo7QXQN2P7pxWvImDK1Ek2fA+Efqb9Jov3skao1Wxm+mDhUED/Pwv1TOLO+Mycs+32VRw46A+764RJNcxyZd7qFg5WJry9dmkEnVnKlpxlwThU921sM8GgVtdj4IGIV1falRwKfmSG4e/BaVBLaB/pRiJlqJsxjPJyBgwJOJlj+F/AzQmLM4GXYQ+4y1W51HhPjb3a5CSFuT59U/GZhUAy8zqOq/aNAA8crOobjJlzkuIrYvw0aFe1Bkfw/Bihvy3FSPqcPn89MgTPXuzBh6WY3/jnTRlfUWSSko11CwP2NwYuGV5mP8p/ziXquyEjAEGtaf9E/ZiJbaDqxb7PCZ2TwXkYm1W3c1jE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CDF1680DB7EDAD4FAB98E70AA6992DE0@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1568103739-36667-1-git-send-email-tiantao6@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c104742-f0b7-4dc6-5191-08d735ca8d8c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 08:40:37.2242
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ABT03u30wSpxo8rJjG7hFdQzUftrOO9vySf8Hho2G5oGSMU6cB64ZB5w4HrZ9CwM4phrKDiXGuC7ziBKp5redQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5581
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 04:22:19PM +0800, tiantao6 wrote:
-> fixed the fellow warning when building with warnings enabled (W=1)
+On Tue, Sep 10, 2019 at 09:10:30AM +0200, Michal Hocko wrote:
+> On Mon 09-09-19 22:41:40, Arnd Bergmann wrote:
+> > On kernels without CONFIG_MMU, we get a link error for the siw
+> > driver:
+> >=20
+> > drivers/infiniband/sw/siw/siw_mem.o: In function `siw_umem_get':
+> > siw_mem.c:(.text+0x4c8): undefined reference to `can_do_mlock'
+> >=20
+> > This is probably not the only driver that needs the function
+> > and could otherwise build correctly without CONFIG_MMU, so
+> > add a dummy variant that always returns false.
+> >=20
+> > Fixes: 2251334dcac9 ("rdma/siw: application buffer management")
+> > Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Makes sense
+> Acked-by: Michal Hocko <mhocko@suse.com>
+>=20
+> but IB on nonMMU? Whut? Is there any HW that actually supports this?
+> Just wondering...
 
-"fellow"?
+I've never heard of anyone doing this configuration, and I don't
+really know much about nommu to comment if it could even potentially
+work or not..
 
-> 
-> drivers/ras/debugfs.c:8:5: warning: no previous prototype for
-> ‘ras_userspace_consumers’ [-Wmissing-prototypes]
-> int ras_userspace_consumers(void)
-> 
-> drivers/ras/debugfs.c:38:12: warning: no previous prototype for
-> ‘ras_add_daemon_trace’ [-Wmissing-prototypes]
-> int __init ras_add_daemon_trace(void)
-> 
-> drivers/ras/debugfs.c:54:13: warning: no previous prototype for
-> ‘ras_debugfs_init’ [-Wmissing-prototypes]
-> void __init ras_debugfs_init(void)
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=ras/core&id=0a54b809a3a2c31e1055b45b03708eb730222be1
-
-> 
-> Signed-off-by: tiantao6 <tiantao6@huawei.com>
-
-Also, if you intend to send more patches in the future, please use your
-real name.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jason
