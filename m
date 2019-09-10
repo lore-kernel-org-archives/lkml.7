@@ -2,100 +2,122 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57DFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39864C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E13207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB3820872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uyuEBoMM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix5XIq52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfIJJQN (ORCPT
+        id S1729044AbfIJJQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:16:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43559 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfIJJQN (ORCPT
+        Tue, 10 Sep 2019 05:16:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34529 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfIJJQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:16:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q27so12825483lfo.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 02:16:12 -0700 (PDT)
+        Tue, 10 Sep 2019 05:16:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r12so11207653pfh.1;
+        Tue, 10 Sep 2019 02:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ip8Tgw+p2G5k0S3Bh1zyW4MCMwm2IXBnOauC9pyqqGM=;
-        b=uyuEBoMMeYZP3Bjkc6hSX/k1miX7i4H8wHCAfvP32VB5mcSoR9rIxSo1oFzyXsrJkT
-         e46f9NcYBFCmRelWJJGfttHcjeYz0rIqU50nug3VUVPoP4oPIBUoqUmfU0+tSk7zoI2x
-         omcxcFD0KHVxRe7mHMSLfdsTL8YTu2aLKCqlzIv4ANsOuP21dVnhTOEAbLnCOHkRuEcK
-         kr4BKK15u+Q++4hQaPxF6rEKO723up/0bxU9w0sdM8o6gENYqw0kBD8km+KVwc2uvb1j
-         GO/ZpKPgHcI1Ux5/u8T4x6wSFLhRMFdNcHj01FtwkinSgVOWrm8/B6PX0rFeQW8mEFhf
-         pCTA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wfhBlXbTlTMX4E76VadOfA+hOSSFiVKlUr5WhybwN6Y=;
+        b=Ix5XIq52ojuczz2WFlndYuPyvegA1xBDLqKlQinxNi/ddwwT7aSp4BE52bdpTtvBZU
+         VGccYwG2QB+jUEvkPdfe009RtiB9HEycmrhIrWHM2Wz5mmZhS9Z/AETPcWfTFmwV3RVr
+         LmnHyXpoIlqloJ3oDoCuKVs3wIKH02w1f1IqNKPq+VKN2iVFQ8lY97MeHbb7nlrdDQjZ
+         a1vYuEugpJMWHAut3i/uQueEv43jrugOrhortyg2TB6eWDbzer1PjupJpjCNdPR/GRIV
+         TFhVK+cu/PfSgVeGkWYqYzXVF/xBJikC6YUBWbu1BJHOGROPTjsqrh8eNAkwfDzk1T8t
+         KXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ip8Tgw+p2G5k0S3Bh1zyW4MCMwm2IXBnOauC9pyqqGM=;
-        b=pQf9D3bh54SlHGpXJ7ZpW6C3S2ljeTd95bhYHPfLy8+BZZDwyJNRLLzMrK2sl5ARRX
-         xoNFh794pnOeHACh/66i81NhZbJCYYSg4PaOrc/BLeL9knTiFTcnTsZD6wK2o1k/UAc0
-         9U88awHIgwmtIor6yrm8TZwl5z4FyBVxY/d+gOkrXhDk3IKg7MQ5LHMBG7WTCUVQJ5B+
-         zkKVbc/QWPv2G3FAhLstdzCM3di4OdxgSj70TUEGZY/GkF6IY/hOALIYpVARXviIKlQS
-         dyjbre8G3+jqbn9wHAkNJH98+/rKepo12nOwiSSb1wouCVmTb2pqi9abujv8HmB0dv9D
-         whVA==
-X-Gm-Message-State: APjAAAXk/Cd9gB9eHRC6UbQHXzwI8a2YbYuKdnNlNS+9k+GEjeOJs+JR
-        2unsUEteuWIKgCwgVwa2wziPJ7HOszBG8Ff7Rm7dtQ==
-X-Google-Smtp-Source: APXvYqz4IkxmLERS+Sdx4yJ2TjFnNAxzIkZaexDSGRqUjspc4l++Q8xMc81KQJgAAL8Am7iCT/LUKtxuGmV+CeBtGII=
-X-Received: by 2002:ac2:568c:: with SMTP id 12mr19253689lfr.133.1568106971437;
- Tue, 10 Sep 2019 02:16:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wfhBlXbTlTMX4E76VadOfA+hOSSFiVKlUr5WhybwN6Y=;
+        b=qVutd7aMe3kzHOynRAvUyp4RXnsCk2k13NO3v7MXVegLU8M6bx0N3nR9VoHjhYUK9e
+         AOGSi3eLE2vAzf63NM+x/sbZOW3eAlgdN7kog1wlih/hUh4UE2y1g84jyym+Ijfvw1wQ
+         fGyYk4Mw6Einaj4JDuSVT1WR/6puoUWSaMktOqSY8kMl+/Oj5UJBP6Q2xGDCrI57rfSL
+         u432VeCwExz8H/6mz13zoAm85xn7oOcsT+xDAohmFkd/BpbqUUG3TsM4FH6oXCNzG9u2
+         E09j/PBgRRl78/selUIcSG9j64Q2p4RvcDCdRhE9KzkHcYben3gP6Pe6VAKuThCNX9V7
+         SN6g==
+X-Gm-Message-State: APjAAAWK5rtNKzRmOxqg2YZskMw+NokgPEd65l+V1hmNMgU0bGrfVhQ/
+        z5ylOapIXRh/4Ux6+PExiMzf3DwF
+X-Google-Smtp-Source: APXvYqzHxaQmBpWgS74sUCr55Qt//D6scXpE7mF2noH5yrUuPhN0dejzlnIbbX8R57D9IIvydGR9/g==
+X-Received: by 2002:a65:5cca:: with SMTP id b10mr27422854pgt.365.1568106983856;
+        Tue, 10 Sep 2019 02:16:23 -0700 (PDT)
+Received: from localhost ([39.7.19.227])
+        by smtp.gmail.com with ESMTPSA id l26sm20389698pgb.90.2019.09.10.02.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 02:16:23 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 18:16:19 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
+ handler
+Message-ID: <20190910091619.GA207290@jagdpanzerIV>
+References: <201908200943.601DD59DCE@keescook>
+ <20190909160539.GA989@tigerII.localdomain>
+ <201909100157.CEE99802C@keescook>
 MIME-Version: 1.0
-References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
- <CANiq72mXLbaefVBqZzz1vSREi0=HiBUgR1KU3iRjOCum7rvfrw@mail.gmail.com>
- <CAHk-=wiNksYaQ5zRFgTdY4TMHkxRi3aOcTC2zMMS6+aVSx+yeQ@mail.gmail.com>
- <CANiq72kyk6uzxS3LRvcOs9zgYYh7V7V2yPtAFkDwpHmyYcsz_Q@mail.gmail.com>
- <CAKwvOdkodVFxUr_Xc-qeUHnpxEmofENDhNdvCuiRzcGXQ54QkQ@mail.gmail.com>
- <CAHk-=wg+PD-+FEdKJuRVrrsgnFFLoAgU4Uz7tnohq_TgsEcNig@mail.gmail.com>
- <CAKwvOdmCBgKMLkXt29=vgvws_ek4XY3urMdfBUzbREH8Bj3uYA@mail.gmail.com>
- <CAHk-=whZ-ac4jm9zt=805xWsXaDAFWn2Bwn2PNtOBVx1vUmVvQ@mail.gmail.com>
- <CAKwvOdkWcB6jhqpr6p3LQkJOOt2si3i=bTGM11Poz8cZypS5EA@mail.gmail.com>
- <CAHk-=wiyxKDMW2fPumh2WyP3tP1BHpispjGfTWQ-we8keZ=q7Q@mail.gmail.com>
- <CA+icZUVNATrXZ7SDTrKa10cK8xtrRiC6VeXjkP6e9WyeKstMnA@mail.gmail.com>
- <CANiq72mOjC+JrpAOveqLPuE8f=XLXnr99DHb79ZVz=SKV6zhnA@mail.gmail.com> <CA+icZUVPFHimzas_YfmYJc14-qthsPRAXwj1m-fvBfP-HpziOQ@mail.gmail.com>
-In-Reply-To: <CA+icZUVPFHimzas_YfmYJc14-qthsPRAXwj1m-fvBfP-HpziOQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 10 Sep 2019 11:16:00 +0200
-Message-ID: <CANiq72mJHrYqYr8dSHh3O2Sy6GPscRc4pkSr3Pi_e76b8O3qzg@mail.gmail.com>
-Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Behan Webster <behanw@gmail.com>,
-        Behan Webster <behanw@converseincode.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909100157.CEE99802C@keescook>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:58 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> Sorry, I was not precise enough and didn't remember correctly.
->
-> I have re-tested with Linux v5.3-rc8. All OK.
+On (09/10/19 01:59), Kees Cook wrote:
+> On Tue, Sep 10, 2019 at 01:05:39AM +0900, Sergey Senozhatsky wrote:
+> > On (08/20/19 09:47), Kees Cook wrote:
+> > [..]
+> > > +	/*
+> > > +	 * BUG() and WARN_ON() families don't print a custom debug message
+> > > +	 * before triggering the exception handler, so we must add the
+> > > +	 * "cut here" line now. WARN() issues its own "cut here" before the
+> > > +	 * extra debugging message it writes before triggering the handler.
+> > > +	 */
+> > > +	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
+> > > +		printk(KERN_DEFAULT CUT_HERE);
+> > 
+> > Shouldn't this be pr_warn() or pr_crit()?
+> 
+> The pr_* helpers here would (potentially) add unwanted prefixes, so
+> those aren't used. KERN_DEFAULT is used here because that's how it's
+> always been printed. I didn't want to change that for this refactoring
+> work. I'm not opposed to it, generally speaking, though. :)
 
-No worries at all! I just wanted to clarify it :)
+I just glanced through CUT_HERE users
 
-Thanks a lot for confirming it works.
+warn_slowpath_fmt()    pr_warn(CUT_HERE)
+__warn_printk()        pr_warn(CUT_HERE)
+rdma_restrack_clean()  pr_err("restrack: %s", CUT_HERE)
+rdma_restrack_clean()  pr_err("restrack: %s", CUT_HERE)
 
-Cheers,
-Miguel
++ oops/panic end markers are of pr_warn() or pr_crit() log levels.
+So I thought that maybe we can make it more or less similar.
+
+But if it has always been this way (KERN_DEFAULT) then OK.
+
+	-ss
