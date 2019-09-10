@@ -2,132 +2,97 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0186C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD54C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D516208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE18D2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392489AbfIJMqX (ORCPT
+        id S2389731AbfIJMrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:46:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57252 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726193AbfIJMqX (ORCPT
+        Tue, 10 Sep 2019 08:47:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42142 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfIJMry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:46:23 -0400
-X-UUID: 3abd29dae8c34e82833ece7ce660722c-20190910
-X-UUID: 3abd29dae8c34e82833ece7ce660722c-20190910
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 723714861; Tue, 10 Sep 2019 20:46:17 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Sep 2019 20:46:14 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Sep 2019 20:46:14 +0800
-Message-ID: <1568119575.24886.20.camel@mtksdccf07>
-Subject: Re: [PATCH v2 0/2] mm/kasan: dump alloc/free stack for page
- allocator
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Tue, 10 Sep 2019 20:46:15 +0800
-In-Reply-To: <a7863965-90ab-5dae-65e7-8f68f4b4beb5@virtuozzo.com>
-References: <20190909082412.24356-1-walter-zh.wu@mediatek.com>
-         <d53d88df-d9a4-c126-32a8-4baeb0645a2c@suse.cz>
-         <a7863965-90ab-5dae-65e7-8f68f4b4beb5@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Sep 2019 08:47:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c17so1167987qtv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 05:47:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d2aOZwIpJYg0wrZBHZwlKVNN/aFyBwqzNH9mtG3DpyY=;
+        b=lYHuv7kfrgq2BMyeLOTG7D1r+QqDfDmPeN9HKboQZgUSLj+xeRdsrE5PAj39EsJIkX
+         BSjc+nzv34KxcMNK1x7SCveB10NraQSVYYere33PmlPCv3CBVjySdXXbXcSM+R9BG1SM
+         V7aSk+/u2Jy4+ma6DlFOCBQmTWVJFIkwZ6eIRpzdvOgbdhvSUd8M48Oe2KhX07O4Rnke
+         nhKxayVOoWSC5RFPxHgBRVECSSf9hD3YIh3sjMblL172A4cwwMI3Te+Y9PbOWuJ1FroP
+         A4i5DkTn2m9o78v27N0ytWQ21dFQvsVCryWhafLl0Ut2MxKpd/7Kn46UrCZJcfSHxR7B
+         MzNQ==
+X-Gm-Message-State: APjAAAVsl/6r4pv3tTz9rEgY7eov5xHRcF4ccH6deG5Wi0bjtUxz5XOr
+        HQ5AbsasFHr2nSW92+BEBORB751cqtUN9emSLsM=
+X-Google-Smtp-Source: APXvYqznXUFZ3cbiRcxFCQDTt85IB1hndwLHj3VmvaGuGlinKGqHNOp5Q1RTECt6q9UqMpDXOroaG2jyB3JaTCf5z2A=
+X-Received: by 2002:ac8:32ec:: with SMTP id a41mr28491816qtb.18.1568119672229;
+ Tue, 10 Sep 2019 05:47:52 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20190708151555.8070-1-efremov@linux.com> <10d12447-7b67-466e-5ab3-3d28256f0621@linux.com>
+In-Reply-To: <10d12447-7b67-466e-5ab3-3d28256f0621@linux.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Sep 2019 14:47:36 +0200
+Message-ID: <CAK8P3a1A1nC53BceMJG6zLzC0cqbcuvnSy9nqYv2OHO8KBjbRw@mail.gmail.com>
+Subject: Re: [PATCH] lib/lz4: remove the exporting of LZ4HC_setExternalDict
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>,
+        Bongkyu Kim <bongkyu.kim@lge.com>,
+        Rui Salvaterra <rsalvaterra@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-10 at 13:50 +0300, Andrey Ryabinin wrote:
-> 
-> On 9/9/19 4:07 PM, Vlastimil Babka wrote:
-> > On 9/9/19 10:24 AM, walter-zh.wu@mediatek.com wrote:
-> >> From: Walter Wu <walter-zh.wu@mediatek.com>
-> >>
-> >> This patch is KASAN report adds the alloc/free stacks for page allocator
-> >> in order to help programmer to see memory corruption caused by page.
-> >>
-> >> By default, KASAN doesn't record alloc and free stack for page allocator.
-> >> It is difficult to fix up page use-after-free or dobule-free issue.
-> >>
-> >> Our patchsets will record the last stack of pages.
-> >> It is very helpful for solving the page use-after-free or double-free.
-> >>
-> >> KASAN report will show the last stack of page, it may be:
-> >> a) If page is in-use state, then it prints alloc stack.
-> >>     It is useful to fix up page out-of-bound issue.
-> > 
-> > I still disagree with duplicating most of page_owner functionality for the sake of using a single stack handle for both alloc and free (while page_owner + debug_pagealloc with patches in mmotm uses two handles). It reduces the amount of potentially important debugging information, and I really doubt the u32-per-page savings are significant, given the rest of KASAN overhead.
-> > 
-> >> BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
-> >> Write of size 1 at addr ffffffc0d64ea00a by task cat/115
-> >> ...
-> >> Allocation stack of page:
-> >>   set_page_stack.constprop.1+0x30/0xc8
-> >>   kasan_alloc_pages+0x18/0x38
-> >>   prep_new_page+0x5c/0x150
-> >>   get_page_from_freelist+0xb8c/0x17c8
-> >>   __alloc_pages_nodemask+0x1a0/0x11b0
-> >>   kmalloc_order+0x28/0x58
-> >>   kmalloc_order_trace+0x28/0xe0
-> >>   kmalloc_pagealloc_oob_right+0x2c/0x68
-> >>
-> >> b) If page is freed state, then it prints free stack.
-> >>     It is useful to fix up page use-after-free or double-free issue.
-> >>
-> >> BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
-> >> Write of size 1 at addr ffffffc0d651c000 by task cat/115
-> >> ...
-> >> Free stack of page:
-> >>   kasan_free_pages+0x68/0x70
-> >>   __free_pages_ok+0x3c0/0x1328
-> >>   __free_pages+0x50/0x78
-> >>   kfree+0x1c4/0x250
-> >>   kmalloc_pagealloc_uaf+0x38/0x80
-> >>
-> >> This has been discussed, please refer below link.
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=203967
-> > 
-> > That's not a discussion, but a single comment from Dmitry, which btw contains "provide alloc *and* free stacks for it" ("it" refers to page, emphasis mine). It would be nice if he or other KASAN guys could clarify.
-> > 
-> 
-> For slab objects we memorize both alloc and free stacks. You'll never know in advance what information will be usefull
-> to fix an issue, so it usually better to provide more information. I don't think we should do anything different for pages.
-> 
-> Given that we already have the page_owner responsible for providing alloc/free stacks for pages, all that we should in KASAN do is to
-> enable the feature by default. Free stack saving should be decoupled from debug_pagealloc into separate option so that it can be enabled 
-> by KASAN and/or debug_pagealloc.
+On Tue, Sep 10, 2019 at 2:13 PM Denis Efremov <efremov@linux.com> wrote:
+>
+> +Cc: Andrew Morton <akpm@linux-foundation.org>,
+>      Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Hi,
+>
+> On 7/8/19 6:15 PM, Denis Efremov wrote:
+> > The function LZ4HC_setExternalDict is declared static and marked
+> > EXPORT_SYMBOL, which is at best an odd combination. Because the function
+> > is not used outside of the lib/lz4/lz4hc_compress.c file it is defined in,
+> > this commit removes the EXPORT_SYMBOL() marking.
+> >
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Thanks your suggestion.
-We will send the patch v3 as described above.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
+> Andrew, could you please look at this patch and accept it if everybody agrees?
+> static LZ4HC_setExternalDict will trigger a warning after this check
+> will be in tree https://lkml.org/lkml/2019/7/14/118
+>
+> There is also a different fix by Arnd Bergmann with making this function non-static:
+> https://lkml.org/lkml/2019/9/6/669
+>
+> But since there is no uses of this EXPORT_SYMBOL in kernel and LZ4HC_setExternalDict
+> is indeed static in the original library https://github.com/lz4/lz4/blob/dev/lib/lz4hc.c#L1054
+> we came to the conclusion that it will be better to simply unexport the symbol.
 
+Right, this version is better than mine.
 
+      Arnd
