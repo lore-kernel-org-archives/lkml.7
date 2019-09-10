@@ -2,88 +2,108 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9197C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F311FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E9820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C999720872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y+tpokf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389210AbfIJJSd (ORCPT
+        id S2389269AbfIJJSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Sep 2019 05:18:35 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3532 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729421AbfIJJSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 05:18:33 -0400
-Received: from smtp3.goneo.de ([85.220.129.37]:33086 "EHLO smtp3.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfIJJSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:18:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 7112623FA2B;
-        Tue, 10 Sep 2019 11:18:29 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id A-la-1SYbXoo; Tue, 10 Sep 2019 11:18:28 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id A463F23F8EB;
-        Tue, 10 Sep 2019 11:18:27 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>
-Subject: [PATCH v7 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
-Date:   Tue, 10 Sep 2019 11:31:21 +0200
-Message-Id: <20190910093129.1844-1-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d776a6d0000>; Tue, 10 Sep 2019 02:18:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 10 Sep 2019 02:18:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 10 Sep 2019 02:18:32 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Sep
+ 2019 09:18:30 +0000
+Subject: Re: [PATCH 4.4 00/23] 4.4.192-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190908121052.898169328@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f97b50f6-e5c4-7de4-3e2b-beeaac184be9@nvidia.com>
+Date:   Tue, 10 Sep 2019 10:18:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190908121052.898169328@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568107117; bh=qJDUkPJb2mRPZbtMz7qKxXKPcoI7CNW+AGNQ3wuxp3c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Y+tpokf8o+SEDBfF2u9ej+klbuqL8oTn7jzdySS3ospX4+DoHmiEUXYazKj/H+Zxn
+         x/U6wa/CTLJdmza/v9adccFvp1w45tQWD0Ieafy95X5GS0PSgBlfbAbn6VWUILSEGZ
+         JlQcmb67uyLl4LQOIdrQtCvTl1lh/Uu5dHACvNMTG5wx5j/txLd426QgbLAoaLph5g
+         0PBUsF7qoN7sXFH10bS9gMZ5ZArPAHGmY0ioJI3C5j02pQRX6B80hNEnRoBrd4Xcxi
+         QUCxF9gPtlQs6nuBKCpFzCuUTkAKv8T/dNrRQPpmc9Ve4tb3wQQNUc9qCRIT5x7PAG
+         rQTSus9g5urgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is favourable to have one unified compatible string for devices that
-have multiple interfaces. So this adds simply "pn532" as the devicetree
-binding compatible string and makes a note that the old ones are
-deprecated.
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
+On 08/09/2019 13:41, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.192 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.192-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Changes in v3:
-- This patch is new in v3
+All tests are passing for Tegra ...
 
- drivers/nfc/pn533/i2c.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
 
-diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-index 1832cd921ea7..1abd40398a5a 100644
---- a/drivers/nfc/pn533/i2c.c
-+++ b/drivers/nfc/pn533/i2c.c
-@@ -245,6 +245,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
- }
- 
- static const struct of_device_id of_pn533_i2c_match[] = {
-+	{ .compatible = "nxp,pn532", },
-+	/*
-+	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
-+	 * deprecated and will be removed.
-+	 */
- 	{ .compatible = "nxp,pn533-i2c", },
- 	{ .compatible = "nxp,pn532-i2c", },
- 	{},
+Linux version:	4.4.192-rc1-gfbce796fcbec
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.23.0
-
+nvpublic
