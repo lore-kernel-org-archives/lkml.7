@@ -2,164 +2,91 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E94C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA5BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDD521928
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568097079;
-	bh=8yUi2ZZ6HoHq9AyF251QOYvfTrLYzorZuwcc5bUrF6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kgWwjp/L4+ScVIKGVCQ+YOapM9lzC3G+3AEjQjAtMETtCRTFWGftRIUnjOqfNuhJv
-	 w5Zk4F+oDQ0ErZX2/BBkES/M4sRk00mb7PQlkUX7e16d+/Oc+FvEuQPDH7UIoQTWYc
-	 CTTyMH4kD08zxPoy9LE3ZeramkSDb0A8xZI+MtHM=
+	by mail.kernel.org (Postfix) with ESMTP id A4396218AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Pxtcidup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393458AbfIJGbS (ORCPT
+        id S2393469AbfIJGdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:31:18 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33291 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfIJGbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:31:17 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u16so17637496wrr.0;
-        Mon, 09 Sep 2019 23:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Upbbc+X30JdJgcki87/KoNEEtO+jDuLsK2AFc+5C7zU=;
-        b=JYj7bSbtEoMC+tqbHGpvs9IuEqqMeYNOVK84yHvhqPph6feZbUjjf1KJVaPxiu4r7D
-         vhKag1Eg/WxvetV7toc1pRoAHg9KODJ8IX0GYebDEJB5oQoSgMxSikdCmmHRJLVztXTW
-         uElErWkaSOf4kMhtAd0hnn/LcKVh/abdkE6fBZgOGXVI3tlAhprDjJBIKNU5Hgk2On0Q
-         U5EAzBPg61PHico4RyTEd+mwRh+uTeEknrovNsZ0+qGm49fL3KCGpLDVke4Z5ZJcozcG
-         qXN/M26Vw2AYlY7ms+Wwdnu/TUsjjbi5ht6IUn3LntBEXM0OfcNtdr3Em19+fSGZz78x
-         G9iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Upbbc+X30JdJgcki87/KoNEEtO+jDuLsK2AFc+5C7zU=;
-        b=P6jn1TkWnxX/lPYWN5bgK9v80XnSUqYwVHA5dqxvXaR+Ho09Okswis4BR8MRNymv6e
-         jJDEd0tBO20b1K5KlvbLCJ139ZyjI4l6pX+2v1zlGXOzQ6dZwsHgHO2AMLYKuyUyE5yp
-         65fbgAYyKGlRLJgwIKpRSuq/V+pu7Pg32YbnjFr5hGpcp9k+GMWriYZRabajmIacC/O/
-         tD2NNfz7p7fSbK6AmgCVbpe85TNT+CprXgONaf9Cx8KsiUMDbI/e1/QK9kVR8ojuufPv
-         WJqOnMCE0I3AP9u31prSaUJqY2FCsDjWjzVOjtRv6G/ayYsuwXtSf1fnofq7dqZ2KlBJ
-         edJg==
-X-Gm-Message-State: APjAAAXNLaXVuai6yODhpFDNnywv4aJRsbuCT1w0R2eBlu6BnFv5Y3ig
-        8TQw2d7Y4qVyJTg1+yt9EbY=
-X-Google-Smtp-Source: APXvYqydsceenTXPx8TXy/IA+DTcka5HAXpBEGN26MHL/Rp7Zn1KaCSGbRqUikWHX70QJE2ZXKnO+A==
-X-Received: by 2002:adf:a4c8:: with SMTP id h8mr24045817wrb.293.1568097075467;
-        Mon, 09 Sep 2019 23:31:15 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id s3sm1481044wmj.48.2019.09.09.23.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 23:31:14 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 08:31:12 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Markus Heiser <markus.heiser@darmarit.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        =?iso-8859-1?Q?Aur=E9lien?= Cedeyn <aurelien.cedeyn@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-doc@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Allison Randal <allison@lohutok.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
-Message-ID: <20190910063112.GA1579@gmail.com>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
- <20190907073419.6a88e318@lwn.net>
- <be329f0e-ec5b-f5ec-823d-66e58699da73@darmarit.de>
- <20190907132259.3199c8a2@coco.lan>
- <a08c5807-38e7-dfb3-ff3c-f78a498455e6@darmarit.de>
- <20190907150442.583b44c2@coco.lan>
- <686101df-f40c-916e-2730-353a3852cc84@darmarit.de>
- <alpine.DEB.2.21.1909072308060.1902@nanos.tec.linutronix.de>
- <20190908100328.GB29434@bombadil.infradead.org>
- <alpine.DEB.2.21.1909081541520.2134@nanos.tec.linutronix.de>
+        Tue, 10 Sep 2019 02:33:09 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42387 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729634AbfIJGdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:33:09 -0400
+Received: from [192.168.4.140] (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x8A6Whi12604321
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 9 Sep 2019 23:32:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x8A6Whi12604321
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019081901; t=1568097166;
+        bh=M4Rnbdd+hBMC+MWdqNSpD8GkoZfmjy8tx/d4XPGtAhA=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=Pxtcidup6Gdn7/1hrKDmBExh97qyYca26tW4nhbkgDO+SwesZCS8beg00BcEud1Ku
+         wbzZTgtVqyvUhtx+8wLEIHh7RuUJUmbXQWSaBYliD19LatO+KBanWaHral24Xp1+uK
+         M15TgZ0jObx7FXR9EENpY5+peMYPcSMc642eyXMVM7wU5uj8iiXbmnAlragUUxFl9E
+         8QaEAosw/BowfI3Bl2y2WZwl1ZhEZqjiqZEtvzDDvGivo1dwaBjGjvVGwe7Xw1rpYt
+         SSAo3/5HjqDZn1ewRdItOdUtHotuMe1TcBIWb5Ny9YbJAeWkEXGZSGX0zKmo9HIHLg
+         Ke6QzIqehFaYA==
+Date:   Tue, 10 Sep 2019 07:32:33 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190910062828.GA40888@gmail.com>
+References: <20190905232222.14900-1-bshanks@codeweavers.com> <7BFFC7D1-6158-4237-AEF9-D10635F054FC@zytor.com> <20190910062828.GA40888@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909081541520.2134@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
+To:     Ingo Molnar <mingo@kernel.org>
+CC:     Brendan Shanks <bshanks@codeweavers.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+From:   hpa@zytor.com
+Message-ID: <193CDEE9-B533-4BFE-972E-384C00359945@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On September 10, 2019 7:28:28 AM GMT+01:00, Ingo Molnar <mingo@kernel=2Eorg=
+> wrote:
+>
+>* hpa@zytor=2Ecom <hpa@zytor=2Ecom> wrote:
+>
+>> I would strongly suggest that we change the term "emulation" to=20
+>> "spoofing" for these instructions=2E We need to explain that we do
+>*not*=20
+>> execute these instructions the was the CPU would have, and unlike the
+>
+>> native instructions do not leak kernel information=2E
+>
+>Ok, I've edited the patch to add the 'spoofing' wording where=20
+>appropriate, and I also made minor fixes such as consistently=20
+>capitalizing instruction names=2E
+>
+>Can I also add your Reviewed-by tag?
+>
+>So the patch should show up in tip:x86/asm today-ish, and barring any=20
+>complications is v5=2E4 material=2E
+>
+>Thanks,
+>
+>	Ingo
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+Yes, please do=2E
 
-> On Sun, 8 Sep 2019, Matthew Wilcox wrote:
-> > On Sat, Sep 07, 2019 at 11:17:22PM +0200, Thomas Gleixner wrote:
-> > > On Sat, 7 Sep 2019, Markus Heiser wrote:
-> > > > Am 07.09.19 um 20:04 schrieb Mauro Carvalho Chehab:
-> > > > > No idea. I would actually prefer to just remove the restriction, and let
-> > > > > the SPDX header to be anywhere inside the first comment block inside a
-> > > > > file [2].
-> > > > > [2] I *suspect* that the restriction was added in order to make
-> > > > >      ./scripts/spdxcheck.py to run faster and to avoid false positives.
-> > > > >      Right now, if the maximum limit is removed (or set to a very high
-> > > > >      value), there will be one false positive:
-> > > 
-> > > Nope. The intention was to have a well define place and format instead of
-> > > everyone and his dog deciding to put it somewhere. SPDX is not intended to
-> > > replace the existing licensing mess with some other randomly placed and
-> > > formatted licensing mess.
-> > 
-> > I find the current style quite unaesthetic:
-> > 
-> > // SPDX-License-Identifier: GPL-2.0-only
-> > /*
-> >  *  linux/mm/memory.c
-> >  *
-> >  *  Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
-> >  */
-> > 
-> > I'd much rather see
-> > 
-> > /*
-> >  * SPDX-License-Identifier: GPL-2.0-only
-> >  * Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
-> >  */
-> > 
-> > but I appreciate the desire to force it to be on the first line if at all
-> > possible.
-> 
-> That style is inflicted upon you by Penguin Emperor Decree. :)
-
-I'd also say that it's a rather tooling-friendly format which mandates a 
-single-line representation, which will be less likely to be morphed into 
-a zillion variants like the original boilerplates.
-
-So the Penguin Emperor Decree also makes sense, which helps. ;-)
-
-Thanks,
-
-	Ingo
+Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
