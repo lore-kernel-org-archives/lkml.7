@@ -2,864 +2,245 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44E2C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D5C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645D421A4C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D552081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436553AbfIJIUt (ORCPT
+        id S1729280AbfIJIVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:20:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47870 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfIJIUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:20:47 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5039310C0932;
-        Tue, 10 Sep 2019 08:20:47 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-188.pek2.redhat.com [10.72.12.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A04E60A35;
-        Tue, 10 Sep 2019 08:20:33 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, cohuck@redhat.com, tiwei.bie@intel.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com
-Subject: [RFC PATCH 4/4] docs: Sample driver to demonstrate how to implement virtio-mdev framework
-Date:   Tue, 10 Sep 2019 16:19:35 +0800
-Message-Id: <20190910081935.30516-5-jasowang@redhat.com>
-In-Reply-To: <20190910081935.30516-1-jasowang@redhat.com>
-References: <20190910081935.30516-1-jasowang@redhat.com>
+        Tue, 10 Sep 2019 04:21:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726151AbfIJIVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:21:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4C4E6AE78;
+        Tue, 10 Sep 2019 08:21:10 +0000 (UTC)
+Subject: Re: [PATCH v4 05/17] arm64: hibernate: remove gotos in
+ create_safe_exec_page
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
+        sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com, bhsharma@redhat.com,
+        linux-mm@kvack.org, mark.rutland@arm.com
+References: <20190909181221.309510-1-pasha.tatashin@soleen.com>
+ <20190909181221.309510-6-pasha.tatashin@soleen.com>
+From:   Matthias Brugger <mbrugger@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9135be3e-cf7e-821d-928d-db98aa3ec9c8@suse.com>
+Date:   Tue, 10 Sep 2019 10:21:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 10 Sep 2019 08:20:47 +0000 (UTC)
+In-Reply-To: <20190909181221.309510-6-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sample driver creates mdev device that simulate virtio net device
-over virtio mdev transport. The device is implemented through vringh
-and workqueue.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- samples/Kconfig            |   7 +
- samples/vfio-mdev/Makefile |   1 +
- samples/vfio-mdev/mvnet.c  | 766 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 774 insertions(+)
- create mode 100644 samples/vfio-mdev/mvnet.c
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index c8dacb4dda80..a1a1ca2c00b7 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -131,6 +131,13 @@ config SAMPLE_VFIO_MDEV_MDPY
- 	  mediated device.  It is a simple framebuffer and supports
- 	  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
- 
-+config SAMPLE_VIRTIO_MDEV_NET
-+        tristate "Build virtio mdev net example mediated device sample code -- loadable modules only"
-+	depends on VIRTIO_MDEV_DEVICE && VHOST_RING && m
-+	help
-+	  Build a networking sample device for use as a virtio
-+	  mediated device.
-+
- config SAMPLE_VFIO_MDEV_MDPY_FB
- 	tristate "Build VFIO mdpy example guest fbdev driver -- loadable module only"
- 	depends on FB && m
-diff --git a/samples/vfio-mdev/Makefile b/samples/vfio-mdev/Makefile
-index 10d179c4fdeb..f34af90ed0a0 100644
---- a/samples/vfio-mdev/Makefile
-+++ b/samples/vfio-mdev/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MTTY) += mtty.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY) += mdpy.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY_FB) += mdpy-fb.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MBOCHS) += mbochs.o
-+obj-$(CONFIG_SAMPLE_VIRTIO_MDEV_NET) += mvnet.o
-diff --git a/samples/vfio-mdev/mvnet.c b/samples/vfio-mdev/mvnet.c
-new file mode 100644
-index 000000000000..da295b41955e
---- /dev/null
-+++ b/samples/vfio-mdev/mvnet.c
-@@ -0,0 +1,766 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Mediated virtual virtio-net device driver.
-+ *
-+ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ * Sample driver that creates mdev device that simulates ethernet
-+ * device virtio mdev transport.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/fs.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+#include <linux/wait.h>
-+#include <linux/uuid.h>
-+#include <linux/iommu.h>
-+#include <linux/sysfs.h>
-+#include <linux/file.h>
-+#include <linux/etherdevice.h>
-+#include <linux/mdev.h>
-+#include <uapi/linux/virtio_mdev.h>
-+
-+#define VERSION_STRING  "0.1"
-+#define DRIVER_AUTHOR   "NVIDIA Corporation"
-+
-+#define MVNET_CLASS_NAME "mvnet"
-+
-+#define MVNET_NAME       "mvnet"
-+
-+/*
-+ * Global Structures
-+ */
-+
-+static struct mvnet_dev {
-+	struct class	*vd_class;
-+	struct idr	vd_idr;
-+	struct device	dev;
-+} mvnet_dev;
-+
-+struct mvnet_virtqueue {
-+	struct vringh vring;
-+	struct vringh_kiov iov;
-+	unsigned short head;
-+	bool ready;
-+	u32 desc_addr_lo;
-+	u32 desc_addr_hi;
-+	u32 device_addr_lo;
-+	u32 device_addr_hi;
-+	u32 driver_addr_lo;
-+	u32 driver_addr_hi;
-+	u64 desc_addr;
-+	u64 device_addr;
-+	u64 driver_addr;
-+	void *private;
-+	irqreturn_t (*cb)(void *);
-+};
-+
-+#define MVNET_QUEUE_ALIGN PAGE_SIZE
-+#define MVNET_QUEUE_MAX 256
-+#define MVNET_MAGIC_VALUE ('v' | 'i' << 8 | 'r' << 16 | 't' << 24)
-+#define MVNET_VERSION 0x1 /* Implies virtio 1.0 */
-+#define MVNET_DEVICE_ID 0x1 /* network card */
-+#define MVNET_VENDOR_ID 0 /* is this correct ? */
-+#define MVNET_DEVICE_FEATURES VIRTIO_F_VERSION_1
-+
-+u64 mvnet_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
-+	             (1ULL << VIRTIO_F_VERSION_1) |
-+		     (1ULL << VIRTIO_F_IOMMU_PLATFORM) ;
-+
-+/* State of each mdev device */
-+struct mvnet_state {
-+	struct mvnet_virtqueue vqs[2];
-+	struct work_struct work;
-+	spinlock_t lock;
-+	struct mdev_device *mdev;
-+	struct virtio_net_config config;
-+	struct virtio_mdev_callback *cbs;
-+	void *buffer;
-+	u32 queue_sel;
-+	u32 driver_features_sel;
-+	u32 driver_features[2];
-+	u32 device_features_sel;
-+	u32 status;
-+	u32 generation;
-+	u32 num;
-+	struct list_head next;
-+};
-+
-+static struct mutex mdev_list_lock;
-+static struct list_head mdev_devices_list;
-+
-+static void mvnet_queue_ready(struct mvnet_state *mvnet, unsigned idx)
-+{
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+	int ret;
-+
-+	vq->desc_addr = (u64)vq->desc_addr_hi << 32 | vq->desc_addr_lo;
-+	vq->device_addr = (u64)vq->device_addr_hi << 32 | vq->device_addr_lo;
-+	vq->driver_addr = (u64)vq->driver_addr_hi << 32 | vq->driver_addr_lo;
-+
-+	ret = vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
-+			       false, (struct vring_desc *)vq->desc_addr,
-+			       (struct vring_avail *)vq->driver_addr,
-+			       (struct vring_used *)vq->device_addr);
-+}
-+
-+static ssize_t mvnet_read_config(struct mdev_device *mdev,
-+				 u32 *val, loff_t pos)
-+{
-+	struct mvnet_state *mvnet;
-+	struct mvnet_virtqueue *vq;
-+	u32 queue_sel;
-+
-+	if (!mdev || !val)
-+		return -EINVAL;
-+
-+	mvnet = mdev_get_drvdata(mdev);
-+	if (!mvnet) {
-+		pr_err("%s mvnet not found\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	queue_sel = mvnet->queue_sel;
-+	vq = &mvnet->vqs[queue_sel];
-+
-+	switch (pos) {
-+	case VIRTIO_MDEV_MAGIC_VALUE:
-+		*val = MVNET_MAGIC_VALUE;
-+		break;
-+	case VIRTIO_MDEV_VERSION:
-+		*val = MVNET_VERSION;
-+		break;
-+	case VIRTIO_MDEV_DEVICE_ID:
-+		*val = MVNET_DEVICE_ID;
-+		break;
-+	case VIRTIO_MDEV_VENDOR_ID:
-+		*val = MVNET_VENDOR_ID;
-+		break;
-+	case VIRTIO_MDEV_DEVICE_FEATURES:
-+		if (mvnet->device_features_sel)
-+			*val = mvnet_features >> 32;
-+		else
-+			*val = mvnet_features;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_NUM_MAX:
-+		*val = MVNET_QUEUE_MAX;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_READY:
-+		*val = vq->ready;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_ALIGN:
-+		*val = MVNET_QUEUE_ALIGN;
-+		break;
-+	case VIRTIO_MDEV_STATUS:
-+		*val = mvnet->status;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_DESC_LOW:
-+		*val = vq->desc_addr_lo;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_DESC_HIGH:
-+		*val = vq->desc_addr_hi;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_AVAIL_LOW:
-+		*val = vq->driver_addr_lo;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_AVAIL_HIGH:
-+		*val = vq->driver_addr_hi;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_USED_LOW:
-+		*val = vq->device_addr_lo;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_USED_HIGH:
-+		*val = vq->device_addr_hi;
-+		break;
-+	case VIRTIO_MDEV_CONFIG_GENERATION:
-+		*val = 1;
-+		break;
-+	default:
-+		pr_err("Unsupported mdev read offset at 0x%x\n", pos);
-+		break;
-+	}
-+
-+	return 4;
-+}
-+
-+static ssize_t mvnet_read_net_config(struct mdev_device *mdev,
-+				     char *buf, size_t count, loff_t pos)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	if (!mvnet) {
-+		pr_err("%s mvnet not found\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (pos + count > sizeof(mvnet->config))
-+		return -EINVAL;
-+
-+	memcpy(buf, &mvnet->config + (unsigned)pos, count);
-+
-+	return count;
-+}
-+
-+static void mvnet_vq_reset(struct mvnet_virtqueue *vq)
-+{
-+	vq->ready = 0;
-+	vq->desc_addr_lo = vq->desc_addr_hi = 0;
-+	vq->device_addr_lo = vq->device_addr_hi = 0;
-+	vq->driver_addr_lo = vq->driver_addr_hi = 0;
-+	vq->desc_addr = 0;
-+	vq->driver_addr = 0;
-+	vq->device_addr = 0;
-+	vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
-+			false, 0, 0, 0);
-+}
-+
-+static void mvnet_reset(struct mvnet_state *mvnet)
-+{
-+	int i;
-+
-+	for (i = 0; i < 2; i++)
-+		mvnet_vq_reset(&mvnet->vqs[i]);
-+
-+	mvnet->queue_sel = 0;
-+	mvnet->driver_features_sel = 0;
-+	mvnet->device_features_sel = 0;
-+	mvnet->status = 0;
-+	++mvnet->generation;
-+}
-+
-+static ssize_t mvnet_write_config(struct mdev_device *mdev,
-+				  u32 *val, loff_t pos)
-+{
-+	struct mvnet_state *mvnet;
-+	struct mvnet_virtqueue *vq;
-+	u32 queue_sel;
-+
-+	if (!mdev || !val)
-+		return -EINVAL;
-+
-+	mvnet = mdev_get_drvdata(mdev);
-+	if (!mvnet) {
-+		pr_err("%s mvnet not found\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	queue_sel = mvnet->queue_sel;
-+	vq = &mvnet->vqs[queue_sel];
-+
-+	switch (pos) {
-+	case VIRTIO_MDEV_DEVICE_FEATURES_SEL:
-+		mvnet->device_features_sel = *val;
-+		break;
-+	case VIRTIO_MDEV_DRIVER_FEATURES:
-+		mvnet->driver_features[mvnet->driver_features_sel] = *val;
-+		break;
-+	case VIRTIO_MDEV_DRIVER_FEATURES_SEL:
-+		mvnet->driver_features_sel = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_SEL:
-+		mvnet->queue_sel = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_NUM:
-+		mvnet->num = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_READY:
-+		vq->ready = *val;
-+		if (vq->ready) {
-+			spin_lock(&mvnet->lock);
-+			mvnet_queue_ready(mvnet, queue_sel);
-+			spin_unlock(&mvnet->lock);
-+		}
-+		break;
-+	case VIRTIO_MDEV_QUEUE_NOTIFY:
-+		if (vq->ready)
-+			schedule_work(&mvnet->work);
-+		break;
-+	case VIRTIO_MDEV_STATUS:
-+		mvnet->status = *val;
-+		if (*val == 0) {
-+			spin_lock(&mvnet->lock);
-+			mvnet_reset(mvnet);
-+			spin_unlock(&mvnet->lock);
-+		}
-+		break;
-+	case VIRTIO_MDEV_QUEUE_DESC_LOW:
-+		vq->desc_addr_lo = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_DESC_HIGH:
-+		vq->desc_addr_hi = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_AVAIL_LOW:
-+		vq->driver_addr_lo = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_AVAIL_HIGH:
-+		vq->driver_addr_hi = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_USED_LOW:
-+		vq->device_addr_lo = *val;
-+		break;
-+	case VIRTIO_MDEV_QUEUE_USED_HIGH:
-+		vq->device_addr_hi = *val;
-+		break;
-+	default:
-+		pr_err("Unsupported write offset! 0x%x\n", pos);
-+		break;
-+	}
-+	spin_unlock(&mvnet->lock);
-+
-+	return 4;
-+}
-+
-+static void mvnet_work(struct work_struct *work)
-+{
-+	struct mvnet_state *mvnet = container_of(work, struct
-+						 mvnet_state, work);
-+	struct mvnet_virtqueue *txq = &mvnet->vqs[1];
-+	struct mvnet_virtqueue *rxq = &mvnet->vqs[0];
-+	size_t read, write, total_write;
-+	unsigned long flags;
-+	int err;
-+	int pkts = 0;
-+
-+	spin_lock(&mvnet->lock);
-+
-+	if (!txq->ready || !rxq->ready)
-+		goto out;
-+
-+	while (true) {
-+		total_write = 0;
-+		err = vringh_getdesc_kern(&txq->vring, &txq->iov, NULL,
-+					  &txq->head, GFP_KERNEL);
-+		if (err <= 0)
-+			break;
-+
-+		err = vringh_getdesc_kern(&rxq->vring, NULL, &rxq->iov,
-+					  &rxq->head, GFP_KERNEL);
-+		if (err <= 0) {
-+			vringh_complete_kern(&txq->vring, txq->head, 0);
-+			break;
-+		}
-+
-+		while (true) {
-+			read = vringh_iov_pull_kern(&txq->iov, mvnet->buffer,
-+						    PAGE_SIZE);
-+			if (read <= 0)
-+				break;
-+
-+			write = vringh_iov_push_kern(&rxq->iov, mvnet->buffer,
-+						     read);
-+			if (write <= 0)
-+				break;
-+
-+			total_write += write;
-+		}
-+
-+		/* Make sure data is wrote before advancing index */
-+		smp_wmb();
-+
-+		vringh_complete_kern(&txq->vring, txq->head, 0);
-+		vringh_complete_kern(&rxq->vring, rxq->head, total_write);
-+
-+		/* Make sure used is visible before rasing the
-+		   interrupt */
-+		smp_wmb();
-+
-+		local_bh_disable();
-+		if (txq->cb)
-+			txq->cb(txq->private);
-+		if (rxq->cb)
-+			rxq->cb(rxq->private);
-+		local_bh_enable();
-+
-+		pkts ++;
-+		if (pkts > 4) {
-+			schedule_work(&mvnet->work);
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	spin_unlock(&mvnet->lock);
-+}
-+
-+static dma_addr_t mvnet_map_page(struct device *dev, struct page *page,
-+				 unsigned long offset, size_t size,
-+				 enum dma_data_direction dir,
-+				 unsigned long attrs)
-+{
-+	/* Vringh can only use VA */
-+	return page_address(page) + offset;
-+}
-+
-+static void mvnet_unmap_page(struct device *dev, dma_addr_t dma_addr,
-+			     size_t size, enum dma_data_direction dir,
-+			     unsigned long attrs)
-+{
-+	return ;
-+}
-+
-+static void *mvnet_alloc_coherent(struct device *dev, size_t size,
-+				  dma_addr_t *dma_addr, gfp_t flag,
-+				  unsigned long attrs)
-+{
-+	void *ret = kmalloc(size, flag);
-+
-+	if (ret == NULL)
-+		*dma_addr = DMA_MAPPING_ERROR;
-+	else
-+		*dma_addr = ret;
-+
-+	return ret;
-+}
-+
-+static void mvnet_free_coherent(struct device *dev, size_t size,
-+				void *vaddr, dma_addr_t dma_addr,
-+				unsigned long attrs)
-+{
-+	kfree(dma_addr);
-+}
-+
-+static const struct dma_map_ops mvnet_dma_ops = {
-+	.map_page = mvnet_map_page,
-+	.unmap_page = mvnet_unmap_page,
-+	.alloc = mvnet_alloc_coherent,
-+	.free = mvnet_free_coherent,
-+};
-+
-+static int mvnet_create(struct kobject *kobj, struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mvnet;
-+	struct virtio_net_config *config;
-+
-+	if (!mdev)
-+		return -EINVAL;
-+
-+	mvnet = kzalloc(sizeof(struct mvnet_state), GFP_KERNEL);
-+	if (mvnet == NULL)
-+		return -ENOMEM;
-+
-+	mvnet->buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	if (!mvnet->buffer) {
-+		kfree(mvnet);
-+		return -ENOMEM;
-+	}
-+
-+	config = &mvnet->config;
-+	config->mtu = 1500;
-+	config->status = VIRTIO_NET_S_LINK_UP;
-+	eth_random_addr(config->mac);
-+
-+	INIT_WORK(&mvnet->work, mvnet_work);
-+
-+	spin_lock_init(&mvnet->lock);
-+	mvnet->mdev = mdev;
-+	mdev_set_drvdata(mdev, mvnet);
-+
-+	mutex_lock(&mdev_list_lock);
-+	list_add(&mvnet->next, &mdev_devices_list);
-+	mutex_unlock(&mdev_list_lock);
-+
-+	mdev_set_dma_ops(mdev, &mvnet_dma_ops);
-+
-+	return 0;
-+}
-+
-+static int mvnet_remove(struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mds, *tmp_mds;
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	int ret = -EINVAL;
-+
-+	mutex_lock(&mdev_list_lock);
-+	list_for_each_entry_safe(mds, tmp_mds, &mdev_devices_list, next) {
-+		if (mvnet == mds) {
-+			list_del(&mvnet->next);
-+			mdev_set_drvdata(mdev, NULL);
-+			kfree(mvnet->buffer);
-+			kfree(mvnet);
-+			ret = 0;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&mdev_list_lock);
-+
-+	return ret;
-+}
-+
-+static ssize_t mvnet_read(struct mdev_device *mdev, char __user *buf,
-+			  size_t count, loff_t *ppos)
-+{
-+	ssize_t ret;
-+
-+	if (*ppos < VIRTIO_MDEV_CONFIG) {
-+		if (count == 4)
-+			ret = mvnet_read_config(mdev, (u32 *)buf, *ppos);
-+		else
-+			ret = -EINVAL;
-+		*ppos += 4;
-+	} else if (*ppos < VIRTIO_MDEV_CONFIG + sizeof(struct virtio_net_config)) {
-+		ret = mvnet_read_net_config(mdev, buf, count,
-+					    *ppos - VIRTIO_MDEV_CONFIG);
-+		*ppos += count;
-+	} else {
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static ssize_t mvnet_write(struct mdev_device *mdev, const char __user *buf,
-+			   size_t count, loff_t *ppos)
-+{
-+	int ret;
-+
-+	if (*ppos < VIRTIO_MDEV_CONFIG) {
-+		if (count == 4)
-+			ret = mvnet_write_config(mdev, (u32 *)buf, *ppos);
-+		else
-+			ret = -EINVAL;
-+		*ppos += 4;
-+	} else {
-+		/* No writable net config */
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static long mvnet_ioctl(struct mdev_device *mdev, unsigned int cmd,
-+			unsigned long arg)
-+{
-+	int ret = 0;
-+	struct mvnet_state *mvnet;
-+	struct virtio_mdev_callback *cb;
-+
-+	if (!mdev)
-+		return -EINVAL;
-+
-+	mvnet = mdev_get_drvdata(mdev);
-+	if (!mvnet)
-+		return -ENODEV;
-+
-+	spin_lock(&mvnet->lock);
-+
-+	switch (cmd) {
-+	case VIRTIO_MDEV_SET_VQ_CALLBACK:
-+		cb = (struct virtio_mdev_callback *)arg;
-+		mvnet->vqs[mvnet->queue_sel].cb = cb->callback;
-+		mvnet->vqs[mvnet->queue_sel].private = cb->private;
-+		break;
-+	case VIRTIO_MDEV_SET_CONFIG_CALLBACK:
-+		break;
-+	default:
-+		pr_err("Not supportted ioctl cmd 0x%x\n", cmd);
-+		ret = -ENOTTY;
-+		break;
-+	}
-+
-+	spin_unlock(&mvnet->lock);
-+
-+	return ret;
-+}
-+
-+static int mvnet_open(struct mdev_device *mdev)
-+{
-+	pr_info("%s\n", __func__);
-+	return 0;
-+}
-+
-+static void mvnet_close(struct mdev_device *mdev)
-+{
-+	pr_info("%s\n", __func__);
-+}
-+
-+static ssize_t
-+sample_mvnet_dev_show(struct device *dev, struct device_attribute *attr,
-+		     char *buf)
-+{
-+	return sprintf(buf, "This is phy device\n");
-+}
-+
-+static DEVICE_ATTR_RO(sample_mvnet_dev);
-+
-+static struct attribute *mvnet_dev_attrs[] = {
-+	&dev_attr_sample_mvnet_dev.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mvnet_dev_group = {
-+	.name  = "mvnet_dev",
-+	.attrs = mvnet_dev_attrs,
-+};
-+
-+static const struct attribute_group *mvnet_dev_groups[] = {
-+	&mvnet_dev_group,
-+	NULL,
-+};
-+
-+static ssize_t
-+sample_mdev_dev_show(struct device *dev, struct device_attribute *attr,
-+		     char *buf)
-+{
-+	if (mdev_from_dev(dev))
-+		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
-+
-+	return sprintf(buf, "\n");
-+}
-+
-+static DEVICE_ATTR_RO(sample_mdev_dev);
-+
-+static struct attribute *mdev_dev_attrs[] = {
-+	&dev_attr_sample_mdev_dev.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mdev_dev_group = {
-+	.name  = "vendor",
-+	.attrs = mdev_dev_attrs,
-+};
-+
-+static const struct attribute_group *mdev_dev_groups[] = {
-+	&mdev_dev_group,
-+	NULL,
-+};
-+
-+#define MVNET_STRING_LEN 16
-+
-+static ssize_t
-+name_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	char name[MVNET_STRING_LEN];
-+	const char *name_str = "virtio-net";
-+
-+	snprintf(name, MVNET_STRING_LEN, "%s", dev_driver_string(dev));
-+	if (!strcmp(kobj->name, name))
-+		return sprintf(buf, "%s\n", name_str);
-+
-+	return -EINVAL;
-+}
-+
-+static MDEV_TYPE_ATTR_RO(name);
-+
-+static ssize_t
-+available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	return sprintf(buf, "%d\n", INT_MAX);
-+}
-+
-+static MDEV_TYPE_ATTR_RO(available_instances);
-+
-+static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
-+}
-+
-+static MDEV_TYPE_ATTR_RO(device_api);
-+
-+static struct attribute *mdev_types_attrs[] = {
-+	&mdev_type_attr_name.attr,
-+	&mdev_type_attr_device_api.attr,
-+	&mdev_type_attr_available_instances.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group mdev_type_group = {
-+	.name  = "",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+static struct attribute_group *mdev_type_groups[] = {
-+	&mdev_type_group,
-+	NULL,
-+};
-+
-+static const struct mdev_parent_ops mdev_fops = {
-+	.owner                  = THIS_MODULE,
-+	.dev_attr_groups        = mvnet_dev_groups,
-+	.mdev_attr_groups       = mdev_dev_groups,
-+	.supported_type_groups  = mdev_type_groups,
-+	.create                 = mvnet_create,
-+	.remove			= mvnet_remove,
-+	.open                   = mvnet_open,
-+	.release                = mvnet_close,
-+	.read                   = mvnet_read,
-+	.write                  = mvnet_write,
-+	.ioctl		        = mvnet_ioctl,
-+};
-+
-+static void mvnet_device_release(struct device *dev)
-+{
-+	dev_dbg(dev, "mvnet: released\n");
-+}
-+
-+static int __init mvnet_dev_init(void)
-+{
-+	int ret = 0;
-+
-+	pr_info("mvnet_dev: %s\n", __func__);
-+
-+	memset(&mvnet_dev, 0, sizeof(mvnet_dev));
-+
-+	idr_init(&mvnet_dev.vd_idr);
-+
-+	mvnet_dev.vd_class = class_create(THIS_MODULE, MVNET_CLASS_NAME);
-+
-+	if (IS_ERR(mvnet_dev.vd_class)) {
-+		pr_err("Error: failed to register mvnet_dev class\n");
-+		ret = PTR_ERR(mvnet_dev.vd_class);
-+		goto failed1;
-+	}
-+
-+	mvnet_dev.dev.class = mvnet_dev.vd_class;
-+	mvnet_dev.dev.release = mvnet_device_release;
-+	dev_set_name(&mvnet_dev.dev, "%s", MVNET_NAME);
-+
-+	ret = device_register(&mvnet_dev.dev);
-+	if (ret)
-+		goto failed2;
-+
-+	ret = mdev_register_device(&mvnet_dev.dev, &mdev_fops);
-+	if (ret)
-+		goto failed3;
-+
-+	mutex_init(&mdev_list_lock);
-+	INIT_LIST_HEAD(&mdev_devices_list);
-+
-+	goto all_done;
-+
-+failed3:
-+
-+	device_unregister(&mvnet_dev.dev);
-+failed2:
-+	class_destroy(mvnet_dev.vd_class);
-+
-+failed1:
-+all_done:
-+	return ret;
-+}
-+
-+static void __exit mvnet_dev_exit(void)
-+{
-+	mvnet_dev.dev.bus = NULL;
-+	mdev_unregister_device(&mvnet_dev.dev);
-+
-+	device_unregister(&mvnet_dev.dev);
-+	idr_destroy(&mvnet_dev.vd_idr);
-+	class_destroy(mvnet_dev.vd_class);
-+	mvnet_dev.vd_class = NULL;
-+	pr_info("mvnet_dev: Unloaded!\n");
-+}
-+
-+module_init(mvnet_dev_init)
-+module_exit(mvnet_dev_exit)
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_INFO(supported, "Test driver that simulate serial port over PCI");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
--- 
-2.19.1
+On 09/09/2019 20:12, Pavel Tatashin wrote:
+> Usually, gotos are used to handle cleanup after exception, but
+> in case of create_safe_exec_page there are no clean-ups. So,
+> simply return the errors directly.
+> 
 
+While at it, how about also cleaning up swsusp_arch_resume() which has the same
+issue.
+
+Regards,
+Matthias
+
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> ---
+>  arch/arm64/kernel/hibernate.c | 34 +++++++++++-----------------------
+>  1 file changed, 11 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 47a861e0cb0c..7bbeb33c700d 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -198,7 +198,6 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  				 unsigned long dst_addr,
+>  				 phys_addr_t *phys_dst_addr)
+>  {
+> -	int rc = 0;
+>  	pgd_t *trans_pgd;
+>  	pgd_t *pgdp;
+>  	pud_t *pudp;
+> @@ -206,47 +205,37 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  	pte_t *ptep;
+>  	unsigned long dst = get_safe_page(GFP_ATOMIC);
+>  
+> -	if (!dst) {
+> -		rc = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!dst)
+> +		return -ENOMEM;
+>  
+>  	memcpy((void *)dst, src_start, length);
+>  	__flush_icache_range(dst, dst + length);
+>  
+>  	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
+> -	if (!trans_pgd) {
+> -		rc = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!trans_pgd)
+> +		return -ENOMEM;
+>  
+>  	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+>  	if (pgd_none(READ_ONCE(*pgdp))) {
+>  		pudp = (void *)get_safe_page(GFP_ATOMIC);
+> -		if (!pudp) {
+> -			rc = -ENOMEM;
+> -			goto out;
+> -		}
+> +		if (!pudp)
+> +			return -ENOMEM;
+>  		pgd_populate(&init_mm, pgdp, pudp);
+>  	}
+>  
+>  	pudp = pud_offset(pgdp, dst_addr);
+>  	if (pud_none(READ_ONCE(*pudp))) {
+>  		pmdp = (void *)get_safe_page(GFP_ATOMIC);
+> -		if (!pmdp) {
+> -			rc = -ENOMEM;
+> -			goto out;
+> -		}
+> +		if (!pmdp)
+> +			return -ENOMEM;
+>  		pud_populate(&init_mm, pudp, pmdp);
+>  	}
+>  
+>  	pmdp = pmd_offset(pudp, dst_addr);
+>  	if (pmd_none(READ_ONCE(*pmdp))) {
+>  		ptep = (void *)get_safe_page(GFP_ATOMIC);
+> -		if (!ptep) {
+> -			rc = -ENOMEM;
+> -			goto out;
+> -		}
+> +		if (!ptep)
+> +			return -ENOMEM;
+>  		pmd_populate_kernel(&init_mm, pmdp, ptep);
+>  	}
+>  
+> @@ -272,8 +261,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  
+>  	*phys_dst_addr = virt_to_phys((void *)dst);
+>  
+> -out:
+> -	return rc;
+> +	return 0;
+>  }
+>  
+>  #define dcache_clean_range(start, end)	__flush_dcache_area(start, (end - start))
+> 
