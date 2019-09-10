@@ -7,101 +7,93 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB40C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EDCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA852168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5548A2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H9a4A105"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VS1WLrah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405538AbfIJKD2 (ORCPT
+        id S2405579AbfIJKDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:03:28 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:41953 "EHLO
+        Tue, 10 Sep 2019 06:03:30 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:49700 "EHLO
         mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405501AbfIJKD0 (ORCPT
+        with ESMTP id S2405541AbfIJKD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:03:26 -0400
-Received: by mail-pg1-f202.google.com with SMTP id b18so10349229pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:03:26 -0700 (PDT)
+        Tue, 10 Sep 2019 06:03:29 -0400
+Received: by mail-pg1-f202.google.com with SMTP id a9so10332832pga.16
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sGqYubR5Lthr7yxzMgwTRpMO66aeWf2qCN8tGk0FHOg=;
-        b=H9a4A105QMmIT8qtxtAQb/NY2MEr1GOUe/9IKXYp1yvFWHSfAlO7CBzcQZRfYWqncZ
-         ZxjG2BQdBexz3OJ4rQ18i+Tdc3DAR0KN3k1p2m17MRcZgGQGgZz5/r8Hh6ucuKYTFsIi
-         fkb8CbJOBYh5MchJNUxddQmx01y0IRBgwhn9w7/i/8qNC3CBTrlV1D1ve6Q/DDPIurib
-         yxPmoPvNIBTWUXkW4bGU99MVYfLii9je1nMATSauAG/U7ocCXMNyfCM+zbtllmDkLzGg
-         do7yLqBRV4AxHkpxALJqAc8OwbG2kROF+aQt44aAwQhK2tgyyCAquB/tOVTRHxvF3hM2
-         vuCA==
+        bh=bv5qoXxIm9QGTQUTxQOHCsSBy/Qj7ow+gIETe7B67Bk=;
+        b=VS1WLrahvCRQTVPhrnh5NGtHefwOtMvCg1ehhBF6kQbjUks8gmIIHPTZiKlEzV5kxf
+         GSILG6mOciwN7+TJw5Co4LVGFi5qK0QFAnE2m94COxwsfWZir8BcWl7qnooghwCvC2KW
+         OrHCyqdAdw5Xn2p41aI6DRFF9qEKIfxrrip4grVq+YprBXZRDHq1v+BZhFfNqQZtGSU+
+         MkTlOeSBfr1cmhliquwIJ1pSR72yuSao+a+Zeq7PDymvA1puCgUON+MjGbsFRIL7AKOB
+         E2iQY+CsmctLt4DRgLWOU7nbzJNZo8Bprv0UoMEbGpfMu7q4jsa5cwb+eRL9UwxhaoQe
+         RThg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sGqYubR5Lthr7yxzMgwTRpMO66aeWf2qCN8tGk0FHOg=;
-        b=Mr2FiVoZCy00Vo/VDtYeSkNIg6kLG+Txqy3LNDhM5RazJZMIwKZRKUcj5sdaGLbbSl
-         5wABEPsZp/wFpyOFU1NePB2ZmOE1b1TadJXJkqnwX1mYoW659UEPDh9O+07i7WcFgyqi
-         BOGnD1QYdE2jK5xfBXG8p9Mrr3tZYmuf5aYuNf1Qtr6iQQBlCsdrtlJiJHR6L7mQipS1
-         cRQRf0w1R+eUMbPfXyDld1AgrM04Ne2mlw/g+8my3AkJj3jzs/2et7K7PkZzRQZmeY+m
-         7cKMkfH1ca2cyeXOP+qrnWtAx3xhtZRcXEuOgJtvRf/CafoUrUZVekvZ8MNswgrq9tAd
-         ImMA==
-X-Gm-Message-State: APjAAAUA1/DzWXO29AnZovozZPxalPqMWwiKfrUzQnuN1yInMOMe6wFj
-        J9gvn3q9vaW2YzkS83NTCDym9in/zmYxpfSo6IecNQ==
-X-Google-Smtp-Source: APXvYqzM05C6SE3TotMj3/meUIyoGC4bBZZMU7jv39OiAWQEeQWjMdLKgYPvcwQT8uU2wIK6u/jlz3kmMv7mFo/bmMBTvg==
-X-Received: by 2002:a65:6850:: with SMTP id q16mr27663278pgt.423.1568109805751;
- Tue, 10 Sep 2019 03:03:25 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 03:03:17 -0700
+        bh=bv5qoXxIm9QGTQUTxQOHCsSBy/Qj7ow+gIETe7B67Bk=;
+        b=bn2+FEyCDUGsQp+y+c/y5kxtTr1gXV6JSHzxDepWBeBEARck7aZTLsSJdQKrJxX32j
+         Hzh+n54qLwUb2+3yPK/9gvEqZVcnxVtT07Iw27qKcH4Mlp0QFL2Rl6VcGEkSFZ/G3k+W
+         VCvr9l8ia1WMU+JIxjqQJcrunGtAPFYy80Q/aGRbyRZpaWIIPkyKdG4FKidZm2whFvOX
+         Xx3M7inbx/YLaEGbdXEtNZYWay44TmRFJn8lYdpBO9gYin0eCzUTyizpw00x8R2K7yOZ
+         y7hqZ4p67FbeKyYMak9zn4sTdoWgNbkQBgaNMJ69zeMMPNMSe0shtOQc3GkPkyLsGvL5
+         bJXA==
+X-Gm-Message-State: APjAAAVONQyG12oXjBv3AeVa30RxLpKNijI6qlWKsrgE9b40SLaqQzkS
+        orTL+MXIDLUUyK7SMDGNZHB1IchCI8m/zXD1guJqRw==
+X-Google-Smtp-Source: APXvYqx8cHOYdn1JFbj+lJuVOsHB+4rC9cO4yzh0N7mo38wEIqxIpOO3PrkduWZWmrxebAtj1X8l6jj829HaWpjFrxVRmg==
+X-Received: by 2002:a63:394:: with SMTP id 142mr27066827pgd.43.1568109808362;
+ Tue, 10 Sep 2019 03:03:28 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 03:03:18 -0700
 In-Reply-To: <20190910100318.204420-1-matthewgarrett@google.com>
-Message-Id: <20190910100318.204420-2-matthewgarrett@google.com>
+Message-Id: <20190910100318.204420-3-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190910100318.204420-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-Subject: [PATCH 1/2] security: constify some arrays in lockdown LSM
+Subject: [PATCH 2/2] kexec: Fix file verification on S390
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Matthew Garrett <matthewgarrett@google.com>,
         Matthew Garrett <mjg59@google.com>,
-        David Howells <dhowells@redhat.com>
+        Philipp Rudo <prudo@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No reason for these not to be const.
+I accidentally typoed this #ifdef, so verification would always be
+disabled.
 
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Suggested-by: David Howells <dhowells@redhat.com>
+Reported-by: Philipp Rudo <prudo@linux.ibm.com>
 ---
- security/lockdown/lockdown.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/kexec_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 0068cec77c05..8a10b43daf74 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -16,7 +16,7 @@
- 
- static enum lockdown_reason kernel_locked_down;
- 
--static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
-+static const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_NONE] = "none",
- 	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
- 	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
-@@ -40,7 +40,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
+index 9b4f37a4edf1..9da6fa30c447 100644
+--- a/arch/s390/kernel/kexec_elf.c
++++ b/arch/s390/kernel/kexec_elf.c
+@@ -130,7 +130,7 @@ static int s390_elf_probe(const char *buf, unsigned long len)
+ const struct kexec_file_ops s390_kexec_elf_ops = {
+ 	.probe = s390_elf_probe,
+ 	.load = s390_elf_load,
+-#ifdef CONFIG_KEXEC__SIG
++#ifdef CONFIG_KEXEC_SIG
+ 	.verify_sig = s390_verify_sig,
+ #endif /* CONFIG_KEXEC_SIG */
  };
- 
--static enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
-+static const enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
- 						 LOCKDOWN_INTEGRITY_MAX,
- 						 LOCKDOWN_CONFIDENTIALITY_MAX};
- 
 -- 
 2.23.0.162.g0b9fbb3734-goog
 
