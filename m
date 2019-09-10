@@ -2,171 +2,90 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A9BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436A1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C981B21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A682089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ExqvI2xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390358AbfIJKZe (ORCPT
+        id S2393678AbfIJKZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:25:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48260 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729700AbfIJKZd (ORCPT
+        Tue, 10 Sep 2019 06:25:39 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:38433 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732679AbfIJKZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:25:33 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AAJ0mL154732
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:25:31 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ux7346dac-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:25:31 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 10 Sep 2019 11:25:27 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Sep 2019 11:25:24 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AAPNin56295572
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 10:25:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6B8052052;
-        Tue, 10 Sep 2019 10:25:23 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.54.190])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 951725204F;
-        Tue, 10 Sep 2019 10:25:09 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        christophe.leroy@c-s.fr,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 2/2] powerpc/watchpoint: Disable watchpoint hit by larx/stcx instructions
-Date:   Tue, 10 Sep 2019 15:54:22 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190910102422.23233-1-ravi.bangoria@linux.ibm.com>
-References: <20190910102422.23233-1-ravi.bangoria@linux.ibm.com>
+        Tue, 10 Sep 2019 06:25:38 -0400
+Received: by mail-lf1-f48.google.com with SMTP id c12so12999299lfh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=86PBgefI/y6X/Isd1n0htxpzll5TC6xu2rYWUoOg2+E=;
+        b=ExqvI2xn9CJJpk4iCHBRebb8Z9iziuTPjPohh4nkXLq31YjmvLjecF8HaVD1b03Zwp
+         BmLmeDpN/7+qkAbxeUzkffB2MRHqZfH+tOLHexeSWoxHaJNeMuv8HNdAPCnRcb1gZ/5a
+         f5eHP58LUGy/385RwTvXwD+XwN0OPXFjOn9ytYD85Uxsc7OrZFqdclb8T7ch5gygoH86
+         HaDeRzxgs4jW/Ig38MwZfRMFk3u/jWISZNWTwHDxy3wXACxguMRTIbjlki94IlZtP/0E
+         /1te8vF5EdgDwHXV17XE18Q1yzV6xbuCWx62fuAhxy9QTlELMJa2cbelEUrW1X6KWzdp
+         9DEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=86PBgefI/y6X/Isd1n0htxpzll5TC6xu2rYWUoOg2+E=;
+        b=CJrDcsq1ofbGrzV8h2ylRoM5nYy65T4onqTOu6Zl39dBd2MZLt14Q99Mqlw1AJqlqE
+         ZSBcuonaUNXNNvCkKxOInTGHJ3Cpm8YsDR0AyTLC1pboxUepDjSWIBZe7Tkaprpe/mCq
+         rSoDfOv+NG85p92NQO8PlnQE/oRNzLUpwAMh/ml6P7Iib7oYhwXZ27qb6PPcueHB8V5C
+         SYApkcZjNXjSlXLhDNLsny7SQc7yK8aQYwVp/On40k5PqjZJZdY/UQRvh37I5BrEfKcR
+         YQtfq77kFkLZ+u/a14qPsqjqfst4yF/YMHZ6kV1+LNX71FnkvLFpFhDLLYYaEp/XEtbF
+         ZAfQ==
+X-Gm-Message-State: APjAAAW5gA7o9B/Bs+n/S6tVUjAVaf9iVKNCh9hBKM609Jh13NxieNDM
+        +Y1XqcX61hGy/MVCOhg7tNF4AaGsnrCkD+LYx+Cq5g==
+X-Google-Smtp-Source: APXvYqxzAgxWmnCAlWjLbJSC2xDUVMd1qjJIhYHnDdxKGJ4zV+g693y3TgzFL0iinVPQnVMmNKjBkeRooOIaDrac4HQ=
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr20173197lfp.61.1568111136928;
+ Tue, 10 Sep 2019 03:25:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091010-0008-0000-0000-00000313D22B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091010-0009-0000-0000-00004A32397F
-Message-Id: <20190910102422.23233-3-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=360 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909100105
+References: <20190908085133.GA7233@amd>
+In-Reply-To: <20190908085133.GA7233@amd>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Sep 2019 11:25:25 +0100
+Message-ID: <CACRpkdYuaoc=0Ljn+xM8nqdo16-5tfS0=N5VeAnM6Lx0FME4Jg@mail.gmail.com>
+Subject: Re: next-20190904: build failure in cp210x usb serial, gpio related?
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If watchpoint exception is generated by larx/stcx instructions, the
-reservation created by larx gets lost while handling exception, and
-thus stcx instruction always fails. Generally these instructions are
-used in a while(1) loop, for example spinlocks. And because stcx
-never succeeds, it loops forever and ultimately hangs the system.
+On Sun, Sep 8, 2019 at 9:51 AM Pavel Machek <pavel@denx.de> wrote:
 
-Note that ptrace anyway works in one-shot mode and thus for ptrace
-we don't change the behaviour. It's up to ptrace user to take care
-of this.
+> I'm getting this compiling the -next:
+(...)
+>   ./include/linux/gpio/driver.h:722:19: error: static declaration of
+>   =E2=80=98gpiochip_lock_as_irq=E2=80=99 follows non-static declaration
+>     722 | static inline int gpiochip_lock_as_irq(struct gpio_chip
+>   *chip,
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/kernel/hw_breakpoint.c | 49 +++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 16 deletions(-)
+Yes this was fixed pretty much the same day the next release came
+out, and by now I got like 4 different patches solving the same problem,
+because no new next releases are coming out right now...
+bad timing with no next releases during the kernel summit, sorry!
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 28ad3171bb82..9fa496a598ce 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -195,14 +195,32 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
- 	tsk->thread.last_hit_ubp = NULL;
- }
- 
-+static bool is_larx_stcx_instr(struct pt_regs *regs, unsigned int instr)
-+{
-+	int ret, type;
-+	struct instruction_op op;
-+
-+	ret = analyse_instr(&op, regs, instr);
-+	type = GETTYPE(op.type);
-+	return (!ret && (type == LARX || type == STCX));
-+}
-+
- /*
-  * Handle debug exception notifications.
-  */
- static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
- 			     unsigned long addr)
- {
--	int stepped;
--	unsigned int instr;
-+	unsigned int instr = 0;
-+
-+	if (__get_user_inatomic(instr, (unsigned int *)regs->nip))
-+		goto fail;
-+
-+	if (is_larx_stcx_instr(regs, instr)) {
-+		printk_ratelimited("Watchpoint: Can't emulate/single-step larx/"
-+				   "stcx instructions. Disabling watchpoint.\n");
-+		goto disable;
-+	}
- 
- 	/* Do not emulate user-space instructions, instead single-step them */
- 	if (user_mode(regs)) {
-@@ -211,23 +229,22 @@ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
- 		return false;
- 	}
- 
--	stepped = 0;
--	instr = 0;
--	if (!__get_user_inatomic(instr, (unsigned int *)regs->nip))
--		stepped = emulate_step(regs, instr);
-+	if (!emulate_step(regs, instr))
-+		goto fail;
- 
-+	return true;
-+
-+fail:
- 	/*
--	 * emulate_step() could not execute it. We've failed in reliably
--	 * handling the hw-breakpoint. Unregister it and throw a warning
--	 * message to let the user know about it.
-+	 * We've failed in reliably handling the hw-breakpoint. Unregister
-+	 * it and throw a warning message to let the user know about it.
- 	 */
--	if (!stepped) {
--		WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
--			"0x%lx will be disabled.", addr);
--		perf_event_disable_inatomic(bp);
--		return false;
--	}
--	return true;
-+	WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
-+		"0x%lx will be disabled.", addr);
-+
-+disable:
-+	perf_event_disable_inatomic(bp);
-+	return false;
- }
- 
- int hw_breakpoint_handler(struct die_args *args)
--- 
-2.21.0
-
+Yours,
+Linus Walleij
