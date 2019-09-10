@@ -2,133 +2,149 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2EAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388B9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE09020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AB120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389143AbfIJKbP (ORCPT
+        id S2393805AbfIJKb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:31:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59388 "EHLO mx1.suse.de"
+        Tue, 10 Sep 2019 06:31:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59264 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729118AbfIJKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2393680AbfIJKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 06:30:52 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9D768AF0B;
-        Tue, 10 Sep 2019 10:30:49 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 78914B11B;
+        Tue, 10 Sep 2019 10:30:23 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     n-horiguchi@ah.jp.nec.com
 Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 04/10] mm,hwpoison: remove MF_COUNT_INCREASED
-Date:   Tue, 10 Sep 2019 12:30:10 +0200
-Message-Id: <20190910103016.14290-5-osalvador@suse.de>
+Subject: [PATCH 00/10] Hwpoison soft-offline rework
+Date:   Tue, 10 Sep 2019 12:30:06 +0200
+Message-Id: <20190910103016.14290-1-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190910103016.14290-1-osalvador@suse.de>
-References: <20190910103016.14290-1-osalvador@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-Now there's no user of MF_COUNT_INCREASED, so we can safely remove
-it from all calling points.
+This patchset was based on Naoya's hwpoison rework [1], so thanks to him
+for the initial work.
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
----
- include/linux/mm.h  |  7 +++----
- mm/memory-failure.c | 16 +++-------------
- 2 files changed, 6 insertions(+), 17 deletions(-)
+This patchset aims to fix some issues laying in soft-offline handling,
+but it also takes the chance and takes some further steps to perform 
+cleanups and some refactoring as well.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ad6766a08f9b..fb36a4165a4e 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2814,10 +2814,9 @@ void register_page_bootmem_memmap(unsigned long section_nr, struct page *map,
- 				  unsigned long nr_pages);
- 
- enum mf_flags {
--	MF_COUNT_INCREASED = 1 << 0,
--	MF_ACTION_REQUIRED = 1 << 1,
--	MF_MUST_KILL = 1 << 2,
--	MF_SOFT_OFFLINE = 1 << 3,
-+	MF_ACTION_REQUIRED = 1 << 0,
-+	MF_MUST_KILL = 1 << 1,
-+	MF_SOFT_OFFLINE = 1 << 2,
- };
- extern int memory_failure(unsigned long pfn, int flags);
- extern void memory_failure_queue(unsigned long pfn, int flags);
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index e43b61462fd5..1be785b25324 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1092,7 +1092,7 @@ static int memory_failure_hugetlb(unsigned long pfn, int flags)
- 
- 	num_poisoned_pages_inc();
- 
--	if (!(flags & MF_COUNT_INCREASED) && !get_hwpoison_page(p)) {
-+	if (!get_hwpoison_page(p)) {
- 		/*
- 		 * Check "filter hit" and "race with other subpage."
- 		 */
-@@ -1286,7 +1286,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	 * In fact it's dangerous to directly bump up page count from 0,
- 	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
- 	 */
--	if (!(flags & MF_COUNT_INCREASED) && !get_hwpoison_page(p)) {
-+	if (!get_hwpoison_page(p)) {
- 		if (is_free_buddy_page(p)) {
- 			action_result(pfn, MF_MSG_BUDDY, MF_DELAYED);
- 			return 0;
-@@ -1327,10 +1327,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	shake_page(p, 0);
- 	/* shake_page could have turned it free. */
- 	if (!PageLRU(p) && is_free_buddy_page(p)) {
--		if (flags & MF_COUNT_INCREASED)
--			action_result(pfn, MF_MSG_BUDDY, MF_DELAYED);
--		else
--			action_result(pfn, MF_MSG_BUDDY_2ND, MF_DELAYED);
-+		action_result(pfn, MF_MSG_BUDDY_2ND, MF_DELAYED);
- 		return 0;
- 	}
- 
-@@ -1618,9 +1615,6 @@ static int __get_any_page(struct page *p, unsigned long pfn, int flags)
- {
- 	int ret;
- 
--	if (flags & MF_COUNT_INCREASED)
--		return 1;
--
- 	/*
- 	 * When the target page is a free hugepage, just remove it
- 	 * from free hugepage list.
-@@ -1890,15 +1884,11 @@ int soft_offline_page(struct page *page, int flags)
- 	if (is_zone_device_page(page)) {
- 		pr_debug_ratelimited("soft_offline: %#lx page is device page\n",
- 				pfn);
--		if (flags & MF_COUNT_INCREASED)
--			put_page(page);
- 		return -EIO;
- 	}
- 
- 	if (PageHWPoison(page)) {
- 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
--		if (flags & MF_COUNT_INCREASED)
--			put_hwpoison_page(page);
- 		return -EBUSY;
- 	}
- 
+ - Motivation:
+
+   A customer and I were facing an issue where poisoned pages we returned
+   back to user-space after having offlined them properly.
+   This was only seend under some memory stress + soft offlining pages.
+   After some anaylsis, it became clear that the problem was that
+   when kcompactd kicked in to migrate pages over, compaction_alloc
+   callback was handing poisoned pages to the migrate routine.
+   Once this page was later on fault in, __do_page_fault returned
+   VM_FAULT_HWPOISON making the process being killed.
+
+   All this could happen because isolate_freepages_block and
+   fast_isolate_freepages just check for the page to be PageBuddy,
+   and since 1) poisoned pages can be part of a higher order page
+   and 2) poisoned pages are also Page Buddy, they can sneak in easily.
+
+   I also saw some problem with swap pages, but I suspected to be the
+   same sort of problem, so I did not follow that trace.
+
+   The full explanation can be see in [2].
+
+ - Approach:
+
+   The taken approach is to not let poisoned pages hit neither
+   pcplists nor buddy freelists.
+   This is achieved by:
+
+In-use pages:
+
+   * Normal pages
+
+   1) do not release the last reference count after the
+      invalidation/migration of the page.
+   2) the page is being handed to page_set_poison, which does:
+      2a) sets PageHWPoison flag
+      2b) calls put_page (only to be able to call __page_cache_release)
+          Since poisoned pages are skipped in free_pages_prepare,
+          this put_page is safe.
+      2c) Sets the refcount to 1
+    
+   * Hugetlb pages
+
+   1) Hand the page to page_set_poison after migration
+   2) page_set_poison does:
+      2a) Calls dissolve_free_huge_page
+      2b) If ranged to be dissolved contains poisoned pages,
+          we free the rangeas order-0 pages (as we do with gigantic hugetlb page),
+          so free_pages_prepare will skip them accordingly.
+      2c) Sets the refcount to 1
+
+Free pages:
+
+   * Normal pages:
+
+   1) Take the page off the buddy freelist
+   2) Set PageHWPoison flag and set refcount to 1
+
+   * Hugetlb pages
+
+   1) Try to allocate a new hugetlb page to the pool
+   2) Take off the pool the poisoned hugetlb
+
+
+With this patchset, I no longer see the issues I faced before.
+
+Note:
+I presented this as RFC to open discussion of the taken aproach.
+I think that furthers cleanups and refactors could be made, but I would
+like to get some insight of the taken approach before touching more
+code.
+
+Thanks
+
+[1] https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
+[2] https://lore.kernel.org/linux-mm/20190826104144.GA7849@linux/T/#u
+
+Naoya Horiguchi (5):
+  mm,hwpoison: cleanup unused PageHuge() check
+  mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
+  mm,hwpoison-inject: don't pin for hwpoison_filter
+  mm,hwpoison: remove MF_COUNT_INCREASED
+  mm: remove flag argument from soft offline functions
+
+Oscar Salvador (5):
+  mm,hwpoison: Unify THP handling for hard and soft offline
+  mm,hwpoison: Rework soft offline for in-use pages
+  mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
+  mm,hwpoison: Rework soft offline for free pages
+  mm,hwpoison: Use hugetlb_replace_page to replace free hugetlb pages
+
+ drivers/base/memory.c      |   2 +-
+ include/linux/mm.h         |   9 +-
+ include/linux/page-flags.h |   5 -
+ mm/hugetlb.c               |  51 +++++++-
+ mm/hwpoison-inject.c       |  18 +--
+ mm/madvise.c               |  25 ++--
+ mm/memory-failure.c        | 319 +++++++++++++++++++++------------------------
+ mm/migrate.c               |  11 +-
+ mm/page_alloc.c            |  62 +++++++--
+ 9 files changed, 267 insertions(+), 235 deletions(-)
+
 -- 
 2.12.3
 
