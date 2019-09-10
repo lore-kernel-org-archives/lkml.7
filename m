@@ -2,183 +2,309 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3B4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2438C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC320206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDD6208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfIJI2G (ORCPT
+        id S1727325AbfIJI3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:28:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54323 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfIJI2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:28:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 01:28:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="359743313"
-Received: from pgsmsx111.gar.corp.intel.com ([10.108.55.200])
-  by orsmga005.jf.intel.com with ESMTP; 10 Sep 2019 01:28:02 -0700
-Received: from pgsmsx108.gar.corp.intel.com ([169.254.8.125]) by
- PGSMSX111.gar.corp.intel.com ([169.254.2.128]) with mapi id 14.03.0439.000;
- Tue, 10 Sep 2019 16:28:01 +0800
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yang.jie@linux.intel.com" <yang.jie@linux.intel.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: RE: [alsa-devel] [PATCH] ASoC: bdw-rt5677: channel constraint
- support
-Thread-Topic: [alsa-devel] [PATCH] ASoC: bdw-rt5677: channel constraint
- support
-Thread-Index: AQHVZFJP8PyrEMjcjUeZpcb0xW/mNqceLbmAgASxdDCAAEEEgIABJDyg
-Date:   Tue, 10 Sep 2019 08:28:00 +0000
-Message-ID: <CF33C36214C39B4496568E5578BE70C7402CB9AC@PGSMSX108.gar.corp.intel.com>
-References: <1567733058-9561-1-git-send-email-brent.lu@intel.com>
- <391e8f6c-7e35-deb4-4f4d-c39396b778ba@linux.intel.com>
- <CF33C36214C39B4496568E5578BE70C7402C9EA2@PGSMSX108.gar.corp.intel.com>
- <29b9fd4e-3d78-b4a3-e61a-c066bf24995a@linux.intel.com>
-In-Reply-To: <29b9fd4e-3d78-b4a3-e61a-c066bf24995a@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzRiNDM3ZDQtMjI2OC00NGUzLThlYjktY2FhOWVhMGE3MDA3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNndmTjNkMFd6M1BaTjE1dW9Vd2REd2YyMzFoQktQZFZIRzNVYmpXRHJ3Sm5IM3JpenBLY3ZrRUhMVkNZVVBNbyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 10 Sep 2019 04:29:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37326 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfIJI3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:29:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CCCB5ACD8;
+        Tue, 10 Sep 2019 08:29:14 +0000 (UTC)
+Subject: Re: [PATCH v4 10/17] arm64: trans_pgd: make trans_pgd_map_page
+ generic
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
+        sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com, bhsharma@redhat.com,
+        linux-mm@kvack.org, mark.rutland@arm.com
+References: <20190909181221.309510-1-pasha.tatashin@soleen.com>
+ <20190909181221.309510-11-pasha.tatashin@soleen.com>
+From:   Matthias Brugger <mbrugger@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <60975350-87f8-56b3-437d-d9ee26ac3bd3@suse.com>
+Date:   Tue, 10 Sep 2019 10:29:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190909181221.309510-11-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQaWVycmUtTG91aXMgQm9zc2Fy
-dCBbbWFpbHRvOnBpZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDog
-VHVlc2RheSwgU2VwdGVtYmVyIDEwLCAyMDE5IDE6NTMgQU0NCj4gVG86IEx1LCBCcmVudCA8YnJl
-bnQubHVAaW50ZWwuY29tPjsgYWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnDQo+IENjOiBSb2pl
-d3NraSwgQ2V6YXJ5IDxjZXphcnkucm9qZXdza2lAaW50ZWwuY29tPjsNCj4ga3VuaW5vcmkubW9y
-aW1vdG8uZ3hAcmVuZXNhcy5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHlh
-bmcuamllQGxpbnV4LmludGVsLmNvbTsgdGl3YWlAc3VzZS5jb207IGxpYW0uci5naXJkd29vZEBs
-aW51eC5pbnRlbC5jb207DQo+IGJyb29uaWVAa2VybmVsLm9yZzsgdGdseEBsaW51dHJvbml4LmRl
-DQo+IFN1YmplY3Q6IFJlOiBbYWxzYS1kZXZlbF0gW1BBVENIXSBBU29DOiBiZHctcnQ1Njc3OiBj
-aGFubmVsIGNvbnN0cmFpbnQNCj4gc3VwcG9ydA0KPiANCj4gUGxlYXNlIGRvbid0IHRvcC1wb3N0
-IG9uIHB1YmxpYyBtYWlsaW5nIGxpc3RzLg0KPiANCj4gPiBXZSBhcmUgd29ya2luZyBvbiBhIGJh
-Y2twb3J0IDMuMTQgYnJhbmNoIGZvciBDaHJvbWUgcHJvamVjdHMgYmFzZWQgb24NCj4gQkRXIHBs
-YXRmb3JtLiBJbiB0aGUgYnJhbmNoIDQtY2hhbm5lbCBjYXB0dXJlIGlzIHN1cHBvcnRlZCBvbiBz
-b21lDQo+IHBsYXRmb3JtcyBidXQgbm90IGFsbC4gU28gd2UgbmVlZCB0byBhZGQgYSBjb25zdHJh
-aW50IGluIHRoZSBtYWNoaW5lIGRyaXZlcg0KPiBmb3IgbWFjaGluZXMgZG9uJ3Qgc3VwcG9ydCB0
-aGlzIGZlYXR1cmUuDQo+ID4NCj4gPiBJIGNoZWNrZWQgdGhlIGZvci1uZXh0IGJyYW5jaCBpbiB0
-aGUgYnJvb25pZSByZXBvLiBUaGUgY2hhbm5lbHNfbWF4IG9mDQo+IEhTV19QQ01fREFJX0lEX1NZ
-U1RFTSBpcyA0IGZvciBjYXB0dXJlIHN0cmVhbSBzbyBJIHRoaW5rIGl0IHdvdWxkIGhhdmUNCj4g
-c2FtZSBpc3N1ZSBsaWtlIGdvb2dsZSdzIGJhY2twb3J0IHRyZWUuIEkgZGlkbid0IGZpbmQgYW55
-IGNvbnN0cmFpbnQgZm9yIHRoaXMgZGFpLg0KPiBXb3VsZCB5b3UgcG9pbnQgb3V0IHdoZXJlIGl0
-IGlzPw0KPiA+DQo+ID4gCQkuY2FwdHVyZSA9IHsNCj4gPiAJCQkuc3RyZWFtX25hbWUgPSAiQW5h
-bG9nIENhcHR1cmUiLA0KPiA+IAkJCS5jaGFubmVsc19taW4gPSAyLA0KPiA+IAkJCS5jaGFubmVs
-c19tYXggPSA0LA0KPiA+IAkJCS5yYXRlcyA9IFNORFJWX1BDTV9SQVRFXzQ4MDAwLA0KPiA+IAkJ
-CS5mb3JtYXRzID0gU05EUlZfUENNX0ZNVEJJVF9TMjRfTEUgfA0KPiBTTkRSVl9QQ01fRk1UQklU
-X1MxNl9MRSwNCj4gPiAJCX0sDQo+IA0KPiBvaywgSSBtaXNzZWQgdGhpcyBjYXB0dXJlIGNhc2Ug
-aW5kZWVkLCBidXQgd2hlbiBJIGxvb2sgYXQgdGhlIENocm9tZQ0KPiAzLjE0IGNvZGUgSSBkb24n
-dCBzZWUgdGhpcyBjb25zdHJhaW50IGJlaW5nIGFkZGVkLCBhbmQgd2UgYWxyZWFkeSBoYXZlIGFu
-DQo+IHNzcDBfZml4dXAgZnVuY3Rpb24gd2hlcmUgMiBjaGFubmVscyBvbmx5IGFyZSB1c2VkLg0K
-PiANCj4gCS8qIFRoZSBBRFNQIHdpbGwgY292ZXJ0IHRoZSBGRSByYXRlIHRvIDQ4aywgc3RlcmVv
-ICovDQo+IAlyYXRlLT5taW4gPSByYXRlLT5tYXggPSA0ODAwMDsNCj4gCWNoYW5uZWxzLT5taW4g
-PSBjaGFubmVscy0+bWF4ID0gMjsNClllcyBJIG5vdGljZWQgaXQsIGJ1dCB0aGUgY2hhbm5lbCBt
-YXggbnVtYmVyIHJldHVybmVkIGJ5IHNuZF9wY21faHdfcGFyYW1zX2FueSgpIA0KaXMgc3RpbGwg
-NCBmb3IgdGhlIHBvcnQgIkNhcHR1cmUgUENNIiBzbyBJIGFkZCBhIGNvbnN0cmFpbnQgdG8gdGhl
-IEZFIGRhaS4NCg0KPiANCj4gSSBhbHNvIGRvbid0IHNlZSBhbnkgY2FzZSB3aGVyZSB3ZSBzdXBw
-b3J0IDQgY2hhbm5lbHMgaW4gYW55IGJyb2Fkd2VsbA0KPiBtYWNoaW5lIGRyaXZlcj8NCkl0J3Mg
-dGhlIGJkdy1ydDU2NTAuYyB3aGljaCBvbmx5IGV4aXN0cyBpbiBjaHJvbWUncyAzLjE0IGJyYW5j
-aCBzdXBwb3J0aW5nIEJ1ZGR5IA0KcHJvamVjdC4gVGhleSBzdWJtaXR0ZWQgdGhlIG1hY2hpbmUg
-ZHJpdmVyIGJ1dCBub3QgeWV0IG1lcmdlZC4NCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC8xMTA1MDk4NS8NCg0KPiANCj4gU28gYWdhaW4gY2FuIHlvdSBwb2ludCBtZSB0byBh
-biBpc3N1ZSBvciBleGlzdGluZyBiYWNrcG9ydCB0aGF0IHJlcXVpcmVzIHRoZQ0KPiBwYXRjaCBi
-ZWxvdy4gTm90IHRyeWluZyB0byBiZSBvYnR1c2UgYnV0IHdlIHNob3VsZCBvbmx5IGNoYW5nZSBv
-bGRlcg0KPiBwbGF0Zm9ybXMgd2hlbiB0aGVyZSBpcyBldmlkZW5jZSB0aGF0IGEgY2hhbmdlIGlz
-IG5lZWRlZC4NClRoZSBzdG9yeSBpcyBDaHJvbWUgaGFzIGEgdG9vbCBjYWxsZWQgYWxzYV9jb25m
-b3JtYW5jZV90ZXN0IHdoaWNoIHJ1bnMgY2FwdHVyZSBvciANCnBsYXliYWNrIGFnYWluc3QgYSBQ
-Q00gcG9ydCB3aXRoIGFsbCBwb3NzaWJsZSBjb25maWd1cmF0aW9ucyAoY2hhbm5lbCwgZm9ybWF0
-LCByYXRlKSANCnRoZW4gbWVhc3VyZSBpZiB0aGUgc2FtcGxlIHJhdGUgaXMgY29ycmVjdC4gU2lu
-Y2UgdGhlIGNoYW5uZWwgbWF4IG51bWJlciByZXBvcnRlZCANCmlzIDQsIGl0IHRlc3RzIHRoZSA0
-LWNoYW5uZWwgNDhLIGNhcHR1cmUgYW5kIHJlcG9ydHMgdGhlIGFjdHVhbCBzYW1wbGUgcmF0ZSBp
-cyAyNDAwMCANCmluc3RlYWQgb2YgNDgwMDAuIFRoYXQncyB0aGUgcmVhc29uIHdlIHdhbnQgdG8g
-YWRkIGEgY29uc3RyYWludCBpbiBtYWNoaW5lIGRyaXZlciB0byANCmF2b2lkIHVzZXIgc3BhY2Ug
-cHJvZ3JhbXMgdHJ5aW5nIHRvIGRvIDQgY2hhbm5lbCByZWNvcmRpbmcgc2luY2UgdGhpcyBtYWNo
-aW5lIGRvZXMgDQpub3Qgc3VwcG9ydCBpdCBpbiB0aGUgYmVnaW5uaW5nLg0KDQoNCj4gDQo+IC1Q
-aWVycmUNCj4gDQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IEJyZW50IEx1DQo+ID4NCj4gPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IFBpZXJyZS1Mb3VpcyBCb3NzYXJ0DQo+
-ID4gW21haWx0bzpwaWVycmUtbG91aXMuYm9zc2FydEBsaW51eC5pbnRlbC5jb21dDQo+ID4gU2Vu
-dDogRnJpZGF5LCBTZXB0ZW1iZXIgNiwgMjAxOSAxMDoyMSBQTQ0KPiA+IFRvOiBMdSwgQnJlbnQg
-PGJyZW50Lmx1QGludGVsLmNvbT47IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZw0KPiA+IENj
-OiBSb2pld3NraSwgQ2V6YXJ5IDxjZXphcnkucm9qZXdza2lAaW50ZWwuY29tPjsNCj4gPiBsaWFt
-LnIuZ2lyZHdvb2RAbGludXguaW50ZWwuY29tOyB5YW5nLmppZUBsaW51eC5pbnRlbC5jb207DQo+
-ID4gYnJvb25pZUBrZXJuZWwub3JnOyBwZXJleEBwZXJleC5jejsgdGl3YWlAc3VzZS5jb207DQo+
-ID4ga3VuaW5vcmkubW9yaW1vdG8uZ3hAcmVuZXNhcy5jb207IHRnbHhAbGludXRyb25peC5kZTsN
-Cj4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gU3ViamVjdDogUmU6IFthbHNh
-LWRldmVsXSBbUEFUQ0hdIEFTb0M6IGJkdy1ydDU2Nzc6IGNoYW5uZWwgY29uc3RyYWludA0KPiA+
-IHN1cHBvcnQNCj4gPg0KPiA+IE9uIDkvNS8xOSA4OjI0IFBNLCBCcmVudCBMdSB3cm90ZToNCj4g
-Pj4gQkRXIGJvYXJkcyB1c2luZyB0aGlzIG1hY2hpbmUgZHJpdmVyIHN1cHBvcnRzIG9ubHkgc3Rl
-cmVvIGNhcHR1cmUgYW5kDQo+ID4+IHBsYXliYWNrLiBJbXBsZW1lbnQgYSBjb25zdHJhaW50IHRv
-IGVuZm9yY2UgaXQuDQo+ID4NCj4gPiBIdW1tLCBjYW4geW91IGNsYXJpZnkgd2hhdCBwcm9ibGVt
-L2Vycm9yIHRoaXMgcGF0Y2ggZml4ZXM/DQo+ID4NCj4gPiBUaGVyZSBhcmUgYWxyZWFkeSBjb25z
-dHJhaW50cyBvbiB0aGUgaHN3X2RhaXNbXSB3aGVyZSB0aGUgY2hhbm5lbHMgYXJlDQo+IHN0ZXJl
-byBvbmx5Lg0KPiA+DQo+ID4gVGhhbmtzDQo+ID4gLVBpZXJyZQ0KPiA+DQo+ID4+DQo+ID4+IFNp
-Z25lZC1vZmYtYnk6IEJyZW50IEx1IDxicmVudC5sdUBpbnRlbC5jb20+DQo+ID4+IC0tLQ0KPiA+
-PiAgICBzb3VuZC9zb2MvaW50ZWwvYm9hcmRzL2Jkdy1ydDU2NzcuYyB8IDMzDQo+ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+PiAgICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5z
-ZXJ0aW9ucygrKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2ludGVsL2JvYXJk
-cy9iZHctcnQ1Njc3LmMNCj4gPj4gYi9zb3VuZC9zb2MvaW50ZWwvYm9hcmRzL2Jkdy1ydDU2Nzcu
-Yw0KPiA+PiBpbmRleCA0YTRkMzM1Li5hMzEyYjU1IDEwMDY0NA0KPiA+PiAtLS0gYS9zb3VuZC9z
-b2MvaW50ZWwvYm9hcmRzL2Jkdy1ydDU2NzcuYw0KPiA+PiArKysgYi9zb3VuZC9zb2MvaW50ZWwv
-Ym9hcmRzL2Jkdy1ydDU2NzcuYw0KPiA+PiBAQCAtMjIsNiArMjIsOCBAQA0KPiA+Pg0KPiA+PiAg
-ICAjaW5jbHVkZSAiLi4vLi4vY29kZWNzL3J0NTY3Ny5oIg0KPiA+Pg0KPiA+PiArI2RlZmluZSBE
-VUFMX0NIQU5ORUwgMg0KPiA+PiArDQo+ID4+ICAgIHN0cnVjdCBiZHdfcnQ1Njc3X3ByaXYgew0K
-PiA+PiAgICAJc3RydWN0IGdwaW9fZGVzYyAqZ3Bpb19ocF9lbjsNCj4gPj4gICAgCXN0cnVjdCBz
-bmRfc29jX2NvbXBvbmVudCAqY29tcG9uZW50OyBAQCAtMjQ1LDYgKzI0NywzNiBAQA0KPiBzdGF0
-aWMNCj4gPj4gaW50IGJkd19ydDU2NzdfaW5pdChzdHJ1Y3Qgc25kX3NvY19wY21fcnVudGltZSAq
-cnRkKQ0KPiA+PiAgICAJcmV0dXJuIDA7DQo+ID4+ICAgIH0NCj4gPj4NCj4gPj4gK3N0YXRpYyBj
-b25zdCB1bnNpZ25lZCBpbnQgY2hhbm5lbHNbXSA9IHsNCj4gPj4gKwlEVUFMX0NIQU5ORUwsDQo+
-ID4+ICt9Ow0KPiA+PiArDQo+ID4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9wY21faHdfY29u
-c3RyYWludF9saXN0IGNvbnN0cmFpbnRzX2NoYW5uZWxzID0gew0KPiA+PiArCS5jb3VudCA9IEFS
-UkFZX1NJWkUoY2hhbm5lbHMpLA0KPiA+PiArCS5saXN0ID0gY2hhbm5lbHMsDQo+ID4+ICsJLm1h
-c2sgPSAwLA0KPiA+PiArfTsNCj4gPj4gKw0KPiA+PiArc3RhdGljIGludCBiZHdfZmVfc3RhcnR1
-cChzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSkgew0KPiA+PiArCXN0cnVjdCBz
-bmRfcGNtX3J1bnRpbWUgKnJ1bnRpbWUgPSBzdWJzdHJlYW0tPnJ1bnRpbWU7DQo+ID4+ICsNCj4g
-Pj4gKwkvKg0KPiA+PiArCSAqIE9uIHRoaXMgcGxhdGZvcm0gZm9yIFBDTSBkZXZpY2Ugd2Ugc3Vw
-cG9ydCwNCj4gPj4gKwkgKiBzdGVyZW8NCj4gPj4gKwkgKi8NCj4gPj4gKw0KPiA+PiArCXJ1bnRp
-bWUtPmh3LmNoYW5uZWxzX21heCA9IERVQUxfQ0hBTk5FTDsNCj4gPj4gKwlzbmRfcGNtX2h3X2Nv
-bnN0cmFpbnRfbGlzdChydW50aW1lLCAwLA0KPiBTTkRSVl9QQ01fSFdfUEFSQU1fQ0hBTk5FTFMs
-DQo+ID4+ICsJCQkJCSAgICZjb25zdHJhaW50c19jaGFubmVscyk7DQo+ID4+ICsNCj4gPj4gKwly
-ZXR1cm4gMDsNCj4gPj4gK30NCj4gPj4gKw0KPiA+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRf
-c29jX29wcyBiZHdfcnQ1Njc3X2ZlX29wcyA9IHsNCj4gPj4gKwkuc3RhcnR1cCA9IGJkd19mZV9z
-dGFydHVwLA0KPiA+PiArfTsNCj4gPj4gKw0KPiA+PiAgICAvKiBicm9hZHdlbGwgZGlnaXRhbCBh
-dWRpbyBpbnRlcmZhY2UgZ2x1ZSAtIGNvbm5lY3RzIGNvZGVjIDwtLT4gQ1BVICovDQo+ID4+ICAg
-IFNORF9TT0NfREFJTElOS19ERUYoZHVtbXksDQo+ID4+ICAgIAlEQUlMSU5LX0NPTVBfQVJSQVko
-Q09NUF9EVU1NWSgpKSk7DQo+ID4+IEBAIC0yNzMsNiArMzA1LDcgQEAgc3RhdGljIHN0cnVjdCBz
-bmRfc29jX2RhaV9saW5rIGJkd19ydDU2NzdfZGFpc1tdID0NCj4gew0KPiA+PiAgICAJCX0sDQo+
-ID4+ICAgIAkJLmRwY21fY2FwdHVyZSA9IDEsDQo+ID4+ICAgIAkJLmRwY21fcGxheWJhY2sgPSAx
-LA0KPiA+PiArCQkub3BzID0gJmJkd19ydDU2NzdfZmVfb3BzLA0KPiA+PiAgICAJCVNORF9TT0Nf
-REFJTElOS19SRUcoZmUsIGR1bW15LCBwbGF0Zm9ybSksDQo+ID4+ICAgIAl9LA0KPiA+Pg0KPiA+
-Pg0KPiA+DQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18NCj4gPiBBbHNhLWRldmVsIG1haWxpbmcgbGlzdA0KPiA+IEFsc2EtZGV2ZWxAYWxzYS1wcm9q
-ZWN0Lm9yZw0KPiA+IGh0dHBzOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlz
-dGluZm8vYWxzYS1kZXZlbA0KPiA+DQo=
+Bikeshedding alarm, please see below.
+
+On 09/09/2019 20:12, Pavel Tatashin wrote:
+> kexec is going to use a different allocator, so make
+> trans_pgd_map_page to accept allocator as an argument, and also
+> kexec is going to use a different map protection, so also pass
+> it via argument.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/include/asm/trans_pgd.h | 24 ++++++++++++++++++++++--
+>  arch/arm64/kernel/hibernate.c      | 12 +++++++++++-
+>  arch/arm64/mm/trans_pgd.c          | 17 +++++++++++------
+>  3 files changed, 44 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
+> index c7b5402b7d87..53f67ec84cdc 100644
+> --- a/arch/arm64/include/asm/trans_pgd.h
+> +++ b/arch/arm64/include/asm/trans_pgd.h
+> @@ -11,10 +11,30 @@
+>  #include <linux/bits.h>
+>  #include <asm/pgtable-types.h>
+>  
+> +/*
+> + * trans_alloc_page
+> + *	- Allocator that should return exactly one zeroed page, if this
+> + *	 allocator fails, trans_pgd returns -ENOMEM error.
+> + *
+> + * trans_alloc_arg
+> + *	- Passed to trans_alloc_page as an argument
+> + */
+> +
+> +struct trans_pgd_info {
+> +	void * (*trans_alloc_page)(void *arg);
+> +	void *trans_alloc_arg;
+> +};
+> +
+>  int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+>  			  unsigned long end);
+>  
+> -int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+> -		       pgprot_t pgprot);
+> +/*
+> + * Add map entry to trans_pgd for a base-size page at PTE level.
+> + * page:	page to be mapped.
+> + * dst_addr:	new VA address for the pages
+> + * pgprot:	protection for the page.
+
+For consistency please describe all function parameters. From my experience
+function parameter description is normally done in the C-file that implements
+the logic. Don't ask me why.
+
+> + */
+> +int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+> +		       void *page, unsigned long dst_addr, pgprot_t pgprot);
+>  
+>  #endif /* _ASM_TRANS_TABLE_H */
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 94ede33bd777..9b75b680ab70 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -179,6 +179,12 @@ int arch_hibernation_header_restore(void *addr)
+>  }
+>  EXPORT_SYMBOL(arch_hibernation_header_restore);
+>  
+> +static void *
+> +hibernate_page_alloc(void *arg)
+
+AFAICS no new line needed here.
+
+> +{
+> +	return (void *)get_safe_page((gfp_t)(unsigned long)arg);
+> +}
+> +
+>  /*
+>   * Copies length bytes, starting at src_start into an new page,
+>   * perform cache maintenance, then maps it at the specified address low
+> @@ -195,6 +201,10 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  				 unsigned long dst_addr,
+>  				 phys_addr_t *phys_dst_addr)
+>  {
+> +	struct trans_pgd_info trans_info = {
+> +		.trans_alloc_page	= hibernate_page_alloc,
+> +		.trans_alloc_arg	= (void *)GFP_ATOMIC,
+> +	};
+
+New line between end of struct and other variables.
+
+With these changes:
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+
+>  	void *page = (void *)get_safe_page(GFP_ATOMIC);
+>  	pgd_t *trans_pgd;
+>  	int rc;
+> @@ -209,7 +219,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>  	if (!trans_pgd)
+>  		return -ENOMEM;
+>  
+> -	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
+> +	rc = trans_pgd_map_page(&trans_info, trans_pgd, page, dst_addr,
+>  				PAGE_KERNEL_EXEC);
+>  	if (rc)
+>  		return rc;
+> diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+> index 5ac712b92439..7521d558a0b9 100644
+> --- a/arch/arm64/mm/trans_pgd.c
+> +++ b/arch/arm64/mm/trans_pgd.c
+> @@ -25,6 +25,11 @@
+>  #include <linux/mm.h>
+>  #include <linux/mmzone.h>
+>  
+> +static void *trans_alloc(struct trans_pgd_info *info)
+> +{
+> +	return info->trans_alloc_page(info->trans_alloc_arg);
+> +}
+> +
+>  static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
+>  {
+>  	pte_t pte = READ_ONCE(*src_ptep);
+> @@ -180,8 +185,8 @@ int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+>  	return rc;
+>  }
+>  
+> -int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+> -		       pgprot_t pgprot)
+> +int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+> +		       void *page, unsigned long dst_addr, pgprot_t pgprot)
+>  {
+>  	pgd_t *pgdp;
+>  	pud_t *pudp;
+> @@ -190,7 +195,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+>  
+>  	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+>  	if (pgd_none(READ_ONCE(*pgdp))) {
+> -		pudp = (void *)get_safe_page(GFP_ATOMIC);
+> +		pudp = trans_alloc(info);
+>  		if (!pudp)
+>  			return -ENOMEM;
+>  		pgd_populate(&init_mm, pgdp, pudp);
+> @@ -198,7 +203,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+>  
+>  	pudp = pud_offset(pgdp, dst_addr);
+>  	if (pud_none(READ_ONCE(*pudp))) {
+> -		pmdp = (void *)get_safe_page(GFP_ATOMIC);
+> +		pmdp = trans_alloc(info);
+>  		if (!pmdp)
+>  			return -ENOMEM;
+>  		pud_populate(&init_mm, pudp, pmdp);
+> @@ -206,14 +211,14 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
+>  
+>  	pmdp = pmd_offset(pudp, dst_addr);
+>  	if (pmd_none(READ_ONCE(*pmdp))) {
+> -		ptep = (void *)get_safe_page(GFP_ATOMIC);
+> +		ptep = trans_alloc(info);
+>  		if (!ptep)
+>  			return -ENOMEM;
+>  		pmd_populate_kernel(&init_mm, pmdp, ptep);
+>  	}
+>  
+>  	ptep = pte_offset_kernel(pmdp, dst_addr);
+> -	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
+> +	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
+>  
+>  	return 0;
+>  }
+> 
