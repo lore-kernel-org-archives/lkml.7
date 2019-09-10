@@ -2,147 +2,138 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9546C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B9BC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789E021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA91B208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caR2EHx2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJbBOpaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393392AbfIJP0o (ORCPT
+        id S2393929AbfIJP2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:26:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42056 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730821AbfIJP0o (ORCPT
+        Tue, 10 Sep 2019 11:28:34 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:39687 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbfIJP2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:26:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w22so11719572pfi.9;
-        Tue, 10 Sep 2019 08:26:44 -0700 (PDT)
+        Tue, 10 Sep 2019 11:28:33 -0400
+Received: by mail-yb1-f196.google.com with SMTP id o80so3447975ybc.6;
+        Tue, 10 Sep 2019 08:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=szCNIUW6BgbokX0FPeRCVgqZ5ZdcFTN5rqoeuNdt524=;
-        b=caR2EHx2Qt5HEr4rR7I7x4dW2X6VHrZZOd5QrFiwQrJcRuuNMXoYgnzTkWyFAo2FLI
-         hIuVDkZMSQqupEAwSEVivqHBmD+UeeHLzBycMfwnzYXxLpNvOQnQjmpVF0AeIhJiGaEX
-         C9BiYSXNaiFNjeXt5ERdvlkklW0kUyxOdN1pPlxEKI2FxI0WyoAzMVcmgMehTclWwZUS
-         k4iPIKC58a+zGDjb0brPpC9UNBfDxITrvoCS6El+GKqRPLIkgHjzbTpEe14u9Le+86l/
-         nd+6LahlcilZwQyO+zDB6DQKre3yKJB4kqglYJK5ji3DbC72wx35fRtE2asafjN68Et/
-         Tymg==
+        bh=vKYdc9cN7UUMlwojbvq9IlbGHtZMRPDdw+6lRqJRyFA=;
+        b=HJbBOpaKk5mixp0xoDM8iD6kLK2zZrpVE+7AH1qhOA4SgO+QWGwYERZiSICsYREVl+
+         l4uP803Vic4AE7KKCx4DkQXCC6Uy8psO7cVLGqGI2097hYQ5dK1e9OYIEjSmQjJpesTk
+         GpjsoXlLp5rUlnQkiskSlqbK39hHVuQICRBH43VDdOK0EDoNNAEgY7YdzZ2KL2bQqMDn
+         2DSShvio62+2OcWzwg4pSIN4gALneDBrPysJOm7kF1B98Pfa6rHoOsnxE6JX4OBiT3bQ
+         L3Dc4w3DrzjCAYavgCUyb+jnRYz5V9sS//pF2yCnwkP9lH1rtDCzKWz1BvgEHQYADdUq
+         JGVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=szCNIUW6BgbokX0FPeRCVgqZ5ZdcFTN5rqoeuNdt524=;
-        b=ucU0zRb9cbCBe9CFHh6DW4s16NhNmHFdnPRuNoZoLxJty+ET/KHdLlFAV3HQxAs1pD
-         SP02zumpsvW+Rsp7p3D0xeM/Nc1Q7Fkbsps0RMNDZEZN4n6Kdq9Ua0/E248r0OyEbUj1
-         2jkzdHTQ6NqgUpFhglYZlRBow5OkGv1CVcT0v1F9rzmAyklEo1HcCjVpJCtbp7u2ejQl
-         aHMtTuMXbFesBreca+GXqrix/hREVZ5POQjpYRjVrd1G0fMNSUZiZS3Tti14pTUW7V8K
-         kd5a4pUFe99+oJoKqRG+Q/rkNLd9kpa+v/Ao50FguyGfWTtRO+MV2cOyaQ2a8op69sJB
-         Xcjg==
-X-Gm-Message-State: APjAAAVFppRVYqzJ5AuLiT2vRRd1Ici6sZnhXCLggsL2ML2FKWm3Smhn
-        qH8IIGBrq/sFtyEvrJZLL3nZNEd9HnE6polHPkI=
-X-Google-Smtp-Source: APXvYqzOINBFtfLvF0b9qbl9PEWwDqdKgy6gSXJJzwn3QWuI+u/Xg4GqfM8xomnm9stnWRBe4FRdbpMx7VLIvJ9L0cU=
-X-Received: by 2002:a17:90a:b313:: with SMTP id d19mr56369pjr.132.1568129203532;
- Tue, 10 Sep 2019 08:26:43 -0700 (PDT)
+        bh=vKYdc9cN7UUMlwojbvq9IlbGHtZMRPDdw+6lRqJRyFA=;
+        b=Sy9gUY957YLWVn514R5qdXdbd6AYPgKYLRDWD+yQEfhgko2JluJmERkjOMZSQGoXpp
+         +tIGdJqAVokxV9U+4XY2xOK+W+fyTqRqSfhGmuARzJmus5EZ5sbyDLOyT576vi2b2Fvx
+         drSCHylnG41ic7ZlFZgk2sgJIMd/NtmP0qFLFm9PvO6FtRKi8UAFe9xlmXwcD9v5Ygt5
+         oHaf1gEY3/P7jugtW3DSf0jQDY5pn1/aRCF/H7L2TavQKL2IM3HdQ/9FSyhcLXaEzltk
+         Ck1wcPts/QGgnKu2ZducckJttmTHhmjXHwN5Up/TtMaVaYrZW/8xSgbMgd7ELZcBDudL
+         YM6g==
+X-Gm-Message-State: APjAAAX5B78XQOiM0kIzQ5a4nFM10Tce6jyDew8FOgyOBrVV1gCGgNoV
+        AcRzDivwGPY2u0Psom+GGL7bffP4Jxngw4QXeFb/7AAidHI=
+X-Google-Smtp-Source: APXvYqztz7oapn1LJuLxoz0mf2ylZTwLVr+YBvn8qM++B/ZQxqgzWIZRx7haTmp8EjSfOmdEUIIqSURfLtYgECrDQjM=
+X-Received: by 2002:a5b:305:: with SMTP id j5mr20079957ybp.256.1568129312654;
+ Tue, 10 Sep 2019 08:28:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830214655.6625-1-linux@rasmusvillemoes.dk> <20190909203826.22263-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Sep 2019 18:26:32 +0300
-Message-ID: <CAHp75Vdpd5uMCM-n+4vAZLwUpN=-cHnHs1uxoV2MDd5fk+CQig@mail.gmail.com>
-Subject: Re: [PATCH v2] printf: add support for printing symbolic error codes
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
+References: <20190909090906.28700-1-kkamagui@gmail.com> <20190909090906.28700-3-kkamagui@gmail.com>
+ <20190910144215.GA30780@linux.intel.com> <20190910150342.GA1920@linux.intel.com>
+In-Reply-To: <20190910150342.GA1920@linux.intel.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Wed, 11 Sep 2019 00:28:18 +0900
+Message-ID: <CAHjaAcRf3fcJMp6AwVRTrVaABZVzSkhBwRcpKZogAS4SSDK3zg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism
+ for supporting AMD's fTPM
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>
+        Vanya Lazeev <ivan.lazeev@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:39 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
 >
-> It has been suggested several times to extend vsnprintf() to be able
-> to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
-> another attempt. Rather than adding another %p extension, simply teach
-> plain %p to convert ERR_PTRs. While the primary use case is
+> On Tue, Sep 10, 2019 at 03:42:15PM +0100, Jarkko Sakkinen wrote:
+> > On Mon, Sep 09, 2019 at 06:09:06PM +0900, Seunghun Han wrote:
+> > > I got an AMD system which had a Ryzen Threadripper 1950X and MSI
+> > > mainboard, and I had a problem with AMD's fTPM. My machine showed an error
+> > > message below, and the fTPM didn't work because of it.
+> > >
+> > > [  5.732084] tpm_crb MSFT0101:00: can't request region for resource
+> > >              [mem 0x79b4f000-0x79b4ffff]
+> > > [  5.732089] tpm_crb: probe of MSFT0101:00 failed with error -16
+> > >
+> > > When I saw the iomem, I found two fTPM regions were in the ACPI NVS area.
+> > > The regions are below.
+> > >
+> > > 79a39000-79b6afff : ACPI Non-volatile Storage
+> > >   79b4b000-79b4bfff : MSFT0101:00
+> > >   79b4f000-79b4ffff : MSFT0101:00
+> > >
+> > > After analyzing this issue, I found that crb_map_io() function called
+> > > devm_ioremap_resource() and it failed. The ACPI NVS didn't allow the TPM
+> > > CRB driver to assign a resource in it because a busy bit was set to
+> > > the ACPI NVS area.
+> > >
+> > > To support AMD's fTPM, I added a function to check intersects between
+> > > the TPM region and ACPI NVS before it mapped the region. If some
+> > > intersects are detected, the function just calls devm_ioremap() for
+> > > a workaround. If there is no intersect, it calls devm_ioremap_resource().
+> > >
+> > > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+> >
+> > This problem is still valid and not addressed by Vanya's patch (and
+> > should not be as it is a disjoint issue).  However, calling
+> > devm_ioremap() is somewhat racy as the NVS driver is not aware of that.
+> >
+> > My take is that this should be fixed in the code that assigns regions to
+> > the NVS driver e.g. it could look up the regions assigned to the
+> > MSFT0101 and ignore those regions. In the end linux-acpi maintainers
+> > have the say on this but this would be the angle that I'd take to
+> > implement such patch probably.
 >
->   if (IS_ERR(foo)) {
->     pr_err("Sorry, can't do that: %p\n", foo);
->     return PTR_ERR(foo);
->   }
+> Matthew pointed out that having a hook in NVS driver is better solution
+> because it is nil functionality if the TPM driver is loaded. We need
+> functions to:
 >
-> it is also more helpful to get a symbolic error code (or, worst case,
-> a decimal number) in case an ERR_PTR is accidentally passed to some
-> %p<something>, rather than the (efault) that check_pointer() would
-> result in.
+> 1. Request a region from the NVS driver (when tpm_crb loads)
+> 2. Release a region back to the NVS Driver (when tpm_crb unloads).
 >
-> With my embedded hat on, I've made it possible to remove this.
+> My proposal would unnecessarily duplicate code and also leave a
+> side-effect when TPM is not used in the first place.
 >
-> I've tested that the #ifdeffery in errcode.c is sufficient to make
-> this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
-> 0day bot will tell me which ones I've missed.
+> I see this as the overally best solution. If you can come up with a
+> patch for the NVS side and changes to CRB drivers to utilize the new
+> hooks, then combined with Vanya's changes we have a sustainable solution
+> for AMD fTPM.
+
+It's a great solution. I will update this patch on your advice and
+send it to you soon.
+
+By the way, I have a question about your advice.
+If we handle the NVS region with NVS driver, calling devm_ioremap()
+function is fine like crb_ioremap_resource() function in this patch?
+
 >
-> The symbols to include have been found by massaging the output of
->
->   find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
->
-> In the cases where some common aliasing exists
-> (e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
-> I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
-> to the bottom so that one takes precedence.
-
-> +#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = #err
-> +#define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = #err
-
-From long term prospective 300 and 550 hard coded here may be forgotten.
-
-> +const char *errcode(int err)
-We got long, why not to use long type for it?
-
-> +{
-> +       /* Might as well accept both -EIO and EIO. */
-> +       if (err < 0)
-> +               err = -err;
-
-> +       if (err <= 0) /* INT_MIN or 0 */
-> +               return NULL;
-> +       if (err < ARRAY_SIZE(codes_0))
-
-> +               return codes_0[err];
-
-It won't work if one of the #ifdef:s in the array fails.
-Would it?
-
-> +       if (err >= 512 && err - 512 < ARRAY_SIZE(codes_512))
-> +               return codes_512[err - 512];
-> +       /* But why? */
-> +       if (IS_ENABLED(CONFIG_MIPS) && err == EDQUOT) /* 1133 */
-> +               return "EDQUOT";
-> +       return NULL;
-> +}
-
-> +               long err = PTR_ERR(ptr);
-> +               const char *sym = errcode(-err);
-
-Do we need additional sign change if we already have such check inside
-errcode()?
-
--- 
-With Best Regards,
-Andy Shevchenko
+> /Jarkko
