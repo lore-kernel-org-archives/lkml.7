@@ -2,96 +2,90 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDC3C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ADCC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DBF2089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB8221479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394001AbfIJPek (ORCPT
+        id S2393988AbfIJPib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:34:40 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:26636 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393960AbfIJPej (ORCPT
+        Tue, 10 Sep 2019 11:38:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:24607 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391115AbfIJPia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:34:39 -0400
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AFW19p001475;
-        Tue, 10 Sep 2019 15:34:16 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2uxc4t2b6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Sep 2019 15:34:16 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id C8E7CAA;
-        Tue, 10 Sep 2019 15:34:15 +0000 (UTC)
-Received: from [16.116.129.27] (unknown [16.116.129.27])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 8873D46;
-        Tue, 10 Sep 2019 15:34:14 +0000 (UTC)
-Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
- <CANiq72nTKbNEKezoy_CqdFRuQ0SD2OsORV8u=i_1g=2atkCRiA@mail.gmail.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <797654d8-562a-6492-79e1-65a292157d04@hpe.com>
-Date:   Tue, 10 Sep 2019 08:34:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-In-Reply-To: <CANiq72nTKbNEKezoy_CqdFRuQ0SD2OsORV8u=i_1g=2atkCRiA@mail.gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Tue, 10 Sep 2019 11:38:30 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-165-ivUePp4GPIuX29LloUIPJQ-1; Tue, 10 Sep 2019 16:38:28 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 10 Sep 2019 16:38:27 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 10 Sep 2019 16:38:27 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@arndb.de>,
+        Saeed Mahameed <saeedm@mellanox.com>
+CC:     "cai@lca.pw" <cai@lca.pw>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Eran Ben Elisha" <eranbe@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Erez Shitrit <erezsh@mellanox.com>
+Subject: RE: [PATCH] net/mlx5: reduce stack usage in FW tracer
+Thread-Topic: [PATCH] net/mlx5: reduce stack usage in FW tracer
+Thread-Index: AQHVZ6/gotndlflYLEiLmwBbeCyLo6clCo3w
+Date:   Tue, 10 Sep 2019 15:38:27 +0000
+Message-ID: <d50f78334e64476bad033862035c734c@AcuMS.aculab.com>
+References: <20190906151123.1088455-1-arnd@arndb.de>
+ <383db08b6001503ac45c2e12ac514208dc5a4bba.camel@mellanox.com>
+ <CAK8P3a0_VhZ9hYmc6P3Qx+Z6WSHh3PVZ7JZh7Tr=R1CAKvqWmA@mail.gmail.com>
+ <5abccf6452a9d4efa2a1593c0af6d41703d4f16f.camel@mellanox.com>
+ <CAK8P3a3q4NqiU-OydMqU3J=gT-8eBmsiL5tPsyJb1PNgR+48hA@mail.gmail.com>
+In-Reply-To: <CAK8P3a3q4NqiU-OydMqU3J=gT-8eBmsiL5tPsyJb1PNgR+48hA@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-10_11:2019-09-10,2019-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=883 spamscore=0 adultscore=0 priorityscore=1501 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1909100147
+X-MC-Unique: ivUePp4GPIuX29LloUIPJQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAxMCBTZXB0ZW1iZXIgMjAxOSAwOToxNQ0KLi4u
+DQo+ID4gSSBhbSBub3Qgc3VyZSBob3cgdGhpcyB3b3VsZCB3b3JrLCBzaW5jZSB0aGUgZm9ybWF0
+IHBhcmFtZXRlcnMgY2FuDQo+ID4gY2hhbmdlcyBkZXBlbmRpbmcgb24gdGhlIEZXIHN0cmluZyBh
+bmQgdGhlIHNwZWNpZmljIHRyYWNlcy4NCj4gDQo+IEFoLCBzbyB0aGUgZm9ybWF0IHN0cmluZyBj
+b21lcyBmcm9tIHRoZSBmaXJtd2FyZT8gSSBkaWRuJ3QgbG9vaw0KPiBhdCB0aGUgY29kZSBpbiBl
+bm91Z2ggZGV0YWlsIHRvIHVuZGVyc3RhbmQgd2h5IGl0J3MgZG9uZSBsaWtlIHRoaXMsDQo+IG9u
+bHkgZW5vdWdoIHRvIG5vdGljZSB0aGF0IGl0J3MgcmF0aGVyIHVudXN1YWwuDQoNCklmIHRoZSBm
+b3JtYXQgc3RyaW5nIGNvbWVzIGZyb20gdGhlIGZpcm13YXJlIHlvdSByZWFsbHkgc2hvdWxkbid0
+DQpwYXNzIGl0IHRvIGFueSBzdGFuZGFyZCBwcmludGYgZnVuY3Rpb24uDQpZb3UgbXVzdCBlbnN1
+cmUgdGhhdCBpdCBkb2Vzbid0IGNvbnRhaW4gYW55IGZvcm1hdCBlZmZlY3RvcnMNCnRoYXQgbWln
+aHQgZGVyZWZlcmVuY2UgcGFyYW1ldGVycy4NCihUaGUgY29kZSBtaWdodCB0cnkgdG8gZG8gdGhh
+dC4pDQoNCkdpdmVuIHRoYXQgJ3BvaW50ZXInIGZvcm1hdCBlZmZlY3RvcnMgY2FuJ3QgYmUgdXNl
+ZCwgdGhlIGZpcm13YXJlDQptdXN0IGFsc28gc3VwcGx5IHRoZSByZWxldmFudCBpbnRlZ2VyIG9u
+ZXM/DQpUaGlzIHNob3VsZCBtZWFuIHRoYXQgYWxsIHRoZSBwcm9jZXNzaW5nIGlzIGRlZmVycmFi
+bGUgdW50aWwgdGhlDQp0cmFjZSByZWNvcmQgaXMgcmVhZC4NCg0KJ25vaW5saW5lJyBqdXN0IHBh
+cGVycyBvdmVyIHRoZSBjcmFja3MuDQpFc3BlY2lhbGx5IHNpbmNlIHZhc3ByaW50ZigpIGlzIGxp
+a2VseSB0byB1c2UgYSBsb3Qgb2Ygc3RhY2suDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
+ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
+TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-
-On 9/10/2019 5:07 AM, Miguel Ojeda wrote:
-> On Thu, Sep 5, 2019 at 3:50 PM Mike Travis <mike.travis@hpe.com> wrote:
->>
->> These patches support upcoming UV systems that do not have a UV HUB.
-> 
-> Please send patches as plain text without attachments. See:
-> 
->    https://www.kernel.org/doc/html/latest/process/submitting-patches.html#no-mime-no-links-no-compression-no-attachments-just-plain-text
-> 
-> for details.
-> 
-> Cheers,
-> Miguel
-> 
-
-Hi,  I'm not conscientiously adding any attachments.  I think what is 
-happening is some email readers mistake the '---' to signify an 
-attachment follows.  I see the "staple" symbol on some indicating an 
-attachment, but not usually all of the email I send.  Thanks, Mike
