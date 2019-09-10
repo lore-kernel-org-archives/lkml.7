@@ -2,121 +2,56 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E1DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2FAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B09521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C14A21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406536AbfIJG5j (ORCPT
+        id S2406548AbfIJG5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:57:39 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:41947 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729634AbfIJG5h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:57:37 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 7a5ki8cZP50xT7a5niDcUA; Tue, 10 Sep 2019 08:57:36 +0200
-Subject: Re: [PATCH] media: vimc: fla: Add virtual flash subdevice
-To:     =?UTF-8?Q?Lucas_Magalh=c3=a3es?= <lucmaga@gmail.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>, edusbarretto@gmail.com
-References: <20190901211139.2405-1-lucmaga@gmail.com>
- <1fea2f25-98d1-f9f6-a483-17c74f89452e@xs4all.nl>
- <CAK0xOaGZx5dyDMAFp+JxnrfOYH3yYdvtcJzWdAmHyeRwUe38Lg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4ee1410b-6ab2-b1e2-46e1-734ba69e8d49@xs4all.nl>
-Date:   Tue, 10 Sep 2019 08:57:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 02:57:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56886 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406535AbfIJG5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:57:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CE142AC18;
+        Tue, 10 Sep 2019 06:57:38 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        paul.walmsley@sifive.com, linux-serial@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
+References: <20190910055923.28384-1-hch@lst.de>
+X-Yow:  My EARS are GONE!!
+Date:   Tue, 10 Sep 2019 08:57:37 +0200
+In-Reply-To: <20190910055923.28384-1-hch@lst.de> (Christoph Hellwig's message
+        of "Tue, 10 Sep 2019 07:59:23 +0200")
+Message-ID: <mvm4l1kskny.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAK0xOaGZx5dyDMAFp+JxnrfOYH3yYdvtcJzWdAmHyeRwUe38Lg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfKamq/PflL4zEMonyAaFfMMxg3y0lQOgRwwMET9oKFk0ms0iq8qBgSn7Qh3H8EJCej9PSK00T778GW2w+SaVsMZc4Q94KLs9b6MjxmQtIdeBU6wst9hY
- M0i4FZknYrdIb65f+8RRAwA02T7X2No/dKrRo4n1Dhuv5IUwkLdtGDSblIZD6LDRQFrA1w5gFZvEIFJOw1u9Nuut6oeKI0I3aBoBbo1W+z2cFIQKEUrnJTjz
- 5/4ukxMl84GVBIyyrTXVphMWOnSFsqhEhrvELg2YZJ+KSWbIJhkVqlQkz/8aPWysEYYUDSB40P58axMCJtl3lg==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 1:00 AM, Lucas Magalhães wrote:
-> Hi Hans,
-> Thanks for the review. I fixed most of the issues you found. Just have
-> the question below.
-> 
-> On Mon, Sep 2, 2019 at 9:04 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->>> +
->>> +int vimc_fla_add(struct vimc_device *vimc, struct vimc_ent_config *vcfg)
->>> +{
->>> +     struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
->>> +     struct vimc_fla_device *vfla;
->>> +     int ret;
->>> +
->>> +     /* Allocate the vfla struct */
->>> +     vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
->>> +     if (!vfla)
->>> +             return -ENOMEM;
->>> +
->>> +     v4l2_ctrl_handler_init(&vfla->hdl, 4);
->>> +
->>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                            V4L2_CID_FLASH_LED_MODE,
->>> +                            V4L2_FLASH_LED_MODE_TORCH, ~0x7,
->>> +                            V4L2_FLASH_LED_MODE_NONE);
->>> +     v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                            V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
->>> +                            V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_TIMEOUT, 1, 10, 1, 10);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_TORCH_INTENSITY, 0, 255, 1, 255);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_INTENSITY, 0, 255, 1, 255);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_INDICATOR_INTENSITY, 0, 255, 1, 255);
->>> +     v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
->>> +                       V4L2_CID_FLASH_STROBE_STATUS, 0, 0, 0, 0);
->>
->> It would be nice if this would actually reflect the actual strobe status.
->>
-> Regarding the strobe status I was reading the code and find out that
-> V4L2_CID_FLASH_STROBE_STATUS is a V4L2_CTRL_FLAG_READ_ONLY
-> but it's not a V4L2_CTRL_FLAG_VOLATILE. I found this intriguing. How an
-> I suppose to get it if its not volatile? As I understood it changes over time
-> if the strobe starts and the timeout expire, isn't it? Shouldn't it be volatile
-> if so?
+On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
 
-A non-volatile read-only control is set deterministically by the the driver.
-So the driver calls v4l2_ctrl_s_ctrl() to change the controls value.
+> The sifive serial driver implements earlycon support,
 
-A volatile read-only control is one where the value is read from a hardware
-register that is continuously changing. E.g. if autogain is on, then the gain
-register in a device contains the currently calculated gain, but that might be
-changed the next time the register is read.
+It should probably be documented in admin-guide/kernel-parameters.txt.
 
-Regards,
+Andreas.
 
-	Hans
-
-> 
-> I've already made a simple implementation were V4L2_CID_FLASH_STROBE_STATUS
-> returns after calling V4L2_CID_FLASH_STROBE and becomes false after the timeout
-> time passes.
-> 
-> Thanks!
-> 
-
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
