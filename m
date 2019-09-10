@@ -2,124 +2,91 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04843C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65FFC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68A02081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A702D217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfIJKZC (ORCPT
+        id S1730756AbfIJKZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Sep 2019 06:25:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726960AbfIJKZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 06:25:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:60660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfIJKZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:25:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45E591000;
-        Tue, 10 Sep 2019 03:25:01 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B154C3F59C;
-        Tue, 10 Sep 2019 03:25:00 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 11:24:59 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] arm64: fix unreachable code issue with cmpxchg
-Message-ID: <20190910102458.GJ9720@e119886-lin.cambridge.arm.com>
-References: <20190909202153.144970-1-arnd@arndb.de>
- <20190910092324.GI9720@e119886-lin.cambridge.arm.com>
- <CAK8P3a2Vk+KSUGJyPTRuLPD=KPEAR43SZ1ofB6k+KeQi3fSERw@mail.gmail.com>
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AAIIrt127455
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:25:02 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ux9ttrhng-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:25:01 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 10 Sep 2019 11:24:59 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Sep 2019 11:24:56 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AAOtnZ48824346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 10:24:55 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04FA452052;
+        Tue, 10 Sep 2019 10:24:55 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.54.190])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 00D7052051;
+        Tue, 10 Sep 2019 10:24:35 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        christophe.leroy@c-s.fr,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH 0/2] powerpc/watchpoint: Disable watchpoint hit by larx/stcx instruction
+Date:   Tue, 10 Sep 2019 15:54:20 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Vk+KSUGJyPTRuLPD=KPEAR43SZ1ofB6k+KeQi3fSERw@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091010-0008-0000-0000-00000313D223
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091010-0009-0000-0000-00004A323973
+Message-Id: <20190910102422.23233-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=279 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909100105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 11:38:37AM +0200, Arnd Bergmann wrote:
-> On Tue, Sep 10, 2019 at 11:23 AM Andrew Murray <andrew.murray@arm.com> wrote:
-> 
-> >
-> > >  arch/arm64/include/asm/cmpxchg.h | 15 ++++++++-------
-> > >  1 file changed, 8 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-> > > index a1398f2f9994..fd64dc8a235f 100644
-> > > --- a/arch/arm64/include/asm/cmpxchg.h
-> > > +++ b/arch/arm64/include/asm/cmpxchg.h
-> > > @@ -19,7 +19,7 @@
-> > >   * acquire+release for the latter.
-> > >   */
-> > >  #define __XCHG_CASE(w, sfx, name, sz, mb, nop_lse, acq, acq_lse, rel, cl)    \
-> > > -static inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)              \
-> > > +static __always_inline u##sz __xchg_case_##name##sz(u##sz x, volatile void *ptr)\
-> >
-> > This hunk isn't needed, there is no BUILD_BUG here.
-> 
-> Right, I noticed this, but it seemed like a good idea regardless given the small
-> size of the function compared with the overhead of a function call.  We clearly
-> want these to be inlined all the time.
-> 
-> Same for the others.
+I've prepared my patch on top of Christophe's patch as it's easy
+to change stepping_handler() rather than hw_breakpoint_handler().
+2nd patch is the actual fix.
 
-I'm not so sure - isn't the point of something like OPTIMIZE_INLINING to give
-more freedom to the tooling (and by virtue of the option - the user)?
+Christophe Leroy (1):
+  powerpc/hw_breakpoint: move instruction stepping out of
+    hw_breakpoint_handler()
 
-Surely any decent optimising compiler will do the right thing by inlining small
-trivial functions that are annotated with inline? And if not, the compiler
-should be fixed not the kernel - unless of course it causes an issue - and then
-we should fix those specific cases.
+Ravi Bangoria (1):
+  powerpc/watchpoint: Disable watchpoint hit by larx/stcx instructions
 
-There must be dozens of trivial functions that are marked with __inline, I
-don't think it would make sense to mark those as __always_inline. For example the
-atomics in atomic_lse.h are trivial but only marked inline. We obviously want
-them inline, though I don't think we should babysit the compiler to do the
-right thing.
+ arch/powerpc/kernel/hw_breakpoint.c | 77 +++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 27 deletions(-)
 
-(Also the commit message implies that all the hunks are required to fix this
-particular issue which they are not).
+-- 
+2.21.0
 
-Thanks,
-
-Andrew Murray
-
-> 
-> > Alternatively is it possible to replace the BUILD_BUG's with something else?
-> >
-> > I think because we use BUILD_BUG at the end of a switch statement, we make
-> > the assumption that size is known at compile time, for this reason we should
-> > ensure the function containing the BUILD_BUG is __always_inline.
-> >
-> > Looking across the kernel where BUILD_BUG is used as a default in a switch
-> > statment ($ git grep -B 3 BUILD_BUG\( | grep default), most instances are
-> > within macros, but many are found in an __always_inline function:
-> >
-> > arch/x86/kvm/cpuid.h
-> > mm/kasan/generic.c
-> >
-> > Though some are not:
-> >
-> > include/linux/signal.h
-> > arch/arm64/include/asm/arm_dsu/pmu.h
-> >
-> > I wonder if there may be a latent mole ready to whack with pmu.h?
-> 
-> Right, it can't hurt to annotate those as well. I actually have another
-> fixup for linux/signal.h that I would have to revisit at some point.
-> See https://bugs.llvm.org/show_bug.cgi?id=38789, I think this is
-> fixed with clang-9 now, but maybe not with clang-8.
-> 
->       Arnd
