@@ -2,107 +2,115 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8438C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A4FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC189206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEeKL2c0"
+	by mail.kernel.org (Postfix) with ESMTP id D6FC42089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405501AbfIJPMm (ORCPT
+        id S2389225AbfIJPPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:12:42 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34218 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730177AbfIJPMl (ORCPT
+        Tue, 10 Sep 2019 11:15:19 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43787 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfIJPPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:12:41 -0400
-Received: by mail-yb1-f195.google.com with SMTP id u68so6255786ybg.1;
-        Tue, 10 Sep 2019 08:12:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dBN0mOQb7kVuILysF+ico+GsGc+Un+rEP0RRGf2F7fA=;
-        b=eEeKL2c0kgpkANsPqQ+OIL4UrNqXsOrPBNDv5Xhb76Uh8VRM8yrYt8RSubFZZq9FnY
-         XAjaFqFhfc4Tn/mPWNpvnB7AebGsGxLQg7jlJuPXz1dm+vuSlzdXZ986Rm042VT9M/7y
-         tzNjkF4qB8bJ3YvoaRJVX5BZ+nNbuOpyDAZWGu0PJxn75Uhgkz5VwiS3LgIVAaAFHnbI
-         MOI1IaSDmoMObywmoGlSUXpQfRG9DBjQh27guB1HgKqz5MinaEwK2lhx8MyLDs+Wc3z8
-         +vg9neqlu5GqBlnCvjB9SjhhCVO/0mYBcHFweHtFnGdcRf2uUG8LqYqHbW51FHjzwhPX
-         N2tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dBN0mOQb7kVuILysF+ico+GsGc+Un+rEP0RRGf2F7fA=;
-        b=j5MiRcjcFD9ZGGeHrfJpr0EJ4mbju26VxoQ4vMYIFWFEB+FYND5/GsEeB6gJQM7HIb
-         e12LEnjbb+Q7d5YoDOpI0o3z2bOBqZXcLHXq02DAkzH73CLO5w03L9/zOmW420qJsVeg
-         xfwAvHX3WJEm85WnYmPaYvT3SS2/bAVG11RSCWfiQQFg1fWNu17IT9ddSpuzFgwA0DHQ
-         pclyORe8rNVzsv93OBktEphztCLc8MjgKKVLYGcAAXewoSVHjldIBIZRwChYMgcMYof7
-         DBJl3cldXMTPfXMPwPg/pQnFqd6xCjkDI2n3wSSvMQ+qE+CnLhKQNeMZyy1nV9SWAfrZ
-         LJBg==
-X-Gm-Message-State: APjAAAXTz+sAPMLHtK0LVm+nvk95/Q4mlJE0GU2YTtK7UFKwT9BHDtTD
-        G+jPDngu75/5++8PoSWIsPQoCDeFbkwgEwNLy7Y=
-X-Google-Smtp-Source: APXvYqzi0rcOSdrW08Ls9qoI4oX8dwob9XnFDdNGrV07kIdOjEbn2N1g/H+DHq2jz1Xlewmr8YljVo4KdeeAJe0784c=
-X-Received: by 2002:a25:d751:: with SMTP id o78mr21368658ybg.101.1568128360022;
- Tue, 10 Sep 2019 08:12:40 -0700 (PDT)
+        Tue, 10 Sep 2019 11:15:18 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id DDB17240006;
+        Tue, 10 Sep 2019 15:15:15 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 17:15:13 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sandeep Sheriker Mallikarjun 
+        <sandeepsheriker.mallikarjun@microchip.com>
+Subject: Re: [PATCH] irqchip/atmel-aic5: add support for sam9x60 irqchip
+Message-ID: <20190910151513.GY21254@piout.net>
+References: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-References: <20190909090906.28700-1-kkamagui@gmail.com> <20190909090906.28700-2-kkamagui@gmail.com>
- <20190910123452.GC7484@linux.intel.com>
-In-Reply-To: <20190910123452.GC7484@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Wed, 11 Sep 2019 00:12:25 +0900
-Message-ID: <CAHjaAcRyd1bSjeD-jJkjzeSGq8gf_f=qz_=wyi1omY7-20xARw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tpm: tpm_crb: enhance command and response buffer
- size calculation code
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Mon, Sep 09, 2019 at 06:09:05PM +0900, Seunghun Han wrote:
-> > The purpose of crb_fixup_cmd_size() function is to work around broken
-> > BIOSes and get the trustable size between the ACPI region and register.
-> > When the TPM has a command buffer and response buffer independently,
-> > the crb_map_io() function calls crb_fixup_cmd_size() twice to calculate
-> > each buffer size.  However, the current implementation of it considers
-> > one of two buffers.
-> >
-> > To support independent command and response buffers, I changed
-> > crb_check_resource() function for storing ACPI TPB regions to a list.
-> > I also changed crb_fixup_cmd_size() to use the list for calculating each
-> > buffer size.
-> >
-> > Signed-off-by: Seunghun Han <kkamagui@gmail.com>
->
-> I think as far as the tpm_crb goes I focus on getting Vanya's change
-> landed because it is better structured, more mature and the first
-> version was sent couple of weeks earlier. You are welcome to make
-> your remarks on that patch.
+On 09/09/2019 14:00:35+0300, Claudiu Beznea wrote:
+> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> 
+> Add support for SAM9X60 irqchip.
+> 
+> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> [claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
+>  documentation]
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Thank you for your review. I already knew Vanya's patch,
-https://lkml.org/lkml/2019/8/11/151, and this patch didn't work for
-me. I also couldn't agree on some points like memory allocating inside
-the ACPI walker and changing many parts of TPM driver. I would like to
-support AMD's fTPM with the smallest changes since this is a
-workaround as you know.
+> ---
+>  .../devicetree/bindings/interrupt-controller/atmel,aic.txt     |  7 +++++--
+>  drivers/irqchip/irq-atmel-aic5.c                               | 10 ++++++++++
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> index f4c5d34c4111..7079d44bf3ba 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> @@ -1,8 +1,11 @@
+>  * Advanced Interrupt Controller (AIC)
+>  
+>  Required properties:
+> -- compatible: Should be "atmel,<chip>-aic"
+> -  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
+> +- compatible: Should be:
+> +    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
+> +      "sama5d3" or "sama5d4"
+> +    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
+> +
+>  - interrupt-controller: Identifies the node as an interrupt controller.
+>  - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+>    The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
+> diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
+> index 6acad2ea0fb3..29333497ba10 100644
+> --- a/drivers/irqchip/irq-atmel-aic5.c
+> +++ b/drivers/irqchip/irq-atmel-aic5.c
+> @@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
+>  static const struct of_device_id aic5_irq_fixups[] __initconst = {
+>  	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
+>  	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
+> +	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
+>  	{ /* sentinel */ },
+>  };
+>  
+> @@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
+>  	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
+>  }
+>  IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
+> +
+> +#define NR_SAM9X60_IRQS		50
+> +
+> +static int __init sam9x60_aic5_of_init(struct device_node *node,
+> +				       struct device_node *parent)
+> +{
+> +	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
+> +}
+> +IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
+> -- 
+> 2.7.4
+> 
 
-I didn't understand clearly what your point is. Do you want me to
-change my patches structurally like Vanya's patch and make patch v3?
-or want me to give some advice to Vanya?
-
->
-> /Jarkko
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
