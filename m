@@ -2,119 +2,166 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B62C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AEEC4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114D720872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE2B20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 07:29:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="oeAHHM5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfIJH2e (ORCPT
+        id S1728593AbfIJH3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 03:28:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfIJH2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 03:28:33 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A41AF81F2F;
-        Tue, 10 Sep 2019 07:28:33 +0000 (UTC)
-Received: from [10.72.12.188] (ovpn-12-188.pek2.redhat.com [10.72.12.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23B5660BF3;
-        Tue, 10 Sep 2019 07:28:28 +0000 (UTC)
-Subject: Re: [RFC PATCH untested] vhost: block speculation of translated
- descriptors
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20190908110521.4031-1-mst@redhat.com>
- <db4d77d7-c467-935d-b4ae-1da7635e9b6b@redhat.com>
- <20190909104355-mutt-send-email-mst@kernel.org>
- <9ab48e0f-50a9-bed4-1801-73c37a7da27c@redhat.com>
- <20190910024814-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bb71974e-a8b3-4cc4-f3e1-e48118469b78@redhat.com>
-Date:   Tue, 10 Sep 2019 15:28:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 10 Sep 2019 03:29:14 -0400
+Received: from srv1.deutnet.info ([116.203.153.70]:41230 "EHLO
+        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfIJH3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 03:29:14 -0400
+X-Greylist: delayed 2537 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Sep 2019 03:29:12 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deutnet.info; s=default; h=Message-ID:Subject:Cc:To:From:Date:in-reply-to;
+         bh=QXUe3+3nzq15jatpRDKHw4LMVFNX7Jji04dG2mMWZNE=; b=oeAHHM5JcJiB9J+TKZ3FERW6s
+        7007dX+mSOYoJ3YCrylOQ6BAUKuDymofE4R6i7kFrbOnJGuLYXXmqlX8e5Ma0DKNXJzMxAeMejrBE
+        0mFJp2kmIE1VHwoSn8nh4mdhash/Yj73xKglrQBsWtiph7zB4LyBKLSXOAwkzEGJKXgRPCQj8SVGn
+        C3oF74vmkUCJZD+8Gsb1BBEhByQSRTue89tMReudkBC0Oa6Q/l+bNzaAmLReXE+HUVa1gDmDspood
+        ykxE8P+b5j4N0Eha8TpOHfE2B3sxW/lxHp3fE05XbA8gZ3wOgK0+Wt2QObXrkElmzC+feKitAMC3J
+        yB+pHDkxQ==;
+Received: from [2001:bc8:3dc9::1] (helo=localhost)
+        by srv1.deutnet.info with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <agriveaux@deutnet.info>)
+        id 1i7ZvQ-0001RS-Qy; Tue, 10 Sep 2019 08:46:52 +0200
+Received: from agriveaux by localhost with local (Exim 4.92)
+        (envelope-from <agriveaux@deutnet.info>)
+        id 1i7ZvQ-000ZKW-G2; Tue, 10 Sep 2019 08:46:52 +0200
+Date:   Tue, 10 Sep 2019 08:46:52 +0200
+From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, agriveaux@deutnet.info
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCHv4] MIPS: JZ4780: DTS: Add I2C nodes
+Message-ID: <20190910064652.GA135775@deutnet.info>
 MIME-Version: 1.0
-In-Reply-To: <20190910024814-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 10 Sep 2019 07:28:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
+by default.
 
-On 2019/9/10 下午2:48, Michael S. Tsirkin wrote:
-> On Tue, Sep 10, 2019 at 09:52:10AM +0800, Jason Wang wrote:
->> On 2019/9/9 下午10:45, Michael S. Tsirkin wrote:
->>> On Mon, Sep 09, 2019 at 03:19:55PM +0800, Jason Wang wrote:
->>>> On 2019/9/8 下午7:05, Michael S. Tsirkin wrote:
->>>>> iovec addresses coming from vhost are assumed to be
->>>>> pre-validated, but in fact can be speculated to a value
->>>>> out of range.
->>>>>
->>>>> Userspace address are later validated with array_index_nospec so we can
->>>>> be sure kernel info does not leak through these addresses, but vhost
->>>>> must also not leak userspace info outside the allowed memory table to
->>>>> guests.
->>>>>
->>>>> Following the defence in depth principle, make sure
->>>>> the address is not validated out of node range.
->>>>>
->>>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>>>> ---
->>>>>     drivers/vhost/vhost.c | 4 +++-
->>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->>>>> index 5dc174ac8cac..0ee375fb7145 100644
->>>>> --- a/drivers/vhost/vhost.c
->>>>> +++ b/drivers/vhost/vhost.c
->>>>> @@ -2072,7 +2072,9 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
->>>>>     		size = node->size - addr + node->start;
->>>>>     		_iov->iov_len = min((u64)len - s, size);
->>>>>     		_iov->iov_base = (void __user *)(unsigned long)
->>>>> -			(node->userspace_addr + addr - node->start);
->>>>> +			(node->userspace_addr +
->>>>> +			 array_index_nospec(addr - node->start,
->>>>> +					    node->size));
->>>>>     		s += size;
->>>>>     		addr += size;
->>>>>     		++ret;
->>>> I've tried this on Kaby Lake smap off metadata acceleration off using
->>>> testpmd (virtio-user) + vhost_net. I don't see obvious performance
->>>> difference with TX PPS.
->>>>
->>>> Thanks
->>> Should I push this to Linus right now then? It's a security thing so
->>> maybe we better do it ASAP ... what's your opinion?
->>
->> Yes, you can.
->>
->> Acked-by: Jason Wang <jasowang@redhat.com>
->
-> And should I include
->
-> Tested-by: Jason Wang <jasowang@redhat.com>
->
-> ?
+Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+---
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index b03cdec56de9..a76ecd69bfd0 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -239,6 +239,92 @@
+ 		status = "disabled";
+ 	};
+ 
++	i2c0: i2c@10050000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg = <0x10050000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <60>;
++
++		clocks = <&cgu JZ4780_CLK_SMB0>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c0_data>;
++
++		status = "disabled";
++	};
++
++	i2c1: i2c@10051000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10051000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <59>;
++
++		clocks = <&cgu JZ4780_CLK_SMB1>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c1_data>;
++
++		status = "disabled";
++	};
++
++	i2c2: i2c@10052000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10052000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++
++		clocks = <&cgu JZ4780_CLK_SMB2>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c2_data>;
++
++		status = "disabled";
++	};
++
++	i2c3: i2c@10053000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10053000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <57>;
++
++		clocks = <&cgu JZ4780_CLK_SMB3>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c3_data>;
++
++		status = "disabled";
++	};
++
++	i2c4: i2c@10054000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10054000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <56>;
++
++		clocks = <&cgu JZ4780_CLK_SMB4>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c4_data>;
++
++		status = "disabled";
++	};
++
+ 	watchdog: watchdog@10002000 {
+ 		compatible = "ingenic,jz4780-watchdog";
+ 		reg = <0x10002000 0x10>;
+-- 
+2.20.1
 
-Yes.
-
-Thanks
-
-
->
->>
