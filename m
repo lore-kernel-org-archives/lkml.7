@@ -2,111 +2,148 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBAEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBAEC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50255216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34D6216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Pd5e7QIn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="N6rJrhq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfIJT0U (ORCPT
+        id S1728812AbfIJT0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 15:26:20 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:11186 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfIJT0U (ORCPT
+        Tue, 10 Sep 2019 15:26:55 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:34706 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfIJT0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 15:26:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568143575;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=cv+Edmyh7Q77ONzodXR6r48kRod7QYj1aXIMSz+yVjE=;
-        b=Pd5e7QInBhGLAMD78oDrXhc2C3wa6oga6bVTdXoz87SCzzbRukj24XdSx4Bxk0NKDz
-        3A8B5z3/69zQHuZtV6psARYipGMHCpYBy8ujPbSx275ou3a66jDo/Akgh6254/fRdnb1
-        vL//foDK8R62BIsKXjxhsbMo6iOoOG3ASFWYvQ9uIjn/rYYmG8LJbI3v5FhulwBcX+Eh
-        v2gjKG6AjcFOtkCU9Am46INeNgUb8g3NXNg6jwI0lw5i5wzo4iRV5aWkYPSPVtWjANrI
-        Slh7F/jsNWIvWqe0x8DXb9ElWR06KEMGueWwJnrcWUwABBb3d76K5Yc6iMxx73ZOxVz4
-        5qFQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PhwDWsEw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8AJQ33Z0
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 10 Sep 2019 21:26:03 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com>
-Date:   Tue, 10 Sep 2019 21:26:03 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E0D77E0F-6A04-4C5D-8821-BB185EBDC511@goldelico.com>
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com> <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com> <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com> <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com> <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com> <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com> <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 10 Sep 2019 15:26:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 282253FC0A;
+        Tue, 10 Sep 2019 21:26:48 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=N6rJrhq8;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id W_jrAifXU1wU; Tue, 10 Sep 2019 21:26:45 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id E74FB3F9ED;
+        Tue, 10 Sep 2019 21:26:43 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 6BC5B3611A2;
+        Tue, 10 Sep 2019 21:26:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568143603; bh=yvs08tYq+zTi96vb4hAXyTxXL+EzYuKm50/B1/vCxcU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=N6rJrhq8kggLEUTAMF6RCMPZDhW38W9/3jCmYmKjPPWwn0r08MzxUHwljIFzt6vNI
+         zIQXx/CpBpp/CL8kJopZJgIqyo7IpS8oQoYZt0D+1Ls2dx7tf5I+gPVYCwTwSmXY0c
+         aI97rIyXMP3kXkokDIkfkNB8qA3fJ9WaqA53RwDw=
+Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+ <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+ <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
+ <20190905152438.GA18286@infradead.org>
+ <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
+Date:   Tue, 10 Sep 2019 21:26:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On 9/10/19 6:11 PM, Andy Lutomirski wrote:
+>
+>> On Sep 5, 2019, at 8:24 AM, Christoph Hellwig <hch@infradead.org> wrote:
+>>
+>>> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
+>>>> On 9/5/19 4:15 PM, Dave Hansen wrote:
+>>>> Hi Thomas,
+>>>>
+>>>> Thanks for the second batch of patches!  These look much improved on all
+>>>> fronts.
+>>> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
+>>> bother you with those though, since this assumes TTM will be using the dma
+>>> API.
+>> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
+>> branch:
+>>
+>>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
+>>
+>> they should allow to fault dma api pages in the page fault handler.  But
+>> this is totally hot off the press and not actually tested for the last
+>> few patches.  Note that I've also included your two patches from this
+>> series to handle SEV.
+> I read that patch, and it seems like you’ve built in the assumption that all pages in the mapping use identical protection or, if not, that the same fake vma hack that TTM already has is used to fudge around it.  Could it be reworked slightly to avoid this?
+>
+> I wonder if it’s a mistake to put the encryption bits in vm_page_prot at all.
 
-> Am 10.09.2019 um 20:51 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi,
->=20
->> Am 10.09.2019 um 20:30 schrieb Adam Ford <aford173@gmail.com>:
->>=20
->> On Tue, Sep 10, 2019 at 11:59 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>=20
+ From my POW, the encryption bits behave quite similar in behaviour to 
+the caching mode bits, and they're also in vm_page_prot. They're the 
+reason TTM needs to modify the page protection in the fault handler in 
+the first place.
 
->>=20
->> I assumed this to be -EINVAL, but I'd be happy to be wrong.
->=20
-> It seems that cat microvolts stringifies the int returned from reading
-> the regulator voltage.
->=20
-> Since it is initialized to -EINVAL it returns "-22" as string instead =
-of
-> converting into an errno return when reading /sys... So one step is
-> missing a proper error check.
+The problem seen in TTM is that we want to be able to change the 
+vm_page_prot from the fault handler, but it's problematic since we have 
+the mmap_sem typically only in read mode. Hence the fake vma hack. From 
+what I can tell it's reasonably well-behaved, since pte_modify() skips 
+the bits TTM updates, so mprotect() and mremap() works OK. I think 
+split_huge_pmd may run into trouble, but we don't support it (yet) with 
+TTM.
 
-Ok, found it in regulator_uV_show().
+We could probably get away with a WRITE_ONCE() update of the 
+vm_page_prot before taking the page table lock since
 
-ret =3D sprintf(buf, "%d\n", regulator_get_voltage_rdev(rdev));
+a) We're locking out all other writers.
+b) We can't race with another fault to the same vma since we hold an 
+address space lock ("buffer object reservation")
+c) When we need to update there are no valid page table entries in the 
+vma, since it only happens directly after mmap(), or after an 
+unmap_mapping_range() with the same address space lock. When another 
+reader (for example split_huge_pmd()) sees a valid page table entry, it 
+also sees the new page protection and things are fine.
 
-simply prints the result into a string.
+But that would really be a special case. To solve this properly we'd 
+probably need an additional lock to protect the vm_flags and 
+vm_page_prot, taken after mmap_sem and i_mmap_lock.
 
-But regulator_get_voltage_rdev() (or _regulator_get_voltage() before =
-v5.3-rc1)
-may return errors like -EPROBE_DEFER or -EINVAL or whatever
-rdev->desc->ops->get_voltage_sel(rdev) returns.
+/Thomas
 
-So this is clearly a bug in regulator_uV_show().
 
-> But that is just a symptom that there is no call to set a good =
-voltage.
 
-That is the next issue to find...
-
-BR,
-Nikolaus
 
