@@ -2,139 +2,144 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DC5C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14077C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DFB21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6918208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bFVqYmBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391975AbfIJQBb (ORCPT
+        id S2394071AbfIJQBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:01:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46641 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730791AbfIJQBb (ORCPT
+        Tue, 10 Sep 2019 12:01:51 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34612 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393142AbfIJQBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:01:31 -0400
-Received: from [148.69.85.38] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i7ia8-00040q-EB; Tue, 10 Sep 2019 16:01:28 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: [GIT PULL v1] core process updates for v5.4
-Date:   Tue, 10 Sep 2019 18:00:51 +0200
-Message-Id: <20190910160051.3795-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904133418.23573-1-christian.brauner@ubuntu.com>
-References: <20190904133418.23573-1-christian.brauner@ubuntu.com>
+        Tue, 10 Sep 2019 12:01:50 -0400
+Received: by mail-qk1-f195.google.com with SMTP id q203so17586739qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 09:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i4GD13AWYtGaucIdPfBacL0HOCS06RwW+OYru26aZGo=;
+        b=bFVqYmBJIFyWISBLSfHrMzHiHbX5do/4cERYQDzWJt+PZeUX0OHsy+TSpRVBXTL+aQ
+         3OvVTAx2WOC9NxGNNC9S6FV8QWMDIDndDSi7jqkc0qtujb/mOjXJc5BbsLL4O7ILwOLl
+         ioI7jRVbci1bxCMndyhJyQ1t7X59S++cBodci18y3HAd1Y/j6ApRGSqlu2EnSogzcaCP
+         NdJyhxsV0XKDKjhdMZ64YeSabZD1Li+xXFb79HCd/3i3LEksxFoU/kzsuLi/8LdbqKR5
+         wi/J4RsiJiLJJHF/ktI1oaePbrpTMpxPq5h6iC2XB1nngjzzPq6YNTUrNxnc3thwBD+/
+         SMlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i4GD13AWYtGaucIdPfBacL0HOCS06RwW+OYru26aZGo=;
+        b=ixMXC0rd0amt6yPX/LNI4J9O0yLO3lvnmM7gInsL6VpdG8WQA+avvmjWy/gbKdR6dX
+         ng5MSkHNKMI1FR0/KBs5AE+DITF5HwBgA8Nleai9OMudM8VkmccVxrjQwtvJl9I+OE3S
+         /yNGTnVNcGN85/ohMe+f9sQzK6FYsBpRiEHy+qzKQXA81WMeT82cst+W4nLolXZyCoI3
+         ch3MVO09CtCsU6+VRncQx/a56eymzLuPGc/hkrwU0FbvUs46poQD+2HMyKxbkh7FMxZY
+         wZf8nkHyrzS0RO6Q6JeQVqF64pmrCrBqvF1gy5DSvOVjUq/yBusC9FXhlwe3tuW7msQk
+         xuAw==
+X-Gm-Message-State: APjAAAVOL39OMudhcHTIOyXvRMZ+ZeQPL7TyBgKzE3t2wXxuMfm/NC3D
+        nZi3ZS99uvRFkzljmvy6Go9i1lgnJsuPsc9vlw6H/A==
+X-Google-Smtp-Source: APXvYqy6SzC7+IGaR6kLfQ1kWlTcyoGFIff7HiG5+P8pj2qyHaCRpqTlB6+sj4xNrcQCndtftJ80ILJGtJ0yn8yaSD4=
+X-Received: by 2002:a37:2784:: with SMTP id n126mr29003422qkn.302.1568131309763;
+ Tue, 10 Sep 2019 09:01:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <a4666f8afa39471658602e06758b04a991f80828.1566907161.git.amit.kucheria@linaro.org>
+ <5D674C35.6060001@linaro.org>
+In-Reply-To: <5D674C35.6060001@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 10 Sep 2019 21:31:38 +0530
+Message-ID: <CAP245DWkd4RvH1y1E17sCEndNY=xs+69EJ-41ecRL_EE0Vnkug@mail.gmail.com>
+Subject: Re: [PATCH v2 15/15] drivers: thermal: tsens: Add interrupt support
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Thara,
 
-This is a resend of the pull request for v5.4 with the clone3 extension for
-choosing a specific pid at process creation time _dropped_: After an
-in-person discussion between multiple parties at LPC/KSummit use-cases were
-presented that require restoring nested pid namespaces. This means clone3
-would need to create a process with specific pids in multiple pid
-namespaces not just a single one. For this reason, it seems wise to delay
-this feature one more cycle to get the semantics for this right. Sorry for
-the churn! The rest is _unchanged_.
+Thanks for the review. Please find replies below.
 
-This pull request includes the current process group and pidfd extensions
-for the waitid() syscall and various tests.
-All changes are centered around process management not just the pidfd api.
-For this reason the tag name is core-process-v5.4. If you have objections
-and would rather see this split in separate PRs, please tell me.
+On Thu, Aug 29, 2019 at 9:23 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
+>
+> Hi Amit,
+>
+> On 08/27/2019 08:14 AM, Amit Kucheria wrote:
+> > Depending on the IP version, TSENS supports upper, lower, max, min and
+> > critical threshold interrupts. We only add support for upper and lower
+> > threshold interrupts for now.
+> >
+> > TSENSv2 has an irq [status|clear|mask] bit tuple for each sensor while
+> > earlier versions only have a single bit per sensor to denote status and
+> > clear. At each interrupt, we reprogram the new upper and lower threshold
+> > in the .set_trip callback.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  drivers/thermal/qcom/tsens-common.c | 377 ++++++++++++++++++++++++++--
+> >  drivers/thermal/qcom/tsens-v0_1.c   |  11 +
+> >  drivers/thermal/qcom/tsens-v1.c     |  29 +++
+> >  drivers/thermal/qcom/tsens-v2.c     |  13 +
+> >  drivers/thermal/qcom/tsens.c        |  32 ++-
+> >  drivers/thermal/qcom/tsens.h        | 270 ++++++++++++++++----
+> >  6 files changed, 669 insertions(+), 63 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> > index 06b44cfd5eab9..c549f8e1488ba 100644
+> > --- a/drivers/thermal/qcom/tsens-common.c
+> > +++ b/drivers/thermal/qcom/tsens-common.c
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+<snip>
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Please snip liberally when only replying to a small part of the patch. :-)
 
-are available in the Git repository at:
+> > +
+> > +             spin_unlock_irqrestore(&priv->ul_lock, flags);
+> > +
+> > +             if (trigger) {
+> > +                     dev_dbg(priv->dev, "[%u] %s: TZ update trigger (%d mC)\n",
+> > +                             hw_id, __func__, temp);
+> > +                     thermal_zone_device_update(priv->sensor[i].tzd,
+> > +                                                THERMAL_EVENT_UNSPECIFIED);
+> Why not use thermal_notify_framework? Or do you want to loop over all
+> registered trips ?
 
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/core-process-v5.4
+Mainly so we get a driver call-back to set_trips where we might want
+to change behaviour once we cross certain thresholds.
 
-for you to fetch changes up to 821cc7b0b205c0df64cce59aacc330af251fa8f7:
+> Another comment I have is regarding support for multiple thermal zone.
+> It might not be needed now, but presence of the same sensor can serve
+> multiple zones (one for cooling and one for warming) . I am not sure if
+> you want to put some infrastructure in place for that as well for
+> interrupt handling.
 
-  waitid: Add support for waiting for the current process group (2019-09-10 17:05:46 +0200)
+It is premature to add such infrastructure to the driver until we
+decide how we're going to implement support for this, IMO.
 
-/* Summary */
-This tag contains two features and various tests.
-
-First, it adds support for waiting on process through pidfds by adding the
-P_PIDFD type to the waitid() syscall. This completes the basic
-functionality of the pidfd api (cf. [1]).
-In the meantime we also have a new adition to the userspace projects that
-make use of the pidfd api. The qt project was nice enough to send a mail
-pointing out that they have a pr up to switch to the pidfd api (cf. [2]).
-
-Second, this tag contains an extension to the waitid() syscall to make it
-possible to wait on the current process group in a race free manner (even
-though the actual problem is very unlikely) by specifing 0 together with
-the P_PGID type. This extension traces back to a discussion on the glibc
-development mailing list.
-
-There are also a range of tests for the features above. Additionally, the
-test-suite which detected the pidfd-polling race we fixed in [3] is
-included in this tag.
-
-/* Testing */
-All patches are based on v5.3-rc1 and have been sitting in linux-next since
-then or at least before v5.3-rc3. None of them have caused failures or
-warnings and they are passing the tests accompanying them.
-
-/* Conflicts */
-At the time of creating this PR no merge conflicts were observed in
-linux-next.
-
-Please consider pulling these changes from the signed core-process-v5.4 tag.
-
-Thanks!
-Christian
-
-/* References */
-[1]: https://lwn.net/Articles/794707/
-[2]: https://codereview.qt-project.org/c/qt/qtbase/+/108456
-[3]: commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
-
-----------------------------------------------------------------
-core-process-v5.4
-
-----------------------------------------------------------------
-Christian Brauner (2):
-      pidfd: add P_PIDFD to waitid()
-      pidfd: add pidfd_wait tests
-
-Eric W. Biederman (1):
-      waitid: Add support for waiting for the current process group
-
-Suren Baghdasaryan (2):
-      tests: move common definitions and functions into pidfd.h
-      tests: add pidfd poll tests
-
- include/linux/pid.h                             |   4 +
- include/uapi/linux/wait.h                       |   1 +
- kernel/exit.c                                   |  38 +++-
- kernel/fork.c                                   |   8 +
- kernel/signal.c                                 |   7 +-
- tools/testing/selftests/pidfd/.gitignore        |   2 +
- tools/testing/selftests/pidfd/Makefile          |   2 +-
- tools/testing/selftests/pidfd/pidfd.h           |  30 +++
- tools/testing/selftests/pidfd/pidfd_open_test.c |   5 -
- tools/testing/selftests/pidfd/pidfd_poll_test.c | 117 ++++++++++
- tools/testing/selftests/pidfd/pidfd_test.c      |  14 --
- tools/testing/selftests/pidfd/pidfd_wait.c      | 271 ++++++++++++++++++++++++
- 12 files changed, 473 insertions(+), 26 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd_poll_test.c
- create mode 100644 tools/testing/selftests/pidfd/pidfd_wait.c
+<snip>
