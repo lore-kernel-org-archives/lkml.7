@@ -2,129 +2,206 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CC2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F9EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F0021019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EA0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L/JcmoL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391183AbfIJL4p (ORCPT
+        id S2392977AbfIJL4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:56:45 -0400
-Received: from mx.socionext.com ([202.248.49.38]:18767 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbfIJL4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:56:43 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 10 Sep 2019 20:56:41 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 723BB605F8;
-        Tue, 10 Sep 2019 20:56:41 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 10 Sep 2019 20:56:41 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 4F5B740357;
-        Tue, 10 Sep 2019 20:56:41 +0900 (JST)
-Received: from [127.0.0.1] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 24B391204AA;
-        Tue, 10 Sep 2019 20:56:41 +0900 (JST)
-Date:   Tue, 10 Sep 2019 20:56:40 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <1568101695.3062.1.camel@pengutronix.de>
-References: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com> <1568101695.3062.1.camel@pengutronix.de>
-Message-Id: <20190910205640.6ABD.4A936039@socionext.com>
+        Tue, 10 Sep 2019 07:56:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35640 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388243AbfIJL4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 07:56:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g7so19677259wrx.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Xx8OQzLGeYj3y8P8kHo1vFFB3UBFSHmtM6b5jQ7aUbc=;
+        b=L/JcmoL9YFbmK7b5Ew8OA1Fu7G6qYLk08zlfibWCYa5wLOBEtncRKjJHOAC/3GgUNH
+         tyH4p/RGx2W8u2s5Z5zmnBfGz80YsBhI+p+vULHEpkDHhJg+ymK5RN5K/0jBPlXyb2Yh
+         0Dwg1BkJ5ku6v9PobnKdYpGahlhHlgU675J58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Xx8OQzLGeYj3y8P8kHo1vFFB3UBFSHmtM6b5jQ7aUbc=;
+        b=i5GOl7L/F+P/8DklAlgKa0onddThKWDtgfhpA6yjo0UfhvwD5M0mTrM9ar1YwkCuwB
+         DiBk419NTnnzbwjSSy/0+6NcRF5aGhIrOYLQ0pCgFinyvY7qAVBOUEddZoIG/k5iVKRG
+         zQTMq8C4dktOzU5CxhPjU5k1aAK1g+Qu9/Z98rTko6mCZ43BxJxEUkEOMWic4WipR8t+
+         73xyx2LGzCjGzvZYwWUghFQ8T+XjwRR4FgEb8qbILE/w2iVT4NfZRow9bOmyMYxpNl+P
+         tX3TrhNJal5CTTgN1R9S4MLbJHgqUATx0Y6+d3R4G/LXacIE8eo47io5NBoLwKhFwZtF
+         yhLQ==
+X-Gm-Message-State: APjAAAUjxoP29ctGxl7HsVv6xglfT8kfvbksgR5cMYiIzLyra5372Fqg
+        wb9srFvqmIdbdlFbklqOBUk00fYuXJM=
+X-Google-Smtp-Source: APXvYqwNk6DvXrD4yaS/Fc0Y482stWXQP2rzXiEmcLEygo6h6UhjTxAsjVjo58V1vhNDVNYvKl8pLw==
+X-Received: by 2002:adf:e852:: with SMTP id d18mr24404287wrn.225.1568116600270;
+        Tue, 10 Sep 2019 04:56:40 -0700 (PDT)
+Received: from kpsingh-kernel.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id q19sm23732935wra.89.2019.09.10.04.56.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 04:56:39 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [RFC v1 10/14] krsi: Handle attachment of the same program
+Date:   Tue, 10 Sep 2019 13:55:23 +0200
+Message-Id: <20190910115527.5235-11-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190910115527.5235-1-kpsingh@chromium.org>
+References: <20190910115527.5235-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+From: KP Singh <kpsingh@google.com>
 
-On Tue, 10 Sep 2019 09:48:15 +0200 <p.zabel@pengutronix.de> wrote:
+Allow the userspace to attach a newer version of a program without
+having duplicates of the same program.
 
-> Hi Kunihiko,
-> 
-> On Tue, 2019-09-10 at 10:55 +0900, Kunihiko Hayashi wrote:
-> > Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
-> > equivalent to Pro4.
-> > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> 
-> If it is exactly the same, you could keep using the same compatible:
+If BPF_F_ALLOW_OVERRIDE is passed, the attachment logic compares the
+name of the new program to the names of existing attached programs. The
+names are only compared till a "__" (or '\0', if there is no "__"). If
+a successful match is found, the existing program is replaced with the
+newer attachment.
 
-This driver is derived from reset-simple, so the method to control reset
-in the glue block is the same for each SoC.
+./krsi Attaches "env_dumper__v1" followed by "env_dumper__v2"
+to the process_execution hook of the KRSI LSM.
 
-And both Pro4 and Pro5 need same parent clock and reset, so the data for
-these SoCs refer same parent clock names and parent reset names.
+./krsi
+./krsi
 
-However, since the glue block itself can be different, I think that
-compatible string should be distinguished for each SoC.
+Before:
 
-For example, "pxs2-usb3-reset", "ld20-usb3-reset" and "pxs3-usb-reset"
-in this driver are distinguished for the same reason.
+  cat /sys/kernel/security/krsi/process_execution
+  env_dumper__v1
+  env_dumper__v2
 
-Thank you,
+After:
 
-> 
-> > ---
-> >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
-> >  drivers/reset/reset-uniphier-glue.c                        | 4 ++++
-> >  2 files changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > index ea00517..e320a8c 100644
-> > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > @@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
-> >  Required properties:
-> >  - compatible: Should be
-> >      "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
-> > +    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
-> 
-> +    "socionext,uniphier-pro5-usb3-reset", "socionext,uniphier-pro4-usb3-reset" - for Pro5 SoC USB3
-> 
-> [...]
-> > diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
-> > index a45923f..2b188b3bb 100644
-> > --- a/drivers/reset/reset-uniphier-glue.c
-> > +++ b/drivers/reset/reset-uniphier-glue.c
-> > @@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
-> >  		.data = &uniphier_pro4_data,
-> >  	},
-> >  	{
-> > +		.compatible = "socionext,uniphier-pro5-usb3-reset",
-> > +		.data = &uniphier_pro4_data,
-> > +	},
-> > +	{
-> >  		.compatible = "socionext,uniphier-pxs2-usb3-reset",
-> >  		.data = &uniphier_pxs2_data,
-> >  	},
-> 
-> And this change would not be necessary.
-> 
-> regards
-> Philipp
+  cat /sys/kernel/security/krsi/process_execution
+  env_dumper__v2
 
+Signed-off-by: KP Singh <kpsingh@google.com>
 ---
-Best Regards,
-Kunihiko Hayashi
+ security/krsi/ops.c | 53 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
+diff --git a/security/krsi/ops.c b/security/krsi/ops.c
+index 57bd304a03f4..1f4df920139c 100644
+--- a/security/krsi/ops.c
++++ b/security/krsi/ops.c
+@@ -65,11 +65,52 @@ static struct krsi_hook *get_hook_from_fd(int fd)
+ 	return ERR_PTR(ret);
+ }
+ 
++/*
++ * match_prog_name matches the name of the program till "__"
++ * or the end of the string is encountered. This allows
++ * a different version of the same program to be loaded.
++ *
++ * For example:
++ *
++ *	env_dumper__v1 is matched with env_dumper__v2
++ *
++ */
++static bool match_prog_name(char *a, char *b)
++{
++	int m, n;
++	char *end;
++
++	end = strstr(a, "__");
++	n = end ? end - a : strlen(a);
++
++	end = strstr(b, "__");
++	m = end ? end - b : strlen(b);
++
++	if (m != n)
++		return false;
++
++	return strncmp(a, b, n) == 0;
++}
++
++static struct bpf_prog *find_attached_prog(struct bpf_prog_array *array,
++					   struct bpf_prog *prog)
++{
++	struct bpf_prog_array_item *item = array->items;
++
++	for (; item->prog; item++) {
++		if (match_prog_name(item->prog->aux->name, prog->aux->name))
++			return item->prog;
++	}
++
++	return NULL;
++}
++
+ int krsi_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ {
+ 	struct bpf_prog_array *old_array;
+ 	struct bpf_prog_array *new_array;
+ 	struct krsi_hook *h;
++	struct bpf_prog *old_prog;
+ 	int ret = 0;
+ 
+ 	h = get_hook_from_fd(attr->target_fd);
+@@ -79,8 +120,18 @@ int krsi_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ 	mutex_lock(&h->mutex);
+ 	old_array = rcu_dereference_protected(h->progs,
+ 					      lockdep_is_held(&h->mutex));
++	/*
++	 * Check if a matching program with already exists and replace
++	 * the existing program will be overridden if BPF_F_ALLOW_OVERRIDE
++	 * is specified in the attach flags.
++	 */
++	old_prog = find_attached_prog(old_array, prog);
++	if (old_prog && !(attr->attach_flags & BPF_F_ALLOW_OVERRIDE)) {
++		ret = -EEXIST;
++		goto unlock;
++	}
+ 
+-	ret = bpf_prog_array_copy(old_array, NULL, prog, &new_array);
++	ret = bpf_prog_array_copy(old_array, old_prog, prog, &new_array);
+ 	if (ret < 0) {
+ 		ret = -ENOMEM;
+ 		goto unlock;
+-- 
+2.20.1
 
