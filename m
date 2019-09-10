@@ -2,107 +2,110 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E137C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70599C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9A2216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8zBDg+t"
+	by mail.kernel.org (Postfix) with ESMTP id 44CED2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568137558;
+	bh=nhozy1+SIp5fZkkmBLeMpwh1CRoYgJBvilyJiNcb0+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2QI2bsppqxtDOwreGMCQjFXcHmD+SjZN6tWrhMZCRdkducwyw4AigGR4DlMocI20U
+	 d8E8JRtpv6aQ93Ypd7ReAtQ3507FTYFmQfiAPMpbVdTRFfgMt+tQdyDoJWzUxw/3gT
+	 yRfyccs5KHLEgd7Kg95CasEYET5zza0Cq6+3lSn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437151AbfIJRnW (ORCPT
+        id S2437174AbfIJRp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:43:22 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37354 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732096AbfIJRnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:43:21 -0400
-Received: by mail-vs1-f67.google.com with SMTP id q9so11877623vsl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 10:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iZFN9sZS2h8SFWG+P0x7nyGva9yupkamPkDWX3SwdVA=;
-        b=E8zBDg+tTwWnNy6Z4n8i89oWK6PRu64Hw71Y7M42Z/TQwydXy//2zYP/oDlh9/X5Wk
-         Sp93Eh4WKbfU0Sp/Qizmwi3ZEgM/181PPLN7uNYURu6dFIOzvjT9ggjvNNPm/NnT5usp
-         4mloXyqX1j/ipt5bGlTOqpUldlnrlz9OdIjY1bQeZu3uvVd6hJTv4i8I/5ne7DvJC6wO
-         tVUuJbONRHGV63jNWKH06cva+nh6anS0I+z/x8XoGpFPoejFwncsxWA9nR6wmG/a1e0O
-         XiZOYKL0hlmmUH7CkcAXsV62Wor73r3yfRuxZl0GzVmyq6QMQkbRIGpu24nb28C4DtLx
-         TVOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iZFN9sZS2h8SFWG+P0x7nyGva9yupkamPkDWX3SwdVA=;
-        b=h41Y72eMSv2Oh4eFWhmiGLGfYdx9TB6nK4rsL2OgMPLBMiY5p/R4yvAKROALWAGVa6
-         bqAUHMcjrpYDQPKvfFoULGaWWG+iet8snofqqyc/73oX2EjIthEl+HAOYW9Ljtzp937X
-         HnziLAqs7kNClNWBxs2lqP+sKj6LTDdGp79rsUwTeSd8gTka4PbdqUH3wi5W5/CoV4tP
-         Za+sV0m7NBnISZq66L5Fct1XlJahqAWNCTSn0D7qTbk4E9x+fP2bs10IT4o5eHJ11820
-         28wHLPFk4uIkRZnoSpfhRvyc941Io1Nw57TjQKV/GaR93ucWmkwaCZoIwjItpqZjVGU2
-         SZFA==
-X-Gm-Message-State: APjAAAV7HXXuFGSSHu+nlRgsRCaQI61XETGuvAWQn0Lvuslh0glU0itk
-        L62PLgYO7dTllIyFsWM/ED9/ficS1RXo9c9ZL/qoEQ==
-X-Google-Smtp-Source: APXvYqwztIyJeOVDg7mHYVMP5EiFipb+OaSO/GlDtBUviPUH8Ju2PrPm1ueyE3eP7+PRthYsLhXBYb4deBGXOUAj3c4=
-X-Received: by 2002:a67:1043:: with SMTP id 64mr2413213vsq.114.1568137400264;
- Tue, 10 Sep 2019 10:43:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190905005313.126823-1-dancol@google.com> <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
-In-Reply-To: <CALCETrU2Wycgdfo8vLZQUnx1J9ro=6ddSkP37BhsfBkKL1mbMA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 10 Sep 2019 10:42:43 -0700
-Message-ID: <CAKOZuevMiomDQwzrHVb4qU6nhKOiENWsEmFhVKrBvjVNa0ff+w@mail.gmail.com>
-Subject: Re: [RFC] Add critical process prctl
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
+        Tue, 10 Sep 2019 13:45:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44990 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437122AbfIJRp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:45:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E89D9AD17;
+        Tue, 10 Sep 2019 17:45:54 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 19:45:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v9 3/8] mm: Move set/get_pcppage_migratetype to mmzone.h
+Message-ID: <20190910174553.GC4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190907172528.10910.37051.stgit@localhost.localdomain>
+ <20190910122313.GW2063@dhcp22.suse.cz>
+ <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Ud1xqhEy_LL4AfMgreP0uXrkF-fSDn=6uDXfn7Pvj5AAw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 9:57 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Wed, Sep 4, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
+On Tue 10-09-19 07:46:50, Alexander Duyck wrote:
+> On Tue, Sep 10, 2019 at 5:23 AM Michal Hocko <mhocko@kernel.org> wrote:
 > >
-> > A task with CAP_SYS_ADMIN can mark itself PR_SET_TASK_CRITICAL,
-> > meaning that if the task ever exits, the kernel panics. This facility
-> > is intended for use by low-level core system processes that cannot
-> > gracefully restart without a reboot. This prctl allows these processes
-> > to ensure that the system restarts when they die regardless of whether
-> > the rest of userspace is operational.
->
-> The kind of panic produced by init crashing is awful -- logs don't get
-> written, etc.
+> > On Sat 07-09-19 10:25:28, Alexander Duyck wrote:
+> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > >
+> > > In order to support page reporting it will be necessary to store and
+> > > retrieve the migratetype of a page. To enable that I am moving the set and
+> > > get operations for pcppage_migratetype into the mm/internal.h header so
+> > > that they can be used outside of the page_alloc.c file.
+> >
+> > Please describe who is the user and why does it needs this interface.
+> > This is really important because migratetype is an MM internal thing and
+> > external users shouldn't really care about it at all. We really do not
+> > want a random code to call those, especially the set_pcppage_migratetype.
+> 
+> I was using it to store the migratetype of the page so that I could
+> find the boundary list that contained the reported page as the array
+> is indexed based on page order and migratetype. However on further
+> discussion I am thinking I may just use page->index directly to index
+> into the boundary array. Doing that I should be able to get a very
+> slight improvement in lookup time since I am not having to pull order
+> and migratetype and then compute the index based on that. In addition
+> it becomes much more clear as to what is going on, and if needed I
+> could add debug checks to verify the page is "Reported" and that the
+> "Buddy" page type is set.
 
-True today --- but that's a separate problem, and one that can be
-solved in a few ways, e.g., pre-registering log buffers to be
-incorporated into any kexec kernel memory dumps. If a system aiming
-for reliability can't diagnose panics, that's a problem with or
-without my patch.
+Be careful though. A free page belongs to the page allocator and it is
+free to reuse any fields for its purpose so using any of them nilly
+willy is no go. If you need to stuff something like that then there
+better be an api the allocator is aware of. My main objection is the
+abuse migrate type. There might be other ways to express what you need.
+Please make sure you clearly define that though.
 
-> I'm wondering if you would be better off with a new
-> watchdog-like device that, when closed, kills the system in a
-> configurable way (e.g. after a certain amount of time, while still
-> logging something and having a decent chance of getting the logs
-> written out.)  This could plausibly even be an extension to the
-> existing /dev/watchdog API.
-
-There are lots of approaches that work today: a few people have
-suggested just having init watch processes, perhaps with pidfds. What
-I worry about is increasing the length (both in terms of time and
-complexity) of the critical path between something going wrong in a
-critical process and the system getting back into a known-good state.
-A panic at the earliest moment we know that a marked-critical process
-has become doomed seems like the most reliable approach, especially
-since alternatives can get backed up behind things like file
-descriptor closing and various forms of scheduling delay.
+-- 
+Michal Hocko
+SUSE Labs
