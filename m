@@ -2,315 +2,109 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098DFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5160C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D460C2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BFC20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U8zU/NLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbfIJJUP (ORCPT
+        id S1732052AbfIJJU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:20:15 -0400
-Received: from smtp3.goneo.de ([85.220.129.37]:33702 "EHLO smtp3.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfIJJUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:20:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 5D92923F057;
-        Tue, 10 Sep 2019 11:20:11 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 57WAefLzVhIo; Tue, 10 Sep 2019 11:20:09 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id 0086123F3DF;
-        Tue, 10 Sep 2019 11:20:08 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        Kees Cook <keescook@chromium.org>,
-        Steve Winslow <swinslow@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v7 4/7] nfc: pn533: Split pn533 init & nfc_register
-Date:   Tue, 10 Sep 2019 11:33:29 +0200
-Message-Id: <20190910093335.2045-1-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
+        Tue, 10 Sep 2019 05:20:29 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3657 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbfIJJU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 05:20:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d776adf0000>; Tue, 10 Sep 2019 02:20:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 10 Sep 2019 02:20:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 10 Sep 2019 02:20:27 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Sep
+ 2019 09:20:25 +0000
+Subject: Re: [PATCH 5.2 00/94] 5.2.14-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190908121150.420989666@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <df670408-bb4b-de9f-13d7-f9d605747df9@nvidia.com>
+Date:   Tue, 10 Sep 2019 10:20:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190908121150.420989666@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568107231; bh=BKsvLTIOrpgZyKDPVauh7e4uIUVLX2T9GTsVUgogrtg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=U8zU/NLaPGL3irNk/FDYCV7u3i2MPxR9AeKgwDZuhyiWP6Fn9Kg9AWLEjmtcoDWL/
+         Tu5QJHYgzoGtPm2S8Kbhl1u+AiwEU+T7dFpvBjHPOc//RtIRf/svyS56F4yeTQPEKT
+         GK1LMMXmtGh4Vac+5erT3F4+351bbG4Oam2PwmJ2bE5d3r3FyO3qdsXphunSxfAYt5
+         3zL/gJd5TgLAq7PsaoOKCaE7vr5yzQr7peLsRMX68C1UlKVUzVQVLBCGwGC7P02KOI
+         AeW/uadybSJLhu4BDknsdWB059bA2PxoVVn4TPTek1ZD3viRMgqIf/cfAMKta+jyCh
+         gggYBsI83yd6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a problem in the initialisation and setup of the pn533: It
-registers with nfc too early. It could happen, that it finished
-registering with nfc and someone starts using it. But setup of the pn533
-is not yet finished. Bad or at least unintended things could happen.
-So I split out nfc registering (and unregistering) to seperate functions
-that have to be called late in probe then.
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v7:
-- Remove an unneeded rc variable initialization
-- Corrected goto error to err_clean in pn533_usb_probe
+On 08/09/2019 13:40, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.14 release.
+> There are 94 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.14-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
+All tests are passing for Tegra ...
 
-Changes in v5:
-- This patch is new in v5
+Test results for stable-v5.2:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	38 pass, 0 fail
 
- drivers/nfc/pn533/i2c.c   | 17 +++++-----
- drivers/nfc/pn533/pn533.c | 66 ++++++++++++++++++++-------------------
- drivers/nfc/pn533/pn533.h | 11 ++++---
- drivers/nfc/pn533/usb.c   | 14 ++++++---
- 4 files changed, 60 insertions(+), 48 deletions(-)
+Linux version:	5.2.14-rc1-g562387856c86
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-index 1abd40398a5a..e9e5a1ec8857 100644
---- a/drivers/nfc/pn533/i2c.c
-+++ b/drivers/nfc/pn533/i2c.c
-@@ -193,12 +193,10 @@ static int pn533_i2c_probe(struct i2c_client *client,
- 	phy->i2c_dev = client;
- 	i2c_set_clientdata(client, phy);
- 
--	priv = pn533_register_device(PN533_DEVICE_PN532,
--				     PN533_NO_TYPE_B_PROTOCOLS,
-+	priv = pn53x_common_init(PN533_DEVICE_PN532,
- 				     PN533_PROTO_REQ_ACK_RESP,
- 				     phy, &i2c_phy_ops, NULL,
--				     &phy->i2c_dev->dev,
--				     &client->dev);
-+				     &phy->i2c_dev->dev);
- 
- 	if (IS_ERR(priv)) {
- 		r = PTR_ERR(priv);
-@@ -220,13 +218,17 @@ static int pn533_i2c_probe(struct i2c_client *client,
- 	if (r)
- 		goto fn_setup_err;
- 
--	return 0;
-+	r = pn53x_register_nfc(priv, PN533_NO_TYPE_B_PROTOCOLS, &client->dev);
-+	if (r)
-+		goto fn_setup_err;
-+
-+	return r;
- 
- fn_setup_err:
- 	free_irq(client->irq, phy);
- 
- irq_rqst_err:
--	pn533_unregister_device(phy->priv);
-+	pn53x_common_clean(phy->priv);
- 
- 	return r;
- }
-@@ -239,7 +241,8 @@ static int pn533_i2c_remove(struct i2c_client *client)
- 
- 	free_irq(client->irq, phy);
- 
--	pn533_unregister_device(phy->priv);
-+	pn53x_unregister_nfc(phy->priv);
-+	pn53x_common_clean(phy->priv);
- 
- 	return 0;
- }
-diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
-index 64836c727aee..e5d5e4c83a04 100644
---- a/drivers/nfc/pn533/pn533.c
-+++ b/drivers/nfc/pn533/pn533.c
-@@ -2590,14 +2590,12 @@ int pn533_finalize_setup(struct pn533 *dev)
- }
- EXPORT_SYMBOL_GPL(pn533_finalize_setup);
- 
--struct pn533 *pn533_register_device(u32 device_type,
--				u32 protocols,
-+struct pn533 *pn53x_common_init(u32 device_type,
- 				enum pn533_protocol_type protocol_type,
- 				void *phy,
- 				struct pn533_phy_ops *phy_ops,
- 				struct pn533_frame_ops *fops,
--				struct device *dev,
--				struct device *parent)
-+				struct device *dev)
- {
- 	struct pn533 *priv;
- 	int rc = -ENOMEM;
-@@ -2638,43 +2636,18 @@ struct pn533 *pn533_register_device(u32 device_type,
- 	skb_queue_head_init(&priv->fragment_skb);
- 
- 	INIT_LIST_HEAD(&priv->cmd_queue);
--
--	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
--					   priv->ops->tx_header_len +
--					   PN533_CMD_DATAEXCH_HEAD_LEN,
--					   priv->ops->tx_tail_len);
--	if (!priv->nfc_dev) {
--		rc = -ENOMEM;
--		goto destroy_wq;
--	}
--
--	nfc_set_parent_dev(priv->nfc_dev, parent);
--	nfc_set_drvdata(priv->nfc_dev, priv);
--
--	rc = nfc_register_device(priv->nfc_dev);
--	if (rc)
--		goto free_nfc_dev;
--
- 	return priv;
- 
--free_nfc_dev:
--	nfc_free_device(priv->nfc_dev);
--
--destroy_wq:
--	destroy_workqueue(priv->wq);
- error:
- 	kfree(priv);
- 	return ERR_PTR(rc);
- }
--EXPORT_SYMBOL_GPL(pn533_register_device);
-+EXPORT_SYMBOL_GPL(pn53x_common_init);
- 
--void pn533_unregister_device(struct pn533 *priv)
-+void pn53x_common_clean(struct pn533 *priv)
- {
- 	struct pn533_cmd *cmd, *n;
- 
--	nfc_unregister_device(priv->nfc_dev);
--	nfc_free_device(priv->nfc_dev);
--
- 	flush_delayed_work(&priv->poll_work);
- 	destroy_workqueue(priv->wq);
- 
-@@ -2689,8 +2662,37 @@ void pn533_unregister_device(struct pn533 *priv)
- 
- 	kfree(priv);
- }
--EXPORT_SYMBOL_GPL(pn533_unregister_device);
-+EXPORT_SYMBOL_GPL(pn53x_common_clean);
-+
-+int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
-+			struct device *parent)
-+{
-+	int rc;
-+
-+	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
-+					   priv->ops->tx_header_len +
-+					   PN533_CMD_DATAEXCH_HEAD_LEN,
-+					   priv->ops->tx_tail_len);
-+	if (!priv->nfc_dev)
-+		return -ENOMEM;
-+
-+	nfc_set_parent_dev(priv->nfc_dev, parent);
-+	nfc_set_drvdata(priv->nfc_dev, priv);
-+
-+	rc = nfc_register_device(priv->nfc_dev);
-+	if (rc)
-+		nfc_free_device(priv->nfc_dev);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(pn53x_register_nfc);
- 
-+void pn53x_unregister_nfc(struct pn533 *priv)
-+{
-+	nfc_unregister_device(priv->nfc_dev);
-+	nfc_free_device(priv->nfc_dev);
-+}
-+EXPORT_SYMBOL_GPL(pn53x_unregister_nfc);
- 
- MODULE_AUTHOR("Lauro Ramos Venancio <lauro.venancio@openbossa.org>");
- MODULE_AUTHOR("Aloisio Almeida Jr <aloisio.almeida@openbossa.org>");
-diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
-index 570ee0a3e832..510ddebbd896 100644
---- a/drivers/nfc/pn533/pn533.h
-+++ b/drivers/nfc/pn533/pn533.h
-@@ -219,18 +219,19 @@ struct pn533_phy_ops {
- };
- 
- 
--struct pn533 *pn533_register_device(u32 device_type,
--				u32 protocols,
-+struct pn533 *pn53x_common_init(u32 device_type,
- 				enum pn533_protocol_type protocol_type,
- 				void *phy,
- 				struct pn533_phy_ops *phy_ops,
- 				struct pn533_frame_ops *fops,
--				struct device *dev,
--				struct device *parent);
-+				struct device *dev);
- 
- int pn533_finalize_setup(struct pn533 *dev);
--void pn533_unregister_device(struct pn533 *priv);
-+void pn53x_common_clean(struct pn533 *priv);
- void pn533_recv_frame(struct pn533 *dev, struct sk_buff *skb, int status);
-+int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
-+			struct device *parent);
-+void pn53x_unregister_nfc(struct pn533 *priv);
- 
- bool pn533_rx_frame_is_cmd_response(struct pn533 *dev, void *frame);
- bool pn533_rx_frame_is_ack(void *_frame);
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index c5289eaf17ee..8511fd089970 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -534,9 +534,9 @@ static int pn533_usb_probe(struct usb_interface *interface,
- 		goto error;
- 	}
- 
--	priv = pn533_register_device(id->driver_info, protocols, protocol_type,
-+	priv = pn53x_common_init(id->driver_info, protocol_type,
- 					phy, &usb_phy_ops, fops,
--					&phy->udev->dev, &interface->dev);
-+					&phy->udev->dev);
- 
- 	if (IS_ERR(priv)) {
- 		rc = PTR_ERR(priv);
-@@ -547,12 +547,17 @@ static int pn533_usb_probe(struct usb_interface *interface,
- 
- 	rc = pn533_finalize_setup(priv);
- 	if (rc)
--		goto error;
-+		goto err_clean;
- 
- 	usb_set_intfdata(interface, phy);
-+	rc = pn53x_register_nfc(priv, protocols, &interface->dev);
-+	if (rc)
-+		goto err_clean;
- 
- 	return 0;
- 
-+err_clean:
-+	pn53x_common_clean(priv);
- error:
- 	usb_free_urb(phy->in_urb);
- 	usb_free_urb(phy->out_urb);
-@@ -570,7 +575,8 @@ static void pn533_usb_disconnect(struct usb_interface *interface)
- 	if (!phy)
- 		return;
- 
--	pn533_unregister_device(phy->priv);
-+	pn53x_unregister_nfc(phy->priv);
-+	pn53x_common_clean(phy->priv);
- 
- 	usb_set_intfdata(interface, NULL);
- 
+Cheers
+Jon
+
 -- 
-2.23.0
-
+nvpublic
