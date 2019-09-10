@@ -2,44 +2,71 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66090C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AF1C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3189F21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCDC21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R61eEifg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfIJUJQ (ORCPT
+        id S1726303AbfIJUMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 16:09:16 -0400
-Received: from cyberdimension.org ([80.67.179.20]:40988 "EHLO
-        gnutoo.cyberdimension.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfIJUJQ (ORCPT
+        Tue, 10 Sep 2019 16:12:25 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:47037 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbfIJUMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 16:09:16 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Sep 2019 16:09:14 EDT
-Received: from gnutoo.cyberdimension.org (localhost [127.0.0.1])
-        by cyberdimension.org (OpenSMTPD) with ESMTP id f0d39e6a;
-        Tue, 10 Sep 2019 19:59:29 +0000 (UTC)
-Received: from primarylaptop.localdomain (localhost.localdomain [IPv6:::1])
-        by gnutoo.cyberdimension.org (OpenSMTPD) with ESMTP id 1dac50d3;
-        Tue, 10 Sep 2019 19:59:28 +0000 (UTC)
-From:   Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
-To:     Chanwoo@gnutoo.cyberdimension.org, Choi@gnutoo.cyberdimension.org
-Cc:     linux-kernel@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>,
-        Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
-Subject: [PATCH 2/2] power_supply: max77693: Listen for cable events and enable charging
-Date:   Tue, 10 Sep 2019 22:02:33 +0200
-Message-Id: <20190910200233.3195-2-GNUtoo@cyberdimension.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190910200233.3195-1-GNUtoo@cyberdimension.org>
-References: <20190910200233.3195-1-GNUtoo@cyberdimension.org>
+        Tue, 10 Sep 2019 16:12:25 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t1so9088381plq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 13:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=15hWnr6f2tJrfEoilZ1helN5HSi4DmE9rTuHqUhMmkU=;
+        b=R61eEifgYMh7PnNayuYxhvP5bhbfW2mOmVNcjBrX0u4fCMa2T6Ler3WWj5Apg/ZTMQ
+         f1/ye3xAfOzASybxWrea9GsS6SoROey6PHwxCSthuxwXK0qDfT/cYfz/fb9ycyHnRX2e
+         EbV46qG2jGs23H1GpBftp0RKBI0c8rFuNQb3M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=15hWnr6f2tJrfEoilZ1helN5HSi4DmE9rTuHqUhMmkU=;
+        b=kZpQ2aaPLvWdfvSGqvPXMAGXkWN0hnpeD/pPtPlik4AtGmcPT6sxNUxzGJyvt8+MHv
+         GW5FYUQgYCEnMc1x9bDZ57VzFPi2KDCPlKVdu2E+4aOAgwC1UOdB7G9oPzyV3iqnEnml
+         JcpNQPzfpBLg/h8iSEfx7+P3dMNrhL7nXCKFh8LsP39k0taW26emcP5gH4M6JN7HXHTB
+         h/KRMx3QKp/n7SO4t3rvVT3v+xhwGlG0MEpG2dtXAMd0N4tpAH48GEGrdFe7AHGrEEon
+         B+gxhUs+TBJM9noPAGu6NBj/kcPb0w7og1bhRlACb/F92vQkQyaGiU3AztXIuaLxJuqI
+         pIPA==
+X-Gm-Message-State: APjAAAV14SNvoOyY5chVimYw3+WNgbedFh6p+gPyoiaTxcPkokstYZid
+        C07QtUR8HwieJ9hF3Iozzb3Rqg==
+X-Google-Smtp-Source: APXvYqxe5wirZcu9g1h+r/nLCfi6tx506Er0HD6EdTcai5ASMPCpU4DNsON/yG0qYLuEnO9zkBPWPw==
+X-Received: by 2002:a17:902:b497:: with SMTP id y23mr33009585plr.201.1568146344505;
+        Tue, 10 Sep 2019 13:12:24 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:e9ae:bd45:1bd9:e60d])
+        by smtp.gmail.com with ESMTPSA id c8sm1581955pgw.37.2019.09.10.13.12.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2019 13:12:23 -0700 (PDT)
+From:   David Riley <davidriley@chromium.org>
+To:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>,
+        linux-kernel@vger.kernel.org, David Riley <davidriley@chromium.org>
+Subject: [PATCH v3 2/2] drm/virtio: Use vmalloc for command buffer allocations.
+Date:   Tue, 10 Sep 2019 13:06:51 -0700
+Message-Id: <20190910200651.118628-2-davidriley@chromium.org>
+X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
+In-Reply-To: <20190829212417.257397-1-davidriley@chromium.org>
+References: <20190829212417.257397-1-davidriley@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,298 +74,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
+Userspace requested command buffer allocations could be too large
+to make as a contiguous allocation.  Use vmalloc if necessary to
+satisfy those allocations.
 
-This patch adds a listener for extcon cable events and enables
-charging if an USB cable is connected. It recognizes SDP and DCP cable
-types and treats them the same (same input current and fast charge
-current). The maximum input current is set before the charger is
-enabled and before the charger gets disabled, the maximum input
-current is set to zero. The listener is inspired by the listener
-implementation that was used for the AXP288 Charger driver.
-
-The patch also adds support for the CURRENT_NOW property. It reads the
-fast charge current that gets set before the charger is enabled or
-disabled.
-
-Signed-off-by: Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>
-GNUtoo@cyberdimension.org: small fixes
-Signed-off-by: Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
+Signed-off-by: David Riley <davidriley@chromium.org>
 ---
- drivers/power/supply/Kconfig            |   2 +-
- drivers/power/supply/max77693_charger.c | 176 ++++++++++++++++++++++++
- 2 files changed, 177 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c |  4 +-
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 79 +++++++++++++++++++++++---
+ 2 files changed, 73 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 5d91b5160b41..5cd06b1b145e 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -534,7 +534,7 @@ config CHARGER_MAX77650
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index ac60be9b5c19..a8732a8af766 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -195,7 +195,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+ 	if (ret)
+ 		goto out_free;
  
- config CHARGER_MAX77693
- 	tristate "Maxim MAX77693 battery charger driver"
--	depends on MFD_MAX77693
-+	depends on MFD_MAX77693 && REGULATOR_MAX77693
- 	help
- 	  Say Y to enable support for the Maxim MAX77693 battery charger.
- 
-diff --git a/drivers/power/supply/max77693_charger.c b/drivers/power/supply/max77693_charger.c
-index a2c5c9858639..b19490cb4a8f 100644
---- a/drivers/power/supply/max77693_charger.c
-+++ b/drivers/power/supply/max77693_charger.c
-@@ -12,8 +12,11 @@
- #include <linux/mfd/max77693.h>
- #include <linux/mfd/max77693-common.h>
- #include <linux/mfd/max77693-private.h>
-+#include <linux/extcon.h>
-+#include <linux/regulator/consumer.h>
- 
- #define MAX77693_CHARGER_NAME				"max77693-charger"
-+#define MAX77693_EXTCON_DEV_NAME			"max77693-muic"
- static const char *max77693_charger_model		= "MAX77693";
- static const char *max77693_charger_manufacturer	= "Maxim Integrated";
- 
-@@ -21,12 +24,21 @@ struct max77693_charger {
- 	struct device		*dev;
- 	struct max77693_dev	*max77693;
- 	struct power_supply	*charger;
-+	struct regulator	*regu;
- 
- 	u32 constant_volt;
- 	u32 min_system_volt;
- 	u32 thermal_regulation_temp;
- 	u32 batttery_overcurrent;
- 	u32 charge_input_threshold_volt;
-+
-+	/* SDP/DCP USB charging cable notifications */
-+	struct {
-+		struct extcon_dev *edev;
-+		bool connected;
-+		struct notifier_block nb;
-+		struct work_struct work;
-+	} cable;
- };
- 
- static int max77693_get_charger_state(struct regmap *regmap, int *val)
-@@ -197,12 +209,28 @@ static int max77693_get_online(struct regmap *regmap, int *val)
+-	buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
++	buf = vmemdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
+ 	if (IS_ERR(buf)) {
+ 		ret = PTR_ERR(buf);
+ 		goto out_unresv;
+@@ -230,7 +230,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
  	return 0;
+ 
+ out_memdup:
+-	kfree(buf);
++	kvfree(buf);
+ out_unresv:
+ 	ttm_eu_backoff_reservation(&ticket, &validate_list);
+ out_free:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index bf5a4a50b002..76cf2b9d5d1d 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -154,7 +154,7 @@ static void free_vbuf(struct virtio_gpu_device *vgdev,
+ {
+ 	if (vbuf->resp_size > MAX_INLINE_RESP_SIZE)
+ 		kfree(vbuf->resp_buf);
+-	kfree(vbuf->data_buf);
++	kvfree(vbuf->data_buf);
+ 	kmem_cache_free(vgdev->vbufs, vbuf);
  }
  
-+int max77693_get_charge_current(struct regmap *regmap, int *val)
-+{
-+	unsigned int data;
-+	int ret;
-+
-+	ret = regmap_read(regmap, MAX77693_CHG_REG_CHG_CNFG_02, &data);
-+	if (ret < 0)
-+		return ret;
-+
-+	data &= CHG_CNFG_02_CC_MASK;
-+	*val = data * 333 / 10; /* 3 steps/0.1A */
-+
-+	return 0;
-+}
-+
- static enum power_supply_property max77693_charger_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_CHARGE_TYPE,
- 	POWER_SUPPLY_PROP_HEALTH,
- 	POWER_SUPPLY_PROP_PRESENT,
- 	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- };
-@@ -231,6 +259,9 @@ static int max77693_charger_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_ONLINE:
- 		ret = max77693_get_online(regmap, &val->intval);
- 		break;
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		ret = max77693_get_charge_current(regmap, &val->intval);
-+		break;
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		val->strval = max77693_charger_model;
- 		break;
-@@ -285,6 +316,7 @@ static ssize_t fast_charge_timer_show(struct device *dev,
- 
- 	data &= CHG_CNFG_01_FCHGTIME_MASK;
- 	data >>= CHG_CNFG_01_FCHGTIME_SHIFT;
-+
- 	switch (data) {
- 	case 0x1 ... 0x7:
- 		/* Starting from 4 hours, step by 2 hours */
-@@ -573,6 +605,102 @@ static int max77693_set_charge_input_threshold_volt(struct max77693_charger *chg
- 			CHG_CNFG_12_VCHGINREG_MASK, data);
+@@ -251,13 +251,54 @@ void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
+ 	wake_up(&vgdev->cursorq.ack_queue);
  }
  
-+static int max77693_enable_charger(struct max77693_charger *chg, bool enable)
++/* Create sg_table from a vmalloc'd buffer. */
++static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
 +{
-+	int ret;
++	int ret, s, i;
++	struct sg_table *sgt;
++	struct scatterlist *sg;
++	struct page *pg;
 +
-+	if (enable) {
-+		ret = regulator_set_current_limit(
-+			chg->regu,
-+			CHG_CNFG_09_CHGIN_ILIM_500_MIN,
-+			CHG_CNFG_09_CHGIN_ILIM_500_MAX);
++	if (WARN_ON(!PAGE_ALIGNED(data)))
++		return NULL;
 +
-+		if (ret < 0)
-+			return ret;
++	sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
++	if (!sgt)
++		return NULL;
 +
-+		ret = regulator_enable(chg->regu);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		/* sets fast charge current to zero */
-+		ret = regulator_set_current_limit(chg->regu,
-+						  CHG_CNFG_09_CHGIN_ILIM_0_MIN,
-+						  CHG_CNFG_09_CHGIN_ILIM_0_MAX);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = regulator_disable(chg->regu);
-+		if (ret < 0)
-+			return ret;
++	*sg_ents = DIV_ROUND_UP(size, PAGE_SIZE);
++	ret = sg_alloc_table(sgt, *sg_ents, GFP_KERNEL);
++	if (ret) {
++		kfree(sgt);
++		return NULL;
 +	}
 +
-+	return ret;
-+}
-+
-+static void max77693_extcon_evt_worker(struct work_struct *work)
-+{
-+	struct max77693_charger *chg = container_of(work,
-+						    struct max77693_charger,
-+						    cable.work);
-+	bool changed = false;
-+	struct extcon_dev *edev = chg->cable.edev;
-+	bool old_connected = chg->cable.connected;
-+	bool is_charger_enabled;
-+	int ret;
-+
-+	/* Determine cable/charger type */
-+	if (extcon_get_state(edev, EXTCON_CHG_USB_SDP) ||
-+	    extcon_get_state(edev, EXTCON_CHG_USB_DCP)) {
-+		dev_dbg(chg->dev, "USB charger is connected");
-+		chg->cable.connected = true;
-+	} else {
-+		if (old_connected)
-+			dev_dbg(chg->dev, "USB charger disconnected");
-+		chg->cable.connected = false;
-+	}
-+
-+	/* Cable status changed */
-+	if (old_connected != chg->cable.connected)
-+		changed = true;
-+
-+	if (!changed)
-+		return;
-+
-+	if (regulator_is_enabled(chg->regu))
-+		is_charger_enabled = true;
-+	else
-+		is_charger_enabled = false;
-+
-+	if (is_charger_enabled && !chg->cable.connected) {
-+		ret = max77693_enable_charger(chg, false);
-+		if (ret < 0) {
-+			dev_err(chg->dev,
-+				"failed to disable charger (%d)", ret);
++	for_each_sg(sgt->sgl, sg, *sg_ents, i) {
++		pg = vmalloc_to_page(data);
++		if (!pg) {
++			sg_free_table(sgt);
++			kfree(sgt);
++			return NULL;
 +		}
-+	} else if (!is_charger_enabled && chg->cable.connected) {
-+		ret = max77693_enable_charger(chg, true);
-+		if (ret < 0) {
-+			dev_err(chg->dev,
-+				"cannot enable charger (%d)", ret);
++
++		s = min_t(int, PAGE_SIZE, size);
++		sg_set_page(sg, pg, s, 0);
++
++		size -= s;
++		data += s;
++	}
++
++	return sgt;
++}
++
+ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+-					       struct virtio_gpu_vbuffer *vbuf)
++					       struct virtio_gpu_vbuffer *vbuf,
++					       struct scatterlist *vout)
+ 		__releases(&vgdev->ctrlq.qlock)
+ 		__acquires(&vgdev->ctrlq.qlock)
+ {
+ 	struct virtqueue *vq = vgdev->ctrlq.vq;
+-	struct scatterlist *sgs[3], vcmd, vout, vresp;
++	struct scatterlist *sgs[3], vcmd, vresp;
+ 	int outcnt = 0, incnt = 0;
+ 	int ret;
+ 
+@@ -268,9 +309,8 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
+ 	sgs[outcnt + incnt] = &vcmd;
+ 	outcnt++;
+ 
+-	if (vbuf->data_size) {
+-		sg_init_one(&vout, vbuf->data_buf, vbuf->data_size);
+-		sgs[outcnt + incnt] = &vout;
++	if (vout) {
++		sgs[outcnt + incnt] = vout;
+ 		outcnt++;
+ 	}
+ 
+@@ -305,7 +345,24 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+ 					       struct virtio_gpu_fence *fence)
+ {
+ 	struct virtqueue *vq = vgdev->ctrlq.vq;
++	struct scatterlist *vout = NULL, sg;
++	struct sg_table *sgt = NULL;
+ 	int rc;
++	int outcnt = 0;
++
++	if (vbuf->data_size) {
++		if (is_vmalloc_addr(vbuf->data_buf)) {
++			sgt = vmalloc_to_sgt(vbuf->data_buf, vbuf->data_size,
++					     &outcnt);
++			if (!sgt)
++				return -ENOMEM;
++			vout = sgt->sgl;
++		} else {
++			sg_init_one(&sg, vbuf->data_buf, vbuf->data_size);
++			vout = &sg;
++			outcnt = 1;
 +		}
 +	}
-+
-+	if (changed)
-+		power_supply_changed(chg->charger);
-+}
-+
-+static int max77693_handle_cable_evt(struct notifier_block *nb,
-+				unsigned long event, void *param)
-+{
-+	struct max77693_charger *chg = container_of(nb,
-+						    struct max77693_charger,
-+						    cable.nb);
-+
-+	schedule_work(&chg->cable.work);
-+
-+	return NOTIFY_OK;
-+}
-+
- /*
-  * Sets charger registers to proper and safe default values.
-  */
-@@ -684,6 +812,45 @@ static int max77693_charger_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
  
-+	chg->regu = devm_regulator_get(chg->dev, "CHARGER");
-+	if (IS_ERR(chg->regu)) {
-+		ret = PTR_ERR(chg->regu);
-+		dev_err(&pdev->dev,
-+			"failed to get charger regulator %d\n", ret);
-+		return ret;
-+	}
-+
-+	chg->cable.edev = extcon_get_extcon_dev(MAX77693_EXTCON_DEV_NAME);
-+	if (chg->cable.edev == NULL) {
-+		dev_dbg(&pdev->dev, "%s is not ready, probe deferred\n",
-+			MAX77693_EXTCON_DEV_NAME);
-+		return -EPROBE_DEFER;
-+	}
-+
-+	/* set initial value */
-+	chg->cable.connected = false;
-+
-+	/* Register for extcon notification */
-+	INIT_WORK(&chg->cable.work, max77693_extcon_evt_worker);
-+	chg->cable.nb.notifier_call = max77693_handle_cable_evt;
-+	ret = extcon_register_notifier(chg->cable.edev, EXTCON_CHG_USB_SDP,
-+				       &chg->cable.nb);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to register extcon notifier for SDP %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = extcon_register_notifier(chg->cable.edev, EXTCON_CHG_USB_DCP,
-+				       &chg->cable.nb);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to register extcon notifier for DCP %d\n", ret);
-+		extcon_unregister_notifier(chg->cable.edev,
-+					   EXTCON_CHG_USB_SDP, &chg->cable.nb);
-+		return ret;
-+	}
-+
- 	ret = max77693_reg_init(chg);
- 	if (ret)
- 		return ret;
-@@ -724,6 +891,10 @@ static int max77693_charger_probe(struct platform_device *pdev)
- 	device_remove_file(&pdev->dev, &dev_attr_top_off_timer);
- 	device_remove_file(&pdev->dev, &dev_attr_top_off_threshold_current);
- 	device_remove_file(&pdev->dev, &dev_attr_fast_charge_timer);
-+	extcon_unregister_notifier(chg->cable.edev, EXTCON_CHG_USB_SDP,
-+				   &chg->cable.nb);
-+	extcon_unregister_notifier(chg->cable.edev, EXTCON_CHG_USB_DCP,
-+				   &chg->cable.nb);
+ again:
+ 	spin_lock(&vgdev->ctrlq.qlock);
+@@ -318,7 +375,7 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+ 	 * to wait for free space, which can result in fence ids being
+ 	 * submitted out-of-order.
+ 	 */
+-	if (vq->num_free < 3) {
++	if (vq->num_free < 2 + outcnt) {
+ 		spin_unlock(&vgdev->ctrlq.qlock);
+ 		wait_event(vgdev->ctrlq.ack_queue, vq->num_free >= 3);
+ 		goto again;
+@@ -326,8 +383,14 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
  
- 	return ret;
+ 	if (hdr && fence)
+ 		virtio_gpu_fence_emit(vgdev, hdr, fence);
+-	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
++	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf, vout);
+ 	spin_unlock(&vgdev->ctrlq.qlock);
++
++	if (sgt) {
++		sg_free_table(sgt);
++		kfree(sgt);
++	}
++
+ 	return rc;
  }
-@@ -736,6 +907,11 @@ static int max77693_charger_remove(struct platform_device *pdev)
- 	device_remove_file(&pdev->dev, &dev_attr_top_off_threshold_current);
- 	device_remove_file(&pdev->dev, &dev_attr_fast_charge_timer);
  
-+	extcon_unregister_notifier(chg->cable.edev, EXTCON_CHG_USB_SDP,
-+				   &chg->cable.nb);
-+	extcon_unregister_notifier(chg->cable.edev, EXTCON_CHG_USB_DCP,
-+				   &chg->cable.nb);
-+
- 	power_supply_unregister(chg->charger);
- 
- 	return 0;
 -- 
-2.23.0
+2.23.0.162.g0b9fbb3734-goog
 
