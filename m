@@ -2,232 +2,78 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E89C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6968AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE10C216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A57521D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="UoVv0ryY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfIJVXm (ORCPT
+        id S1726230AbfIJV30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 17:23:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54464 "EHLO mga04.intel.com"
+        Tue, 10 Sep 2019 17:29:26 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:49820 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfIJVXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 17:23:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 14:23:40 -0700
-X-IronPort-AV: E=Sophos;i="5.64,490,1559545200"; 
-   d="scan'208";a="178807819"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 14:23:40 -0700
-Message-ID: <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Date:   Tue, 10 Sep 2019 14:23:40 -0700
-In-Reply-To: <20190910175213.GD4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
-         <20190910124209.GY2063@dhcp22.suse.cz>
-         <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
-         <20190910144713.GF2063@dhcp22.suse.cz>
-         <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
-         <20190910175213.GD4023@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1725876AbfIJV30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 17:29:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xcg8PAW6M2blaLHjGv+8B+4Y3q8SjsFw7wRNh6L6zik=; b=UoVv0ryYF7R4K8jEIuCSAsrqXH
+        Iju2/vSh7ahNGK2uVpKYuL5s/mmoQ2O3WHtAEEDCcQ5OwHJ24ox3iae2CGYB6IA8WabONRdHXI144
+        zuWwVVFdD7CjZmByfnj5Ii0iO0ItMMwLuNFnbt9ZW1hmy5ivzkJiCov/5fNQC07tRlaY=;
+Received: from p200300ccff17ef001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff17:ef00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7nhJ-0001iA-QI; Tue, 10 Sep 2019 23:29:14 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7nhJ-0004ig-C2; Tue, 10 Sep 2019 23:29:13 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v2 0/2] backlight_lm3630a: add enable_gpios property
+Date:   Tue, 10 Sep 2019 23:29:07 +0200
+Message-Id: <20190910212909.18095-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-10 at 19:52 +0200, Michal Hocko wrote:
-> On Tue 10-09-19 09:05:43, Alexander Duyck wrote:
-> > On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
-> > > > On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > > I wanted to review "mm: Introduce Reported pages" just realize that I
-> > > > > have no clue on what is going on so returned to the cover and it didn't
-> > > > > really help much. I am completely unfamiliar with virtio so please bear
-> > > > > with me.
-> > > > > 
-> > > > > On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
-> > > > > [...]
-> > > > > > This series provides an asynchronous means of reporting to a hypervisor
-> > > > > > that a guest page is no longer in use and can have the data associated
-> > > > > > with it dropped. To do this I have implemented functionality that allows
-> > > > > > for what I am referring to as unused page reporting
-> > > > > > 
-> > > > > > The functionality for this is fairly simple. When enabled it will allocate
-> > > > > > statistics to track the number of reported pages in a given free area.
-> > > > > > When the number of free pages exceeds this value plus a high water value,
-> > > > > > currently 32, it will begin performing page reporting which consists of
-> > > > > > pulling pages off of free list and placing them into a scatter list. The
-> > > > > > scatterlist is then given to the page reporting device and it will perform
-> > > > > > the required action to make the pages "reported", in the case of
-> > > > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > > > > > and as such they are forced out of the guest. After this they are placed
-> > > > > > back on the free list,
-> > > > > 
-> > > > > And here I am reallly lost because "forced out of the guest" makes me
-> > > > > feel that those pages are no longer usable by the guest. So how come you
-> > > > > can add them back to the free list. I suspect understanding this part
-> > > > > will allow me to understand why we have to mark those pages and prevent
-> > > > > merging.
-> > > > 
-> > > > Basically as the paragraph above mentions "forced out of the guest"
-> > > > really is just the hypervisor calling MADV_DONTNEED on the page in
-> > > > question. So the behavior is the same as any userspace application
-> > > > that calls MADV_DONTNEED where the contents are no longer accessible
-> > > > from userspace and attempting to access them will result in a fault
-> > > > and the page being populated with a zero fill on-demand page, or a
-> > > > copy of the file contents if the memory is file backed.
-> > > 
-> > > As I've said I have no idea about virt so this doesn't really tell me
-> > > much. Does that mean that if somebody allocates such a page and tries to
-> > > access it then virt will handle a fault and bring it back?
-> > 
-> > Actually I am probably describing too much as the MADV_DONTNEED is the
-> > hypervisor behavior in response to the virtio-balloon notification. A
-> > more thorough explanation of it can be found by just running "man
-> > madvise", probably best just to leave it at that since I am probably
-> > confusing things by describing hypervisor behavior in a kernel patch
-> > set.
-> 
-> This analogy is indeed confusing and doesn't help to build a picture.
+To be able to handle the HWEN pin of the lm3630a, add
+an enable gpio to the driver and a property.
 
-All I am really doing is using a pointer per free_list, the page->index, 
-and a page flag to provide a way to iterate over the list in such a way
-that I will not repeat the operation on a page I have already reported. It
-is taking advantage of the fact that we add pages to either the head or
-the tail of the list, and can pull the pages from anywhere in the list, so
-we have to work around those edges to avoid processing the already
-reported pages in between.
+Tested on Kobo Clara HD.
 
-Admittedly this is pretty complex. I've been at this for several months,
-and have gone through several iterations.
+Changes in v2:
+simplification and reordering
 
-If it helps I can try to draw it out as a bit of ASCII art. Basically what
-I am trying to do is find a way to skip over the blob of reported pages
-that would exist after we have not been reporting for a little while. Most
-of this logic is in the get_reported_pages/free_reported_pages that should
-be in patch 6.
+Andreas Kemnade (2):
+  dt-bindings: backlight: lm3630a: add enable_gpios
+  backlight: lm3630a: add an enable gpio for the HWEN pin
 
-So on our first iteration through the pages it is pretty straightforward.
-We basically just keep pushing the boundary pointer up, we fetch the pages
-immediately in front of it, and then when we return the now-reported pages
-we push the boundary pointer up to those pages.
+ .../bindings/leds/backlight/lm3630a-backlight.yaml     |  5 +++++
+ drivers/video/backlight/lm3630a_bl.c                   | 10 ++++++++++
+ 2 files changed, 15 insertions(+)
 
-While we are actively reporting a given zone we prevent any pages from
-being inserted behind the boundary. They are always inserted before the
-boundary pointer. This is achieved by replacing the free_list tail pointer
-value with the boundary pointer value in the case of add_to_tail calls.
-
-Legend:
-U Unused Page
-R Reported Page
-< Boundary Reported Page
-
-     Head ....................................................... Tail
-Start     UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU <
-..        UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU<RRRRRRRRRRRRRRRRRRRRRRR
-End       UU<RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-
-After we completed the boundary pointer is discarded and we don't have to
-update it when the zone->flag indicating reporting is active is no longer
-set. What we then have happening is that pages are pulled out of the
-free_list at random locations or from the head. This causes the list of
-reported pages to slowly shrink, however the block of pages should remain
-contiguous since new pages are only added to the head or the tail.
-
-     Head ....................................................... Tail
-Idle      UUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUU
-
-Once we have a large enough difference between the nr_free and
-reported_pages we will then restart the reporting by resetting the
-boundary to the tail and proceeding to pull the non-reported pages that
-are in front of the boundary(fig1). Once those are exhasusted we will
-start pulling the pages from the head of the list, reporting those, and
-then placing them back at the boundary(fig2). When we finally hit the
-point where there are no more pages to pull from the head that are not
-reported we will update the boundary to the first reported page in the
-list, return the reported pages there, and we should be done reporting
-pages from this free list.
-
-     Head ....................................................... Tail
-Start     UUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUU <
-fig1      UUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRU<RRRR
-fig2      UUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR<RRRRRRRRRRRRRRRRRRRR
-End       UU<RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-
-The goal with all this is to allow the boundary pointer to move, but to
-guarantee forward progress as we work our way through the free_list(s).
-Essentially the only requirements we are posing on the page allocator is
-that if it pulls the page at the boundary it has to push it back, and if
-it wants to add to the tail it has to use the boundary page as the tail
-instead.
-
-> > For the most part all the page reporting really does is provide a way
-> > to incrementally identify unused regions of memory in the buddy
-> > allocator. That in turn is used by virtio-balloon in a polling thread
-> > to report to the hypervisor what pages are not in use so that it can
-> > make a decision on what to do with the pages now that it knows they
-> > are unused.
-> 
-> So essentially you want to store metadata into free pages and control
-> what the allocator can do with them? Namely buddy merging if the type
-> doesn't match?
-
-We don't put any limitations on the allocator other then that it needs to
-clean up the metadata on allocation, and that it cannot allocate a page
-that is in the process of being reported since we pulled it from the
-free_list. If the page is a "Reported" page then it decrements the
-reported_pages count for the free_area and makes sure the page doesn't
-exist in the "Boundary" array pointer value, if it does it moves the
-"Boundary" since it is pulling the page.
-
-> > All this is providing is just a report and it is optional if the
-> > hypervisor will act on it or not. If the hypervisor takes some sort of
-> > action on the page, then the expectation is that the hypervisor will
-> > use some sort of mechanism such as a page fault to discover when the
-> > page is used again.
-> 
-> OK so the baloon driver is in charge of this metadata and the allocator
-> has to live with that. Isn't that a layer violation?
-
-Really the metadata belongs to the page reporting. The virtio balloon
-driver doesn't get to see any of it. It basically registers as a Reporting
-interface and then we start sending it scatterlists to report. It doesn't
-do anything with the actual pages themselves other then DMA map the
-physical addresses for them.
+-- 
+2.20.1
 
