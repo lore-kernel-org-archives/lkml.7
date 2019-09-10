@@ -2,184 +2,232 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FA4C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E89C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EE32171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hAhbaJBA"
+	by mail.kernel.org (Postfix) with ESMTP id BE10C216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 21:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbfIJVUN (ORCPT
+        id S1726194AbfIJVXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 17:20:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36126 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfIJVUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 17:20:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ALDvKr145582;
-        Tue, 10 Sep 2019 21:20:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=fdebqBOvcqPAlLiTq0SIFl+VD3fUB4pXg0l91CdBhTc=;
- b=hAhbaJBAJcyqaTNZmaHVUH++hh95iH3UlDgZnAZ9TC8vAyTvrCDXlgrSgT/u1764DBXO
- s+zB7WpWufVRb6RXMpF1zHXGk2zDQtveMhoXee6YtsV2l1ZiFQzIMwRIUcBcy4AfIW3a
- y/vOWqgRcdhkmS1qtXxb768mYXYFw4ThShLWzRal1l2A5U6M7ziNJjTIVBeLAUVdPm5B
- 7o60pdYfSr6FreG8K2IdA/XPsVJR/5v6I+F+fTwSehgezLJOaNUhuzjayY3AprEi38jZ
- mWoeRia5ybWDnMqP/ysXGeZLTxvaPbu3WUPATJhQVOIpKDS/OJaK+ETkbSqDf0xyq3uC sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uw1jke58v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 21:19:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ALDmCb184572;
-        Tue, 10 Sep 2019 21:19:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uxk0sh7tu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 21:19:58 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8ALJuw2031843;
-        Tue, 10 Sep 2019 21:19:57 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 14:19:56 -0700
-Subject: Re: [Xen-devel] [PATCH] xen/pci: try to reserve MCFG areas earlier
-To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     jgross@suse.com
-References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
- <5054ad91-5b87-652c-873a-b31758948bd7@oracle.com>
- <e3114d56-51cd-b973-1ada-f6a60a7e99cc@citrix.com>
- <43b7da04-5c42-80d8-898b-470ee1c91ed2@oracle.com>
- <adefac87-c2b3-b67f-fb4d-d763ce920bef@citrix.com>
- <1695c88d-e5ad-1854-cdef-3cd95c812574@oracle.com>
- <4d3bf854-51de-99e4-9a40-a64c581bdd10@citrix.com>
- <bc3da154-d451-02cf-6154-5e0dc721a6e6@oracle.com>
- <c45b8786-5735-a95d-bc40-61372c326037@citrix.com>
- <43e492ff-f967-7218-65c4-d16581fabea3@oracle.com>
- <416ff4b7-3186-f61a-75fa-bcfc968f8117@citrix.com>
- <df64cd80-d92e-27ad-b1bc-e58184379e50@oracle.com>
- <d281baaf-a6d7-306e-63aa-b84552ac3ea5@citrix.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <9ac1f34b-ea2a-3818-4cbd-a22a9a475dd4@oracle.com>
-Date:   Tue, 10 Sep 2019 17:19:45 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 10 Sep 2019 17:23:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54464 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfIJVXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 17:23:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 14:23:40 -0700
+X-IronPort-AV: E=Sophos;i="5.64,490,1559545200"; 
+   d="scan'208";a="178807819"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 14:23:40 -0700
+Message-ID: <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date:   Tue, 10 Sep 2019 14:23:40 -0700
+In-Reply-To: <20190910175213.GD4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+         <20190910124209.GY2063@dhcp22.suse.cz>
+         <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+         <20190910144713.GF2063@dhcp22.suse.cz>
+         <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+         <20190910175213.GD4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <d281baaf-a6d7-306e-63aa-b84552ac3ea5@citrix.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100203
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 4:36 PM, Igor Druzhinin wrote:
-> On 10/09/2019 18:48, Boris Ostrovsky wrote:
->> On 9/10/19 5:46 AM, Igor Druzhinin wrote:
->>> On 10/09/2019 02:47, Boris Ostrovsky wrote:
->>>> On 9/9/19 5:48 PM, Igor Druzhinin wrote:
->>>>> On 09/09/2019 20:19, Boris Ostrovsky wrote:
->>>>>
->>>>>> The other question I have is why you think it's worth keeping
->>>>>> xen_mcfg_late() as a late initcall. How could MCFG info be updated
->>>>>> between acpi_init() and late_initcalls being run? I'd think it can only
->>>>>> happen when a new device is hotplugged.
->>>>>>
->>>>> It was a precaution against setup_mcfg_map() calls that might add new
->>>>> areas that are not in MCFG table but for some reason have _CBA method.
->>>>> It's obviously a "firmware is broken" scenario so I don't have strong
->>>>> feelings to keep it here. Will prefer to remove in v2 if you want.
->>>> Isn't setup_mcfg_map() called before the first xen_add_device() which is where you are calling xen_mcfg_late()?
->>>>
->>> setup_mcfg_map() calls are done in order of root bus discovery which
->>> happens *after* the previous root bus has been enumerated. So the order
->>> is: call setup_mcfg_map() for root bus 0, find that
->>> pci_mmcfg_late_init() has finished MCFG area registration, perform PCI
->>> enumeration of bus 0, call xen_add_device() for every device there, call
->>> setup_mcfg_map() for root bus X, etc.
->> Ah, yes. Multiple busses.
->>
->> If that's the case then why don't we need to call xen_mcfg_late() for
->> the first device on each bus?
->>
-> Ideally, yes - we'd like to call it for every bus discovered. But boot
-> time buses are already in MCFG (otherwise system boot might not simply
-> work as Jan pointed out) so it's not strictly required. The only case is
-> a potential PCI bus hot-plug but I'm not sure it actually works in
-> practice and we certainly didn't support it before. It might be solved
-> theoretically by subscribing to acpi_bus_type that is available after
-> acpi_init().
+On Tue, 2019-09-10 at 19:52 +0200, Michal Hocko wrote:
+> On Tue 10-09-19 09:05:43, Alexander Duyck wrote:
+> > On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
+> > > > On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > I wanted to review "mm: Introduce Reported pages" just realize that I
+> > > > > have no clue on what is going on so returned to the cover and it didn't
+> > > > > really help much. I am completely unfamiliar with virtio so please bear
+> > > > > with me.
+> > > > > 
+> > > > > On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
+> > > > > [...]
+> > > > > > This series provides an asynchronous means of reporting to a hypervisor
+> > > > > > that a guest page is no longer in use and can have the data associated
+> > > > > > with it dropped. To do this I have implemented functionality that allows
+> > > > > > for what I am referring to as unused page reporting
+> > > > > > 
+> > > > > > The functionality for this is fairly simple. When enabled it will allocate
+> > > > > > statistics to track the number of reported pages in a given free area.
+> > > > > > When the number of free pages exceeds this value plus a high water value,
+> > > > > > currently 32, it will begin performing page reporting which consists of
+> > > > > > pulling pages off of free list and placing them into a scatter list. The
+> > > > > > scatterlist is then given to the page reporting device and it will perform
+> > > > > > the required action to make the pages "reported", in the case of
+> > > > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > > > > > and as such they are forced out of the guest. After this they are placed
+> > > > > > back on the free list,
+> > > > > 
+> > > > > And here I am reallly lost because "forced out of the guest" makes me
+> > > > > feel that those pages are no longer usable by the guest. So how come you
+> > > > > can add them back to the free list. I suspect understanding this part
+> > > > > will allow me to understand why we have to mark those pages and prevent
+> > > > > merging.
+> > > > 
+> > > > Basically as the paragraph above mentions "forced out of the guest"
+> > > > really is just the hypervisor calling MADV_DONTNEED on the page in
+> > > > question. So the behavior is the same as any userspace application
+> > > > that calls MADV_DONTNEED where the contents are no longer accessible
+> > > > from userspace and attempting to access them will result in a fault
+> > > > and the page being populated with a zero fill on-demand page, or a
+> > > > copy of the file contents if the memory is file backed.
+> > > 
+> > > As I've said I have no idea about virt so this doesn't really tell me
+> > > much. Does that mean that if somebody allocates such a page and tries to
+> > > access it then virt will handle a fault and bring it back?
+> > 
+> > Actually I am probably describing too much as the MADV_DONTNEED is the
+> > hypervisor behavior in response to the virtio-balloon notification. A
+> > more thorough explanation of it can be found by just running "man
+> > madvise", probably best just to leave it at that since I am probably
+> > confusing things by describing hypervisor behavior in a kernel patch
+> > set.
+> 
+> This analogy is indeed confusing and doesn't help to build a picture.
 
-OK. Then *I think* we can drop late_initcall() but I would really like
-to hear when others think.
+All I am really doing is using a pointer per free_list, the page->index, 
+and a page flag to provide a way to iterate over the list in such a way
+that I will not repeat the operation on a page I have already reported. It
+is taking advantage of the fact that we add pages to either the head or
+the tail of the list, and can pull the pages from anywhere in the list, so
+we have to work around those edges to avoid processing the already
+reported pages in between.
 
--boris
+Admittedly this is pretty complex. I've been at this for several months,
+and have gone through several iterations.
 
+If it helps I can try to draw it out as a bit of ASCII art. Basically what
+I am trying to do is find a way to skip over the blob of reported pages
+that would exist after we have not been reporting for a little while. Most
+of this logic is in the get_reported_pages/free_reported_pages that should
+be in patch 6.
 
+So on our first iteration through the pages it is pretty straightforward.
+We basically just keep pushing the boundary pointer up, we fetch the pages
+immediately in front of it, and then when we return the now-reported pages
+we push the boundary pointer up to those pages.
+
+While we are actively reporting a given zone we prevent any pages from
+being inserted behind the boundary. They are always inserted before the
+boundary pointer. This is achieved by replacing the free_list tail pointer
+value with the boundary pointer value in the case of add_to_tail calls.
+
+Legend:
+U Unused Page
+R Reported Page
+< Boundary Reported Page
+
+     Head ....................................................... Tail
+Start     UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU <
+..        UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU<RRRRRRRRRRRRRRRRRRRRRRR
+End       UU<RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+After we completed the boundary pointer is discarded and we don't have to
+update it when the zone->flag indicating reporting is active is no longer
+set. What we then have happening is that pages are pulled out of the
+free_list at random locations or from the head. This causes the list of
+reported pages to slowly shrink, however the block of pages should remain
+contiguous since new pages are only added to the head or the tail.
+
+     Head ....................................................... Tail
+Idle      UUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUU
+
+Once we have a large enough difference between the nr_free and
+reported_pages we will then restart the reporting by resetting the
+boundary to the tail and proceeding to pull the non-reported pages that
+are in front of the boundary(fig1). Once those are exhasusted we will
+start pulling the pages from the head of the list, reporting those, and
+then placing them back at the boundary(fig2). When we finally hit the
+point where there are no more pages to pull from the head that are not
+reported we will update the boundary to the first reported page in the
+list, return the reported pages there, and we should be done reporting
+pages from this free list.
+
+     Head ....................................................... Tail
+Start     UUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRUUUU <
+fig1      UUUUUUUUUUUUUUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRU<RRRR
+fig2      UUURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR<RRRRRRRRRRRRRRRRRRRR
+End       UU<RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+The goal with all this is to allow the boundary pointer to move, but to
+guarantee forward progress as we work our way through the free_list(s).
+Essentially the only requirements we are posing on the page allocator is
+that if it pulls the page at the boundary it has to push it back, and if
+it wants to add to the tail it has to use the boundary page as the tail
+instead.
+
+> > For the most part all the page reporting really does is provide a way
+> > to incrementally identify unused regions of memory in the buddy
+> > allocator. That in turn is used by virtio-balloon in a polling thread
+> > to report to the hypervisor what pages are not in use so that it can
+> > make a decision on what to do with the pages now that it knows they
+> > are unused.
+> 
+> So essentially you want to store metadata into free pages and control
+> what the allocator can do with them? Namely buddy merging if the type
+> doesn't match?
+
+We don't put any limitations on the allocator other then that it needs to
+clean up the metadata on allocation, and that it cannot allocate a page
+that is in the process of being reported since we pulled it from the
+free_list. If the page is a "Reported" page then it decrements the
+reported_pages count for the free_area and makes sure the page doesn't
+exist in the "Boundary" array pointer value, if it does it moves the
+"Boundary" since it is pulling the page.
+
+> > All this is providing is just a report and it is optional if the
+> > hypervisor will act on it or not. If the hypervisor takes some sort of
+> > action on the page, then the expectation is that the hypervisor will
+> > use some sort of mechanism such as a page fault to discover when the
+> > page is used again.
+> 
+> OK so the baloon driver is in charge of this metadata and the allocator
+> has to live with that. Isn't that a layer violation?
+
+Really the metadata belongs to the page reporting. The virtio balloon
+driver doesn't get to see any of it. It basically registers as a Reporting
+interface and then we start sending it scatterlists to report. It doesn't
+do anything with the actual pages themselves other then DMA map the
+physical addresses for them.
 
