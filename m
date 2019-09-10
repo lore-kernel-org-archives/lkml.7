@@ -2,70 +2,96 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B8BC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48234C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB3121479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2442F21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389798AbfIJOcO (ORCPT
+        id S2388757AbfIJOcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:32:14 -0400
-Received: from muru.com ([72.249.23.125]:60488 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388484AbfIJOcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:32:08 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 824BA8027;
-        Tue, 10 Sep 2019 14:32:38 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 07:32:04 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the omap-fixes tree
-Message-ID: <20190910143204.GR52127@atomide.com>
-References: <20190911000818.6539fd35@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911000818.6539fd35@canb.auug.org.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 10 Sep 2019 10:32:12 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:13716 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388433AbfIJOcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:32:04 -0400
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AER1KT006821;
+        Tue, 10 Sep 2019 14:31:47 GMT
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2ux843msm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 14:31:47 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 4660E5C;
+        Tue, 10 Sep 2019 14:31:46 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
+        id 07F63201FBE2C; Tue, 10 Sep 2019 09:31:46 -0500 (CDT)
+Message-Id: <20190910143100.962781883@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: quilt/0.46-1
+Date:   Tue, 10 Sep 2019 09:31:00 -0500
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/8] x86/platform/UV: Update UV Hubless System Support
+In-Reply-To: <20190905184741.256857552@stormcage.eag.rdlabs.hpecorp.net>
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-10_10:2019-09-10,2019-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=926 mlxscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1906280000 definitions=main-1909100141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-* Stephen Rothwell <sfr@canb.auug.org.au> [190910 14:25]:
-> Hi all,
+On 9/5/2019 11:47 AM, Mike Travis wrote:
 > 
-> In commit
+> These patches support upcoming UV systems that do not have a UV HUB.
 > 
->   a932b77b4d19 ("ARM: dts: logicpd-som-lv: Fix i2c2 and i2c3 Pin mux")
-> 
-> Fixes tag
-> 
->   Fixes: 5fe3c0fa0d54 ("ARM: dts: Add pinmuxing for i2c2 and i2c3
-> 
-> has these problem(s):
-> 
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
-> 
-> Please do not split Fixes tags over more than one line (and also just
-> keep them with all the other tags).
+> [1/8] Save OEM_ID from ACPI MADT probe
+>
+> [2/8] Return UV Hubless System Type
+    V2: Remove is_uv_hubless define
+	Remove leading '_' from _is_uv_hubless
 
-Oops sorry I missed that again, will try to be more careful
-the next time. I really should have some automated checks
-in place for that..
+> [3/8] Add return code to UV BIOS Init function
+>
+> [4/8] Setup UV functions for Hubless UV Systems
+>
+> [5/8] Add UV Hubbed/Hubless Proc FS Files
+    V2: Remove is_uv_hubbed define
+	Remove leading '_' from _is_uv_hubbed
 
-Regards,
+> [6/8] Decode UVsystab Info
+    V2: Removed redundant error message after call to uv_bios_init.
+	Removed redundant error message after call to decode_uv_systab.
+	Clarify selection of UV4 and higher when checking for extended UVsystab
+	in decode_uv_systab().
 
-Tony
+> [7/8] Check EFI Boot to set reboot type
+>
+> [8/8] Account for UV Hubless in is_uvX_hub Ops
+    V2: Add WARNING that the is UVx supported defines will be removed.
+
+-- 
+
