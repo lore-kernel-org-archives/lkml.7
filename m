@@ -2,125 +2,126 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE13C4740C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D25C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9961F21726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678FB2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qj4vouVd"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JZZSPS+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403957AbfIJCH3 (ORCPT
+        id S2392623AbfIJCLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 22:07:29 -0400
-Received: from mail-eopbgr70085.outbound.protection.outlook.com ([40.107.7.85]:41262
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392543AbfIJCH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 22:07:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RK3vwYP5aKcm8APEU033xN0XCpozCmmiloOXQdLcZzefAoF7dugdbBF3esZHkylLj1FPaSPi3ODWbfDw/EjGqostRbkKppaW6ncilV8tVkO2Tc5BbC6/2tsuwUNYlgfybFPBbsqxi9ZfqefN/65fdsmzzdMwpb73eSqEmelcV7a8KFfyvvYfuJTxOyXsXU0M23sp0JxTBOihn0Lp2CdLESxcr1reIZBcfKlUO/aZstJ0CPBncQIB6J0dJ9sNR5ZQe3oJ/bfmD7odoq3b5qVe/2iO+6PUDaxhQeVCNx2PUGOVTtUhdU3DKUXFcgNFG8+fTyRr9jdrBNVGQEvIXNqJ6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l0Q7M29zjUZiT5VpAvxff+oGDKk7ik9Lw9CnBST1wwI=;
- b=I6JaEcmuxgpNsCv4hsGDQ9uK+1ZWDhXLr6R+cSu9R0DUnMm9yIBC8TwcXTKJmKG3ZlCTWrPij1H/3kzrhpP1iZv3vzeyWpydxjjmA8ldFJIvUbq5JXL5H8HMC/N8VIewAvwZ+P873AzUuCOUbWGyzwJPLHb7hoRh8F5SJGLy+5IfDuWfN3RkaJ5x7r7Si0MiWcnHVTSZ0ZknWvje0yg7rWB7xhP6LzchjurDTTgKrAmA1+myv6GfMnWVIADUTOWD7WofH/MURIARY5vxls3BOWgRW/lJI0OPn8NXz0gxuFL9HO2uhXqdMK341coZ9rwhAbn8mJHVfrv2/U0UFF9SVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l0Q7M29zjUZiT5VpAvxff+oGDKk7ik9Lw9CnBST1wwI=;
- b=Qj4vouVdNXOyqLOfRZQwhAsyFV/y+VzfTMYdHUNfZ52xVMSK1kMRHRx9ovENmQu6Ua41xRFS9WpvZ4ix1MLncMRZAtnYuFAHoLV0EpMBvB5Uqt81XP6QDp4VPo76wLysgJMoURbJuJNV7XaAEsyb8yKELBh9xaR5S/13Gj7eBIE=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6590.eurprd04.prod.outlook.com (20.179.234.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Tue, 10 Sep 2019 02:07:25 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 02:07:25 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample format
-Thread-Topic: [PATCH 2/3] ASoC: fsl_asrc: update supported sample format
-Thread-Index: AdVne99A50iblB+wSvqDBZhWvxbm4A==
-Date:   Tue, 10 Sep 2019 02:07:25 +0000
-Message-ID: <VE1PR04MB64791308D87F91C51412DF53E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7ae50c49-f1ff-4ac3-b35e-08d73593a00f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6590;
-x-ms-traffictypediagnostic: VE1PR04MB6590:
-x-microsoft-antispam-prvs: <VE1PR04MB65902D2856F523D4870B2AC6E3B60@VE1PR04MB6590.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(366004)(376002)(396003)(189003)(199004)(8936002)(4744005)(7696005)(53936002)(256004)(9686003)(55016002)(52536014)(66946007)(64756008)(66446008)(86362001)(316002)(478600001)(14454004)(66066001)(66476007)(6246003)(6506007)(7416002)(2906002)(1411001)(25786009)(4326008)(33656002)(229853002)(8676002)(71190400001)(74316002)(6916009)(476003)(81166006)(102836004)(81156014)(26005)(5660300002)(186003)(6436002)(99286004)(76116006)(7736002)(66556008)(71200400001)(54906003)(305945005)(3846002)(6116002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6590;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bYlrU4jnp+IhudtYAD+U46GCMO1594Vx4x+JE2i8l91iZdPkkkooLDxSh6dw61Plhc59/2B+dRLYkQr4x+U+Y9AH9KIGmQ5NntNVArskF7IKnoQW43AwycNgqtO6wHsJUEzbcrFimE/xRybbThFR22R5e2nXieB3i1hijsZuqsGn6TEDk+HXo1H47gaq1R1qBg0L2LN+8KJAHsw4eJTMqCGKyfOm99haE5//C3kT5fwkWuN0+oCDA3pLviABGpoePTdf79a9UpyGAq+gmz66D7BgoXrUuy1AaGP7iDeZeXuwKa3nVYi/G5e3O8N6Yd6rfEuIj6oxiv2amL7+xYoq1190purGoSbIpqkAjdNr/V/zELf57sdeMb5o74+wSPAfblk8tpNZZC9g5xn65T53VaDwPWLDjdxyZd+kujnvLAQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Sep 2019 22:11:01 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:52635 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388705AbfIJCLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 22:11:01 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x8A2ArGG023752;
+        Tue, 10 Sep 2019 11:10:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x8A2ArGG023752
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568081454;
+        bh=a157QSKkFHFQDXKrnSwhaYkEU7C+AFGKYmKxUEaX5bo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JZZSPS+AC3StfV68me3abXJZiev8jTHnNFd4zr/HIVlSxk0sA5TLIa28Ulqdj/RhI
+         lDEwI6QFQ4TwskOFmjIcI16sgtGpunt9xsVAQk0I54VUuHb9x43C/lq6+mZsByYdkw
+         5xf5Va1PC8NY7jtvDvHSnhSkjfVZZIQL7n5/La+dgHFR63kPuR+OBYWeXTzRPTio6G
+         FfKtnTss8C4zwVN3pSZtCVY+L/HV7umiS8GaQrI9lWG3GBOfeBw+ofc6Hm53dAZuvm
+         zhQVgEf5ZRyc9fNttLvfd3qw4d/D1Zcy1R3ghhNf04FBPRJWfA1B4oupFsCQ7eoo2q
+         bqP+ZDGLLCfMQ==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id u21so10178495vsl.10;
+        Mon, 09 Sep 2019 19:10:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAUHTYx1JWw2/mFiP11ECzUVfFdYa00oK+PLT9pClwM6LwEuM1un
+        6cqoXp3Wsg76MX/gx+z2Yj/wkVn5ovVDGa6l70U=
+X-Google-Smtp-Source: APXvYqy/6SZUE4ZItHpdV+NV1DywvKICh6bR6SRDVgEDOqaSL4CcjHYn2/6IT8T5biDHj7Qw2ZX6sMnn5d9yFX1u80Q=
+X-Received: by 2002:a67:f496:: with SMTP id o22mr14372435vsn.179.1568081452893;
+ Mon, 09 Sep 2019 19:10:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae50c49-f1ff-4ac3-b35e-08d73593a00f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 02:07:25.6593
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oPNe9BqE5f0XnhyrPG9gsKCspaCiihaWFCbmdx1ZmkaeZAhffgemDSxnHS/numxbnd+zDr/ixd907k52KgQpQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6590
+References: <20190909105317.20473-1-yamada.masahiro@socionext.com>
+ <nycvar.YSQ.7.76.1909090942420.3091@knanqh.ubzr> <CAK7LNATC1pZ_2BQ-Uh2+qfUjJtL0mRpsm78N-sUQXhF0tDf6Hw@mail.gmail.com>
+ <nycvar.YSQ.7.76.1909091158200.3091@knanqh.ubzr>
+In-Reply-To: <nycvar.YSQ.7.76.1909091158200.3091@knanqh.ubzr>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 10 Sep 2019 11:10:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
+Message-ID: <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] export.h: remove defined(__KERNEL__)
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Denis Efremov <efremov@linux.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Tue, Sep 10, 2019 at 1:06 AM Nicolas Pitre <nico@fluxnic.net> wrote:
+>
+> On Mon, 9 Sep 2019, Masahiro Yamada wrote:
+>
+> > Hi Nicolas,
+> >
+> > On Mon, Sep 9, 2019 at 10:48 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+> > >
+> > > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
+> > >
+> > > > This line was touched by commit f235541699bc ("export.h: allow for
+> > > > per-symbol configurable EXPORT_SYMBOL()"), but the commit log did
+> > > > not explain why.
+> > > >
+> > > > CONFIG_TRIM_UNUSED_KSYMS works for me without defined(__KERNEL__).
+> > >
+> > > I'm pretty sure it was needed back then so not to interfere with users
+> > > of this file. My fault for not documenting it.
+> >
+> > Hmm, I did not see a problem in my quick build test.
+> >
+> > Do you remember which file was causing the problem?
+>
+> If you build commit 7ec925701f5f with CONFIG_TRIM_UNUSED_KSYMS=y and the
+> defined(__KERNEL__) test removed then you'll get:
+>
+>   HOSTCC  scripts/mod/modpost.o
+> In file included from scripts/mod/modpost.c:24:
+> scripts/mod/../../include/linux/export.h:81:10: fatal error: linux/kconfig.h: No such file or directory
+>
+>
+> Nicolas
 
->=20
-> On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
-> > The ASRC support 24bit/16bit/8bit input width, so S20_3LE format
-> > should not be supported, it is word width is 20bit.
->=20
-> I thought 3LE used 24-bit physical width. And the driver assigns
-> ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit would go
-> for that 24-bit slot also. I don't clearly recall if I had explicitly tes=
-ted
-> S20_3LE, but I feel it should work since I put there...
->=20
-> Thanks
-> Nicolin
->=20
 
-For S20_3LE, the width is 20bit,  but the ASRC only support 24bit, if set t=
-he
-ASRMCR1n.IWD=3D 24bit, because the actual width is 20 bit, the volume is
-Lower than expected,  it likes 24bit data right shift 4 bit.=20
-So it is not supported.
+Thanks for explaining this.
 
-Best regards
-Wang shengjiu=20
+It is not the case any more.
+
+
+I will reword the commit message as follows:
+
+------------------------>8---------------------------------------
+export.h: remove defined(__KERNEL__), which is no longer needed
+
+The conditional define(__KERNEL__) was added by commit f235541699bc
+("export.h: allow for per-symbol configurable EXPORT_SYMBOL()").
+
+It was needed at that time to avoid the build error of modpost
+with CONFIG_TRIM_UNUSED_KSYMS=y.
+
+Since commit b2c5cdcfd4bc ("modpost: remove symbol prefix support"),
+modpost no longer includes linux/export.h, thus the define(__KERNEL__)
+is unneeded.
+------------------------>8---------------------------------------
+
+
+
+--
+Best Regards
+Masahiro Yamada
