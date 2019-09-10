@@ -2,128 +2,117 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701A9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9F120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NZNLFGjH"
+	by mail.kernel.org (Postfix) with ESMTP id 50A4220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393333AbfIJM62 (ORCPT
+        id S2393359AbfIJM6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:58:28 -0400
-Received: from mail-eopbgr760047.outbound.protection.outlook.com ([40.107.76.47]:27712
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393272AbfIJM61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:58:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d812xeIfG8WzSWePmgP3ahT5U1BWa9idFqsZ/Af1wUoDfAIY3aIY7XPAGSpsGTKJBk3KXM1raa9XT/bQVqXozU0i/bmGPt51IwYF2lZ/pYMcLiG1d9J+kDSVY9SiY6HvuC4wkGfK8L0AccR9RbPhYdMrpKndKzmbsd5RKyWXoHDBs/UC21NDYhqKynUg1evflqEIk3yoKe9N++FgAp9y2K2wwezgVPCu4CIXt6ohpqUzX47SXUIi85RbriQwQn24Ejk+enDF1zSdOFgpp1ciqX4sr2GY66CQPVcC+AF3EuUpEjr8ztAI39wP2mTPQPosXhxFHNnPcfNn0qHdH6v+Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8jABUHBUN1U8VcAao+7tW+N1JuchKgux5u9gtjRpgZE=;
- b=XmSfPM5IHc5ucM5AFOsXqb2ASOsdFH3eWTes5R5U4eEyv+h1HfHHihLf21k3xHYc9jxNgFIfsQNxamstAyq5Xp4ghX+MS6C1h3hhv4UW5xPajlrk6W7H7Abfr/39gPrwA1PNgSNPtppfMQTbTf5iZC1rQ8vwKm/KAwKAUSY1XtMZL/LbKIIltnq4dd4WZ9HToFKAzOdLr/Kgw3msRhbVKXEXB8/0g8UKHGDWH4HB9o6NJLHZMOlprftdQRSLIYwHxJpLiFD0ddSy7w7DiLDfzxZ6cnh0/okR8vSkn574G3CXfLpG/IJgHbwh+3zEhTvLjNCphwzhskBYnrgMKanNVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8jABUHBUN1U8VcAao+7tW+N1JuchKgux5u9gtjRpgZE=;
- b=NZNLFGjHTlfpUy/k9PoaEdHCFwA/eW+ip+a5xEG3vt7CgLr4MK8Bxixh+eaFK2RdEAIn9hCGfUdeGPpOHBVmFLSD0XEgGA4Z5Xccplz077jbJre6G7A378IMw4NEsGQ8GqFw7xR4UicC2MUwjSpySSgi/HuhdjtTPBdZzBjcg8g=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB0198.namprd12.prod.outlook.com (10.172.75.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.13; Tue, 10 Sep 2019 12:58:25 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2241.018; Tue, 10 Sep
- 2019 12:58:25 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Navare, Manasi D" <manasi.d.navare@intel.com>,
-        Gaurav K Singh <gaurav.k.singh@intel.com>
-Subject: Re: [PATCH] drm: include: fix W=1 warnings in struct drm_dsc_config
-Thread-Topic: [PATCH] drm: include: fix W=1 warnings in struct drm_dsc_config
-Thread-Index: AQHVZ6UWBRRywSwpYUOubjyuuYsSz6ck348A
-Date:   Tue, 10 Sep 2019 12:58:24 +0000
-Message-ID: <f17b306d-2810-985c-42ec-59c6a6dd7093@amd.com>
-References: <20190909135205.10277-1-benjamin.gaignard@st.com>
-In-Reply-To: <20190909135205.10277-1-benjamin.gaignard@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2607:fea8:925f:916c::2]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-x-clientproxiedby: YTBPR01CA0024.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::37) To CY4PR1201MB0230.namprd12.prod.outlook.com
- (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b97725d0-a85c-439c-c842-08d735ee90ff
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB0198;
-x-ms-traffictypediagnostic: CY4PR1201MB0198:
-x-microsoft-antispam-prvs: <CY4PR1201MB01983A35079C3A3A86E69D338CB60@CY4PR1201MB0198.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(189003)(199004)(46003)(66446008)(256004)(66946007)(66476007)(64756008)(66556008)(2906002)(446003)(476003)(2616005)(11346002)(65806001)(65956001)(102836004)(478600001)(8936002)(31686004)(186003)(486006)(53936002)(6246003)(14454004)(6512007)(386003)(6506007)(25786009)(53546011)(4326008)(6116002)(2201001)(71200400001)(36756003)(7736002)(6486002)(110136005)(2501003)(58126008)(316002)(52116002)(81156014)(81166006)(229853002)(31696002)(8676002)(305945005)(6436002)(99286004)(71190400001)(54906003)(5660300002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0198;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: m9x1VN4fQ75kmcoS5zgSrrVyhwYno7NIwUHrc5W57zeW359ofigqKIAS1x7nS7kb12YJTsRYUggWWTBPLnHZJlV2Z9A7Zl3ZgW8XE3EsuKcUJ3JsoIwSH3XezrMoZxxFgs1Ft+MNCnSUKuyFhQ7Dayga4mEyouy9ssc17C+lrnjqkDuwYInfRqCSVQ7O6ORSMuIF2YNU0yv5Z6otZkPKAHTfjBcYMvSqDDP/auxGb1tQ/9wur3bBaOU4NmOaofVGUHc4pW8zHHfhBzdxQ4xRCMHiTkQWEq6HwD6gbCRlQ06X2r+ssguqWBIxA2We9KrNwTqfQ7UjKdkvm2GNZ/4eewuv5uXToshM4C/fSbgbSrOM8XI589YWcincyZn2P/nQ1tN7p56TZFH3r7xITpvg7U0s3x1oklgWaAn5w9NWp1I=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <69BD3F4FEE66F34C9F3837D7F89D1218@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Sep 2019 08:58:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37899 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729518AbfIJM6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:58:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i7fjA-0002f7-7P; Tue, 10 Sep 2019 12:58:36 +0000
+Subject: Re: staging: exfat: issue with FFS_MEDIAERR error return assignment
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <c569b04c-2959-c8eb-0d38-628e8c5ff7ac@canonical.com>
+ <20190910124443.GD15977@kadam>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <aefa4806-af3c-1757-59c2-72e7d1663d66@canonical.com>
+Date:   Tue, 10 Sep 2019 13:58:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b97725d0-a85c-439c-c842-08d735ee90ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 12:58:24.8924
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pXsfnUtpMrzb1H3j1HAwip7WP+y3r5Z+eG9VjViGzlsCW5X5M2gR0MlQiAmbjpLLXF4MjcUCqcFXI7Xl6h/O+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0198
+In-Reply-To: <20190910124443.GD15977@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-K01hbmFzaSwgR2F1cmF2DQoNCk9uIDIwMTktMDktMDkgOTo1MiBhLm0uLCBCZW5qYW1pbiBHYWln
-bmFyZCB3cm90ZToNCj4gQ2hhbmdlIHNjYWxlX2luY3JlbWVudF9pbnRlcnZhbCBhbmQgbmZsX2Jw
-Z19vZmZzZXQgZmllbGRzIHRvDQo+IHUzMiB0byBhdm9pZCBXPTEgd2FybmluZ3MgYmVjYXVzZSB3
-ZSBhcmUgdGVzdGluZyB0aGVtIGFnYWluc3QNCj4gNjU1MzUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPiAtLS0NCj4g
-ICBpbmNsdWRlL2RybS9kcm1fZHNjLmggfCA2ICsrKystLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVk
-ZS9kcm0vZHJtX2RzYy5oIGIvaW5jbHVkZS9kcm0vZHJtX2RzYy5oDQo+IGluZGV4IDg4Nzk1NGNi
-ZmM2MC4uZTQ5NTAyNGU5MDFjIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fZHNjLmgN
-Cj4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX2RzYy5oDQo+IEBAIC0yMDcsMTEgKzIwNywxMyBAQCBz
-dHJ1Y3QgZHJtX2RzY19jb25maWcgew0KPiAgIAkgKiBOdW1iZXIgb2YgZ3JvdXAgdGltZXMgYmV0
-d2VlbiBpbmNyZW1lbnRpbmcgdGhlIHNjYWxlIGZhY3RvciB2YWx1ZQ0KPiAgIAkgKiB1c2VkIGF0
-IHRoZSBiZWdpbm5pbmcgb2YgYSBzbGljZS4NCj4gICAJICovDQo+IC0JdTE2IHNjYWxlX2luY3Jl
-bWVudF9pbnRlcnZhbDsNCj4gKwl1MzIgc2NhbGVfaW5jcmVtZW50X2ludGVydmFsOw0KDQpUaGUg
-RFNDIHNwZWMgZGVmaW5lcyBib3RoIGFzIHUxNi4gSSB0aGluayB0aGUgY2hlY2sgaW4gZHJtX2Rz
-Yy5jIGlzIA0KdXNlbGVzcyBhbmQgc2hvdWxkIGJlIGRyb3BwZWQuDQoNCkhhcnJ5DQoNCj4gKw0K
-PiAgIAkvKioNCj4gICAJICogQG5mbF9icGdfb2Zmc2V0OiBOb24gZmlyc3QgbGluZSBCUEcgb2Zm
-c2V0IHRvIGJlIHVzZWQNCj4gICAJICovDQo+IC0JdTE2IG5mbF9icGdfb2Zmc2V0Ow0KPiArDQo+
-ICsJdTMyIG5mbF9icGdfb2Zmc2V0Ow0KPiAgIAkvKioNCj4gICAJICogQHNsaWNlX2JwZ19vZmZz
-ZXQ6IEJQRyBvZmZzZXQgdXNlZCB0byBlbmZvcmNlIHNsaWNlIGJpdA0KPiAgIAkgKi8NCj4gDQo=
+On 10/09/2019 13:44, Dan Carpenter wrote:
+> On Fri, Aug 30, 2019 at 07:38:00PM +0100, Colin Ian King wrote:
+>> Hi,
+>>
+>> Static analysis on exfat with Coverity has picked up an assignment of
+>> FFS_MEDIAERR that gets over-written:
+>>
+>>
+>> 1750        if (is_dir) {
+>> 1751                if ((fid->dir.dir == p_fs->root_dir) &&
+>> 1752                    (fid->entry == -1)) {
+>> 1753                        if (p_fs->dev_ejected)
+> 
+> Idealy we would have both a filename and a function name but this email
+> doesn't have either so no one knows what code you are talking about.  :P
+
+Oops, my bad.
+
+drivers/staging/exfat/exfat_super.c ffsWriteStat()
+
+> 
+> regards,
+> dan carpenter
+> 
+
