@@ -3,127 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2EFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182A6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0C021D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22A721019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:43:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdlhWpzQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PNqyeqmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393450AbfIJOm4 (ORCPT
+        id S2393496AbfIJOnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:42:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34360 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732465AbfIJOmz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:42:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id k13so22848847ioj.1;
-        Tue, 10 Sep 2019 07:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qwfqdrsthj6wGMKbVfq9KS+2D4+bl2wd+HAoXgrqGpM=;
-        b=mdlhWpzQsILASMQ7+1ikwT0fUSiwI9Yno2A8k95yLHD6P9eV0S05kOW5Jv6prsMvSt
-         iBXlVLmgNneBJJPewyY1Iz+eUwtz//m6IWYeMweTFXG1suDqKgsSJ2xCT/kZ1HcGuX4Y
-         n5DFuajmtetj/LpA2LEgEC9oiE4MlkG9fH5vD+eWjaUxrS6bT4PmDA2aOayknXG3RXII
-         9e0AvcNoE4ZxbCtIxiI/lT91HGh0dhQFb9BVLzxS7z4Bakuzjqvda8OJvgMc4cNBYsKq
-         JywENk314egMFnOMmeOVAlHQzPFr5FrWB11JMPxvnyAvp/9VaOr3lB+4BYVwvWI0USRT
-         DKkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwfqdrsthj6wGMKbVfq9KS+2D4+bl2wd+HAoXgrqGpM=;
-        b=Z9LPZMhsolBeT8q3jBZpNieT2wYdkoa/4VTmTXMcfGuh2Y6jsWSoYgTaxevanmkA/k
-         1Q3SR6D2IVWgmcWBJumyvlN+SD0PWYd0PZeLkHQUVHz5xdwVcsm+IV/cMaowhPw9j14v
-         ftQ+3bWVwMvJ/rYd8bR92mNuZRDRTXPA0H0M7394VUrW1HnWrKe1/7C2L2xYZu4jrqGP
-         Q5Ehx5hdBngM+1emZFoaN0k/jc7QEeT1nIU0OcJ8kWa949foPkFugkL9uBSngWz3RFcJ
-         PPx1kVfzyJh+PqvbHNjGkE+QuHLBqMcAJiPQB6ZYg1BdfcsvMW0bXdFKzhgjEtDAoRWY
-         Up0g==
-X-Gm-Message-State: APjAAAWbYmT0uoHevvdwytI1PNgAz8HRx7+MufoYxRvNI6BXe/wNl6Dt
-        7VGbILc/Y59ylpi6KcXH+rgac/wt/0SFsRstpbQ=
-X-Google-Smtp-Source: APXvYqw25PAt3681VzSp2aKtn4HION8cnSVVgIaDxDN4t5As0qF4aUf02XL+Yw/GC74k1NJX1qc/ljlh1hZcV/Ap7TM=
-X-Received: by 2002:a02:9f16:: with SMTP id z22mr31770205jal.83.1568126574433;
- Tue, 10 Sep 2019 07:42:54 -0700 (PDT)
+        Tue, 10 Sep 2019 10:43:01 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54817 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387754AbfIJOnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:43:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSS526h2z9s00;
+        Wed, 11 Sep 2019 00:42:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568126577;
+        bh=8CHR1ql8lKCJuN/K0/AQDkfcgpKFggsliYfzwtuDJ98=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PNqyeqmDVdVq6K+6REELrKsztbNZKrd5WGpOjpEnhPfzu2rLQnPFqH1IilTDFZfBZ
+         n+sE9SEt1KtBG70rzKp4v/RaqUpRwX7gj4LHSBT57uNZvG1x6uixEZAZChrFlUUtoU
+         eLgaAPvlXOBua93qVNfS8QU1U+dJtmbUiJFGIONTYq2Ib9wIdwXL8QASYeP0w9hvGQ
+         NcKxw19HzvqtyqnJdo1gCRgcl+UfSKaNS70oQO/VQHn5L1GeAuL02Wn2+xeLhLfcu5
+         sOKt5OwvQmOBKHfewQBRdZ2OxNOg3pL4durRyRpX7Z0xxppDSbm8u4PU3uRspiz+Le
+         6JuI31/t8HR8g==
+Date:   Wed, 11 Sep 2019 00:42:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Alex Malamud <alex.malamud@intel.com>
+Subject: linux-next: Signed-off-by missing for commit in the net-next tree
+Message-ID: <20190911004229.74d2763a@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190907172225.10910.34302.stgit@localhost.localdomain> <20190910124209.GY2063@dhcp22.suse.cz>
-In-Reply-To: <20190910124209.GY2063@dhcp22.suse.cz>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 10 Sep 2019 07:42:43 -0700
-Message-ID: <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/IXCx+HMwnXfQfdjl0Ux6jLA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> I wanted to review "mm: Introduce Reported pages" just realize that I
-> have no clue on what is going on so returned to the cover and it didn't
-> really help much. I am completely unfamiliar with virtio so please bear
-> with me.
->
-> On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
-> [...]
-> > This series provides an asynchronous means of reporting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as unused page reporting
-> >
-> > The functionality for this is fairly simple. When enabled it will allocate
-> > statistics to track the number of reported pages in a given free area.
-> > When the number of free pages exceeds this value plus a high water value,
-> > currently 32, it will begin performing page reporting which consists of
-> > pulling pages off of free list and placing them into a scatter list. The
-> > scatterlist is then given to the page reporting device and it will perform
-> > the required action to make the pages "reported", in the case of
-> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > and as such they are forced out of the guest. After this they are placed
-> > back on the free list,
->
-> And here I am reallly lost because "forced out of the guest" makes me
-> feel that those pages are no longer usable by the guest. So how come you
-> can add them back to the free list. I suspect understanding this part
-> will allow me to understand why we have to mark those pages and prevent
-> merging.
+--Sig_/IXCx+HMwnXfQfdjl0Ux6jLA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Basically as the paragraph above mentions "forced out of the guest"
-really is just the hypervisor calling MADV_DONTNEED on the page in
-question. So the behavior is the same as any userspace application
-that calls MADV_DONTNEED where the contents are no longer accessible
-from userspace and attempting to access them will result in a fault
-and the page being populated with a zero fill on-demand page, or a
-copy of the file contents if the memory is file backed.
+Hi all,
+
+Commit
+
+  aa43ae121675 ("iwlwifi: LTR updates")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IXCx+HMwnXfQfdjl0Ux6jLA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13tlUACgkQAVBC80lX
+0Gxcogf+MfRk9WaWMCUTd8A0rPx9ITXCXhJlI3BVLAvjeF3ENW/O/ZhM7Z+/WiKY
+oHfUS9MlBWjawP43S0p5wy5nfG4fqbXhdlFTi8m02FMmE0Qy/uWskMgnwL9MTlcy
+ydPKNytrIcGNtQn5LC330OfqpTwPJnV2YqohZ4exljA303yi068J2/ZkPnD/os2/
+8oC9fIoQC1CvhZIs5EWrPLs4aquNGsi2fwac3sIMHA2pIdptDGUwCLS3JaX64e9g
+UmtVFzGE/+7vX8Rc1p18exv0S8F142Z5MXlORJgFt4dtAt1/CWVHO7uoOtMNz6AM
+TLpXWg7BuCrSHAuY+j/viVJ2LsFaYg==
+=MMVg
+-----END PGP SIGNATURE-----
+
+--Sig_/IXCx+HMwnXfQfdjl0Ux6jLA--
