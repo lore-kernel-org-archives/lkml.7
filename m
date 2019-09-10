@@ -2,230 +2,96 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F075EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE32221670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17FC2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="JZVf1aqk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ctYf5MQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393774AbfIJOza (ORCPT
+        id S2393695AbfIJO55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:55:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:21592 "EHLO pegase1.c-s.fr"
+        Tue, 10 Sep 2019 10:57:57 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60729 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732385AbfIJOza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:55:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46SSkk3K00z9txnp;
-        Tue, 10 Sep 2019 16:55:26 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=JZVf1aqk; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id i3ybmswC3RQA; Tue, 10 Sep 2019 16:55:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46SSkk2GPDz9txnd;
-        Tue, 10 Sep 2019 16:55:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568127326; bh=30fkMarMliajaDoFZ2pA9svREmutzztaNNEeLN0jcTw=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=JZVf1aqkffhO4Av0H/EZkXChN0LnWXIlnpIs7an4yD+N5yYEupGfNt4EIv/a7EpL3
-         G4zLyGqsPKag95jjnN4KZkV09xYFG7D6RknsUQ0igM+Tw+JiAlFWbii1/7fWMWgdjD
-         VO7/pEAydJNJOvBWwTY9BlfiuyhHYLc/O8//Js+E=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C5FF68B88B;
-        Tue, 10 Sep 2019 16:55:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id eElr6IEGEC_O; Tue, 10 Sep 2019 16:55:27 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FC968B885;
-        Tue, 10 Sep 2019 16:55:27 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5B2CB6B750; Tue, 10 Sep 2019 14:55:27 +0000 (UTC)
-Message-Id: <9019b24c1f6ed838550669135fcaa9493670e188.1568127294.git.christophe.leroy@c-s.fr>
-In-Reply-To: <68d12eb0b815049049babc9be243ffd8521b48c7.1568127294.git.christophe.leroy@c-s.fr>
-References: <68d12eb0b815049049babc9be243ffd8521b48c7.1568127294.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 2/2] powerpc/kexec: move kexec files into a dedicated
- subdir.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 10 Sep 2019 14:55:27 +0000 (UTC)
+        id S1731464AbfIJO55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:57:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSnW13P4z9s00;
+        Wed, 11 Sep 2019 00:57:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568127474;
+        bh=CzzYK7LmIfqYSITSVn4Qe5K5GimeLxwYyKauahEi5lA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ctYf5MQ0+dZbSVyko67G6AZmdJLPmqXqgHfzwEAvZtTyT6weCdtQ88IULtjkymQRd
+         f/mA+75b0JuIFkMBfBYsWNKIKQ3OqsSYW8L3nH7GOTw/6jp/ORRWxaZ8C6malTgItM
+         kIJ1EopOpyNAgw0+Jf90zWMSrhIWrHUoDB7ARpJFQgkVOXeGyp9F0aqlaUwOi95n/1
+         2GBdGOpjhEXkZbOOBPVpPFlYXi3O1+PIi8e8rs4cqprpQBapAM91vP2mnS5h/DkGfk
+         306igNm/iTYm7FQe5D2SG+Z7V7HC0pDbiQ6F6G3TppawCEQvUcUUFIWaEZplASEV/F
+         93/I3opaNtQAA==
+Date:   Wed, 11 Sep 2019 00:57:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jackie Liu <liuyun01@kylinos.cn>
+Subject: linux-next: Fixes tag needs some work in the block tree
+Message-ID: <20190911005749.74fff98e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/KaBVzwNGjJc.aoDM_sHElhC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/powerpc/kernel/ contains 7 files dedicated to kexec.
+--Sig_/KaBVzwNGjJc.aoDM_sHElhC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Move them into a dedicated subdirectory.
+Hi all,
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+In commit
 
----
-v2: moved crash.c as well as it's part of kexec suite.
----
- arch/powerpc/kernel/Makefile                       | 19 +---------------
- arch/powerpc/kernel/kexec/Makefile                 | 25 ++++++++++++++++++++++
- arch/powerpc/kernel/{ => kexec}/crash.c            |  0
- arch/powerpc/kernel/{ => kexec}/ima_kexec.c        |  0
- arch/powerpc/kernel/{ => kexec}/kexec_32.S         |  2 +-
- arch/powerpc/kernel/{ => kexec}/kexec_elf_64.c     |  0
- arch/powerpc/kernel/{ => kexec}/machine_kexec.c    |  0
- arch/powerpc/kernel/{ => kexec}/machine_kexec_32.c |  0
- arch/powerpc/kernel/{ => kexec}/machine_kexec_64.c |  0
- .../kernel/{ => kexec}/machine_kexec_file_64.c     |  0
- 10 files changed, 27 insertions(+), 19 deletions(-)
- create mode 100644 arch/powerpc/kernel/kexec/Makefile
- rename arch/powerpc/kernel/{ => kexec}/crash.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/ima_kexec.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/kexec_32.S (99%)
- rename arch/powerpc/kernel/{ => kexec}/kexec_elf_64.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/machine_kexec.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/machine_kexec_32.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/machine_kexec_64.c (100%)
- rename arch/powerpc/kernel/{ => kexec}/machine_kexec_file_64.c (100%)
+  8776f3fa15a5 ("io_uring: fix wrong sequence setting logic")
 
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index df708de6f866..42e150e6e663 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -5,9 +5,6 @@
- 
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
- 
--# Disable clang warning for using setjmp without setjmp.h header
--CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
--
- ifdef CONFIG_PPC64
- CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
- endif
-@@ -81,7 +78,6 @@ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
- obj-$(CONFIG_FA_DUMP)		+= fadump.o
- ifdef CONFIG_PPC32
- obj-$(CONFIG_E500)		+= idle_e500.o
--obj-$(CONFIG_KEXEC_CORE)	+= kexec_32.o
- endif
- obj-$(CONFIG_PPC_BOOK3S_32)	+= idle_6xx.o l2cr_6xx.o cpu_setup_6xx.o
- obj-$(CONFIG_TAU)		+= tau_6xx.o
-@@ -125,14 +121,7 @@ pci64-$(CONFIG_PPC64)		+= pci_dn.o pci-hotplug.o isa-bridge.o
- obj-$(CONFIG_PCI)		+= pci_$(BITS).o $(pci64-y) \
- 				   pci-common.o pci_of_scan.o
- obj-$(CONFIG_PCI_MSI)		+= msi.o
--obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o crash.o \
--				   machine_kexec_$(BITS).o
--obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file_$(BITS).o kexec_elf_$(BITS).o
--ifdef CONFIG_HAVE_IMA_KEXEC
--ifdef CONFIG_IMA
--obj-y				+= ima_kexec.o
--endif
--endif
-+obj-$(CONFIG_KEXEC_CORE)	+= kexec/
- 
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
-@@ -164,12 +153,6 @@ endif
- GCOV_PROFILE_prom_init.o := n
- KCOV_INSTRUMENT_prom_init.o := n
- UBSAN_SANITIZE_prom_init.o := n
--GCOV_PROFILE_machine_kexec_64.o := n
--KCOV_INSTRUMENT_machine_kexec_64.o := n
--UBSAN_SANITIZE_machine_kexec_64.o := n
--GCOV_PROFILE_machine_kexec_32.o := n
--KCOV_INSTRUMENT_machine_kexec_32.o := n
--UBSAN_SANITIZE_machine_kexec_32.o := n
- GCOV_PROFILE_kprobes.o := n
- KCOV_INSTRUMENT_kprobes.o := n
- UBSAN_SANITIZE_kprobes.o := n
-diff --git a/arch/powerpc/kernel/kexec/Makefile b/arch/powerpc/kernel/kexec/Makefile
-new file mode 100644
-index 000000000000..aa765037f0c0
---- /dev/null
-+++ b/arch/powerpc/kernel/kexec/Makefile
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the linux kernel.
-+#
-+
-+# Disable clang warning for using setjmp without setjmp.h header
-+CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
-+
-+obj-y				+= machine_kexec.o crash.o machine_kexec_$(BITS).o
-+
-+obj-$(CONFIG_PPC32)		+= kexec_32.o
-+
-+obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file_$(BITS).o kexec_elf_$(BITS).o
-+
-+ifdef CONFIG_HAVE_IMA_KEXEC
-+ifdef CONFIG_IMA
-+obj-y				+= ima_kexec.o
-+endif
-+endif
-+
-+
-+# Disable GCOV, KCOV & sanitizers in odd or sensitive code
-+GCOV_PROFILE_machine_kexec_$(BITS).o := n
-+KCOV_INSTRUMENT_machine_kexec_$(BITS).o := n
-+UBSAN_SANITIZE_machine_kexec_$(BITS).o := n
-diff --git a/arch/powerpc/kernel/crash.c b/arch/powerpc/kernel/kexec/crash.c
-similarity index 100%
-rename from arch/powerpc/kernel/crash.c
-rename to arch/powerpc/kernel/kexec/crash.c
-diff --git a/arch/powerpc/kernel/ima_kexec.c b/arch/powerpc/kernel/kexec/ima_kexec.c
-similarity index 100%
-rename from arch/powerpc/kernel/ima_kexec.c
-rename to arch/powerpc/kernel/kexec/ima_kexec.c
-diff --git a/arch/powerpc/kernel/kexec_32.S b/arch/powerpc/kernel/kexec/kexec_32.S
-similarity index 99%
-rename from arch/powerpc/kernel/kexec_32.S
-rename to arch/powerpc/kernel/kexec/kexec_32.S
-index 3f8ca6a566fb..b9355e0d5c85 100644
---- a/arch/powerpc/kernel/kexec_32.S
-+++ b/arch/powerpc/kernel/kexec/kexec_32.S
-@@ -32,7 +32,7 @@ relocate_new_kernel:
- 	mr	r31, r5
- 
- #define ENTRY_MAPPING_KEXEC_SETUP
--#include "fsl_booke_entry_mapping.S"
-+#include <kernel/fsl_booke_entry_mapping.S>
- #undef ENTRY_MAPPING_KEXEC_SETUP
- 
- 	mr      r3, r29
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec/kexec_elf_64.c
-similarity index 100%
-rename from arch/powerpc/kernel/kexec_elf_64.c
-rename to arch/powerpc/kernel/kexec/kexec_elf_64.c
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/kexec/machine_kexec.c
-similarity index 100%
-rename from arch/powerpc/kernel/machine_kexec.c
-rename to arch/powerpc/kernel/kexec/machine_kexec.c
-diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/kexec/machine_kexec_32.c
-similarity index 100%
-rename from arch/powerpc/kernel/machine_kexec_32.c
-rename to arch/powerpc/kernel/kexec/machine_kexec_32.c
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/kexec/machine_kexec_64.c
-similarity index 100%
-rename from arch/powerpc/kernel/machine_kexec_64.c
-rename to arch/powerpc/kernel/kexec/machine_kexec_64.c
-diff --git a/arch/powerpc/kernel/machine_kexec_file_64.c b/arch/powerpc/kernel/kexec/machine_kexec_file_64.c
-similarity index 100%
-rename from arch/powerpc/kernel/machine_kexec_file_64.c
-rename to arch/powerpc/kernel/kexec/machine_kexec_file_64.c
--- 
-2.13.3
+Fixes tag
 
+  Fixes: de0617e4671 ("io_uring: add support for marking commands as draini=
+ng")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KaBVzwNGjJc.aoDM_sHElhC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13ue0ACgkQAVBC80lX
+0GzZewgAnkOJtHiIvPue6AKCMTOc73Wq1C8NUsC89FpDD0LTF4ND4h/tsEgPVzx2
+bX0iZtB7gVVbGL3tYbxdIkjWoLhbbnl+dekyFInBxTTZW7W0Jv2qMKk+FMniwhk8
+RAG983rcYyjb8F5RFAjMoCNO4RlaEwSDnt9Mt6XXoG+jBJDuXnWCR9fac4YuDgoN
+123a8txQm2LzEv+Q0HORuy9SPaZgxf9Rj4v7QIDoEwutxjI3Zk5eoSd3hWgdrVYa
+NFGf4nZcSxoR6HUXqL+/0S+I7/OFP8XayunzUiZL3uBEXtdMaqWDzyr+1fvxOEuU
+Hi49misjI4W1s6dbQKU7f/GoY4v9NA==
+=sk0+
+-----END PGP SIGNATURE-----
+
+--Sig_/KaBVzwNGjJc.aoDM_sHElhC--
