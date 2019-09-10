@@ -2,118 +2,153 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32971C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83549C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E53321924
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="cWfgCp+a"
+	by mail.kernel.org (Postfix) with ESMTP id 55CC821479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 17:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568137938;
+	bh=ahRkm/Z16F/wft54erqBNBTEf7t6k/SP6Lb5IDj30D0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EM3uFNg7IxPEF49Q1vc4KHpRtEoMnSgjxLZwURcViaXBnAjA3EBhuwrXAQzLFbj2i
+	 ZQDliwvlJ84zPD4JxqUqQrlMoLAEdmLXXpcD0aOI53A/oh/9gHI48J9MSig96P7gDZ
+	 vpTy9zwXllK1TwsdKblIYKyBwblgQzBgR7srokAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437236AbfIJRuN (ORCPT
+        id S2437199AbfIJRwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 13:50:13 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:44977 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732449AbfIJRuH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 13:50:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1568137807; x=1599673807;
-  h=from:to:subject:date:message-id:in-reply-to:references;
-  bh=9g2f9965/AguN0jWvC9vxXzWh+98n2Npj805hP9BUAk=;
-  b=cWfgCp+aGwkFEzm24T6/nJ5bbhw6vO48JdJOyAhmmt1TFybW+xwhYxix
-   fdsNvpHqprbiqFkTLvppCjpQ3Dqmv1V0QM9CzRWqiLqv5q3Z1KjfPNKXM
-   pRetXz7vi+hwnsxhw3j4ME2kyuWWrXorS+QhFTqkyoFRB4XCpAXfV8Lih
-   g=;
-X-IronPort-AV: E=Sophos;i="5.64,490,1559520000"; 
-   d="scan'208";a="701858170"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Sep 2019 17:49:46 +0000
-Received: from uf8b156e456a5587c9af4.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 1E290A219D;
-        Tue, 10 Sep 2019 17:49:43 +0000 (UTC)
-Received: from uf8b156e456a5587c9af4.ant.amazon.com (localhost [127.0.0.1])
-        by uf8b156e456a5587c9af4.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x8AHnfdW023824;
-        Tue, 10 Sep 2019 19:49:41 +0200
-Received: (from sironi@localhost)
-        by uf8b156e456a5587c9af4.ant.amazon.com (8.15.2/8.15.2/Submit) id x8AHnfnG023822;
-        Tue, 10 Sep 2019 19:49:41 +0200
-From:   Filippo Sironi <sironi@amazon.de>
-To:     sironi@amazon.de, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] iommu/amd: Hold the domain lock when calling __map_single
-Date:   Tue, 10 Sep 2019 19:49:22 +0200
-Message-Id: <1568137765-20278-3-git-send-email-sironi@amazon.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568137765-20278-1-git-send-email-sironi@amazon.de>
-References: <1568137765-20278-1-git-send-email-sironi@amazon.de>
+        Tue, 10 Sep 2019 13:52:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46114 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727086AbfIJRwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 13:52:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7BE91AD17;
+        Tue, 10 Sep 2019 17:52:14 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 19:52:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+Message-ID: <20190910175213.GD4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190910124209.GY2063@dhcp22.suse.cz>
+ <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+ <20190910144713.GF2063@dhcp22.suse.cz>
+ <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__map_single makes several calls to __domain_flush_pages, which
-traverses the device list that is protected by the domain lock.
+On Tue 10-09-19 09:05:43, Alexander Duyck wrote:
+> On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
+> > > On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > I wanted to review "mm: Introduce Reported pages" just realize that I
+> > > > have no clue on what is going on so returned to the cover and it didn't
+> > > > really help much. I am completely unfamiliar with virtio so please bear
+> > > > with me.
+> > > >
+> > > > On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
+> > > > [...]
+> > > > > This series provides an asynchronous means of reporting to a hypervisor
+> > > > > that a guest page is no longer in use and can have the data associated
+> > > > > with it dropped. To do this I have implemented functionality that allows
+> > > > > for what I am referring to as unused page reporting
+> > > > >
+> > > > > The functionality for this is fairly simple. When enabled it will allocate
+> > > > > statistics to track the number of reported pages in a given free area.
+> > > > > When the number of free pages exceeds this value plus a high water value,
+> > > > > currently 32, it will begin performing page reporting which consists of
+> > > > > pulling pages off of free list and placing them into a scatter list. The
+> > > > > scatterlist is then given to the page reporting device and it will perform
+> > > > > the required action to make the pages "reported", in the case of
+> > > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > > > > and as such they are forced out of the guest. After this they are placed
+> > > > > back on the free list,
+> > > >
+> > > > And here I am reallly lost because "forced out of the guest" makes me
+> > > > feel that those pages are no longer usable by the guest. So how come you
+> > > > can add them back to the free list. I suspect understanding this part
+> > > > will allow me to understand why we have to mark those pages and prevent
+> > > > merging.
+> > >
+> > > Basically as the paragraph above mentions "forced out of the guest"
+> > > really is just the hypervisor calling MADV_DONTNEED on the page in
+> > > question. So the behavior is the same as any userspace application
+> > > that calls MADV_DONTNEED where the contents are no longer accessible
+> > > from userspace and attempting to access them will result in a fault
+> > > and the page being populated with a zero fill on-demand page, or a
+> > > copy of the file contents if the memory is file backed.
+> >
+> > As I've said I have no idea about virt so this doesn't really tell me
+> > much. Does that mean that if somebody allocates such a page and tries to
+> > access it then virt will handle a fault and bring it back?
+> 
+> Actually I am probably describing too much as the MADV_DONTNEED is the
+> hypervisor behavior in response to the virtio-balloon notification. A
+> more thorough explanation of it can be found by just running "man
+> madvise", probably best just to leave it at that since I am probably
+> confusing things by describing hypervisor behavior in a kernel patch
+> set.
 
-Also, this is in line with the comment on top of __map_single, which
-says that the domain lock should be held when calling.
+This analogy is indeed confusing and doesn't help to build a picture.
 
-Signed-off-by: Filippo Sironi <sironi@amazon.de>
----
- drivers/iommu/amd_iommu.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+> For the most part all the page reporting really does is provide a way
+> to incrementally identify unused regions of memory in the buddy
+> allocator. That in turn is used by virtio-balloon in a polling thread
+> to report to the hypervisor what pages are not in use so that it can
+> make a decision on what to do with the pages now that it knows they
+> are unused.
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f026a8c2b218..8e3664821b3c 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2482,6 +2482,8 @@ static dma_addr_t map_page(struct device *dev, struct page *page,
- 	struct protection_domain *domain;
- 	struct dma_ops_domain *dma_dom;
- 	u64 dma_mask;
-+	unsigned long flags;
-+	dma_addr_t dma_addr;
- 
- 	domain = get_domain(dev);
- 	if (PTR_ERR(domain) == -EINVAL)
-@@ -2492,7 +2494,10 @@ static dma_addr_t map_page(struct device *dev, struct page *page,
- 	dma_mask = *dev->dma_mask;
- 	dma_dom = to_dma_ops_domain(domain);
- 
--	return __map_single(dev, dma_dom, paddr, size, dir, dma_mask);
-+	spin_lock_irqsave(&domain->lock, flags);
-+	dma_addr = __map_single(dev, dma_dom, paddr, size, dir, dma_mask);
-+	spin_unlock_irqrestore(&domain->lock, flags);
-+	return dma_addr;
- }
- 
- /*
-@@ -2663,6 +2668,7 @@ static void *alloc_coherent(struct device *dev, size_t size,
- 	struct protection_domain *domain;
- 	struct dma_ops_domain *dma_dom;
- 	struct page *page;
-+	unsigned long flags;
- 
- 	domain = get_domain(dev);
- 	if (PTR_ERR(domain) == -EINVAL) {
-@@ -2692,8 +2698,10 @@ static void *alloc_coherent(struct device *dev, size_t size,
- 	if (!dma_mask)
- 		dma_mask = *dev->dma_mask;
- 
-+	spin_lock_irqsave(&domain->lock, flags);
- 	*dma_addr = __map_single(dev, dma_dom, page_to_phys(page),
- 				 size, DMA_BIDIRECTIONAL, dma_mask);
-+	spin_unlock_irqrestore(&domain->lock, flags);
- 
- 	if (*dma_addr == DMA_MAPPING_ERROR)
- 		goto out_free;
+So essentially you want to store metadata into free pages and control
+what the allocator can do with them? Namely buddy merging if the type
+doesn't match?
+
+> All this is providing is just a report and it is optional if the
+> hypervisor will act on it or not. If the hypervisor takes some sort of
+> action on the page, then the expectation is that the hypervisor will
+> use some sort of mechanism such as a page fault to discover when the
+> page is used again.
+
+OK so the baloon driver is in charge of this metadata and the allocator
+has to live with that. Isn't that a layer violation?
+
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
