@@ -2,93 +2,64 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE13AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55182C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7BB20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3703C20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404717AbfIJII2 (ORCPT
+        id S2404834AbfIJIJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:08:28 -0400
-Received: from 8bytes.org ([81.169.241.247]:53684 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393569AbfIJII2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:08:28 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0ED8E386; Tue, 10 Sep 2019 10:08:26 +0200 (CEST)
-Date:   Tue, 10 Sep 2019 10:08:23 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Kyung Min Park <kyung.min.park@intel.com>
-Cc:     dwmw2@infradead.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, sohil.mehta@intel.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        baolu.lu@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH] iommu/vt-d: Add Scalable Mode fault information
-Message-ID: <20190910080823.GA3247@8bytes.org>
-References: <1567793642-17063-1-git-send-email-kyung.min.park@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567793642-17063-1-git-send-email-kyung.min.park@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Sep 2019 04:09:32 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53050 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404739AbfIJIJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:09:31 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4F5F8154A86C5;
+        Tue, 10 Sep 2019 01:09:28 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 10:09:23 +0200 (CEST)
+Message-Id: <20190910.100923.398630420341862032.davem@davemloft.net>
+To:     chunguo.feng@amlogic.com
+Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        ast@kernel.org, daniel@iogearbox.net, netdev@vger.kernel.org,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] tcp: fix tcp_disconnect() not clear tp->fastopen_rsk
+ sometimes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190906093429.930-1-chunguo.feng@amlogic.com>
+References: <20190906093429.930-1-chunguo.feng@amlogic.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Sep 2019 01:09:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 11:14:02AM -0700, Kyung Min Park wrote:
-> Intel VT-d specification revision 3 added support for Scalable Mode
-> Translation for DMA remapping. Add the Scalable Mode fault reasons to
-> show detailed fault reasons when the translation fault happens.
+From: chunguo feng <chunguo.feng@amlogic.com>
+Date: Fri, 6 Sep 2019 17:34:29 +0800
+
+> From: fengchunguo <chunguo.feng@amlogic.com>
 > 
-> Link: https://software.intel.com/sites/default/files/managed/c5/15/vt-directed-io-spec.pdf
+> This patch avoids fastopen_rsk not be cleared every times, then occur 
+> the below BUG_ON:
+> tcp_v4_destroy_sock
+> 	->BUG_ON(tp->fastopen_rsk);
 > 
-> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-> Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
-> ---
->  drivers/iommu/dmar.c        | 77 ++++++++++++++++++++++++++++++++++++++++++---
->  include/linux/intel-iommu.h |  2 ++
->  2 files changed, 75 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 1207e05..5cb63c5 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -1532,6 +1532,64 @@ static const char *dma_remap_fault_reasons[] =
->  	"PCE for translation request specifies blocking",
->  };
->  
-> +static const char * const dma_remap_sm_fault_reasons[] = {
-> +	"SM: Invalid Root Table Address",
-> +	"SM: TTM 0 for request with PASID",
-> +	"SM: TTM 0 for page group request",
-> +	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x33-0x37 */
-> +	"SM: Error attempting to access Root Entry",
-> +	"SM: Present bit in Root Entry is clear",
-> +	"SM: Non-zero reserved field set in Root Entry",
-> +	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x3B-0x3F */
-> +	"SM: Error attempting to access Context Entry",
-> +	"SM: Present bit in Context Entry is clear",
-> +	"SM: Non-zero reserved field set in the Context Entry",
-> +	"SM: Invalid Context Entry",
-> +	"SM: DTE field in Context Entry is clear",
-> +	"SM: PASID Enable field in Context Entry is clear",
-> +	"SM: PASID is larger than the max in Context Entry",
-> +	"SM: PRE field in Context-Entry is clear",
-> +	"SM: RID_PASID field error in Context-Entry",
-> +	"Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", /* 0x49-0x4F */
+> When playback some videos from netwrok,used tcp_disconnect continually.
+ ...
+> Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
 
-Maybe add the number (0x49-0x4f) to the respecting "Unknown" fields? If
-we can't give a reason we should give the number for easier debugging in
-the future. Same for the "Unknown" fields below.
-
-Other than that, the patch looks good.
-
-Regards,
-
-	Joerg
+This still needs review.
