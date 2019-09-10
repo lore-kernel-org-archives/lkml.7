@@ -2,127 +2,165 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F27C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D17C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE32220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9092089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCbEc1/3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRBVq+k/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfIJLVV (ORCPT
+        id S1729848AbfIJL01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:21:21 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38324 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfIJLVU (ORCPT
+        Tue, 10 Sep 2019 07:26:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46409 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfIJL01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:21:20 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so19386016wrx.5;
-        Tue, 10 Sep 2019 04:21:18 -0700 (PDT)
+        Tue, 10 Sep 2019 07:26:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d17so6670101wrq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MrINUQGFA0l/We/Wa3iq30ErdoQdRnCKtSaB6+ShjIs=;
-        b=pCbEc1/3duUPc3UmWObiepmEmkhTJnfZVi4z+Xe+ogQts1oMtlAoovAaM6O7DYSERu
-         AgsPRmm4Quo9JT5jbNNV0UCDcyLBcCT74XIu5w3AqSUKEZS1cY1Y0vuY/D7+mt7/q/Vy
-         3RSldqlXTMn0KA6H6c3DgSdcLc0hjOJVLs2kaNWTkyZgPusYKRIkPdVc4CXS2pFZ6G09
-         s0mQ/y93jFrcvcdIbA1yLtW5QaWnb3vNFzaM4estMADY1H9J6i8zIvulh8CZe4HVJdI2
-         6fXoM5oa8V196gnq9ungBEuWevk2wj70tFOKjj0f9Vtfd+yiz+VvRX9waKZ38dlef9lO
-         EIAg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2U0vF9K5FUZesrb/f2dR+z0p/SVAlF7QvnXLB1ik3bo=;
+        b=SRBVq+k/9dc8SXn1wOvnBCc62YimdTFEAa7BaW0MnrQ46cgN9H+PU81Tp9sHi+xsDJ
+         1VSTFchloZhE48V5IFUIAurGh/6Hoe5uU1tpS8BYGUdnGZUOjcJzlb0IS/shw18Og+Cb
+         t/dsc5/OJzyVYaoRVjx49msQUe2jgVctiuKDTkRxpshWJrEdhC62UEMB9aWVc4adn0Ce
+         e49duMogzQrkfuF6b7Jrfm1mQx1qmlv49al+0aIW7ii4MEhz9RljbDMwtr71WfPrZDHI
+         9DiOaPjXpQQMw2I2yd1YNj5GJM/M5hvw8zscYctV5caP6llagJrzf/RgH1+JXEfwIbjg
+         cqDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MrINUQGFA0l/We/Wa3iq30ErdoQdRnCKtSaB6+ShjIs=;
-        b=Pfxk8bGMyum+wNV7lGzELuAtSHExBVA24Tz68uSjHAsDfccUfgSD8jyN5qO6NMjuyj
-         8vIhiFUpPXF5RtaNcUhgV2h3rWVW04y+THA8WS+qE9KNREV/KyRyqDVoBEwI7tASI3dx
-         H1WTCWFz2Aev3gV9POaqgdPGQnJ20GgqVfNrGzOOEUYPfA0cNefkLndeDHPeBy6B/QEA
-         OBbnIydmxSBlnq2Anubvy17iuwl/62JrlEDNmx6MGNYQ2gJXnbkllpYA/XgNVWnXQah3
-         XjTvHRm9cpYrwCjfoRQRrhsJV5/7AVH0D5z0sel1jlMaOEvlqEx3Pne+wuoo4zXUa/3P
-         FAhQ==
-X-Gm-Message-State: APjAAAVD5VMlUrP4VHQtQqW5X5N/Po/1qNfMhPWJ2F4biLlHXv+nx7DK
-        1u6OqXk83CEKbB+z978JZf8=
-X-Google-Smtp-Source: APXvYqwLfBEPvG1wXLHzROYBheQl0cRFh0Tje0PdacQ2uxMjVudppEWJMMEunseQr0OH9qQGWveswQ==
-X-Received: by 2002:a5d:6602:: with SMTP id n2mr26965864wru.317.1568114477454;
-        Tue, 10 Sep 2019 04:21:17 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id s3sm1871301wmj.48.2019.09.10.04.21.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2019 04:21:17 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
- <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
- <87r24piwhm.fsf@x220.int.ebiederm.org>
- <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
- <87ftl5donm.fsf@x220.int.ebiederm.org>
- <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
- <20190910111551.scam5payogqqvlri@wittgenstein>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
-Date:   Tue, 10 Sep 2019 13:21:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2U0vF9K5FUZesrb/f2dR+z0p/SVAlF7QvnXLB1ik3bo=;
+        b=o9xc79lm1PQRaS85UlVHblBHoAr8pOrwYiASU6NjuNC5yNxMcrXR7KjuAlY9k5Zb9D
+         BPGl/3V5Adj0h0FaW7V5aMutVcjBw7qQ2tV+hTmalUpH+iJRUJV0LXBMfzeOeak2lrPc
+         VxHRObxc2cQZcqmBShIGQijaPI6qdfgAj7+/fATHz3tN4GBRG+GkuvheGQyFUWVgtZgp
+         aMTLm81ZEps+t138D5NvbXSjR5Ub74TBT3G8lNCrcf45CHksXrEOG76MkClwumFJ8ftQ
+         MR6MKaBk8way3eLQNsK73Lr1jq8zDDeQM07GsXhBiZrB6Ks+9BwxpEaIkpiK93LawH4k
+         Pxvw==
+X-Gm-Message-State: APjAAAWD8oOHNlaRKwBzLM2FO/+C2i09shv6eu7ea59nj2UiY1trVfAS
+        NrZLvaZGzwspg4FAWmrklKR/0A==
+X-Google-Smtp-Source: APXvYqwhEg3hf1AkS2G22feB0s4++EdgJF22iHMS+DuQWNtvuw8RWa4RD2zltWw9uEeHwxN8X39oTA==
+X-Received: by 2002:a5d:5689:: with SMTP id f9mr23802140wrv.224.1568114785307;
+        Tue, 10 Sep 2019 04:26:25 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id y13sm36988391wrg.8.2019.09.10.04.26.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 04:26:24 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 12:26:22 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, lee.jones@linaro.org, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dridevel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v5 4/4] backlight: add led-backlight driver
+Message-ID: <20190910112622.iflmknh5qplbfoyu@holly.lan>
+References: <20190910105946.23057-1-jjhiblot@ti.com>
+ <20190910105946.23057-5-jjhiblot@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190910111551.scam5payogqqvlri@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910105946.23057-5-jjhiblot@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christian,
-
->> All: I plan to add the following text to the manual page:
->>
->>        new_root and put_old may be the same  directory.   In  particular,
->>        the following sequence allows a pivot-root operation without need‐
->>        ing to create and remove a temporary directory:
->>
->>            chdir(new_root);
->>            pivot_root(".", ".");
->>            umount2(".", MNT_DETACH);
+On Tue, Sep 10, 2019 at 12:59:46PM +0200, Jean-Jacques Hiblot wrote:
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > 
-> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
-> before the umount2()? Especially for the container case... I think we
-> discussed this briefly yesterday in person.
-Thanks for noticing. That detail (more precisely: not MS_SHARED) is
-already covered in the numerous other changes that I have pending
-for this page:
+> This patch adds a led-backlight driver (led_bl), which is similar to
+> pwm_bl except the driver uses a LED class driver to adjust the
+> brightness in the HW. Multiple LEDs can be used for a single backlight.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> ---
+>  drivers/video/backlight/Kconfig  |   7 +
+>  drivers/video/backlight/Makefile |   1 +
+>  drivers/video/backlight/led_bl.c | 264 +++++++++++++++++++++++++++++++
+>  3 files changed, 272 insertions(+)
+>  create mode 100644 drivers/video/backlight/led_bl.c
+> 
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 8b081d61773e..585a1787618c 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -458,6 +458,13 @@ config BACKLIGHT_RAVE_SP
+>  	help
+>  	  Support for backlight control on RAVE SP device.
+>  
+> +config BACKLIGHT_LED
+> +	tristate "Generic LED based Backlight Driver"
+> +	depends on LEDS_CLASS && OF
+> +	help
+> +	  If you have a LCD backlight adjustable by LED class driver, say Y
+> +	  to enable this driver.
+> +
+>  endif # BACKLIGHT_CLASS_DEVICE
+>  
+>  endmenu
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index 63c507c07437..2a67642966a5 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+>  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+>  obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+>  obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
+> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> new file mode 100644
+> index 000000000000..a72456e11fb9
+> --- /dev/null
+> +++ b/drivers/video/backlight/led_bl.c
+> @@ -0,0 +1,264 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> + *
+> + * Based on pwm_bl.c
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/gpio/consumer.h>
 
-       The following restrictions apply:
-       ...
-       -  The propagation type of new_root and its parent mount must  not
-          be MS_SHARED; similarly, if put_old is an existing mount point,
-          its propagation type must not be MS_SHARED.
+Maybe this is a nitpick but it is one I have now raised three times and
+I don't recall any response, what symbols from this header are used in
+this file?
 
-Thanks,
-
-Michael
+AFAICT everything defined in this header includes the string "gpio" and
+that string doesn't appear anywhere in the file (except this line).
 
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+
+Come to think of it, are you sure you need this include? devm_kzalloc()
+doesn't comes from this file.
+
+
+> +#define BKL_FULL_BRIGHTNESS 255
+
+This is unused. Please remove.
+
+
+Other than that, looks good!
+
+
+Daniel.
