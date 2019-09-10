@@ -2,39 +2,42 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0397C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA75C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A918206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55E3206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbfIJJBn (ORCPT
+        id S2387924AbfIJJBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:01:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55566 "EHLO huawei.com"
+        Tue, 10 Sep 2019 05:01:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55602 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbfIJJBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726655AbfIJJBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 05:01:09 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 93ACF227333CCAA1672C;
+        by Forcepoint Email with ESMTP id 98AAE63E293416FC9073;
         Tue, 10 Sep 2019 17:01:07 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 10 Sep 2019 17:00:59 +0800
+ 14.3.439.0; Tue, 10 Sep 2019 17:01:01 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 0/7] net: hns3: add a feature & bugfixes & cleanups
-Date:   Tue, 10 Sep 2019 16:58:21 +0800
-Message-ID: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 7/7] net: hns3: add some DFX info for reset issue
+Date:   Tue, 10 Sep 2019 16:58:28 +0800
+Message-ID: <1568105908-60983-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
+References: <1568105908-60983-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -44,49 +47,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes a VF feature, bugfixes and cleanups for the HNS3
-ethernet controller driver.
+This patch adds more information for reset DFX. Also, adds some
+cleanups to reset info, move reset_fail_cnt into struct
+hclge_rst_stats, and modifies some print formats.
 
-[patch 01/07] adds ethtool_ops.set_channels support for HNS3 VF driver
-
-[patch 02/07] adds a recovery for setting channel fail.
-
-[patch 03/07] fixes an error related to shaper parameter algorithm.
-
-[patch 04/07] fixes an error related to ksetting.
-
-[patch 05/07] adds cleanups for some log pinting.
-
-[patch 06/07] adds a NULL pointer check before function calling.
-
-[patch 07/07] adds some debugging information for reset issue.
-
-Guangbin Huang (4):
-  net: hns3: add ethtool_ops.set_channels support for HNS3 VF driver
-  net: hns3: fix port setting handle for fibre port
-  net: hns3: modify some logs format
-  net: hns3: check NULL pointer before use
-
-Huazhong Tan (1):
-  net: hns3: add some DFX info for reset issue
-
-Peng Li (1):
-  net: hns3: revert to old channel when setting new channel num fail
-
-Yonglong Liu (1):
-  net: hns3: fix shaper parameter algorithm
-
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  7 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 54 ++++++++++----
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 16 ++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 32 +++++---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 13 ++--
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 32 ++++++++++++++++------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 11 ++++----
  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  2 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  | 11 +--
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 87 ++++++++++++++++++++--
- 9 files changed, 178 insertions(+), 46 deletions(-)
+ 3 files changed, 30 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index 6dcce48..d0128d7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -931,22 +931,36 @@ static void hclge_dbg_fd_tcam(struct hclge_dev *hdev)
+ 
+ static void hclge_dbg_dump_rst_info(struct hclge_dev *hdev)
+ {
+-	dev_info(&hdev->pdev->dev, "PF reset count: %d\n",
++	dev_info(&hdev->pdev->dev, "PF reset count: %u\n",
+ 		 hdev->rst_stats.pf_rst_cnt);
+-	dev_info(&hdev->pdev->dev, "FLR reset count: %d\n",
++	dev_info(&hdev->pdev->dev, "FLR reset count: %u\n",
+ 		 hdev->rst_stats.flr_rst_cnt);
+-	dev_info(&hdev->pdev->dev, "CORE reset count: %d\n",
+-		 hdev->rst_stats.core_rst_cnt);
+-	dev_info(&hdev->pdev->dev, "GLOBAL reset count: %d\n",
++	dev_info(&hdev->pdev->dev, "GLOBAL reset count: %u\n",
+ 		 hdev->rst_stats.global_rst_cnt);
+-	dev_info(&hdev->pdev->dev, "IMP reset count: %d\n",
++	dev_info(&hdev->pdev->dev, "IMP reset count: %u\n",
+ 		 hdev->rst_stats.imp_rst_cnt);
+-	dev_info(&hdev->pdev->dev, "reset done count: %d\n",
++	dev_info(&hdev->pdev->dev, "reset done count: %u\n",
+ 		 hdev->rst_stats.reset_done_cnt);
+-	dev_info(&hdev->pdev->dev, "HW reset done count: %d\n",
++	dev_info(&hdev->pdev->dev, "HW reset done count: %u\n",
+ 		 hdev->rst_stats.hw_reset_done_cnt);
+-	dev_info(&hdev->pdev->dev, "reset count: %d\n",
++	dev_info(&hdev->pdev->dev, "reset count: %u\n",
+ 		 hdev->rst_stats.reset_cnt);
++	dev_info(&hdev->pdev->dev, "reset count: %u\n",
++		 hdev->rst_stats.reset_cnt);
++	dev_info(&hdev->pdev->dev, "reset fail count: %u\n",
++		 hdev->rst_stats.reset_fail_cnt);
++	dev_info(&hdev->pdev->dev, "vector0 interrupt enable status: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_MISC_VECTOR_REG_BASE));
++	dev_info(&hdev->pdev->dev, "reset interrupt source: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_MISC_RESET_STS_REG));
++	dev_info(&hdev->pdev->dev, "reset interrupt status: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_MISC_VECTOR_INT_STS));
++	dev_info(&hdev->pdev->dev, "hardware reset status: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG));
++	dev_info(&hdev->pdev->dev, "handshake status: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_NIC_CSQ_DEPTH_REG));
++	dev_info(&hdev->pdev->dev, "function reset status: 0x%x\n",
++		 hclge_read_dev(&hdev->hw, HCLGE_FUN_RST_ING));
+ }
+ 
+ static void hclge_dbg_get_m7_stats_info(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index bc5bad3..fd7f943 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3547,12 +3547,12 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev)
+ 			 "reset failed because new reset interrupt\n");
+ 		hclge_clear_reset_cause(hdev);
+ 		return false;
+-	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
+-		hdev->reset_fail_cnt++;
++	} else if (hdev->rst_stats.reset_fail_cnt < MAX_RESET_FAIL_CNT) {
++		hdev->rst_stats.reset_fail_cnt++;
+ 		set_bit(hdev->reset_type, &hdev->reset_pending);
+ 		dev_info(&hdev->pdev->dev,
+ 			 "re-schedule reset task(%d)\n",
+-			 hdev->reset_fail_cnt);
++			 hdev->rst_stats.reset_fail_cnt);
+ 		return true;
+ 	}
+ 
+@@ -3679,7 +3679,8 @@ static void hclge_reset(struct hclge_dev *hdev)
+ 	/* ignore RoCE notify error if it fails HCLGE_RESET_MAX_FAIL_CNT - 1
+ 	 * times
+ 	 */
+-	if (ret && hdev->reset_fail_cnt < HCLGE_RESET_MAX_FAIL_CNT - 1)
++	if (ret &&
++	    hdev->rst_stats.reset_fail_cnt < HCLGE_RESET_MAX_FAIL_CNT - 1)
+ 		goto err_reset;
+ 
+ 	rtnl_lock();
+@@ -3695,7 +3696,7 @@ static void hclge_reset(struct hclge_dev *hdev)
+ 		goto err_reset;
+ 
+ 	hdev->last_reset_time = jiffies;
+-	hdev->reset_fail_cnt = 0;
++	hdev->rst_stats.reset_fail_cnt = 0;
+ 	hdev->rst_stats.reset_done_cnt++;
+ 	ae_dev->reset_type = HNAE3_NONE_RESET;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 870550f..3e9574a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -659,6 +659,7 @@ struct hclge_rst_stats {
+ 	u32 global_rst_cnt;	/* the number of GLOBAL */
+ 	u32 imp_rst_cnt;	/* the number of IMP reset */
+ 	u32 reset_cnt;		/* the number of reset */
++	u32 reset_fail_cnt;	/* the number of reset fail */
+ };
+ 
+ /* time and register status when mac tunnel interruption occur */
+@@ -725,7 +726,6 @@ struct hclge_dev {
+ 	unsigned long reset_request;	/* reset has been requested */
+ 	unsigned long reset_pending;	/* client rst is pending to be served */
+ 	struct hclge_rst_stats rst_stats;
+-	u32 reset_fail_cnt;
+ 	u32 fw_version;
+ 	u16 num_vmdq_vport;		/* Num vmdq vport this PF has set up */
+ 	u16 num_tqps;			/* Num task queue pairs of this PF */
 -- 
 2.7.4
 
