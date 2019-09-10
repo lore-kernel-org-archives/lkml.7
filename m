@@ -2,99 +2,131 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99125C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B866C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACCE21A4C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4FA21A4C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436476AbfIJIU0 (ORCPT
+        id S2436493AbfIJIUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:20:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41348 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbfIJIUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:20:25 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00549309BF15;
-        Tue, 10 Sep 2019 08:20:25 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-188.pek2.redhat.com [10.72.12.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DD7560A35;
-        Tue, 10 Sep 2019 08:20:11 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, cohuck@redhat.com, tiwei.bie@intel.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com
-Subject: [RFC PATCH 2/4] mdev: introduce helper to set per device dma ops
-Date:   Tue, 10 Sep 2019 16:19:33 +0800
-Message-Id: <20190910081935.30516-3-jasowang@redhat.com>
-In-Reply-To: <20190910081935.30516-1-jasowang@redhat.com>
-References: <20190910081935.30516-1-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 10 Sep 2019 08:20:25 +0000 (UTC)
+        Tue, 10 Sep 2019 04:20:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33228 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731531AbfIJIU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:20:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 31EA6B03A;
+        Tue, 10 Sep 2019 08:20:27 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 10:20:27 +0200
+Message-ID: <s5h5zm0a7g4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Evan Green <evgreen@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Intel: work around snd_hdac_aligned_read link failure
+In-Reply-To: <CAK8P3a2-gMbuN-17MC6ZsDwvPGCHmbJojKYGnrUshxhazATPRg@mail.gmail.com>
+References: <20190909195159.3326134-1-arnd@arndb.de>
+        <3b69e0ec-63cb-4888-9faa-acb7638d71dc@linux.intel.com>
+        <CAK8P3a0WDB_UvAnwfPDyR_maEefE4Qh++fHxAP61=8JfOFmy6w@mail.gmail.com>
+        <s5hef0oaav5.wl-tiwai@suse.de>
+        <CAK8P3a2-gMbuN-17MC6ZsDwvPGCHmbJojKYGnrUshxhazATPRg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces mdev_set_dma_ops() which allows parent to set
-per device DMA ops. This help for the kernel driver to setup a correct
-DMA mappings.
+On Tue, 10 Sep 2019 09:52:13 +0200,
+Arnd Bergmann wrote:
+> 
+> On Tue, Sep 10, 2019 at 9:06 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > On Mon, 09 Sep 2019 22:51:23 +0200, Arnd Bergmann wrote:
+> > >
+> > > On Mon, Sep 9, 2019 at 10:39 PM Pierre-Louis Bossart
+> > > <pierre-louis.bossart@linux.intel.com> wrote:
+> > > >
+> > > > On 9/9/19 2:51 PM, Arnd Bergmann wrote:
+> > > > > When CONFIG_SND_HDA_ALIGNED_MMIO is selected by another driver
+> > > > > (i.e. Tegra) that selects CONFIG_SND_HDA_CORE as a loadable
+> > > > > module, but SND_SOC_SOF_HDA_COMMON is built-in, we get a
+> > > > > link failure from some functions that access the hda register:
+> > > > >
+> > > > > sound/soc/sof/intel/hda.o: In function `hda_ipc_irq_dump':
+> > > > > hda.c:(.text+0x784): undefined reference to `snd_hdac_aligned_read'
+> > > > > sound/soc/sof/intel/hda-stream.o: In function `hda_dsp_stream_threaded_handler':
+> > > > > hda-stream.c:(.text+0x12e4): undefined reference to `snd_hdac_aligned_read'
+> > > > > hda-stream.c:(.text+0x12f8): undefined reference to `snd_hdac_aligned_write'
+> > > > >
+> > > > > Add an explicit 'select' statement as a workaround. This is
+> > > > > not a great solution, but it's the easiest way I could come
+> > > > > up with.
+> > > >
+> > > > Thanks for spotting this, I don't think anyone on the SOF team looked at
+> > > > this. Maybe we can filter with depends on !TEGRA or
+> > > > !SND_HDA_ALIGNED_MMIO at the SOF Intel top-level instead?
+> > >
+> > > That doesn't sound much better than my approach, but could also work.
+> > > One idea that I had but did not manage to implement was to move out
+> > > the snd_hdac_aligned_read/write functions from the core hda code
+> > > into a separate file. I think that would be the cleanest solution,
+> > > as it decouples the problem from any drivers.
+> >
+> > Yeah, that's a tricky problem because of the reverse-selection, as
+> > usual...
+> >
+> > Another solution would be to just avoid byte/word access but use only
+> > long access, i.e. replace snd_hdac_chip_readb() with
+> > snd_hdac_chip_readl() with the aligned register and bit shift.
+> > The aligned access helper is needed only for the register that isn't
+> > aligned with 4 bytes offset.
+> 
+> Ok, so basically open-coding the aligned access to RIRBSTS?
+> That sounds like a much nicer workaround. So in place of
+> 
+>                         sd_status = snd_hdac_stream_readb(s, SD_STS);
+>                         dev_vdbg(bus->dev, "stream %d status 0x%x\n",
+>                                  s->index, sd_status);
+>                         snd_hdac_stream_writeb(s, SD_STS, sd_status);
+> 
+> I suppose one could just readl/writel SOF_HDA_ADSP_REG_CL_SD_CTL
+> and print the shifted value, right?
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vfio/mdev/mdev_core.c | 7 +++++++
- include/linux/mdev.h          | 2 ++
- 2 files changed, 9 insertions(+)
+Yes.
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b558d4cfd082..eb28552082d7 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -13,6 +13,7 @@
- #include <linux/uuid.h>
- #include <linux/sysfs.h>
- #include <linux/mdev.h>
-+#include <linux/dma-mapping.h>
- 
- #include "mdev_private.h"
- 
-@@ -27,6 +28,12 @@ static struct class_compat *mdev_bus_compat_class;
- static LIST_HEAD(mdev_list);
- static DEFINE_MUTEX(mdev_list_lock);
- 
-+void mdev_set_dma_ops(struct mdev_device *mdev, struct dma_map_ops *ops)
-+{
-+	set_dma_ops(&mdev->dev, ops);
-+}
-+EXPORT_SYMBOL(mdev_set_dma_ops);
-+
- struct device *mdev_parent_dev(struct mdev_device *mdev)
- {
- 	return mdev->parent->dev;
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index 0ce30ca78db0..7195f40bf8bf 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -145,4 +145,6 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
- struct device *mdev_dev(struct mdev_device *mdev);
- struct mdev_device *mdev_from_dev(struct device *dev);
- 
-+void mdev_set_dma_ops(struct mdev_device *mdev, struct dma_map_ops *ops);
-+
- #endif /* MDEV_H */
--- 
-2.19.1
+> While I know nothing about the underlying requirements, I wonder
+> about two things that stick out to me:
+> 
+> 1. the existing code just writes back the same byte it has read. If
+>     this write has no side-effects, why write it at all? OTOH, if it has
+>     side-effects, isn't the aligned implementation of writing the whole
+>     word in snd_hdac_aligned_write()  fundamentally flawed?
 
+The aligned read/write does already the whole 4-bytes read/write, so
+it should work.  But we need confirmation with the actual hardware.
+
+> 2. Doesn't the read-modify-write cycle in snd_hdac_aligned_write()
+>    need locking to work correctly?
+
+The helper doesn't guarantee the atomic write by itself, so a lock
+would be required in the caller side if needed.  Luckily there aren't
+many places calling the unaligned access.
+
+
+thanks,
+
+Takashi
