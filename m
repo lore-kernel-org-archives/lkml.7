@@ -2,118 +2,113 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C4DC5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C81AC5AE59
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF7E2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YjDCFK4z"
+	by mail.kernel.org (Postfix) with ESMTP id 7EC852168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 19:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfIJS6e (ORCPT
+        id S1726475AbfIJTDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:58:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55946 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfIJS6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:58:33 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AIrs0f027506;
-        Tue, 10 Sep 2019 18:57:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=PNXHZLibSlx8GAKedEj61iEzVO7t88YI1+R7FoPooS8=;
- b=YjDCFK4zc9CyH8hCGLWDU+Ph0z6eFfR1BxfWSzUxQTEvqxGJsIm+GiYtNqTP6lfPKmJb
- ucgwJ5EebprZjNh8b7LVzgAlb+8LKbRmGQD/HYEjyljbHUnQmKp2TymM3LK/7aILWln9
- T1YNDIcwV4xatReCt27cxADfoUkCRLZMXCRDX6xBE2z8EsZgwDkFkNoOoZpnJ5Fz3KGs
- DochFJkjG+hU+d3IkzOsC8fU42efb/nOu9jxQv4Ewn4tNIoLmJQZ23BKD6CPemjbT7rR
- Fc1fZ/97rYHJC3tmv53eFqGgmMZdX51OiGiPGMwZgKFWWWoLHpAA95ke4GPbeifEX8OB lA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2uw1jkdfq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 18:57:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8AIrpgJ105209;
-        Tue, 10 Sep 2019 18:57:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2uwq9qg20v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 18:57:28 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8AIvOHt018523;
-        Tue, 10 Sep 2019 18:57:24 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Sep 2019 11:57:23 -0700
-Date:   Tue, 10 Sep 2019 21:57:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
- sctp_get_port_local
-Message-ID: <20190910185710.GF15977@kadam>
-References: <20190910071343.18808-1-maowenan@huawei.com>
- <20190910071343.18808-2-maowenan@huawei.com>
+        Tue, 10 Sep 2019 15:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbfIJTDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 15:03:10 -0400
+Received: from oasis.local.home (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DED721479;
+        Tue, 10 Sep 2019 19:03:05 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 15:03:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Message-ID: <20190910150303.5a0d3904@oasis.local.home>
+In-Reply-To: <c458e734f5777561138b87228384808398547762.camel@perches.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+        <20190910071837.2e9110f8@oasis.local.home>
+        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+        <20190910142621.0bec208d@oasis.local.home>
+        <c458e734f5777561138b87228384808398547762.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910071343.18808-2-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909100176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909100176
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
-> There are more parentheses in if clause when call sctp_get_port_local
-> in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
-> do cleanup.
+On Tue, 10 Sep 2019 11:42:06 -0700
+Joe Perches <joe@perches.com> wrote:
+
+> On Tue, 2019-09-10 at 14:26 -0400, Steven Rostedt wrote:
+> > On Tue, 10 Sep 2019 10:18:44 -0700
+> > Joe Perches <joe@perches.com> wrote:
+> >   
+> > > > It's not just for the lastest kernel. We must maintain backward
+> > > > compatibility here too. If there use to be a usage of this, then we
+> > > > must keep it until the kernels are no longer used (perhaps 7 years?)    
+> > > 
+> > > That argues for not using "%pfw" at all for some number of years.
+> > > 
+> > > Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'  
+> >
+> >   -ENOCOMPREHENSION  
 > 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  net/sctp/socket.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Perhaps you were not copied on the whole series.
 > 
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 9d1f83b10c0a..766b68b55ebe 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
->  	 * detection.
->  	 */
->  	addr->v4.sin_port = htons(snum);
-> -	if ((ret = sctp_get_port_local(sk, addr))) {
-> +	if (sctp_get_port_local(sk, addr))
->  		return -EADDRINUSE;
+> https://lore.kernel.org/lkml/20190910084707.18380-1-sakari.ailus@linux.intel.com/
 
-sctp_get_port_local() returns a long which is either 0,1 or a pointer
-casted to long.  It's not documented what it means and neither of the
-callers use the return since commit 62208f12451f ("net: sctp: simplify
-sctp_get_port").
+Thanks for the link.
 
-Probably it should just return a bool?
+> 
+> As I understand it, Sakair Ailus is proposing to
+> obsolete the current vsprintf "%p[Ff]" extension
+> and replace the usage with a new "%pfw" extension
+> which would emit the name of a pointer to "struct fwnode {}".
+> 
+> https://lore.kernel.org/lkml/20190910084707.18380-10-sakari.ailus@linux.intel.com/
+> 
+> If reusing "%pf<foo>" is a problem, then instead
+> it might be reasonable to have a new "%pn<foo>" for
+> that use instead.
+> 
+> btw:
+> 
+> Is there kernel version information available in
+> trace output files?
 
-regards,
-dan carpenter
+Not really. This is just a library that parses the trace event formats,
+there's not kernel versions passed in, but we do use variations in
+formats and such to determine what is supported.
+
+> 
+> If so, it might be reasonable to change the tooling
+> there instead.
+> 
+
+Actually, I think we could just look to see if "%pfw" is used and fall
+to that, otherwise consider it an older kernel and do it the original
+way.
+
+-- Steve
 
