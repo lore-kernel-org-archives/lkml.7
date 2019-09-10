@@ -2,108 +2,106 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FE8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F76C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A014421019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GMqgtLrw"
+	by mail.kernel.org (Postfix) with ESMTP id 4346720863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfIJI7e (ORCPT
+        id S1727723AbfIJJAE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:59:34 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45380 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfIJI7d (ORCPT
+        Tue, 10 Sep 2019 05:00:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33270 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfIJJAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:59:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y72so11120694pfb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BVZkeB8kcfbAhGWCwFmsi+Af79YcNd2rTDIYMad/gaM=;
-        b=GMqgtLrwt3KM8f3wheWQ7WpLBzaMDWSTCw5oTy8E406J0B6emHLl1jKtsM+6vYT72P
-         VweUtZAmpCf6H/wVVMayc3KsdLLcGrydwRc+pZKkjJZPadftpD6K7raTMiVSPhaLV+dr
-         PdGEZMyKA66nEZoTsUqvbTm1f6HMlCuf8pNeA=
+        Tue, 10 Sep 2019 05:00:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g25so16094045otl.0;
+        Tue, 10 Sep 2019 02:00:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BVZkeB8kcfbAhGWCwFmsi+Af79YcNd2rTDIYMad/gaM=;
-        b=GDMKk3d1fdhkkNkg9zw+B9A8Qwcp9wXhZgV060ihgzV6VIx9Xkrua8mbAWHE9U0AYF
-         nM5lUJy12C7/2mtUzjsN2v3ChX+BP1Xoa7nTr4zrO/VA7m8L2hvcwaZP3l4aEu8CTR/H
-         M5k1NgzCrUmwysI+f0cuFNzd0tS9n/kE9e7lHR+F57sFfYZgq6ltKPWnkI8oQH4h24D0
-         4lnO1eIC0AMZrc9ozK3vlxtTdWr6HwzZskNu9I+E0iuQROKoLSP6LA/Zpl35K5xoQq7Q
-         5LabUbR8r4niYhNs50Eu/5bxkT7DHbwkftcaiub8/VxoosnQwsg29PKxnFvQLAa7u3Al
-         dT5Q==
-X-Gm-Message-State: APjAAAUSmw+2j/VwdDjXe9kxyDk3giH2DYjuNYXLKc/Y1wlbaCQL7YtK
-        7w3yBg7APc5DRQOiMzY0LLcDbg==
-X-Google-Smtp-Source: APXvYqzK0Ttf4/Xi57wL2oeea0djC4HNgeahFaJrMzpGlfeG86fQuDKcRSHD3yi1HIq4tDv9kNpaSA==
-X-Received: by 2002:a63:6888:: with SMTP id d130mr25498575pgc.197.1568105972826;
-        Tue, 10 Sep 2019 01:59:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 127sm34965672pfw.6.2019.09.10.01.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 01:59:31 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 01:59:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     20190819234111.9019-8-keescook@chromium.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-Message-ID: <201909100157.CEE99802C@keescook>
-References: <201908200943.601DD59DCE@keescook>
- <20190909160539.GA989@tigerII.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tDTK3OLpchCjCRU8TOfjhGkxmXXLcL73wfiJk/3qy3k=;
+        b=rG4hCQ4KSKKUbjmtgEOyUvwZommEuCu2CTjo/TtvMcTdfiJT9A2Iq6JPNDK1IHKmDR
+         svoqw71zy5N1Zx1QFQ7OZQWfHL9xD+oUi0F5u7GFor1rd/E9edZlNWrUgX+yv5col899
+         XF/dv7DSTTc52cP96tJGvONAiGcV6SBL+4AsA2HGtEvj7QS7wtpcEKWnbQ4SP2RKZOb4
+         5ZJvdUYE6GTrp0DcIualJvV0ByeIsW9HADnX/tSj8+wjmSz0EREHRL26FUsgzCwmO0ks
+         G0vJgAWgWVdEcPrYLoOhIyOS4djBHsSAGMypouJefqnkBNaJR5Peupci6jO0NZl/TWT/
+         zGpA==
+X-Gm-Message-State: APjAAAVD6l9QjS2sETo3/63uPgGYii9X1W1U7jNRYqSalc6mqi93fJtm
+        uSrffj6J6EMsLscOA9QElgbDEcC997VmhdGjUXn8Sw==
+X-Google-Smtp-Source: APXvYqw1/V7JJZY7iU4ASdisuWl7yMwdrDM7D32UeSrm/lIre9DoD2PTYCLldEyJ3F30z/x0IGm9trL79jz0Nifw45k=
+X-Received: by 2002:a9d:2cc:: with SMTP id 70mr24743844otl.145.1568106003005;
+ Tue, 10 Sep 2019 02:00:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909160539.GA989@tigerII.localdomain>
+References: <20190906084539.21838-1-geert+renesas@glider.be> <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
+In-Reply-To: <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Sep 2019 10:59:51 +0200
+Message-ID: <CAMuHMdWpDOSpz3Mak7Vd=CY7r_kxPUx3A0CMqC-VY6TXtD9cqg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 01:05:39AM +0900, Sergey Senozhatsky wrote:
-> On (08/20/19 09:47), Kees Cook wrote:
-> [..]
-> > @@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
-> >  		}
-> >  	}
-> >  
-> > +	/*
-> > +	 * BUG() and WARN_ON() families don't print a custom debug message
-> > +	 * before triggering the exception handler, so we must add the
-> > +	 * "cut here" line now. WARN() issues its own "cut here" before the
-> > +	 * extra debugging message it writes before triggering the handler.
-> > +	 */
-> > +	if ((bug->flags & BUGFLAG_NO_CUT_HERE) == 0)
-> > +		printk(KERN_DEFAULT CUT_HERE);
-> 
-> Shouldn't this be pr_warn() or pr_crit()?
+Hi Bartosz,
 
-The pr_* helpers here would (potentially) add unwanted prefixes, so
-those aren't used. KERN_DEFAULT is used here because that's how it's
-always been printed. I didn't want to change that for this refactoring
-work. I'm not opposed to it, generally speaking, though. :)
+On Tue, Sep 10, 2019 at 10:51 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pt., 6 wrz 2019 o 10:45 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
+> > This patch series contains various API boundary cleanups for gpiolib:
+> >   - The first two patches make two functions private,
+> >   - The last two patches switch the remaining gpiolib exported functions
+> >     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
+> >
+> > After this there is only a single GPIO driver function exported with
+> > EXPORT_SYMBOL();
+> >
+> >     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
+> >
+> > I believe this symbol was never used upstream, and may be a relic of the
+> > original out-of-tree code the htc-egpio was based on.  I don't know if
+> > there (still) exist out-of-tree users of the symbol.
+> >
+> > Thanks for your comments!
+>
+> All looks good to me. Are you fine with this being picked up after the
+> v5.4 merge window?
+
+Sure, whatever suits you best.
+
+Thanks!
+
+> > Geert Uytterhoeven (4):
+> >   gpio: of: Make of_get_named_gpiod_flags() private
+> >   gpio: of: Make of_gpio_simple_xlate() private
+> >   gpio: of: Switch to EXPORT_SYMBOL_GPL()
+> >   gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Kees Cook
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
