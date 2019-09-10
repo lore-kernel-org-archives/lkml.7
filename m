@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEACDC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C47220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A3620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gTpX58Gg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xhY4es2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731453AbfIJLpm (ORCPT
+        id S1731500AbfIJLpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:45:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32846 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731383AbfIJLpl (ORCPT
+        Tue, 10 Sep 2019 07:45:43 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41574 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731389AbfIJLpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 07:45:41 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjaJ1039840;
-        Tue, 10 Sep 2019 06:45:36 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjZYh130303;
+        Tue, 10 Sep 2019 06:45:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568115936;
-        bh=Xv9IdSYQH2Wyjdje4PEB2rgCyL+w8guQKyTJ3UYqNXA=;
+        s=ti-com-17Q1; t=1568115935;
+        bh=oj1t9aK27h7kYmeJtRxpc+tY35M83uRPBJm+zMEvkzs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gTpX58GgNDpjPLX3OcJeIAepr8ezrqR9cD//hLKnkR1KnfkHORr2MXZYaR0C5WUAS
-         pttZzGI/1eMC4zzj1LFsI7H/zITk3fF6vdYHsC+jxBQbE9uiNgok4tV3Ke8gJW5Iq+
-         IWJSFojmCheVop5THPFCrXcqvsPxatoTtsmU3gq8=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ABjac6006007
+        b=xhY4es2sP9GJEKK2AZdZWSswZpwAbOEtHXfbgHYhxJTNGP+2JYkfypnvXd0Fq/84S
+         NOyG7vS/LyLrz0oGoYMz6GoiMzxP2JK70ozW3zwkGKjlrswpv7d/W6WcGSy3UnDagR
+         Q9X0OxRLBe+coZNZwDjIn2meeg4r5im5Dcuf24Uo=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ABjZNr005985
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Sep 2019 06:45:36 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 10 Sep 2019 06:45:35 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 06:45:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 06:45:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 06:45:36 -0500
+ Frontend Transport; Tue, 10 Sep 2019 06:45:32 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjRpL119821;
-        Tue, 10 Sep 2019 06:45:34 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ABjRpJ119821;
+        Tue, 10 Sep 2019 06:45:30 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 3/3] dmaengine: ti: edma: Add support for handling reserved channels
-Date:   Tue, 10 Sep 2019 14:45:59 +0300
-Message-ID: <20190910114559.22810-4-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change dma-channel-mask to uint32-array
+Date:   Tue, 10 Sep 2019 14:45:57 +0300
+Message-ID: <20190910114559.22810-2-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190910114559.22810-1-peter.ujfalusi@ti.com>
 References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
@@ -67,134 +67,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like paRAM slots, channels could be used by other cores and in this case
-we need to make sure that the driver do not alter these channels.
-
-Handle the generic dma-channel-mask property to mark channels in a bitmap
-which can not be used by Linux and convert the legacy rsv_chans if it is
-provided by platform_data.
+Make the dma-channel-mask to be usable for controllers with more than 32
+channels.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/edma.c | 59 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/dma/dma-common.yaml | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ba7c4f07fcd6..03c9c6296006 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -260,6 +260,13 @@ struct edma_cc {
- 	 */
- 	unsigned long *slot_inuse;
+diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+index ed0a49a6f020..41460946be64 100644
+--- a/Documentation/devicetree/bindings/dma/dma-common.yaml
++++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+@@ -25,11 +25,19 @@ properties:
+       Used to provide DMA controller specific information.
  
-+	/*
-+	 * For tracking reserved channels used by DSP.
-+	 * If the bit is cleared, the channel is allocated to be used by DSP
-+	 * and Linux must not touch it.
-+	 */
-+	unsigned long *channels_mask;
-+
- 	struct dma_device		dma_slave;
- 	struct dma_device		*dma_memcpy;
- 	struct edma_chan		*slave_chans;
-@@ -716,6 +723,12 @@ static int edma_alloc_channel(struct edma_chan *echan,
- 	struct edma_cc *ecc = echan->ecc;
- 	int channel = EDMA_CHAN_SLOT(echan->ch_num);
+   dma-channel-mask:
+-    $ref: /schemas/types.yaml#definitions/uint32
+     description:
+       Bitmask of available DMA channels in ascending order that are
+       not reserved by firmware and are available to the
+       kernel. i.e. first channel corresponds to LSB.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          minItems = 1
++          maxItems = 255 # Should be enough
++          - description: Mask of channels 0-31
++          - description: Mask of channels 32-63
++          ...
++          - description: Mask of chnanels X-(X+31)
  
-+	if (!test_bit(echan->ch_num, ecc->channels_mask)) {
-+		dev_err(ecc->dev, "Channel%d is reserved, can not be used!\n",
-+			echan->ch_num);
-+		return -EINVAL;
-+	}
-+
- 	/* ensure access through shadow region 0 */
- 	edma_or_array2(ecc, EDMA_DRAE, 0, EDMA_REG_ARRAY_INDEX(channel),
- 		       EDMA_CHANNEL_BIT(channel));
-@@ -2250,7 +2263,7 @@ static int edma_probe(struct platform_device *pdev)
- 	struct edma_soc_info	*info = pdev->dev.platform_data;
- 	s8			(*queue_priority_mapping)[2];
- 	int			i, off;
--	const s16		(*rsv_slots)[2];
-+	const s16		(*reserved)[2];
- 	const s16		(*xbar_chans)[2];
- 	int			irq;
- 	char			*irq_name;
-@@ -2331,15 +2344,32 @@ static int edma_probe(struct platform_device *pdev)
- 	if (!ecc->slot_inuse)
- 		return -ENOMEM;
- 
-+	ecc->channels_mask = devm_kcalloc(dev,
-+					   BITS_TO_LONGS(ecc->num_channels),
-+					   sizeof(unsigned long), GFP_KERNEL);
-+	if (!ecc->channels_mask)
-+		return -ENOMEM;
-+
-+	/* Mark all channels available initially */
-+	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-+
- 	ecc->default_queue = info->default_queue;
- 
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
--		rsv_slots = info->rsv->rsv_slots;
--		if (rsv_slots) {
--			for (i = 0; rsv_slots[i][0] != -1; i++)
--				bitmap_set(ecc->slot_inuse, rsv_slots[i][0],
--					   rsv_slots[i][1]);
-+		reserved = info->rsv->rsv_slots;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_set(ecc->slot_inuse, reserved[i][0],
-+					   reserved[i][1]);
-+		}
-+
-+		/* Clear channels not usable for Linux */
-+		reserved = info->rsv->rsv_chans;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_clear(ecc->channels_mask, reserved[i][0],
-+					     reserved[i][1]);
- 		}
- 	}
- 
-@@ -2399,6 +2429,7 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	if (!ecc->legacy_mode) {
- 		int lowest_priority = 0;
-+		unsigned int array_max;
- 		struct of_phandle_args tc_args;
- 
- 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
-@@ -2420,6 +2451,18 @@ static int edma_probe(struct platform_device *pdev)
- 				info->default_queue = i;
- 			}
- 		}
-+
-+		/* See if we have optional dma-channel-mask array */
-+		array_max = DIV_ROUND_UP(ecc->num_channels, BITS_PER_TYPE(u32));
-+		ret = of_property_read_variable_u32_array(node,
-+						"dma-channel-mask",
-+						(u32 *)ecc->channels_mask,
-+						1, array_max);
-+		if (ret > 0 && ret != array_max)
-+			dev_warn(dev, "dma-channel-mask is not complete.\n");
-+		else if (ret == -EOVERFLOW || ret == -ENODATA)
-+			dev_warn(dev,
-+				 "dma-channel-mask is out of range or empty\n");
- 	}
- 
- 	/* Event queue priority mapping */
-@@ -2437,6 +2480,10 @@ static int edma_probe(struct platform_device *pdev)
- 	edma_dma_init(ecc, legacy_mode);
- 
- 	for (i = 0; i < ecc->num_channels; i++) {
-+		/* Do not touch reserved channels */
-+		if (!test_bit(i, ecc->channels_mask))
-+			continue;
-+
- 		/* Assign all channels to the default queue */
- 		edma_assign_channel_eventq(&ecc->slave_chans[i],
- 					   info->default_queue);
+   dma-channels:
+     $ref: /schemas/types.yaml#definitions/uint32
 -- 
 Peter
 
