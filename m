@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778FCC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57138218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9071820872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393772AbfIJKbN (ORCPT
+        id S2393796AbfIJKbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:31:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59386 "EHLO mx1.suse.de"
+        Tue, 10 Sep 2019 06:31:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59330 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393700AbfIJKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2393682AbfIJKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 06:30:52 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4C37AF68;
+        by mx1.suse.de (Postfix) with ESMTP id 9D29BAE84;
         Tue, 10 Sep 2019 10:30:49 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     n-horiguchi@ah.jp.nec.com
 Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 06/10] mm,hwpoison: Unify THP handling for hard and soft offline
-Date:   Tue, 10 Sep 2019 12:30:12 +0200
-Message-Id: <20190910103016.14290-7-osalvador@suse.de>
+Subject: [PATCH 05/10] mm: remove flag argument from soft offline functions
+Date:   Tue, 10 Sep 2019 12:30:11 +0200
+Message-Id: <20190910103016.14290-6-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190910103016.14290-1-osalvador@suse.de>
 References: <20190910103016.14290-1-osalvador@suse.de>
@@ -39,90 +39,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Place the THP's page handling in a helper and use it
-from both hard and soft-offline machinery, so we get rid
-of some duplicated code.
+From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
+The argument @flag no longer affects the behavior of soft_offline_page()
+and its variants, so let's remove them.
+
+Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/memory-failure.c | 48 ++++++++++++++++++++++--------------------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
+ drivers/base/memory.c |  2 +-
+ include/linux/mm.h    |  2 +-
+ mm/madvise.c          |  2 +-
+ mm/memory-failure.c   | 27 +++++++++++++--------------
+ 4 files changed, 16 insertions(+), 17 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 5071d39bdfef..820742035402 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1077,6 +1077,25 @@ static int identify_page_state(unsigned long pfn, struct page *p,
- 	return page_action(ps, p, pfn);
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 6bea4f3f8040..e5485c22ef77 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -540,7 +540,7 @@ static ssize_t soft_offline_page_store(struct device *dev,
+ 	pfn >>= PAGE_SHIFT;
+ 	if (!pfn_valid(pfn))
+ 		return -ENXIO;
+-	ret = soft_offline_page(pfn_to_page(pfn), 0);
++	ret = soft_offline_page(pfn_to_page(pfn));
+ 	return ret == 0 ? count : ret;
  }
  
-+static int try_to_split_thp_page(struct page *page, const char *msg)
-+{
-+	lock_page(page);
-+	if (!PageAnon(page) || unlikely(split_huge_page(page))) {
-+		unsigned long pfn = page_to_pfn(page);
-+
-+		unlock_page(page);
-+		if (!PageAnon(page))
-+			pr_info("%s: %#lx: non anonymous thp\n", msg, pfn);
-+		else
-+			pr_info("%s: %#lx: thp split failed\n", msg, pfn);
-+		put_hwpoison_page(page);
-+		return -EBUSY;
-+	}
-+	unlock_page(page);
-+
-+	return 0;
-+}
-+
- static int memory_failure_hugetlb(unsigned long pfn, int flags)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index fb36a4165a4e..3cc800d9f57a 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2827,7 +2827,7 @@ extern int sysctl_memory_failure_early_kill;
+ extern int sysctl_memory_failure_recovery;
+ extern void shake_page(struct page *p, int access);
+ extern atomic_long_t num_poisoned_pages __read_mostly;
+-extern int soft_offline_page(struct page *page, int flags);
++extern int soft_offline_page(struct page *page);
+ 
+ 
+ /*
+diff --git a/mm/madvise.c b/mm/madvise.c
+index fbe6d402232c..ece128211400 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -906,7 +906,7 @@ static int madvise_inject_error(int behavior,
+ 			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+ 					pfn, start);
+ 
+-			ret = soft_offline_page(page, 0);
++			ret = soft_offline_page(page);
+ 			if (ret)
+ 				return ret;
+ 			continue;
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 1be785b25324..5071d39bdfef 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1478,7 +1478,7 @@ static void memory_failure_work_func(struct work_struct *work)
+ 		if (!gotten)
+ 			break;
+ 		if (entry.flags & MF_SOFT_OFFLINE)
+-			soft_offline_page(pfn_to_page(entry.pfn), entry.flags);
++			soft_offline_page(pfn_to_page(entry.pfn));
+ 		else
+ 			memory_failure(entry.pfn, entry.flags);
+ 	}
+@@ -1611,7 +1611,7 @@ static struct page *new_page(struct page *p, unsigned long private)
+  * that is not free, and 1 for any other page type.
+  * For 1 the page is returned with increased page count, otherwise not.
+  */
+-static int __get_any_page(struct page *p, unsigned long pfn, int flags)
++static int __get_any_page(struct page *p, unsigned long pfn)
  {
- 	struct page *p = pfn_to_page(pfn);
-@@ -1297,21 +1316,8 @@ int memory_failure(unsigned long pfn, int flags)
- 	}
+ 	int ret;
  
- 	if (PageTransHuge(hpage)) {
--		lock_page(p);
--		if (!PageAnon(p) || unlikely(split_huge_page(p))) {
--			unlock_page(p);
--			if (!PageAnon(p))
--				pr_err("Memory failure: %#lx: non anonymous thp\n",
--					pfn);
--			else
--				pr_err("Memory failure: %#lx: thp split failed\n",
--					pfn);
--			if (TestClearPageHWPoison(p))
--				num_poisoned_pages_dec();
--			put_hwpoison_page(p);
-+		if (try_to_split_thp_page(p, "Memory Failure") < 0)
- 			return -EBUSY;
--		}
--		unlock_page(p);
- 		VM_BUG_ON_PAGE(!page_count(p), p);
- 		hpage = compound_head(p);
- 	}
-@@ -1810,19 +1816,9 @@ static int soft_offline_in_use_page(struct page *page)
+@@ -1638,9 +1638,9 @@ static int __get_any_page(struct page *p, unsigned long pfn, int flags)
+ 	return ret;
+ }
+ 
+-static int get_any_page(struct page *page, unsigned long pfn, int flags)
++static int get_any_page(struct page *page, unsigned long pfn)
+ {
+-	int ret = __get_any_page(page, pfn, flags);
++	int ret = __get_any_page(page, pfn);
+ 
+ 	if (ret == 1 && !PageHuge(page) &&
+ 	    !PageLRU(page) && !__PageMovable(page)) {
+@@ -1653,7 +1653,7 @@ static int get_any_page(struct page *page, unsigned long pfn, int flags)
+ 		/*
+ 		 * Did it turn free?
+ 		 */
+-		ret = __get_any_page(page, pfn, 0);
++		ret = __get_any_page(page, pfn);
+ 		if (ret == 1 && !PageLRU(page)) {
+ 			/* Drop page reference which is from __get_any_page() */
+ 			put_hwpoison_page(page);
+@@ -1665,7 +1665,7 @@ static int get_any_page(struct page *page, unsigned long pfn, int flags)
+ 	return ret;
+ }
+ 
+-static int soft_offline_huge_page(struct page *page, int flags)
++static int soft_offline_huge_page(struct page *page)
+ {
+ 	int ret;
+ 	unsigned long pfn = page_to_pfn(page);
+@@ -1724,7 +1724,7 @@ static int soft_offline_huge_page(struct page *page, int flags)
+ 	return ret;
+ }
+ 
+-static int __soft_offline_page(struct page *page, int flags)
++static int __soft_offline_page(struct page *page)
+ {
+ 	int ret;
+ 	unsigned long pfn = page_to_pfn(page);
+@@ -1804,7 +1804,7 @@ static int __soft_offline_page(struct page *page, int flags)
+ 	return ret;
+ }
+ 
+-static int soft_offline_in_use_page(struct page *page, int flags)
++static int soft_offline_in_use_page(struct page *page)
+ {
+ 	int ret;
  	int mt;
- 	struct page *hpage = compound_head(page);
+@@ -1834,9 +1834,9 @@ static int soft_offline_in_use_page(struct page *page, int flags)
+ 	mt = get_pageblock_migratetype(page);
+ 	set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+ 	if (PageHuge(page))
+-		ret = soft_offline_huge_page(page, flags);
++		ret = soft_offline_huge_page(page);
+ 	else
+-		ret = __soft_offline_page(page, flags);
++		ret = __soft_offline_page(page);
+ 	set_pageblock_migratetype(page, mt);
+ 	return ret;
+ }
+@@ -1857,7 +1857,6 @@ static int soft_offline_free_page(struct page *page)
+ /**
+  * soft_offline_page - Soft offline a page.
+  * @page: page to offline
+- * @flags: flags. Same as memory_failure().
+  *
+  * Returns 0 on success, otherwise negated errno.
+  *
+@@ -1876,7 +1875,7 @@ static int soft_offline_free_page(struct page *page)
+  * This is not a 100% solution for all memory, but tries to be
+  * ``good enough'' for the majority of memory.
+  */
+-int soft_offline_page(struct page *page, int flags)
++int soft_offline_page(struct page *page)
+ {
+ 	int ret;
+ 	unsigned long pfn = page_to_pfn(page);
+@@ -1893,11 +1892,11 @@ int soft_offline_page(struct page *page, int flags)
+ 	}
  
--	if (!PageHuge(page) && PageTransHuge(hpage)) {
--		lock_page(page);
--		if (!PageAnon(page) || unlikely(split_huge_page(page))) {
--			unlock_page(page);
--			if (!PageAnon(page))
--				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
--			else
--				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
--			put_hwpoison_page(page);
-+	if (!PageHuge(page) && PageTransHuge(hpage))
-+		if (try_to_split_thp_page(page, "soft offline") < 0)
- 			return -EBUSY;
--		}
--		unlock_page(page);
--	}
+ 	get_online_mems();
+-	ret = get_any_page(page, pfn, flags);
++	ret = get_any_page(page, pfn);
+ 	put_online_mems();
  
- 	/*
- 	 * Setting MIGRATE_ISOLATE here ensures that the page will be linked
+ 	if (ret > 0)
+-		ret = soft_offline_in_use_page(page, flags);
++		ret = soft_offline_in_use_page(page);
+ 	else if (ret == 0)
+ 		ret = soft_offline_free_page(page);
+ 
 -- 
 2.12.3
 
