@@ -2,129 +2,126 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84589C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A2A2089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595E820692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lcNXj1GZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390367AbfIJK7W (ORCPT
+        id S2390550AbfIJLAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:59:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43642 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbfIJK7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:59:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9AE8AF3E82A8CAEC040C;
-        Tue, 10 Sep 2019 18:59:20 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Sep 2019
- 18:59:12 +0800
-Subject: Re: [PATCH] driver core: ensure a device has valid node id in
- device_add()
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@kernel.org>, <mhocko@kernel.org>,
-        <linuxarm@huawei.com>
-References: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
- <20190909095347.GB6314@kroah.com>
- <9598b359-ab96-7d61-687a-917bee7a5cd9@huawei.com>
- <20190910093114.GA19821@kroah.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
-Date:   Tue, 10 Sep 2019 18:58:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Tue, 10 Sep 2019 07:00:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37066 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfIJLAC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 07:00:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8AAxqB3120291;
+        Tue, 10 Sep 2019 05:59:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568113192;
+        bh=tCs+ZjIyQkDzrb2FMt+l1fPEknxKowmXyWf2qmXDAm0=;
+        h=From:To:CC:Subject:Date;
+        b=lcNXj1GZsqgh0aDzUt1fuLe8sfgcApRou61xmZSimuShpfT2NURbgaU0jMkXcMyKo
+         hhAqVKYADDdL8P7i+diGyR/tBJcrfnCyuJRgwGD4/WhO2kFQlaXbMupZb2SlrjZlpS
+         aRKsJMM2eYbmiW8ChQF0sRhNev9wKHU4qRaWNoX8=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8AAxqph038243
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Sep 2019 05:59:52 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 05:59:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 05:59:52 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8AAxpYh018214;
+        Tue, 10 Sep 2019 05:59:51 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dridevel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v5 0/4] Add a generic driver for LED-based backlight
+Date:   Tue, 10 Sep 2019 12:59:42 +0200
+Message-ID: <20190910105946.23057-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190910093114.GA19821@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/10 17:31, Greg KH wrote:
-> On Tue, Sep 10, 2019 at 02:43:32PM +0800, Yunsheng Lin wrote:
->> On 2019/9/9 17:53, Greg KH wrote:
->>> On Mon, Sep 09, 2019 at 02:04:23PM +0800, Yunsheng Lin wrote:
->>>> Currently a device does not belong to any of the numa nodes
->>>> (dev->numa_node is NUMA_NO_NODE) when the node id is neither
->>>> specified by fw nor by virtual device layer and the device has
->>>> no parent device.
->>>
->>> Is this really a problem?
->>
->> Not really.
->> Someone need to guess the node id when it is not specified, right?
-> 
-> No, why?  Guessing guarantees you will get it wrong on some systems.
-> 
-> Are you seeing real problems because the id is not being set?  What
-> problem is this fixing that you can actually observe?
+This series aims to add a led-backlight driver, similar to pwm-backlight,
+but using a LED class device underneath.
 
-When passing the return value of dev_to_node() to cpumask_of_node()
-without checking the node id if the node id is not valid, there is
-global-out-of-bounds detected by KASAN as below:
+A few years ago (2015), Tomi Valkeinen posted a series implementing a
+backlight driver on top of a LED device:
+https://patchwork.kernel.org/patch/7293991/
+https://patchwork.kernel.org/patch/7294001/
+https://patchwork.kernel.org/patch/7293981/
 
-there are different checking to return value of dev_to_node(), I though
-it is better to consistently do checking in cpumask_of_node(), then
-discussion [1] [2] led to do the checking in device_add().
+The discussion stopped because Tomi lacked the time to work on it.
 
-[   42.970381] ==================================================================
-[   42.977595] BUG: KASAN: global-out-of-bounds in __bitmap_weight+0x48/0xb0
-[   42.984370] Read of size 8 at addr ffff20008cdf8790 by task kworker/0:1/13
-[   42.991230]
-[   42.992712] CPU: 0 PID: 13 Comm: kworker/0:1 Tainted: G           O      5.2.0-rc4-g8bde06a-dirty #3
-[   43.001830] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.B050.01 08/08/2019
-[   43.011298] Workqueue: events work_for_cpu_fn
-[   43.015643] Call trace:
-[   43.018078]  dump_backtrace+0x0/0x1e8
-[   43.021727]  show_stack+0x14/0x20
-[   43.025031]  dump_stack+0xc4/0xfc
-[   43.028335]  print_address_description+0x178/0x270
-[   43.033113]  __kasan_report+0x164/0x1b8
-[   43.036936]  kasan_report+0xc/0x18
-[   43.040325]  __asan_load8+0x84/0xa8
-[   43.043801]  __bitmap_weight+0x48/0xb0
-[   43.047552]  hclge_init_ae_dev+0x988/0x1e78 [hclge]
-[   43.052418]  hnae3_register_ae_dev+0xcc/0x278 [hnae3]
-[   43.057467]  hns3_probe+0xe0/0x120 [hns3]
-[   43.061464]  local_pci_probe+0x74/0xf0
-[   43.065200]  work_for_cpu_fn+0x2c/0x48
-[   43.068937]  process_one_work+0x3c0/0x878
-[   43.072934]  worker_thread+0x400/0x670
-[   43.076670]  kthread+0x1b0/0x1b8
-[   43.079885]  ret_from_fork+0x10/0x18
-[   43.083446]
-[   43.084925] The buggy address belongs to the variable:
-[   43.090052]  numa_distance+0x30/0x40
-[   43.093613]
-[   43.095091] Memory state around the buggy address:
-[   43.099870]  ffff20008cdf8680: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 fa fa
-[   43.107078]  ffff20008cdf8700: fa fa fa fa 04 fa fa fa fa fa fa fa 00 fa fa fa
-[   43.114286] >ffff20008cdf8780: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
-[   43.121494]                          ^
-[   43.125230]  ffff20008cdf8800: 01 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-[   43.132439]  ffff20008cdf8880: fa fa fa fa fa fa fa fa 00 00 fa fa fa fa fa fa
-[   43.139646] ==================================================================
+changes in v5:
+- removed LED brightness scaling
+- disable sysfs the interface of the LEDs when used by the backlight device
+
+changes in v4:
+- fix dev_err() messages and commit logs following the advices of Pavel
+- cosmetic changes (indents, getting rid of  "? 1 : 0" in
+  led_match_led_node())
+
+changes in v3:
+- dt binding: don't limit the brightness range to 0-255. Use the range of
+  the underlying LEDs. as a side-effect, all LEDs must now have the same
+  range
+- driver: Adapt to dt binding update.
+- driver: rework probe() for clarity and remove the remaining goto.
+
+changes in v2:
+- handle more than one LED.
+- don't make the backlight device a child of the LED controller.
+- make brightness-levels and default-brightness-level optional
+- removed the option to use a GPIO enable.
+- removed the option to use a regulator. It should be handled by the LED
+  core
+- don't make any change to the LED core (not needed anymore)
 
 
-[1] https://lore.kernel.org/patchwork/patch/1122081/
-[2] https://lore.kernel.org/patchwork/patch/1122516/
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
+Jean-Jacques Hiblot (2):
+  leds: Add managed API to get a LED from a device driver
+  dt-bindings: backlight: Add led-backlight binding
+
+Tomi Valkeinen (2):
+  leds: Add of_led_get() and led_put()
+  backlight: add led-backlight driver
+
+ .../bindings/leds/backlight/led-backlight.txt |  28 ++
+ drivers/leds/led-class.c                      |  92 ++++++
+ drivers/video/backlight/Kconfig               |   7 +
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/led_bl.c              | 264 ++++++++++++++++++
+ include/linux/leds.h                          |   6 +
+ 6 files changed, 398 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+ create mode 100644 drivers/video/backlight/led_bl.c
+
+-- 
+2.17.1
 
