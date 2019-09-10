@@ -2,219 +2,93 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FCEC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FCDC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7782168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568146756;
-	bh=zKRo37Pf7dFOQl5bAW44sn3H0snx91tL8n5bI5LlTIM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qx2Bn+7C3qwXctlwec70Ub1reYgVypPk73S8W0g3/GM/1prnSJskimeNEqzX4A/j/
-	 u5g4SCGX+mQpXokUl52AFL5fX3UDTBCTGhHAX68iFZxqNHLlxeW/rmZb+uYVQDJnCQ
-	 FrvnpMcfUdoIEus9cKweeOYzP0d84cFn+efzF0Jc=
+	by mail.kernel.org (Postfix) with ESMTP id 5015E2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 20:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fviAnWWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfIJUTP (ORCPT
+        id S1726067AbfIJUZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 16:19:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57788 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726318AbfIJUTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 16:19:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 94DEDAD31;
-        Tue, 10 Sep 2019 20:19:10 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 22:19:05 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Nitin Gupta <nigupta@nvidia.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, dan.j.williams@intel.com,
-        khalid.aziz@oracle.com, Matthew Wilcox <willy@infradead.org>,
-        Yu Zhao <yuzhao@google.com>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Allison Randal <allison@lohutok.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arun KS <arunks@codeaurora.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Add callback for defining compaction completion
-Message-ID: <20190910201905.GG4023@dhcp22.suse.cz>
-References: <20190910200756.7143-1-nigupta@nvidia.com>
+        Tue, 10 Sep 2019 16:25:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44894 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfIJUZQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 16:25:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k6so9870047wrn.11;
+        Tue, 10 Sep 2019 13:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=va7zx4dWy4opl/0MisZyc5Dgg3A7vjbqzLK/FnBX/Ho=;
+        b=fviAnWWVJY2LWZyAlaPZFkG1cdl//otHF8ct4EeO410hyLBcHPd/6eqIpKhqbLB0nc
+         NAXmIsmJRoD9Qr1ij5k9f05AyQyRVETf3UdJ/f+pQEKVzFuILU/XMFb00dPBBXlKHmjq
+         tq6IWXLkAoLv6e4pTGROdEZdZk/q/nAoYZQHfgFEeTphpqiJ82hYWPO4BKFXidU8rkxY
+         AvmU680qKKnUV10BUlK8USgig7Ot+YDY90jraycKKxyS6N090oV+rGyIpWj6fLVb59Qn
+         H74ui4HynoVaB0/YzYu3HvXysTKS2o8ZLsZ8cabU2yo8uRHvAtO8Ja3C7ziZ67p/gEI3
+         ki2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=va7zx4dWy4opl/0MisZyc5Dgg3A7vjbqzLK/FnBX/Ho=;
+        b=T13ZAWMR6oK5ASMNZ7gJI4TGXSf2ejI8TVdEuiGkFx+E9LWJcVj/w5Kdaqcjdp48Xy
+         z7nGMuctUEiCY92I7InFDxjCtV9w5Sm8L/andWSEpncDNXYZGs/1upQPFx8fOU6B0Z80
+         gLR/lxtbShsUBRILYHaYzvo2XFXhxTk/vnHb1kNcOceBvUAjgNqsuPG+SsSBtXSjke7Z
+         SQMwas7wocWgiNPveVeJ2iJw4iVmcHP1+yFyxseRrhpZI7zmqgPk35OWGsHz8KqULDdR
+         cpRRtjemIBlk8OCpTX1av/BLi+3PWGOFISiyACT+srVUVW2q6HSYuvu1Ggi/1lVhRKna
+         cqHw==
+X-Gm-Message-State: APjAAAUsNGCMqkhXOPDRwlRudnY1AgHM66/xcGv60kgJj1OOgEj+RJLf
+        w10UQYJ3KWkEiQQKg9iBblLxk4yvjuE=
+X-Google-Smtp-Source: APXvYqxopsBTm1LI6ZET3eOZ+cxvt4V+YcW4hRdhrbBo6FMZ0k8YPNAnPTjK3cnFDWGFBSHhF8gPSA==
+X-Received: by 2002:a5d:4f08:: with SMTP id c8mr30042573wru.51.1568147114468;
+        Tue, 10 Sep 2019 13:25:14 -0700 (PDT)
+Received: from rocinante ([91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id g3sm8305904wrq.64.2019.09.10.13.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 13:25:13 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 22:25:06 +0200
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: light: bh1750: Move static keyword to the front of
+ declaration
+Message-ID: <20190910202504.GA19939@rocinante>
+References: <20190902113132.26658-1-kw@linux.com>
+ <20190908114944.18bb78e3@archlinux>
+ <20190908135208.GA29162@rocinante>
+ <20190910143550.00000e64@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190910200756.7143-1-nigupta@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910143550.00000e64@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-09-19 13:07:32, Nitin Gupta wrote:
-> For some applications we need to allocate almost all memory as hugepages.
-> However, on a running system, higher order allocations can fail if the
-> memory is fragmented. Linux kernel currently does on-demand compaction as
-> we request more hugepages but this style of compaction incurs very high
-> latency. Experiments with one-time full memory compaction (followed by
-> hugepage allocations) shows that kernel is able to restore a highly
-> fragmented memory state to a fairly compacted memory state within <1 sec
-> for a 32G system. Such data suggests that a more proactive compaction can
-> help us allocate a large fraction of memory as hugepages keeping allocation
-> latencies low.
-> 
-> In general, compaction can introduce unexpected latencies for applications
-> that don't even have strong requirements for contiguous allocations. It is
-> also hard to efficiently determine if the current system state can be
-> easily compacted due to mixing of unmovable memory. Due to these reasons,
-> automatic background compaction by the kernel itself is hard to get right
-> in a way which does not hurt unsuspecting applications or waste CPU cycles.
+Hello Jonathan,
 
-We do trigger background compaction on a high order pressure from the
-page allocator by waking up kcompactd. Why is that not sufficient?
+Thank you for the feedback.  I really appreciate it.
 
-> Even with these caveats, pro-active compaction can still be very useful in
-> certain scenarios to reduce hugepage allocation latencies. This callback
-> interface allows drivers to drive compaction based on their own policies
-> like the current level of external fragmentation for a particular order,
-> system load etc.
+[...]
+> We can do that of course, but that's nothing to do with moving the static
+> keyword to the front of the declaration which is what the patch claims
+> to be doing.
 
-So we do not trust the core MM to make a reasonable decision while we
-give a free ticket to modules. How does this make any sense at all? How
-is a random module going to make a more informed decision when it has
-less visibility on the overal MM situation.
+I see your point.  I am going to send a v2 that hopefully will be much
+cleaner and better worded.  Thank you!
 
-If you need to control compaction from the userspace you have an
-interface for that.  It is also completely unexplained why you need a
-completion callback.
-
-That being said, this looks like a terrible idea to me.
-
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
-> ---
->  include/linux/compaction.h | 10 ++++++++++
->  mm/compaction.c            | 20 ++++++++++++++------
->  mm/internal.h              |  2 ++
->  3 files changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-> index 9569e7c786d3..1ea828450fa2 100644
-> --- a/include/linux/compaction.h
-> +++ b/include/linux/compaction.h
-> @@ -58,6 +58,16 @@ enum compact_result {
->  	COMPACT_SUCCESS,
->  };
->  
-> +/* Callback function to determine if compaction is finished. */
-> +typedef enum compact_result (*compact_finished_cb)(
-> +	struct zone *zone, int order);
-> +
-> +enum compact_result compact_zone_order(struct zone *zone, int order,
-> +		gfp_t gfp_mask, enum compact_priority prio,
-> +		unsigned int alloc_flags, int classzone_idx,
-> +		struct page **capture,
-> +		compact_finished_cb compact_finished_cb);
-> +
->  struct alloc_context; /* in mm/internal.h */
->  
->  /*
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 952dc2fb24e5..73e2e9246bc4 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -1872,6 +1872,9 @@ static enum compact_result __compact_finished(struct compact_control *cc)
->  			return COMPACT_PARTIAL_SKIPPED;
->  	}
->  
-> +	if (cc->compact_finished_cb)
-> +		return cc->compact_finished_cb(cc->zone, cc->order);
-> +
->  	if (is_via_compact_memory(cc->order))
->  		return COMPACT_CONTINUE;
->  
-> @@ -2274,10 +2277,11 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
->  	return ret;
->  }
->  
-> -static enum compact_result compact_zone_order(struct zone *zone, int order,
-> +enum compact_result compact_zone_order(struct zone *zone, int order,
->  		gfp_t gfp_mask, enum compact_priority prio,
->  		unsigned int alloc_flags, int classzone_idx,
-> -		struct page **capture)
-> +		struct page **capture,
-> +		compact_finished_cb compact_finished_cb)
->  {
->  	enum compact_result ret;
->  	struct compact_control cc = {
-> @@ -2293,10 +2297,11 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
->  					MIGRATE_ASYNC :	MIGRATE_SYNC_LIGHT,
->  		.alloc_flags = alloc_flags,
->  		.classzone_idx = classzone_idx,
-> -		.direct_compaction = true,
-> +		.direct_compaction = !compact_finished_cb,
->  		.whole_zone = (prio == MIN_COMPACT_PRIORITY),
->  		.ignore_skip_hint = (prio == MIN_COMPACT_PRIORITY),
-> -		.ignore_block_suitable = (prio == MIN_COMPACT_PRIORITY)
-> +		.ignore_block_suitable = (prio == MIN_COMPACT_PRIORITY),
-> +		.compact_finished_cb = compact_finished_cb
->  	};
->  	struct capture_control capc = {
->  		.cc = &cc,
-> @@ -2313,11 +2318,13 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
->  	VM_BUG_ON(!list_empty(&cc.freepages));
->  	VM_BUG_ON(!list_empty(&cc.migratepages));
->  
-> -	*capture = capc.page;
-> +	if (capture)
-> +		*capture = capc.page;
->  	current->capture_control = NULL;
->  
->  	return ret;
->  }
-> +EXPORT_SYMBOL(compact_zone_order);
->  
->  int sysctl_extfrag_threshold = 500;
->  
-> @@ -2361,7 +2368,8 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
->  		}
->  
->  		status = compact_zone_order(zone, order, gfp_mask, prio,
-> -				alloc_flags, ac_classzone_idx(ac), capture);
-> +				alloc_flags, ac_classzone_idx(ac), capture,
-> +				NULL);
->  		rc = max(status, rc);
->  
->  		/* The allocation should succeed, stop compacting */
-> diff --git a/mm/internal.h b/mm/internal.h
-> index e32390802fd3..f873f7c2b9dc 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -11,6 +11,7 @@
->  #include <linux/mm.h>
->  #include <linux/pagemap.h>
->  #include <linux/tracepoint-defs.h>
-> +#include <linux/compaction.h>
->  
->  /*
->   * The set of flags that only affect watermark checking and reclaim
-> @@ -203,6 +204,7 @@ struct compact_control {
->  	bool whole_zone;		/* Whole zone should/has been scanned */
->  	bool contended;			/* Signal lock or sched contention */
->  	bool rescan;			/* Rescanning the same pageblock */
-> +	compact_finished_cb compact_finished_cb;
->  };
->  
->  /*
-> -- 
-> 2.21.0
-
--- 
-Michal Hocko
-SUSE Labs
+Krzysztof
