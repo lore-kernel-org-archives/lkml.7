@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B79C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBA9C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E4420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C4220872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404882AbfIJIJ4 (ORCPT
+        id S2404917AbfIJIJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:09:56 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50734 "EHLO inva021.nxp.com"
+        Tue, 10 Sep 2019 04:09:59 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50778 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfIJIJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:09:55 -0400
+        id S1729872AbfIJIJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:09:57 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B97B200089;
-        Tue, 10 Sep 2019 10:09:54 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 894D6200494;
+        Tue, 10 Sep 2019 10:09:55 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C481E200494;
-        Tue, 10 Sep 2019 10:09:48 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F316B200490;
+        Tue, 10 Sep 2019 10:09:49 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DE111402A5;
-        Tue, 10 Sep 2019 16:09:41 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2151B402D2;
+        Tue, 10 Sep 2019 16:09:43 +0800 (SGT)
 From:   Wen He <wen.he_1@nxp.com>
 To:     linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>,
         Brian Starkey <brian.starkey@arm.com>,
@@ -39,46 +39,105 @@ To:     linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, leoyang.li@nxp.com
 Cc:     Wen He <wen.he_1@nxp.com>
-Subject: [v5 1/2] dt/bindings: display: Add optional property node define for Mali DP500
-Date:   Tue, 10 Sep 2019 15:59:12 +0800
-Message-Id: <20190910075913.17650-1-wen.he_1@nxp.com>
+Subject: [v5 2/2] drm/arm/mali-dp: Add display QoS interface configuration for Mali DP500
+Date:   Tue, 10 Sep 2019 15:59:13 +0800
+Message-Id: <20190910075913.17650-2-wen.he_1@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190910075913.17650-1-wen.he_1@nxp.com>
+References: <20190910075913.17650-1-wen.he_1@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
-This property describe the ARQoS levels of DP500's QoS signaling.
+Configure the display Quality of service (QoS) levels priority if the
+optional property node "arm,malidp-aqros-value" is defined in DTS file.
+
+QoS signaling using AQROS and AWQOS AXI interface signals, the AQROS is
+driven from the "RQOS" register, so needed to program the RQOS register
+to avoid the high resolutions flicker issue on the LS1028A platform.
 
 Signed-off-by: Wen He <wen.he_1@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/arm/malidp_drv.c  |  6 ++++++
+ drivers/gpu/drm/arm/malidp_hw.c   |  9 +++++++++
+ drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
+ drivers/gpu/drm/arm/malidp_regs.h | 10 ++++++++++
+ 4 files changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
-index 2f7870983ef1..7a97a2b48c2a 100644
---- a/Documentation/devicetree/bindings/display/arm,malidp.txt
-+++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
-@@ -37,6 +37,8 @@ Optional properties:
-     Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
-     to be used for the framebuffer; if not present, the framebuffer may
-     be located anywhere in memory.
-+  - arm,malidp-arqos-high-level: integer of u32 value describing the ARQoS
-+    levels of DP500's QoS signaling.
+diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+index 333b88a5efb0..8a76315aaa0f 100644
+--- a/drivers/gpu/drm/arm/malidp_drv.c
++++ b/drivers/gpu/drm/arm/malidp_drv.c
+@@ -817,6 +817,12 @@ static int malidp_bind(struct device *dev)
  
+ 	malidp->core_id = version;
  
- Example:
-@@ -54,6 +56,7 @@ Example:
- 		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-+		arm,malidp-arqos-high-level = <0xd000d000>;
- 		port {
- 			dp0_output: endpoint {
- 				remote-endpoint = <&tda998x_2_input>;
++	ret = of_property_read_u32(dev->of_node,
++					"arm,malidp-arqos-value",
++					&hwdev->arqos_value);
++	if (ret)
++		hwdev->arqos_value = 0x0;
++
+ 	/* set the number of lines used for output of RGB data */
+ 	ret = of_property_read_u8_array(dev->of_node,
+ 					"arm,malidp-output-port-lines",
+diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
+index bd8265f02e0b..ca570b135478 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.c
++++ b/drivers/gpu/drm/arm/malidp_hw.c
+@@ -379,6 +379,15 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
+ 		malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
+ 	else
+ 		malidp_hw_clearbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
++
++	/*
++	 * Program the RQoS register to avoid high resolutions flicker
++	 * issue on the LS1028A.
++	 */
++	if (hwdev->arqos_value) {
++		val = hwdev->arqos_value;
++		malidp_hw_setbits(hwdev, val, MALIDP500_RQOS_QUALITY);
++	}
+ }
+ 
+ int malidp_format_get_bpp(u32 fmt)
+diff --git a/drivers/gpu/drm/arm/malidp_hw.h b/drivers/gpu/drm/arm/malidp_hw.h
+index 968a65eed371..e4c36bc90bda 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.h
++++ b/drivers/gpu/drm/arm/malidp_hw.h
+@@ -251,6 +251,9 @@ struct malidp_hw_device {
+ 
+ 	/* size of memory used for rotating layers, up to two banks available */
+ 	u32 rotation_memory[2];
++
++	/* priority level of RQOS register used for driven the ARQOS signal */
++	u32 arqos_value;
+ };
+ 
+ static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev, u32 reg)
+diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
+index 993031542fa1..514c50dcb74d 100644
+--- a/drivers/gpu/drm/arm/malidp_regs.h
++++ b/drivers/gpu/drm/arm/malidp_regs.h
+@@ -210,6 +210,16 @@
+ #define MALIDP500_CONFIG_VALID		0x00f00
+ #define MALIDP500_CONFIG_ID		0x00fd4
+ 
++/*
++ * The quality of service (QoS) register on the DP500. RQOS register values
++ * are driven by the ARQOS signal, using AXI transacations, dependent on the
++ * FIFO input level.
++ * The RQOS register can also set QoS levels for:
++ *    - RED_ARQOS   @ A 4-bit signal value for close to underflow conditions
++ *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
++ */
++#define MALIDP500_RQOS_QUALITY          0x00500
++
+ /* register offsets and bits specific to DP550/DP650 */
+ #define MALIDP550_ADDR_SPACE_SIZE	0x10000
+ #define MALIDP550_DE_CONTROL		0x00010
 -- 
 2.17.1
 
