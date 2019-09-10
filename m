@@ -2,159 +2,130 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A9C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFA8C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3024B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869692084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZSpzF0/g"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fIIKNGJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404839AbfIJMhB (ORCPT
+        id S2404972AbfIJMhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:37:01 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46968 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404281AbfIJMgk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:36:40 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190910123639euoutp0241453850539b04fc789db7689172693e~DE_vsgLZd2679026790euoutp02d
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 12:36:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190910123639euoutp0241453850539b04fc789db7689172693e~DE_vsgLZd2679026790euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568118999;
-        bh=ageHcoP5yyUcbBzIKRba9vlDt9YVjqT0KkoUSzxprYw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSpzF0/gmUzByPQj4mapOlwqx6g8v0VJDQIxhmSYcsHbb3kXitR1hRol4DQozavQX
-         2vFRy8EJRvNiwnQRE9dCrGlKnirR2QZweiVEJvNF54lxNNbeOQw+tr5kzKJceAWSfM
-         gGQ1awj1Kwd6jKdH1dYO3DKLu5/sBDbd+WGuPP9Q=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190910123638eucas1p217975a57a3d938b79bcd3c9afecdc6fb~DE_u3Qcb-1661016610eucas1p2u;
-        Tue, 10 Sep 2019 12:36:38 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 52.EB.04469.6D8977D5; Tue, 10
-        Sep 2019 13:36:38 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641~DE_uIU1DJ1360413604eucas1p2u;
-        Tue, 10 Sep 2019 12:36:37 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190910123637eusmtrp17d93565418338fe6a8edb22585aa325c~DE_uHa7Ij2381323813eusmtrp16;
-        Tue, 10 Sep 2019 12:36:37 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-68-5d7798d6b9fa
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id EB.EC.04117.5D8977D5; Tue, 10
-        Sep 2019 13:36:37 +0100 (BST)
-Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190910123636eusmtip11189d73e0cd292dac1eb81a70cbae68d~DE_tjHbJ71089810898eusmtip1v;
-        Tue, 10 Sep 2019 12:36:36 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     krzk@kernel.org, vireshk@kernel.org
-Cc:     robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
- documentation
-Date:   Tue, 10 Sep 2019 14:36:14 +0200
-Message-Id: <20190910123618.27985-3-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190910123618.27985-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleLIzCtJLcpLzFFi42LZduzned1rM8pjDfZPZLHYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y27RuvcIu8XhN+2sFpsfHGNz
-        4PHYtKqTzWPzknqPvi2rGD0+b5ILYInisklJzcksSy3St0vgynjw6gBrQS9vxY0JT1gbGH9y
-        dTFyckgImEjseTiNuYuRi0NIYAWjRNveVkYI5wujxOLr05ggnM+MEkeergbKcIC1nDnmBBFf
-        ziixfWYDG1zH9pajLCBz2QQMJXqP9jGC2CIC6hKvTv0H28EssI5JYtmsZWCThAUiJJZMjACp
-        YRFQlTi37hVYPa+AtcTKRZuZIe6Tl1i94QCYzSlgI3Fq9y6wiyQEutkl1izqY4O4yEVi+vMQ
-        iHphiVfHt7BD2DISpyf3sEDUNzNK9Oy+zQ7hTGCUuH98ASNElbXE4eMXWUEGMQtoSqzfpQ8R
-        dpS4tOYB1Hw+iRtvBUHCzEDmpG3TmSHCvBIdbUIQ1SoSv1dNZ4KwpSS6n/xngbA9JOYs2Qm2
-        SEign1Hi5U7rCYzysxB2LWBkXMUonlpanJueWmyYl1quV5yYW1yal66XnJ+7iRGYSE7/O/5p
-        B+PXS0mHGAU4GJV4eDtaymOFWBPLiitzDzFKcDArifBe7yuNFeJNSaysSi3Kjy8qzUktPsQo
-        zcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cAoejuT4+IaC3U3DplpqcuaEnfe/qUu4jjP
-        147X/ezEa/yNQTs1BD0k85i8xM9mXv9+95arks/UuIZ5fe5T2hI8xV0CNsnHHJyykUd2cTf3
-        v3/Ljrsm7U+v/cG7bWrq7zXtJ1S2ZyT5uEmJKf9gqGM4lrs07lCC7taMhUpPnX9O/q5fUtuq
-        u1+JpTgj0VCLuag4EQAiRUw0IAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsVy+t/xu7pXZ5THGjw4K2uxccZ6Vov5R86x
-        WvQ/fs1scf78BnaLTY+vsVpc3jWHzeJz7xFGixnn9zFZrD1yl92ide8RdovDb9pZLTY/OMbm
-        wOOxaVUnm8fmJfUefVtWMXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl/Hg1QHWgl7eihsTnrA2MP7k6mLk4JAQMJE4c8ypi5GLQ0hg
-        KaPExQu3WSDiUhLzW5S6GDmBTGGJP9e62CBqPjFKrDs5hRUkwSZgKNF7tI8RpF5EQFNi7zqw
-        GmaBHUwSe5/9ZQOJCwuESey5pQhSziKgKnFu3StGEJtXwFpi5aLNzBDz5SVWbzgAZnMK2Eic
-        2r2LCcQWAqp5/XEK6wRGvgWMDKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECg3rbsZ9bdjB2
-        vQs+xCjAwajEw9vRUh4rxJpYVlyZe4hRgoNZSYT3el9prBBvSmJlVWpRfnxRaU5q8SFGU6Cj
-        JjJLiSbnAyMuryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo+XE
-        ffOsHuW8Zwl4WPjm+JzfX+Kbwv2mWU8J2/uqRDPJMsbdosNGsEqsffWtLZyueY92CZ0wZvS4
-        uoN5y3PLPw+WZBvmxa4xFmsJf25xeUJ2/EvZSYt4zzTnL+zg33FieZqqAYvtgitz/ySqlnqv
-        Lp2SLTMxhFl26u8DEYf0Otk860L6/HbsVWIpzkg01GIuKk4EAE9kh36AAgAA
-X-CMS-MailID: 20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
-        <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
+        Tue, 10 Sep 2019 08:37:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39350 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404281AbfIJMhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:37:04 -0400
+Received: from zn.tnic (p200300EC2F0ABE00B4DC6059A6D53D5D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:be00:b4dc:6059:a6d5:3d5d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D5E731EC09F7;
+        Tue, 10 Sep 2019 14:37:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1568119023;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=iRKPqdcLM+kIMKQijSuNX/Hkh1U20nQQOR1J17cSy3o=;
+        b=fIIKNGJ1id/7q2ZxU9h9Q2i1Be7Ply8kVNK7bzSWUuq0YJSynP+6Em41TvF/fBf1/kUv/p
+        lT2WQBuZpSVnJi5+NbHo8uUn61BuYtDMQnp9DsgXsrym1+bdLCblJRmgf19HdAqliQWvji
+        0agAQ+vWhqJu7f8YegZ35lX1Dhrq9Rc=
+Date:   Tue, 10 Sep 2019 14:36:57 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v2 4/4] x86/mce: Add Zhaoxin LMCE support
+Message-ID: <20190910123657.GE23931@zn.tnic>
+References: <5f4f8dee1fb24d38aa0ee136c5e98c72@zhaoxin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5f4f8dee1fb24d38aa0ee136c5e98c72@zhaoxin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds documentation of a new optional "samsung,asv-bin"
-property in the chipid device node and documents requirement of
-"syscon" compatible string.  These additions are needed to support
-Exynos ASV (Adaptive Supply Voltage) feature.
+On Tue, Sep 10, 2019 at 08:20:07AM +0000, Tony W Wang-oc wrote:
+> Zhaoxin newer CPUs support LMCE that compatible with Intel's
+> "Machine-Check Architecture", so add support for Zhaoxin LMCE
+> in mce/core.c.
+> 
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+> v1->v2:
+>  - Fix redefinition of "mce_zhaoxin_feature_clear"
+> 
+>  arch/x86/include/asm/mce.h     |  2 ++
+>  arch/x86/kernel/cpu/mce/core.c | 25 +++++++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+> index 0986a11..01840ec 100644
+> --- a/arch/x86/include/asm/mce.h
+> +++ b/arch/x86/include/asm/mce.h
+> @@ -352,8 +352,10 @@ static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c)	{ return mce_am
+>  
+>  #ifdef CONFIG_CPU_SUP_ZHAOXIN
+>  void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c);
+> +void mce_zhaoxin_feature_clear(struct cpuinfo_x86 *c);
+>  #else
+>  static inline void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c) { }
+> +static inline void mce_zhaoxin_feature_clear(struct cpuinfo_x86 *c) { }
+>  #endif
+>  
+>  #endif /* _ASM_X86_MCE_H */
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 8a36833..595d3af7ac 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1129,6 +1129,17 @@ static bool __mc_check_crashing_cpu(int cpu)
+>  		u64 mcgstatus;
+>  
+>  		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
+> +
+> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
+> +			if (mcgstatus & MCG_STATUS_LMCES) {
+> +				return false;
+> +			} else {
+> +				if (mcgstatus & MCG_STATUS_RIPV)
+> +					mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+> +				return true;
+> +			}
+> +		}
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v3:
- - none
+Simplify:
 
-Changes since v2:
- - corrected patch summary line prefix, the patch moved in the
-   sequence
+                if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
+                        if (mcgstatus & MCG_STATUS_LMCES)
+                                return false;
+		}
 
-Changes since v1 (RFC):
- - new patch
----
- .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+		<--- Now here, on your CPUs which don't set MCG_STATUS_LMCES,
+it will fallback to clearing the status register. I.e., what you do in the else
+clause.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-index 85c5dfd4a720..be3657e6c00c 100644
---- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-@@ -1,12 +1,18 @@
--SAMSUNG Exynos SoCs Chipid driver.
-+SAMSUNG Exynos SoC series CHIPID subsystem
+-- 
+Regards/Gruss,
+    Boris.
 
- Required properties:
--- compatible : Should at least contain "samsung,exynos4210-chipid".
-+- compatible : Should at least contain "samsung,exynos4210-chipid", "syscon".
-
- - reg: offset and length of the register set
-
-+Optional properties:
-+ - samsung,asv-bin : Adaptive Supply Voltage bin selection. This can be used
-+   to determine the ASV bin of an SoC if respective information is missing
-+   in the CHIPID registers or in the OTP memory. Possible values: 0...3.
-+
- Example:
- 	chipid@10000000 {
- 		compatible = "samsung,exynos4210-chipid";
- 		reg = <0x10000000 0x100>;
-+		samsung,asv-bin = <2>;
- 	};
---
-2.17.1
-
+https://people.kernel.org/tglx/notes-about-netiquette
