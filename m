@@ -2,127 +2,88 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DD3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68946C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D4F2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="QF1YyFIk"
+	by mail.kernel.org (Postfix) with ESMTP id 3F8CE2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392185AbfIJKMl (ORCPT
+        id S2392221AbfIJKOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:12:41 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40265 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392136AbfIJKMk (ORCPT
+        Tue, 10 Sep 2019 06:14:23 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40240 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfIJKOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:12:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 7so15796941ljw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vIypOE6gjfATSZoix2kguReUWJHTcsgf5EsyS0T781E=;
-        b=QF1YyFIkmZH8XMjdajrv1LsBZvMStMtL9CdUSsoqF53hVExeBX3ofrdCsBZ/RfLbEZ
-         bF4iUNbPwTMCFtuQY7B4eVyLSqzqCXxcg4t2ySUWC4RnI1xw47mTDnuJPWLAvv0Eo9yU
-         609AkfC6pXkT7Imqgs74GtajM0JLN+FY+WK9b9qvpWMRLyfRzMGzlwPB3JVr637fDM2A
-         AI6JTjXcTKRxXeiVwtwR+OqEQLANkMr6+OEr4ATQm8mkUDW8kvYvuhlm5VjTcWVfhFRc
-         h2Fdu1B2THjxZfDG5pRqklTDwtnEmJLYNHkxRdzInkLugfKm1y9uLWZYt9S6gEzgB1/6
-         DPQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vIypOE6gjfATSZoix2kguReUWJHTcsgf5EsyS0T781E=;
-        b=h10Dz2W71K2Jpod2/5utWCxYfEN4jBjeTTuO0bemU9eJScPPalBgGdog09fP2mQ/XL
-         4RnlUY91t77M2OyE5fC7CjVbJyXBwqZEHtX4X1Lv42tcesrBelRvQ3IekjGasZ6vAX+l
-         4IlIbDRBOP8oTK3MskuTKjx8nMJcAZh8r2NtOK8bRE+b3ENWcFYFLWIqfL5jnm9xyDVi
-         63SlYvM31fPDIxj9Fk2/z7NMzb+SGg4bldn6+PQwA+dORxe41ex/TwpT9w/686wv5wyR
-         uEdO2reHdEuL9T6uCCMytyAWoAd5sRIgj0qW7eHvw4Sv/tHmLHnf9s0IZCiZ34aajxXS
-         eKsw==
-X-Gm-Message-State: APjAAAVf6+IRLEzw9sIrzHALJJuFVtlq94t38uWTiyPb2vTAIvTTv8xH
-        DJTlfNcbbaqtfn4kQpBEMnfPIy5ODdIUA9DwZHSvsp4L
-X-Google-Smtp-Source: APXvYqyn5Iv26yGhGRoybRCrkATjmQRFJ0chHHX7nMpvtSffVmLBw/0PY1zHPe2ZxcY10fGaOxP0+hSePlHfRh5I4zU=
-X-Received: by 2002:a2e:9602:: with SMTP id v2mr19496698ljh.215.1568110359105;
- Tue, 10 Sep 2019 03:12:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190828103229.191853-1-maco@android.com> <20190904194901.165883-1-maco@android.com>
-In-Reply-To: <20190904194901.165883-1-maco@android.com>
-From:   Martijn Coenen <maco@android.com>
-Date:   Tue, 10 Sep 2019 12:12:28 +0200
-Message-ID: <CAB0TPYHjPbzMNqS6wiYmjUjrmROSVVCYsSQLjwE+PUOBsMH_mw@mail.gmail.com>
-Subject: Re: [PATCH v2] loop: change queue block size to match when using DIO.
-To:     Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, kernel-team@android.com,
-        Narayan Kamath <narayan@google.com>,
-        Dario Freni <dariofreni@google.com>,
-        Nikita Ioffe <ioffe@google.com>,
-        Jiyong Park <jiyong@google.com>,
-        Martijn Coenen <maco@google.com>
+        Tue, 10 Sep 2019 06:14:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B932128C51D
+Message-ID: <56f8886353ced71426e2ce6442eed18fe349cdab.camel@collabora.com>
+Subject: Re: [PATCH 02/12] media: hantro: Do not reorder H264 scaling list
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 10 Sep 2019 11:14:17 +0100
+In-Reply-To: <HE1PR06MB4011A8F99D58E5ACFAE3CECAACBE0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB40116C92C3D52C5957EF48E9ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <1567432843.3666.6.camel@pengutronix.de>
+         <HE1PR06MB4011A8F99D58E5ACFAE3CECAACBE0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens, Ming,
+Hi Jonas,
 
-Do you have any thoughts about this patch?
+Thanks for your patch.
+
+On Mon, 2019-09-02 at 16:18 +0000, Jonas Karlman wrote:
+[..]
+> 
+> > > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+> > > index 0d758e0c0f99..e2d01145ac4f 100644
+> > > --- a/drivers/staging/media/hantro/hantro_h264.c
+> > > +++ b/drivers/staging/media/hantro/hantro_h264.c
+> > > @@ -20,7 +20,7 @@
+> > >  /* Size with u32 units. */
+> > >  #define CABAC_INIT_BUFFER_SIZE		(460 * 2)
+> > >  #define POC_BUFFER_SIZE			34
+> > > -#define SCALING_LIST_SIZE		(6 * 16 + 6 * 64)
+> > > +#define SCALING_LIST_SIZE		(6 * 16 + 2 * 64)
+> > This changes the size of struct hantro_h264_dec_priv_tbl. Did this
+> > describe the auxiliary buffer format incorrectly before?
+> 
+> Based on RKMPP and Hantro SDK the HW expects the 8x8 inter/intra list for
+> Y-component to be located at indices 0 and 1, lists for Cr/Cb is only used for
+> 4:4:4 and HW only supports 4:0:0/4:2:0 if I am not mistaken. So the unused
+> extra 4 lists at the end of the auxiliary buffer seemed like a waste,
+> also RKMPP and Hantro SDK only seemed to allocate space for 2 lists.
+> 
+
+I think it would make a lot of sense to document what the hardware
+expects somewhere, perhaps as part of the struct hantro_h264_dec_priv_tbl
+documentation?
 
 Thanks,
-Martijn
+Ezequiel
 
-On Wed, Sep 4, 2019 at 9:49 PM Martijn Coenen <maco@android.com> wrote:
->
-> The loop driver assumes that if the passed in fd is opened with
-> O_DIRECT, the caller wants to use direct I/O on the loop device.
-> However, if the underlying block device has a different block size than
-> the loop block queue, direct I/O can't be enabled. Instead of requiring
-> userspace to manually change the blocksize and re-enable direct I/O,
-> just change the queue block sizes to match, as well as the io_min size.
->
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> ---
-> v2 changes:
-> - Fixed commit message to say the block size must match the underlying
->   block device, not the underlying filesystem.
-> - Also set physical blocksize and minimal io size correspondingly.
->
->  drivers/block/loop.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index ab7ca5989097a..b547182037af2 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -994,6 +994,16 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->         if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
->                 blk_queue_write_cache(lo->lo_queue, true, false);
->
-> +       if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
-> +               /* In case of direct I/O, match underlying block size */
-> +               unsigned short bsize = bdev_logical_block_size(
-> +                       inode->i_sb->s_bdev);
-> +
-> +               blk_queue_logical_block_size(lo->lo_queue, bsize);
-> +               blk_queue_physical_block_size(lo->lo_queue, bsize);
-> +               blk_queue_io_min(lo->lo_queue, bsize);
-> +       }
-> +
->         loop_update_rotational(lo);
->         loop_update_dio(lo);
->         set_capacity(lo->lo_disk, size);
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
