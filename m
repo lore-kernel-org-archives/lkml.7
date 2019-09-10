@@ -2,61 +2,63 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1810C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC430C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED1D20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A06208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uIct9Bvb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hN4dTuYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfIJNie (ORCPT
+        id S1732837AbfIJNig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:38:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43202 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfIJNid (ORCPT
+        Tue, 10 Sep 2019 09:38:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45590 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfIJNie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:38:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcT25076996;
-        Tue, 10 Sep 2019 08:38:29 -0500
+        Tue, 10 Sep 2019 09:38:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcWBf109914;
+        Tue, 10 Sep 2019 08:38:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568122709;
-        bh=EcMSu4m42xGnN8JKAeX2Bwa3OOPO+UWNpzBhOLNRiVE=;
-        h=From:To:CC:Subject:Date;
-        b=uIct9BvbpF+T3tBHyKU6q08ZPd5T2ZFxTFsJtQQ10otTjRgLHwKJoP16veDR2arYC
-         KRb7oLGWXcgEH0nTa932lTSmn/Op/DuuAXP52vvWJnJvjaDTCPKIv5THdEVXHw5CiT
-         R7RK6VzYTBPubSnPmj/7EraNVsScR1mZp55H9IeQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ADcTog097629
+        s=ti-com-17Q1; t=1568122712;
+        bh=YVo6iYdWALs+Xpp42Wo9fNLJ3/ExYwL0sdWFDjBnzhg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=hN4dTuYimJ8DhlcyIzLdo62tOV563GuW51gbUS8PITVh905RUmAvpVHKYh/RO0txG
+         Sf/Pl4pf7wJqL0ToLQjgnCx3hZ/bzjAUIcCroKkLk79mCT3P/E3K6vJg4y5sSJGua3
+         EJODGWKyxfnwM5f/+tgMwClRQWXcToKC1uEWebSM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ADcWMY101041
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Sep 2019 08:38:29 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 10 Sep 2019 08:38:32 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 08:38:29 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 08:38:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 08:38:29 -0500
+ Frontend Transport; Tue, 10 Sep 2019 08:38:31 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcSBd065480;
-        Tue, 10 Sep 2019 08:38:28 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADcVos119262;
+        Tue, 10 Sep 2019 08:38:31 -0500
 From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
 CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [RESEND,v2 0/2] leds: tlc591xx: switch to OF and managed API
-Date:   Tue, 10 Sep 2019 15:38:12 +0200
-Message-ID: <20190910133814.10275-1-jjhiblot@ti.com>
+Subject: [RESEND,v2 2/2] leds: tlc591xx: Use the OF version of the LED registration function
+Date:   Tue, 10 Sep 2019 15:38:14 +0200
+Message-ID: <20190910133814.10275-3-jjhiblot@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190910133814.10275-1-jjhiblot@ti.com>
+References: <20190910133814.10275-1-jjhiblot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -65,22 +67,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This mini-series updates the tlc591xx driver to use the managed API. The
-driver is also modified to pass the DT node to the LED core layer.
-The goal is to be able to the generic led-backlight [0] driver on top of
-it.
+The driver parses the device-tree to identify which LED should be handled.
+Since the information about the device node is known at this time, we can
+provide the LED core with it. It may be useful later.
 
-changes in v2:
-- fixed LED indexing. Previous version did not allow for holes: if n LEDs
-  were used, they had to be led(0) to led(n-1)
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/leds/leds-tlc591xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jean-Jacques Hiblot (2):
-  leds: tlc591xx: simplify driver by using the managed led API
-  leds: tlc591xx: Use the OF version of the LED registration function
-
- drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
- 1 file changed, 20 insertions(+), 59 deletions(-)
-
+diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+index 3d5a4b92f016..10764a62cb71 100644
+--- a/drivers/leds/leds-tlc591xx.c
++++ b/drivers/leds/leds-tlc591xx.c
+@@ -207,7 +207,7 @@ tlc591xx_probe(struct i2c_client *client,
+ 		led->led_no = reg;
+ 		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
+ 		led->ldev.max_brightness = LED_FULL;
+-		err = devm_led_classdev_register(dev, &led->ldev);
++		err = devm_of_led_classdev_register(dev, child, &led->ldev);
+ 		if (err < 0) {
+ 			dev_err(dev, "couldn't register LED %s\n",
+ 				led->ldev.name);
 -- 
 2.17.1
 
