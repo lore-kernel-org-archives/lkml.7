@@ -2,111 +2,187 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF77C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6531BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B323320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568115213;
-	bh=623fYzFI8D1TaKyw1isaYldtSwGOQuKm+nvPmA7M2/c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s/ysltLlhasUdnvV7yJ6TFV8v/rNVrSgrafIJaIvP7mr/1x2D9uIN03ZswRw4kcII
-	 6AjRrMDTl4JGZ9GN9ZoekG06p2K0wbs/VRoYz8O1Y/i0EIBSYMcOU494NTjBCeHxzz
-	 nHeZk2FOhZe6Fz1Um9vytMAnO7hTcpTcWzAWzVkc=
+	by mail.kernel.org (Postfix) with ESMTP id 3D78F20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfIJLdd (ORCPT
+        id S1730886AbfIJLe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:33:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35828 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfIJLdc (ORCPT
+        Tue, 10 Sep 2019 07:34:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40984 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfIJLe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:33:32 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q22so11476260ljj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/87kLUWhA8VGKwQ9ReDVfft5SDHkATRiA6uskomi3Do=;
-        b=VPec9JRv8Tfx9xEc4r84woloylMuGNHPDiClO6km+SMR4SlGOn2EWxH8paATQU4SYk
-         EdX0wUykyyflt8+WFj/VGKXZi/CVm+7AEyvwhPWJkWLBihBks9G66wETZBSNT1pzq08G
-         a35JZGXi1OKWxuE5XkZCOuOYghEjdjQryubYo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/87kLUWhA8VGKwQ9ReDVfft5SDHkATRiA6uskomi3Do=;
-        b=HXR42mrMEuAVLZAq3AV2c3jEfKG3b+2NP1e20JWgNQtMqDX1455iUOP97UAZBGwd7Z
-         YCrnTyM91/e2/rxKwdMi20j1kROm9yDw6v1jkF4TAiLkZVka/zIqZ8NnBvZXB+Wbgx0e
-         bgrV79EZWTf9dwi0RerMkh+ffYhLoueq3aL5m+J4261NWyDg+Gl/5Mn0O2RoEzbNY5p7
-         keUfJPvJ4WluuEjrkwKeVCXwxOf7p1PR1klXGaYcgxLD/ILtkRxn8HGRMimvRjT+NPNi
-         gfWA83sTqZAek0fxX0UOJolH8bElZzQ4hg9AfxOMxAyto/zucjQXBaISp4pmdU7WlPIx
-         BpBQ==
-X-Gm-Message-State: APjAAAUlX8TBc1N4cOEnLOVAsvY2xjzjUl3NFkie/abzto9fZQIQlh+b
-        nwXy7fU6d613gYsn1VHReIJKzXco5AZpsg==
-X-Google-Smtp-Source: APXvYqyCfbDrkZ6LtgxKyIfO8jKZ2l52ot97y3gcwHImV15QoPfUtUYUigXgJV+dj5U2ym0IXGi/vw==
-X-Received: by 2002:a2e:87c4:: with SMTP id v4mr20087846ljj.234.1568115209583;
-        Tue, 10 Sep 2019 04:33:29 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id x13sm3987210lfc.80.2019.09.10.04.33.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2019 04:33:28 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id y23so15713600ljn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:33:28 -0700 (PDT)
-X-Received: by 2002:a2e:3c14:: with SMTP id j20mr18756186lja.84.1568115208066;
- Tue, 10 Sep 2019 04:33:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc>
-In-Reply-To: <20190910042107.GA1517@darwi-home-pc>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 10 Sep 2019 12:33:12 +0100
-X-Gmail-Original-Message-ID: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
-Message-ID: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, zhangjs <zachary@baishancloud.com>,
-        linux-ext4@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+        Tue, 10 Sep 2019 07:34:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id C0BAF28B8CC
+Message-ID: <7c8f2bc85e00b8a6600e0ef938c1fdc358003888.camel@collabora.com>
+Subject: Re: [PATCH 03/12] media: hantro: Fix H264 motion vector buffer
+ offset
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 10 Sep 2019 12:34:20 +0100
+In-Reply-To: <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB40115337CD86C429EF24430CACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 5:21 AM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
->
-> The commit b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), [1]
-> which was merged in v5.3-rc1, *always* leads to a blocked boot on my
-> system due to low entropy.
+A few more comments...
 
-Exactly what is it that blocks on entropy? Nobody should do that
-during boot, because on some systems entropy is really really low
-(think flash memory with polling IO etc).
+On Sun, 2019-09-01 at 12:45 +0000, Jonas Karlman wrote:
+> A decoded 8-bit 4:2:0 frame need memory for up to 448 macroblocks
+> and is laid out in memory as follow:
+> 
+> +-------------------+
+> > Y-plane   256 MBs |
+> +-------------------+
+> > UV-plane  128 MBs |
+> +-------------------+
+> > MV buffer  64 MBs |
+> +-------------------+
+> 
+> The motion vector buffer offset is currently correct for 4:2:0 because
+> the extra space for motion vectors is overallocated with an extra 64 MBs.
+> 
+> Wrong offset for both destination and motion vector buffer are used
+> for the bottom field of field encoded content, wrong offset is
+> also used for 4:0:0 (monochrome) content.
+> 
+> Fix this by always setting the motion vector address to the expected
+> 384 MBs offset for 4:2:0 and 256 MBs offset for 4:0:0 content.
+> 
+> Also use correct destination and motion vector buffer offset
+> for the bottom field of field encoded content.
+> 
+> While at it also extend the check for 4:0:0 (monochrome) to include an
+> additional check for High Profile (100).
+> 
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  .../staging/media/hantro/hantro_g1_h264_dec.c | 33 +++++++++++--------
+>  1 file changed, 19 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 7ab534936843..159bd67e0a36 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -19,6 +19,9 @@
+>  #include "hantro_hw.h"
+>  #include "hantro_v4l2.h"
+>  
+> +#define MV_OFFSET_420	384
+> +#define MV_OFFSET_400	256
+> +
 
-That said, I would have expected that any PC gets plenty of entropy.
-Are you sure it's entropy that is blocking, and not perhaps some odd
-"forgot to unplug" situation?
+Instead of introducing these macros, I'd just use the macroblock width
+and height ones explicitly. This way it's more clear where is
+the code coming from.
 
-> Can this even be considered a user-space breakage? I'm honestly not
-> sure. On my modern RDRAND-capable x86, just running rng-tools rngd(8)
-> early-on fixes the problem. I'm not sure about the status of older
-> CPUs though.
+>  static void set_params(struct hantro_ctx *ctx)
+>  {
+>  	const struct hantro_h264_dec_ctrls *ctrls = &ctx->h264_dec.ctrls;
+> @@ -49,8 +52,8 @@ static void set_params(struct hantro_ctx *ctx)
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
+>  
+>  	/* Decoder control register 1. */
+> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
+> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
+> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(H264_MB_WIDTH(ctx->dst_fmt.width)) |
+> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(H264_MB_HEIGHT(ctx->dst_fmt.height)) |
 
-It's definitely breakage, although rather odd. I would have expected
-us to have other sources of entropy than just the disk. Did we stop
-doing low bits of TSC from timer interrupts etc?
+This is a nice fix, but unless I'm missing something it's unrelated to this patch.
+ 
+>  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
+>  
+> @@ -79,7 +82,7 @@ static void set_params(struct hantro_ctx *ctx)
+>  		reg |= G1_REG_DEC_CTRL4_CABAC_E;
+>  	if (sps->flags & V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE)
+>  		reg |= G1_REG_DEC_CTRL4_DIR_8X8_INFER_E;
+> -	if (sps->chroma_format_idc == 0)
+> +	if (sps->profile_idc >= 100 && sps->chroma_format_idc == 0)
+>  		reg |= G1_REG_DEC_CTRL4_BLACKWHITE_E;
+>  	if (pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED)
+>  		reg |= G1_REG_DEC_CTRL4_WEIGHT_PRED_E;
+> @@ -233,6 +236,7 @@ static void set_buffers(struct hantro_ctx *ctx)
+>  	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+>  	struct hantro_dev *vpu = ctx->dev;
+>  	dma_addr_t src_dma, dst_dma;
+> +	unsigned int offset = MV_OFFSET_420;
+>  
+>  	src_buf = hantro_get_src_buf(ctx);
+>  	dst_buf = hantro_get_dst_buf(ctx);
+> @@ -243,19 +247,20 @@ static void set_buffers(struct hantro_ctx *ctx)
+>  
+>  	/* Destination (decoded frame) buffer. */
+>  	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+> +	if (ctrls->slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> +		dst_dma += ALIGN(ctx->dst_fmt.width, H264_MB_DIM);
+>  	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
+>  
+> -	/* Higher profiles require DMV buffer appended to reference frames. */
+> -	if (ctrls->sps->profile_idc > 66) {
+> -		size_t pic_size = ctx->h264_dec.pic_size;
+> -		size_t mv_offset = round_up(pic_size, 8);
+> -
+> -		if (ctrls->slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> -			mv_offset += 32 * H264_MB_WIDTH(ctx->dst_fmt.width);
+> -
+> -		vdpu_write_relaxed(vpu, dst_dma + mv_offset,
+> -				   G1_REG_ADDR_DIR_MV);
+> -	}
+> +	/* Motion vector buffer is located after the decoded frame. */
+> +	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
 
-Ted, either way - ext4 IO patterns or random number entropy - this is
-your code. Comments?
+I would try to rework the code to avoid calling
+vb2_dma_contig_plane_dma_addr() again.
 
-                 Linus
+> +	if (ctrls->sps->profile_idc >= 100 && ctrls->sps->chroma_format_idc == 0)
+> +		offset = MV_OFFSET_400;
+> +	dst_dma += offset * H264_MB_WIDTH(ctx->dst_fmt.width) *
+> +		   H264_MB_HEIGHT(ctx->dst_fmt.height);
+
+Perhaps rename 'offset' to something different? Maybe bytes_per_mb
+or similar.
+
+> +	if (ctrls->slices[0].flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> +		dst_dma += 32 * H264_MB_WIDTH(ctx->dst_fmt.width) *
+> +			   H264_MB_HEIGHT(ctx->dst_fmt.height);
+
+While here, could you replace this 32 magic number with some
+meaningful macro?
+
+> +	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DIR_MV);
+>  
+>  	/* Auxiliary buffer prepared in hantro_g1_h264_dec_prepare_table(). */
+>  	vdpu_write_relaxed(vpu, ctx->h264_dec.priv.dma, G1_REG_ADDR_QTABLE);
+
+Thanks a lot,
+Ezequiel
+
