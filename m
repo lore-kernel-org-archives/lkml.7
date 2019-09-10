@@ -2,80 +2,75 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46133C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1B1C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158CA2081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568124073;
-	bh=0ExGHZcnS5acd9BsNp/vbksKCteH1/dCfEqmA1S1e14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yxvEfkDn5T22JeFRJ27Dr+0xsbPa8iHN5fGQOcnEgLz7KZxaAH8jlsPtvQS8BKIwj
-	 +rppbVJAiG+bdW1iWypIJYkziOtXHOEWMC3XKoSPb0SPlILf/lTwFDkiKJQA8ZNMes
-	 cU1eEINnEncluia45Kunnc6tG9N3qvRQtIL14q5c=
+	by mail.kernel.org (Postfix) with ESMTP id 9863A2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EVoil5Ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbfIJOBM (ORCPT
+        id S2387765AbfIJODR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:01:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57444 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726634AbfIJOBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:01:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60A59B71C;
-        Tue, 10 Sep 2019 14:01:09 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 16:01:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Message-ID: <20190910140107.GD2063@dhcp22.suse.cz>
-References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+        Tue, 10 Sep 2019 10:03:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38026 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbfIJODR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:03:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FqKfQsiBOTyZitqzXjJVEKWxZ/2yB1mlJyy6Xco5aA4=; b=EVoil5AkVpuXllPLDdeqTzo5Lb
+        f/N1jzf74Y1+whpcnUaski9yXT9ZydIZ2AZaSb2lXz7uiuATX2ZhC4SYhgI2UwqoDTndjPpsmRnj1
+        zlWSy5nwH1bpyYvESKm08uHPWiebWUaDCIrxYWIrkFwxcwJNiC0hUZ4C6HqUwUv/0qgk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i7gjY-0001NC-MR; Tue, 10 Sep 2019 16:03:04 +0200
+Date:   Tue, 10 Sep 2019 16:03:04 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     George McCollister <george.mccollister@gmail.com>
+Cc:     netdev@vger.kernel.org, Woojung Huh <woojung.huh@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marek Vasut <marex@denx.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/3] net: dsa: microchip: add KSZ9477 I2C
+ driver
+Message-ID: <20190910140304.GA4683@lunn.ch>
+References: <20190910131836.114058-1-george.mccollister@gmail.com>
+ <20190910131836.114058-2-george.mccollister@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910131836.114058-2-george.mccollister@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06-09-19 08:09:52, Toshiki Fukasawa wrote:
-[...]
-> @@ -5856,8 +5855,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->  		if (!altmap)
->  			return;
+Hi George
+
+> +KSZ_REGMAP_TABLE(ksz9477, not_used, 16, 0, 0);
+> +
+> @@ -294,6 +294,8 @@ static inline void ksz_pwrite32(struct ksz_device *dev, int port, int offset,
+>  #define KSZ_SPI_OP_RD		3
+>  #define KSZ_SPI_OP_WR		2
 >  
-> -		if (start_pfn == altmap->base_pfn)
-> -			start_pfn += altmap->reserve;
->  		end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
+> +#define swabnot_used(x)		0
 
-Who is actually setting reserve? This is is something really impossible
-to grep for in the kernle and git grep on altmap->reserve doesn't show
-anything AFAICS.
+> +
+>  #define KSZ_SPI_OP_FLAG_MASK(opcode, swp, regbits, regpad)		\
+>  	swab##swp((opcode) << ((regbits) + (regpad)))
 
-Btw. irrespective to this issue all three callers should be using
-pfn_to_online_page rather than pfn_to_page AFAICS. It doesn't really
-make sense to collect data for offline pfn ranges. They might be
-uninitialized even without zone device.
--- 
-Michal Hocko
-SUSE Labs
+There seems to be quite a lot of macro magic here which is not
+obvious. Can this be simplified or made more obvious?
+
+	 Andrew
