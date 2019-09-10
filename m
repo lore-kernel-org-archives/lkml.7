@@ -2,44 +2,45 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57DFC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B33EC49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7FC21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0220021670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C2o6PJo4"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DaRe0Ykg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388599AbfIJOld (ORCPT
+        id S2388484AbfIJOld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 10 Sep 2019 10:41:33 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42888 "EHLO
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42900 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732145AbfIJOlc (ORCPT
+        by vger.kernel.org with ESMTP id S1732106AbfIJOlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 10:41:32 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4F355C2B07;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 61E27C2B55;
         Tue, 10 Sep 2019 14:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568126491; bh=Tub4nxbeU4nreRv8Psll6baSDgasdHP9Jdi2H3FUuM0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=C2o6PJo4/Gf/7lp2JOLM+WEG1MfCOq73flr31Z7C9+k5tPz3ahpk3X+Jdiw3i1fn9
-         imLq+yTn/PJJlWrTdXHoTa/8aus7nXy5gjO+RrI80mGiwkgCCXASzT7qN2WCdjCmue
-         OfxO8I9cv2dqEbJBlSWxOiLrHu6RW1A/4GkyB+sQraKB0raSVjXXKSPSvCrFaIga4B
-         y9BuCLwa04cyaUqPgnY6ADYrMAWgEQzFctN1M50DadnTDXTeUkweuOTpiwzxUdd5pr
-         rfMt62re75WqJhRakCtdR1TKDAOFu4McgBvPV74oFBSIxBzoQgSa7LdCuXxvsneLn/
-         kptY6jHGqPW/g==
+        t=1568126491; bh=WXb3k5kCzoIqB0+MtuE+z0LkMBJLvWOptqMwOn7VXow=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=DaRe0YkgTbbaPL71rZVUpSLT35ofKxuwgfuk4lS6ziJpDwHFBg6hojL0xGWP0dSJf
+         Y4bEm+bCfQKysQaqSKPuRQvL73WiG3cECCtImeez0muWjLEztjnxGwrPtPpj5XHAii
+         h8newO+ZVZRf57KgmaTzECB1MLy4J1Va5H2tCN2yu2xAwydL4dvrjYgnoqy+PT8PyC
+         nOQ9rrAhuBZJJJQcsf0TxdxUjLs/hZ26vwYdRouWpiX1AH/Cs0+E9ycfsdmw4n+hJ1
+         TfV2YOO1LCjHf1g+QSMrKZV02FJv1E9PUQFE0EFeWMcBhZcqgGjmvSh7yKVUdvAfl/
+         ksZzbVHL62hzA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B7508A0057;
-        Tue, 10 Sep 2019 14:41:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 24FAAA006F;
+        Tue, 10 Sep 2019 14:41:30 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,18 +51,22 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/6] net: stmmac: Improvements for -next
-Date:   Tue, 10 Sep 2019 16:41:21 +0200
-Message-Id: <cover.1568126224.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 6/6] net: stmmac: ARP Offload for GMAC4+ Cores
+Date:   Tue, 10 Sep 2019 16:41:27 +0200
+Message-Id: <9423c111db514a03abfe6ee7f74052245a859d1f.1568126225.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
+References: <cover.1568126224.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1568126224.git.joabreu@synopsys.com>
+References: <cover.1568126224.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc patches for -next. It includes:
- - Two fixes for features in -next only
- - New features support for GMAC cores (which includes GMAC4 and GMAC5)
+Implement the ARP Offload feature in GMAC4 and GMAC5 cores.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -74,24 +79,102 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  3 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 19 +++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |  1 +
+ 3 files changed, 23 insertions(+)
 
-Jose Abreu (6):
-  net: stmmac: Prevent divide-by-zero
-  net: stmmac: Add VLAN HASH filtering support in GMAC4+
-  net: stmmac: xgmac: Reinitialize correctly a variable
-  net: stmmac: Add support for SA Insertion/Replacement in GMAC4+
-  net: stmmac: Add support for VLAN Insertion Offload in GMAC4+
-  net: stmmac: ARP Offload for GMAC4+ Cores
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       | 23 +++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  | 79 ++++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c | 43 ++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |  9 +++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |  5 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  4 +-
- 7 files changed, 162 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index e88dac1dd765..89a3420eba42 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -40,6 +40,7 @@
+ #define GMAC_HW_FEATURE3		0x00000128
+ #define GMAC_MDIO_ADDR			0x00000200
+ #define GMAC_MDIO_DATA			0x00000204
++#define GMAC_ARP_ADDR			0x00000210
+ #define GMAC_ADDR_HIGH(reg)		(0x300 + reg * 8)
+ #define GMAC_ADDR_LOW(reg)		(0x304 + reg * 8)
+ 
+@@ -165,6 +166,7 @@ enum power_event {
+ #define GMAC_DEBUG_RPESTS		BIT(0)
+ 
+ /* MAC config */
++#define GMAC_CONFIG_ARPEN		BIT(31)
+ #define GMAC_CONFIG_SARC		GENMASK(30, 28)
+ #define GMAC_CONFIG_SARC_SHIFT		28
+ #define GMAC_CONFIG_IPC			BIT(27)
+@@ -188,6 +190,7 @@ enum power_event {
+ #define GMAC_HW_FEAT_TXCOSEL		BIT(14)
+ #define GMAC_HW_FEAT_EEESEL		BIT(13)
+ #define GMAC_HW_FEAT_TSSEL		BIT(12)
++#define GMAC_HW_FEAT_ARPOFFSEL		BIT(9)
+ #define GMAC_HW_FEAT_MMCSEL		BIT(8)
+ #define GMAC_HW_FEAT_MGKSEL		BIT(7)
+ #define GMAC_HW_FEAT_RWKSEL		BIT(6)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index a99effe61325..9b4b5f69fc02 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -782,6 +782,22 @@ static void dwmac4_enable_vlan(struct mac_device_info *hw, u32 type)
+ 	writel(value, ioaddr + GMAC_VLAN_INCL);
+ }
+ 
++static void dwmac4_set_arp_offload(struct mac_device_info *hw, bool en,
++				   u32 addr)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	writel(addr, ioaddr + GMAC_ARP_ADDR);
++
++	value = readl(ioaddr + GMAC_CONFIG);
++	if (en)
++		value |= GMAC_CONFIG_ARPEN;
++	else
++		value &= ~GMAC_CONFIG_ARPEN;
++	writel(value, ioaddr + GMAC_CONFIG);
++}
++
+ const struct stmmac_ops dwmac4_ops = {
+ 	.core_init = dwmac4_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -815,6 +831,7 @@ const struct stmmac_ops dwmac4_ops = {
+ 	.update_vlan_hash = dwmac4_update_vlan_hash,
+ 	.sarc_configure = dwmac4_sarc_configure,
+ 	.enable_vlan = dwmac4_enable_vlan,
++	.set_arp_offload = dwmac4_set_arp_offload,
+ };
+ 
+ const struct stmmac_ops dwmac410_ops = {
+@@ -850,6 +867,7 @@ const struct stmmac_ops dwmac410_ops = {
+ 	.update_vlan_hash = dwmac4_update_vlan_hash,
+ 	.sarc_configure = dwmac4_sarc_configure,
+ 	.enable_vlan = dwmac4_enable_vlan,
++	.set_arp_offload = dwmac4_set_arp_offload,
+ };
+ 
+ const struct stmmac_ops dwmac510_ops = {
+@@ -890,6 +908,7 @@ const struct stmmac_ops dwmac510_ops = {
+ 	.update_vlan_hash = dwmac4_update_vlan_hash,
+ 	.sarc_configure = dwmac4_sarc_configure,
+ 	.enable_vlan = dwmac4_enable_vlan,
++	.set_arp_offload = dwmac4_set_arp_offload,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+index f3ca0236450d..68c157979b94 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+@@ -349,6 +349,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->tx_coe = (hw_cap & GMAC_HW_FEAT_TXCOSEL) >> 14;
+ 	dma_cap->rx_coe =  (hw_cap & GMAC_HW_FEAT_RXCOESEL) >> 16;
+ 	dma_cap->vlins = (hw_cap & GMAC_HW_FEAT_SAVLANINS) >> 27;
++	dma_cap->arpoffsel = (hw_cap & GMAC_HW_FEAT_ARPOFFSEL) >> 9;
+ 
+ 	/* MAC HW feature1 */
+ 	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
 -- 
 2.7.4
 
