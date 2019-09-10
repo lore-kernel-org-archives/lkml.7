@@ -2,275 +2,297 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBBAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3D216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568104428;
-	bh=2uR4nxIjqM7SnG1v4kNKhpb+sUD9OZx60ycRGNAxrtw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AmBzDodI5lC7LFw/y6RgQ3iImHUZqkEPhv4EutCD8rul0hh/LOs3Tw2V661r20O2b
-	 B1y6FVxLsmMnVMc2+HLXZrYWKLikMd9MeY2y5W34TSkek8SXomrYj1dSPDkJlhccg4
-	 WAVBEDRtLKoo1s5MQZHFwpEuypL85WOyucJou2Lo=
+	by mail.kernel.org (Postfix) with ESMTP id 7495D218AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Nx2EJRFk";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LMMYy7EL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfIJIdr (ORCPT
+        id S1730840AbfIJIfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfIJIdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:33:47 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B64B208E4;
-        Tue, 10 Sep 2019 08:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568104425;
-        bh=2uR4nxIjqM7SnG1v4kNKhpb+sUD9OZx60ycRGNAxrtw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zkyH+aH6JWcdKV1TOV/nja1ecvfl3lLTGstOD4HAsuDECS9uvu2lq0Mo86BskhHno
-         6xZgbjmFxR34hSXGNYrU+2Ceq/0lw2Fa9mpvAFfL3RrD5P2Qq3s48Yrdlu/OaWC8mn
-         T67jhtdbaZZARc6Ke8v1Bp13nbhBnvrg85LB0B58=
-Received: by mail-qk1-f169.google.com with SMTP id h126so8436025qke.10;
-        Tue, 10 Sep 2019 01:33:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWXarIKGvAN7A+NqGljrBO0Y/xPoRo9ha840Y02h2tgo3A0Av6z
-        kPuyNbcpgu2+okKleQqH45mHl+1/MVGOKKLP2A==
-X-Google-Smtp-Source: APXvYqxLh1CJWwOy8vR96z3k42d/dcFGmobWEBtEKhWU5BCP7PWz2tSD9v3y460G6fz1mUNTWgCDfkxzMTBNwpKCY50=
-X-Received: by 2002:a37:8905:: with SMTP id l5mr28038475qkd.152.1568104424368;
- Tue, 10 Sep 2019 01:33:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190909183436.9045-1-krzk@kernel.org>
-In-Reply-To: <20190909183436.9045-1-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 10 Sep 2019 09:33:32 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqJpZ-64Y7p1w5ctMwbjdftQPLjeh3XRHkBeS6tfYY0a+A@mail.gmail.com>
-Message-ID: <CAL_JsqJpZ-64Y7p1w5ctMwbjdftQPLjeh3XRHkBeS6tfYY0a+A@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: Convert PWM bindings to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        Tue, 10 Sep 2019 04:35:20 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:34316 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730029AbfIJIfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:35:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1568104515; x=1599640515;
+  h=from:to:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=yhkFE1EA/FktOcIhJfm+w4r26LFbKwyv5JLTqiAWU0U=;
+  b=Nx2EJRFkyFPskciX447ht0fzJhmeZB5i505+PQVyRW4rVIb3Kt6BOvqp
+   /84cbr+V4D7vvRSoL47MnTE8kb4kOlNBk5pVgvmZelzmwxd8kU/xeUnPs
+   stl10As9NUrfgCKNLu++Y7TKfQDmrxvhsM1Ib0VaXPWr7CsOrv2ouLD3u
+   AjWF3Byh4EhZ3BgQLZ2yKu+aoj1Vo/+pMloiMOrkMHyRB6NHMdPWDSfmt
+   2a/E5PqySvrVe7MqPgkakdGjJaoT13yPDCTh+jo0i84oG/TMqHTI/iESc
+   19cD9zudw2gzS3x/x21xBgjegtNyA0g91hVFgK93kZVqaHcybhitgYQ5z
+   w==;
+IronPort-SDR: 9KwW4IxSAcekiHh/wqpufxhTr1rUbnFD0pStpdMmV1/ZTNS4JLg58+V8FGqL21MTqZ1+/1RsQP
+ hZQm50d0qBc+VjaJVdUt/F5K15fXPQt6NDpyb1/+gLMNLsUc9qFjDyW7TuQERLleZ8RqWznN6a
+ SXUzCMXnF6rdbBOjAkziHFG0paAgJgO7QHefURBbl/f3nLP4bRgQtpnIepzwHj28H8iElLThNi
+ 9IwNwrVLSsjppZs2RxK0dPH0FTRcs0R2ddzVp9/rh0Q8oB8vXbu6UW7AILxPzk/lI3p5kFpls3
+ 7NE=
+X-IronPort-AV: E=Sophos;i="5.64,489,1559491200"; 
+   d="scan'208";a="224666404"
+Received: from mail-bn3nam01lp2055.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.55])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Sep 2019 16:35:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EumKfg9zuylrrJhoKXGB8JwCpbTbBTsRX3C930cJWJBJf2DwR3ID9K2G0p7YQi9GYU6zuhrYOx1SnmHMwJ8Qr96RXJhENDNVUgd9sczSofGfUUdw5vYpzSfLSry9cIyRDYF59RcglH3dMOKRECwXON/NBFIBrAVvtXUHjzy7E5v/RuCbnJpQcV92slg7axShdRK3cfZO1CoT3mKcdiZZbdV6ZaGYWQtqn0XUoEFkwuDgAgi5/DmzbHHJx5HERclzVvSv8RI69TfM93oMxNMED3JqYXTjrTf1GefQTWL/vu8k6FyleYFjvN4jYibl0V3tvqWy7p2FbaT5CdobotuwOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/dtCzAgHqHaMqkFXl6TEOQT8DQCpybZCbkMfBpd9GGM=;
+ b=kBevn0KQQEReLWPoCMurTMA6nSOJD664cpiKdomQdlze2ndcuchKZa0MFZffGtnQEzEQXGKj73GtuMVFlH8XOhb8FoEW3/UJ+Vae+eUxDL+kB2UjMsdeAVzmds1W2A/jparwp+NnUBj8PXR7keHkTLGgT2YXJLc2C71a6W0cFHngGu8q3J+CcPlOeWLAwlvCFlKullHUV2Cb1O4MYRnSMb2448jYQJ2sURlk+qiQzKBY/dFA72VtTMWHTIFTsc9g9yRiWARWoX9G0zqQ2+l6Nh/XFiXrqNaCnSnRXHh8ZBzpehingS+CxwnUfHTo3hEYYmLmCBLqYDoM4Z7p6axOBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/dtCzAgHqHaMqkFXl6TEOQT8DQCpybZCbkMfBpd9GGM=;
+ b=LMMYy7ELwFHUxVJriPyLmGrnBXbaCUaaVsYtpy9nvmaONl96iIKhkVI9O6jK+u9HSH1OH32XGNb7NqqQBn3+hH8/1fbSn7ufuLFgynKfGzQW0Ttg3LRQD+2B0z/2EZBtHtvTLwp5LJzKJCgdZ2DAo+TVbP7VWMoZJj0dZsarp3w=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB3893.namprd04.prod.outlook.com (52.135.214.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.18; Tue, 10 Sep 2019 08:35:08 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::50cc:80d2:5c1b:3a10]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::50cc:80d2:5c1b:3a10%5]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
+ 08:35:08 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Mike Christie <mchristi@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+Thread-Topic: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+Thread-Index: AQHVZyuWq/Op5bBFkEiasB8XvOZqww==
+Date:   Tue, 10 Sep 2019 08:35:08 +0000
+Message-ID: <BYAPR04MB5816DABF3C5071D13D823990E7B60@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190909162804.5694-1-mchristi@redhat.com>
+ <5D76995B.1010507@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aa997ff8-2028-4968-e5e7-08d735c9c9ab
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB3893;
+x-ms-traffictypediagnostic: BYAPR04MB3893:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR04MB389329007F9BC733B4EA9E42E7B60@BYAPR04MB3893.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01565FED4C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(189003)(199004)(15374003)(14444005)(186003)(8936002)(81166006)(25786009)(6116002)(91956017)(76116006)(8676002)(6506007)(53546011)(52536014)(478600001)(966005)(7736002)(7696005)(256004)(81156014)(66066001)(86362001)(26005)(102836004)(64756008)(66446008)(66556008)(66476007)(66946007)(476003)(446003)(99286004)(229853002)(110136005)(53936002)(3846002)(74316002)(486006)(6306002)(305945005)(55016002)(6246003)(316002)(2201001)(2501003)(14454004)(5660300002)(71200400001)(71190400001)(2906002)(6436002)(76176011)(33656002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB3893;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PmizGDm9W1coGXbuwZBJ/k9NmfmIVo8gFuhwpH4+Qm0R1+ZGbkHSno+4nc8veG0XUdDIjC3SfjP7SvzWL90ITo0ffHY1vRUo2bpQjtfPylljEAWhPdOypbkRruRKJbSBOQOIQUBuWyRHE5z7TIHNKboruH2vqSJ+T/usM5VjNRqLu5zX/cSzTwSpcOXKjC3m0QOXiDZNXuCnFhIFIlkdeRueYZjiDIT7k5rk6cL+ZUnGLSXTWJkQMRVffT8KlS0LtF8uGiIuD6hza4rRnbwdkJfIjDlvjSEOEOyESKeDPNozRdlFZc4av9bbA8ryK9MvMI9hpd+NaQpVwJK35fRjGSB7brgO2rfInxASe53bBQP4hMG3fT6q3kRCbW/iQouIL+usiIXph2oQiAMtiqM/WXrfC/IrkJFP5aQ7p5WyN+Y=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa997ff8-2028-4968-e5e7-08d735c9c9ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 08:35:08.2260
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /uVJbG/TZ6odIlFgIRBkk1+ehfkpL8D0z4HSpnYc+I8qpwmTYseinKoxaMAskfg0mDe+6PYVqjK/iVp2aAldFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3893
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 7:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert generic PWM bindings to DT schema format using json-schema.  The
-> consumer bindings are split to separate file.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  .../devicetree/bindings/clock/pwm-clock.txt   |  2 +-
->  .../bindings/display/bridge/ti,sn65dsi86.txt  |  2 +-
->  .../devicetree/bindings/display/ssd1307fb.txt |  2 +-
->  .../bindings/leds/backlight/pwm-backlight.txt |  2 +-
->  .../devicetree/bindings/leds/leds-pwm.txt     |  2 +-
->  .../devicetree/bindings/mfd/max77693.txt      |  2 +-
->  .../bindings/pwm/atmel-hlcdc-pwm.txt          |  2 +-
->  .../devicetree/bindings/pwm/atmel-pwm.txt     |  2 +-
->  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt |  2 +-
->  .../bindings/pwm/brcm,bcm7038-pwm.txt         |  2 +-
->  .../bindings/pwm/brcm,iproc-pwm.txt           |  2 +-
->  .../devicetree/bindings/pwm/brcm,kona-pwm.txt |  2 +-
->  .../devicetree/bindings/pwm/img-pwm.txt       |  2 +-
->  .../devicetree/bindings/pwm/imx-pwm.txt       |  2 +-
->  .../devicetree/bindings/pwm/imx-tpm-pwm.txt   |  2 +-
->  .../bindings/pwm/lpc1850-sct-pwm.txt          |  2 +-
->  .../devicetree/bindings/pwm/mxs-pwm.txt       |  2 +-
->  .../bindings/pwm/nvidia,tegra20-pwm.txt       |  2 +-
->  .../bindings/pwm/nxp,pca9685-pwm.txt          |  2 +-
->  .../devicetree/bindings/pwm/pwm-bcm2835.txt   |  2 +-
->  .../devicetree/bindings/pwm/pwm-berlin.txt    |  2 +-
->  .../bindings/pwm/pwm-consumers.yaml           | 76 +++++++++++++++++++
->  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt   |  2 +-
->  .../devicetree/bindings/pwm/pwm-hibvt.txt     |  2 +-
->  .../devicetree/bindings/pwm/pwm-lp3943.txt    |  2 +-
->  .../devicetree/bindings/pwm/pwm-mediatek.txt  |  2 +-
->  .../devicetree/bindings/pwm/pwm-meson.txt     |  2 +-
->  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  |  2 +-
->  .../bindings/pwm/pwm-omap-dmtimer.txt         |  2 +-
->  .../devicetree/bindings/pwm/pwm-rockchip.txt  |  2 +-
->  .../devicetree/bindings/pwm/pwm-sifive.txt    |  2 +-
->  .../devicetree/bindings/pwm/pwm-stm32-lp.txt  |  2 +-
->  .../devicetree/bindings/pwm/pwm-stm32.txt     |  2 +-
->  .../devicetree/bindings/pwm/pwm-tiecap.txt    |  2 +-
->  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt  |  2 +-
->  .../devicetree/bindings/pwm/pwm-zx.txt        |  2 +-
->  Documentation/devicetree/bindings/pwm/pwm.txt | 69 -----------------
->  .../devicetree/bindings/pwm/pwm.yaml          | 30 ++++++++
->  .../bindings/pwm/renesas,pwm-rcar.txt         |  2 +-
->  .../bindings/pwm/renesas,tpu-pwm.txt          |  4 +-
->  .../devicetree/bindings/pwm/spear-pwm.txt     |  2 +-
->  .../devicetree/bindings/pwm/st,stmpe-pwm.txt  |  2 +-
->  .../devicetree/bindings/pwm/ti,twl-pwm.txt    |  2 +-
->  .../devicetree/bindings/pwm/ti,twl-pwmled.txt |  2 +-
->  .../devicetree/bindings/pwm/vt8500-pwm.txt    |  2 +-
->  .../bindings/regulator/pwm-regulator.txt      |  2 +-
->  .../devicetree/bindings/timer/ingenic,tcu.txt |  2 +-
-
-We've been leaving the .txt file with a reference to the schema file
-to avoid doing all the updates. But as you've done it already, that's
-good.
-
->  47 files changed, 151 insertions(+), 114 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm.yaml
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
-> new file mode 100644
-> index 000000000000..39c844fe6338
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
-
-We already have a PWM consumer schema in dt-schema repository. It
-doesn't have the descriptions because we need permission to relicense.
-My aim is to have all common schema in the dt-schema repo, but we have
-a mixture because of needing to relicense.
-
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-consumers.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Specifying PWM information for devices
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +description: |
-> +  PWM properties should be named "pwms". The exact meaning of each pwms
-> +  property must be documented in the device tree binding for each device.
-> +  An optional property "pwm-names" may contain a list of strings to label
-> +  each of the PWM devices listed in the "pwms" property. If no "pwm-names"
-> +  property is given, the name of the user node will be used as fallback.
-> +
-> +  Drivers for devices that use more than a single PWM device can use the
-> +  "pwm-names" property to map the name of the PWM device requested by the
-> +  pwm_get() call to an index into the list given by the "pwms" property.
-> +
-> +properties:
-> +  pwms:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: |
-> +      Phandle to PWM controller node and pwm-specifier (controller specific).
-> +      pwm-specifier typically encodes the chip-relative PWM number and the PWM
-> +      period in nanoseconds.
-> +      Optionally, the pwm-specifier can encode a number of flags (defined in
-> +      <dt-bindings/pwm/pwm.h>) in a third cell:
-> +        - PWM_POLARITY_INVERTED: invert the PWM signal polarity
-> +
-> +  pwm-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description:
-> +      A list of strings to label each of the PWM devices listed in the "pwms"
-> +      property. If no "pwm-names" property is given, the name of the user node
-> +      will be used as fallback.
-> +
-> +required:
-> +  - pwms
-
-Doing this means every consumer has to include this file where as I do
-'select: true' some every occurrence of these properties is checked.
-We're generally only including other schema on the provider side.
-
-> +
-> +dependencies:
-> +  pwm-names: [ pwms ]
-> +
-> +examples:
-> +  - |
-> +    // The following example could be used to describe a PWM-based
-> +    // backlight device:
-> +
-> +    pwm: pwm {
-> +      #pwm-cells = <2>;
-> +    };
-> +
-> +    bl: backlight {
-> +      pwms = <&pwm 0 5000000>;
-> +      pwm-names = "backlight";
-> +    };
-> +
-> +    // Note that in the example above, specifying the "pwm-names" is redundant
-> +    // because the name "backlight" would be used as fallback anyway.
-> +
-> +  - |
-> +    // Example with optional PWM specifier for inverse polarity
-> +
-> +    #include <dt-bindings/pwm/pwm.h>
-> +
-> +    pwm2: pwm {
-> +      #pwm-cells = <3>;
-> +    };
-> +
-> +    backlight {
-> +      pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
-> +      pwm-names = "backlight";
-> +    };
-
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
-> new file mode 100644
-> index 000000000000..5d8029f11ccc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PWM controllers (providers)
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^pwm(@.*)?$"
-
-Copy the pattern for spi. We allow for 'pwm-[0-9]' for cases like GPIO PWMs.
-
-> +
-> +  "#pwm-cells":
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-You don't actually need to define the type as we already have for '#.*-cells'
-
-> +    description:
-> +      Number of cells in a PWM specifier.
-> +
-> +required:
-> +  - "#pwm-cells"
-> +
-> +examples:
-> +  - |
-> +    pwm: pwm@7000a000 {
-> +      compatible = "nvidia,tegra20-pwm";
-> +      reg = <0x7000a000 0x100>;
-> +      #pwm-cells = <2>;
-> +    };
+Mike,=0A=
+=0A=
+On 2019/09/09 19:26, Mike Christie wrote:=0A=
+> Forgot to cc linux-mm.=0A=
+> =0A=
+> On 09/09/2019 11:28 AM, Mike Christie wrote:=0A=
+>> There are several storage drivers like dm-multipath, iscsi, and nbd that=
+=0A=
+>> have userspace components that can run in the IO path. For example,=0A=
+>> iscsi and nbd's userspace deamons may need to recreate a socket and/or=
+=0A=
+>> send IO on it, and dm-multipath's daemon multipathd may need to send IO=
+=0A=
+>> to figure out the state of paths and re-set them up.=0A=
+>>=0A=
+>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the=0A=
+>> memalloc_*_save/restore functions to control the allocation behavior,=0A=
+>> but for userspace we would end up hitting a allocation that ended up=0A=
+>> writing data back to the same device we are trying to allocate for.=0A=
+>>=0A=
+>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags=0A=
+>> through procfs. It currently only supports PF_MEMALLOC_NOIO, but=0A=
+>> depending on what other drivers and userspace file systems need, for=0A=
+>> the final version I can add the other flags for that file or do a file=
+=0A=
+>> per flag or just do a memalloc_noio file.=0A=
+=0A=
+Awesome. That probably will be the perfect solution for the problem we hit =
+with=0A=
+tcmu-runner a while back (please see this thread:=0A=
+https://www.spinics.net/lists/linux-fsdevel/msg148912.html).=0A=
+=0A=
+I think we definitely need nofs as well for dealing with cases where the ba=
+ckend=0A=
+storage for the user daemon is a file.=0A=
+=0A=
+I will give this patch a try as soon as possible (I am traveling currently)=
+.=0A=
+=0A=
+Best regards.=0A=
+=0A=
+>>=0A=
+>> Signed-off-by: Mike Christie <mchristi@redhat.com>=0A=
+>> ---=0A=
+>>  Documentation/filesystems/proc.txt |  6 ++++=0A=
+>>  fs/proc/base.c                     | 53 ++++++++++++++++++++++++++++++=
+=0A=
+>>  2 files changed, 59 insertions(+)=0A=
+>>=0A=
+>> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesyst=
+ems/proc.txt=0A=
+>> index 99ca040e3f90..b5456a61a013 100644=0A=
+>> --- a/Documentation/filesystems/proc.txt=0A=
+>> +++ b/Documentation/filesystems/proc.txt=0A=
+>> @@ -46,6 +46,7 @@ Table of Contents=0A=
+>>    3.10  /proc/<pid>/timerslack_ns - Task timerslack value=0A=
+>>    3.11	/proc/<pid>/patch_state - Livepatch patch operation state=0A=
+>>    3.12	/proc/<pid>/arch_status - Task architecture specific information=
+=0A=
+>> +  3.13  /proc/<pid>/memalloc - Control task's memory reclaim behavior=
+=0A=
+>>  =0A=
+>>    4	Configuring procfs=0A=
+>>    4.1	Mount options=0A=
+>> @@ -1980,6 +1981,11 @@ Example=0A=
+>>   $ cat /proc/6753/arch_status=0A=
+>>   AVX512_elapsed_ms:      8=0A=
+>>  =0A=
+>> +3.13 /proc/<pid>/memalloc - Control task's memory reclaim behavior=0A=
+>> +-----------------------------------------------------------------------=
+=0A=
+>> +A value of "noio" indicates that when a task allocates memory it will n=
+ot=0A=
+>> +reclaim memory that requires starting phisical IO.=0A=
+>> +=0A=
+>>  Description=0A=
+>>  -----------=0A=
+>>  =0A=
+>> diff --git a/fs/proc/base.c b/fs/proc/base.c=0A=
+>> index ebea9501afb8..c4faa3464602 100644=0A=
+>> --- a/fs/proc/base.c=0A=
+>> +++ b/fs/proc/base.c=0A=
+>> @@ -1223,6 +1223,57 @@ static const struct file_operations proc_oom_scor=
+e_adj_operations =3D {=0A=
+>>  	.llseek		=3D default_llseek,=0A=
+>>  };=0A=
+>>  =0A=
+>> +static ssize_t memalloc_read(struct file *file, char __user *buf, size_=
+t count,=0A=
+>> +			     loff_t *ppos)=0A=
+>> +{=0A=
+>> +	struct task_struct *task;=0A=
+>> +	ssize_t rc =3D 0;=0A=
+>> +=0A=
+>> +	task =3D get_proc_task(file_inode(file));=0A=
+>> +	if (!task)=0A=
+>> +		return -ESRCH;=0A=
+>> +=0A=
+>> +	if (task->flags & PF_MEMALLOC_NOIO)=0A=
+>> +		rc =3D simple_read_from_buffer(buf, count, ppos, "noio", 4);=0A=
+>> +	put_task_struct(task);=0A=
+>> +	return rc;=0A=
+>> +}=0A=
+>> +=0A=
+>> +static ssize_t memalloc_write(struct file *file, const char __user *buf=
+,=0A=
+>> +			      size_t count, loff_t *ppos)=0A=
+>> +{=0A=
+>> +	struct task_struct *task;=0A=
+>> +	char buffer[5];=0A=
+>> +	int rc =3D count;=0A=
+>> +=0A=
+>> +	memset(buffer, 0, sizeof(buffer));=0A=
+>> +	if (count !=3D sizeof(buffer) - 1)=0A=
+>> +		return -EINVAL;=0A=
+>> +=0A=
+>> +	if (copy_from_user(buffer, buf, count))=0A=
+>> +		return -EFAULT;=0A=
+>> +	buffer[count] =3D '\0';=0A=
+>> +=0A=
+>> +	task =3D get_proc_task(file_inode(file));=0A=
+>> +	if (!task)=0A=
+>> +		return -ESRCH;=0A=
+>> +=0A=
+>> +	if (!strcmp(buffer, "noio")) {=0A=
+>> +		task->flags |=3D PF_MEMALLOC_NOIO;=0A=
+>> +	} else {=0A=
+>> +		rc =3D -EINVAL;=0A=
+>> +	}=0A=
+>> +=0A=
+>> +	put_task_struct(task);=0A=
+>> +	return rc;=0A=
+>> +}=0A=
+>> +=0A=
+>> +static const struct file_operations proc_memalloc_operations =3D {=0A=
+>> +	.read		=3D memalloc_read,=0A=
+>> +	.write		=3D memalloc_write,=0A=
+>> +	.llseek		=3D default_llseek,=0A=
+>> +};=0A=
+>> +=0A=
+>>  #ifdef CONFIG_AUDIT=0A=
+>>  #define TMPBUFLEN 11=0A=
+>>  static ssize_t proc_loginuid_read(struct file * file, char __user * buf=
+,=0A=
+>> @@ -3097,6 +3148,7 @@ static const struct pid_entry tgid_base_stuff[] =
+=3D {=0A=
+>>  #ifdef CONFIG_PROC_PID_ARCH_STATUS=0A=
+>>  	ONE("arch_status", S_IRUGO, proc_pid_arch_status),=0A=
+>>  #endif=0A=
+>> +	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),=0A=
+>>  };=0A=
+>>  =0A=
+>>  static int proc_tgid_base_readdir(struct file *file, struct dir_context=
+ *ctx)=0A=
+>> @@ -3487,6 +3539,7 @@ static const struct pid_entry tid_base_stuff[] =3D=
+ {=0A=
+>>  #ifdef CONFIG_PROC_PID_ARCH_STATUS=0A=
+>>  	ONE("arch_status", S_IRUGO, proc_pid_arch_status),=0A=
+>>  #endif=0A=
+>> +	REG("memalloc", S_IRUGO|S_IWUSR, proc_memalloc_operations),=0A=
+>>  };=0A=
+>>  =0A=
+>>  static int proc_tid_base_readdir(struct file *file, struct dir_context =
+*ctx)=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
