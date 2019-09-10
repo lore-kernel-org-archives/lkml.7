@@ -2,100 +2,111 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277FDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00440C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BCE2089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BDA2089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzUouiro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393931AbfIJPe1 (ORCPT
+        id S2393959AbfIJPe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:34:27 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54427 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728417AbfIJPe0 (ORCPT
+        Tue, 10 Sep 2019 11:34:28 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46493 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfIJPe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Sep 2019 11:34:26 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6A030240002;
-        Tue, 10 Sep 2019 15:34:23 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 0/2] drm: LogiCVC display controller support
-Date:   Tue, 10 Sep 2019 17:34:07 +0200
-Message-Id: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.23.0
+Received: by mail-ed1-f65.google.com with SMTP id i8so17479835edn.13;
+        Tue, 10 Sep 2019 08:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b4wnBlpeFgpGxUVqzfbdvP1S+Q+RawN3p7bTgqnZia8=;
+        b=tzUouiroRdJjO/r28/634yrQ4C8pWz/+BOZ+mEtUOK3kpyHqIRhDkUnyEQ71dGDzZd
+         eV9r1PRFyP8IHgUbl9FqShjbwycRxAB0fwLv2qC7bme4DyOSOsM8HR2u8x2sI4UPumtG
+         c0OlWiSyl2uwiL7uTXcNcWtQwoZ4hvX3jgw3VhaUOJjf3FlZgjIN68zIQso9eaGkmtTP
+         /3GmXxjh0Fn7jkEanuaNrTfCjI+I3RqMMoKmq7qrrJjrlZg7YmxLdzpWZA4BjA4ivqxL
+         s83bDaQOuAHvVXsmXCo9hHqsCcSA1CafKyd4S0M5LZYrxfey+98rQGYF5KXA6PmW3vyX
+         foKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b4wnBlpeFgpGxUVqzfbdvP1S+Q+RawN3p7bTgqnZia8=;
+        b=FJtAhFnmwwmAHI9SNw9mu+kDf7juD7dKi2tHcfZKmx5NjDaZfahCaHs+3nOkh57cNP
+         YDxSnH3s9eJ8Z6XfiJmK0nO31yZ12G3d4Sf2VvpD23b031PW69529hPRVyorOA7jklrY
+         mxpOp3Oz61dEnUZrNuplQUfipL9zYln50tKM7XKJO+MLHpZo0MoFyxPyeZVN3fHZrUQf
+         EO7Zlz+Vt+vNvASeaKzTwlJXQXrJDHlE5Zh8v+8Fselh03R8EJ+Iukvg6+YSrevaezFB
+         qEqwIs5aAl5djZKtSaT0OJRmCCMcS1pVUPjAvaVSAS1O1HdjwG8wvAH2mMEH11ixVi3O
+         JhYg==
+X-Gm-Message-State: APjAAAXcGJJUn77kSh8Exx2ixkwXW266FzDKKurm5byxFKlykduivAtD
+        J6Xa9xfPXo63yikLCZ4fOoGSDFKsJ+lObUwu/KY=
+X-Google-Smtp-Source: APXvYqyyx6xWTkb16aLchOZtzOWws5iFVpGXm89mtst/lZo1kpZ1sLfKtvPombMjz1ZlKI1NrttKYsabF6z8hwrEYtQ=
+X-Received: by 2002:a17:906:a3d5:: with SMTP id ca21mr25922239ejb.258.1568129664829;
+ Tue, 10 Sep 2019 08:34:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190906214409.26677-1-robdclark@gmail.com> <20190906214409.26677-2-robdclark@gmail.com>
+ <20190910081415.GB3247@8bytes.org>
+In-Reply-To: <20190910081415.GB3247@8bytes.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 10 Sep 2019 08:34:13 -0700
+Message-ID: <CAF6AEGsFmuO5M_RWm-RjDT_F_1Z=MLYmNqRXqFNDR7aUoPaMdg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] iommu: add support for drivers that manage iommu explicitly
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces support for the LogiCVC display controller.
-The controller is a bit unusual since it is usually loaded as
-programmable logic on Xilinx FPGAs or Zynq-7000 SoCs.
-More details are presented on the main commit for the driver.
+On Tue, Sep 10, 2019 at 1:14 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> On Fri, Sep 06, 2019 at 02:44:01PM -0700, Rob Clark wrote:
+> > @@ -674,7 +674,7 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+> >
+> >       mutex_lock(&group->mutex);
+> >       list_add_tail(&device->list, &group->devices);
+> > -     if (group->domain)
+> > +     if (group->domain && !(dev->driver && dev->driver->driver_manages_iommu))
+>
+> Hmm, this code usually runs at enumeration time when no driver is
+> attached to the device. Actually it would be pretty dangerous when this
+> code runs while a driver is attached to the device. How does that change
+> make things work for you?
+>
 
-More information about the controller is available on the dedicated
-web page: https://www.logicbricks.com/Products/logiCVC-ML.aspx
+I was seeing this get called via the path driver_probe_device() ->
+platform_dma_configure() -> of_dma_configure() -> of_iommu_configure()
+-> iommu_probe_device() -> ...
 
-Cheers!
+The only cases I was seeing where dev->driver is NULL where a few
+places that drivers call of_dma_configure() on their own sub-devices.
+But maybe there are some other paths that I did not notice?
 
-Paul Kocialkowski (2):
-  dt-bindings: display: Add xylon logicvc bindings documentation
-  drm: Add support for the LogiCVC display controller
-
- .../bindings/display/xylon,logicvc.txt        | 188 ++++++
- drivers/gpu/drm/Kconfig                       |   2 +
- drivers/gpu/drm/Makefile                      |   1 +
- drivers/gpu/drm/logicvc/Kconfig               |   8 +
- drivers/gpu/drm/logicvc/Makefile              |   4 +
- drivers/gpu/drm/logicvc/logicvc_crtc.c        | 272 ++++++++
- drivers/gpu/drm/logicvc/logicvc_crtc.h        |  25 +
- drivers/gpu/drm/logicvc/logicvc_drm.c         | 457 ++++++++++++++
- drivers/gpu/drm/logicvc/logicvc_drm.h         |  60 ++
- drivers/gpu/drm/logicvc/logicvc_interface.c   | 235 +++++++
- drivers/gpu/drm/logicvc/logicvc_interface.h   |  32 +
- drivers/gpu/drm/logicvc/logicvc_layer.c       | 594 ++++++++++++++++++
- drivers/gpu/drm/logicvc/logicvc_layer.h       |  65 ++
- drivers/gpu/drm/logicvc/logicvc_mode.c        | 103 +++
- drivers/gpu/drm/logicvc/logicvc_mode.h        |  15 +
- drivers/gpu/drm/logicvc/logicvc_of.c          | 204 ++++++
- drivers/gpu/drm/logicvc/logicvc_of.h          |  28 +
- drivers/gpu/drm/logicvc/logicvc_regs.h        |  88 +++
- 18 files changed, 2381 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc.txt
- create mode 100644 drivers/gpu/drm/logicvc/Kconfig
- create mode 100644 drivers/gpu/drm/logicvc/Makefile
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.c
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.h
- create mode 100644 drivers/gpu/drm/logicvc/logicvc_regs.h
-
--- 
-2.23.0
-
+BR,
+-R
