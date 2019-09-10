@@ -2,91 +2,67 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA5BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA42C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4396218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38A821924
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Pxtcidup"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1gm8I5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393469AbfIJGdJ (ORCPT
+        id S2393488AbfIJGfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:33:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42387 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729634AbfIJGdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:33:09 -0400
-Received: from [192.168.4.140] (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x8A6Whi12604321
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 9 Sep 2019 23:32:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x8A6Whi12604321
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019081901; t=1568097166;
-        bh=M4Rnbdd+hBMC+MWdqNSpD8GkoZfmjy8tx/d4XPGtAhA=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=Pxtcidup6Gdn7/1hrKDmBExh97qyYca26tW4nhbkgDO+SwesZCS8beg00BcEud1Ku
-         wbzZTgtVqyvUhtx+8wLEIHh7RuUJUmbXQWSaBYliD19LatO+KBanWaHral24Xp1+uK
-         M15TgZ0jObx7FXR9EENpY5+peMYPcSMc642eyXMVM7wU5uj8iiXbmnAlragUUxFl9E
-         8QaEAosw/BowfI3Bl2y2WZwl1ZhEZqjiqZEtvzDDvGivo1dwaBjGjvVGwe7Xw1rpYt
-         SSAo3/5HjqDZn1ewRdItOdUtHotuMe1TcBIWb5Ny9YbJAeWkEXGZSGX0zKmo9HIHLg
-         Ke6QzIqehFaYA==
-Date:   Tue, 10 Sep 2019 07:32:33 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190910062828.GA40888@gmail.com>
-References: <20190905232222.14900-1-bshanks@codeweavers.com> <7BFFC7D1-6158-4237-AEF9-D10635F054FC@zytor.com> <20190910062828.GA40888@gmail.com>
+        Tue, 10 Sep 2019 02:35:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53038 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729627AbfIJGfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:35:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EfnT9VJR0SzXrUiBMWp/FXHqRLpUfRlW0ohjNvj2Vb8=; b=b1gm8I5xilk/JhHQW9MqgCP2G
+        z2VJw4VRyInonLf6onQ5j0cmX4L6CXk0HFSBHyJQ3BSiTDU288kmel00mX7AgmiajAGfUpxRoTa/M
+        U57jR5+acOxHJWzA5WvGX+t2083sSeCJI1kh/3E/G0IfqE/JSnEubow+5KQZAODwWxxEBbq9lIpWn
+        jA3aY/7ZRf29cUM4mYDHyAyPJ3SEE+pbJy1LBPGbfLVHEkuAcANFp9d/8kvenpdi2yvRDtPP8kU9m
+        2XDamMgXIGh4sND10NMvRitV58Wx6p1jvcp0okM7/RmX9jmfjkLuFnvfqxzC9RElAh8P0HX8pCVLw
+        mcLSvMRoQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i7Zk6-0005SP-DO; Tue, 10 Sep 2019 06:35:10 +0000
+Date:   Mon, 9 Sep 2019 23:35:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Federico Vaga <federico.vaga@vaga.pv.it>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] doc: replace IFF abbreviation  with 'if and only if'
+Message-ID: <20190910063510.GA4267@infradead.org>
+References: <20190907105116.19183-1-federico.vaga@vaga.pv.it>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86/umip: Add emulation for 64-bit processes
-To:     Ingo Molnar <mingo@kernel.org>
-CC:     Brendan Shanks <bshanks@codeweavers.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-From:   hpa@zytor.com
-Message-ID: <193CDEE9-B533-4BFE-972E-384C00359945@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907105116.19183-1-federico.vaga@vaga.pv.it>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On September 10, 2019 7:28:28 AM GMT+01:00, Ingo Molnar <mingo@kernel=2Eorg=
-> wrote:
->
->* hpa@zytor=2Ecom <hpa@zytor=2Ecom> wrote:
->
->> I would strongly suggest that we change the term "emulation" to=20
->> "spoofing" for these instructions=2E We need to explain that we do
->*not*=20
->> execute these instructions the was the CPU would have, and unlike the
->
->> native instructions do not leak kernel information=2E
->
->Ok, I've edited the patch to add the 'spoofing' wording where=20
->appropriate, and I also made minor fixes such as consistently=20
->capitalizing instruction names=2E
->
->Can I also add your Reviewed-by tag?
->
->So the patch should show up in tip:x86/asm today-ish, and barring any=20
->complications is v5=2E4 material=2E
->
->Thanks,
->
->	Ingo
+On Sat, Sep 07, 2019 at 12:51:16PM +0200, Federico Vaga wrote:
+> In a normal piece of text the use of 'iff' does not guarantee a correct
+> interpretation because it is easy to confuse it for a typo (if or iff?).
+> 
+> I believe that IFF should not be used outside a logical/mathematical
+> expression. For this reason with this patch I am replacing 'iff' with
+> 'if an only if' in text, and I am leaving it as it is in logical formulae.
 
-Yes, please do=2E
-
-Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Hell no.  If you want to avoid the usage in your own docs please go for
+it, but as seen in your patch we commonly use and that is a good thing
+as it brings the information across in a very compact way.
