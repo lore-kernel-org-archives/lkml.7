@@ -2,140 +2,108 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F88C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0730B20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C413208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PP3G1VGp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SG/MvSUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfIJLjg (ORCPT
+        id S1731197AbfIJLo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:39:36 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43061 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730304AbfIJLjg (ORCPT
+        Tue, 10 Sep 2019 07:44:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52316 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728639AbfIJLo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:39:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q17so14798014wrx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rxMynZw2F7Q544maYoP/CgIIEkMi90NAQ2LdnqF+ByE=;
-        b=PP3G1VGp5vvb8+v3qhss/sZ8dRo2B7iDpAFhzvLaFAGTodqeiFl2dp0M3y35k/WrZC
-         Bjz/XwLZxSJJ1wP3rVVqUOimycZg9BXErFrX8eq/Mu+yjMGZ9iOlv7ZJA0qDRr0EZBIj
-         Ywt2Z0QlyMyRc2eHuLdiiowoAcjzP1yDIKSOPcB1L7jMBcQPgPy4KaGD64ZoijBbaMCm
-         ojHbXSRGQjlFOwvjXkYZEpJTxtHa8zx54fqvw5n+lTxKtBjJyrhUaNvlfA2GKYXomTRJ
-         pyva6P6BvmuyId2mj0sdIDvk0ZBfWERjsFryms9TD2cY+76DUv37b+YdNWUv2n2RpXvS
-         F5RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rxMynZw2F7Q544maYoP/CgIIEkMi90NAQ2LdnqF+ByE=;
-        b=f0afgInwVpgghf1FVaRci81VCH2WRqqUtQbDE0RJ/l8L6GJrw59Slv7yoa+O9+1xkR
-         DkcTmAna4Ehajgil5CBQTCoOYPaFWD7ixkvxazeOwD9BDoxoLcWWCsWDgftvKbyY/XyG
-         YvIGTucsgwUEvHqmw9os9yePHgMTncaWAM450EwTvMblrTX8eKwAint+WQ/MaHcTW8ff
-         Ji+w7hA0tM1ty6f7e05Fs2oR7W3H3FcWeiyr3mVH3aokfDIR9sE9J2hoKzsKoqe04cUs
-         RYg6Ktg3jAmU0KPUdjfpNOct/1MYa+HlXMBGkjI8Mcb+Sq77Stmruj8oVcohouJFhRuL
-         nt+w==
-X-Gm-Message-State: APjAAAWWqGA+K/UMGvqv0YYDLj7dEPXvO4Tc0bVYuKySh7RqKJ6GkfIv
-        Lk8njn583Fm8YgqKMQbFzvmEcw==
-X-Google-Smtp-Source: APXvYqyk3I+kSou33suv8fQxHSSiTS7dJTAZIL43yKwUZQ8eakcf/Ter2j5rrM4u/z/RW0qKVc9aww==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr24912506wrx.156.1568115574148;
-        Tue, 10 Sep 2019 04:39:34 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id a190sm3861146wme.8.2019.09.10.04.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 04:39:33 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 12:39:31 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dridevel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v5 4/4] backlight: add led-backlight driver
-Message-ID: <20190910113931.4epumos2yaublv2t@holly.lan>
-References: <20190910105946.23057-1-jjhiblot@ti.com>
- <20190910105946.23057-5-jjhiblot@ti.com>
- <20190910112622.iflmknh5qplbfoyu@holly.lan>
- <8c80495a-440e-05c6-22c8-cf05d4f6b611@ti.com>
+        Tue, 10 Sep 2019 07:44:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABhtR2015616;
+        Tue, 10 Sep 2019 11:44:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=M26h0AGYcEfBiuzAehJPVIMkfowFx11TlIwUQGcORAs=;
+ b=SG/MvSUKOt8/vQ/CC2E1Ek4pG76eF728aO3+ozGQel+pGltwvyPzJpwxOwB9YgUYHagp
+ zFwogIBRBjMsZmjfAJDll3ff4gSpI4hNrOQYLV/+mNAe0sqSz3etTFIFsk9YLIRA1nm1
+ w4TODF64f/X22x368ggdPdEELSV1EWZ7w7iBIqjOUAY7OiMghHulPfHobhxDWdtOParS
+ hnRyAyOzmEP5lXI8GKsvZ+0XOtrHhdAQUCDKLBRud/sncSwcUESeZDWCJZKK2lbTLNCP
+ R4Kk40qVeDftAYR+k7byGAReINl9GBCMEeMgK1Qz8vf/Op3DxAA8DBtN9PzFozM+FFyr Mg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uw1jkas9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 11:44:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8ABi7fr084674;
+        Tue, 10 Sep 2019 11:44:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uwqqdwa70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Sep 2019 11:44:20 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8ABhGrd030663;
+        Tue, 10 Sep 2019 11:43:17 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Sep 2019 04:43:15 -0700
+Date:   Tue, 10 Sep 2019 14:43:03 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sandro Volery <sandro@volery.com>
+Cc:     gregkh@linuxfoundation.org, osdevtc@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: wlan-ng: parenthesis at end of line fix
+Message-ID: <20190910114135.GD30834@kadam>
+References: <20190907205720.GA25377@volery>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c80495a-440e-05c6-22c8-cf05d4f6b611@ti.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190907205720.GA25377@volery>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909100117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9375 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909100117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 01:38:18PM +0200, Jean-Jacques Hiblot wrote:
+On Sat, Sep 07, 2019 at 10:57:20PM +0200, Sandro Volery wrote:
+> Fixed open parenthesis at the end of the line on line 327.
 > 
-> On 10/09/2019 13:26, Daniel Thompson wrote:
-> > 
-> > >   endmenu
-> > > diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> > > index 63c507c07437..2a67642966a5 100644
-> > > --- a/drivers/video/backlight/Makefile
-> > > +++ b/drivers/video/backlight/Makefile
-> > > @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
-> > >   obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-> > >   obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
-> > >   obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
-> > > +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
-> > > diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
-> > > new file mode 100644
-> > > index 000000000000..a72456e11fb9
-> > > --- /dev/null
-> > > +++ b/drivers/video/backlight/led_bl.c
-> > > @@ -0,0 +1,264 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
-> > > + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > > + *
-> > > + * Based on pwm_bl.c
-> > > + */
-> > > +
-> > > +#include <linux/backlight.h>
-> > > +#include <linux/gpio/consumer.h>
-> > Maybe this is a nitpick but it is one I have now raised three times and
-> > I don't recall any response, what symbols from this header are used in
-> > this file?
-> > 
-> > AFAICT everything defined in this header includes the string "gpio" and
-> > that string doesn't appear anywhere in the file (except this line).
-> > 
-> > 
-> > > +#include <linux/leds.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > Come to think of it, are you sure you need this include? devm_kzalloc()
-> > doesn't comes from this file.
-> > 
-> > 
-> > > +#define BKL_FULL_BRIGHTNESS 255
-> > This is unused. Please remove.
-> > 
-> > 
-> > Other than that, looks good!
+> Signed-off-by: Sandro Volery <sandro@volery.com>
+> ---
+>  drivers/staging/wlan-ng/cfg80211.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Thanks for the quick review. I forgot to cleanup the headers. I'll fix that
-> now
+> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+> index eee1998c4b18..0a4c7415f773 100644
+> --- a/drivers/staging/wlan-ng/cfg80211.c
+> +++ b/drivers/staging/wlan-ng/cfg80211.c
+> @@ -324,7 +324,8 @@ static int prism2_scan(struct wiphy *wiphy,
+>  		(i < request->n_channels) && i < ARRAY_SIZE(prism2_channels);
+>  		i++)
+>  		msg1.channellist.data.data[i] =
+> -			ieee80211_frequency_to_channel(
+> +			ieee80211_frequency_to_channel
+> +			(
+>  				request->channels[i]->center_freq);
 
-I felt I owed it to this patch series after my performance so far this
-dev cycle!
+No, that looks even worse.
 
+regards,
+dan carpenter
 
-Daniel.
