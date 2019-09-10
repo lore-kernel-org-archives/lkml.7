@@ -2,258 +2,158 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711FFC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E614C49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386D0216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ahiXN/57"
+	by mail.kernel.org (Postfix) with ESMTP id 3C08921D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 23:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfIJXcB (ORCPT
+        id S1726444AbfIJXfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 19:32:01 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:50985 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfIJXb7 (ORCPT
+        Tue, 10 Sep 2019 19:35:10 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:43665 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfIJXfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 19:31:59 -0400
-Received: by mail-pg1-f202.google.com with SMTP id q9so11554933pgv.17
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 16:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=mZUy7Vl4WlAaKPPlo1SGP0dD97p4q4C7uD62LJh5Kro=;
-        b=ahiXN/57Hx8pU/8w3RyQRjOyezvn5sN+aDaZhNIpskt5jXIuVMfJqDgNOFjsxNarak
-         OsiWFRclaKX8/iNvDaAZQE306u2LvBU0Ra98M5bbJuqIBiXey4/GaeywyS+H8+/uW4UW
-         uEU5G+6/TecMke0/5AiexxqTdK83XicFjkO5irdEbDn+nzoEZ24T/puDFx5v/MwVYhZB
-         doA4m8J/bG81ocCSOUx3GC6z/uXjuo9RuGPbZucTdvI+KJt38NajRJdnojhnKPz5Ph8X
-         wG/RGLSbTpQox2JkYyBjWqjwDLHE5FXO5qjMiG+unc2sldvdhNYJy38ml7Nr2dFkX0HM
-         Zjxg==
+        Tue, 10 Sep 2019 19:35:09 -0400
+Received: by mail-io1-f72.google.com with SMTP id o6so11660710ioh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 16:35:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=mZUy7Vl4WlAaKPPlo1SGP0dD97p4q4C7uD62LJh5Kro=;
-        b=kR02rBhTRyuNCfwXUynn/daGIRok0UTYa8v47dsJwlDK+0MkvNJa51jAC5t68RKieU
-         uEkto7L0e9YluiW35J+/664xhx92IZuwxLu4N1EVKJ0qroVHt+6cdrR60ZJRcINEYgif
-         FnO29SvOmizrhnHjOii9RjtsZE//EiqZy2AUqkifHWuGjGe2YP+jA5z21Yj7RLR0pIhD
-         vxFZWSu5cD2z9cCuJVpFCKCr/wTXFOP9dgS6JnArjN+/2YVWSQEeALEzpAgd/RAcDJMW
-         BxZ+yCWRwcSB/EcXM1pYh1nFfky0/6kth2sxMzetwLUCj7IXR5MhE9sP5cJt3eUM6m+Y
-         Heiw==
-X-Gm-Message-State: APjAAAUip1GZPn5gKpL91zJ2tzM5QGXxDbwjCvkfg0TYg3r7dQDXdAXx
-        gFNsnC6eJC1nBZHH4ljsgio4C+4Wcx+lS2ErpQ==
-X-Google-Smtp-Source: APXvYqzDDIfM1YkRxGnTNbUcbG5VGJZzeeVi+8DsjY1EECkM7SWLPMCeuXCw4Zsop1Ui01SonOWXARD0pa3+dAp4pQ==
-X-Received: by 2002:a65:50c5:: with SMTP id s5mr30212218pgp.368.1568158318057;
- Tue, 10 Sep 2019 16:31:58 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 16:31:40 -0700
-In-Reply-To: <20190910233146.206080-1-almasrymina@google.com>
-Message-Id: <20190910233146.206080-4-almasrymina@google.com>
-Mime-Version: 1.0
-References: <20190910233146.206080-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-Subject: [PATCH v4 3/9] hugetlb_cgroup: add reservation accounting for private mappings
-From:   Mina Almasry <almasrymina@google.com>
-To:     mike.kravetz@oracle.com
-Cc:     shuah@kernel.org, almasrymina@google.com, rientjes@google.com,
-        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
-        mkoutny@suse.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Y67ZPAjv5Qq+Fx3oOv1534DfTfsCTzwcze7Z3T26u+U=;
+        b=L82qwplGj3hCAUEKZMypuhTQa1a8JChawRfgi7sMZMZb6hnJqfrRu82YcSXtqgG90W
+         qFQPyBf0CDu9sfMlBCxa9x7/EXlABDO7DOUs/0LHhrg2ZNByUeI3VR4TiwqH7JJ3xiIh
+         jQEDYYKBMvWWPhQpIK1ajfFihT9QvQGX/2/vszfPBjESH5XPFt84Sv3FqucN0TpvrQIM
+         s7jZHMutUy8SMsXAph1IBsbntu/Gjx2ifOYxg1grrqffWDQGuNtuhgnejU4zM6i1N6HW
+         Hv5Xj/P2jsAfAbf4d19z598CIe3ZMTwnwMWDHvDy7nqGapOFeLNm7AYPwR9ZLrgv85Cz
+         ythQ==
+X-Gm-Message-State: APjAAAUpGU7vVYxKz2K6R2QK+P1J01AyQ0SK4NvQLW9yVTOrlTbjsNN8
+        fOaExjzI9NBE3ggoFu0UN2VxU3kpvYrLogt1FfBgmdkSbjvW
+X-Google-Smtp-Source: APXvYqxDShE5QODV3Bt/aXdYO54eEw9UNBEK1xCKo6mvmG8TVje0Sj9MsL8Fcp0zqrZrft6TEdufwtY4haSPtBVWoFBfbq6+Htkz
+MIME-Version: 1.0
+X-Received: by 2002:a6b:b4c7:: with SMTP id d190mr11298139iof.209.1568158506509;
+ Tue, 10 Sep 2019 16:35:06 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 16:35:06 -0700
+In-Reply-To: <000000000000e695c1058fb26925@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bb6c1005923b5ab7@google.com>
+Subject: Re: KASAN: use-after-free Read in rxrpc_send_keepalive
+From:   syzbot <syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com>
+To:     MAILER_DAEMON@email.uscc.net, davem@davemloft.net,
+        dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Normally the pointer to the cgroup to uncharge hangs off the struct
-page, and gets queried when it's time to free the page. With
-hugetlb_cgroup reservations, this is not possible. Because it's possible
-for a page to be reserved by one task and actually faulted in by another
-task.
+syzbot has found a reproducer for the following crash on:
 
-The best place to put the hugetlb_cgroup pointer to uncharge for
-reservations is in the resv_map. But, because the resv_map has different
-semantics for private and shared mappings, the code patch to
-charge/uncharge shared and private mappings is different. This patch
-implements charging and uncharging for private mappings.
+HEAD commit:    3120b9a6 Merge tag 'ipc-fixes' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=107d1ca5600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed2b148cd67382ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=d850c266e3df14da1d31
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17347095600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143bcca5600000
 
-For private mappings, the counter to uncharge is in
-resv_map->reservation_counter. On initializing the resv_map this is set
-to NULL. On reservation of a region in private mapping, the tasks
-hugetlb_cgroup is charged and the hugetlb_cgroup is placed is
-resv_map->reservation_counter.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
 
-On hugetlb_vm_op_close, we uncharge resv_map->reservation_counter.
+==================================================================
+BUG: KASAN: use-after-free in rxrpc_send_keepalive+0xe2/0x3c0  
+net/rxrpc/output.c:634
+Read of size 8 at addr ffff8880a859a058 by task kworker/0:2/3016
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
----
- include/linux/hugetlb.h        |  8 ++++++
- include/linux/hugetlb_cgroup.h | 11 ++++++++
- mm/hugetlb.c                   | 47 ++++++++++++++++++++++++++++++++--
- mm/hugetlb_cgroup.c            | 12 ---------
- 4 files changed, 64 insertions(+), 14 deletions(-)
+CPU: 0 PID: 3016 Comm: kworker/0:2 Not tainted 5.3.0-rc8+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: krxrpcd rxrpc_peer_keepalive_worker
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_address_description+0x75/0x5b0 mm/kasan/report.c:351
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:482
+  kasan_report+0x26/0x50 mm/kasan/common.c:618
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  rxrpc_send_keepalive+0xe2/0x3c0 net/rxrpc/output.c:634
+  rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:369 [inline]
+  rxrpc_peer_keepalive_worker+0x76e/0xb40 net/rxrpc/peer_event.c:430
+  process_one_work+0x7ef/0x10e0 kernel/workqueue.c:2269
+  worker_thread+0xc01/0x1630 kernel/workqueue.c:2415
+  kthread+0x332/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 128ff1aff1c93..536cb144cf484 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -46,6 +46,14 @@ struct resv_map {
- 	long adds_in_progress;
- 	struct list_head region_cache;
- 	long region_cache_count;
-+ #ifdef CONFIG_CGROUP_HUGETLB
-+	/*
-+	 * On private mappings, the counter to uncharge reservations is stored
-+	 * here. If these fields are 0, then the mapping is shared.
-+	 */
-+	struct page_counter *reservation_counter;
-+	unsigned long pages_per_hpage;
-+#endif
- };
- extern struct resv_map *resv_map_alloc(void);
- void resv_map_release(struct kref *ref);
-diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
-index c467715dd8fb8..8c6ea58c63c89 100644
---- a/include/linux/hugetlb_cgroup.h
-+++ b/include/linux/hugetlb_cgroup.h
-@@ -25,6 +25,17 @@ struct hugetlb_cgroup;
- #define HUGETLB_CGROUP_MIN_ORDER	2
+Allocated by task 9378:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:493
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:507
+  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  rxrpc_alloc_connection+0x79/0x490 net/rxrpc/conn_object.c:41
+  rxrpc_alloc_client_connection net/rxrpc/conn_client.c:176 [inline]
+  rxrpc_get_client_conn net/rxrpc/conn_client.c:339 [inline]
+  rxrpc_connect_call+0xb30/0x2c40 net/rxrpc/conn_client.c:697
+  rxrpc_new_client_call+0x6d5/0xb60 net/rxrpc/call_object.c:289
+  rxrpc_new_client_call_for_sendmsg net/rxrpc/sendmsg.c:595 [inline]
+  rxrpc_do_sendmsg+0xf2b/0x19b0 net/rxrpc/sendmsg.c:652
+  rxrpc_sendmsg+0x5eb/0x8b0 net/rxrpc/af_rxrpc.c:585
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
+  __sys_sendmmsg+0x239/0x470 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2439
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
- #ifdef CONFIG_CGROUP_HUGETLB
-+struct hugetlb_cgroup {
-+	struct cgroup_subsys_state css;
-+	/*
-+	 * the counter to account for hugepages from hugetlb.
-+	 */
-+	struct page_counter hugepage[HUGE_MAX_HSTATE];
-+	/*
-+	 * the counter to account for hugepage reservations from hugetlb.
-+	 */
-+	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
-+};
+Freed by task 16:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:455
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:463
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x115/0x200 mm/slab.c:3756
+  rxrpc_destroy_connection+0x1ec/0x240 net/rxrpc/conn_object.c:372
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
+  rcu_core+0x892/0xf10 kernel/rcu/tree.c:2314
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:778
 
- static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page)
- {
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index e975f55aede94..fbd7c52e17348 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -711,6 +711,16 @@ struct resv_map *resv_map_alloc(void)
- 	INIT_LIST_HEAD(&resv_map->regions);
+The buggy address belongs to the object at ffff8880a859a040
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 24 bytes inside of
+  1024-byte region [ffff8880a859a040, ffff8880a859a440)
+The buggy address belongs to the page:
+page:ffffea0002a16680 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00024cc688 ffffea0002684d88 ffff8880aa400c40
+raw: 0000000000000000 ffff8880a859a040 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
 
- 	resv_map->adds_in_progress = 0;
-+#ifdef CONFIG_CGROUP_HUGETLB
-+	/*
-+	 * Initialize these to 0. On shared mappings, 0's here indicate these
-+	 * fields don't do cgroup accounting. On private mappings, these will be
-+	 * re-initialized to the proper values, to indicate that hugetlb cgroup
-+	 * reservations are to be un-charged from here.
-+	 */
-+	resv_map->reservation_counter = NULL;
-+	resv_map->pages_per_hpage = 0;
-+#endif
+Memory state around the buggy address:
+  ffff8880a8599f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a8599f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a859a000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                     ^
+  ffff8880a859a080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a859a100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
- 	INIT_LIST_HEAD(&resv_map->region_cache);
- 	list_add(&rg->link, &resv_map->region_cache);
-@@ -3193,7 +3203,19 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
-
- 	reserve = (end - start) - region_count(resv, start, end);
-
--	kref_put(&resv->refs, resv_map_release);
-+#ifdef CONFIG_CGROUP_HUGETLB
-+	/*
-+	 * Since we check for HPAGE_RESV_OWNER above, this must a private
-+	 * mapping, and these values should be none-zero, and should point to
-+	 * the hugetlb_cgroup counter to uncharge for this reservation.
-+	 */
-+	WARN_ON(!resv->reservation_counter);
-+	WARN_ON(!resv->pages_per_hpage);
-+
-+	hugetlb_cgroup_uncharge_counter(
-+			resv->reservation_counter,
-+			(end - start) * resv->pages_per_hpage);
-+#endif
-
- 	if (reserve) {
- 		/*
-@@ -3203,6 +3225,8 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
- 		gbl_reserve = hugepage_subpool_put_pages(spool, reserve);
- 		hugetlb_acct_memory(h, -gbl_reserve);
- 	}
-+
-+	kref_put(&resv->refs, resv_map_release);
- }
-
- static int hugetlb_vm_op_split(struct vm_area_struct *vma, unsigned long addr)
-@@ -4536,6 +4560,7 @@ int hugetlb_reserve_pages(struct inode *inode,
- 	struct hstate *h = hstate_inode(inode);
- 	struct hugepage_subpool *spool = subpool_inode(inode);
- 	struct resv_map *resv_map;
-+	struct hugetlb_cgroup *h_cg;
- 	long gbl_reserve;
-
- 	/* This should never happen */
-@@ -4569,11 +4594,29 @@ int hugetlb_reserve_pages(struct inode *inode,
- 		chg = region_chg(resv_map, from, to);
-
- 	} else {
-+		/* Private mapping. */
-+		chg = to - from;
-+
-+		if (hugetlb_cgroup_charge_cgroup(
-+					hstate_index(h),
-+					chg * pages_per_huge_page(h),
-+					&h_cg, true)) {
-+			return -ENOMEM;
-+		}
-+
- 		resv_map = resv_map_alloc();
- 		if (!resv_map)
- 			return -ENOMEM;
-
--		chg = to - from;
-+#ifdef CONFIG_CGROUP_HUGETLB
-+		/*
-+		 * Since this branch handles private mappings, we attach the
-+		 * counter to uncharge for this reservation off resv_map.
-+		 */
-+		resv_map->reservation_counter =
-+			&h_cg->reserved_hugepage[hstate_index(h)];
-+		resv_map->pages_per_hpage = pages_per_huge_page(h);
-+#endif
-
- 		set_vma_resv_map(vma, resv_map);
- 		set_vma_resv_flags(vma, HPAGE_RESV_OWNER);
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 2ab36a98d834e..66ffd32063722 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -19,18 +19,6 @@
- #include <linux/hugetlb.h>
- #include <linux/hugetlb_cgroup.h>
-
--struct hugetlb_cgroup {
--	struct cgroup_subsys_state css;
--	/*
--	 * the counter to account for hugepages from hugetlb.
--	 */
--	struct page_counter hugepage[HUGE_MAX_HSTATE];
--	/*
--	 * the counter to account for hugepage reservations from hugetlb.
--	 */
--	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
--};
--
- #define MEMFILE_PRIVATE(x, val)	(((x) << 16) | (val))
- #define MEMFILE_IDX(val)	(((val) >> 16) & 0xffff)
- #define MEMFILE_ATTR(val)	((val) & 0xffff)
---
-2.23.0.162.g0b9fbb3734-goog
