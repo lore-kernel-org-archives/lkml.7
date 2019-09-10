@@ -6,130 +6,90 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FC2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD32820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49BF20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfIJKlc (ORCPT
+        id S2389649AbfIJKm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:41:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2203 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725797AbfIJKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:41:31 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8F8E7C44C905677AE275;
-        Tue, 10 Sep 2019 18:41:27 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Sep 2019
- 18:41:19 +0800
-Subject: Re: [PATCH] driver core: ensure a device has valid node id in
- device_add()
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@kernel.org>, <linuxarm@huawei.com>
-References: <1568009063-77714-1-git-send-email-linyunsheng@huawei.com>
- <20190909185035.GC2063@dhcp22.suse.cz>
- <07576292-e129-5949-6a2e-45fff067ca5a@huawei.com>
- <20190910072425.GI2063@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <434aff9a-2acb-73d7-83fa-43d5494471c0@huawei.com>
-Date:   Tue, 10 Sep 2019 18:40:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Tue, 10 Sep 2019 06:42:57 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:39259 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729308AbfIJKm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:42:57 -0400
+Received: from [IPv6:2001:420:44c1:2577:9dde:3063:4dc7:2a88] ([IPv6:2001:420:44c1:2577:9dde:3063:4dc7:2a88])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 7dbniVrTy9b7T7dbrii3hs; Tue, 10 Sep 2019 12:42:55 +0200
+Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190909162743.30114-1-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
+Date:   Tue, 10 Sep 2019 12:42:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190910072425.GI2063@dhcp22.suse.cz>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190909162743.30114-1-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-CMAE-Envelope: MS4wfDgLUEHVN+RKov8OWXK1F7XNGT12EkJNiYeymJivzCZcZuFob/plBzrX/mPgK47XVhOZy64hbgWTJSXRZXg53bsDL2o24RyqG6Yk5/bKNtsBxMPfo7lf
+ 6Y+6E9PCVDB74klKgCifSzdihMf4RSAKZuVrvrpZyZ6M5enTvN1rpiivxHtqdvR4HbGZfUJSozQGB0h6r/fqV4wpFbb8IMFmENSV9czometSb2ird2gjTPN8
+ ULjQA2TVpldqO/OaNYq37mUO7HXKqfxx49Xe3hASQEYcPyc/pr1qS6rc6+D/0c3Exh0ZoHGwcsXffW9RzuglCcXXvhexe5ywDmOySNcx67yXuWUr6RUgGNMX
+ dDYcgO1NXn9hwaUqDoNOc9FZ3McMA4pjti1dCJjC70VflsSdpSEPUHPpDE9R4MLLInQji2HJB5H/1BYnGEhc+78FZjjdWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/10 15:24, Michal Hocko wrote:
-> Our emails crossed, sorry about that.
+Hi Benoit,
+
+On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> This patch series is a collection of patches we have been carrying for a
+> while.
 > 
-> On Tue 10-09-19 15:08:20, Yunsheng Lin wrote:
->> On 2019/9/10 2:50, Michal Hocko wrote:
->>> On Mon 09-09-19 14:04:23, Yunsheng Lin wrote:
-> [...]
->>>> Even if a device's numa node is not specified, the device really
->>>> does belong to a node.
->>>
->>> What does this mean?
->>
->> It means some one need to guess the node id if the node is not
->> specified.
-> 
-> I have asked about this in other email so let's not cross the
-> communication even more.
+> A few patches do fix actual bug and v4l2-compliance errors/warnings.
+> Other are drivers re-work to simplify/clarify the code for easier
+> maintenance.
 
-I may just answer your question here.
+Can you post the output of the latest version of v4l2-compliance? Use
+the '-s' option so streaming is tested as well.
 
-Besides the page allocator, cpu allocator or scheduler may need to
-know about the node id to figure out which cpu to run is more
-optimized, like in workqueue_select_cpu_near().
+Thanks!
 
-
->  
->>>> This patch sets the device node to node 0 in device_add() if the
->>>> device's node id is not specified and it either has no parent
->>>> device, or the parent device also does not have a valid node id.
->>>
->>> Why is node 0 special? I have seen platforms with node 0 missing or
->>> being memory less. The changelog also lacks an actual problem
->>
->> by node 0 missing, how do we know if node 0 is missing?
->> by node_online(0)?
-> 
-> No, this is a dynamic situation. Node might get offline via hotremove.
-> In most cases it wouldn't because there will likely be some kernel
-> memory on node0 but you cannot really make any assumptions here. Besides
-> that nothing should really care.
-
-From the node checking:
-'(unsigned)node_id >= nr_node_ids'
-
-If the nr_node_ids > 0, then node 0 is a valid node according to
-the above checking, is there a function to check if a node is
-missing?
-
-Also, I am not sure if I understand "nothing should really care".
-Does it means a device still can be a numa that is missing, just
-have some performance degradation?
+	Hans
 
 > 
->>> descripton. Why do we even care about NUMA_NO_NODE? E.g. the page
->>> allocator interprets NUMA_NO_NODE as the closest node with a memory.
->>> And by closest it really means to the CPU which is performing the
->>> allocation.
->>
->> Yes, I should have mentioned that in the commit log.
->>
->> I mentioned the below in the RFC, but somehow deleted when sending
->> V1:
->> "There may be explicit handling out there relying on NUMA_NO_NODE,
->> like in nvme_probe()."
+> We also include the SPDX Licensing update which seemed to have been
+> missed by the global script thus far.
 > 
-> This code, and other doing similar things, is very likely bogus. Just
-> look at what the code does. It takes the node affinity from the dev and
-> uses it for an allocation. So far so good. But it tries to be clever
-> and special cases NUMA_NO_NODE to be first_node. So now the allocator
-> has used a proper fallback to the nearest node with memory for the
-> current CPU that is executing the code while dev will point to a
-> first_node which might be a completely different one. See the
-> discrepancy?
-
-Do you mean let kzalloc_node handle the NUMA_NO_NODE case, if node
-id is NUMA_NO_NODE, kzalloc_node handles it as numa_mem_id().
-
-If yes, above makes more sense.
-
+> Benoit Parrot (12):
+>   media: am437x-vpfe: Fix missing first line
+>   media: am437x-vpfe: Rework ISR routine for clarity
+>   media: am437x-vpfe: Wait for end of frame before tear-down
+>   media: am437x-vpfe: Streamlined vb2 buffer cleanup
+>   media: am437x-vpfe: Setting STD to current value is not an error
+>   media: am437x-vpfe: Use a per instance format array instead of a
+>     static one
+>   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+>   media: am437x-vpfe: fix function trace debug log
+>   media: am437x-vpfe: Remove print_fourcc helper
+>   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+>   media: am437x-vpfe: Remove per bus width static data
+>   media: am437x-vpfe: Switch to SPDX Licensing
+> 
+> Dave Gerlach (1):
+>   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+> 
+>  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+>  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+>  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+>  3 files changed, 438 insertions(+), 522 deletions(-)
 > 
 
