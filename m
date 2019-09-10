@@ -2,104 +2,132 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D091C4740C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4706C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBDA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE90A21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QMvvyOIf"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Q/pq/wk3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="YvI4Dyvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392687AbfIJCQG (ORCPT
+        id S2392694AbfIJCV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 22:16:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34971 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392427AbfIJCQG (ORCPT
+        Mon, 9 Sep 2019 22:21:27 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:57299 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388855AbfIJCV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 22:16:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id f4so33190504ion.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Sep 2019 19:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s0zjoo9SPbyn3mwdviPBzOKNzAEbtRRkUdJYEIlsrM8=;
-        b=QMvvyOIfmJ8b72UgqfZt+USf5rJhMBxGxpXY31hltr/3Z1sUpbI4yCYBzFvxLinfta
-         N766ptEWkXUde2Yf4CiM8hW/ksvxTrsaQZk06jljXmIFBS9WiUv6Y8iE7jVzl909rVZh
-         EYHuH4oLMBPNgaCalq9NbS5Uxdx1pQi23IOqcqksnRFTcZkYHQHb2TXrnWlwtl4VDXy0
-         0jQ50ujM5J1t6jdfqTj4FeJjCFS1fBwc9InXgufcIZ6/dReeNDNy6XZPUfQMU/niYTeR
-         6Hrxwf/IRkOlmFPjCP6FwayaYvtZX3Gzm87t13pvPx4tY1mb3wnKa4NWQcvihsrra6J5
-         Uyrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s0zjoo9SPbyn3mwdviPBzOKNzAEbtRRkUdJYEIlsrM8=;
-        b=HspxZQ3Ev4NdRzh4oypuPF/dKZXVAuvLg+m2cM4mdmGUKD6sTTpJl18qYXf//eRT14
-         q26kvPxH81c2MV7VI+KvHm19wHSOIx5d0XTNx9gjY4lqXcOiYgpqbxqcHXtIr3U50Kpn
-         RikTDEw/NGP8CiuYlwlbAZ9CTyXlCp3SDDwHQtcJ/o/sX6peE3CPSivt2vGpZP541M7M
-         dXitlmFMnC9bLWFaCXugCWFqryoZ+b0TqLi3Jqrdr4oKMMGgjpvi7FJ2tu1Mt3EfywVz
-         rOY0pbw4fakbsXeamCYX8e2nL71mkk/XCyiWZJgiNWukrP2SdGqYXZ0u+IeKoElJJUoX
-         imtw==
-X-Gm-Message-State: APjAAAUZZaBopnxKyRINuCm3OBiCO8MPjE2YFDFc0W8bBBb6vslpvySy
-        UvWQPRuKLZWwyZTZ7fJW/Vhagw==
-X-Google-Smtp-Source: APXvYqy1bTR2h5IQgYy9MmFm5wRWpSShFSHEK6QI4hje5LSBnukLQ2sJCXKpmJnByre9fpYnDPgkzw==
-X-Received: by 2002:a02:c546:: with SMTP id g6mr3736142jaj.59.1568081764686;
-        Mon, 09 Sep 2019 19:16:04 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id f7sm13892189ioj.66.2019.09.09.19.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2019 19:16:04 -0700 (PDT)
-Date:   Mon, 9 Sep 2019 20:16:00 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: avoid slub allocation while holding list_lock
-Message-ID: <20190910021600.GA28048@google.com>
-References: <e5e25aa3-651d-92b4-ac82-c5011c66a7cb@I-love.SAKURA.ne.jp>
- <20190909213938.GA53078@google.com>
- <201909100141.x8A1fVdu048305@www262.sakura.ne.jp>
+        Mon, 9 Sep 2019 22:21:26 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 196762E7B1;
+        Mon,  9 Sep 2019 22:21:24 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=3uVY+/vCeyBFYTF8HZgOWLSrqkY=; b=Q/pq/w
+        k37wAzBOswvxWWLbHXwkbMV9A4bwzVVB8wCgN/gmuiEfvdTGGRnqA5bSj/Ipf4Yh
+        cA3led+OGkIjvhOawr4jfzR8qgHeD7pQJCsfxc8gIdChLWj5bdqy1cHBEDsLNvdN
+        l+Q5Se4BuIgHLLN6nmd8J2z4/pSkBzeuCvQns=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 10A882E7B0;
+        Mon,  9 Sep 2019 22:21:24 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=mM2cT/KO/Kh0p+hNabg5T75OZEj8HxdC6mWFljOTELs=; b=YvI4DyvqY79b0o7dreSUgK1LAHgLktpz0fuzX1z/g/RQ8+TqSeJG2OcWNCAbFxKQ60n5j2wDwwF+PFtLoYDrVUSEmLvG1t3hmUG7tYu8hqlDxvxANiUYfWzufFd8rRd2P+7NdrYsvLhcUvmoBg/4eG4e2J0DfKJex1e2tvmjNgs=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 7E2312E7AF;
+        Mon,  9 Sep 2019 22:21:23 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id A727E2DA0774;
+        Mon,  9 Sep 2019 22:21:22 -0400 (EDT)
+Date:   Mon, 9 Sep 2019 22:21:22 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Denis Efremov <efremov@linux.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] export.h: remove defined(__KERNEL__)
+In-Reply-To: <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
+Message-ID: <nycvar.YSQ.7.76.1909092220020.3091@knanqh.ubzr>
+References: <20190909105317.20473-1-yamada.masahiro@socionext.com> <nycvar.YSQ.7.76.1909090942420.3091@knanqh.ubzr> <CAK7LNATC1pZ_2BQ-Uh2+qfUjJtL0mRpsm78N-sUQXhF0tDf6Hw@mail.gmail.com> <nycvar.YSQ.7.76.1909091158200.3091@knanqh.ubzr>
+ <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909100141.x8A1fVdu048305@www262.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: AF2E4D72-D371-11E9-A9B9-C28CBED8090B-78420484!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:41:31AM +0900, Tetsuo Handa wrote:
-> Yu Zhao wrote:
-> > I think we can safely assume PAGE_SIZE is unsigned long aligned and
-> > page->objects is non-zero. But if you don't feel comfortable with these
-> > assumptions, I'd be happy to ensure them explicitly.
+On Tue, 10 Sep 2019, Masahiro Yamada wrote:
+
+> On Tue, Sep 10, 2019 at 1:06 AM Nicolas Pitre <nico@fluxnic.net> wrote:
+> >
+> > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
+> >
+> > > Hi Nicolas,
+> > >
+> > > On Mon, Sep 9, 2019 at 10:48 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+> > > >
+> > > > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
+> > > >
+> > > > > This line was touched by commit f235541699bc ("export.h: allow for
+> > > > > per-symbol configurable EXPORT_SYMBOL()"), but the commit log did
+> > > > > not explain why.
+> > > > >
+> > > > > CONFIG_TRIM_UNUSED_KSYMS works for me without defined(__KERNEL__).
+> > > >
+> > > > I'm pretty sure it was needed back then so not to interfere with users
+> > > > of this file. My fault for not documenting it.
+> > >
+> > > Hmm, I did not see a problem in my quick build test.
+> > >
+> > > Do you remember which file was causing the problem?
+> >
+> > If you build commit 7ec925701f5f with CONFIG_TRIM_UNUSED_KSYMS=y and the
+> > defined(__KERNEL__) test removed then you'll get:
+> >
+> >   HOSTCC  scripts/mod/modpost.o
+> > In file included from scripts/mod/modpost.c:24:
+> > scripts/mod/../../include/linux/export.h:81:10: fatal error: linux/kconfig.h: No such file or directory
+> >
+> >
+> > Nicolas
 > 
-> I know PAGE_SIZE is unsigned long aligned. If someone by chance happens to
-> change from "dynamic allocation" to "on stack", get_order() will no longer
-> be called and the bug will show up.
 > 
-> I don't know whether __get_free_page(GFP_ATOMIC) can temporarily consume more
-> than 4096 bytes, but if it can, we might want to avoid "dynamic allocation".
+> Thanks for explaining this.
+> 
+> It is not the case any more.
+> 
+> 
+> I will reword the commit message as follows:
+> 
+> ------------------------>8---------------------------------------
+> export.h: remove defined(__KERNEL__), which is no longer needed
+> 
+> The conditional define(__KERNEL__) was added by commit f235541699bc
+> ("export.h: allow for per-symbol configurable EXPORT_SYMBOL()").
+> 
+> It was needed at that time to avoid the build error of modpost
+> with CONFIG_TRIM_UNUSED_KSYMS=y.
+> 
+> Since commit b2c5cdcfd4bc ("modpost: remove symbol prefix support"),
+> modpost no longer includes linux/export.h, thus the define(__KERNEL__)
+> is unneeded.
+> ------------------------>8---------------------------------------
+> 
 
-With GFP_ATOMIC and ~~__GFP_HIGHMEM, it shouldn't.
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
 
-> By the way, if "struct kmem_cache_node" is object which won't have many thousands
-> of instances, can't we embed that buffer into "struct kmem_cache_node" because
-> max size of that buffer is only 4096 bytes?
 
-It seems to me allocation in error path is better than always keeping
-a page around. But the latter may still be acceptable given it's done
-only when debug is on and, of course, on a per-node scale.
+Nicolas
