@@ -2,83 +2,74 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2EBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C81C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06814222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1095620692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 06:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KYEU3O4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393331AbfIJGJs (ORCPT
+        id S2404599AbfIJGLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 02:09:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:9595 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbfIJGJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 02:09:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2019 23:09:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,487,1559545200"; 
-   d="scan'208";a="175206844"
-Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by orsmga007.jf.intel.com with ESMTP; 09 Sep 2019 23:09:07 -0700
-From:   Wu Hao <hao.wu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux@roeck-us.net, jdelvare@suse.com, gregkh@linuxfoundation.org,
-        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH v6 1/3] Documentation: fpga: dfl: add descriptions for thermal/power management interfaces
-Date:   Tue, 10 Sep 2019 13:50:38 +0800
-Message-Id: <1568094640-4920-2-git-send-email-hao.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568094640-4920-1-git-send-email-hao.wu@intel.com>
-References: <1568094640-4920-1-git-send-email-hao.wu@intel.com>
+        Tue, 10 Sep 2019 02:11:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44774 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbfIJGLP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 02:11:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0OlTj7DXpHCk8/Cet3gIZRH6ht6v2JPpcLLEodIn3mE=; b=KYEU3O4X4h5OlvA3vMrRL+/5G
+        3+NIrpr5m0SE4kkP3xwQGc2Se1a7cwobERWyuzI3xawpqP6kVK/ASb5gADRVYoXboLGXaM23kRoZy
+        w3rB8siioFkF/Tm/yvd1nJwe8H8PqBVVz65xB52L8StAjqCZKoEgrY07M4UNfCx6CfaHI2s/A+Wn+
+        eSKcrih5TmbtiuYJ7EeN8K4SSv08xbCkFHIKF74fh2fb0wi+lYYS+K6B5frefZb3We2dsbxNk92He
+        OCrvwX1JOBD63s0PeciBC6abccc8OTXtq4cD6jdeReBFYnr1DSLc4lG/dzfQCWbhOCpAfx3bCD0jQ
+        VCZ5qdcBA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i7ZMs-0005d1-VR; Tue, 10 Sep 2019 06:11:10 +0000
+Date:   Mon, 9 Sep 2019 23:11:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        pv-drivers@vmware.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFC PATCH 0/2] Fix SEV user-space mapping of unencrypted
+ coherent memory
+Message-ID: <20190910061110.GA10968@infradead.org>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905112311.GA10199@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905112311.GA10199@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Yilun <yilun.xu@intel.com>
+On Thu, Sep 05, 2019 at 04:23:11AM -0700, Christoph Hellwig wrote:
+> This looks fine from the DMA POV.  I'll let the x86 guys comment on the
+> rest.
 
-This patch add introductions to thermal/power interfaces. They are
-implemented as hwmon sysfs interfaces by thermal/power private
-feature drivers.
-
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
----
- Documentation/fpga/dfl.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
-index 6fa483f..094fc8a 100644
---- a/Documentation/fpga/dfl.rst
-+++ b/Documentation/fpga/dfl.rst
-@@ -108,6 +108,16 @@ More functions are exposed through sysfs
-      error reporting sysfs interfaces allow user to read errors detected by the
-      hardware, and clear the logged errors.
- 
-+ Power management (dfl_fme_power hwmon)
-+     power management hwmon sysfs interfaces allow user to read power management
-+     information (power consumption, thresholds, threshold status, limits, etc.)
-+     and configure power thresholds for different throttling levels.
-+
-+ Thermal management (dfl_fme_thermal hwmon)
-+     thermal management hwmon sysfs interfaces allow user to read thermal
-+     management information (current temperature, thresholds, threshold status,
-+     etc.).
-+
- 
- FIU - PORT
- ==========
--- 
-1.8.3.1
-
+Do we want to pick this series up for 5.4?  Should I queue it up in
+the dma-mapping tree?
