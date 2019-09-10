@@ -2,88 +2,106 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C679C49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61362C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE79521479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6BA21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V8/WaLQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392128AbfIJOcx (ORCPT
+        id S2392398AbfIJOdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:32:53 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5499 "EHLO mga09.intel.com"
+        Tue, 10 Sep 2019 10:33:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53689 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbfIJOcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:32:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 07:32:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="196566788"
-Received: from agreppma-mobl.ger.corp.intel.com (HELO localhost) ([10.252.53.7])
-  by orsmga002.jf.intel.com with ESMTP; 10 Sep 2019 07:32:47 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] MAINTAINERS: Add a git and a maintainer entry to keyring subsystems
-Date:   Tue, 10 Sep 2019 15:32:16 +0100
-Message-Id: <20190910143228.30305-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727815AbfIJOdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:33:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSFJ0fKlz9sP3;
+        Wed, 11 Sep 2019 00:33:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568126008;
+        bh=yXOQaT5bvinXt6pLKKFxeQT0Z7vZcluV/1M6yvoOkqo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=V8/WaLQL4amjraDF+8MRg9up2BqbXq6XgqKbvGEPGuUAcCjhr7Yczr4pTwJuKxMEb
+         St1q2n7FsNMeOjo/q88rl8XCvvkupFP7BnIrWzhQ950dHxgm6oz/R61S5Fv8N9ce/B
+         UALrbTX5YQ35r7R0TvEsh8cVAHF8iQky4WRTtanOmD/x+gCMMrW3A84QmHTgKg0+AB
+         OzQsjfzHQgGp8UfLGLsCpXooZHuF/Y2bezFeb85BY8JkB3MlfZ6+Y+oim9nqJSaWS5
+         PbxRSklG8YVAFvbYp3eLFM/ZOqRiRwx59sqJdURJyd3+GJLDR8B4pb0eoPAiW+OyU1
+         cZuAftDTqb1jQ==
+Date:   Wed, 11 Sep 2019 00:33:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: linux-next: Fixes tag needs some work in the pm tree
+Message-ID: <20190911003306.74ca7251@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ri4BnrE64cvCcnMy8wwFDih";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Jarkko Sakkinen as co-maintainer of KEYS/KEYRINGS and add
-git://git.infradead.org/users/jjs/linux-tpmdd.git as the GIT repository
-for KEYS-TRUSTED.
+--Sig_/ri4BnrE64cvCcnMy8wwFDih
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: David Howells <dhowells@redhat.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: James Bottomley <jejb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Hi all,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 108ea925a5d9..aa7cedd671d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8937,6 +8937,7 @@ M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
- M:	Mimi Zohar <zohar@linux.ibm.com>
- L:	linux-integrity@vger.kernel.org
- L:	keyrings@vger.kernel.org
-+T:	git git://git.infradead.org/users/jjs/linux-tpmdd.git
- S:	Supported
- F:	Documentation/security/keys/trusted-encrypted.rst
- F:	include/keys/trusted-type.h
-@@ -8945,6 +8946,7 @@ F:	security/keys/trusted.h
- 
- KEYS/KEYRINGS:
- M:	David Howells <dhowells@redhat.com>
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
- L:	keyrings@vger.kernel.org
- S:	Maintained
- F:	Documentation/security/keys/core.rst
--- 
-2.20.1
+In commit
 
+  fd3f7275826f ("software node: Initialize the return value in software_nod=
+e_find_by_name()")
+
+Fixes tag
+
+  Fixes: 1666faedb567 ("software node: Add software_node_get_reference_args=
+()")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+Did you mean
+
+Fixes: 1666faedb567 ("software node: Add software_node_find_by_name()")
+
+or
+
+Fixes: b06184acf751 ("software node: Add software_node_get_reference_args()=
+")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ri4BnrE64cvCcnMy8wwFDih
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13tCIACgkQAVBC80lX
+0GxCPQf7BwgHuRft5yeff0IEVoiG7l1HNaTMwkibwKOs63UX7rhHBjOFOMnrXCCe
+KBBLqZDkwbqF/+l05nrIJKriO+TBrRxeuZVQXowxJdwUdlagcRKJ+t9vlZMjrWEA
+JSfc05L8IyZAivn7Qu/XiMEbFqTSHoihXFwG3sTw9ufQhLtFk1ndH3CkFhg2ZZkm
+PLTKOSoF/ZAV5pw6up32fe9u/E8r5MhFjgOuaGKxMLdV3K1yMCy3oMeLnhMwuoGi
+DV72p7isfmnnsXEJvaAsDB+LSwl1NckiMfbkzuVxdlV3Hp1TpfjTbhzk7gevTlCk
+OKr/jnuSw+SjnKZFIbQksJOfz0Kf6A==
+=/MsX
+-----END PGP SIGNATURE-----
+
+--Sig_/ri4BnrE64cvCcnMy8wwFDih--
