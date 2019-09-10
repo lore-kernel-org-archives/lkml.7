@@ -2,96 +2,127 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A4C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17FC2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:57:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ctYf5MQ0"
+	by mail.kernel.org (Postfix) with ESMTP id 810F621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393695AbfIJO55 (ORCPT
+        id S2405334AbfIJPAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:57:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60729 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfIJO55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:57:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SSnW13P4z9s00;
-        Wed, 11 Sep 2019 00:57:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568127474;
-        bh=CzzYK7LmIfqYSITSVn4Qe5K5GimeLxwYyKauahEi5lA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ctYf5MQ0+dZbSVyko67G6AZmdJLPmqXqgHfzwEAvZtTyT6weCdtQ88IULtjkymQRd
-         f/mA+75b0JuIFkMBfBYsWNKIKQ3OqsSYW8L3nH7GOTw/6jp/ORRWxaZ8C6malTgItM
-         kIJ1EopOpyNAgw0+Jf90zWMSrhIWrHUoDB7ARpJFQgkVOXeGyp9F0aqlaUwOi95n/1
-         2GBdGOpjhEXkZbOOBPVpPFlYXi3O1+PIi8e8rs4cqprpQBapAM91vP2mnS5h/DkGfk
-         306igNm/iTYm7FQe5D2SG+Z7V7HC0pDbiQ6F6G3TppawCEQvUcUUFIWaEZplASEV/F
-         93/I3opaNtQAA==
-Date:   Wed, 11 Sep 2019 00:57:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jackie Liu <liuyun01@kylinos.cn>
-Subject: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20190911005749.74fff98e@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KaBVzwNGjJc.aoDM_sHElhC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 10 Sep 2019 11:00:14 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:32364 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732797AbfIJPAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 11:00:14 -0400
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AEpeTO021162;
+        Tue, 10 Sep 2019 14:59:59 GMT
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2uxa9hkdj6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Sep 2019 14:59:59 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id CE98989;
+        Tue, 10 Sep 2019 14:59:58 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
+        id 8B533201FCF19; Tue, 10 Sep 2019 09:59:58 -0500 (CDT)
+Message-Id: <20190910145839.895739629@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: quilt/0.46-1
+Date:   Tue, 10 Sep 2019 09:58:42 -0500
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/8] x86/platform/uv: Add return code to UV BIOS Init function
+Content-Disposition: inline; filename=add-bios_init-rc
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-10_10:2019-09-10,2019-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909100144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KaBVzwNGjJc.aoDM_sHElhC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add a return code to the UV BIOS init function that indicates the 
+successful initialization of the kernel/BIOS callback interface.
 
-Hi all,
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+---
+ arch/x86/include/asm/uv/bios.h |    2 +-
+ arch/x86/platform/uv/bios_uv.c |    9 +++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-In commit
+--- linux.orig/arch/x86/include/asm/uv/bios.h
++++ linux/arch/x86/include/asm/uv/bios.h
+@@ -138,7 +138,7 @@ extern s64 uv_bios_change_memprotect(u64
+ extern s64 uv_bios_reserved_page_pa(u64, u64 *, u64 *, u64 *);
+ extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
+ 
+-extern void uv_bios_init(void);
++extern int uv_bios_init(void);
+ 
+ extern unsigned long sn_rtc_cycles_per_second;
+ extern int uv_type;
+--- linux.orig/arch/x86/platform/uv/bios_uv.c
++++ linux/arch/x86/platform/uv/bios_uv.c
+@@ -184,20 +184,20 @@ int uv_bios_set_legacy_vga_target(bool d
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_set_legacy_vga_target);
+ 
+-void uv_bios_init(void)
++int uv_bios_init(void)
+ {
+ 	uv_systab = NULL;
+ 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
+ 	    !uv_systab_phys || efi_runtime_disabled()) {
+ 		pr_crit("UV: UVsystab: missing\n");
+-		return;
++		return -EEXIST;
+ 	}
+ 
+ 	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
+ 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
+ 		pr_err("UV: UVsystab: bad signature!\n");
+ 		iounmap(uv_systab);
+-		return;
++		return -EINVAL;
+ 	}
+ 
+ 	/* Starting with UV4 the UV systab size is variable */
+@@ -208,8 +208,9 @@ void uv_bios_init(void)
+ 		uv_systab = ioremap(uv_systab_phys, size);
+ 		if (!uv_systab) {
+ 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
+-			return;
++			return -EFAULT;
+ 		}
+ 	}
+ 	pr_info("UV: UVsystab: Revision:%x\n", uv_systab->revision);
++	return 0;
+ }
 
-  8776f3fa15a5 ("io_uring: fix wrong sequence setting logic")
+-- 
 
-Fixes tag
-
-  Fixes: de0617e4671 ("io_uring: add support for marking commands as draini=
-ng")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KaBVzwNGjJc.aoDM_sHElhC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl13ue0ACgkQAVBC80lX
-0GzZewgAnkOJtHiIvPue6AKCMTOc73Wq1C8NUsC89FpDD0LTF4ND4h/tsEgPVzx2
-bX0iZtB7gVVbGL3tYbxdIkjWoLhbbnl+dekyFInBxTTZW7W0Jv2qMKk+FMniwhk8
-RAG983rcYyjb8F5RFAjMoCNO4RlaEwSDnt9Mt6XXoG+jBJDuXnWCR9fac4YuDgoN
-123a8txQm2LzEv+Q0HORuy9SPaZgxf9Rj4v7QIDoEwutxjI3Zk5eoSd3hWgdrVYa
-NFGf4nZcSxoR6HUXqL+/0S+I7/OFP8XayunzUiZL3uBEXtdMaqWDzyr+1fvxOEuU
-Hi49misjI4W1s6dbQKU7f/GoY4v9NA==
-=sk0+
------END PGP SIGNATURE-----
-
---Sig_/KaBVzwNGjJc.aoDM_sHElhC--
