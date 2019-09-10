@@ -2,204 +2,158 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC77C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C983C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE647208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaQ6O1ee"
+	by mail.kernel.org (Postfix) with ESMTP id 3E48821019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbfIJN5D (ORCPT
+        id S1731700AbfIJN6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:57:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39055 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730520AbfIJN5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:57:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id d25so37699410iob.6;
-        Tue, 10 Sep 2019 06:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WiJfk6BOQ9URkJhc4rYT7Cef+8bJjMR5zQiVGBcXf9o=;
-        b=EaQ6O1eeHeZ7e7GTBRsUQWg0bCT0bWiASR2rd8VgF8uIcukRGqCjUT4xqUaQitnglP
-         ikKMwnlv+rFHcNqG1QjFNIUF671pqNNZA1cTRemld56Mo9Yb0KgQUaxwKUQmYEjI3xzb
-         bgPDPOCmqMm4tNNJARAMqwyX2+LDjYp/eoUgzQxbgyzFjobuIL72VnIStIc5nQQNQnUm
-         HBQVADpd4FRbW4B2zS+Po85H1J8NVYdbjCVBf+xbi+43sXVnTKz1vWiFnCCMZVD7T8LM
-         OuGERIu/ryG9zjMResmNKiNXB5DtgChrabikLFkbjwMycYzyye9mXOH/IvotpF5X5Iv3
-         JlZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WiJfk6BOQ9URkJhc4rYT7Cef+8bJjMR5zQiVGBcXf9o=;
-        b=qj2vW8KHaFvFy2qR+6PjYGGhQFyEhRJ9I/+fT8ulykiapKQltCllbZMJ6FXBbqpwKa
-         XErLIMUwJeiWGUzdXCaKi8b/Qr1gD/C6yx0cJmZwtUsN28cK7A+74/w9CVJTalNCl5yw
-         UKi8iSyI9U0ddtf7wm4AzuXSc5DS91j2Yg6xURCdL5d9tmsASSPKfA4OMEb60pV/z3Pn
-         But9NLTmuWuWqom7kVVEDgJlkuEg3FiC+ajJtHxl5yF6YAmYNOkACh5OtJwxKb1AvpjH
-         SWjYgf6obSx+yJiBXX73bgz9QUibnM0pfEFG90HUcvMLVgtYM1F18T4yYEtimvVakcJg
-         2yUg==
-X-Gm-Message-State: APjAAAUoYRO08eG7rSXp5ddUEJ6ZMEeq6oy2XbJgOn1O+PHpo/skmvY8
-        6zkZU1JMtDHE08YcKkUxTlLzrjskPeIcYvykyMHJ210cWPk=
-X-Google-Smtp-Source: APXvYqwpbmj+9gSQ84cmL21PKzfeoORrvoHlfRtvKw1m73P5qmijzXxshrIRVofX574C/KBbdM2WpaAAorFjgcnQKac=
-X-Received: by 2002:a05:6638:4b:: with SMTP id a11mr32038325jap.0.1568123821449;
- Tue, 10 Sep 2019 06:57:01 -0700 (PDT)
+        Tue, 10 Sep 2019 09:58:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:35820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbfIJN6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 09:58:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C15B28;
+        Tue, 10 Sep 2019 06:58:16 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7B3E3F59C;
+        Tue, 10 Sep 2019 06:58:15 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 14:58:13 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: Re: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
+Message-ID: <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
+References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
+ <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
 MIME-Version: 1.0
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
-In-Reply-To: <20190905230443.GA52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 10 Sep 2019 08:56:49 -0500
-Message-ID: <CAHCN7xKxffJUV2V2CCuw0iPqUm4LJT28GMrcF2=8rDJQM2dOOw@mail.gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> Hi,
->
-> * Adam Ford <aford173@gmail.com> [190828 15:01]:
-> > The datasheet for the AM3517 shows the RNG is connected to L4.
-> > It shows the module address for the RNG is 0x480A0000, and it
-> > matches the omap2.dtsi description.  Since the driver can support
-> > omap2 and omap4, it seems reasonable to assume the omap3 would
-> > use the same core for the RNG.
-> >
-> > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
-> > also adds the necessary clock for driving the RNG.  Unfortunately,
-> > it appears non-functional.  If anyone has any suggestions on how
-> > to finish the hwmod (or port it to the newer l4 device tree
-> > format), feedback is requested.
->
-> Yup I'll take the bait :) The patch below seems to do the trick
-> for me on dm3730 based on translating your patch to probe with
-> ti-sysc.
->
-> Not sure about 34xx, it seems we're missing rng_clk? Care
-> to give it a try and attempt simlar patches for 34xx and
-> 3517?
->
+On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
+> From: Anvesh Salveru <anvesh.s@samsung.com>
+> 
+> In some platforms, PCIe PHY may have issues which will prevent linkup
+> to happen in GEN3 or high speed. In case equalization fails, link will
+> fallback to GEN1.
 
-I took the block you added to omap36xx and copied it to omap34xx.
-Since this is present in the omap2.dtsi, I wonder if it could be used
-at the omap3.dtsi level instead of am3517, omap34xx and omap36xx.
-What is not clear to me is the clocking architecture needed.  The
-omap34xx-omap36xx-clocks.dtsi have the  aes1, rng_ick, sha1, and des1
-setup which appears to be present in the am3517 based on that
-datasheet, but they are all dependent on the security_l4_ick2 which is
-not defined for am35.  I wonder if all these could move to omap3 and
-its respective clock file.  Duplicating it in 3x locations doesn't
-seem to make sense, but I don't have every permutation of omap3 to
-know, and those features are not clearly documented.
+When you refer to "high speed", do you mean "higher speeds" as in GEN3,
+GEN4, etc?
 
-I have it working on an omap3530:
+> 
+> Designware controller has support for disabling GEN3 equalization if
+> required. This patch enables the designware driver to disable the PCIe
+> GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
 
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 5.3.0-rc8-00009-gaa2f12f5625a-dirty
-(aford@aford-OptiPlex-7050) (gcc version 8.3.0 (Buildroot
-2019.02.4-00056-gb0868303cf)) #11 SMP Mon Sep 9 13:59:31 CDT 2019
-[    0.000000] CPU: ARMv7 Processor [411fc083] revision 3 (ARMv7), cr=10c5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT
-nonaliasing instruction cache
-[    0.000000] OF: fdt: Machine model: LogicPD Zoom OMAP35xx SOM-LV
-Development Kit
-...snip...
+Thus limiting to GEN2 speeds max, right?
 
-[    0.000000] OMAP3430/3530 ES3.1 (l2cache iva sgx neon isp)
+Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and above
+even though we advertise GEN3 and above speeds? I.e. the IP advertises
+GEN3 but the phy can't handle it, we can't change what the IP advertises
+and so we disable equalization to limit to GEN2?
 
-... snip...
+I notice many of the other dwc drivers (dra7xx, keystone, tegra194, imx6)
+seem to use the device tree to specify a max-link-speed and then impose
+that limit by changing the value in PCI_EXP_LNKCAP. Is your
+PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the PCI_EXP_LNKCAP
+approach, or does your approach add something else?
 
-[    0.000000] random: get_random_bytes called from
-start_kernel+0x2e8/0x514 with crng_init=0
-[    2.573120] random: fast init done
-[    5.172821] random: udevd: uninitialized urandom read (16 bytes read)
-[    5.182922] random: udevd: uninitialized urandom read (16 bytes read)
-[    5.190460] random: udevd: uninitialized urandom read (16 bytes read)
-[    7.739837] omap_rng 480a0000.rng: Random Number Generator ver. 70
-[    7.747283] random: crng init done
-[    7.750793] random: 1 urandom warning(s) missed due to ratelimiting
-
-And hexdump  is working on both /dev/hwrng and /dev/random
-I have not been able to replicate the issue you mentioned about it
-dying after a few reads and/or rmmod-modprobe cycles.
-
-
-> At least I'm not needing the "ti,no-reset-on-init" property
-> that your patch has a comment for. Maybe that's needed on
-> some other omap3.
-
-The hwmod I used was a copy-paste from omap2, so it might not be
-needed in omap3's at all.
-
->
-> Oh and this needs to default to status = "disabled" for
-> HS devices like n900 as it needs to use the omap3-rom-rng.
-
-I don't know enough about the HS version of the OMAP3, but what's the
-main difference between omap3-rom-rng and this one?
-
-adam
->
-> Regards,
->
-> Tony
->
-> 8< -----------------------
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -140,6 +140,29 @@
->                         };
->                 };
->
-> +               rng_target: target-module@480a0000 {
-> +                       compatible = "ti,sysc-omap2", "ti,sysc";
-> +                       reg = <0x480a003c 0x4>,
-> +                             <0x480a0040 0x4>,
-> +                             <0x480a0044 0x4>;
-> +                       reg-names = "rev", "sysc", "syss";
-> +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>;
-> +                       ti,syss-mask = <1>;
-> +                       clocks = <&rng_ick>;
-> +                       clock-names = "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0x480a0000 0x2000>;
+> 
+> Platform drivers can disable equalization by setting the dwc_pci_quirk
+> flag DWC_EQUALIZATION_DISABLE.
+> 
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+>  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7d25102..bf82091 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		break;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
 > +
-> +                       rng: rng@0 {
-> +                               compatible = "ti,omap2-rng";
-> +                               reg = <0x0 0x2000>;
-> +                               interrupts = <52>;
-> +                       };
-> +               };
+> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
 > +
->                 /*
->                  * Note that the sysconfig register layout is a subset of the
->                  * "ti,sysc-omap4" type register with just sidle and midle bits
+> +	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> +
+> +	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+
+The problem here is that even when DWC_EQUALIZATION_DISABLE is not set
+the driver will read and write PCIE_PORT_GEN3_RELATED when it is not
+needed. How about something like:
+
+> +
+> +	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
+> +	        val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> +	        dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> +     }
+
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ffed084..a1453c5 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -29,6 +29,9 @@
+>  #define LINK_WAIT_MAX_IATU_RETRIES	5
+>  #define LINK_WAIT_IATU			9
+>  
+> +/* Parameters for PCIe Quirks */
+> +#define DWC_EQUALIZATION_DISABLE	0x1
+
+How about using BIT(1) instead? Thus implying that you can combine
+quirks.
+
+Thanks,
+
+Andrew Murray
+
+> +
+>  /* Synopsys-specific PCIe configuration registers */
+>  #define PCIE_PORT_LINK_CONTROL		0x710
+>  #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+> @@ -60,6 +63,9 @@
+>  #define PCIE_MSI_INTR0_MASK		0x82C
+>  #define PCIE_MSI_INTR0_STATUS		0x830
+>  
+> +#define PCIE_PORT_GEN3_RELATED		0x890
+> +#define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
+> +
+>  #define PCIE_ATU_VIEWPORT		0x900
+>  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>  #define PCIE_ATU_REGION_OUTBOUND	0
+> @@ -244,6 +250,7 @@ struct dw_pcie {
+>  	struct dw_pcie_ep	ep;
+>  	const struct dw_pcie_ops *ops;
+>  	unsigned int		version;
+> +	unsigned int		dwc_pci_quirk;
+>  };
+>  
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> -- 
+> 2.7.4
+> 
