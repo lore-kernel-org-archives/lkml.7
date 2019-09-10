@@ -2,161 +2,319 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC25C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A8AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B22208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Hdbv8mQZ"
+	by mail.kernel.org (Postfix) with ESMTP id 375E620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568118432;
+	bh=VNVZeDKcLQOb9TnY/UyGcvSCEixIw1Nn197VhW3dClc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YORzY0PQBm+ctxa3vMkywnSJFuKnL64HDwW1CAtAQUljR5RzPbLgIhrJyOsc3ypzc
+	 XAhxMa7FZNSVk6rLalDXQ4n7IIw6lPxKJTVtmAbnJh+qpXbFRbrobEVaCaOV+UUoAj
+	 IKFQYn5eeMzJlBzm4k3pA7jgwkzeCQkO773Q78Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392170AbfIJMZY (ORCPT
+        id S2392075AbfIJM1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:25:24 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:55188 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfIJMZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:25:24 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190910122521epoutp0438edfa0ba8442bcbfc3ec88c3bc01784~DE04jc-MD1736317363epoutp049
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 12:25:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190910122521epoutp0438edfa0ba8442bcbfc3ec88c3bc01784~DE04jc-MD1736317363epoutp049
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568118321;
-        bh=ENoo0m1X18Vj3JVZ1WPFeFwISs1ZdRMWK1NqeYShs1Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hdbv8mQZewKHtrfUSvdwPTVbEoWDAH3Q5kCYR1Ksrae4+FK8MzLzt9SjoY7zEL2gw
-         qXC6Kt1fKJeEEjr3trm+Pne9haJi4Qua6ysPoJIomh8OCl+bW3F9O5+OVo86awg+UB
-         bQhut3JE5Z8qbsJ/Mfl5OCGj+zpnnA+YDAnL80i0=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20190910122520epcas5p21ab5a5698efbca737be7aa7d1ef56c58~DE03zYg_r0710407104epcas5p2E;
-        Tue, 10 Sep 2019 12:25:20 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2C.F1.04429.036977D5; Tue, 10 Sep 2019 21:25:20 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4~DE03f-C7J2157221572epcas5p1-;
-        Tue, 10 Sep 2019 12:25:20 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190910122520epsmtrp1ccbdaeaf3162eac4489becab9e07f17c~DE03fVSwY1251612516epsmtrp1O;
-        Tue, 10 Sep 2019 12:25:20 +0000 (GMT)
-X-AuditID: b6c32a4a-63dff7000000114d-f8-5d7796302ede
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.97.03638.036977D5; Tue, 10 Sep 2019 21:25:20 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190910122518epsmtip286b1af9ec46a93801941d17c73064c35~DE016fcL60912709127epsmtip2K;
-        Tue, 10 Sep 2019 12:25:18 +0000 (GMT)
-From:   Pankaj Dubey <pankaj.dubey@samsung.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase 2
- and 3
-Date:   Tue, 10 Sep 2019 17:55:02 +0530
-Message-Id: <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRjm2znbOQ6Xh6n4tkpilKTgLQoOFBUkeLqIFUGQrVp5cNI2x+ac
-        BoKlzAtmpikoU7wra2pNE51athrDcjPUsAhLyW4miimtEGftIv17nve5vC8fH4kJl3ERma7M
-        ZNVKqVzM4+N9zyMjo+OqdZK4ktl9tMPSyKVbbstoy0wRQXes1RD0pMXAox31dh69uP6NoJse
-        rxHHSMZUb0LMQO0MwTSYtUxZrxExvU9XEbNqDj/Du8g/nMrK07NYdeyRq3yZ+345rrIHZTeY
-        J4k81CMoQQEkUAegaqUGlSA+KaQGEVQNuzg+8hNB69Ic4SO/EEw79MRWxOlwcn3CMII/lRP+
-        fAEH8h/ZMI+LR0XD/HKdF4dQhyBvwehNYJ4l7nuT/whJBlPnYNN42ePBqb2gr57hebCAYuDh
-        s3r/tnB45yz29gRQJ2CtoxDz9ABl4sHYdJPflAA9rw1+HAwL9l4/FsH3u1tnZ8Dv5gp/uABB
-        pb2O6xOOwsiUAfcchFGR0G2J9YwxahvcWZ/neMZACaBIL/S5I8D1dQzz4Z0wl9/K8WEG2tsm
-        /M9lQNDjLuWWo121/1sbEDKi7axKo0hjNQdV+5WsLkYjVWi0yrSY6xkKM/J+g6iT/ajNedqK
-        KBKJAwWzep1EyJVmaXIUVgQkJg4RTJdpJUJBqjTnJqvOuKLWylmNFe0gcXGYoIL75pKQSpNm
-        sjdYVsWqt1QOGSDKQ1UpzOepa6PNF5Ytr9oH3ibdEi3FS/pGSuM2jjeOjSdtWKtD3SubexJ4
-        UKyzMfTQC3lnv41bOJr/5CPKdeHGwJeZEbnuLsb2fr3GQGgJY6wstP3Hl5bBRTi7Ue4OItju
-        T6bCB47ZcXz1gyjRlZIt2Z08dB5PP6XsTEzuChPjGpk0PgpTa6R/AQ8YL5oCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLLMWRmVeSWpSXmKPExsWy7bCSvK7BtPJYg42dYhZndy1ktVjSlGGx
-        624Hu8WKLzPZLS7vmsNmcXbecTaLN79fsFss2vqF3YHDY828NYweO2fdZfdYsKnUo2/LKkaP
-        Lfs/M3p83iQXwBbFZZOSmpNZllqkb5fAlfFvygSWguP8FQs2XWZvYNzM28XIySEhYCJx7uw5
-        1i5GLg4hgd2MEu/W9bFCJGQkJq9eAWULS6z895wdoqiJSWJd9yZGkASbgK7Ek/dzmUFsEQFb
-        iYa/HcwgRcwCBxklrizdxwSSEBYIkJi44gELiM0ioCrRNu0uG4jNK+AhseHgPHaIDXISN891
-        gg3iFPCU+LKiHcwWAqrZeuMM0wRGvgWMDKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3
-        MYIDUUtrB+OJE/GHGAU4GJV4eB+0lccKsSaWFVfmHmKU4GBWEuG93lcaK8SbklhZlVqUH19U
-        mpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoHR7YilZFznxXsqL2uXXan9ufLr
-        k7Tvbnr/stMYLsW2/mRbxcx+eFNlSMf3ozxxHptNvp3cPu0bk8ScgEzVGasnMFsEvJjMx+Pf
-        Ziykmel7uGOP+LFiu4qYxEO+Crd31Sg8/N39seeQQP+9NzL/XMwnrXuqtsUlcn2N5bkrPxzN
-        pIU+r3RZWaSjxFKckWioxVxUnAgAvZpz20ACAAA=
-X-CMS-MailID: 20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4
-References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
-        <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
+        Tue, 10 Sep 2019 08:27:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55540 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726245AbfIJM1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:27:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0C728AB89;
+        Tue, 10 Sep 2019 12:27:08 +0000 (UTC)
+Date:   Tue, 10 Sep 2019 14:27:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        ying.huang@intel.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com,
+        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH v9 4/8] mm: Use zone and order instead of free area in
+ free_list manipulators
+Message-ID: <20190910122707.GX2063@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190907172536.10910.99561.stgit@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907172536.10910.99561.stgit@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anvesh Salveru <anvesh.s@samsung.com>
+On Sat 07-09-19 10:25:36, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> In order to enable the use of the zone from the list manipulator functions
+> I will need access to the zone pointer. As it turns out most of the
+> accessors were always just being directly passed &zone->free_area[order]
+> anyway so it would make sense to just fold that into the function itself
+> and pass the zone and order as arguments instead of the free area.
 
-In some platforms, PCIe PHY may have issues which will prevent linkup
-to happen in GEN3 or high speed. In case equalization fails, link will
-fallback to GEN1.
+Yes this makes the interface better.
 
-Designware controller gives flexibility to disable GEN3 equalization
-completely or only phase 2 and 3.
+> In order to be able to reference the zone we need to move the declaration
+> of the functions down so that we have the zone defined before we define the
+> list manipulation functions.
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Platform drivers can disable equalization phase 2 and 3, by setting
-dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- drivers/pci/controller/dwc/pcie-designware.c | 3 +++
- drivers/pci/controller/dwc/pcie-designware.h | 2 ++
- 2 files changed, 5 insertions(+)
+> ---
+>  include/linux/mmzone.h |   70 ++++++++++++++++++++++++++----------------------
+>  mm/page_alloc.c        |   30 ++++++++-------------
+>  2 files changed, 49 insertions(+), 51 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 125f300981c6..2ddf1f1971c0 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -100,29 +100,6 @@ struct free_area {
+>  	unsigned long		nr_free;
+>  };
+>  
+> -/* Used for pages not on another list */
+> -static inline void add_to_free_area(struct page *page, struct free_area *area,
+> -			     int migratetype)
+> -{
+> -	list_add(&page->lru, &area->free_list[migratetype]);
+> -	area->nr_free++;
+> -}
+> -
+> -/* Used for pages not on another list */
+> -static inline void add_to_free_area_tail(struct page *page, struct free_area *area,
+> -				  int migratetype)
+> -{
+> -	list_add_tail(&page->lru, &area->free_list[migratetype]);
+> -	area->nr_free++;
+> -}
+> -
+> -/* Used for pages which are on another list */
+> -static inline void move_to_free_area(struct page *page, struct free_area *area,
+> -			     int migratetype)
+> -{
+> -	list_move(&page->lru, &area->free_list[migratetype]);
+> -}
+> -
+>  static inline struct page *get_page_from_free_area(struct free_area *area,
+>  					    int migratetype)
+>  {
+> @@ -130,15 +107,6 @@ static inline struct page *get_page_from_free_area(struct free_area *area,
+>  					struct page, lru);
+>  }
+>  
+> -static inline void del_page_from_free_area(struct page *page,
+> -		struct free_area *area)
+> -{
+> -	list_del(&page->lru);
+> -	__ClearPageBuddy(page);
+> -	set_page_private(page, 0);
+> -	area->nr_free--;
+> -}
+> -
+>  static inline bool free_area_empty(struct free_area *area, int migratetype)
+>  {
+>  	return list_empty(&area->free_list[migratetype]);
+> @@ -796,6 +764,44 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
+>  	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
+>  }
+>  
+> +/* Used for pages not on another list */
+> +static inline void add_to_free_list(struct page *page, struct zone *zone,
+> +				    unsigned int order, int migratetype)
+> +{
+> +	struct free_area *area = &zone->free_area[order];
+> +
+> +	list_add(&page->lru, &area->free_list[migratetype]);
+> +	area->nr_free++;
+> +}
+> +
+> +/* Used for pages not on another list */
+> +static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
+> +					 unsigned int order, int migratetype)
+> +{
+> +	struct free_area *area = &zone->free_area[order];
+> +
+> +	list_add_tail(&page->lru, &area->free_list[migratetype]);
+> +	area->nr_free++;
+> +}
+> +
+> +/* Used for pages which are on another list */
+> +static inline void move_to_free_list(struct page *page, struct zone *zone,
+> +				     unsigned int order, int migratetype)
+> +{
+> +	struct free_area *area = &zone->free_area[order];
+> +
+> +	list_move(&page->lru, &area->free_list[migratetype]);
+> +}
+> +
+> +static inline void del_page_from_free_list(struct page *page, struct zone *zone,
+> +					   unsigned int order)
+> +{
+> +	list_del(&page->lru);
+> +	__ClearPageBuddy(page);
+> +	set_page_private(page, 0);
+> +	zone->free_area[order].nr_free--;
+> +}
+> +
+>  #include <linux/memory_hotplug.h>
+>  
+>  void build_all_zonelists(pg_data_t *pgdat);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index a791f2baeeeb..f85dc1561b85 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -921,7 +921,6 @@ static inline void __free_one_page(struct page *page,
+>  	struct capture_control *capc = task_capc(zone);
+>  	unsigned long uninitialized_var(buddy_pfn);
+>  	unsigned long combined_pfn;
+> -	struct free_area *area;
+>  	unsigned int max_order;
+>  	struct page *buddy;
+>  
+> @@ -958,7 +957,7 @@ static inline void __free_one_page(struct page *page,
+>  		if (page_is_guard(buddy))
+>  			clear_page_guard(zone, buddy, order, migratetype);
+>  		else
+> -			del_page_from_free_area(buddy, &zone->free_area[order]);
+> +			del_page_from_free_list(buddy, zone, order);
+>  		combined_pfn = buddy_pfn & pfn;
+>  		page = page + (combined_pfn - pfn);
+>  		pfn = combined_pfn;
+> @@ -992,12 +991,11 @@ static inline void __free_one_page(struct page *page,
+>  done_merging:
+>  	set_page_order(page, order);
+>  
+> -	area = &zone->free_area[order];
+>  	if (is_shuffle_order(order) ? shuffle_pick_tail() :
+>  	    buddy_merge_likely(pfn, buddy_pfn, page, order))
+> -		add_to_free_area_tail(page, area, migratetype);
+> +		add_to_free_list_tail(page, zone, order, migratetype);
+>  	else
+> -		add_to_free_area(page, area, migratetype);
+> +		add_to_free_list(page, zone, order, migratetype);
+>  }
+>  
+>  /*
+> @@ -2001,13 +1999,11 @@ void __init init_cma_reserved_pageblock(struct page *page)
+>   * -- nyc
+>   */
+>  static inline void expand(struct zone *zone, struct page *page,
+> -	int low, int high, struct free_area *area,
+> -	int migratetype)
+> +	int low, int high, int migratetype)
+>  {
+>  	unsigned long size = 1 << high;
+>  
+>  	while (high > low) {
+> -		area--;
+>  		high--;
+>  		size >>= 1;
+>  		VM_BUG_ON_PAGE(bad_range(zone, &page[size]), &page[size]);
+> @@ -2021,7 +2017,7 @@ static inline void expand(struct zone *zone, struct page *page,
+>  		if (set_page_guard(zone, &page[size], high, migratetype))
+>  			continue;
+>  
+> -		add_to_free_area(&page[size], area, migratetype);
+> +		add_to_free_list(&page[size], zone, high, migratetype);
+>  		set_page_order(&page[size], high);
+>  	}
+>  }
+> @@ -2179,8 +2175,8 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+>  		page = get_page_from_free_area(area, migratetype);
+>  		if (!page)
+>  			continue;
+> -		del_page_from_free_area(page, area);
+> -		expand(zone, page, order, current_order, area, migratetype);
+> +		del_page_from_free_list(page, zone, current_order);
+> +		expand(zone, page, order, current_order, migratetype);
+>  		set_pcppage_migratetype(page, migratetype);
+>  		return page;
+>  	}
+> @@ -2188,7 +2184,6 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+>  	return NULL;
+>  }
+>  
+> -
+>  /*
+>   * This array describes the order lists are fallen back to when
+>   * the free lists for the desirable migrate type are depleted
+> @@ -2254,7 +2249,7 @@ static int move_freepages(struct zone *zone,
+>  		VM_BUG_ON_PAGE(page_zone(page) != zone, page);
+>  
+>  		order = page_order(page);
+> -		move_to_free_area(page, &zone->free_area[order], migratetype);
+> +		move_to_free_list(page, zone, order, migratetype);
+>  		page += 1 << order;
+>  		pages_moved += 1 << order;
+>  	}
+> @@ -2370,7 +2365,6 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>  		unsigned int alloc_flags, int start_type, bool whole_block)
+>  {
+>  	unsigned int current_order = page_order(page);
+> -	struct free_area *area;
+>  	int free_pages, movable_pages, alike_pages;
+>  	int old_block_type;
+>  
+> @@ -2441,8 +2435,7 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>  	return;
+>  
+>  single_page:
+> -	area = &zone->free_area[current_order];
+> -	move_to_free_area(page, area, start_type);
+> +	move_to_free_list(page, zone, current_order, start_type);
+>  }
+>  
+>  /*
+> @@ -3113,7 +3106,6 @@ void split_page(struct page *page, unsigned int order)
+>  
+>  int __isolate_free_page(struct page *page, unsigned int order)
+>  {
+> -	struct free_area *area = &page_zone(page)->free_area[order];
+>  	unsigned long watermark;
+>  	struct zone *zone;
+>  	int mt;
+> @@ -3139,7 +3131,7 @@ int __isolate_free_page(struct page *page, unsigned int order)
+>  
+>  	/* Remove page from free list */
+>  
+> -	del_page_from_free_area(page, area);
+> +	del_page_from_free_list(page, zone, order);
+>  
+>  	/*
+>  	 * Set the pageblock if the isolated page is at least half of a
+> @@ -8560,7 +8552,7 @@ void zone_pcp_reset(struct zone *zone)
+>  		pr_info("remove from free list %lx %d %lx\n",
+>  			pfn, 1 << order, end_pfn);
+>  #endif
+> -		del_page_from_free_area(page, &zone->free_area[order]);
+> +		del_page_from_free_list(page, zone, order);
+>  		for (i = 0; i < (1 << order); i++)
+>  			SetPageReserved((page+i));
+>  		pfn += (1 << order);
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index bf82091..97a8268 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
- 		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
- 
-+	if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
-+		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-+
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index a1453c5..b541508 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -31,6 +31,7 @@
- 
- /* Parameters for PCIe Quirks */
- #define DWC_EQUALIZATION_DISABLE	0x1
-+#define DWC_EQ_PHASE_2_3_DISABLE	0x2
- 
- /* Synopsys-specific PCIe configuration registers */
- #define PCIE_PORT_LINK_CONTROL		0x710
-@@ -65,6 +66,7 @@
- 
- #define PCIE_PORT_GEN3_RELATED		0x890
- #define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
-+#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
- 
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
