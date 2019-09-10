@@ -2,443 +2,125 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACF1C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C93C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF2521479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HWPU3GzU"
+	by mail.kernel.org (Postfix) with ESMTP id 916F821019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393146AbfIJL5I (ORCPT
+        id S2393172AbfIJL5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:57:08 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41695 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391089AbfIJL4r (ORCPT
+        Tue, 10 Sep 2019 07:57:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:48971 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732932AbfIJL5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:56:47 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so18603843wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 04:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YfOGR22A4l38lkUXccDczpuDVTPqgcNTsRkizO9Fy14=;
-        b=HWPU3GzU3QVDWGFcOkzkKogiWC5zNxa38kUeFlNO9Kv0qUPHCTbSerropijK0SpZSN
-         K/tSAc/9Oz+hLKCio0IEWK860DNV+gZDHBlDbqUjgdz4U7Db7F2HtGcT0V4b5XbfHCw6
-         a0n8yMrG4npPrn6SWvm2vaGruTF3DZBFh4q1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YfOGR22A4l38lkUXccDczpuDVTPqgcNTsRkizO9Fy14=;
-        b=aq47sfs4a85yHoF/GBZJmWbGZpOwjxAipQ4OlqSDVivw9J3ndGD9V/BUWJSKoWal8L
-         7kGs4OKalZKdZ5Qzr2gJltX1fKFn2KqEkmaQxcO2IHtLyT2c9HJJPrXjQtfi4hnz4ldC
-         aVVIAd1w2kN243XLgAOfX96l+i9VTLemTgHKCjgyODNCF8tYEFRMCivGPNiKPaHv3RR0
-         e/Drq5sbQY/1Ej3CCiW6HBDAp7QeQ0LJqhMfiqWINO5HA+ZHVCpp3d3uSm91aqGSP/Wj
-         Qcf6UiQKmNCfXz12sPZ7pKqqEVMDJ1XKbrqR0jJscZWqZDWZZSIMpHHTbUS0aj+fBJ+t
-         kW+w==
-X-Gm-Message-State: APjAAAWNuKcx3bJ1atNsCnVhtc6RFZy/GY2+sL3ZrN75KWeyPDqNdTd0
-        mDwYcxf4xLbO/F2tBH/LMpnnsL5aAfA=
-X-Google-Smtp-Source: APXvYqwBvCNY+UARdEFe9ujlmg+pek1+2O0NHRq9kph8SAZQWqBrnPDrZyO43r/LIcfKjWSRpLGvmw==
-X-Received: by 2002:adf:e48f:: with SMTP id i15mr2910963wrm.26.1568116604037;
-        Tue, 10 Sep 2019 04:56:44 -0700 (PDT)
-Received: from kpsingh-kernel.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id q19sm23732935wra.89.2019.09.10.04.56.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 04:56:43 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: [RFC v1 12/14] krsi: Add an eBPF helper function to get the value of an env variable
-Date:   Tue, 10 Sep 2019 13:55:25 +0200
-Message-Id: <20190910115527.5235-13-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190910115527.5235-1-kpsingh@chromium.org>
-References: <20190910115527.5235-1-kpsingh@chromium.org>
+        Tue, 10 Sep 2019 07:57:08 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M2xjg-1i8k9h33wC-003NW5; Tue, 10 Sep 2019 13:56:45 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] [v2] arm64: fix unreachable code issue with cmpxchg
+Date:   Tue, 10 Sep 2019 13:56:22 +0200
+Message-Id: <20190910115643.391995-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:EHTSpuLoMolBSz8CcDfb/qHKuFLM8p+7X9tC8Slqv2t0NwgBE8C
+ CEK+aT1cF8p9GCYOMXQ9HwXnX5NR3vF73638cRLoJsKIRu4XOBbcOp7sn4PNSRR5Jbt0Sry
+ d6um31l43yl6egOIpt1DYB9KLWb+JQkE3FcXmpjvrBxGY9yI6dKjHFJ35D2Ao3CsqwFFPRU
+ kW57LeoduR53gqRvt9G4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tZ2pxyEDoFE=:FjiMNmyAJhF+Kct/9J4gj6
+ WlnXVAVAC8Cxf0IYDscFNtsWlONzdMJXCr0JwZPzKZe6H2kyJ+9zA6HZFLjNI6X8TGtTkx1ZU
+ YeaJHl2QR/C+yOjV5mni9COAFLkrzR9B7FOn2i+MEUH3TSPUt1pRfhhr/JI6u/vxjpCCIXE56
+ lNNhX2f3/fJAYKLEbZEVxiRggi9Ae3gY4942USVK6PBNwClhC4wz7fiy4rmgHW5cFUcxop+oW
+ bhsTxXPMd3ZNAjh+m6UWJBBZlkWFR9iScOGuXMPlP9jiMWveayxKFHQzPHzdwVD0hBYv3H0Uy
+ FAV/roihgc1V0OUDl0qwBKuk9y4inwLCLHCYShGOiiJQ/BzEHzoR8Uzn76IZ4vaBXyvsguiAQ
+ GKMMqeoH7+xtXsCDhFTxAewinskUBlX1II/D54y5mi4S1S7Cb+s49Vy3pPwPZaCQ0FGUxBcLL
+ bm8u22xwBXQZMAHtIBrJGBOKZEBIeoKBzNZo7YLv8DI6q+Uh2qNAWIcZF60YxOoYrkSQ2SlsX
+ EjN3vfJjiwr+RAvsJGgW0Updu1M0NHsFManaC9mkCRbY0k36V7Bi7YkrQEzUEPjkBMVXH7l4D
+ eaUUPAu6qsGCrrVdU9IB/Autez1PeKBWm66DURBJl+gtrTiw9RrEbLT0xkiXlBXlOs05c1YsI
+ uxOL6R7TgViEhaboreZmuwhnng1zszG6BEXPJNLZ/bynHBAJHtf8NvDNWlzmHJC9IeTSTpQtG
+ QLsB2fv3oQcctBcfg0wLRYs1XNLJoirOb5z3fOldnxwVHphjv344tb3G7pOKU9SH+f/JD0ZkR
+ H1QVp8iXmykxUFgO3di1hBiinYpWgQvVDHWXAEBGF9wZY5SgfU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
+when CONFIG_OPTIMIZE_INLINING is set.
+Clang then fails a compile-time assertion, because it cannot tell at
+compile time what the size of the argument is:
 
-The helper returns the value of the environment variable in the buffer
-that is passed to it. If the var is set multiple times, the helper
-returns all the values as null separated strings.
+mm/memcontrol.o: In function `__cmpxchg_mb':
+memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
+memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
 
-If the buffer is too short for these values, the helper tries to fill it
-the best it can and guarantees that the value returned in the buffer
-is always null terminated. After the buffer is filled, the helper keeps
-counting the number of times the environment variable is set in the
-envp.
+Mark all of the cmpxchg() style functions as __always_inline to
+ensure that the compiler can see the result.
 
-The return value of the helper is an u64 value which carries two pieces
-of information.
-
-  * The upper 32 bits are a u32 value signifying the number of times
-    the environment variable is set in the envp.
-  * The lower 32 bits are a s32 value signifying the number of bytes
-    written to the buffer or an error code.
-
-Since the value of the environment variable can be very long and exceed
-what can be allocated on the BPF stack, a per-cpu array can be used
-instead:
-
-struct bpf_map_def SEC("maps") env_map = {
-        .type = BPF_MAP_TYPE_PERCPU_ARRAY,
-        .key_size = sizeof(u32),
-        .value_size = 4096,
-        .max_entries = 1,
-};
-
-SEC("prgrm")
-int bpf_prog1(void *ctx)
-{
-        u32 map_id = 0;
-        u64 times_ret;
-        s32 ret;
-        char name[48] = "LD_PRELOAD";
-
-        char *map_value = bpf_map_lookup_elem(&env_map, &map_id);
-        if (!map_value)
-                return 0;
-
-        // Read the lower 32 bits for the return value
-        times_ret = krsi_get_env_var(ctx, name, 48, map_value, 4096);
-        ret = times_ret & 0xffffffff;
-        if (ret < 0)
-                return ret;
-        return 0;
-}
-
-Signed-off-by: KP Singh <kpsingh@google.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/648
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Tested-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/uapi/linux/bpf.h                  |  42 ++++++-
- security/krsi/ops.c                       | 129 ++++++++++++++++++++++
- tools/include/uapi/linux/bpf.h            |  42 ++++++-
- tools/testing/selftests/bpf/bpf_helpers.h |   3 +
- 4 files changed, 214 insertions(+), 2 deletions(-)
+v2: skip unneeded changes, as suggested by Andrew Murray
+---
+ arch/arm64/include/asm/cmpxchg.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 32ab38f1a2fe..a4ef07956e07 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -2715,6 +2715,45 @@ union bpf_attr {
-  *		**-EPERM** if no permission to send the *sig*.
-  *
-  *		**-EAGAIN** if bpf program can try again.
-+ *
-+ * u64 krsi_get_env_var(void *ctx, char *name, char *buf,
-+ *			size_t name_len, size_t buf_len)
-+ *	Description
-+ *		This helper can be used as a part of the
-+ *		process_execution hook of the KRSI LSM in
-+ *		programs of type BPF_PROG_TYPE_KRSI.
-+ *
-+ *		The helper returns the value of the environment
-+ *		variable with the provided "name" for process that's
-+ *		going to be executed in the passed buffer, "buf". If the var
-+ *		is set multiple times, the helper returns all
-+ *		the values as null separated strings.
-+ *
-+ *		If the buffer is too short for these values, the helper
-+ *		tries to fill it the best it can and guarantees that the value
-+ *		returned in the buffer  is always null terminated.
-+ *		After the buffer is filled, the helper keeps counting the number
-+ *		of times the environment variable is set in the envp.
-+ *
-+ *	Return:
-+ *
-+ *		The return value of the helper is an u64 value
-+ *		which carries two pieces of information:
-+ *
-+ *		   The upper 32 bits are a u32 value signifying
-+ *		   the number of times the environment variable
-+ *		   is set in the envp.
-+ *		   The lower 32 bits are an s32 value signifying
-+ *		   the number of bytes written to the buffer or an error code:
-+ *
-+ *		**-ENOMEM** if the kernel is unable to allocate memory
-+ *			    for pinning the argv and envv.
-+ *
-+ *		**-E2BIG** if the value is larger than the size of the
-+ *			   destination buffer. The higher bits will still
-+ *			   the number of times the variable was set in the envp.
-+ *
-+ *		**-EINVAL** if name is not a NULL terminated string.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -2826,7 +2865,8 @@ union bpf_attr {
- 	FN(strtoul),			\
- 	FN(sk_storage_get),		\
- 	FN(sk_storage_delete),		\
--	FN(send_signal),
-+	FN(send_signal),		\
-+	FN(krsi_get_env_var),
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index a1398f2f9994..f9bef42c1411 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -62,7 +62,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
+ #undef __XCHG_CASE
  
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-diff --git a/security/krsi/ops.c b/security/krsi/ops.c
-index 1f4df920139c..1db94dfaac15 100644
---- a/security/krsi/ops.c
-+++ b/security/krsi/ops.c
-@@ -6,6 +6,8 @@
- #include <linux/bpf.h>
- #include <linux/security.h>
- #include <linux/krsi.h>
-+#include <linux/binfmts.h>
-+#include <linux/highmem.h>
+ #define __XCHG_GEN(sfx)							\
+-static inline unsigned long __xchg##sfx(unsigned long x,		\
++static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
+ 					volatile void *ptr,		\
+ 					int size)			\
+ {									\
+@@ -148,7 +148,7 @@ __CMPXCHG_DBL(_mb)
+ #undef __CMPXCHG_DBL
  
- #include "krsi_init.h"
- #include "krsi_fs.h"
-@@ -162,6 +164,131 @@ static bool krsi_prog_is_valid_access(int off, int size,
- 	return false;
- }
+ #define __CMPXCHG_GEN(sfx)						\
+-static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
++static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
+ 					   unsigned long old,		\
+ 					   unsigned long new,		\
+ 					   int size)			\
+@@ -255,7 +255,7 @@ __CMPWAIT_CASE( ,  , 64);
+ #undef __CMPWAIT_CASE
  
-+static char *array_next_entry(char *array, unsigned long *offset,
-+			      unsigned long end)
-+{
-+	char *entry;
-+	unsigned long current_offset = *offset;
-+
-+	if (current_offset >= end)
-+		return NULL;
-+
-+	/*
-+	 * iterate on the array till the null byte is encountered
-+	 * and check for any overflows.
-+	 */
-+	entry = array + current_offset;
-+	while (array[current_offset]) {
-+		if (unlikely(++current_offset >= end))
-+			return NULL;
-+	}
-+
-+	/*
-+	 * Point the offset to the next element in the array.
-+	 */
-+	*offset = current_offset + 1;
-+
-+	return entry;
-+}
-+
-+static u64 get_env_var(struct krsi_ctx *ctx, char *name, char *dest,
-+		u32 n_size, u32 size)
-+{
-+	s32 ret = 0;
-+	u32 num_vars = 0;
-+	int i, name_len;
-+	struct linux_binprm *bprm = ctx->bprm_ctx.bprm;
-+	int argc = bprm->argc;
-+	int envc = bprm->envc;
-+	unsigned long end = ctx->bprm_ctx.max_arg_offset;
-+	unsigned long offset = bprm->p % PAGE_SIZE;
-+	char *buf = ctx->bprm_ctx.arg_pages;
-+	char *curr_dest = dest;
-+	char *entry;
-+
-+	if (unlikely(!buf))
-+		return -ENOMEM;
-+
-+	for (i = 0; i < argc; i++) {
-+		entry = array_next_entry(buf, &offset, end);
-+		if (!entry)
-+			return 0;
-+	}
-+
-+	name_len = strlen(name);
-+	for (i = 0; i < envc; i++) {
-+		entry = array_next_entry(buf, &offset, end);
-+		if (!entry)
-+			return 0;
-+
-+		if (!strncmp(entry, name, name_len)) {
-+			num_vars++;
-+
-+			/*
-+			 * There is no need to do further copying
-+			 * if the buffer is already full. Just count how many
-+			 * times the environment variable is set.
-+			 */
-+			if (ret == -E2BIG)
-+				continue;
-+
-+			if (entry[name_len] != '=')
-+				continue;
-+
-+			/*
-+			 * Move the buf pointer by name_len + 1
-+			 * (for the "=" sign)
-+			 */
-+			entry += name_len + 1;
-+			ret = strlcpy(curr_dest, entry, size);
-+
-+			if (ret >= size) {
-+				ret = -E2BIG;
-+				continue;
-+			}
-+
-+			/*
-+			 * strlcpy just returns the length of the string copied.
-+			 * The remaining space needs to account for the added
-+			 * null character.
-+			 */
-+			curr_dest += ret + 1;
-+			size -= ret + 1;
-+			/*
-+			 * Update ret to be the current number of bytes written
-+			 * to the destination
-+			 */
-+			ret = curr_dest - dest;
-+		}
-+	}
-+
-+	return (u64) num_vars << 32 | (u32) ret;
-+}
-+
-+BPF_CALL_5(krsi_get_env_var, struct krsi_ctx *, ctx, char *, name, u32, n_size,
-+	  char *, dest, u32, size)
-+{
-+	char *name_end;
-+
-+	name_end = memchr(name, '\0', n_size);
-+	if (!name_end)
-+		return -EINVAL;
-+
-+	memset(dest, 0, size);
-+	return get_env_var(ctx, name, dest, n_size, size);
-+}
-+
-+static const struct bpf_func_proto krsi_get_env_var_proto = {
-+	.func = krsi_get_env_var,
-+	.gpl_only = true,
-+	.ret_type = RET_INTEGER,
-+	.arg1_type = ARG_PTR_TO_CTX,
-+	.arg2_type = ARG_PTR_TO_MEM,
-+	.arg3_type = ARG_CONST_SIZE_OR_ZERO,
-+	.arg4_type = ARG_PTR_TO_UNINIT_MEM,
-+	.arg5_type = ARG_CONST_SIZE_OR_ZERO,
-+};
-+
- BPF_CALL_5(krsi_event_output, void *, log,
- 	   struct bpf_map *, map, u64, flags, void *, data, u64, size)
- {
-@@ -192,6 +319,8 @@ static const struct bpf_func_proto *krsi_prog_func_proto(enum bpf_func_id
- 		return &bpf_map_lookup_elem_proto;
- 	case BPF_FUNC_get_current_pid_tgid:
- 		return &bpf_get_current_pid_tgid_proto;
-+	case BPF_FUNC_krsi_get_env_var:
-+		return &krsi_get_env_var_proto;
- 	case BPF_FUNC_perf_event_output:
- 		return &krsi_event_output_proto;
- 	default:
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 32ab38f1a2fe..a4ef07956e07 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2715,6 +2715,45 @@ union bpf_attr {
-  *		**-EPERM** if no permission to send the *sig*.
-  *
-  *		**-EAGAIN** if bpf program can try again.
-+ *
-+ * u64 krsi_get_env_var(void *ctx, char *name, char *buf,
-+ *			size_t name_len, size_t buf_len)
-+ *	Description
-+ *		This helper can be used as a part of the
-+ *		process_execution hook of the KRSI LSM in
-+ *		programs of type BPF_PROG_TYPE_KRSI.
-+ *
-+ *		The helper returns the value of the environment
-+ *		variable with the provided "name" for process that's
-+ *		going to be executed in the passed buffer, "buf". If the var
-+ *		is set multiple times, the helper returns all
-+ *		the values as null separated strings.
-+ *
-+ *		If the buffer is too short for these values, the helper
-+ *		tries to fill it the best it can and guarantees that the value
-+ *		returned in the buffer  is always null terminated.
-+ *		After the buffer is filled, the helper keeps counting the number
-+ *		of times the environment variable is set in the envp.
-+ *
-+ *	Return:
-+ *
-+ *		The return value of the helper is an u64 value
-+ *		which carries two pieces of information:
-+ *
-+ *		   The upper 32 bits are a u32 value signifying
-+ *		   the number of times the environment variable
-+ *		   is set in the envp.
-+ *		   The lower 32 bits are an s32 value signifying
-+ *		   the number of bytes written to the buffer or an error code:
-+ *
-+ *		**-ENOMEM** if the kernel is unable to allocate memory
-+ *			    for pinning the argv and envv.
-+ *
-+ *		**-E2BIG** if the value is larger than the size of the
-+ *			   destination buffer. The higher bits will still
-+ *			   the number of times the variable was set in the envp.
-+ *
-+ *		**-EINVAL** if name is not a NULL terminated string.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -2826,7 +2865,8 @@ union bpf_attr {
- 	FN(strtoul),			\
- 	FN(sk_storage_get),		\
- 	FN(sk_storage_delete),		\
--	FN(send_signal),
-+	FN(send_signal),		\
-+	FN(krsi_get_env_var),
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
-index f804f210244e..ecebdb772a9d 100644
---- a/tools/testing/selftests/bpf/bpf_helpers.h
-+++ b/tools/testing/selftests/bpf/bpf_helpers.h
-@@ -303,6 +303,9 @@ static int (*bpf_get_numa_node_id)(void) =
- static int (*bpf_probe_read_str)(void *ctx, __u32 size,
- 				 const void *unsafe_ptr) =
- 	(void *) BPF_FUNC_probe_read_str;
-+static unsigned long long (*krsi_get_env_var)(void *ctx,
-+	void *name, __u32 n_size, void *buf, __u32 size) =
-+	(void *) BPF_FUNC_krsi_get_env_var;
- static unsigned int (*bpf_get_socket_uid)(void *ctx) =
- 	(void *) BPF_FUNC_get_socket_uid;
- static unsigned int (*bpf_set_hash)(void *ctx, __u32 hash) =
+ #define __CMPWAIT_GEN(sfx)						\
+-static inline void __cmpwait##sfx(volatile void *ptr,			\
++static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
+ 				  unsigned long val,			\
+ 				  int size)				\
+ {									\
 -- 
-2.20.1
+2.20.0
 
