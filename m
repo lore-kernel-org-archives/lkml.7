@@ -3,189 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A323C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243CAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD3A20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022952067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfIJKo2 convert rfc822-to-8bit (ORCPT
+        id S1729878AbfIJKpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:44:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728993AbfIJKo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:44:27 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8AAc8Ab194748
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:44:26 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ux7346w5y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 06:44:26 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Tue, 10 Sep 2019 11:44:24 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Sep 2019 11:44:22 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8AAiLRt54395070
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Sep 2019 10:44:21 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 742594203F;
-        Tue, 10 Sep 2019 10:44:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 144E442045;
-        Tue, 10 Sep 2019 10:44:21 +0000 (GMT)
-Received: from localhost (unknown [9.85.92.121])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Sep 2019 10:44:20 +0000 (GMT)
-Date:   Tue, 10 Sep 2019 16:14:17 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH 2/2] powerpc/watchpoint: Disable watchpoint hit by
- larx/stcx instructions
-To:     mikey@neuling.org, mpe@ellerman.id.au,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     benh@kernel.crashing.org, christophe.leroy@c-s.fr,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        paulus@samba.org
-References: <20190910102422.23233-1-ravi.bangoria@linux.ibm.com>
-        <20190910102422.23233-3-ravi.bangoria@linux.ibm.com>
-In-Reply-To: <20190910102422.23233-3-ravi.bangoria@linux.ibm.com>
+        Tue, 10 Sep 2019 06:45:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39996 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728238AbfIJKpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:45:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C1A64B684;
+        Tue, 10 Sep 2019 10:45:42 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Gregory Farnum <gfarnum@redhat.com>
+Cc:     IlyaDryomov <idryomov@gmail.com>, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ceph: allow object copies across different filesystems in the same cluster
+References: <87k1ahojri.fsf@suse.com>
+        <20190909102834.16246-1-lhenriques@suse.com>
+        <3f838e42a50575595c7310386cf698aca8f89607.camel@kernel.org>
+        <87d0g9oh4r.fsf@suse.com>
+        <CAJ4mKGZVjJxQA69s92C+7DFbDxv87SOj10AUfyLXwVe9b+SDTw@mail.gmail.com>
+Date:   Tue, 10 Sep 2019 11:45:41 +0100
+In-Reply-To: <CAJ4mKGZVjJxQA69s92C+7DFbDxv87SOj10AUfyLXwVe9b+SDTw@mail.gmail.com>
+        (Gregory Farnum's message of "Mon, 9 Sep 2019 15:22:10 -0700")
+Message-ID: <871rwoo2ei.fsf@suse.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19091010-0028-0000-0000-0000039A7159
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091010-0029-0000-0000-0000245CD4A5
-Message-Id: <1568111933.eaf72yeuof.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-10_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=636 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909100108
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ravi Bangoria wrote:
-> If watchpoint exception is generated by larx/stcx instructions, the
-> reservation created by larx gets lost while handling exception, and
-> thus stcx instruction always fails. Generally these instructions are
-> used in a while(1) loop, for example spinlocks. And because stcx
-> never succeeds, it loops forever and ultimately hangs the system.
-> 
-> Note that ptrace anyway works in one-shot mode and thus for ptrace
-> we don't change the behaviour. It's up to ptrace user to take care
-> of this.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/hw_breakpoint.c | 49 +++++++++++++++++++----------
->  1 file changed, 33 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-> index 28ad3171bb82..9fa496a598ce 100644
-> --- a/arch/powerpc/kernel/hw_breakpoint.c
-> +++ b/arch/powerpc/kernel/hw_breakpoint.c
-> @@ -195,14 +195,32 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
->  	tsk->thread.last_hit_ubp = NULL;
->  }
->  
-> +static bool is_larx_stcx_instr(struct pt_regs *regs, unsigned int instr)
-> +{
-> +	int ret, type;
-> +	struct instruction_op op;
-> +
-> +	ret = analyse_instr(&op, regs, instr);
-> +	type = GETTYPE(op.type);
-> +	return (!ret && (type == LARX || type == STCX));
-> +}
-> +
->  /*
->   * Handle debug exception notifications.
->   */
->  static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
->  			     unsigned long addr)
->  {
-> -	int stepped;
-> -	unsigned int instr;
-> +	unsigned int instr = 0;
-> +
-> +	if (__get_user_inatomic(instr, (unsigned int *)regs->nip))
-> +		goto fail;
-> +
-> +	if (is_larx_stcx_instr(regs, instr)) {
-> +		printk_ratelimited("Watchpoint: Can't emulate/single-step larx/"
-> +				   "stcx instructions. Disabling watchpoint.\n");
+Gregory Farnum <gfarnum@redhat.com> writes:
 
-The below WARN() uses the term 'breakpoint'. Better to use consistent 
-terminology. I would rewrite the above as:
-	printk_ratelimited("Breakpoint hit on instruction that can't be emulated. "
-				"Breakpoint at 0x%lx will be disabled.\n", addr);
+> On Mon, Sep 9, 2019 at 4:15 AM Luis Henriques <lhenriques@suse.com> wrote:
+>>
+>> "Jeff Layton" <jlayton@kernel.org> writes:
+>>
+>> > On Mon, 2019-09-09 at 11:28 +0100, Luis Henriques wrote:
+>> >> OSDs are able to perform object copies across different pools.  Thus,
+>> >> there's no need to prevent copy_file_range from doing remote copies if the
+>> >> source and destination superblocks are different.  Only return -EXDEV if
+>> >> they have different fsid (the cluster ID).
+>> >>
+>> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> >> ---
+>> >>  fs/ceph/file.c | 18 ++++++++++++++----
+>> >>  1 file changed, 14 insertions(+), 4 deletions(-)
+>> >>
+>> >> Hi,
+>> >>
+>> >> Here's the patch changelog since initial submittion:
+>> >>
+>> >> - Dropped have_fsid checks on client structs
+>> >> - Use %pU to print the fsid instead of raw hex strings (%*ph)
+>> >> - Fixed 'To:' field in email so that this time the patch hits vger
+>> >>
+>> >> Cheers,
+>> >> --
+>> >> Luis
+>> >>
+>> >> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+>> >> index 685a03cc4b77..4a624a1dd0bb 100644
+>> >> --- a/fs/ceph/file.c
+>> >> +++ b/fs/ceph/file.c
+>> >> @@ -1904,6 +1904,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>> >>      struct ceph_inode_info *src_ci = ceph_inode(src_inode);
+>> >>      struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+>> >>      struct ceph_cap_flush *prealloc_cf;
+>> >> +    struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+>> >>      struct ceph_object_locator src_oloc, dst_oloc;
+>> >>      struct ceph_object_id src_oid, dst_oid;
+>> >>      loff_t endoff = 0, size;
+>> >> @@ -1915,8 +1916,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>> >>
+>> >>      if (src_inode == dst_inode)
+>> >>              return -EINVAL;
+>> >> -    if (src_inode->i_sb != dst_inode->i_sb)
+>> >> -            return -EXDEV;
+>> >> +    if (src_inode->i_sb != dst_inode->i_sb) {
+>> >> +            struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+>> >> +
+>> >> +            if (ceph_fsid_compare(&src_fsc->client->fsid,
+>> >> +                                  &dst_fsc->client->fsid)) {
+>> >> +                    dout("Copying object across different clusters:");
+>> >> +                    dout("  src fsid: %pU dst fsid: %pU\n",
+>> >> +                         &src_fsc->client->fsid, &dst_fsc->client->fsid);
+>> >> +                    return -EXDEV;
+>> >> +            }
+>> >> +    }
+>> >
+>> > Just to be clear: what happens here if I mount two entirely separate
+>> > clusters, and their OSDs don't have any access to one another? Will this
+>> > fail at some later point with an error that we can catch so that we can
+>> > fall back?
+>>
+>> This is exactly what this check prevents: if we have two CephFS from two
+>> unrelated clusters mounted and we try to copy a file across them, the
+>> operation will fail with -EXDEV[1] because the FSIDs for these two
+>> ceph_fs_client will be different.  OTOH, if these two filesystems are
+>> within the same cluster (and thus with the same FSID), then the OSDs are
+>> able to do 'copy-from' operations between them.
+>>
+>> I've tested all these scenarios and they seem to be handled correctly.
+>> Now, I'm assuming that *all* OSDs within the same ceph cluster can
+>> communicate between themselves; if this assumption is false, then this
+>> patch is broken.  But again, I'm not aware of any mechanism that
+>> prevents 2 OSDs from communicating between them.
+>
+> Your assumption is correct: all OSDs in a Ceph cluster can communicate
+> with each other. I'm not aware of any plans to change this.
+>
+> I spent a bit of time trying to figure out how this could break
+> security models and things and didn't come up with anything, so I
+> think functionally it's fine even though I find it a bit scary.
+>
+> Also, yes, cluster FSIDs are UUIDs so they shouldn't collide.
 
-Otherwise:
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Awesome, thanks for clarifying these points!
 
-- Naveen
+Cheers,
+-- 
+Luis
 
-> +		goto disable;
-> +	}
->  
->  	/* Do not emulate user-space instructions, instead single-step them */
->  	if (user_mode(regs)) {
-> @@ -211,23 +229,22 @@ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
->  		return false;
->  	}
->  
-> -	stepped = 0;
-> -	instr = 0;
-> -	if (!__get_user_inatomic(instr, (unsigned int *)regs->nip))
-> -		stepped = emulate_step(regs, instr);
-> +	if (!emulate_step(regs, instr))
-> +		goto fail;
->  
-> +	return true;
-> +
-> +fail:
->  	/*
-> -	 * emulate_step() could not execute it. We've failed in reliably
-> -	 * handling the hw-breakpoint. Unregister it and throw a warning
-> -	 * message to let the user know about it.
-> +	 * We've failed in reliably handling the hw-breakpoint. Unregister
-> +	 * it and throw a warning message to let the user know about it.
->  	 */
-> -	if (!stepped) {
-> -		WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
-> -			"0x%lx will be disabled.", addr);
-> -		perf_event_disable_inatomic(bp);
-> -		return false;
-> -	}
-> -	return true;
-> +	WARN(1, "Unable to handle hardware breakpoint. Breakpoint at "
-> +		"0x%lx will be disabled.", addr);
-> +
-> +disable:
-> +	perf_event_disable_inatomic(bp);
-> +	return false;
->  }
->  
->  int hw_breakpoint_handler(struct die_args *args)
-> -- 
-> 2.21.0
-> 
-> 
 
+> -Greg
+>
+>>
+>> [1] Actually, the files will still be copied because we'll fallback into
+>> the default VFS generic_copy_file_range behaviour, which is to do
+>> reads+writes operations.
+>>
+>> Cheers,
+>> --
+>> Luis
+>>
+>>
+>> >
+>> >
+>> >>      if (ceph_snap(dst_inode) != CEPH_NOSNAP)
+>> >>              return -EROFS;
+>> >>
+>> >> @@ -1928,7 +1938,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>> >>       * efficient).
+>> >>       */
+>> >>
+>> >> -    if (ceph_test_mount_opt(ceph_inode_to_client(src_inode), NOCOPYFROM))
+>> >> +    if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+>> >>              return -EOPNOTSUPP;
+>> >>
+>> >>      if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+>> >> @@ -2044,7 +2054,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>> >>                              dst_ci->i_vino.ino, dst_objnum);
+>> >>              /* Do an object remote copy */
+>> >>              err = ceph_osdc_copy_from(
+>> >> -                    &ceph_inode_to_client(src_inode)->client->osdc,
+>> >> +                    &src_fsc->client->osdc,
+>> >>                      src_ci->i_vino.snap, 0,
+>> >>                      &src_oid, &src_oloc,
+>> >>                      CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+>
