@@ -2,319 +2,474 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A8AC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2510C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375E620872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568118432;
-	bh=VNVZeDKcLQOb9TnY/UyGcvSCEixIw1Nn197VhW3dClc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YORzY0PQBm+ctxa3vMkywnSJFuKnL64HDwW1CAtAQUljR5RzPbLgIhrJyOsc3ypzc
-	 XAhxMa7FZNSVk6rLalDXQ4n7IIw6lPxKJTVtmAbnJh+qpXbFRbrobEVaCaOV+UUoAj
-	 IKFQYn5eeMzJlBzm4k3pA7jgwkzeCQkO773Q78Xg=
+	by mail.kernel.org (Postfix) with ESMTP id 7FF7C20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyVxcenR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392075AbfIJM1L (ORCPT
+        id S2388206AbfIJMaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:27:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55540 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726245AbfIJM1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:27:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C728AB89;
-        Tue, 10 Sep 2019 12:27:08 +0000 (UTC)
-Date:   Tue, 10 Sep 2019 14:27:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, catalin.marinas@arm.com, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        ying.huang@intel.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com,
-        alexander.h.duyck@linux.intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v9 4/8] mm: Use zone and order instead of free area in
- free_list manipulators
-Message-ID: <20190910122707.GX2063@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190907172536.10910.99561.stgit@localhost.localdomain>
+        Tue, 10 Sep 2019 08:30:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33240 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIJMaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:30:04 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so9731521pgn.0;
+        Tue, 10 Sep 2019 05:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pahx3+Ak6TebFPml638WcX6MdpfKxaX+m0NespzBX/k=;
+        b=CyVxcenR7kaMqrV4RpB7O4Dkt4OfIfmIr5z/wHDdIc9e/cagGDDNAcWrAv8KwdkDl5
+         YwwSFnpPZaqsUFHwa9j10aJ58+IlgFFfEvEdS8iPn/0CfrEqbLbxCmGLJai6S4pCo2dG
+         pUOhdkMdwXWaIHYLfOvcuFKZmSk/qzjr5O4+LKwZkoxWUrXb8OLsYRoEincZ2726xXuY
+         N1Ca3FYeP992Fp9WtdhC0wEGYGggBoPGCLGGFm6GShuRRpEPWR+0woVQnT6IIceHsI+L
+         d5v6ddMgmrWBpx8MeZGoU1M5kZNbDyKwYYsaq6nVtB0X0vx4tNmHrAT7ymbO4VGdgnra
+         bdpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pahx3+Ak6TebFPml638WcX6MdpfKxaX+m0NespzBX/k=;
+        b=TdhvNO18kPYd+RVQJhjnc0jn2eqUVekqYSqueoenLTy7dZY04WG5Ee1XXiEzBTiSFm
+         5AjTSvWQRx5T4iNxwbkaX8FkoQS27w9kGcSrCZwIgQ5ZNd96MprWvzbXyxwVMHMMplP/
+         6i03X4iyaZrGn5jq8EPhWGC5qJdw1bEWPiK6cPxpL3ZCrG9pPmQaDkRHeSUPOlbgZfoV
+         i/pkYxY3p7FR/e0GF4kZ04fKCW7B4iviVHzLpqHymeLluMvUZGgpZONMEG85XI8/z0pq
+         kqNVzDqmrA0ByEvMwuz462fNoE+b7ZlmJds4qNXNYNeTenuzGAIqOEHXQm2zLIenKMOA
+         Ze3w==
+X-Gm-Message-State: APjAAAVfKtImn6aqcchrRVlUxI0EJ5eluUkv103s5NrazBLPYvGmeNjy
+        Xg55kNiMrC0NoCieV97UNeupV/mv34ToXg==
+X-Google-Smtp-Source: APXvYqwBxFk/F9gqNPzcBYMZRnhxA7IH6Ccvo/Le0lHvePPNpV84N9dFitcKYm+UE4B8oAOCeCBOZg==
+X-Received: by 2002:aa7:8156:: with SMTP id d22mr8843533pfn.190.1568118603178;
+        Tue, 10 Sep 2019 05:30:03 -0700 (PDT)
+Received: from debian ([103.231.90.170])
+        by smtp.gmail.com with ESMTPSA id x12sm20588975pff.49.2019.09.10.05.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 05:30:02 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 17:59:50 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.2.14
+Message-ID: <20190910122946.GA32443@debian>
+References: <20190910101841.GA7510@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
 Content-Disposition: inline
-In-Reply-To: <20190907172536.10910.99561.stgit@localhost.localdomain>
+In-Reply-To: <20190910101841.GA7510@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 07-09-19 10:25:36, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> In order to enable the use of the zone from the list manipulator functions
-> I will need access to the zone pointer. As it turns out most of the
-> accessors were always just being directly passed &zone->free_area[order]
-> anyway so it would make sense to just fold that into the function itself
-> and pass the zone and order as arguments instead of the free area.
 
-Yes this makes the interface better.
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> In order to be able to reference the zone we need to move the declaration
-> of the functions down so that we have the zone defined before we define the
-> list manipulation functions.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On 11:18 Tue 10 Sep 2019, Greg KH wrote:
+>I'm announcing the release of the 5.2.14 kernel.
+>
+>All users of the 5.2 kernel series must upgrade.
+>
+>The updated 5.2.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git lin=
+ux-5.2.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3D=
+summary
+>
+>thanks,
+>
+>greg k-h
+>
+>------------
+>
+> Makefile                                                       |    2
+> arch/x86/boot/compressed/pgtable_64.c                          |   13
+> arch/x86/include/asm/bootparam_utils.h                         |    1
+> arch/x86/kernel/apic/apic.c                                    |    4
+> drivers/bluetooth/btqca.c                                      |   24 +
+> drivers/bluetooth/btqca.h                                      |    7
+> drivers/bluetooth/hci_qca.c                                    |    3
+> drivers/clk/clk.c                                              |   49 ++-
+> drivers/clk/samsung/clk-exynos5-subcmu.c                       |   16
+> drivers/clk/samsung/clk-exynos5-subcmu.h                       |    2
+> drivers/clk/samsung/clk-exynos5250.c                           |    7
+> drivers/clk/samsung/clk-exynos5420.c                           |  162 +++=
++++----
+> drivers/gpio/gpiolib.c                                         |   30 -
+> drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c                         |    9
+> drivers/gpu/drm/mediatek/mtk_drm_drv.c                         |   49 ++-
+> drivers/gpu/drm/mediatek/mtk_drm_drv.h                         |    2
+> drivers/hid/hid-cp2112.c                                       |    8
+> drivers/hid/intel-ish-hid/ipc/hw-ish.h                         |    1
+> drivers/hid/intel-ish-hid/ipc/pci-ish.c                        |    1
+> drivers/infiniband/core/cma.c                                  |    6
+> drivers/infiniband/hw/bnxt_re/qplib_rcfw.c                     |    8
+> drivers/infiniband/hw/bnxt_re/qplib_rcfw.h                     |   11
+> drivers/infiniband/hw/hfi1/fault.c                             |   12
+> drivers/infiniband/hw/mlx4/mad.c                               |    4
+> drivers/input/serio/hyperv-keyboard.c                          |   35 --
+> drivers/mmc/core/mmc_ops.c                                     |    2
+> drivers/net/ethernet/cavium/common/cavium_ptp.c                |    2
+> drivers/net/ethernet/cavium/liquidio/request_manager.c         |    4
+> drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c             |    4
+> drivers/net/ethernet/ibm/ibmveth.c                             |    9
+> drivers/net/ethernet/ibm/ibmvnic.c                             |   11
+> drivers/net/ethernet/intel/ixgbe/ixgbe_main.c                  |    5
+> drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c       |   12
+> drivers/net/ethernet/mellanox/mlx5/core/en_main.c              |    1
+> drivers/net/ethernet/myricom/myri10ge/myri10ge.c               |    2
+> drivers/net/ethernet/netronome/nfp/flower/offload.c            |    7
+> drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c        |    8
+> drivers/net/ethernet/renesas/ravb_main.c                       |    8
+> drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c                 |    6
+> drivers/net/ethernet/toshiba/tc35815.c                         |    2
+> drivers/net/ethernet/tundra/tsi108_eth.c                       |    5
+> drivers/net/hyperv/netvsc_drv.c                                |    9
+> drivers/net/phy/phy-c45.c                                      |   26 +
+> drivers/net/phy/phy.c                                          |    2
+> drivers/net/usb/cx82310_eth.c                                  |    3
+> drivers/net/usb/kalmia.c                                       |    6
+> drivers/net/usb/lan78xx.c                                      |    8
+> drivers/net/usb/r8152.c                                        |    5
+> drivers/net/wimax/i2400m/fw.c                                  |    4
+> drivers/nvme/host/core.c                                       |    4
+> drivers/nvme/host/multipath.c                                  |    1
+> drivers/s390/net/qeth_core.h                                   |    1
+> drivers/s390/net/qeth_core_main.c                              |   20 +
+> drivers/scsi/lpfc/lpfc.h                                       |    1
+> drivers/scsi/lpfc/lpfc_attr.c                                  |   15
+> drivers/scsi/lpfc/lpfc_init.c                                  |   10
+> drivers/scsi/lpfc/lpfc_sli4.h                                  |    5
+> drivers/scsi/qla2xxx/qla_attr.c                                |    2
+> drivers/scsi/qla2xxx/qla_os.c                                  |   11
+> drivers/target/target_core_user.c                              |    9
+> fs/afs/cell.c                                                  |    4
+> fs/afs/dir.c                                                   |    3
+> fs/afs/yfsclient.c                                             |    2
+> fs/ceph/caps.c                                                 |    5
+> fs/ceph/inode.c                                                |    7
+> fs/ceph/snap.c                                                 |    4
+> fs/ceph/super.h                                                |    2
+> fs/ceph/xattr.c                                                |   19 -
+> fs/read_write.c                                                |   49 ++-
+> include/linux/ceph/buffer.h                                    |    3
+> include/linux/gpio.h                                           |   24 -
+> include/linux/phy.h                                            |    1
+> include/net/act_api.h                                          |    4
+> include/net/netfilter/nf_tables.h                              |    9
+> include/net/psample.h                                          |    1
+> kernel/kprobes.c                                               |    8
+> kernel/sched/core.c                                            |    5
+> net/batman-adv/multicast.c                                     |    2
+> net/core/netpoll.c                                             |    6
+> net/dsa/tag_8021q.c                                            |    2
+> net/ipv4/tcp.c                                                 |   30 +
+> net/ipv4/tcp_output.c                                          |    3
+> net/ipv6/mcast.c                                               |    5
+> net/netfilter/nf_flow_table_core.c                             |   43 +-
+> net/netfilter/nf_flow_table_ip.c                               |   43 ++
+> net/netfilter/nf_tables_api.c                                  |   15
+> net/netfilter/nft_flow_offload.c                               |    9
+> net/psample/psample.c                                          |    2
+> net/rds/recv.c                                                 |    5
+> net/sched/act_bpf.c                                            |    2
+> net/sched/act_connmark.c                                       |    2
+> net/sched/act_csum.c                                           |    2
+> net/sched/act_gact.c                                           |    2
+> net/sched/act_ife.c                                            |    2
+> net/sched/act_ipt.c                                            |   11
+> net/sched/act_mirred.c                                         |    2
+> net/sched/act_nat.c                                            |    2
+> net/sched/act_pedit.c                                          |    2
+> net/sched/act_police.c                                         |    2
+> net/sched/act_sample.c                                         |    8
+> net/sched/act_simple.c                                         |    2
+> net/sched/act_skbedit.c                                        |    2
+> net/sched/act_skbmod.c                                         |    2
+> net/sched/act_tunnel_key.c                                     |    2
+> net/sched/act_vlan.c                                           |    2
+> net/sched/sch_cbs.c                                            |   19 -
+> net/sched/sch_generic.c                                        |   19 -
+> net/sched/sch_taprio.c                                         |   31 +
+> tools/bpf/bpftool/common.c                                     |    2
+> tools/hv/hv_kvp_daemon.c                                       |    2
+> tools/lib/bpf/libbpf.c                                         |   15
+> tools/testing/selftests/kvm/include/evmcs.h                    |    2
+> tools/testing/selftests/kvm/lib/x86_64/processor.c             |   16
+> tools/testing/selftests/kvm/lib/x86_64/vmx.c                   |   20 +
+> tools/testing/selftests/kvm/x86_64/evmcs_test.c                |   15
+> tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c              |   12
+> tools/testing/selftests/kvm/x86_64/platform_info_test.c        |    2
+> tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c |   32 -
+> virt/kvm/arm/mmio.c                                            |    7
+> virt/kvm/arm/vgic/vgic-init.c                                  |   30 +
+> 120 files changed, 864 insertions(+), 418 deletions(-)
+>
+>Alexandre Courbot (2):
+>      drm/mediatek: use correct device to import PRIME buffers
+>      drm/mediatek: set DMA max segment size
+>
+>Andre Przywara (1):
+>      KVM: arm/arm64: VGIC: Properly initialise private IRQ affinity
+>
+>Andrea Righi (1):
+>      kprobes: Fix potential deadlock in kprobe_optimizer()
+>
+>Andrew Jones (1):
+>      KVM: arm/arm64: Only skip MMIO insn once
+>
+>Andrii Nakryiko (2):
+>      libbpf: fix erroneous multi-closing of BTF FD
+>      libbpf: set BTF FD for prog only when there is supported .BTF.ext da=
+ta
+>
+>Anton Eidelman (1):
+>      nvme-multipath: fix possible I/O hang when paths are updated
+>
+>Aya Levin (1):
+>      net/mlx5e: Fix error flow of CQE recovery on tx reporter
+>
+>Benjamin Tissoires (1):
+>      HID: cp2112: prevent sleeping function called from invalid context
+>
+>Bill Kuzeja (1):
+>      scsi: qla2xxx: Fix gnl.l memory leak on adapter init failure
+>
+>Chen-Yu Tsai (1):
+>      net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
+>
+>Cong Wang (1):
+>      net_sched: fix a NULL pointer deref in ipt action
+>
+>Darrick J. Wong (1):
+>      vfs: fix page locking deadlocks when deduping files
+>
+>David Howells (1):
+>      afs: Fix leak in afs_lookup_cell_rcu()
+>
+>Davide Caratti (2):
+>      net/sched: pfifo_fast: fix wrong dereference in pfifo_fast_enqueue
+>      net/sched: pfifo_fast: fix wrong dereference when qdisc is reset
+>
+>Dexuan Cui (2):
+>      hv_netvsc: Fix a warning of suspicious RCU usage
+>      Input: hyperv-keyboard: Use in-place iterator API in the channel cal=
+lback
+>
+>Dmitry Fomichev (1):
+>      scsi: target: tcmu: avoid use-after-free after command timeout
+>
+>Eric Dumazet (2):
+>      mld: fix memory leak in mld_del_delrec()
+>      tcp: remove empty skb from write queue in error cases
+>
+>Even Xu (1):
+>      HID: intel-ish-hid: ipc: add EHL device id
+>
+>Feng Sun (1):
+>      net: fix skb use after free in netpoll
+>
+>Florian Westphal (1):
+>      netfilter: nf_flow_table: fix offload for flows that are subject to =
+xfrm
+>
+>Fuqian Huang (1):
+>      net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq =
+in IRQ context
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.2.14
+>
+>Guilherme G. Piccoli (1):
+>      nvme: Fix cntlid validation when not using NVMEoF
+>
+>Harish Bandi (1):
+>      Bluetooth: hci_qca: Send VS pre shutdown command.
+>
+>Hayes Wang (2):
+>      Revert "r8152: napi hangup fix after disconnect"
+>      r8152: remove calling netif_napi_del
+>
+>Jakub Kicinski (1):
+>      tools: bpftool: fix error message (prog -> object)
+>
+>James Smart (1):
+>      scsi: lpfc: Mitigate high memory pre-allocation by SCSI-MQ
+>
+>Jan Kaisrlik (1):
+>      Revert "mmc: core: do not retry CMD6 in __mmc_switch()"
+>
+>John Hurley (2):
+>      nfp: flower: prevent ingress block binds on internal ports
+>      nfp: flower: handle neighbour events on internal ports
+>
+>John S. Gruber (1):
+>      x86/boot: Preserve boot_params.secure_boot from sanitizing
+>
+>Julian Wiedmann (1):
+>      s390/qeth: serialize cmd reply with concurrent timeout
+>
+>Ka-Cheong Poon (1):
+>      net/rds: Fix info leak in rds6_inc_info_copy()
+>
+>Kirill A. Shutemov (2):
+>      x86/boot/compressed/64: Fix boot on machines with broken E820 table
+>      x86/boot/compressed/64: Fix missing initialization in find_trampolin=
+e_placement()
+>
+>Linus Torvalds (1):
+>      Revert "x86/apic: Include the LDR when clearing out APIC registers"
+>
+>Linus Walleij (1):
+>      gpio: Fix irqchip initialization order
+>
+>Luis Henriques (4):
+>      ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+>      ceph: fix buffer free while holding i_ceph_lock in __ceph_build_xatt=
+rs_blob()
+>      ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+>      libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+>
+>Marc Dionne (1):
+>      afs: Fix possible oops in afs_lookup trace event
+>
+>Marco Hartmann (1):
+>      Add genphy_c45_config_aneg() function to phy-c45.c
+>
+>Marek Szyprowski (1):
+>      clk: samsung: exynos542x: Move MSCL subsystem clocks to its sub-CMU
+>
+>Martin Blumenstingl (1):
+>      clk: Fix potential NULL dereference in clk_fetch_parent_index()
+>
+>Matthias Kaehlcke (1):
+>      Bluetooth: btqca: Add a short delay before downloading the NVM
+>
+>Nathan Chancellor (1):
+>      net: tc35815: Explicitly check NET_IP_ALIGN is not zero in tc35815_rx
+>
+>Nicolai H=E4hnle (1):
+>      drm/amdgpu: prevent memory leaks in AMDGPU_CS ioctl
+>
+>Pablo Neira Ayuso (4):
+>      netfilter: nf_tables: use-after-free in failing rule with bound set
+>      netfilter: nf_flow_table: conntrack picks up expired flows
+>      netfilter: nf_flow_table: teardown flow timeout race
+>      netfilter: nft_flow_offload: skip tcp rst and fin packets
+>
+>Paolo Bonzini (4):
+>      selftests: kvm: do not try running the VM in vmx_set_nested_state_te=
+st
+>      selftests: kvm: provide common function to enable eVMCS
+>      selftests: kvm: fix vmx_set_nested_state_test
+>      selftests: kvm: fix state save/load on processors without XSAVE
+>
+>Sebastian Andrzej Siewior (1):
+>      sched/core: Schedule new worker even if PI-blocked
+>
+>Selvin Xavier (1):
+>      RDMA/bnxt_re: Fix stack-out-of-bounds in bnxt_qplib_rcfw_send_message
+>
+>Stephen Boyd (1):
+>      clk: Fix falling back to legacy parent string matching
+>
+>Stephen Hemminger (1):
+>      net: cavium: fix driver name
+>
+>Sven Eckelmann (1):
+>      batman-adv: Fix netlink dumping of all mcast_flags buckets
+>
+>Sylwester Nawrocki (2):
+>      clk: samsung: Change signature of exynos5_subcmus_init() function
+>      clk: samsung: exynos5800: Move MAU subsystem clocks to MAU sub-CMU
+>
+>Taehee Yoo (1):
+>      ixgbe: fix possible deadlock in ixgbe_service_task()
+>
+>Tho Vu (1):
+>      ravb: Fix use-after-free ravb_tstamp_skb
+>
+>Thomas Falcon (2):
+>      ibmveth: Convert multicast list size for little-endian system
+>      ibmvnic: Unmap DMA address of TX descriptor buffers after use
+>
+>Vitaly Kuznetsov (2):
+>      Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+>      selftests/kvm: make platform_info_test pass on AMD
+>
+>Vlad Buslov (1):
+>      net: sched: act_sample: fix psample group handling on overwrite
+>
+>Vladimir Oltean (4):
+>      taprio: Fix kernel panic in taprio_destroy
+>      taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_by=
+te
+>      net/sched: cbs: Set default link speed to 10 Mbps in cbs_set_port_ra=
+te
+>      net: dsa: tag_8021q: Future-proof the reserved fields in the custom =
+VID
+>
+>Wenwen Wang (10):
+>      cxgb4: fix a memory leak bug
+>      liquidio: add cleanup in octeon_setup_iq()
+>      net: myri10ge: fix memory leaks
+>      lan78xx: Fix memory leaks
+>      cx82310_eth: fix a memory leak bug
+>      net: kalmia: fix memory leaks
+>      wimax/i2400m: fix a memory leak bug
+>      IB/mlx4: Fix memory leaks
+>      infiniband: hfi1: fix a memory leak bug
+>      infiniband: hfi1: fix memory leaks
+>
+>Willem de Bruijn (1):
+>      tcp: inherit timestamp on mtu probe
+>
+>YueHaibing (2):
+>      gpio: Fix build error of function redefinition
+>      afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
+>
+>zhengbin (1):
+>      RDMA/cma: fix null-ptr-deref Read in cma_cleanup
+>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks, a bunch Greg! :)
 
-> ---
->  include/linux/mmzone.h |   70 ++++++++++++++++++++++++++----------------------
->  mm/page_alloc.c        |   30 ++++++++-------------
->  2 files changed, 49 insertions(+), 51 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 125f300981c6..2ddf1f1971c0 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -100,29 +100,6 @@ struct free_area {
->  	unsigned long		nr_free;
->  };
->  
-> -/* Used for pages not on another list */
-> -static inline void add_to_free_area(struct page *page, struct free_area *area,
-> -			     int migratetype)
-> -{
-> -	list_add(&page->lru, &area->free_list[migratetype]);
-> -	area->nr_free++;
-> -}
-> -
-> -/* Used for pages not on another list */
-> -static inline void add_to_free_area_tail(struct page *page, struct free_area *area,
-> -				  int migratetype)
-> -{
-> -	list_add_tail(&page->lru, &area->free_list[migratetype]);
-> -	area->nr_free++;
-> -}
-> -
-> -/* Used for pages which are on another list */
-> -static inline void move_to_free_area(struct page *page, struct free_area *area,
-> -			     int migratetype)
-> -{
-> -	list_move(&page->lru, &area->free_list[migratetype]);
-> -}
-> -
->  static inline struct page *get_page_from_free_area(struct free_area *area,
->  					    int migratetype)
->  {
-> @@ -130,15 +107,6 @@ static inline struct page *get_page_from_free_area(struct free_area *area,
->  					struct page, lru);
->  }
->  
-> -static inline void del_page_from_free_area(struct page *page,
-> -		struct free_area *area)
-> -{
-> -	list_del(&page->lru);
-> -	__ClearPageBuddy(page);
-> -	set_page_private(page, 0);
-> -	area->nr_free--;
-> -}
-> -
->  static inline bool free_area_empty(struct free_area *area, int migratetype)
->  {
->  	return list_empty(&area->free_list[migratetype]);
-> @@ -796,6 +764,44 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
->  	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
->  }
->  
-> +/* Used for pages not on another list */
-> +static inline void add_to_free_list(struct page *page, struct zone *zone,
-> +				    unsigned int order, int migratetype)
-> +{
-> +	struct free_area *area = &zone->free_area[order];
-> +
-> +	list_add(&page->lru, &area->free_list[migratetype]);
-> +	area->nr_free++;
-> +}
-> +
-> +/* Used for pages not on another list */
-> +static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
-> +					 unsigned int order, int migratetype)
-> +{
-> +	struct free_area *area = &zone->free_area[order];
-> +
-> +	list_add_tail(&page->lru, &area->free_list[migratetype]);
-> +	area->nr_free++;
-> +}
-> +
-> +/* Used for pages which are on another list */
-> +static inline void move_to_free_list(struct page *page, struct zone *zone,
-> +				     unsigned int order, int migratetype)
-> +{
-> +	struct free_area *area = &zone->free_area[order];
-> +
-> +	list_move(&page->lru, &area->free_list[migratetype]);
-> +}
-> +
-> +static inline void del_page_from_free_list(struct page *page, struct zone *zone,
-> +					   unsigned int order)
-> +{
-> +	list_del(&page->lru);
-> +	__ClearPageBuddy(page);
-> +	set_page_private(page, 0);
-> +	zone->free_area[order].nr_free--;
-> +}
-> +
->  #include <linux/memory_hotplug.h>
->  
->  void build_all_zonelists(pg_data_t *pgdat);
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index a791f2baeeeb..f85dc1561b85 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -921,7 +921,6 @@ static inline void __free_one_page(struct page *page,
->  	struct capture_control *capc = task_capc(zone);
->  	unsigned long uninitialized_var(buddy_pfn);
->  	unsigned long combined_pfn;
-> -	struct free_area *area;
->  	unsigned int max_order;
->  	struct page *buddy;
->  
-> @@ -958,7 +957,7 @@ static inline void __free_one_page(struct page *page,
->  		if (page_is_guard(buddy))
->  			clear_page_guard(zone, buddy, order, migratetype);
->  		else
-> -			del_page_from_free_area(buddy, &zone->free_area[order]);
-> +			del_page_from_free_list(buddy, zone, order);
->  		combined_pfn = buddy_pfn & pfn;
->  		page = page + (combined_pfn - pfn);
->  		pfn = combined_pfn;
-> @@ -992,12 +991,11 @@ static inline void __free_one_page(struct page *page,
->  done_merging:
->  	set_page_order(page, order);
->  
-> -	area = &zone->free_area[order];
->  	if (is_shuffle_order(order) ? shuffle_pick_tail() :
->  	    buddy_merge_likely(pfn, buddy_pfn, page, order))
-> -		add_to_free_area_tail(page, area, migratetype);
-> +		add_to_free_list_tail(page, zone, order, migratetype);
->  	else
-> -		add_to_free_area(page, area, migratetype);
-> +		add_to_free_list(page, zone, order, migratetype);
->  }
->  
->  /*
-> @@ -2001,13 +1999,11 @@ void __init init_cma_reserved_pageblock(struct page *page)
->   * -- nyc
->   */
->  static inline void expand(struct zone *zone, struct page *page,
-> -	int low, int high, struct free_area *area,
-> -	int migratetype)
-> +	int low, int high, int migratetype)
->  {
->  	unsigned long size = 1 << high;
->  
->  	while (high > low) {
-> -		area--;
->  		high--;
->  		size >>= 1;
->  		VM_BUG_ON_PAGE(bad_range(zone, &page[size]), &page[size]);
-> @@ -2021,7 +2017,7 @@ static inline void expand(struct zone *zone, struct page *page,
->  		if (set_page_guard(zone, &page[size], high, migratetype))
->  			continue;
->  
-> -		add_to_free_area(&page[size], area, migratetype);
-> +		add_to_free_list(&page[size], zone, high, migratetype);
->  		set_page_order(&page[size], high);
->  	}
->  }
-> @@ -2179,8 +2175,8 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
->  		page = get_page_from_free_area(area, migratetype);
->  		if (!page)
->  			continue;
-> -		del_page_from_free_area(page, area);
-> -		expand(zone, page, order, current_order, area, migratetype);
-> +		del_page_from_free_list(page, zone, current_order);
-> +		expand(zone, page, order, current_order, migratetype);
->  		set_pcppage_migratetype(page, migratetype);
->  		return page;
->  	}
-> @@ -2188,7 +2184,6 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
->  	return NULL;
->  }
->  
-> -
->  /*
->   * This array describes the order lists are fallen back to when
->   * the free lists for the desirable migrate type are depleted
-> @@ -2254,7 +2249,7 @@ static int move_freepages(struct zone *zone,
->  		VM_BUG_ON_PAGE(page_zone(page) != zone, page);
->  
->  		order = page_order(page);
-> -		move_to_free_area(page, &zone->free_area[order], migratetype);
-> +		move_to_free_list(page, zone, order, migratetype);
->  		page += 1 << order;
->  		pages_moved += 1 << order;
->  	}
-> @@ -2370,7 +2365,6 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
->  		unsigned int alloc_flags, int start_type, bool whole_block)
->  {
->  	unsigned int current_order = page_order(page);
-> -	struct free_area *area;
->  	int free_pages, movable_pages, alike_pages;
->  	int old_block_type;
->  
-> @@ -2441,8 +2435,7 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
->  	return;
->  
->  single_page:
-> -	area = &zone->free_area[current_order];
-> -	move_to_free_area(page, area, start_type);
-> +	move_to_free_list(page, zone, current_order, start_type);
->  }
->  
->  /*
-> @@ -3113,7 +3106,6 @@ void split_page(struct page *page, unsigned int order)
->  
->  int __isolate_free_page(struct page *page, unsigned int order)
->  {
-> -	struct free_area *area = &page_zone(page)->free_area[order];
->  	unsigned long watermark;
->  	struct zone *zone;
->  	int mt;
-> @@ -3139,7 +3131,7 @@ int __isolate_free_page(struct page *page, unsigned int order)
->  
->  	/* Remove page from free list */
->  
-> -	del_page_from_free_area(page, area);
-> +	del_page_from_free_list(page, zone, order);
->  
->  	/*
->  	 * Set the pageblock if the isolated page is at least half of a
-> @@ -8560,7 +8552,7 @@ void zone_pcp_reset(struct zone *zone)
->  		pr_info("remove from free list %lx %d %lx\n",
->  			pfn, 1 << order, end_pfn);
->  #endif
-> -		del_page_from_free_area(page, &zone->free_area[order]);
-> +		del_page_from_free_list(page, zone, order);
->  		for (i = 0; i < (1 << order); i++)
->  			SetPageReserved((page+i));
->  		pfn += (1 << order);
+Thanks,
+Bhaskar
 
--- 
-Michal Hocko
-SUSE Labs
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl13lzcACgkQsjqdtxFL
+KRXJ5gf/W+rECZMUZLTuttmbkVnM7CFm3UM64hG2meBjiWqoNE7mmeFMw459gY+D
+2Jf0vGiferQe09y8W0tqMIQkXNvMx0KCNPGRngMs1OaP5+K2u08qPeJBEJk7aWYv
+/DCEDqD1ybdK29LMw8FPrbcyw/pi34ktGV4ayPzNxI/ez4ppFXz7pUKbhmV5Vxw7
+zCyio/8nrtjK7eiqM5sn6XoMJxlY4FTmp4bpHMRiGoJj3sxP+HrLhQIT3lRkvxnR
+M4omkU8jzoGmHV/ZcBdjXQq3z9z50gNm7AXepmojCcLnKrtUwIkkfHXIbLgTZEUr
+7zR0MH6Da4Xy5oCkBgpYDD/fNz/OmQ==
+=/N5B
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
