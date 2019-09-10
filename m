@@ -2,183 +2,197 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D9BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D651C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F73216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55287206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 10:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LyN9zyK/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWD1IplS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388914AbfIJKVh (ORCPT
+        id S2389019AbfIJKWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 06:21:37 -0400
-Received: from mail-eopbgr150044.outbound.protection.outlook.com ([40.107.15.44]:9092
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726231AbfIJKVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 06:21:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dsUQDQSPy6afKuK7nYcq5eUgkgyHY4TdZgHCsTgGdxkhhvf5uhez5BJC3SFvJ8G5qOjhMGkotOptd9S+/Hk1RYJpc7xZBldnEIi7/+PJM2M0zHNlVbDcV/NYLrYb1HGD7CQ9OUaOO8BV4nGslQs6MKaBqcyyNGL6OGGD33+BEkZTmcb5dGsA112bOa3oAq0Ab+3RKMx648oJvwQWoCDN3n4Y9ulmZks1SPFOXR2JZu/VAGrhLqLAo6cx83QX9Le55sLs/VpyS904eS18KYQM5n7o0UY0uiAlreWzz3QfooOMUvKTVleQ8ByF28F3zu7+1tuhJZe06EOQO1YXRLsXSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8oSkNysn+HgO4b37sBIEVLHgCeN5ZXtc1gRaMsjTWLI=;
- b=DnX47s2E28seBnmrRHkf42KYMJSyGK0ymZk3cxBtUKAAR8UVBU6YHooUGyfW/HpQW/fjdub8ntxwMJ7b8tryn4dF/4WuuK9JvjLpmPdHBFaNnxGFT2ExrSnwHUWXAySYDevgxdesj9gspkDw+9vVg9zcfERXmQrKA61q7P9V4U1mTXaGLdwYCchmPpVGxqMIoE0bSP06cHzb1fh8CoJNyPPq+eC2QzTzcIHKqmGdflUM47CoGw6HcNVb4Hu+O2yxZsKFzaDoGFokeO+tx7JUD+dDFXkd3pAZndQvhFwflSkPgP/gPJkitrnRo39A3EA7HI46U/BS3z2JxwD93RlRFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8oSkNysn+HgO4b37sBIEVLHgCeN5ZXtc1gRaMsjTWLI=;
- b=LyN9zyK/FUn4xNDZmPy5alCS2nJn3aCwn5zEU1851rF2h4sPBewD62oj+G2dNcnFdchNSB3mHBHWWpG3wthqMo06odag3JRAHTscW3TMJdK9XUGwnmRGi6zc7JbKRd2cJXzeQ29jZ7qFGCLv2qfnDe/E4iY/u4jqtfgaRYvSzMU=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4300.eurprd04.prod.outlook.com (52.135.131.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Tue, 10 Sep 2019 10:21:33 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 10:21:33 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     'Rob Herring' <robh@kernel.org>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>
-CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: RE: [EXT] Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
- properties
-Thread-Topic: [EXT] Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
- properties
-Thread-Index: AQHVYiDislXlKba5R0W8Eh4TiH+l96cZsgSAgACF2ACACoaiQA==
-Date:   Tue, 10 Sep 2019 10:21:32 +0000
-Message-ID: <DB7PR04MB4490F16B6EB5BBE4FE2472218FB60@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190903061853.19793-1-biwen.li@nxp.com>
- <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
- <20190903173604.GA18177@bogus>
-In-Reply-To: <20190903173604.GA18177@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e52ad49-6db5-4bd5-8922-08d735d8a745
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4300;
-x-ms-traffictypediagnostic: DB7PR04MB4300:|DB7PR04MB4300:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB4300511548D5EFE26BDDBF318FB60@DB7PR04MB4300.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(189003)(199004)(81156014)(66066001)(8676002)(102836004)(486006)(44832011)(476003)(99286004)(71200400001)(76116006)(110136005)(7696005)(76176011)(316002)(54906003)(5660300002)(55016002)(53936002)(26005)(6436002)(9686003)(305945005)(7736002)(11346002)(6246003)(33656002)(71190400001)(478600001)(8936002)(14454004)(53546011)(6506007)(229853002)(25786009)(64756008)(66556008)(66476007)(66446008)(2906002)(74316002)(66946007)(4326008)(6116002)(256004)(3846002)(86362001)(52536014)(446003)(81166006)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4300;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Fg8K18l47oZPprONuqOt0aAURnNwOdpSmRtF+SvWSaHk2MS1NnaKxOpRAAs+ZC498ReOKJ75dHwubRnAywN/+I1lxQzlDGD85s6i0A+qi/MvhB/glVPjx7pzhyX+fGdMd5jBvUbgBDWtaoMC/u30uaim8PdCiItOUL2GCM5LYZtkZ1hfKFlDTmwwiPKNaCNArI8g6kJVB5TQ/nHiZ0S6lZQKU7ZOEwIBP/Ztb3Oz8270Wda5wiHRrxrU+5tB/Ms6B5xKLs8HugEFFlmo0stXkvJjO5r4pNGR+m4XA3MVShdxohozGD7lpg3gHmCgV5zO2fqK8n2s7uQORXNvLMJMx2OkFhsoc5VM0Mquhq5A5JDXKob8rqxJLF9IWTJkZlsVxwxS/hVryGSgICA+1HAuXnPs4JrxmiQBzs1E/+TeNgA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Sep 2019 06:22:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37687 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbfIJKWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 06:22:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i1so18435012wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 03:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wpr2coDySs9Rh34jajBcihEANouoWM4tiMrDCeWl8sg=;
+        b=OWD1IplSbH+Uj6fRnvAWQMTtgsLhiEt+qYbKjXaLSulXC/QfZK1S8iBbPUxjl80LQs
+         Sxa/NOEYbyoMdACAwtywuw45EkqtZ4cwdzmxnQTw9JieI26ywI5teAX/795GB6Jtqmp9
+         SK1E4X5R8xry3MoVaEDSWL3tNsjqoxoGYqC+m1t6M9u5PG5TtnU76MQiPPj/ch8FZCVh
+         VNAkXR11i4Q+SFgNCBjUbiUoEY9M8+hM44rio0gVfl4Q1Eof5sap2IoUobfy8txXXqGa
+         SdF6Z2HV1FVkF11y1n4OqbppwEtKiDW3lebmGQ+6jAoCKHsYYEQQTXBbwSvCj25uPmQ+
+         BMfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wpr2coDySs9Rh34jajBcihEANouoWM4tiMrDCeWl8sg=;
+        b=LeabYc9QAR/+k0qhFXj+QE+05FQ9YdhGCBxBoS1o9eUmlq7c0kxHZGZAdxnxzj7wFd
+         +xyO4XBXpEO9l2LUtAYxlscGrGuziiz3q51gUH+POzBXl5FAf0R2g1saVHRO5Ev6y83m
+         CsidWecTDfQBGsOzkeV67H+CpkPZfNTkxiMlgKjF1CiKCE5H72FhqbIkvRG+FkaiJllx
+         vNA0E2HOVhgJjSdtGn9brgZQLBlFKf0LFe62PvhfxUV6DjJEX7yGz4biGNzZ74h/e71g
+         tN2Oic5Wb3FmXLmMi9Q38PxbGLYlzpwIeiOm/ZKkS1TJ2JToKRYRFdI5przdJ3gbW6vr
+         umNg==
+X-Gm-Message-State: APjAAAUGo7l/I+nw7xyxvG+zXbwWdTHeMubm1CWkSmZz48CKvrOOGyOv
+        AC4oQxKhwUEWtIfxHtDp4a8KWw==
+X-Google-Smtp-Source: APXvYqzG45USjR48kMX2kVZsXNO4YuCGkE3qBxH6BwrxuV+lwOeTtCvs9XVNlmc/kSobyXOtgJDQdA==
+X-Received: by 2002:adf:f04f:: with SMTP id t15mr13262934wro.250.1568110919018;
+        Tue, 10 Sep 2019 03:21:59 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id o19sm23744301wro.50.2019.09.10.03.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 03:21:58 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 11:21:56 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
+ pin
+Message-ID: <20190910102156.vmprsjebmlphkv34@holly.lan>
+References: <20190908203704.30147-1-andreas@kemnade.info>
+ <20190908203704.30147-2-andreas@kemnade.info>
+ <20190909105729.w5552rtop7rhghy2@holly.lan>
+ <20190909221349.46ca5a1f@aktux>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e52ad49-6db5-4bd5-8922-08d735d8a745
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 10:21:32.9975
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EkQD8Um05LVooLdu1WZa1CB82GmdKweFWcecKxwLw9EYHY1TANTZQXrW+4v4QaLQ1lFZalhD53/xwjuCQIaneg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4300
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909221349.46ca5a1f@aktux>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Caution: EXT Email
->=20
-> On Tue, Sep 03, 2019 at 11:37:01AM +0200, Martin Fuzzey wrote:
-> > On 03/09/2019 08:18, Biwen Li wrote:
-> > > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > index 94adc1cf93d9..588f688b30d1 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > @@ -8,10 +8,39 @@ Required properties:
-> > >   Optional properties:
-> > >   - interrupts: IRQ line for the RTC (not implemented).
-> > > +- interrupt-output-pin: The interrupt output pin must be
-> > > +  "INTA" or "INTB", default value is "INTA"
+On Mon, Sep 09, 2019 at 10:13:49PM +0200, Andreas Kemnade wrote:
+> On Mon, 9 Sep 2019 11:57:29 +0100
+> Daniel Thompson <daniel.thompson@linaro.org> wrote:
+> 
+> > On Sun, Sep 08, 2019 at 10:37:03PM +0200, Andreas Kemnade wrote:
+> > > For now just enable it in the probe function to allow i2c
+> > > access and disable it on remove. Disabling also means resetting
+> > > the register values to default.
+> > > 
+> > > Tested on Kobo Clara HD.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > >  drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> > > index b04b35d007a2..3b45a1733198 100644
+> > > --- a/drivers/video/backlight/lm3630a_bl.c
+> > > +++ b/drivers/video/backlight/lm3630a_bl.c
+> > > @@ -12,6 +12,8 @@
+> > >  #include <linux/uaccess.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/regmap.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/gpio.h>
+> > >  #include <linux/pwm.h>
+> > >  #include <linux/platform_data/lm3630a_bl.h>
+> > >  
+> > > @@ -48,6 +50,7 @@ struct lm3630a_chip {
+> > >  	struct lm3630a_platform_data *pdata;
+> > >  	struct backlight_device *bleda;
+> > >  	struct backlight_device *bledb;
+> > > +	struct gpio_desc *enable_gpio;
+> > >  	struct regmap *regmap;
+> > >  	struct pwm_device *pwmd;
+> > >  };
+> > > @@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
+> > >  		return -ENOMEM;
+> > >  	pchip->dev = &client->dev;
+> > >  
+> > > +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+> > > +						GPIOD_ASIS);  
+> > 
+> > Initializing GPIOD_ASIS doesn't look right to me.
+> > 
+> > If you initialize ASIS then the driver must configure the pin as an
+> > output... far easier just to set GPIOD_OUT_HIGH during the get.
+> > 
+> > Note also that the call to this function should also be moved *below*
+> > the calls parse the DT.
+> > 
+> oops, must have forgotten that, and had good luck here.
+> > 
+> > > +	if (IS_ERR(pchip->enable_gpio)) {
+> > > +		rval = PTR_ERR(pchip->enable_gpio);
+> > > +		return rval;
+> > > +	}
 > > > +
-> >
-> >
-> > The hardware has 2 interrupt pins which can be mapped to various
-> > interrupt sources (alarm1, alarm2, periodic, ...)
-> >
-> > Currently the driver only supports alarm1.
-> >
-> > It is even possible to use both pins for the same interrupt (eg if
-> > INTA were wired to the SoC, INTB to a PMIC and both used for alarm...)
-> >
-> >
-> > So maybe it would be better to have
-> >
-> > alarm1-interrupt-output-pin: The interrupt output pin used for the
-> > alarm function. Must be "INTA", "INTB" or "BOTH"
->=20
-> That's a property per source. 2 properties possible sources (either a mas=
-k or list)
-> would be my preference.
->=20
-> Also, whatever you end up with needs a vendor prefix.
->=20
-> >
-> > Then, if and when other types of interrupts are supported by the
-> > driver new properties could be added for them.
-> >
-> >
-> >
-> > > +- quartz-load-femtofarads: The internal capacitor to select for the =
-quartz:
-> > > +   PCF85263_QUARTZCAP_7pF          [0]
-> > > +   PCF85263_QUARTZCAP_6pF          [1]
-> > > +   PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
 > > > +
-> >
-> >
-> > The standard DT property "quartz-load-femtofarads" takes the real
-> > physical value in femto Farads ie values should be 7000, 6000, 12500 wi=
-thout
-> defines.
->=20
-> I believe I said this on the last version.
-Yes, I will fix it in v4.
->=20
-> >
-> >
-> > > +- nxp,quartz-drive-strength: Drive strength for the quartz:
-> > > +   PCF85263_QUARTZDRIVE_100ko      [0] DEFAULT
-> > > +   PCF85263_QUARTZDRIVE_60ko       [1]
-> > > +   PCF85263_QUARTZDRIVE_500ko      [2]
-> > > +
-> >
-> >
-> > Not sure about this.
-> >
-> > Wouldn't it be better to either use a real impedence value in ohms
-> > (like load property above, even though it is a vendor specific value)
-> > rather than a define, or defines for "Low, Medium, High"?
-> >
-> >
-> > Martin
-> >
-> >
+> > >  	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
+> > >  	if (IS_ERR(pchip->regmap)) {
+> > >  		rval = PTR_ERR(pchip->regmap);
+> > > @@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
+> > >  	}
+> > >  	pchip->pdata = pdata;
+> > >  
+> > > +	if (pchip->enable_gpio) {
+> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 1);  
+> > 
+> > Not needed, use GPIOD_OUT_HIGH instead.
+> > 
+> > 
+> > > +		usleep_range(1000, 2000);  
+> > 
+> > Not needed, this sleep is already part of lm3630a_chip_init().
+> > 
+> you are right.
+> > 
+> > > +	}
+> > >  	/* chip initialize */
+> > >  	rval = lm3630a_chip_init(pchip);
+> > >  	if (rval < 0) {
+> > > @@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
+> > >  	if (rval < 0)
+> > >  		dev_err(pchip->dev, "i2c failed to access register\n");
+> > >  
+> > > +	if (pchip->enable_gpio)
+> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
+> > > +  
+> > 
+> > Is this needed?
+> > 
+> > This is a remove path, not a power management path, and we have no idea
+> > what the original status of the pin was anyway?
+> > 
+> 
+> Looking at Ishdn on page 5 of the datasheet, switching it off everytime
+> possible seems not needed. We would need to call chip_init() everytime
+> we enable the gpio or live with default values.
+> Therefore I did decide to not put it into any power management path.
+> But switching it on and not switching it off feels so unbalanced. 
+
+Either the power consumed by the controller when strings aren't lit up
+matters, in which case the driver should implement proper power
+management or it doesn't matter and changing the pin state isn't needed.
+
+I'm happy with either of the above but this looks like a third way,
+where eager users could hack in a bit of extra power management by
+forcing drivers to unbind. 
+
+
+Daniel.
