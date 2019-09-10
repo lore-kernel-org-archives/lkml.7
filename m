@@ -2,175 +2,438 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8674BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F437C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478C62089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ueonR/wN"
+	by mail.kernel.org (Postfix) with ESMTP id 54FF521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 12:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568117359;
+	bh=y+39VBb48thxkpEF0lOi45VFbAXN+ilt9IuP+uZBHLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AFjr95mmW5tJv2seWSIIyYrCnBUQrIbx+hgzvxDLA0DmznKOFu0H3meniUurt/qwc
+	 /6VNGQ8cdU6m5aFGC5JyE+/8duXSII+fV5LCySatbCEW51j4WR+4566BgZEd/zZerF
+	 jtJVfKFd8dp13kAtvEpIOMuU7DJxCQShIzfNzmwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbfIJMIH (ORCPT
+        id S1732442AbfIJMJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 08:08:07 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:40966 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726060AbfIJMIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 08:08:06 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8ABwJhJ009084;
-        Tue, 10 Sep 2019 08:07:54 -0400
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2056.outbound.protection.outlook.com [104.47.38.56])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2uv967jq5n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Sep 2019 08:07:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kkhho13uyng0qOb52P/d0GD0hFtbUJ+E63DZOKVPT5C8/IHlIRw/n9Pp1qLbQol9Yh1vdRQZYxrcKmZrV1RxT80m2cskXUORGh/3twCLZFt7jv1+vVLE1MBEyNDaN+RDCh5hrspoEEVPwYsujmQudRTNbqStyr6vDrhi9Lz1B6Bl59jMm3UZYF/mpwl5HgMuCl+Z1kk1iczyB3kCqU0vEbtnkhNT4UH/fsWdUA8YGqC2nYjN1DSFutR+P+uxBR9AHYohB0MQ+EOdcntnVJKskIHYkn+POfPvV2ZDAFgdfTEj3l+3aFIMfWTDYxy4nJ8ccRtZUMmwlyfrjiAcFB/BSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SzblVY6ZyNx6EL03YlFydhvKPnXa7T2rIcInPcatTls=;
- b=fxRVR/pkeDxvBYnK/R9GcBzqNsmuTtXtCDCXLsM5YCRC9E0DERb8ea2TSQpJcGgvldNbUgt9NBOyVfTPF4VUAjXeHiPE5R/w9JUpTVLGUSwh1UQEHW2N7zXcboQ/YBuRU1Lzdxy0EDqie4An6unkkeyBPaFzn0Jn1A8fizTD1POMXyYIWWUdXsGF9rnV0tnhDbpmbU0pJ9PfdCkupIZ9ay8Ke+uxuMHqCalMU8pJH9Kd99z7AwDfZ5RpTKnNayAwkVdylPc5U3Y0d+zcPRZD67WdGRU+1PLDtq593xXqzEQOi5mQp7mwtjupV95OGcjEYnWRRwvHWnSAnLCbYzHiZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SzblVY6ZyNx6EL03YlFydhvKPnXa7T2rIcInPcatTls=;
- b=ueonR/wN2QtCVIl7IhLo7ycL/c762j89sOkNK+gBn6QguCYbzE25jfvk/BhCv7idnh2Ez2SWo7Df//N9vJnbHHkRB2XkiguwYRHMuBAf5sXan/JZ9zd53EkHUbIpI9ovPcqTi0q8QLPvDxy1OQ6xQtl2g6pYLiSFDslIVHKXurg=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5205.namprd03.prod.outlook.com (20.180.15.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.15; Tue, 10 Sep 2019 12:07:53 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 12:07:53 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] ethtool: implement Energy Detect Powerdown support
- via phy-tunable
-Thread-Topic: [PATCH v3 1/2] ethtool: implement Energy Detect Powerdown
- support via phy-tunable
-Thread-Index: AQHVZxBaBQL3EPMRaE2wlpmgsbkWfackjWwAgAB3ewA=
-Date:   Tue, 10 Sep 2019 12:07:53 +0000
-Message-ID: <98aef502750727f94fb0603f3bf5e4634eaa0561.camel@analog.com>
-References: <20190909131251.3634-1-alexandru.ardelean@analog.com>
-         <20190909131251.3634-2-alexandru.ardelean@analog.com>
-         <20190910080014.GC24779@unicorn.suse.cz>
-In-Reply-To: <20190910080014.GC24779@unicorn.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1ef53fc-8723-43d7-2fc9-08d735e7822c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR03MB5205;
-x-ms-traffictypediagnostic: CH2PR03MB5205:
-x-microsoft-antispam-prvs: <CH2PR03MB5205CFEA9AF75571CAD293FEF9B60@CH2PR03MB5205.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(366004)(136003)(199004)(189003)(66476007)(66556008)(76116006)(6246003)(6486002)(102836004)(186003)(99286004)(14454004)(66446008)(86362001)(6506007)(6116002)(446003)(2906002)(53936002)(76176011)(11346002)(478600001)(3846002)(6436002)(110136005)(476003)(486006)(25786009)(54906003)(316002)(2616005)(7416002)(7736002)(305945005)(66066001)(91956017)(8676002)(229853002)(26005)(5660300002)(81166006)(81156014)(4326008)(8936002)(64756008)(6512007)(2501003)(36756003)(14444005)(71190400001)(256004)(118296001)(71200400001)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5205;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: af/5GoDbbbAGqRzlgRzIkspA2Hi7aTAwRrAFVzzLDNqPOczTr3Hb+Xgw6Pf3chhog8TZcITS+PV+w7IpfLmpp6Y9OVAugEEHrypsy7rM8ZLb0/BLJyieUdS2qIg8SoRM+q6sT+faU1TmG6b6h8KbAtXKx31emx7i9HTylKQTwrjruf26b/B4PT/PEpa+GWEloZbvJD3/YgC/3L1P5LJDzKckSWtDgLzlSZ0dvJ6MdFqJnySxs1yrqlUXS5rGSjSITDITQgC5J8EtNUvs/jXM04pKdexFOS/OL+88yl+9Z1lvrmjbr3B6BTshZ0IOUl2gDnJaHyTjRAcxjwty9iMVlOsXvB7cPNFXMsP20b+/4w4WnAtyO4nYmLTS7NBQH6g7NjVOJECQ2om1Ed6oYudvMsFkCsFk+9NGLHywWm1KOgs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <186FD882CC375343BB98BC5D9718F1D9@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Sep 2019 08:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfIJMJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:09:18 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61932089F;
+        Tue, 10 Sep 2019 12:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568117356;
+        bh=y+39VBb48thxkpEF0lOi45VFbAXN+ilt9IuP+uZBHLA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ktjWM5ODWEMk2ZbwOOqniRKCoASOhy7ltrQ/09aceAEjbYyjHo87XlBLrjVwZK43D
+         fXXQHzkTtjAwQZYNjXotCSmhZB0zE0+pkDre6lk7fBknDzMlr8BgtWhCECxMqb1KNx
+         Fwof6AT05vrH8TQKc8k73nabghTWxubn5GCRwVAI=
+Date:   Tue, 10 Sep 2019 13:09:13 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: avoid infinite GC loop due to stale
+ atomic files
+Message-ID: <20190910120913.GB98080@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190909080108.GC21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <bf0683d9-ac05-1edc-71ea-3d02f7b2fb55@huawei.com>
+ <20190909082112.GA25724@jaegeuk-macbookpro.roam.corp.google.com>
+ <2f5b844c-f722-6a80-a4ab-61bdd72b8be4@huawei.com>
+ <20190909083844.GC25724@jaegeuk-macbookpro.roam.corp.google.com>
+ <83759349-644a-b3a0-787d-e463b0565885@huawei.com>
+ <20190909143419.GB31108@jaegeuk-macbookpro.roam.corp.google.com>
+ <c48f8992-eaef-9b2e-56a3-f6a922daa4af@huawei.com>
+ <20190910115850.GA98080@jaegeuk-macbookpro.roam.corp.google.com>
+ <2fd8940b-9ebd-d143-5ce6-c056750c596f@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1ef53fc-8723-43d7-2fc9-08d735e7822c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 12:07:53.2474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 80tvKaUko0Bt6m3PBANlVQyEVUYZ9M8OmKPWo55LzYBJkKyuVFIKEYfzos/Ehxipzet6h02W1ncLiaVcNhLAQHN/FW6NfYigp5PYuE7F8us=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5205
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-10_07:2019-09-10,2019-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 clxscore=1011 mlxscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909100120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fd8940b-9ebd-d143-5ce6-c056750c596f@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTEwIGF0IDEwOjAwICswMjAwLCBNaWNoYWwgS3ViZWNlayB3cm90ZToN
-Cj4gW0V4dGVybmFsXQ0KPiANCj4gT24gTW9uLCBTZXAgMDksIDIwMTkgYXQgMDQ6MTI6NTBQTSAr
-MDMwMCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoZSBgcGh5X3R1bmFibGVfaWRg
-IGhhcyBiZWVuIG5hbWVkIGBFVEhUT09MX1BIWV9FRFBEYCBzaW5jZSBpdCBsb29rcyBsaWtlDQo+
-ID4gdGhpcyBmZWF0dXJlIGlzIGNvbW1vbiBhY3Jvc3Mgb3RoZXIgUEhZcyAobGlrZSBFRUUpLCBh
-bmQgZGVmaW5pbmcNCj4gPiBgRVRIVE9PTF9QSFlfRU5FUkdZX0RFVEVDVF9QT1dFUl9ET1dOYCBz
-ZWVtcyB0b28gbG9uZy4NCj4gPiANCj4gPiBUaGUgd2F5IEVEUEQgd29ya3MsIGlzIHRoYXQgdGhl
-IFJYIGJsb2NrIGlzIHB1dCB0byBhIGxvd2VyIHBvd2VyIG1vZGUsDQo+ID4gZXhjZXB0IGZvciBs
-aW5rLXB1bHNlIGRldGVjdGlvbiBjaXJjdWl0cy4gVGhlIFRYIGJsb2NrIGlzIGFsc28gcHV0IHRv
-IGxvdw0KPiA+IHBvd2VyIG1vZGUsIGJ1dCB0aGUgUEhZIHdha2VzLXVwIHBlcmlvZGljYWxseSB0
-byBzZW5kIGxpbmsgcHVsc2VzLCB0byBhdm9pZA0KPiA+IGxvY2stdXBzIGluIGNhc2UgdGhlIG90
-aGVyIHNpZGUgaXMgYWxzbyBpbiBFRFBEIG1vZGUuDQo+ID4gDQo+ID4gQ3VycmVudGx5LCB0aGVy
-ZSBhcmUgMiBQSFkgZHJpdmVycyB0aGF0IGxvb2sgbGlrZSB0aGV5IGNvdWxkIHVzZSB0aGlzIG5l
-dw0KPiA+IFBIWSB0dW5hYmxlIGZlYXR1cmU6IHRoZSBgYWRpbmAgJiYgYG1pY3JlbGAgUEhZcy4N
-Cj4gPiANCj4gPiBUaGUgQURJTidzIGRhdGFzaGVldCBtZW50aW9ucyB0aGF0IFRYIHB1bHNlcyBh
-cmUgYXQgaW50ZXJ2YWxzIG9mIDEgc2Vjb25kDQo+ID4gZGVmYXVsdCBlYWNoLCBhbmQgdGhleSBj
-YW4gYmUgZGlzYWJsZWQuIEZvciB0aGUgTWljcmVsIEtTWjkwMzEgUEhZLCB0aGUNCj4gPiBkYXRh
-c2hlZXQgZG9lcyBub3QgbWVudGlvbiB3aGV0aGVyIHRoZXkgY2FuIGJlIGRpc2FibGVkLCBidXQg
-bWVudGlvbnMgdGhhdA0KPiA+IHRoZXkgY2FuIG1vZGlmaWVkLg0KPiA+IA0KPiA+IFRoZSB3YXkg
-dGhpcyBjaGFuZ2UgaXMgc3RydWN0dXJlZCwgaXMgc2ltaWxhciB0byB0aGUgUEhZIHR1bmFibGUg
-ZG93bnNoaWZ0DQo+ID4gY29udHJvbDoNCj4gPiAqIGEgYEVUSFRPT0xfUEhZX0VEUERfREZMVF9U
-WF9JTlRFUlZBTGAgdmFsdWUgaXMgZXhwb3NlZCB0byBjb3ZlciBhIGRlZmF1bHQNCj4gPiAgIFRY
-IGludGVydmFsOyBzb21lIFBIWXMgY291bGQgc3BlY2lmeSBhIGNlcnRhaW4gdmFsdWUgdGhhdCBt
-YWtlcyBzZW5zZQ0KPiA+ICogYEVUSFRPT0xfUEhZX0VEUERfTk9fVFhgIHdvdWxkIGRpc2FibGUg
-VFggd2hlbiBFRFBEIGlzIGVuYWJsZWQNCj4gPiAqIGBFVEhUT09MX1BIWV9FRFBEX0RJU0FCTEVg
-IHdpbGwgZGlzYWJsZSBFRFBEDQo+ID4gDQo+ID4gVGhpcyBzaG91bGQgYWxsb3cgUEhZcyB0bzoN
-Cj4gPiAqIGVuYWJsZSBFRFBEIGFuZCBub3QgZW5hYmxlIFRYIHB1bHNlcyAoaW50ZXJ2YWwgd291
-bGQgYmUgMCkNCj4gPiAqIGVuYWJsZSBFRFBEIGFuZCBjb25maWd1cmUgVFggcHVsc2UgaW50ZXJ2
-YWw7IG5vdGUgdGhhdCBUWCBpbnRlcnZhbCB1bml0cw0KPiA+ICAgd291bGQgYmUgUEhZIHNwZWNp
-ZmljOyB3ZSBjb3VsZCBjb25zaWRlciBgc2Vjb25kc2AgYXMgdW5pdHMsIGJ1dCBpdCBjb3VsZA0K
-PiA+ICAgaGFwcGVuIHRoYXQgc29tZSBQSFlzIHdvdWxkIGJlIHByZWZlciBtaWxsaXNlY29uZHMg
-YXMgYSB1bml0Ow0KPiA+ICAgYSBtYXhpbXVtIG9mIDY1NTMzIHVuaXRzIHNob3VsZCBiZSBzdWZm
-aWNpZW50DQo+IA0KPiBTb3JyeSBmb3IgbWlzc2luZyB0aGUgZGlzY3Vzc2lvbiBvbiBwcmV2aW91
-cyB2ZXJzaW9uIGJ1dCBJIGRvbid0IHJlYWxseQ0KPiBsaWtlIHRoZSBpZGVhIG9mIGxlYXZpbmcg
-dGhlIGNob2ljZSBvZiB1bml0cyB0byBQSFkuIEJvdGggZm9yIG1hbnVhbA0KPiBzZXR0aW5nIGFu
-ZCBzeXN0ZW0gY29uZmlndXJhdGlvbiwgaXQgd291bGQgYmUgSU1ITyBtdWNoIG1vcmUgY29udmVu
-aWVudA0KPiB0byBoYXZlIHRoZSBpbnRlcnByZXRhdGlvbiB1bml2ZXJzYWwgZm9yIGFsbCBOSUNz
-Lg0KPiANCg0KSSB3YXMgYWxzbyBhIGJpdCB1bmNlcnRhaW4vdW5kZWNpZGVkIGhlcmUgYWJvdXQg
-bGV0dGluZyBQSFlzIGRlY2lkZSB1bml0cy4NCkFuZCBJIGFsc28gd2Fzbid0IHN1cmUgd2hhdCB0
-byBwcm9wb3NlLg0KTm90IHByb3Bvc2luZyBhIHVuaXQgbm93LCB3b3VsZCBoYXZlIGFsbG93ZWQg
-dXMgdG8gZGVjaWRlIGxhdGVyIGJhc2VkIG9uIHdoYXQgUEhZcyBpbXBsZW1lbnQgKGdlbmVyYWxs
-eSkgaW4gdGhlIGZ1dHVyZS4NCkkga25vdyB0aGF0IG1heSBtYWtlIG1lIGxvb2sgYSBiaXQgbGF6
-eSBbZm9yIG5vdCBwcm9wb3NpbmcgdW5pdHMgaW4gZXRodG9vbF0sIGJ1dCB0YmggaXQncyBtb3Jl
-IG9mIGxhY2stb2YtZXhwZXJpZW5jZQ0Kd2l0aCBldGh0b29sIChvciB0aGVzZSBBUElzKSBldm9s
-dmUgb3ZlciB0aW1lLg0KDQo+IFNlY29uZHMgYXMgdW5pdHMgc2VlbSB0b28gY29hcnNlIGFuZCBt
-YXhpbXVtIG9mIH4xOCBob3VycyB3YXkgdG9vIGJpZy4NCj4gTWlsbGlzZWNvbmRzIHdvdWxkIGJl
-IG1vcmUgcHJhY3RpY2FsIGZyb20gZ3JhbnVsYXJpdHkgcG9pbnQgb2YgdmlldywNCj4gd291bGQg
-bWF4aW11bSBvZiB+NjUgc2Vjb25kcyBiZSBzdWZmaWNpZW50Pw0KDQpJIHRoaW5rIDY1IHNlY29u
-ZHMgaXMgbW9yZSB0aGFuIGVub3VnaC4NCkkgZmVlbCB0aGF0LCBpZiB5b3UgcGx1Zy1pbiBhbiBl
-dGggY2FibGUgYW5kIGRvbid0IGhhdmUgYSBsaW5rIGluIGEgbWludXRlLCB0aGVuIGl0J3Mgbm90
-IGdyZWF0IChubyBtYXR0ZXIgaG93IG11Y2ggb2YgYQ0KcG93ZXItc2F2ZXIgeW91IGFyZSkuDQoN
-CkFjdHVhbGx5LCB2b2ljaW5nIG91dCB0aGVzZSB1bml0cyBtYWtlcyBpdCBzaW1wbGVyIGZvciBh
-IGRlY2lzaW9uIHRvIGdvIGluIGZhdm9yIGZvciBtaWxsaXNlY29uZHMuDQpTbzogdGhhbmsgeW91
-IDopDQoNCkFsZXgNCg0KPiANCj4gTWljaGFsIEt1YmVjZWsNCj4gDQo+ID4gKiBkaXNhYmxlIEVE
-UEQNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRy
-dS5hcmRlbGVhbkBhbmFsb2cuY29tPg0K
+On 09/10, Chao Yu wrote:
+> On 2019/9/10 19:58, Jaegeuk Kim wrote:
+> > On 09/10, Chao Yu wrote:
+> >> On 2019/9/9 22:34, Jaegeuk Kim wrote:
+> >>> On 09/09, Chao Yu wrote:
+> >>>> On 2019/9/9 16:38, Jaegeuk Kim wrote:
+> >>>>> On 09/09, Chao Yu wrote:
+> >>>>>> On 2019/9/9 16:21, Jaegeuk Kim wrote:
+> >>>>>>> On 09/09, Chao Yu wrote:
+> >>>>>>>> On 2019/9/9 16:01, Jaegeuk Kim wrote:
+> >>>>>>>>> On 09/09, Chao Yu wrote:
+> >>>>>>>>>> On 2019/9/9 15:30, Jaegeuk Kim wrote:
+> >>>>>>>>>>> On 09/09, Chao Yu wrote:
+> >>>>>>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+> >>>>>>>>>>>>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+> >>>>>>>>>>>>> get commited pages but atomic_file being still set like:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> If GC selects this block, we can get an infinite loop like this:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>>>>>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>>>>>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>>>>>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>>>>>>>>>>>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>>>>>>>>>>>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>>>>>>>>>>>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>>>>>>>>>>>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> In that moment, we can observe:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> [Before]
+> >>>>>>>>>>>>> Try to move 5084219 blocks (BG: 384508)
+> >>>>>>>>>>>>>   - data blocks : 4962373 (274483)
+> >>>>>>>>>>>>>   - node blocks : 121846 (110025)
+> >>>>>>>>>>>>> Skipped : atomic write 4534686 (10)
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> [After]
+> >>>>>>>>>>>>> Try to move 5088973 blocks (BG: 384508)
+> >>>>>>>>>>>>>   - data blocks : 4967127 (274483)
+> >>>>>>>>>>>>>   - node blocks : 121846 (110025)
+> >>>>>>>>>>>>> Skipped : atomic write 4539440 (10)
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>>>>>>>>>>>> ---
+> >>>>>>>>>>>>>  fs/f2fs/file.c | 10 +++++-----
+> >>>>>>>>>>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>>>>>>>>>>> index 7ae2f3bd8c2f..68b6da734e5f 100644
+> >>>>>>>>>>>>> --- a/fs/f2fs/file.c
+> >>>>>>>>>>>>> +++ b/fs/f2fs/file.c
+> >>>>>>>>>>>>> @@ -1997,11 +1997,11 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+> >>>>>>>>>>>>>  			goto err_out;
+> >>>>>>>>>>>>>  
+> >>>>>>>>>>>>>  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+> >>>>>>>>>>>>> -		if (!ret) {
+> >>>>>>>>>>>>> -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+> >>>>>>>>>>>>> -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> >>>>>>>>>>>>> -			stat_dec_atomic_write(inode);
+> >>>>>>>>>>>>> -		}
+> >>>>>>>>>>>>> +
+> >>>>>>>>>>>>> +		/* doesn't need to check error */
+> >>>>>>>>>>>>> +		clear_inode_flag(inode, FI_ATOMIC_FILE);
+> >>>>>>>>>>>>> +		F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> >>>>>>>>>>>>> +		stat_dec_atomic_write(inode);
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> If there are still valid atomic write pages linked in .inmem_pages, it may cause
+> >>>>>>>>>>>> memory leak when we just clear FI_ATOMIC_FILE flag.
+> >>>>>>>>>>>
+> >>>>>>>>>>> f2fs_commit_inmem_pages() should have flushed them.
+> >>>>>>>>>>
+> >>>>>>>>>> Oh, we failed to flush its nodes.
+> >>>>>>>>>>
+> >>>>>>>>>> However we won't clear such info if we failed to flush inmen pages, it looks
+> >>>>>>>>>> inconsistent.
+> >>>>>>>>>>
+> >>>>>>>>>> Any interface needed to drop inmem pages or clear ATOMIC_FILE flag in that two
+> >>>>>>>>>> error path? I'm not very clear how sqlite handle such error.
+> >>>>>>>>>
+> >>>>>>>>> f2fs_drop_inmem_pages() did that, but not in this case.
+> >>>>>>>>
+> >>>>>>>> What I mean is, for any error returned from atomic_commit() interface, should
+> >>>>>>>> userspace application handle it with consistent way, like trigger
+> >>>>>>>> f2fs_drop_inmem_pages(), so we don't need to handle it inside atomic_commit().
+> >>>>>>>
+> >>>>>>> f2fs_ioc_abort_volatile_write() will be triggered.
+> >>>>>>
+> >>>>>> If userspace can do this, we can get rid of this patch, or am I missing sth?
+> >>>>>
+> >>>>> We don't know when that will come. And, other threads are waiting for GC here.
+> >>>>
+> >>>> Yes, however, even atomic_write won't be called sometimes... that's why we add
+> >>>> handling logic in f2fs_gc().
+> >>>
+> >>> We need to clean this up like:
+> >>>
+> >>> If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+> >>> get commited pages but atomic_file being still set like:
+> >>>
+> >>> - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+> >>>
+> >>> If GC selects this block, we can get an infinite loop like this:
+> >>>
+> >>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>> f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> >>> f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> >>> f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> >>> f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> >>>
+> >>> In that moment, we can observe:
+> >>>
+> >>> [Before]
+> >>> Try to move 5084219 blocks (BG: 384508)
+> >>>   - data blocks : 4962373 (274483)
+> >>>   - node blocks : 121846 (110025)
+> >>> Skipped : atomic write 4534686 (10)
+> >>>
+> >>> [After]
+> >>> Try to move 5088973 blocks (BG: 384508)
+> >>>   - data blocks : 4967127 (274483)
+> >>>   - node blocks : 121846 (110025)
+> >>> Skipped : atomic write 4539440 (10)
+> >>>
+> >>> So, refactor atomic_write flow like this:
+> >>> 1. start_atomic_write
+> >>>  - add inmem_list and set atomic_file
+> >>>
+> >>> 2. write()
+> >>>  - register it in inmem_pages
+> >>>
+> >>> 3. commit_atomic_write
+> >>>  - if no error, f2fs_drop_inmem_pages()
+> >>>  - f2fs_commit_inmme_pages() failed
+> >>>    : __revoked_inmem_pages() was done
+> >>>  - f2fs_do_sync_file failed
+> >>>    : abort_atomic_write later
+> >>>
+> >>> 4. abort_atomic_write
+> >>>  - f2fs_drop_inmem_pages
+> >>>
+> >>> 5. f2fs_drop_inmem_pages
+> >>>  - clear atomic_file
+> >>>  - remove inmem_list
+> >>
+> >> Looks good.
+> >>
+> >>>
+> >>> Based on this change, when GC fails to move block in atomic_file,
+> >>> f2fs_drop_inmem_pages_all() can call f2fs_drop_inmem_pages().
+> >>>
+> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>> ---
+> >>>  fs/f2fs/file.c    | 17 +++++++++++------
+> >>>  fs/f2fs/segment.c | 24 +++++-------------------
+> >>>  2 files changed, 16 insertions(+), 25 deletions(-)
+> >>>
+> >>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>> index 10927a0b8df3..1f499ac13d9a 100644
+> >>> --- a/fs/f2fs/file.c
+> >>> +++ b/fs/f2fs/file.c
+> >>> @@ -1830,6 +1830,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+> >>>  {
+> >>>  	struct inode *inode = file_inode(filp);
+> >>>  	int ret;
+> >>> +	struct f2fs_inode_info *fi = F2FS_I(inode);
+> >>>  
+> >>>  	if (!inode_owner_or_capable(inode))
+> >>>  		return -EACCES;
+> >>> @@ -1871,10 +1872,17 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+> >>>  		goto out;
+> >>>  	}
+> >>>  
+> >>> -	set_inode_flag(inode, FI_ATOMIC_FILE);
+> >>>  	clear_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+> >>>  	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> >>>  
+> >>> +	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>> +	if (list_empty(&fi->inmem_ilist))
+> >>> +		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
+> >>> +	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >>> +
+> >>> +	/* add inode in inmem_list first and set atomic_file */
+> >>> +	set_inode_flag(inode, FI_ATOMIC_FILE);
+> >>
+> >> Should call up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]) here? Then in f2fs_gc(),
+> >> we can check FI_ATOMIC_FILE atomically under i_gc_rwsem.
+> > 
+> > Yup.
+> > 
+> > If committing atomic pages is failed when doing f2fs_do_sync_file(), we can
+> > get commited pages but atomic_file being still set like:
+> > 
+> > - inmem:    0, atomic IO:    4 (Max.   10), volatile IO:    0 (Max.    0)
+> > 
+> > If GC selects this block, we can get an infinite loop like this:
+> > 
+> > f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> > f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> > f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> > f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> > f2fs_submit_page_bio: dev = (253,7), ino = 2, page_index = 0x2359a8, oldaddr = 0x2359a8, newaddr = 0x2359a8, rw = READ(), type = COLD_DATA
+> > f2fs_submit_read_bio: dev = (253,7)/(253,7), rw = READ(), DATA, sector = 18533696, size = 4096
+> > f2fs_get_victim: dev = (253,7), type = No TYPE, policy = (Foreground GC, LFS-mode, Greedy), victim = 4355, cost = 1, ofs_unit = 1, pre_victim_secno = 4355, prefree = 0, free = 234
+> > f2fs_iget: dev = (253,7), ino = 6247, pino = 5845, i_mode = 0x81b0, i_size = 319488, i_nlink = 1, i_blocks = 624, i_advise = 0x2c
+> > 
+> > In that moment, we can observe:
+> > 
+> > [Before]
+> > Try to move 5084219 blocks (BG: 384508)
+> >   - data blocks : 4962373 (274483)
+> >   - node blocks : 121846 (110025)
+> > Skipped : atomic write 4534686 (10)
+> > 
+> > [After]
+> > Try to move 5088973 blocks (BG: 384508)
+> >   - data blocks : 4967127 (274483)
+> >   - node blocks : 121846 (110025)
+> > Skipped : atomic write 4539440 (10)
+> > 
+> > So, refactor atomic_write flow like this:
+> > 1. start_atomic_write
+> >  - add inmem_list and set atomic_file
+> > 
+> > 2. write()
+> >  - register it in inmem_pages
+> > 
+> > 3. commit_atomic_write
+> >  - if no error, f2fs_drop_inmem_pages()
+> >  - f2fs_commit_inmme_pages() failed
+> >    : __revoked_inmem_pages() was done
+> >  - f2fs_do_sync_file failed
+> >    : abort_atomic_write later
+> > 
+> > 4. abort_atomic_write
+> >  - f2fs_drop_inmem_pages
+> > 
+> > 5. f2fs_drop_inmem_pages
+> >  - clear atomic_file
+> >  - remove inmem_list
+> > 
+> > Based on this change, when GC fails to move block in atomic_file,
+> > f2fs_drop_inmem_pages_all() can call f2fs_drop_inmem_pages().
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  fs/f2fs/file.c    | 15 ++++++++++-----
+> >  fs/f2fs/segment.c | 27 ++++++---------------------
+> >  2 files changed, 16 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 10927a0b8df3..fab6e4cf8f06 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -1829,6 +1829,8 @@ static int f2fs_ioc_getversion(struct file *filp, unsigned long arg)
+> >  static int f2fs_ioc_start_atomic_write(struct file *filp)
+> >  {
+> >  	struct inode *inode = file_inode(filp);
+> > +	struct f2fs_inode_info *fi = F2FS_I(inode);
+> > +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> >  	int ret;
+> >  
+> >  	if (!inode_owner_or_capable(inode))
+> > @@ -1871,6 +1873,12 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+> >  		goto out;
+> >  	}
+> >  
+> > +	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> > +	if (list_empty(&fi->inmem_ilist))
+> > +		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
+> > +	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> > +
+> > +	/* add inode in inmem_list first and set atomic_file */
+> >  	set_inode_flag(inode, FI_ATOMIC_FILE);
+> >  	clear_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+> >  	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> > @@ -1912,11 +1920,8 @@ static int f2fs_ioc_commit_atomic_write(struct file *filp)
+> >  			goto err_out;
+> >  
+> >  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 0, true);
+> > -		if (!ret) {
+> > -			clear_inode_flag(inode, FI_ATOMIC_FILE);
+> > -			F2FS_I(inode)->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> > -			stat_dec_atomic_write(inode);
+> > -		}
+> > +		if (!ret)
+> > +			f2fs_drop_inmem_pages(inode);
+> >  	} else {
+> >  		ret = f2fs_do_sync_file(filp, 0, LLONG_MAX, 1, false);
+> >  	}
+> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > index 18584d4c078a..66343f451d73 100644
+> > --- a/fs/f2fs/segment.c
+> > +++ b/fs/f2fs/segment.c
+> > @@ -185,8 +185,6 @@ bool f2fs_need_SSR(struct f2fs_sb_info *sbi)
+> >  
+> >  void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+> >  {
+> > -	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> > -	struct f2fs_inode_info *fi = F2FS_I(inode);
+> >  	struct inmem_pages *new;
+> >  
+> >  	f2fs_trace_pid(page);
+> > @@ -200,15 +198,9 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+> >  	INIT_LIST_HEAD(&new->list);
+> >  
+> >  	/* increase reference count with clean state */
+> > -	mutex_lock(&fi->inmem_lock);
+> 
+> The lock is used to protect F2FS_I(inode)->inmem_pages list... it should be kept?
+
+Urg.. yup. I added.
+
+> 
+> Thanks,
+> 
+> >  	get_page(page);
+> > -	list_add_tail(&new->list, &fi->inmem_pages);
+> > -	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> > -	if (list_empty(&fi->inmem_ilist))
+> > -		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
+> > -	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> > +	list_add_tail(&new->list, &F2FS_I(inode)->inmem_pages);
+> >  	inc_page_count(F2FS_I_SB(inode), F2FS_INMEM_PAGES);
+> > -	mutex_unlock(&fi->inmem_lock);
+> >  
+> >  	trace_f2fs_register_inmem_page(page, INMEM);
+> >  }
+> > @@ -330,19 +322,17 @@ void f2fs_drop_inmem_pages(struct inode *inode)
+> >  		mutex_lock(&fi->inmem_lock);
+> >  		__revoke_inmem_pages(inode, &fi->inmem_pages,
+> >  						true, false, true);
+> > -
+> > -		if (list_empty(&fi->inmem_pages)) {
+> > -			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> > -			if (!list_empty(&fi->inmem_ilist))
+> > -				list_del_init(&fi->inmem_ilist);
+> > -			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> > -		}
+> >  		mutex_unlock(&fi->inmem_lock);
+> >  	}
+> >  
+> >  	clear_inode_flag(inode, FI_ATOMIC_FILE);
+> >  	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+> >  	stat_dec_atomic_write(inode);
+> > +
+> > +	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> > +	if (!list_empty(&fi->inmem_ilist))
+> > +		list_del_init(&fi->inmem_ilist);
+> > +	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >  }
+> >  
+> >  void f2fs_drop_inmem_page(struct inode *inode, struct page *page)
+> > @@ -471,11 +461,6 @@ int f2fs_commit_inmem_pages(struct inode *inode)
+> >  
+> >  	mutex_lock(&fi->inmem_lock);
+> >  	err = __f2fs_commit_inmem_pages(inode);
+> > -
+> > -	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+> > -	if (!list_empty(&fi->inmem_ilist))
+> > -		list_del_init(&fi->inmem_ilist);
+> > -	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+> >  	mutex_unlock(&fi->inmem_lock);
+> >  
+> >  	clear_inode_flag(inode, FI_ATOMIC_COMMIT);
+> > 
