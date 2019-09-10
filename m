@@ -2,114 +2,127 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F0CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9A9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA8D20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="czbPDEr+"
+	by mail.kernel.org (Postfix) with ESMTP id 970C020692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403816AbfIJLAP (ORCPT
+        id S2403996AbfIJLAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:00:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55964 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbfIJLAC (ORCPT
+        Tue, 10 Sep 2019 07:00:50 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63309 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729647AbfIJLAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:00:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8AAxuVP071833;
-        Tue, 10 Sep 2019 05:59:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568113196;
-        bh=J37WOYhcIEKzEnO3t8q5TtofJfu6T7iSB8tR2Bkh500=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=czbPDEr+OvH3hBFdUOyqld4eLuWL7baiMvvSfQAf9VV7NMerjSdQET1+1LdEKc6j4
-         fcKc9FR1xdet90ONeTo9s0LWV9uGYXe7CVOvWvaDG+TBLTQYg90R/hk5HJLayFzIF0
-         dWwj1o/uJ2TOdtCh9B48pjMuHo08U2llzAXfXkjQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8AAxuKf034417;
-        Tue, 10 Sep 2019 05:59:56 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
- Sep 2019 05:59:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 10 Sep 2019 05:59:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8AAxs7N018253;
-        Tue, 10 Sep 2019 05:59:55 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dridevel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v5 3/4] dt-bindings: backlight: Add led-backlight binding
-Date:   Tue, 10 Sep 2019 12:59:45 +0200
-Message-ID: <20190910105946.23057-4-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190910105946.23057-1-jjhiblot@ti.com>
-References: <20190910105946.23057-1-jjhiblot@ti.com>
+        Tue, 10 Sep 2019 07:00:50 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8AB0T1I098839;
+        Tue, 10 Sep 2019 20:00:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Tue, 10 Sep 2019 20:00:29 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8AB0O8v098813
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 10 Sep 2019 20:00:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH (resend)] mm,oom: Defer dump_tasks() output.
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <1567159493-5232-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <7de2310d-afbd-e616-e83a-d75103b986c6@i-love.sakura.ne.jp>
+ <20190909113627.GJ27159@dhcp22.suse.cz>
+ <579a27d2-52fb-207e-9278-fc20a2154394@i-love.sakura.ne.jp>
+ <20190909130435.GO27159@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <5bbcd93f-aa42-6c62-897a-d7b94aacdb87@i-love.sakura.ne.jp>
+Date:   Tue, 10 Sep 2019 20:00:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190909130435.GO27159@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding for led-backlight.
+On 2019/09/09 22:04, Michal Hocko wrote:
+> On Mon 09-09-19 21:40:24, Tetsuo Handa wrote:
+>> On 2019/09/09 20:36, Michal Hocko wrote:
+>>> This is not an improvement. It detaches the oom report and tasks_dump
+>>> for an arbitrary amount of time because the worder context might be
+>>> stalled for an arbitrary time. Even long after the oom is resolved.
+>>
+>> A new worker thread is created if all existing worker threads are busy
+>> because this patch solves OOM situation quickly when a new worker thread
+>> cannot be created due to OOM situation.
+>>
+>> Also, if a worker thread cannot run due to CPU starvation, the same thing
+>> applies to dump_tasks(). In other words, dump_tasks() cannot complete due
+>> to CPU starvation, which results in more costly and serious consequences.
+>> Being able to send SIGKILL and reclaim memory as soon as possible is
+>> an improvement.
+> 
+> There might be zillion workers waiting to make a forward progress and
+> you cannot expect any timing here. Just remember your own experiments
+> with xfs and low memory conditions.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+Even if there were zillion workers waiting to make a forward progress, the
+worker for processing dump_tasks() output can make a forward progress. That's
+how workqueue works. (If you still don't trust workqueue, I can update my patch
+to use a kernel thread.) And if there were zillion workers waiting to make a
+forward progress, completing the OOM killer quickly will be more important than
+keep blocking zillion workers waiting for the OOM killer to solve OOM situation.
+Preempting a thread calling out_of_memory() by zillion workers is a nightmare. ;-)
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-new file mode 100644
-index 000000000000..4c7dfbe7f67a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-@@ -0,0 +1,28 @@
-+led-backlight bindings
-+
-+This binding is used to describe a basic backlight device made of LEDs.
-+It can also be used to describe a backlight device controlled by the output of
-+a LED driver.
-+
-+Required properties:
-+  - compatible: "led-backlight"
-+  - leds: a list of LEDs
-+
-+Optional properties:
-+  - brightness-levels: Array of distinct brightness levels. The levels must be
-+                       in the range accepted by the underlying LED devices.
-+                       This is used to translate a backlight brightness level
-+                       into a LED brightness level. If it is not provided, the
-+                       identity mapping is used.
-+
-+  - default-brightness-level: The default brightness level.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "led-backlight";
-+
-+		leds = <&led1>, <&led2>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+	};
--- 
-2.17.1
+> 
+>>> Not to mention that 1:1 (oom to tasks) information dumping is
+>>> fundamentally broken. Any task might be on an oom list of different
+>>> OOM contexts in different oom scopes (think of OOM happening in disjunct
+>>> NUMA sets).
+>>
+>> I can't understand what you are talking about. This patch just defers
+>> printk() from /proc/sys/vm/oom_dump_tasks != 0. Please look at the patch
+>> carefully. If you are saying that it is bad that OOM victim candidates for
+>> OOM domain B, C, D ... cannot be printed if printing of OOM victim candidates
+>> for OOM domain A has not finished, I can update this patch to print them.
+> 
+> You would have to track each ongoing oom context separately.
+
+I can update my patch to track each OOM context separately. But
+
+>                                                              And not
+> only those from different oom scopes because as a matter of fact a new
+> OOM might trigger before the previous dump_tasks managed to be handled.
+
+please be aware that we are already dropping OOM messages from different scopes
+due to __ratelimit(&oom_rs). The difference is, given that __ratelimit(&oom_rs)
+can work, nothing but which OOM messages will be dropped when cluster of OOM
+events from multiple different scopes happened.
+
+And "OOM events from multiple different scopes can trivially happen" is a
+violation for commit dc56401fc9f25e8f ("mm: oom_kill: simplify OOM killer
+locking") saying
+
+    However, the OOM killer is a fairly cold error path, there is really no
+    reason to optimize for highly performant and concurrent OOM kills.
+
+where we will need "per an OOM scope locking mechanism" in order to avoid
+deferring OOM killer event in current thread's OOM scope due to processing
+OOM killer events in other threads' OOM scopes.
 
