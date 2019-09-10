@@ -2,132 +2,156 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4706C4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D89C4740A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE90A21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79CE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 02:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Q/pq/wk3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="YvI4Dyvq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dOPrJrhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392694AbfIJCV1 (ORCPT
+        id S2392711AbfIJCWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Sep 2019 22:21:27 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:57299 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388855AbfIJCV0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Sep 2019 22:21:26 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 196762E7B1;
-        Mon,  9 Sep 2019 22:21:24 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=3uVY+/vCeyBFYTF8HZgOWLSrqkY=; b=Q/pq/w
-        k37wAzBOswvxWWLbHXwkbMV9A4bwzVVB8wCgN/gmuiEfvdTGGRnqA5bSj/Ipf4Yh
-        cA3led+OGkIjvhOawr4jfzR8qgHeD7pQJCsfxc8gIdChLWj5bdqy1cHBEDsLNvdN
-        l+Q5Se4BuIgHLLN6nmd8J2z4/pSkBzeuCvQns=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 10A882E7B0;
-        Mon,  9 Sep 2019 22:21:24 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=mM2cT/KO/Kh0p+hNabg5T75OZEj8HxdC6mWFljOTELs=; b=YvI4DyvqY79b0o7dreSUgK1LAHgLktpz0fuzX1z/g/RQ8+TqSeJG2OcWNCAbFxKQ60n5j2wDwwF+PFtLoYDrVUSEmLvG1t3hmUG7tYu8hqlDxvxANiUYfWzufFd8rRd2P+7NdrYsvLhcUvmoBg/4eG4e2J0DfKJex1e2tvmjNgs=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 7E2312E7AF;
-        Mon,  9 Sep 2019 22:21:23 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id A727E2DA0774;
-        Mon,  9 Sep 2019 22:21:22 -0400 (EDT)
-Date:   Mon, 9 Sep 2019 22:21:22 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Denis Efremov <efremov@linux.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] export.h: remove defined(__KERNEL__)
-In-Reply-To: <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
-Message-ID: <nycvar.YSQ.7.76.1909092220020.3091@knanqh.ubzr>
-References: <20190909105317.20473-1-yamada.masahiro@socionext.com> <nycvar.YSQ.7.76.1909090942420.3091@knanqh.ubzr> <CAK7LNATC1pZ_2BQ-Uh2+qfUjJtL0mRpsm78N-sUQXhF0tDf6Hw@mail.gmail.com> <nycvar.YSQ.7.76.1909091158200.3091@knanqh.ubzr>
- <CAK7LNASiavMOYDGs0sRm2xAzznd8_Q0vT9T+PFT-bN=mhYezWA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 9 Sep 2019 22:22:12 -0400
+Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:45188
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388855AbfIJCWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Sep 2019 22:22:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hac85i4Ybze1qWltxjXPi/UP7J3gvUJc5kvSt5tWowEMUi5Yyniwm+bqF7pKHU99iD5ePul57+0YW8n/GIXra1K67Gr1vBK0HLWp3ksmg2LpMOHvCXGg8jlrfoOPt+W2w5C9826NihtmlL+LTBnTwejJITaZVpN0h1Sks8GAuFHXL0ffo030UCqljAiy76GoyRnHckkrjvgMPXWZrEVyEdOvBOOtqb441jTGTJiDoQwAgNTDBgImafBDC9W143DqGFiKoUcqw4dgpUh/TK/xLg5jnq6g9gtSTZzUhY/7Yo9kVtgYy/2FmM8+RM2pSLUGPpSJwAokzGu9RhM+yjfKzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=No3ctTFpXzweRSedArjwO/8+SYHAoCvKdfZu3TKJWx8=;
+ b=VNVNNeYPCXBW6yahBmsT2HBbm5zqwDQBuQdZNQzoHABQMAXoTA3n9ectaurTGi91OdPT/aea6l+1LWI91eCzzp9M4OO3ssJysHPx0LdxiQb4o/HsvlsbslsXMPEXNQka2UPDmKcgEcLiJfcUEN9APKvQVTpVLaKYirj6nZ8ZoyfCC4gv70szWt/9Wi0NGGcybiCXHdFIRUsJxPML+0KR5vxL0EXrX0zRjM/2x3ZmC1H9+pK5XXGf64WIJhl08cR1xIMVpsmGwdBH48epoMRna3ftXjvkL3GvMiOtaPXCecQRFtBONsob13Cw2Ug/QCDcZKFUfujC0dz1FGQXBSPI5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=No3ctTFpXzweRSedArjwO/8+SYHAoCvKdfZu3TKJWx8=;
+ b=dOPrJrhEM5zMXtKC5R+XK2U8DoBe39Iw2Vl6OQv3CLCQP58tRTfsXih/5sd0G1cwXHp3UveYxgdqs6jJzEEcyzEujVReTMjv+mNXzPJuygkaJDUp3rFSFYH3Ayjld1KzSYUJLL9EfzSao7zEqrp8jjJPg5RxjxPuKQGoQll4ogg=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.13; Tue, 10 Sep 2019 02:22:06 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
+ 02:22:06 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH 1/3] ASoC: fsl_asrc: Use in(out)put_format
+ instead of in(out)put_word_width
+Thread-Topic: [EXT] Re: [PATCH 1/3] ASoC: fsl_asrc: Use in(out)put_format
+ instead of in(out)put_word_width
+Thread-Index: AQHVZ0mAeLH1tmnz60SUVq7w0GAb7KckKplg
+Date:   Tue, 10 Sep 2019 02:22:06 +0000
+Message-ID: <VE1PR04MB6479D271F4271ECF404473E7E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
+References: <cover.1568025083.git.shengjiu.wang@nxp.com>
+ <65e96ca15afd4a282b122f3ea8b13642cf4614c7.1568025083.git.shengjiu.wang@nxp.com>
+ <20190909200156.GB10344@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190909200156.GB10344@Asurada-Nvidia.nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9990b7f9-2712-4b84-72a7-08d73595acf7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6479;
+x-ms-traffictypediagnostic: VE1PR04MB6479:
+x-microsoft-antispam-prvs: <VE1PR04MB6479DE5863AF1C44681D582CE3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01565FED4C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(199004)(189003)(53936002)(81166006)(14454004)(7736002)(55016002)(26005)(305945005)(52536014)(76176011)(2906002)(33656002)(6916009)(316002)(7416002)(9686003)(6436002)(54906003)(6506007)(102836004)(66476007)(66556008)(256004)(25786009)(1411001)(64756008)(8676002)(66446008)(229853002)(86362001)(3846002)(66066001)(476003)(71200400001)(446003)(4326008)(8936002)(71190400001)(5660300002)(76116006)(478600001)(66946007)(81156014)(99286004)(186003)(486006)(11346002)(6246003)(7696005)(74316002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6479;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: khDdeqQSy4Adt0azYaGDX/+ZEyZNC/8e4RSyezJqKWpUKqhCPwBTwbBG+6jJ9QfvcO5G9H14nsxuTqQ5qs0JWU1X99kVMu2k4VNnGDHC79dVc+EIba4ssRJ3ErgRK1bX6nAciANbeSe5FJIZb+8vWBvluqBbaZgOHciuXk6aFLDCu1hAlms3UrRLzdLv1V0rYkK+IZyAzhBmjvR4hC2RJiNyol8n98sbSF3st4F/hsgG0uAvIbLoFnL5w8LPGKnNvvwUjJMgj1Dsa1eKEzd9SfrtxjRMqMCfswS0XSyQZbOjwHhhA4b/eR88Xg0PONUM4tpPCe4mpDNUkwbR0CwOOguV3bMx1JkkdCBZ1wPUNdapVjha1xZg4PGEqthBKzHCGpuZUU4FPobBuu3z4mkZ6vAowgwybRun57H5cNPVN2A=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: AF2E4D72-D371-11E9-A9B9-C28CBED8090B-78420484!pb-smtp1.pobox.com
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9990b7f9-2712-4b84-72a7-08d73595acf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 02:22:06.4121
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8JJLXM9+bDxisu84w9pfEKEWxO28mnYvOIng2F9yuDc9r7dPaWbNGniCfgbNE6UEJsaDmq9NCdwwXflaRyTBQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6479
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019, Masahiro Yamada wrote:
+Hi
 
-> On Tue, Sep 10, 2019 at 1:06 AM Nicolas Pitre <nico@fluxnic.net> wrote:
-> >
-> > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
-> >
-> > > Hi Nicolas,
-> > >
-> > > On Mon, Sep 9, 2019 at 10:48 PM Nicolas Pitre <nico@fluxnic.net> wrote:
-> > > >
-> > > > On Mon, 9 Sep 2019, Masahiro Yamada wrote:
-> > > >
-> > > > > This line was touched by commit f235541699bc ("export.h: allow for
-> > > > > per-symbol configurable EXPORT_SYMBOL()"), but the commit log did
-> > > > > not explain why.
-> > > > >
-> > > > > CONFIG_TRIM_UNUSED_KSYMS works for me without defined(__KERNEL__).
-> > > >
-> > > > I'm pretty sure it was needed back then so not to interfere with users
-> > > > of this file. My fault for not documenting it.
-> > >
-> > > Hmm, I did not see a problem in my quick build test.
-> > >
-> > > Do you remember which file was causing the problem?
-> >
-> > If you build commit 7ec925701f5f with CONFIG_TRIM_UNUSED_KSYMS=y and the
-> > defined(__KERNEL__) test removed then you'll get:
-> >
-> >   HOSTCC  scripts/mod/modpost.o
-> > In file included from scripts/mod/modpost.c:24:
-> > scripts/mod/../../include/linux/export.h:81:10: fatal error: linux/kconfig.h: No such file or directory
-> >
-> >
-> > Nicolas
-> 
-> 
-> Thanks for explaining this.
-> 
-> It is not the case any more.
-> 
-> 
-> I will reword the commit message as follows:
-> 
-> ------------------------>8---------------------------------------
-> export.h: remove defined(__KERNEL__), which is no longer needed
-> 
-> The conditional define(__KERNEL__) was added by commit f235541699bc
-> ("export.h: allow for per-symbol configurable EXPORT_SYMBOL()").
-> 
-> It was needed at that time to avoid the build error of modpost
-> with CONFIG_TRIM_UNUSED_KSYMS=y.
-> 
-> Since commit b2c5cdcfd4bc ("modpost: remove symbol prefix support"),
-> modpost no longer includes linux/export.h, thus the define(__KERNEL__)
-> is unneeded.
-> ------------------------>8---------------------------------------
-> 
+>=20
+> On Mon, Sep 09, 2019 at 06:33:19PM -0400, Shengjiu Wang wrote:
+> > snd_pcm_format_t is more formal than enum asrc_word_width, which
+> has
+> > two property, width and physical width, which is more accurate than
+> > enum asrc_word_width. So it is better to use in(out)put_format instead
+> > of in(out)put_word_width.
+>=20
+> Hmm...I don't really see the benefit of using snd_pcm_format_t here...I
+> mean, I know it's a generic one, and would understand if we use it as a
+> param for a common API. But this patch merely packs the "width" by
+> intentionally using this snd_pcm_format_t and then adds another
+> translation to unpack it.. I feel it's a bit overcomplicated. Or am I mis=
+sing
+> something?
+>=20
+> And I feel it's not necessary to use ALSA common format in our own "struc=
+t
+> asrc_config" since it is more IP/register specific.
+>=20
+> Thanks
+> Nicolin
+>=20
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+As you know, we have another M2M function internally, when user want to
+Set the format through M2M API, it is better to use snd_pcm_format_t instea=
+d the
+Width, for snd_pcm_format_t include two property, data with and physical wi=
+dth
+In driver some place need data width, some place need physical width.
+For example how to distinguish S24_LE and S24_3LE in driver,  DMA setting n=
+eeds
+The physical width,  but ASRC need data width.=20
+
+Another purpose is that we have another new designed ASRC, which support mo=
+re
+Formats, I would like it can share same API with this ASRC, using snd_pcm_f=
+ormat_t
+That we can use the common API, like snd_pcm_format_linear,
+snd_pcm_format_big_endian to get the property of the format, which is neede=
+d by
+driver.
 
 
-Nicolas
+Best regards
+Wang shengjiu
+
+
