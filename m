@@ -2,142 +2,86 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C1EC5AE59
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33597C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB469218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B0F216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 18:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqsljV6R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="F3kG4VZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfIJSh7 (ORCPT
+        id S1727375AbfIJSmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 14:37:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52497 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfIJSh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 14:37:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t17so664593wmi.2;
-        Tue, 10 Sep 2019 11:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jpk6aWfDsr+wjLXvq2B45mZ3x2l5amVRwHa9kiI1c0I=;
-        b=EqsljV6R1Oc8io09+E+9JENgvuhVia+vCgepJpEF5LoHg1IvSODazF1pbnc6Ik5mcZ
-         CP41BRoQpdz4FscoDCzm9koKcGOLU4p4HFeLGKc+OxIoDj2cJ3N92wKM9FMkvQHwGpRR
-         OKvxvWwVvhdbJkwTMzGQ/cdxuYt704h9RfCiPE4cZIy94+HxnN6UJ4BXvjBHJEf2erGF
-         iwE9mckoqYvLxQbzURoSbAMjexskGkQw1khtDcqsd8LivkHoIldnU45INf6I7bbJAg7D
-         rhUoDmSy4ogXq7I3GgqCKxV4ZxdOpx7dwnaYmk72vLN85GnC0Lw9R3TMz25sD4qkWi4t
-         02rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jpk6aWfDsr+wjLXvq2B45mZ3x2l5amVRwHa9kiI1c0I=;
-        b=ACw8h2N210o7c0UdvBu7v17GC0kn0uII1Amyilfi5MG7RF/xneOU4izdJHxPaNjL2j
-         fdYXZAyz9Mu0dd0M2bZiNeOfSfRtkftjV6wFHTGjuva5bMPHGWKodn3U2UShBfDX3TsM
-         Yg8tGF14R8bLp+UHi/7Mm2qPvdq2OAwtNy/9CjYPDOcCITKS5k2/o6rnhKan8cLm+2xb
-         mTqdux0kGuGoxReRzNmdRoggj0/pRV09JEEfiZFqvgEueWMFf3Zr1LFKoCjzd60xloa1
-         RzPboaaQmVHSP0fGt/rcnaYrZUGRAKZq67nv/HYhCe9vcK4Tl/TDq9G0bc8pvlzFIk88
-         bnRg==
-X-Gm-Message-State: APjAAAUTI3T1HafI3hgj47sexDCRijFbGiFfAOEpyDXfTNpp3rV1OgWR
-        iex6Wt5zKaOT8Ccq96VpynO+c9k2OZp1Gw==
-X-Google-Smtp-Source: APXvYqz0Vt46FkrYxvE8sC2zsou4Fu/K2OM0uY0eeF0c2HkTXA8vITv7APcKVJHnhRDi0P/kPjTb/w==
-X-Received: by 2002:a1c:a014:: with SMTP id j20mr165157wme.69.1568140676561;
-        Tue, 10 Sep 2019 11:37:56 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id y15sm278829wmj.32.2019.09.10.11.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 11:37:55 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 11:37:54 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
-        David Laight <David.Laight@aculab.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Message-ID: <20190910183754.GA42190@archlinux-threadripper>
-References: <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com>
- <20190828184529.GC127646@archlinux-threadripper>
- <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
- <20190903055553.GC60296@archlinux-threadripper>
- <20190903193128.GC9749@gate.crashing.org>
- <20190904002401.GA70635@archlinux-threadripper>
- <1bcd7086f3d24dfa82eec03980f30fbc@AcuMS.aculab.com>
- <20190904130135.GN9749@gate.crashing.org>
- <20190904231554.GA42450@archlinux-threadripper>
- <87mufcypf5.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mufcypf5.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 10 Sep 2019 14:42:05 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:47666 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfIJSmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 14:42:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vJAeRMch7ip54W8wc3UhVFZN0MUREcLR4FPZHtlSeHo=; b=F3kG4VZua+8Qi8Sh/M8n8kd4/d
+        HuXgSQsgcHQaCjMlbmdwDlrOfAS6im9RsPoB3CTVRStUhPnduMbdlPVzCd5MID0gsQrVi+IQqVhLk
+        uoHLTnVSwToOI5xa4jOSZ3IX8OZGnkZZHOcHDwgegGUzAmd12IpXwvVvKQqJ4YyC9EBY=;
+Received: from p200300ccff17ef007ee9d3fffe1fa246.dip0.t-ipconnect.de ([2003:cc:ff17:ef00:7ee9:d3ff:fe1f:a246] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7l5R-0005mG-Lg; Tue, 10 Sep 2019 20:41:57 +0200
+Received: from andi by localhost with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i7hzy-0001xi-Vb; Tue, 10 Sep 2019 17:24:07 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hns@goldelico.com
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] backlight: lm3630a: fix module aliases
+Date:   Tue, 10 Sep 2019 17:23:59 +0200
+Message-Id: <20190910152359.7448-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 04:30:38AM +1000, Michael Ellerman wrote:
-> Nathan Chancellor <natechancellor@gmail.com> writes:
-> > On Wed, Sep 04, 2019 at 08:01:35AM -0500, Segher Boessenkool wrote:
-> >> On Wed, Sep 04, 2019 at 08:16:45AM +0000, David Laight wrote:
-> >> > From: Nathan Chancellor [mailto:natechancellor@gmail.com]
-> >> > > Fair enough so I guess we are back to just outright disabling the
-> >> > > warning.
-> >> > 
-> >> > Just disabling the warning won't stop the compiler generating code
-> >> > that breaks a 'user' implementation of setjmp().
-> >> 
-> >> Yeah.  I have a patch (will send in an hour or so) that enables the
-> >> "returns_twice" attribute for setjmp (in <asm/setjmp.h>).  In testing
-> >> (with GCC trunk) it showed no difference in code generation, but
-> >> better save than sorry.
-> >> 
-> >> It also sets "noreturn" on longjmp, and that *does* help, it saves a
-> >> hundred insns or so (all in xmon, no surprise there).
-> >> 
-> >> I don't think this will make LLVM shut up about this though.  And
-> >> technically it is right: the C standard does say that in hosted mode
-> >> setjmp is a reserved name and you need to include <setjmp.h> to access
-> >> it (not <asm/setjmp.h>).
-> >
-> > It does not fix the warning, I tested your patch.
-> >
-> >> So why is the kernel compiled as hosted?  Does adding -ffreestanding
-> >> hurt anything?  Is that actually supported on LLVM, on all relevant
-> >> versions of it?  Does it shut up the warning there (if not, that would
-> >> be an LLVM bug)?
-> >
-> > It does fix this warning because -ffreestanding implies -fno-builtin,
-> > which also solves the warning. LLVM has supported -ffreestanding since
-> > at least 3.0.0. There are some parts of the kernel that are compiled
-> > with this and it probably should be used in more places but it sounds
-> > like there might be some good codegen improvements that are disabled
-> > with it:
-> >
-> > https://lore.kernel.org/lkml/CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com/
-> 
-> For xmon.c and crash.c I think using -ffreestanding would be fine.
-> They're both crash/debug code, so we don't care about minor optimisation
-> differences. If anything we don't want the compiler being too clever
-> when generating that code.
-> 
-> cheers
+Devicetree aliases are missing, so that module autoloading
+does not work properly.
 
-I will send a v2 later today along with another patch to fix this
-warning and another build error.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/video/backlight/lm3630a_bl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Cheers,
-Nathan
+diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+index 3b45a1733198..9d67c07db2f2 100644
+--- a/drivers/video/backlight/lm3630a_bl.c
++++ b/drivers/video/backlight/lm3630a_bl.c
+@@ -617,12 +617,14 @@ static const struct i2c_device_id lm3630a_id[] = {
+ 	{}
+ };
+ 
++MODULE_DEVICE_TABLE(i2c, lm3630a_id);
++
+ static const struct of_device_id lm3630a_match_table[] = {
+ 	{ .compatible = "ti,lm3630a", },
+ 	{ },
+ };
+ 
+-MODULE_DEVICE_TABLE(i2c, lm3630a_id);
++MODULE_DEVICE_TABLE(of, lm3630a_match_table);
+ 
+ static struct i2c_driver lm3630a_i2c_driver = {
+ 	.driver = {
+-- 
+2.11.0
+
