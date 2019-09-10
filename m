@@ -2,180 +2,131 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE20C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E111AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECEF222BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80F620863
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 08:51:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FP63dxnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393635AbfIJIsD (ORCPT
+        id S1728788AbfIJIvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 04:48:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8059 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfIJIrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 04:47:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 01:47:09 -0700
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="185446491"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 01:47:07 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 8A5F820365;
-        Tue, 10 Sep 2019 11:47:05 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1i7bnn-0004nL-5B; Tue, 10 Sep 2019 11:47:07 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v6 00/12] Device property improvements, add %pfw format specifier
-Date:   Tue, 10 Sep 2019 11:46:55 +0300
-Message-Id: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Sep 2019 04:51:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34986 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfIJIvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 04:51:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t6so4079005otp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 01:51:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TORtZiXw+gviBY1uqojNwtzUG5Du45WnPV4wu8nw43A=;
+        b=FP63dxnYbqidnXC5M+glimtjNBKD/siLT23X23yuuOER2/9MRjpqdmr17EYxW/s6p0
+         E+BlJ699H7VMsfwq2N1wqcggLYV4SabdWzY7R+9yPxtI/5t3nmNf5ca2zAEhu1LnVkuB
+         djYTbLY1JIMnBRApHzAxKwnWqjP+nN1qESTU3SbZUvPgE9If19AaeeYRC/e77mGKGlHs
+         Z8ZBwXsPYqqQJgcLf6S0grCdZJQsRslVL3vSrRDO2qTE8+rlRH1udar3q0c+ncpOXXIv
+         4GVPY8w0RyJ4klXWtdtrKObo3MRhX8E73WYW7kEYXbu2xbXOjxHEltwsAL090sa9hSiJ
+         ROuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TORtZiXw+gviBY1uqojNwtzUG5Du45WnPV4wu8nw43A=;
+        b=a49iuQ4bJBIEhqP97Tfl3feFiL49KfbKKaO2tlrklioSJOapHYIiPOntjD4SNlNrSu
+         z47CKoC/0O0wOmQBJ/AXJ4cs2QSCVNTzCVBSeDpvCKkoFvXntlveJRAg4Xz8Dx1VwLxz
+         Pwhh50gEGvfTkBMq3pFNwe2eG8SOGAt4A6J5IoBNc2v3t8W3UoZZSeO1ZV3WDiyYootY
+         yefodFRl2LVoBsBr1BBR/A+HuqCjrNhkXB+4AvFCYJjEOOYsEgGsd7nJczp5LBdEKjK/
+         uiV8063LFNvs6qLKfJYaY+GIvgdDyfRWL0zNG9YQaAlUhch2ezwbZj6TbmYGi0Gbo1lF
+         jm9w==
+X-Gm-Message-State: APjAAAWRbhlYNut+Y0p44kqdIjnWu2y8t8CRBE+MOltRBauGpv1PAv5g
+        FE7B7DS9yUgH5G9hCQMQAICkuKF7ez6pTfD14gsvAw==
+X-Google-Smtp-Source: APXvYqxAsq9CF/Si2rdwo5vSZgIzEMUPMsKHEsRblYndhdS59/hlsoR7x+5MiowCWiAhLmrRORnRA4H2pVT8BZGTtxI=
+X-Received: by 2002:a05:6830:1d4e:: with SMTP id p14mr1451146oth.292.1568105466197;
+ Tue, 10 Sep 2019 01:51:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190906084539.21838-1-geert+renesas@glider.be>
+In-Reply-To: <20190906084539.21838-1-geert+renesas@glider.be>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 10 Sep 2019 10:50:55 +0200
+Message-ID: <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+pt., 6 wrz 2019 o 10:45 Geert Uytterhoeven <geert+renesas@glider.be> napisa=
+=C5=82(a):
+>
+>         Hi Linus, Bartosz,
+>
+> This patch series contains various API boundary cleanups for gpiolib:
+>   - The first two patches make two functions private,
+>   - The last two patches switch the remaining gpiolib exported functions
+>     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
+>
+> After this there is only a single GPIO driver function exported with
+> EXPORT_SYMBOL();
+>
+>     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq)=
+;
+>
+> I believe this symbol was never used upstream, and may be a relic of the
+> original out-of-tree code the htc-egpio was based on.  I don't know if
+> there (still) exist out-of-tree users of the symbol.
+>
+> Thanks for your comments!
 
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
+All looks good to me. Are you fine with this being picked up after the
+v5.4 merge window?
 
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
+Bart
 
-Note: the set now depends on 2d44d165e939 ("scsi: lpfc: Convert existing
-%pf users to %ps") that is expected from the linux-scsi tree.
-
-since v5:
-
-- Added a patch to convert %pf to %ps in tools/lib/traceevent.c (first in
-  the set).
-
-- Fix ReST syntax in Documentation/core-api/printk-formats.rst.
-
-- Fix returning root swnode name in patch "device property: Add
-  fwnode_get_name for returning the name of a node". Use to_swnode()
-  directly as well in the same patch.
-
-- Tests: take root node name into account, use direct indices and remove
-  the comma from the guardian entry.
-
-- Add a comment on how fwnode_full_name_string() enumerates the nodes.
-
-- Fix error string in fwnode_string().
-
-- Move 'f' + default case as last in the switch in fwnode_string().
-
-- Fix %pfw validation in checkpatch.pl.
-
-since v4:
-
-- Improved documentation for fwnode_get_nth_parent().
-
-- Removed comma from the guardian entry in fwnode_pointer() testcase.
-
-since v3:
-
-- Remove underscores in argument name of fwnode_count_parents().
-
-- Re-introduce "%pO?" error string.
-
-- Unwrap a call to string() in fwnode_string().
-
-- Removed a useless Depends-on: on a patch that was merged long ago.
-
-- Unwrap a Fixes: line.
-
-- Added a patch to move fwnode_get_parent() up to make the review of the
-  following patch easier.
-
-since v2:
-
-- Better comments in acpi_fwnode_get_name_prefix().
-
-- Added swnode implementation.
-
-- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
-  parent swnode in get_parent op")
-
-- Make argument to to_software_node() const (a new patch)
-
-- Factored out confusingly named kobject_string() that had a single
-  caller.
-
-- Cleaner fwnode_count_parents() implementation (as discussed in review).
-
-- Made fwnode_count_parents() argument const.
-
-- Added tests (last patch in the set).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (12):
-  tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
-  software node: Get reference to parent swnode in get_parent op
-  software node: Make argument to to_software_node const
-  device property: Move fwnode_get_parent() up
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-  lib/test_printf: Add tests for %pfw printk modifier
-
- Documentation/core-api/printk-formats.rst     | 34 ++++---
- drivers/acpi/property.c                       | 48 ++++++++++
- drivers/base/property.c                       | 83 +++++++++++++++--
- drivers/base/swnode.c                         | 43 ++++++++-
- drivers/of/property.c                         | 16 ++++
- include/linux/fwnode.h                        |  4 +
- include/linux/property.h                      |  8 +-
- lib/test_printf.c                             | 32 +++++++
- lib/vsprintf.c                                | 89 +++++++++++--------
- scripts/checkpatch.pl                         |  8 +-
- .../Documentation/libtraceevent-func_apis.txt | 10 +--
- tools/lib/traceevent/event-parse.c            |  7 +-
- 12 files changed, 314 insertions(+), 68 deletions(-)
-
--- 
-2.20.1
-
+>
+> Geert Uytterhoeven (4):
+>   gpio: of: Make of_get_named_gpiod_flags() private
+>   gpio: of: Make of_gpio_simple_xlate() private
+>   gpio: of: Switch to EXPORT_SYMBOL_GPL()
+>   gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+>
+>  drivers/gpio/gpiolib-devres.c | 28 ++++++++++++++--------------
+>  drivers/gpio/gpiolib-of.c     | 16 ++++++++--------
+>  drivers/gpio/gpiolib-of.h     |  7 -------
+>  include/linux/of_gpio.h       | 11 -----------
+>  4 files changed, 22 insertions(+), 40 deletions(-)
+>
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                                             -- Linus Torv=
+alds
