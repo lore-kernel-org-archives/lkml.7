@@ -2,140 +2,193 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C78C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C41FC49ED9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0736A2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568132130;
-	bh=5W/Rry5FFVI4GmLW/JWJkq+73Cv1NHVWc8L9Yrwkn68=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CC1T6BwFQIIaIPXCeGG0GtutdktOvl6UglfURXU8zAMukI2Bf48AK3kKA5BJ9U2Iu
-	 ZdBDWsHu8StkMNp5N5oTWswF14R2Nh+g9H1obqX3sdD7VbGSeEXXHkL+afnoPvMCiU
-	 w3eIHPs6nim5X3GUrVqOFfT5Lh9cnK+bvqtutSfg=
+	by mail.kernel.org (Postfix) with ESMTP id 54D4E20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436747AbfIJQP3 (ORCPT
+        id S2394130AbfIJQQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:15:29 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40317 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436575AbfIJQP3 (ORCPT
+        Tue, 10 Sep 2019 12:16:41 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42006 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729971AbfIJQQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:15:29 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g4so21426927qtq.7;
-        Tue, 10 Sep 2019 09:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=BzSkrvowps0g0N5g6HScYMxe8xO2mx5UwGqeLTuW+Hk=;
-        b=ParuHlsgLMt+EXk5iwj5kllgfVd78Xqi8XxmT53ucKqxnnfE9HO1f70TItdD4QTprD
-         NSI2+nSSvd0DYFCBc/MYuP/0c21UzIXD3t0PjcjjuelpRvBobkcN3+HCpgtP2rWKgIUJ
-         +gy6rh9Tp0ZCS6BiO7coXzGiUQIE+Rg/GI+WbVE5Nx9gDt6fKH30h7tddn6FTpqTfoyp
-         WbVyAMGGuFpwjE6MtE+FCUW0R4lw8vsBpG4FJAIdTV9YmqRudzlnzSX5XLtaAdJGWfbI
-         E/gWUk5lSZgExw+x22kpQ2NEsvbI0H4SfrVZySWh+0M1No6viAjzSv711nFqxfPcoAiI
-         bHRw==
+        Tue, 10 Sep 2019 12:16:41 -0400
+Received: by mail-yw1-f68.google.com with SMTP id i207so6637332ywc.9;
+        Tue, 10 Sep 2019 09:16:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=BzSkrvowps0g0N5g6HScYMxe8xO2mx5UwGqeLTuW+Hk=;
-        b=M38Nayzu2e6KcXBQR00BJzGTyMfEucIAXATM2T5ylHOuGD3nDHq7ryHBK3tAcbDA12
-         lOlQfsQwCblAupd/ix4xZFwQo7RuFYWLu52P0E5SIAp4OQPaqDI7iGrMdG96ibKLhqJk
-         rnNxuhAxvdW8x2k8oGpuFn9/UW3AtMwfgHojUmo39dJKDuVQV39Bi4p8owjgpUMQHv4Q
-         usLvDWKRp3hWnnFpMAYw1wLkokqjhqKjpIyVWJHzhGK5C5H7QOwMJf7bZXRui7TO2Zdu
-         LQ6zZrtqlmJzhTY9BAlRHQTtuns23A7rj9Fs8OWzngSd5uO2K6XIsF+v5xjQU3H3Oog1
-         GLdg==
-X-Gm-Message-State: APjAAAUST1zLEOtpJ3Jg3cDmMGdVS/WKvGApzArIpMZqSj6vRXOtlc/5
-        jFNNJd95eUfv883ayGoau77JTZwTziA=
-X-Google-Smtp-Source: APXvYqz+fRhZSzqN0CIOHMhPrk/SeU7rcytoTB+/zfQXi6mmIdIDRH2vqSMTY0gjwRxRcjtRFKpq6Q==
-X-Received: by 2002:ac8:43c8:: with SMTP id w8mr29145969qtn.322.1568132127861;
-        Tue, 10 Sep 2019 09:15:27 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:f049])
-        by smtp.gmail.com with ESMTPSA id z200sm8663032qkb.5.2019.09.10.09.15.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 09:15:27 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 09:15:25 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, kernel-team@fb.com,
-        Dave Jones <davej@codemonkey.org.uk>
-Subject: [block/for-next] iocost: Fix incorrect operation order during iocg
- free
-Message-ID: <20190910161525.GT2263813@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FDQLIng6kCw7wl/fv02qjtPxeGZB6gd6OThPCSovKTs=;
+        b=LjDrRh4W31/m10U40aUMoKxR0cgMfqwGtYeBrZlHgiNbgMaLMKzRw14ygyw8R3YJds
+         Jt5VmvBmfdNiyRSDbpKX/BnDjzUNTdt+d9TATzlVAr/q8O5UfleVeG/38/k4N88pAqUu
+         U+CGVo06PqUCYDOgW0z13zeiVpD6J5fa0GevbiyofE7ej6liii51wbJLM1BKYYCCM8pW
+         wr5HiFjpVnOguw0HtbB5Z/ItdD/hlhpEp2RtBkhoK05k2QjAC5iion3DB1jPDlVkoc+0
+         vaFpuRp0aHdsoFOySzLP4IwdmaODghkOTfX/eBq1ltEYseGABQrLQzyKtIwJ/yGTffRc
+         ak3A==
+X-Gm-Message-State: APjAAAUC5rKu8dhq81dQB+3zgTjyxYLGjat+y4C5T0SHYXz2XRvSI4Wz
+        TZ9QPUgCYPjCZYMU8zMFGxjZg2WyvwZnWZEUvZw=
+X-Google-Smtp-Source: APXvYqzmsL42TZRBK6S3XMFhX7UkHuUJCmUwDrJ9agMT2fIQE8XEq9em+k3KCl5sn2MIVcOApA8FI+6GaRs+DWfpqxU=
+X-Received: by 2002:a81:8105:: with SMTP id r5mr20891732ywf.489.1568132199817;
+ Tue, 10 Sep 2019 09:16:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
+ <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com> <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
+From:   Pankaj Dubey <pankaj.dubey@samsung.com>
+Date:   Tue, 10 Sep 2019 21:46:28 +0530
+Message-ID: <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioc_pd_free() first cancels the hrtimers and then deactivates the
-iocg.  However, the iocg timer can run inbetween and reschedule the
-hrtimers which will end up running after the iocg is freed leading to
-crashes like the following.
+On Tue, 10 Sep 2019 at 19:56, Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
+> > From: Anvesh Salveru <anvesh.s@samsung.com>
+> >
+> > In some platforms, PCIe PHY may have issues which will prevent linkup
+> > to happen in GEN3 or high speed. In case equalization fails, link will
+> > fallback to GEN1.
+>
+> When you refer to "high speed", do you mean "higher speeds" as in GEN3,
+> GEN4, etc?
+>
 
-  general protection fault: 0000 [#1] SMP
-  ...
-  RIP: 0010:iocg_kick_delay+0xbe/0x1b0
-  RSP: 0018:ffffc90003598ea0 EFLAGS: 00010046
-  RAX: 1cee00fd69512b54 RBX: ffff8881bba48400 RCX: 00000000000003e8
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8881bba48400
-  RBP: 0000000000004e20 R08: 0000000000000002 R09: 00000000000003e8
-  R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90003598ef0
-  R13: 00979f3810ad461f R14: ffff8881bba4b400 R15: 25439f950d26e1d1
-  FS:  0000000000000000(0000) GS:ffff88885f800000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f64328c7e40 CR3: 0000000002409005 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <IRQ>
-   iocg_delay_timer_fn+0x3d/0x60
-   __hrtimer_run_queues+0xfe/0x270
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x5e/0x120
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
+Yes. Will reword the commit message as "higher speeds"
 
-Fix it by canceling hrtimers after deactivating the iocg.
+> >
+> > Designware controller has support for disabling GEN3 equalization if
+> > required. This patch enables the designware driver to disable the PCIe
+> > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
+>
+> Thus limiting to GEN2 speeds max, right?
+>
+> Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and above
+> even though we advertise GEN3 and above speeds? I.e. the IP advertises
+> GEN3 but the phy can't handle it, we can't change what the IP advertises
+> and so we disable equalization to limit to GEN2?
+>
+> I notice many of the other dwc drivers (dra7xx, keystone, tegra194, imx6)
+> seem to use the device tree to specify a max-link-speed and then impose
+> that limit by changing the value in PCI_EXP_LNKCAP. Is your
+> PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the PCI_EXP_LNKCAP
+> approach, or does your approach add something else?
+>
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Dave Jones <davej@codemonkey.org.uk>
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
----
- block/blk-iocost.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+No, max speed will be still as per advertised by link or it will be
+equal to the limited speed as per DT property if any.
+This register will prohibit to perform all phases of equalization and
+thus allowing link to happen in maximum supported/advertised speed.
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 2aae8ec391ef..7af350293c2f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1957,15 +1957,15 @@ static void ioc_pd_free(struct blkg_policy_data *pd)
- 	struct ioc *ioc = iocg->ioc;
- 
- 	if (ioc) {
--		hrtimer_cancel(&iocg->waitq_timer);
--		hrtimer_cancel(&iocg->delay_timer);
--
- 		spin_lock(&ioc->lock);
- 		if (!list_empty(&iocg->active_list)) {
- 			propagate_active_weight(iocg, 0, 0);
- 			list_del_init(&iocg->active_list);
- 		}
- 		spin_unlock(&ioc->lock);
-+
-+		hrtimer_cancel(&iocg->waitq_timer);
-+		hrtimer_cancel(&iocg->delay_timer);
- 	}
- 	kfree(iocg);
- }
+This is not to limit max link speed, this register helps link to
+happen in higher speeds (GEN3/4) without going through equalization
+phases. It is intended to use only if at all link fails to latch up in
+GEN3/4 due to failure in equalization phases.
+
+> >
+> > Platform drivers can disable equalization by setting the dwc_pci_quirk
+> > flag DWC_EQUALIZATION_DISABLE.
+> >
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+> >  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
+> >  2 files changed, 14 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 7d25102..bf82091 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> >               break;
+> >       }
+> >       dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> > +
+> > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > +
+> > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > +
+> > +     dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+>
+> The problem here is that even when DWC_EQUALIZATION_DISABLE is not set
+> the driver will read and write PCIE_PORT_GEN3_RELATED when it is not
+> needed. How about something like:
+>
+> > +
+> > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
+> > +             val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > +             dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > +     }
+>
+
+Yes, before posting we taught about it, but then next patchset is
+adding one more quirk and in that case we need to repeat read and
+write under each if condition. I hope that repetition should be fine.
+
+> >  }
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index ffed084..a1453c5 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -29,6 +29,9 @@
+> >  #define LINK_WAIT_MAX_IATU_RETRIES   5
+> >  #define LINK_WAIT_IATU                       9
+> >
+> > +/* Parameters for PCIe Quirks */
+> > +#define DWC_EQUALIZATION_DISABLE     0x1
+>
+> How about using BIT(1) instead? Thus implying that you can combine
+> quirks.
+>
+
+Agreed.
+
+> Thanks,
+>
+> Andrew Murray
+>
+> > +
+> >  /* Synopsys-specific PCIe configuration registers */
+> >  #define PCIE_PORT_LINK_CONTROL               0x710
+> >  #define PORT_LINK_MODE_MASK          GENMASK(21, 16)
+> > @@ -60,6 +63,9 @@
+> >  #define PCIE_MSI_INTR0_MASK          0x82C
+> >  #define PCIE_MSI_INTR0_STATUS                0x830
+> >
+> > +#define PCIE_PORT_GEN3_RELATED               0x890
+> > +#define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > +
+> >  #define PCIE_ATU_VIEWPORT            0x900
+> >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> >  #define PCIE_ATU_REGION_OUTBOUND     0
+> > @@ -244,6 +250,7 @@ struct dw_pcie {
+> >       struct dw_pcie_ep       ep;
+> >       const struct dw_pcie_ops *ops;
+> >       unsigned int            version;
+> > +     unsigned int            dwc_pci_quirk;
+> >  };
+> >
+> >  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> > --
+> > 2.7.4
+> >
