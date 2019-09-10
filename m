@@ -2,331 +2,86 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD02CC49ED9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C41C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937FC21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C692081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 16:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WblFv4yQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436898AbfIJQjk (ORCPT
+        id S2436901AbfIJQk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 12:39:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45918 "EHLO mx1.redhat.com"
+        Tue, 10 Sep 2019 12:40:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50220 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436805AbfIJQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 12:39:39 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729580AbfIJQk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 12:40:57 -0400
+Received: from zn.tnic (p200300EC2F0ABE00F527A81DC3416441.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:be00:f527:a81d:c341:6441])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A6DA837E79;
-        Tue, 10 Sep 2019 16:39:38 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-108.ams2.redhat.com [10.36.116.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6855060BF3;
-        Tue, 10 Sep 2019 16:39:33 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        David Hildenbrand <david@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arun KS <arunks@codeaurora.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1A6891EC0A91;
+        Tue, 10 Sep 2019 18:40:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1568133656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XtHKBvvT6hRDvVQrlI/kCAwmX4eSzoQdN87+l4zR9TA=;
+        b=WblFv4yQtTjDzBQUuW+wU5Tfm7msSatpYprxSfEBMe8cL+IYilTHDGd4VwIsGXUoTFnAHl
+        evKBQhw14L6MTWSYRt6givb39YdZptEJNFcoFmORgRT+5vUgnjwO6xWmAZywu9Kk4uAANz
+        aWdSfim6rEHetCZOWghaBKh5d4UOnp8=
+Date:   Tue, 10 Sep 2019 18:40:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v1] powerpc/pseries: CMM: Drop page array
-Date:   Tue, 10 Sep 2019 18:39:32 +0200
-Message-Id: <20190910163932.13160-1-david@redhat.com>
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+Message-ID: <20190910164050.GH23931@zn.tnic>
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <CANiq72nTKbNEKezoy_CqdFRuQ0SD2OsORV8u=i_1g=2atkCRiA@mail.gmail.com>
+ <797654d8-562a-6492-79e1-65a292157d04@hpe.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 10 Sep 2019 16:39:38 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <797654d8-562a-6492-79e1-65a292157d04@hpe.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can simply store the pages in a list (page->lru), no need for a
-separate data structure (+ complicated handling). This is how most
-other balloon drivers store allocated pages without additional tracking
-data.
+On Tue, Sep 10, 2019 at 08:34:44AM -0700, Mike Travis wrote:
+> Hi,  I'm not conscientiously adding any attachments.  I think what is
+> happening is some email readers mistake the '---' to signify an attachment
+> follows.  I see the "staple" symbol on some indicating an attachment, but
+> not usually all of the email I send.  Thanks, Mike
 
-For the notifiers, use page_to_pfn() to check if a page is in the
-applicable range. plpar_page_set_loaned()/plpar_page_set_active() were
-called with __pa(page_address()) for now, I assume we can simply switch
-to page_to_phys() here. The pfn_to_kaddr() handling is now mostly gone.
+Btw, is there anyway to fix your mail setup and not flood with your
+patchset?
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
+I have received your V2 patchset 5(!) times yesterday and today. All
+separate submissions!
 
-Only compile-tested. I hope the page_to_phys() thingy is correct and I
-didn't mess up something else / ignoring something important why the array
-is needed.
+;-(
 
-I stumbled over this while looking at how the memory isolation notifier is
-used - and wondered why the additional array is necessary. Also, I think
-by switching to the generic balloon compaction mechanism, we could get
-rid of the memory hotplug notifier and the memory isolation notifier in
-this code, as the migration capability of the inflated pages is the real
-requirement:
-	commit 14b8a76b9d53346f2871bf419da2aaf219940c50
-	Author: Robert Jennings <rcj@linux.vnet.ibm.com>
-	Date:   Thu Dec 17 14:44:52 2009 +0000
-	
-	    powerpc: Make the CMM memory hotplug aware
-	
-	    The Collaborative Memory Manager (CMM) module allocates individual pages
-	    over time that are not migratable.  On a long running system this can
-	    severely impact the ability to find enough pages to support a hotplug
-	    memory remove operation.
-	[...]
-
-Thoughts?
-
----
- arch/powerpc/platforms/pseries/cmm.c | 155 ++++++---------------------
- 1 file changed, 31 insertions(+), 124 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/pseries/cmm.c
-index b33251d75927..9cab34a667bf 100644
---- a/arch/powerpc/platforms/pseries/cmm.c
-+++ b/arch/powerpc/platforms/pseries/cmm.c
-@@ -75,21 +75,13 @@ module_param_named(debug, cmm_debug, uint, 0644);
- MODULE_PARM_DESC(debug, "Enable module debugging logging. Set to 1 to enable. "
- 		 "[Default=" __stringify(CMM_DEBUG) "]");
- 
--#define CMM_NR_PAGES ((PAGE_SIZE - sizeof(void *) - sizeof(unsigned long)) / sizeof(unsigned long))
--
- #define cmm_dbg(...) if (cmm_debug) { printk(KERN_INFO "cmm: "__VA_ARGS__); }
- 
--struct cmm_page_array {
--	struct cmm_page_array *next;
--	unsigned long index;
--	unsigned long page[CMM_NR_PAGES];
--};
--
- static unsigned long loaned_pages;
- static unsigned long loaned_pages_target;
- static unsigned long oom_freed_pages;
- 
--static struct cmm_page_array *cmm_page_list;
-+static LIST_HEAD(cmm_page_list);
- static DEFINE_SPINLOCK(cmm_lock);
- 
- static DEFINE_MUTEX(hotplug_mutex);
-@@ -138,8 +130,7 @@ static long plpar_page_set_active(unsigned long vpa)
-  **/
- static long cmm_alloc_pages(long nr)
- {
--	struct cmm_page_array *pa, *npa;
--	unsigned long addr;
-+	struct page *page;
- 	long rc;
- 
- 	cmm_dbg("Begin request for %ld pages\n", nr);
-@@ -156,43 +147,20 @@ static long cmm_alloc_pages(long nr)
- 			break;
- 		}
- 
--		addr = __get_free_page(GFP_NOIO | __GFP_NOWARN |
--				       __GFP_NORETRY | __GFP_NOMEMALLOC);
--		if (!addr)
-+		page = alloc_page(GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY |
-+				  __GFP_NOMEMALLOC);
-+		if (!page)
- 			break;
- 		spin_lock(&cmm_lock);
--		pa = cmm_page_list;
--		if (!pa || pa->index >= CMM_NR_PAGES) {
--			/* Need a new page for the page list. */
--			spin_unlock(&cmm_lock);
--			npa = (struct cmm_page_array *)__get_free_page(
--					GFP_NOIO | __GFP_NOWARN |
--					__GFP_NORETRY | __GFP_NOMEMALLOC);
--			if (!npa) {
--				pr_info("%s: Can not allocate new page list\n", __func__);
--				free_page(addr);
--				break;
--			}
--			spin_lock(&cmm_lock);
--			pa = cmm_page_list;
--
--			if (!pa || pa->index >= CMM_NR_PAGES) {
--				npa->next = pa;
--				npa->index = 0;
--				pa = npa;
--				cmm_page_list = pa;
--			} else
--				free_page((unsigned long) npa);
--		}
--
--		if ((rc = plpar_page_set_loaned(__pa(addr)))) {
-+		rc = plpar_page_set_loaned(page_to_phys(page));
-+		if (rc) {
- 			pr_err("%s: Can not set page to loaned. rc=%ld\n", __func__, rc);
- 			spin_unlock(&cmm_lock);
--			free_page(addr);
-+			__free_page(page);
- 			break;
- 		}
- 
--		pa->page[pa->index++] = addr;
-+		list_add(&page->lru, &cmm_page_list);
- 		loaned_pages++;
- 		totalram_pages_dec();
- 		spin_unlock(&cmm_lock);
-@@ -212,25 +180,16 @@ static long cmm_alloc_pages(long nr)
-  **/
- static long cmm_free_pages(long nr)
- {
--	struct cmm_page_array *pa;
--	unsigned long addr;
-+	struct page *page, *tmp;
- 
- 	cmm_dbg("Begin free of %ld pages.\n", nr);
- 	spin_lock(&cmm_lock);
--	pa = cmm_page_list;
--	while (nr) {
--		if (!pa || pa->index <= 0)
-+	list_for_each_entry_safe(page, tmp, &cmm_page_list, lru) {
-+		if (!nr)
- 			break;
--		addr = pa->page[--pa->index];
--
--		if (pa->index == 0) {
--			pa = pa->next;
--			free_page((unsigned long) cmm_page_list);
--			cmm_page_list = pa;
--		}
--
--		plpar_page_set_active(__pa(addr));
--		free_page(addr);
-+		plpar_page_set_active(page_to_phys(page));
-+		list_del(&page->lru);
-+		__free_page(page);
- 		loaned_pages--;
- 		nr--;
- 		totalram_pages_inc();
-@@ -491,20 +450,13 @@ static struct notifier_block cmm_reboot_nb = {
- static unsigned long cmm_count_pages(void *arg)
- {
- 	struct memory_isolate_notify *marg = arg;
--	struct cmm_page_array *pa;
--	unsigned long start = (unsigned long)pfn_to_kaddr(marg->start_pfn);
--	unsigned long end = start + (marg->nr_pages << PAGE_SHIFT);
--	unsigned long idx;
-+	struct page *page;
- 
- 	spin_lock(&cmm_lock);
--	pa = cmm_page_list;
--	while (pa) {
--		if ((unsigned long)pa >= start && (unsigned long)pa < end)
-+	list_for_each_entry(page, &cmm_page_list, lru) {
-+		if (page_to_pfn(page) >= marg->start_pfn &&
-+		    page_to_pfn(page) < marg->start_pfn + marg->nr_pages)
- 			marg->pages_found++;
--		for (idx = 0; idx < pa->index; idx++)
--			if (pa->page[idx] >= start && pa->page[idx] < end)
--				marg->pages_found++;
--		pa = pa->next;
- 	}
- 	spin_unlock(&cmm_lock);
- 	return 0;
-@@ -545,69 +497,24 @@ static struct notifier_block cmm_mem_isolate_nb = {
- static int cmm_mem_going_offline(void *arg)
- {
- 	struct memory_notify *marg = arg;
--	unsigned long start_page = (unsigned long)pfn_to_kaddr(marg->start_pfn);
--	unsigned long end_page = start_page + (marg->nr_pages << PAGE_SHIFT);
--	struct cmm_page_array *pa_curr, *pa_last, *npa;
--	unsigned long idx;
-+	struct page *page, *tmp;
- 	unsigned long freed = 0;
- 
- 	cmm_dbg("Memory going offline, searching 0x%lx (%ld pages).\n",
--			start_page, marg->nr_pages);
-+		(unsigned long)pfn_to_kaddr(marg->start_pfn), marg->nr_pages);
- 	spin_lock(&cmm_lock);
- 
- 	/* Search the page list for pages in the range to be offlined */
--	pa_last = pa_curr = cmm_page_list;
--	while (pa_curr) {
--		for (idx = (pa_curr->index - 1); (idx + 1) > 0; idx--) {
--			if ((pa_curr->page[idx] < start_page) ||
--			    (pa_curr->page[idx] >= end_page))
--				continue;
--
--			plpar_page_set_active(__pa(pa_curr->page[idx]));
--			free_page(pa_curr->page[idx]);
--			freed++;
--			loaned_pages--;
--			totalram_pages_inc();
--			pa_curr->page[idx] = pa_last->page[--pa_last->index];
--			if (pa_last->index == 0) {
--				if (pa_curr == pa_last)
--					pa_curr = pa_last->next;
--				pa_last = pa_last->next;
--				free_page((unsigned long)cmm_page_list);
--				cmm_page_list = pa_last;
--			}
--		}
--		pa_curr = pa_curr->next;
--	}
--
--	/* Search for page list structures in the range to be offlined */
--	pa_last = NULL;
--	pa_curr = cmm_page_list;
--	while (pa_curr) {
--		if (((unsigned long)pa_curr >= start_page) &&
--				((unsigned long)pa_curr < end_page)) {
--			npa = (struct cmm_page_array *)__get_free_page(
--					GFP_NOIO | __GFP_NOWARN |
--					__GFP_NORETRY | __GFP_NOMEMALLOC);
--			if (!npa) {
--				spin_unlock(&cmm_lock);
--				cmm_dbg("Failed to allocate memory for list "
--						"management. Memory hotplug "
--						"failed.\n");
--				return -ENOMEM;
--			}
--			memcpy(npa, pa_curr, PAGE_SIZE);
--			if (pa_curr == cmm_page_list)
--				cmm_page_list = npa;
--			if (pa_last)
--				pa_last->next = npa;
--			free_page((unsigned long) pa_curr);
--			freed++;
--			pa_curr = npa;
--		}
--
--		pa_last = pa_curr;
--		pa_curr = pa_curr->next;
-+	list_for_each_entry_safe(page, tmp, &cmm_page_list, lru) {
-+		if (page_to_pfn(page) < marg->start_pfn ||
-+		    page_to_pfn(page) >= marg->start_pfn + marg->nr_pages)
-+			continue;
-+		plpar_page_set_active(page_to_phys(page));
-+		list_del(&page->lru);
-+		__free_page(page);
-+		freed++;
-+		loaned_pages--;
-+		totalram_pages_inc();
- 	}
- 
- 	spin_unlock(&cmm_lock);
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
