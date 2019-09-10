@@ -2,177 +2,90 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148E9C49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9E120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E072F20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 11:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392826AbfIJLP5 (ORCPT
+        id S2392898AbfIJLRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 07:15:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35281 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729270AbfIJLP5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 07:15:57 -0400
-Received: from [148.69.85.38] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i7e7l-0001zI-BD; Tue, 10 Sep 2019 11:15:53 +0000
-Date:   Tue, 10 Sep 2019 13:15:52 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-Message-ID: <20190910111551.scam5payogqqvlri@wittgenstein>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
- <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
- <87r24piwhm.fsf@x220.int.ebiederm.org>
- <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
- <87ftl5donm.fsf@x220.int.ebiederm.org>
- <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
+        Tue, 10 Sep 2019 07:17:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:33130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730842AbfIJLRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 07:17:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F164B1000;
+        Tue, 10 Sep 2019 04:17:45 -0700 (PDT)
+Received: from red-moon.cambridge.arm.com (unknown [10.37.12.160])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69DCE3F59C;
+        Tue, 10 Sep 2019 04:17:44 -0700 (PDT)
+Date:   Tue, 10 Sep 2019 12:17:37 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the pci tree
+Message-ID: <20190910111737.GA4382@red-moon.cambridge.arm.com>
+References: <20190821071939.11382b44@canb.auug.org.au>
+ <20190821090249.GA28112@e121166-lin.cambridge.arm.com>
+ <DM6PR21MB13377560DB091B7F7C68E5E1CAB70@DM6PR21MB1337.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <DM6PR21MB13377560DB091B7F7C68E5E1CAB70@DM6PR21MB1337.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 12:27:27PM +0200, Michael Kerrisk (man-pages) wrote:
-> Hello Eric,
+On Mon, Sep 09, 2019 at 11:10:06PM +0000, Haiyang Zhang wrote:
 > 
-> On 9/10/19 1:40 AM, Eric W. Biederman wrote:
 > 
-> [...]
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: Wednesday, August 21, 2019 5:03 AM
+> > To: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>; Linux Next Mailing List <linux-
+> > next@vger.kernel.org>; Linux Kernel Mailing List <linux-
+> > kernel@vger.kernel.org>; Sasha Levin <sashal@kernel.org>; Haiyang Zhang
+> > <haiyangz@microsoft.com>
+> > Subject: Re: linux-next: Signed-off-by missing for commit in the pci tree
+> > 
+> > On Wed, Aug 21, 2019 at 07:19:39AM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > Commit
+> > >
+> > >   c4a29fbba415 ("PCI: hv: Use bytes 4 and 5 from instance ID as the PCI
+> > domain numbers")
+> > >
+> > > is missing a Signed-off-by from its committer.
+> > >
+> > > Also, all the tags should be kept together, please.
+> > 
+> > Fixed it up in my pci/hv branch, apologies.
+> > 
+> > Lorenzo
 > 
-> >>> I have just spotted this conversation and I expect if you are going
-> >>> to use this example it is probably good to document what is going
-> >>> on so that people can follow along.
-> >>
-> >> (Sounds reasonable.)
-> >>
-> >>>>> chdir(rootfs)
-> >>>>> pivot_root(".", ".")
-> >>>
-> >>> At this point the mount stack should be:
-> >>> old_root
-> >>> new_root
-> >>> rootfs
-> >>
-> >> In this context, what is 'rootfs'? The initramfs? At least, when I
-> >> examine /proc/PID/mountinfo. When I look at the / mount point in
-> >> /proc/PID/mountinfo, I see just
-> >>
-> >>    old_root
-> >>    new_root
-> >>
-> >> But nothing below 'new_root'. So, I'm a little puzzled.
-> > 
-> > I think that is because Al changed /proc/mounts to not display mounts
-> > that are outside of your current root.  But yes there is typically
-> > the initramfs of file system type rootfs on their.  Even when it isn't
-> > used you have one.  Just to keep everything simple I presume.
-> > 
-> > I haven't double checked lately to be certain it is there but I expect
-> > it is.
-> > 
-> >> By the way, why is 'old_root' stacked above 'new_root', do you know? I
-> >> mean, in this scenario it turns out to be useful, but it's kind of the
-> >> opposite from what I would have expected. (And if this was a
-> >> deliverate design decision in pivot_root(), it was never made
-> >> explicit.)
-> > 
-> > Oh.  It is absolutely explicit and part of the design and it has nothing
-> > to do with this case.
-> > 
-> > The pivot_root system calls takes two parameters:  new_root and put_old.
-> > 
-> > In this case the old root is put on put_old (which is the new_root).
-> > And new_root is made the current root.
-> > 
-> > The pivot_root code looks everything up before it moves anything.   With
-> > the result it is totally immaterrial which order the moves actually
-> > happen in the code.  Further it is pretty much necessary to look
-> > everything up before things are moved because the definition of paths
-> > change.
-> > 
-> > So it would actually be difficult to have pivot_root(.,.) to do anything
-> > except what it does today.
-> > 
-> > 
-> >>> With "." and "/" pointing to new_root.
-> >>>
-> >>>>> umount2(".", MNT_DETACH)
-> >>>
-> >>> At this point resolving "." starts with new_root and follows up the
-> >>> mount stack to old-root.
-> >>
-> >> Okay.
-> >>
-> >>> Ordinarily if you unmount "/" as is happening above you then need to
-> >>> call chroot and possibly chdir to ensure neither "/" nor "." point to
-> >>> somewhere other than the unmounted root filesystem.  In this specific
-> >>> case because "/" and "." resolve to new_root under the filesystem that is
-> >>> being unmounted that all is well.
-> >>
-> >> s/that/then/ ?
+> Hi thanks for fixing this, but I found the following commit now has the Subject line
+> and commit message same as a previous patch.
 > 
-> Thanks for the further clarifications.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers?id=87b20a08dcc265959f5c59f18603ea0487fe609b
 > 
-> All: I plan to add the following text to the manual page:
-> 
->        new_root and put_old may be the same  directory.   In  particular,
->        the following sequence allows a pivot-root operation without need‐
->        ing to create and remove a temporary directory:
-> 
->            chdir(new_root);
->            pivot_root(".", ".");
->            umount2(".", MNT_DETACH);
+> The correct message for the patch should be the msg below. Any possibility to 
+> fix it again?  Thanks.
 
-Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
-before the umount2()? Especially for the container case... I think we
-discussed this briefly yesterday in person.
+I updated my pci/hv branch and rewrote the commit log, I will ask
+Bjorn to update it so that it shows up in -next.
 
-> 
->        This sequence succeeds because the pivot_root()  call  stacks  the
->        old root mount point (old_root) on top of the new root mount point
->        at /.  At that point, the calling  process's  root  directory  and
->        current  working  directory  refer  to  the  new  root mount point
->        (new_root).  During the subsequent umount()  call,  resolution  of
->        "."   starts  with  new_root  and then moves up the list of mounts
->        stacked at /, with the result that old_root is unmounted.
-> 
-> Look okay?
-> 
-> Thanks,
-> 
-> Michael
-> 
-> 
-> -- 
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
-> _______________________________________________
-> Containers mailing list
-> Containers@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/containers
+Lorenzo
