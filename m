@@ -2,105 +2,109 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DDEC4740A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319F7C49ED8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A60021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D1421479
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 14:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y06Mp6xa"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="E1l0FDeU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NNHX+V7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392840AbfIJOdu (ORCPT
+        id S1732640AbfIJOfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 10:33:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40071 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbfIJOdt (ORCPT
+        Tue, 10 Sep 2019 10:35:04 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50139 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbfIJOfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:33:49 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so11634260pfb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 07:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CN84UWkaCrFsbXjQU8HPx5pvSQFtml/KKbG+22M3OVM=;
-        b=Y06Mp6xalqbIZd2E44S3rfqWm1jFSkoc5uA1b76edCbsR84TQErKfKr/3ay/JHij9L
-         hZIKfbmSEAnRtGJYEi1orXDlKnAiILkOgw4iDQBOZmNjsKdndZXUqrA/LL4IKT4gKx9x
-         yTzoxp8G2TXSaovBGSI+4ztWzE2bJG7M5hetwOPgwVZ3cgLrmBrL4+afTEfJr1Y8mzuP
-         L43lz3nKlhgIE/ADw8gNUOvcCpxGAhbrxFrY8mk5ko7nEcU1JUPjjUYk23X2VbK7qbmr
-         apTSwjN+LqXu5f7XlUy5q5ZpGKH9Ceyvnxy4CiA4OvMaYOCCyp4VjloF+Xbys/1C8LFi
-         qQaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CN84UWkaCrFsbXjQU8HPx5pvSQFtml/KKbG+22M3OVM=;
-        b=oebEcacpyNC9RhgjGGany8x4/Y9jWHjQmovYA8dhBIIZhyIjFXrI0a5h2tUPXPa1gf
-         yuSODFtk59Z2r5QPuzRm6ixQcNYWkVnS9Mnglhm1PK1eS6VfVunAVH/cgFnHxI6Fh7xv
-         oTcbTl9QZ9nQ/CMywwKZ1Wh7+BMTjiDtQnpiBl8mX+RLCsaPWHyunZ76K9wm7XvG8Cmv
-         QCXFgyOSx6pwG4ie/rsF7X2k8sQLxH7oJ/ub+Vv/PdQFWCFMdDaxyO2LwsTUxNcD/IG7
-         yQV8TPcPIe2OqBadZVVb34r3MJYt9Y+lBi7opbS5Sf+9a1fhycwEY5JAYc3DDYyf374o
-         e/Pg==
-X-Gm-Message-State: APjAAAVJyi990BZxml0yCfGVnmm2Pdk8S9Q4/DEOU4uD5TSCkDh74NYv
-        DwgJzyDwBC7CU4NFFrYK7LOl4s/Mi4Hzeg==
-X-Google-Smtp-Source: APXvYqwNw5Y+LPBxQT+YX1tu1j96Tyi9S5wtJ6UtzVHiuAKJ1F9l14tA/t5kJT/7X12fRcJ+Ktr4tg==
-X-Received: by 2002:a63:6c46:: with SMTP id h67mr28835208pgc.248.1568126029049;
-        Tue, 10 Sep 2019 07:33:49 -0700 (PDT)
-Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id k5sm28386813pfp.109.2019.09.10.07.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 07:33:48 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3] ftrace: simplify ftrace hash lookup code in clear_func_from_hash()
-Date:   Tue, 10 Sep 2019 22:33:36 +0800
-Message-Id: <20190910143336.13472-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Sep 2019 10:35:03 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 2D199258;
+        Tue, 10 Sep 2019 10:35:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 10 Sep 2019 10:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=Yn2LW5Cn6NDpHwAp8OL/VHEBLuD
+        Ea+FvY5tcN4UAkhY=; b=E1l0FDeU0uUFm7pcZuFCt4iz6yOAMuia+vNX5NgkfB9
+        OZ+OCRjCjmAheEZ/c0h/S46faHhQNilYVNSjtRKtEaHY/kG/ecQRjLJyA2moFe/m
+        QiGLzarjz3ucq0RiMxzat8L+2491N7JAvPBXH5i/on3KZHNI2lQwlnftpgcTIunw
+        A2NMpap8CEX7RSvWM0WTG7HhOKYDG79boZ3pcNrA9xmbAaShQHWxTV1aAAcZUyjx
+        xXnPucNsfVuZ2moPw5EHpIQCIY/t7qYRleuWKHPRmlKSbgnCLB/7ZJGL/c4QiN1X
+        SMJaboUtlK9Z54p+uBTgSHA0yDYE70+fSngiiws5SHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Yn2LW5
+        Cn6NDpHwAp8OL/VHEBLuDEa+FvY5tcN4UAkhY=; b=NNHX+V7aLEcSUnQcXHmGE3
+        nqfAJ1DZb+GMtyCwjtXktd01OmnSK0LMe3vSOTjBUaGAmSF46McHmEA3ASkbI6mz
+        /a7H9PN7qTW/0XsNw2iOX08ic59QTPZhc/VAXM3yORb5oQy1ZG0BW7a7s4EI5o4A
+        /YzepHaWkEb181HwyWTWK75/RkLk2p3ZQ4DqHJvdHCtGUCIF3dzUuYI803HJwnw8
+        jT18H5KQNk2bDKCwVxOKJO+PNKBMJcHn8B6sFBa90EWFzc5AoRr0afIFIuRBIZlH
+        sZLwttpozKF0w0dWRQ9TMqOwO6P5OOkSQC0WP40bhyaPhw7E+0td0sURk7cfXZKw
+        ==
+X-ME-Sender: <xms:lbR3XeLGvUx4O31kAw2oE1n5l3b6fsed1JR-zVy08lObam-UxyKvhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrtddtgdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepvddufedrfedtrdekrdduud
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:lbR3XcGSgZBgfUJoxZBU4g8S3NN0RXfw57IHLBKmHhDJsEAasRbyAg>
+    <xmx:lbR3XcWakchC9nsJ8YlQPtYqK5DzoQcbNHxshQdTHqBMSbyym-Sh6Q>
+    <xmx:lbR3XSMePnZU-G5F6G3_gJC1yDjQfi6DXoXu20hx31ihEJ3K3AB3zA>
+    <xmx:lbR3XaV84X5qhBZCloMBm7H7idqNjs0OLhwR7hNP8BIkyQZHYjIeNg>
+Received: from localhost (110.8.30.213.rev.vodafone.pt [213.30.8.110])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DE087D6005A;
+        Tue, 10 Sep 2019 10:35:00 -0400 (EDT)
+Date:   Tue, 10 Sep 2019 15:34:59 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     stable@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [BACKPORT 4.14.y 03/18] drm/omap: panel-dsi-cm: fix driver
+Message-ID: <20190910143459.GC3362@kroah.com>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+ <20190905161759.28036-4-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905161759.28036-4-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ftrace_lookup_ip() will check empty hash table. So we don't
-need extra check outside.
+On Thu, Sep 05, 2019 at 10:17:44AM -0600, Mathieu Poirier wrote:
+> From: Tony Lindgren <tony@atomide.com>
+> 
+> commit e128310ddd379b0fdd21dc41d176c3b3505a0832 upstream
+> 
+> This adds support for get_timings() and check_timings()
+> to get the driver working and properly initializes the
+> timing information from DT.
+> 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  .../gpu/drm/omapdrm/displays/panel-dsi-cm.c   | 56 +++++++++++++++++--
+>  1 file changed, 51 insertions(+), 5 deletions(-)
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+THis looks like a "new feature", right?  Why is this a stable patch?
 
----
-v3: only keep the change in function clear_func_from_hash().
-v2: fix incorrect code remove.
----
- kernel/trace/ftrace.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+thanks,
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f9821a3374e9..c4cc048eb594 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6036,11 +6036,7 @@ clear_func_from_hash(struct ftrace_init_func *func, struct ftrace_hash *hash)
- {
- 	struct ftrace_func_entry *entry;
- 
--	if (ftrace_hash_empty(hash))
--		return;
--
--	entry = __ftrace_lookup_ip(hash, func->ip);
--
-+	entry = ftrace_lookup_ip(hash, func->ip);
- 	/*
- 	 * Do not allow this rec to match again.
- 	 * Yeah, it may waste some memory, but will be removed
--- 
-2.20.1
-
+greg k-h
