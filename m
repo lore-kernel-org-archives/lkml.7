@@ -2,117 +2,103 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4FCC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B876321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966002089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 09:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiDG9nvj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZihR0Lcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfIJJ1j (ORCPT
+        id S1731959AbfIJJ1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 05:27:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40429 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfIJJ1j (ORCPT
+        Tue, 10 Sep 2019 05:27:52 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42232 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfIJJ1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 05:27:39 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y10so8283209pll.7;
-        Tue, 10 Sep 2019 02:27:37 -0700 (PDT)
+        Tue, 10 Sep 2019 05:27:51 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u13so12857911lfm.9;
+        Tue, 10 Sep 2019 02:27:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3I/RwDNyR0c5I8Mzz7CZb34k+5TRodcyDN5J9yOyCXE=;
-        b=SiDG9nvjNzi0fPg0DDKoqEXUP2gPz23dm1mJWP5Mz/FIdMA1Xpwo+P/ZbwXureAaM1
-         U0QhNAcKvliifokLQsrURc30rUGlQ6TjGuGc5cmgd0j0+mRGEmRzXE5O1A0SV5BhnzBU
-         wvPpQyshUktQHKwZUlTh5NLAVh9mVapbBVdr9rr2KZC2BPs4amn+vY16W6q2996pttxQ
-         4LMMNNyjfL0CmD708OZX9aZYtwfQvm63inrXpLCqfDf/xEHaudP3C0164n4lAt8aoe5k
-         mksh9fDqXIlBcGzT2gcHM/p/0sIq6+Nvv3V/myjwjDSkX7at5CcBXk28hJFBvf3JIyEb
-         bw0g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=des3FmaInciiDX/kbaTdrmt+UrXUSx/UL48o1MoSUCw=;
+        b=ZihR0Lcy+n6XFpMb5D4I2FEed+J2lJt8NlNvxrbKPK3J9KVqxm0wo7JqYQytiXHaoM
+         Ce4aNqnIzd0zgFVjy3YhK9j+Rm7kc5aWGau6so+/HcE0iXZGWJy1FfxZQWJd8cW+YQH6
+         Wufg2wCDEhY+uyjJLJiSYreitqEfUFITKYwgSZV4Nc1zITc+qvBBO1CeKGRWxSl/ZgPo
+         wgEMkvoL997lhw0xssuFvlnl+DdRmLxduSDNfAZ+bK8s27gzA+p16s5u5lu5RbaR1JVO
+         9sjpF7Tj16QKJJMGR8JejxDhjtFBXyD04FZG4jd4n5cdKbvZnLvp/AlXU9AeApNEPvDG
+         ZLMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3I/RwDNyR0c5I8Mzz7CZb34k+5TRodcyDN5J9yOyCXE=;
-        b=r2roY8ljo/X9T8x6YtdMWyWXRKd8icjdrjigoWj+7/X3s+qo20J0etPBhTc/jTCq/o
-         cosQe85lZJYw8y4sRUYp+awqmU/uYBR/FT+fYNUl6deHVLsNAVpuxgFc5pVUMgfulClA
-         tOLIcI+sAvNLwtzz9ZfZ4cUNRww/QNd9Z889Yeb5h17CY84PdB+lthH37NzeBg32zqcS
-         WNL7z+EGIoKyBAb+XxSkYzHESQkImcKoqlZJCZ/0lJlu74ku4usx+F1IdV7E89kXJFJy
-         LJ33bWiuFjCHL97tQaXzpTK5wNKXwrssLX0GMlQ2jfYap7j+wTcwbchnsTDOUUtt3oI2
-         N//Q==
-X-Gm-Message-State: APjAAAWqOIQdKbkOcJ3PDrNCswh9HJ5rpOlZ/Q94LFjNiq1rE94wxzXl
-        /oDapYOqd87PT4QivHhxNys=
-X-Google-Smtp-Source: APXvYqwzF/G7K8Q482wfDKwY0BEHlU4ukFMULym2qfUCvsJjMbmPGafbQntqaDb8HAKjNh3waQTEsw==
-X-Received: by 2002:a17:902:76c2:: with SMTP id j2mr30004606plt.305.1568107657101;
-        Tue, 10 Sep 2019 02:27:37 -0700 (PDT)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id y15sm21142300pfp.111.2019.09.10.02.27.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Sep 2019 02:27:36 -0700 (PDT)
-Date:   Tue, 10 Sep 2019 18:27:31 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     saeedm@mellanox.com, leon@kernel.org
-Cc:     davem@davemloft.net, valex@mellanox.com, erezsh@mellanox.com,
-        markb@mellanox.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        austindh.kim@gmail.com
-Subject: [PATCH] net/mlx5: Declare 'rt' as corresponding enum type
-Message-ID: <20190910092731.GA173476@LGEARND20B15>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=des3FmaInciiDX/kbaTdrmt+UrXUSx/UL48o1MoSUCw=;
+        b=sKsZL/wP/Et8zd6OXuBeH3vwWg5tN85HqQfXaSESdNAx6pUY1ON27g/atBIVDEDdrs
+         UPsZXH+izBRVEAlrIMovD8/8eVyvVMvBWpcv2sg5gdHxlUa4H7LgQxB18eykfe0fR60P
+         DEpI6ljBRaxBKkpD8xvhaP0HaxI6iNh3/4fuladCZySOPDIGU6GLDIre4LZKrhk5UxGz
+         qryztLQY+7M2FPZdjV6mcv4knTlrNAaiEHKsk9AL40fWLcGggSLWTXaaxg1wxJ3yu5l6
+         MgCLnlcuoXrU7TNt4mxJ/nIPWUaZ03BDECnwtr6LGv/UndR9VsIhRhruIKDfHtiWwy3P
+         u0Lg==
+X-Gm-Message-State: APjAAAXaHZgM4mqyg+T8E5lOtEc/vk7Jkan3A1vmiUl2VH+4YNEMkXGP
+        ds/7NhGg27crJ8FU0/w3S0tfQeuwS7QOtCh21sg=
+X-Google-Smtp-Source: APXvYqzjWn8TEGn9EE5XtRv3ypTFRh9wJOVVBhF9zpCW+d0Wzxqx4XRAEF8phlFcNLZjgobELXcdfXylWpqd2V7ryW4=
+X-Received: by 2002:ac2:5399:: with SMTP id g25mr19561603lfh.178.1568107669389;
+ Tue, 10 Sep 2019 02:27:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190908121125.608195329@linuxfoundation.org>
+In-Reply-To: <20190908121125.608195329@linuxfoundation.org>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Tue, 10 Sep 2019 11:27:38 +0200
+Message-ID: <CA+res+ST4i0SHR78b7eyE5rUhS4vuwo6NzzsAyu27xeYtxeT6A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/57] 4.19.72-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        akpm@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
+        shuah@kernel.org, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building kernel with clang, we can observe below warning message:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B49=E6=
+=9C=889=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=8812:19=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> This is the start of the stable review cycle for the 4.19.72 release.
+> There are 57 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue 10 Sep 2019 12:09:36 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.72-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1080:9:
-warning: implicit conversion from enumeration type 'enum mlx5_reformat_ctx_type'
-to different enumeration type 'enum mlx5dr_action_type' [-   Wenum-conversion]
-	rt = MLX5_REFORMAT_TYPE_L2_TO_L2_TUNNEL;
-       			  ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1082:9:
-warning: implicit conversion from enumeration type 'enum mlx5_reformat_ctx_type'
-to different enumeration type 'enum mlx5dr_action_type' [-   Wenum-conversion]
-	rt = MLX5_REFORMAT_TYPE_L2_TO_L3_TUNNEL;
-        ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1084:51:
-warning: implicit conversion from enumeration type 'enum mlx5dr_action_type'
-to different enumeration type 'enum mlx5_reformat_ctx_type' [-  Wenum-conversion]
-	ret = mlx5dr_cmd_create_reformat_ctx(dmn->mdev, rt, data_sz, data,
-         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~            ^~
+Merged, boot and tested on my testing machine, no regression found.
 
-Declare 'rt' as corresponding enum mlx5_reformat_ctx_type type.
-
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
-index a02f87f..7d81a77 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
-@@ -1074,7 +1074,7 @@ dr_action_create_reformat_action(struct mlx5dr_domain *dmn,
- 	case DR_ACTION_TYP_L2_TO_TNL_L2:
- 	case DR_ACTION_TYP_L2_TO_TNL_L3:
- 	{
--		enum mlx5dr_action_type rt;
-+		enum mlx5_reformat_ctx_type rt;
- 
- 		if (action->action_type == DR_ACTION_TYP_L2_TO_TNL_L2)
- 			rt = MLX5_REFORMAT_TYPE_L2_TO_L2_TUNNEL;
--- 
-2.6.2
-
+Thanks,
+Jack Wang
