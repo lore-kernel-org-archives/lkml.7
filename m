@@ -2,45 +2,43 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A697C49ED8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277FDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2845D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BCE2089F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 15:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393965AbfIJPaA (ORCPT
+        id S2393931AbfIJPe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 11:30:00 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50889 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728535AbfIJP34 (ORCPT
+        Tue, 10 Sep 2019 11:34:27 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54427 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728417AbfIJPe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:29:56 -0400
+        Tue, 10 Sep 2019 11:34:26 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8D84760008;
-        Tue, 10 Sep 2019 15:29:53 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6A030240002;
+        Tue, 10 Sep 2019 15:34:23 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 3/3] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Date:   Tue, 10 Sep 2019 17:28:55 +0200
-Message-Id: <20190910152855.111588-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 0/2] drm: LogiCVC display controller support
+Date:   Tue, 10 Sep 2019 17:34:07 +0200
+Message-Id: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,105 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LogiCVC display hardware block comes with GPIO capabilities
-that must be exposed separately from the main driver (as GPIOs) for
-use with regulators and panels. A syscon is used to share the same
-regmap across the two drivers.
+This series introduces support for the LogiCVC display controller.
+The controller is a bit unusual since it is usually loaded as
+programmable logic on Xilinx FPGAs or Zynq-7000 SoCs.
+More details are presented on the main commit for the driver.
 
-Since the GPIO capabilities are pretty simple, add them to the syscon
-GPIO driver.
+More information about the controller is available on the dedicated
+web page: https://www.logicbricks.com/Products/logiCVC-ML.aspx
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/gpio/gpio-syscon.c | 68 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+Cheers!
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 05c537ed73f1..3d435187940b 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -190,6 +190,70 @@ static const struct syscon_gpio_data keystone_dsp_gpio = {
- 	.set		= keystone_gpio_set,
- };
- 
-+#define LOGICVC_CTRL_REG		0x40
-+#define LOGICVC_CTRL_GPIO_SHIFT		11
-+#define LOGICVC_CTRL_GPIO_BITS		5
-+
-+#define LOGICVC_POWER_CTRL_REG		0x78
-+#define LOGICVC_POWER_CTRL_GPIO_SHIFT	0
-+#define LOGICVC_POWER_CTRL_GPIO_BITS	4
-+
-+static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
-+				unsigned offset, unsigned int *reg,
-+				unsigned int *bit)
-+{
-+	if (offset >= LOGICVC_CTRL_GPIO_BITS) {
-+		*reg = LOGICVC_POWER_CTRL_REG;
-+
-+		/* To the (virtual) power ctrl offset. */
-+		offset -= LOGICVC_CTRL_GPIO_BITS;
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
-+	} else {
-+		*reg = LOGICVC_CTRL_REG;
-+
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_CTRL_GPIO_SHIFT;
-+	}
-+
-+	*bit = 1 << offset;
-+}
-+
-+static int logicvc_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
-+	unsigned int value;
-+	int ret;
-+
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
-+
-+	ret = regmap_read(priv->syscon, reg, &value);
-+	if (ret)
-+		return ret;
-+
-+	return !!(value & bit);
-+}
-+
-+static void logicvc_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
-+
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
-+
-+	regmap_update_bits(priv->syscon, reg, bit, val ? bit : 0);
-+}
-+
-+static const struct syscon_gpio_data logicvc_3_gpio = {
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= LOGICVC_CTRL_GPIO_BITS + LOGICVC_POWER_CTRL_GPIO_BITS,
-+	.get		= logicvc_gpio_get,
-+	.set		= logicvc_gpio_set,
-+};
-+
- static const struct of_device_id syscon_gpio_ids[] = {
- 	{
- 		.compatible	= "cirrus,ep7209-mctrl-gpio",
-@@ -203,6 +267,10 @@ static const struct of_device_id syscon_gpio_ids[] = {
- 		.compatible	= "rockchip,rk3328-grf-gpio",
- 		.data		= &rockchip_rk3328_gpio_mute,
- 	},
-+	{
-+		.compatible	= "xylon,logicvc-3.02.a-gpio",
-+		.data		= &logicvc_3_gpio,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
+Paul Kocialkowski (2):
+  dt-bindings: display: Add xylon logicvc bindings documentation
+  drm: Add support for the LogiCVC display controller
+
+ .../bindings/display/xylon,logicvc.txt        | 188 ++++++
+ drivers/gpu/drm/Kconfig                       |   2 +
+ drivers/gpu/drm/Makefile                      |   1 +
+ drivers/gpu/drm/logicvc/Kconfig               |   8 +
+ drivers/gpu/drm/logicvc/Makefile              |   4 +
+ drivers/gpu/drm/logicvc/logicvc_crtc.c        | 272 ++++++++
+ drivers/gpu/drm/logicvc/logicvc_crtc.h        |  25 +
+ drivers/gpu/drm/logicvc/logicvc_drm.c         | 457 ++++++++++++++
+ drivers/gpu/drm/logicvc/logicvc_drm.h         |  60 ++
+ drivers/gpu/drm/logicvc/logicvc_interface.c   | 235 +++++++
+ drivers/gpu/drm/logicvc/logicvc_interface.h   |  32 +
+ drivers/gpu/drm/logicvc/logicvc_layer.c       | 594 ++++++++++++++++++
+ drivers/gpu/drm/logicvc/logicvc_layer.h       |  65 ++
+ drivers/gpu/drm/logicvc/logicvc_mode.c        | 103 +++
+ drivers/gpu/drm/logicvc/logicvc_mode.h        |  15 +
+ drivers/gpu/drm/logicvc/logicvc_of.c          | 204 ++++++
+ drivers/gpu/drm/logicvc/logicvc_of.h          |  28 +
+ drivers/gpu/drm/logicvc/logicvc_regs.h        |  88 +++
+ 18 files changed, 2381 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc.txt
+ create mode 100644 drivers/gpu/drm/logicvc/Kconfig
+ create mode 100644 drivers/gpu/drm/logicvc/Makefile
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_regs.h
+
 -- 
 2.23.0
 
