@@ -2,312 +2,165 @@ Return-Path: <SRS0=embV=XF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1160C49ED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C713DC49ED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD6721019
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B39E21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Sep 2019 13:48:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aCBFXZAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733088AbfIJNr6 (ORCPT
+        id S1733134AbfIJNsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 09:47:58 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52168 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731435AbfIJNr6 (ORCPT
+        Tue, 10 Sep 2019 09:48:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46020 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731435AbfIJNsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 09:47:58 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: WYS5UQP5HXf7OLJq54zsEnQ1oNnAeHdIAxZAYemrOsYCgwy2OLXHpkudvePjABycZHpsCUnCPx
- hu9HPi6WthTulW4WGOPo5tGVzYQV3GKoGEXIiCsaZiM623CAJpJrIP9wk6CCE5s+Qy009xJJ21
- mDzhyiR/G+V8C523m1u+uwrtT56/z5DgndQ/KpSmIP2hql0xZkyl+7eGa4R/dYfa0NcdrC9l1G
- CRYzjZ+PHY057XrnVVfhadcc3MU+IwyUoLsOtLWnnN4YuCAKQpcGcdzshzOYbjVhc6fHmuJgWM
- suU=
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="45604858"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Sep 2019 06:47:52 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Sep 2019 06:47:52 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 10 Sep 2019 06:47:29 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <daniel.lezcano@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux@armlinux.org.uk>, <nsekhar@ti.com>,
-        <bgolaszewski@baylibre.com>, <monstr@monstr.eu>,
-        <john@phrozen.org>, <ralf@linux-mips.org>, <paul.burton@mips.com>,
-        <jhogan@kernel.org>, <lftan@altera.com>, <tglx@linutronix.de>,
-        <vgupta@synopsys.com>, <marc.zyngier@arm.com>,
-        <patrice.chotard@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
-        <f.fainelli@gmail.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-        <linus.walleij@linaro.org>, <shc_work@mail.ru>, <kgene@kernel.org>,
-        <krzk@kernel.org>, <ysato@users.sourceforge.jp>,
-        <liviu.dudau@arm.com>, <sudeep.holla@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>, <baohua@kernel.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <baruch@tkos.co.il>,
-        <u.kleine-koenig@pengutronix.de>, <guoren@kernel.org>,
-        <kaloz@openwrt.org>, <khalasa@piap.pl>, <ssantosh@kernel.org>,
-        <vz@mleia.com>, <slemieux.tyco@gmail.com>, <khilman@baylibre.com>,
-        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
-        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
-        <benjaminfair@google.com>, <afaerber@suse.de>,
-        <manivannan.sadhasivam@linaro.org>, <narmstrong@baylibre.com>,
-        <agross@kernel.org>, <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
-        <heiko@sntech.de>, <orsonzhai@gmail.com>, <baolin.wang@linaro.org>,
-        <zhang.lyra@gmail.com>, <maxime.ripard@bootlin.com>,
-        <wens@csie.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux@prisktech.co.nz>,
-        <john.stultz@linaro.org>, <sboyd@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mips@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        <linux-amlogic@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
-        <linux-oxnas@groups.io>, <linux-arm-msm@vger.kernel.org>,
-        <linux-unisoc@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH 0/7] add support for clocksource/clockevent DT selection
-Date:   Tue, 10 Sep 2019 16:47:09 +0300
-Message-ID: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Sep 2019 09:48:03 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ADlAGb068851;
+        Tue, 10 Sep 2019 08:47:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568123230;
+        bh=KCsuiucHi88CCTXSYu2IpIzdJ7GYk/usdfSwVkf0fN0=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=aCBFXZAkngxsPLJ/RWW99Vqvi5DqIb/9uS/cdfD7nGL+ng9fLYqb/l80gcbyjzpAg
+         npotnHguI98tJFqnWongfobRdhcla/VvL9Kq75+dWDSHcYcVFoVjWY2+yneHYw/p8q
+         ln/foJwhUp+NiNKabjS9tFqNrF7LOdI5vbxOawaY=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADlAVO104167;
+        Tue, 10 Sep 2019 08:47:10 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 10
+ Sep 2019 08:47:10 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 10 Sep 2019 08:47:10 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ADlAPC079028;
+        Tue, 10 Sep 2019 08:47:10 -0500
+Subject: Re: [PATCH] tas2770: add tas2770 smart PA dt bindings
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <shifu0704@thundersoft.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>
+CC:     <navada@ti.com>
+References: <1567753564-13699-1-git-send-email-shifu0704@thundersoft.com>
+ <76759c2c-3f5d-5cf6-fc2b-feb1dc8c0e6a@ti.com>
+Message-ID: <15483b8f-ffda-eea3-9461-894f43a39a20@ti.com>
+Date:   Tue, 10 Sep 2019 08:47:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <76759c2c-3f5d-5cf6-fc2b-feb1dc8c0e6a@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Shi
 
-This series adds support to permit the selection of clocksource/clockevent
-via DT.
+One other thing
 
-In [1] I proposed a solution other than the one in this series, with parsing DT
-bindings and at probe time and passing it to timer specific probe function.
-Looking forward though the clocksource/clockevent drivers implementation and
-taking into account the response at [2] I sticked the implementation to
-timer-of specific library.
-
-The implementation in this series is using timer-of specific library to parse
-the DT bindings related to timers functions: clocksource or clockevent.
-
-With this implementation a timer's driver registers for probing an array of
-objects of type struct timer_of. In flags member of struct timer_of object it
-has to be passed the following new flags (related to how the driver will behave)
-as follows:
-- TIMER_OF_TYPE_CS: timer could work only as clocksource at a time
-- TIMER_OF_TYPE_CE: timer could work only as clockevent at a time
-- TIMER_OF_TYPE_CE_AND_CE: timer could work at a time as both, clocksource and
-clockevent.
-
-The timer registration macro (for probing) now gets a new argument which should
-be an array of struct timer_of objects:
-
-TIMER_OF_DECLARE(name, compat, handler, to)
-CLOCKSOURCE_OF_DECLARE(name, compat, handler, to)
-
-In case driver could work to feed only the clocksource subsystem or only the
-clockevent subsystem the struct timer_of array passed to TIMER_OF_DECLARE()/
-CLOCKSOURCE_OF_DECLARE() should contain 2 entries: one to be filled if probed
-timer works as clocksource device, one to be filled if probed timer works as
-clockevent device.
-
-For such a case, the minimal format of struct timer_of array is as follows:
-struct timer_of to[] = {
-	{ .flags = TIMER_OF_TYPE_CS }
-	{ .flags = TIMER_OF_TYPE_CE }
-	{ /* sentinel. */
-};
-
-If timer could work as both, clocksource and clockevent at the same time,
-the struct timer_of array should look as follows:
-struct timer_of to[] = {
-	{ .flags = TIMER_OF_TYPE_CE_AND_CS }
-	{ /* sentinel. */
-};
-
-And in device tree there should be added chosen bindings as follows:
-
-chosen {
-	linux,clocksource {
-		timer = <&timer1>
-	};
-	
-	linux,clockevent {
-		timer = <&timer2>;
-	}
-};
-
-timer1: t1@123 {
-	compatible = "timerx-compatible";
-	/* the rest of DT bindings here */
-};
-
-timer2: t1@234 {
-	compatible = "timerx-compatible";
-	/* the rest of DT bindings here */
-};
-
-At probing time (timer_probe()), timer_of_init() will check the DT bindings
-and try to match with one of the entries in struct timer_of array passed at
-probe. The used entry will be considered used if the timers' device_node 
-pointer is set. If no matching b/w DT and what has been passed for probe
-via struct timer_of array then probe should fail.
-
-The patches in this series are organized as follows:
-1/7 - avoid calling timer_of_init() for every CPU since it should not be needed
-2/7 - changes timer registration macro by adding a new argument (pointer to
-      struct timer_of)
-3/7 - use BIT() macro
-4/7 - add clocksource/clockevent selection documentation [3]
-5/7 - implement support described above
-6/7 - remove an unnecessary line
-7/7 - implement this support for integrator-ap timer
-
-I implemented this support for timer published at [4].
-
-Thank you,
-Claudiu Beznea
-
-[1] https://lore.kernel.org/lkml/34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com/
-[2] https://lore.kernel.org/lkml/1ebaa306-8a7f-fd58-56e0-a61b767357f7@linaro.org/
-[3] https://lore.kernel.org/lkml/20171213185313.20017-1-alexandre.belloni@free-electrons.com/
-[4] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-
-Alexandre Belloni (2):
-  dt-bindings: chosen: Add clocksource and clockevent selection
-  clocksource/drivers/integrator-ap: parse the chosen node
-
-Claudiu Beznea (5):
-  clocksource/drivers/c-sky: request timer_of_init only for probing CPU
-  clocksource: change timer registration macros
-  clocksource/timer_of: use BIT() macro
-  clocksource/drivers/timer-of: add support support for timer's
-    functionalities
-  drivers/clocksource/timer-of: keep declaration on one line
-
- Documentation/devicetree/bindings/chosen.txt |  20 +++++
- arch/arm/kernel/smp_twd.c                    |  10 ++-
- arch/arm/mach-davinci/time.c                 |   2 +-
- arch/microblaze/kernel/timer.c               |   2 +-
- arch/mips/ralink/cevt-rt3352.c               |   2 +-
- arch/nios2/kernel/time.c                     |   2 +-
- drivers/clocksource/Kconfig                  |   1 +
- drivers/clocksource/arc_timer.c              |   6 +-
- drivers/clocksource/arm_arch_timer.c         |   6 +-
- drivers/clocksource/arm_global_timer.c       |   2 +-
- drivers/clocksource/armv7m_systick.c         |   2 +-
- drivers/clocksource/asm9260_timer.c          |   2 +-
- drivers/clocksource/bcm2835_timer.c          |   2 +-
- drivers/clocksource/bcm_kona_timer.c         |   4 +-
- drivers/clocksource/clksrc-dbx500-prcmu.c    |   2 +-
- drivers/clocksource/clksrc_st_lpc.c          |   2 +-
- drivers/clocksource/clps711x-timer.c         |   2 +-
- drivers/clocksource/dw_apb_timer_of.c        |   9 ++-
- drivers/clocksource/exynos_mct.c             |   4 +-
- drivers/clocksource/h8300_timer16.c          |   2 +-
- drivers/clocksource/h8300_timer8.c           |   2 +-
- drivers/clocksource/h8300_tpu.c              |   2 +-
- drivers/clocksource/jcore-pit.c              |   2 +-
- drivers/clocksource/mips-gic-timer.c         |   2 +-
- drivers/clocksource/mps2-timer.c             |   2 +-
- drivers/clocksource/mxs_timer.c              |   2 +-
- drivers/clocksource/nomadik-mtu.c            |   2 +-
- drivers/clocksource/renesas-ostm.c           |   2 +-
- drivers/clocksource/samsung_pwm_timer.c      |  12 ++-
- drivers/clocksource/timer-armada-370-xp.c    |   6 +-
- drivers/clocksource/timer-atcpit100.c        |  74 +++++++++---------
- drivers/clocksource/timer-atlas7.c           |   3 +-
- drivers/clocksource/timer-atmel-pit.c        |   2 +-
- drivers/clocksource/timer-atmel-st.c         |   2 +-
- drivers/clocksource/timer-atmel-tcb.c        |   2 +-
- drivers/clocksource/timer-cadence-ttc.c      |   2 +-
- drivers/clocksource/timer-davinci.c          |   3 +-
- drivers/clocksource/timer-digicolor.c        |   2 +-
- drivers/clocksource/timer-efm32.c            |   4 +-
- drivers/clocksource/timer-fsl-ftm.c          |   2 +-
- drivers/clocksource/timer-fttmr010.c         |  10 +--
- drivers/clocksource/timer-gx6605s.c          |  58 +++++++-------
- drivers/clocksource/timer-imx-gpt.c          |  24 +++---
- drivers/clocksource/timer-imx-sysctr.c       |  61 +++++++--------
- drivers/clocksource/timer-imx-tpm.c          |  69 ++++++++---------
- drivers/clocksource/timer-integrator-ap.c    |  21 +++++-
- drivers/clocksource/timer-ixp4xx.c           |   2 +-
- drivers/clocksource/timer-keystone.c         |   2 +-
- drivers/clocksource/timer-lpc32xx.c          |   2 +-
- drivers/clocksource/timer-mediatek.c         | 108 +++++++++++++++------------
- drivers/clocksource/timer-meson6.c           |   2 +-
- drivers/clocksource/timer-milbeaut.c         |  59 ++++++++-------
- drivers/clocksource/timer-mp-csky.c          |  52 ++++++-------
- drivers/clocksource/timer-npcm7xx.c          |  87 +++++++++++----------
- drivers/clocksource/timer-nps.c              |   6 +-
- drivers/clocksource/timer-of.c               |  91 +++++++++++++++++++++-
- drivers/clocksource/timer-of.h               |  36 +++++++--
- drivers/clocksource/timer-orion.c            |   2 +-
- drivers/clocksource/timer-owl.c              |   6 +-
- drivers/clocksource/timer-oxnas-rps.c        |   4 +-
- drivers/clocksource/timer-pistachio.c        |   2 +-
- drivers/clocksource/timer-prima2.c           |   2 +-
- drivers/clocksource/timer-probe.c            |  17 ++++-
- drivers/clocksource/timer-pxa.c              |   2 +-
- drivers/clocksource/timer-qcom.c             |   4 +-
- drivers/clocksource/timer-rda.c              |  66 ++++++++--------
- drivers/clocksource/timer-riscv.c            |   2 +-
- drivers/clocksource/timer-rockchip.c         |   4 +-
- drivers/clocksource/timer-sp804.c            |   4 +-
- drivers/clocksource/timer-sprd.c             |  75 +++++++++----------
- drivers/clocksource/timer-stm32.c            |  39 +++++-----
- drivers/clocksource/timer-sun4i.c            |  78 +++++++++----------
- drivers/clocksource/timer-sun5i.c            |   4 +-
- drivers/clocksource/timer-tango-xtal.c       |   2 +-
- drivers/clocksource/timer-tegra.c            |  31 ++++----
- drivers/clocksource/timer-ti-32k.c           |   2 +-
- drivers/clocksource/timer-u300.c             |   2 +-
- drivers/clocksource/timer-versatile.c        |   4 +-
- drivers/clocksource/timer-vf-pit.c           |   2 +-
- drivers/clocksource/timer-vt8500.c           |   2 +-
- drivers/clocksource/timer-zevio.c            |   2 +-
- include/linux/clocksource.h                  |  30 +++++++-
- 82 files changed, 748 insertions(+), 544 deletions(-)
-
--- 
-2.7.4
-
+On 9/10/19 8:21 AM, Dan Murphy wrote:
+> Shi
+>
+> On 9/6/19 2:06 AM, shifu0704@thundersoft.com wrote:
+>> From: Frank Shi <shifu0704@thundersoft.com>
+>
+> Subject should be
+>
+> dt-bindings: ASoC: Add tas2770 smart PA dt bindings
+>
+> Also Please add Rob Herring <robh+dt@kernel.org> for review
+>
+>> add tas2770 smart PA dt bindings
+>>
+>> Signed-off-by: Frank Shi <shifu0704@thundersoft.com>
+>> ---
+>>   Documentation/devicetree/bindings/tas2770.txt | 38 
+>> +++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/tas2770.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/tas2770.txt 
+>> b/Documentation/devicetree/bindings/tas2770.txt
+This binding belongs in Documentation/devicetree/bindings/sound
+>> new file mode 100644
+>> index 0000000..f70b310
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/tas2770.txt
+>> @@ -0,0 +1,38 @@
+>> +Texas Instruments TAS2770 Smart PA
+>> +
+>> +The TAS2770 is a mono, digital input Class-D audio amplifier 
+>> optimized for
+>> +efficiently driving high peak power into small loudspeakers.
+>> +Integrated speaker voltage and current sense provides for
+>> +real time monitoring of loudspeaker behavior.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible:       - Should contain "ti,tas2770".
+>> + - reg:               - The i2c address. Should contain <0x4c>, 
+>> <0x4d>,<0x4e>, or <0x4f>.
+> s/should/may
+>> + - #address-cells  - Should be <1>.
+>> + - #size-cells     - Should be <0>.
+>> + - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
+>> + - ti,left-slot:   - Sets TDM RX left time slots.
+>> + - ti,right-slot:  - Sets TDM RX right time slots.
+>> + - ti,imon-slot-no:- TDM TX current sense time slot.
+>> + - ti,vmon-slot-no:- TDM TX voltage sense time slot.
+>> +
+>> +Optional properties:
+>> +
+>> + - reset-gpio:    Reset GPIO number of left device.
+>> + - irq-gpio:  IRQ GPIO number of left device.
+>
+> You might want to use
+>
+> - interrupt-parent: the phandle to the interrupt controller which 
+> provides
+>                     the interrupt.
+> - interrupts: interrupt specification for data-ready.
+>
+> Instead of irq-gpio
+>
+>> +
+>> +Examples:
+>> +
+>> +    tas2770@4c {
+>> +                compatible = "ti,tas2770";
+>> +                reg = <0x4c>;
+>
+> Missing
+>
+> #address-cells = <1>;
+>
+> #size-cells = <0>;
+>
+>> +                reset-gpio = <&gpio15 1 GPIO_ACTIVE_LOW>;
+>> +                irq-gpio = <&gpio16 1 GPIO_ACTIVE_LOW>;
+>> +                ti,asi-format = <0>;
+>> +                ti,left-slot = <0>;
+>> +                ti,right-slot = <1>;
+>> +                ti,imon-slot-no = <0>;
+>> +                ti,vmon-slot-no = <2>;
+>> +        };
+>> +
+>
+> Suggestion to provide the URL to the data sheet.
+>
