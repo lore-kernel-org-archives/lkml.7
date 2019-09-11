@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94779C5AE5C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF26C5AE5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B11521D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03A021D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="JleHZLOL"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="EdAea2NH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfIKA14 (ORCPT
+        id S1726647AbfIKA16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 20:27:56 -0400
-Received: from mail.efficios.com ([167.114.142.138]:60000 "EHLO
+        Tue, 10 Sep 2019 20:27:58 -0400
+Received: from mail.efficios.com ([167.114.142.138]:59988 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfIKA1y (ORCPT
+        with ESMTP id S1726504AbfIKA1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 20:27:54 -0400
+        Tue, 10 Sep 2019 20:27:55 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 88A1CBD669;
+        by mail.efficios.com (Postfix) with ESMTP id 7F2ECBD667;
         Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Bb5JDBfMkZDU; Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
+        with ESMTP id Jlve_KhKvART; Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 22552BD657;
+        by mail.efficios.com (Postfix) with ESMTP id 18080BD650;
         Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 22552BD657
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 18080BD650
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
         s=default; t=1568161673;
-        bh=0AOj4Cqa3vF0hisHUzfMACALABVREE/Ti6Xyn871J5Y=;
+        bh=W4jMXPsnJkokBAz0RvMF3m+o1BZRSxX2/fcbTb/hjTY=;
         h=From:To:Date:Message-Id;
-        b=JleHZLOLjmjgCbv9ZMeWei0sLrRREKFLXnBv1oDJZ86C9UKaqzsEGWflkhDt5C+eW
-         Rul0CS46AUHMIULF3FQBsa2pAQAf5gxuUggvSAHYEt4gvnC1BcNCvRzgx6JdbGUW+m
-         yZKntrk3BjmTbfXZrKJizY0MigEY15AODL+c3bOYssPm8fOmm1GO7x1AF3JNFAhnMG
-         LyyalBnKggyHuEilh+v5HEdsMip2HzKWWVczt55kb/e8F8rjQ9B1Pri8khD6jLnJcX
-         wUr5gfXcvsr6xkMYur1r1WUXdL9F02okTnEYybDcdrLO+v4xi2GblUsnE+OMhT0xYs
-         MumTSKMp0ZClQ==
+        b=EdAea2NHM8iG4NEj2pD5HgRVH9sHCV8p3r9eu2XzQuVL9dFxTWk6q4U1T/uDP+E+S
+         9Ikb1IpDSH6CtyNS90cGcu9I7QYGwHCy2/S+Yd9DWT3MG5U58MHsE2gs/tgLd2C6b0
+         Hio1BL7JIz3snZezuvHLZTNDqdnYaSBX/ODfBzv4fRhsjApUfWvvvd3tTYHkD3ukYk
+         NTqaU3rCm7QXDHqxOQJkoz0YPaakbQavY//bZbqpsJpd33T9mUsU1t4Tg3t1ECxIdW
+         8/3JYXm/HKxuP0facH/GSgsacFP6bsP0UMzTgK/XiRmtJd0qoknaEnImMpdHXZ6lpa
+         rSzQ63byoMZnQ==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id imSYtPCCEs3O; Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
+        with ESMTP id Bd4J1vp88lc5; Tue, 10 Sep 2019 20:27:53 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 56310BD642;
+        by mail.efficios.com (Postfix) with ESMTPSA id 28F47BD63E;
         Tue, 10 Sep 2019 20:27:52 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -56,14 +56,13 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Paul Turner <pjt@google.com>
 Cc:     linux-kernel@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         "H . Peter Anvin" <hpa@zytor.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [RFC PATCH 4/4] rseq/selftests: Use RSEQ_FLAG_UNREG_CLONE_FLAGS
-Date:   Tue, 10 Sep 2019 20:27:44 -0400
-Message-Id: <20190911002744.8690-4-mathieu.desnoyers@efficios.com>
+        Dmitry Vyukov <dvyukov@google.com>, linux-api@vger.kernel.org
+Subject: [RFC PATCH 3/4] rseq: Introduce unreg_clone_flags
+Date:   Tue, 10 Sep 2019 20:27:43 -0400
+Message-Id: <20190911002744.8690-3-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190911002744.8690-1-mathieu.desnoyers@efficios.com>
 References: <20190911002744.8690-1-mathieu.desnoyers@efficios.com>
@@ -72,10 +71,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new RSEQ_FLAG_UNREG_CLONE_FLAGS rseq flag in the rseq selftests.
+Considering that some custom libc could possibly choose not to use
+CLONE_SETTLS, we should allow the libc to override the choice of clone
+flags meant to unregister rseq. This is a policy decision which should
+not be made by the kernel.
 
+Therefore, introduce a new RSEQ_FLAG_UNREG_CLONE_FLAGS, which makes the
+rseq system call expect an additional 5th argument: a mask of all the
+clone flags which may each ensure rseq is unregistered upon clone.
+
+So even if CLONE_SETTLS is eventually replaced by some other flag in the
+future, the libc will be able to adapt and pass this new flag upon rseq
+registration as well.
+
+The default when RSEQ_FLAG_UNREG_CLONE_FLAGS is unset is to unregister
+rseq on clone with CLONE_SETTLS.
+
+Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
@@ -83,47 +96,134 @@ Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Paul Turner <pjt@google.com>
 Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: linux-api@vger.kernel.org
 ---
- tools/testing/selftests/rseq/rseq.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ include/linux/sched.h     |  9 +++++++--
+ include/linux/syscalls.h  |  2 +-
+ include/uapi/linux/rseq.h |  1 +
+ kernel/rseq.c             | 14 +++++++++++---
+ 4 files changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
-index 7159eb777fd3..d5268570014c 100644
---- a/tools/testing/selftests/rseq/rseq.c
-+++ b/tools/testing/selftests/rseq/rseq.c
-@@ -68,9 +68,10 @@ static void signal_restore(sigset_t oldset)
- }
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index deb4154dbf11..c8faa6f8493d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1138,6 +1138,7 @@ struct task_struct {
+ 	 * with respect to preemption.
+ 	 */
+ 	unsigned long rseq_event_mask;
++	int rseq_unreg_clone_flags;
+ #endif
  
- static int sys_rseq(volatile struct rseq *rseq_abi, uint32_t rseq_len,
--		    int flags, uint32_t sig)
-+		    int flags, uint32_t sig, int unreg_clone_flags)
+ 	struct tlbflush_unmap_batch	tlb_ubc;
+@@ -1919,18 +1920,21 @@ static inline void rseq_migrate(struct task_struct *t)
+ 
+ /*
+  * If parent process has a registered restartable sequences area, the
+- * child inherits. Unregister rseq for a clone with CLONE_TLS set.
++ * child inherits, except if it has been required to be explicitly
++ * unregistered when any of the rseq_unreg_clone_flags are passed to clone.
+  */
+ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
  {
--	return syscall(__NR_rseq, rseq_abi, rseq_len, flags, sig);
-+	return syscall(__NR_rseq, rseq_abi, rseq_len, flags, sig,
-+		       unreg_clone_flags);
+-	if (clone_flags & CLONE_TLS) {
++	if (clone_flags & t->rseq_unreg_clone_flags) {
+ 		t->rseq = NULL;
+ 		t->rseq_sig = 0;
+ 		t->rseq_event_mask = 0;
++		t->rseq_unreg_clone_flags = 0;
+ 	} else {
+ 		t->rseq = current->rseq;
+ 		t->rseq_sig = current->rseq_sig;
+ 		t->rseq_event_mask = current->rseq_event_mask;
++		t->rseq_unreg_clone_flags = current->rseq_unreg_clone_flags;
+ 	}
  }
  
- int rseq_register_current_thread(void)
-@@ -87,7 +88,9 @@ int rseq_register_current_thread(void)
+@@ -1939,6 +1943,7 @@ static inline void rseq_execve(struct task_struct *t)
+ 	t->rseq = NULL;
+ 	t->rseq_sig = 0;
+ 	t->rseq_event_mask = 0;
++	t->rseq_unreg_clone_flags = 0;
+ }
+ 
+ #else
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 88145da7d140..6a242cfcc360 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -987,7 +987,7 @@ asmlinkage long sys_pkey_free(int pkey);
+ asmlinkage long sys_statx(int dfd, const char __user *path, unsigned flags,
+ 			  unsigned mask, struct statx __user *buffer);
+ asmlinkage long sys_rseq(struct rseq __user *rseq, uint32_t rseq_len,
+-			 int flags, uint32_t sig);
++			 int flags, uint32_t sig, int unreg_clone_flags);
+ asmlinkage long sys_open_tree(int dfd, const char __user *path, unsigned flags);
+ asmlinkage long sys_move_mount(int from_dfd, const char __user *from_path,
+ 			       int to_dfd, const char __user *to_path,
+diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+index 9a402fdb60e9..d71e3c6b7fdb 100644
+--- a/include/uapi/linux/rseq.h
++++ b/include/uapi/linux/rseq.h
+@@ -20,6 +20,7 @@ enum rseq_cpu_id_state {
+ 
+ enum rseq_flags {
+ 	RSEQ_FLAG_UNREGISTER = (1 << 0),
++	RSEQ_FLAG_UNREG_CLONE_FLAGS = (1 << 1),
+ };
+ 
+ enum rseq_cs_flags_bit {
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index a4f86a9d6937..c59b8d3dc275 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -304,8 +304,8 @@ void rseq_syscall(struct pt_regs *regs)
+ /*
+  * sys_rseq - setup restartable sequences for caller thread.
+  */
+-SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+-		int, flags, u32, sig)
++SYSCALL_DEFINE5(rseq, struct rseq __user *, rseq, u32, rseq_len,
++		int, flags, u32, sig, int, unreg_clone_flags)
+ {
+ 	int ret;
+ 
+@@ -324,12 +324,16 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 			return ret;
+ 		current->rseq = NULL;
+ 		current->rseq_sig = 0;
++		current->rseq_unreg_clone_flags = 0;
+ 		return 0;
  	}
- 	if (__rseq_refcount++)
- 		goto end;
--	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq), 0, RSEQ_SIG);
-+	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq),
-+		      RSEQ_FLAG_UNREG_CLONE_FLAGS, RSEQ_SIG,
-+		      CLONE_SETTLS);
- 	if (!rc) {
- 		assert(rseq_current_cpu_raw() >= 0);
- 		goto end;
-@@ -116,7 +119,7 @@ int rseq_unregister_current_thread(void)
- 	if (--__rseq_refcount)
- 		goto end;
- 	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq),
--		      RSEQ_FLAG_UNREGISTER, RSEQ_SIG);
-+		      RSEQ_FLAG_UNREGISTER, RSEQ_SIG, 0);
- 	if (!rc)
- 		goto end;
- 	__rseq_refcount = 1;
+ 
+-	if (unlikely(flags))
++	if (unlikely(flags & ~RSEQ_FLAG_UNREG_CLONE_FLAGS))
+ 		return -EINVAL;
+ 
++	if (!(flags & RSEQ_FLAG_UNREG_CLONE_FLAGS))
++		unreg_clone_flags = CLONE_SETTLS;
++
+ 	if (current->rseq) {
+ 		/*
+ 		 * If rseq is already registered, check whether
+@@ -338,6 +342,9 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		 */
+ 		if (current->rseq != rseq || rseq_len != sizeof(*rseq))
+ 			return -EINVAL;
++		if ((flags & RSEQ_FLAG_UNREG_CLONE_FLAGS) &&
++		    current->rseq_unreg_clone_flags != unreg_clone_flags)
++			return -EINVAL;
+ 		if (current->rseq_sig != sig)
+ 			return -EPERM;
+ 		/* Already registered. */
+@@ -355,6 +362,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		return -EFAULT;
+ 	current->rseq = rseq;
+ 	current->rseq_sig = sig;
++	current->rseq_unreg_clone_flags = unreg_clone_flags;
+ 	/*
+ 	 * If rseq was previously inactive, and has just been
+ 	 * registered, ensure the cpu_id_start and cpu_id fields
 -- 
 2.17.1
 
