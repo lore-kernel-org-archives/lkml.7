@@ -2,159 +2,228 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B84BC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9EFC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C01B21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qNiz9DHl"
+	by mail.kernel.org (Postfix) with ESMTP id 505CB2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568203131;
+	bh=3kWcuQzTxhD/PnZhS6e2K7KiFERFxhcmMFLTjZKzD7E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jxQh8mtDwwtELEDUOhC9rTOo/Uzn4OhDiyOf/sCXy9yrN6+SYhrO8bay2QJhbZJ95
+	 /32wMHT7WPOVqKuV423g+z6iqP+8drUYMqB8FGXnseB6kwoSP0c3VELrMI4AHO/5ej
+	 6vzihjzIE0XPNaIkevMskG+betuymE5XdyoFxjCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfIKL5H (ORCPT
+        id S1727796AbfIKL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:57:07 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49617 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727342AbfIKL5H (ORCPT
+        Wed, 11 Sep 2019 07:58:50 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39321 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfIKL6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:57:07 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190911115705euoutp0189874613e8c0362c22003eb1006deac3~DYFfDyBbp2256522565euoutp01e
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:57:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190911115705euoutp0189874613e8c0362c22003eb1006deac3~DYFfDyBbp2256522565euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568203025;
-        bh=OH6rMiShoRkq4pzXu23aOxDbiKTdcWya1YQCabiUZWo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qNiz9DHlRsY7Q743TJAxz3IFOV06tcGoX80bFUb0P7JPXaC5cc5VPjLBo/4Fz/7CU
-         ueN8Qpje0RaSrW0Xy34luJClKZKxEBRRN9Hsnp4K4xPZDl1HoG5+7nrkHensmZFz28
-         28JCmOmkOFPYiI0ei9uMbN5h9YQa1NAFRH/OM+H8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190911115704eucas1p2e4913ba6e16036352d5396bfcd6e1b60~DYFem1vTH0661106611eucas1p2X;
-        Wed, 11 Sep 2019 11:57:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id FE.C9.04469.011E87D5; Wed, 11
-        Sep 2019 12:57:04 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190911115703eucas1p1e3119c400c601a80d2c88d25ab744b38~DYFdtxlQQ2705827058eucas1p1N;
-        Wed, 11 Sep 2019 11:57:03 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190911115703eusmtrp1ae7557e36298b60adb553e64820d7327~DYFdfXUa71503915039eusmtrp1O;
-        Wed, 11 Sep 2019 11:57:03 +0000 (GMT)
-X-AuditID: cbfec7f2-994db9c000001175-e1-5d78e110d6a5
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 08.5D.04166.F01E87D5; Wed, 11
-        Sep 2019 12:57:03 +0100 (BST)
-Received: from [106.120.50.63] (unknown [106.120.50.63]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190911115703eusmtip13d3ffffe11e3b882ad3b095bb5f75059~DYFdFgB1f2440924409eusmtip1b;
-        Wed, 11 Sep 2019 11:57:03 +0000 (GMT)
-Subject: Re: [PATCH v3] dt-bindings: arm: samsung: Convert Samsung Exynos
- IOMMU H/W, System MMU to dt-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Maciej Falkowski <m.falkowski@samsung.com>
-Cc:     "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Andrzej Hajda <a.hajda@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <d7e938e8-d42e-be22-ce76-561159064180@samsung.com>
-Date:   Wed, 11 Sep 2019 13:57:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Wed, 11 Sep 2019 07:58:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id l11so16204052lfk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7y00Zo+5wfahV0f4/m81h1l5nqsfXa8NWKboTHI3bB8=;
+        b=IlGa9i2PgZ+p/7vPskXhJMz24AHlJrognoCRIq6cXUTri02E8LYJ3BVJxl0TCIs5xW
+         aaMVjXylk4QgfGuLFaXhqfexFBZp8KMJmssk0x1OFhAAfHIVz9C8V+VmtHVQP/C/CTZu
+         2Ffzul3fzuvdBRW8zyUDq8vdQs6F98erwQq+A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7y00Zo+5wfahV0f4/m81h1l5nqsfXa8NWKboTHI3bB8=;
+        b=hsWOA58LcI2A113ASw2+H6qHDH8aSpiXFKDtT/qZygKm/hqLe6mUt5t3iQ6jj94Yuc
+         EZybI7JYemR/D2xmQsE6jwVSrxO8O4Yk3iGS3fSY7D4PgPsks4Z39j4wh0nbCFXKUtWR
+         D4c2QAepIAZHiOwf3RELMWiJIhy8FRngNUOmxRBxbtDqfhcsw5p9+b8YkdHyumUD6IPN
+         pucxnxA2Rcdxgr0xUCFFG7pAjVABSiI9EJeqKZJu2RbRGtwteH9pkMBaYT0xyL4YTDUX
+         uzQ0nW9eIL/KSxS659e9w0P5nsZ7WTx7JhCkpZdqCC2DTYWy3G9q59V0TE4HmfTvclG3
+         Jqwg==
+X-Gm-Message-State: APjAAAWHRi6nfKvHq5+sKKBQaYOm0opZfadEtsOEWOWPvkgoEeg1kNFD
+        7SNU2ny0PXp8PJfhgCri01Tjbjw9CcjK4w==
+X-Google-Smtp-Source: APXvYqxF2PDFiMTuwW8uu8tMCL0nABoGhFtAiJ1oj9oHb1HlUgibx40kDnC8LMLmgOiji7PYbFqIHA==
+X-Received: by 2002:a05:6512:49b:: with SMTP id v27mr23227860lfq.68.1568203127120;
+        Wed, 11 Sep 2019 04:58:47 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id e21sm5071846lfj.10.2019.09.11.04.58.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2019 04:58:46 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id y5so8894147lji.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:58:46 -0700 (PDT)
+X-Received: by 2002:a2e:3c14:: with SMTP id j20mr22307828lja.84.1568203125714;
+ Wed, 11 Sep 2019 04:58:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djPc7oCDytiDe5MV7K4te4cq8X8I0Di
-        /PkN7BaXd81hs5hxfh+TxYPmdWwWS69fZLJo3XuE3YHDY828NYwem1Z1snn0bVnF6PF5k1wA
-        SxSXTUpqTmZZapG+XQJXxve2k+wF87kqHt4+xNTAuJKji5GTQ0LAROJx4yOWLkYuDiGBFYwS
-        r57OZAJJCAl8YZRY86cMIvGZUeLitsesXYwcYB1H+uwg4ssZJbpWnmWGcN4CNTy6xArSLSyQ
-        J/GrfQMbiC0iEC6x6OQRsCJmgd+MEhceb2EHSbAJGEp0ve0CK+IVsJPYfP0emM0ioCox7Wcj
-        C4gtKhAjsfzNAxaIGkGJkzOfgNmcAoES+18cBpvDLCAvsf3tHGYIW1zi1pP5TBC/rWOXOLQx
-        H8J2kZjdf5QNwhaWeHUc4gYJARmJ05N7wP6XEGhmlHh4bi07hNPDKHG5aQYjRJW1xOHjF8H+
-        ZxbQlFi/Sx8i7Cjx5s59Nkiw8EnceCsIcQOfxKRt05khwrwSHW1CENVqErOOr4Nbe/DCJeYJ
-        jEqzkHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcWGeanlesWJucWleel6yfm5mxiBKej0v+Of
-        djB+vZR0iFGAg1GJh1fgbkWsEGtiWXFl7iFGCQ5mJRHeBy1AId6UxMqq1KL8+KLSnNTiQ4zS
-        HCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYy2H49MWsCTdVTv6tu5ae/jHjJVGSSErJ43
-        MzVk/+fbG42fsbw+V9bT2LhXLVV5+t2tD49qe3eWv752MPq2Y0bJQRk9P46WhzEv/1TulheZ
-        OCtMIN07Ytmp+rN3vG+qhkxKEa9czq1z89R69qVXpZ/kNsz5oWyyg0PEwYRT5tW2Rbfmqoqm
-        fuZWYinOSDTUYi4qTgQA/+tsNz0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xu7r8DytiDT4vVbW4te4cq8X8I0Di
-        /PkN7BaXd81hs5hxfh+TxYPmdWwWS69fZLJo3XuE3YHDY828NYwem1Z1snn0bVnF6PF5k1wA
-        S5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexve2
-        k+wF87kqHt4+xNTAuJKji5GDQ0LAROJIn10XIyeHkMBSRokbt9hAbAkBGYmT0xpYIWxhiT/X
-        uoDiXEA1rxkl9r58wQ6SEBbIk/jVvgGsQUQgXOLKgvvMIEXMAr8ZJT4/3wrVMY9JYu/0N2BV
-        bAKGEl1vu8BsXgE7ic3X74HZLAKqEtN+NrKA2KICMRLbpk5ihagRlDg58wlYnFMgUGL/i8Ng
-        m5kFzCTmbX7IDGHLS2x/OwfKFpe49WQ+0wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OL
-        DfWKE3OLS/PS9ZLzczcxAqNu27Gfm3cwXtoYfIhRgINRiYdX4G5FrBBrYllxZe4hRgkOZiUR
-        3gctQCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OByaEvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6B
-        gzFCAumJJanZqakFqUUwfUwcnFINjPV+vxW0J+23CH7ypH/OSX6/p/0dk8NveljM+x4Z9Jdf
-        WXThLqbrJVP0+HgXRvy4vX2GiOXxzYzznvfKm/256xp78tf1DSUmB+ec0/feWyS1PI3latGx
-        oENOM5c/LJo/TVKx14SnU0XgSbXekaXmjqGf+8V/1Z8OdE2fW9zKZu3tY89rk5vrpcRSnJFo
-        qMVcVJwIAO6aOKfQAgAA
-X-CMS-MailID: 20190911115703eucas1p1e3119c400c601a80d2c88d25ab744b38
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237
-References: <CGME20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237@eucas1p2.samsung.com>
-        <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
-        <20190911110446.32058-1-m.falkowski@samsung.com>
-        <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+ <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+In-Reply-To: <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Sep 2019 12:58:29 +0100
+X-Gmail-Original-Message-ID: <CAHk-=wj_jneK+UYzHhjwsH0XxP0knM+2o2OeFVEz-FjuQ77-ow@mail.gmail.com>
+Message-ID: <CAHk-=wj_jneK+UYzHhjwsH0XxP0knM+2o2OeFVEz-FjuQ77-ow@mail.gmail.com>
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzyszotf,
-
-On 2019-09-11 13:36, Krzysztof Kozlowski wrote:
-> On Wed, 11 Sep 2019 at 13:05, Maciej Falkowski <m.falkowski@samsung.com> wrote:
->> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
->> to newer dt-schema format.
->>
->> Update clock description.
->>
->> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> ---
->> Hi Krzysztof,
->>
->> Thank you for feedback.
->>
->> v3:
->>
->> - remove obsolete interrupts description and
->> set its maxItems to one. There are some incompatible
->> files which will be fixed with another patch.
-> Driver stopped supporting two IRQ lines in commit
-> 7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
-> errors). The second IRQ line in Exynos3250 DTS seems to be ignored.
+On Wed, Sep 11, 2019 at 11:26 AM Johannes Berg
+<johannes@sipsolutions.net> wrote:
 >
-> The patch now looks good to me:
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Hi,
 >
-> However for some reasons you did not CC the IOMMU maintainers. Please
-> use scripts/get_maintainer.pl to get the list of folks to CC.
+> > So I'm at LCA
+>
+> When did LCA move to Portugal? ;-))
 
-Frankly I don't see any reason to spam IOMMU ml or maintainer with this 
-discussion about dt-binding conversion. This patch will be merged via dt 
-tree if I got it right.
+Heh. I may be jetlagged and not thinking straight.  LCA/LPC ;)
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> > Previous resume looks normal:
+> > [snip]
+> >    wlp2s0: Limiting TX power to 23 (23 - 0) dBm as advertised by
+> > 54:ec:2f:05:70:2c
+>
+> Is that the message you meant?
+>
+> > I say _almost_, because I don't see the "No TX power limit" for the
+> > country lookup (yes, Portugal) this time?
+>
+> because here you had it too, just a bit earlier. It usually comes when a
+> beacon is received the first time, which depends on the AP timing.
 
+Duh. I'm blind and didn't notice, because I was expecting it in the same order.
+
+And I didn't think about it or double-check, because the errors that
+then followed later _looked_ like that TX power failing that I thought
+hadn't happened.
+
+> I don't _think_ any of the above would be a reason to disconnect, but it
+> clearly looks like the device got stuck at this point, since everything
+> just fails afterwards.
+
+Yeah, maybe the power stuff was just another effect of things getting
+stuck, rather than the reason for it getting stuck.
+
+So I probably mis-attributed the cause.
+
+> >    WARNING: CPU: 4 PID: 1246 at net/mac80211/sta_info.c:1057
+> > __sta_info_destroy_part2+0x147/0x150 [mac80211]
+>
+> Not really a surprise. Perhaps we shouldn't even WARN_ON() this, if the
+> driver is stuck completely and returning errors to everything that
+> doesn't help so much.
+>
+> Then again, the stack trace was helpful this time:
+>
+> >     ieee80211_set_disassoc+0xc2/0x590 [mac80211]
+> >     ieee80211_mgd_deauth.cold+0x4a/0x1b8 [mac80211]
+> >     cfg80211_mlme_deauth+0xb3/0x1d0 [cfg80211]
+> >     cfg80211_mlme_down+0x66/0x90 [cfg80211]
+> >     cfg80211_disconnect+0x129/0x1e0 [cfg80211]
+> >     cfg80211_leave+0x27/0x40 [cfg80211]
+> >     cfg80211_netdev_notifier_call+0x1a7/0x4e0 [cfg80211]
+> >     notifier_call_chain+0x4c/0x70
+> >     __dev_close_many+0x57/0x100
+> >     dev_close_many+0x8d/0x140
+> >     dev_close.part.0+0x44/0x70
+> >     cfg80211_shutdown_all_interfaces+0x71/0xd0 [cfg80211]
+> >     cfg80211_rfkill_set_block+0x22/0x30 [cfg80211]
+> >     rfkill_set_block+0x92/0x140 [rfkill]
+> >     rfkill_fop_write+0x11f/0x1c0 [rfkill]
+> >     vfs_write+0xb6/0x1a0
+>
+>
+> Since we see that something actually did an rfkill operation. Did you
+> push a button there?
+
+No, I tried to turn off and turn on Wifi manually (no button, just the
+settings panel).
+
+I didn't notice the WARN_ON(), I just noticed that there was no
+networking, and "turn it off and on again" is obviously the first
+thing to try ;)
+
+> You don't happen to have timing information on these logs, perhaps
+> recorded in the logfile/journal?
+
+Sure. I cleaned up the logs to not spam people with lots of illegible
+data, but it's all in the journal log.
+
+Rough timeline:
+
+Sep 11 03:40:00 xps13 kernel: PM: suspend entry (s2idle)
+Sep 11 03:40:00 xps13 kernel: Filesystems sync: 0.028 seconds
+...
+Sep 11 10:13:14 xps13 kernel: Restarting tasks ... done.
+Sep 11 10:13:14 xps13 kernel: PM: suspend exit
+Sep 11 10:13:14 xps13 kernel: ath10k_pci 0000:02:00.0: UART prints enabled
+Sep 11 10:13:14 xps13 kernel: ath10k_pci 0000:02:00.0: unsupported HTC
+service id: 1536
+Sep 11 10:13:23 xps13 kernel: wlp2s0: authenticate with 54:ec:2f:05:70:2c
+Sep 11 10:13:23 xps13 kernel: wlp2s0: send auth to 54:ec:2f:05:70:2c (try 1/3)
+Sep 11 10:13:23 xps13 kernel: wlp2s0: authenticated
+Sep 11 10:13:23 xps13 kernel: wlp2s0: Limiting TX power to 23 (23 - 0)
+dBm as advertised by 54:ec:2f:05:70:2c
+...
+Sep 11 10:13:23 xps13 kernel: ath: regdomain 0x826c dynamically
+updated by country element
+Sep 11 10:13:24 xps13 kernel: IPv6: ADDRCONF(NETDEV_CHANGE): wlp2s0:
+link becomes ready
+Sep 11 10:27:07 xps13 kernel: ath10k_pci 0000:02:00.0: wmi command
+16387 timeout, restarting hardware
+...
+Sep 11 10:27:07 xps13 kernel: ath10k_pci 0000:02:00.0: failed to read
+hi_board_data address: -16
+Sep 11 10:27:10 xps13 kernel: ath10k_pci 0000:02:00.0: failed to
+receive initialized event from target: 00000000
+Sep 11 10:27:13 xps13 kernel: ath10k_pci 0000:02:00.0: failed to
+receive initialized event from target: 00000000
+...
+Sep 11 10:27:13 xps13 kernel: WARNING: CPU: 4 PID: 1246 at
+net/mac80211/sta_info.c:1057 __sta_info_destroy_part2+0x147/0x150
+[mac80211]
+
+but if you want full logs I can send them in private to you.
+
+I do suspect it's atheros and suspend/resume or something. The
+wireless clearly worked for a while after the resume, but then at some
+point it stopped.
+
+> It seems odd to me, since the RTNL is acquired by
+> cfg80211_rfkill_set_block() and that doesn't even have an error path, it
+> just does
+>         rtnl_lock();
+>         cfg80211_shutdown_all_interfaces(&rdev->wiphy);
+>         rtnl_unlock();
+>
+> The only explanation I therefore have is that something is just taking
+> *forever* in that code path, hence my question about timing information
+> on the logs.
+
+Yeah, maybe it would time out everything eventually. But not for a
+long time. It hadn't cleared up by
+
+  Sep 11 10:36:21 xps13 gnome-session-f[6837]: gnome-session-failed:
+Fatal IO error 0 (Success) on X server :0.
+
+which is when I shut down the machine (and had to then force a hard
+power-off because the shutdown wanted things that needed the rtnl_lock
+to go away)
+
+                 Linus
