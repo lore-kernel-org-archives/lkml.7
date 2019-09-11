@@ -2,111 +2,106 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E8C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF9AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D452089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568220019;
-	bh=IYlQzZjToZbYtDmhBVLvoXVdhbIE48lfVFIE1bOVOQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ODB1e7jGgkhclAEhzF3+z3golHf6STjsRVaCTAEOrEqueQZ5nbE+zZ/+rKquwmH+H
-	 /5LA8yr0E4MqdtZFCQK9hKZpZcNr8l/ZfAtIVVe1Fu0qqfQpzp1eC71/GUvWmiUCrq
-	 lfgKWcuY2CEM77J29bv1mLH0A1FsSv6YNUPbJT1g=
+	by mail.kernel.org (Postfix) with ESMTP id 3175A20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrwK0M0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfIKQkS (ORCPT
+        id S1729179AbfIKQkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbfIKQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:40:18 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3014920838;
-        Wed, 11 Sep 2019 16:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568220017;
-        bh=IYlQzZjToZbYtDmhBVLvoXVdhbIE48lfVFIE1bOVOQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SCJ519pKPOYYsA536PDlGELRLGoajfeziyypGF33UqFYKSFfKVwawoyiuNpwGt/A6
-         aSlZT1KxY4TptGNwGrbLQWFyS42WBYjgsrzOrlSFs2nrdj24OB46VWtUV5l+tm6Pmm
-         lKe27NFw4LJNUPUlhUMQxK7VaH62KDbiLzOkDtm0=
-Date:   Wed, 11 Sep 2019 17:40:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        gregkh@linuxfoundation.org,
-        Matthias Maennich <maennich@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
- namespace offset
-Message-ID: <20190911164012.nalsccw6jku7gbpw@willie-the-truck>
-References: <20190911122646.13838-1-will@kernel.org>
- <20190911133506.GB7837@linux-8ccs>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911133506.GB7837@linux-8ccs>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 11 Sep 2019 12:40:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33946 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbfIKQkb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:40:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id k13so32138090ioj.1;
+        Wed, 11 Sep 2019 09:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Tl8NmQTauJTkodtSWs25AtKBiKIs4gXgEL1Drv1zzhk=;
+        b=KrwK0M0dhLOpf2xNKKt7rOC/ir8cAmxu7g3OknTESI8+ndgvUAupbL8zdtSpJ9q9ya
+         scfVgs+5s3OgeLS4tDRLlTlyQvcHFeY6n226EBv3elBq6Z2BMNbG9esOCL/nhHIFYSUy
+         uAeu2TM04i6KT5YtI9oix9nRO5cAFmXAGNXyouGLmXgR7nugb0KC0YkTaScMZZUMEQh6
+         EkZmBF3qzqz94I7bEwNr/SJgiFi8+0r0DmiZUp8chd3e4lzdbBfu42MptgfZ4l/zQkUe
+         cHXsvM2IiBxyCBjIfFeb9BB2TUvi8z7qx3cT+osuZMmamwGPic6/fAVMt//zaD44jL5k
+         vbew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Tl8NmQTauJTkodtSWs25AtKBiKIs4gXgEL1Drv1zzhk=;
+        b=qxzf2hRA5XbMJ1F1vgWzxQKCIR6A8Nfi+D3E+p6kOWvlr3e+Cu3x/xhPxZMOYaR8/3
+         pPqAOL8Hzg8iXnGZ5l6kKzD6tDWCv7r983DJ5f2gwNOht0FNnqMH6I6pxxxqqqEUQX48
+         0xCY6jo65QAqY/WxppEUceT6qsTheZlR1g4o61YXSclFTnlUpiUln98EboApGX7j8XjK
+         8Ya6DoVz9bkn702V/6X8GNEf8IJN837VmNpoISyY/Mf1Z/qzbgHi/VFRqqXWNQFQiV/h
+         b6Zg4VK+LJR4w/ke8AjyGKwJgXSrWT2q109huA4GEzq/b6Z3jhj+bukxVHRlkLEq4BJY
+         MIRA==
+X-Gm-Message-State: APjAAAX+KnjvfmaVPAeTG9gALvS9YErIfwstvWR+oWSOoAMHuTIy2H+u
+        8hbkT32B6f6EsFHEW47wavmHpNkvDPU=
+X-Google-Smtp-Source: APXvYqzc+JQCdlEO9+dnSpChUka38hj/JdRKSAzWqwa3qzi+usVxxHxFWg7YZcVpoMqm0KSMXimWVg==
+X-Received: by 2002:a5d:9153:: with SMTP id y19mr703021ioq.109.1568220030163;
+        Wed, 11 Sep 2019 09:40:30 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id c4sm16912886ioa.76.2019.09.11.09.40.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 09:40:29 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     mkubecek@suse.cz
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] nbd_genl_status: null check for nla_nest_start
+Date:   Wed, 11 Sep 2019 11:40:12 -0500
+Message-Id: <20190911164013.27364-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190910113521.GA9895@unicorn.suse.cz>
+References: <20190910113521.GA9895@unicorn.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 03:35:06PM +0200, Jessica Yu wrote:
-> +++ Will Deacon [11/09/19 13:26 +0100]:
-> > Commit 8651ec01daed ("module: add support for symbol namespaces.")
-> > broke linking for arm64 defconfig:
-> > 
-> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
-> >  | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
-> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
-> >  | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
-> > 
-> > This is because the dummy initialisation of the 'namespace_offset' field
-> > in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
-> > support for PREL32 locations uses an offset from an absolute address (0)
-> > in an effort to trick 'offset_to_pointer' into behaving as a NOP,
-> > allowing non-namespaced symbols to be treated in the same way as those
-> > belonging to a namespace.
-> > 
-> > Unfortunately, place-relative relocations require a symbol reference
-> > rather than an absolute value and, although x86 appears to get away with
-> > this due to placing the kernel text at the top of the address space, it
-> > almost certainly results in a runtime failure if the kernel is relocated
-> > dynamically as a result of KASLR.
-> > 
-> > Rework 'namespace_offset' so that a value of 0, which cannot occur for a
-> > valid namespaced symbol, indicates that the corresponding symbol does
-> > not belong to a namespace.
-> > 
-> > Cc: Matthias Maennich <maennich@google.com>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> > 
-> > Please note that I've not been able to test this at LPC, but it's been
-> > submitted to kernelci.
-> 
-> Thanks for fixing this so quickly. I can confirm that this fixes the
-> build for arm64 defconfig and x86 built fine for me as well. I'll wait
-> a bit and apply this at the end of the day in case Matthias or anybody
-> else would like to confirm/test.
+nla_nest_start may fail and return NULL. The check is inserted, and
+errno is selected based on other call sites within the same source code.
+Update: removed extra new line.
+v3 Update: added release reply, thanks to Michal Kubecek for pointing
+out.
 
-FWIW, I've managed to boot arm64 Debian under QEMU and load/unload
-modules successfully with this patch applied on top of modules-next.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/block/nbd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Will
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e21d2ded732b..8a9712181c2a 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2149,6 +2149,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
++	if (!dev_list) {
++		nlmsg_free(reply);
++		ret = -EMSGSIZE;
++		goto out;
++	}
++
+ 	if (index == -1) {
+ 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+ 		if (ret) {
+-- 
+2.17.1
+
