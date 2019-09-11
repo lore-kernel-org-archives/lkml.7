@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25AFC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B026CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5432082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A592082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="B7+fD5SU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="UVq8ZG1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfIKMkg (ORCPT
+        id S1727953AbfIKMkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:40:36 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:11248 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbfIKMkg (ORCPT
+        Wed, 11 Sep 2019 08:40:43 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:35304 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfIKMkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:40:36 -0400
+        Wed, 11 Sep 2019 08:40:42 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 9E5BE3F3E7;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id E47373F4B9;
         Wed, 11 Sep 2019 14:40:34 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=B7+fD5SU;
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=UVq8ZG1m;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tauN1zsihhrY; Wed, 11 Sep 2019 14:40:32 +0200 (CEST)
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Rh--3oeQzsSf; Wed, 11 Sep 2019 14:40:34 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 535A03F449;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8B86A3F40C;
         Wed, 11 Sep 2019 14:40:30 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id EE5AA3602D6;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id C74E03602AF;
         Wed, 11 Sep 2019 14:40:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568205630; bh=h6am28tjus1+KbMcn5GOOEwhmeKLs5yd8dEaw6oNuyQ=;
+        t=1568205629; bh=HCfXSiSlYFFQuEbgg0fd/Beb1ygPT33Fwve4O2CKjik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7+fD5SUWqzBKl6tBtyQGitQAB/ns6tTT/vcHX2QMLbxxbdE5OXCMN2s/cgQs8LfS
-         QL6xlLu8/6IhvwOBaYRyAzhbGyIlIu+kQ7B7vJEkKVvbdeVE05L22NTtMNfzs7daXI
-         vdOkZMiPV5EckKdIAVxJ315GijRycWTptT0OCKvA=
+        b=UVq8ZG1mdRJ99zzTOa06A0WCSmICDeoA923j5vpbwF/96VtBbpv21b0xS9KOXmUxU
+         CZYlvPug27fuPUPo2quSq8QxEevm7/jjfCLHMcefeyneRdAjeSbqieiJ4IhDGZ6CYe
+         N4djwYRPtK8N62+7Rm2l53dYNwk+1Fd85cPkJAO0=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 2/2] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
-Date:   Wed, 11 Sep 2019 14:40:22 +0200
-Message-Id: <20190911124022.22423-3-thomas_os@shipmail.org>
+Subject: [PATCH v2 1/2] x86: Don't let pgprot_modify() change the page encryption bit
+Date:   Wed, 11 Sep 2019 14:40:21 +0200
+Message-Id: <20190911124022.22423-2-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190911124022.22423-1-thomas_os@shipmail.org>
 References: <20190911124022.22423-1-thomas_os@shipmail.org>
@@ -77,17 +77,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
-under SEV encryption and sometimes under SME encryption, it will actually
-set up an encrypted mapping rather than an unencrypted, causing devices
-that DMAs from that memory to read encrypted contents. Fix this.
-
-When force_dma_unencrypted() returns true, the linear kernel map of the
-coherent pages have had the encryption bit explicitly cleared and the
-page content is unencrypted. Make sure that any additional PTEs we set
-up to these pages also have the encryption bit cleared by having
-dma_pgprot() return a protection with the encryption bit cleared in this
-case.
+When SEV or SME is enabled and active, vm_get_page_prot() typically
+returns with the encryption bit set. This means that users of
+pgprot_modify(, vm_get_page_prot()) (mprotect_fixup, do_mmap) end up with
+a value of vma->vm_pg_prot that is not consistent with the intended
+protection of the PTEs. This is also important for fault handlers that
+rely on the VMA vm_page_prot to set the page protection. Fix this by
+not allowing pgprot_modify() to change the encryption bit, similar to
+how it's done for PAT bits.
 
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -102,22 +99,45 @@ Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 ---
- kernel/dma/mapping.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/pgtable.h       | 7 +++++--
+ arch/x86/include/asm/pgtable_types.h | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index b0038ca3aa92..2b499dcae74f 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -157,6 +157,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 0bc530c4eb13..1e6bb4c25334 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ 	return __pmd(val);
+ }
+ 
+-/* mprotect needs to preserve PAT bits when updating vm_page_prot */
++/*
++ * mprotect needs to preserve PAT and encryption bits when updating
++ * vm_page_prot
++ */
+ #define pgprot_modify pgprot_modify
+ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
  {
-+	if (force_dma_unencrypted(dev))
-+		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
-              (attrs & DMA_ATTR_NON_CONSISTENT)))
+ 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+-	pgprotval_t addbits = pgprot_val(newprot);
++	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
+ 	return __pgprot(preservebits | addbits);
+ }
+ 
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b5e49e6bac63..e13084b3d6cb 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -123,7 +123,7 @@
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+-			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | sme_me_mask)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ 
+ /*
 -- 
 2.20.1
 
