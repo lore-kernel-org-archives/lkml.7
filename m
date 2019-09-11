@@ -2,157 +2,233 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4A4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A49FC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3143A2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B1F20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcBl4ORb"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q0awtSEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfIKVly (ORCPT
+        id S1728899AbfIKV5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 17:41:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44931 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfIKVly (ORCPT
+        Wed, 11 Sep 2019 17:57:48 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35182 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbfIKV5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 17:41:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k6so14050357wrn.11;
-        Wed, 11 Sep 2019 14:41:52 -0700 (PDT)
+        Wed, 11 Sep 2019 17:57:47 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u9so1252330qtq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 14:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wUQ0KtwI4JvmBE2NmHQlnqS911wm8Dp4miyti6AoRUo=;
-        b=OcBl4ORbkMLxWZZZhAU68oS4rGZ0QlvvAX4lfklsyeVE8snDaUViMQsXeSG7XP1/vC
-         cMhXlWWPhD7E3h/nR9utdchmtUNmkmm4+aNlyUZDRnk9sR9p++o8C7HTXvNXHRS85zh5
-         GoNfii/IDYhgxrLi0RWHdt38OP0fRjcPQ6xdC0DZk7R/rGdeH0wMjAN29sWK2dyIYtu9
-         a0Z1yPjVo+ppKZ5UMsfSmEGB62dRCA+OiYIWkNjAa5Ce2+GsWigDeoXzwW1CM6j4BCT+
-         jRc8hIOwMJZu0ykUqCaa8p2womulHPFhZvRy4HtXC8DBU63IYHLx6q49L7u2IhLtU7eq
-         VhuQ==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=BiFTutYwV7WV5DTyUFMki78gS/6bcfMhuRhUhPM02wk=;
+        b=q0awtSEwQpMikevefu0T5iDrpyNVuEqLab3ASXSI3OPhsNK8YZrfg0yvG/pDMazPN6
+         qSxV7yRyX3G2ls1linDGBO+564XnEKqw6m+bMPmKC9LLKr9osKpMSEndnySLnToSlTjI
+         O0y5/ig/n+u+iqMPQN9IJgSZqbDqREvoECT7+j0s3weOgJr3Bnw2JtoT21ojnCztjZog
+         YTDuU/lo9yxG4TFCQo6Yxnruh14FPxxC5nPAQoO3v+0UPfLJQDbj9dl+b43aU1KAfGub
+         w/95lofeKUVDU5AzHzwQaO97cWZORANP/Mecsf8ih1MQN6aaaygGy+F33g8uKa1V8Avx
+         ecfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wUQ0KtwI4JvmBE2NmHQlnqS911wm8Dp4miyti6AoRUo=;
-        b=jbnmCuui6h4X6tKO2F8R2M5EppKOgtB/JE8kw8aFp+RR4/0nXcn1iec6Z7su7xNuB7
-         j1kyFP4mijFdgdWBp8Tecg57rwP0KwR4wGfMu+5SUpUyihnxO/CcG+IvALuGfqmPq8tG
-         gM8nozHliqoIRKIVHqwJF46wLmUTj35WdPYh+QleThXJiQLIXxzCUIezIov9/l1eWeAT
-         /nnqS4eeY2XkvhKbeQU47lVABqM8x8k7ch27h6ZnSuJ8AAGK9qRuIL0a7XlvY33KriPV
-         Xc1hpSxLmZHdJ7LyxuPY872ctQs0as4AQ7tzIRlUopoDI1Q3v8qe7lq4UW1SHRcQ89kH
-         2gaA==
-X-Gm-Message-State: APjAAAV99YCQ0w1eoFlWUl3yFmhc933wyQu3HMvZ0vDLT5xoeYZ8BJ1V
-        1jwA8lmtZQnTI9/Ma+bTKaY=
-X-Google-Smtp-Source: APXvYqwwcqRAU4uZN+OylUfTPf1i2wrI1PoXQG05Mx/ueeI4i/mR7ztwxo7ox8fUbclXC42yTd9Fcg==
-X-Received: by 2002:adf:e48a:: with SMTP id i10mr32193682wrm.311.1568238111873;
-        Wed, 11 Sep 2019 14:41:51 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D14CBD4495B592C99C920.dip0.t-ipconnect.de. [2003:d0:6f2d:14cb:d449:5b59:2c99:c920])
-        by smtp.gmail.com with ESMTPSA id t14sm11246789wrs.6.2019.09.11.14.41.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 14:41:50 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 23:41:44 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190911214144.GA1840@darwi-home-pc>
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc>
- <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
- <20190910173243.GA3992@darwi-home-pc>
- <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=BiFTutYwV7WV5DTyUFMki78gS/6bcfMhuRhUhPM02wk=;
+        b=PIoehJRUYIPwODm73DY1WhLl6CZIMF3UgrDm5QnBfSccgYQ/F4Ire2s0NuEKjTi7Gi
+         vYOAMPDBw32DATZqYCK0uCsiSO2DG2O2mBTx7mUI1WT3kpNy0DlYqmY3x8UwczHBX867
+         L4UNdFK5j5l9M3O+A9TSqLK0joQzZtnNKRiACR8KUfjerLWnxl3bnHq+nOi+mY78seQe
+         FXIboCiW8n4pSjoiHmon6kl8pu3Yw6hSxExwBGcrO7AkC1lnf9W+Iy3kOkJDTdONRp2z
+         K4Sb/VLoIDaSl5BaZRzb7rf97kU5t68LktjDCf9Fe8wAMFW8SS1Hw6C5S4RfKK9YVfJF
+         o1OA==
+X-Gm-Message-State: APjAAAVsFdDf5xl+rWBxgvazMqtsXuiMuk/h/6PipUEHvFlvD3/05C5/
+        H1u3eVg3CMnZYpX/jtDquOoCmA==
+X-Google-Smtp-Source: APXvYqyCWOJ3rjZ/V0ODkA3YcXn1qSynuCFqbmhNBntxeVQmYkQlLe7JfZdCiEET9EjhKsi3aTCWHQ==
+X-Received: by 2002:ac8:2c86:: with SMTP id 6mr19594990qtw.113.1568239066370;
+        Wed, 11 Sep 2019 14:57:46 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d134sm11584329qkg.133.2019.09.11.14.57.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 14:57:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <211b144f-0e86-d891-e1ec-9879ceb53e36@redhat.com>
+Date:   Wed, 11 Sep 2019 17:57:44 -0400
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B06C5D2C-94E2-4C25-AB16-DC96A0900015@lca.pw>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
+ <1a8e6c0a-6ba6-d71f-974e-f8a9c623c25b@redhat.com>
+ <70714929-2CE3-42F4-BD31-427077C9E24E@lca.pw>
+ <211b144f-0e86-d891-e1ec-9879ceb53e36@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 05:45:38PM +0100, Linus Torvalds wrote:
-> On Wed, Sep 11, 2019 at 5:07 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> > >
-> > > Ted, comments? I'd hate to revert the ext4 thing just because it
-> > > happens to expose a bad thing in user space.
-> >
-> > Unfortuantely, I very much doubt this is going to work.  That's
-> > because the add_disk_randomness() path is only used for legacy
-> > /dev/random [...]
-> >
-> > Also, because by default, the vast majority of disks have
-> > /sys/block/XXX/queue/add_random set to zero by default.
-> 
-> Gaah. I was looking at the input randomness, since I thought that was
-> where the added randomness that Ahmed got things to work with came
-> from.
-> 
-> And that then made me just look at the legacy disk randomness (for the
-> obvious disk IO reasons) and I didn't look further.
->
 
-Yup, I confirm that the quick patch kept the situation as-is. I was
-going to debug why, but now we know the answer..
 
-> > So the the way we get entropy these days for initializing the CRNG is
-> > via the add_interrupt_randomness() path, where do something really
-> > fast, and we assume that we get enough uncertainity from 8 interrupts
-> > to give us one bit of entropy (64 interrupts to give us a byte of
-> > entropy), and that we need 512 bits of entropy to consider the CRNG
-> > fully initialized.  (Yeah, there's a lot of conservatism in those
-> > estimates, and so what we could do is decide to say, cut down the
-> > number of bits needed to initialize the CRNG to be 256 bits, since
-> > that's the size of the CHACHA20 cipher.)
-> 
-> So that's 4k interrupts if I counted right, and yeah, maybe Ahmed was
-> just close enough before, and the merging of the inode table IO then
-> took him below that limit.
->
-> > Ultimately, though, we need to find *some* way to fix userspace's
-> > assumptions that they can always get high quality entropy in early
-> > boot, or we need to get over people's distrust of Intel and RDRAND.
->
-> Well, even on a PC, sometimes rdrand just isn't there. AMD has screwed
-> it up a few times, and older Intel chips just don't have it.
-> 
-> So I'd be inclined to either lower the limit regardless -
+> On Sep 11, 2019, at 4:54 PM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> On 9/11/19 8:42 PM, Qian Cai wrote:
+>>=20
+>>> On Sep 11, 2019, at 12:34 PM, Waiman Long <longman@redhat.com> =
+wrote:
+>>>=20
+>>> On 9/11/19 5:01 PM, Qian Cai wrote:
+>>>>> On Sep 11, 2019, at 11:05 AM, Waiman Long <longman@redhat.com> =
+wrote:
+>>>>>=20
+>>>>> When allocating a large amount of static hugepages (~500-1500GB) =
+on a
+>>>>> system with large number of CPUs (4, 8 or even 16 sockets), =
+performance
+>>>>> degradation (random multi-second delays) was observed when =
+thousands
+>>>>> of processes are trying to fault in the data into the huge pages. =
+The
+>>>>> likelihood of the delay increases with the number of sockets and =
+hence
+>>>>> the CPUs a system has.  This only happens in the initial setup =
+phase
+>>>>> and will be gone after all the necessary data are faulted in.
+>>>>>=20
+>>>>> These random delays, however, are deemed unacceptable. The cause =
+of
+>>>>> that delay is the long wait time in acquiring the mmap_sem when =
+trying
+>>>>> to share the huge PMDs.
+>>>>>=20
+>>>>> To remove the unacceptable delays, we have to limit the amount of =
+wait
+>>>>> time on the mmap_sem. So the new down_write_timedlock() function =
+is
+>>>>> used to acquire the write lock on the mmap_sem with a timeout =
+value of
+>>>>> 10ms which should not cause a perceivable delay. If timeout =
+happens,
+>>>>> the task will abandon its effort to share the PMD and allocate its =
+own
+>>>>> copy instead.
+>>>>>=20
+>>>>> When too many timeouts happens (threshold currently set at 256), =
+the
+>>>>> system may be too large for PMD sharing to be useful without undue =
+delay.
+>>>>> So the sharing will be disabled in this case.
+>>>>>=20
+>>>>> Signed-off-by: Waiman Long <longman@redhat.com>
+>>>>> ---
+>>>>> include/linux/fs.h |  7 +++++++
+>>>>> mm/hugetlb.c       | 24 +++++++++++++++++++++---
+>>>>> 2 files changed, 28 insertions(+), 3 deletions(-)
+>>>>>=20
+>>>>> diff --git a/include/linux/fs.h b/include/linux/fs.h
+>>>>> index 997a530ff4e9..e9d3ad465a6b 100644
+>>>>> --- a/include/linux/fs.h
+>>>>> +++ b/include/linux/fs.h
+>>>>> @@ -40,6 +40,7 @@
+>>>>> #include <linux/fs_types.h>
+>>>>> #include <linux/build_bug.h>
+>>>>> #include <linux/stddef.h>
+>>>>> +#include <linux/ktime.h>
+>>>>>=20
+>>>>> #include <asm/byteorder.h>
+>>>>> #include <uapi/linux/fs.h>
+>>>>> @@ -519,6 +520,12 @@ static inline void i_mmap_lock_write(struct =
+address_space *mapping)
+>>>>> 	down_write(&mapping->i_mmap_rwsem);
+>>>>> }
+>>>>>=20
+>>>>> +static inline bool i_mmap_timedlock_write(struct address_space =
+*mapping,
+>>>>> +					 ktime_t timeout)
+>>>>> +{
+>>>>> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
+>>>>> +}
+>>>>> +
+>>>>> static inline void i_mmap_unlock_write(struct address_space =
+*mapping)
+>>>>> {
+>>>>> 	up_write(&mapping->i_mmap_rwsem);
+>>>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>>>> index 6d7296dd11b8..445af661ae29 100644
+>>>>> --- a/mm/hugetlb.c
+>>>>> +++ b/mm/hugetlb.c
+>>>>> @@ -4750,6 +4750,8 @@ void =
+adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+>>>>> 	}
+>>>>> }
+>>>>>=20
+>>>>> +#define PMD_SHARE_DISABLE_THRESHOLD	(1 << 8)
+>>>>> +
+>>>>> /*
+>>>>> * Search for a shareable pmd page for hugetlb. In any case calls =
+pmd_alloc()
+>>>>> * and returns the corresponding pte. While this is not necessary =
+for the
+>>>>> @@ -4770,11 +4772,24 @@ pte_t *huge_pmd_share(struct mm_struct =
+*mm, unsigned long addr, pud_t *pud)
+>>>>> 	pte_t *spte =3D NULL;
+>>>>> 	pte_t *pte;
+>>>>> 	spinlock_t *ptl;
+>>>>> +	static atomic_t timeout_cnt;
+>>>>>=20
+>>>>> -	if (!vma_shareable(vma, addr))
+>>>>> -		return (pte_t *)pmd_alloc(mm, pud, addr);
+>>>>> +	/*
+>>>>> +	 * Don't share if it is not sharable or locking attempt timed =
+out
+>>>>> +	 * after 10ms. After 256 timeouts, PMD sharing will be =
+permanently
+>>>>> +	 * disabled as it is just too slow.
+>>>> It looks like this kind of policy interacts with kernel debug =
+options like KASAN (which is going to slow the system down
+>>>> anyway) could introduce tricky issues due to different timings on a =
+debug kernel.
+>>> With respect to lockdep, down_write_timedlock() works like a =
+trylock. So
+>>> a lot of checking will be skipped. Also the lockdep code won't be =
+run
+>>> until the lock is acquired. So its execution time has no effect on =
+the
+>>> timeout.
+>> No only lockdep, but also things like KASAN, debug_pagealloc, =
+page_poison, kmemleak, debug
+>> objects etc that  all going to slow down things in huge_pmd_share(), =
+and make it tricky to get a
+>> right timeout value for those debug kernels without changing the =
+previous behavior.
+>=20
+> Right, I understand that. I will move to use a sysctl parameters for =
+the
+> timeout and then set its default value to either 10ms or 20ms if some
+> debug options are detected. Usually the slower than should not be more
+> than 2X.
 
-ACK :)
+That 2X is another magic number which has no testing data back for it. =
+We need a way to disable timeout
+completely in Kconfig, so it can ship in the part of a debug kernel =
+package.
 
-> and perhaps make the "user space asked for randomness much too
-> early" be a big *warning* instead of being a basically fatal hung
-> machine?
 
-Hmmm, regarding "randomness request much too early", how much is time
-really a factor here?
-
-I tested leaving the machine even for 15+ minutes, and it still didn't
-continue booting: the boot is practically blocked forever...
-
-Or is the thoery that hopefully once the machine is un-stuck, more
-sources of entropy will be available? If that's the case, then
-possibly (rate-limited):
-
-  "urandom: process XX asked for YY bytes. CRNG not yet initialized"
-
-> Linus
-
-thanks,
-
---
-darwi
-http://darwish.chasingpointers.com
