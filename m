@@ -2,67 +2,91 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF54C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA3CECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1B20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568202366;
-	bh=TgGP6K2sExQU7B6iYcL9MelWWYE5pjNpEfLTHO3R/JI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QL2BCkd82jaOVYcePble3JRbN9Q7sLtGP6PjNEKbww8GZpoyLfPSFZuWQUaF88JAx
-	 W9FnihPIvivO2gmZgznrn++EvwACJt0gtjXvD4KloDq0nVyJ1BbmikItxAoPyua0Vp
-	 y/+pLYG2dNYuLCdT4DC72na7owhmtkLXCMWXhJcU=
+	by mail.kernel.org (Postfix) with ESMTP id 6D7CB20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhnuxKLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfIKLqF (ORCPT
+        id S1727758AbfIKLq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbfIKLqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:46:05 -0400
-Received: from linux-8ccs.fritz.box (unknown [92.117.136.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED6A20872;
-        Wed, 11 Sep 2019 11:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568202364;
-        bh=TgGP6K2sExQU7B6iYcL9MelWWYE5pjNpEfLTHO3R/JI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VCXUge6pjNEkchBQlIqE4hhWnFB65QKP0m8fn389qNMdcEzShXq1d6Wv05Isv+XCJ
-         sSz7lI0ojbN47k4Z4rTuYK1+IZvrJhVy+HV7YVyKYAoJV5Cigzbj+C3YqeMGuambE7
-         1Wx4Q4RuJFy41/N1ecNtPFkpAQ3amPLGQ64Ria8s=
-Date:   Wed, 11 Sep 2019 13:45:59 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] module: remove redundant 'depends on MODULES'
-Message-ID: <20190911114559.GA6189@linux-8ccs.fritz.box>
-References: <20190909110408.21832-1-yamada.masahiro@socionext.com>
+        Wed, 11 Sep 2019 07:46:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37549 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfIKLq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:46:56 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r195so3164894wme.2;
+        Wed, 11 Sep 2019 04:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EhNVqd7lKYTm2RjaGn886HTdC3x02uNTfuifCk7g2lg=;
+        b=FhnuxKLxRpgRFJ+2mA6bg+MunVeIvSpIS27r/gVmAIEs2YIck3qeV3LdJymVgReAoW
+         3qQmUg9gZ3ELvUrtW/vF7VVxnLEMXEhMAkNTiVuPKMGIEpSgTl7+LhFIKF+h5nv/NsVA
+         OBHOl9Zz5vniIrS44Chb76Au9/FynnfzK/8vHRPUw7rYf8jJT/md8yM9P1rRcIfxq7wK
+         K7rrqTJ/N1+iLuMf367E90Q8UmfrgjFTZvQ1Px7hkPU4i4O55M6s0P+fK+Kg5oMao1Jf
+         XObZ/oe5dTduchmpxopCmlh8+QmHdWkP18Ipcmw/gkon/RD1oR0E5LMJ04+KgSF1i9RT
+         wpWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EhNVqd7lKYTm2RjaGn886HTdC3x02uNTfuifCk7g2lg=;
+        b=arIQhqIEhYCnynRNHmjUY6SbQL7WQbvDJ2urd8+JLXTO6ElIgKZsfsqkM1iqdrpTbD
+         PuwYlIhN10dP+RpmgyC9dbra4R7k3EPXQfq92Ts/QWzMw4lc4I5z4+Mw9SAP3EjSstmF
+         Yw/YnRL/75xvxLC+VADD4XPGEopMmAdXcwQIQbZxDnAc4akbNIned4Ghe207tF2L0mu4
+         IWjn/SHKzonMbAwLuqixWeLdI19pCcVfsAwW95SFnkHXuLXZtgNtgI5WD9q13MrTficI
+         rY+WWelQ1EE9JI1rtJIaV6rbTcSfUzG6jOLcu5F5Co329U3KuE/8Q8i1fVdZBtzrVZ96
+         Knyw==
+X-Gm-Message-State: APjAAAVGomoLd5q8PKxzvxJa432xwS3B5Q5rnsmxf8Fu+t7qxpyCNBoM
+        Ko5a1wTIeVwnqe7rcmxT/z0=
+X-Google-Smtp-Source: APXvYqxCcM+NFG1ZIPUS5eQvXWa05L2llrF+e94UySmKsX6lXGf/8t2UCuJrSW5dkKJ13v5FrT2NmQ==
+X-Received: by 2002:a7b:c752:: with SMTP id w18mr3543962wmk.63.1568202414069;
+        Wed, 11 Sep 2019 04:46:54 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id h17sm4864705wme.6.2019.09.11.04.46.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 04:46:53 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH 0/2] crypto: sun4i-ss: Enable power management
+Date:   Wed, 11 Sep 2019 13:46:48 +0200
+Message-Id: <20190911114650.20567-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190909110408.21832-1-yamada.masahiro@socionext.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [09/09/19 20:04 +0900]:
->These are located in the 'if MODULES' ... 'endif' block.
->
->Remove the redundant dependencies.
->
->Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hello
 
-Acked-by: Jessica Yu <jeyu@kernel.org>
+This serie enables power management in the sun4i-ss driver.
+
+Regards
+
+Corentin Labbe (2):
+  crypto: sun4i-ss: simplify enable/disable of the device
+  crypto: sun4i-ss: enable pm_runtime
+
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c |   5 +
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c   | 115 ++++++++++++++++------
+ 2 files changed, 88 insertions(+), 32 deletions(-)
+
+-- 
+2.21.0
 
