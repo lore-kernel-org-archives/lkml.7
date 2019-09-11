@@ -2,202 +2,198 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D83CECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DF8ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C6F20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D142168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="VWcUzUgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfIKHrD (ORCPT
+        id S1726966AbfIKHtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:47:03 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:47833 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfIKHrC (ORCPT
+        Wed, 11 Sep 2019 03:49:45 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:23514 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfIKHtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:47:02 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8B7jWvI012271, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8B7jWvI012271
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 15:45:34 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
- 14.03.0468.000; Wed, 11 Sep 2019 15:45:31 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpW+aItOW/l+WzsF0=?= <james.tai@realtek.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>
-CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Paul Burton" <paul.burton@mips.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Doug Anderson" <armlinux@m.disordat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Thierry Reding" <treding@nvidia.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        "Rob Herring" <robh@kernel.org>,
-        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: RE: [PATCH] ARM: Add support for Realtek SOC
-Thread-Topic: [PATCH] ARM: Add support for Realtek SOC
-Thread-Index: AQHVY67V+8blpY45FUyr2dN3mgK/RqccOwQAgAf67AA=
-Date:   Wed, 11 Sep 2019 07:45:30 +0000
-Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8DA1D0@RTITMBSVM04.realtek.com.tw>
-References: <20190905054647.1235-1-james.tai@realtek.com>
- <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 03:49:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 86F693F6E9;
+        Wed, 11 Sep 2019 09:49:41 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=VWcUzUgE;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 18ytgjrsSKhl; Wed, 11 Sep 2019 09:49:36 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id A101D3F671;
+        Wed, 11 Sep 2019 09:49:32 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 01E0D3600A6;
+        Wed, 11 Sep 2019 09:49:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568188172; bh=RzGKKS4Bp05BsWEWP+aX9IYliv4nwEQmfcOAV0di4dE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VWcUzUgETPQNDpnigqTUT+SyEwR5F3qH+fxULzOut++6Sn/TCnvXzaiTv4IQoyW/z
+         1hY47vnfO+njzb2vntVa7WGPdoW69pSA3eXOgSLRVPnMjKMuKKj1H4AAH8gnheYzFx
+         IlbYmB6CCCbBtUC4UeuRX7ttFgDnYwyuVA2fHQxw=
+Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        pv-drivers@vmware.com, Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+ <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+ <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
+ <20190905152438.GA18286@infradead.org>
+ <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
+ <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
+ <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <76f89b46-7b14-9483-e552-eb52762adca0@shipmail.org>
+Date:   Wed, 11 Sep 2019 09:49:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IEFkZCBzdXBwb3J0IGZvciBSZWFsdGVrIFNPQw0K
-PiANCj4gT24gVGh1LCBTZXAgNSwgMjAxOSBhdCA3OjQ4IEFNIDxqYW1lc3RhaS5za3lAZ21haWwu
-Y29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206ICJqYW1lcy50YWkiIDxqYW1lcy50YWlAcmVhbHRl
-ay5jb20+DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGJhc2ljIG1hY2hpbmUgZmlsZSBm
-b3IgdGhlIFJlYWx0ZWsgUlREMTZYWA0KPiA+IHBsYXRmb3JtLg0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogamFtZXMudGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQo+IA0KPiBIaSBKYW1lcywN
-Cj4gDQo+IFRoYW5rcyBhIGxvdCBmb3IgeW91ciBzdWJtaXNzaW9uISBJJ20gZ2xhZCB0byBzZWUg
-aW50ZXJlc3QgaW4gdXBzdHJlYW0gc3VwcG9ydA0KPiBmb3IgdGhpcyBTb0MgZmFtaWx5LiBJIGhh
-dmUgYSBmZXcgc21hbGwgY29tbWVudHMgb24gZGV0YWlscywgbW9zdGx5IHdoZXJlIEkNCj4gd291
-bGQgZWl0aGVyIGxpa2UgdG8gc2VlIGFuIGV4cGxhbmF0aW9uIGluIHRoZSBwYXRjaCBkZXNjcmlw
-dGlvbiwgb3IgdGhpbmdzIHRoYXQNCj4gbG9va3MgbGlrZSB0aGV5IGNhbiBiZSBsZWZ0IG91dCBm
-cm9tIHRoZSBwYXRjaC4NCj4NClRoYW5rcyBmb3IgeW91ciByZXBseS4NCg0KPiA+IGluZGV4IDMz
-YjAwNTc5YmVmZi4uYzdjOWEzNjYyZWI3IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL0tjb25m
-aWcNCj4gPiArKysgYi9hcmNoL2FybS9LY29uZmlnDQo+ID4gQEAgLTgzNiw2ICs4MzYsOCBAQCBz
-b3VyY2UgImFyY2gvYXJtL21hY2gtengvS2NvbmZpZyINCj4gPg0KPiA+ICBzb3VyY2UgImFyY2gv
-YXJtL21hY2gtenlucS9LY29uZmlnIg0KPiA+DQo+ID4gK3NvdXJjZSAiYXJjaC9hcm0vbWFjaC1y
-ZWFsdGVrL0tjb25maWciDQo+ID4gKw0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXJl
-YWx0ZWsvS2NvbmZpZw0KPiBiL2FyY2gvYXJtL21hY2gtcmVhbHRlay9LY29uZmlnDQo+ID4gQEAg
-LTIyNSw2ICsyMjYsNyBAQCBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfVlQ4NTAwKQ0KPiArPSB2dDg1
-MDANCj4gPiAgbWFjaGluZS0kKENPTkZJR19BUkNIX1c5MFg5MDApICAgICAgICAgKz0gdzkweDkw
-MA0KPiA+ICBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfWlgpICAgICAgICAgICAgICArPSB6eA0KPiA+
-ICBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfWllOUSkgICAgICAgICAgICArPSB6eW5xDQo+ID4gK21h
-Y2hpbmUtJChDT05GSUdfQVJDSF9SRUFMVEVLKSAgICAgICAgICs9IHJlYWx0ZWsNCj4gPiAgbWFj
-aGluZS0kKENPTkZJR19QTEFUX1NQRUFSKSAgICAgICAgICAgKz0gc3BlYXINCj4gPg0KPiA+ICAj
-IFBsYXRmb3JtIGRpcmVjdG9yeSBuYW1lLiAgVGhpcyBsaXN0IGlzIHNvcnRlZCBhbHBoYW51bWVy
-aWNhbGx5DQo+IA0KPiBQbGVhc2Uga2VlcCB0aGVzZSBsaXN0cyBpbiBhbHBoYWJldGljYWwgb3Jk
-ZXIuDQo+IA0KSSB3aWxsIGtlZXAgdGhlc2UgbGlzdHMgaW4gYWxwaGFiZXRpY2FsIG9yZGVyIGlu
-IG5ldyB2ZXJzaW9uIHBhdGNoLg0KDQo+ID4gICMgQVJNdjctTSBhcmNoaXRlY3R1cmUNCj4gPiAg
-Y29uZmlnIEFSQ0hfRUZNMzINCj4gPiAgICAgICAgIGJvb2wgIkVuZXJneSBNaWNybyBlZm0zMiIN
-Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vTWFrZWZpbGUgYi9hcmNoL2FybS9NYWtlZmlsZSBp
-bmRleA0KPiA+IGMzNjI0Y2E2YzBiYy4uMWYwOTI2NDQ5ZDQ3IDEwMDY0NA0KPiA+IC0tLSBhL2Fy
-Y2gvYXJtL01ha2VmaWxlDQo+ID4gKysrIGIvYXJjaC9hcm0vTWFrZWZpbGUNCj4gPiBAQCAtMTQ4
-LDYgKzE0OCw3IEBAIGVuZGlmDQo+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004WDYwKSA6
-PSAweDAwMjA4MDAwDQo+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004OTYwKSA6PSAweDAw
-MjA4MDAwDQo+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NRVNPTikgOj0gMHgwMDIwODAwMA0K
-PiA+ICt0ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfUkVBTFRFSykgOj0gMHgwMDIwODAwMA0KPiA+ICB0
-ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfQVhYSUEpIDo9IDB4MDAzMDgwMDANCj4gDQo+IENhbiB5b3Ug
-ZXhwbGFpbiB3aHkgdGhpcyBpcyBuZWVkZWQgZm9yIHlvdXIgcGxhdGZvcm0/DQo+IA0KV2UgbmVl
-ZCB0byByZXNlcnZlIG1lbW9yeSAoMHgwMDAwMDAwMCB+IDB4MDAxQjAwMDApIGZvciByb20gYW5k
-IGJvb3QgY29kZS4NCg0KPiA+ICAjIE1hY2hpbmUgZGlyZWN0b3J5IG5hbWUuICBUaGlzIGxpc3Qg
-aXMgc29ydGVkIGFscGhhbnVtZXJpY2FsbHkgbmV3DQo+ID4gZmlsZSBtb2RlIDEwMDY0NCBpbmRl
-eCAwMDAwMDAwMDAwMDAuLmE4MjY5OTY0ZGJkYg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysg
-Yi9hcmNoL2FybS9tYWNoLXJlYWx0ZWsvS2NvbmZpZw0KPiA+IEBAIC0wLDAgKzEsMzIgQEANCj4g
-PiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5IG1lbnVjb25maWcgQVJD
-SF9SRUFMVEVLDQo+ID4gKyAgICAgICBib29sICJSZWFsdGVrIFNvQ3MiDQo+IA0KPiBQbGVhc2Ug
-YWRkICJkZXBlbmRzIG9uIEFSQ0hfTVVMVElfVjciIHRvIGF2b2lkIGNvbXBpbGUgdGltZSBpc3N1
-ZXMgd2hlbg0KPiBzZWxlY3RpbmcgaXQgb24gYW4gZWFybGllciBhcmNoaXRlY3R1cmUuDQo+IA0K
-SSB3aWxsIGFkZCAiZGVwZW5kcyBvbiBBUkNIX01VTFRJX1Y3IiBpbiBuZXcgdmVyc2lvbiBwYXRj
-aC4NCg0KPiA+ICsgICAgICAgc2VsZWN0IEFSTV9HTE9CQUxfVElNRVINCj4gPiArICAgICAgIHNl
-bGVjdCBDTEtERVZfTE9PS1VQDQo+ID4gKyAgICAgICBzZWxlY3QgSEFWRV9TTVANCj4gPiArICAg
-ICAgIHNlbGVjdCBIQVZFX01BQ0hfQ0xLREVWDQo+ID4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19D
-TE9DS0VWRU5UUw0KPiA+ICsgICAgICAgc2VsZWN0IEhBVkVfU0NIRURfQ0xPQ0sNCj4gPiArICAg
-ICAgIHNlbGVjdCBBUkNIX0hBU19DUFVGUkVRDQo+ID4gKyAgICAgICBzZWxlY3QgQ0xLU1JDX09G
-DQo+ID4gKyAgICAgICBzZWxlY3QgQVJDSF9SRVFVSVJFX0dQSU9MSUINCj4gPiArICAgICAgIHNl
-bGVjdCBHRU5FUklDX0lSUV9DSElQDQo+ID4gKyAgICAgICBzZWxlY3QgSVJRX0RPTUFJTg0KPiA+
-ICsgICAgICAgc2VsZWN0IFBJTkNUUkwNCj4gPiArICAgICAgIHNlbGVjdCBDT01NT05fQ0xLDQo+
-ID4gKyAgICAgICBzZWxlY3QgQVJDSF9IQVNfQkFSUklFUlMNCj4gPiArICAgICAgIHNlbGVjdCBT
-UEFSU0VfSVJRDQo+ID4gKyAgICAgICBzZWxlY3QgUE1fT1BQDQo+ID4gKyAgICAgICBzZWxlY3Qg
-QVJNX0hBU19TR19DSEFJTg0KPiA+ICsgICAgICAgc2VsZWN0IEFSTV9QQVRDSF9QSFlTX1ZJUlQN
-Cj4gPiArICAgICAgIHNlbGVjdCBBVVRPX1pSRUxBRERSDQo+ID4gKyAgICAgICBzZWxlY3QgTUlH
-SFRfSEFWRV9QQ0kNCj4gPiArICAgICAgIHNlbGVjdCBNVUxUSV9JUlFfSEFORExFUg0KPiA+ICsg
-ICAgICAgc2VsZWN0IFBDSV9ET01BSU5TIGlmIFBDSQ0KPiA+ICsgICAgICAgc2VsZWN0IFVTRV9P
-Rg0KPiANCj4gQWxtb3N0IGFsbCBvZiB0aGUgc3ltYm9scyBhYm92ZSBhcmUgaW1wbGllZCBieQ0K
-PiBBUkNIX01VTFRJX1Y3IGFuZCBzaG91bGQgbm90IGJlIHNlbGVjdGVkIHNlcGFyYXRlbHkuDQo+
-DQpPSywgSSB1bmRlcnN0YW5kLg0KDQo+ID4gK2NvbmZpZyBBUkNIX1JURDE2WFgNCj4gPiArICAg
-ICAgIGJvb2wgIkVuYWJsZSBzdXBwb3J0IGZvciBSVEQxNjE5Ig0KPiA+ICsgICAgICAgZGVwZW5k
-cyBvbiBBUkNIX1JFQUxURUsNCj4gPiArICAgICAgIHNlbGVjdCBBUk1fR0lDX1YzDQo+ID4gKyAg
-ICAgICBzZWxlY3QgQVJNX1BTQ0kNCj4gDQo+IEFzIEkgdW5kZXJzdGFuZCwgdGhpcyBjaGlwIHVz
-ZXMgYSBDb3J0ZXgtQTU1LiBXaGF0IGlzIHRoZSByZWFzb24gZm9yIGFkZGluZw0KPiBzdXBwb3J0
-IG9ubHkgdG8gdGhlIDMyLWJpdCBBUk0gYXJjaGl0ZWN0dXJlIHJhdGhlciB0aGFuIDY0LWJpdD8N
-Cg0KVGhlIFJURDE2WFggcGxhdGZvcm0gYWxzbyBzdXBwb3J0IHRoZSA2NC1iaXQgQVJNIGFyY2hp
-dGVjdHVyZS4NCkkgd2lsbCBhZGQgdGhlIDY0LWJpdCBBUk0gYXJjaGl0ZWN0dXJlIGluIG5ldyB2
-ZXJzaW9uIHBhdGNoLg0KDQo+IE1vc3QgNjQtYml0IFNvQ3MgYXJlIG9ubHkgc3VwcG9ydGVkIHdp
-dGggYXJjaC9hcm02NCwgYnV0IGdlbmVyYWxseSBzcGVha2luZw0KPiB0aGF0IGlzIG5vdCBhIHJl
-cXVpcmVtZW50LiBNeSBydWxlIG9mIHRodW1iIGlzIHRoYXQgb24gc3lzdGVtcyB3aXRoIDFHQiBv
-Zg0KPiBSQU0gb3IgbW9yZSwgb25lIHdvdWxkIHdhbnQgdG8gcnVuIGEgNjQtYml0IGtlcm5lbCwg
-d2hpbGUgc3lzdGVtcyB3aXRoIGxlc3MNCj4gdGhhbiB0aGF0IGFyZSBiZXR0ZXIgb2ZmIHdpdGgg
-YSAzMi1iaXQgb25lLCBidXQgdGhhdCBpcyBjbGVhcmx5IG5vdCB0aGUgb25seSByZWFzb24NCj4g
-Zm9yIHBpY2tpbmcgb25lIG92ZXIgdGhlIG90aGVyLg0KPiANClN1cHBvcnQgMzItYml0IEFSTSBh
-cmNoaXRlY3R1cmUgaXMgZm9yIGFwcGxpY2F0aW9uIGNvbXBhdGliaWxpdHkuDQoNCj4gPiArDQo+
-ID4gK3N0YXRpYyBpbnQgcnRrX2Jvb3Rfc2Vjb25kYXJ5KHVuc2lnbmVkIGludCBjcHUsIHN0cnVj
-dCB0YXNrX3N0cnVjdA0KPiA+ICsqaWRsZSkgew0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBl
-bnRyeV9wYSA9IF9fcGFfc3ltYm9sKHNlY29uZGFyeV9zdGFydHVwKTsNCj4gPiArDQo+ID4gKyAg
-ICAgICB3cml0ZWxfcmVsYXhlZChlbnRyeV9wYSB8IChjcHUgPDwgQ1BVSUQpLCBjcHVfcmVsZWFz
-ZV92aXJ0KTsNCj4gPiArDQo+ID4gKyAgICAgICBhcmNoX3NlbmRfd2FrZXVwX2lwaV9tYXNrKGNw
-dW1hc2tfb2YoY3B1KSk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4g
-DQo+IEl0J3MgdmVyeSB1bnVzdWFsIHRvIHNlZSBjdXN0b20gc21wIG9wZXJhdGlvbnMgb24gYW4g
-QVJNdjggc3lzdGVtLCBhcyB3ZQ0KPiBub3JtYWxseSB1c2UgUFNDSSBoZXJlLiBDYW4geW91IGV4
-cGxhaW4gd2hhdCBpcyBnb2luZyBvbiBoZXJlPyBBcmUgeW91IGFibGUgdG8NCj4gdXNlIGEgYm9v
-dCB3cmFwcGVyIHRoYXQgaW1wbGVtZW50cyB0aGVzZSBpbiBwc2NpIGluc3RlYWQ/DQo+DQpUaGUg
-c21wIG9wZXJhdGlvbnMgaXMgcG9ydGluZyBmb3JtIG90aGVyIFJlYWx0ZWsgcGxhdGZvcm0uDQoN
-CkN1cnJlbnRseSwgVGhlIFJURDE2WFggcGxhdGZvcm0gY2FuIHVzZSB0aGUgUFNDSSBtZXRob2Qu
-DQpJIHdpbGwgYWRkIFBTQ0kgbWV0aG9kIGluIG5ldyB2ZXJzaW9uIHBhdGNoLg0KDQo+ID4gKw0K
-PiA+ICsjaW5jbHVkZSAicGxhdHNtcC5oIg0KPiA+ICsNCj4gPiArI2RlZmluZSBSQlVTX0JBU0Vf
-UEhZUyAoMHg5ODAwMDAwMCkNCj4gPiArI2RlZmluZSBSQlVTX0JBU0VfVklSVCAoMHhmZTAwMDAw
-MCkNCj4gPiArI2RlZmluZSBSQlVTX0JBU0VfU0laRSAoMHgwMDEwMDAwMCkNCj4gPiArDQo+ID4g
-K3N0YXRpYyBzdHJ1Y3QgbWFwX2Rlc2MgcnRrX2lvX2Rlc2NbXSBfX2luaXRkYXRhID0gew0KPiA+
-ICsgICAgICAgew0KPiA+ICsgICAgICAgICAgICAgICAudmlydHVhbCA9ICh1bnNpZ25lZCBsb25n
-KSBJT01FTShSQlVTX0JBU0VfVklSVCksDQo+ID4gKyAgICAgICAgICAgICAgIC5wZm4gPSBfX3Bo
-eXNfdG9fcGZuKFJCVVNfQkFTRV9QSFlTKSwNCj4gPiArICAgICAgICAgICAgICAgLmxlbmd0aCA9
-IFJCVVNfQkFTRV9TSVpFLA0KPiA+ICsgICAgICAgICAgICAgICAudHlwZSA9IE1UX0RFVklDRSwN
-Cj4gPiArICAgICAgIH0sDQo+ID4gK307DQo+IA0KPiBUaGlzIG5lZWRzIGEgY29tbWVudDogV2h5
-IGRvIHlvdSByZXF1aXJlIGEgc3RhdGljIG1hcHBpbmcgZm9yDQo+ICJSQlVTX0JBU0VfUEhZUyI/
-IE5vcm1hbGx5IGRldmljZSBkcml2ZXJzIHNob3VsZCBqdXN0IHVzZQ0KPiBpb3JlbWFwKCkgZm9y
-IG1hcHBpbmcgd2hpY2hldmVyIHJlZ2lzdGVycyB0aGV5IHdhbnQgdG8gYWNjZXNzLg0KPiANClRo
-ZSBzdGF0aWMgbWFwcGluZyBpcyBmb3Igb2xkIFJlYWx0ZWsgZGV2aWNlcyBkcml2ZXIuDQpJIHdp
-bGwgJ3VzZSBpb3JlbWFwKCknIHRvIHJlcGxhY2Ugd2l0aCBzdGF0aWMgbWFwcGluZy4NCg0KPiA+
-ICtzdGF0aWMgdm9pZCBfX2luaXQgcnRrX2R0X2luaXQodm9pZCkNCj4gPiArew0KPiA+ICsgICAg
-ICAgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoTlVMTCwgb2ZfZGVmYXVsdF9idXNfbWF0Y2hfdGFibGUs
-IE5VTEwsDQo+ID4gK05VTEwpOyB9DQo+IA0KPiBUaGlzIHNob3VsZCBiZSB0YWtlbiBjYXJlIG9m
-IGJ5IHRoZQ0KPiBvZl9wbGF0Zm9ybV9kZWZhdWx0X3BvcHVsYXRlX2luaXQoKSBhbmQgY2FuIGJl
-IGRyb3BwZWQuDQo+IA0KSSB3aWxsIHJlbW92ZSBydGtfZHRfaW5pdCgpIGluIG5ldyB2ZXJzaW9u
-IHBhdGNoLg0KDQo+ID4gK3N0YXRpYyB2b2lkIF9faW5pdCBydGtfdGltZXJfaW5pdCh2b2lkKSB7
-ICNpZmRlZiBDT05GSUdfQ09NTU9OX0NMSw0KPiA+ICsgICAgICAgb2ZfY2xrX2luaXQoTlVMTCk7
-DQo+ID4gKyNlbmRpZg0KPiANCj4gQ09NTU9OX0NMSyBpcyBpbXBsaWVkIGJ5IEFSQ0hfTVVMVElf
-VjcsIHNvIHRoZSAjaWZkZWYgY2FuIGJlIGRyb3BwZWQuDQo+IA0KT0ssIEkgdW5kZXJzdGFuZC4N
-Cg0KPiA+ICsgICAgICAgdGltZXJfcHJvYmUoKTsNCj4gPiArICAgICAgIHRpY2tfc2V0dXBfaHJ0
-aW1lcl9icm9hZGNhc3QoKTsgfQ0KPiANCj4gV2hhdCBkbyB5b3UgbmVlZCB0aWNrX3NldHVwX2hy
-dGltZXJfYnJvYWRjYXN0KCkgZm9yPyBJIGRvbid0IHNlZSBhbnkgb3RoZXINCj4gcGxhdGZvcm0g
-Y2FsbGluZyB0aGlzLg0KPiANCkkgd2FudCB0byBpbml0aWFsaXplIHRoZSBIUiB0aW1lci4NCg0K
-PiA+ICtib29sIF9faW5pdCBydGtfc21wX2luaXRfb3BzKHZvaWQpDQo+ID4gK3sNCj4gPiArICAg
-ICAgIHNtcF9zZXRfb3BzKHNtcF9vcHMocnRrX3NtcF9vcHMpKTsNCj4gPiArDQo+ID4gKyAgICAg
-ICByZXR1cm4gdHJ1ZTsNCj4gPiArfQ0KPiANCj4gSSB0aGluayB0aGlzIGNhbiBhbHNvIGJlIGRy
-b3BwZWQsIGFzIHlvdSBzZXQgdGhlIHNtcF9vcHMgaW4gdGhlIG1hY2hpbmUNCj4gZGVzY3JpcHRv
-ci4NCj4gDQpPSywgSSB1bmRlcnN0YW5kLg0KDQo+ICAgICAgICBBcm5kDQo+IA0KPiAtLS0tLS1Q
-bGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBwcmludGluZyB0aGlzIGUtbWFp
-bC4NCg==
+Hi, Andy.
+
+On 9/11/19 6:18 AM, Andy Lutomirski wrote:
+> On Tue, Sep 10, 2019 at 12:26 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> On 9/10/19 6:11 PM, Andy Lutomirski wrote:
+>>>> On Sep 5, 2019, at 8:24 AM, Christoph Hellwig <hch@infradead.org> wrote:
+>>>>
+>>>>> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
+>>>>>> On 9/5/19 4:15 PM, Dave Hansen wrote:
+>>>>>> Hi Thomas,
+>>>>>>
+>>>>>> Thanks for the second batch of patches!  These look much improved on all
+>>>>>> fronts.
+>>>>> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
+>>>>> bother you with those though, since this assumes TTM will be using the dma
+>>>>> API.
+>>>> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
+>>>> branch:
+>>>>
+>>>>      http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
+>>>>
+>>>> they should allow to fault dma api pages in the page fault handler.  But
+>>>> this is totally hot off the press and not actually tested for the last
+>>>> few patches.  Note that I've also included your two patches from this
+>>>> series to handle SEV.
+>>> I read that patch, and it seems like you’ve built in the assumption that all pages in the mapping use identical protection or, if not, that the same fake vma hack that TTM already has is used to fudge around it.  Could it be reworked slightly to avoid this?
+>>>
+>>> I wonder if it’s a mistake to put the encryption bits in vm_page_prot at all.
+>>   From my POW, the encryption bits behave quite similar in behaviour to
+>> the caching mode bits, and they're also in vm_page_prot. They're the
+>> reason TTM needs to modify the page protection in the fault handler in
+>> the first place.
+>>
+>> The problem seen in TTM is that we want to be able to change the
+>> vm_page_prot from the fault handler, but it's problematic since we have
+>> the mmap_sem typically only in read mode. Hence the fake vma hack. From
+>> what I can tell it's reasonably well-behaved, since pte_modify() skips
+>> the bits TTM updates, so mprotect() and mremap() works OK. I think
+>> split_huge_pmd may run into trouble, but we don't support it (yet) with
+>> TTM.
+> One thing I'm confused about: does TTM move individual pages between
+> main memory and device memory or does it move whole mappings?  If it
+> moves individual pages, then a single mapping could have PTEs from
+> dma_alloc_coherent() space and from PCI space.  How can this work with
+> vm_page_prot?  I guess you might get lucky and have both have the same
+> protection bits, but that seems like an unfortunate thing to rely on.
+
+With TTM, a single vma is completely backed with memory of the same 
+type, so all PTEs have the same protection, and mimics that of the 
+linear kernel map (if applicable). But the protection is not 
+determinable at mmap time, and we may switch protection and backing 
+memory at certain points in time where all PTEs are first killed.
+
+>
+> As a for-real example, take a look at arch/x86/entry/vdso/vma.c.  The
+> "vvar" VMA contains multiple pages that are backed by different types
+> of memory.  There's a page of ordinary kernel memory.  Historically
+> there was a page of genuine MMIO memory, but that's gone now.  If the
+> system is a SEV guest with pvclock enabled, then there's a page of
+> decrypted memory.   They all share a VMA, they're instantiated in
+> .fault, and there is no hackery involved.  Look at vvar_fault().
+
+So this is conceptually identical to TTM. The difference is that it uses 
+vmf_insert_pfn_prot() instead of vmf_insert_mixed() with the vma hack. 
+Had there been a vmf_insert_mixed_prot(), the hack in TTM wouldn't be 
+needed. I guess providing a vmf_insert_mixed_prot() is a to-do for me to 
+pick up.
+
+Having said that, the code you point out is as fragile and suffers from 
+the same shortcomings as TTM since
+a) Running things like split_huge_pmd() that takes the vm_page_prot and 
+applies it to new PTEs will make things break, (although probably never 
+applicable in this case).
+b) Running mprotect() on that VMA will only work if sme_me_mask is part 
+of _PAGE_CHG_MASK (which is addressed in a reliable way in my recent 
+patchset),  otherwise, the encryption setting will be overwritten.
+
+
+>> We could probably get away with a WRITE_ONCE() update of the
+>> vm_page_prot before taking the page table lock since
+>>
+>> a) We're locking out all other writers.
+>> b) We can't race with another fault to the same vma since we hold an
+>> address space lock ("buffer object reservation")
+>> c) When we need to update there are no valid page table entries in the
+>> vma, since it only happens directly after mmap(), or after an
+>> unmap_mapping_range() with the same address space lock. When another
+>> reader (for example split_huge_pmd()) sees a valid page table entry, it
+>> also sees the new page protection and things are fine.
+>>
+>> But that would really be a special case. To solve this properly we'd
+>> probably need an additional lock to protect the vm_flags and
+>> vm_page_prot, taken after mmap_sem and i_mmap_lock.
+>>
+> This is all horrible IMO.
+
+I'd prefer to call it fragile and potentially troublesome to maintain.
+
+That distinction is important because if it ever comes to a choice 
+between adding a new lock to protect vm_page_prot (and consequently slow 
+down the whole vm system) and using the WRITE_ONCE solution in TTM, we 
+should know what the implications are. As it turns out previous choices 
+in this area actually seem to have opted for the lockless WRITE_ONCE / 
+READ_ONCE / ptl solution. See __split_huge_pmd_locked() and 
+vma_set_page_prot().
+
+Thanks,
+Thomas
+
+
