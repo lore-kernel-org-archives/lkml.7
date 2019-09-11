@@ -2,113 +2,107 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D572C49ED7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D29C49ED9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10F12085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05CC22085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CZ78pD0R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBm4mmF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfIKAbE (ORCPT
+        id S1726540AbfIKAiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 20:31:04 -0400
-Received: from mail.efficios.com ([167.114.142.138]:60804 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfIKAbD (ORCPT
+        Tue, 10 Sep 2019 20:38:10 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43702 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfIKAiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 20:31:03 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 58B03BD795;
-        Tue, 10 Sep 2019 20:31:02 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id XrPThBl8tjVC; Tue, 10 Sep 2019 20:31:02 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 16B8ABD790;
-        Tue, 10 Sep 2019 20:31:02 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 16B8ABD790
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1568161862;
-        bh=ZOSuBOtnx5tmUa5F/y7B4GyOM6B9EVZ/X0moEBPnBkY=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CZ78pD0Rexjepon13fo0YGJ4gEoHZTudCec6djL4In/r0hugkoiYLDmY901If39TL
-         qvMpJTsLob6p2hMJbWm1VhN42XeFetkGXgtCAi0/jomSuvaavugP0I94iCjvRnhFZc
-         OYw5fsDbHWdut6C1XqLNE2Xokw5s2oSH6CMHHe+A3FXBuAp9l2jAKrsyJnyKsuLyjo
-         Plk9ICKdNCtSMKa8il45VMpkP54f1MXyFsc7ub6FYsP0AuloPNdr2Qh6ZEAhyMCGH3
-         SlAmcYov8/M2eGqGURmvJHqkovwo8BOoNTBJoCBRXKSHREhXWU26BpRiWXVKLLjZnO
-         DSPKEUg/skahA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id OhzEgqO9byjV; Tue, 10 Sep 2019 20:31:02 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id F070DBD787;
-        Tue, 10 Sep 2019 20:31:01 -0400 (EDT)
-Date:   Tue, 10 Sep 2019 20:31:01 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul Turner <pjt@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <248314994.16.1568161861658.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190911002744.8690-2-mathieu.desnoyers@efficios.com>
-References: <20190911002744.8690-1-mathieu.desnoyers@efficios.com> <20190911002744.8690-2-mathieu.desnoyers@efficios.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Fix: Unregister rseq for CLONE_TLS
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3829)
-Thread-Topic: rseq: Fix: Unregister rseq for CLONE_TLS
-Thread-Index: c0VdxbY5ZA77HRlxK+q7z56h9NwCIw==
+        Tue, 10 Sep 2019 20:38:09 -0400
+Received: by mail-io1-f67.google.com with SMTP id r8so16916240iol.10;
+        Tue, 10 Sep 2019 17:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dRI+UdAuaAbnPtCUSwMls+vSMICgBec5wWc6vxh4hkk=;
+        b=OBm4mmF1te/FWhD/LX89H9UprVV9vS9/H2Np6nhNmwprVCnmDCcbySPjxXw4clpFPp
+         g7IniQTiq4FgQPuztxxZjPuzChPi9IND59ptii0SCMHs7dyRHBKzLhxxa/CVbinoj8fc
+         OoMlRTXgQQcD8M2ajqUiY7ECsGiApYfCIoAJqLNW44rpYVJ17S6KWEOmGz04Lei/159U
+         B1NOCZFLKdX9b6wt7wXNJ7XB7upIPjm59+grmrdCWFJXtptKZCY6g7COllw44qXqaYWw
+         yGWDj3gq0s548XMqOkpYybiorQAvmIbiDsZr3Gaxn3WdDZlQuEkIb0L7BqrkgUcC8EW3
+         euZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dRI+UdAuaAbnPtCUSwMls+vSMICgBec5wWc6vxh4hkk=;
+        b=fzq7zyQbHJjngSc/03P76LBCYEvFfgARX6uvKOuzCnri6JlrJ3E15ANu0pqtB/dkPM
+         WX7ak06+SXRooWvk+oU3QSlWQl31wOOQk9urPQBS2BiMVMpSGkJljT1vkgbYapYcf5eN
+         4OTg28zAn+UJmJUwxD/YrrUHmyS6lqM+w/pQ9l3sBmerXDbj0U2cg7Q9fj/WWMw9tbls
+         And4LACtoYb1gQxcT6m5jOZB+a+HSb2ZyVKmORCpcKhjGTbByfc7sO1tjAK2BHYyp5ZR
+         j+goAQ4LPLRw3KqGOjdb6PhA0iEQhR2EqDRpyluD5QA5BqpYdcNLxk9cAY+sPmTnvhz/
+         Jf8Q==
+X-Gm-Message-State: APjAAAXxQTNc/Q8aMLEgwNnoagvYuEabsQC5YW0grsymIeg7HRiJqPM1
+        l0//+o8eejap6iergxX6b3A=
+X-Google-Smtp-Source: APXvYqwp9FZpJ5cxlCa56IMz05LQ68eyqQTkw8sXV1jbfhzeViymUH1fmKgEyuj7eYkyl7WCVDII2A==
+X-Received: by 2002:a6b:acc5:: with SMTP id v188mr39248679ioe.268.1568162288759;
+        Tue, 10 Sep 2019 17:38:08 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id s201sm48548116ios.83.2019.09.10.17.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 17:38:08 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: qrtr: fix memort leak in qrtr_tun_write_iter
+Date:   Tue, 10 Sep 2019 19:37:45 -0500
+Message-Id: <20190911003748.26841-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Of course, this patch title should read:
+In qrtr_tun_write_iter the allocated kbuf should be release in case of
+error happening.
 
-  rseq: Fix: Unregister rseq for CLONE_SETTLS
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ net/qrtr/tun.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
------ On Sep 11, 2019, at 1:27 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-
+diff --git a/net/qrtr/tun.c b/net/qrtr/tun.c
+index ccff1e544c21..1dba8b92560e 100644
+--- a/net/qrtr/tun.c
++++ b/net/qrtr/tun.c
+@@ -84,12 +84,18 @@ static ssize_t qrtr_tun_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (!kbuf)
+ 		return -ENOMEM;
  
-> /*
->  * If parent process has a registered restartable sequences area, the
-> - * child inherits. Only applies when forking a process, not a thread.
-> + * child inherits. Unregister rseq for a clone with CLONE_TLS set.
-
-and here CLONE_SETTLS as well.
-
->  */
-> static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
-> {
-> -	if (clone_flags & CLONE_THREAD) {
-> +	if (clone_flags & CLONE_TLS) {
-
-.. and here.
-
-Thanks,
-
-Mathieu
-
-> 		t->rseq = NULL;
-> 		t->rseq_sig = 0;
-> 		t->rseq_event_mask = 0;
-> --
-> 2.17.1
-
+-	if (!copy_from_iter_full(kbuf, len, from))
++	if (!copy_from_iter_full(kbuf, len, from)) {
++		kfree(kbuf);
+ 		return -EFAULT;
++	}
+ 
+ 	ret = qrtr_endpoint_post(&tun->ep, kbuf, len);
++	if (ret < 0) {
++		kfree(kbuf);
++		return ret;
++	}
+ 
+-	return ret < 0 ? ret : len;
++	return len;
+ }
+ 
+ static __poll_t qrtr_tun_poll(struct file *filp, poll_table *wait)
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.17.1
+
