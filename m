@@ -2,117 +2,82 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E653ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55438C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80724206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3B82084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tMBcI+9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfIKMVn (ORCPT
+        id S1727850AbfIKMWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:21:43 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33641 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKMVn (ORCPT
+        Wed, 11 Sep 2019 08:22:36 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:43591 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfIKMWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:21:43 -0400
-X-Originating-IP: 148.69.85.38
-Received: from localhost (unknown [148.69.85.38])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 95794FF810;
-        Wed, 11 Sep 2019 12:21:40 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 14:21:37 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
-        Ludovic.Desroches@microchip.com
-Subject: Re: [PATCH 2/2] clk: at91: select parent if main oscillator or
- bypass is enabled
-Message-ID: <20190911122137.GM21254@piout.net>
-References: <1568042692-11784-1-git-send-email-eugen.hristev@microchip.com>
- <1568042692-11784-2-git-send-email-eugen.hristev@microchip.com>
+        Wed, 11 Sep 2019 08:22:36 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x8BCMJ2M020161
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 21:22:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x8BCMJ2M020161
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568204540;
+        bh=CVh/5EnZyxNyamVX+P7ZAjgLLbsfL+GIO+jUVTk44yE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tMBcI+9pCDKjlr/m6niHSn3MsRRRlFojc9WCle5gyjR+lCmEzDKFgWHwMHJ1udsmL
+         qnNzf7N7sVt9iTCaRX59E1z7iR5zvuFVigmXc2EMUxfrF2beIbzOpLh3ipKCPePdtW
+         k6BqeS8sdwRGj4L7A2XQ8A1kfZRsFux2pxwfAb7JwR/oVT5T8ThoJXgkHWfo4JEyW5
+         zHGvlT6kphoRqRI41Jk0FOwkE1RHbioacBdGB5DRDYfcTETDqalW0ajZlVL9+FtJki
+         l1t5ru/kgwaQoddJN59gjHNSCkKJWRyYgQed6c99GtQsas+Nn9cKUvpEjQ3KwgvwGw
+         wji7ZYjtbX4Nw==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id y62so13557962vsb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:22:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAVcnd5KFrSr/AAONjuzOmT9gZWin2TPz74k0BhzKLiq5Mg+Ck3C
+        KtVFf53ZMwu9fKOeLubvVL3jHAoaFxLPx5rJ84Y=
+X-Google-Smtp-Source: APXvYqwY32PG1UjsfS36XubSd3rbCs8Nt70vUerGMDswZg6dZ49BVVzOES6GjPIt/QmeqFOYjOjHflvflYoUSK3VdJE=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr20356117vsa.54.1568204539234;
+ Wed, 11 Sep 2019 05:22:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568042692-11784-2-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190909110408.21832-1-yamada.masahiro@socionext.com> <20190911114559.GA6189@linux-8ccs.fritz.box>
+In-Reply-To: <20190911114559.GA6189@linux-8ccs.fritz.box>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 11 Sep 2019 21:21:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATn3Gde_52uhv683_tWPrL3amHAbc5g-_WyHRR7TVh9sw@mail.gmail.com>
+Message-ID: <CAK7LNATn3Gde_52uhv683_tWPrL3amHAbc5g-_WyHRR7TVh9sw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] module: remove redundant 'depends on MODULES'
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09/2019 15:30:34+0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Selecting the right parent for the main clock is done using only
-> main oscillator enabled bit.
-> In case we have this oscillator bypassed by an external signal (no driving
-> on the XOUT line), we still use external clock, but with BYPASS bit set.
-> So, in this case we must select the same parent as before.
-> Create a macro that will select the right parent considering both bits from
-> the MOR register.
-> Use this macro when looking for the right parent.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Wed, Sep 11, 2019 at 8:46 PM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Masahiro Yamada [09/09/19 20:04 +0900]:
+> >These are located in the 'if MODULES' ... 'endif' block.
+> >
+> >Remove the redundant dependencies.
+> >
+> >Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Acked-by: Jessica Yu <jeyu@kernel.org>
+>
 
-> ---
->  drivers/clk/at91/clk-main.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-> index ebe9b99..87083b3 100644
-> --- a/drivers/clk/at91/clk-main.c
-> +++ b/drivers/clk/at91/clk-main.c
-> @@ -21,6 +21,10 @@
->  
->  #define MOR_KEY_MASK		(0xff << 16)
->  
-> +#define clk_main_parent_select(s)	(((s) & \
-> +					(AT91_PMC_MOSCEN | \
-> +					AT91_PMC_OSCBYPASS)) ? 1 : 0)
-> +
->  struct clk_main_osc {
->  	struct clk_hw hw;
->  	struct regmap *regmap;
-> @@ -113,7 +117,7 @@ static int clk_main_osc_is_prepared(struct clk_hw *hw)
->  
->  	regmap_read(regmap, AT91_PMC_SR, &status);
->  
-> -	return (status & AT91_PMC_MOSCS) && (tmp & AT91_PMC_MOSCEN);
-> +	return (status & AT91_PMC_MOSCS) && clk_main_parent_select(tmp);
->  }
->  
->  static const struct clk_ops main_osc_ops = {
-> @@ -450,7 +454,7 @@ static u8 clk_sam9x5_main_get_parent(struct clk_hw *hw)
->  
->  	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
->  
-> -	return status & AT91_PMC_MOSCEN ? 1 : 0;
-> +	return clk_main_parent_select(status);
->  }
->  
->  static const struct clk_ops sam9x5_main_ops = {
-> @@ -492,7 +496,7 @@ at91_clk_register_sam9x5_main(struct regmap *regmap,
->  	clkmain->hw.init = &init;
->  	clkmain->regmap = regmap;
->  	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
-> -	clkmain->parent = status & AT91_PMC_MOSCEN ? 1 : 0;
-> +	clkmain->parent = clk_main_parent_select(status);
->  
->  	hw = &clkmain->hw;
->  	ret = clk_hw_register(NULL, &clkmain->hw);
-> -- 
-> 2.7.4
-> 
+Could you queue these two patches to your tree?
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks.
+
+
+--
+Best Regards
+
+Masahiro Yamada
