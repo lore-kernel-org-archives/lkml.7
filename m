@@ -6,68 +6,63 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6CAC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4ECC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56CE621928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C6B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p2jaID0P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b5WLEtD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfIKKEO (ORCPT
+        id S1727586AbfIKKFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:04:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40085 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbfIKKEO (ORCPT
+        Wed, 11 Sep 2019 06:05:01 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35511 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfIKKFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:04:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w18so4037844lfk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:04:11 -0700 (PDT)
+        Wed, 11 Sep 2019 06:05:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id w6so15994803lfl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hUrALqLYIp3tenV9WPlX+wrIGiFW2sjaAtprRGLAeEM=;
-        b=p2jaID0PK0kDp5GpJDQQkIXhcRDJG0tyKs3M8dW00A0nTmYl4XPzPDxiiXVVHMrvt+
-         3r7lWYb3E1VbxJKjCFl4T/s7r/GjKdCpMsYFGhPYq40CrLVtcwphRVLlOz4Mi1abAmc6
-         gb7WEzvYMYxI1T0Yv1JJQMukj1kqEswd1th8aKqcRAHTLbfy8nsrMproykhpVp2apyq1
-         YZAJxHMjH/FKf0pJw40wEhiG4GATCpQy1rgKrv+b1JNb++7VFgOOXTCNwIkKecduNXL3
-         gwOiiQuJzd/9zYidBIhoUcbKtFgICCtV1yeLL8Sdtn6e6RFujjx3Wf2pnscLkru96m90
-         vHEg==
+        bh=aEBAvzyvKwKy4+z0icRgfRVKXYXcNb1iM7EN7yrDUow=;
+        b=b5WLEtD03nLPtyVSE+wLZn9h7qijVtAN+cYaeN6IYy+aFGDtEbDuL/gYsMMM/a/5ed
+         Bm/8bSgVFY582J67Cdazp0Jc7/0Ip0JtCwnp1Jwa0sBRHurYKd3AFT/MOoX9EgKmv7Wt
+         THm606K5uucv2RO6R7HvnwPXo9zNI5/SCpU50YcpK5nYOIZ/jeKlZyT4JwA91pyBCRGY
+         76K3WnTq/FQ1cFtQhenLCpIb3UROTl/67IWPqHB+hXeomfMlanRc/zaQHe3r5hBODnQq
+         lVYiLeCNz+Ewk8X+yoLY0VvEITQNeFzHI7YN8tMAZaUuIjZtJqEzFplZ9DoSsXHDz63B
+         er6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hUrALqLYIp3tenV9WPlX+wrIGiFW2sjaAtprRGLAeEM=;
-        b=P/gNin4YfOrOLmMDYdCb7bTCWbguH+kWPIaWvtW7KL69LIitXejWiSLR04jeyb2CAv
-         8lzU9A/D5v8BOwEtqAW3YNnAcBnUMyBHnavQdU+/3hv3mHL3Cf9F4bZ1dufSozhuhOxS
-         qJaePSzmiZ3sVjoPXPnvmd68ObhiIf3MuWD46z7OvpWy8VlCcHiI6ntaVYXmQDF/5i6U
-         GLrHf5X+STRSoqKzu6fErbD7VhBELpZa8HkszTusI5NgCXZeqZ/2jZ95QG0f6ucsXyak
-         WH0o/dMwgkh3L1NyKIbQVAjT//GVb8AjihNEDP+/zKDZAz83eTkOVucjLIRRZmcab2LH
-         1dBw==
-X-Gm-Message-State: APjAAAUmUgdsYsUPczrSHvQxcaiktd65T5cqzONi7YR+xohDz6TcfGsM
-        B50DOvj6KXHHh0AHZcdoE9rtcz5VHOJzelYqkgJNTQ==
-X-Google-Smtp-Source: APXvYqzngoeZ/r34ebfHnHn3MkbXp29HvsnciD2vYxTBkFVS7UiQq+i0mLCv1JJKPJCI91Pa7RHozJe5TicykUeAq+0=
-X-Received: by 2002:a19:14f:: with SMTP id 76mr22938921lfb.92.1568196250647;
- Wed, 11 Sep 2019 03:04:10 -0700 (PDT)
+        bh=aEBAvzyvKwKy4+z0icRgfRVKXYXcNb1iM7EN7yrDUow=;
+        b=DE5r388kuWbkxbCMIUx/p9UDgWcxG1e7LRCp89q2QEA/J3gmTY/SuRRL/Ufijjw68K
+         sS9vzF23DSENPj0OaauCa/hhiH+SIn/r8FTv4KAaIJRkCuUf9/ehTsxX7MCX/taq5FC1
+         AOG6yspNhBcJaJUm2cgfOJ0eXj56GK9rTOlpjoOmH4AR8Og/PSZ6pMd75AppxU/S3/7P
+         RR6fqv7CCGo4fguNqwYaUCx1m9a/OKj1SMn/vEfBHtvZkVlZ27EYqTidt8af4CPY71gT
+         2fRMRUIUwE7t6MWtqAA2QpC6z2PB84+QkcnmtpFQ+Hg4QKbOZuMY/cEJsgyDmaGu5jwP
+         uqrg==
+X-Gm-Message-State: APjAAAX1l+5BC2tAeZDGdkQJ3/OOvvPjR3Qm4JWvZa+bbQg3WDyBlDhY
+        hRm1sIeU3qAdAEgnCRW5paqe9pxp0VnmzDrrTiL2aICPLyvXTA==
+X-Google-Smtp-Source: APXvYqyC+pv5N0Vcj+RE52xkcBxAzDFKvxknvjpMo7X5lxTEnajzZlDFTx5W6vtzY7meOzprM4Zolus/zI1aT2yhpaQ=
+X-Received: by 2002:a19:117:: with SMTP id 23mr23845320lfb.115.1568196299188;
+ Wed, 11 Sep 2019 03:04:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906062547.13264-1-rashmica.g@gmail.com>
-In-Reply-To: <20190906062547.13264-1-rashmica.g@gmail.com>
+References: <20190906062623.13354-1-rashmica.g@gmail.com>
+In-Reply-To: <20190906062623.13354-1-rashmica.g@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Sep 2019 11:03:59 +0100
-Message-ID: <CACRpkdY1Rk6vPihZkpKC9hya9ixQcqg9PG9rEpM3kSY0kxwsjg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation
- with ast2600 controllers
+Date:   Wed, 11 Sep 2019 11:04:47 +0100
+Message-ID: <CACRpkdZvBHk65Vs93YbrTR92-8o0SgtUUWMBXeABQH0PZwpRxQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] gpio/aspeed: Fix incorrect number of banks
 To:     Rashmica Gupta <rashmica.g@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         "moderated list:ARM/ASPEED MACHINE SUPPORT" 
         <linux-arm-kernel@lists.infradead.org>,
         "moderated list:ARM/ASPEED MACHINE SUPPORT" 
@@ -79,17 +74,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 7:25 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
+On Fri, Sep 6, 2019 at 7:26 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
 
-> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
-> ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
-> Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
-> the ngpio property to differentiate between these controllers.
+> The current calculation for the number of GPIO banks is only correct if
+> the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
+> currently say there are 0 banks, which is incorrect).
+>
+> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
 >
 > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-The changes are uncontroversial (uses just standard GPIO
-ngpios and adds a compatible) so patch applied.
+Patch applied.
 
 Yours,
 Linus Walleij
