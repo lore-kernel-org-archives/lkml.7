@@ -2,72 +2,103 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE08C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB278C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1A02084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810FB2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568216137;
+	bh=WpkelQj8A7nj+hvouPzufjXNd3IIxMc4ASMGpD8eSmQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ed/6nS9GGhjUE4ydwgmUxiY+kJYc8LwF+KuJRa3e2OapzyAkh38N0Jmepk2aYm1zs
+	 wPQfPLtj5IejZeyrxMD7TffKptzQ4ea5pGMynKMRxLTGIUpJev80Ei9PwLpdeuBQLQ
+	 hjE4jFpe9kEy+uuYQ7FD4tmBck9Q7YglSp65B9Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfIKPfD (ORCPT
+        id S1728617AbfIKPfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:35:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34069 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbfIKPfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:35:02 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i84e4-0007EO-RV; Wed, 11 Sep 2019 15:35:00 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/qeth: fix spelling mistake "alocpool" -> "allocpool"
-Date:   Wed, 11 Sep 2019 16:35:00 +0100
-Message-Id: <20190911153500.30836-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Sep 2019 11:35:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:49682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728244AbfIKPfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:35:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8DB628;
+        Wed, 11 Sep 2019 08:35:35 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9954E3F67D;
+        Wed, 11 Sep 2019 08:35:33 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 16:35:27 +0100
+Message-ID: <868squsv5s.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH 2/2] KVM: arm/arm64: Print the EC hex value with its exact width
+In-Reply-To: <e013e828-5e61-8c07-510f-6cb4c59367cf@huawei.com>
+References: <1568169216-12632-1-git-send-email-yuzenghui@huawei.com>
+        <1568169216-12632-3-git-send-email-yuzenghui@huawei.com>
+        <86h85js083.wl-maz@kernel.org>
+        <e013e828-5e61-8c07-510f-6cb4c59367cf@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, 11 Sep 2019 10:19:05 +0100,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> Hi Marc,
+> 
+> On 2019/9/11 16:31, Marc Zyngier wrote:
+> > On Wed, 11 Sep 2019 03:33:36 +0100,
+> > Zenghui Yu <yuzenghui@huawei.com> wrote:
+> >> 
+> >> EC is the bits [31:26] of ESR_ELx on arm64 (HSR on arm). Print the
+> >> hex value with its exact width (8).
+> >> 
+> >> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> >> ---
+> >>   virt/kvm/arm/trace.h | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/virt/kvm/arm/trace.h b/virt/kvm/arm/trace.h
+> >> index 204d210d01c2..022b0a060034 100644
+> >> --- a/virt/kvm/arm/trace.h
+> >> +++ b/virt/kvm/arm/trace.h
+> >> @@ -42,7 +42,7 @@ TRACE_EVENT(kvm_exit,
+> >>   		__entry->vcpu_pc		= vcpu_pc;
+> >>   	),
+> >>   -	TP_printk("%s: HSR_EC: 0x%04x (%s), PC: 0x%08lx",
+> >> +	TP_printk("%s: HSR_EC: 0x%02x (%s), PC: 0x%08lx",
+> >>   		  __print_symbolic(__entry->ret, kvm_arm_exception_type),
+> >>   		  __entry->esr_ec,
+> >>   		  __print_symbolic(__entry->esr_ec, kvm_arm_exception_class),
+> > 
+> > Although you're right that 8 bits ought to be enough, this is a change
+> > to the output of the tracepoint, which userspace could (does?) parse.
+> 
+> Well-written userspace tools should only parse the low 8 bits (if they
+> do parse). But even if the high bits are parsed, they're always 0.
+> So I don't think this change will have a bad impact on userspace.
 
-There is a spelling mistake in QETH_CARD_TEXT text. Fix it.
+The problem is that we don't only cater for well written SW. We also
+support the broken stuff, unfortunately.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/s390/net/qeth_core_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index a7868c8133ee..ab96b22db3fe 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -218,7 +218,7 @@ static int qeth_alloc_buffer_pool(struct qeth_card *card)
- 	void *ptr;
- 	int i, j;
- 
--	QETH_CARD_TEXT(card, 5, "alocpool");
-+	QETH_CARD_TEXT(card, 5, "allocpool");
- 	for (i = 0; i < card->qdio.init_pool.buf_count; ++i) {
- 		pool_entry = kzalloc(sizeof(*pool_entry), GFP_KERNEL);
- 		if (!pool_entry) {
+	M.
+
 -- 
-2.20.1
-
+Jazz is not dead, it just smells funny.
