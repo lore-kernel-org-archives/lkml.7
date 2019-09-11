@@ -6,66 +6,65 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE59DECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAF9ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5452085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7701D222C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfIKIRh (ORCPT
+        id S1727305AbfIKISD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:17:37 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:39976 "EHLO
+        Wed, 11 Sep 2019 04:18:03 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40008 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfIKIRg (ORCPT
+        with ESMTP id S1726735AbfIKISD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:17:36 -0400
+        Wed, 11 Sep 2019 04:18:03 -0400
 Received: from localhost (unknown [148.69.85.38])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 660301556733A;
-        Wed, 11 Sep 2019 01:17:34 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 10:17:32 +0200 (CEST)
-Message-Id: <20190911.101732.1453519960272118746.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AEAB115567343;
+        Wed, 11 Sep 2019 01:18:00 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 10:17:59 +0200 (CEST)
+Message-Id: <20190911.101759.1557703938346599792.davem@davemloft.net>
 To:     poeschel@lemonage.de
-Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de,
-        kstewart@linuxfoundation.org, swinslow@gmail.com,
-        allison@lohutok.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, johan@kernel.org,
-        Claudiu.Beznea@microchip.com
-Subject: Re: [PATCH v7 5/7] nfc: pn533: add UART phy driver
+Cc:     allison@lohutok.net, keescook@chromium.org, opensource@jilayne.com,
+        swinslow@gmail.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de,
+        kstewart@linuxfoundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, johan@kernel.org
+Subject: Re: [PATCH v7 6/7] nfc: pn533: Add autopoll capability
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190910093359.2110-1-poeschel@lemonage.de>
-References: <20190910093359.2110-1-poeschel@lemonage.de>
+In-Reply-To: <20190910093415.2186-1-poeschel@lemonage.de>
+References: <20190910093415.2186-1-poeschel@lemonage.de>
 X-Mailer: Mew version 6.8 on Emacs 26.2
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Sep 2019 01:17:36 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Sep 2019 01:18:02 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lars Poeschel <poeschel@lemonage.de>
-Date: Tue, 10 Sep 2019 11:33:50 +0200
+Date: Tue, 10 Sep 2019 11:34:12 +0200
 
-> +static int pn532_uart_send_ack(struct pn533 *dev, gfp_t flags)
+> +static int pn533_autopoll_complete(struct pn533 *dev, void *arg,
+> +			       struct sk_buff *resp)
 > +{
-> +	struct pn532_uart_phy *pn532 = dev->phy;
-> +	/* spec 7.1.1.3:  Preamble, SoPC (2), ACK Code (2), Postamble */
-> +	static const u8 ack[PN533_STD_FRAME_ACK_SIZE] = {
-> +			0x00, 0x00, 0xff, 0x00, 0xff, 0x00};
-> +	int err;
+> +	u8 nbtg;
+> +	int rc;
+> +	struct pn532_autopoll_resp *apr;
+> +	struct nfc_target nfc_tgt;
 
-Reverse christmas tree ordering for the local variables please.
+Need reverse christmas tree here.
 
-> +static int pn532_uart_rx_is_frame(struct sk_buff *skb)
-> +{
-> +	int i;
-> +	u16 frame_len;
-> +	struct pn533_std_frame *std;
-> +	struct pn533_ext_frame *ext;
+> @@ -1534,6 +1655,7 @@ static int pn533_start_poll(struct nfc_dev *nfc_dev,
+>  	struct pn533_poll_modulations *cur_mod;
+>  	u8 rand_mod;
+>  	int rc;
+> +	struct sk_buff *skb;
 
 Likewise.
