@@ -2,181 +2,212 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E91C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860262085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qOB0qxHg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KXTJAO9c"
+	by mail.kernel.org (Postfix) with ESMTP id BC4482081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfIKRpW (ORCPT
+        id S1729722AbfIKRpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:45:22 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54298 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729349AbfIKRpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:45:22 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BHeVCl001307;
-        Wed, 11 Sep 2019 10:44:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=9OxxgqyxwATjBdv57AaRO2tmC6ELEdjpHgw6NAqg2n8=;
- b=qOB0qxHgErT1QbC1hZribwilhYf8cFXjOIXSXEGIpOOTxyuR2G6II5JSYnbvsLmSNZC1
- Vl8RQ/u8n0vBU33iO8GSTE9fBxwBQ6U4/BRjMXMbXHmYecASNTQo+8HMsFJmBeKdcVO7
- IHbd5vQ3lDkcOOQhjygk/fIA5EiAGtMCdLg= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uxv0p2nak-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 10:44:11 -0700
-Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 11 Sep 2019 10:44:07 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 11 Sep 2019 10:44:07 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 11 Sep 2019 10:44:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HmgR5m/QKkXNaxZwHeUjIJvqjn2qmhTFj5dfBtNYTPE+4uDvKJpfWLtLap9NPDzB4W+PdEOc31d02kT0e/e1hAackMfuJ4MpPovA3YjzZxtPUO6OYkcQF2g6VwaHhANS+xiALyW7AoTeP/FV/evOPDWJoqUhWbT+fckB7qxN29k7aDrkxO6w/F7GENHBj1VgsF6qXgJjucfewIX+qKg1+9vYdDfgaRebVkt+jpX7TsX/Tfdms36l2KJx9CORpgmBb9X+fuLw2Q7KXaM8ECSBOsTsU1NKnxXr/3S7kpILxqJT9bM2slvld/RiKznAAs1GGC+ALvydDjUQRF54rhzFEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9OxxgqyxwATjBdv57AaRO2tmC6ELEdjpHgw6NAqg2n8=;
- b=Lu6nypCOKLBw7aT/5h3Gfi/qS9Cp0PNZTIqn+cjtYPBjXnW8CNtZkoy7jBUj1wmlmawIuLG2VUKAgX7B1IMvxNirkt32v4Phdaa6Y6QINpupuzOZzXM1I8k9aELRYy1Hs/RBrhf2HDQyZmZGtuiLZqr5wruX7yYAjm1QBys6w+gw81QOgNXQmhhmp99p6DJzvSXUgwnKEkGqnZSpcxKELVgNoeWzAU+uF6GKCNb0ZDF+ts1NrOtc5nGq7hemsLdmiTqCWlPJLoe2Sfm4lEHP4uMizF+8edJwaY3R6gkDy5WxXAZ92VJp7LncHpA15urf4VJr98DWqBEbmS2huAeYUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9OxxgqyxwATjBdv57AaRO2tmC6ELEdjpHgw6NAqg2n8=;
- b=KXTJAO9cCZfIHA/U2g54LkX+C0eBGxQSPyI80yqisD/gumfY4t8vY8vMyikhxjbg+cbVckQSpAlkQ080uc3CTBy/mALrR5wDY+q2hdnmOvcxp+P5FQTf5hM8WMmT9uLqWJXmcvlf0sv6tKUEmi52f4yyuRG0Vo2093DFw2Mkzb0=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1432.namprd15.prod.outlook.com (10.172.161.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Wed, 11 Sep 2019 17:44:05 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::38b1:336:13e6:b02b]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::38b1:336:13e6:b02b%7]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 17:44:05 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Joel Stanley <joel@jms.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
-Thread-Topic: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
-Thread-Index: AQHVaCL3HHZ/0IxjZ0GB2KAMVKzdAqcld28AgAEYWwD//7uYAA==
-Date:   Wed, 11 Sep 2019 17:44:05 +0000
-Message-ID: <A15F2B7E-3AC6-4C24-8AF3-9E47635FDC7F@fb.com>
-References: <20190910213734.3112330-1-vijaykhemka@fb.com>
- <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
- <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
-In-Reply-To: <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::1:a2f5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 17bcb530-1e56-4d91-f4fb-08d736dfa420
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1432;
-x-ms-traffictypediagnostic: CY4PR15MB1432:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR15MB143260F22068945BA4E56F36DDB10@CY4PR15MB1432.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(396003)(136003)(346002)(189003)(199004)(64756008)(8676002)(4326008)(2906002)(66946007)(91956017)(54906003)(66476007)(110136005)(316002)(66556008)(81166006)(186003)(6506007)(102836004)(99286004)(256004)(6116002)(76116006)(66446008)(5660300002)(71190400001)(71200400001)(11346002)(7416002)(2616005)(46003)(486006)(446003)(53546011)(476003)(33656002)(36756003)(229853002)(76176011)(81156014)(6486002)(53936002)(8936002)(6436002)(305945005)(478600001)(14454004)(7736002)(6246003)(25786009)(6512007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1432;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qvCVoZVIj+wuyIRO4CAmQQqcoZgNA00LB2XBcGFeDEB4M7ThW3ekQLpQLYSXeSKexscuAyqSmXBxhRZrGiLe3lzy2+kdX4z+iba+KMiHnwYs9wKRptUsiolRxyaDdE4Q2ylFXCbaG4JwNfPBED5tL0VkS32LS/YsiH2QXAPCexEtUfm3TG4PAHvrvzkU9SCIC53Kbrshe5LQAyuXhRt5iP//FVWiv6t+zLJYUtPGcg6TjDlv4GzngmGWGj4kGtsbxXWfu9Nk8kemO2J3PEMkGT0xe1HVE7I9+6g0V9GBrcPH8ILlvWwAx7gIwBfwjDyNNCLYZIikpXNn+3WyQJgwZIrXAMmvTSOMlZQtchzmXp11ckuYEYi3KbgeGositc6yddJtzj8ZeSheIV34ZczJcA/uBoZJ8+wBPNPCwkOE/M4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <687EF9F737F9564E8FB7C3725A80B3F8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 13:45:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34010 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729349AbfIKRpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:45:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 10:45:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
+   d="scan'208";a="200562914"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Sep 2019 10:45:38 -0700
+Subject: Re: [PATCH v2 3/3] libnvdimm, MAINTAINERS: Maintainer Entry Profile
+To:     Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Vishal Verma <vishal.l.verma@intel.com>, linux-nvdimm@lists.01.org,
+        ksummit-discuss@lists.linuxfoundation.org
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.jiang@intel.com; prefer-encrypt=mutual; keydata=
+ xsPuBE6TbysRDACKOBHZT4ez/3/idMBVQP+cMIJAWfTTLqbHVYLdHMHh4h6IXWLqWgc9AYTx
+ /ajdOrBVGSK9kMuvqRi0iRO1QLOMUAIc2n/44vh/3Fe54QYfgbndeXhHZi7YEwjiTCbpQ336
+ pS0rS2qQaA8GzFwu96OslLI05j9Ygaqy73qmuk3wxomIYiu9a97aN3oVv1RyTp6gJK1NWT3J
+ On17P1yWUYPvY3KJtpVqnRLkLZeOIiOahgf9+qiYqPhKQI1Ycx4YhbqkNmDG1VqdMtEWREZO
+ DpTti6oecydN37MW1Y+YSzWYDVLWfoLUr2tBveGCRLf/U2n+Tm2PlJR0IZq+BhtuIUVcRLQW
+ vI+XenR8j3vHVNHs9UXW/FPB8Xb5fwY2bJniZ+B4G67nwelhMNWe7H9IcEaI7Eo32fZk+9fo
+ x6GDAhdT0pEetwuhkmI0YYD7cQj1mEx1oEbzX2p/HRW9sHTSv0V2zKbkPvii3qgvCoDb1uLd
+ 4661UoSG0CYaAx8TwBxUqjsBAO9FXDhLHZJadyHmWp64xQGnNgBathuqoSsIWgQWBpfhDACA
+ OYftX52Wp4qc3ZT06NPzGTV35xr4DVftxxUHiwzB/bzARfK8tdoW4A44gN3P03DAu+UqLoqm
+ UP/e8gSLEjoaebjMu8c2iuOhk1ayHkDPc2gugTgLLBWPkhvIEV4rUV9C7TsgAAvNNDAe8X00
+ Tu1m01A4ToLpYsNWEtM9ZRdKXSo6YS45DFRhel29ZRz24j4ZNIxN9Bee/fn7FrL4HgO01yH+
+ QULDAtU87AkVoBdU5xBJVj7tGosuV+ia4UCWXjTzb+ERek2503OvNq4xqche3RMoZLsSHiOj
+ 5PjMNX4EA6pf5kRWdNutjmAsXrpZrnviWMPy+zHUzHIw/gaI00lHMjS0P99A7ay/9BjtsIBx
+ lJZ09Kp6SE0EiZpFIxB5D0ji6rHu3Qblwq+WjM2+1pydVxqt2vt7+IZgEB4Qm6rml835UB89
+ TTkMtiIXJ+hMC/hajIuFSah+CDkfagcrt1qiaVoEAs/1cCuAER+h5ClMnLZPPxNxphsqkXxn
+ 3MVJcMEL/iaMimP3oDXJoK3O+u3gC3p55A/LYZJ7hP9lHTT4MtgwmgBp9xPeVFWx3rwQOKix
+ SPONHlkjfvn4dUHmaOmJyKgtt5htpox+XhBkuCZ5UWpQ40/GyVypWyBXtqNx/0IKByXy4QVm
+ QjUL/U2DchYhW+2w8rghIhkuHX2YOdldyEvXkzN8ysGR31TDwshg600k4Q/UF/MouC2ZNeMa
+ y8I0whHBFTwSjN5T1F9cvko4PsHNB3QH4M4tbArwn4RzSX6Hfxoq59ziyI4Et6sE5SyiVEZQ
+ DhKZ8VU61uUaYHDdid8xKU4sV5IFCERIoIwieEAkITNvCdFtuXl9gugzld7IHbOTRaGy4M+M
+ gOyAvSe5ysBrXhY+B0d+EYif1I8s4PbnkH2xehof++lQuy3+1TZcweSx1f/uF6d92ZDkvJzQ
+ QbkicMLaPy0IS5XIMkkpD1zIO0jeaHcTm3uzB9k8N9y4tA2ELWVR/iFZigrtrwpIJtJLUieB
+ 89EOJLR6xbksSrFhQ80oRGF2ZSBKaWFuZyAoV29yaykgPGRhdmUuamlhbmdAaW50ZWwuY29t
+ PsJ9BBMRCAAlAhsjBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCUZEwDwIZAQAKCRBkFcTx
+ ZqO5Ps8HAP4kF/KAor80fNwT7osSHGG5rLFPR/Yc5V0QpqkU8DhZDgEAoStRa/a6Mtq3Ri1H
+ B84kFIqSQ9ME5049k6k1K7wdXcvOwE0ETpNvKxAEANGHLx0q/R99wzbVdnRthIZttNQ6M4R8
+ AAtEypE9JG3PLrEd9MUB5wf0fB/2Jypec3x935mRW3Zt1i+TrzjQDzMV5RyTtpWI7PwIh5IZ
+ 0h4OV2yQHFVViHi6lubCRypQYiMzTmEKua3LeBGvUR9vVmpPJZ/UP6VajKqywjPHYBwLAAMF
+ A/9B/PdGc1sZHno0ezuwZO2J9BOsvASNUzamO9to5P9VHTA6UqRvyfXJpNxLF1HjT4ax7Xn4
+ wGr6V1DCG3JYBmwIZjfinrLINKEK43L+sLbVVi8Mypc32HhNx/cPewROY2vPb4U7y3jhPBtt
+ lt0ZMb75Lh7zY3TnGLOx1AEzmqwZSMJhBBgRCAAJBQJOk28rAhsMAAoJEGQVxPFmo7k+qiUB
+ AKH0QWC+BBBn3pa9tzOz5hTrup+GIzf5TcuCsiAjISEqAPkBTGk5iiGrrHkxsz8VulDVpNxk
+ o6nmKbYpUAltQObU2w==
+Message-ID: <67708305-438f-8abe-66f1-f1daff5f8057@intel.com>
+Date:   Wed, 11 Sep 2019 10:45:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17bcb530-1e56-4d91-f4fb-08d736dfa420
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 17:44:05.4585
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2vi6bb8ZNpHOEQx1FvRTVrG8WFRTZKh+ErKIKrDsAzcGIQeIr6GD98U5ab6IYCfHfwuHtyM/VcD1pf/y67n6eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1432
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-11_08:2019-09-11,2019-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
- adultscore=0 malwarescore=0 bulkscore=0 mlxscore=0 priorityscore=1501
- spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909110163
-X-FB-Internal: deliver
+In-Reply-To: <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDkvMTEvMTksIDc6NDkgQU0sICJKb2VsIFN0YW5sZXkiIDxqb2VsQGptcy5pZC5h
-dT4gd3JvdGU6DQoNCiAgICBIaSBCZW4sDQogICAgDQogICAgT24gVHVlLCAxMCBTZXAgMjAxOSBh
-dCAyMjowNSwgRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+IHdyb3RlOg0K
-ICAgID4NCiAgICA+IE9uIDkvMTAvMTkgMjozNyBQTSwgVmlqYXkgS2hlbWthIHdyb3RlOg0KICAg
-ID4gPiBIVyBjaGVja3N1bSBnZW5lcmF0aW9uIGlzIG5vdCB3b3JraW5nIGZvciBBU1QyNTAwLCBz
-cGVjaWFsbHkgd2l0aCBJUFY2DQogICAgPiA+IG92ZXIgTkNTSS4gQWxsIFRDUCBwYWNrZXRzIHdp
-dGggSVB2NiBnZXQgZHJvcHBlZC4gQnkgZGlzYWJsaW5nIHRoaXMNCiAgICA+ID4gaXQgd29ya3Mg
-cGVyZmVjdGx5IGZpbmUgd2l0aCBJUFY2Lg0KICAgID4gPg0KICAgID4gPiBWZXJpZmllZCB3aXRo
-IElQVjYgZW5hYmxlZCBhbmQgY2FuIGRvIHNzaC4NCiAgICA+DQogICAgPiBIb3cgYWJvdXQgSVB2
-NCwgZG8gdGhlc2UgcGFja2V0cyBoYXZlIHByb2JsZW0/IElmIG5vdCwgY2FuIHlvdSBjb250aW51
-ZQ0KICAgID4gYWR2ZXJ0aXNpbmcgTkVUSUZfRl9JUF9DU1VNIGJ1dCB0YWtlIG91dCBORVRJRl9G
-X0lQVjZfQ1NVTT8NCiAgICA+DQogICAgPiA+DQogICAgPiA+IFNpZ25lZC1vZmYtYnk6IFZpamF5
-IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgID4gPiAtLS0NCiAgICA+ID4gIGRyaXZl
-cnMvbmV0L2V0aGVybmV0L2ZhcmFkYXkvZnRnbWFjMTAwLmMgfCA1ICsrKy0tDQogICAgPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KICAgID4gPg0K
-ICAgID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZmFyYWRheS9mdGdtYWMx
-MDAuYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZhcmFkYXkvZnRnbWFjMTAwLmMNCiAgICA+ID4g
-aW5kZXggMDMwZmVkNjUzOTNlLi41OTFjOTcyNTAwMmIgMTAwNjQ0DQogICAgPiA+IC0tLSBhL2Ry
-aXZlcnMvbmV0L2V0aGVybmV0L2ZhcmFkYXkvZnRnbWFjMTAwLmMNCiAgICA+ID4gKysrIGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvZmFyYWRheS9mdGdtYWMxMDAuYw0KICAgID4gPiBAQCAtMTgzOSw4
-ICsxODM5LDkgQEAgc3RhdGljIGludCBmdGdtYWMxMDBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCiAgICA+ID4gICAgICAgaWYgKHByaXYtPnVzZV9uY3NpKQ0KICAgID4gPiAg
-ICAgICAgICAgICAgIG5ldGRldi0+aHdfZmVhdHVyZXMgfD0gTkVUSUZfRl9IV19WTEFOX0NUQUdf
-RklMVEVSOw0KICAgID4gPg0KICAgID4gPiAtICAgICAvKiBBU1QyNDAwICBkb2Vzbid0IGhhdmUg
-d29ya2luZyBIVyBjaGVja3N1bSBnZW5lcmF0aW9uICovDQogICAgPiA+IC0gICAgIGlmIChucCAm
-JiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJhc3BlZWQsYXN0MjQwMC1tYWMiKSkpDQog
-ICAgPiA+ICsgICAgIC8qIEFTVDI0MDAgIGFuZCBBU1QyNTAwIGRvZXNuJ3QgaGF2ZSB3b3JraW5n
-IEhXIGNoZWNrc3VtIGdlbmVyYXRpb24gKi8NCiAgICA+ID4gKyAgICAgaWYgKG5wICYmIChvZl9k
-ZXZpY2VfaXNfY29tcGF0aWJsZShucCwgImFzcGVlZCxhc3QyNDAwLW1hYyIpIHx8DQogICAgPiA+
-ICsgICAgICAgICAgICAgICAgb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJhc3BlZWQsYXN0
-MjUwMC1tYWMiKSkpDQogICAgDQogICAgRG8geW91IHJlY2FsbCB1bmRlciB3aGF0IGNpcmN1bXN0
-YW5jZXMgd2UgbmVlZCB0byBkaXNhYmxlIGhhcmR3YXJlIGNoZWNrc3VtbWluZz8NCk1haW5seSwg
-VENQIHBhY2tldHMgb3ZlciBJUFY2IGdldHRpbmcgZHJvcHBlZC4gQWZ0ZXIgZGlzYWJsaW5nIGl0
-IHdhcyB3b3JraW5nLg0KICAgIA0KICAgIENoZWVycywNCiAgICANCiAgICBKb2VsDQogICAgDQog
-ICAgPiA+ICAgICAgICAgICAgICAgbmV0ZGV2LT5od19mZWF0dXJlcyAmPSB+TkVUSUZfRl9IV19D
-U1VNOw0KICAgID4gPiAgICAgICBpZiAobnAgJiYgb2ZfZ2V0X3Byb3BlcnR5KG5wLCAibm8taHct
-Y2hlY2tzdW0iLCBOVUxMKSkNCiAgICA+ID4gICAgICAgICAgICAgICBuZXRkZXYtPmh3X2ZlYXR1
-cmVzICY9IH4oTkVUSUZfRl9IV19DU1VNIHwgTkVUSUZfRl9SWENTVU0pOw0KICAgID4gPg0KICAg
-ID4NCiAgICA+DQogICAgPiAtLQ0KICAgID4gRmxvcmlhbg0KICAgIA0KDQo=
+
+
+On 9/11/19 8:48 AM, Dan Williams wrote:
+> Document the basic policies of the libnvdimm subsystem and provide a first
+> example of a Maintainer Entry Profile for others to duplicate and edit.
+> 
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  Documentation/nvdimm/maintainer-entry-profile.rst |   64 +++++++++++++++++++++
+>  MAINTAINERS                                       |    4 +
+>  2 files changed, 68 insertions(+)
+>  create mode 100644 Documentation/nvdimm/maintainer-entry-profile.rst
+> 
+> diff --git a/Documentation/nvdimm/maintainer-entry-profile.rst b/Documentation/nvdimm/maintainer-entry-profile.rst
+> new file mode 100644
+> index 000000000000..c102950f2257
+> --- /dev/null
+> +++ b/Documentation/nvdimm/maintainer-entry-profile.rst
+> @@ -0,0 +1,64 @@
+> +LIBNVDIMM Maintainer Entry Profile
+> +==================================
+> +
+> +Overview
+> +--------
+> +The libnvdimm subsystem manages persistent memory across multiple
+> +architectures. The mailing list, is tracked by patchwork here:
+> +https://patchwork.kernel.org/project/linux-nvdimm/list/
+> +...and that instance is configured to give feedback to submitters on
+> +patch acceptance and upstream merge. Patches are merged to either the
+> +'libnvdimm-fixes', or 'libnvdimm-for-next' branch. Those branches are
+> +available here:
+> +https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
+> +
+> +In general patches can be submitted against the latest -rc, however if
+> +the incoming code change is dependent on other pending changes then the
+> +patch should be based on the libnvdimm-for-next branch. However, since
+> +persistent memory sits at the intersection of storage and memory there
+> +are cases where patches are more suitable to be merged through a
+> +Filesystem or the Memory Management tree. When in doubt copy the nvdimm
+> +list and the maintainers will help route.
+> +
+> +Submissions will be exposed to the kbuild robot for compile regression
+> +testing. It helps to get a success notification from that infrastructure
+> +before submitting, but it is not required.
+> +
+> +
+> +Submit Checklist Addendum
+> +-------------------------
+> +There are unit tests for the subsystem via the ndctl utility:
+> +https://github.com/pmem/ndctl
+> +Those tests need to be passed before the patches go upstream, but not
+> +necessarily before initial posting. Contact the list if you need help
+> +getting the test environment set up.
+> +
+> +
+> +Key Cycle Dates
+> +---------------
+> +New submissions can be sent at any time, but if they intend to hit the
+> +next merge window they should be sent before -rc4, and ideally
+> +stabilized in the libnvdimm-for-next branch by -rc6. Of course if a
+> +patch set requires more than 2 weeks of review -rc4 is already too late
+> +and some patches may require multiple development cycles to review.
+> +
+> +
+> +Coding Style Addendum
+> +---------------------
+> +libnvdimm expects multi-line statements to be double indented. I.e.
+> +
+> +        if (x...
+> +                        && ...y) {
+> +
+> +
+> +Review Cadence
+> +--------------
+> +In general, please wait up to one week before pinging for feedback. A
+> +private mail reminder is preferred. Alternatively ask for other
+> +developers that have Reviewed-by tags for libnvdimm changes to take a
+> +look and offer their opinion.
+> +
+> +
+> +Style Cleanup Patches
+> +---------------------
+> +Standalone style-cleanups are welcome.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e5d111a86e61..2be1e18a368e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9185,6 +9185,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
+>  M:	Vishal Verma <vishal.l.verma@intel.com>
+>  M:	Dave Jiang <dave.jiang@intel.com>
+>  L:	linux-nvdimm@lists.01.org
+> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
+>  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+>  S:	Supported
+>  F:	drivers/nvdimm/blk.c
+> @@ -9195,6 +9196,7 @@ M:	Vishal Verma <vishal.l.verma@intel.com>
+>  M:	Dan Williams <dan.j.williams@intel.com>
+>  M:	Dave Jiang <dave.jiang@intel.com>
+>  L:	linux-nvdimm@lists.01.org
+> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
+>  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+>  S:	Supported
+>  F:	drivers/nvdimm/btt*
+> @@ -9204,6 +9206,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
+>  M:	Vishal Verma <vishal.l.verma@intel.com>
+>  M:	Dave Jiang <dave.jiang@intel.com>
+>  L:	linux-nvdimm@lists.01.org
+> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
+>  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+>  S:	Supported
+>  F:	drivers/nvdimm/pmem*
+> @@ -9223,6 +9226,7 @@ M:	Dave Jiang <dave.jiang@intel.com>
+>  M:	Keith Busch <keith.busch@intel.com>
+>  M:	Ira Weiny <ira.weiny@intel.com>
+>  L:	linux-nvdimm@lists.01.org
+> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
+>  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git
+>  S:	Supported
+> 
