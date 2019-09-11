@@ -2,94 +2,186 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCABDC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF95C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC482084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gbl/3eu/"
+	by mail.kernel.org (Postfix) with ESMTP id 878502082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfIKKTl (ORCPT
+        id S1727270AbfIKKX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:19:41 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43749 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKKTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:19:41 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d5so19435690lja.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y3147zBZhw/UX51VlglkVVRHJRKcmU6+Mh2CpbRNH1Q=;
-        b=Gbl/3eu/vRbHPX5XNV0bq9/xamdbVPSy6srUKEYj9dLP0KlXQermQi/0BhYAMKVK7D
-         FwgtjLbYFvTB8hOlFy9jp5ewb8DxvFcq0yCsfUb1lkbDFhkNrZ7s0gG6xY+dPT/avqnk
-         JUQLntIlCF0fyPJUnyZGFpKXEH93uEKlGdEIXxUZPhVEEUI7frf2VgPkX8NK7YlfNlnF
-         n212L19y0FiO12PVM/Lba/WgNePOhgz9m0dD2X/TkPlLYtR1qo1N2TPWq61wdn9LJAzR
-         ip83lhH+KsS3/Mkt+AxXfhqt4Eayu16KARqRVKfChpoGPHxIpFIqswRIErt6af19j/LZ
-         aaWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y3147zBZhw/UX51VlglkVVRHJRKcmU6+Mh2CpbRNH1Q=;
-        b=ZS+FdSbeO19NcaF0kthThJEuEBPKpGgbfwoWUdrKezf8WjuMGnvm87T9hLnIlFcCCk
-         P5vXuXjTN5y/9RbWl1/LiEuctKxslmkFJGLcJXT9G12BjCMLvYcCjJ77VJT+YC2Djge2
-         h5TEslBvFH6G45Z4Hy+ZBYfJKzpAycYBXfonuzmBqFUMwJCrxzBBfiyxMDdyi+Lxcijo
-         lWXwoIN/ClJzAPFyBqwidwVJwilALS9ycTDVBRNjG13r65hR5Dqraja2ITHPeQLZgm4f
-         fuKHTVaR3CGNbvvIv0R1R98qi7k5m25Ue2QDZj19si1xeABKedxEkjy6yl5RwqzpT1ik
-         ldNQ==
-X-Gm-Message-State: APjAAAXKh4W81ZzJc7ilfd7VPP3DSy1+0xLvgoIlMSchFzxN6aqayu+o
-        KWLq+JI+nhrrnmXS+y4b8/ea+1psdnQBsmUGHG7iow==
-X-Google-Smtp-Source: APXvYqzB5BVgv6AQnPfWAutofN/bDoNRjMTME5RBOuMqvBevxj/0paBL/L/Gw6RJVZRAhcMdHPv5ejElCDlE9+NqdtA=
-X-Received: by 2002:a2e:654a:: with SMTP id z71mr22927335ljb.37.1568197178805;
- Wed, 11 Sep 2019 03:19:38 -0700 (PDT)
+        Wed, 11 Sep 2019 06:23:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbfIKKX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:23:27 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DF97B302C060;
+        Wed, 11 Sep 2019 10:23:26 +0000 (UTC)
+Received: from [10.36.117.155] (ovpn-117-155.ams2.redhat.com [10.36.117.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 85D126012E;
+        Wed, 11 Sep 2019 10:23:25 +0000 (UTC)
+Subject: Re: [PATCH 02/10] mm,madvise: call soft_offline_page() without
+ MF_COUNT_INCREASED
+To:     Oscar Salvador <osalvador@suse.de>, n-horiguchi@ah.jp.nec.com
+Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190910103016.14290-1-osalvador@suse.de>
+ <20190910103016.14290-3-osalvador@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <c17c8bac-c443-046f-e622-78ed713517c9@redhat.com>
+Date:   Wed, 11 Sep 2019 12:23:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-10-ilina@codeaurora.org>
-In-Reply-To: <20190829181203.2660-10-ilina@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Sep 2019 11:19:27 +0100
-Message-ID: <CACRpkdbhNY8N=LMG6wwYw9bAnL4HmAqj8WMpsLsqvh8PvaQ52A@mail.gmail.com>
-Subject: Re: [PATCH RFC 09/14] drivers: pinctrl: msm: fix use of deprecated
- gpiolib APIs
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190910103016.14290-3-osalvador@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 11 Sep 2019 10:23:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On 10.09.19 12:30, Oscar Salvador wrote:
+> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> 
+> Currently madvise_inject_error() pins the target via get_user_pages_fast.
+> The call to get_user_pages_fast is only to get the respective page
+> of a given address, but it is the job of the memory-poisoning handler
+> to deal with races, so drop the refcount grabbed by get_user_pages_fast.
+> 
+> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  mm/madvise.c | 25 +++++++++++--------------
+>  1 file changed, 11 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 6e023414f5c1..fbe6d402232c 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -883,6 +883,16 @@ static int madvise_inject_error(int behavior,
+>  		ret = get_user_pages_fast(start, 1, 0, &page);
+>  		if (ret != 1)
+>  			return ret;
+> +		/*
+> +		 * The get_user_pages_fast() is just to get the pfn of the
+> +		 * given address, and the refcount has nothing to do with
+> +		 * what we try to test, so it should be released immediately.
+> +		 * This is racy but it's intended because the real hardware
+> +		 * errors could happen at any moment and memory error handlers
+> +		 * must properly handle the race.
+> +		 */
+> +		put_page(page);
+> +
 
-> Replace gpiochip_irqchip_add() and gpiochip_set_chained_irqchip() calls
-> by populating the gpio_irq_chip data structures instead.
->
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+I wonder if it would be clearer to do that after the page has been fully
+used  - e.g. after getting the pfn and the order (and then e.g.,
+symbolically setting the page pointer to 0).
 
-This is mostly fixed upstream I think, but:
+I guess the important part of this patch is to not have an elevated
+refcount while calling soft_offline_page().
 
-> +       chip->irq.fwnode = pctrl->dev->fwnode;
+>  		pfn = page_to_pfn(page);
+>  
+>  		/*
+> @@ -892,16 +902,11 @@ static int madvise_inject_error(int behavior,
+>  		 */
+>  		order = compound_order(compound_head(page));
+>  
+> -		if (PageHWPoison(page)) {
+> -			put_page(page);
+> -			continue;
+> -		}
 
-This fwnode assignment is missing though.
+This change is not reflected in the changelog. I would have expected
+that only the put_page() would go. If this should go completely, I
+suggest a separate patch.
 
-Sorry for the constant churn and required rebasing...
+> -
+>  		if (behavior == MADV_SOFT_OFFLINE) {
+>  			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+>  					pfn, start);
+>  
+> -			ret = soft_offline_page(page, MF_COUNT_INCREASED);
+> +			ret = soft_offline_page(page, 0);
+>  			if (ret)
+>  				return ret;
+>  			continue;
+> @@ -909,14 +914,6 @@ static int madvise_inject_error(int behavior,
+>  
+>  		pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
+>  				pfn, start);
+> -
+> -		/*
+> -		 * Drop the page reference taken by get_user_pages_fast(). In
+> -		 * the absence of MF_COUNT_INCREASED the memory_failure()
+> -		 * routine is responsible for pinning the page to prevent it
+> -		 * from being released back to the page allocator.
+> -		 */
+> -		put_page(page);
+>  		ret = memory_failure(pfn, 0);
+>  		if (ret)
+>  			return ret;
+> 
 
-Yours,
-Linus Walleij
+
+-- 
+
+Thanks,
+
+David / dhildenb
