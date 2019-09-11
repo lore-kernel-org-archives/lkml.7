@@ -2,91 +2,112 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80FEECDE28
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FF3ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAF020CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC8B222BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfIKHfM (ORCPT
+        id S1727127AbfIKHgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:35:12 -0400
-Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:44648 "EHLO
-        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfIKHfL (ORCPT
+        Wed, 11 Sep 2019 03:36:12 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:56151 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfIKHgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:35:11 -0400
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 03:35:11 EDT
-Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
-        by localhost (Postfix) with SMTP id D1A0E561587;
-        Wed, 11 Sep 2019 09:27:56 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
-        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id CBF0F5613CD;
-        Wed, 11 Sep 2019 09:27:56 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
-        by localhost (Postfix) with SMTP id D71071802BC;
-        Wed, 11 Sep 2019 09:27:53 +0200 (CEST)
-Received: from yd-CZC9059FTQ.si.francetelecom.fr (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.64])
-        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id A4CBC1802B1;
-        Wed, 11 Sep 2019 09:27:53 +0200 (CEST)
-From:   =?UTF-8?q?Pierre=20Cr=C3=A9gut?= <pierre.cregut@orange.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Pierre=20Cr=C3=A9gut?= <pierre.cregut@orange.com>
-Subject: [PATCH v2] PCI/IOV: avoid giving back wrong numvfs
-Date:   Wed, 11 Sep 2019 09:27:36 +0200
-Message-Id: <20190911072736.32091-1-pierre.cregut@orange.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Sep 2019 03:36:11 -0400
+Received: from [10.18.29.226] (10.18.29.226) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Sep
+ 2019 15:37:02 +0800
+Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+ <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
+ <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
+ <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
+ <a82336e2-44df-5682-1c86-daf8a8448d30@amlogic.com>
+ <CAFBinCAJG4=M3BSXfREGU+iadMPkc7=yt3AdcqA1KAhQx6Wh9w@mail.gmail.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <09d7f5cc-9063-28f4-b68f-79f21fca500b@amlogic.com>
+Date:   Wed, 11 Sep 2019 15:37:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PMX-Version: 6.4.7.2805085, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.9.11.72116, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.9.11.5650000
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODYTEXTP_SIZE_3000_LESS 0, BODY_SIZE_1200_1299 0, BODY_SIZE_2000_LESS 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, CT_TEXT_PLAIN_UTF8_CAPS 0, LEGITIMATE_SIGNS 0, MULTIPLE_REAL_RCPTS 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __FROM_DOMAIN_IN_ANY_CC1 0, __FROM_DOMAIN_IN_RCPT 0, __FROM_UTF_Q 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_X_MAILER 0, __HTTPS_URI 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __TO_MALFORMED_2 0, __TO_NO_NAME 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0'
+In-Reply-To: <CAFBinCAJG4=M3BSXfREGU+iadMPkc7=yt3AdcqA1KAhQx6Wh9w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.226]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When numvfs is being updated, reply to numvfs queries with EAGAIN.
-As drivers may notify changes on numvfs before they are implemented,
-it is advisable to not reply rather than giving back an outdated value.
-Clients will notice that the value is still unknown and will retry
-to get it.
+Hi Martin,
 
-The patch relies on the status of the device mutex as an
-overapproximation of when numvfs is modified.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
-Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
----
-
-This is an updated version of "PCI/IOV: update num_VFs earlier" and a
-reply to your mail sent on 14/06/19. Sorry I completely missed it.
-The commit message was changed as the implementation principle was
-modified.
-
- drivers/pci/pci-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 965c72104150..493eea261d40 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -568,6 +568,8 @@ static ssize_t sriov_numvfs_show(struct device *dev,
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
-+	if (mutex_is_locked(&dev->mutex))
-+		return -EAGAIN;
- 	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
- }
- 
--- 
-2.17.1
+On 2019/9/10 1:24, Martin Blumenstingl wrote:
+> Hi Jianxin,
+> 
+> On Mon, Sep 9, 2019 at 2:03 PM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+>>
+>> Hi Martin,
+>>
+>> On 2019/9/7 23:02, Martin Blumenstingl wrote:
+>>> Hi Jianxin,
+>>>
+>>> On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+>>> [...]
+>>>>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
+>>>>> aren't there any busses defined in the A1 SoC implementation or are
+>>>>> were you planning to add them later?
+>>>> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
+>>>> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
+>>> OK, thank you for the explanation
+>>> since you're going to re-send the patch anyways: can you please
+>>> include the apb_32b bus?
+>>> all other upstream Amlogic .dts are using the bus definitions, so that
+>>> will make A1 consistent with the other SoCs
+>> In A1 (and the later C1), BUS is not mentioned in the memmap and register spec.
+>> Registers are organized and grouped by functions, and we can not find information about buses from the SoC document.
+> do you know why the busses are not part of the documentation?
+> 
+>> Maybe it's better to remove bus definitions for these chips.
+> my understanding is that devicetree describes the hardware
+> so if there's a bus in hardware (that we know about) then we should
+> describe it in devicetree
+> 
+> personally I think busses also make the .dts easier to read:
+> instead of a huge .dts with all nodes on one level it's split into
+> multiple smaller sub-nodes - thus making it easier to keep track of
+> "where am I in this file".
+> 
+OK, I will add the bus description for A1.
+Thank you for your suggestion.
+> 
+> Martin
+> 
+> .
+> 
 
