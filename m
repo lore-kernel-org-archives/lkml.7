@@ -2,92 +2,144 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C773C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB9C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A9F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="ighaW8uw"
+	by mail.kernel.org (Postfix) with ESMTP id 389B820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbfIKQjz (ORCPT
+        id S1729123AbfIKQkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:39:55 -0400
-Received: from smtp113.ord1c.emailsrvr.com ([108.166.43.113]:59718 "EHLO
-        smtp113.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728828AbfIKQjz (ORCPT
+        Wed, 11 Sep 2019 12:40:01 -0400
+Received: from 6.mo179.mail-out.ovh.net ([46.105.56.76]:38545 "EHLO
+        6.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728828AbfIKQkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:39:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1568219994;
-        bh=ShXCPuRTmrlcXQzNVyVjvWiPOGKA9ghbqXSw5ScsjpY=;
-        h=From:To:Subject:Date:From;
-        b=ighaW8uwiJSs2+yv0J1Fj6FHIvEo+xB+FivBVZujCIPewmG5OsbTMmrWIvohtlegp
-         gJEyD0z+VVKM/b6UJXE6BtIAg0kVA1FqgwBhe6fvwL59GytokCuLVczuxzAtRMKMHP
-         //bDXfwK6xaZoQqVmsGnPxKCDa7ZDWM6MEg2/wPU=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp15.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9F8E620138;
-        Wed, 11 Sep 2019 12:39:53 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Wed, 11 Sep 2019 12:39:54 -0400
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] devices.txt: improve entry for comedi (char major 98)
-Date:   Wed, 11 Sep 2019 17:39:41 +0100
-Message-Id: <20190911163941.16664-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 11 Sep 2019 12:40:00 -0400
+X-Greylist: delayed 2262 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 12:39:59 EDT
+Received: from player761.ha.ovh.net (unknown [10.109.159.222])
+        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 0CFA5141187
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 18:02:16 +0200 (CEST)
+Received: from kaod.org (lfbn-1-2240-157.w90-76.abo.wanadoo.fr [90.76.60.157])
+        (Authenticated sender: clg@kaod.org)
+        by player761.ha.ovh.net (Postfix) with ESMTPSA id 50A7F9B791FC;
+        Wed, 11 Sep 2019 16:02:11 +0000 (UTC)
+Subject: Re: [PATCH v2] powerpc/xive: Fix bogus error code returned by OPAL
+To:     Greg Kurz <groug@kaod.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Message-ID: <a15c02b2-ac3a-21a7-db56-242cb864f79e@kaod.org>
+Date:   Wed, 11 Sep 2019 18:02:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 1911778042506414871
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdejtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe how the comedi minor device numbers are split across comedi
-devices and comedi subdevices.
+On 11/09/2019 17:52, Greg Kurz wrote:
+> There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+> to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+> Unfortunatelty, OPAL return values are signed 64-bit entities and
+> errors are supposed to be negative. If that happens, the linux code
+> confusingly treats 0xffffffff as a valid IRQ number and panics at some
+> point.
+> 
+> A fix was recently merged in skiboot:
+> 
+> e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+> 
+> but we need a workaround anyway to support older skiboots already
+> in the field.
+> 
+> Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+> returned upon resource exhaustion.
+> 
+> Cc: stable@vger.kernel.org # v4.12+
+> Signed-off-by: Greg Kurz <groug@kaod.org>
 
-Replace the current, long dead URL with an official URL for the Comedi
-project.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- Documentation/admin-guide/devices.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-guide/devices.txt
-index e56e00655153..1c5d2281efc9 100644
---- a/Documentation/admin-guide/devices.txt
-+++ b/Documentation/admin-guide/devices.txt
-@@ -1647,8 +1647,17 @@
- 		  0 = /dev/comedi0	First comedi device
- 		  1 = /dev/comedi1	Second comedi device
- 		    ...
-+		 47 = /dev/comedi47	48th comedi device
- 
--		See http://stm.lbl.gov/comedi.
-+		Minors 48 to 255 are reserved for comedi subdevices with
-+		pathnames of the form "/dev/comediX_subdY", where "X" is the
-+		minor number of the associated comedi device and "Y" is the
-+		subdevice number.  These subdevice minors are assigned
-+		dynamically, so there is no fixed mapping from subdevice
-+		pathnames to minor numbers.
-+
-+		See http://www.comedi.org/ for information about the Comedi
-+		project.
- 
-   98 block	User-mode virtual block device
- 		  0 = /dev/ubda		First user-mode block device
--- 
-2.23.0
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
+Thanks,
+
+C.
+
+> ---
+> v2: - fix syntax error in changelog
+>     - Cc stable
+>     - rename original OPAL wrapper
+>     - rewrite fixup wrapper (style, use s64 and u32)
+> ---
+>  arch/powerpc/include/asm/opal.h            |    2 +-
+>  arch/powerpc/platforms/powernv/opal-call.c |    2 +-
+>  arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
+>  3 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+> index 57bd029c715e..d5a0807d21db 100644
+> --- a/arch/powerpc/include/asm/opal.h
+> +++ b/arch/powerpc/include/asm/opal.h
+> @@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t vp,
+>  int64_t opal_xive_set_vp_info(uint64_t vp,
+>  			      uint64_t flags,
+>  			      uint64_t report_cl_pair);
+> -int64_t opal_xive_allocate_irq(uint32_t chip_id);
+> +int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
+>  int64_t opal_xive_free_irq(uint32_t girq);
+>  int64_t opal_xive_sync(uint32_t type, uint32_t id);
+>  int64_t opal_xive_dump(uint32_t type, uint32_t id);
+> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+> index 29ca523c1c79..dccdc9df5213 100644
+> --- a/arch/powerpc/platforms/powernv/opal-call.c
+> +++ b/arch/powerpc/platforms/powernv/opal-call.c
+> @@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPAL_XIVE_SET_QUEUE_INFO);
+>  OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
+>  OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
+>  OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
+> -OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
+> +OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
+>  OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
+>  OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
+>  OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
+> diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+> index 37987c815913..ad8ee7dd7f57 100644
+> --- a/arch/powerpc/sysdev/xive/native.c
+> +++ b/arch/powerpc/sysdev/xive/native.c
+> @@ -231,6 +231,17 @@ static bool xive_native_match(struct device_node *node)
+>  	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+>  }
+>  
+> +static s64 opal_xive_allocate_irq(u32 chip_id)
+> +{
+> +	s64 irq = opal_xive_allocate_irq_raw(chip_id);
+> +
+> +	/*
+> +	 * Old versions of skiboot can incorrectly return 0xffffffff to
+> +	 * indicate no space, fix it up here.
+> +	 */
+> +	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
+> +}
+> +
+>  #ifdef CONFIG_SMP
+>  static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+>  {
+> 
 
