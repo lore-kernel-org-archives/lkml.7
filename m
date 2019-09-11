@@ -2,130 +2,100 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39834C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F2EC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047CD2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE0E2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B3UwskUy"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ESsau/uU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbfIKReQ (ORCPT
+        id S1729655AbfIKRf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:34:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33580 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbfIKReP (ORCPT
+        Wed, 11 Sep 2019 13:35:28 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43070 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbfIKRf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:34:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHSmB0185448;
-        Wed, 11 Sep 2019 17:31:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=vdcAsqLRAiFiTKWcxJVERFUpZ1PHtp9XnzYZYe2wy6M=;
- b=B3UwskUyw0aAdXtXHV5+JRlHhj2c6ftYlEO72NPMjUfSjSM5Ls7u/c8qjGsWxhoEKLjw
- EVUlDWE/Ts4GZ0WTBagxCv+3feVEWNrAn41lPK9LWtQZxRfDGICR12QWfjY1R+d6GQqw
- BZye9daqD639D7jQJulIQIplTvfxpzEJ/04IUAJEksoytpNuFAQ7GAYbei2Vvt2GFMrI
- dYF9R9evHhk2Q6d+G40lovb8ttggL2dgGVtHERS/hIm/zZRBTdJtQlbePGkLYY0pzqlw
- u5JrisEjMcvw0y9ZMxIgRwvtcERHjTr3sQHotRDusW4ES+Q4zFTIump+7MnAansryJ1L Ow== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uw1m93q0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:31:38 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHSco2020308;
-        Wed, 11 Sep 2019 17:29:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2uxj891dxm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:29:38 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8BHTaBm030828;
-        Wed, 11 Sep 2019 17:29:36 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 10:29:36 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
-Date:   Wed, 11 Sep 2019 13:29:34 -0400
-Cc:     Jason L Tibbitts III <tibbs@math.uh.edu>,
-        Bruce Fields <bfields@fieldses.org>,
-        Wolfgang Walter <linux@stwm.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=899
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=959 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110161
+        Wed, 11 Sep 2019 13:35:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l22so26220654qtp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mJD6iQtvN/UCjy4Ek8D93A8B4R/KlP3wDuq4/HX54Nk=;
+        b=ESsau/uU7KkgWzaER4y2/52TBwwEMzglevQZgPhz8mpsh/psDnnwjhgCfMZx2xn7RO
+         pTQMc4weP+eRGMm7La/QZypjUcjwfXOSY31sJWbO9DllIrfBVvcSDUt15jbMJJ5IQnkr
+         fNnSmRkOk62gX4p8GqROfsCMVJkvswWy3bjYmTudOEQNz3hvX2e1t+Df2R313l4H0CQ7
+         xDhRgrN7QroVOiWA7CvNIccCpQ6PsgEbUr3mVULnSlr7MoIuZxR5jpA5CMZYoQMPR7xY
+         CTfHGHAhQCmh+Th+AdcgeGVctHvcOXk7cadtaOtxfl2XVnRMAexGlG1idU8BFky60sgz
+         u38g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mJD6iQtvN/UCjy4Ek8D93A8B4R/KlP3wDuq4/HX54Nk=;
+        b=h8uS75hoXYuoKs+MH5Tk/nic5gHzuUtcDuWmvDOBzi9BokkahSV6khseuURcjRhzZu
+         Ere6JWVjy/yyw0fp5ntgVZ7ISC4pt0fUIgrvJy5Ly0h3V31f9LKDjjAgcj27CzhGAtnT
+         GpDzEQT2m8sP/f8VO5+HttHnJiVHaluPJ37PdIXg2mowAYo+hGtnLpCIYWdjCvu1YYSl
+         pSJtBaEJtTapOms7R41bSAhNKbKwnCRHh53y6DvpNBnjSSNvhHoqyN0UWqyolreEpDKn
+         IFuLf1WiaW58vDm+qw+4sjIQil24Pg+keBklJB4XwEhPcIgt+balPvqZ1mvtz7xYBami
+         aYEA==
+X-Gm-Message-State: APjAAAVA3jQocs06QdDc+bV3w0z3hHblWCyY3wnSfFBn32XU6Scu1jM6
+        HdTTjXtDviymqSVqEE1xy8AlIA==
+X-Google-Smtp-Source: APXvYqwcOywenx8LVLVD6JO3ednMqGYhwk73RQ5i92GZvWMV25FAZF2IFj/VjnedRzlUY75Dl91o7g==
+X-Received: by 2002:aed:22cc:: with SMTP id q12mr37648607qtc.232.1568223320208;
+        Wed, 11 Sep 2019 10:35:20 -0700 (PDT)
+Received: from ovpn-125-217.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c204sm850853qkb.90.2019.09.11.10.35.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 11 Sep 2019 10:35:19 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     airlied@linux.ie, daniel@ffwll.ch
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, emil.l.velikov@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [RFC PATCH] gpu: no need to compile drm/ if CONFIG_DRM=n
+Date:   Wed, 11 Sep 2019 13:34:53 -0400
+Message-Id: <20190911173453.958-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit c0e09200dc08 ("drm: reorganise drm tree to be more future
+proof.") changed the behavior from only compiling drm/ if CONFIG_DRM=y
+to always compiling drm/. This restores the behavior, so people don't
+need to waste time compiling stuff they don't need.
 
+Fixes: c0e09200dc08 ("drm: reorganise drm tree to be more future proof.")
+---
+ drivers/gpu/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington <bcodding@redhat.com> =
-wrote:
->=20
->=20
-> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->=20
->>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->>>=20
->=20
->>> Instead, I think we want to make sure the mic falls squarely into =
-the tail
->>> every time.
->>=20
->> I'm not clear how you could do that. The length of the page data is =
-not
->> known to the client before it parses the reply. Are you suggesting =
-that
->> gss_unwrap should do it somehow?
->=20
-> Is it too niave to always put the mic at the end of the tail?
-
-The size of the page content is variable.
-
-The only way the MIC will fall into the tail is if the page content is
-exactly the largest expected size. When the page content is smaller than
-that, the receive logic will place part or all of the MIC in ->pages.
-
-
---
-Chuck Lever
-
-
+diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
+index f17d01f076c7..a793b9ace34b 100644
+--- a/drivers/gpu/Makefile
++++ b/drivers/gpu/Makefile
+@@ -3,5 +3,6 @@
+ # taken to initialize them in the correct order. Link order is the only way
+ # to ensure this currently.
+ obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
+-obj-y			+= drm/ vga/
++obj-$(CONFIG_DRM)		+= drm/
++obj-y				+= vga/
+ obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
+-- 
+2.20.1 (Apple Git-117)
 
