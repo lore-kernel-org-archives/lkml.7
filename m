@@ -2,112 +2,129 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40341C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FB0ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B682084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9431A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfIKMWy (ORCPT
+        id S1727904AbfIKMZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:22:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:46656 "EHLO foss.arm.com"
+        Wed, 11 Sep 2019 08:25:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60770 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbfIKMWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:22:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CAD91000;
-        Wed, 11 Sep 2019 05:22:53 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A78693F59C;
-        Wed, 11 Sep 2019 05:22:52 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 13:22:50 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
-        devicetree@vger.kernel.org, repk@triplefau.lt, maz@kernel.org,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
- bindings
-Message-ID: <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
-References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
- <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
+        id S1726198AbfIKMZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:25:10 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 28F993D966
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:25:10 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id y13so23488596qtn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:25:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hxqdd7sLD0IIJEG1yv3oLsELLYkxr9dTgSFMh9qjyAM=;
+        b=F9HyynCZWQH4Psc6FeBiCM7WPQS7j5gVdHycBItbd3hXu9FZxSG5IngdYfl+rYZaRd
+         Rx/+XtqqcdiwKazzybNQlwW14SRpDmSRWvHo/jbuLA6bxUkS0EBA9AW3Mj+CtYSPbJYz
+         plYymS08NZMSo8ETIePJSy6sAvjQvIqiZyKWWriUdHoZZ1OnDixXRyjvCe3A016alZat
+         rYb/vVU4iNL7dkl6M9xAkDnwxcD+8rv/+oNo07wHDVufZKZ4sZSZzvzYoHMMMCPW9GY/
+         7OZTu5uwveVTVrtmbXjoJ5V/Idq+N+GXNNAvU085gIWg8pIsA0zinhCOIxOPO+DVPMc9
+         IQOA==
+X-Gm-Message-State: APjAAAU8iAkssE1GFKJBebUAYo7rOzeTJwrYqOZrk3UZimv3Hw9BFEDl
+        davZ1tv4FaVTbHBos0DplOmUhn7qra3E7VDzYZzTLHUqkecngSdlY0usDJUL10V27khUobK8Z0G
+        +InYAlEBIoKlp/ApQWPwRl4aS
+X-Received: by 2002:a37:a858:: with SMTP id r85mr20448439qke.394.1568204709488;
+        Wed, 11 Sep 2019 05:25:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqydIpMhvodySW7CTJrCuCWEytvXXGQbmEf5VStZ8nkcJ6t3BKc9d/kPejtfhSjav5sm2yl2eg==
+X-Received: by 2002:a37:a858:: with SMTP id r85mr20448417qke.394.1568204709315;
+        Wed, 11 Sep 2019 05:25:09 -0700 (PDT)
+Received: from redhat.com ([80.74.107.118])
+        by smtp.gmail.com with ESMTPSA id w126sm9508107qkd.68.2019.09.11.05.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 05:25:08 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 08:25:03 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2] vhost: block speculation of translated descriptors
+Message-ID: <20190911082236-mutt-send-email-mst@kernel.org>
+References: <20190911120908.28410-1-mst@redhat.com>
+ <20190911121628.GT4023@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190911121628.GT4023@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 01:42:53PM +0000, Neil Armstrong wrote:
-> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
-> but the PHY is shared with USB3 to control the differential lines.
+On Wed, Sep 11, 2019 at 02:16:28PM +0200, Michal Hocko wrote:
+> On Wed 11-09-19 08:10:00, Michael S. Tsirkin wrote:
+> > iovec addresses coming from vhost are assumed to be
+> > pre-validated, but in fact can be speculated to a value
+> > out of range.
+> > 
+> > Userspace address are later validated with array_index_nospec so we can
+> > be sure kernel info does not leak through these addresses, but vhost
+> > must also not leak userspace info outside the allowed memory table to
+> > guests.
+> > 
+> > Following the defence in depth principle, make sure
+> > the address is not validated out of node range.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > Acked-by: Jason Wang <jasowang@redhat.com>
+> > Tested-by: Jason Wang <jasowang@redhat.com>
 > 
-> Thus this adds a phy phandle to control the PHY, and sets invalid
-> MIPI clock as optional for G12A.
+> no need to mark fo stable? Other spectre fixes tend to be backported
+> even when the security implications are not really clear. The risk
+> should be low and better to be covered in case.
 
-Perhaps reword to "Thus this adds a phy phandle to control the PHY,
-and only requires a MIPI clock for AXG SoC Family".
+This is not really a fix - more a defence in depth thing,
+quite similar to e.g.  commit b3bbfb3fb5d25776b8e3f361d2eedaabb0b496cd
+x86: Introduce __uaccess_begin_nospec() and uaccess_try_nospec
+in scope.
 
-Thanks,
+That one doesn't seem to be tagged for stable. Was it queued
+there in practice?
 
-Andrew Murray
-
+> > ---
+> > 
+> > changes from v1: fix build on 32 bit
+> > 
+> >  drivers/vhost/vhost.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 5dc174ac8cac..34ea219936e3 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -2071,8 +2071,10 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+> >  		_iov = iov + ret;
+> >  		size = node->size - addr + node->start;
+> >  		_iov->iov_len = min((u64)len - s, size);
+> > -		_iov->iov_base = (void __user *)(unsigned long)
+> > -			(node->userspace_addr + addr - node->start);
+> > +		_iov->iov_base = (void __user *)
+> > +			((unsigned long)node->userspace_addr +
+> > +			 array_index_nospec((unsigned long)(addr - node->start),
+> > +					    node->size));
+> >  		s += size;
+> >  		addr += size;
+> >  		++ret;
+> > -- 
+> > MST
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> index efa2c8b9b85a..84fdc422792e 100644
-> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> @@ -9,13 +9,16 @@ Additional properties are described here:
->  
->  Required properties:
->  - compatible:
-> -	should contain "amlogic,axg-pcie" to identify the core.
-> +	should contain :
-> +	- "amlogic,axg-pcie" for AXG SoC Family
-> +	- "amlogic,g12a-pcie" for G12A SoC Family
-> +	to identify the core.
->  - reg:
->  	should contain the configuration address space.
->  - reg-names: Must be
->  	- "elbi"	External local bus interface registers
->  	- "cfg"		Meson specific registers
-> -	- "phy"		Meson PCIE PHY registers
-> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
->  	- "config"	PCIe configuration space
->  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->  - clocks: Must contain an entry for each entry in clock-names.
-> @@ -23,12 +26,13 @@ Required properties:
->  	- "pclk"       PCIe GEN 100M PLL clock
->  	- "port"       PCIe_x(A or B) RC clock gate
->  	- "general"    PCIe Phy clock
-> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
->  - resets: phandle to the reset lines.
->  - reset-names: must contain "phy" "port" and "apb"
-> -       - "phy"         Share PHY reset
-> +       - "phy"         Share PHY reset for AXG SoC Family
->         - "port"        Port A or B reset
->         - "apb"         Share APB reset
-> +- phys: should contain a phandle to the shared phy for G12A SoC Family
->  - device_type:
->  	should be "pci". As specified in designware-pcie.txt
->  
 > -- 
-> 2.17.1
-> 
+> Michal Hocko
+> SUSE Labs
