@@ -2,183 +2,211 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BE5ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA065C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60E220CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C055620872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568202191;
+	bh=YzWZW7fIuQ/hMWEfEFuyifHV7xQrAuW9vHt/Tk5o2pY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H0lNYjqTNgwUzIjSqZniXn7n8G71TWEDEVrfu4fmYFu13exaruu1JsnPafWitgVCv
+	 WAcXtkKLxWAcT2IgYqrTgkZmgeKxYh+u3JgJzO/5qoYhYkHUy0lIeVnykRd36LC3mR
+	 Z9adaYovOD5dTTwWW4unBmfHtrIkpN29twfd2iec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfIKLnC (ORCPT
+        id S1727079AbfIKLnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:43:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:46150 "EHLO foss.arm.com"
+        Wed, 11 Sep 2019 07:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfIKLnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:43:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CF3228;
-        Wed, 11 Sep 2019 04:43:00 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 452D43F59C;
-        Wed, 11 Sep 2019 04:42:59 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 12:42:55 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Message-ID: <20190911124255.45e44be3@donnerap.cambridge.arm.com>
-In-Reply-To: <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
-        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
-        <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
-        <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
-        <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
-        <AM0PR04MB448133D1F4C887A82C679CEB88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
-        <20190909143230.48b1143f@donnerap.cambridge.arm.com>
-        <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S1727656AbfIKLnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:43:10 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BCAE20CC7;
+        Wed, 11 Sep 2019 11:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568202189;
+        bh=YzWZW7fIuQ/hMWEfEFuyifHV7xQrAuW9vHt/Tk5o2pY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=aPfd+XVspS17VU4U2mkQl6Yc4E2z+1yRNW+uYs18CSe7JJAuk+1FzZu+3SE5KNTJT
+         k1ikshr4Ua440fWfMYE/HvxdawoEX9KTNuM4Sq1etzk0GjHQRxqjT0XCQkuU8U7sBO
+         LSiuf6tIZwox4urGzreZGw/V59EemNYHp4Q8+1xs=
+Date:   Wed, 11 Sep 2019 12:42:38 +0100 (WEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
+ BH-safe
+In-Reply-To: <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
+Message-ID: <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>  <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>  <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm> <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 21:36:35 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
+On Mon, 15 Apr 2019, Johannes Berg wrote:
 
-Hi,
+> > If there are other reasons why disable BH for the whole function (are 
+> > there?), then this bigger hammer works as well of course.
+> 
+> I thought there are, but seeing the commit log here I'm not sure.
+> 
+> In any case, even if not, the function itself is part of the TX fast
+> path, but the caller from the workqueue is very uncommon (basically only
+> happens for a handful of packets on each new RA/TID), so I'd say that'd
+> be a good reason to use the slightly bigger hammer (it's not that much
+> different really, if you look at how much code is covered by the lock)
+> and avoid doing it all the time when we know it to be not needed.
 
-> On Mon, Sep 9, 2019 at 8:32 AM Andre Przywara <andre.przywara@arm.com> wrote:
-> >
-> > On Fri, 30 Aug 2019 03:12:29 -0500
-> > Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> >
-> > Hi,
-> >  
-> > > On Fri, Aug 30, 2019 at 3:07 AM Peng Fan <peng.fan@nxp.com> wrote:  
-> > > >  
-> > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
-> > > > > SMC/HVC mailbox
-> > > > >
-> > > > > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:  
-> > > > > >
-> > > > > > Hi Jassi,
-> > > > > >  
-> > > > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc
-> > > > > > > for the ARM SMC/HVC mailbox
-> > > > > > >
-> > > > > > > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > > > > > >  
-> > > > > > > > > > +examples:
-> > > > > > > > > > +  - |
-> > > > > > > > > > +    sram@910000 {
-> > > > > > > > > > +      compatible = "mmio-sram";
-> > > > > > > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
-> > > > > > > > > > +      #address-cells = <1>;
-> > > > > > > > > > +      #size-cells = <1>;
-> > > > > > > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
-> > > > > > > > > > +
-> > > > > > > > > > +      cpu_scp_lpri: scp-shmem@0 {
-> > > > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > > > +        reg = <0x0 0x200>;
-> > > > > > > > > > +      };
-> > > > > > > > > > +
-> > > > > > > > > > +      cpu_scp_hpri: scp-shmem@200 {
-> > > > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > > > +        reg = <0x200 0x200>;
-> > > > > > > > > > +      };
-> > > > > > > > > > +    };
-> > > > > > > > > > +
-> > > > > > > > > > +    firmware {
-> > > > > > > > > > +      smc_mbox: mailbox {
-> > > > > > > > > > +        #mbox-cells = <1>;
-> > > > > > > > > > +        compatible = "arm,smc-mbox";
-> > > > > > > > > > +        method = "smc";
-> > > > > > > > > > +        arm,num-chans = <0x2>;
-> > > > > > > > > > +        transports = "mem";
-> > > > > > > > > > +        /* Optional */
-> > > > > > > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> > > > > > > > > >  
-> > > > > > > > > SMC/HVC is synchronously(block) running in "secure mode", i.e,
-> > > > > > > > > there can only be one instance running platform wide. Right?  
-> > > > > > > >
-> > > > > > > > I think there could be channel for TEE, and channel for Linux.
-> > > > > > > > For virtualization case, there could be dedicated channel for each VM.
-> > > > > > > >  
-> > > > > > > I am talking from Linux pov. Functions 0xfe and 0xff above, can't
-> > > > > > > both be active at the same time, right?  
-> > > > > >
-> > > > > > If I get your point correctly,
-> > > > > > On UP, both could not be active. On SMP, tx/rx could be both active,
-> > > > > > anyway this depends on secure firmware and Linux firmware design.
-> > > > > >
-> > > > > > Do you have any suggestions about arm,func-ids here?
-> > > > > >  
-> > > > > I was thinking if this is just an instruction, why can't each channel be
-> > > > > represented as a controller, i.e, have exactly one func-id per controller node.
-> > > > > Define as many controllers as you need channels ?  
-> > > >
-> > > > I am ok, this could make driver code simpler. Something as below?
-> > > >
-> > > >     smc_tx_mbox: tx_mbox {
-> > > >       #mbox-cells = <0>;
-> > > >       compatible = "arm,smc-mbox";
-> > > >       method = "smc";
-> > > >       transports = "mem";
-> > > >       arm,func-id = <0xc20000fe>;
-> > > >     };
-> > > >
-> > > >     smc_rx_mbox: rx_mbox {
-> > > >       #mbox-cells = <0>;
-> > > >       compatible = "arm,smc-mbox";
-> > > >       method = "smc";
-> > > >       transports = "mem";
-> > > >       arm,func-id = <0xc20000ff>;
-> > > >     };
-> > > >
-> > > >     firmware {
-> > > >       scmi {
-> > > >         compatible = "arm,scmi";
-> > > >         mboxes = <&smc_tx_mbox>, <&smc_rx_mbox 1>;
-> > > >         mbox-names = "tx", "rx";
-> > > >         shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
-> > > >       };
-> > > >     };
-> > > >  
-> > > Yes, the channel part is good.
-> > > But I am not convinced by the need to have SCMI specific "transport" mode.  
-> >
-> > Why would this be SCMI specific and what is the problem with having this property?
-> > By the very nature of the SMC/HVC call you would expect to also pass parameters in registers.
-> > However this limits the amount of data you can push, so the option of reverting to a
-> > memory based payload sounds very reasonable.
-> >  
-> Of course, it is very legit to pass data via mem and many platforms do
-> that. But as you note in your next post, the 'transport' doesn't seem
-> necessary doing what it does in the driver.
+So this now popped up on me with current Linus' tree from a different 
+codepath, see below. Therefore I'd like to propose bringing my previous 
+patch back to life.
 
-Yes, indeed. I didn't realise that until looking more deeply into the driver later.
-So I think we are on the same page regarding this: the *controller* driver and its binding does not need to know about the transport, that's something between the mailbox client and the firmware implementation.
+Thanks.
 
-Cheers,
-Andre.
+
+
+
+From: Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH] iwlwifi: make locking in iwl_mvm_tx_mpdu() BH-safe
+
+iwl_mvm_sta->lock can be taken from BH, and therefore BH must be disabled if
+taking it from other contexts.
+
+This fixes the lockdep warning below.
+
+ ================================
+ WARNING: inconsistent lock state
+ 5.3.0-rc8 #3 Tainted: G        W
+ --------------------------------
+ inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
+ kworker/u8:2/28401 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ 000000009c020e13 (&(&mvm_sta->lock)->rlock){+.?.}, at: iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+ {IN-SOFTIRQ-W} state was registered at:
+   lock_acquire+0xbd/0x1e0
+   _raw_spin_lock+0x35/0x50
+   iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+   iwl_mvm_tx_skb+0x1f8/0x460 [iwlmvm]
+   iwl_mvm_mac_itxq_xmit+0xcc/0x200 [iwlmvm]
+   ieee80211_queue_skb+0x290/0x4c0 [mac80211]
+   ieee80211_xmit_fast+0x814/0xa70 [mac80211]
+   __ieee80211_subif_start_xmit+0x132/0x380 [mac80211]
+   ieee80211_subif_start_xmit+0x49/0x370 [mac80211]
+   dev_hard_start_xmit+0xaf/0x340
+   __dev_queue_xmit+0x98d/0xd20
+   ip6_finish_output2+0x323/0x960
+   ip6_output+0x19d/0x2d0
+   mld_sendpack+0x361/0x3a0
+   mld_ifc_timer_expire+0x19f/0x2e0
+   call_timer_fn+0x97/0x300
+   run_timer_softirq+0x233/0x590
+   __do_softirq+0x12c/0x448
+   irq_exit+0xa5/0xb0
+   smp_apic_timer_interrupt+0xac/0x2a0
+   apic_timer_interrupt+0xf/0x20
+   cpuidle_enter_state+0xbf/0x450
+   cpuidle_enter+0x29/0x40
+   do_idle+0x1cc/0x290
+   cpu_startup_entry+0x19/0x20
+   start_secondary+0x15f/0x1a0
+   secondary_startup_64+0xa4/0xb0
+[ ... snip ... ]
+               stack backtrace:
+ CPU: 1 PID: 28401 Comm: kworker/u8:2 Tainted: G        W         5.3.0-rc8 #3
+ Hardware name: LENOVO 20K5S22R00/20K5S22R00, BIOS R0IET38W (1.16 ) 05/31/2017
+ Workqueue: phy0 ieee80211_beacon_connection_loss_work [mac80211]
+ Call Trace:
+  dump_stack+0x78/0xb3
+  mark_lock+0x28a/0x2a0
+  __lock_acquire+0x568/0x1020
+  ? iwl_mvm_set_tx_cmd+0x1c5/0x400 [iwlmvm]
+  lock_acquire+0xbd/0x1e0
+  ? iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+  _raw_spin_lock+0x35/0x50
+  ? iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+  iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+  ? ieee80211_tx_h_select_key+0xf1/0x4a0 [mac80211]
+  iwl_mvm_tx_skb+0x1f8/0x460 [iwlmvm]
+  iwl_mvm_mac_itxq_xmit+0xcc/0x200 [iwlmvm]
+  ? iwl_mvm_mac_itxq_xmit+0x55/0x200 [iwlmvm]
+  _ieee80211_wake_txqs+0x2cf/0x660 [mac80211]
+  ? _ieee80211_wake_txqs+0x5/0x660 [mac80211]
+  ? __ieee80211_wake_queue+0x219/0x340 [mac80211]
+  ieee80211_wake_queues_by_reason+0x64/0xa0 [mac80211]
+  ieee80211_set_disassoc+0x3b1/0x520 [mac80211]
+  __ieee80211_disconnect+0x81/0x110 [mac80211]
+  process_one_work+0x1f0/0x5b0
+  ? process_one_work+0x16a/0x5b0
+  worker_thread+0x4c/0x3f0
+  kthread+0x103/0x140
+  ? process_one_work+0x5b0/0x5b0
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x3a/0x50
+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 6ac114a393cc..bcfb290beaaf 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1106,7 +1106,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 	 */
+ 	info->flags &= ~IEEE80211_TX_STATUS_EOSP;
+ 
+-	spin_lock(&mvmsta->lock);
++	spin_lock_bh(&mvmsta->lock);
+ 
+ 	/* nullfunc frames should go to the MGMT queue regardless of QOS,
+ 	 * the condition of !ieee80211_is_qos_nullfunc(fc) keeps the default
+@@ -1145,7 +1145,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 
+ 	if (WARN_ONCE(txq_id == IWL_MVM_INVALID_QUEUE, "Invalid TXQ id")) {
+ 		iwl_trans_free_tx_cmd(mvm->trans, dev_cmd);
+-		spin_unlock(&mvmsta->lock);
++		spin_unlock_bh(&mvmsta->lock);
+ 		return 0;
+ 	}
+ 
+@@ -1181,7 +1181,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 	if (tid < IWL_MAX_TID_COUNT && !ieee80211_has_morefrags(fc))
+ 		mvmsta->tid_data[tid].seq_number = seq_number + 0x10;
+ 
+-	spin_unlock(&mvmsta->lock);
++	spin_unlock_bh(&mvmsta->lock);
+ 
+ 	if (iwl_mvm_tx_pkt_queued(mvm, mvmsta,
+ 				  tid == IWL_MAX_TID_COUNT ? 0 : tid))
+@@ -1191,7 +1191,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 
+ drop_unlock_sta:
+ 	iwl_trans_free_tx_cmd(mvm->trans, dev_cmd);
+-	spin_unlock(&mvmsta->lock);
++	spin_unlock_bh(&mvmsta->lock);
+ drop:
+ 	IWL_DEBUG_TX(mvm, "TX to [%d|%d] dropped\n", mvmsta->sta_id, tid);
+ 	return -1;
+
+-- 
+Jiri Kosina
+SUSE Labs
+
