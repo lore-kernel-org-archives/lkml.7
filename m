@@ -2,205 +2,116 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7514CECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE43C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0462089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC3C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfIKPs3 (ORCPT
+        id S1728718AbfIKPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:48:29 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:55100 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfIKPs3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:48:29 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46T5sP06Mqz1r7hg;
-        Wed, 11 Sep 2019 17:48:24 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46T5sN69pbz1qqkw;
-        Wed, 11 Sep 2019 17:48:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id FKitvMXOmW3W; Wed, 11 Sep 2019 17:48:22 +0200 (CEST)
-X-Auth-Info: xd2sm1XRNSYrwIX2giQpW1xnFCUOjECH5odT+gLl0rg=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 11 Sep 2019 11:49:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34978 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727839AbfIKPtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:49:16 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 11 Sep 2019 17:48:22 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] rtc: Add support for century bits to m41t62 (rv4162) RTC devices
-Date:   Wed, 11 Sep 2019 17:48:03 +0200
-Message-Id: <20190911154803.15969-1-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 5E668C05AA56;
+        Wed, 11 Sep 2019 15:49:16 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8080B5D9E2;
+        Wed, 11 Sep 2019 15:49:10 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x8BFnAUQ013042;
+        Wed, 11 Sep 2019 11:49:10 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x8BFnAUi013038;
+        Wed, 11 Sep 2019 11:49:10 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 11 Sep 2019 11:49:10 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Mike Snitzer <snitzer@redhat.com>
+cc:     Martijn Coenen <maco@android.com>, agk@redhat.com,
+        dm-devel@redhat.com, dariofreni@google.com, jiyong@google.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        maco@google.com, ioffe@google.com, narayan@google.com,
+        kernel-team@android.com
+Subject: Re: dm-bufio: Allow clients to specify an upper bound on cache
+ size.
+In-Reply-To: <20190909145703.GA16249@redhat.com>
+Message-ID: <alpine.LRH.2.02.1909111142400.11772@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20190906074526.169194-1-maco@android.com> <20190909145703.GA16249@redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 11 Sep 2019 15:49:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for 'century bits' on 4162 family of RTC devices
-(from ST or microcrystal), which allow storing time beyond year 2099.
 
-For rv4162 century bits - CB1[7]:CB0[6] are stored in reg6 - 0x6 (MONTH):
-CB1  CB0
- 0    0      (year 2000 - 2099)
- 0    1      (year 2100 - 2199)
- 1    0      (year 2200 - 2299)
- 1    1      (year 2300 - 2399)
 
-The driver has been also adjusted to allow setting time up to year 2399
-if the M41T80_FEATURE_CB is set in its DTS/I2C data.
+On Mon, 9 Sep 2019, Mike Snitzer wrote:
 
-There shall be no functional changes for devices not supporting this
-feature. However, other devices - like m41t80 - have different approaches
-to handle century information.
+> On Fri, Sep 06 2019 at  3:45am -0400,
+> Martijn Coenen <maco@android.com> wrote:
+> 
+> > The upper limit on the cache size of a client is currently determined by
+> > dividing the total cache size by the number of clients. However, in some
+> > cases it is beneficial to give one client a higher limit than others; an
+> > example is a device with many dm-verity targets, where one target has a
+> > very large hashtree, and all the others have a small hashtree. Giving
+> > the target with the large hashtree a higher limit will be beneficial.
+> > Another example is dm-verity-fec: FEC is only used in (rare) error
+> > conditions, yet for every dm-verity target with FEC, we create two FEC
+> > dm-bufio clients, which together have a higher cache limit than the
+> > dm-verity target itself.
+> > 
+> > This patchset allows a client to indicate a maximum cache size for its
+> > client; if that maximum is lower than the calculated per-client limit,
+> > that maximum will be used instead, and the freed up cache size will be
+> > allocated to other clients (that haven't set a maximum).
+> > 
+> > Note that this algorithm is not perfect; if we have 100MB with 3
+> > clients, where the first set a max of 1MB, the second set a max of 40MB,
+> > and the third set no maximumm, the ideal allocation would be 1:40:59,
+> > respectively. However, because the initial per-client limit is 100 / 3
+> > =~33MB, the requested max of 40MB is over the per-client limit, and
+> > instead the allocation will end up being ~ 1:40:49. This is still better
+> > than the original 33:33:33 allocation. An iterative algorithm could do
+> > better, but it also complicates the code significantly.
+> 
+> Definitely not very intuitive.. but yes I think it is a reasonable
+> tradeoff between your goals and further code complexity to be able to
+> achieve the "ideal".
+> 
+> Think the documented example can be made clearer by documenting that
+> dm_bufio_cache_size_per_client = 49.  And that _that_ is the reason why
+> the client that didn't set a maximum is bounded to 49.
+> 
+> Overall I think this patch looks reasonable, but I'd like Mikulas to
+> review this closer before I pick it up.
+> 
+> Thanks,
+> Mike
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- drivers/rtc/rtc-m41t80.c | 56 +++++++++++++++++++++++++++++++---------
- 1 file changed, 44 insertions(+), 12 deletions(-)
+I think the proper way how to solve this problem with large amount of 
+clients is to have a global queue holding all the buffers and clean up the 
+oldest buffers in the queue.
 
-diff --git a/drivers/rtc/rtc-m41t80.c b/drivers/rtc/rtc-m41t80.c
-index 9fdc284c943b..5452ab693568 100644
---- a/drivers/rtc/rtc-m41t80.c
-+++ b/drivers/rtc/rtc-m41t80.c
-@@ -68,9 +68,22 @@
- #define M41T80_FEATURE_SQ	BIT(2)	/* Squarewave feature */
- #define M41T80_FEATURE_WD	BIT(3)	/* Extra watchdog resolution */
- #define M41T80_FEATURE_SQ_ALT	BIT(4)	/* RSx bits are in reg 4 */
-+#define M41T80_FEATURE_CB	BIT(5)	/* Century Bits[CB1:CB0] are in reg 6 */
-+
-+/*
-+ * Century bits - CB1[7]:CB0[6] in reg6 (MONTH):
-+ * CB1  CB0
-+ * 0    0      (year 2000 - 2099)
-+ * 0    1      (year 2100 - 2199)
-+ * 1    0      (year 2200 - 2299)
-+ * 1    1      (year 2300 - 2399)
-+ */
-+#define M41T80_CB_SHIFT         6       /* CB[0] bit position */
-+#define M41T80_CB_MASK          0xc0    /* Century bits mask */
- 
- static const struct i2c_device_id m41t80_id[] = {
--	{ "m41t62", M41T80_FEATURE_SQ | M41T80_FEATURE_SQ_ALT },
-+	{ "m41t62", M41T80_FEATURE_SQ | M41T80_FEATURE_SQ_ALT |
-+	  M41T80_FEATURE_CB},
- 	{ "m41t65", M41T80_FEATURE_HT | M41T80_FEATURE_WD },
- 	{ "m41t80", M41T80_FEATURE_SQ },
- 	{ "m41t81", M41T80_FEATURE_HT | M41T80_FEATURE_SQ},
-@@ -80,7 +93,8 @@ static const struct i2c_device_id m41t80_id[] = {
- 	{ "m41st84", M41T80_FEATURE_HT | M41T80_FEATURE_BL | M41T80_FEATURE_SQ },
- 	{ "m41st85", M41T80_FEATURE_HT | M41T80_FEATURE_BL | M41T80_FEATURE_SQ },
- 	{ "m41st87", M41T80_FEATURE_HT | M41T80_FEATURE_BL | M41T80_FEATURE_SQ },
--	{ "rv4162", M41T80_FEATURE_SQ | M41T80_FEATURE_WD | M41T80_FEATURE_SQ_ALT },
-+	{ "rv4162", M41T80_FEATURE_SQ | M41T80_FEATURE_WD |
-+	  M41T80_FEATURE_SQ_ALT | M41T80_FEATURE_CB},
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, m41t80_id);
-@@ -88,7 +102,8 @@ MODULE_DEVICE_TABLE(i2c, m41t80_id);
- static const struct of_device_id m41t80_of_match[] = {
- 	{
- 		.compatible = "st,m41t62",
--		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_SQ_ALT)
-+		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_SQ_ALT |
-+				 M41T80_FEATURE_CB)
- 	},
- 	{
- 		.compatible = "st,m41t65",
-@@ -128,16 +143,19 @@ static const struct of_device_id m41t80_of_match[] = {
- 	},
- 	{
- 		.compatible = "microcrystal,rv4162",
--		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD | M41T80_FEATURE_SQ_ALT)
-+		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD |
-+				 M41T80_FEATURE_SQ_ALT | M41T80_FEATURE_CB)
- 	},
- 	/* DT compatibility only, do not use compatibles below: */
- 	{
- 		.compatible = "st,rv4162",
--		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD | M41T80_FEATURE_SQ_ALT)
-+		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD |
-+				 M41T80_FEATURE_SQ_ALT | M41T80_FEATURE_CB)
- 	},
- 	{
- 		.compatible = "rv4162",
--		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD | M41T80_FEATURE_SQ_ALT)
-+		.data = (void *)(M41T80_FEATURE_SQ | M41T80_FEATURE_WD |
-+				 M41T80_FEATURE_SQ_ALT | M41T80_FEATURE_CB)
- 	},
- 	{ }
- };
-@@ -197,6 +215,7 @@ static irqreturn_t m41t80_handle_irq(int irq, void *dev_id)
- static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct m41t80_data *clientdata = i2c_get_clientdata(client);
- 	unsigned char buf[8];
- 	int err, flags;
- 
-@@ -222,9 +241,13 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	tm->tm_mday = bcd2bin(buf[M41T80_REG_DAY] & 0x3f);
- 	tm->tm_wday = buf[M41T80_REG_WDAY] & 0x07;
- 	tm->tm_mon = bcd2bin(buf[M41T80_REG_MON] & 0x1f) - 1;
--
--	/* assume 20YY not 19YY, and ignore the Century Bit */
-+	/* assume 20YY not 19YY */
- 	tm->tm_year = bcd2bin(buf[M41T80_REG_YEAR]) + 100;
-+
-+	if (clientdata->features & M41T80_FEATURE_CB)
-+		tm->tm_year += ((buf[M41T80_REG_MON] & M41T80_CB_MASK)
-+				>> M41T80_CB_SHIFT) * 100;
-+
- 	return 0;
- }
- 
-@@ -232,10 +255,13 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct m41t80_data *clientdata = i2c_get_clientdata(client);
-+	int err, flags, max_year = 199;
- 	unsigned char buf[8];
--	int err, flags;
- 
--	if (tm->tm_year < 100 || tm->tm_year > 199)
-+	if (clientdata->features & M41T80_FEATURE_CB)
-+		max_year = 499;
-+
-+	if (tm->tm_year < 100 || tm->tm_year > max_year)
- 		return -EINVAL;
- 
- 	buf[M41T80_REG_SSEC] = 0;
-@@ -243,8 +269,14 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	buf[M41T80_REG_MIN] = bin2bcd(tm->tm_min);
- 	buf[M41T80_REG_HOUR] = bin2bcd(tm->tm_hour);
- 	buf[M41T80_REG_DAY] = bin2bcd(tm->tm_mday);
--	buf[M41T80_REG_MON] = bin2bcd(tm->tm_mon + 1);
--	buf[M41T80_REG_YEAR] = bin2bcd(tm->tm_year - 100);
-+	if (clientdata->features & M41T80_FEATURE_CB) {
-+		buf[M41T80_REG_YEAR] = bin2bcd((tm->tm_year - 100) % 100);
-+		buf[M41T80_REG_MON] = bin2bcd(tm->tm_mon + 1) |
-+			(((tm->tm_year - 100) / 100) << M41T80_CB_SHIFT);
-+	} else {
-+		buf[M41T80_REG_MON] = bin2bcd(tm->tm_mon + 1);
-+		buf[M41T80_REG_YEAR] = bin2bcd(tm->tm_year - 100);
-+	}
- 	buf[M41T80_REG_WDAY] = tm->tm_wday;
- 
- 	/* If the square wave output is controlled in the weekday register */
--- 
-2.20.1
+So that if one instance of the dm-verity target uses the buffer cache 
+heavily, it can evict buffers loaded by other inactive dm-verity 
+instances.
 
+I am now working on the global queue patch.
+
+Mikulas
