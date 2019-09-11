@@ -6,130 +6,71 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34584C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EF4C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC342084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7992053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfIKUoO (ORCPT
+        id S1729601AbfIKUvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:44:14 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:30342 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728808AbfIKUoO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:44:14 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BKgCNh005514;
-        Wed, 11 Sep 2019 20:43:53 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2uxg74nmvc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 20:43:53 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 4B97453;
-        Wed, 11 Sep 2019 20:43:51 +0000 (UTC)
-Received: from [16.116.129.27] (unknown [16.116.129.27])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id A2A064A;
-        Wed, 11 Sep 2019 20:43:49 +0000 (UTC)
-Subject: Re: [PATCH 4/8] x86/platform/uv: Setup UV functions for Hubless UV
- Systems
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 11 Sep 2019 16:51:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49166 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729327AbfIKUvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 16:51:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6274930821BF;
+        Wed, 11 Sep 2019 20:51:04 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-121-77.rdu2.redhat.com [10.10.121.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D11845D6A5;
+        Wed, 11 Sep 2019 20:51:01 +0000 (UTC)
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
- <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
- <20190911060702.GD104115@gmail.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <e3a3d64d-87ff-d6de-c550-9a3249b687dd@hpe.com>
-Date:   Wed, 11 Sep 2019 13:44:19 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <20190911195745.GI29434@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <11361434-ca3d-78ae-e825-8521ee3bfbe6@redhat.com>
+Date:   Wed, 11 Sep 2019 21:51:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190911060702.GD104115@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190911195745.GI29434@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-11_10:2019-09-11,2019-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=788 phishscore=0 bulkscore=0 clxscore=1015
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1909110186
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 11 Sep 2019 20:51:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/11/19 8:57 PM, Matthew Wilcox wrote:
+> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+>> To remove the unacceptable delays, we have to limit the amount of wait
+>> time on the mmap_sem. So the new down_write_timedlock() function is
+>> used to acquire the write lock on the mmap_sem with a timeout value of
+>> 10ms which should not cause a perceivable delay. If timeout happens,
+>> the task will abandon its effort to share the PMD and allocate its own
+>> copy instead.
+> If you do a v2, this is *NOT* the mmap_sem.  It's the i_mmap_rwsem
+> which protects a very different data structure from the mmap_sem.
+>
+Thanks for reminder. I should have read the code more carefully.
 
+Cheers,
+Longman
 
-On 9/10/2019 11:07 PM, Ingo Molnar wrote:
-> 
-> * Mike Travis <mike.travis@hpe.com> wrote:
-> 
->> +/* Initialize UV hubless systems */
->> +static __init int uv_system_init_hubless(void)
->> +{
->> +	int rc;
->> +
->> +	/* Setup PCH NMI handler */
->> +	uv_nmi_setup_hubless();
->> +
->> +	/* Init kernel/BIOS interface */
->> +	rc = uv_bios_init();
->> +
->> +	return rc;
->> +}
-
-This looks like an excessive cleanup error by me.  The original was:
-
-> +static __init int uv_system_init_hubless(void)
-> +{
-> +       int rc;
-> +
-> +       /* Setup PCH NMI handler */
-> +       uv_nmi_setup_hubless();
-> +
-> +       /* Init kernel/BIOS interface */
-> +       rc = uv_bios_init();
-> +
-> +       /* Create user access node if UVsystab available */
-> +       if (rc >= 0)
-> +               uv_setup_proc_files(1);
-> +
-> +       return rc;
-> +}
-> +
-
-Hubbed UV's do not have a non-UV BIOS, but hubless systems in theory 
-can.   So uv_bios_init can fail on hubless systems if it has some other 
-BIOS (unlikely but possible).  So I removed too much in this cleanup. 
-I'll send another patch set to puts this back.
-
-Thanks,
-Mike
-
-> 
-> Am I the only one who immediately sees the trivial C transformation
-> through which this function could lose a local variable and become 4
-> lines shorter?
-> 
-> And this function got two Reviewed-by tags...
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
