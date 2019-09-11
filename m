@@ -2,154 +2,347 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BABC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF155C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A172085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695302089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:54:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="berDa54j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfIKPw0 (ORCPT
+        id S1728748AbfIKPy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:52:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727581AbfIKPw0 (ORCPT
+        Wed, 11 Sep 2019 11:54:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55894 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbfIKPyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:52:26 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BFq2YY073022
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:52:25 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uy3kagtp8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:52:24 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
-        Wed, 11 Sep 2019 16:52:23 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Sep 2019 16:52:19 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BFqI8A49741954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 15:52:18 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C220652063;
-        Wed, 11 Sep 2019 15:52:18 +0000 (GMT)
-Received: from bahia.lan (unknown [9.145.58.141])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 832F952054;
-        Wed, 11 Sep 2019 15:52:18 +0000 (GMT)
-Subject: [PATCH v2] powerpc/xive: Fix bogus error code returned by OPAL
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 11 Sep 2019 17:52:18 +0200
-User-Agent: StGit/unknown-version
+        Wed, 11 Sep 2019 11:54:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g207so4093104wmg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 08:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mvvOS/sqUBhPu8WpbD9ESoPKpPJlW80v1nzcyWDzFnk=;
+        b=berDa54jZShV5yj/T8FtyatN1X7Am1A9RTI2E4oedaNH0OFoXGJIW45ngV/8/HRvCO
+         eiBpHkJhX+/j1hv75eHhND2KTS2/quVGuVYmRHu15NkQjUrC6su2GZL3DP/zSDcXiUkI
+         JTNWXYrmYyHcj0Ej6OXxVR8gTTzgGalNJd/QbonIilTMi5M0v73b+/VcnLpBNCk9tj15
+         9Lh/qw1L0Pvj1wJi+H8Dszk592L98sYZUqH8h/PP0tSSMQhopWmN+4vpDXFEIh5FXQNo
+         Yj4fgCWcBp6xCvzJaUoyeDwRCkO8D/FWCm40D3Epc82Hu3o8ZnmsG9qxP2vopdUYL2hS
+         h1UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mvvOS/sqUBhPu8WpbD9ESoPKpPJlW80v1nzcyWDzFnk=;
+        b=sdBkuXfC8CjetNlW60eNJptohCnUdyOt1mvw4hlaY4JuCn5GuKJNVWtuwmKdff9AfE
+         aTsv3jKsH8ukYVlgwt3wifdyOTGsjncm+Xu3IVAwD/2qrUFN9CCpPqmv7LnedSRPpJGa
+         AFY4kkz1rMNnkjDzlQKqlOQauGQj4DSbTBGcfQNJxY2kEjf0PvloYpmRkhgYCuwbYPTQ
+         jlBqMfHgX1W2j5kdX8zK5Mnt9EjhYkDlCJsk6Zfxv5CYb24T2mT4RpkfHDhDGKdwLQd0
+         6B9XlZ5eq+es8jo0t/3ImQjz6hO18oMLdBqYE3L0hRUoSiQ9PLCaI3XYzGnqJjDwv7wA
+         T+/w==
+X-Gm-Message-State: APjAAAXqyor6WmXZ73MeA+zSPVQCAUC11tsz6TJ4zQc1Cs0oDYtVKNDz
+        XC4c1/SYjhKdWvlBS86IbFL+IQ==
+X-Google-Smtp-Source: APXvYqwxrY5aqD7yuz7QrYEDqFnizyeWFIeFjtg4MRUvNx/wHZNRO/Pwkk41hM6E3jLKEmiWzmNIxw==
+X-Received: by 2002:a7b:cc94:: with SMTP id p20mr4603927wma.171.1568217292018;
+        Wed, 11 Sep 2019 08:54:52 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id y3sm4420368wmg.2.2019.09.11.08.54.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 08:54:51 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+References: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568216290-84219-5-git-send-email-jianxin.pan@amlogic.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <e0054a53-7516-0527-3df7-c85e168003ba@baylibre.com>
+Date:   Wed, 11 Sep 2019 17:54:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1568216290-84219-5-git-send-email-jianxin.pan@amlogic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091115-0016-0000-0000-000002AA163A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091115-0017-0000-0000-0000330AA387
-Message-Id: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=763 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909110144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
-to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
-Unfortunatelty, OPAL return values are signed 64-bit entities and
-errors are supposed to be negative. If that happens, the linux code
-confusingly treats 0xffffffff as a valid IRQ number and panics at some
-point.
+On 11/09/2019 17:38, Jianxin Pan wrote:
+> Add basic support for the Amlogic A1 based Amlogic AD401 board:
+> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+> Timer, UART. It's capable of booting up into the serial console.
+> 
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile           |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 131 +++++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 84afecb..a90be52 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+> new file mode 100644
+> index 00000000..69c25c6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-a1.dtsi"
+> +
+> +/ {
+> +	compatible = "amlogic,ad401", "amlogic,a1";
+> +	model = "Amlogic Meson A1 AD401 Development Board";
+> +
+> +	aliases {
+> +		serial0 = &uart_AO_B;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x8000000>;
+> +	};
+> +};
+> +
+> +&uart_AO_B {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> new file mode 100644
+> index 00000000..7da448c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -0,0 +1,131 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "amlogic,a1";
+> +
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a35";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		l2: l2-cache0 {
+> +			compatible = "cache";
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			size = <0x0 0x800000>;
+> +			alignment = <0x0 0x400000>;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+> +	sm: secure-monitor {
+> +		compatible = "amlogic,meson-gxbb-sm";
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +
+> +		apb: bus@0xfe000000 {
 
-A fix was recently merged in skiboot:
+Should be bus@fe000000
 
-e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+> +			compatible = "simple-bus";
+> +			reg = <0x0 0xfe000000 0x0 0x1000000>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+> +
+> +			uart_AO: serial@1c00 {
+> +				compatible = "amlogic,meson-gx-uart",
+> +					     "amlogic,meson-ao-uart";
+> +				reg = <0x0 0x1c00 0x0 0x18>;
+> +				interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&xtal>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+> +
+> +			uart_AO_B: serial@2000 {
+> +				compatible = "amlogic,meson-gx-uart",
+> +					     "amlogic,meson-ao-uart";
+> +				reg = <0x0 0x2000 0x0 0x18>;
+> +				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&xtal>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gic: interrupt-controller@ff901000 {
+> +			compatible = "arm,gic-400";
+> +			reg = <0x0 0xff901000 0x0 0x1000>,
+> +			      <0x0 0xff902000 0x0 0x2000>,
+> +			      <0x0 0xff904000 0x0 0x2000>,
+> +			      <0x0 0xff906000 0x0 0x2000>;
+> +			interrupt-controller;
+> +			interrupts = <GIC_PPI 9
+> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13
+> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14
+> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11
+> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10
+> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	xtal: xtal-clk {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "xtal";
+> +		#clock-cells = <0>;
+> +	};
+> +};
+> 
 
-but we need a workaround anyway to support older skiboots already
-in the field.
+With that fixed:
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
-returned upon resource exhaustion.
-
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Greg Kurz <groug@kaod.org>
----
-v2: - fix syntax error in changelog
-    - Cc stable
-    - rename original OPAL wrapper
-    - rewrite fixup wrapper (style, use s64 and u32)
----
- arch/powerpc/include/asm/opal.h            |    2 +-
- arch/powerpc/platforms/powernv/opal-call.c |    2 +-
- arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
- 3 files changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 57bd029c715e..d5a0807d21db 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t vp,
- int64_t opal_xive_set_vp_info(uint64_t vp,
- 			      uint64_t flags,
- 			      uint64_t report_cl_pair);
--int64_t opal_xive_allocate_irq(uint32_t chip_id);
-+int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
- int64_t opal_xive_free_irq(uint32_t girq);
- int64_t opal_xive_sync(uint32_t type, uint32_t id);
- int64_t opal_xive_dump(uint32_t type, uint32_t id);
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 29ca523c1c79..dccdc9df5213 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPAL_XIVE_SET_QUEUE_INFO);
- OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
- OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
- OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
--OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
-+OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
- OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
- OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
- OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
-diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-index 37987c815913..ad8ee7dd7f57 100644
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -231,6 +231,17 @@ static bool xive_native_match(struct device_node *node)
- 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
- }
- 
-+static s64 opal_xive_allocate_irq(u32 chip_id)
-+{
-+	s64 irq = opal_xive_allocate_irq_raw(chip_id);
-+
-+	/*
-+	 * Old versions of skiboot can incorrectly return 0xffffffff to
-+	 * indicate no space, fix it up here.
-+	 */
-+	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
-+}
-+
- #ifdef CONFIG_SMP
- static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
- {
-
+Neil
