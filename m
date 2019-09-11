@@ -2,120 +2,120 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3693BECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A62C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180C92084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCA42084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfIKR2n (ORCPT
+        id S1729528AbfIKRco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:28:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36536 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfIKR2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:28:42 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9BB09A37191;
-        Wed, 11 Sep 2019 17:28:42 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-234.rdu2.redhat.com [10.10.123.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 61251608C2;
-        Wed, 11 Sep 2019 17:28:40 +0000 (UTC)
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-From:   Waiman Long <longman@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <20190911151451.GH29434@bombadil.infradead.org>
- <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
- <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
- <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
-Organization: Red Hat
-Message-ID: <81464111-2335-9dc4-3465-5800348d5aba@redhat.com>
-Date:   Wed, 11 Sep 2019 18:28:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 11 Sep 2019 13:32:44 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:40357 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbfIKRco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:32:44 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i86Tw-0002nA-MY; Wed, 11 Sep 2019 11:32:40 -0600
+Received: from 110.8.30.213.rev.vodafone.pt ([213.30.8.110] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i86Tv-0005Lh-OI; Wed, 11 Sep 2019 11:32:40 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+References: <20190910175852.GA15572@asgard.redhat.com>
+Date:   Wed, 11 Sep 2019 12:32:17 -0500
+In-Reply-To: <20190910175852.GA15572@asgard.redhat.com> (Eugene
+        Syromiatnikov's message of "Tue, 10 Sep 2019 18:58:52 +0100")
+Message-ID: <87d0g691su.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 17:28:42 +0000 (UTC)
+Content-Type: text/plain
+X-XM-SPF: eid=1i86Tv-0005Lh-OI;;;mid=<87d0g691su.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=213.30.8.110;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18Q8+CvTzcoLi+RF1BzgBUOMruIPSj6/JI=
+X-SA-Exim-Connect-IP: 213.30.8.110
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 6:15 PM, Waiman Long wrote:
-> On 9/11/19 6:03 PM, Mike Kravetz wrote:
->> On 9/11/19 8:44 AM, Waiman Long wrote:
->>> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
->>>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
->>>>> When allocating a large amount of static hugepages (~500-1500GB) on a
->>>>> system with large number of CPUs (4, 8 or even 16 sockets), performance
->>>>> degradation (random multi-second delays) was observed when thousands
->>>>> of processes are trying to fault in the data into the huge pages. The
->>>>> likelihood of the delay increases with the number of sockets and hence
->>>>> the CPUs a system has.  This only happens in the initial setup phase
->>>>> and will be gone after all the necessary data are faulted in.
->>>> Can;t the application just specify MAP_POPULATE?
->>> Originally, I thought that this happened in the startup phase when the
->>> pages were faulted in. The problem persists after steady state had been
->>> reached though. Every time you have a new user process created, it will
->>> have its own page table.
->> This is still at fault time.  Although, for the particular application it
->> may be after the 'startup phase'.
->>
->>>                          It is the sharing of the of huge page shared
->>> memory that is causing problem. Of course, it depends on how the
->>> application is written.
->> It may be the case that some applications would find the delays acceptable
->> for the benefit of shared pmds once they reach steady state.  As you say, of
->> course this depends on how the application is written.
->>
->> I know that Oracle DB would not like it if PMD sharing is disabled for them.
->> Based on what I know of their model, all processes which share PMDs perform
->> faults (write or read) during the startup phase.  This is in environments as
->> big or bigger than you describe above.  I have never looked at/for delays in
->> these environments around pmd sharing (page faults), but that does not mean
->> they do not exist.  I will try to get the DB group to give me access to one
->> of their large environments for analysis.
->>
->> We may want to consider making the timeout value and disable threshold user
->> configurable.
-> Making it configurable is certainly doable. They can be sysctl
-> parameters so that the users can reenable PMD sharing by making those
-> parameters larger.
+Eugene Syromiatnikov <esyr@redhat.com> writes:
 
-I suspect that the customer's application may be generating a new
-process with its own address space for each transaction. That will be
-causing a lot of PMD sharing operations when hundreds of threads are
-pounding it simultaneously. I had inserted some instrumentation code to
-a test kernel that the customers used for testing, the number of
-timeouts after a certain time went up more than 20k.
+> Previously, higher 32 bits of exit_signal fields were lost when
+> copied to the kernel args structure (that uses int as a type for the
+> respective field).  Moreover, as Oleg has noted[1], exit_signal is used
+> unchecked, so it has to be checked for sanity before use; for the legacy
+> syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
+> however, there's no such thing is done in clone3() code path, and that can
+> break at least thread_group_leader.
+>
+> Checking user-passed exit_signal against ~CSIGNAL mask solves both
+> of these problems.
+>
+> [1] https://lkml.org/lkml/2019/9/10/467
+>
+> * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
+> args.exit_signal has bits set outside CSIGNAL mask.
+> (_do_fork): Note that exit_signal is expected to be checked for the
+> sanity by the caller.
+>
+> Fixes: 7f192e3cd316 ("fork: add clone3")
+> Reported-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 
-On the other hands, if the application is structured in such a way that
-there is limited number of separate address spaces with worker threads
-processing the transaction, PMD sharing will be less of a problem. It
-will be hard to convince users to make such a structural changes to
-their application.
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Cheers,
-Longman
-
-
+> ---
+>  kernel/fork.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2852d0e..9dee2ab 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2338,6 +2338,8 @@ struct mm_struct *copy_init_mm(void)
+>   *
+>   * It copies the process, and if successful kick-starts
+>   * it and waits for it to finish using the VM if required.
+> + *
+> + * args->exit_signal is expected to be checked for sanity by the caller.
+>   */
+>  long _do_fork(struct kernel_clone_args *args)
+>  {
+> @@ -2562,6 +2564,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+>  	if (copy_from_user(&args, uargs, size))
+>  		return -EFAULT;
+>  
+> +	/*
+> +	 * exit_signal is confined to CSIGNAL mask in legacy syscalls,
+> +	 * so it is used unchecked deeper in syscall handling routines;
+> +	 * moreover, copying to struct kernel_clone_args.exit_signals
+> +	 * trims higher 32 bits, so it is has to be checked that they
+> +	 * are zero.
+> +	 */
+> +	if (unlikely(args.exit_signal & ~((u64)CSIGNAL)))
+> +		return -EINVAL;
+> +
+>  	*kargs = (struct kernel_clone_args){
+>  		.flags		= args.flags,
+>  		.pidfd		= u64_to_user_ptr(args.pidfd),
