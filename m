@@ -3,478 +3,390 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F76C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AA0ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EAA2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5019208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfIKQQ2 (ORCPT
+        id S1729092AbfIKQQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:16:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53552 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 12:16:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47296 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbfIKQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729047AbfIKQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 12:16:24 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 934748980F6;
+        by mx1.redhat.com (Postfix) with ESMTPS id DC8F8C057E9F;
         Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C28C1001944;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 946CC5C22C;
         Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 7858B20ED5; Wed, 11 Sep 2019 12:16:22 -0400 (EDT)
+        id 8F89820F44; Wed, 11 Sep 2019 12:16:22 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 22/26] NFS: Do some tidying of the parsing code
-Date:   Wed, 11 Sep 2019 12:16:17 -0400
-Message-Id: <20190911161621.19832-23-smayhew@redhat.com>
+Subject: [PATCH v3 26/26] NFS: Attach supplementary error information to fs_context.
+Date:   Wed, 11 Sep 2019 12:16:21 -0400
+Message-Id: <20190911161621.19832-27-smayhew@redhat.com>
 In-Reply-To: <20190911161621.19832-1-smayhew@redhat.com>
 References: <20190911161621.19832-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Split out from commit "NFS: Add fs_context support."
 
-Do some tidying of the parsing code, including:
+Add wrappers nfs_errorf(), nfs_invalf(), and nfs_warnf() which log error
+information to the fs_context.  Convert some printk's to use these new
+wrappers instead.
 
- (*) Returning 0/error rather than true/false.
-
- (*) Putting the nfs_fs_context pointer first in some arg lists.
-
- (*) Unwrap some lines that will now fit on one line.
-
- (*) Provide unioned sockaddr/sockaddr_storage fields to avoid casts.
-
- (*) nfs_parse_devname() can paste its return values directly into the
-     nfs_fs_context struct as that's where the caller puts them.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- fs/nfs/fs_context.c | 128 +++++++++++++++++++-------------------------
- fs/nfs/internal.h   |  16 ++++--
- fs/nfs/super.c      |   2 +-
- 3 files changed, 67 insertions(+), 79 deletions(-)
+ fs/nfs/fs_context.c | 105 +++++++++++++++-----------------------------
+ fs/nfs/getroot.c    |   3 ++
+ fs/nfs/internal.h   |   4 ++
+ fs/nfs/namespace.c  |   2 +-
+ fs/nfs/nfs4super.c  |   2 +
+ fs/nfs/super.c      |   4 +-
+ 6 files changed, 48 insertions(+), 72 deletions(-)
 
 diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 1ff60c0e073f..02ed45ccdebf 100644
+index 14c43d1c7da9..03044aaa8e17 100644
 --- a/fs/nfs/fs_context.c
 +++ b/fs/nfs/fs_context.c
-@@ -347,8 +347,9 @@ static void nfs_set_mount_transport_protocol(struct nfs_fs_context *ctx)
-  * Add 'flavor' to 'auth_info' if not already present.
-  * Returns true if 'flavor' ends up in the list, false otherwise
-  */
--static bool nfs_auth_info_add(struct nfs_auth_info *auth_info,
--			      rpc_authflavor_t flavor)
-+static int nfs_auth_info_add(struct nfs_fs_context *ctx,
-+			     struct nfs_auth_info *auth_info,
-+			     rpc_authflavor_t flavor)
- {
- 	unsigned int i;
- 	unsigned int max_flavor_len = ARRAY_SIZE(auth_info->flavors);
-@@ -356,26 +357,27 @@ static bool nfs_auth_info_add(struct nfs_auth_info *auth_info,
- 	/* make sure this flavor isn't already in the list */
- 	for (i = 0; i < auth_info->flavor_len; i++) {
- 		if (flavor == auth_info->flavors[i])
--			return true;
-+			return 0;
+@@ -321,10 +321,8 @@ static int nfs_auth_info_add(struct fs_context *fc,
+ 			return 0;
  	}
  
- 	if (auth_info->flavor_len + 1 >= max_flavor_len) {
- 		dfprintk(MOUNT, "NFS: too many sec= flavors\n");
--		return false;
-+		return -EINVAL;
- 	}
+-	if (auth_info->flavor_len + 1 >= max_flavor_len) {
+-		dfprintk(MOUNT, "NFS: too many sec= flavors\n");
+-		return -EINVAL;
+-	}
++	if (auth_info->flavor_len + 1 >= max_flavor_len)
++		return nfs_invalf(fc, "NFS: too many sec= flavors");
  
  	auth_info->flavors[auth_info->flavor_len++] = flavor;
--	return true;
-+	return 0;
- }
- 
- /*
-  * Parse the value of the 'sec=' option.
-  */
--static int nfs_parse_security_flavors(char *value, struct nfs_fs_context *ctx)
-+static int nfs_parse_security_flavors(struct nfs_fs_context *ctx, char *value)
- {
- 	substring_t args[MAX_OPT_ARGS];
- 	rpc_authflavor_t pseudoflavor;
- 	char *p;
-+	int ret;
- 
- 	dfprintk(MOUNT, "NFS: parsing sec=%s option\n", value);
- 
-@@ -417,19 +419,20 @@ static int nfs_parse_security_flavors(char *value, struct nfs_fs_context *ctx)
+ 	return 0;
+@@ -381,9 +379,7 @@ static int nfs_parse_security_flavors(struct fs_context *fc,
+ 			pseudoflavor = RPC_AUTH_GSS_SPKMP;
+ 			break;
  		default:
- 			dfprintk(MOUNT,
- 				 "NFS: sec= option '%s' not recognized\n", p);
--			return 0;
-+			return -EINVAL;
+-			dfprintk(MOUNT,
+-				 "NFS: sec= option '%s' not recognized\n", p);
+-			return -EINVAL;
++			return nfs_invalf(fc, "NFS: sec=%s option not recognized", p);
  		}
  
--		if (!nfs_auth_info_add(&ctx->auth_info, pseudoflavor))
--			return 0;
-+		ret = nfs_auth_info_add(ctx, &ctx->auth_info, pseudoflavor);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
--	return 1;
-+	return 0;
- }
- 
--static int nfs_parse_version_string(char *string,
--		struct nfs_fs_context *ctx,
--		substring_t *args)
-+static int nfs_parse_version_string(struct nfs_fs_context *ctx,
-+				    char *string,
-+				    substring_t *args)
- {
- 	ctx->flags &= ~NFS_MOUNT_VER3;
- 	switch (match_token(string, nfs_vers_tokens, args)) {
-@@ -460,9 +463,10 @@ static int nfs_parse_version_string(char *string,
+ 		ret = nfs_auth_info_add(fc, &ctx->auth_info, pseudoflavor);
+@@ -428,8 +424,7 @@ static int nfs_parse_version_string(struct fs_context *fc,
  		ctx->minorversion = 2;
  		break;
  	default:
--		return 0;
-+		dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
-+		return -EINVAL;
+-		dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
+-		return -EINVAL;
++		return nfs_invalf(fc, "NFS: Unsupported NFS version");
  	}
--	return 1;
-+	return 0;
+ 	return 0;
  }
+@@ -454,10 +449,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
  
- static int nfs_get_option_str(substring_t args[], char **option)
-@@ -517,7 +521,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- {
- 	substring_t args[MAX_OPT_ARGS];
- 	char *string;
--	int token, rc;
-+	int token, ret;
- 
- 	dfprintk(MOUNT, "NFS:   parsing nfs mount option '%s'\n", p);
- 
-@@ -557,13 +561,11 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		break;
- 	case Opt_lock:
- 		ctx->flags &= ~NFS_MOUNT_NONLM;
--		ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK |
--				NFS_MOUNT_LOCAL_FCNTL);
-+		ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		break;
- 	case Opt_nolock:
- 		ctx->flags |= NFS_MOUNT_NONLM;
--		ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK |
--			       NFS_MOUNT_LOCAL_FCNTL);
-+		ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
- 		break;
- 	case Opt_udp:
- 		ctx->flags &= ~NFS_MOUNT_TCP;
-@@ -696,29 +698,25 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		rc = nfs_parse_version_string(string, ctx, args);
-+		ret = nfs_parse_version_string(ctx, string, args);
- 		kfree(string);
--		if (!rc)
--			goto out_invalid_value;
-+		if (ret < 0)
-+			return ret;
- 		break;
- 	case Opt_sec:
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		rc = nfs_parse_security_flavors(string, ctx);
-+		ret = nfs_parse_security_flavors(ctx, string);
- 		kfree(string);
--		if (!rc) {
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "security flavor\n");
+ 	switch (opt) {
+ 	case Opt_source:
+-		if (fc->source) {
+-			dfprintk(MOUNT, "NFS: Multiple sources not supported\n");
 -			return -EINVAL;
 -		}
-+		if (ret < 0)
-+			return ret;
++		if (fc->source)
++			return nfs_invalf(fc, "NFS: Multiple sources not supported");
+ 		fc->source = param->string;
+ 		param->string = NULL;
  		break;
- 	case Opt_proto:
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_xprt_protocol_tokens, args);
-+		token = match_token(string, nfs_xprt_protocol_tokens, args);
- 
- 		ctx->protofamily = AF_INET;
- 		switch (token) {
-@@ -746,9 +744,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			xprt_load_transport(string);
+@@ -667,8 +660,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 			xprt_load_transport(param->string);
  			break;
  		default:
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "transport protocol\n");
- 			kfree(string);
-+			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
- 			return -EINVAL;
+-			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
+-			return -EINVAL;
++			return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
  		}
- 		kfree(string);
-@@ -757,8 +754,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_xprt_protocol_tokens, args);
-+		token = match_token(string, nfs_xprt_protocol_tokens, args);
- 		kfree(string);
  
- 		ctx->mountfamily = AF_INET;
-@@ -777,8 +773,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
+ 		ctx->protofamily = protofamily;
+@@ -691,8 +683,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
  			break;
  		case Opt_xprt_rdma: /* not used for side protocols */
  		default:
--			dfprintk(MOUNT, "NFS:   unrecognized "
--				 "transport protocol\n");
-+			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
- 			return -EINVAL;
+-			dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
+-			return -EINVAL;
++			return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
  		}
+ 		ctx->mountfamily = mountfamily;
  		break;
-@@ -788,9 +783,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		ctx->nfs_server.addrlen =
- 			rpc_pton(ctx->net, string, strlen(string),
--				 (struct sockaddr *)
- 				 &ctx->nfs_server.address,
--				 sizeof(ctx->nfs_server.address));
-+				 sizeof(ctx->nfs_server._address));
- 		kfree(string);
- 		if (ctx->nfs_server.addrlen == 0)
- 			goto out_invalid_address;
-@@ -800,8 +794,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		break;
- 	case Opt_mounthost:
--		if (nfs_get_option_str(args,
--				       &ctx->mount_server.hostname))
-+		if (nfs_get_option_str(args, &ctx->mount_server.hostname))
- 			goto out_nomem;
- 		break;
- 	case Opt_mountaddr:
-@@ -810,9 +803,8 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			goto out_nomem;
- 		ctx->mount_server.addrlen =
- 			rpc_pton(ctx->net, string, strlen(string),
--				 (struct sockaddr *)
- 				 &ctx->mount_server.address,
--				 sizeof(ctx->mount_server.address));
-+				 sizeof(ctx->mount_server._address));
- 		kfree(string);
- 		if (ctx->mount_server.addrlen == 0)
- 			goto out_invalid_address;
-@@ -826,8 +818,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string,
--				    nfs_lookupcache_tokens, args);
-+		token = match_token(string, nfs_lookupcache_tokens, args);
- 		kfree(string);
- 		switch (token) {
- 		case Opt_lookupcache_all:
-@@ -841,10 +832,9 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 			ctx->flags |= NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE;
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:   invalid "
--				 "lookupcache argument\n");
-+			dfprintk(MOUNT, "NFS:   invalid lookupcache argument\n");
- 			return -EINVAL;
--		};
-+		}
- 		break;
- 	case Opt_fscache_uniq:
- 		if (nfs_get_option_str(args, &ctx->fscache_uniq))
-@@ -855,8 +845,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		string = match_strdup(args);
- 		if (string == NULL)
- 			goto out_nomem;
--		token = match_token(string, nfs_local_lock_tokens,
--				    args);
-+		token = match_token(string, nfs_local_lock_tokens, args);
- 		kfree(string);
- 		switch (token) {
- 		case Opt_local_lock_all:
-@@ -874,8 +863,7 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 					NFS_MOUNT_LOCAL_FCNTL);
- 			break;
- 		default:
--			dfprintk(MOUNT, "NFS:	invalid	"
--				 "local_lock argument\n");
-+			dfprintk(MOUNT, "NFS:	invalid	local_lock argument\n");
- 			return -EINVAL;
- 		};
- 		break;
-@@ -889,13 +877,11 @@ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p)
- 		break;
- 	case Opt_userspace:
- 	case Opt_deprecated:
--		dfprintk(MOUNT, "NFS:   ignoring mount option "
--			 "'%s'\n", p);
-+		dfprintk(MOUNT, "NFS:   ignoring mount option '%s'\n", p);
- 		break;
+@@ -777,13 +768,11 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 	return 0;
  
- 	default:
--		dfprintk(MOUNT, "NFS:   unrecognized mount option "
--			 "'%s'\n", p);
-+		dfprintk(MOUNT, "NFS:   unrecognized mount option '%s'\n", p);
- 		return -EINVAL;
- 	}
+ out_invalid_value:
+-	printk(KERN_INFO "NFS: Bad mount option value specified\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Bad mount option value specified");
+ out_invalid_address:
+-	printk(KERN_INFO "NFS: Bad IP address specified\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Bad IP address specified");
+ out_of_bounds:
+-	printk(KERN_INFO "NFS: Value for '%s' out of range\n", param->key);
++	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+ 	return -ERANGE;
+ }
  
-@@ -955,15 +941,15 @@ int nfs_parse_mount_options(char *raw, struct nfs_fs_context *ctx)
- 	 * families in the addr=/mountaddr= options.
- 	 */
- 	if (ctx->protofamily != AF_UNSPEC &&
--	    ctx->protofamily != ctx->nfs_server.address.ss_family)
-+	    ctx->protofamily != ctx->nfs_server.address.sa_family)
- 		goto out_proto_mismatch;
- 
- 	if (ctx->mountfamily != AF_UNSPEC) {
- 		if (ctx->mount_server.addrlen) {
--			if (ctx->mountfamily != ctx->mount_server.address.ss_family)
-+			if (ctx->mountfamily != ctx->mount_server.address.sa_family)
- 				goto out_mountproto_mismatch;
- 		} else {
--			if (ctx->mountfamily != ctx->nfs_server.address.ss_family)
-+			if (ctx->mountfamily != ctx->nfs_server.address.sa_family)
- 				goto out_mountproto_mismatch;
- 		}
- 	}
-@@ -999,9 +985,9 @@ int nfs_parse_mount_options(char *raw, struct nfs_fs_context *ctx)
-  *
-  * Note: caller frees hostname and export path, even on error.
-  */
--static int nfs_parse_devname(const char *dev_name,
--			     char **hostname, size_t maxnamlen,
--			     char **export_path, size_t maxpathlen)
-+static int nfs_parse_devname(struct nfs_fs_context *ctx,
-+			     const char *dev_name,
-+			     size_t maxnamlen, size_t maxpathlen)
- {
- 	size_t len;
- 	char *end;
-@@ -1037,17 +1023,17 @@ static int nfs_parse_devname(const char *dev_name,
- 		goto out_hostname;
- 
- 	/* N.B. caller will free nfs_server.hostname in all cases */
--	*hostname = kstrndup(dev_name, len, GFP_KERNEL);
--	if (*hostname == NULL)
-+	ctx->nfs_server.hostname = kmemdup_nul(dev_name, len, GFP_KERNEL);
-+	if (!ctx->nfs_server.hostname)
- 		goto out_nomem;
- 	len = strlen(++end);
- 	if (len > maxpathlen)
- 		goto out_path;
--	*export_path = kstrndup(end, len, GFP_KERNEL);
--	if (!*export_path)
-+	ctx->nfs_server.export_path = kmemdup_nul(end, len, GFP_KERNEL);
-+	if (!ctx->nfs_server.export_path)
- 		goto out_nomem;
- 
--	dfprintk(MOUNT, "NFS: MNTPATH: '%s'\n", *export_path);
-+	dfprintk(MOUNT, "NFS: MNTPATH: '%s'\n", ctx->nfs_server.export_path);
+@@ -849,19 +838,15 @@ static int nfs_parse_source(struct fs_context *fc,
  	return 0;
  
  out_bad_devname:
-@@ -1068,7 +1054,7 @@ static int nfs_parse_devname(const char *dev_name,
+-	dfprintk(MOUNT, "NFS: device name not in host:path format\n");
+-	return -EINVAL;
+-
++	return nfs_invalf(fc, "NFS: device name not in host:path format");
+ out_nomem:
+-	dfprintk(MOUNT, "NFS: not enough memory to parse device name\n");
++	nfs_errorf(fc, "NFS: not enough memory to parse device name");
+ 	return -ENOMEM;
+-
+ out_hostname:
+-	dfprintk(MOUNT, "NFS: server hostname too long\n");
++	nfs_errorf(fc, "NFS: server hostname too long");
+ 	return -ENAMETOOLONG;
+-
+ out_path:
+-	dfprintk(MOUNT, "NFS: export pathname too long\n");
++	nfs_errorf(fc, "NFS: export pathname too long");
+ 	return -ENAMETOOLONG;
+ }
+ 
+@@ -1018,29 +1003,23 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+ 		ctx->skip_reconfig_option_check = true;
+ 		return 0;
+ 	}
+-	dfprintk(MOUNT, "NFS: mount program didn't pass any mount data\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: mount program didn't pass any mount data");
+ 
+ out_no_v3:
+-	dfprintk(MOUNT, "NFS: nfs_mount_data version %d does not support v3\n",
+-		 data->version);
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: nfs_mount_data version does not support v3");
+ 
+ out_no_sec:
+-	dfprintk(MOUNT, "NFS: nfs_mount_data version supports only AUTH_SYS\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: nfs_mount_data version supports only AUTH_SYS");
+ 
+ out_nomem:
+-	dfprintk(MOUNT, "NFS: not enough memory to handle mount options\n");
++	dfprintk(MOUNT, "NFS: not enough memory to handle mount options");
+ 	return -ENOMEM;
+ 
+ out_no_address:
+-	dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+ 
+ out_invalid_fh:
+-	dfprintk(MOUNT, "NFS: invalid root filehandle\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: invalid root filehandle");
+ }
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
+@@ -1135,21 +1114,17 @@ static int nfs4_parse_monolithic(struct fs_context *fc,
+ 		ctx->skip_reconfig_option_check = true;
+ 		return 0;
+ 	}
+-	dfprintk(MOUNT, "NFS4: mount program didn't pass any mount data\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS4: mount program didn't pass any mount data");
+ 
+ out_inval_auth:
+-	dfprintk(MOUNT, "NFS4: Invalid number of RPC auth flavours %d\n",
+-		 data->auth_flavourlen);
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS4: Invalid number of RPC auth flavours %d",
++		      data->auth_flavourlen);
+ 
+ out_no_address:
+-	dfprintk(MOUNT, "NFS4: mount program didn't pass remote address\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS4: mount program didn't pass remote address");
+ 
+ out_invalid_transport_udp:
+-	dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
+ }
+ #endif
+ 
+@@ -1167,8 +1142,7 @@ static int nfs_fs_context_parse_monolithic(struct fs_context *fc,
+ 		return nfs4_parse_monolithic(fc, data);
+ #endif
+ 
+-	dfprintk(MOUNT, "NFS: Unsupported monolithic data version\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Unsupported monolithic data version");
  }
  
  /*
-- * Validate the NFS2/NFS3 mount data
-+ * Parse monolithic NFS2/NFS3 mount data
-  * - fills in the mount root filehandle
-  *
-  * For option strings, user space handles the following behaviors:
-@@ -1397,11 +1383,7 @@ int nfs_validate_text_mount_data(void *options,
+@@ -1256,32 +1230,25 @@ static int nfs_fs_context_validate(struct fs_context *fc)
+ 	return 0;
  
- 	nfs_set_port(sap, &ctx->nfs_server.port, port);
- 
--	return nfs_parse_devname(dev_name,
--				   &ctx->nfs_server.hostname,
--				   max_namelen,
--				   &ctx->nfs_server.export_path,
--				   max_pathlen);
-+	return nfs_parse_devname(ctx, dev_name, max_namelen, max_pathlen);
- 
- #if !IS_ENABLED(CONFIG_NFS_V4)
+ out_no_device_name:
+-	dfprintk(MOUNT, "NFS: Device name not specified\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Device name not specified");
  out_v4_not_compiled:
+-	dfprintk(MOUNT, "NFS: NFSv4 is not compiled into kernel\n");
++	nfs_errorf(fc, "NFS: NFSv4 is not compiled into kernel");
+ 	return -EPROTONOSUPPORT;
+ out_invalid_transport_udp:
+-	dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
+ out_no_address:
+-	dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+ out_mountproto_mismatch:
+-	dfprintk(MOUNT, "NFS: Mount server address does not match mountproto= option\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Mount server address does not match mountproto= option");
+ out_proto_mismatch:
+-	dfprintk(MOUNT, "NFS: Server address does not match proto= option\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: Server address does not match proto= option");
+ out_minorversion_mismatch:
+-	dfprintk(MOUNT, "NFS: Mount option vers=%u does not support minorversion=%u\n",
++	return nfs_invalf(fc, "NFS: Mount option vers=%u does not support minorversion=%u",
+ 			  ctx->version, ctx->minorversion);
+-	return -EINVAL;
+ out_migration_misuse:
+-	dfprintk(MOUNT, "NFS: 'Migration' not supported for this NFS version\n");
+-	return -EINVAL;
++	return nfs_invalf(fc, "NFS: 'Migration' not supported for this NFS version");
+ out_version_unavailable:
+-	dfprintk(MOUNT, "NFS: Version unavailable\n");
++	nfs_errorf(fc, "NFS: Version unavailable");
+ 	return ret;
+ }
+ 
+diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
+index ab45496d23a6..b012c2668a1f 100644
+--- a/fs/nfs/getroot.c
++++ b/fs/nfs/getroot.c
+@@ -86,6 +86,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
+ 	error = server->nfs_client->rpc_ops->getroot(server, ctx->mntfh, &fsinfo);
+ 	if (error < 0) {
+ 		dprintk("nfs_get_root: getattr error = %d\n", -error);
++		nfs_errorf(fc, "NFS: Couldn't getattr on root");
+ 		goto out_fattr;
+ 	}
+ 
+@@ -93,6 +94,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
+ 	if (IS_ERR(inode)) {
+ 		dprintk("nfs_get_root: get root inode failed\n");
+ 		error = PTR_ERR(inode);
++		nfs_errorf(fc, "NFS: Couldn't get root inode");
+ 		goto out_fattr;
+ 	}
+ 
+@@ -108,6 +110,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
+ 	if (IS_ERR(root)) {
+ 		dprintk("nfs_get_root: get root dentry failed\n");
+ 		error = PTR_ERR(root);
++		nfs_errorf(fc, "NFS: Couldn't get root dentry");
+ 		goto out_fattr;
+ 	}
+ 
 diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 11df0d1f9fd4..caaf0af1bc7f 100644
+index e0911815e153..e1f46034814f 100644
 --- a/fs/nfs/internal.h
 +++ b/fs/nfs/internal.h
-@@ -90,11 +90,11 @@ struct nfs_client_initdata {
-  * In-kernel mount arguments
-  */
- struct nfs_fs_context {
--	int			flags;
-+	unsigned int		flags;		/* NFS{,4}_MOUNT_* flags */
- 	unsigned int		rsize, wsize;
- 	unsigned int		timeo, retrans;
--	unsigned int		acregmin, acregmax,
--				acdirmin, acdirmax;
-+	unsigned int		acregmin, acregmax;
-+	unsigned int		acdirmin, acdirmax;
- 	unsigned int		namlen;
- 	unsigned int		options;
- 	unsigned int		bsize;
-@@ -110,7 +110,10 @@ struct nfs_fs_context {
- 	bool			sloppy;
+@@ -141,6 +141,10 @@ struct nfs_fs_context {
+ 	} clone_data;
+ };
  
- 	struct {
--		struct sockaddr_storage	address;
-+		union {
-+			struct sockaddr	address;
-+			struct sockaddr_storage	_address;
-+		};
- 		size_t			addrlen;
- 		char			*hostname;
- 		u32			version;
-@@ -119,7 +122,10 @@ struct nfs_fs_context {
- 	} mount_server;
++#define nfs_errorf(fc, fmt, ...) errorf(fc, fmt, ## __VA_ARGS__)
++#define nfs_invalf(fc, fmt, ...) invalf(fc, fmt, ## __VA_ARGS__)
++#define nfs_warnf(fc, fmt, ...) warnf(fc, fmt, ## __VA_ARGS__)
++
+ static inline struct nfs_fs_context *nfs_fc2context(const struct fs_context *fc)
+ {
+ 	return fc->fs_private;
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 3e566a632215..c1824bc6336b 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -278,7 +278,7 @@ int nfs_do_submount(struct fs_context *fc)
  
- 	struct {
--		struct sockaddr_storage	address;
-+		union {
-+			struct sockaddr	address;
-+			struct sockaddr_storage	_address;
-+		};
- 		size_t			addrlen;
- 		char			*hostname;
- 		char			*export_path;
+ 	p = nfs_devname(dentry, buffer, 4096);
+ 	if (IS_ERR(p)) {
+-		dprintk("NFS: Couldn't determine submount pathname\n");
++		nfs_errorf(fc, "NFS: Couldn't determine submount pathname");
+ 		ret = PTR_ERR(p);
+ 	} else {
+ 		ret = vfs_parse_fs_string(fc, "source", p, buffer + 4096 - p);
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 3b27c5e3d781..54e9c54bd08d 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -225,6 +225,7 @@ int nfs4_try_get_tree(struct fs_context *fc)
+ 			   fc, ctx->nfs_server.hostname,
+ 			   ctx->nfs_server.export_path);
+ 	if (err) {
++		nfs_errorf(fc, "NFS4: Couldn't follow remote path");
+ 		dfprintk(MOUNT, "<-- nfs4_try_get_tree() = %d [error]\n", err);
+ 	} else {
+ 		dfprintk(MOUNT, "<-- nfs4_try_get_tree() = 0\n");
+@@ -247,6 +248,7 @@ int nfs4_get_referral_tree(struct fs_context *fc)
+ 			    fc, ctx->nfs_server.hostname,
+ 			    ctx->nfs_server.export_path);
+ 	if (err) {
++		nfs_errorf(fc, "NFS4: Couldn't follow remote path");
+ 		dfprintk(MOUNT, "<-- nfs4_get_referral_tree() = %d [error]\n", err);
+ 	} else {
+ 		dfprintk(MOUNT, "<-- nfs4_get_referral_tree() = 0\n");
 diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index abd99ed00e39..d44de53c17a6 100644
+index 60174a30a91a..2e363cc65688 100644
 --- a/fs/nfs/super.c
 +++ b/fs/nfs/super.c
-@@ -816,7 +816,7 @@ static int nfs_request_mount(struct nfs_fs_context *cfg,
- 	/*
- 	 * Construct the mount server's address.
- 	 */
--	if (cfg->mount_server.address.ss_family == AF_UNSPEC) {
-+	if (cfg->mount_server.address.sa_family == AF_UNSPEC) {
- 		memcpy(request.sap, &cfg->nfs_server.address,
- 		       cfg->nfs_server.addrlen);
- 		cfg->mount_server.addrlen = cfg->nfs_server.addrlen;
+@@ -1189,7 +1189,7 @@ int nfs_get_tree_common(struct fs_context *fc)
+ 	fc->s_fs_info = NULL;
+ 	if (IS_ERR(s)) {
+ 		error = PTR_ERR(s);
+-		dfprintk(MOUNT, "NFS: Couldn't get superblock\n");
++		nfs_errorf(fc, "NFS: Couldn't get superblock");
+ 		goto out_err_nosb;
+ 	}
+ 
+@@ -1218,7 +1218,7 @@ int nfs_get_tree_common(struct fs_context *fc)
+ 
+ 	error = nfs_get_root(s, fc);
+ 	if (error < 0) {
+-		dfprintk(MOUNT, "NFS: Couldn't get root dentry\n");
++		nfs_errorf(fc, "NFS: Couldn't get root dentry");
+ 		goto error_splat_super;
+ 	}
+ 
 -- 
 2.17.2
 
