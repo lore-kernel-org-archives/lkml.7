@@ -6,39 +6,48 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821DFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC742C49ED7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BED32171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B85821D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfIKDR0 (ORCPT
+        id S1726753AbfIKDTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 23:17:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40516 "EHLO huawei.com"
+        Tue, 10 Sep 2019 23:19:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39614 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfIKDR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 23:17:26 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 751608BE641628B3B9F7;
-        Wed, 11 Sep 2019 11:17:24 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Sep 2019
- 11:17:16 +0800
-Subject: Re: [PATCH v3] module: add link_flag pram in ref_module func to
- decide whether add usage link
+        id S1726561AbfIKDTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 23:19:08 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 84172D56FCE51CAEFA0E;
+        Wed, 11 Sep 2019 11:19:06 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Sep 2019
+ 11:18:56 +0800
+Subject: Re: [PATCH next v2] softirq: enable MAX_SOFTIRQ_TIME tuning with
+ sysctl, max_softirq_time_msecs
 From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-To:     Jessica Yu <jeyu@kernel.org>, <rusty@rustcorp.com.au>,
-        <kay.sievers@vrfy.org>, <clabbe.montjoie@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>, <wangxiaogang3@huawei.com>,
-        <zhoukang7@huawei.com>, Mingfangsen <mingfangsen@huawei.com>
-References: <48019b31-3a74-1821-8ad3-72c9ef1219ba@huawei.com>
-Message-ID: <c9b837f9-4d70-107e-52d4-0eb2f7d2d99c@huawei.com>
-Date:   Wed, 11 Sep 2019 11:16:09 +0800
+To:     <tglx@linutronix.de>, <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
+        <dvyukov@google.com>, <feng.tang@intel.com>,
+        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
+        <linux@leemhuis.info>, <alex.popov@linux.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>
+References: <53770380-053e-70b6-f75e-a0e00bf35c30@huawei.com>
+Message-ID: <5569bcf0-fb5a-d808-2eed-610b3a548630@huawei.com>
+Date:   Wed, 11 Sep 2019 11:17:46 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <48019b31-3a74-1821-8ad3-72c9ef1219ba@huawei.com>
+In-Reply-To: <53770380-053e-70b6-f75e-a0e00bf35c30@huawei.com>
 Content-Type: text/plain; charset="gb18030"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.184.225.177]
@@ -48,133 +57,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly Ping...
+Friendly ping...
 
-On 2019/7/20 22:40, Zhiqiang Liu wrote:
-> Users can call ref_module func in their modules to construct
-> relationships with other modules. However, the holders
-> '/sys/module/<mod-name>/holders' of the target module donot include
-> the users` module. So lsmod command misses detailed info of 'Used by'.
+On 2019/6/25 11:13, Zhiqiang Liu wrote:
+> From: Zhiqiang liu <liuzhiqiang26@huawei.com>
 > 
-> When load module, the process is given as follows,
-> load_module()
-> 	-> mod_sysfs_setup()
-> 		-> add_usage_links
-> 	-> do_init_module
-> 		-> mod->init()
+> In __do_softirq func, MAX_SOFTIRQ_TIME was set to 2ms via experimentation by
+> commit c10d73671 ("softirq: reduce latencies") in 2013, which was designed
+> to reduce latencies for various network workloads. The key reason is that the
+> maximum number of microseconds in one NAPI polling cycle in net_rx_action func
+> was set to 2 jiffies, so different HZ settting will lead to different latencies.
 > 
-> add_usage_links func creates holders of target modules linking to
-> this module. If ref_module is called in mod->init() func, the usage
-> links cannot be added.
+> However, commit 7acf8a1e8 ("Replace 2 jiffies with sysctl netdev_budget_usecs
+> to enable softirq tuning") adopts netdev_budget_usecs to tun maximum number of
+> microseconds in one NAPI polling cycle. So the latencies of net_rx_action can be
+> controlled by sysadmins to copy with hardware changes over time.
 > 
-> Consider that add_module_usage and add usage_link may separate, the
-> link_flag pram is added in ref_module func to decide whether add usage
-> link after add_module_usage. If link_flag is true, it means usage link
-> of a to b's holder_dir should be created immediately after add_module_usage.
+> Correspondingly, the MAX_SOFTIRQ_TIME should be able to be tunned by sysadmins,
+> who knows best about hardware performance, for excepted tradeoff between latence
+> and fairness. Here, we add sysctl variable max_softirq_time_msecs to replace
+> MAX_SOFTIRQ_TIME with 2ms default value.
 > 
-> V2->V3:
-> - add link_flag pram in ref_module func to decide whether add usage link
+> Note: max_softirq_time_msecs will be coverted to jiffies, and any budget
+> value will be rounded up to the next jiffies, which relates to CONFIG_HZ.
+> The time accuracy of jiffies will result in a certain difference
+> between the setting jiffies of max_softirq_time_msecs and the actual
+> value, which is in one jiffies range.
 > 
-> V1->V2:
-> - remove incorrect Fixes tag
-> - fix error handling of sysfs_create_link as suggested by Jessica Yu
-> 
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> Suggested-by: Jessica Yu <jeyu@kernel.org>
-> Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+> Signed-off-by: Zhiqiang liu <liuzhiqiang26@huawei.com>
 > ---
->  include/linux/module.h |  2 +-
->  kernel/module.c        | 27 ++++++++++++++++++++-------
->  2 files changed, 21 insertions(+), 8 deletions(-)
+>  Documentation/sysctl/kernel.txt | 17 +++++++++++++++++
+>  kernel/softirq.c                |  8 +++++---
+>  kernel/sysctl.c                 |  9 +++++++++
+>  3 files changed, 31 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 188998d3dca9..9ec04b9e93e8 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -632,7 +632,7 @@ static inline void __module_get(struct module *module)
->  #define symbol_put_addr(p) do { } while (0)
+> diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+> index f0c86fbb3b48..23b36393f150 100644
+> --- a/Documentation/sysctl/kernel.txt
+> +++ b/Documentation/sysctl/kernel.txt
+> @@ -44,6 +44,7 @@ show up in /proc/sys/kernel:
+>  - kexec_load_disabled
+>  - kptr_restrict
+>  - l2cr                        [ PPC only ]
+> +- max_softirq_time_msecs
+>  - modprobe                    ==> Documentation/debugging-modules.txt
+>  - modules_disabled
+>  - msg_next_id		      [ sysv ipc ]
+> @@ -445,6 +446,22 @@ This flag controls the L2 cache of G3 processor boards. If
 > 
->  #endif /* CONFIG_MODULE_UNLOAD */
-> -int ref_module(struct module *a, struct module *b);
-> +int ref_module(struct module *a, struct module *b, bool link_flag);
+>  ==============================================================
 > 
->  /* This is a #define so the string doesn't get put in every .o file */
->  #define module_name(mod)			\
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 80c7c09584cf..00e4862a8ef7 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -837,25 +837,26 @@ static int already_uses(struct module *a, struct module *b)
->   *    'b' can walk the list to see who sourced them), and of 'a'
->   *    targets (so 'a' can see what modules it targets).
+> +max_softirq_time_msecs:
+> +
+> +Maximum number of milliseconds to break the loop of restarting softirq
+> +processing for at most MAX_SOFTIRQ_RESTART times in __do_softirq().
+> +max_softirq_time_msecs will be coverted to jiffies, and any budget
+> +value will be rounded up to the next jiffies, which relates to CONFIG_HZ.
+> +The time accuracy of jiffies will result in a certain difference
+> +between the setting jiffies of max_softirq_time_msecs and the actual
+> +value, which is in one jiffies range.
+> +
+> +max_softirq_time_msecs is a non-negative integer value, and setting
+> +negative value is meaningless and will return error.
+> +Default: 2
+> +
+> +==============================================================
+> +
+>  modules_disabled:
+> 
+>  A toggle value indicating if modules are allowed to be loaded
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index a6b81c6b6bff..1e456db70093 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -199,7 +199,8 @@ EXPORT_SYMBOL(__local_bh_enable_ip);
+> 
+>  /*
+>   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
+> - * but break the loop if need_resched() is set or after 2 ms.
+> + * but break the loop if need_resched() is set or after
+> + * max_softirq_time_msecs msecs.
+>   * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
+>   * certain cases, such as stop_machine(), jiffies may cease to
+>   * increment and so we need the MAX_SOFTIRQ_RESTART limit as
+> @@ -210,7 +211,7 @@ EXPORT_SYMBOL(__local_bh_enable_ip);
+>   * we want to handle softirqs as soon as possible, but they
+>   * should not be able to lock up the box.
 >   */
-> -static int add_module_usage(struct module *a, struct module *b)
-> +static struct module_use *add_module_usage(struct module *a, struct module *b)
+> -#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
+> +unsigned int __read_mostly max_softirq_time_msecs = 2;
+>  #define MAX_SOFTIRQ_RESTART 10
+> 
+>  #ifdef CONFIG_TRACE_IRQFLAGS
+> @@ -248,7 +249,8 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
+> 
+>  asmlinkage __visible void __softirq_entry __do_softirq(void)
 >  {
->  	struct module_use *use;
+> -	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
+> +	unsigned long end = jiffies +
+> +		msecs_to_jiffies(max_softirq_time_msecs);
+>  	unsigned long old_flags = current->flags;
+>  	int max_restart = MAX_SOFTIRQ_RESTART;
+>  	struct softirq_action *h;
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 1beca96fb625..96ff292ce7f6 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -118,6 +118,7 @@ extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
+>  #ifndef CONFIG_MMU
+>  extern int sysctl_nr_trim_pages;
+>  #endif
+> +extern unsigned int max_softirq_time_msecs;
 > 
->  	pr_debug("Allocating new usage for %s.\n", a->name);
->  	use = kmalloc(sizeof(*use), GFP_ATOMIC);
->  	if (!use)
-> -		return -ENOMEM;
-> +		return NULL;
-> 
->  	use->source = a;
->  	use->target = b;
->  	list_add(&use->source_list, &b->source_list);
->  	list_add(&use->target_list, &a->target_list);
-> -	return 0;
-> +	return use;
->  }
-> 
->  /* Module a uses b: caller needs module_mutex() */
-> -int ref_module(struct module *a, struct module *b)
-> +int ref_module(struct module *a, struct module *b, bool link_flag)
->  {
-> +	struct module_use *use;
->  	int err;
-> 
->  	if (b == NULL || already_uses(a, b))
-> @@ -866,9 +867,21 @@ int ref_module(struct module *a, struct module *b)
->  	if (err)
->  		return err;
-> 
-> -	err = add_module_usage(a, b);
-> +	use = add_module_usage(a, b);
-> +	if (!use) {
-> +		module_put(b);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	if (!link_flag)
-> +		return 0;
-> +
-> +	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
->  	if (err) {
->  		module_put(b);
-> +		list_del(&use->source_list);
-> +		list_del(&use->target_list);
-> +		kfree(use);
->  		return err;
->  	}
->  	return 0;
-> @@ -1152,7 +1165,7 @@ static inline void module_unload_free(struct module *mod)
->  {
->  }
-> 
-> -int ref_module(struct module *a, struct module *b)
-> +int ref_module(struct module *a, struct module *b, bool link_flag)
->  {
->  	return strong_try_module_get(b);
->  }
-> @@ -1407,7 +1420,7 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
->  		goto getname;
->  	}
-> 
-> -	err = ref_module(mod, owner);
-> +	err = ref_module(mod, owner, false);
->  	if (err) {
->  		sym = ERR_PTR(err);
->  		goto getname;
+>  /* Constants used for minimum and  maximum */
+>  #ifdef CONFIG_LOCKUP_DETECTOR
+> @@ -1276,6 +1277,14 @@ static struct ctl_table kern_table[] = {
+>  		.extra2		= &one,
+>  	},
+>  #endif
+> +	{
+> +		.procname	= "max_softirq_time_msecs",
+> +		.data		= &max_softirq_time_msecs,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler   = proc_dointvec_minmax,
+> +		.extra1		= &zero,
+> +	},
+>  	{ }
+>  };
 > 
 
