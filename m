@@ -2,73 +2,118 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8665ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA01EECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD8A21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD51121928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568181923;
-	bh=zYdm2Cq1kYehtw1bMUiQo+oQ7ISwoEKpDBbAJ1sN5nI=;
+	s=default; t=1568182028;
+	bh=NyFgLdAtL7G7r4VwV0PMLVYuv4D/PpdH1+bqEr6kBWM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H0TJgcb6YdROjSZbR8frMTOXgji1gEDqgZM0s6A7bJKRP27UBDdwAB6EZkwg4WUVM
-	 rmF3mjVlMHQyZkLs9OjZMoEE6pWbcXyCVWIH/WrCiHZpuop4Uj/VCg8yb+4mc/d2HP
-	 m1L5VbJTBNQg0xfR4m+FOLFelCz15sNg05GTuq9o=
+	b=uQeUv6PGQ1NiOTHhY7seLuTpcBlbWYYja7Ty6C7lQNueZee+B74NYWH2r6+28DCY3
+	 y4SUOlZ3M0V7yxRX7PE7nzgt23IRoLoiZSdxf/FXKMtgTSQCFh0nYMinKy1x683z6f
+	 5glzeFhfQ0L+QvGVz4SFONY8CLfKBps9t1wQX7nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfIKGFW (ORCPT
+        id S1726833AbfIKGHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 02:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfIKGFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 02:05:22 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28B2C21928;
-        Wed, 11 Sep 2019 06:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568181922;
-        bh=zYdm2Cq1kYehtw1bMUiQo+oQ7ISwoEKpDBbAJ1sN5nI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jmWKco2UiMWQJ3UvqQamu/2YkfxcarjWKuR1LxILWHnIC2WIAqGxyg0IjF7V+kycc
-         QlGbUdqh3Gxod/1uYb+IRh2x7+zxRTQIJ068a7nVBvrGHgJz2AMQ4jf64IwmW1aoAV
-         HUgQk6EynUE7Lz/j702hO3Kzsr8DFjJbQ1qOxSpk=
-Date:   Wed, 11 Sep 2019 14:05:13 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
+        Wed, 11 Sep 2019 02:07:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34930 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfIKGHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 02:07:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g7so23101936wrx.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 23:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WfMAZ45br/Di2RY5jgIjhxqqeQk5rlQZL/Ma6yQGV2w=;
+        b=G0+ibcruLLFVXgwzGOifA/mXRgBnp7n9juLLu6caUueN/7sVmTQRtosDg8+K4O3QXA
+         qPoFMpSzPpFULdkmSYrKMVbugWgazUUnkLqujuwjg/sojtBA8Sz4b+pn1PL9cjy67APm
+         TvBO9trOeSIgCW8pCU+oqcI/TbgcEyXzPSug0xK0WA6p7SOJO16zHoH4ZqvdsmNrWQiX
+         jWnKyIXyfMZpmdj2HVJdfg5BNxyQZU7FPD6wa+55G+D1zXzNsyTBkPao19IzlP0kV1DS
+         7h2jRuIy2k44NnuknyuLD0PKsM7cskdnY7kCCDUb6sDSSShuUYIary0RVdlAE2YxJaC/
+         yBlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WfMAZ45br/Di2RY5jgIjhxqqeQk5rlQZL/Ma6yQGV2w=;
+        b=QzFj8CUv/WSv6iCyJdXH0PSaLVAVqQHksnq3lQ6p/pl5u7jJE0bVKMojp8Pg7qk/fY
+         5TBsixzAfKmMguCe9EzRbwEhFOuQtCBBeC7TZSG5AEygOhBqVHRh1LkUTJxYaEquwdCw
+         GzxFK0Mt410ETy+Y+rma07Xvav+n0Nt0yhYg9rzKg60hmxdNPBra+UqGN9X0Obag472X
+         5URdgz5xLvt4luR7E48tWbb/1Bd8TpefCMtg1+rbLe7ZiITybUPeVlSAoTcKN85UnZn2
+         5y8MrLH2QqdVbTATzSpyp0Ni0usox/7H2Ji/iS1tZZBSi7dXF2vKi6IKh6zb8uNm4AFj
+         MMKQ==
+X-Gm-Message-State: APjAAAXbV5B0qGxeoMq8NUwN8lXRD4XC3sd0JblHN5tLgdEcdxwCAKBE
+        7n/IvjE8EdO13on9C/4dJD8=
+X-Google-Smtp-Source: APXvYqyZVOUkPGs97UVwQ35ctn0ys/nsz7s0hl3kwHBc8r+CMtC2xYcmEzBWNmcsNaa6QbNGNsZYXw==
+X-Received: by 2002:a5d:54cd:: with SMTP id x13mr5753758wrv.12.1568182025419;
+        Tue, 10 Sep 2019 23:07:05 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y3sm18570625wrw.83.2019.09.10.23.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 23:07:04 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 08:07:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Drop "rs485-rts-delay"
- property
-Message-ID: <20190911060512.GC13923@dragon>
-References: <20190820031301.11172-1-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 4/8] x86/platform/uv: Setup UV functions for Hubless UV
+ Systems
+Message-ID: <20190911060702.GD104115@gmail.com>
+References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
+ <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820031301.11172-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 08:13:01PM -0700, Andrey Smirnov wrote:
-> LPUART driver does not support specifying "rs485-rts-delay"
-> property. Drop it.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
 
-Applied, thanks.
+* Mike Travis <mike.travis@hpe.com> wrote:
+
+> +/* Initialize UV hubless systems */
+> +static __init int uv_system_init_hubless(void)
+> +{
+> +	int rc;
+> +
+> +	/* Setup PCH NMI handler */
+> +	uv_nmi_setup_hubless();
+> +
+> +	/* Init kernel/BIOS interface */
+> +	rc = uv_bios_init();
+> +
+> +	return rc;
+> +}
+
+Am I the only one who immediately sees the trivial C transformation 
+through which this function could lose a local variable and become 4 
+lines shorter?
+
+And this function got two Reviewed-by tags...
+
+Thanks,
+
+	Ingo
