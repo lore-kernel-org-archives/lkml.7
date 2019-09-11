@@ -2,215 +2,221 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF3AC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AA5C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21C02075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1201B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fP8AO1YE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n2GBBXdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfIKQBs (ORCPT
+        id S1728893AbfIKQBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:01:48 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41708 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbfIKQBr (ORCPT
+        Wed, 11 Sep 2019 12:01:52 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:25389 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbfIKQBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:01:47 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j10so25821868qtp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SzFYnOnqYRRD6oxfohm7GaTRApau1VSO8et7sdvAxw4=;
-        b=fP8AO1YEJfmo1iSSlsVCCw128xF/ewA8VemLrD++gV3EuoRdYfWj5LGmMLdu19lK4s
-         9zlJY92ZHUnz8AH9KmdUzzjMuRJkhMtseQEihRbLApkujfj9Oacj8sSEv0S9bp5m5L2P
-         0s0HfThhl6kHvvwdsCAzApVOD5G+ChCuptHjBZjkPs/npao4zDC+Uk+EQGQ7BXiP8NFk
-         zZuMrvwi5ek2GUs/E7YBQJsP8kx9aDaANfBUgpE23o4kmuy2S/lBVl52ydKaTkzFcbvk
-         cnNRSTf2/N88bVMUqK/e3TinHy4A7UR1PGtMx2yWphZeeekzfos9ZbSMyrUX84rCLBNX
-         16rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SzFYnOnqYRRD6oxfohm7GaTRApau1VSO8et7sdvAxw4=;
-        b=fqmys62r+fo+MxHt7QxjkEEMOxO7i9RG1zUlTUEswBbg+1A8sEHjCy4UUKOWkhCq3r
-         tI+RiKnp1NiPe6Ha4s2fcxGrLzBWhY/w1EZ+oDQ7t22hjIwMpReS5unhTLmYg84I3pxk
-         Mnn4YWJMeRlEqc02jDKTtjis5jFHmqIybFWIGaBX9K7td4f3j3RdnkbZFTBVpbUubxB/
-         dhxbmG7jJKLF14qHX4DtbY+tnbqetNMNM/JMYejix2OQVBUt+HwyQ3h/3ELpZM4HfztH
-         e0Wwg0aKhokmMgkSCqBJjMQBTYGlUTqSsCjvH4FKD//aRrbvTzTDxiyZUbVDLB30DYZW
-         CqWw==
-X-Gm-Message-State: APjAAAVjamKn+/OzuYVwk1Yy6yhNOAObfUplVZBGCIECgk3y2G+pk4Pa
-        S6k+iRlwb4++stslwy7N5FSW7A==
-X-Google-Smtp-Source: APXvYqyPRa3MTbsa/Kmfswg0Bvkx67oWrfiDmXUWdRKwYuZ+uMqrlFSoglXlepuG5gVaVEYCQcG8yg==
-X-Received: by 2002:ac8:546:: with SMTP id c6mr11563196qth.151.1568217704576;
-        Wed, 11 Sep 2019 09:01:44 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l22sm8529363qtp.8.2019.09.11.09.01.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 09:01:44 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20190911150537.19527-6-longman@redhat.com>
-Date:   Wed, 11 Sep 2019 12:01:42 -0400
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+        Wed, 11 Sep 2019 12:01:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568217706;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=J4ruJ7rTl4QIBdoU+3XEkjcU9X8gAMuqIvC9RKTkB4c=;
+        b=n2GBBXdInh7skr1AwWKT45c/aPvwCP0f+06UlTr0zZiugIRywgqv26APDgIVy94ASr
+        fVSOSXGzr8QrCynDQtqApxMTSznQjBuU7n4LPDjATCEplnXDItqCOsnElVD/Vl05c4ew
+        nnwzzCvCFYSTrK+9Z9/50KKYuR0gaEN64/UXPM/POoCH/OoYkcHqENKJ3mVzR7g4tYnO
+        fmtHqyYjEe80kssF6WEiiUJ7fBjRnXHU90QEzMKOUwDSz6IXUQ0djh+JGs4X79ISo4E5
+        n4XwxqYDP7s1YvDKH3TdXeQmOT0QxKIdWXaWqz7oacCsN7U5YZag0oEYgBN805a0lUGs
+        8KbQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PgwDCvjo0="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8BG1g8aH
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 11 Sep 2019 18:01:42 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
+Date:   Wed, 11 Sep 2019 18:01:41 +0200
+Cc:     Nishanth Menon <nm@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Andreas Kemnade <andreas@kemnade.info>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+Message-Id: <BF829797-492C-4120-AC69-F8B83572FD38@goldelico.com>
+References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com> <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com> <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com> <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com> <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com> <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com> <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com> <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com> <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com> <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com> <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <CAHC
+ N7x++uBzYx0cK4K6CY6aveofti5TVXnqEeNKnGBy_fzm5GQ@mail.gmail.com> <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com> <CAHCN7xL59cXgbe1YTbNvTjptO9bMnuxprCP7ok5kRuc8UO9Fcw@mail.gmail.com> <D7B54A39-D8A3-4EDF-8B47-66D59319B3F4@goldelico.com> <F65E947E-784A-4540-B926-BF3ECB0C01EC@goldelico.com> <285FED38-2B2B-4813-9FD2-396C53E9B1B2@goldelico.com> <CAHCN7xKyTnNojwRqsXcE1AsDKtJikBpXoUo8ED=89ZR9-ko9hA@mail.gmail.com> <65A23326-70B4-46E3-992D-74256B056900@goldelico.com> <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+> Am 11.09.2019 um 17:56 schrieb Adam Ford <aford173@gmail.com>:
+>=20
+> On Wed, Sep 11, 2019 at 10:46 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>=20
+>> Hi,
+>>=20
+>>> Am 11.09.2019 um 14:43 schrieb Adam Ford <aford173@gmail.com>:
+>>>=20
+>>>>=20
+>>>> I can also see that there are transitions on the voltages (reg.8 is =
+vdd and reg.3 is abb).
+>>>=20
+>>> I concur.  I have good results with the added ti,omap-opp-supply =
+entry.
+>>=20
+>> Great!
+>>=20
+>> There are some subtleties for testing.
+>>=20
+>> * I have added turbo-mode; to OPP6 / OPP1G
+>> * which means they are available but not used by the ondemand govenor
+>> * to enable them one has to echo 1 =
+>/sys/devices/system/cpu/cpufreq/boost
+>=20
+> Will that be documented somewhere? If not, can we put a comment in the
+> device tree so people know how to enable it?
 
-> On Sep 11, 2019, at 11:05 AM, Waiman Long <longman@redhat.com> wrote:
+It seems to be pretty standard on i86 systems if you google for "turbo =
+mode".
+I have added it to the commit message which adds the vbb regulator.
+
 >=20
-> When allocating a large amount of static hugepages (~500-1500GB) on a
-> system with large number of CPUs (4, 8 or even 16 sockets), =
-performance
-> degradation (random multi-second delays) was observed when thousands
-> of processes are trying to fault in the data into the huge pages. The
-> likelihood of the delay increases with the number of sockets and hence
-> the CPUs a system has.  This only happens in the initial setup phase
-> and will be gone after all the necessary data are faulted in.
+>>=20
+>> Testing is also easily done through cpufreq-set -f 800m or-f 1g
+>>=20
+>> Then I can see the microvolts change and also registers
+>> PRM_LDO_ABB_CTRL 0x483072F4 bit 3:0 1=3Dbypass 5=3DFBB
+>> PRM_LDO_ABB_SETUP 0x483072F0 0x00=3Dbypass 0x11=3DFBB
+>>=20
+>> I have added both of this as descriptive notes to the commit =
+messages.
+>>=20
+>> What I have to check is if it behaves as expected on a dm3730 without
+>> 1GHz rating.
 >=20
-> These random delays, however, are deemed unacceptable. The cause of
-> that delay is the long wait time in acquiring the mmap_sem when trying
-> to share the huge PMDs.
+> I already tested it.  =46rom what I can see, it's behaving normally.
 >=20
-> To remove the unacceptable delays, we have to limit the amount of wait
-> time on the mmap_sem. So the new down_write_timedlock() function is
-> used to acquire the write lock on the mmap_sem with a timeout value of
-> 10ms which should not cause a perceivable delay. If timeout happens,
-> the task will abandon its effort to share the PMD and allocate its own
-> copy instead.
->=20
-> When too many timeouts happens (threshold currently set at 256), the
-> system may be too large for PMD sharing to be useful without undue =
-delay.
-> So the sharing will be disabled in this case.
->=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
-> include/linux/fs.h |  7 +++++++
-> mm/hugetlb.c       | 24 +++++++++++++++++++++---
-> 2 files changed, 28 insertions(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 997a530ff4e9..e9d3ad465a6b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -40,6 +40,7 @@
-> #include <linux/fs_types.h>
-> #include <linux/build_bug.h>
-> #include <linux/stddef.h>
-> +#include <linux/ktime.h>
->=20
-> #include <asm/byteorder.h>
-> #include <uapi/linux/fs.h>
-> @@ -519,6 +520,12 @@ static inline void i_mmap_lock_write(struct =
-address_space *mapping)
-> 	down_write(&mapping->i_mmap_rwsem);
-> }
->=20
-> +static inline bool i_mmap_timedlock_write(struct address_space =
-*mapping,
-> +					 ktime_t timeout)
-> +{
-> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
-> +}
-> +
-> static inline void i_mmap_unlock_write(struct address_space *mapping)
-> {
-> 	up_write(&mapping->i_mmap_rwsem);
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 6d7296dd11b8..445af661ae29 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -4750,6 +4750,8 @@ void adjust_range_if_pmd_sharing_possible(struct =
-vm_area_struct *vma,
-> 	}
-> }
->=20
-> +#define PMD_SHARE_DISABLE_THRESHOLD	(1 << 8)
-> +
-> /*
->  * Search for a shareable pmd page for hugetlb. In any case calls =
-pmd_alloc()
->  * and returns the corresponding pte. While this is not necessary for =
+>>=20
+>>> I noticed the FIXME note on the omap36xx.dtsi file where you added =
 the
-> @@ -4770,11 +4772,24 @@ pte_t *huge_pmd_share(struct mm_struct *mm, =
-unsigned long addr, pud_t *pud)
-> 	pte_t *spte =3D NULL;
-> 	pte_t *pte;
-> 	spinlock_t *ptl;
-> +	static atomic_t timeout_cnt;
+>>> vdd-supply reference.  For what its worth, I searched for a list of
+>>> all files that reference omap3630, then built a bunch of dtb's
+>>>=20
+>>> make `cat dtb-list` ARCH=3Darm CROSS_COMPILE=3D"ccache arm-linux-" =
+-j8
+>>> DTC     arch/arm/boot/dts/omap3-beagle-xm.dtb
+>>> DTC     arch/arm/boot/dts/omap3-cm-t3730.dtb
+>>> DTC     arch/arm/boot/dts/omap3-evm-37xx.dtb
+>>> DTC     arch/arm/boot/dts/omap3-igep0020.dtb
+>>> DTC     arch/arm/boot/dts/omap3-igep0020-rev-f.dtb
+>>> DTC     arch/arm/boot/dts/omap3-igep0030.dtb
+>>> DTC     arch/arm/boot/dts/omap3-igep0030-rev-g.dtb
+>>> DTC     arch/arm/boot/dts/omap3-lilly-dbb056.dtb
+>>> DTC     arch/arm/boot/dts/omap3-n950.dtb
+>>> DTC     arch/arm/boot/dts/omap3-n9.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-alto35.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-chestnut43.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-gallop43.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-palo35.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-palo43.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-summit.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-tobi.dtb
+>>> DTC     arch/arm/boot/dts/omap3-overo-storm-tobiduo.dtb
+>>> DTC     arch/arm/boot/dts/omap3-pandora-1ghz.dtb
+>>> DTC     arch/arm/boot/dts/omap3-sbc-t3730.dtb
+>>> DTC     arch/arm/boot/dts/omap3-sniper.dtb
+>>> DTC     arch/arm/boot/dts/omap3-zoom3.dtb
+>>> DTC     arch/arm/boot/dts/omap3-gta04a5.dtb
+>>> DTC     arch/arm/boot/dts/omap3-gta04a5one.dtb
+>>> DTC     arch/arm/boot/dts/omap3-gta04a3.dtb
+>>> DTC     arch/arm/boot/dts/omap3-gta04a4.dtb
+>>=20
+>> Quite a lot...
+>>=20
+>>> I think it's probably safe to leave the vcc-supply there, but you =
+may
+>>> want to add a note that users who do not use twl4030 should add
+>>> something to their device tree to specify the vcc-supply.
+>>>=20
+>>> At this point, I doubt anyone will do new designs on omap3 SoC's.
+>>=20
+>> Well, I am not sure if there are out-of-tree boards with omap3
+>> where we could break everything. I know of at least one such
+>> board.
+>>=20
+>> Therefore I have looked where the cpu0-supply vs. vdd-supply
+>> is decoded. It turns out to be also the ti-cpufreq driver
+>> which we already tweak for omap3 support.
+>>=20
+>> So I just have to modify ca. 10 LOC to add this "cpu0" to the
+>> SoC description tables and process it once during probe time.
+>>=20
+>> Then, it works with unmodified board.dtb
+>> defining cpu0-supply =3D <&vcc> or whatever regulator.
+>>=20
+>> The only question that comes up is if this change is am3517
+>> compatible. I.e. can we still use the omap36xx_soc_data for
+>> it as well which now expects two regulators... So you
+>> might now see an error message that cpu0-supply and vbb-supply
+>> are missing or not the right number of regulators is given.
+>>=20
+>> We may have to add an am3517_soc_data table, but that would
+>> be straightforward now.
 >=20
-> -	if (!vma_shareable(vma, addr))
-> -		return (pte_t *)pmd_alloc(mm, pud, addr);
-> +	/*
-> +	 * Don't share if it is not sharable or locking attempt timed =
-out
-> +	 * after 10ms. After 256 timeouts, PMD sharing will be =
-permanently
-> +	 * disabled as it is just too slow.
+> I will run some tests on the 3517 using the 3430 table instead of the
+> 3630. I didn't look into great detail as to what the tables do, but it
+> might be sufficient.
 
-It looks like this kind of policy interacts with kernel debug options =
-like KASAN (which is going to slow the system down
-anyway) could introduce tricky issues due to different timings on a =
-debug kernel.
+Yes, but it reads some undocumented register...
 
-> +	 */
-> +	if (!vma_shareable(vma, addr) ||
-> +	   (atomic_read(&timeout_cnt) >=3D PMD_SHARE_DISABLE_THRESHOLD))
-> +		goto out_no_share;
-> +
-> +	if (!i_mmap_timedlock_write(mapping, ms_to_ktime(10))) {
-> +		if (atomic_inc_return(&timeout_cnt) =3D=3D
-> +		    PMD_SHARE_DISABLE_THRESHOLD)
-> +			pr_info("Hugetlbfs PMD sharing disabled because =
-of timeouts!\n");
-> +		goto out_no_share;
-> +	}
+> Otherwise, I can copy-paste the 3630 table and change the
+> multi-regulator off and test it that way if you'd prefer.
+
+I'd prefer to copy-paste the old 3630 table (which was already
+tested...).
+
+> Let me know your preference, and I can do it.
 >=20
-> -	i_mmap_lock_write(mapping);
-> 	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
-> 		if (svma =3D=3D vma)
-> 			continue;
-> @@ -4806,6 +4821,9 @@ pte_t *huge_pmd_share(struct mm_struct *mm, =
-unsigned long addr, pud_t *pud)
-> 	pte =3D (pte_t *)pmd_alloc(mm, pud, addr);
-> 	i_mmap_unlock_write(mapping);
-> 	return pte;
-> +
-> +out_no_share:
-> +	return (pte_t *)pmd_alloc(mm, pud, addr);
-> }
+>>=20
+>>>=20
+>>>> so that you can inspect/compare/test/check before I tidy up and add
+>>>> the patches for our OPP-v2 patch set.
+>>>=20
+>>> I think it looks good.  Maybe Tony and or TI people have some
+>>> comments, but it appears to set both regulators now.
+>>>=20
+>>> Nice job!
+>>=20
+>> With your kind help!
+>>=20
+> I am glad to help.
 >=20
-> /*
-> --=20
-> 2.18.1
->=20
->=20
+>> Now it's time to wrap up and post a new PATCH set version for
+>> review.
+>>=20
+>> Best regards,
+>> Nikolaus
+>>=20
+
+BR,
+Nikolaus
 
