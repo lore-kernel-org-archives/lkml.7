@@ -2,141 +2,72 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD7ECDE28
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E3ECDE28
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAFE2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B7121A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfIKJ1O (ORCPT
+        id S1727381AbfIKJ27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:27:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:44278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfIKJ1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:27:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 064E0337;
-        Wed, 11 Sep 2019 02:27:13 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 723133F71F;
-        Wed, 11 Sep 2019 02:27:12 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 10:27:10 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
- 2 and 3
-Message-ID: <20190911092710.GO9720@e119886-lin.cambridge.arm.com>
-References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
- <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
- <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
- <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
+        Wed, 11 Sep 2019 05:28:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48118 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfIKJ27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:28:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i7yvo-0005JO-Do; Wed, 11 Sep 2019 09:28:56 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Selvin Xavier <selvin.xavier@broadcom.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/bnxt_re: fix spelling mistake "missin_resp" -> "missing_resp"
+Date:   Wed, 11 Sep 2019 10:28:56 +0100
+Message-Id: <20190911092856.11146-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 09:51:41PM +0530, Pankaj Dubey wrote:
-> On Tue, 10 Sep 2019 at 19:59, Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
-> > > From: Anvesh Salveru <anvesh.s@samsung.com>
-> > >
-> > > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > > to happen in GEN3 or high speed. In case equalization fails, link will
-> > > fallback to GEN1.
-> > >
-> > > Designware controller gives flexibility to disable GEN3 equalization
-> > > completely or only phase 2 and 3.
-> >
-> > Do some platforms have issues conducting phase 2 and 3 when they successfully
-> > conduct phase 0 and 1?
-> >
-> 
-> Yes, it is possible.
-> 
-> > >
-> > > Platform drivers can disable equalization phase 2 and 3, by setting
-> > > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
-> > >
-> > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
-> > >  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
-> > >  2 files changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index bf82091..97a8268 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > >       if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
-> > >               val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-> > >
-> > > +     if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
-> > > +             val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-> > > +
+From: Colin Ian King <colin.king@canonical.com>
 
-Also is it harmless to set both DWC_EQUALIZATION_DISABLE and
-DWC_EQ_PHASE_2_3_DISABLE? (Which is permitted here).
+There is a spelling mistake in a literal string, fix it.
 
-Thanks,
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/infiniband/hw/bnxt_re/hw_counters.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Andrew Murray
+diff --git a/drivers/infiniband/hw/bnxt_re/hw_counters.c b/drivers/infiniband/hw/bnxt_re/hw_counters.c
+index 604b71875f5f..3421a0b15983 100644
+--- a/drivers/infiniband/hw/bnxt_re/hw_counters.c
++++ b/drivers/infiniband/hw/bnxt_re/hw_counters.c
+@@ -74,7 +74,7 @@ static const char * const bnxt_re_stat_name[] = {
+ 	[BNXT_RE_SEQ_ERR_NAKS_RCVD]     = "seq_err_naks_rcvd",
+ 	[BNXT_RE_MAX_RETRY_EXCEEDED]    = "max_retry_exceeded",
+ 	[BNXT_RE_RNR_NAKS_RCVD]         = "rnr_naks_rcvd",
+-	[BNXT_RE_MISSING_RESP]          = "missin_resp",
++	[BNXT_RE_MISSING_RESP]          = "missing_resp",
+ 	[BNXT_RE_UNRECOVERABLE_ERR]     = "unrecoverable_err",
+ 	[BNXT_RE_BAD_RESP_ERR]          = "bad_resp_err",
+ 	[BNXT_RE_LOCAL_QP_OP_ERR]       = "local_qp_op_err",
+-- 
+2.20.1
 
-> > >       dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > >  }
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index a1453c5..b541508 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -31,6 +31,7 @@
-> > >
-> > >  /* Parameters for PCIe Quirks */
-> > >  #define DWC_EQUALIZATION_DISABLE     0x1
-> > > +#define DWC_EQ_PHASE_2_3_DISABLE     0x2
-> >
-> > It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
-> > to be specified, though if dwc_pci_quirk intends to hold other quirks should these
-> > be numbers and not bit fields?
-> >
-> Yes, you are right in a given platform it will be either
-> DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE.
-> 
-> Intention behind making it bit-field was to add other quirks in future.
-> 
-> > Thanks,
-> >
-> > Andrew Murray
-> >
-> > >
-> > >  /* Synopsys-specific PCIe configuration registers */
-> > >  #define PCIE_PORT_LINK_CONTROL               0x710
-> > > @@ -65,6 +66,7 @@
-> > >
-> > >  #define PCIE_PORT_GEN3_RELATED               0x890
-> > >  #define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
-> > > +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE BIT(9)
-> > >
-> > >  #define PCIE_ATU_VIEWPORT            0x900
-> > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
-> > > --
-> > > 2.7.4
-> > >
