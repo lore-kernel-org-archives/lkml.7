@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74B5ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195C4ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87EEF21D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ED321A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwFimumA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlFFY6vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfIKHW7 (ORCPT
+        id S1727250AbfIKHXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:22:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45347 "EHLO
+        Wed, 11 Sep 2019 03:23:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35879 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKHW7 (ORCPT
+        with ESMTP id S1725616AbfIKHXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:22:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y72so13068268pfb.12;
-        Wed, 11 Sep 2019 00:22:58 -0700 (PDT)
+        Wed, 11 Sep 2019 03:23:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y22so13125795pfr.3;
+        Wed, 11 Sep 2019 00:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=X/gqa9V2L+P7ZTpCq0TlKj9v1dS5cmC4kjSw+65uCNc=;
-        b=hwFimumAJ3dzVLsdJRz6iV+uEzELODNL2lJiw22kfZYn5GP2uekM/xd0F4bLyVDQWx
-         8EijycLwidpf5y0+hrXiZMNoZSBPF4ZfwbxcDlQNwYR3XEYaSlfeuMKCot1AOu4vvWt8
-         gfDJMfgbS23x/1mu2DEzNk/rzXff+9/I0Ds+to25lT8g/d48ILdjGeIviZti+SGrbWgT
-         n+wWaCOqn9mfaegzo1J5hIYiBFp9Mw2do5NdqnK+8aGT9WO0DsJ0HlzCJC9UazMVWEgO
-         8S2Cwo+wo3p+xyKb+x+lbY8cM7wH+KQXgAJTHKxF4C1QDAbdSz9JqjxWYXhvKN0p7yoJ
-         pxSQ==
+        bh=+363ozv7hHWtnDZ7Q+OUTPSDfOt22ArWkNBA2J7l/rE=;
+        b=MlFFY6vmdN6JzSxXoup182yy4ANP0O24aePGKFB6Ve7AVQEKB9uEy0LEqxY5lXGtuG
+         7paTrgMGqHg7Pu+S6eDC459+G9JlvrqCE0OUT01zINxnkFbTlE3XbSGsZ9r23B2DhWPW
+         vyN3x1gjAiYMU4UHVbmm8pOhcZXnauswRDvtCI2zgOefeJSVrIvANl9WxUzMwj+XLMf2
+         n0SfbSaAb8wIKnVbC0QNLXr6etxFgvewKqjnJVMioB3zXLUBwJI49iPACx3qyJ28xSpH
+         Vm3WEl6/HheEJhxXXPxhGPJ3qdVKlfVzciBOFRG2qCLauEyEjIlo9sZh4A7FBltDRp67
+         +7cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=X/gqa9V2L+P7ZTpCq0TlKj9v1dS5cmC4kjSw+65uCNc=;
-        b=AG8EJw0GyluwvfDPQyphC2RScZ0JcQJRYhEY28P0+EL9tsuiT1+lQPgOrGsWEDJ0eB
-         Khk6cCaB6dfkO7o5x/ZT7U9uWvVl4eRDobUATTX38D7EioYlkrYsBgd6VHVXw4gShhWj
-         /7Ywy/RoyOixBJ8eVWtLVaIFcLfzMHk1Dpd1gzfk6juG3QmfYL6h8X22NInv3WXBodCl
-         iLhnElCrS3mqJYZGtB5FR6LNhmq5Gaf1zdjTYez/5WPW+ZvHZua7b+4M7nxPWdTmduIs
-         vh7xQYlLvQNy/IPcooxzfbG+De4A2jWayPbmaRxmeDDceGSQEXyza/ZzwcgLUBJORuIA
-         Kl8w==
-X-Gm-Message-State: APjAAAUqTuCOHyAEW94lmqdKueH6gzsEkQNKw01GvlqUkWF4eHClLei1
-        fnhjkvq9qWGS7D80zaCCRC0=
-X-Google-Smtp-Source: APXvYqwuXoPT0z6Tle9Liqq4AWtT10UkBBHDtFueE/NPKV1wjQgRBVUBB0ZlO9L1c7/YP7UIwn7z0w==
-X-Received: by 2002:a17:90a:e98e:: with SMTP id v14mr3956501pjy.101.1568186578617;
-        Wed, 11 Sep 2019 00:22:58 -0700 (PDT)
+        bh=+363ozv7hHWtnDZ7Q+OUTPSDfOt22ArWkNBA2J7l/rE=;
+        b=mlJ8Vjg0OlAR4UJWtEvzr2UDVdBGQv/w5MVnb8FF53iYkRbKRCOlnHE1O0wwm83dv+
+         c7MmR6y5Hy8sSWmAV+/HGUIkFY2EEf5QBAupNefpPIS31LtogdK097ZJw6dk9PoS6/yu
+         tcXrqx0sHyE0XXcvE0CNC/ZvmoA5yNXc/93o6KFw7mYYWqR+zoBXL6ObSvjcWwT0VmnD
+         WcFO4W7OQLiS8ct03HZtdgSYmJ3NPMHPa25VXSRNdbGvwa1qH9W7divZwcQqsYXOur/u
+         jtY546CKcWZx4wEYadw+JPJtijRYv5kswjYPD7pUXos0M8RGTfDiF9vmtJP/XTIkcqLD
+         n5GA==
+X-Gm-Message-State: APjAAAXU0Dh+IJ1+ftD3hMpQa1zj9Cbgwk4lUBaZqs4Mu4DV1NZrTYW/
+        hyertn5gOto/R1Hn7WWpjpI=
+X-Google-Smtp-Source: APXvYqxFWSIwUy+vMZjIz2+XMH541xgOFi9roE09pdelMazqkJOWzzwtIfPidT0t/JYFn3wlJ9vZEg==
+X-Received: by 2002:a17:90b:f02:: with SMTP id br2mr3864564pjb.67.1568186594129;
+        Wed, 11 Sep 2019 00:23:14 -0700 (PDT)
 Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id d22sm884962pfq.168.2019.09.11.00.22.56
+        by smtp.gmail.com with ESMTPSA id k36sm18517322pgl.42.2019.09.11.00.23.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 00:22:58 -0700 (PDT)
+        Wed, 11 Sep 2019 00:23:13 -0700 (PDT)
 From:   Ben Chuang <benchuanggli@gmail.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
         Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V9 3/5] PCI: Add Genesys Logic, Inc. Vendor ID
-Date:   Wed, 11 Sep 2019 15:23:15 +0800
-Message-Id: <860ef173fe110630d91e384ae44d7ad42cb72d3a.1568184581.git.benchuanggli@gmail.com>
+Subject: [PATCH V9 4/5] mmc: sdhci: Export sdhci_abort_tuning function symbol
+Date:   Wed, 11 Sep 2019 15:23:31 +0800
+Message-Id: <8495caa6af2bcfb916e57e626dd2d9eaeb0310c5.1568184581.git.benchuanggli@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568184581.git.benchuanggli@gmail.com>
 References: <cover.1568184581.git.benchuanggli@gmail.com>
@@ -77,29 +77,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-Add the Genesys Logic, Inc. vendor ID to pci_ids.h.
+Export sdhci_abort_tuning() function symbols which are used by other SD Host
+controller driver modules.
 
 Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
 Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci.c | 3 ++-
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 70e86148cb1e..4f7e12772a14 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2403,6 +2403,8 @@
- #define PCI_DEVICE_ID_RDC_R6061		0x6061
- #define PCI_DEVICE_ID_RDC_D1010		0x1010
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9106ebc7a422..0f2f110534db 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2328,7 +2328,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
+ }
+ EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
  
-+#define PCI_VENDOR_ID_GLI		0x17a0
-+
- #define PCI_VENDOR_ID_LENOVO		0x17aa
+-static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
++void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+ {
+ 	sdhci_reset_tuning(host);
  
- #define PCI_VENDOR_ID_QCOM		0x17cb
+@@ -2339,6 +2339,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+ 
+ 	mmc_abort_tuning(host->mmc, opcode);
+ }
++EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
+ 
+ /*
+  * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 72601a4d2e95..437bab3af195 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+ void sdhci_end_tuning(struct sdhci_host *host);
+ void sdhci_reset_tuning(struct sdhci_host *host);
+ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
++void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+ 
+ #endif /* __SDHCI_HW_H */
 -- 
 2.23.0
 
