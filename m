@@ -2,116 +2,192 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6255ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D783C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6852084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568204386;
-	bh=6WRpKouEe1TD+L5kJBxIYz+iT0recCfEkaX9dNyx0FE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PP0riXQLq4Tj+jix1bE6Soj8yrrKG1F4bXbhxZo/wFfW/5vDZsQ9a+WEvv82KPCTl
-	 GScNPJNFJX7Sie4F0prUPFXfcuq8OJjaOe0mJnGXHSmNEiKiPznneGegSU321WIdKA
-	 UT45eCC0Lmb55bwu2X8UM+Boub9XngBDJsTr5JQI=
+	by mail.kernel.org (Postfix) with ESMTP id 4DC9A206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfIKMTp (ORCPT
+        id S1727848AbfIKMT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:19:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58008 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726911AbfIKMTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:19:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2C828B667;
-        Wed, 11 Sep 2019 12:19:42 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 14:19:41 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190911121941.GU4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
- <20190911113619.GP4023@dhcp22.suse.cz>
- <20190911080804-mutt-send-email-mst@kernel.org>
+        Wed, 11 Sep 2019 08:19:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:46592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727786AbfIKMT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:19:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D1D91000;
+        Wed, 11 Sep 2019 05:19:58 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A969D3F59C;
+        Wed, 11 Sep 2019 05:19:57 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 13:19:56 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, maz@kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] phy: meson-g12a-usb3-pcie: Add support for PCIe mode
+Message-ID: <20190911121954.GS9720@e119886-lin.cambridge.arm.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911080804-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 08:08:38, Michael S. Tsirkin wrote:
-> On Wed, Sep 11, 2019 at 01:36:19PM +0200, Michal Hocko wrote:
-> > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-> > [...]
-> > > We don't put any limitations on the allocator other then that it needs to
-> > > clean up the metadata on allocation, and that it cannot allocate a page
-> > > that is in the process of being reported since we pulled it from the
-> > > free_list. If the page is a "Reported" page then it decrements the
-> > > reported_pages count for the free_area and makes sure the page doesn't
-> > > exist in the "Boundary" array pointer value, if it does it moves the
-> > > "Boundary" since it is pulling the page.
-> > 
-> > This is still a non-trivial limitation on the page allocation from an
-> > external code IMHO. I cannot give any explicit reason why an ordering on
-> > the free list might matter (well except for page shuffling which uses it
-> > to make physical memory pattern allocation more random) but the
-> > architecture seems hacky and dubious to be honest. It shoulds like the
-> > whole interface has been developed around a very particular and single
-> > purpose optimization.
-> > 
-> > I remember that there was an attempt to report free memory that provided
-> > a callback mechanism [1], which was much less intrusive to the internals
-> > of the allocator yet it should provide a similar functionality. Did you
-> > see that approach? How does this compares to it? Or am I completely off
-> > when comparing them?
-> > 
-> > [1] mostly likely not the latest version of the patchset
-> > http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
+On Sun, Sep 08, 2019 at 01:42:56PM +0000, Neil Armstrong wrote:
+> This adds extended PCIe PHY functions for the Amlogic G12A
+> USB3+PCIE Combo PHY to support reset, power_on and power_off for
+> PCIe exclusively.
 > 
-> Linus nacked that one. He thinks invoking callbacks with lots of
-> internal mm locks is too fragile.
+> With these callbacks, we can handle all the needed operations of the
+> Amlogic PCIe controller driver.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 70 ++++++++++++++++---
+>  1 file changed, 61 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> index ac322d643c7a..08e322789e59 100644
+> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+> @@ -50,6 +50,8 @@
+>  	#define PHY_R5_PHY_CR_ACK				BIT(16)
+>  	#define PHY_R5_PHY_BS_OUT				BIT(17)
+>  
+> +#define PCIE_RESET_DELAY					500
+> +
+>  struct phy_g12a_usb3_pcie_priv {
+>  	struct regmap		*regmap;
+>  	struct regmap		*regmap_cr;
+> @@ -196,6 +198,10 @@ static int phy_g12a_usb3_init(struct phy *phy)
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  	int data, ret;
+>  
+> +	ret = reset_control_reset(priv->reset);
+> +	if (ret)
+> +		return ret;
+> +
 
-I would be really curious how much he would be happy about injecting
-other restrictions on the allocator like this patch proposes. This is
-more intrusive as it has a higher maintenance cost longterm IMHO.
--- 
-Michal Hocko
-SUSE Labs
+Right, so we've moved this to apply to USB only, thus assuming PCI will
+call .reset for its reset (why the asymmetry?).
+
+Thanks,
+
+Andrew Murray
+
+>  	/* Switch PHY to USB3 */
+>  	/* TODO figure out how to handle when PCIe was set in the bootloader */
+>  	regmap_update_bits(priv->regmap, PHY_R0,
+> @@ -272,24 +278,64 @@ static int phy_g12a_usb3_init(struct phy *phy)
+>  	return 0;
+>  }
+>  
+> -static int phy_g12a_usb3_pcie_init(struct phy *phy)
+> +static int phy_g12a_usb3_pcie_power_on(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
+> +
+> +	regmap_update_bits(priv->regmap, PHY_R0,
+> +			   PHY_R0_PCIE_POWER_STATE,
+> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_power_off(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
+> +
+> +	regmap_update_bits(priv->regmap, PHY_R0,
+> +			   PHY_R0_PCIE_POWER_STATE,
+> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_reset(struct phy *phy)
+>  {
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  	int ret;
+>  
+> -	ret = reset_control_reset(priv->reset);
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return 0;
+> +
+> +	ret = reset_control_assert(priv->reset);
+>  	if (ret)
+>  		return ret;
+>  
+> +	udelay(PCIE_RESET_DELAY);
+> +
+> +	ret = reset_control_deassert(priv->reset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	udelay(PCIE_RESET_DELAY);
+> +
+> +	return 0;
+> +}
+> +
+> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
+> +{
+> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+>  	if (priv->mode == PHY_TYPE_USB3)
+>  		return phy_g12a_usb3_init(phy);
+>  
+> -	/* Power UP PCIE */
+> -	/* TODO figure out when the bootloader has set USB3 mode before */
+> -	regmap_update_bits(priv->regmap, PHY_R0,
+> -			   PHY_R0_PCIE_POWER_STATE,
+> -			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
+> -
+>  	return 0;
+>  }
+>  
+> @@ -297,7 +343,10 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
+>  {
+>  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  
+> -	return reset_control_reset(priv->reset);
+> +	if (priv->mode == PHY_TYPE_USB3)
+> +		return reset_control_reset(priv->reset);
+> +
+> +	return 0;
+>  }
+>  
+>  static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
+> @@ -326,6 +375,9 @@ static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
+>  static const struct phy_ops phy_g12a_usb3_pcie_ops = {
+>  	.init		= phy_g12a_usb3_pcie_init,
+>  	.exit		= phy_g12a_usb3_pcie_exit,
+> +	.power_on	= phy_g12a_usb3_pcie_power_on,
+> +	.power_off	= phy_g12a_usb3_pcie_power_off,
+> +	.reset		= phy_g12a_usb3_pcie_reset,
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> -- 
+> 2.17.1
+> 
