@@ -4,190 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D783C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E653ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC9A206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80724206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfIKMT7 (ORCPT
+        id S1727834AbfIKMVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:19:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:46592 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfIKMT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:19:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D1D91000;
-        Wed, 11 Sep 2019 05:19:58 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A969D3F59C;
-        Wed, 11 Sep 2019 05:19:57 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 13:19:56 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
-        repk@triplefau.lt, maz@kernel.org,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] phy: meson-g12a-usb3-pcie: Add support for PCIe mode
-Message-ID: <20190911121954.GS9720@e119886-lin.cambridge.arm.com>
-References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
- <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
+        Wed, 11 Sep 2019 08:21:43 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33641 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKMVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:21:43 -0400
+X-Originating-IP: 148.69.85.38
+Received: from localhost (unknown [148.69.85.38])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 95794FF810;
+        Wed, 11 Sep 2019 12:21:40 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 14:21:37 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugen.Hristev@microchip.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
+        Ludovic.Desroches@microchip.com
+Subject: Re: [PATCH 2/2] clk: at91: select parent if main oscillator or
+ bypass is enabled
+Message-ID: <20190911122137.GM21254@piout.net>
+References: <1568042692-11784-1-git-send-email-eugen.hristev@microchip.com>
+ <1568042692-11784-2-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567950178-4466-5-git-send-email-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <1568042692-11784-2-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 01:42:56PM +0000, Neil Armstrong wrote:
-> This adds extended PCIe PHY functions for the Amlogic G12A
-> USB3+PCIE Combo PHY to support reset, power_on and power_off for
-> PCIe exclusively.
+On 09/09/2019 15:30:34+0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> With these callbacks, we can handle all the needed operations of the
-> Amlogic PCIe controller driver.
+> Selecting the right parent for the main clock is done using only
+> main oscillator enabled bit.
+> In case we have this oscillator bypassed by an external signal (no driving
+> on the XOUT line), we still use external clock, but with BYPASS bit set.
+> So, in this case we must select the same parent as before.
+> Create a macro that will select the right parent considering both bits from
+> the MOR register.
+> Use this macro when looking for the right parent.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
 > ---
->  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 70 ++++++++++++++++---
->  1 file changed, 61 insertions(+), 9 deletions(-)
+>  drivers/clk/at91/clk-main.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> index ac322d643c7a..08e322789e59 100644
-> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> @@ -50,6 +50,8 @@
->  	#define PHY_R5_PHY_CR_ACK				BIT(16)
->  	#define PHY_R5_PHY_BS_OUT				BIT(17)
+> diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+> index ebe9b99..87083b3 100644
+> --- a/drivers/clk/at91/clk-main.c
+> +++ b/drivers/clk/at91/clk-main.c
+> @@ -21,6 +21,10 @@
 >  
-> +#define PCIE_RESET_DELAY					500
-> +
->  struct phy_g12a_usb3_pcie_priv {
->  	struct regmap		*regmap;
->  	struct regmap		*regmap_cr;
-> @@ -196,6 +198,10 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int data, ret;
+>  #define MOR_KEY_MASK		(0xff << 16)
 >  
-> +	ret = reset_control_reset(priv->reset);
-> +	if (ret)
-> +		return ret;
+> +#define clk_main_parent_select(s)	(((s) & \
+> +					(AT91_PMC_MOSCEN | \
+> +					AT91_PMC_OSCBYPASS)) ? 1 : 0)
 > +
-
-Right, so we've moved this to apply to USB only, thus assuming PCI will
-call .reset for its reset (why the asymmetry?).
-
-Thanks,
-
-Andrew Murray
-
->  	/* Switch PHY to USB3 */
->  	/* TODO figure out how to handle when PCIe was set in the bootloader */
->  	regmap_update_bits(priv->regmap, PHY_R0,
-> @@ -272,24 +278,64 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	return 0;
+>  struct clk_main_osc {
+>  	struct clk_hw hw;
+>  	struct regmap *regmap;
+> @@ -113,7 +117,7 @@ static int clk_main_osc_is_prepared(struct clk_hw *hw)
+>  
+>  	regmap_read(regmap, AT91_PMC_SR, &status);
+>  
+> -	return (status & AT91_PMC_MOSCS) && (tmp & AT91_PMC_MOSCEN);
+> +	return (status & AT91_PMC_MOSCS) && clk_main_parent_select(tmp);
 >  }
 >  
-> -static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +static int phy_g12a_usb3_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_reset(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int ret;
+>  static const struct clk_ops main_osc_ops = {
+> @@ -450,7 +454,7 @@ static u8 clk_sam9x5_main_get_parent(struct clk_hw *hw)
 >  
-> -	ret = reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	ret = reset_control_assert(priv->reset);
->  	if (ret)
->  		return ret;
+>  	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
 >  
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	ret = reset_control_deassert(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
->  	if (priv->mode == PHY_TYPE_USB3)
->  		return phy_g12a_usb3_init(phy);
->  
-> -	/* Power UP PCIE */
-> -	/* TODO figure out when the bootloader has set USB3 mode before */
-> -	regmap_update_bits(priv->regmap, PHY_R0,
-> -			   PHY_R0_PCIE_POWER_STATE,
-> -			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> -
->  	return 0;
+> -	return status & AT91_PMC_MOSCEN ? 1 : 0;
+> +	return clk_main_parent_select(status);
 >  }
 >  
-> @@ -297,7 +343,10 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>  static const struct clk_ops sam9x5_main_ops = {
+> @@ -492,7 +496,7 @@ at91_clk_register_sam9x5_main(struct regmap *regmap,
+>  	clkmain->hw.init = &init;
+>  	clkmain->regmap = regmap;
+>  	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
+> -	clkmain->parent = status & AT91_PMC_MOSCEN ? 1 : 0;
+> +	clkmain->parent = clk_main_parent_select(status);
 >  
-> -	return reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return reset_control_reset(priv->reset);
-> +
-> +	return 0;
->  }
->  
->  static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
-> @@ -326,6 +375,9 @@ static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
->  static const struct phy_ops phy_g12a_usb3_pcie_ops = {
->  	.init		= phy_g12a_usb3_pcie_init,
->  	.exit		= phy_g12a_usb3_pcie_exit,
-> +	.power_on	= phy_g12a_usb3_pcie_power_on,
-> +	.power_off	= phy_g12a_usb3_pcie_power_off,
-> +	.reset		= phy_g12a_usb3_pcie_reset,
->  	.owner		= THIS_MODULE,
->  };
->  
+>  	hw = &clkmain->hw;
+>  	ret = clk_hw_register(NULL, &clkmain->hw);
 > -- 
-> 2.17.1
+> 2.7.4
 > 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
