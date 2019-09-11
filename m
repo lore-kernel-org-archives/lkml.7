@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3BEC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E1C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4182081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79362085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OMWrhrtZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V1IfLia3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfIKSBj (ORCPT
+        id S1729968AbfIKSBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:01:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55976 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729729AbfIKSBX (ORCPT
+        Wed, 11 Sep 2019 14:01:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33064 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729788AbfIKSBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 14:01:23 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1Hce000896;
-        Wed, 11 Sep 2019 13:01:17 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1I1k006894;
+        Wed, 11 Sep 2019 13:01:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568224877;
-        bh=S8BtTodIkwTN2xYbwppqWLNg7DkbMnBekNn+USRsSks=;
+        s=ti-com-17Q1; t=1568224878;
+        bh=7rskmsTiAzvQ4NF4+vWKavl0uEPi2s+cxTAi1MuphJk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OMWrhrtZwk9VJEOtsN8gA8chauwX/Pbfdp5YfghNlWeWSsVxRwLMBg4OdwWJMhxGD
-         PArtS/V1bd+XK1BpqRcGDhD1SZOhM7PSaFPPh0SLG1pIQqkABlPIcBb8kdRBn3e2H4
-         IEG8rVYrD0O+XRrAF1/o4hcT9O2Dq5e5QAzicW7E=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BI1HCV007240
+        b=V1IfLia3FQRuIEQCR92NUkfcLKlYJPqLyyMTXMtUG2TNBFfnfTFFeaEQLbYQFLwaj
+         NpksfBklZozMN9htJRge214pYhW89IYPL5Bf4ukozsjLBTltsbERZweuqOkZ+Of2JX
+         7FF9TZC0P/XFfokhiAmpeeGH9aw1T7rRxTtryYrQ=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BI1IYa007271
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Sep 2019 13:01:17 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Sep 2019 13:01:18 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
- Sep 2019 13:01:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 13:01:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 11 Sep 2019 13:01:17 -0500
+ Frontend Transport; Wed, 11 Sep 2019 13:01:18 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1HMi063840;
-        Wed, 11 Sep 2019 13:01:17 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1Im7052630;
+        Wed, 11 Sep 2019 13:01:18 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 2/9] documention: leds: Add multicolor class documentation
-Date:   Wed, 11 Sep 2019 13:01:08 -0500
-Message-ID: <20190911180115.21035-3-dmurphy@ti.com>
+Subject: [PATCH v5 7/9] dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+Date:   Wed, 11 Sep 2019 13:01:13 -0500
+Message-ID: <20190911180115.21035-8-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190911180115.21035-1-dmurphy@ti.com>
 References: <20190911180115.21035-1-dmurphy@ti.com>
@@ -67,184 +67,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support documentation on the multicolor LED framework.
-This document defines the directores and file generated by the
-multicolor framework.  It also documents usage.
+Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+can control RGB LEDs individually or as part of a control bank group.
+These devices have the ability to adjust the mixing control for the RGB
+LEDs to obtain different colors independent of the overall brightness of
+the LED grouping.
+
+Datasheet:
+http://www.ti.com/lit/ds/symlink/lp5012.pdf
+http://www.ti.com/lit/ds/symlink/lp5024.pdf
+http://www.ti.com/lit/ds/symlink/lp5036.pdf
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/leds/index.rst                 |   1 +
- Documentation/leds/leds-class-multicolor.rst | 149 +++++++++++++++++++
- 2 files changed, 150 insertions(+)
- create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
 
-diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
-index 060f4e485897..bc70c6aa7138 100644
---- a/Documentation/leds/index.rst
-+++ b/Documentation/leds/index.rst
-@@ -9,6 +9,7 @@ LEDs
- 
-    leds-class
-    leds-class-flash
-+   leds-class-multicolor
-    ledtrig-oneshot
-    ledtrig-transient
-    ledtrig-usbport
-diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
 new file mode 100644
-index 000000000000..0b40c85f417a
+index 000000000000..9d05f43042e0
 --- /dev/null
-+++ b/Documentation/leds/leds-class-multicolor.rst
-@@ -0,0 +1,149 @@
-+====================================
-+Multi Color LED handling under Linux
-+====================================
++++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+@@ -0,0 +1,148 @@
++* Texas Instruments - LP5009/12/18/24/30/36 RGB LED driver
 +
-+Description
-+===========
-+There are varying monochrome LED colors available for application.  These
-+LEDs can be used as a single use case LED or can be mixed with other color
-+LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-+can be presented under a single LED node with individual color control.
-+The multicolor class groups these LEDs and allows dynamically setting the value
-+of a single LED or setting the intensity values of the LEDs in the group and
-+updating the LEDs virtually simultaneously.
++The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
++a LED group or control them individually.
 +
-+Multicolor Class Control
-+========================
-+The multicolor class presents the LED groups under a directory called "colors".
-+This directory is a child under the LED parent node created by the led_class
-+framework.  The led_class framework is documented in led-class.rst within this
-+documentation directory.
++The difference in these RGB LED drivers is the number of supported RGB modules.
 +
-+Each colored LED is given its own directory.  These directories will be one of
-+LED_COLOR_ID_* definitions from the header include/dt-bindings/leds/common.h.
-+Under these directories the intensity and max_intensity files are presented for
-+each LED.
++Required parent properties:
++	- compatible:
++		"ti,lp5009"
++		"ti,lp5012"
++		"ti,lp5018"
++		"ti,lp5024"
++		"ti,lp5030"
++		"ti,lp5036"
++	- reg :  I2C slave address
++		lp5009/12 - 0x28
++		lp5018/24 - 0x28
++		lp5030/36 - 0x30
++	- #address-cells : 1
++	- #size-cells : 0
 +
-+Directory Layout Example
-+========================
-+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-+colors/:
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-+-rw-------    1 root     root          4096 Jun 28 20:21 color_mix
++Optional parent properties:
++	- enable-gpios : gpio pin to enable/disable the device.
++	- vled-supply : LED supply
 +
-+colors/blue:
-+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
++Required child properties:
++	- #address-cells : 1
++	- #size-cells : 0
++	- reg : This is the LED module number.
++	- color : see Documentation/devicetree/bindings/leds/common.txt
++	- function : see Documentation/devicetree/bindings/leds/common.txt
 +
-+colors/green:
-+-rw-------    1 root     root          4096 Jun 28 20:22 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
++Required child properties only is LED modules will be banked:
++	- ti,led-bank : This property denotes the LED module numbers that will
++			be controlled as a single RGB cluster.  Each LED module
++			number will be controlled by a single LED class instance.
++			There can only be one instance of the ti,led-bank
++			property for each device node.
 +
-+colors/red:
-+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+-r--------    1 root     root          4096 Jun 28 20:21 color_id
++Required grandchildren properties:
++	- reg : A single entry denoting the LED module that controls
++		the RGB cluster.
++	- color : see Documentation/devicetree/bindings/leds/leds-multicolor.txt
++	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
 +
-+Multicolor Color Mixing
-+=======================
-+Multicolor monochrome LEDs intensity can be modified and mixed to produce a
-+varying array of colors.  The color_mix file gives the user the ability to write
-+all the monochrome LEDs registered in the directory with a single call.
-+To create a specific color from monochrome LEDs the color_mix file needs to be
-+written with each color's intensity.  The order in which the monochrome LEDs
-+should be written is based on the colors color_id.  The LEDs brightness will be
-+updated on the next call to the parent brightness file.
++The LED outputs associated with the LED modules are defined in Table 1 of the
++corresponding data sheets.
 +
-+For example:
-+cat /sys/class/leds/rgb:grouped_leds/red/color_id
-+0
-+cat /sys/class/leds/rgb:grouped_leds/green/color_id
-+1
-+cat /sys/class/leds/rgb:grouped_leds/blue/color_id
-+2
++LP5009 - 2 Total RGB cluster LED outputs 0-1
++LP5012 - 4 Total RGB cluster LED outputs 0-3
++LP5018 - 6 Total RGB cluster LED outputs 0-5
++LP5024 - 8 Total RGB cluster LED outputs 0-7
++LP5030 - 10 Total RGB cluster LED outputs 0-9
++LP5036 - 12 Total RGB cluster LED outputs 0-11
 +
-+red - color_id = 0
-+green - color_id = 1
-+blue - color_id = 2
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
 +
-+These id's are the order in which to write the color_mix file.
++Examples:
++led-controller@29 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vmmcsd_fixed>;
 +
-+echo "<red> <green> <blue>" > color_mix
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
 +
-+echo "80 00 80" > color_mix
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
 +
-+The order of the monochrome LEDs are determined during multicolor class
-+registration and will not change unless unregistered and re-registered.
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
 +
-+Other example with amber monochrome LED:
-+blue - color_id = 0
-+amber - color_id = 1
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
 +
-+In this example blue is at ID 0 and amber ID is 1 so the user would write
-+echo "<blue> <amber>" > color_mix
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <2>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STANDBY;
++		ti,led-bank = <2 3 5>;
 +
-+echo "38 80" > color_mix
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
 +
-+If a single monochrome LED needs to be modified then the user would write the
-+colors/<color>/intensity file.
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
 +
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
 +
-+Multicolor Class Brightness Control
-+===================================
-+The multiclor class framework will calculate each monochrome LEDs intensity.
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
 +
-+The brightness level for each LED is calculated based on the color LED
-+intensity setting divided by the color LED max intensity setting multiplied by
-+the requested value.
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
 +
-+led_brightness = requested_value * led_color_intensity/led_color_max_intensity
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
 +
-+Example:
-+Three LEDs are present in the group as defined in "Directory Layout Example"
-+within this document.
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++};
 +
-+A user first writes the color LED brightness file with the brightness level that
-+is necessary to achieve a blueish violet output from the RGB LED group.
-+
-+echo 138 > /sys/class/leds/rgb:grouped_leds/red/intensity
-+echo 43 > /sys/class/leds/rgb:grouped_leds/green/intensity
-+echo 226 > /sys/class/leds/rgb:grouped_leds/blue/intensity
-+
-+red -
-+	intensity = 138
-+	max_intensity = 255
-+green -
-+	intensity = 43
-+	max_intensity = 255
-+blue -
-+	intensity = 226
-+	max_intensity = 255
-+
-+The user can control the brightness of that RGB group by writing the parent
-+'brightness' control.  Assuming a parent max_brightness of 255 the user may want
-+to dim the LED color group to half.  The user would write a value of 128 to the
-+parent brightness file then the values written to each LED will be adjusted
-+base on this value
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+adjusted_red_value = 128 * 138/255 = 69
-+adjusted_green_value = 128 * 43/255 = 21
-+adjusted_blue_value = 128 * 226/255 = 113
-+
-+Reading the parent brightness file will return the current brightness value of
-+the color LED group.
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+255
-+
-+echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-+
-+cat /sys/class/leds/rgb:grouped_leds/max_brightness
-+128
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lp5012.pdf
++http://www.ti.com/lit/ds/symlink/lp5024.pdf
++http://www.ti.com/lit/ds/symlink/lp5036.pdf
 -- 
 2.22.0.214.g8dca754b1e
 
