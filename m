@@ -2,148 +2,235 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD62ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BF3C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B597C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LdwUSNv6"
+	by mail.kernel.org (Postfix) with ESMTP id 363472075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfIKStG (ORCPT
+        id S1730216AbfIKStf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:49:06 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41896 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbfIKStF (ORCPT
+        Wed, 11 Sep 2019 14:49:35 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15820 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730050AbfIKStf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:49:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BImcY7051732;
-        Wed, 11 Sep 2019 13:48:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568227718;
-        bh=1xSERSqIkAtP/bLDu3RUnmyzW6/XzR17kn4wt0JSzQE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LdwUSNv6ZbXANbfxNoJYEDv5rETOOMt04lMlvG8RYbaxYrQHBgvNg3m/RdnpG5lq2
-         Yjj10rCiVfbF39DafaKdYQ1v6fluk0Bw4dMFmGqNwMCLhe7HBe0KyxPFnkmi3pGYvI
-         6TMFbQLtFu+VsK3BApMVojHliBROeOnBpSjZJAI4=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BImbgv068137
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Sep 2019 13:48:37 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
- Sep 2019 13:48:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 11 Sep 2019 13:48:37 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BImaxV119829;
-        Wed, 11 Sep 2019 13:48:36 -0500
-Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
- HWEN pin
-To:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Andreas Kemnade <andreas@kemnade.info>
-CC:     <lee.jones@linaro.org>, <jingoohan1@gmail.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-References: <20190910212909.18095-1-andreas@kemnade.info>
- <20190910212909.18095-3-andreas@kemnade.info>
- <20190911102533.not4ta3xwgm6bhjo@holly.lan>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
-Date:   Wed, 11 Sep 2019 13:48:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190911102533.not4ta3xwgm6bhjo@holly.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 11 Sep 2019 14:49:35 -0400
+X-UUID: 39ff3adccfad45a68dd0489c47847c57-20190912
+X-UUID: 39ff3adccfad45a68dd0489c47847c57-20190912
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 787524690; Thu, 12 Sep 2019 02:49:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Sep 2019 02:49:26 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Sep 2019 02:49:26 +0800
+Message-ID: <1568227767.8481.4.camel@mtkswgap22>
+Subject: Re: [PATCH v7 5/7] power: reset: add driver for mt6323 poweroff
+From:   Sean Wang <sean.wang@mediatek.com>
+To:     Frank Wunderlich <frank-w@public-files.de>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-rtc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        <linux-pm@vger.kernel.org>, Josef Friedl <josef.friedl@speed.at>,
+        <linux-kernel@vger.kernel.org>,
+        Tianping Fang <tianping.fang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Sep 2019 02:49:27 +0800
+In-Reply-To: <20190910070446.639-6-frank-w@public-files.de>
+References: <20190910070446.639-1-frank-w@public-files.de>
+         <20190910070446.639-6-frank-w@public-files.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 40F2DA63D46F5CD798C0546348146FBED6745C18E6A0AE0525103705EBD596C12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Frank
 
-On 9/11/19 5:25 AM, Daniel Thompson wrote:
-> On Tue, Sep 10, 2019 at 11:29:09PM +0200, Andreas Kemnade wrote:
->> For now just enable it in the probe function to allow i2c
->> access. Disabling also means resetting the register values
->> to default and according to the datasheet does not give
->> power savings
->>
->> Tested on Kobo Clara HD.
->>
->> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->> ---
->> changes in v2:
->> - simplification
->> - correct gpio direction initialisation
->>
->>   drivers/video/backlight/lm3630a_bl.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
->> index 8f84f3684f04..9d0639d4202d 100644
->> --- a/drivers/video/backlight/lm3630a_bl.c
->> +++ b/drivers/video/backlight/lm3630a_bl.c
->> @@ -12,6 +12,8 @@
->>   #include <linux/uaccess.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/regmap.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/gpio.h>
-> Nitpicking... but I don't think linux/gpio.h is used anymore.
->
->
->>   #include <linux/pwm.h>
->>   #include <linux/platform_data/lm3630a_bl.h>
->>   
->> @@ -48,6 +50,7 @@ struct lm3630a_chip {
->>   	struct lm3630a_platform_data *pdata;
->>   	struct backlight_device *bleda;
->>   	struct backlight_device *bledb;
->> +	struct gpio_desc *enable_gpio;
->>   	struct regmap *regmap;
->>   	struct pwm_device *pwmd;
->>   };
->> @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *client,
->>   	}
->>   	pchip->pdata = pdata;
->>   
->> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
->> +						GPIOD_OUT_HIGH);
->> +	if (IS_ERR(pchip->enable_gpio)) {
->> +		rval = PTR_ERR(pchip->enable_gpio);
->> +		return rval;
-
-the enable gpio is optional so if it fails you log the error and move on
-
-Also on driver removal did you want to set the GPIO to low to disable 
-the device to save power?
-
-Dan
+On Tue, 2019-09-10 at 09:04 +0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> add poweroff driver for mt6323 and make Makefile and Kconfig-Entries
+> 
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
 
->> +	}
->> +
->>   	/* chip initialize */
->>   	rval = lm3630a_chip_init(pchip);
->>   	if (rval < 0) {
->> -- 
->> 2.20.1
->>
+Thanks for your help keep the unfinished driver to upstream
+
+Acked-by: Sean Wang <sean.wang@mediatek.com>
+
+> ---
+> changes since v6: none
+> changes since v5: split out mfd/mt6397/core.h
+> changes since v4: none
+> changes since v3: none
+> changes since v2: none (=v2 part 5)
+> ---
+>  drivers/power/reset/Kconfig           | 10 +++
+>  drivers/power/reset/Makefile          |  1 +
+>  drivers/power/reset/mt6323-poweroff.c | 97 +++++++++++++++++++++++++++
+>  3 files changed, 108 insertions(+)
+>  create mode 100644 drivers/power/reset/mt6323-poweroff.c
+> 
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index a564237278ff..c721939767eb 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -140,6 +140,16 @@ config POWER_RESET_LTC2952
+>  	  This driver supports an external powerdown trigger and board power
+>  	  down via the LTC2952. Bindings are made in the device tree.
+>  
+> +config POWER_RESET_MT6323
+> +       bool "MediaTek MT6323 power-off driver"
+> +       depends on MFD_MT6397
+> +       help
+> +         The power-off driver is responsible for externally shutdown down
+> +         the power of a remote MediaTek SoC MT6323 is connected to through
+> +         controlling a tiny circuit BBPU inside MT6323 RTC.
+> +
+> +         Say Y if you have a board where MT6323 could be found.
+> +
+>  config POWER_RESET_QNAP
+>  	bool "QNAP power-off driver"
+>  	depends on OF_GPIO && PLAT_ORION
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 85da3198e4e0..da37f8b851dc 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+>  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+>  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_MT6323) += mt6323-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
+>  obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
+>  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
+> new file mode 100644
+> index 000000000000..1caf43d9e46d
+> --- /dev/null
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Power off through MediaTek PMIC
+> + *
+> + * Copyright (C) 2018 MediaTek Inc.
+> + *
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/mfd/mt6397/rtc.h>
+> +
+> +struct mt6323_pwrc {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	u32 base;
+> +};
+> +
+> +static struct mt6323_pwrc *mt_pwrc;
+> +
+> +static void mt6323_do_pwroff(void)
+> +{
+> +	struct mt6323_pwrc *pwrc = mt_pwrc;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +
+> +	ret = regmap_read_poll_timeout(pwrc->regmap,
+> +					pwrc->base + RTC_BBPU, val,
+> +					!(val & RTC_BBPU_CBUSY),
+> +					MTK_RTC_POLL_DELAY_US,
+> +					MTK_RTC_POLL_TIMEOUT);
+> +	if (ret)
+> +		dev_err(pwrc->dev, "failed to write BBPU: %d\n", ret);
+> +
+> +	/* Wait some time until system down, otherwise, notice with a warn */
+> +	mdelay(1000);
+> +
+> +	WARN_ONCE(1, "Unable to power off system\n");
+> +}
+> +
+> +static int mt6323_pwrc_probe(struct platform_device *pdev)
+> +{
+> +	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
+> +	struct mt6323_pwrc *pwrc;
+> +	struct resource *res;
+> +
+> +	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
+> +	if (!pwrc)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwrc->base = res->start;
+> +	pwrc->regmap = mt6397_chip->regmap;
+> +	pwrc->dev = &pdev->dev;
+> +	mt_pwrc = pwrc;
+> +
+> +	pm_power_off = &mt6323_do_pwroff;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt6323_pwrc_remove(struct platform_device *pdev)
+> +{
+> +	if (pm_power_off == &mt6323_do_pwroff)
+> +		pm_power_off = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mt6323_pwrc_dt_match[] = {
+> +	{ .compatible = "mediatek,mt6323-pwrc" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
+> +
+> +static struct platform_driver mt6323_pwrc_driver = {
+> +	.probe          = mt6323_pwrc_probe,
+> +	.remove         = mt6323_pwrc_remove,
+> +	.driver         = {
+> +		.name   = "mt6323-pwrc",
+> +		.of_match_table = mt6323_pwrc_dt_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(mt6323_pwrc_driver);
+> +
+> +MODULE_DESCRIPTION("Poweroff driver for MT6323 PMIC");
+> +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+
+
