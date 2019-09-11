@@ -2,118 +2,170 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68CDECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD3ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0942067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60562085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jtm7zYN/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UDYiwiFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfIKRy5 (ORCPT
+        id S1729793AbfIKR4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:54:57 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40768 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbfIKRy5 (ORCPT
+        Wed, 11 Sep 2019 13:56:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56858 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729675AbfIKR4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:54:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so14161333pfb.7;
-        Wed, 11 Sep 2019 10:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hVAmdWRlaxMqfcknDHMrIO4GwZviw2k7zF3Deg03FGs=;
-        b=Jtm7zYN/3BPBHV71cSqvO7q3OxMIAkTDNLyHSKVttZKkze0neUTRRu+k9y9nUDPEIJ
-         4QnZEeEU8MX+GWmV3XSfBVHtsIjkzHwhIM2Z9oYyz5jMPg7zNyBYbMyaT91v89Mik2gM
-         /qdyt0i2kxDHF7y5LUTfXkfwA+LEwPLGZ+mbvB9TlO8Wxh+9Kp7Q2cr2B5xxGBiCB3Nb
-         HgPf7XQfXO7AOnjDwLWcmBsHz4oe4USv7/RZB5EzmbiQcm0/p/yfwa82yDlS+frVk/RY
-         beFTBN0aIaRW01N9AFgUJQzTvKThoUUseeVOkehN458v1qRTAC9Lxv54RznIZl5VdS6G
-         GNjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hVAmdWRlaxMqfcknDHMrIO4GwZviw2k7zF3Deg03FGs=;
-        b=fowUJ/EehU/lyjcvLqzYGL/ix0P7vhxHJgiNLd5YqVkIizXbrWtXVIM5iMBGE7Dz7f
-         T9saOBpqceLMsvt8yhrQsNica1izQ967GYBlE3UjcSl5yMntNbBjML/dSN0KV4mbddaJ
-         y6aebqASBkmNP7whU9N6hdMJ90tyGyyBD4R7XrV1PjTCXzjE5AMvvS9KxrRdxc1Zx4m5
-         /c/LC5YNZyAGxxokNBRCNgf55E8Jz8CXDGM485wtGs1jyETY6+ROwtguAvxgW8ZtXvjG
-         rlAgmSk1E7EFb05h0D5+oIsoEgdOtFY/itcA8noyxQloRJ5SaW19BSPQcufufmwFLhjj
-         t+tQ==
-X-Gm-Message-State: APjAAAWjXeB+GU7L5+6dOq1jIrg8cChxo/Ffp48IU9ufWfSJjFXirWbR
-        KhcKqqTGEPuPH3NrgMbLJXs6VuTw
-X-Google-Smtp-Source: APXvYqy2FvuGYRN6QinUeQL+5/39/wahbZLGdnRk9wVpivns5lnmWAojDdnq8q10lpLzdfR2JkoH7w==
-X-Received: by 2002:a17:90a:1903:: with SMTP id 3mr6821217pjg.80.1568224496232;
-        Wed, 11 Sep 2019 10:54:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k4sm4911733pfa.95.2019.09.11.10.54.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 10:54:54 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 10:54:53 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Loic Poulain <loic.poulain@linaro.org>
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] watchdog: pm8916_wdt: fix pretimeout registration
- flow
-Message-ID: <20190911175453.GA31612@roeck-us.net>
-References: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
- <4231aab1-c538-a14f-cea1-ceb28781c7bb@roeck-us.net>
- <CAMZdPi-P_AopbbyJEWDbnm7X8MtxTzs=MN13+UFndL2OK5VReg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZdPi-P_AopbbyJEWDbnm7X8MtxTzs=MN13+UFndL2OK5VReg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 11 Sep 2019 13:56:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHnIdo008474;
+        Wed, 11 Sep 2019 17:54:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=AUeQRUUFdHpNLBcc428WLypzGQ/LjLJEnFYlu11VwoU=;
+ b=UDYiwiFSkQwdICVVLQDO8Gz8JGcZ6+v+5VNE/72zbZwrOqBFiImsxCv+rBycXZoznlHD
+ kmE9oDTRbIcAbvGa3hBcacrQ6WZdwJTWpQykgJvFbu7s9pL6VNbFpIXXgeOMLJHfUyXH
+ mYwklrkyf/h/pWNm7fA+DIQDEr5KQxTm5J3VsOm1UPsqbHpm5TlG35eaLnTuZvia3OCN
+ sKf9zeyFEzyTBBQHf3CQ05jhv3B8yGtoS8fu8XqKNpEq15GQ5oKO63cLT25OE5uc4e13
+ 8qIXrEgbpy8ifVm/GxjFOuOKRM59DIZzw5M+31UZ51GLi7ZFXOFR62bz/+7GOMCT22XZ zA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2uw1m93u11-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:54:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHrkat088487;
+        Wed, 11 Sep 2019 17:54:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uxj8924jv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:54:16 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BHsFv0022162;
+        Wed, 11 Sep 2019 17:54:15 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 10:54:15 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
+Date:   Wed, 11 Sep 2019 13:54:14 -0400
+Cc:     Jason L Tibbitts III <tibbs@math.uh.edu>,
+        Bruce Fields <bfields@fieldses.org>,
+        Wolfgang Walter <linux@stwm.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+ <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+ <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+ <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
+ <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+ <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 10:04:12AM +0200, Loic Poulain wrote:
-> Hi Guenter, Jorge,
-> 
-> On Mon, 9 Sep 2019 at 00:50, Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > On 9/6/19 1:30 PM, Jorge Ramirez-Ortiz wrote:
-> > > When an IRQ is present in the dts, the probe function shall fail if
-> > > the interrupt can not be registered.
-> > >
-> >
-> > The author intended differently, and did not want registration to fail
-> > in this situation, following the logic that it is better to have a
-> > standard watchdog without pretimeout than no watchdog at all.
-> >
-> 
-> Indeed, but I tend to agree with this change since it aligns behavior with
-> other
-> watchdog drivers and I assume there is a serious issue if request_irq fails.
-> I suggest adding a dev_err message in such case.
-> 
-> Copying the author; I am not inclined to accept such a change without
-> > input from the driver author.
-> >
-> > Similar, for the deferred probe, we'll need to know from the driver author
-> > if this is a concern. In general it is, but there are cases where
-> > -EPROBE_DEFFER is never returned in practice (eg for some SoC watchdog
-> > drivers).
-> >
-> 
-> The IRQ controller is the SPMI bus parent node whose driver (MFD_SPMI_PMIC)
-> is a direct dependency of pm8916_wdt. I'm not sure in which scenario this
-> could
-> happen.
-> 
-Not sure what the action item is. Accept the patch as-is (Reviewed-by
-appreciated), or resubmit without the -EPROBE_DEFER check ?
 
-Thanks,
-Guenter
+
+> On Sep 11, 2019, at 1:50 PM, Benjamin Coddington <bcodding@redhat.com> =
+wrote:
+>=20
+> On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
+>=20
+>> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
+>>=20
+>>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>>=20
+>>>>=20
+>>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
+>>>>=20
+>>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>>>>=20
+>>>>=20
+>>>>>> Instead, I think we want to make sure the mic falls squarely into =
+the tail
+>>>>>> every time.
+>>>>>=20
+>>>>> I'm not clear how you could do that. The length of the page data =
+is not
+>>>>> known to the client before it parses the reply. Are you suggesting =
+that
+>>>>> gss_unwrap should do it somehow?
+>>>>=20
+>>>> Is it too niave to always put the mic at the end of the tail?
+>>>=20
+>>> The size of the page content is variable.
+>>>=20
+>>> The only way the MIC will fall into the tail is if the page content =
+is
+>>> exactly the largest expected size. When the page content is smaller =
+than
+>>> that, the receive logic will place part or all of the MIC in =
+->pages.
+>>=20
+>> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be =
+renamed
+>> and repurposed to be "move the mic from wherever it is to the end of
+>> xdr_buf's tail".
+>>=20
+>> But now I see what you mean, and I also see that it is already trying =
+to do
+>> that.. and we don't want to overlap the copy..
+>>=20
+>> So, really, we need the tail to be larger than twice the mic.. less =
+1.  That
+>> means the fix is probably just increasing rslack for krb5i.
+>=20
+> .. or we can keep the tighter tail space, and if we detect the mic =
+straddles
+> the page and tail, we can move the mic into the tail with 2 copies, =
+first
+> move the bit in the tail back, then move the bit in the pages.
+>=20
+> Which is preferred, less allocation, or in the rare case this occurs, =
+doing
+> copy twice?
+
+It sounds like the bug is that the current code does not deal correctly
+when the MIC crosses the boundary between ->pages and ->tail? I'd like
+to see that addressed rather than changing rslack.
+
+
+--
+Chuck Lever
+
+
+
