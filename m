@@ -2,171 +2,104 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358F6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ADAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E0221928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C97B216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 00:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9WY6tPJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EzMngyN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfIKAYd (ORCPT
+        id S1726532AbfIKA1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 20:24:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34481 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfIKAYd (ORCPT
+        Tue, 10 Sep 2019 20:27:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40573 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfIKA1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 20:24:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id k13so26622513ioj.1;
-        Tue, 10 Sep 2019 17:24:32 -0700 (PDT)
+        Tue, 10 Sep 2019 20:27:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id w18so3035960lfk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 17:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hG6Ad8oG+XWKQFZ06WDpVgaXMLOxylPSZI2j3avJCp8=;
-        b=a9WY6tPJhLtXpuSJHyBLw9J5ha92tm+Z8pe+ly1rtWlFMe1EtGpJbuzdZXFfsCDHps
-         4g+hCYsJpQF+ZotqJIV1/wcZqQVL0FlsUtfoZmM/k6tp3CmTrLPXmxxufvZ5mW0P9EFI
-         h9bZhmIVHqRpaASjxvvN4Ip64ATS01T4QA77BrnWftbbYKYXqhFTHKbhar1ozk72dSBB
-         3kn0DZ1d8+W3GZxtpxxuur3trBDAHH+KJPVz9EIBjzNWyxpnUxq0a+oNLeE/m6ztJ+3N
-         ib73nQKEmWoJFzekQKmMIoHtvag7NoOQHm8kmsBV8CWCfo1CP5iMRvHb9DXgAKq30Qlg
-         jvcA==
+        bh=WajEOxLInLugBAoDBpA/UZhycoI/rEzq/XTRSPCwG6E=;
+        b=EzMngyN8/VFtydsD0WIWfF50NQaPkM2eq8VQZ1+mbgQSlXsfBVGI+7MkTEJzrMepjE
+         N5dzp3wn51b/B2O+rrJbqNGUKq5JuOmTT6211sd23WXSiR3zd2dGAm9f8pa0q1IGg2IK
+         7UUdZYscZWrzG/He/DIZfQEpeLTSwcEo3eedfyMyU6cEaPIfRhxowWNF6pc2dPeVa5X5
+         v3AHcOmN5viENhp+J71IZD/ZGQXMj0xOiHP+s7iSQW7MdcXBb3q+PaJlOw5FzNIHbjK7
+         mYXUmu9PfI0jRJ5VcJqvushgAmgG0XP8z+66xHsDuZzkpejBCpjVGlQGBPgYhkvRR1n8
+         BBEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hG6Ad8oG+XWKQFZ06WDpVgaXMLOxylPSZI2j3avJCp8=;
-        b=dWTkblaLacGPhZYi6AsqUHCTng7tL1DCMAFo48u2EC2YC8WUpE8vn/3yqIOvIwAGRq
-         P4KaEjDZ0bOhur8WGGPl1jF4AHdh5giNSA3nrkUj2xT/fP4F8iLwtOdEbzl+xB4HfYSL
-         VFDvHlxKSFQQ8GMkVROik1YdzjV25Ub3e6upD0ZocjPtT+AQPlWrZqGrxtdofHORxXR+
-         aMZViLpL0BjBFyf+vEHEB6+NnCIv65GvwmSlXWtF/dqbsbKo5eOan9o2/E9w52QJGnaV
-         yAxVOugnzWjWSMfFBy5m93KowAqz7crej8ozgOJIkcqJNiFbcxqEd1BATBKJmE3K1lXb
-         Of9w==
-X-Gm-Message-State: APjAAAVKMnJSv2b5lDGiTrnSX/bjbYOQG8YjHnDO4AkoQ4ZHkASl46q8
-        nLj8t/9kZRCYVETBn/tQtpfanhyZnEmqCH/8zZA=
-X-Google-Smtp-Source: APXvYqxWR7wwaGhiLBd+q6fW6t3WjkY/HH3Y6Wso+cn3pkti5dpmORYih3cb+7MWYLXE3/sXM565U+g8djh/oLDbXDg=
-X-Received: by 2002:a5d:8518:: with SMTP id q24mr28044931ion.228.1568161471394;
- Tue, 10 Sep 2019 17:24:31 -0700 (PDT)
+        bh=WajEOxLInLugBAoDBpA/UZhycoI/rEzq/XTRSPCwG6E=;
+        b=kNkhd4Yix95aHdtQ9TN8OZrHpKlsfsVOacQkGmDyALQHwyuEkj0/JOkYJ4bRtmq6bI
+         d7wBVO+tnPSomm9vG5gxTyNVhIuNo3UmeFA8djlM3yOmLd8qDcemTSsgi3g7qldvstzD
+         V7/Y2P97bvhnuHt3n32eJAOewU8jDzuna9iiE339nNxmuc35VYk41V2ZSjj4HgqrAbkf
+         42DWeXmzszeKybfJE9QciBt6lQl+Auu0z9ys97u13GxNi2t56qjFTbsSCM55Z5YScX7Q
+         J9OJvKtVx+QXhi5GcV2fkxfXi72r+PrjV/AlvBX/73IdabLQmEl3dOoED3rF/a/8b3R8
+         VBcA==
+X-Gm-Message-State: APjAAAVt72P4ppljpKdHI7CqqTwouPPQu85BerccBZQeIsHSfWHETwMS
+        1AkM8dYf949aNJmzcSkd6dUdJ/3SUR8g0IRxHkkWQA==
+X-Google-Smtp-Source: APXvYqzTq8nRKqDrSo4UwdKaMsjIls0OQxxqbEF2KXMZYG4h+hjc3wihhhumQbhxZ9JIU9zTtyDhgWLKDvdddWxQFZc=
+X-Received: by 2002:a19:14f:: with SMTP id 76mr21572482lfb.92.1568161641802;
+ Tue, 10 Sep 2019 17:27:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
- <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
- <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
- <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
- <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
- <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com>
- <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <2DC3BCD1-BD61-4109-9AF3-04FBD980FFB8@goldelico.com>
- <CAHCN7x++uBzYx0cK4K6CY6aveofti5TVXnqEeNKnGBy_fzm5GQ@mail.gmail.com>
-In-Reply-To: <CAHCN7x++uBzYx0cK4K6CY6aveofti5TVXnqEeNKnGBy_fzm5GQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 10 Sep 2019 19:24:18 -0500
-Message-ID: <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>
+References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 01:27:10 +0100
+Message-ID: <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 3:06 PM Adam Ford <aford173@gmail.com> wrote:
+On Thu, Sep 5, 2019 at 3:13 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 >
-> On Tue, Sep 10, 2019 at 2:55 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >
-> > Ok,
-> >
-> > > Am 10.09.2019 um 20:51 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> > >
-> > >>>> it, but then I got some nasty errors and crashes.
-> > >>>
-> > >>> I have done the same but not (yet) seen a crash or error. Maybe you had
-> > >>> a typo?
-> > >>
-> > >> Can you send me an updated patch?  I'd like to try to get where you
-> > >> are that doesn't crash.
-> > >
-> > > Yes, as soon as I have access.
-> >
-> > it turns out that my patch breaks cpufreq completely...
-> > So it looks as if *I* have a typo :)
-> >
-> > Hence I am likely running at constant speed and the
-> > VDD1 regulator is fixed a 1.200V.
-> >
-> > root@letux:~# dmesg|fgrep opp
-> > [    2.426208] cpu cpu0: opp_parse_supplies: Invalid number of elements in opp-microvolt property (6) with supplies (1)
-> > [    2.438140] cpu cpu0: _of_add_opp_table_v2: Failed to add OPP, -22
-> > root@letux:~# cat /sys/class/regulator/regulator.8/microvolts
-> > 1200000
-> > root@letux:~#
-> >
-> > The error message looks as if we have to enable multi_regulator.
+> Implement .get_multiple and .set_multiple to allow reading or setting
+> multiple pins simultaneously. Pins in the same bank will all be switched at
+> the same time, improving synchronization and performances.
 >
-> That will enable both vdd and vbb regulators from what I can tell in the driver.
->
-> > And that may need to rename cpu0-supply to vdd-supply (unless the
-> > names can be configured).
->
-> That is consistent with what I found.  vdd-supply = <&vcc>; and
-> vbb-supply = <&abb_mpu_iva>;
-> I put them both under the cpu node.  Unfortunately, when I did that,
-> my board crashed.
->
-> I am thinking it has something to do with the abb_mpu_iva driver
-> because until this point, we've always operated at 800MHz or lower
-> which all have the same behavior in abb_mpu_iva.
->
-> With the patch you posted for the regulator, without the update to
-> cpufreq,  and with debugging enabled, I received the following in
-> dmesg:
->
-> [    1.112518] ti_abb 483072f0.regulator-abb-mpu: Missing
-> 'efuse-address' IO resource
-> [    1.112579] ti_abb 483072f0.regulator-abb-mpu: [0]v=1012500 ABB=0
-> ef=0x0 rbb=0x0 fbb=0x0 vset=0x0
-> [    1.112609] ti_abb 483072f0.regulator-abb-mpu: [1]v=1200000 ABB=0
-> ef=0x0 rbb=0x0 fbb=0x0 vset=0x0
-> [    1.112609] ti_abb 483072f0.regulator-abb-mpu: [2]v=1325000 ABB=0
-> ef=0x0 rbb=0x0 fbb=0x0 vset=0x0
-> [    1.112640] ti_abb 483072f0.regulator-abb-mpu: [3]v=1375000 ABB=1
-> ef=0x0 rbb=0x0 fbb=0x0 vset=0x0
-> [    1.112731] ti_abb 483072f0.regulator-abb-mpu: ti_abb_init_timings:
-> Clk_rate=13000000, sr2_cnt=0x00000032
->
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Using an unmodified kernel, I changed the device tree to make the abb
-regulator power the cpu instead of vcc.  After doing so, I was able to
-read the microvolt value, and it matched the processor's desired OPP
-voltage, and the debug code showed the abb regulator was attempting to
-set the various index based on the needed voltage.  I think the abb
-driver is working correctly.
+Good initiative!
 
-I think tomorrow, I will re-apply the patches and tweak it again to
-support both vdd and vbb regulators.  If it crashes again, I'll look
-more closely at the logs to see if I can determine why.  I think it's
-pretty close.  I also need to go back and find the SmartReflex stuff
-as well.
+> +       for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {> +               unsigned int word = bank;
+> +               unsigned int offset = 0;
+> +               unsigned int reg;
+> +
+> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
 
-adam
->
-> adam
-> >
-> > BR,
-> > Nikolaus
-> >
+Should it not be > rather than != ?
+
+> +               word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> +               offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
+> +#endif
+
+This doesn't look good for multiplatform kernels.
+
+We need to get rid of any compiletime constants like this.
+
+Not your fault I suppose it is already there, but this really need
+to be fixed. Any ideas?
+
+Yours,
+Linus Walleij
