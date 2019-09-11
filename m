@@ -2,121 +2,113 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23D0C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B6EC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790512087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E1820863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EymCVzZM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YeChDvIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfIKKtB (ORCPT
+        id S1727439AbfIKKvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:49:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40180 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfIKKtA (ORCPT
+        Wed, 11 Sep 2019 06:51:52 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55248 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfIKKvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:49:00 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BAmu9L140801;
-        Wed, 11 Sep 2019 10:48:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=A0EQ0ucC5Utn4XuUW5I4qgdwre2fMdk+hXIPmS6ZuSk=;
- b=EymCVzZMbEUhHasDk7R6Xke5KhrXVT1sy1ccx9suCoRrnXaRIGoOia7jfzNKe20gllQA
- bkdrZ+j5ZrdWsKhvyql5bPz48jfSASc9/zgCY+0/3Ma08y3/+kGcKjHGDXSf6eB8hFXO
- NaDwiX6uZ4uME1vo4vpVa77RYgE62ckOyS/9V5w+cvqWY12X2kglgDwbssq8/awYLMJD
- BYFZLzveuT/LrxPLEm70zYDIbI/VCLhMEW4bClDl3iPaUgCsNvciYZwT0F2XJ1A4HLL4
- ev0eDWBHSHQucLuvTiIEwpfIcXgXYuFMUy7X3xdNacx3lQHBNU1xzPthvV7xQOUvStg+ qw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2uw1jy925h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 10:48:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BAmaxS176312;
-        Wed, 11 Sep 2019 10:48:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2uxj3jf7aq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 10:48:52 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8BAminO016854;
-        Wed, 11 Sep 2019 10:48:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 03:48:44 -0700
-Date:   Wed, 11 Sep 2019 13:48:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sandro Volery <sandro@volery.com>
-Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        valdis.kletnieks@vt.edu, linux-kernel@vger.kernel.org,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v2] Staging: exfat: Avoid use of strcpy
-Message-ID: <20190911104835.GK15977@kadam>
-References: <20190911100616.GH20699@kadam>
- <EAFF08E1-747C-4084-BFEF-A89465A6F9ED@volery.com>
+        Wed, 11 Sep 2019 06:51:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p7so2873021wmp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Uryc0/pqdqKJAZc5VoGKLbUrzv2t7H2FdK8rw8hlLgg=;
+        b=YeChDvIWXEB0TstAMgYAD4rorZ17PMeVJH48y0XNFopRTKZkFqUzX25bM6/kDkwlSB
+         viruUn+aG6aBu7i775BC0uPh+Nsgx/H/fOmG9216rwKNJhReVC/5NFTPYosGl7ssOqXf
+         Ip70bQ66StWipRujTpPgoTIYal+mCceDScD4Xpm6y026t3KvdNv8aQG0AX1QCn4xSqqg
+         J2DFJGyp8hAvpPJxNa+g/OKeKf5D0HyIxw3JdyOMhYjvFneVT7aV2X+MA1yMM361/1py
+         /X/tC/wr7UCCvVd8QF24ZWpp+8FpWc8i3kUAx2gpGTztEI/E2jSfyarbbeJ/q9Js94L+
+         T3Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uryc0/pqdqKJAZc5VoGKLbUrzv2t7H2FdK8rw8hlLgg=;
+        b=q350kOpSuzZSQTmgvoOxFiHRy172gnJdXugas1FGYaleqe+TdVASd+cWTwBRe+9bYN
+         tAvB4k1VmrMOxmFck1JxdSclg8O/8IuG1RB7R766J5vX35ZxQMjCo8/Yv6/XVrjg0r6Q
+         0Xg/U9+MzmVGeB7wVSRUIIK6vBVJal+OgX5Q50Aaz8lEewDIPmfoQjEZ4j3xEcf7Cpj/
+         vEqgm+0VdkI7ARzDd7NZ5M6aFKEfF3YhYL7+EpbUrKj/KW64HEww6H0mH8EAAHT0DIu/
+         +02VOHqfk6ljjgmCc7wF0Q8j2XzDHGT+nK0COL4JZtcemreK91XD5+emSY/xBYHEwlpU
+         fd1w==
+X-Gm-Message-State: APjAAAWsLdBrrusdw4o9xphMFXS9s+NLJ/2jl47czmqEfVxel1rN2IB3
+        4+ShyiYBRDy7ME2qW8sgCQuSqszR6QZ3Mw==
+X-Google-Smtp-Source: APXvYqxQ+TkhPae6YnwpETNmnZCKnGfRVMJswmmeya3cK+zZE7nfR1qS/48jxDEUAMDXwJhtaDBYyw==
+X-Received: by 2002:a1c:110:: with SMTP id 16mr3544521wmb.88.1568199110456;
+        Wed, 11 Sep 2019 03:51:50 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id b144sm2485131wmb.3.2019.09.11.03.51.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 03:51:49 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 11:51:48 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hns@goldelico.com
+Subject: Re: [PATCH] backlight: lm3630a: fix module aliases
+Message-ID: <20190911105148.4prmcr2f2r36sgrf@holly.lan>
+References: <20190910152359.7448-1-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <EAFF08E1-747C-4084-BFEF-A89465A6F9ED@volery.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110099
+In-Reply-To: <20190910152359.7448-1-andreas@kemnade.info>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:24:23PM +0200, Sandro Volery wrote:
+On Tue, Sep 10, 2019 at 05:23:59PM +0200, Andreas Kemnade wrote:
+> Devicetree aliases are missing, so that module autoloading
+> does not work properly.
 > 
-> 
-> > On 11 Sep 2019, at 12:06, Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > 
-> > ﻿On Wed, Sep 11, 2019 at 11:42:19AM +0200, Sandro Volery wrote:
-> >> Use strscpy instead of strcpy in exfat_core.c, and add a check
-> >> for length that will return already known FFS_INVALIDPATH.
-> >> 
-> >> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> >> Signed-off-by: Sandro Volery <sandro@volery.com>
-> >> ---
-> >> v2: Implement length check and return in one
-> >> v1: Original Patch
-> >> drivers/staging/exfat/exfat_core.c | 3 ++-
-> >> 1 file changed, 2 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-> >> index da8c58149c35..4c40f1352848 100644
-> >> --- a/drivers/staging/exfat/exfat_core.c
-> >> +++ b/drivers/staging/exfat/exfat_core.c
-> >> @@ -2964,7 +2964,8 @@ s32 resolve_path(struct inode *inode, char *path, struct chain_t *p_dir,
-> >>    if (strlen(path) >= (MAX_NAME_LENGTH * MAX_CHARSET_SIZE))
-> >        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > Delete this as it is no longer required.
-> > 
-> 
-> Yep, saw it from Rasmus response too just now.. Dumb mistake.
-> Will fix this this afternoon.
-> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-Or you could send it tomorrow.  There is no rush.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-regards,
-dan carpenter
 
+> ---
+>  drivers/video/backlight/lm3630a_bl.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index 3b45a1733198..9d67c07db2f2 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -617,12 +617,14 @@ static const struct i2c_device_id lm3630a_id[] = {
+>  	{}
+>  };
+>  
+> +MODULE_DEVICE_TABLE(i2c, lm3630a_id);
+> +
+>  static const struct of_device_id lm3630a_match_table[] = {
+>  	{ .compatible = "ti,lm3630a", },
+>  	{ },
+>  };
+>  
+> -MODULE_DEVICE_TABLE(i2c, lm3630a_id);
+> +MODULE_DEVICE_TABLE(of, lm3630a_match_table);
+>  
+>  static struct i2c_driver lm3630a_i2c_driver = {
+>  	.driver = {
+> -- 
+> 2.11.0
+> 
