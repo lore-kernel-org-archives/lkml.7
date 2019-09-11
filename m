@@ -2,483 +2,218 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E354ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C40C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC17206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DAA20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uiPaJvFg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3acxjl1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfIKPzG (ORCPT
+        id S1728863AbfIKP4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:55:06 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35680 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbfIKPzF (ORCPT
+        Wed, 11 Sep 2019 11:56:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37715 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbfIKP4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:55:05 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7189A33A;
-        Wed, 11 Sep 2019 17:55:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568217302;
-        bh=F/WAEGE5bSJL5pX6H+opA4klhH7FkmTeNtPy7PfymT0=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=uiPaJvFgtWkwsY3c8LofYJzpdhWCZtT90Q+/e+hWnozTvRurj04z29Ahc0rSxegAc
-         XGCxzF77j6cvt7oT+50su1tV+x9VnRTm5bA2YPUQY4dJP8gltP3kjolUhDzD0gGB53
-         SiDw/q1/f3W1lLovVuwpvdg1V/bVI/mHGeLnHdJE=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 3/9] drm: rcar-du: Add support for CMM
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-4-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <d46b0e1b-d0a8-3e6b-41e5-029bf07c2cae@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 16:54:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 11:56:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id r4so46972661iop.4;
+        Wed, 11 Sep 2019 08:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mzTiwpJgDw1EATMRIrpLBFsul5Dt2y/EocbWcXzqDUM=;
+        b=p3acxjl1SUpYGk4WZpSQ5CYEdDy0jwrmceX1Dvu62YVs/ugom+Z37BMY/CLbo+pxIm
+         fJw4t7nHUrbxiyc+ZTa0myoSgxD0eo21B2x8snthbA0KmtYKugZxjirLRYVHOL2iHVL8
+         tbNof/c70lpxHEnmqrf+rucXWFZIRRPjNFF5x8d4DR4hy+vSjtkFB3hBVB+2z3mASwxQ
+         SIyB/ITsw188Ylh4hWQy1vCABgPsqSDk9ZEX3dnzCngiww+mG0FjKQu4BfV0oBYtUcy2
+         49gITuuMkF8TrTQcsZazlcTWK8pfD5RUpyGOfhuHWsRBdbMmFCTaOIY4cl3hmLWnaRQ1
+         J4hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mzTiwpJgDw1EATMRIrpLBFsul5Dt2y/EocbWcXzqDUM=;
+        b=aSLsRAaITaCmZt77ruSvow2Hk0UComKdLC5ksmYm32Uq3T7u9+bHic9X7ntxjDcdc7
+         SHTDhxO+DxoqDm3Y2Hg3Zi9qAiqqPvCCpfrZHsxxzqIYbI+67shZpecmChwH/y7vk4MA
+         VeLSBLEJlpp7Bu3lgwKQFtjKAuiTyk+X6Wz2ku7fsuiWiYys/js+1c2vdYwyPIOOEjZ1
+         yqNwtA3mhwIFK6+e/42JU/2PeGQqZpVhRWrYNRjHrFtIddekhufS6AAIuBg5UsF+Syjh
+         AKuQqsOHY+uuKcGN37PWtn3IluZBTLDuKIQRS/8agBWKDN8vQ3APa7zURz+SB1GNYi4l
+         du9w==
+X-Gm-Message-State: APjAAAWPYwzPUHSIZfHV0uUlUnWHB1+I2cWBqxHxi48Q0rRRG5FiV7F6
+        aEXnsxZTYQKOH1pzXMyf1WXho81seYd2wS55KJQ=
+X-Google-Smtp-Source: APXvYqzQ9onGKMmPm/d8IIryqyE4ifCfZ2jZZCYtYiAh2ArfhJOawrRH+g9queC7rLFvpIf61xhYSeZGnAzjZ6O37iw=
+X-Received: by 2002:a5e:dc47:: with SMTP id s7mr1717770iop.228.1568217381892;
+ Wed, 11 Sep 2019 08:56:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-4-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
+ <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
+ <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
+ <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
+ <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
+ <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
+ <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
+ <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
+ <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
+ <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com>
+ <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <CAHCN7x++uBzYx0cK4K6CY6aveofti5TVXnqEeNKnGBy_fzm5GQ@mail.gmail.com>
+ <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com>
+ <CAHCN7xL59cXgbe1YTbNvTjptO9bMnuxprCP7ok5kRuc8UO9Fcw@mail.gmail.com>
+ <D7B54A39-D8A3-4EDF-8B47-66D59319B3F4@goldelico.com> <F65E947E-784A-4540-B926-BF3ECB0C01EC@goldelico.com>
+ <285FED38-2B2B-4813-9FD2-396C53E9B1B2@goldelico.com> <CAHCN7xKyTnNojwRqsXcE1AsDKtJikBpXoUo8ED=89ZR9-ko9hA@mail.gmail.com>
+ <65A23326-70B4-46E3-992D-74256B056900@goldelico.com>
+In-Reply-To: <65A23326-70B4-46E3-992D-74256B056900@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 11 Sep 2019 10:56:10 -0500
+Message-ID: <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
+Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Nishanth Menon <nm@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Andreas Kemnade <andreas@kemnade.info>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-<This time replying to the mail with ML's included Doh!>
-
-On 06/09/2019 14:43, Jacopo Mondi wrote:
-> Add a driver for the R-Car Display Unit Color Correction Module.
+On Wed, Sep 11, 2019 at 10:46 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 >
-> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> to perform image enhancement and color correction.
+> Hi,
 >
-> Add support for CMM through a driver that supports configuration of
-> the 1-dimensional LUT table. More advanced CMM feature will be
+> > Am 11.09.2019 um 14:43 schrieb Adam Ford <aford173@gmail.com>:
+> >
+> >>
+> >> I can also see that there are transitions on the voltages (reg.8 is vdd and reg.3 is abb).
+> >
+> > I concur.  I have good results with the added ti,omap-opp-supply entry.
+>
+> Great!
+>
+> There are some subtleties for testing.
+>
+> * I have added turbo-mode; to OPP6 / OPP1G
+> * which means they are available but not used by the ondemand govenor
+> * to enable them one has to echo 1 >/sys/devices/system/cpu/cpufreq/boost
 
-s/feature/features/
-
-> implemented on top of this basic one.
-
-s/basic/initial/
+Will that be documented somewhere? If not, can we put a comment in the
+device tree so people know how to enable it?
 
 >
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
->  drivers/gpu/drm/rcar-du/Makefile   |   1 +
->  drivers/gpu/drm/rcar-du/rcar_cmm.c | 251 +++++++++++++++++++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_cmm.h |  61 +++++++
->  4 files changed, 320 insertions(+)
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> Testing is also easily done through cpufreq-set -f 800m or-f 1g
 >
-> diff --git a/drivers/gpu/drm/rcar-du/Kconfig
-b/drivers/gpu/drm/rcar-du/Kconfig
-> index 1529849e217e..539d232790d1 100644
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
->  	  Choose this option if you have an R-Car chipset.
->  	  If M is selected the module will be called rcar-du-drm.
+> Then I can see the microvolts change and also registers
+> PRM_LDO_ABB_CTRL 0x483072F4 bit 3:0 1=bypass 5=FBB
+> PRM_LDO_ABB_SETUP 0x483072F0 0x00=bypass 0x11=FBB
 >
-> +config DRM_RCAR_CMM
-> +	bool "R-Car DU Color Management Module (CMM) Support"
-> +	depends on DRM && OF
-> +	depends on DRM_RCAR_DU
-> +	help
-> +	  Enable support for R-Car Color Management Module (CMM).
-> +
->  config DRM_RCAR_DW_HDMI
->  	tristate "R-Car DU Gen3 HDMI Encoder Support"
->  	depends on DRM && OF
-> diff --git a/drivers/gpu/drm/rcar-du/Makefile
-b/drivers/gpu/drm/rcar-du/Makefile
-> index 6c2ed9c46467..4d1187ccc3e5 100644
-> --- a/drivers/gpu/drm/rcar-du/Makefile
-> +++ b/drivers/gpu/drm/rcar-du/Makefile
-> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
->  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
->  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+> I have added both of this as descriptive notes to the commit messages.
 >
-> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
->  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
->  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
->  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c
-b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> new file mode 100644
-> index 000000000000..3cacdc4474c7
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> @@ -0,0 +1,251 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#include <drm/drm_color_mgmt.h>
-> +
-> +#include "rcar_cmm.h"
-> +
-> +#define CM2_LUT_CTRL		0x0000
-> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
+> What I have to check is if it behaves as expected on a dm3730 without
+> 1GHz rating.
 
-I'd have a new line here
+I already tested it.  From what I can see, it's behaving normally.
 
-> +#define CM2_LUT_TBL_BASE	0x0600
-> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> +
-> +struct rcar_cmm {
-> +	void __iomem *base;
-> +	bool enabled;
-> +
-> +	/*
-> +	 * @lut:		1D-LUT status
-> +	 * @lut.enabled:	1D-LUT enabled flag
-> +	 * @lut.table:		Table of 1D-LUT entries scaled to hardware
-> +	 *			precision (8-bits per color component)
-> +	 */
-> +	struct {
-> +		bool enabled;
-> +		u32 table[CM2_LUT_SIZE];
-> +	} lut;
-> +};
-> +
-> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> +{
-> +	return ioread32(rcmm->base + reg);
-> +}
-> +
-> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32
-data)
-> +{
-> +	iowrite32(data, rcmm->base + reg);
-> +}
-> +
-> +/*
-> + * rcar_cmm_lut_extract() - Scale down to hardware precision the DRM
-LUT table
-> + *			    entries and store them.
-> + * @rcmm: Pointer to the CMM device
-> + * @drm_lut: Pointer to the DRM LUT table
-> + */
-> +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm,
-> +				 const struct drm_color_lut *drm_lut)
-> +{
-> +	unsigned int i;
-
-I think you're missing the following here:
-
-	if (!drm_lut)
-		return;
-
-You mention below that drm_lut could be passed in as NULL, which would
-cause a segfault here otherwise.
-
-
-> +
-> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
-> +		const struct drm_color_lut *lut = &drm_lut[i];
-> +
-> +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
-> +				   | drm_color_lut_extract(lut->green, 8) << 8
-> +				   | drm_color_lut_extract(lut->blue, 8);
-> +	}
-> +}
-> +
-> +/*
-> + * rcar_cmm_lut_write() - Write to hardware the LUT table entries
-from the
-> + *			  local table.
-> + * @rcmm: Pointer to the CMM device
-> + */
-> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < CM2_LUT_SIZE; ++i)
-> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), rcmm->lut.table[i]);
-> +}
-> +
-> +/*
-> + * rcar_cmm_setup() - Configure the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + * @config: The CRTC-provided configuration.
-
-I don't think CRTC-provided should be hyphenated like that.
-Perhaps just:
-	"The colour management configuration".
-
-As I don't think who provides the configuration is relevant to the
-actual call.
-
-> + *
-> + * Configure the CMM unit with the CRTC-provided configuration.
-
-s/CRTC-provided/given/
-
-> + * Currently enabling, disabling and programming of the 1-D LUT unit is
-> + * supported.
-> + */
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	/*
-> +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it might
-> +	 * be called when the CMM is disabled. As we can't program the hardware
-> +	 * in that case, store the configuration internally and apply it when
-> +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
-> +	 */
-> +	if (!rcmm->enabled) {
-> +		if (!config->lut.enable)
-> +			return 0;
-> +
-> +		rcar_cmm_lut_extract(rcmm, config->lut.table);
-> +		rcmm->lut.enabled = true;
-> +
-> +		return 0;
-> +	}
-> +
-> +	/* Stop LUT operations if requested. */
-> +	if (!config->lut.enable) {
-> +		if (rcmm->lut.enabled) {
-> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +			rcmm->lut.enabled = false;
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Enable LUT and program the new gamma table values.
-> +	 *
-> +	 * FIXME: In order to have stable operations it is required to first
-> +	 * enable the 1D-LUT and then program its table entries. This seems to
-> +	 * contradict what the chip manual reports, and will have to be
-> +	 * reconsidered when implementing support for double buffering.
-> +	 */
-> +	if (!rcmm->lut.enabled) {
-> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> +		rcmm->lut.enabled = true;
-> +	}
-> +
-> +	rcar_cmm_lut_extract(rcmm, config->lut.table);
-> +	rcar_cmm_lut_write(rcmm);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> +
-> +/*
-> + * rcar_cmm_enable() - Enable the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
-> + * components, such as 1-D LUT, if requested.
-> + */
-> +int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
-> +	if (rcmm->lut.enabled) {
-> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> +		rcar_cmm_lut_write(rcmm);
-> +	}
-> +
-> +	rcmm->enabled = true;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> +
-> +/*
-> + * rcar_cmm_disable() - Disable the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Disable the CMM unit by stopping the parent clock.
-> + */
-> +void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +
-> +	pm_runtime_put(&pdev->dev);
-> +
-> +	rcmm->lut.enabled = false;
-> +	rcmm->enabled = false;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> +
-> +/*
-> + * rcar_cmm_init() - Make sure the CMM has probed.
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Return: 0 if the CMM has probed, -EPROBE_DEFER otherwise
-> + */
-> +int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	if (!rcmm)
-> +		return -EPROBE_DEFER;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
-> +
-> +static int rcar_cmm_probe(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm;
-> +
-> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> +	if (!rcmm)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, rcmm);
-> +
-> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(rcmm->base))
-> +		return PTR_ERR(rcmm->base);
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_cmm_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rcar_cmm_of_table[] = {
-> +	{ .compatible = "renesas,rcar-gen3-cmm", },
-> +	{ .compatible = "renesas,rcar-gen2-cmm", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> +
-> +static struct platform_driver rcar_cmm_platform_driver = {
-> +	.probe		= rcar_cmm_probe,
-> +	.remove		= rcar_cmm_remove,
-> +	.driver		= {
-> +		.name	= "rcar-cmm",
-> +		.of_match_table = rcar_cmm_of_table,
-> +	},
-> +};
-> +
-> +module_platform_driver(rcar_cmm_platform_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h
-b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> new file mode 100644
-> index 000000000000..15a2c874b6a6
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> @@ -0,0 +1,61 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#ifndef __RCAR_CMM_H__
-> +#define __RCAR_CMM_H__
-> +
-> +#define CM2_LUT_SIZE		256
-> +
-> +struct drm_color_lut;
-> +struct platform_device;
-> +
-> +/**
-> + * struct rcar_cmm_config - CMM configuration
-> + *
-> + * @lut:	1D-LUT configuration
-> + * @lut.enable:	1D-LUT enable flag
-> + * @lut.table:	1D-LUT table entries. Might be set to NULL when the
-CMM has to
-> + *		be re-enabled but not re=programmed.
-
-So lut.table can be NULL ... See comment at rcar_cmm_lut_extract()
-
-> + */
-> +struct rcar_cmm_config {
-> +	struct {
-> +		bool enable;
-> +		struct drm_color_lut *table;
-> +	} lut;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
-> +int rcar_cmm_init(struct platform_device *pdev);
-> +
-> +int rcar_cmm_enable(struct platform_device *pdev);
-> +void rcar_cmm_disable(struct platform_device *pdev);
-> +
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config);
-> +#else
-> +static inline int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +}
-> +
-> +static int rcar_cmm_setup(struct platform_device *pdev,
-> +			  const struct rcar_cmm_config *config)
-> +{
-> +	return 0;
-> +}
-> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
-> +
-> +#endif /* __RCAR_CMM_H__ */
 >
+> > I noticed the FIXME note on the omap36xx.dtsi file where you added the
+> > vdd-supply reference.  For what its worth, I searched for a list of
+> > all files that reference omap3630, then built a bunch of dtb's
+> >
+> > make `cat dtb-list` ARCH=arm CROSS_COMPILE="ccache arm-linux-" -j8
+> >  DTC     arch/arm/boot/dts/omap3-beagle-xm.dtb
+> >  DTC     arch/arm/boot/dts/omap3-cm-t3730.dtb
+> >  DTC     arch/arm/boot/dts/omap3-evm-37xx.dtb
+> >  DTC     arch/arm/boot/dts/omap3-igep0020.dtb
+> >  DTC     arch/arm/boot/dts/omap3-igep0020-rev-f.dtb
+> >  DTC     arch/arm/boot/dts/omap3-igep0030.dtb
+> >  DTC     arch/arm/boot/dts/omap3-igep0030-rev-g.dtb
+> >  DTC     arch/arm/boot/dts/omap3-lilly-dbb056.dtb
+> >  DTC     arch/arm/boot/dts/omap3-n950.dtb
+> >  DTC     arch/arm/boot/dts/omap3-n9.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-alto35.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-chestnut43.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-gallop43.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-palo35.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-palo43.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-summit.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-tobi.dtb
+> >  DTC     arch/arm/boot/dts/omap3-overo-storm-tobiduo.dtb
+> >  DTC     arch/arm/boot/dts/omap3-pandora-1ghz.dtb
+> >  DTC     arch/arm/boot/dts/omap3-sbc-t3730.dtb
+> >  DTC     arch/arm/boot/dts/omap3-sniper.dtb
+> >  DTC     arch/arm/boot/dts/omap3-zoom3.dtb
+> >  DTC     arch/arm/boot/dts/omap3-gta04a5.dtb
+> >  DTC     arch/arm/boot/dts/omap3-gta04a5one.dtb
+> >  DTC     arch/arm/boot/dts/omap3-gta04a3.dtb
+> >  DTC     arch/arm/boot/dts/omap3-gta04a4.dtb
+>
+> Quite a lot...
+>
+> > I think it's probably safe to leave the vcc-supply there, but you may
+> > want to add a note that users who do not use twl4030 should add
+> > something to their device tree to specify the vcc-supply.
+> >
+> > At this point, I doubt anyone will do new designs on omap3 SoC's.
+>
+> Well, I am not sure if there are out-of-tree boards with omap3
+> where we could break everything. I know of at least one such
+> board.
+>
+> Therefore I have looked where the cpu0-supply vs. vdd-supply
+> is decoded. It turns out to be also the ti-cpufreq driver
+> which we already tweak for omap3 support.
+>
+> So I just have to modify ca. 10 LOC to add this "cpu0" to the
+> SoC description tables and process it once during probe time.
+>
+> Then, it works with unmodified board.dtb
+> defining cpu0-supply = <&vcc> or whatever regulator.
+>
+> The only question that comes up is if this change is am3517
+> compatible. I.e. can we still use the omap36xx_soc_data for
+> it as well which now expects two regulators... So you
+> might now see an error message that cpu0-supply and vbb-supply
+> are missing or not the right number of regulators is given.
+>
+> We may have to add an am3517_soc_data table, but that would
+> be straightforward now.
 
+I will run some tests on the 3517 using the 3430 table instead of the
+3630. I didn't look into great detail as to what the tables do, but it
+might be sufficient.
+Otherwise, I can copy-paste the 3630 table and change the
+multi-regulator off and test it that way if you'd prefer.
+
+Let me know your preference, and I can do it.
+
+>
+> >
+> >> so that you can inspect/compare/test/check before I tidy up and add
+> >> the patches for our OPP-v2 patch set.
+> >
+> > I think it looks good.  Maybe Tony and or TI people have some
+> > comments, but it appears to set both regulators now.
+> >
+> > Nice job!
+>
+> With your kind help!
+>
+I am glad to help.
+
+> Now it's time to wrap up and post a new PATCH set version for
+> review.
+>
+> Best regards,
+> Nikolaus
+>
