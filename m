@@ -2,142 +2,117 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4348CC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC8C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAE52081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jc9Nf8+G"
+	by mail.kernel.org (Postfix) with ESMTP id 08AAE2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfIKRuH (ORCPT
+        id S1729811AbfIKRuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:50:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38273 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbfIKRuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:50:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id k5so22572356iol.5;
-        Wed, 11 Sep 2019 10:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BiVtPEqM908NUB3dBSJY2gAQDyOXwRsQwEkRcPZywqI=;
-        b=jc9Nf8+GW9nZpQ0ok6swsNOLkv+pGqsSyc21nizbrfEMW5OQZTAYm96rg9TIObiBCt
-         XHJngLQdhpxII/jMetLaSjWWHddk+kc/6WlV6Rp5+ONZJ7lo9qA/4x3vO97qduAHC/Th
-         ItwIUifaX2DGdTlFMc54yWpK8kM0fvXp6akMNLJpOBl47p2BXp/oE/sf9T72YQqwLto9
-         9dUIzTM4+awJdTHsMN7TjQ8pJhcccTbf9h1Ms1Qc17ZJeuUt/80RKtfHmmwkQyBWZpkz
-         q2dsHwVpM24jqLYSfhJv9bSmw1LY+mIBL5JMRx2hQmIBIUNThCkmEvpxKsr0VzRUdMM8
-         BHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BiVtPEqM908NUB3dBSJY2gAQDyOXwRsQwEkRcPZywqI=;
-        b=lGKzQwP95M0H3IPHjOp/FJ5hUVMIw+REtqM54dnMtNu17NtV3cvaPhxcNPTBooGWBI
-         nIYouiZAW+61ngGKwhHWt66QVVyXgD0ZHGO0MZkEwW1Z5woCWv886Cr3YZHKd9oMwGS9
-         +dC4TPvCwldDoQ/EQy9wAvLuXNqBCCfc32y3T4Z/DJrn2BQsZi/YqomnzrEczMHu4oVK
-         VCRW1G1JZti8p5ChCcvMNvCMKeY2mYzSBQcuwJs59U2j6GROLWloNl8yUazAVQmbmTH7
-         KpOe0N2izE9qu9wRX+QdveQ8kHQEW/qpQkh7IvMZVuoCLT7hTcwfn7Iay6HmxcCQSG22
-         heZA==
-X-Gm-Message-State: APjAAAU5v3fnTs86+OaSUhlrZbHlZAxwdVB93OYsmjP9HthWn38reRI1
-        lM7tftpVEz+I9DD7OXwjf+G0NHQ/goZlSaGhjQg=
-X-Google-Smtp-Source: APXvYqxIT4Dcqge2c5gC0lT0eUdANFfKovs5IBIuAHz7cTm/bLxKVUyS8v9G9EAwjfRfiW5heNFtoExzCoI5CJy/qRU=
-X-Received: by 2002:a6b:8e92:: with SMTP id q140mr13229896iod.205.1568224205056;
- Wed, 11 Sep 2019 10:50:05 -0700 (PDT)
+        Wed, 11 Sep 2019 13:50:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44806 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729622AbfIKRuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:50:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 55167A37188;
+        Wed, 11 Sep 2019 17:50:23 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4560A19C6A;
+        Wed, 11 Sep 2019 17:50:22 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
+        "Bruce Fields" <bfields@fieldses.org>,
+        "Wolfgang Walter" <linux@stwm.de>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Wed, 11 Sep 2019 13:50:21 -0400
+Message-ID: <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
+In-Reply-To: <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+ <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+ <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+ <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
+ <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
 MIME-Version: 1.0
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
- <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
- <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
- <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
- <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
- <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com>
- <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com>
- <CAHCN7xL59cXgbe1YTbNvTjptO9bMnuxprCP7ok5kRuc8UO9Fcw@mail.gmail.com>
- <D7B54A39-D8A3-4EDF-8B47-66D59319B3F4@goldelico.com> <F65E947E-784A-4540-B926-BF3ECB0C01EC@goldelico.com>
- <285FED38-2B2B-4813-9FD2-396C53E9B1B2@goldelico.com> <CAHCN7xKyTnNojwRqsXcE1AsDKtJikBpXoUo8ED=89ZR9-ko9hA@mail.gmail.com>
- <65A23326-70B4-46E3-992D-74256B056900@goldelico.com> <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
- <BF829797-492C-4120-AC69-F8B83572FD38@goldelico.com> <D3E8B5DC-AB53-4F46-8ABB-F839A11EB31C@goldelico.com>
-In-Reply-To: <D3E8B5DC-AB53-4F46-8ABB-F839A11EB31C@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 11 Sep 2019 12:49:53 -0500
-Message-ID: <CAHCN7xKq1CszKxax+7sG4O_V+iBYLSDVtDC480gvGV+KVb2-sw@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 17:50:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:43 PM H. Nikolaus Schaller <hns@goldelico.com> w=
-rote:
->
-> Hi Adam,
->
-> > Am 11.09.2019 um 18:01 schrieb H. Nikolaus Schaller <hns@goldelico.com>=
-:
-> >
-> >>
-> >> Am 11.09.2019 um 17:56 schrieb Adam Ford <aford173@gmail.com>:
-> >>
-> >>> There are some subtleties for testing.
-> >>>
-> >>> * I have added turbo-mode; to OPP6 / OPP1G
-> >>> * which means they are available but not used by the ondemand govenor
-> >>> * to enable them one has to echo 1 >/sys/devices/system/cpu/cpufreq/b=
-oost
-> >>
-> >> Will that be documented somewhere? If not, can we put a comment in the
-> >> device tree so people know how to enable it?
-> >
-> > It seems to be pretty standard on i86 systems if you google for "turbo =
-mode".
-> > I have added it to the commit message which adds the vbb regulator.
->
-> And, I am not sure if DT maintainers will accept comments about the
-> Linux /sys implementation in device tree files or bindings. Those
-> should be independent of Linux.
+On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
 
-OK.
+> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
 >
-> Basically the turbo-mode property is a hint to the OPP system (which
-> may or may not use of it).
+>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
+>>> <bcodding@redhat.com> wrote:
+>>>
+>>>
+>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
+>>>
+>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
+>>>>> <bcodding@redhat.com> wrote:
+>>>>>
+>>>
+>>>>> Instead, I think we want to make sure the mic falls squarely into 
+>>>>> the tail
+>>>>> every time.
+>>>>
+>>>> I'm not clear how you could do that. The length of the page data is 
+>>>> not
+>>>> known to the client before it parses the reply. Are you suggesting 
+>>>> that
+>>>> gss_unwrap should do it somehow?
+>>>
+>>> Is it too niave to always put the mic at the end of the tail?
+>>
+>> The size of the page content is variable.
+>>
+>> The only way the MIC will fall into the tail is if the page content 
+>> is
+>> exactly the largest expected size. When the page content is smaller 
+>> than
+>> that, the receive logic will place part or all of the MIC in ->pages.
 >
-> So I think it is indeed better to have it in the commit message and
-> not the code.
+> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
+> renamed
+> and repurposed to be "move the mic from wherever it is to the end of
+> xdr_buf's tail".
+>
+> But now I see what you mean, and I also see that it is already trying 
+> to do
+> that.. and we don't want to overlap the copy..
+>
+> So, really, we need the tail to be larger than twice the mic.. less 1. 
+>  That
+> means the fix is probably just increasing rslack for krb5i.
 
-That makes sense.
+.. or we can keep the tighter tail space, and if we detect the mic 
+straddles
+the page and tail, we can move the mic into the tail with 2 copies, 
+first
+move the bit in the tail back, then move the bit in the pages.
 
->
-> One more thought: as long as we do not have junction temperature monitori=
-ng
-> we should keep it off by default... We may even remove the turbo-mode
-> designator if we have the 90=C2=B0C limit and smart reflex working.
+Which is preferred, less allocation, or in the rare case this occurs, 
+doing
+copy twice?
 
-We're almost there!
-
-adam
->
-> BR,
-> Nikolaus
->
+Ben
