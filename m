@@ -2,129 +2,99 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC25ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1DCECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285A12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:08:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SloJf08G"
+	by mail.kernel.org (Postfix) with ESMTP id DED2A206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfIKJIs (ORCPT
+        id S1727382AbfIKJLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:08:48 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfIKJIr (ORCPT
+        Wed, 11 Sep 2019 05:11:08 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:60895 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfIKJLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:08:47 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r195so2563248wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 02:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fVXJdEiyG3g7I0Ee9AcvktkAQsh4s+Etlf6fhn1BiQk=;
-        b=SloJf08GFdByA5YtqiSMgVWUoDfKLosEALLv1z+JHxPfMHmzqQEPufdARHBVpooccQ
-         PKa46XI6UoUWJ0FlKtMQMmqrGAi3Ahdh7o9BvXGcV3cAyUT6cjldNAt5XNWaSJ/V3zaN
-         WsYE2nbdiPV18nUGV7BdAUREhqyvAbdiNJKGKcMr9vpGVX4RM89zF/7kSYnFpKil8o6g
-         xUh73eh/yqXmbe7W/PCTK5wNZTTUMq5ygAIVemM23Odt5cTRXw2E2TKBq1V5dtQP462D
-         9pWAQZQdm+7c2dOGYvb96qJpTkDthZTfJV5MnQ01O6TducJB4vSY63I9obEi7PMlvwxv
-         ZQVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fVXJdEiyG3g7I0Ee9AcvktkAQsh4s+Etlf6fhn1BiQk=;
-        b=sWiCLSziuxY0SNLUy3mY8lfD6vlTRoFLTU4XsSQBxRO0LUoSjsjQRYc1SOio/kxcz2
-         4c0cO7K1JIakhSgaLtZUBOBvMDaw1p2K//Py+x5PjjInqJQh1TZswWGNc8QyjKjZMa8n
-         JRm56VRCgNdSY+WFTSxl3VE5jNXFZpFgitCUnr9wKlX2kNVTtxOsAk+VJmCIhwEJQRY0
-         UFCjImRPuBtE55fgtNzYJKcPhdNhL7l4aEzl9u1cqRQTBRModox7VF4ZpxGILkqXf9mr
-         IuzVjupXHt1j5pWpbYrcMjlcvSc7ONEDCWymhXZsvbkFVe+OazajOvCuTcEf6puvJBLk
-         Lgfw==
-X-Gm-Message-State: APjAAAW1E5FiUjyogvZvi3ik1XCjpP5Y/N3z67jOAqN2b3bxub+XvcT4
-        C8atIVjaM2YT4GLVpyNJODlniEFChLCLZ3OMokp7wQ==
-X-Google-Smtp-Source: APXvYqxRP0NOtvDhWQscJB/M1Lhu0yxbUlcmMzQncopqZ5So0Oa9QNkSkEGdSsimlxZP8zxmTbUSKvG1ea/1pcfKyvA=
-X-Received: by 2002:a1c:c90e:: with SMTP id f14mr2849955wmb.54.1568192924093;
- Wed, 11 Sep 2019 02:08:44 -0700 (PDT)
+        Wed, 11 Sep 2019 05:11:08 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9046124001F;
+        Wed, 11 Sep 2019 09:11:05 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 11:11:01 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and
+ .set_multiple
+Message-ID: <20190911091101.GC21254@piout.net>
+References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+ <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190724224954.229540-1-nums@google.com> <20190724224954.229540-2-nums@google.com>
-In-Reply-To: <20190724224954.229540-2-nums@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 Sep 2019 02:08:32 -0700
-Message-ID: <CAP-5=fUf1BN634Ojkp-sPUV5iryzZ-qbv_UVS-GoNOgj-454dQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] Fix event.c misaligned address error
-To:     Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An idea here is that, if this breaks backward compatibility, we
-introduce an aligned variant and work to deprecate the unaligned
-variant. I will look into making a patch set.
+On 11/09/2019 01:27:10+0100, Linus Walleij wrote:
+> On Thu, Sep 5, 2019 at 3:13 PM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> >
+> > Implement .get_multiple and .set_multiple to allow reading or setting
+> > multiple pins simultaneously. Pins in the same bank will all be switched at
+> > the same time, improving synchronization and performances.
+> >
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> 
+> Good initiative!
+> 
+> > +       for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {> +               unsigned int word = bank;
+> > +               unsigned int offset = 0;
+> > +               unsigned int reg;
+> > +
+> > +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
+> 
+> Should it not be > rather than != ?
+> 
 
-Thanks,
-Ian
+Realistically, the only case that could happen would be
+ATMEL_PIO_NPINS_PER_BANK == 32 and BITS_PER_LONG ==64. so I would go for
+ATMEL_PIO_NPINS_PER_BANK < BITS_PER_LONG
 
-On Wed, Jul 24, 2019 at 3:50 PM Numfor Mbiziwo-Tiapo <nums@google.com> wrote:
->
-> The ubsan (undefined behavior sanitizer) build of perf throws an
-> error when the synthesize "Synthesize cpu map" function from
-> perf test is run.
->
-> This can be reproduced by running (from the tip directory):
-> make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
->
-> (see cover letter for why perf may not build)
->
-> then running: tools/perf/perf test 44 -v
->
-> This bug occurs because the cpu_map_data__synthesize function in
-> event.c calls synthesize_mask, casting the 'data' variable
-> (of type cpu_map_data*) to a cpu_map_mask*. Since struct
-> cpu_map_data is 2 byte aligned and struct cpu_map_mask is 8 byte
-> aligned this causes memory alignment issues.
->
-> This is fixed by adding 6 bytes of padding to the struct cpu_map_data,
-> however, this will break compatibility between perf data files - a file
-> written by an old perf wouldn't work with a perf with this patch due
-> to event data alignment changing.
->
-> Comments?
->
-> Not-Quite-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> ---
->  tools/perf/util/event.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> index eb95f3384958..82eaf06c2604 100644
-> --- a/tools/perf/util/event.h
-> +++ b/tools/perf/util/event.h
-> @@ -433,6 +433,7 @@ struct cpu_map_mask {
->
->  struct cpu_map_data {
->         u16     type;
-> +       u8 pad[6];
->         char    data[];
->  };
->
-> --
-> 2.22.0.657.g960e92d24f-goog
->
+> > +               word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> > +               offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
+> > +#endif
+> 
+> This doesn't look good for multiplatform kernels.
+> 
+
+I don't think we have multiplatform kernels that run both in 32 and 64
+bits. I don't believe ATMEL_PIO_NPINS_PER_BANK will ever change, it has
+been 32 on all the atmel SoCs since 2001.
+
+> We need to get rid of any compiletime constants like this.
+> 
+> Not your fault I suppose it is already there, but this really need
+> to be fixed. Any ideas?
+> 
+
+I can go for a variable instead of a constant but the fact is that there
+is currently no 64bit SoC with that IP. I added the compile time check
+just in case a 64 bit SoC appears with that IP one day.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
