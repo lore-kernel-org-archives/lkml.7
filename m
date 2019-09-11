@@ -2,126 +2,139 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ABCC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F398ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AA92081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVZB36l4"
+	by mail.kernel.org (Postfix) with ESMTP id 5F9202081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfIKRNm (ORCPT
+        id S1729533AbfIKROF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:13:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35713 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbfIKRNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:13:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so46873557ion.2;
-        Wed, 11 Sep 2019 10:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6+SoHhsQOovqeJZiGrW82P38EagpxDWDR4IIb3FtRF0=;
-        b=XVZB36l4tCCXIo99rJgiEOcRMbNK/SDldNDhuEWHpRBjh9g1qEnpocs0amMHNLuITu
-         nTt0wafLCJ2XqHDDe5Vowa9SwAUsqRHYXqlFcBJvKMUoC90gXSsKVLz1ry/5H/dSJAKE
-         43rCckOnr2QVdwEnZNU+NrVErFfEFAe1mijavOefP+CcwT1Ig0vXBhkUIuYcg9RiTR5Q
-         HTpq2vMxLJoa4mVpnwqv+fpVe1KcBUKHsqa6TOkXoov68QAADJBLTevGBqfdyoo8M/VF
-         pPBZOSKHY26pofiVpOkorepZpmsIjFgc9XWu04QRFdfyUrvNpVUBnkGKzu82+bge2LQD
-         iF3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6+SoHhsQOovqeJZiGrW82P38EagpxDWDR4IIb3FtRF0=;
-        b=sEbrFCb5yBI4k0vUm3laSt1LkPJ58wckYgD9ucdoV83F+RWEIwhH3TSXSOS5iCQ9/g
-         FwFbVx1wsq/F3nx+uBaAbYwGUZoFyajKoIUgREJK+X66NZ0jU0k3Ddunjy6Rs5Q23za2
-         yG2RB73MZ7iPDTtiROUiyyZRUZahdlylgLB6fBbFIvBXXkYmB4wJ68TQKc0ZneZIwKrr
-         UhJux+ngqwtULisu5WeBuOTU9E4EGBtGTJI7jZVL/uxbh7xEQBQiCv2kLb91zIjRisc9
-         s7Zp5xpQ+HSpR0DPmVwjWtLFlOiahGiTY+i4BJEjrhJhhS7o9C6xJcaqBc6sGaPzDd++
-         4nyg==
-X-Gm-Message-State: APjAAAWByvrSkhWIQ4ZD95KMJl9e6aCjxH5GA8T8EosV8KGS0gJrLc+V
-        1GBu532mWlYgzOWbTL/TjlFr5m7eZMtFWccVc/oJT2bC
-X-Google-Smtp-Source: APXvYqzvZEOqQx2WkH+vz6db30rZjP0YoOEZETq41+nri6onsnfSe2ye9BXROxkmT5TyXDj3omZewOfWQsdOtYuRCP4=
-X-Received: by 2002:a02:65cd:: with SMTP id u196mr38920494jab.3.1568222019620;
- Wed, 11 Sep 2019 10:13:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190911145226.21088-1-aford173@gmail.com> <20190911165021.qr5i37mpnua3fvw5@earth.universe>
-In-Reply-To: <20190911165021.qr5i37mpnua3fvw5@earth.universe>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 11 Sep 2019 12:13:27 -0500
-Message-ID: <CAHCN7xKin45Hqr1fgoOmbBKaM_hM_xnvrs2_5nnxAifHL2Sz0A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: omap2plus_defconfig: Update for removed items
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Wed, 11 Sep 2019 13:14:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16174 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729450AbfIKROF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:14:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 10:14:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="336315272"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 11 Sep 2019 10:13:58 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i86Bo-0001zn-Jk; Wed, 11 Sep 2019 20:13:56 +0300
+Date:   Wed, 11 Sep 2019 20:13:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Russell King <linux@armlinux.org.uk>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
+Message-ID: <20190911171356.GV2680@smile.fi.intel.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:50 AM Sebastian Reichel <sre@kernel.org> wrote:
->
-> Hi,
->
-> On Wed, Sep 11, 2019 at 09:52:25AM -0500, Adam Ford wrote:
-> > The omap panel-dpi driver was removed in
-> > Commit 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> >
-> > The tFP410 and DVI connector was remove in
-> > Commit be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
-> >
-> > This patch removes these items from the omap2plus_defconfig.
->
-> The omapdrm specific drivers have generic replacements, that
-> should be added to the defconfig instead:
->
-> DRM_OMAP_PANEL_DPI -> DRM_PANEL_SIMPLE
-> DRM_OMAP_ENCODER_TFP410 -> DRM_TI_TFP410
->
-> Nothing should be required for DRM_OMAP_CONNECTOR_DVI.
+On Wed, Sep 11, 2019 at 12:52:04AM -0700, Dmitry Torokhov wrote:
+> This series attempts to add support for software nodes to gpiolib, using
+> software node references that were introduced recently. This allows us
+> to convert more drivers to the generic device properties and drop
+> support for custom platform data:
+> 
+> static const struct software_node gpio_bank_b_node = {
+> |-------.name = "B",
+> };
+> 
+> static const struct property_entry simone_key_enter_props[] = {
+> |-------PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> |-------PROPERTY_ENTRY_STRING("label", "enter"),
+> |-------PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> |-------{ }
+> };
+> 
+> If we agree in principle, I would like to have the very first 3 patches
+> in an immutable branch off maybe -rc8 so that it can be pulled into
+> individual subsystems so that patches switching various drivers to
+> fwnode_gpiod_get_index() could be applied.
 
-The DPI panel was already done.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-https://patchwork.kernel.org/patch/11119569/
+for patches 1-8 after addressing minor issues.
+I'll review the rest later on.
 
-I'll submit a patch for the TFP410
+> 
+> Thanks,
+> Dmitry
+> 
+> Dmitry Torokhov (11):
+>   gpiolib: of: add a fallback for wlf,reset GPIO name
+>   gpiolib: introduce devm_fwnode_gpiod_get_index()
+>   gpiolib: introduce fwnode_gpiod_get_index()
+>   net: phylink: switch to using fwnode_gpiod_get_index()
+>   net: mdio: switch to using fwnode_gpiod_get_index()
+>   drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+>   gpliolib: make fwnode_get_named_gpiod() static
+>   gpiolib: of: tease apart of_find_gpio()
+>   gpiolib: of: tease apart acpi_find_gpio()
+>   gpiolib: consolidate fwnode GPIO lookups
+>   gpiolib: add support for software nodes
+> 
+>  drivers/gpio/Makefile              |   1 +
+>  drivers/gpio/gpiolib-acpi.c        | 153 ++++++++++++++----------
+>  drivers/gpio/gpiolib-acpi.h        |  21 ++--
+>  drivers/gpio/gpiolib-devres.c      |  33 ++----
+>  drivers/gpio/gpiolib-of.c          | 159 ++++++++++++++-----------
+>  drivers/gpio/gpiolib-of.h          |  26 ++--
+>  drivers/gpio/gpiolib-swnode.c      |  92 +++++++++++++++
+>  drivers/gpio/gpiolib-swnode.h      |  13 ++
+>  drivers/gpio/gpiolib.c             | 184 ++++++++++++++++-------------
+>  drivers/gpu/drm/bridge/ti-tfp410.c |   4 +-
+>  drivers/net/phy/mdio_bus.c         |   4 +-
+>  drivers/net/phy/phylink.c          |   4 +-
+>  include/linux/gpio/consumer.h      |  53 ++++++---
+>  13 files changed, 471 insertions(+), 276 deletions(-)
+>  create mode 100644 drivers/gpio/gpiolib-swnode.c
+>  create mode 100644 drivers/gpio/gpiolib-swnode.h
+> 
+> -- 
+> 2.23.0.162.g0b9fbb3734-goog
+> 
 
-adam
->
-> -- Sebastian
->
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> >
-> > diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> > index c7bf9c493646..166b36be2ca6 100644
-> > --- a/arch/arm/configs/omap2plus_defconfig
-> > +++ b/arch/arm/configs/omap2plus_defconfig
-> > @@ -349,12 +349,9 @@ CONFIG_OMAP5_DSS_HDMI=y
-> >  CONFIG_OMAP2_DSS_SDI=y
-> >  CONFIG_OMAP2_DSS_DSI=y
-> >  CONFIG_DRM_OMAP_ENCODER_OPA362=m
-> > -CONFIG_DRM_OMAP_ENCODER_TFP410=m
-> >  CONFIG_DRM_OMAP_ENCODER_TPD12S015=m
-> > -CONFIG_DRM_OMAP_CONNECTOR_DVI=m
-> >  CONFIG_DRM_OMAP_CONNECTOR_HDMI=m
-> >  CONFIG_DRM_OMAP_CONNECTOR_ANALOG_TV=m
-> > -CONFIG_DRM_OMAP_PANEL_DPI=m
-> >  CONFIG_DRM_OMAP_PANEL_DSI_CM=m
-> >  CONFIG_DRM_OMAP_PANEL_SONY_ACX565AKM=m
-> >  CONFIG_DRM_OMAP_PANEL_LGPHILIPS_LB035Q02=m
-> > --
-> > 2.17.1
-> >
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
