@@ -2,155 +2,94 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3324EC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D750BC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32F12081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A221720863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fNFTn4tK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQHGkTsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfIKRqR (ORCPT
+        id S1729766AbfIKRrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:46:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49514 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729735AbfIKRqP (ORCPT
+        Wed, 11 Sep 2019 13:47:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38502 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729683AbfIKRq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:46:15 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHgc0g174577;
-        Wed, 11 Sep 2019 17:43:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=Pb5WjMUsVaTlVO0wSI4Ye0S4dRAE3PuojCAmFvOzGjQ=;
- b=fNFTn4tKKIr78GW9Kv+VoT4MiNJGk4PQ0XBCe408niyns2ckkaxjoAk2u7ssN3NjLpMl
- Bx5zpjO0AQD+i7TEof1VpEmV/6j+GpBWGRGJqKHWYePmt+aNPNE8Xi5aNwAYLz7qqAsG
- RBMJJzIQadKJ5p5N/meX18uXRmF1f5bg2oUJGANeSYD0Te3Y+CrbXKLyfXbJyOlTZrgI
- TxPxFoNbIwJfQKkZSH+aA+k5kvvEoAWiwMuvtwueuCmzR+0M/LkSOKswH9/UqDgZ808j
- evdmKpfmqKTKerUntQlxS+6w8sX04mpfLneZBkhDgszmJBdDNKt0hph8k9K22zZWMzxu +w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2uw1jkkpf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:43:40 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHcnam044036;
-        Wed, 11 Sep 2019 17:43:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2uxk0tfveq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 17:43:39 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BHhciQ014105;
-        Wed, 11 Sep 2019 17:43:38 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 10:43:38 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
-Date:   Wed, 11 Sep 2019 13:43:37 -0400
-Cc:     Jason L Tibbitts III <tibbs@math.uh.edu>,
-        Bruce Fields <bfields@fieldses.org>,
-        Wolfgang Walter <linux@stwm.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
- <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
- <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110163
+        Wed, 11 Sep 2019 13:46:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id k5so22549352iol.5;
+        Wed, 11 Sep 2019 10:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=m6EOAJO1qgEemJlkYFxDYcBwzW52x2O5dEl25GRcoSc=;
+        b=LQHGkTsqCaP8EfYJI/4g9fzb5NhR+mH8Ofvj4v2IIjBuYitiqn/Iz0cp5UZVRy6EGq
+         GcsPryMwY+RrBvooTU18BzfsCCX7TDEihCT8uSFRtDj/93ML9GR1wXg7Va/QCNIj7H+w
+         aYd4DGYjJOJBQ01MdyYdzWl1PCZpdbt8UyAAzTzFEvRZE3euqOUQ+IDxvT0ZRV5Z+jXN
+         8s8QBvTzTOnCp0IiDHH8OhOJtToHgAIiLEAfcFwk5UDydGLLuTMcKbVF1gdPLzTsd6og
+         rnb0wU3P+F5ibXwLonI/Ns26o3b/RtvMw05MrWXDNphEP8JCw8WRUbiy5GBnoG1YyQDE
+         0zVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m6EOAJO1qgEemJlkYFxDYcBwzW52x2O5dEl25GRcoSc=;
+        b=jTlcSE/5N37jEjwwKmFFPAvguYXcusOj2ukpf5i/kBXBvXVbaeN/tIfgLS8OEvjvde
+         thSeje9DQuj3rn4hK3m7CK9fpp1/iEqSMOKiNa8NrFEixOIfAsa5WNP/euqKMk4+gWwA
+         xMjpXWdxCTAM72YEZJ8N3vC4zPpBU2HkrkXWAaapg+/x3YzbZME/inbkCkXoSHB7toC6
+         I7RPXt7CwvczK+QjzaFlpe7aROIvEQvZ387sropbX0dK0jUOniiU7Y+WsnVFLn2Cto9Y
+         bZslTvJ21PkPECImOI/MA0rCO35+RIOKDpC5u4e9c3DmWSwnjGzf4Zdf9lAdnUtOOt1b
+         TKSg==
+X-Gm-Message-State: APjAAAUt7CxFoZiqAwM58eI2PpYvnk7qWm/jWAb4WPykmSoCUD2DPVz4
+        x4sws6hPORXv9Hp+vzDy1SA85l8y
+X-Google-Smtp-Source: APXvYqzxTMSyzOm40fnhFm9eaQZkFEEtBWf0exKouA7+NALtOfOJVLpNgsp+8oDMNF52g0vv1Y8dZg==
+X-Received: by 2002:a5d:89c1:: with SMTP id a1mr7693726iot.306.1568224018425;
+        Wed, 11 Sep 2019 10:46:58 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id z11sm18788778ioi.88.2019.09.11.10.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 10:46:57 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     adam.ford@logicpd.com, sre@kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: omap2plus_defconfig: Enable DRM_TI_TFP410
+Date:   Wed, 11 Sep 2019 12:46:47 -0500
+Message-Id: <20190911174647.29721-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The TFP410 driver was removed but the replacement driver was
+never enabled.  This patch enableds the DRM_TI_TFP410
 
+Fixes: be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
 
-> On Sep 11, 2019, at 1:40 PM, Benjamin Coddington <bcodding@redhat.com> =
-wrote:
->=20
-> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
->=20
->>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->>>=20
->>>=20
->>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->>>=20
->>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington =
-<bcodding@redhat.com> wrote:
->>>>>=20
->>>=20
->>>>> Instead, I think we want to make sure the mic falls squarely into =
-the tail
->>>>> every time.
->>>>=20
->>>> I'm not clear how you could do that. The length of the page data is =
-not
->>>> known to the client before it parses the reply. Are you suggesting =
-that
->>>> gss_unwrap should do it somehow?
->>>=20
->>> Is it too niave to always put the mic at the end of the tail?
->>=20
->> The size of the page content is variable.
->>=20
->> The only way the MIC will fall into the tail is if the page content =
-is
->> exactly the largest expected size. When the page content is smaller =
-than
->> that, the receive logic will place part or all of the MIC in ->pages.
->=20
-> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be =
-renamed
-> and repurposed to be "move the mic from wherever it is to the end of
-> xdr_buf's tail".
->=20
-> But now I see what you mean, and I also see that it is already trying =
-to do
-> that.. and we don't want to overlap the copy..
->=20
-> So, really, we need the tail to be larger than twice the mic.. less 1. =
- That
-> means the fix is probably just increasing rslack for krb5i.
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-What's the justification for that particular maximum size? Are you sure =
-the
-page contents are not spilling into the tail?
-
---
-Chuck Lever
-
-
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index a0449d3b48a5..d384c13de19a 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -359,6 +359,7 @@ CONFIG_DRM_OMAP_PANEL_TPO_TD028TTEC1=m
+ CONFIG_DRM_OMAP_PANEL_TPO_TD043MTEA1=m
+ CONFIG_DRM_OMAP_PANEL_NEC_NL8048HL11=m
+ CONFIG_DRM_TILCDC=m
++CONFIG_DRM_TI_TFP410=m
+ CONFIG_FB=y
+ CONFIG_FIRMWARE_EDID=y
+ CONFIG_FB_MODE_HELPERS=y
+-- 
+2.17.1
 
