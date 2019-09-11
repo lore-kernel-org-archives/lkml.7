@@ -3,106 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4887C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD57C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BD42084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A082084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfIKPJA (ORCPT
+        id S1728539AbfIKPJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:09:00 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:60684 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbfIKPJA (ORCPT
+        Wed, 11 Sep 2019 11:09:12 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:36878 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728421AbfIKPJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:09:00 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 2BB5D72CC6C;
-        Wed, 11 Sep 2019 18:08:58 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id E60E17CCB47; Wed, 11 Sep 2019 18:08:57 +0300 (MSK)
-Date:   Wed, 11 Sep 2019 18:08:57 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
-Message-ID: <20190911150857.GA23868@altlinux.org>
-References: <20190910175852.GA15572@asgard.redhat.com>
- <20190911064852.9f236d4c201b50e14d717c14@linux-foundation.org>
- <20190911135236.73l6icwxqff7fkw5@wittgenstein>
- <20190911141635.lafrcjwvbhjm3ezy@wittgenstein>
- <20190911143213.GB21600@asgard.redhat.com>
- <20190911145446.vkcqy2shldi5ibb5@wittgenstein>
+        Wed, 11 Sep 2019 11:09:11 -0400
+Received: (qmail 4433 invoked by uid 2102); 11 Sep 2019 11:09:10 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 11 Sep 2019 11:09:10 -0400
+Date:   Wed, 11 Sep 2019 11:09:10 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>
+cc:     linux-kernel@vger.kernel.org,
+        <linux-arm-kernel@lists.infradead.org>,
+        <gregkh@linuxfoundation.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <Boris.Krasnovskiy@lairdconnect.com>, <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 0/3] USB: host: ohci-at91: tailor power consumption
+In-Reply-To: <20190911064154.28633-1-nicolas.ferre@microchip.com>
+Message-ID: <Pine.LNX.4.44L0.1909111108460.1483-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911145446.vkcqy2shldi5ibb5@wittgenstein>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 04:54:47PM +0200, Christian Brauner wrote:
-> On Wed, Sep 11, 2019 at 03:32:13PM +0100, Eugene Syromiatnikov wrote:
-> > On Wed, Sep 11, 2019 at 04:16:36PM +0200, Christian Brauner wrote:
-> > > On Wed, Sep 11, 2019 at 03:52:36PM +0200, Christian Brauner wrote:
-> > > > On Wed, Sep 11, 2019 at 06:48:52AM -0700, Andrew Morton wrote:
-> > > > > What are the user-visible runtime effects of this bug?
-> > 
-> > The userspace can set -1 as an exit_signal, and that will break process
-> > signalling and reaping.
-> > 
-> > > > > Relatedly, should this fix be backported into -stable kernels?  If so, why?
-> > > > 
-> > > > No, as I said in my other mail clone3() is not in any released kernel
-> > > > yet. clone3() is going to be released in v5.3.
-> > > 
-> > > Sigh, I spoke to soon... Hm, this is placed in _do_fork(). There's a
-> > > chance that this might be visible in legacy clone if anyone passes in an
-> > > invalid signal greater than NSIG right now somehow, they'd now get
-> > > EINVAL if I'm seeing this right.
-> > > 
-> > > So an alternative might be to only fix this in clone3() only right now
-> > > and get this patch into 5.3 to not release clone3() with this bug from
-> > > legacy clone duplicated.
-> > > And we defer the actual legacy clone fix until after next merge window
-> > > having it stew in linux-next for a couple of rcs. Distros often pull in
-> > > rcs so if anyone notices a regression for legacy clone we'll know about
-> > > it... valid_signal() checks at process exit time when the parent is
-> > > supposed to be notifed will catch faulty signals anyway so it's not that
-> > > big of a deal.
-> > 
-> > As the patch is written, only copy_clone_args_from_user is touched (which
-> > is used only by clone3 and not legacy clone), and the check added
+On Wed, 11 Sep 2019, Nicolas Ferre wrote:
+
+> Following a set of experiments we found areas of improvement for OHCI power
+> consumption (and associated USB analog cells).
+> This enhances the shutdown of residual power consumption in case of Linux
+> suspend/resume and removal of the driver (when compiled as a module).
 > 
-> Great!
+> Best regards,
+>   Nicolas
 > 
-> > replicates legacy clone behaviour: userspace can set 0..CSIGNAL
-> > as an exit_signal.   Having ability to set exit_signal in NSIG..CSIGNAL
+> Boris Krasnovskiy (2):
+>   USB: host: ohci-at91: completely shutdown the controller in
+>     at91_stop_hc()
+>   USB: host: ohci-at91: resume: balance the clock start call
 > 
-> Hm. The way I see it for clone3() it would make sense to only have <
-> NSIG right away. valid_signal() won't let through anything else
-> anyway... Since clone3() isn't out yet it doesn't make sense to
-> replicate the (buggy) behavior of legacy clone, right?
+> Nicolas Ferre (1):
+>   USB: host: ohci-at91: suspend: delay needed before to stop clocks
+> 
+>  drivers/usb/host/ohci-at91.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 
-I agree, let's have a proper exit_signal check in the new syscall
-from the beginning.
+For all three patches:
 
-It should be as simple as
-	if (unlikely((args.exit_signal & ~((u64)CSIGNAL)) ||
-		     !valid_signal(args.exit_signal)))
-		return -EINVAL;
-shouldn't it?
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-
--- 
-ldv
