@@ -2,104 +2,93 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAE4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC7EC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7694720863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC7020863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rt2nYJmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfIKOjZ (ORCPT
+        id S1728216AbfIKOl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:39:25 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:34306 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfIKOjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:39:13 -0400
-Received: from ramsan ([84.194.98.4])
-        by laurent.telenet-ops.be with bizsmtp
-        id 0Ef42100205gfCL01Ef4Ro; Wed, 11 Sep 2019 16:39:10 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0006T7-V5; Wed, 11 Sep 2019 16:39:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0003PC-Tp; Wed, 11 Sep 2019 16:39:03 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v2 3/5] gpio: Export gpio_name_to_desc() to modular GPIO code
-Date:   Wed, 11 Sep 2019 16:38:56 +0200
-Message-Id: <20190911143858.13024-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190911143858.13024-1-geert+renesas@glider.be>
-References: <20190911143858.13024-1-geert+renesas@glider.be>
+        Wed, 11 Sep 2019 10:41:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:45547 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbfIKOl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:41:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46T4N23CsCz9s4Y;
+        Thu, 12 Sep 2019 00:41:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568212885;
+        bh=UC3U6plrH8X94TDXBLOodUB+8J0CqlIt7Wkb6yaJzRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rt2nYJmmauNCwvjj85MJQaAoJlyYKWbpVTHf4KoFS0lslo+sfaZC286whLvX2QFrG
+         cze5IZsEZwP9RArfBO0P+EB8b66lpmNK5RvIfBkNBgmAbOM2JRgJwWTl1T+yxTxAgt
+         /mE4mVLoQE/DHcbcERkPCQOrjqfA91P0kzsFnYcfDPTvNcXHYkbRtJJzc6OibiQdQS
+         SMhVYsX4Ra2di8McFHF4J1wwbc/rWd+sATLWAJV9JTYY9CfwglWwGJaxtx2P5zdYV7
+         JtKKdmi2Wj0cNge7L+1P0ql1cEfpA1MPgHpc54iKuRDfNXiNaU/BDEmWpY8OFzLUVf
+         FIfWs+3f1SwEA==
+Date:   Thu, 12 Sep 2019 00:41:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <mike.rapoport@gmail.com>,
+        Chester Lin <clin@suse.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the arm tree
+Message-ID: <20190912004119.3f2fbe4f@canb.auug.org.au>
+In-Reply-To: <20190911142106.GA6429@linux.ibm.com>
+References: <20190911001459.6ccc76ee@canb.auug.org.au>
+        <20190910142128.GR13294@shell.armlinux.org.uk>
+        <20190911142106.GA6429@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/bXv=r5lWWH5tTSyjhEXvh0i";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make gpio_name_to_desc() global, and export its symbol, so modular GPIO
-driver can make use of this function.
+--Sig_/bXv=r5lWWH5tTSyjhEXvh0i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This will be used by the GPIO Aggregator.
+Hi Mike,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpiolib.c | 3 ++-
- drivers/gpio/gpiolib.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+On Wed, 11 Sep 2019 15:21:07 +0100 Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Would you like me to resubmit the patch?
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c2cf01fb72a9de87..c0caafd111e6ff51 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -288,7 +288,7 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
- /*
-  * Convert a GPIO name to its descriptor
-  */
--static struct gpio_desc *gpio_name_to_desc(const char * const name)
-+struct gpio_desc *gpio_name_to_desc(const char * const name)
- {
- 	struct gpio_device *gdev;
- 	unsigned long flags;
-@@ -315,6 +315,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(gpio_name_to_desc);
- 
- /*
-  * Takes the names from gc->names and checks if they are all unique. If they
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index b8b10a409c7b9c65..240d2868a3024b52 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -117,6 +117,7 @@ struct gpio_desc {
- 	const char		*name;
- };
- 
-+struct gpio_desc *gpio_name_to_desc(const char * const name);
- int gpiod_request(struct gpio_desc *desc, const char *label);
- void gpiod_free(struct gpio_desc *desc);
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
--- 
-2.17.1
+It looks like Russell has already fixed it up.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bXv=r5lWWH5tTSyjhEXvh0i
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl15B48ACgkQAVBC80lX
+0GxvJwf8CJ8zNpLSF58PJeRTIw5HY8J14LK9WCRRxwoGzs1CPRSdH4BsB2qjckW9
++IKMaSI0kOQl0IwHoeMcHrY1hNbJuCpwHUlLyt1F6DPxFQs/FnUDm7mmvLmjFeHi
+GGll+OY8G8iUpBkIEEAa9bZjtNeBF4f8+9MXrkTvFFn03eg/V28MhgnEHMIUHu8y
+3d9HFSlPB0xeoAh2FdOM4z7WTvsd85sKZ0xjProvuhmA7hvXNwvWHNwQprquD+Dp
+3kOAQ1DHZnjbc/Yk2awczWCPdiWDnX8bDpTrQ7kdIVDj0mSDuGyG/OziAEu31N2q
+5vKB4VJg9fb1zctMFfnU1YXja+bc2Q==
+=ONJP
+-----END PGP SIGNATURE-----
+
+--Sig_/bXv=r5lWWH5tTSyjhEXvh0i--
