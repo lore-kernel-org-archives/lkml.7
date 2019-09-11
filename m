@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7641ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA75ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790252085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507262168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="si6rElJJ"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="JRiFP/7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfIKIYc (ORCPT
+        id S1726794AbfIKIYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:24:32 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:28434 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfIKIYc (ORCPT
+        Wed, 11 Sep 2019 04:24:35 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:62447 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbfIKIYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 04:24:32 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Eugen.Hristev@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Eugen.Hristev@microchip.com";
   x-sender="Eugen.Hristev@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -34,38 +34,38 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Eugen.Hristev@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: pjivRJ08USp1FD3jA1C+CpEpKWOHx7voY2Sn0WWqo1NpHBMwy272dTyej1OubCN3TVLwIEg6qp
- 064BadlWfTP5cWcdTTJ7BKZzwAeChuOAnJNtw9D5eGL3fSXzNaLwWAWb39ELHLuEnuK1GAmy5R
- czQcCywqoUMjf8M8uD97sv7rosQkMlHE6jBiH1RWxq3ZfmFJAiQwNpFMSQ5j078H7GahPwU2Zz
- qHoJ+vUexD4V6ad4wXOJv/AtEhUSM0gq3iB6P/EfWkZg3O8oANI5xVuf8HBVQJ+tIhlI3UR0Of
- 8qQ=
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: rX4nhMPin3s1XsNPmDcrBNiaB5AfIux3ljYsrYo+SdT+KTY5THs5S9BCnkC7u7zOvkX5LASvhV
+ Z0XfTlr9UvDt20JrsoPXp0wL+VEKSTiVRG/NiAndFWL5BpevZmb2gvgJ3PqbxD1PPE/NXqNpn3
+ YY/tXUNzdEMdw3A9COsCsky28Bf60AvdhuQJb5MlGucya+ahPs1MYDQp1FWSvmnPFWPNi4Qbs2
+ KtrYV0TnD11wt+DtsdpZXMGTrPamlvgtMy/L4CEbEOzSLcByjkDfih0FWnhgG3TGXv/nYtJYzt
+ VJY=
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="47514872"
+   d="scan'208";a="48478475"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Sep 2019 01:24:30 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Sep 2019 01:24:21 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 11 Sep 2019 01:24:30 -0700
+ 15.1.1713.5; Wed, 11 Sep 2019 01:24:21 -0700
 Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 11 Sep 2019 01:24:30 -0700
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 11 Sep 2019 01:24:20 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iNIHpfmttniCKX1UV+W9I+yspdBi/dIffh8U752nYUJ2GGmpB/5lVjbXZoXz0qHBFU52nwYDztjckgXueY6nQTfSNczHlkU06NvrpHk51YiXW5CHHK8xiFfzI8qJQ3CJveWwK8bmFTm0MfC+bmTOpu8r1g0ptstlGOhz5GIpbUVasBS2SqyMSLym5060Vy7H3AAOmPRCr80j/EAizmvNnvWIvWEdMrt/cw0vjymCTEg2cE5PYrPYNdrzbWKQT88yBDHDT8sFzJNA9G2GDGAkU23bYWNFjt0360yG/9flAJnHnSFJlvIlWXjqoAgCsCnLiDxdsLFjoWQ7IkOmnALNdw==
+ b=PZiL3hpnjqZG8X719hi7G3Gkj2vmuqQ22phRqOhR4VUYQLJOEXrUYxSHhETxPOIHjLGRqf5TMVXdjtP1uCg18KXcKqaA4zWcxh5VH9B/BHC+AQl4nGeGGh+gLtEdCXGtNyoSWw3giQg9AyO0pZDo3OJoi+n9wZ82xgfRTju8DS50YN+mn3CdouwExV1ooqUg9zhFl7L8vyWtIhYJnH242aGaQCJYrtvrliwrjo+8AAVNH5QU+D8yubCwBRSHxbB5GY/lr9TdPIp267rsDZEXyPf5ntokBAAQVxq7igZIOjlKlQA9pL2nCMSZt7/LXaeRprRg1OJdPW4C9kq/VfIX1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lysMRDJuItjSsyVJJz4n+LiOmbx8YznG/q2CVYc8HI8=;
- b=P/Gq0kAuO71yokuEZYNeD8faLelqRE6+Jk2WXbwA70DEeGmUFafR/9TaW13YuHgU/ins7B+lQwzUYTxc2s+wl77f4dCBdnT36p6wYO5Shv32dAFhFwXPiZVUrMIvcanvI7b0+aUQ5z3FUE0pbkYpopFDL1Ma7onPia2cmhbrfRo5Mv666TdF3Q0j/deV39x+8LNPjoc9hc5+iFjU7TFODXvugOeJx9UshPxd3D+jjtXFqrd4Ju/6Iz1II0ymvRFwf7x6H5JhzXQaJb6l6nUgoATdIvqgVEb0cXeEx9JWVgAIGgYUQUib/xaP65FCH182uatyGgSRJ7YLGIzbzXEx9A==
+ bh=MXZGz96MmEkN5dZzYYAjNgFn+FtkW43FTvVIA4U8MwQ=;
+ b=hgGbLRVB7SesWnKByZvYQvRxms1/as4UJERrsuFiv2VURLegBPawMLKtFyfobmup9903jyIO5deDgclVwYd8CX67rNt1dPPwo322zzXC7f7zvh2trDko9V+gjo1MCKEV1FDSNscJhpipSbJN2J1RBUf8RNMU2SZCiT4O7g4N1UpKxInHJML7bepXsI6JP4gkE7zMgwlejhGEDH8y0zglhT17zPz4MUusDXpsmHgMguONFCt6rFXDq2SNEAniWFupkhoe8DaDj740/3C2ZxuAyMMf8gRuQrjzO3XOLzTavfLQck6OVMQ001MFHD3zt3B36EH8veqhAua1c8+5jpSSGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -73,16 +73,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lysMRDJuItjSsyVJJz4n+LiOmbx8YznG/q2CVYc8HI8=;
- b=si6rElJJBMsJ2m1kwm1hoSklsFdrpKjx5o2zDvIzsOhXkXP5DOdKnspVkFQZisTiagMuIF3MQUQyoshszmhOsq2dMKI4QTjdsV7wgkB/mis2SxW7s7k2MWHwSOVLsTf+Wx0R1b8RzNnVG5uDjoHVJaYU9n2zzgdcwu9yQMTcXPg=
+ bh=MXZGz96MmEkN5dZzYYAjNgFn+FtkW43FTvVIA4U8MwQ=;
+ b=JRiFP/7V5tyxC8XLN0TnHE/dyTeSszcvMH90HAIjA7FQp6Lfz+OErN5kcp+u+9u/d7jqvQdrJHQx8BInQUvs09APKF/z3VuFyV72Kqe0+SgpEyrPy1nxhdeLU/nhYh3PbtqW53+0uM4mBkAIQx0XKiPubJMNZZWJXd/GZN1teuk=
 Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
  DM5PR11MB1452.namprd11.prod.outlook.com (10.172.36.135) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Wed, 11 Sep 2019 08:24:29 +0000
+ 15.20.2241.18; Wed, 11 Sep 2019 08:24:20 +0000
 Received: from DM5PR11MB1242.namprd11.prod.outlook.com
  ([fe80::a141:1974:9668:fbe2]) by DM5PR11MB1242.namprd11.prod.outlook.com
  ([fe80::a141:1974:9668:fbe2%12]) with mapi id 15.20.2241.018; Wed, 11 Sep
- 2019 08:24:28 +0000
+ 2019 08:24:20 +0000
 From:   <Eugen.Hristev@microchip.com>
 To:     <wsa@the-dreams.de>, <peda@axentia.se>, <mark.rutland@arm.com>,
         <Ludovic.Desroches@microchip.com>, <linux-i2c@vger.kernel.org>,
@@ -91,11 +91,13 @@ To:     <wsa@the-dreams.de>, <peda@axentia.se>, <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
         <robh+dt@kernel.org>
 CC:     <Eugen.Hristev@microchip.com>, <Nicolas.Ferre@microchip.com>
-Subject: [PATCH v5 5/9] i2c: at91: add support for digital filtering
-Thread-Topic: [PATCH v5 5/9] i2c: at91: add support for digital filtering
-Thread-Index: AQHVaHpUF8/4sBZb20uY7HIPGe992w==
-Date:   Wed, 11 Sep 2019 08:24:28 +0000
-Message-ID: <1568189911-31641-6-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH v5 2/9] dt-bindings: i2c: add bindings for i2c analog and
+ digital filter
+Thread-Topic: [PATCH v5 2/9] dt-bindings: i2c: add bindings for i2c analog and
+ digital filter
+Thread-Index: AQHVaHpPW8l4X5Kqx0mXlxkiy0GaLA==
+Date:   Wed, 11 Sep 2019 08:24:20 +0000
+Message-ID: <1568189911-31641-3-git-send-email-eugen.hristev@microchip.com>
 References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Accept-Language: en-US, ro-RO
@@ -109,28 +111,28 @@ x-mailer: git-send-email 2.7.4
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5c1e24ff-bc8d-49fd-6d37-08d7369176a2
+x-ms-office365-filtering-correlation-id: d918bab3-f1c0-4257-4a4a-08d736917184
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1452;
 x-ms-traffictypediagnostic: DM5PR11MB1452:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB14526432592458A1D0876D2FE8B10@DM5PR11MB1452.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam-prvs: <DM5PR11MB1452BDDB048C2DB97A27BFB6E8B10@DM5PR11MB1452.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 0157DEB61B
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(366004)(136003)(189003)(199004)(52116002)(3846002)(2501003)(66556008)(66476007)(66946007)(54906003)(110136005)(478600001)(25786009)(316002)(6436002)(6116002)(76176011)(66066001)(386003)(14454004)(2906002)(102836004)(486006)(476003)(2616005)(11346002)(446003)(6506007)(186003)(26005)(4326008)(8936002)(81166006)(81156014)(7736002)(66446008)(8676002)(5660300002)(50226002)(64756008)(86362001)(2201001)(99286004)(71190400001)(71200400001)(53936002)(36756003)(256004)(107886003)(6512007)(305945005)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1452;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1aF3jxAtmpvIyFFGoneBajoZGDmUe743EoMn0Ox005AtPGrNWwn4/a/4i1+MdkFYNwqooWRWBCI3tL5JeX2a+wBOWOh2tyt4twhhgJNpJSAAqkW/tXBbWigh0aMz4JyaY0QkmveSPjKX9XFSdxduDGihAiAwpRswvoHZT8eJePsgIdak+RfuFGyXwT/+R70uCHN+aaP06hMQoZE46TOuJxt1lNf4bcfhMm1qac/3baaFV0FffIIolku27td9FCe7J4wHmqbtvHtY30IOlcOdLl1/x6yDYb/18S1VPiiMkJo1+arAjmSEehbxMShgLi187WEsJrZrVDrwY/aVHcopAnQro+ukb97SaAvAL5ksf5Vsdq86TDfbDiP6Jruc5U303RkzbQVDUB7G60dpqvtxUIr0ZcRSsE1iRyEw2R5+CFE=
+x-microsoft-antispam-message-info: XXB8dROqTagHFwLtyDf9+/Ur31S71JwqRYP/AeaFknObJp35jtl6anI5prxjNGLv6KEsNoEQ3jNRSAT57HDQ8YbpLiF+r/RBWQWKBXYMvpL1xXbcw2fJGlsEBO2PvGaGXNgnbymEqwB8ZZYvUbufB2tCJ6p+tNpztE3rp5d7/i2RC9S2Rvj2a1LKtwmyrQ8KSiKvso0CEUnQA3R5vevqYU8lP7JKyQWhiDMbprrwOTGrI/6vidLDC3EYL+dfF9ypYY3yzg+ZgJtApgbPJzSGlzMuDTLfICFHN/IaRuQX4itkqu8/w+2luKEHDWqsVd/yEKmOohyAtXRmAe+aBF+DxnDPfXQxeruV2Q8GrrZTKKGm/3yJCl+7pdluLGnmwwLWIic3Z/7T7RDdQGb+DygPlzlxeivVBqVDXtxj5D2lDvA=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c1e24ff-bc8d-49fd-6d37-08d7369176a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 08:24:28.8327
+X-MS-Exchange-CrossTenant-Network-Message-Id: d918bab3-f1c0-4257-4a4a-08d736917184
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 08:24:20.1156
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: picUN0FENe2Cfmu3sl0nJkIcTvXvGAHBux1rkdGGLZYh68YRqvzb0a+o9YLqCN/x3yGB2c3I3Mzaca/E6iX8pkuWe+YPXhHX94RjUP2c9+E=
+X-MS-Exchange-CrossTenant-userprincipalname: 3UG3liKMupN/pX91OXF1TsaBXzIKTWbzghD8Ri5ooIJKQHpn3p4nlv95xBjP+HDzrCR1ajB3Kc2sbqtCBagPUP9CY4RUi+KHEl6+Jv/ZmPw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1452
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -139,157 +141,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Add new platform data support for digital filtering for i2c.
-The sama5d4, sama5d2 and sam9x60 support this feature.
+Some i2c controllers have a built-in digital or analog filter.
+This is specifically required depending on the hardware PCB/board.
+Some controllers also allow specifying the maximum width of the
+spikes that can be filtered for digital filter. The width length can be
+specified in nanoseconds.
+Analog filters can be configured to have a cutoff frequency (low-pass filte=
+r).
+This frequency can be specified in Hz.
+Added an optional property for such types of analog filters.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- drivers/i2c/busses/i2c-at91-core.c   | 9 +++++++++
- drivers/i2c/busses/i2c-at91-master.c | 9 +++++++++
- drivers/i2c/busses/i2c-at91.h        | 5 +++++
- 3 files changed, 23 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at=
-91-core.c
-index caf1846..e96360f 100644
---- a/drivers/i2c/busses/i2c-at91-core.c
-+++ b/drivers/i2c/busses/i2c-at91-core.c
-@@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config =3D {
- 	.has_unre_flag =3D true,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/=
+devicetree/bindings/i2c/i2c.txt
+index 44efafd..9a53df4 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+@@ -55,6 +55,24 @@ wants to support one of the below features, it should ad=
+apt the bindings below.
+ 	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+ 	specification.
 =20
- static struct at91_twi_pdata at91sam9261_config =3D {
-@@ -76,6 +77,7 @@ static struct at91_twi_pdata at91sam9261_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9260_config =3D {
-@@ -84,6 +86,7 @@ static struct at91_twi_pdata at91sam9260_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9g20_config =3D {
-@@ -92,6 +95,7 @@ static struct at91_twi_pdata at91sam9g20_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9g10_config =3D {
-@@ -100,6 +104,7 @@ static struct at91_twi_pdata at91sam9g10_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
-=20
- static const struct platform_device_id at91_twi_devtypes[] =3D {
-@@ -130,6 +135,7 @@ static struct at91_twi_pdata at91sam9x5_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
-+	.has_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata sama5d4_config =3D {
-@@ -138,6 +144,7 @@ static struct at91_twi_pdata sama5d4_config =3D {
- 	.has_unre_flag =3D false,
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D true,
-+	.has_dig_filtr =3D true,
- };
-=20
- static struct at91_twi_pdata sama5d2_config =3D {
-@@ -146,6 +153,7 @@ static struct at91_twi_pdata sama5d2_config =3D {
- 	.has_unre_flag =3D true,
- 	.has_alt_cmd =3D true,
- 	.has_hold_field =3D true,
-+	.has_dig_filtr =3D true,
- };
-=20
- static struct at91_twi_pdata sam9x60_config =3D {
-@@ -154,6 +162,7 @@ static struct at91_twi_pdata sam9x60_config =3D {
- 	.has_unre_flag =3D true,
- 	.has_alt_cmd =3D true,
- 	.has_hold_field =3D true,
-+	.has_dig_filtr =3D true,
- };
-=20
- static const struct of_device_id atmel_twi_dt_ids[] =3D {
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-=
-at91-master.c
-index a3fcc35..df80557 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -31,12 +31,18 @@
-=20
- void at91_init_twi_bus_master(struct at91_twi_dev *dev)
- {
-+	struct at91_twi_pdata *pdata =3D dev->pdata;
++- i2c-analog-filter
++	Enable analog filter for i2c lines.
 +
- 	/* FIFO should be enabled immediately after the software reset */
- 	if (dev->fifo_size)
- 		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_FIFOEN);
- 	at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_MSEN);
- 	at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_SVDIS);
- 	at91_twi_write(dev, AT91_TWI_CWGR, dev->twi_cwgr_reg);
++- i2c-digital-filter
++	Enable digital filter for i2c lines.
 +
-+	/* enable digital filter */
-+	if (pdata->has_dig_filtr && dev->enable_dig_filt)
-+		at91_twi_write(dev, AT91_TWI_FILTR, AT91_TWI_FILTR_FILT);
- }
-=20
- /*
-@@ -793,6 +799,9 @@ int at91_twi_probe_master(struct platform_device *pdev,
- 		dev_info(dev->dev, "Using FIFO (%u data)\n", dev->fifo_size);
- 	}
-=20
-+	dev->enable_dig_filt =3D of_property_read_bool(pdev->dev.of_node,
-+						     "i2c-digital-filter");
++- i2c-digital-filter-width-ns
++	Width of spikes which can be filtered by digital filter
++	(i2c-digital-filter). This width is specified in nanoseconds.
 +
- 	at91_calc_twi_clock(dev);
-=20
- 	dev->adapter.algo =3D &at91_twi_algorithm;
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 499b506..c75447e 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -84,6 +84,9 @@
- #define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
- #define	AT91_TWI_ACR_DIR	BIT(8)
-=20
-+#define AT91_TWI_FILTR		0x0044
-+#define AT91_TWI_FILTR_FILT	BIT(0)
++- i2c-analog-filter-cutoff-frequency
++	Frequency that the analog filter (i2c-analog-filter) uses to distinguish
++	which signal to filter. Signal with higher frequency than specified will
++	be filtered out. Only lower frequency will pass (this is applicable to
++	a low-pass analog filter). Typical value should be above the normal
++	i2c bus clock frequency (clock-frequency).
++	Specified in Hz.
 +
- #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
- #define	AT91_TWI_FMR_TXRDYM(mode)	(((mode) & 0x3) << 0)
- #define	AT91_TWI_FMR_TXRDYM_MASK	(0x3 << 0)
-@@ -108,6 +111,7 @@ struct at91_twi_pdata {
- 	bool has_unre_flag;
- 	bool has_alt_cmd;
- 	bool has_hold_field;
-+	bool has_dig_filtr;
- 	struct at_dma_slave dma_slave;
- };
+ - interrupts
+ 	interrupts used by the device.
 =20
-@@ -145,6 +149,7 @@ struct at91_twi_dev {
- 	unsigned smr;
- 	struct i2c_client *slave;
- #endif
-+	bool enable_dig_filt;
- };
-=20
- unsigned at91_twi_read(struct at91_twi_dev *dev, unsigned reg);
 --=20
 2.7.4
 
