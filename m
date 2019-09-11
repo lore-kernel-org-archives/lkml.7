@@ -2,364 +2,122 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BF6ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8CC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E2B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BC02085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UI9VUa5R"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D4aSuyuL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oPoyWpwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbfIKSQj (ORCPT
+        id S1729939AbfIKSTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:16:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39038 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfIKSQi (ORCPT
+        Wed, 11 Sep 2019 14:19:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46830 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfIKSTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:16:38 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12CAF33A;
-        Wed, 11 Sep 2019 20:16:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568225794;
-        bh=JfpGD2XNiEa10BL3XOxANjHOBAWNgeYUpaG4a1nT5DE=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UI9VUa5RllbdIR74yOCe1OB9vro99OvGpZOoi/EHeJMBcE89VKWbhMne7INCXjeOR
-         1fAOnNq+uoXtBhara3HrI4o54azlU02XxJ9/XZpqdr82+2SVrKEkVdY5K4P23nlhEg
-         590h1mvTLBmD/rC+p2yoGxrY9/gHbAtxy71mTW90=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 9/9] arm64: dts: renesas: Add CMM units to Gen3 SoCs
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-10-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <49012496-1a6e-d62c-2882-45ed8aeb88f7@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 19:16:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 14:19:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 33882607C6; Wed, 11 Sep 2019 18:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568225964;
+        bh=Cq8dA5RuJNCfEAowmhvZuC5y4iuFy5mhIPmTToluUMs=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=D4aSuyuLCh3pJmHnnFpuTZCHcgVPaPoy16SYi1IkAD2LGzeyMkb1mf4M04VdRUEsl
+         deUcjNc05bsek504fYmwIDZbrG6EDW1lu3lpUtBPeCdZqQkJ68cukQl+Hzlsp1p82J
+         wny+cIg6vd2kG6sSC7EPTgNfqTVcbu96E3ggKVSY=
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 933CF602BC;
+        Wed, 11 Sep 2019 18:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568225963;
+        bh=Cq8dA5RuJNCfEAowmhvZuC5y4iuFy5mhIPmTToluUMs=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=oPoyWpwWaYG6gmpB5EbPPo9zZG4bz8pA8hQ3l4p8ZV5bp+GMzxvD0tduXjlV+A/vn
+         4PvOsNNH3umELX67JiyoIbxDx+wsjMi3kYHic0fJIv+3qNnM2tnVsy/YnztgZjQHat
+         egYPG4zlizRYUB9g1n3e9+jHAuwVloSa1avaEzGg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 933CF602BC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+        <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+Date:   Wed, 11 Sep 2019 21:19:19 +0300
+In-Reply-To: <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+        (Johannes Berg's message of "Wed, 11 Sep 2019 12:26:32 +0200")
+Message-ID: <87ef0mlmqg.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-10-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Johannes Berg <johannes@sipsolutions.net> writes:
 
-On 06/09/2019 14:54, Jacopo Mondi wrote:
-> Add CMM units to Renesas R-Car Gen3 SoC that support it, and reference them
-> from the Display Unit they are connected to.
-> 
-> Sort the 'vsps' and 'renesas,cmm' entries in the DU unit consistently
-> in all the involved DTS.
+>>    ath10k_pci 0000:02:00.0: wmi command 16387 timeout, restarting hardware
+>>    ath10k_pci 0000:02:00.0: failed to set 5g txpower 23: -11
+>>    ath10k_pci 0000:02:00.0: failed to setup tx power 23: -11
+>>    ath10k_pci 0000:02:00.0: failed to recalc tx power: -11
+>>    ath10k_pci 0000:02:00.0: failed to set inactivity time for vdev 0: -108
+>>    ath10k_pci 0000:02:00.0: failed to setup powersave: -108
+>> 
+>> That certainly looks like something did try to set a power limit, but
+>> eventually failed.
+>
+> Yeah, that does seem a bit fishy. Kalle would have to comment for
+> ath10k.
+>
+>> Immediately after that:
+>> 
+>>    wlp2s0: deauthenticating from 54:ec:2f:05:70:2c by local choice
+>> (Reason: 3=DEAUTH_LEAVING)
+>
+> I don't _think_ any of the above would be a reason to disconnect, but it
+> clearly looks like the device got stuck at this point, since everything
+> just fails afterwards.
 
-I think if you chose the ordering in the r8a7795, then you only have to
-adjust/correct the ordering in the r8a7796 and r8a77965 ...
+Yeah, to me it looks anything ath10k tries to do with the devie fails,
+even resetting the device.
 
-Especially as you haven't changed the ordering of r8a77970, and r8a77980
-which have the status after the vsps entry.
+> Looks like indeed the driver gives the device at least *3 seconds* for
+> every command, see ath10k_wmi_cmd_send(), so most likely this would
+> eventually have finished, but who knows how many firmware commands it
+> would still have attempted to send...
 
+3 seconds is a bit short but in normal cases it should be enough. Of
+course we could increase the delay but I'm skeptic it would help here.
 
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 40 ++++++++++++++++++++++-
->  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 28 ++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 28 ++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a77990.dtsi | 22 ++++++++++++-
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 22 ++++++++++++-
->  5 files changed, 137 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 6675462f7585..67c242a447bc 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -2939,6 +2939,42 @@
->  			iommus = <&ipmmu_vi1 10>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,r8a7795-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,r8a7795-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
-> +		cmm2: cmm@fea60000 {
-> +			compatible = "renesas,r8a7795-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea60000 0 0x1000>;
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 709>;
-> +			resets = <&cpg 709>;
-> +		};
-> +
-> +		cmm3: cmm@fea70000 {
-> +			compatible = "renesas,r8a7795-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea70000 0 0x1000>;
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 708>;
-> +			resets = <&cpg 708>;
-> +		};
-> +
->  		csi20: csi2@fea80000 {
->  			compatible = "renesas,r8a7795-csi2";
->  			reg = <0 0xfea80000 0 0x10000>;
-> @@ -3142,9 +3178,11 @@
->  				 <&cpg CPG_MOD 722>,
->  				 <&cpg CPG_MOD 721>;
->  			clock-names = "du.0", "du.1", "du.2", "du.3";
-> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
->  			status = "disabled";
+> Perhaps the driver should mark the device as dead and fail quickly once
+> it timed out once, or so, but I'll let Kalle comment on that.
 
-I'm not sure the vsps should be below the status = disabled line.
+Actually we do try to restart the device when a timeout happens in
+ath10k_wmi_cmd_send():
 
-I'd have this as:
+        if (ret == -EAGAIN) {
+                ath10k_warn(ar, "wmi command %d timeout, restarting hardware\n",
+                            cmd_id);
+                queue_work(ar->workqueue, &ar->restart_work);
+        }
+                        
 
-	clock-names...
-	vsps...
-	renesas,cmms...
-		<blank line>
-	status...
-		<blank line>
-	ports...
-
->  
-> +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-> +			renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
-
-I think these should be separated by comma's to show they are separate
-references, or references to separate phandles or such.
-
-The only precedence I could find was in pmu_a53:
-
-          interrupt-affinity = <&a53_0>, <&a53_1>, <&a53_2>, <&a53_3>;
-
-
-> +
->  			ports {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> index 822c96601d3c..837c3b2da773 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> @@ -2641,6 +2641,33 @@
->  			renesas,fcp = <&fcpvi0>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,r8a7796-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,r8a7796-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
-> +		cmm2: cmm@fea60000 {
-> +			compatible = "renesas,r8a7796-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea60000 0 0x1000>;
-> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 709>;
-> +			resets = <&cpg 709>;
-> +		};
-> +
->  		csi20: csi2@fea80000 {
->  			compatible = "renesas,r8a7796-csi2";
->  			reg = <0 0xfea80000 0 0x10000>;
-> @@ -2794,6 +2821,7 @@
->  			status = "disabled";
->  
->  			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
-> +			renesas,cmms = <&cmm0 &cmm1 &cmm2>;
-
-Aha, yes, I'd move this vsps rather than the one at r8a7795, which I'd
-consider to be more 'correct'.
-
-
->  
->  			ports {
->  				#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> index 4ae163220f60..c7635e8b261c 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> @@ -2320,6 +2320,33 @@
->  			resets = <&cpg 611>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,r8a77965-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,r8a77965-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
-> +		cmm3: cmm@fea70000 {
-> +			compatible = "renesas,r8a77965-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea70000 0 0x1000>;
-> +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 708>;
-> +			resets = <&cpg 708>;
-> +		};
-> +
->  		csi20: csi2@fea80000 {
->  			compatible = "renesas,r8a77965-csi2";
->  			reg = <0 0xfea80000 0 0x10000>;
-> @@ -2470,6 +2497,7 @@
->  			status = "disabled";
->  
->  			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
-> +			renesas,cmms = <&cmm0 &cmm1 &cmm3>;
-
-Again, I'd consider this the wrong sort order, due to the status'
-importance. I wouldn't hide it in the middle.
-
->  
->  			ports {
->  				#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> index 455954c3d98e..5e3d758a033f 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> @@ -1727,6 +1727,24 @@
->  			iommus = <&ipmmu_vi0 9>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,r8a77990-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,r8a77990-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
->  		csi40: csi2@feaa0000 {
->  			compatible = "renesas,r8a77990-csi2";
->  			reg = <0 0xfeaa0000 0 0x10000>;
-> @@ -1768,9 +1786,11 @@
->  			clock-names = "du.0", "du.1";
->  			resets = <&cpg 724>;
->  			reset-names = "du.0";
-> -			vsps = <&vspd0 0>, <&vspd1 0>;
->  			status = "disabled";
->  
-> +			vsps = <&vspd0 0>, <&vspd1 0>;
-> +			renesas,cmms = <&cmm0 &cmm1>;
-
-
-Same ... :D
-
-> +
->  			ports {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> index 183fef86cf7c..6838a81f5caa 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -993,6 +993,24 @@
->  			iommus = <&ipmmu_vi0 9>;
->  		};
->  
-> +		cmm0: cmm@fea40000 {
-> +			compatible = "renesas,r8a77995-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea40000 0 0x1000>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 711>;
-> +			resets = <&cpg 711>;
-> +		};
-> +
-> +		cmm1: cmm@fea50000 {
-> +			compatible = "renesas,r8a77995-cmm",
-> +				     "renesas,rcar-gen3-cmm";
-> +			reg = <0 0xfea50000 0 0x1000>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			clocks = <&cpg CPG_MOD 710>;
-> +			resets = <&cpg 710>;
-> +		};
-> +
->  		du: display@feb00000 {
->  			compatible = "renesas,du-r8a77995";
->  			reg = <0 0xfeb00000 0 0x40000>;
-> @@ -1003,9 +1021,11 @@
->  			clock-names = "du.0", "du.1";
->  			resets = <&cpg 724>;
->  			reset-names = "du.0";
-> -			vsps = <&vspd0 0>, <&vspd1 0>;
->  			status = "disabled";
->  
-> +			vsps = <&vspd0 0>, <&vspd1 0>;
-> +			renesas,cmms = <&cmm0 &cmm1>;
-> +
-
-Same.
-
->  			ports {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> 
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
