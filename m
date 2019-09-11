@@ -2,122 +2,117 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6DFECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2585CC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909A9206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A9A206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aGnQ/XE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfIKR7V (ORCPT
+        id S1729893AbfIKSBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:59:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39182 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbfIKR7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:59:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 090BF10CC1F9;
-        Wed, 11 Sep 2019 17:59:21 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CD365D9E2;
-        Wed, 11 Sep 2019 17:59:20 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Wed, 11 Sep 2019 13:59:19 -0400
-Message-ID: <8DD22D2C-A26B-430E-AB10-E420B4C6A8F0@redhat.com>
-In-Reply-To: <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
- <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
- <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
- <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
+        Wed, 11 Sep 2019 14:01:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36754 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfIKSBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:01:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1Gam040429;
+        Wed, 11 Sep 2019 13:01:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568224877;
+        bh=/wxi3Ble2IRwzoGt/NZ3bTLxzbC82fxNt8d4oO8Smtk=;
+        h=From:To:CC:Subject:Date;
+        b=aGnQ/XE6OA4Ow8uQqTXjdvexhRxGup+lawV4ZYY5QvTKnCcoZ2ZVxykMTf4+o//B4
+         Sho7GX75gYbXwAH88mlLPPBu5I+ni9uzU8eDJnOp4OKuRp29kCBEenvGvk/VRAC51x
+         yuVivbzfhF+FGPbRpkjGZV98tGS9B3iFj0IJSxXo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1Gbl102520;
+        Wed, 11 Sep 2019 13:01:16 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
+ Sep 2019 13:01:16 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 11 Sep 2019 13:01:16 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1GeY011087;
+        Wed, 11 Sep 2019 13:01:16 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v5 0/9] Multicolor FW update
+Date:   Wed, 11 Sep 2019 13:01:06 -0500
+Message-ID: <20190911180115.21035-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Wed, 11 Sep 2019 17:59:21 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11 Sep 2019, at 13:43, Chuck Lever wrote:
+Hello
 
->> On Sep 11, 2019, at 1:40 PM, Benjamin Coddington 
->> <bcodding@redhat.com> wrote:
->>
->> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
->>
->>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
->>>> <bcodding@redhat.com> wrote:
->>>>
->>>>
->>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->>>>
->>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
->>>>>> <bcodding@redhat.com> wrote:
->>>>>>
->>>>
->>>>>> Instead, I think we want to make sure the mic falls squarely into 
->>>>>> the tail
->>>>>> every time.
->>>>>
->>>>> I'm not clear how you could do that. The length of the page data 
->>>>> is not
->>>>> known to the client before it parses the reply. Are you suggesting 
->>>>> that
->>>>> gss_unwrap should do it somehow?
->>>>
->>>> Is it too niave to always put the mic at the end of the tail?
->>>
->>> The size of the page content is variable.
->>>
->>> The only way the MIC will fall into the tail is if the page content 
->>> is
->>> exactly the largest expected size. When the page content is smaller 
->>> than
->>> that, the receive logic will place part or all of the MIC in 
->>> ->pages.
->>
->> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
->> renamed
->> and repurposed to be "move the mic from wherever it is to the end of
->> xdr_buf's tail".
->>
->> But now I see what you mean, and I also see that it is already trying 
->> to do
->> that.. and we don't want to overlap the copy..
->>
->> So, really, we need the tail to be larger than twice the mic.. less 
->> 1.  That
->> means the fix is probably just increasing rslack for krb5i.
->
-> What's the justification for that particular maximum size? Are you 
-> sure the
-> page contents are not spilling into the tail?
+Lots of changes went into this update.  The main change was that when writing to
+the colors/intensity or colors/color_mix file for a specific color the LED 
+intensity will not change until the brightness file is written.
 
-In the problem case, I am sure they are not.
+Added the LP5012/9 LED devices to the LP50xx code.
+Converted the class doc to rst format.
 
-The justification is that if the mic straddles pages and tail, today we 
-try
-to copy it to the end of the tail.  The room we'd need for that is the 
-size
-of the mic less any of it that is up in the pages.
+Dan
+
+Dan Murphy (9):
+  leds: multicolor: Add sysfs interface definition
+  documention: leds: Add multicolor class documentation
+  dt: bindings: Add multicolor class dt bindings documention
+  dt-bindings: leds: Add multicolor ID to the color ID list
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  leds: Update the lp55xx to use the multi color framework
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  73 ++
+ .../bindings/leds/leds-class-multicolor.txt   |  96 +++
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  | 149 ++++
+ drivers/leds/Kconfig                          |  17 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 387 +++++++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 807 ++++++++++++++++++
+ drivers/leds/leds-lp5523.c                    |  13 +
+ drivers/leds/leds-lp55xx-common.c             | 131 ++-
+ drivers/leds/leds-lp55xx-common.h             |   9 +
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          |  96 +++
+ include/linux/platform_data/leds-lp55xx.h     |   6 +
+ modules.builtin.modinfo                       | Bin 0 -> 43550 bytes
+ 17 files changed, 1916 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+ create mode 100644 modules.builtin.modinfo
+
+-- 
+2.22.0.214.g8dca754b1e
+
