@@ -2,111 +2,121 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C24ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC1C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D2820863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiDNR8b5"
+	by mail.kernel.org (Postfix) with ESMTP id 9367320863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568211396;
+	bh=FIfh8abaa8XlGAP/1eddhG+gO/seYnQRvWxG9Irag7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aAlTeISzf3Q2ofM7p0h1B9WaCg1cAORFnsvAGZlfM/4iCl55QmVPxdCVI3Hvf09XJ
+	 MeUQ0B8exzunY2q2aF5+Bs7wPeb/qxEzycnxcSg7O/a+au38ZE/nxCAAfB+lJzVO58
+	 SGMs9CKmMqmha7+3f0Ytf+Z0CNGyRXYIhD+nksMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfIKOQE (ORCPT
+        id S1728162AbfIKOQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:16:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37350 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfIKOQD (ORCPT
+        Wed, 11 Sep 2019 10:16:35 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42450 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKOQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:16:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y5so11004020pfo.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 07:16:03 -0700 (PDT)
+        Wed, 11 Sep 2019 10:16:35 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f13so20923089qkm.9;
+        Wed, 11 Sep 2019 07:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=pwI9Nj5vtGdzn5MvkjXpV83BoYE5sMntyDtos1t7hrk=;
-        b=MiDNR8b5UQcE1rhM2uCd+Ka3gMWU2mmQI3g2DJQitzSEzCa3o69gPLwbEV4gi5T6Ci
-         DKGVUEN1MPAqhyT22ldAeym832I0wB5sS0q3nq6kMoHqxbhJQv3PeOxASPkIQn8QBDOy
-         u24zd3weX7xY/4kFfPk5R8bLtZDL7WU8/78TQifzn1tAi89M9r2m4C4KP/Q4FyD4wvRD
-         QVoJE5Jfkbb9tx+uRV1ZxtD3GpQeSPx4pGzPP/8vG2EwfD4drfaMPxW9b7wdXUFkxoKL
-         wGG+tdDcIq+9T9x5CvAjLEdndm9y2y65YlgrPD05+ZXStDrhdSP0WYw9rrI0DFN8hkwH
-         jBWg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bz1mSsuTl+E4vAwMyWtdro8hF2w1GwA4uT5lSquTwhw=;
+        b=XP5xHqZ7xOlRXj7HOW4YfjSKWQCcUqBQprIziluIiQnuAsTEkzCybcB7fFfJm27yPR
+         GDds5yZIiLTxvxACCXmb197OBE3R2vYBFbX5oUURMbg2GGKciF0uxI85nxPNfswKjMSJ
+         W0LYPjiH0p1Z6JT+dM8YBJOmfnn360bKFYmhkBPKstBRfZBnC9kt+Jn6sOkTNkutXH65
+         /3JoF0p9BKrGEW2kPfjAkiwAPxJyIapUHhtb2UtDTYd7m2R18FXNoDQX7EiN8uvrfeaY
+         m6jQPJfEBMe0sY3RlHXJKhkxcJ2G52HBucA1bVupG1GNaLxpC5whk5FvSs6tN/1JwvTL
+         mz5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=pwI9Nj5vtGdzn5MvkjXpV83BoYE5sMntyDtos1t7hrk=;
-        b=bLxJzn+scNGnemtxBj0PZqbx+Yf/QJq/MgRL9SQF5I4HGXbvb7b0iY2A/CU5JGcXd3
-         tY0GMdQzeB4OhM8P578W1/IR8vTLKRq5DyPumVlsAN54VUdPodSIgivWxi0mWMZ/MnGr
-         6zin/BNQCv69an5yAWtTtYeN7vOw8j4XE0NQ2t1vZPHfDLOAArDxRdBhSCVZVCp9iPrW
-         fDhqY3URI4ZV80k+KaUvJHxhhZ2TFolEDhO0a4Ye/YLpXaDKNUAH0UJNPqj+Xn53f2OA
-         PWzpvv1H/bo+3kQpDkSJR2Mjn+iStwanF4qy3KBs9o0GZYgghUnlxaaJpS+viV8TAfT8
-         gg4g==
-X-Gm-Message-State: APjAAAWoAH5yUbvFU+qrGpVFKsz8ZmFf7kqQdYaZaIddhH9CEP5HlOhP
-        eF8z8Ntn/5jSryb8tRYv9o4uNTKiLGciCQ==
-X-Google-Smtp-Source: APXvYqxoFjgTMSHcF44EumRFFrggEjZ7D4/eizzE8mBrEw4K/LE8gZAeoQzVxY5OLRmUt8D4UlDoKQ==
-X-Received: by 2002:a17:90a:ae15:: with SMTP id t21mr5781382pjq.50.1568211362448;
-        Wed, 11 Sep 2019 07:16:02 -0700 (PDT)
-Received: from raspberrypi ([210.183.35.47])
-        by smtp.gmail.com with ESMTPSA id w13sm23185858pfi.30.2019.09.11.07.16.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Sep 2019 07:16:01 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 23:15:55 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     linux@armlinux.org.uk, allison@lohutok.net, info@metux.net,
-        matthias.schiffer@ew.tq-group.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        austindh.kim@gmail.com
-Subject: [RESEND PATCH] ARM: module: Drop 'rel->r_offset < 0' statement
-Message-ID: <20190911141552.rtpdazx3ekfgsh3v@raspberrypi>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bz1mSsuTl+E4vAwMyWtdro8hF2w1GwA4uT5lSquTwhw=;
+        b=GZyPR5TpcteGzat3Yb8Xwr9/sMVUbZ4lm60BEK2n5M/nvqKk/NAi4maLuhtntQq0ID
+         fnMwQN/yKhIJUMsuJ0+aZPHkT6TFWI0j7bKIhdj4OlIEUqZGa9+MUKViS1z7giXuMdOX
+         Dv9AzbSCNwQlvpJNkKDNfnbYvvBPDp+4pxVTNBVTU89D9zyGdhVOHQErPwAIlTPO2WoT
+         WNGixiZ/1pg6ERnz8ax85eqi909t5xNYd7Yj1L8X5ezAR+lKn9obLcWb77Dnpr7BiZMy
+         gh0qGl8lBncn0aj/T+GIXzrWmBIQTFTpXVpFtx2GC5FV/Iv83mI+mIrT4wel1owgDH63
+         ++4w==
+X-Gm-Message-State: APjAAAWAxiz8uMkCST/4s8RJW8DiubtyrIVxnJJJFrOt7AqRzuqUKLLy
+        /Qj1xNqcvcsqZE700c1lbMQ=
+X-Google-Smtp-Source: APXvYqwuwH+uTdCa1/gFy0lDxUqqnquHphTP7vop0X2azQQu3OGdlEUhBiSQpiRxhOW6fyirrD/wFw==
+X-Received: by 2002:a37:a3cc:: with SMTP id m195mr34540776qke.443.1568211393921;
+        Wed, 11 Sep 2019 07:16:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:8b2])
+        by smtp.gmail.com with ESMTPSA id u23sm10041210qkm.49.2019.09.11.07.16.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 07:16:33 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 07:16:30 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, clm@fb.com,
+        dennisz@fb.com, newella@fb.com, Li Zefan <lizefan@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+ <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since rel->r_offset is declared as Elf32_Addr,
-this value is always non-negative.
-typedef struct elf32_rel {
-  Elf32_Addr    r_offset;
-  Elf32_Word  r_info;
-} Elf32_Rel;
+Hello,
 
-typedef __u32   Elf32_Addr;
-typedef unsigned int __u32;
+On Wed, Sep 11, 2019 at 10:18:53AM +0200, Paolo Valente wrote:
+> > The two being enabled at the same time doesn't make sense, so we can
+> > just switch over to bfq when bfq is selected as the iosched.  I asked
+> > what Paolo wanted to do in terms of interface a couple times now but
+> > didn't get an answer and he posted a patch which makes the two
+> > controllers conflict, so....  Paolo, so it looks like you want to
+> > rename all bfq files to drop the bfq prefix, right?
+> 
+> Yep, mainly because ... this is the solution you voted and you
+> yourself proposed [1] :)
+> 
+> [1] https://patchwork.kernel.org/patch/10988261/
 
-Drop 'rel->r_offset < 0' statement which is always false.
-Also change %u to %d in pr_err() for rel->r_offset.
+So, that was then.  Since then the interface change has been published
+and userspace, at least some of them, already had to adjust.  Now, I
+don't have any opinion on the matter and flipping again will cause
+inconveniences to some subset of users.  It's your call.
 
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
----
- arch/arm/kernel/module.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> >  I can implement
+> > the switching if so.
+> 
+> That would be perfect.
 
-diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
-index deef17f34..f805bcbda 100644
---- a/arch/arm/kernel/module.c
-+++ b/arch/arm/kernel/module.c
-@@ -92,8 +92,8 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
- 		sym = ((Elf32_Sym *)symsec->sh_addr) + offset;
- 		symname = strtab + sym->st_name;
- 
--		if (rel->r_offset < 0 || rel->r_offset > dstsec->sh_size - sizeof(u32)) {
--			pr_err("%s: section %u reloc %u sym '%s': out of bounds relocation, offset %d size %u\n",
-+		if (rel->r_offset > dstsec->sh_size - sizeof(u32)) {
-+			pr_err("%s: section %u reloc %u sym '%s': out of bounds relocation, offset %u size %u\n",
- 			       module->name, relindex, i, symname,
- 			       rel->r_offset, dstsec->sh_size);
- 			return -ENOEXEC;
+Whichever way it gets decided, this is easy enough.  I'll prep a
+patch.
+
+Thanks.
+
 -- 
-2.11.0
-
+tejun
