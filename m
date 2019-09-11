@@ -2,96 +2,157 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BB5C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4117ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517EB2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568227008;
-	bh=zGc5nUnSrcLmCATImTaZ81stiof+h7AVsb7mMRzglHQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AbETRAwviRDtu4X+2SddnMdS9Nf725WfuLwwcuLRzLZHSgHzo454Gi9ur5FPvssEv
-	 eSY7xYFf18WJecVwwJYGJ/+fV252Tzl9jpMK1wkwuev+xB33FjO9BE4nFOnPKUDHj5
-	 yxOe7VIwnYx0IHpoVtk20zsIPj5paD9SzjeXrAMg=
+	by mail.kernel.org (Postfix) with ESMTP id 7E8012084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:40:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Fbg0AjCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfIKSgr (ORCPT
+        id S1730112AbfIKSkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbfIKSgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:36:46 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957EE20863;
-        Wed, 11 Sep 2019 18:36:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568227006;
-        bh=zGc5nUnSrcLmCATImTaZ81stiof+h7AVsb7mMRzglHQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=epMIAbtK1rFqZ/4CHUz4ELsJLowpBnDvtMQa5AC8jk3ZcGbRCfG3hxX+yVp0ptnOX
-         lWUjPThKTgxtTOgLaH9oQhQ+1iirO09jCTZrcF8SxagFJTFYTusBjn3P87l4Yu9noY
-         pgVN93YEcJlobSwuyLEjXAT+RUKLCkgSUD2e21MM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL 2/2] ARM: samsung: mach/soc for v5.4, second pull
-Date:   Wed, 11 Sep 2019 20:36:32 +0200
-Message-Id: <20190911183632.4317-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190911183632.4317-1-krzk@kernel.org>
-References: <20190911183632.4317-1-krzk@kernel.org>
+        Wed, 11 Sep 2019 14:40:33 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39178 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbfIKSkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:40:33 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E7FCA33A;
+        Wed, 11 Sep 2019 20:40:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568227230;
+        bh=Cm4wbCtI9Gzn79VIY7AbQ+F58/Qss2DHcbMDeHO/vJs=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Fbg0AjCoUSm7qfE40KzniJtnT5TizMqaZtackRBNACafqaOFix0cU/S0G2GsgWZZp
+         SFELE0Ia/I4Nb/23kJ/cdIM7+BoZiojzlMpKdY7M4iDuFnnNgY/yuy2FzHt77y2Kar
+         M20BaTZ9u+k9ljLFN33eSXoPzHPeJm8fJ1pqJ5Sk=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 6/9] drm: rcar-du: crtc: Enable and disable CMMs
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
+        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-7-jacopo+renesas@jmondi.org>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <bc443263-5f20-f022-34c8-1e521243dec1@ideasonboard.com>
+Date:   Wed, 11 Sep 2019 19:40:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190906135436.10622-7-jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jacopo,
 
-Late pull, on top of previous pull request.  Unfortunately the patches
-were applied right after closing the linux-next.
+On 06/09/2019 14:54, Jacopo Mondi wrote:
+> Enable/disable the CMM associated with a CRTC at CRTC start and stop
+> time and enable the CMM unit through the Display Extensional Functions
+> register at group setup time.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 23f1d6cc1719..3dac605c3a67 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_vblank.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+>  
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_disable(rcrtc->cmm);
+> +
+>  	/*
+>  	 * Select switch sync mode. This stops display operation and configures
+>  	 * the HSYNC and VSYNC signals as inputs.
+> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	}
+>  
+>  	rcar_du_crtc_start(rcrtc);
+> +
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_enable(rcrtc->cmm);
+>  }
+>  
+>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..25d0fc125d7a 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  
+>  	rcar_du_group_setup_pins(rgrp);
+>  
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+> +		u32 defr7 = DEFR7_CODE
+> +			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
+> +			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> +
+> +		rcar_du_group_write(rgrp, DEFR7, defr7);
+> +	}
+> +
+
+What's the effect here on platforms with a CMM, but with
+CONFIG_DRM_RCAR_CMM unset?
+
+Will this incorrectly configure the DU ?
+
+Will it stall the display if the DU tries to interact with another
+module which is not enabled?
 
 
-Best regards,
-Krzysztof
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>  
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
+>  /* -----------------------------------------------------------------------------
+>   * R8A7790-only Control Registers
+>   */
+> 
 
-
-The following changes since commit c663d542bfb40eeeb6d393ed155c23a4666d65e1:
-
-  MAINTAINERS: Extend patterns for Samsung SoC, Security Subsystem and clock drivers (2019-08-22 21:04:45 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc-5.4-3
-
-for you to fetch changes up to 13aeb3fe4d5bd78a6dc7bde32986a7296da420d3:
-
-  ARM: exynos: Enable support for ARM architected timers (2019-09-09 20:56:43 +0200)
-
-----------------------------------------------------------------
-Samsung mach/soc changes for v5.4, part 2
-
-1. Fix system restart on S3C6410 due to missing match of watchdog,
-2. Enable suppor for ARM architected timers on Exynos.
-
-----------------------------------------------------------------
-Lihua Yao (1):
-      ARM: samsung: Fix system restart on S3C6410
-
-Marek Szyprowski (1):
-      ARM: exynos: Enable support for ARM architected timers
-
- arch/arm/mach-exynos/Kconfig           | 1 +
- arch/arm/plat-samsung/watchdog-reset.c | 1 +
- 2 files changed, 2 insertions(+)
