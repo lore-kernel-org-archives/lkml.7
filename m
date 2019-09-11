@@ -2,134 +2,92 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D57C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05CCC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CA720863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A353720863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568203340;
+	bh=Qc3hlFF9+Xg0m7O9h3ZwZt5x8AAS+U9qpshK4Qhom80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yZqDsiItdBRS/aztjs+pd11UNigrNv3tcZEiDZDTJXpoY/I3tUmY4nCiZe97tgAtB
+	 uLxiRuj/Mlpeu75gDdfZYvQvqe9AjVHReQ9v0qw0Itc0ENOXqyCKBT/0C3Kmi8kZ+w
+	 XvTP/QnPVyqNezeZ/hZhlLacAWlpejuHycQZUU7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfIKMCA convert rfc822-to-8bit (ORCPT
+        id S1727870AbfIKMCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:02:00 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:63476 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726702AbfIKMCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:02:00 -0400
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
- 2019 20:01:58 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
- 2019 20:01:57 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Wed, 11 Sep 2019 20:01:57 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     "tony.luck@intel.com" <tony.luck@intel.com>,
-        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
-CC:     David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v3 2/4] x86/mce: Make 3 functions non-static
-Thread-Topic: [PATCH v3 2/4] x86/mce: Make 3 functions non-static
-Thread-Index: AdVojGnAZkhIxKi7Su+JNwehltYJmw==
-Date:   Wed, 11 Sep 2019 12:01:57 +0000
-Message-ID: <e5a3fcc6a0184f729e57c34bc491805f@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Sep 2019 08:02:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43992 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726702AbfIKMCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:02:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D3217B660;
+        Wed, 11 Sep 2019 12:02:17 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 14:02:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190911120217.GR4023@dhcp22.suse.cz>
+References: <20190910111252.GA8970@kroah.com>
+ <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
+ <20190910125339.GZ2063@dhcp22.suse.cz>
+ <20190911053334.GH4023@dhcp22.suse.cz>
+ <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
+ <20190911064926.GJ4023@dhcp22.suse.cz>
+ <3b977388-5f25-d0b5-bdc9-f963a9be2bd1@huawei.com>
+ <20190911073451.GM4023@dhcp22.suse.cz>
+ <d828d48c-cae7-f3c2-fb2e-c8b25995cbef@huawei.com>
+ <97ad9ede-3a69-bd9e-e6c9-c2a893459565@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97ad9ede-3a69-bd9e-e6c9-c2a893459565@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions are declared static and cannot be used in others
-.c source file. this commit removes the static attribute and adds
-the declaration to the header for these functions.
+On Wed 11-09-19 19:41:44, Yunsheng Lin wrote:
+> On 2019/9/11 19:03, Yunsheng Lin wrote:
+> > On 2019/9/11 15:34, Michal Hocko wrote:
+> >> On Wed 11-09-19 15:22:30, Yunsheng Lin wrote:
+> >> [...]
+> >>> It seems that there is no protection that prevent setting the node
+> >>> of device to an invalid node.
+> >>> And the kernel does have a few different check now:
+> >>> 1) some does " < 0" check;
+> >>> 2) some does "== NUMA_NO_NODE" check;
+> >>> 3) some does ">= MAX_NUMNODES" check;
+> >>> 4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
+> >>>
+> >>> We need to be consistent about the checking, right?
+> >>
+> >> You can try and chase each of them and see what to do with them. I
+> >> suspect they are a result of random attempts to fortify the code in many
+> >> cases. Consistency is certainly good but spreading more checks all over
+> >> the place just adds more cargo cult. Each check should be reasonably
+> >> justified.
+> > 
+> > Ok, Let me focus on making the node_to_cpumask_map() NUMA_NO_NODE aware
+> > by only checking "node == NUMA_NO_NODE" first.
+> 
+> Hi, Michal
+>     It that ok for me to add your name to "Suggested-by" tag, since I am
+> going to quote some of your words on the commit log.
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
-v2->v3:
- - Revert 1 unused function
-
- arch/x86/kernel/cpu/mce/intel.c    | 6 +++---
- arch/x86/kernel/cpu/mce/internal.h | 6 ++++++
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 88cd959..70799a5 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -423,7 +423,7 @@ void cmci_disable_bank(int bank)
- 	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
- }
- 
--static void intel_init_cmci(void)
-+void intel_init_cmci(void)
- {
- 	int banks;
- 
-@@ -442,7 +442,7 @@ static void intel_init_cmci(void)
- 	cmci_recheck();
- }
- 
--static void intel_init_lmce(void)
-+void intel_init_lmce(void)
- {
- 	u64 val;
- 
-@@ -455,7 +455,7 @@ static void intel_init_lmce(void)
- 		wrmsrl(MSR_IA32_MCG_EXT_CTL, val | MCG_EXT_CTL_LMCE_EN);
- }
- 
--static void intel_clear_lmce(void)
-+void intel_clear_lmce(void)
- {
- 	u64 val;
- 
-diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-index 43031db..842b273 100644
---- a/arch/x86/kernel/cpu/mce/internal.h
-+++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -45,11 +45,17 @@ unsigned long cmci_intel_adjust_timer(unsigned long interval);
- bool mce_intel_cmci_poll(void);
- void mce_intel_hcpu_update(unsigned long cpu);
- void cmci_disable_bank(int bank);
-+void intel_init_cmci(void);
-+void intel_init_lmce(void);
-+void intel_clear_lmce(void);
- #else
- # define cmci_intel_adjust_timer mce_adjust_timer_default
- static inline bool mce_intel_cmci_poll(void) { return false; }
- static inline void mce_intel_hcpu_update(unsigned long cpu) { }
- static inline void cmci_disable_bank(int bank) { }
-+static inline void intel_init_cmci(void) { }
-+static inline void intel_init_lmce(void) { }
-+static inline void intel_clear_lmce(void) { }
- #endif
- 
- void mce_timer_kick(unsigned long interval);
+Sure, no problem. Thanks!
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
