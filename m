@@ -2,72 +2,106 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8DEC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E7CECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B554206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771F02085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfIKPVy (ORCPT
+        id S1728548AbfIKPXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:21:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33131 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbfIKPVy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:21:54 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i84RI-0005p3-ID; Wed, 11 Sep 2019 15:21:48 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf test: fix spelling mistake "allos" -> "allocate"
-Date:   Wed, 11 Sep 2019 16:21:48 +0100
-Message-Id: <20190911152148.17031-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Sep 2019 11:23:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44502 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbfIKPXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:23:23 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C7BEF1DA2;
+        Wed, 11 Sep 2019 15:23:22 +0000 (UTC)
+Received: from [10.10.125.194] (ovpn-125-194.rdu2.redhat.com [10.10.125.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9212C60BEC;
+        Wed, 11 Sep 2019 15:23:21 +0000 (UTC)
+Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+References: <20190909162804.5694-1-mchristi@redhat.com>
+ <5D76995B.1010507@redhat.com>
+ <ee39d997-ee07-22c7-3e59-a436cef4d587@I-love.SAKURA.ne.jp>
+Cc:     axboe@kernel.dk, James.Bottomley@HansenPartnership.com,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5D791169.2090807@redhat.com>
+Date:   Wed, 11 Sep 2019 10:23:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ee39d997-ee07-22c7-3e59-a436cef4d587@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 11 Sep 2019 15:23:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 09/10/2019 05:12 PM, Tetsuo Handa wrote:
+> On 2019/09/10 3:26, Mike Christie wrote:
+>> Forgot to cc linux-mm.
+>>
+>> On 09/09/2019 11:28 AM, Mike Christie wrote:
+>>> There are several storage drivers like dm-multipath, iscsi, and nbd that
+>>> have userspace components that can run in the IO path. For example,
+>>> iscsi and nbd's userspace deamons may need to recreate a socket and/or
+>>> send IO on it, and dm-multipath's daemon multipathd may need to send IO
+>>> to figure out the state of paths and re-set them up.
+>>>
+>>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+>>> memalloc_*_save/restore functions to control the allocation behavior,
+>>> but for userspace we would end up hitting a allocation that ended up
+>>> writing data back to the same device we are trying to allocate for.
+>>>
+>>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+>>> through procfs. It currently only supports PF_MEMALLOC_NOIO, but
+>>> depending on what other drivers and userspace file systems need, for
+>>> the final version I can add the other flags for that file or do a file
+>>> per flag or just do a memalloc_noio file.
+> 
+> Interesting patch. But can't we instead globally mask __GFP_NOFS / __GFP_NOIO
+> than playing games with per a thread masking (which suffers from inability to
+> propagate current thread's mask to other threads indirectly involved)?
 
-There is a spelling mistake in a TEST_ASSERT_VAL message. Fix it.
+If I understood you, then that had been discussed in the past:
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- tools/perf/tests/event_update.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://www.spinics.net/lists/linux-fsdevel/msg149035.html
 
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index cac4290e233a..7f0868a31a7f 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -92,7 +92,7 @@ int test__event_update(struct test *test __maybe_unused, int subtest __maybe_unu
- 
- 	evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("failed to allos ids",
-+	TEST_ASSERT_VAL("failed to allocate ids",
- 			!perf_evsel__alloc_id(evsel, 1, 1));
- 
- 	perf_evlist__id_add(evlist, evsel, 0, 0, 123);
--- 
-2.20.1
+We only need this for specific threads which implement part of a storage
+driver in userspace.
 
+> 
+>>> +static ssize_t memalloc_write(struct file *file, const char __user *buf,
+>>> +			      size_t count, loff_t *ppos)
+>>> +{
+>>> +	struct task_struct *task;
+>>> +	char buffer[5];
+>>> +	int rc = count;
+>>> +
+>>> +	memset(buffer, 0, sizeof(buffer));
+>>> +	if (count != sizeof(buffer) - 1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (copy_from_user(buffer, buf, count))
+> 
+> copy_from_user() / copy_to_user() might involve memory allocation
+> via page fault which has to be done under the mask? Moreover, since
+> just open()ing this file can involve memory allocation, do we forbid
+> open("/proc/thread-self/memalloc") ?
+
+I was having the daemons set the flag when they initialize.
