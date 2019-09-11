@@ -2,118 +2,138 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CC3C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E831C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0855F2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350392084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hnB8/Pcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfIKQxq (ORCPT
+        id S1729461AbfIKQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:53:46 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48026 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbfIKQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:53:45 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1i85s8-00013U-0b; Wed, 11 Sep 2019 10:53:37 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190828215429.4572-1-logang@deltatee.com>
- <20190828215429.4572-14-logang@deltatee.com>
- <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
- <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
- <7954e8a4-6026-2210-7192-94a4e483facf@grimberg.me>
- <b23c72b2-c9db-cb8e-5519-63eb195b7fd4@deltatee.com>
- <ca811aea-c4ae-10ee-15a5-2332d5a9e29a@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <19da6ca1-3cde-3f29-59ee-923c562e6487@deltatee.com>
-Date:   Wed, 11 Sep 2019 10:53:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 12:53:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41724 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729028AbfIKQxs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:53:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h7so24375420wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mTW2NGhchHctlDfByjQ3iFEDbmI3VdsCUaLfFyoMAJ8=;
+        b=hnB8/Pcy7pVNims5ONvJOOiLXQquQNUiLlnpuExQysfOSHUYBCHDjSaewyv3gh9S3L
+         rjbI2zg3KwrS6Td16efQHiypKuIAigmR0XqaI0aO7iELofYqsoOOy/kTWx2aVVoZ8OpS
+         L0FPqF95b7ksipCMWGqHwXj5oC6S+IU4adGodm5uCbHfrK09wyRO61F0HCQI0xzDEpBB
+         5haI+KEXQcefks+1f2d4xCf+radDZ9SQd9DdWWnKf/1lwaZMo2c1J2MvzWBxg3Ant+Ec
+         5KZZIqRp2cBbjGrvSfgxAlTjIsCzBVe/ZQYE9V8Mw+n3LUM7g2/478Ec8V6Y5U4pqmy3
+         iAUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mTW2NGhchHctlDfByjQ3iFEDbmI3VdsCUaLfFyoMAJ8=;
+        b=HMvfx2n9NdDFcry0AtJVhJ+ZeZrhhdV1uneAOY+f0UZMCp3dDf8CHNDRwAfRuhGcaY
+         +P4hx3gJUQESvz2D9vNtwv5Bn2cpt2WbacTX1STRdQdq2FD3yTj0UeBJ0i9IK54fRMz6
+         46p+xKH+HtmbQHntaJb8RpKtWDFmd99HzyN+ALSBXmrdk6MKcsosr2i31FVq2iFG95fB
+         kfZTgOp3845muMDL6Nc++MGY7iVj1l1Cy89NPWxkIpO6f3HuVVnyb698VuuK1LsSKfn1
+         kqIdbCMAxPO1peaHvH+p+y9zkzZ4LYBsZk/He1V7H5DCeVt+4WoI+t/ySyRwmVHaqG3i
+         0Bgw==
+X-Gm-Message-State: APjAAAUo1k+7Z+WdipcgyYtfbSabTw36QLXNeqaO75Y4Mesotr9UfeMR
+        qdGWo2UOXxi9jkf0ua/rtDMpwQ==
+X-Google-Smtp-Source: APXvYqzrQLLJCrnyf7C59El44czLd6dbLQsyczqdPGvatxMhN+DToH5Fg6V5WD/fQBv+dh3aJDCSvQ==
+X-Received: by 2002:adf:a357:: with SMTP id d23mr3448326wrb.18.1568220825432;
+        Wed, 11 Sep 2019 09:53:45 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id y6sm2420326wmi.14.2019.09.11.09.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 09:53:44 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 17:53:41 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        maco@android.com, gregkh@linuxfoundation.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
+ namespace offset
+Message-ID: <20190911165341.GA40932@google.com>
+References: <20190911122646.13838-1-will@kernel.org>
+ <20190911133506.GB7837@linux-8ccs>
+ <20190911164012.nalsccw6jku7gbpw@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <ca811aea-c4ae-10ee-15a5-2332d5a9e29a@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: hch@lst.de, maxg@mellanox.com, kbusch@kernel.org, axboe@fb.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190911164012.nalsccw6jku7gbpw@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-09-09 5:15 p.m., Sagi Grimberg wrote:
-> 
->>>>>> Support block disk accounting by setting the RQF_IO_STAT flag
->>>>>> and gendisk in the request.
->>>>>>
->>>>>> After this change, IO counts will be reflected correctly in
->>>>>> /proc/diskstats for drives being used by passthru.
->>>>>>
->>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>>>>> ---
->>>>>>     drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
->>>>>>     1 file changed, 4 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/nvme/target/io-cmd-passthru.c
->>>>>> b/drivers/nvme/target/io-cmd-passthru.c
->>>>>> index 7557927a3451..63f12750a80d 100644
->>>>>> --- a/drivers/nvme/target/io-cmd-passthru.c
->>>>>> +++ b/drivers/nvme/target/io-cmd-passthru.c
->>>>>> @@ -410,6 +410,9 @@ static struct request
->>>>>> *nvmet_passthru_blk_make_request(struct nvmet_req *req,
->>>>>>         if (unlikely(IS_ERR(rq)))
->>>>>>             return rq;
->>>>>>     +    if (blk_queue_io_stat(q) && cmd->common.opcode !=
->>>>>> nvme_cmd_flush)
->>>>>> +        rq->rq_flags |= RQF_IO_STAT;
->>>>
->>>> Thanks for the review!
->>>>
->>>>> Does flush has data bytes in the request? Why the special casing?
->>>>
->>>> Well it was special cased in the vanilla blk account flow... But I
->>>> think
->>>> it's required to be special cased so the IO and in_flight counts don't
->>>> count flushes (as they do not for regular block device traffic).
->>>
->>> I think that the accounting exclude I/O that is yielded from the flush
->>> sequence. Don't think its relevant here...
+On Wed, Sep 11, 2019 at 05:40:13PM +0100, Will Deacon wrote:
+>On Wed, Sep 11, 2019 at 03:35:06PM +0200, Jessica Yu wrote:
+>> +++ Will Deacon [11/09/19 13:26 +0100]:
+>> > Commit 8651ec01daed ("module: add support for symbol namespaces.")
+>> > broke linking for arm64 defconfig:
+>> >
+>> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
+>> >  | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
+>> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
+>> >  | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
+>> >
+>> > This is because the dummy initialisation of the 'namespace_offset' field
+>> > in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
+>> > support for PREL32 locations uses an offset from an absolute address (0)
+>> > in an effort to trick 'offset_to_pointer' into behaving as a NOP,
+>> > allowing non-namespaced symbols to be treated in the same way as those
+>> > belonging to a namespace.
+>> >
+>> > Unfortunately, place-relative relocations require a symbol reference
+>> > rather than an absolute value and, although x86 appears to get away with
+>> > this due to placing the kernel text at the top of the address space, it
+>> > almost certainly results in a runtime failure if the kernel is relocated
+>> > dynamically as a result of KASLR.
+>> >
+>> > Rework 'namespace_offset' so that a value of 0, which cannot occur for a
+>> > valid namespaced symbol, indicates that the corresponding symbol does
+>> > not belong to a namespace.
+>> >
+>> > Cc: Matthias Maennich <maennich@google.com>
+>> > Cc: Jessica Yu <jeyu@kernel.org>
+>> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> > Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
+>> > Reported-by: kbuild test robot <lkp@intel.com>
+>> > Signed-off-by: Will Deacon <will@kernel.org>
+>> > ---
+>> >
+>> > Please note that I've not been able to test this at LPC, but it's been
+>> > submitted to kernelci.
 >>
->> What? Per blk_account_io_done(), RQF_FLUSH_SEQ will not be set by us for
->> passthru commands and I don't think it's appropriate to do so. Thus, if
->> we set RQF_IO_STAT for passthru flush commands, they will be counted
->> which we do not want.
-> 
-> Have you considered to have nvmet_passthru_blk_make_request set RQF_FUA
-> for nvme_cmd_flush? this way blk_insert_flush will be called and
-> RQF_FLUSH_SEQ will be set and you don't need to worry about this
-> special casing...
+>> Thanks for fixing this so quickly. I can confirm that this fixes the
+>> build for arm64 defconfig and x86 built fine for me as well. I'll wait
+>> a bit and apply this at the end of the day in case Matthias or anybody
+>> else would like to confirm/test.
+>
+>FWIW, I've managed to boot arm64 Debian under QEMU and load/unload
+>modules successfully with this patch applied on top of modules-next.
 
-Well, I haven't done that mostly because I'm not sure of all the side
-effects of doing so. However, I've tried it and everything seems to
-still work, so I'll make that change for v9 which I'll probably send out
-after the merge window.
+Thanks Will for fixing this so quickly! The patch looks good to me.
 
-Logan
+Feel free to add
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Tested-by: Matthias Maennich <maennich@google.com>
+
+Cheers,
+Matthias
