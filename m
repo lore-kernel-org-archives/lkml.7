@@ -2,115 +2,107 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD6C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17960C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE71208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80EE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RPozfMIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfIKS0g (ORCPT
+        id S1730110AbfIKS1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:26:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43328 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbfIKS0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:26:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4FFF8AC6FB;
-        Wed, 11 Sep 2019 18:26:34 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-117-150.ams2.redhat.com [10.36.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 868C919C6A;
-        Wed, 11 Sep 2019 18:26:28 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v12)
-References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
-        <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
-Date:   Wed, 11 Sep 2019 20:26:21 +0200
-In-Reply-To: <20190807142726.2579-2-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers's message of "Wed, 7 Aug 2019 10:27:22 -0400")
-Message-ID: <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Wed, 11 Sep 2019 14:27:36 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59228 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729758AbfIKS1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:27:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BIRWOh007757;
+        Wed, 11 Sep 2019 13:27:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568226452;
+        bh=AeW/DYP1zkaB9/BB4ZesrqQm2k+eZeF9Bifc81J4frk=;
+        h=From:To:CC:Subject:Date;
+        b=RPozfMIZ2vDTQYaxoPOFnOcEnciwqNCZ7cTzn4KcF5ddsRPOW4oWLJM6/HG0MXcB7
+         +pc0BxiBQXXihGDUog4Er0XNIDvZnZlb6MLeOZIJpXuNj723b845oRRW83Jzv013vw
+         CvJyslAAtNRMAKO5H4A0Sbkhi/rWce3xyY+pUd8M=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BIRWuM038829
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Sep 2019 13:27:32 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
+ Sep 2019 13:27:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 11 Sep 2019 13:27:31 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BIRVEN099700;
+        Wed, 11 Sep 2019 13:27:31 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2] leds: lm3532: Fix optional led-max-microamp prop error handling
+Date:   Wed, 11 Sep 2019 13:27:30 -0500
+Message-ID: <20190911182730.22409-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 11 Sep 2019 18:26:35 +0000 (UTC)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Fix the error handling for the led-max-microamp property.
+Need to check if the property is present and then if it is
+retrieve the setting and its max boundary
 
-> +#ifdef SHARED
-> +  if (rtld_active ())
-> +    {
-> +      /* Register rseq ABI to the kernel.   */
-> +      (void) rseq_register_current_thread ();
-> +    }
-> +#else
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-I think this will need *another* check for the inner libc in an audit
-module.  See what we do in malloc.  __libc_multiple_libcs is supposed to
-cover that, but it's unfortunately not reliable.
+v2 - Changed full scale current check to use min function
 
-I believe without that additional check, the first audit module we load
-will claim rseq, and the main program will not have control over the
-rseq area.  Reversed roles would be desirable here.
+ drivers/leds/leds-lm3532.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-In October, I hope to fix __libc_multiple_libcs, and then you can use
-just that.  (We have a Fedora patch that is supposed to fix it, I need
-to documen the mechanism and upstream it.)
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index 62ace6698d25..a1742dc1f6fa 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 			goto child_out;
+ 		}
+ 
+-		ret = fwnode_property_read_u32(child, "led-max-microamp",
+-					       &led->full_scale_current);
+-
+-		if (led->full_scale_current > LM3532_FS_CURR_MAX)
+-			led->full_scale_current = LM3532_FS_CURR_MAX;
++		if (fwnode_property_present(child, "led-max-microamp")) {
++			if (fwnode_property_read_u32(child, "led-max-microamp",
++						     &led->full_scale_current))
++				dev_err(&priv->client->dev,
++					"Failed getting led-max-microamp\n");
++			else
++				min(led->full_scale_current,
++				    LM3532_FS_CURR_MAX);
++		}
+ 
+ 		if (led->mode == LM3532_BL_MODE_ALS) {
+ 			led->mode = LM3532_ALS_CTRL;
+-- 
+2.22.0.214.g8dca754b1e
 
-> +/* Advertise Restartable Sequences registration ownership across
-> +   application and shared libraries.
-> +
-> +   Libraries and applications must check whether this variable is zero or
-> +   non-zero if they wish to perform rseq registration on their own. If it
-> +   is zero, it means restartable sequence registration is not handled, and
-> +   the library or application is free to perform rseq registration. In
-> +   that case, the library or application is taking ownership of rseq
-> +   registration, and may set __rseq_handled to 1. It may then set it back
-> +   to 0 after it completes unregistering rseq.
-> +
-> +   If __rseq_handled is found to be non-zero, it means that another
-> +   library (or the application) is currently handling rseq registration.
-> +
-> +   Typical use of __rseq_handled is within library constructors and
-> +   destructors, or at program startup.  */
-> +
-> +int __rseq_handled;
-
-Are there any programs that use __rseq_handled *today*?
-
-I'm less convinced that we actually need this.  I don't think we have
-ever done anything like that before, and I don't think it's necessary.
-Any secondary rseq library just needs to note if it could perform
-registration, and if it failed to do so, do not perform unregistration
-in a pthread destructor callback.
-
-Sure, there's the matter of pthread destructor ordering, but that
-problem is not different from any other singleton (thread-local or not),
-and the fix for the last time this has come up (TLS destructors vs
-dlclose) was to upgrade glibc.
-
-Thanks,
-Florian
