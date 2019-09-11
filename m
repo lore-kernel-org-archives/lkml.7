@@ -2,224 +2,122 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0B1C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603EAC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4564D2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LX9/70/s"
+	by mail.kernel.org (Postfix) with ESMTP id 398012084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfIKPap (ORCPT
+        id S1728605AbfIKPbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:30:45 -0400
-Received: from mail-eopbgr20065.outbound.protection.outlook.com ([40.107.2.65]:26315
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728385AbfIKPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:30:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eujU0MAWH6jiTJT8SozHYPRL8WAZBDbcAfVUdxkBmxqvKKErtmEoihuYov13sSFormOBhjpib0PlmC4O47SkPfAMtjPIiIIgjs3Cdonym5Ki86PQro1jfs8kl2xiC3Fh4v/YWW9yhMOtdSHnGqIrjViCy0NJ0AzDP5wPPAb7KupA5oedGnJZsWRGnafZkB5lbYDjznBj5HhHFbdFLLO5P+mPRzWszA5XpoyDQ6deWrJYvsYUMV19nEqyekAa2uFpFDaO+EO5LBlKre67cZuxLX9Wr5pa7ePGmUL0ZAjqXXDI/+SUDiRbCPuZIeVTw044FEdw0PK58qFjQy0G+EiHGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KQUVO7eImhDYW9CJvxffN3GRPzuT15tU3eJaDPOBYyg=;
- b=A3o9eOAXv1VUAVJwd7FEKjL+ZVDebE+elE0AxeFP+rlX6AU3pbnHa+ZbejKavo8Z6TeTI155A0FM2mgj1a/WUu4pl8EmJwUM+Zj9Sqd5pZ6W7LaNUwYQteJ6LeowiDkh0z1DxTit9O6ERTWoIIzh2f5XCv5Lu02HM6qsRnJodKu3j1F/5x4BmlBdyPMQSmD905SGdzckr3yWaJWkdKhg1S5ZyyvJADd/YPekTJDvbxVgFtNI387IfTHdcKxZwjy/VlgJGpQCS7TOpepqpJgsbUQCDfRvPgFBG/BCvdxPJeDqjIqLB0tT3jM+KbpNBxKWI6Yhg49zCi6xLhMDDR7lSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KQUVO7eImhDYW9CJvxffN3GRPzuT15tU3eJaDPOBYyg=;
- b=LX9/70/sChqmTRZaiiC8ba4AOE8EmzmAQLj017F+24OzFeCj0pt5k0ku1jY1kDSqoayvzYp1urAj2TJsH9zEq3S5lcvYJEDu5AJk8dsskFmcnRGzmxMt49QqVC8f78p+auw8MXdsfSlP2SmXXTxAnSwLsBH+APuAI8iUJObRx9k=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5025.eurprd05.prod.outlook.com (52.134.89.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Wed, 11 Sep 2019 15:30:40 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 15:30:40 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Topic: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Index: AQHVYUZdAS6KYIr8SUO1vQ8myuXcNacjy68wgALDGQCAABfpQA==
-Date:   Wed, 11 Sep 2019 15:30:40 +0000
-Message-ID: <AM0PR05MB48668DFF8E816F0D2D3041BFD1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190902042436.23294-1-parav@mellanox.com>
-        <AM0PR05MB4866F76F807409ED887537D7D1B70@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190911145610.453b32ec@x1.home>
-In-Reply-To: <20190911145610.453b32ec@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 88583fb9-e32f-42f8-7c14-08d736cd00d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5025;
-x-ms-traffictypediagnostic: AM0PR05MB5025:|AM0PR05MB5025:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB5025B019B5C92707178ECAC4D1B10@AM0PR05MB5025.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(54534003)(13464003)(189003)(199004)(2906002)(81166006)(8936002)(81156014)(8676002)(7736002)(74316002)(305945005)(64756008)(5660300002)(66476007)(76116006)(66946007)(7696005)(54906003)(33656002)(71200400001)(71190400001)(99286004)(316002)(6306002)(3846002)(66066001)(6916009)(229853002)(256004)(25786009)(478600001)(66556008)(66446008)(14444005)(6116002)(86362001)(52536014)(76176011)(446003)(11346002)(486006)(9686003)(55016002)(186003)(6436002)(53936002)(6246003)(53376002)(4326008)(6506007)(26005)(53546011)(966005)(102836004)(14454004)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5025;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: feOfqoVgQpT/nXY1fwOJsu9MxwoSbZEyY03on0NO2s/+tSego12puBsQNyLBLbPMfTGuEKhDNnkwhrPk35q+LJNfVKw25QdRbeGFEqP2FIw9f548a2uycru+yIOrfj3iFLOA59ss1PUhEy87Llhc03gpq8z10YYSS6f7AQpzMmTAPeZJun3ST0m594CH2t8O6tNfTMdSCwiiklvqCPLr7PQjZv+qo7/a0ox5VeeOQPB3XAfIKGLDYTLzZtczR/Ly/xT6tld8b/rIBA1Lu7T4sAnhSLUO38J7jxqKwHovHRClbki7ATASlTiJzbuNgPzEemFHJmXDe+yEB2FgtKllALRcXr1CICSct8dmeeYZZ0b+CpRcz5xwTI5tkEJUkHMHNeghevF7EPLLH+CwIBnBhf7xrf+SWaiEwLFUtCKfJCw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Sep 2019 11:31:06 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33811 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbfIKPbG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:31:06 -0400
+Received: from [148.69.85.38] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i84aF-0006sU-TQ; Wed, 11 Sep 2019 15:31:04 +0000
+Date:   Wed, 11 Sep 2019 17:31:02 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
+Message-ID: <20190911153101.ecllfqnmqdijad5p@wittgenstein>
+References: <20190910175852.GA15572@asgard.redhat.com>
+ <20190911064852.9f236d4c201b50e14d717c14@linux-foundation.org>
+ <20190911135236.73l6icwxqff7fkw5@wittgenstein>
+ <20190911141635.lafrcjwvbhjm3ezy@wittgenstein>
+ <20190911143213.GB21600@asgard.redhat.com>
+ <20190911145446.vkcqy2shldi5ibb5@wittgenstein>
+ <20190911152048.GD21600@asgard.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88583fb9-e32f-42f8-7c14-08d736cd00d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 15:30:40.5683
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +4Ueha/UbWAM2PufX4W71oPthIaq62C2NwnvG/U69lgZbYEfNghKHzREYr4YXhbs2WkmnyGCQVwQmxsK6XfgQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5025
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190911152048.GD21600@asgard.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Wed, Sep 11, 2019 at 04:20:48PM +0100, Eugene Syromiatnikov wrote:
+> On Wed, Sep 11, 2019 at 04:54:47PM +0200, Christian Brauner wrote:
+> > On Wed, Sep 11, 2019 at 03:32:13PM +0100, Eugene Syromiatnikov wrote:
+> > > On Wed, Sep 11, 2019 at 04:16:36PM +0200, Christian Brauner wrote:
+> > > > On Wed, Sep 11, 2019 at 03:52:36PM +0200, Christian Brauner wrote:
+> > > > > On Wed, Sep 11, 2019 at 06:48:52AM -0700, Andrew Morton wrote:
+> > > > > > What are the user-visible runtime effects of this bug?
+> > > 
+> > > The userspace can set -1 as an exit_signal, and that will break process
+> > > signalling and reaping.
+> > > 
+> > > > > > Relatedly, should this fix be backported into -stable kernels?  If so, why?
+> > > > > 
+> > > > > No, as I said in my other mail clone3() is not in any released kernel
+> > > > > yet. clone3() is going to be released in v5.3.
+> > > > 
+> > > > Sigh, I spoke to soon... Hm, this is placed in _do_fork(). There's a
+> > > > chance that this might be visible in legacy clone if anyone passes in an
+> > > > invalid signal greater than NSIG right now somehow, they'd now get
+> > > > EINVAL if I'm seeing this right.
+> > > > 
+> > > > So an alternative might be to only fix this in clone3() only right now
+> > > > and get this patch into 5.3 to not release clone3() with this bug from
+> > > > legacy clone duplicated.
+> > > > And we defer the actual legacy clone fix until after next merge window
+> > > > having it stew in linux-next for a couple of rcs. Distros often pull in
+> > > > rcs so if anyone notices a regression for legacy clone we'll know about
+> > > > it... valid_signal() checks at process exit time when the parent is
+> > > > supposed to be notifed will catch faulty signals anyway so it's not that
+> > > > big of a deal.
+> > > 
+> > > As the patch is written, only copy_clone_args_from_user is touched (which
+> > > is used only by clone3 and not legacy clone), and the check added
+> > 
+> > Great!
+> > 
+> > > replicates legacy clone behaviour: userspace can set 0..CSIGNAL
+> > > as an exit_signal.   Having ability to set exit_signal in NSIG..CSIGNAL
+> > 
+> > Hm. The way I see it for clone3() it would make sense to only have <
+> > NSIG right away. valid_signal() won't let through anything else
+> > anyway... Since clone3() isn't out yet it doesn't make sense to
+> > replicate the (buggy) behavior of legacy clone, right?
+> 
+> I was thinking about that and in the end decided to go with CSIGNAL;
+> the only issue I see here is that it prevents for libc to easily
+> switch clone() library call implementation to clone3(), in case there
+> are some applications that rely on this kind of behaviour; if there's
+> no such userspace users, then switch to valid_signal() check for both
+> legacy and clone3 should be fine (along with possible switching to u64
+> for kernel_clone_args's exit_signal, so the check can done in one place),
+> but I'm agree with your hesitance to do it right now.
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Wednesday, September 11, 2019 8:56 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
-> cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
->=20
-> On Mon, 9 Sep 2019 20:42:32 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > Hi Alex,
-> >
-> > > -----Original Message-----
-> > > From: Parav Pandit <parav@mellanox.com>
-> > > Sent: Sunday, September 1, 2019 11:25 PM
-> > > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
-> > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
-> > > Subject: [PATCH v3 0/5] Introduce variable length mdev alias
-> > >
-> > > To have consistent naming for the netdevice of a mdev and to have
-> > > consistent naming of the devlink port [1] of a mdev, which is formed
-> > > using phys_port_name of the devlink port, current UUID is not usable
-> > > because UUID is too long.
-> > >
-> > > UUID in string format is 36-characters long and in binary 128-bit.
-> > > Both formats are not able to fit within 15 characters limit of netdev
-> name.
-> > >
-> > > It is desired to have mdev device naming consistent using UUID.
-> > > So that widely used user space framework such as ovs [2] can make
-> > > use of mdev representor in similar way as PCIe SR-IOV VF and PF
-> representors.
-> > >
-> > > Hence,
-> > > (a) mdev alias is created which is derived using sha1 from the mdev
-> name.
-> > > (b) Vendor driver describes how long an alias should be for the
-> > > child mdev created for a given parent.
-> > > (c) Mdev aliases are unique at system level.
-> > > (d) alias is created optionally whenever parent requested.
-> > > This ensures that non networking mdev parents can function without
-> > > alias creation overhead.
-> > >
-> > > This design is discussed at [3].
-> > >
-> > > An example systemd/udev extension will have,
-> > >
-> > > 1. netdev name created using mdev alias available in sysfs.
-> > >
-> > > mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-> > > mdev 12 character alias=3Dcd5b146a80a5
-> > >
-> > > netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet lin=
-k m
-> > > =3D mediated device
-> > >
-> > > 2. devlink port phys_port_name created using mdev alias.
-> > > devlink phys_port_name=3Dpcd5b146a80a5
-> > >
-> > > This patchset enables mdev core to maintain unique alias for a mdev.
-> > >
-> > > Patch-1 Introduces mdev alias using sha1.
-> > > Patch-2 Ensures that mdev alias is unique in a system.
-> > > Patch-3 Exposes mdev alias in a sysfs hirerchy, update Documentation
-> > > Patch-4 Introduces mdev_alias() API.
-> > > Patch-5 Extends mtty driver to optionally provide alias generation.
-> > > This also enables to test UUID based sha1 collision and trigger
-> > > error handling for duplicate sha1 results.
-> > >
-> > > [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
-> > > [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
-> > > [3] https://patchwork.kernel.org/cover/11084231/
-> > >
-> > > ---
-> > > Changelog:
-> > > v2->v3:
-> > >  - Addressed comment from Yunsheng Lin
-> > >  - Changed strcmp() =3D=3D0 to !strcmp()
-> > >  - Addressed comment from Cornelia Hunk
-> > >  - Merged sysfs Documentation patch with syfs patch
-> > >  - Added more description for alias return value
-> >
-> > Did you get a chance review this updated series?
-> > I addressed Cornelia's and yours comment.
-> > I do not think allocating alias memory twice, once for comparison and
-> > once for storing is good idea or moving alias generation logic inside
-> > the mdev_list_lock(). So I didn't address that suggestion of Cornelia.
->=20
-> Sorry, I'm at LPC this week.  I agree, I don't think the double allocatio=
-n is
-> necessary, I thought the comment was sufficient to clarify null'ing the
-> variable.  It's awkward, but seems correct.
->=20
-> I'm not sure what we do with this patch series though, has the real
-> consumer of this even been proposed?  It feels optimistic to include at t=
-his
-> point.  We've used the sample driver as a placeholder in the past for
-> mdev_uuid(), but we arrived at that via a conversion rather than explicit=
-ly
-> adding the API.  Please let me know where the consumer patches stand,
-> perhaps it would make more sense for them to go in together rather than
-> risk adding an unused API.  Thanks,
->=20
-Given that consumer patch series is relatively large (around 15+ patches), =
-I was considering to merge this one as pre-series to it.
-Its ok to combine this with consumer patch series.
-But wanted to have it reviewed beforehand, so that churn is less in actual =
-consumer series which is more mlx5_core and devlink/netdev centric.
-So if you can add Review-by, it will be easier to combine with consumer ser=
-ies.
+We already have other explicit differences between clone() and clone3().
+And these differences are intentional. Two examples are that CSIGNAL is
+not a valid flag anymore (due to .exit-signal) and CLONE_DETACHED will
+not be simply ignored anymore but will get you EINVAL. So that shouldn't
+be a concern.
 
-And if we merge it with consumer series, it will come through Dave Miller's=
- tree instead of your tree.
-Would that work for you?
+I think we really want the minimal thing and only for clone3 right now:
+verify whether any high-bits are set and whether it's a valid signal.
+clone3() needs to have correct semantics when released!
+
+Legacy clone on the other hand already has this buggy behavior for
+n-years. It can have it for a little while longer so we can see whether
+userspace relies on it.
+
+Christian
