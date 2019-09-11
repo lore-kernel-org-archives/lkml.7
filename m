@@ -2,268 +2,133 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD35C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF9DC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4336021479
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BB421479
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z+nLvmJs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rahUj/tG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbfIKRDI (ORCPT
+        id S1729476AbfIKRDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:03:08 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:42997 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728937AbfIKRDI (ORCPT
+        Wed, 11 Sep 2019 13:03:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35828 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbfIKRDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:03:08 -0400
-Received: by mail-ua1-f68.google.com with SMTP id w16so7016896uap.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=buUqc8ERVmqHmMW6WwjRVMJPzy7dr7EKMl9vRpwJpZM=;
-        b=Z+nLvmJsUyDmb3Z8llyNwlmD2jVrnXGV2ode7JUJ0CBsoLN0QQqjF/H/3gDTLg6VDJ
-         jXit3LAhfojKsULrELXKF1wwGBp8vNz5EVM7DcARGt0ByQSpvOJ48NQVf6fQWh/Zujp+
-         cBblUSKAe177/psfJfCGsbkuJOHDOsO5Qb/yg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=buUqc8ERVmqHmMW6WwjRVMJPzy7dr7EKMl9vRpwJpZM=;
-        b=PRVKvj/2IAII+sdrw3p0JG0f1CEJ5qnb/GSN7ppLw5oHyFkJ4FuW2W3rOmrFqsOO8G
-         KUVQsuBAj6cZKKYObN/hpqHjl8PbFIfLMI/vfFGF2QxOiK0aXMTbIIHQG2sZA08EWCya
-         CacAWvOP/dO/TePmNQvI0KxNrvEpmCQI8RleTD764F9kjhuhv6gdSOL3L92ae6bKHKHv
-         5YpMrTNyHY1n3myMi7FHdszze5TFj6vUOS/PR+s3EdQaXiAktJHoPP/VUTJucUWwukTd
-         6o7Mg7yEKMjp2gZligmaGcfuVbYpWscUC/RCWiZ/Q+b0xr7ti04IzjUsGGhAW4jLoERr
-         Tzpg==
-X-Gm-Message-State: APjAAAXEYm5rH19HPqfiEj3aASbKmXU83BlnyQ/nxPZwBIh55MdRP9cz
-        LCJpEsVbruDTyxqSrxYZGVMwJisDe2rFOQxuQjvYcBGsFVQZSw==
-X-Google-Smtp-Source: APXvYqyHbuhYljIhllMZZXCEGHUZOYmQOMAogOruLFfO7e3oALf2ZphzQ2tT6Oy4Xky7aPF4tOyye2GIxWQClO2dXQ0=
-X-Received: by 2002:ab0:604a:: with SMTP id o10mr4566868ual.105.1568221385686;
- Wed, 11 Sep 2019 10:03:05 -0700 (PDT)
+        Wed, 11 Sep 2019 13:03:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BH0Ggv100146;
+        Wed, 11 Sep 2019 17:03:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=tjDusgHWwwcPuTZyb2yaXH/a3BzidRe9zFpLRpAYF4g=;
+ b=rahUj/tGvPrsXSREtfv19e5V4S+Aat3lWreLhWdAQ9x7+xLkfXGW4KF3+clgs2tdXqxW
+ 7ENlChx6ATWdWvhKqJJDXFe79tbQ9ja9/KN50pDbtsoDgkIC9sWcgi/NGDpy+ogROC9H
+ 2RMalKU6L3BcXF6TydcEKfB6sLDGAwU5iVAn5lvB2A8NGtQGjFrBhII6Vb+zax6sufO9
+ V0leGK7NozKN8/zrqWZtytnCcuIKfNQc+I2m1AgRuolpDr7y/mu7/A1WaIZQaCgTAIEn
+ lpGfhs5nspoPn6OfmijX1Usx3VYGUHvtWPt0DdkTOgqlv+W9mBNzq1Q8anqqvdK53kRz oQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2uw1jybfmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:03:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BH3AIP145409;
+        Wed, 11 Sep 2019 17:03:20 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2uxk0terde-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:03:20 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BH3Iu2004387;
+        Wed, 11 Sep 2019 17:03:18 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 10:03:17 -0700
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+To:     Waiman Long <longman@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <20190911151451.GH29434@bombadil.infradead.org>
+ <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
+Date:   Wed, 11 Sep 2019 10:03:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190911082646.134347-1-cychiang@chromium.org>
- <1e2ec69d-e42d-4e1b-7ce9-d1620cfbb4c9@baylibre.com> <10668907.r1TyVuJQb1@jernej-laptop>
-In-Reply-To: <10668907.r1TyVuJQb1@jernej-laptop>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Thu, 12 Sep 2019 01:02:38 +0800
-Message-ID: <CAFv8NwJGa0HXsnv2MvJhknpr9PxUL3jH2HZLSLiSD5s_nHiQhQ@mail.gmail.com>
-Subject: Re: [PATCH v3] drm: bridge/dw_hdmi: add audio sample channel status setting
-To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        kuninori.morimoto.gx@renesas.com, sam@ravnborg.org,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        Xing Zheng <zhengxing@rock-chips.com>, cain.cai@rock-chips.com,
-        =?UTF-8?B?6JSh5p6r?= <eddie.cai@rock-chips.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>, kuankuan.y@gmail.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Yakir Yang <ykk@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:54 AM Jernej =C5=A0krabec <jernej.skrabec@siol.n=
-et> wrote:
->
-> Dne sreda, 11. september 2019 ob 18:23:59 CEST je Neil Armstrong napisal(=
-a):
-> > On 11/09/2019 10:26, Cheng-Yi Chiang wrote:
-> > > From: Yakir Yang <ykk@rock-chips.com>
-> > >
-> > > When transmitting IEC60985 linear PCM audio, we configure the
-> > > Aduio Sample Channel Status information in the IEC60958 frame.
-> > > The status bit is already available in iec.status of hdmi_codec_param=
-s.
-> > >
-> > > This fix the issue that audio does not come out on some monitors
-> > > (e.g. LG 22CV241)
-> > >
-> > > Note that these registers are only for interfaces:
-> > > I2S audio interface, General Purpose Audio (GPA), or AHB audio DMA
-> > > (AHBAUDDMA).
-> > > For S/PDIF interface this information comes from the stream.
-> > >
-> > > Currently this function dw_hdmi_set_channel_status is only called
-> > > from dw-hdmi-i2s-audio in I2S setup.
-> > >
-> > > Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > > ---
-> > >
-> > > Change from v2 to v3:
-> > > 1. Reuse what is already set in iec.status in hw_param.
-> > > 2. Remove all useless definition of registers and values.
-> > > 3. Note that the original sampling frequency is not written to
-> > >
-> > >    the channel status as we reuse create_iec958_consumer in pcm_iec95=
-8.c.
-> > >    Without that it can still play audio fine.
-> > >
-> > >  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   |  1 +
-> > >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 20 +++++++++++++++++=
-++
-> > >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     |  2 ++
-> > >  include/drm/bridge/dw_hdmi.h                  |  1 +
-> > >  4 files changed, 24 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c index
-> > > 34d8e837555f..20f4f92dd866 100644
-> > > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> > > @@ -102,6 +102,7 @@ static int dw_hdmi_i2s_hw_params(struct device *d=
-ev,
-> > > void *data,>
-> > >     }
-> > >
-> > >     dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
-> > >
-> > > +   dw_hdmi_set_channel_status(hdmi, hparms->iec.status);
-> > >
-> > >     dw_hdmi_set_channel_count(hdmi, hparms->channels);
-> > >     dw_hdmi_set_channel_allocation(hdmi, hparms-
-> >cea.channel_allocation);
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> > > bd65d0479683..aa7efd4da1c8 100644
-> > > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > @@ -582,6 +582,26 @@ static unsigned int hdmi_compute_n(unsigned int =
-freq,
-> > > unsigned long pixel_clk)>
-> > >     return n;
-> > >
-> > >  }
-> > >
-> > > +/*
-> > > + * When transmitting IEC60958 linear PCM audio, these registers allo=
-w to
-> > > + * configure the channel status information of all the channel statu=
-s
-> > > + * bits in the IEC60958 frame. For the moment this configuration is =
-only
-> > > + * used when the I2S audio interface, General Purpose Audio (GPA),
-> > > + * or AHB audio DMA (AHBAUDDMA) interface is active
-> > > + * (for S/PDIF interface this information comes from the stream).
-> > > + */
-> > > +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi,
-> > > +                           u8 *channel_status)
-> > > +{
-> > > +   /*
-> > > +    * Set channel status register for frequency and word length.
-> > > +    * Use default values for other registers.
-> > > +    */
-> > > +   hdmi_writeb(hdmi, channel_status[3], HDMI_FC_AUDSCHNLS7);
-> > > +   hdmi_writeb(hdmi, channel_status[4], HDMI_FC_AUDSCHNLS8);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dw_hdmi_set_channel_status);
-> > > +
-> > >
-> > >  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> > >
-> > >     unsigned long pixel_clk, unsigned int sample_rate)
-> > >
-> > >  {
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h index
-> > > 6988f12d89d9..fcff5059db24 100644
-> > > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > @@ -158,6 +158,8 @@
-> > >
-> > >  #define HDMI_FC_SPDDEVICEINF                    0x1062
-> > >  #define HDMI_FC_AUDSCONF                        0x1063
-> > >  #define HDMI_FC_AUDSSTAT                        0x1064
-> > >
-> > > +#define HDMI_FC_AUDSCHNLS7                      0x106e
-> > > +#define HDMI_FC_AUDSCHNLS8                      0x106f
-> > >
-> > >  #define HDMI_FC_DATACH0FILL                     0x1070
-> > >  #define HDMI_FC_DATACH1FILL                     0x1071
-> > >  #define HDMI_FC_DATACH2FILL                     0x1072
-> > >
-> > > diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdm=
-i.h
-> > > index cf528c289857..4b3e863c4f8a 100644
-> > > --- a/include/drm/bridge/dw_hdmi.h
-> > > +++ b/include/drm/bridge/dw_hdmi.h
-> > > @@ -156,6 +156,7 @@ void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi,=
- bool
-> > > hpd, bool rx_sense);>
-> > >  void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate=
-);
-> > >  void dw_hdmi_set_channel_count(struct dw_hdmi *hdmi, unsigned int cn=
-t);
-> > >
-> > > +void dw_hdmi_set_channel_status(struct dw_hdmi *hdmi, u8
-> > > *channel_status);
-> > >
-> > >  void dw_hdmi_set_channel_allocation(struct dw_hdmi *hdmi, unsigned i=
-nt
-> > >  ca);
-> > >  void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
-> > >  void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
-> >
-> > Looks fine for me:
-> > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> >
-> > Jonas ? Jernej ? Russell ?
->
-> Patch itself is fine, I'm just wondering if more information should be co=
-pied
-> from status array to registers. But I think they are not 1:1 mapping so s=
-ome
-> more work would be needed. Anyway, patch is:
+On 9/11/19 8:44 AM, Waiman Long wrote:
+> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
+>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+>>> When allocating a large amount of static hugepages (~500-1500GB) on a
+>>> system with large number of CPUs (4, 8 or even 16 sockets), performance
+>>> degradation (random multi-second delays) was observed when thousands
+>>> of processes are trying to fault in the data into the huge pages. The
+>>> likelihood of the delay increases with the number of sockets and hence
+>>> the CPUs a system has.  This only happens in the initial setup phase
+>>> and will be gone after all the necessary data are faulted in.
+>> Can;t the application just specify MAP_POPULATE?
+> 
+> Originally, I thought that this happened in the startup phase when the
+> pages were faulted in. The problem persists after steady state had been
+> reached though. Every time you have a new user process created, it will
+> have its own page table.
 
-Hi Jernej,
-Yes you are right. I was thinking about the same thing.
-But there are also some fields in the IEC60958 spec not mapped to the
-registers on dw-hdmi.
-So I ended up just writing the two registers in the original ykk's
-patch, and ignoring "original sampling frequency" like pcm_iec958.
-It turns out that audio plays fine on my LG monitor. So I suggest we
-can keep this patch as simple as it is, and add more register setting
-if we find issue.
-Thanks!
+This is still at fault time.  Although, for the particular application it
+may be after the 'startup phase'.
 
->
->
-> Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
->
-> Best regards,
-> Jernej
->
-> >
-> > If it's ok for you I'll apply it.
-> >
-> > Neil
->
->
->
->
+>                          It is the sharing of the of huge page shared
+> memory that is causing problem. Of course, it depends on how the
+> application is written.
+
+It may be the case that some applications would find the delays acceptable
+for the benefit of shared pmds once they reach steady state.  As you say, of
+course this depends on how the application is written.
+
+I know that Oracle DB would not like it if PMD sharing is disabled for them.
+Based on what I know of their model, all processes which share PMDs perform
+faults (write or read) during the startup phase.  This is in environments as
+big or bigger than you describe above.  I have never looked at/for delays in
+these environments around pmd sharing (page faults), but that does not mean
+they do not exist.  I will try to get the DB group to give me access to one
+of their large environments for analysis.
+
+We may want to consider making the timeout value and disable threshold user
+configurable.
+-- 
+Mike Kravetz
