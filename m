@@ -2,102 +2,301 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5DEC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5DFC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695652089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C649621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568211217;
-	bh=q4Y7ST0eO607+g6D3aQth/Q9xrqwcsEEj2BO2x3fO1o=;
+	s=default; t=1568211336;
+	bh=AYBtQ0b4ILh7eTMvxhllNofi/ZdaQuT6o+mzLzVHAMc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a7cRLU7BawaRzaT5hMqXEB7byaLQK2UaPlLa1IoJe9cqV51l1g4WzGhFMJsqVjcUb
-	 YXh3fpHNJatL5F4WwRbokTuynQkXlEZclpLyULWIFOTZEi7JAdcKzWgSFO5o0vYCd/
-	 J9QYOBUASRC/oyedQIbeNPNd6nqvF2/JOB0PtKmo=
+	b=JjESRqyETszoLUa9tbTcLLv4tavGkaNBpWs4TuwBIhfDDP3t+U2ejSAClpBjtLRDP
+	 qGQojZAY5nmAkRjHMV0a9YES7+l+ZcM2G8j60JF0nDpv22guxpWzOwj1Tq0y3188cN
+	 Nerve397OEesy0s4x2EFd7zf+b3exuhbh6+IiTjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfIKONg (ORCPT
+        id S1728046AbfIKOPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52920 "EHLO mail.kernel.org"
+        Wed, 11 Sep 2019 10:15:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:48302 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfIKONg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:13:36 -0400
-Received: from X1 (110.8.30.213.rev.vodafone.pt [213.30.8.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09E120863;
-        Wed, 11 Sep 2019 14:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568211215;
-        bh=q4Y7ST0eO607+g6D3aQth/Q9xrqwcsEEj2BO2x3fO1o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SzjNBnUdKKtkJJFXvj8EgFhIuIo+x5nsHdoFPTeBunWHAFnn33rDFDfZa1ZCsgwVc
-         VR+SWEBn5qcANGb827BXDvKsaC1mn6fPaAxkc8i7HgT+pevwoU8tfNEbEiooo12dYR
-         KyS32lBQGy/SXcZwJmFG9lywOs+WxyJFq/65dM+E=
-Date:   Wed, 11 Sep 2019 07:13:31 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: avoid slub allocation while holding list_lock
-Message-Id: <20190911071331.770ecddff6a085330bf2b5f2@linux-foundation.org>
-In-Reply-To: <20190909061016.173927-1-yuzhao@google.com>
-References: <20190909061016.173927-1-yuzhao@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        id S1726058AbfIKOPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:15:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFEE31000;
+        Wed, 11 Sep 2019 07:15:34 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78FC73F67D;
+        Wed, 11 Sep 2019 07:15:31 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 15:15:21 +0100
+Message-ID: <86d0g6syva.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     <robh+dt@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
+        <mchehab+samsung@kernel.org>, <shawn.lin@rock-chips.com>,
+        <gregkh@linuxfoundation.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v2 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+In-Reply-To: <1568142310-17622-3-git-send-email-talel@amazon.com>
+References: <1568142310-17622-1-git-send-email-talel@amazon.com>
+        <1568142310-17622-3-git-send-email-talel@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  9 Sep 2019 00:10:16 -0600 Yu Zhao <yuzhao@google.com> wrote:
+[+James]
 
-> If we are already under list_lock, don't call kmalloc(). Otherwise we
-> will run into deadlock because kmalloc() also tries to grab the same
-> lock.
+Hi Talel,
+
+On Tue, 10 Sep 2019 20:05:09 +0100,
+Talel Shenhar <talel@amazon.com> wrote:
 > 
-> Instead, allocate pages directly. Given currently page->objects has
-> 15 bits, we only need 1 page. We may waste some memory but we only do
-> so when slub debug is on.
+> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+> logging unit that reports an error in case write error (e.g. attempt to
+> write to a read only register).
+> This patch introduces the support for this unit.
 > 
->   WARNING: possible recursive locking detected
->   --------------------------------------------
->   mount-encrypted/4921 is trying to acquire lock:
->   (&(&n->list_lock)->rlock){-.-.}, at: ___slab_alloc+0x104/0x437
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  MAINTAINERS                 |   7 +++
+>  drivers/soc/Kconfig         |   1 +
+>  drivers/soc/Makefile        |   1 +
+>  drivers/soc/amazon/Kconfig  |   5 ++
+>  drivers/soc/amazon/Makefile |   1 +
+>  drivers/soc/amazon/al_pos.c | 127 ++++++++++++++++++++++++++++++++++++++++++++
+>  6 files changed, 142 insertions(+)
+>  create mode 100644 drivers/soc/amazon/Kconfig
+>  create mode 100644 drivers/soc/amazon/Makefile
+>  create mode 100644 drivers/soc/amazon/al_pos.c
 > 
->   but task is already holding lock:
->   (&(&n->list_lock)->rlock){-.-.}, at: __kmem_cache_shutdown+0x81/0x3cb
-> 
->   other info that might help us debug this:
->    Possible unsafe locking scenario:
-> 
->          CPU0
->          ----
->     lock(&(&n->list_lock)->rlock);
->     lock(&(&n->list_lock)->rlock);
-> 
->    *** DEADLOCK ***
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e7a47b5..8c3a070 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -751,6 +751,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>  F:	include/linux/altera_uart.h
+>  F:	include/linux/altera_jtaguart.h
+>  
+> +AMAZON ANNAPURNA LABS POS
+> +M:	Talel Shenhar <talel@amazon.com>
+> +M:	Talel Shenhar <talelshenhar@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+> +F:	drivers/soc/amazon/al_pos.c
+> +
+>  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+>  M:	Talel Shenhar <talel@amazon.com>
+>  S:	Maintained
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index 833e04a..913a6b1 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -2,6 +2,7 @@
+>  menu "SOC (System On Chip) specific Drivers"
+>  
+>  source "drivers/soc/actions/Kconfig"
+> +source "drivers/soc/amazon/Kconfig"
+>  source "drivers/soc/amlogic/Kconfig"
+>  source "drivers/soc/aspeed/Kconfig"
+>  source "drivers/soc/atmel/Kconfig"
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 2ec3550..c1c5c64 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -6,6 +6,7 @@
+>  obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
+>  obj-$(CONFIG_SOC_ASPEED)	+= aspeed/
+>  obj-$(CONFIG_ARCH_AT91)		+= atmel/
+> +obj-y				+= amazon/
+>  obj-y				+= bcm/
+>  obj-$(CONFIG_ARCH_DOVE)		+= dove/
+>  obj-$(CONFIG_MACH_DOVE)		+= dove/
+> diff --git a/drivers/soc/amazon/Kconfig b/drivers/soc/amazon/Kconfig
+> new file mode 100644
+> index 00000000..fdd4cdd
+> --- /dev/null
+> +++ b/drivers/soc/amazon/Kconfig
+> @@ -0,0 +1,5 @@
+> +config AL_POS
+> +	bool "Amazon's Annapurna Labs POS driver"
+
+Some would say that the name is ever slightly unfortunate...
+
+> +	depends on ARCH_ALPINE || COMPILE_TEST
+> +	help
+> +	  Include support for the SoC POS error capability.
+> diff --git a/drivers/soc/amazon/Makefile b/drivers/soc/amazon/Makefile
+> new file mode 100644
+> index 00000000..a31441a
+> --- /dev/null
+> +++ b/drivers/soc/amazon/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_AL_POS) += al_pos.o
+> diff --git a/drivers/soc/amazon/al_pos.c b/drivers/soc/amazon/al_pos.c
+> new file mode 100644
+> index 00000000..a865111
+> --- /dev/null
+> +++ b/drivers/soc/amazon/al_pos.c
+> @@ -0,0 +1,127 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +
+> +/* Registers Offset */
+> +#define AL_POS_ERROR_LOG_1	0x0
+> +#define AL_POS_ERROR_LOG_0	0x4
+> +
+> +/* Registers Fields */
+> +#define AL_POS_ERROR_LOG_1_VALID	GENMASK(31, 31)
+> +#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
+> +#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
+> +#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
+> +
+> +#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
+> +
+> +static int al_pos_panic;
+> +module_param(al_pos_panic, int, 0);
+> +MODULE_PARM_DESC(al_pos_panic, "Defines if POS error is causing panic()");
+> +
+> +struct al_pos {
+> +	struct platform_device *pdev;
+> +	void __iomem *mmio_base;
+> +	int irq;
+> +};
+> +
+> +static irqreturn_t al_pos_irq_handler(int irq, void *info)
+> +{
+> +	struct platform_device *pdev = info;
+> +	struct al_pos *pos = platform_get_drvdata(pdev);
+> +	u32 log1;
+> +	u32 log0;
+> +	u64 addr;
+> +	u16 request_id;
+> +	u8 bresp;
+> +
+> +	log1 = readl(pos->mmio_base + AL_POS_ERROR_LOG_1);
+
+Do you actually need the implied barriers? I'd expect that relaxed
+accesses should be enough.
+
+> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+> +		return IRQ_NONE;
+> +
+> +	log0 = readl(pos->mmio_base + AL_POS_ERROR_LOG_0);
+> +	writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+> +
+> +	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
+> +	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
+> +	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
+> +	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
+> +
+> +	dev_err(&pdev->dev, "addr=0x%llx request_id=0x%x bresp=0x%x\n",
+> +		addr, request_id, bresp);
+
+What is this information? How do we make use of it? Given that this is
+asynchronous, how do we correlate it to the offending software?
+
+> +
+> +	if (al_pos_panic)
+> +		panic("POS");
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int al_pos_probe(struct platform_device *pdev)
+> +{
+> +	struct al_pos *pos;
+> +	int ret;
+> +
+> +	pos = devm_kzalloc(&pdev->dev, sizeof(*pos), GFP_KERNEL);
+> +	if (!pos)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, pos);
+> +	pos->pdev = pdev;
+> +
+> +	pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(pos->mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(pos->mmio_base));
+> +		return PTR_ERR(pos->mmio_base);
+> +	}
+> +
+> +	pos->irq = platform_get_irq(pdev, 0);
+> +	if (pos->irq <= 0) {
+> +		dev_err(&pdev->dev, "fail to parse and map irq\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev,
+> +			       pos->irq,
+> +			       al_pos_irq_handler,
+> +			       0,
+> +			       pdev->name,
+> +			       pdev);
+> +	if (ret != 0) {
+> +		dev_err(&pdev->dev,
+> +			"failed to register to irq %d (%d)\n",
+> +			pos->irq, ret);
+> +		return ret;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "successfully loaded\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id al_pos_of_match[] = {
+> +	{ .compatible = "amazon,al-pos", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, al_pos_of_match);
+> +
+> +static struct platform_driver al_pos_driver = {
+> +	.probe = al_pos_probe,
+> +	.driver = {
+> +		.name = "al-pos",
+> +		.of_match_table = al_pos_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(al_pos_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Talel Shenhar");
+> +MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
+> -- 
+> 2.7.4
 > 
 
-It would be better if a silly low-level debug function like this
-weren't to try to allocate memory at all.  Did you consider simply
-using a statically allocated buffer?
+The whole think looks to me like a poor man's EDAC handling, and I'd
+expect to be plugged in that subsystem instead. Any reason why this
+isn't the case? It would certainly make the handling uniform for the
+user.
 
-{
-	static char buffer[something large enough];
-	static spinlock_t lock_to_protect_it;
+Thanks,
 
+	M.
 
-Alternatively, do we need to call get_map() at all in there?  We could
-simply open-code the get_map() functionality inside
-list_slab_objects().  It would be slower, but printk is already slow. 
-Potentially extremely slow.
+-- 
+Jazz is not dead, it just smells funny.
