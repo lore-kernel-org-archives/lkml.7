@@ -2,117 +2,335 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34384C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AAE2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7BA206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:52:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b+x7KfTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfIKRuY (ORCPT
+        id S1729770AbfIKRwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:50:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44806 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729622AbfIKRuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:50:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 55167A37188;
-        Wed, 11 Sep 2019 17:50:23 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4560A19C6A;
-        Wed, 11 Sep 2019 17:50:22 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Wed, 11 Sep 2019 13:50:21 -0400
-Message-ID: <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
-In-Reply-To: <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
- <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
- <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+        Wed, 11 Sep 2019 13:52:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34072 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729716AbfIKRwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:52:18 -0400
+Received: by mail-io1-f68.google.com with SMTP id k13so32667784ioj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HbS/KQiPS6GYQq/A01AcuHnYtxU/1GCYRocYDq2JA1s=;
+        b=b+x7KfThP8mwzHSS0fnuf6kgIsBKNRIeXFwrR5UJKYaFo2gS/TjEBsV8MM43IgiQQD
+         6q9s+Oh2B2Yelu98Zl0ap07eXNLx4FwX8UjhX6XNSJZ5B4v6t8khZgYHh+Qe9roM/6Jm
+         1hHjsa+3JqdhaeJ2L68tfTM42KeicxNHolDFE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HbS/KQiPS6GYQq/A01AcuHnYtxU/1GCYRocYDq2JA1s=;
+        b=qJpps3Qj6TpysTw5Ghe5NJgnrdrfVpOZlN5MvcHFSldMVFd80tgPSAvlgAnoj1h54f
+         Yp6SU7ii7cMEf3BlXfhkU2BSJryohLB+fgfbkzMzitzIYAFt582gtA13ppgFajWZCNzj
+         46LU/PH4Vlj8PKZOkik+anuczCv7nxbqAiNQxOrdm8z34WHAwsxut9NTth3LtD3ynnrq
+         lMs9z3FQGm0DSfoKGinJFdXCt/j9BecNyH2+unPUs14lEktpu1xxdXdf3VDFmcwXKkdl
+         fRNzVZ4Y4/9J+zlWpxgub5uYBN/+yzdcfYTiBr+jz0tGK7HVczE12Q8WFhGjLTs4bHWa
+         lv2Q==
+X-Gm-Message-State: APjAAAUb8MjyGVVmI+n6k/zoDRANkt5z3ckv5qZdrKAsT0/yMLSIns32
+        wHoJ7/1uEpcAxJzi4VEuTaj8iAA7HsWVWBLLCzzvPg==
+X-Google-Smtp-Source: APXvYqxkQY2aPHHvJGRvqt+Dwv2PsDnBNCwxYJo7++vNEUAeJk43TQhCoq5hPcsrnVqk5SBNnMHxXYJP2PK6HU0/dfY=
+X-Received: by 2002:a6b:b487:: with SMTP id d129mr84591iof.223.1568224337302;
+ Wed, 11 Sep 2019 10:52:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 17:50:23 +0000 (UTC)
+References: <1568128624-2902-1-git-send-email-sheetal.tigadoli@broadcom.com> <20190910171601.GA12665@kroah.com>
+In-Reply-To: <20190910171601.GA12665@kroah.com>
+From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Date:   Wed, 11 Sep 2019 23:23:56 +0530
+Message-ID: <CAFD6DHjOV9ChRXsuoanXh0JN6DW-AUxTFdcu8PKTwGa5wW7e8A@mail.gmail.com>
+Subject: Re: [PATCH] firmware: broadcom: add OP-TEE based BNXT f/w manager
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Vikram Prakash <vikram.prakash@broadcom.com>,
+        tee-dev@lists.linaro.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Vikas Gupta <vikas.gupta@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
+Thanks for the review and  comments.
 
-> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
+On Tue, Sep 10, 2019 at 10:46 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
->>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
->>> <bcodding@redhat.com> wrote:
->>>
->>>
->>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->>>
->>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
->>>>> <bcodding@redhat.com> wrote:
->>>>>
->>>
->>>>> Instead, I think we want to make sure the mic falls squarely into 
->>>>> the tail
->>>>> every time.
->>>>
->>>> I'm not clear how you could do that. The length of the page data is 
->>>> not
->>>> known to the client before it parses the reply. Are you suggesting 
->>>> that
->>>> gss_unwrap should do it somehow?
->>>
->>> Is it too niave to always put the mic at the end of the tail?
->>
->> The size of the page content is variable.
->>
->> The only way the MIC will fall into the tail is if the page content 
->> is
->> exactly the largest expected size. When the page content is smaller 
->> than
->> that, the receive logic will place part or all of the MIC in ->pages.
+> On Tue, Sep 10, 2019 at 08:47:04PM +0530, Sheetal Tigadoli wrote:
+> > From: Vikas Gupta <vikas.gupta@broadcom.com>
+> >
+> > This driver registers on TEE bus to interact with OP-TEE based
+> > BNXT firmware management modules
+> >
+> > Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+> > Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> > ---
+> >  drivers/firmware/broadcom/Kconfig             |   8 +
+> >  drivers/firmware/broadcom/Makefile            |   1 +
+> >  drivers/firmware/broadcom/tee_bnxt_fw.c       | 447 ++++++++++++++++++++++++++
+> >  include/linux/firmware/broadcom/tee_bnxt_fw.h |  17 +
+> >  4 files changed, 473 insertions(+)
+> >  create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
+> >  create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
+> >
+> > diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
+> > index 6468082..a846a21 100644
+> > --- a/drivers/firmware/broadcom/Kconfig
+> > +++ b/drivers/firmware/broadcom/Kconfig
+> > @@ -22,3 +22,11 @@ config BCM47XX_SPROM
+> >         In case of SoC devices SPROM content is stored on a flash used by
+> >         bootloader firmware CFE. This driver provides method to ssb and bcma
+> >         drivers to read SPROM on SoC.
+> > +
+> > +config TEE_BNXT_FW
+> > +     bool "Broadcom BNXT firmware manager"
+> > +     depends on ARCH_BCM_IPROC && OPTEE
 >
-> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
-> renamed
-> and repurposed to be "move the mic from wherever it is to the end of
-> xdr_buf's tail".
+> No ability to build with compile testing?
+Will add "|| COMPILE_TEST"
 >
-> But now I see what you mean, and I also see that it is already trying 
-> to do
-> that.. and we don't want to overlap the copy..
+> > +     default ARCH_BCM_IPROC
+> > +     help
+> > +       This module help to manage firmware on Broadcom BNXT device. The module
+> > +       registers on tee bus and invoke calls to manage firmware on BNXT device.
+> > diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
+> > index 72c7fdc..17c5061 100644
+> > --- a/drivers/firmware/broadcom/Makefile
+> > +++ b/drivers/firmware/broadcom/Makefile
+> > @@ -1,3 +1,4 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >  obj-$(CONFIG_BCM47XX_NVRAM)          += bcm47xx_nvram.o
+> >  obj-$(CONFIG_BCM47XX_SPROM)          += bcm47xx_sprom.o
+> > +obj-$(CONFIG_TEE_BNXT_FW)            += tee_bnxt_fw.o
+> > diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+> > new file mode 100644
+> > index 00000000..89a48fd
+> > --- /dev/null
+> > +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+> > @@ -0,0 +1,447 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2019 Broadcom.
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/tee_drv.h>
+> > +#include <linux/uuid.h>
+> > +
+> > +#include <linux/firmware/broadcom/tee_bnxt_fw.h>
+> > +
+> > +#define DRIVER_NAME  "tee-bnxt-fw"
 >
-> So, really, we need the tail to be larger than twice the mic.. less 1. 
->  That
-> means the fix is probably just increasing rslack for krb5i.
+> KBUILD_MODNAME?
+Will remove DRIVER_NAME macro and use KBUILD_MODNAME instead.
+>
+> > +#define MAX_SHM_MEM_SZ       SZ_4M
+>
+> Why?
+Limiting max data buffer size per request to optee to 4MB.
+>
+> > +
+> > +#define MAX_TEE_PARAM_ARRY_MEMB              4
+> > +
+> > +enum ta_cmd {
+> > +/*
+> > + * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
+> > + *
+> > + * param[0] unused
+> > + * param[1] unused
+> > + * param[2] unused
+> > + * param[3] unused
+> > + *
+> > + * Result:
+> > + * TEE_SUCCESS - Invoke command success
+> > + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
+> > + */
+> > +     TA_CMD_BNXT_FASTBOOT = 0,
+> > +
+>
+> Please indent the comments too.  As-is this is hard to read.
+Will do
+>
+>
+> > +/*
+> > + * TA_CMD_BNXT_HEALTH_STATUS - to check health of bnxt device
+> > + *
+> > + * param[0] (out value) - value.a: health status
+> > + * param[1] unused
+> > + * param[2] unused
+> > + * param[3] unused
+> > + *
+> > + * Result:
+> > + * TEE_SUCCESS - Invoke command success
+> > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+> > + */
+> > +     TA_CMD_BNXT_HEALTH_STATUS,
+>
+> Should all of these have explicit values?
+Will initialize each cmd (TA_CMD_BNXT_*) explicitly
+>
+> > +
+> > +/*
+> > + * TA_CMD_BNXT_HANDSHAKE - to check bnxt device is booted
+> > + *
+> > + * param[0] (in value)  - value.a: max timeout value
+> > + * param[0] (out value) - value.a: boot status
+> > + * param[1] unused
+> > + * param[2] unused
+> > + * param[3] unused
+> > + *
+> > + * Result:
+> > + * TEE_SUCCESS - Invoke command success
+> > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+> > + */
+> > +     TA_CMD_BNXT_HANDSHAKE,
+> > +
+> > +/*
+> > + * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
+> > + *
+> > + * param[0] (in value) - value.a: offset at which data to be copied from
+> > + *                    value.b: size of the data
+> > + * param[1] unused
+> > + * param[2] unused
+> > + * param[3] unused
+> > + *
+> > + * Result:
+> > + * TEE_SUCCESS - Invoke command success
+> > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+> > + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
+> > + */
+> > +     TA_CMD_BNXT_COPY_COREDUMP,
+> > +
+> > +/*
+> > + * TA_CMD_BNXT_FW_UPGRADE - upgrade the bnxt firmware
+> > + *
+> > + * param[0] (in value) - value.a: size of the f/w image
+> > + * param[1] unused
+> > + * param[2] unused
+> > + * param[3] unused
+> > + *
+> > + * Result:
+> > + * TEE_SUCCESS - Invoke command success
+> > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+> > + */
+> > +     TA_CMD_BNXT_FW_UPGRADE,
+> > +};
+> > +
+> > +/**
+> > + * struct tee_bnxt_fw_private - OP-TEE bnxt private data
+> > + * @dev:             OP-TEE based bnxt device.
+> > + * @ctx:             OP-TEE context handler.
+> > + * @session_id:              TA session identifier.
+> > + */
+> > +struct tee_bnxt_fw_private {
+> > +     struct device *dev;
+>
+> Why is the pointer back needed?
+the dev pointer is used in "dev_err()"
+>
+> > +     struct tee_context *ctx;
+> > +     u32 session_id;
+> > +     struct tee_shm *fw_shm_pool;
+> > +};
+> > +
+> > +static struct tee_bnxt_fw_private pvt_data;
+> > +
+> > +static inline void prepare_args(int cmd,
+> > +                             struct tee_ioctl_invoke_arg *inv_arg,
+> > +                             struct tee_param *param)
+> > +{
+> > +     memset(inv_arg, 0, sizeof(*inv_arg));
+> > +     memset(param, 0, (MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param)));
+> > +
+> > +     inv_arg->func = cmd;
+> > +     inv_arg->session = pvt_data.session_id;
+> > +     inv_arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
+> > +
+> > +     /* Fill invoke cmd params */
+> > +     switch (cmd) {
+> > +     case TA_CMD_BNXT_HEALTH_STATUS:
+> > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
+> > +             break;
+> > +     case TA_CMD_BNXT_HANDSHAKE:
+> > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT;
+> > +             break;
+> > +     case TA_CMD_BNXT_COPY_COREDUMP:
+> > +     case TA_CMD_BNXT_FW_UPGRADE:
+> > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
+> > +             param[0].u.memref.shm = pvt_data.fw_shm_pool;
+> > +             param[0].u.memref.size = MAX_SHM_MEM_SZ;
+> > +             param[0].u.memref.shm_offs = 0;
+> > +             param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
+> > +             break;
+> > +     case TA_CMD_BNXT_FASTBOOT:
+> > +     default:
+> > +             /* Nothing to do */
+> > +             break;
+> > +     }
+> > +}
+> > +
+> > +/**
+> > + * tee_bnxt_fw_load() - Load the bnxt firmware
+> > + *               Uses an OP-TEE call to start a secure
+> > + *               boot process.
+> > + * Returns 0 on success, negative errno otherwise.
+> > + */
+> > +int tee_bnxt_fw_load(void)
+> > +{
+> > +     int ret = 0;
+> > +     struct tee_ioctl_invoke_arg inv_arg;
+> > +     struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
+> > +
+> > +     if (!pvt_data.ctx)
+> > +             return -ENODEV;
+> > +
+> > +     prepare_args(TA_CMD_BNXT_FASTBOOT, &inv_arg, param);
+> > +
+> > +     ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
+> > +     if ((ret < 0) || (inv_arg.ret != 0)) {
+> > +             dev_err(pvt_data.dev, "TA_CMD_BNXT_LOAD invoke err: %x\n",
+> > +                     (ret < 0) ? ret : inv_arg.ret);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(tee_bnxt_fw_load);
+>
+> Why are you exporting symbols for a single file?  What uses these?
+These apis will be used by bnxt driver, still working on open sourcing changes
 
-.. or we can keep the tighter tail space, and if we detect the mic 
-straddles
-the page and tail, we can move the mic into the tail with 2 copies, 
-first
-move the bit in the tail back, then move the bit in the pages.
-
-Which is preferred, less allocation, or in the rare case this occurs, 
-doing
-copy twice?
-
-Ben
+> This feels really wrong, are you sure this all is correct?
+>
+> I stopped reading here :)
+>
+> thanks,
+>
+> greg k-h
