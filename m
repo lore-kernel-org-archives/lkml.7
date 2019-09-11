@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C685BC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAF5C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8B8207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBB12084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EJ0U3t+Q"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="zES1kZIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfIKKRA (ORCPT
+        id S1727645AbfIKKRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:17:00 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43055 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfIKKRA (ORCPT
+        Wed, 11 Sep 2019 06:17:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38780 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727491AbfIKKRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:17:00 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u3so860578lfl.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:16:59 -0700 (PDT)
+        Wed, 11 Sep 2019 06:17:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so19089806ljn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a2Y/6nQhmbjCYM6INFKB83UDY8cfiNqLZZ65oB1VAN8=;
-        b=EJ0U3t+QcOcSKiPM6djC6Fs1w7rmDTqEIqiCs2Fb5RYK/ti+qyPKe8K9hqCx2Qx9VK
-         amN8HRc3FOkCPNpTOnAMjUimmaB7c9cl3Bpr7joltgtKR/nXvSllc9cYncRN69fNRY8g
-         PRBiLF6XYsZUcvFucSz7TLtQ3sI+e/E95uZVg1s5EN9aDhFHlePXCpr8UDEPx2PjO/lE
-         BUp4wsrrJRFkbV5iAxkc7YWe/Y3onxxuETh5MIgVMOGet/0q2fMXBv3NLfwMJuaIeL4a
-         23uSowgv/iHEd+2yhG6jIRWeBvu7oXLIQ4gdOHlSBc4u7PrdR1o+jiNkuXHjBIhHH+f2
-         D2fw==
+        bh=HHRzzoV7NRJaC+wX9s9V5DTVizkcpByr53r0dhYAcVg=;
+        b=zES1kZIBhS+m6Od2zZhR/Mlgf0dY5jo8KGsZEBvuEjAthjBQ7XUGs0GLBpD52SRwnA
+         7X6S6ZwHKhD/0vQDlDzvAcq3/3XR3JYzJFp1IzjadZ+7Bjle6lgClvuuyLkWU5JJvw7t
+         l8uGP8egnLL7qoQBh80zpWU074HQr/PsNg1y8iiONO/yujMGG9Pj46hnsnFuK867abQl
+         Tek4xwVtLw4Kv+UFD58gUHF9DkL5ESiEN7+QXmZLjuVlCDb1j+szyTjg3cZbjAgV1UCo
+         IKVktML2E6s/mQPCYHzPZGd5EzkDHzqjuPRNXkEQhTpV/BHyYcodekv/ZprVV3VVW80U
+         pPlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=a2Y/6nQhmbjCYM6INFKB83UDY8cfiNqLZZ65oB1VAN8=;
-        b=RU3gQ4RMZyjSO+YS4ANbDmm015p8H6Qo+3qVhdtQQn3o59i9ozK2DuMok3i9Zk/hbk
-         guWKS81yNcmHzizyNoLbAF0s5dAlwtJf/+hpB1wsz5uMZhHgkX1P7H1ey4c0EeWIYc9Y
-         p0qw6iHeCU6CK5rY+jwvXBSOsB6+BBSYtwvYZ+KKRJlcT3m0biK1SicOucQDOnRY4z/x
-         Ib4scI8c+4qklwdzOdnDhFHu2MgfJZO8QFI1ezMjaLkibv/uDO2MaV64bW52HAZQVte3
-         b7KYnkmIiO28ItAK8YbFhdOOlj2jzuMNmZk5UZDwoI+Uw5Bok90CsP63J/T8csSq93BH
-         3TcQ==
-X-Gm-Message-State: APjAAAXvgyMZi0m1AvWvRuiOXkbQYdR7M6vnFXWpDUhUjCHTc7JIq9yD
-        wD5OU0OR00TPUmTSzzOL9yRNVQ==
-X-Google-Smtp-Source: APXvYqz+Md79E0HPoC6Of1z/8S0vb5X0xR7NuEQx2fmlklAsDJKb6cezcxADEwx7B+c/EKr25xMc5g==
-X-Received: by 2002:ac2:5633:: with SMTP id b19mr23451254lff.103.1568197018465;
-        Wed, 11 Sep 2019 03:16:58 -0700 (PDT)
+        bh=HHRzzoV7NRJaC+wX9s9V5DTVizkcpByr53r0dhYAcVg=;
+        b=K/9QZQ0x2KzqvCrQKKHDYoNOtV/M2jn9ao5IM5sB8xX1U++fORbHVhaU2744Yocw6i
+         Vr1aZKyxQbo4urLhonmbz08R/AIAn1ggfJSwXtAU66LLk58lcX9SRiht/yGjlOM7/El8
+         fYPEO25r+k3CbZ8GFTts4d4ptaiusZw1Ytgq7V19rMKY5Aw5ehm+TP64C7xXsCP3tAnl
+         HQOHRnuX+cuIP5bYqZc6iXCckp43147YhXCpDnBE0+j/WxPiIveCa87Lf6VoirlpfweW
+         fmIADxksc71DsB+V7tQGKkzV1R2c/AGbg5iq8HjfkU6MTe1GdEQ/luetkWnZH+x4D8hz
+         Y4ow==
+X-Gm-Message-State: APjAAAXt/iBifiSG4a0Y4qhsQ7YK0s6G0sim8gGGNSHMbnhqMk2qiBHh
+        yUm84zNfN7iVhASuxIbBqxLPGxQBliTHng==
+X-Google-Smtp-Source: APXvYqz0W9Akn44DPfRBMCBm6kmYIVFmDE5tpxWtOxVdc9UMk+fDn9oEq5xC5iLNSIul/dinpdxt4g==
+X-Received: by 2002:a2e:91d9:: with SMTP id u25mr22758502ljg.85.1568197026734;
+        Wed, 11 Sep 2019 03:17:06 -0700 (PDT)
 Received: from ?IPv6:2a00:1fa0:8e6:86de:79c0:860e:c175:7d39? ([2a00:1fa0:8e6:86de:79c0:860e:c175:7d39])
-        by smtp.gmail.com with ESMTPSA id l9sm4610655ljg.79.2019.09.11.03.16.57
+        by smtp.gmail.com with ESMTPSA id h5sm4760682ljf.83.2019.09.11.03.17.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 03:16:57 -0700 (PDT)
+        Wed, 11 Sep 2019 03:17:06 -0700 (PDT)
 Subject: Re: [PATCH V2 net-next 4/7] net: hns3: fix port setting handle for
  fibre port
 To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
@@ -66,8 +66,8 @@ Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 References: <1568169639-43658-1-git-send-email-tanhuazhong@huawei.com>
  <1568169639-43658-5-git-send-email-tanhuazhong@huawei.com>
 From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <7f914173-a2fc-08d8-e2b1-48fa3da4e29c@cogentembedded.com>
-Date:   Wed, 11 Sep 2019 13:16:52 +0300
+Message-ID: <011fc0e2-1116-37d5-f10b-cb9cbb1b41a2@cogentembedded.com>
+Date:   Wed, 11 Sep 2019 13:17:01 +0300
 User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
@@ -88,7 +88,7 @@ On 11.09.2019 5:40, Huazhong Tan wrote:
 > 
 > For hardware doesn't support use specified speed and duplex
 
-    Can't pasre that. "For hardware that does not support using", perhaps?
+    Can't parse that. "For hardware that does not support using", perhaps?
 
 > to negotiate, it's unnecessary to check and modify the port
 > speed and duplex for fibre port when autoneg is on.
