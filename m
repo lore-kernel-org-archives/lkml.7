@@ -2,223 +2,206 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D376C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692E1C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C84A20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333F12168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hpI0Skle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfIKMa2 (ORCPT
+        id S1728040AbfIKMau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:30:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51750 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfIKMa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:30:27 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 851E818CCF03;
-        Wed, 11 Sep 2019 12:30:26 +0000 (UTC)
-Received: from [10.36.117.155] (ovpn-117-155.ams2.redhat.com [10.36.117.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AEF2F5DD61;
-        Wed, 11 Sep 2019 12:30:04 +0000 (UTC)
-Subject: Re: [RFC][PATCH v12 0/2] mm: Support for page reporting
-To:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org, pbonzini@redhat.com,
-        lcapitulino@redhat.com, pagupta@redhat.com, wei.w.wang@intel.com,
-        yang.zhang.wz@gmail.com, riel@surriel.com, mst@redhat.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com,
-        john.starks@microsoft.com, dave.hansen@intel.com, mhocko@suse.com,
-        cohuck@redhat.com
-References: <20190812131235.27244-1-nitesh@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
+        Wed, 11 Sep 2019 08:30:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37790 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbfIKMat (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:30:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so23755971wro.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fUOH2AuBp89861Obcu3EouaC9zAbyMHL1Ch3LrCv81k=;
+        b=hpI0SkleDvQmTxx08b5CXBFf11w7qUlvLLv7yGsweA+eX1Lj6Vr7hXzP8qCKL9bdbl
+         E51jiLv7rN8D7gVBpJ8vXZu88bOfUCgwhL7TMMdAMFhJv6xds1KsWKohTKCgPRVafyVb
+         ElKE+E1SUL7QIf6Ox/2aCaDBdxPxZ3bxMtMOMK7Y8YhijDOMYKqIC4DRig4/J00Ak9RG
+         JMEpQZPjX7jKreBo9Ciu8RCSxqy9TY/mfZZ19WQ6yOp0gxPorl76d6o0Eki4ZAo7LplR
+         +dtyRFSXj4T/v2MZ9yxaDTDpjv9CqkbDwuNWTQN94H/8isyRJR3OpUq5atOGCyj4bOlb
+         9Jrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fUOH2AuBp89861Obcu3EouaC9zAbyMHL1Ch3LrCv81k=;
+        b=SDiYO15LMunjpnBUTU0MaWGTfmYStHSrHKMyAjCz9vlsRhIGGTazSYfv5X8nxgLc7H
+         jRfw4Ti1hrS+Zm8tLMxid5EcVS+XS+9nD5n2OU6p/Of2bgSqgtDp20QG+02a0xZpWtRU
+         Kim/xJiZwczj9b0dJ2CcWzqTUqOzklQ5knRtQwpm/w5NGTegHjI1tHcor6s1hQkPT7Ul
+         +9h9/T6PBNp42b4kZBSazOpoUGVi0yXJuZBBINYGGrKEQ6DrFQW/zsg7yEiPC7GaGeK1
+         DHSG/bVKT8XKnToYyqKn4DtXxbe1+6tPLysStetnXvYCkO+NtJ4V95Y78LTJnEN0rWH0
+         0YKA==
+X-Gm-Message-State: APjAAAXiijZEcfps9UMNZkX7L2/aNZFCnBw8XGa8oSKkUrNp2ZXf0IJG
+        NdorATWuBYccKuCDYR/8iIYM91CPc3lUdw==
+X-Google-Smtp-Source: APXvYqxVStqpL7Sm3IQPJZJ86JZM9xDCsszzqSVhkyTXj8EMRGljXkLEgwBwVWQb9YSsuGnCvRpfyg==
+X-Received: by 2002:adf:fc05:: with SMTP id i5mr25279247wrr.134.1568205045140;
+        Wed, 11 Sep 2019 05:30:45 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id s19sm32026440wrb.14.2019.09.11.05.30.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 05:30:44 -0700 (PDT)
+Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
+ bindings
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        devicetree@vger.kernel.org, repk@triplefau.lt, maz@kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
+ <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <356b752f-7f5c-a6f7-c643-8ffb49c27a67@redhat.com>
-Date:   Wed, 11 Sep 2019 14:30:03 +0200
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <62994535-1617-9f71-4059-b8c4da8ecbd1@baylibre.com>
+Date:   Wed, 11 Sep 2019 14:30:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812131235.27244-1-nitesh@redhat.com>
+In-Reply-To: <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Wed, 11 Sep 2019 12:30:26 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.08.19 15:12, Nitesh Narayan Lal wrote:
-> This patch series proposes an efficient mechanism for reporting free memory
-> from a guest to its hypervisor. It especially enables guests with no page cache
-> (e.g., nvdimm, virtio-pmem) or with small page caches (e.g., ram > disk) to
-> rapidly hand back free memory to the hypervisor.
-> This approach has a minimal impact on the existing core-mm infrastructure.
+Hi Andrew,
+
+On 11/09/2019 14:22, Andrew Murray wrote:
+> On Sun, Sep 08, 2019 at 01:42:53PM +0000, Neil Armstrong wrote:
+>> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+>> but the PHY is shared with USB3 to control the differential lines.
+>>
+>> Thus this adds a phy phandle to control the PHY, and sets invalid
+>> MIPI clock as optional for G12A.
 > 
-> This approach tracks all freed pages of the order MAX_ORDER - 2 in bitmaps.
-> A new hook after buddy merging is used to set the bits in the bitmap for a freed 
-> page. Each set bit is cleared after they are processed/checked for
-> re-allocation.
-> Bitmaps are stored on a per-zone basis and are protected by the zone lock. A
-> workqueue asynchronously processes the bitmaps as soon as a pre-defined memory
-> threshold is met, trying to isolate and report pages that are still free.
-> The isolated pages are stored in a scatterlist and are reported via
-> virtio-balloon, which is responsible for sending batched pages to the
-> hypervisor. Once the hypervisor processed the reporting request, the isolated
-> pages are returned back to the buddy.
-> The thershold which defines the number of pages which will be isolated and
-> reported to the hypervisor at a time is currently hardcoded to 16 in the guest.
+> Perhaps reword to "Thus this adds a phy phandle to control the PHY,
+> and only requires a MIPI clock for AXG SoC Family".
+
+Sure, thanks,
+Neil
+
 > 
-> Benefit analysis:
-> Number of 5 GB guests (each touching 4 to 5 GB memory) that can be launched on a
-> 15 GB single NUMA system without using swap space in the host.
+> Thanks,
 > 
-> 	    Guest kernel-->	Unmodified		with v12 page reporting
-> 	Number of guests-->	    2				7
+> Andrew Murray
 > 
-> Conclusion: In a page-reporting enabled kernel, the guest is able to report
-> most of its unused memory back to the host. Due to this on the same host, I was
-> able to launch 7 guests without touching any swap compared to 2 which were
-> launched with an unmodified kernel.
-> 
-> Performance Analysis:
-> In order to measure the performance impact of this patch-series over an
-> unmodified kernel, I am using will-it-scale/page_fault1 on a 30 GB, 24 vcpus
-> single NUMA guest which is affined to a single node in the host. Over several
-> runs, I observed that with this patch-series there is a degradation of around
-> 1-3% for certain cases. This degradation could be a result of page-zeroing
-> overhead which comes with every page-fault in the guest.
-> I also tried this test on a 2 NUMA node host running page reporting
-> enabled 60GB guest also having 2 NUMA nodes and 24 vcpus. I observed a similar
-> degradation of around 1-3% in most of the cases.
-> For certain cases, the variability even with an unmodified kernel was around
-> 4-6% with every fresh boot. I will continue to investigate this further to find
-> the reason behind it.
-> 
-> Ongoing work-items:
-> * I have a working prototype for supporting memory hotplug/hotremove with page
->   reporting. However, it still requires more testing and fixes specifically on
->   the hotremove side.
->   Right now, for any memory hotplug or hotremove request bitmap or its
->   respective fields are not changed. Hence, memory added via hotplug is not
->   tracked in the bitmap. Similarly, removed memory is not reported to the
->   hypervisor by using an online memory check. 
-> * I will also have to look into the details about how to handle page poisoning
->   scenarios and test with directly assigned devices.
-> 
-> 
-> Changes from v11:
-> https://lkml.org/lkml/2019/7/10/742
-> * Moved the fields required to manage bitmap of free pages to 'struct zone'.
-> * Replaced the list which was used to hold and report the free pages with
->   scatterlist.
-> * Tried to fix the anti-kernel patterns and improve overall code quality.
-> * Fixed a few bugs in the code which were reported in the last posting.
-> * Moved to use MADV_DONTNEED from MADV_FREE.
-> * Replaced page hinting in favor of page reporting.
-> * Addressed other comments which I received in the last posting.	
-> 
-> 
-> Changes from v10:
-> https://lkml.org/lkml/2019/6/3/943
-> * Added logic to take care of multiple NUMA nodes scenarios.
-> * Simplified the logic for reporting isolated pages to the host. (Eg. replaced
->   dynamically allocated arrays with static ones, introduced wait event instead
->   of the loop in order to wait for a response from the host)
-> * Added a mutex to prevent race condition when page reporting is enabled by
->   multiple drivers.
-> * Simplified the logic responsible for decrementing free page counter for each
->   zone.
-> * Simplified code structuring/naming.
->  
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+>>  1 file changed, 8 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>> index efa2c8b9b85a..84fdc422792e 100644
+>> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>> @@ -9,13 +9,16 @@ Additional properties are described here:
+>>  
+>>  Required properties:
+>>  - compatible:
+>> -	should contain "amlogic,axg-pcie" to identify the core.
+>> +	should contain :
+>> +	- "amlogic,axg-pcie" for AXG SoC Family
+>> +	- "amlogic,g12a-pcie" for G12A SoC Family
+>> +	to identify the core.
+>>  - reg:
+>>  	should contain the configuration address space.
+>>  - reg-names: Must be
+>>  	- "elbi"	External local bus interface registers
+>>  	- "cfg"		Meson specific registers
+>> -	- "phy"		Meson PCIE PHY registers
+>> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>>  	- "config"	PCIe configuration space
+>>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>>  - clocks: Must contain an entry for each entry in clock-names.
+>> @@ -23,12 +26,13 @@ Required properties:
+>>  	- "pclk"       PCIe GEN 100M PLL clock
+>>  	- "port"       PCIe_x(A or B) RC clock gate
+>>  	- "general"    PCIe Phy clock
+>> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+>> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>>  - resets: phandle to the reset lines.
+>>  - reset-names: must contain "phy" "port" and "apb"
+>> -       - "phy"         Share PHY reset
+>> +       - "phy"         Share PHY reset for AXG SoC Family
+>>         - "port"        Port A or B reset
+>>         - "apb"         Share APB reset
+>> +- phys: should contain a phandle to the shared phy for G12A SoC Family
+>>  - device_type:
+>>  	should be "pci". As specified in designware-pcie.txt
+>>  
+>> -- 
+>> 2.17.1
+>>
 
-Some current limitations of this patchset seem to be
-
-1. Sparse zones eventually wasting memory (1bit per 2MB).
-
-As I already set, I consider this in most virtual environments a special
-case (especially a lot of sparsity). You can simply compare the spanned
-vs. present pages and don't allocate a bitmap in case it's too sparse
-("currently unsupported environment"). These pieces won't be considered
-for free page reporting, however free page reporting is a pure
-optimization already either way. We can be smarter in the future (split
-up bitmap into sub-bitmaps ...)
-
-2. Memory hot(un)plug support
-
-Memory hotplug should be easy with the memory hotplug notifier. Resize
-bitmaps after hotplug if required. Hotunplug is tricky, as it depends on
-zone shrinking (shrink bitmaps after offlining). You could scan for
-actually online section manually. But with minor modifications after
-"[PATCH v4 0/8] mm/memory_hotplug: Shrink zones before removing memory",
-at least some cases could also be handled. (sparse handling similar to
-1). Of course, initially, you could also simply not try to shrink the
-bitmap on unplug ...
-
-3. Scanning speed
-
-I have no idea if that is actually an issue. But there are different
-options if it is, for example, a hierarchical bitmap.
-
-
-Besides these, I think there were other review comments that should be
-addressed, but they don't seem to target the concept but rather
-implementation details.
-
--- 
-
-Thanks,
-
-David / dhildenb
