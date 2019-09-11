@@ -2,234 +2,273 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9857ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED029ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789C62075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="poFRPox0"
+	by mail.kernel.org (Postfix) with ESMTP id B67D6207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568183224;
+	bh=psIls2uZnyD8aULtZ7ZdVGeCU/oXNQFs5fNTc8c37BA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nHHG79Rk8DuKZkyRabuoYtUyzDTtkD3rXm1ArBGV9lyLo/FrE2P+HFzyA8DF3CmKT
+	 w/hFxsKa0ct4fgdOkrW1GqqtqUBjj1i8kLUmA/67sw++9daX8j8DVWLwa80hCc9LmB
+	 MNubK6bFYsZ60/Uzu/5AYgRhNNAGABc2ZmXyaUVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfIKGZw (ORCPT
+        id S1726998AbfIKG1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 02:25:52 -0400
-Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:52793
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726792AbfIKGZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 02:25:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AhQgZA9RL2RnUEE8En3cCN6d3nqE6gxNFyzAm6Aq134MqX0W5hOF6xYUbbHXfCLs6wcSglQJi1H8eFFmL8NhJx30CJ/txM8Krn51HB8hDryTY62JLf8Prlpdet4biqL4mAODLFXPHbS56Liwr1RsEPDMRd5VtMXVW9a7h+x81rDjFZGfE9HT44glvmW/5/Pc7yrt7mcwH7tW2Bb2gTrX1R7aahutEBXTcRpbBz0bmdeDIqQbu0z1Ce94301wl/aGuWPIGcdJv/EtePFn6Af823Tn5h5Zb6b5KUQydvqeTN5AA4jrr5sH++aAMQ3g/P8pZanb9UhfLIkBozFqBuQHtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0oEkVv3Qp5GP1MfcPqvcdNuPJFghY9hqhJQ2bMLAkM=;
- b=iOq9/A1p3Tt8Dckl4B4TqKuwpY50JsfbtFXgKZRnqaT35xglHU1751zRth9k2WNNGfD5D4eQqyt4J3lhB+qpxoq2bY6u0EkemcYtD4c8SG+vZQEdiwMyt2a8QLPZJIx4pHwfXdPb2DDNIPDajbu/DAHmzOXrX9QLCBp8oZ9htCAuao31+mcB5R2KEmzlhEBzO68SBpMbYKQ3qa25YoZSYnTL8DIWjuTA0cSeP1TwULEhyIgntuUhRbiFPtfZWWmSo9TNj+YKt15XlayWQx5W9V2sZmKrUmTYCEEu+OSiJkmZqYfis3rodPfv8K7zsWb5DbD7RDsiOApWoiLNDZeiEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0oEkVv3Qp5GP1MfcPqvcdNuPJFghY9hqhJQ2bMLAkM=;
- b=poFRPox0fMD200mjsw8hCP1CN0aR53a/MCr4y396sQCr6HXq2OP0qMul0J03CWxXT6joxrXDGTM3nFCD7h/EI5ugs/9aHjO1TBxZUplPrpjG2TPxI6alioxOYC3Q+zbA/7renMyOG2PPW9GLAEOuxJaiid0CQNiczrpJ0dDl+ws=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4235.eurprd04.prod.outlook.com (52.135.128.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Wed, 11 Sep 2019 06:25:47 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 06:25:47 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-        Udit Kumar <udit.kumar@nxp.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-CC:     Chuanhua Han <chuanhua.han@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [v2] ACPI: support for NXP i2c controller
-Thread-Topic: [v2] ACPI: support for NXP i2c controller
-Thread-Index: AQHVZImk5g5PYdwMgEGSUu7QXQNuc6cmCfxA
-Date:   Wed, 11 Sep 2019 06:25:47 +0000
-Message-ID: <DB7PR04MB4490390AC5331280CDF012E38FB10@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190906075319.21244-1-biwen.li@nxp.com>
-In-Reply-To: <20190906075319.21244-1-biwen.li@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e1044cb-a643-4ee0-8314-08d73680e24f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4235;
-x-ms-traffictypediagnostic: DB7PR04MB4235:|DB7PR04MB4235:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB423549E353D4131150B333E18FB10@DB7PR04MB4235.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:483;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(189003)(199004)(7696005)(316002)(446003)(11346002)(6116002)(8676002)(81156014)(478600001)(81166006)(5660300002)(66066001)(66476007)(256004)(66946007)(14444005)(7416002)(66446008)(64756008)(66556008)(25786009)(52536014)(7736002)(74316002)(305945005)(71190400001)(71200400001)(6246003)(53936002)(4326008)(8936002)(229853002)(33656002)(6436002)(476003)(54906003)(186003)(3846002)(55016002)(2906002)(9686003)(44832011)(486006)(86362001)(14454004)(102836004)(76116006)(99286004)(2201001)(26005)(110136005)(76176011)(2501003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4235;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iF2SUKnxSzLiiZskm+ykpukJHTYSSRcZhXEr4bqD1SThDBvevwQLqAiHmtoIvV1A+OO/k4Lxj3lX3rnlVkkTFWiyed16txQj63EBIpg9RFfHo7M3H5wCqENf1o20XlbJ2O3PkClpoZjO6KAh/HhA0xLBLzQ0v9pBBNvSeNTqf3FpmafazzkqLq4eqbFPnXyHPVagI4aaU9X3wx8uNFDijn0wuvvkv4hYS0vAB8biHBYKUFk0X3vb5k9/bOPfz4U49W5JS34pHbBjA0EpfDYAqyPODEWw5Q1SASfeVl3fUnejYQU+P2GBKaRktvG6AA5Nw4M1oSiwoXGonmdXQXntNGJrzaf0DnKk4G+P7ndi5zS2w46uXMdUs1/awj298xhWqYQJy+jEG1bN1pYg7br1y7h9r17WsUKWh6ewyiF3HJA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Sep 2019 02:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfIKG1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 02:27:03 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A9E21A4C;
+        Wed, 11 Sep 2019 06:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568183221;
+        bh=psIls2uZnyD8aULtZ7ZdVGeCU/oXNQFs5fNTc8c37BA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0wMnm6NSoAMi4ZwyIgCyMisByOfANk0tvatkgryTmkxOSrv3jXOpXZLn7Ko3bPXf4
+         6+JXVdbfmTTwqBLextfHlDBS37zoErULbbdXanfJn/J2AzeH0Az+4LqiIVakky+IG+
+         IiGgPAaO9o1d2JwLCXsRmTkxzEwi/EHSxGSbZOK0=
+Received: by mail-lj1-f180.google.com with SMTP id 7so18789245ljw.7;
+        Tue, 10 Sep 2019 23:27:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXA37AxumEwjNivVNVL/BoAbBW1tmxQa6oJe8prZ7KKguVi1Woc
+        EuNxtLISdBSjnEnIRmjV93OhyUkOeBg+y/razeQ=
+X-Google-Smtp-Source: APXvYqw0KGJTsVber/DyRaso03CZ5aKuQemCVWi2hKR4ZyaBju2pa7/7LE+9HaukTekenCqVV1/A8KN8u5yhz6EDxdM=
+X-Received: by 2002:a2e:b4e3:: with SMTP id s3mr22848863ljm.143.1568183219643;
+ Tue, 10 Sep 2019 23:26:59 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e1044cb-a643-4ee0-8314-08d73680e24f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 06:25:47.5890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: a7fkQTTbZyXHQTfJ5ixjwBiCwuIcnJP8gXeISo/PaKHH+7GWm1dwZ8Ez3AUfXmH5bv2qIezn3CvzbqGAdwxWhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4235
+References: <CGME20190910155240eucas1p26b343fd58e0f7b7fbe8dae06fe565de7@eucas1p2.samsung.com>
+ <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com> <20190910155207.6569-1-m.falkowski@samsung.com>
+In-Reply-To: <20190910155207.6569-1-m.falkowski@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 11 Sep 2019 08:26:48 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
+Message-ID: <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: arm: samsung: Convert Samsung Exynos
+ IOMMU H/W, System MMU to dt-schema
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi rafael, wolfram
-	Any comments about this?
->=20
-> Enable NXP i2c controller to boot with ACPI
->=20
-> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+On Tue, 10 Sep 2019 at 17:52, Maciej Falkowski <m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
+> to newer dt-schema format.
+>
+> Update clock description.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
-> Change in v2:
-> 	- Simplify code
-> 	- Adjust header file order
-> 	- Not use ACPI_PTR()
->=20
->  drivers/acpi/acpi_apd.c      |  7 +++++++
->  drivers/i2c/busses/i2c-imx.c | 17 +++++++++++++----
->  2 files changed, 20 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c index
-> 7cd0c9ac71ea..71511ae2dfcd 100644
-> --- a/drivers/acpi/acpi_apd.c
-> +++ b/drivers/acpi/acpi_apd.c
-> @@ -160,11 +160,17 @@ static const struct apd_device_desc hip08_i2c_desc
-> =3D {
->  	.setup =3D acpi_apd_setup,
->  	.fixed_clk_rate =3D 250000000,
->  };
+> Hi Krzysztof,
+>
+> Thank you for feedback.
+>
+> New changes:
+> - style fixes including missing empty lines,
+> deletion of unneeded descriptions
+>
+> - fix mistake where one example was split
+> into two separete ones.
+>
+> There are some updates with clock description. I have spoken with
+> Marek Szyprowski and the right setup for clocks seems to be two pairs:
+> "sysmmu" with optional "master" or a pair of "aclk" + "pclk".
+>
+> The option: "aclk" + "pclk" + "master" was never used in any
+> of device bindings and there are none compilation problems with that.
+>
+> In so, clock-names are rewritten to handle this version
+> and maximal clock number is set to two.
+>
+> Best regards,
+> Maciej Falkowski
+> ---
+>  .../bindings/iommu/samsung,sysmmu.txt         |  67 -----------
+>  .../bindings/iommu/samsung,sysmmu.yaml        | 112 ++++++++++++++++++
+>  2 files changed, 112 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+> deleted file mode 100644
+> index 525ec82615a6..000000000000
+> --- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+> -
+> -Samsung's Exynos architecture contains System MMUs that enables scattered
+> -physical memory chunks visible as a contiguous region to DMA-capable peripheral
+> -devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+> -
+> -System MMU is an IOMMU and supports identical translation table format to
+> -ARMv7 translation tables with minimum set of page properties including access
+> -permissions, shareability and security protection. In addition, System MMU has
+> -another capabilities like L2 TLB or block-fetch buffers to minimize translation
+> -latency.
+> -
+> -System MMUs are in many to one relation with peripheral devices, i.e. single
+> -peripheral device might have multiple System MMUs (usually one for each bus
+> -master), but one System MMU can handle transactions from only one peripheral
+> -device. The relation between a System MMU and the peripheral device needs to be
+> -defined in device node of the peripheral device.
+> -
+> -MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+> -MMUs.
+> -* MFC has one System MMU on its left and right bus.
+> -* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+> -  for window 1, 2 and 3.
+> -* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+> -  the other System MMU on the write channel.
+> -
+> -For information on assigning System MMU controller to its peripheral devices,
+> -see generic IOMMU bindings.
+> -
+> -Required properties:
+> -- compatible: Should be "samsung,exynos-sysmmu"
+> -- reg: A tuple of base address and size of System MMU registers.
+> -- #iommu-cells: Should be <0>.
+> -- interrupts: An interrupt specifier for interrupt signal of System MMU,
+> -             according to the format defined by a particular interrupt
+> -             controller.
+> -- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
+> -              SYSMMU core clocks.
+> -              Optional "master" if the clock to the System MMU is gated by
+> -              another gate clock other core  (usually main gate clock
+> -              of peripheral device this SYSMMU belongs to).
+> -- clocks: Phandles for respective clocks described by clock-names.
+> -- power-domains: Required if the System MMU is needed to gate its power.
+> -         Please refer to the following document:
+> -         Documentation/devicetree/bindings/power/pd-samsung.txt
+> -
+> -Examples:
+> -       gsc_0: gsc@13e00000 {
+> -               compatible = "samsung,exynos5-gsc";
+> -               reg = <0x13e00000 0x1000>;
+> -               interrupts = <0 85 0>;
+> -               power-domains = <&pd_gsc>;
+> -               clocks = <&clock CLK_GSCL0>;
+> -               clock-names = "gscl";
+> -               iommus = <&sysmmu_gsc0>;
+> -       };
+> -
+> -       sysmmu_gsc0: sysmmu@13e80000 {
+> -               compatible = "samsung,exynos-sysmmu";
+> -               reg = <0x13E80000 0x1000>;
+> -               interrupt-parent = <&combiner>;
+> -               interrupts = <2 0>;
+> -               clock-names = "sysmmu", "master";
+> -               clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
+> -               power-domains = <&pd_gsc>;
+> -               #iommu-cells = <0>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+> new file mode 100644
+> index 000000000000..85d1a251f2ff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  static const struct apd_device_desc thunderx2_i2c_desc =3D {
->  	.setup =3D acpi_apd_setup,
->  	.fixed_clk_rate =3D 125000000,
->  };
->=20
-> +static const struct apd_device_desc nxp_i2c_desc =3D {
-> +	.setup =3D acpi_apd_setup,
-> +	.fixed_clk_rate =3D 350000000,
-> +};
+> +title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
 > +
->  static const struct apd_device_desc hip08_spi_desc =3D {
->  	.setup =3D acpi_apd_setup,
->  	.fixed_clk_rate =3D 250000000,
-> @@ -238,6 +244,7 @@ static const struct acpi_device_id acpi_apd_device_id=
-s[]
-> =3D {
->  	{ "HISI02A1", APD_ADDR(hip07_i2c_desc) },
->  	{ "HISI02A2", APD_ADDR(hip08_i2c_desc) },
->  	{ "HISI0173", APD_ADDR(hip08_spi_desc) },
-> +	{ "NXP0001", APD_ADDR(nxp_i2c_desc) },
->  #endif
->  	{ }
->  };
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c =
-index
-> 15f6cde6452f..a3b61336fe55 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -20,6 +20,7 @@
->   *
->   */
->=20
-> +#include <linux/acpi.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
->  #include <linux/delay.h>
-> @@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] =
-=3D
-> {  };  MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
->=20
-> +static const struct acpi_device_id i2c_imx_acpi_ids[] =3D {
-> +	{"NXP0001", .driver_data =3D (kernel_ulong_t)&vf610_i2c_hwdata},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
+> +maintainers:
+> +  - Marek Szyprowski <m.szyprowski@samsung.com>
 > +
->  static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)  {
->  	return i2c_imx->hwdata->devtype =3D=3D IMX1_I2C; @@ -1048,14 +1055,13
-> @@ static const struct i2c_algorithm i2c_imx_algo =3D {
->=20
->  static int i2c_imx_probe(struct platform_device *pdev)  {
-> -	const struct of_device_id *of_id =3D of_match_device(i2c_imx_dt_ids,
-> -							   &pdev->dev);
->  	struct imx_i2c_struct *i2c_imx;
->  	struct resource *res;
->  	struct imxi2c_platform_data *pdata =3D dev_get_platdata(&pdev->dev);
->  	void __iomem *base;
->  	int irq, ret;
->  	dma_addr_t phy_addr;
-> +	const struct imx_i2c_hwdata *match;
->=20
->  	dev_dbg(&pdev->dev, "<%s>\n", __func__);
->=20
-> @@ -1075,8 +1081,9 @@ static int i2c_imx_probe(struct platform_device
-> *pdev)
->  	if (!i2c_imx)
->  		return -ENOMEM;
->=20
-> -	if (of_id)
-> -		i2c_imx->hwdata =3D of_id->data;
-> +	match =3D device_get_match_data(&pdev->dev);
-> +	if (match)
-> +		i2c_imx->hwdata =3D match;
->  	else
->  		i2c_imx->hwdata =3D (struct imx_i2c_hwdata *)
->  				platform_get_device_id(pdev)->driver_data;
-> @@ -1089,6 +1096,7 @@ static int i2c_imx_probe(struct platform_device
-> *pdev)
->  	i2c_imx->adapter.nr		=3D pdev->id;
->  	i2c_imx->adapter.dev.of_node	=3D pdev->dev.of_node;
->  	i2c_imx->base			=3D base;
-> +	ACPI_COMPANION_SET(&i2c_imx->adapter.dev,
-> ACPI_COMPANION(&pdev->dev));
->=20
->  	/* Get I2C clock */
->  	i2c_imx->clk =3D devm_clk_get(&pdev->dev, NULL); @@ -1247,6 +1255,7
-> @@ static struct platform_driver i2c_imx_driver =3D {
->  		.name =3D DRIVER_NAME,
->  		.pm =3D &i2c_imx_pm_ops,
->  		.of_match_table =3D i2c_imx_dt_ids,
-> +		.acpi_match_table =3D i2c_imx_acpi_ids,
->  	},
->  	.id_table =3D imx_i2c_devtype,
->  };
-> --
-> 2.17.1
+> +description: |+
+> +  Samsung's Exynos architecture contains System MMUs that enables scattered
+> +  physical memory chunks visible as a contiguous region to DMA-capable peripheral
+> +  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+> +
+> +  System MMU is an IOMMU and supports identical translation table format to
+> +  ARMv7 translation tables with minimum set of page properties including access
+> +  permissions, shareability and security protection. In addition, System MMU has
+> +  another capabilities like L2 TLB or block-fetch buffers to minimize translation
+> +  latency.
+> +
+> +  System MMUs are in many to one relation with peripheral devices, i.e. single
+> +  peripheral device might have multiple System MMUs (usually one for each bus
+> +  master), but one System MMU can handle transactions from only one peripheral
+> +  device. The relation between a System MMU and the peripheral device needs to be
+> +  defined in device node of the peripheral device.
+> +
+> +  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+> +  MMUs.
+> +  * MFC has one System MMU on its left and right bus.
+> +  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+> +    for window 1, 2 and 3.
+> +  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+> +    the other System MMU on the write channel.
+> +
+> +  For information on assigning System MMU controller to its peripheral devices,
+> +  see generic IOMMU bindings.
+> +
+> +properties:
+> +  compatible:
+> +    const: samsung,exynos-sysmmu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: |
+> +      An interrupt specifier for interrupt signal of System MMU,
+> +      according to the format defined by a particular interrupt
+> +      controller.
 
+You left this description and it is not needed - does not bring any information.
+Add also maxItems as I believe there should be only one interrupt.
+
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - contains:
+> +          enum:
+> +            - sysmmu
+> +            - master
+
+This is not specific enough, because it accepts:
+clock-names = "master";
+clock-names = "aclk";
+
+Instead I think this could work:
+oneOf:
+  - items:
+    - const: sysmmu
+  - items:
+    - const: sysmmu
+    - const: master
+  - items:
+    - const: aclk
+    - const: pclk
+
+Best regards,
+Krzysztof
