@@ -2,347 +2,278 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF155C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B765ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695302089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:54:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="berDa54j"
+	by mail.kernel.org (Postfix) with ESMTP id DDFC321479
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568217303;
+	bh=mWazBz14KQpmgg/o+0E4JzHIclA6TK+WlDDvb+Zv/5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ycb9RYcv5njodmDm5bmwyeapiqhH01Wq4ND4YifnPkpmSjOV7hWY7UMEFZug37xv0
+	 HMDS6zY2fgm3i9hnSaOB2y95xU7nsM1/izKVY+nMJiD90MN0F/BPTK7RN2MBT6Krr1
+	 GUoZcugFauLs3pqOVKPpEu31O8+kJukK4G/RCaYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfIKPy4 (ORCPT
+        id S1728807AbfIKPzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:54:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55894 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbfIKPyz (ORCPT
+        Wed, 11 Sep 2019 11:55:02 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40214 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbfIKPzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:54:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g207so4093104wmg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 08:54:52 -0700 (PDT)
+        Wed, 11 Sep 2019 11:55:01 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g4so25877356qtq.7;
+        Wed, 11 Sep 2019 08:55:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mvvOS/sqUBhPu8WpbD9ESoPKpPJlW80v1nzcyWDzFnk=;
-        b=berDa54jZShV5yj/T8FtyatN1X7Am1A9RTI2E4oedaNH0OFoXGJIW45ngV/8/HRvCO
-         eiBpHkJhX+/j1hv75eHhND2KTS2/quVGuVYmRHu15NkQjUrC6su2GZL3DP/zSDcXiUkI
-         JTNWXYrmYyHcj0Ej6OXxVR8gTTzgGalNJd/QbonIilTMi5M0v73b+/VcnLpBNCk9tj15
-         9Lh/qw1L0Pvj1wJi+H8Dszk592L98sYZUqH8h/PP0tSSMQhopWmN+4vpDXFEIh5FXQNo
-         Yj4fgCWcBp6xCvzJaUoyeDwRCkO8D/FWCm40D3Epc82Hu3o8ZnmsG9qxP2vopdUYL2hS
-         h1UA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QHtvXZdJhxnSSB+tt58qotfhmjmO1WJZUkRUMqmYHaA=;
+        b=rEG1LEpjQqN5rSQBkSx9VcIiZ/LShjkPMMCi0QvFtOoePPn9YEhEAmAHR1z19zuUN7
+         t2jm2MM4N/1MqJOKn04Uhfv5xFZk9eCTHNdS4e027HuTZCFpCTrJINKOJmAHtrbgfo3q
+         pAb+W050CnfIvQdxNZ7MBMk9lhe/b3I2cc0/s7dy/MsCGsSfj97LUbXXRwI9ALC1Tzvu
+         FbyPLY4LWKXgU3ms52KAvgzx7Z4TXKgM9jZDxaXyBJlYmkxgi6oKuQ6f0zp1NLMt1uIQ
+         rAQ7bc2jplo5/rB50PQ1MYilA83qY2KmVfR+Lyak4WJlRwWCgYlY5rOwpeoYhFgNlCm/
+         QG+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mvvOS/sqUBhPu8WpbD9ESoPKpPJlW80v1nzcyWDzFnk=;
-        b=sdBkuXfC8CjetNlW60eNJptohCnUdyOt1mvw4hlaY4JuCn5GuKJNVWtuwmKdff9AfE
-         aTsv3jKsH8ukYVlgwt3wifdyOTGsjncm+Xu3IVAwD/2qrUFN9CCpPqmv7LnedSRPpJGa
-         AFY4kkz1rMNnkjDzlQKqlOQauGQj4DSbTBGcfQNJxY2kEjf0PvloYpmRkhgYCuwbYPTQ
-         jlBqMfHgX1W2j5kdX8zK5Mnt9EjhYkDlCJsk6Zfxv5CYb24T2mT4RpkfHDhDGKdwLQd0
-         6B9XlZ5eq+es8jo0t/3ImQjz6hO18oMLdBqYE3L0hRUoSiQ9PLCaI3XYzGnqJjDwv7wA
-         T+/w==
-X-Gm-Message-State: APjAAAXqyor6WmXZ73MeA+zSPVQCAUC11tsz6TJ4zQc1Cs0oDYtVKNDz
-        XC4c1/SYjhKdWvlBS86IbFL+IQ==
-X-Google-Smtp-Source: APXvYqwxrY5aqD7yuz7QrYEDqFnizyeWFIeFjtg4MRUvNx/wHZNRO/Pwkk41hM6E3jLKEmiWzmNIxw==
-X-Received: by 2002:a7b:cc94:: with SMTP id p20mr4603927wma.171.1568217292018;
-        Wed, 11 Sep 2019 08:54:52 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id y3sm4420368wmg.2.2019.09.11.08.54.50
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QHtvXZdJhxnSSB+tt58qotfhmjmO1WJZUkRUMqmYHaA=;
+        b=fwTu7y6dk5dwj2Xa0O3X6dWnmKNEbvZhxcJFR3FtqGG+fcHOEHBOiGd6WlBrXzsKg+
+         +/n8bZRcmiR9g+AdlaVOLh9EizeA92FMecPfmxeA+J14iFZ2XiAAGH5bwV/aA+niwG7V
+         NTsfqml0c7Hem5MPvlAxcN7uoOYJ/QDbpIl1c+bVInmX7B+qSToxhXJ5lPdRgpPtl3G+
+         O+olLjDt3lw0QK/5dgzNVGPxMbx2WNuYAzzPJNK+2OObFLVtU3MbRBLWhF2SRhfix3+I
+         s7+zvj7oB85OMlYngCJar0NO0C/Keq/NrZdoz6+4QeS9IfUW92plHbDSOvE3/fNjHDD4
+         aA2Q==
+X-Gm-Message-State: APjAAAUpeYHIzPfF0tmswkIoxkreYzememb43grbiEtM014ZH5HijJgi
+        AdDj5Cfwvp+AM86bq2ZcTps=
+X-Google-Smtp-Source: APXvYqwjukYuvfUgQ+Aacq2Nz2oOJFjGDm8cUzhW3IoRCsNBhBgx35NaeiQEDfraEPLiLgDD6dAknA==
+X-Received: by 2002:ad4:4bca:: with SMTP id l10mr23356580qvw.139.1568217299897;
+        Wed, 11 Sep 2019 08:54:59 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:8b2])
+        by smtp.gmail.com with ESMTPSA id f5sm5963815qkg.9.2019.09.11.08.54.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 08:54:51 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] arm64: dts: add support for A1 based Amlogic AD401
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Tao Zeng <tao.zeng@amlogic.com>
-References: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
- <1568216290-84219-5-git-send-email-jianxin.pan@amlogic.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <e0054a53-7516-0527-3df7-c85e168003ba@baylibre.com>
-Date:   Wed, 11 Sep 2019 17:54:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 08:54:59 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 08:54:57 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, clm@fb.com,
+        dennisz@fb.com, newella@fb.com, Li Zefan <lizefan@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20190911155457.GW2263813@devbig004.ftw2.facebook.com>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+ <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
+ <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <1568216290-84219-5-git-send-email-jianxin.pan@amlogic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/09/2019 17:38, Jianxin Pan wrote:
-> Add basic support for the Amlogic A1 based Amlogic AD401 board:
-> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-> Timer, UART. It's capable of booting up into the serial console.
+Hey,
+
+On Wed, Sep 11, 2019 at 07:16:30AM -0700, Tejun Heo wrote:
+> > >  I can implement
+> > > the switching if so.
+> > 
+> > That would be perfect.
 > 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile           |   1 +
->  arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 131 +++++++++++++++++++++++++
->  3 files changed, 162 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 84afecb..a90be52 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> new file mode 100644
-> index 00000000..69c25c6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-a1.dtsi"
-> +
-> +/ {
-> +	compatible = "amlogic,ad401", "amlogic,a1";
-> +	model = "Amlogic Meson A1 AD401 Development Board";
-> +
-> +	aliases {
-> +		serial0 = &uart_AO_B;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x8000000>;
-> +	};
-> +};
-> +
-> +&uart_AO_B {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> new file mode 100644
-> index 00000000..7da448c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "amlogic,a1";
-> +
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache0 {
-> +			compatible = "cache";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x0 0x800000>;
-> +			alignment = <0x0 0x400000>;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
-> +	sm: secure-monitor {
-> +		compatible = "amlogic,meson-gxbb-sm";
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +
-> +		apb: bus@0xfe000000 {
+> Whichever way it gets decided, this is easy enough.  I'll prep a
+> patch.
 
-Should be bus@fe000000
+Here's the patch.
 
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xfe000000 0x0 0x1000000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
-> +
-> +			uart_AO: serial@1c00 {
-> +				compatible = "amlogic,meson-gx-uart",
-> +					     "amlogic,meson-ao-uart";
-> +				reg = <0x0 0x1c00 0x0 0x18>;
-> +				interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +
-> +			uart_AO_B: serial@2000 {
-> +				compatible = "amlogic,meson-gx-uart",
-> +					     "amlogic,meson-ao-uart";
-> +				reg = <0x0 0x2000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		gic: interrupt-controller@ff901000 {
-> +			compatible = "arm,gic-400";
-> +			reg = <0x0 0xff901000 0x0 0x1000>,
-> +			      <0x0 0xff902000 0x0 0x2000>,
-> +			      <0x0 0xff904000 0x0 0x2000>,
-> +			      <0x0 0xff906000 0x0 0x2000>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	xtal: xtal-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "xtal";
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> 
+* It disables iocost when bfq iosched is selected.  iocost is only
+  re-enabled when bfq module is unloaded.  While it can easily be made
+  to flip when there's no bfq queue left, I think minimizing the
+  number of switches is likely is better.
 
-With that fixed:
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+* It looks like building bfq as module has been broken for some time
+  and I added symbol exports to make it work.  They should be
+  separated into a separate patch.
 
-Neil
+* It doesn't actually rename any of the bfq interface files.  It just
+  gets rid of potential conflict from iocost.
+
+Please feel free to use / modify the patch however you see fit.
+
+Thanks.
+
+---
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 86a607cf19a1..decda96770f4 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -1194,7 +1194,9 @@ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node)
+ }
+ 
+ struct blkcg_policy blkcg_policy_bfq = {
++#ifndef CONFIG_BLK_CGROUP_IOCOST
+ 	.dfl_cftypes		= bfq_blkg_files,
++#endif
+ 	.legacy_cftypes		= bfq_blkcg_legacy_files,
+ 
+ 	.cpd_alloc_fn		= bfq_cpd_alloc,
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index b33be928d164..b4aaeef1fb87 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -6365,6 +6365,36 @@ static void bfq_init_root_group(struct bfq_group *root_group,
+ 	root_group->sched_data.bfq_class_idle_last_service = jiffies;
+ }
+ 
++#if defined(CONFIG_BFQ_GROUP_IOSCHED) && defined(CONFIG_BLK_CGROUP_IOCOST)
++static bool bfq_enabled = false;
++
++static void bfq_enable(void)
++{
++	static DEFINE_MUTEX(bfq_enable_mutex);
++
++	mutex_lock(&bfq_enable_mutex);
++	if (!bfq_enabled) {
++		pr_info("bfq-iosched: Overriding iocost\n");
++		blkcg_policy_unregister(&blkcg_policy_iocost);
++		cgroup_add_dfl_cftypes(&io_cgrp_subsys, bfq_blkg_files);
++		bfq_enabled = true;
++	}
++	mutex_unlock(&bfq_enable_mutex);
++}
++
++static void __exit bfq_disable(void)
++{
++	if (bfq_enabled) {
++		pr_info("bfq-iosched: Restoring iocost\n");
++		cgroup_rm_cftypes(bfq_blkg_files);
++		blkcg_policy_register(&blkcg_policy_iocost);
++	}
++}
++#else
++static void bfq_enable(void) {}
++static void __exit bfq_disable(void) {}
++#endif
++
+ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
+ {
+ 	struct bfq_data *bfqd;
+@@ -6489,6 +6519,7 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
+ 	bfq_init_entity(&bfqd->oom_bfqq.entity, bfqd->root_group);
+ 
+ 	wbt_disable_default(q);
++	bfq_enable();
+ 	return 0;
+ 
+ out_free:
+@@ -6806,6 +6837,7 @@ static void __exit bfq_exit(void)
+ 	blkcg_policy_unregister(&blkcg_policy_bfq);
+ #endif
+ 	bfq_slab_kill();
++	bfq_disable();
+ }
+ 
+ module_init(bfq_init);
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 0e2619c1a422..b6f20be0fc78 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -900,6 +900,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+ 	}
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(blkg_conf_prep);
+ 
+ /**
+  * blkg_conf_finish - finish up per-blkg config update
+@@ -915,6 +916,7 @@ void blkg_conf_finish(struct blkg_conf_ctx *ctx)
+ 	rcu_read_unlock();
+ 	put_disk_and_module(ctx->disk);
+ }
++EXPORT_SYMBOL_GPL(blkg_conf_finish);
+ 
+ static int blkcg_print_stat(struct seq_file *sf, void *v)
+ {
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 3b39deb8b9f8..1ef5b443c09a 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -605,8 +605,6 @@ static u32 vrate_adj_pct[] =
+ 	  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+ 	  4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 16 };
+ 
+-static struct blkcg_policy blkcg_policy_iocost;
+-
+ /* accessors and helpers */
+ static struct ioc *rqos_to_ioc(struct rq_qos *rqos)
+ {
+@@ -2434,7 +2432,7 @@ static struct cftype ioc_files[] = {
+ 	{}
+ };
+ 
+-static struct blkcg_policy blkcg_policy_iocost = {
++struct blkcg_policy blkcg_policy_iocost = {
+ 	.dfl_cftypes	= ioc_files,
+ 	.cpd_alloc_fn	= ioc_cpd_alloc,
+ 	.cpd_free_fn	= ioc_cpd_free,
+@@ -2442,6 +2440,7 @@ static struct blkcg_policy blkcg_policy_iocost = {
+ 	.pd_init_fn	= ioc_pd_init,
+ 	.pd_free_fn	= ioc_pd_free,
+ };
++EXPORT_SYMBOL_GPL(blkcg_policy_iocost);
+ 
+ static int __init ioc_init(void)
+ {
+diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+index bed9e43f9426..5669e3cfa1bc 100644
+--- a/include/linux/blk-cgroup.h
++++ b/include/linux/blk-cgroup.h
+@@ -815,6 +815,11 @@ static inline void blkcg_clear_delay(struct blkcg_gq *blkg)
+ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta);
+ void blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay);
+ void blkcg_maybe_throttle_current(void);
++
++#ifdef CONFIG_BLK_CGROUP_IOCOST
++extern struct blkcg_policy blkcg_policy_iocost;
++#endif
++
+ #else	/* CONFIG_BLK_CGROUP */
+ 
+ struct blkcg {
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 753afbca549f..ced23229f359 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4059,6 +4059,7 @@ int cgroup_rm_cftypes(struct cftype *cfts)
+ 	mutex_unlock(&cgroup_mutex);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(cgroup_rm_cftypes);
+ 
+ /**
+  * cgroup_add_cftypes - add an array of cftypes to a subsystem
+@@ -4115,6 +4116,7 @@ int cgroup_add_dfl_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
+ 		cft->flags |= __CFTYPE_ONLY_ON_DFL;
+ 	return cgroup_add_cftypes(ss, cfts);
+ }
++EXPORT_SYMBOL_GPL(cgroup_add_dfl_cftypes);
+ 
+ /**
+  * cgroup_add_legacy_cftypes - add an array of cftypes for legacy hierarchies
