@@ -2,163 +2,162 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C7C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE263C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D6F21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568225017;
-	bh=0OW0R0944mrm7VDRjfWc+dTciELz4dFGwuNUyC/pvHY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RVs6BYu3T+VezGl+RzexQPxLke7+nwEgMusDdxhqYm7Uthatdxc/76KXZF+H0hcxY
-	 615nDJhasSSzuZhNxBZ2C7J7qkaZsZi3jgPKrpmClkctI/lXnqrqPsj4ZAHgc0P9a1
-	 qKxRgAlspAHfg35lvdeOIpB7XZUwMOIt3OrN4V0c=
+	by mail.kernel.org (Postfix) with ESMTP id 7F8162084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y9CJw4+v";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hMuxXxp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbfIKSDg (ORCPT
+        id S1729850AbfIKSKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:03:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbfIKSDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:03:35 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 11 Sep 2019 14:10:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42450 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729603AbfIKSKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:10:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7AEC26083E; Wed, 11 Sep 2019 18:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568225417;
+        bh=cth2OToflJTkN3D/O4iZhjJihL/01YTrfPtE4GsgCgo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Y9CJw4+v9XT5TXnfyFAawO9Mpw3Qtkezxm7jhZfPKZc/37GSSbc+cHV0k5gzYrohF
+         erKa33beW9l5sVO7lIANR4cQ0HMSBchNv0WeRbl4w4y/+1c2WVsCHmfPxA0kwHrukL
+         mpOJgP1ynurI/3tRDjPEnq5UDTGtD77dPxQ+B5E8=
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 069BD21D7B
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 18:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568225014;
-        bh=0OW0R0944mrm7VDRjfWc+dTciELz4dFGwuNUyC/pvHY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rh25mxvWIo9i4lbqkPpHwEhMSxYb6KHnc8BEwdrdZfJGK8o5lCM+/eMKmj5iC6v2d
-         bj+jPhZ9Lq137zzKXuSEpdEph2AQ2LxhEMQa4WBJK22sY4V02ZUY2LXbeesrtI8QY0
-         1QDOUTbyfLvXI5BYAX9ioK7Z8k6JeqkT8D8Fps+4=
-Received: by mail-wr1-f42.google.com with SMTP id t16so25625910wra.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:03:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAX1qogk5Hky6wkChx4kgiERKbVh+HdCXFgOyG7ITtY+F1hr8hr4
-        XJaUEal3kboLWfBhQCJ1DwS41tZDGJJa9OeEUIs+EA==
-X-Google-Smtp-Source: APXvYqw8eh1PfkTVVWq6aHusd2tHhF/sjG45JwIeuzTO2HIz/Br6hch9j+hZ/Kg9MDK9PrsKz6esUNSJD4zmCk3CAfY=
-X-Received: by 2002:adf:ee10:: with SMTP id y16mr4387873wrn.47.1568225012407;
- Wed, 11 Sep 2019 11:03:32 -0700 (PDT)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2562660790;
+        Wed, 11 Sep 2019 18:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568225416;
+        bh=cth2OToflJTkN3D/O4iZhjJihL/01YTrfPtE4GsgCgo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hMuxXxp35tcUz+Y20r9+iJeSGY4gCb3KvvG3mouExKnNPiuJewGZizo1agn4D68EW
+         xoFmIYgzdTgXMttGUXjHfUOaWope0ATvEuZ/iCEtWuY8oDwk7DBe9zGxI0JaG0K5jG
+         p7MysMxZzVH2ThqosFRpGC5xMCXYpd12jWhd9sRc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2562660790
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+Date:   Wed, 11 Sep 2019 21:10:12 +0300
+In-Reply-To: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+        (Linus Torvalds's message of "Wed, 11 Sep 2019 11:05:46 +0100")
+Message-ID: <87lfuuln5n.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190905103541.4161-1-thomas_os@shipmail.org> <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com> <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org> <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
- <92171412-eed7-40e9-2554-adb358e65767@shipmail.org> <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
- <76f89b46-7b14-9483-e552-eb52762adca0@shipmail.org>
-In-Reply-To: <76f89b46-7b14-9483-e552-eb52762adca0@shipmail.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 11 Sep 2019 11:03:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrVKg=xjG5qyHbCY7P1H17v8LBV3FmQmqGKsPz_4qovFZQ@mail.gmail.com>
-Message-ID: <CALCETrVKg=xjG5qyHbCY7P1H17v8LBV3FmQmqGKsPz_4qovFZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        pv-drivers@vmware.com, Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:49 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
++ ath10k list
+
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+
+> So I'm at LCA, reading email, using my laptop more than I normally do,
+> and with different networking than I normally do.
 >
-> Hi, Andy.
+> And I just had a 802.11 WARN_ON() trigger, followed by essentially a
+> dead machine due to some lock held (maybe rtnl_lock).
 >
-> On 9/11/19 6:18 AM, Andy Lutomirski wrote:
+> It's possible that the lock held thing happened before, and is the
+> _reason_ for the delay, I don't know. I had to reboot the machine, but
+> I gathered as much information as made sense and was obvious before I
+> did so. That's appended.
 
-> >
-> > As a for-real example, take a look at arch/x86/entry/vdso/vma.c.  The
-> > "vvar" VMA contains multiple pages that are backed by different types
-> > of memory.  There's a page of ordinary kernel memory.  Historically
-> > there was a page of genuine MMIO memory, but that's gone now.  If the
-> > system is a SEV guest with pvclock enabled, then there's a page of
-> > decrypted memory.   They all share a VMA, they're instantiated in
-> > .fault, and there is no hackery involved.  Look at vvar_fault().
+Some notes while investigating this:
+
+> But wait!
 >
-> So this is conceptually identical to TTM. The difference is that it uses
-> vmf_insert_pfn_prot() instead of vmf_insert_mixed() with the vma hack.
-> Had there been a vmf_insert_mixed_prot(), the hack in TTM wouldn't be
-> needed. I guess providing a vmf_insert_mixed_prot() is a to-do for me to
-> pick up.
-
-:)
-
+> ... then 10+ minutes later:
 >
-> Having said that, the code you point out is as fragile and suffers from
-> the same shortcomings as TTM since
-> a) Running things like split_huge_pmd() that takes the vm_page_prot and
-> applies it to new PTEs will make things break, (although probably never
-> applicable in this case).
-
-Hmm.  There are no vvar huge pages, so this is okay.
-
-I wonder how hard it would be to change the huge page splitting code
-to copy the encryption and cacheability bits from the source entry
-instead of getting them from vm_page_prot, at least in the cases
-relevant to VM_MIXEDMAP and VM_PFNMAP.
-
-> b) Running mprotect() on that VMA will only work if sme_me_mask is part
-> of _PAGE_CHG_MASK (which is addressed in a reliable way in my recent
-> patchset),  otherwise, the encryption setting will be overwritten.
+>    ath10k_pci 0000:02:00.0: wmi command 16387 timeout, restarting hardware
+>    ath10k_pci 0000:02:00.0: failed to set 5g txpower 23: -11
+>    ath10k_pci 0000:02:00.0: failed to setup tx power 23: -11
+>    ath10k_pci 0000:02:00.0: failed to recalc tx power: -11
+>    ath10k_pci 0000:02:00.0: failed to set inactivity time for vdev 0: -108
+>    ath10k_pci 0000:02:00.0: failed to setup powersave: -108
 >
+> That certainly looks like something did try to set a power limit, but
+> eventually failed.
 
-Indeed.  Thanks for the fix!
+I suspect the failing WMI command is called from:
 
+ath10k_bss_info_changed()
+ath10k_mac_txpower_recalc()
+ath10k_mac_txpower_setup()
+ath10k_wmi_pdev_set_param()
+ath10k_wmi_cmd_send()
+ath10k_wmi_cmd_send_nowait()
+ath10k_htc_send()
+
+-11 is -EAGAIN which would mean that the HTC credits have run out some
+ reason for the WMI command:
+
+if (ep->tx_credits < credits) {
+        ath10k_dbg(ar, ATH10K_DBG_HTC,
+                "htc insufficient credits ep %d required %d available %d\n",
+                eid, credits, ep->tx_credits);
+        spin_unlock_bh(&htc->tx_lock);
+        ret = -EAGAIN;
+        goto err_pull;
+}
+
+Credits can run out, for example, if there's a lot of WMI command/event
+activity and are not returned during the 3s wait, firmware crashed or
+problems with the PCI bus. But when the WMI command timeout happens
+ath10k is supposed to restart the firmware and everything should be
+usable again.
+                                             
+> Immediately after that:
 >
-> >> We could probably get away with a WRITE_ONCE() update of the
-> >> vm_page_prot before taking the page table lock since
-> >>
-> >> a) We're locking out all other writers.
-> >> b) We can't race with another fault to the same vma since we hold an
-> >> address space lock ("buffer object reservation")
-> >> c) When we need to update there are no valid page table entries in the
-> >> vma, since it only happens directly after mmap(), or after an
-> >> unmap_mapping_range() with the same address space lock. When another
-> >> reader (for example split_huge_pmd()) sees a valid page table entry, i=
-t
-> >> also sees the new page protection and things are fine.
-> >>
-> >> But that would really be a special case. To solve this properly we'd
-> >> probably need an additional lock to protect the vm_flags and
-> >> vm_page_prot, taken after mmap_sem and i_mmap_lock.
-> >>
-> > This is all horrible IMO.
->
-> I'd prefer to call it fragile and potentially troublesome to maintain.
+>    wlp2s0: deauthenticating from 54:ec:2f:05:70:2c by local choice
+> (Reason: 3=DEAUTH_LEAVING)
+>    ath10k_pci 0000:02:00.0: failed to read hi_board_data address: -16
+>    ath10k_pci 0000:02:00.0: failed to receive initialized event from
+> target: 00000000
+>    ath10k_pci 0000:02:00.0: failed to receive initialized event from
+> target: 00000000
+>    ath10k_pci 0000:02:00.0: failed to wait for target init: -110
 
-Fair enough.
+I suspect here ath10k tries to reset the target during stop operation,
+"failed to receive initialized event from target" comes from:
 
->
-> That distinction is important because if it ever comes to a choice
-> between adding a new lock to protect vm_page_prot (and consequently slow
-> down the whole vm system) and using the WRITE_ONCE solution in TTM, we
-> should know what the implications are. As it turns out previous choices
-> in this area actually seem to have opted for the lockless WRITE_ONCE /
-> READ_ONCE / ptl solution. See __split_huge_pmd_locked() and
-> vma_set_page_prot().
+ath10k_pci_hif_stop()
+ath10k_pci_safe_chip_reset()
+ath10k_pci_warm_reset()
+ath10k_pci_wait_for_target_init()
 
-I think it would be even better if the whole thing could work without
-ever writing to vm_page_prot.  This would be a requirement for vvar in
-the unlikely event that the vvar vma ever supported splittable huge
-pages.  Fortunately, that seems unlikely :)
+It shouldn't fail like that, which makes me suspect either a low level
+problem or a bug in qca6174 firmware restart code. To check the latter,
+could you please try to force a firmware crash and see if firmware
+restart is working for you?
+
+To crash the firmware you need to write either "hard" or "assert" (I
+forgot which one QCA6174 firmware supports) to
+/sys/kernel/debug/ieee80211/phy*/ath10k/simulate_fw_crash. And what
+should happen is that the firmware crashes, ath10k prints a big pile of
+warnings, restarts it and in few seconds everything resumes to normal
+without user space even noticing it.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
