@@ -2,117 +2,148 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BAC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD62ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1112075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B597C2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zmn0VYxj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ELVDQ4yB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LdwUSNv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbfIKSsQ (ORCPT
+        id S1730203AbfIKStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:48:16 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60890 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbfIKSsQ (ORCPT
+        Wed, 11 Sep 2019 14:49:06 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41896 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfIKStF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:48:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 09CC460A50; Wed, 11 Sep 2019 18:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568227695;
-        bh=fqLyZWfORQEC6v2+nP26Sy1WzgSPYbYDAMK27hsI/aM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Zmn0VYxjz9scf466LpHylBrRTkA2pA87LGVT89iiuYIuLXGwPHR1DYgX3FGiwmobS
-         t+QCf0mnrQE34HEKrj2FVXLJWMbnGg00k1c+uS9U6DL4OSlAbkh93773cXZTkJdPXk
-         cd1r9XzktA6BDPbemGmGON23N1VwkRuUO5MMHrvo=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6633560256;
-        Wed, 11 Sep 2019 18:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568227694;
-        bh=fqLyZWfORQEC6v2+nP26Sy1WzgSPYbYDAMK27hsI/aM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=ELVDQ4yBwmWuMQqmVGmxRYOhTtlyRU6jCwAb3UnUg0v9ooHc0HPskOWE89vdnBX8c
-         4eFlpirL9TxhLpPpLbUhMzNgtwIR3iCm8UGMDqdPlni9ZRfN8TbtNlstGC1/lXFnmK
-         /qKvzz3JVyycQejo+UVgQZ1uvFkEJzaWP6DdAEjA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6633560256
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
-References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
-        <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
-        <87ef0mlmqg.fsf@tynnyri.adurom.net>
-        <383b145b608e0fe3a35ffb0ceb99fdf938d4e2bb.camel@sipsolutions.net>
-Date:   Wed, 11 Sep 2019 21:48:09 +0300
-In-Reply-To: <383b145b608e0fe3a35ffb0ceb99fdf938d4e2bb.camel@sipsolutions.net>
-        (Johannes Berg's message of "Wed, 11 Sep 2019 20:23:33 +0200")
-Message-ID: <87zhjak6ty.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 11 Sep 2019 14:49:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BImcY7051732;
+        Wed, 11 Sep 2019 13:48:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568227718;
+        bh=1xSERSqIkAtP/bLDu3RUnmyzW6/XzR17kn4wt0JSzQE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LdwUSNv6ZbXANbfxNoJYEDv5rETOOMt04lMlvG8RYbaxYrQHBgvNg3m/RdnpG5lq2
+         Yjj10rCiVfbF39DafaKdYQ1v6fluk0Bw4dMFmGqNwMCLhe7HBe0KyxPFnkmi3pGYvI
+         6TMFbQLtFu+VsK3BApMVojHliBROeOnBpSjZJAI4=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BImbgv068137
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Sep 2019 13:48:37 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
+ Sep 2019 13:48:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 11 Sep 2019 13:48:37 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BImaxV119829;
+        Wed, 11 Sep 2019 13:48:36 -0500
+Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
+ HWEN pin
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Andreas Kemnade <andreas@kemnade.info>
+CC:     <lee.jones@linaro.org>, <jingoohan1@gmail.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+References: <20190910212909.18095-1-andreas@kemnade.info>
+ <20190910212909.18095-3-andreas@kemnade.info>
+ <20190911102533.not4ta3xwgm6bhjo@holly.lan>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
+Date:   Wed, 11 Sep 2019 13:48:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190911102533.not4ta3xwgm6bhjo@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Berg <johannes@sipsolutions.net> writes:
 
-> On Wed, 2019-09-11 at 21:19 +0300, Kalle Valo wrote:
->> > Looks like indeed the driver gives the device at least *3 seconds* for
->> > every command, see ath10k_wmi_cmd_send(), so most likely this would
->> > eventually have finished, but who knows how many firmware commands it
->> > would still have attempted to send...
->> 
->> 3 seconds is a bit short but in normal cases it should be enough. Of
->> course we could increase the delay but I'm skeptic it would help here.
+On 9/11/19 5:25 AM, Daniel Thompson wrote:
+> On Tue, Sep 10, 2019 at 11:29:09PM +0200, Andreas Kemnade wrote:
+>> For now just enable it in the probe function to allow i2c
+>> access. Disabling also means resetting the register values
+>> to default and according to the datasheet does not give
+>> power savings
+>>
+>> Tested on Kobo Clara HD.
+>>
+>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>> ---
+>> changes in v2:
+>> - simplification
+>> - correct gpio direction initialisation
+>>
+>>   drivers/video/backlight/lm3630a_bl.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+>> index 8f84f3684f04..9d0639d4202d 100644
+>> --- a/drivers/video/backlight/lm3630a_bl.c
+>> +++ b/drivers/video/backlight/lm3630a_bl.c
+>> @@ -12,6 +12,8 @@
+>>   #include <linux/uaccess.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/regmap.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/gpio.h>
+> Nitpicking... but I don't think linux/gpio.h is used anymore.
 >
-> I was thinking 3 seconds is way too long :-)
-
-Heh :)
-
->> > Perhaps the driver should mark the device as dead and fail quickly once
->> > it timed out once, or so, but I'll let Kalle comment on that.
->> 
->> Actually we do try to restart the device when a timeout happens in
->> ath10k_wmi_cmd_send():
->> 
->>         if (ret == -EAGAIN) {
->>                 ath10k_warn(ar, "wmi command %d timeout, restarting hardware\n",
->>                             cmd_id);
->>                 queue_work(ar->workqueue, &ar->restart_work);
->>         }
 >
-> Yeah, and this is the problem, in a sense, I'd think. It seems to me
-> that at this point the code needs to tag the device as "dead" and
-> immediately return from any further commands submitted to it with an
-> error (e.g. -EIO).
+>>   #include <linux/pwm.h>
+>>   #include <linux/platform_data/lm3630a_bl.h>
+>>   
+>> @@ -48,6 +50,7 @@ struct lm3630a_chip {
+>>   	struct lm3630a_platform_data *pdata;
+>>   	struct backlight_device *bleda;
+>>   	struct backlight_device *bledb;
+>> +	struct gpio_desc *enable_gpio;
+>>   	struct regmap *regmap;
+>>   	struct pwm_device *pwmd;
+>>   };
+>> @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *client,
+>>   	}
+>>   	pchip->pdata = pdata;
+>>   
+>> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+>> +						GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(pchip->enable_gpio)) {
+>> +		rval = PTR_ERR(pchip->enable_gpio);
+>> +		return rval;
 
-Yeah, ath10k_core_restart() is supposed change to state
-ATH10K_STATE_RESTARTING but very few mac80211 ops in ath10k_ops are
-checking for it, and to me it looks like quite late even. I think a
-proper fix for ops which can sleep is to check ar->state is
-ATH10K_STATE_ON and for ops which cannot sleep check
-ATH10K_FLAG_CRASH_FLUSH.
+the enable gpio is optional so if it fails you log the error and move on
 
-But of course this just fixes the symptoms, the root cause for timeouts
-needs to be found as well.
+Also on driver removal did you want to set the GPIO to low to disable 
+the device to save power?
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Dan
+
+
+>> +	}
+>> +
+>>   	/* chip initialize */
+>>   	rval = lm3630a_chip_init(pchip);
+>>   	if (rval < 0) {
+>> -- 
+>> 2.20.1
+>>
