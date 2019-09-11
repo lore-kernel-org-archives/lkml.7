@@ -2,119 +2,136 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABBAC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923ECC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD2A206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637FC20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uadrbg0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfIKJyF (ORCPT
+        id S1727524AbfIKJzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:54:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38808 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbfIKJyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:54:04 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 40E9D11A27;
-        Wed, 11 Sep 2019 09:54:04 +0000 (UTC)
-Received: from [10.72.12.57] (ovpn-12-57.pek2.redhat.com [10.72.12.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54F636012A;
-        Wed, 11 Sep 2019 09:53:50 +0000 (UTC)
-Subject: Re: [RFC PATCH 3/4] virtio: introudce a mdev based transport
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, idos@mellanox.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com
-References: <20190910081935.30516-1-jasowang@redhat.com>
- <20190910081935.30516-4-jasowang@redhat.com>
- <20190910055744-mutt-send-email-mst@kernel.org>
- <572ffc34-3081-8503-d3cc-192edc9b5311@redhat.com>
- <20190910094807-mutt-send-email-mst@kernel.org>
- <390647ae-0a53-5f2b-ccb0-28ed657636e6@redhat.com>
- <20190911053502-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <27fa6786-6e00-a7d3-bd35-7c302514c1b5@redhat.com>
-Date:   Wed, 11 Sep 2019 17:53:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 05:55:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33524 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfIKJzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:55:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so13350898pfl.0;
+        Wed, 11 Sep 2019 02:55:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EYAdW6e1HjgiO7iOA9knRWup6ouX3NvawvaBsn5XypY=;
+        b=uadrbg0nOLNfbytsdr/sMmmtNrDUkeUPXVSZuu51dsCCjTuuJIQ70gXTSFF9T/2Mod
+         9WuGH7pzgyBVz7CUH169M1T2ORrSB93tEzRcOnFlgAlr5aPoxrbP++8WhYuUP+Y+TFBS
+         QGAqm0aqS7VP/0Zp6tN64XH/sgtS0puMtywdEnQWylQa12lnCjhM/28pV43vv5qsiuAo
+         +0x5Q6A57plY+1ZEWAPJusNjnYGnNvM0UGCxpWY9Eiuq70zzjEt6IcD0TFze6vB96iUt
+         mHapZ2Z1zdbob9Oq0EZiiSFhN6JkgJpNt5po04BFPnTWW8d8mCRHdS6tIDwKvoLkRCgK
+         CpvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EYAdW6e1HjgiO7iOA9knRWup6ouX3NvawvaBsn5XypY=;
+        b=sptcehjBkkuOEff8cqXpLIQKmYnpTaUUG+JYv3EiiaowBoR9ZdlBjbmlXd0RKNGklr
+         meH+GY1ZyKj/oWYsC3dtm3p9XgBakvtHGtXaC6rBzRCfKtwxFZMab4qib6yOQQFsWLVX
+         ERWxKNf+dienNlNvyPniHyU13bT+ESyB6+9BDx2CdlWnzpX5BffQEOY+5/gyzRXIF7xa
+         xW/FMxaCM8kuKXxrsXPEedZQfaYo761LH3r5+N3C1NnWImtWotJMT4irjAnha95lUvfD
+         wxVS3hapkVUFFXzNu+i9cKKbdKpfgtr7ecE1wCeCCvZOTRjIM6yCIPQ/D7dWBFl0O8Ap
+         qOYw==
+X-Gm-Message-State: APjAAAWbu3VMHtMJBuA9pCUYB8QNvqmrAmGRmoG8Jyd4uq18fyUVTenM
+        Jznugw9smIQZIJ/d8jv72esQcoQZlkE=
+X-Google-Smtp-Source: APXvYqz8/DQvRH8+c009V9c0kMz3Cs9wV2T2oQJUOaot7e5CWOEkxzbY8jQ1Kv48S4dhqFwZvUdIFw==
+X-Received: by 2002:a17:90a:a014:: with SMTP id q20mr4591336pjp.113.1568195714294;
+        Wed, 11 Sep 2019 02:55:14 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id j2sm21388338pfe.130.2019.09.11.02.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 02:55:13 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 02:55:11 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911095511.GB108334@dtor-ws>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+ <20190911092514.GM2680@smile.fi.intel.com>
+ <20190911093914.GT13294@shell.armlinux.org.uk>
+ <20190911094619.GN2680@smile.fi.intel.com>
+ <20190911094929.GV13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190911053502-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 11 Sep 2019 09:54:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911094929.GV13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 10:49:29AM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
+> > > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> > > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> > > > > works with arbitrary firmware node.
+> e > > 
+> > > > I'm wondering if it's possible to step forward and replace
+> > > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+> > > > in other cases in this series.
+> > > 
+> > > No, those require a struct device, but we have none.  There are network
+> > > drivers where there is a struct device for the network complex, but only
+> > > DT nodes for the individual network interfaces.  So no, gpiod_* really
+> > > doesn't work.
+> > 
+> > In the following patch the node is derived from struct device. So, I believe
+> > some cases can be handled differently.
+> 
+> phylink is not passed a struct device - it has no knowledge what the
+> parent device is.
+> 
+> In any case, I do not have "the following patch".
 
-On 2019/9/11 下午5:36, Michael S. Tsirkin wrote:
-> On Wed, Sep 11, 2019 at 10:38:39AM +0800, Jason Wang wrote:
->> On 2019/9/10 下午9:52, Michael S. Tsirkin wrote:
->>> On Tue, Sep 10, 2019 at 09:13:02PM +0800, Jason Wang wrote:
->>>> On 2019/9/10 下午6:01, Michael S. Tsirkin wrote:
->>>>>> +#ifndef _LINUX_VIRTIO_MDEV_H
->>>>>> +#define _LINUX_VIRTIO_MDEV_H
->>>>>> +
->>>>>> +#include <linux/interrupt.h>
->>>>>> +#include <linux/vringh.h>
->>>>>> +#include <uapi/linux/virtio_net.h>
->>>>>> +
->>>>>> +/*
->>>>>> + * Ioctls
->>>>>> + */
->>>>> Pls add a bit more content here. It's redundant to state these
->>>>> are ioctls. Much better to document what does each one do.
->>>> Ok.
->>>>
->>>>
->>>>>> +
->>>>>> +struct virtio_mdev_callback {
->>>>>> +	irqreturn_t (*callback)(void *);
->>>>>> +	void *private;
->>>>>> +};
->>>>>> +
->>>>>> +#define VIRTIO_MDEV 0xAF
->>>>>> +#define VIRTIO_MDEV_SET_VQ_CALLBACK _IOW(VIRTIO_MDEV, 0x00, \
->>>>>> +					 struct virtio_mdev_callback)
->>>>>> +#define VIRTIO_MDEV_SET_CONFIG_CALLBACK _IOW(VIRTIO_MDEV, 0x01, \
->>>>>> +					struct virtio_mdev_callback)
->>>>> Function pointer in an ioctl parameter? How does this ever make sense?
->>>> I admit this is hacky (casting).
->>>>
->>>>
->>>>> And can't we use a couple of registers for this, and avoid ioctls?
->>>> Yes, how about something like interrupt numbers for each virtqueue and
->>>> config?
->>> Should we just reuse VIRTIO_PCI_COMMON_Q_XXX then?
->>
->> You mean something like VIRTIO_PCI_COMMON_Q_MSIX? Then it becomes a PCI
->> transport in fact. And using either MSIX or irq number is actually another
->> layer of indirection. So I think we can just write callback function and
->> parameter through registers.
-> I just realized, all these registers are just encoded so you
-> can pass stuff through read/write. But it can instead be
-> just a normal C function call with no messy encoding.
-> So why do we want to do this encoding?
+Andy is talking about this one:
 
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index ce940871331e..9ca51d678123 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -46,8 +46,8 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
 
-Just because it was easier to start as a POC since mdev_parent_ops is 
-the only way to communicate between mdev driver and mdev device right 
-now. We can invent private ops besides mdev_parent_ops, e.g a private 
-pointer in mdev_parent_ops. I can try this in next version.
+        /* Deassert the optional reset signal */
+        if (mdiodev->dev.of_node)
+-               gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
+-                                              "reset-gpios", 0,
+                                               GPIOD_OUT_LOW,
++               gpiod = fwnode_gpiod_get_index(&mdiodev->dev.of_node->fwnode,
++                                              "reset", 0, GPIOD_OUT_LOW,
+                                               "PHY reset");
+Here if we do not care about "PHY reset" label, we could use
+gpiod_get(&mdiodev->dev, "reset", GPIOD_OUT_LOW).
 
-Thanks
+Thanks.
 
+-- 
+Dmitry
