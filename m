@@ -2,98 +2,99 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5727C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D63ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2364206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9F3206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfIKNm5 (ORCPT
+        id S1728125AbfIKNnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:42:57 -0400
-Received: from 20.mo7.mail-out.ovh.net ([46.105.49.208]:59288 "EHLO
-        20.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfIKNm5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:42:57 -0400
-X-Greylist: delayed 1199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 09:42:56 EDT
-Received: from player168.ha.ovh.net (unknown [10.109.159.248])
-        by mo7.mail-out.ovh.net (Postfix) with ESMTP id 91D9C12FEB9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:03:35 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player168.ha.ovh.net (Postfix) with ESMTPSA id BC049997FD25;
-        Wed, 11 Sep 2019 13:03:18 +0000 (UTC)
-From:   Quentin Perret <qperret@qperret.net>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
-Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qperret@qperret.net
-Subject: [PATCH RESEND v8 0/4] Make IPA use PM_EM
-Date:   Wed, 11 Sep 2019 15:03:10 +0200
-Message-Id: <20190911130314.29973-1-qperret@qperret.net>
-X-Mailer: git-send-email 2.17.1
-X-Ovh-Tracer-Id: 17340828891127700473
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdefvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
+        Wed, 11 Sep 2019 09:43:41 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:36884 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728100AbfIKNnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:43:41 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 82AC55FC57;
+        Wed, 11 Sep 2019 15:43:39 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3][RESEND] scripts: use pkg-config to locate libcrypto
+Date:   Wed, 11 Sep 2019 15:43:35 +0200
+Message-ID: <8434324.HpHetu710e@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <20190910104830.C1B0E2067B@mail.kernel.org>
+References: <2010898.sAvVGPNi7W@devpool35> <20190910104830.C1B0E2067B@mail.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1843712.YdZ8EksWrV"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-sending this from an email address I can access. For a cover letter,
-see:
-https://lore.kernel.org/lkml/20190812084235.21440-1-quentin.perret@arm.com/
+--nextPart1843712.YdZ8EksWrV
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Changes in v8:
- - Fixed checkpatch errors (Rui)
+Am Dienstag, 10. September 2019, 12:48:30 CEST schrieb Sasha Levin:
+> Hi,
+>=20
+> [This is an automated email]
+>=20
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+>=20
+> The bot has tested the following trees: v5.2.13, v4.19.71, v4.14.142,
+> v4.9.191, v4.4.191.
+>=20
+> v5.2.13: Build OK!
+> v4.19.71: Build OK!
+> v4.14.142: Failed to apply! Possible dependencies:
+>     8377bd2b9ee1 ("kbuild: Rename HOST_LOADLIBES to KBUILD_HOSTLDLIBS")
 
-Changes in v7
- - Added patch 02/04 to fix the build error reported by the kbuild bot
+This one causes the collision, the simple fix would probably be to manually=
+=20
+use the old variable names when cherry-picking.
 
-Changes in v6
- - Added Daniel's and Viresh's Acked-by to all patches
+> How should we proceed with this patch?
 
-Changes in v5:
- - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
-   appropriate ifdefery (Daniel)
- - Rebased on 5.2-rc2
+I can send a backport or you manually fix it up when applying, as you wish.
 
-Changes in v4:
- - Added Viresh's Acked-by to all 3 patches
- - Improved commit message of patch 3/3 to explain how it has no
-   functional impact on existing users (Eduardo)
+Greetings,
 
-Changes in v3:
- - Changed warning message for unordered tables to something more
-   explicit (Viresh)
- - Changed WARN() into a pr_err() for consistency
+Eike
+=2D-=20
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+=46on +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
+Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
+Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
+=2E: DE 205 198 055
 
-Changes in v2:
- - Fixed patch 01/03 to actually enable CONFIG_ENERGY_MODEL
- - Added "depends on ENERGY_MODEL" to IPA (Daniel)
- - Added check to bail out if the freq table is unsorted (Viresh)
+emlix - smart embedded open source
+--nextPart1843712.YdZ8EksWrV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXXj6BwAKCRCr5FH7Xu2t
+/CJvA/98TzIia9tLM92HI7zOFV60dSizs/V5UolpD0n4AmSHgHxz//mYvfZGnE7P
+JY9rxyQvFePMSmxR7snjRlpH89HfPGl0sbZsQrnD/fiIbDmtujDlC5LGXBMJ+umD
+7mHWc0dTZ/ZZ4v4hcSRK15mj0phyMBsjo+H8FgyjGIoYXVoCyg==
+=gcVr
+-----END PGP SIGNATURE-----
+
+--nextPart1843712.YdZ8EksWrV--
 
 
-Quentin Perret (4):
-  arm64: defconfig: Enable CONFIG_ENERGY_MODEL
-  PM / EM: Declare EM data types unconditionally
-  thermal: cpu_cooling: Make the power-related code depend on IPA
-  thermal: cpu_cooling: Migrate to using the EM framework
-
- arch/arm64/configs/defconfig  |   1 +
- drivers/thermal/Kconfig       |   1 +
- drivers/thermal/cpu_cooling.c | 427 ++++++++++++++--------------------
- include/linux/energy_model.h  |   3 +-
- 4 files changed, 178 insertions(+), 254 deletions(-)
-
--- 
-2.22.1
 
