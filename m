@@ -2,125 +2,134 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7230DC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065A5C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A0A2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568213995;
-	bh=8hPjscA2LsEymf0YlCe+fSgepmm4iyh6RfoTRwAMQ2U=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qA7IU7czCz3D5czyJAzu8RwJ9cb2EYVLWD1Hl+W/bjf1S0roz/ysjApfL4O4pG3jm
-	 ZxYYQJI+PmvuvLmT2Bg2TSp1RjRwqN4zIYqqP+JlGNuFjUiB/8NvsILfY4MpX6COgQ
-	 da+amydq7jaG141CI2oqZWNwDwUqkT2qFCpadZ/w=
+	by mail.kernel.org (Postfix) with ESMTP id CF3EF21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfIKO7y (ORCPT
+        id S1728495AbfIKPAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:59:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52578 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbfIKO7v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:59:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+LCtvPkRaLtCqEGPGQaTACYlF+XbHu00PNm28XP+sLI=; b=biDUhq1P7Ytu
-        ucR62zwj/jmMvqM1jV2aMMebsORz/iRXwSa/2vrwcQ7DRYMzKQd8muSPZuExUY1rB50WikXHtQMdj
-        DIxi7SbQTcFjY1iYr9nfEMY3B3WwDEtFyKvHeB6cxSeURMSVocIl+nX+hXYeVGETqtV79Dbg3ihHO
-        oRYuA=;
-Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i845z-0001jK-GJ; Wed, 11 Sep 2019 14:59:47 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id CC382D00486; Wed, 11 Sep 2019 15:59:46 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max77686: fix obtaining "maxim,ena" GPIO" to the regulator tree
-In-Reply-To: <20190910170050.GA55530@dtor-ws>
-X-Patchwork-Hint: ignore
-Message-Id: <20190911145946.CC382D00486@fitzroy.sirena.org.uk>
-Date:   Wed, 11 Sep 2019 15:59:46 +0100 (BST)
+        Wed, 11 Sep 2019 11:00:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59314 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727576AbfIKPAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:00:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3045B81C;
+        Wed, 11 Sep 2019 15:00:02 +0000 (UTC)
+Message-ID: <bf00a6cba91936a89d4495d7f73b874afeac2cb3.camel@suse.de>
+Subject: Re: [PATCH v5 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        Will Deacon <will@kernel.org>, f.fainelli@gmail.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org,
+        phill@raspberrypi.org, m.szyprowski@samsung.com
+Date:   Wed, 11 Sep 2019 17:00:00 +0200
+In-Reply-To: <20190911143527.GB43864@C02TF0J2HF1T.local>
+References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+         <20190909095807.18709-4-nsaenzjulienne@suse.de>
+         <b0b824bebb9ef13ce746f9914de83126b0386e23.camel@suse.de>
+         <20190911143527.GB43864@C02TF0J2HF1T.local>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-p7TAQdIbBeJ5BGhbbxNM"
+User-Agent: Evolution 3.32.4 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: max77686: fix obtaining "maxim,ena" GPIO
+--=-p7TAQdIbBeJ5BGhbbxNM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Wed, 2019-09-11 at 15:35 +0100, Catalin Marinas wrote:
+> On Wed, Sep 11, 2019 at 12:54:38PM +0200, Nicolas Saenz Julienne wrote:
+> > On Mon, 2019-09-09 at 11:58 +0200, Nicolas Saenz Julienne wrote:
+> > >  /*
+> > > - * Return the maximum physical address for ZONE_DMA32 (DMA_BIT_MASK(=
+32)).
+> > > It
+> > > - * currently assumes that for memory starting above 4G, 32-bit devic=
+es
+> > > will
+> > > - * use a DMA offset.
+> > > + * Return the maximum physical address for a zone with a given addre=
+ss
+> > > size
+> > > + * limit. It currently assumes that for memory starting above 4G, 32=
+-bit
+> > > + * devices will use a DMA offset.
+> > >   */
+> > > -static phys_addr_t __init max_zone_dma32_phys(void)
+> > > +static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
+> > >  {
+> > >         phys_addr_t offset =3D memblock_start_of_DRAM() & GENMASK_ULL=
+(63,
+> > > 32);
+> > > -       return min(offset + (1ULL << 32), memblock_end_of_DRAM());
+> > > +       return min(offset + (1ULL << zone_bits), memblock_end_of_DRAM=
+());
+> > >  }
+> >=20
+> > while testing other code on top of this series on odd arm64 machines I =
+found
+> > an
+> > issue: when memblock_start_of_DRAM() !=3D 0, max_zone_phys() isn't taki=
+ng into
+> > account the offset to the beginning of memory. This doesn't matter with
+> > zone_bits =3D=3D 32 but it does when zone_bits =3D=3D 30.
+>=20
+> I thought about this but I confused myself and the only case I had in
+> mind was an AMD Seattle system with RAM starting at 4GB.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+I found the issue on a Cavium ThunderX2 server. Oddly enough the memory sta=
+rts
+at 0x802f0000.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> What we need from this function is that the lowest naturally aligned
+> 2^30 RAM is covered by ZONE_DMA while the rest to 2^32 are ZONE_DMA32.
+> This assumed that devices only capable of 30-bit (or 32-bit), have the
+> top address bits hardwired to be able access the bottom of the memory
+> (and this would be expressed in DT as the DMA offset).
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Ok, I was testing a fix I wrote under these assumptions...
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> I guess the fix here is to use GENMASK_ULL(63, zone_bits).
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+...but this is way cleaner than my solution. Thanks!
 
-Thanks,
-Mark
+Regards,
+Nicolas
 
-From 2418f749641caa59d5bc01b66ba16ec5414b28dc Mon Sep 17 00:00:00 2001
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Tue, 10 Sep 2019 10:00:50 -0700
-Subject: [PATCH] regulator: max77686: fix obtaining "maxim,ena" GPIO
 
-This fixes 96392c3d8ca4, as devm_gpiod_get_from_of_node() does
-not do translation "con-id" -> "con-id-gpios" that our bindings expects,
-and therefore it was wrong to change connection ID to be simply
-"maxim,ena" when moving to using devm_gpiod_get_from_of_node().
+--=-p7TAQdIbBeJ5BGhbbxNM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Fixes: 96392c3d8ca4 ("regulator: max77686: Pass descriptor instead of GPIO number")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://lore.kernel.org/r/20190910170050.GA55530@dtor-ws
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/max77686-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/regulator/max77686-regulator.c b/drivers/regulator/max77686-regulator.c
-index 8020eb57374a..c8e579e99316 100644
---- a/drivers/regulator/max77686-regulator.c
-+++ b/drivers/regulator/max77686-regulator.c
-@@ -257,7 +257,7 @@ static int max77686_of_parse_cb(struct device_node *np,
- 	case MAX77686_BUCK9:
- 	case MAX77686_LDO20 ... MAX77686_LDO22:
- 		config->ena_gpiod = gpiod_get_from_of_node(np,
--				"maxim,ena",
-+				"maxim,ena-gpios",
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"max77686-regulator");
--- 
-2.20.1
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl15C/AACgkQlfZmHno8
+x/5f8ggAsuyzvV52JP8D4F3gMeBcgMlqN3+DQV47QfnPQoZyacvk5k1N3xUfcbNc
+TnGiLoB3xsPta+yqccbFl2njg+FBjZc2Ja/+Natqxx+ulXxkIsp7eGP+yeWJiiw9
+oUApF6wwL6WYXWn0H+ZoYfwjCFqUDGWuCUYP3K8vHSVytsTmYegU/B+9nvncBfmk
+iF5Ql/Pd/TA0RLKvs2wftE8h889R2JSGWvdVMCIWWtC5qENC2ar2/ITluJ7kTCRX
+9Ekkkh3L8fI6/qgPxKEcC8HuzO4aUTFlpWxxnfUMCd83wzWFWUUdOZ+rcaPpTMN2
+ih1+8l3//QFXzpY5utTMqIWXxeKMKA==
+=r2f7
+-----END PGP SIGNATURE-----
+
+--=-p7TAQdIbBeJ5BGhbbxNM--
 
