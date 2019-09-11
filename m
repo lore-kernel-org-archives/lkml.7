@@ -2,94 +2,91 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7471EC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F47C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4154620838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5041F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbfIKUIz (ORCPT
+        id S1730479AbfIKUJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:08:55 -0400
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:48018 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbfIKUIz (ORCPT
+        Wed, 11 Sep 2019 16:09:01 -0400
+Received: from 2.mo3.mail-out.ovh.net ([46.105.75.36]:44502 "EHLO
+        2.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728808AbfIKUJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:08:55 -0400
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1i88uY-0003DM-00; Wed, 11 Sep 2019 20:08:18 +0000
-Date:   Wed, 11 Sep 2019 16:08:18 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C
- startup and thread creation (v12)
-Message-ID: <20190911200818.GB9017@brightrain.aerifal.cx>
-References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
- <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
- <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
- <7db64714-3dc5-b322-1edc-736b08ee7d63@redhat.com>
- <87ef0mr6qj.fsf@oldenburg2.str.redhat.com>
- <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com>
- <877e6er4ls.fsf@oldenburg2.str.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <877e6er4ls.fsf@oldenburg2.str.redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Wed, 11 Sep 2019 16:09:00 -0400
+X-Greylist: delayed 25202 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 16:09:00 EDT
+Received: from player168.ha.ovh.net (unknown [10.108.42.239])
+        by mo3.mail-out.ovh.net (Postfix) with ESMTP id E11EB21F5BB
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:03:51 +0200 (CEST)
+Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
+        (Authenticated sender: qperret@qperret.net)
+        by player168.ha.ovh.net (Postfix) with ESMTPSA id 7EBCF997FDF2;
+        Wed, 11 Sep 2019 13:03:35 +0000 (UTC)
+From:   Quentin Perret <qperret@qperret.net>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
+Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qperret@qperret.net
+Subject: [PATCH v8 1/4] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+Date:   Wed, 11 Sep 2019 15:03:11 +0200
+Message-Id: <20190911130314.29973-2-qperret@qperret.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190911130314.29973-1-qperret@qperret.net>
+References: <20190911130314.29973-1-qperret@qperret.net>
+X-Ovh-Tracer-Id: 17345332493490281465
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 09:54:23PM +0200, Florian Weimer wrote:
-> * Carlos O'Donell:
-> 
-> > On 9/11/19 3:08 PM, Florian Weimer wrote:
-> >> * Carlos O'Donell:
-> >> 
-> >>> It would be easier to merge the patch set if it were just an unconditional
-> >>> registration like we do for set_robust_list().
-> >> 
-> >> Note that this depends on the in-tree system call numbers list, which I
-> >> still need to finish according to Joseph's specifications.
-> >
-> > Which work is this? Do you have a URL reference to WIP?
-> 
->   <https://sourceware.org/ml/libc-alpha/2019-05/msg00630.html>
->   <https://sourceware.org/ml/libc-alpha/2019-06/msg00015.html>
-> 
-> I think realistically this is needed for the Y2038 work as well if we
-> want to support building glibc with older kernel headers.  “glibc 2..31
-> will have Y2038 support and rseq support, but only if it runs on a
-> current and it happens to have been built against sufficiently recent
-> kernel headers” is a bit difficult to explain.  The current kernel part
-> is easy enough to understand, but the impact of the kernel headers on
-> the feature set has always been tough to explain.  Especially if you
-> factor in vendor kernels with system call backports.
+From: Quentin Perret <quentin.perret@arm.com>
 
-I'm in favor of in-tree syscall numbers list. If you don't want O(n)
-per-arch work, though, you could just define the 'base number' for
-each arch and use the fact that all the new syscalls share a common
-numbering (i.e. base + constant depending only on syscall). I think
-including the list with glibc is more robust though, and would
-eliminate the need to check for definitions of older (pre-unification)
-syscalls glibc wants to use.
+The recently introduced Energy Model (EM) framework manages power cost
+tables for the CPUs of the system. Its only user right now is the
+scheduler, in the context of Energy Aware Scheduling (EAS).
 
-Rich
+However, the EM framework also offers a generic infrastructure that
+could replace subsystem-specific implementations of the same concepts,
+as this is the case in the thermal framework.
+
+So, in order to prepare the migration of the thermal subsystem to use
+the EM framework, enable it in the default arm64 defconfig, which is the
+most commonly used architecture for IPA. This will also compile-in all
+of the EAS code, although it won't be enabled by default -- EAS requires
+to use the 'schedutil' CPUFreq governor while arm64 defaults to
+'performance'.
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0e58ef02880c..ad0e4944a71f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -71,6 +71,7 @@ CONFIG_COMPAT=y
+ CONFIG_RANDOMIZE_BASE=y
+ CONFIG_HIBERNATION=y
+ CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
++CONFIG_ENERGY_MODEL=y
+ CONFIG_ARM_CPUIDLE=y
+ CONFIG_CPU_FREQ=y
+ CONFIG_CPU_FREQ_STAT=y
+-- 
+2.22.1
+
