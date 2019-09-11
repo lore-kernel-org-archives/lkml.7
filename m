@@ -2,198 +2,145 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DF8ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA78ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D142168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2170220872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="VWcUzUgE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icWt7W0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfIKHtp (ORCPT
+        id S1727109AbfIKHwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:49:45 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:23514 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfIKHtp (ORCPT
+        Wed, 11 Sep 2019 03:52:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41049 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfIKHwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:49:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 86F693F6E9;
-        Wed, 11 Sep 2019 09:49:41 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=VWcUzUgE;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 18ytgjrsSKhl; Wed, 11 Sep 2019 09:49:36 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id A101D3F671;
-        Wed, 11 Sep 2019 09:49:32 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 01E0D3600A6;
-        Wed, 11 Sep 2019 09:49:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568188172; bh=RzGKKS4Bp05BsWEWP+aX9IYliv4nwEQmfcOAV0di4dE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VWcUzUgETPQNDpnigqTUT+SyEwR5F3qH+fxULzOut++6Sn/TCnvXzaiTv4IQoyW/z
-         1hY47vnfO+njzb2vntVa7WGPdoW69pSA3eXOgSLRVPnMjKMuKKj1H4AAH8gnheYzFx
-         IlbYmB6CCCbBtUC4UeuRX7ttFgDnYwyuVA2fHQxw=
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        pv-drivers@vmware.com, Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org>
- <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
- <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
- <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <76f89b46-7b14-9483-e552-eb52762adca0@shipmail.org>
-Date:   Wed, 11 Sep 2019 09:49:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 11 Sep 2019 03:52:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so13129573pfo.8;
+        Wed, 11 Sep 2019 00:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4c1ESOOpjE2P/uFd/KkrtGxclO2zKfVzjnW7aP5b5c=;
+        b=icWt7W0/ZGxLPm02+gnA/J9j34su+UEYXiIxB1YxkdgQeerLuWIogY5w8f411VOCOq
+         SgN3HpCyUKKt0AHKyEgPID2BBTF3u4+NAuk3B9QNNX/KsAULVe9vssToPV0QF4zjzvr0
+         KKcBVuk0hI5R1cs9G7wNbXYDTEXe4mDCRGFBMbrNiIb2Z+MPOKB/5nd+zOlxhG7ImCxG
+         bQPZ2M+gW9iF9Aikn4j/ghPrWXFh5X+F6gpMOK/20erVWKwkcBiH7ran3LtCKIHxFUnF
+         4jUTN0gHJNHvc/00+XZPU9eLUehHBeQae0yLzl5aTDWL/DklS1NCHKX2o3qv5IO278+C
+         /jmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4c1ESOOpjE2P/uFd/KkrtGxclO2zKfVzjnW7aP5b5c=;
+        b=hVs+MlzzlcOWf6afERJANW73FuqA9/qlcUxEMhazrFhYlDnNh3tLfNt9IcTLf5w8BX
+         V5Jj3Sj4DxXrBidhKtVSWH8OlIX8Q/uxJ5SY4wP9bwmLmmm1Li//xbwNkjgzW+vvkJ5l
+         1tjBL0D6KVsrKei/5+Ec06iwy23krOlgOOxkWD+n0K84p2IbP1QtpiQHXSXVzwvDPt/U
+         FjAhi64ebcVp/w9yeyU1QPpkqiVG07RHQj3/nyeR7aR3O5M6B4Pn4C1S6JR4xt0sroPP
+         /K6Oe5iN9Md+TlAJzOczJHYKS4ob00I36HWOiNQlRs1z6zdzjN0ikwy0zBjL61OrT0Wu
+         Kf1g==
+X-Gm-Message-State: APjAAAX5SHn81kdD08rPok9eR8N3aIHLh5vn9h2D2ck2HbQQLvLCIFyg
+        BrjT3g8SJmd5/y1ulsIMzmsd2BmRBT0=
+X-Google-Smtp-Source: APXvYqyrkl1nQUV0tQy2ao6Qp1atdp6sVcb56rA8O+j9Av28pZKjTEmBQuuMIwaP++GyQIODri9+7A==
+X-Received: by 2002:a62:ee0a:: with SMTP id e10mr41430645pfi.197.1568188339617;
+        Wed, 11 Sep 2019 00:52:19 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id u2sm8582445pgp.66.2019.09.11.00.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 00:52:19 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 00/11] Add support for software nodes to gpiolib
+Date:   Wed, 11 Sep 2019 00:52:04 -0700
+Message-Id: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andy.
+This series attempts to add support for software nodes to gpiolib, using
+software node references that were introduced recently. This allows us
+to convert more drivers to the generic device properties and drop
+support for custom platform data:
 
-On 9/11/19 6:18 AM, Andy Lutomirski wrote:
-> On Tue, Sep 10, 2019 at 12:26 PM Thomas Hellström (VMware)
-> <thomas_os@shipmail.org> wrote:
->> On 9/10/19 6:11 PM, Andy Lutomirski wrote:
->>>> On Sep 5, 2019, at 8:24 AM, Christoph Hellwig <hch@infradead.org> wrote:
->>>>
->>>>> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
->>>>>> On 9/5/19 4:15 PM, Dave Hansen wrote:
->>>>>> Hi Thomas,
->>>>>>
->>>>>> Thanks for the second batch of patches!  These look much improved on all
->>>>>> fronts.
->>>>> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
->>>>> bother you with those though, since this assumes TTM will be using the dma
->>>>> API.
->>>> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
->>>> branch:
->>>>
->>>>      http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
->>>>
->>>> they should allow to fault dma api pages in the page fault handler.  But
->>>> this is totally hot off the press and not actually tested for the last
->>>> few patches.  Note that I've also included your two patches from this
->>>> series to handle SEV.
->>> I read that patch, and it seems like you’ve built in the assumption that all pages in the mapping use identical protection or, if not, that the same fake vma hack that TTM already has is used to fudge around it.  Could it be reworked slightly to avoid this?
->>>
->>> I wonder if it’s a mistake to put the encryption bits in vm_page_prot at all.
->>   From my POW, the encryption bits behave quite similar in behaviour to
->> the caching mode bits, and they're also in vm_page_prot. They're the
->> reason TTM needs to modify the page protection in the fault handler in
->> the first place.
->>
->> The problem seen in TTM is that we want to be able to change the
->> vm_page_prot from the fault handler, but it's problematic since we have
->> the mmap_sem typically only in read mode. Hence the fake vma hack. From
->> what I can tell it's reasonably well-behaved, since pte_modify() skips
->> the bits TTM updates, so mprotect() and mremap() works OK. I think
->> split_huge_pmd may run into trouble, but we don't support it (yet) with
->> TTM.
-> One thing I'm confused about: does TTM move individual pages between
-> main memory and device memory or does it move whole mappings?  If it
-> moves individual pages, then a single mapping could have PTEs from
-> dma_alloc_coherent() space and from PCI space.  How can this work with
-> vm_page_prot?  I guess you might get lucky and have both have the same
-> protection bits, but that seems like an unfortunate thing to rely on.
+static const struct software_node gpio_bank_b_node = {
+|-------.name = "B",
+};
 
-With TTM, a single vma is completely backed with memory of the same 
-type, so all PTEs have the same protection, and mimics that of the 
-linear kernel map (if applicable). But the protection is not 
-determinable at mmap time, and we may switch protection and backing 
-memory at certain points in time where all PTEs are first killed.
+static const struct property_entry simone_key_enter_props[] = {
+|-------PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+|-------PROPERTY_ENTRY_STRING("label", "enter"),
+|-------PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+|-------{ }
+};
 
->
-> As a for-real example, take a look at arch/x86/entry/vdso/vma.c.  The
-> "vvar" VMA contains multiple pages that are backed by different types
-> of memory.  There's a page of ordinary kernel memory.  Historically
-> there was a page of genuine MMIO memory, but that's gone now.  If the
-> system is a SEV guest with pvclock enabled, then there's a page of
-> decrypted memory.   They all share a VMA, they're instantiated in
-> .fault, and there is no hackery involved.  Look at vvar_fault().
-
-So this is conceptually identical to TTM. The difference is that it uses 
-vmf_insert_pfn_prot() instead of vmf_insert_mixed() with the vma hack. 
-Had there been a vmf_insert_mixed_prot(), the hack in TTM wouldn't be 
-needed. I guess providing a vmf_insert_mixed_prot() is a to-do for me to 
-pick up.
-
-Having said that, the code you point out is as fragile and suffers from 
-the same shortcomings as TTM since
-a) Running things like split_huge_pmd() that takes the vm_page_prot and 
-applies it to new PTEs will make things break, (although probably never 
-applicable in this case).
-b) Running mprotect() on that VMA will only work if sme_me_mask is part 
-of _PAGE_CHG_MASK (which is addressed in a reliable way in my recent 
-patchset),  otherwise, the encryption setting will be overwritten.
-
-
->> We could probably get away with a WRITE_ONCE() update of the
->> vm_page_prot before taking the page table lock since
->>
->> a) We're locking out all other writers.
->> b) We can't race with another fault to the same vma since we hold an
->> address space lock ("buffer object reservation")
->> c) When we need to update there are no valid page table entries in the
->> vma, since it only happens directly after mmap(), or after an
->> unmap_mapping_range() with the same address space lock. When another
->> reader (for example split_huge_pmd()) sees a valid page table entry, it
->> also sees the new page protection and things are fine.
->>
->> But that would really be a special case. To solve this properly we'd
->> probably need an additional lock to protect the vm_flags and
->> vm_page_prot, taken after mmap_sem and i_mmap_lock.
->>
-> This is all horrible IMO.
-
-I'd prefer to call it fragile and potentially troublesome to maintain.
-
-That distinction is important because if it ever comes to a choice 
-between adding a new lock to protect vm_page_prot (and consequently slow 
-down the whole vm system) and using the WRITE_ONCE solution in TTM, we 
-should know what the implications are. As it turns out previous choices 
-in this area actually seem to have opted for the lockless WRITE_ONCE / 
-READ_ONCE / ptl solution. See __split_huge_pmd_locked() and 
-vma_set_page_prot().
+If we agree in principle, I would like to have the very first 3 patches
+in an immutable branch off maybe -rc8 so that it can be pulled into
+individual subsystems so that patches switching various drivers to
+fwnode_gpiod_get_index() could be applied.
 
 Thanks,
-Thomas
+Dmitry
 
+Dmitry Torokhov (11):
+  gpiolib: of: add a fallback for wlf,reset GPIO name
+  gpiolib: introduce devm_fwnode_gpiod_get_index()
+  gpiolib: introduce fwnode_gpiod_get_index()
+  net: phylink: switch to using fwnode_gpiod_get_index()
+  net: mdio: switch to using fwnode_gpiod_get_index()
+  drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+  gpliolib: make fwnode_get_named_gpiod() static
+  gpiolib: of: tease apart of_find_gpio()
+  gpiolib: of: tease apart acpi_find_gpio()
+  gpiolib: consolidate fwnode GPIO lookups
+  gpiolib: add support for software nodes
+
+ drivers/gpio/Makefile              |   1 +
+ drivers/gpio/gpiolib-acpi.c        | 153 ++++++++++++++----------
+ drivers/gpio/gpiolib-acpi.h        |  21 ++--
+ drivers/gpio/gpiolib-devres.c      |  33 ++----
+ drivers/gpio/gpiolib-of.c          | 159 ++++++++++++++-----------
+ drivers/gpio/gpiolib-of.h          |  26 ++--
+ drivers/gpio/gpiolib-swnode.c      |  92 +++++++++++++++
+ drivers/gpio/gpiolib-swnode.h      |  13 ++
+ drivers/gpio/gpiolib.c             | 184 ++++++++++++++++-------------
+ drivers/gpu/drm/bridge/ti-tfp410.c |   4 +-
+ drivers/net/phy/mdio_bus.c         |   4 +-
+ drivers/net/phy/phylink.c          |   4 +-
+ include/linux/gpio/consumer.h      |  53 ++++++---
+ 13 files changed, 471 insertions(+), 276 deletions(-)
+ create mode 100644 drivers/gpio/gpiolib-swnode.c
+ create mode 100644 drivers/gpio/gpiolib-swnode.h
+
+-- 
+2.23.0.162.g0b9fbb3734-goog
 
