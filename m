@@ -8,62 +8,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07077C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AFFC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A7B206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE49C2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHklITN4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiZMhTYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbfIKULL (ORCPT
+        id S1730506AbfIKUUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:11:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33511 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbfIKULL (ORCPT
+        Wed, 11 Sep 2019 16:20:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35456 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbfIKUU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:11:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id m11so48951035ioo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 13:11:09 -0700 (PDT)
+        Wed, 11 Sep 2019 16:20:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id f4so48266422ion.2;
+        Wed, 11 Sep 2019 13:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=AaoYh6FCL48C0R8R/wQ/0i195JUsJd9aoZEgjtS/br0=;
-        b=rHklITN4LJr5H01xXlNHodUsQvBy61D2d6Ki4fuu4CCfTSrTTqhlHScSIPzzX7/+JH
-         4M2+FYVswyuU+J5zkNQv2gt4RWbpwFnGTMOwa4SwHRXl0rZr649ggWZeRy7Hb1YjYGqX
-         nccd1hTgxNhVcSHn7SzWd5pemJnlKIXKil3o1jqkx6SwrKsgRksJPp9p9tlWyKkQvIuR
-         /Shi0XcCG2dV4gjgDslIgs6OJpkeMLHeDyhGmfo6DARxu+afJZQSTnFE60zSZSsUlWIM
-         9FsTuBUxGCBmlhnCeiWxNc84AV3BDKamJneOT+Kt3iwfwdC3borsXvHaaUSCCVJxHK/I
-         9h3w==
+        bh=iZ9ZspCWMcol1pKYB+J9B5Kr5gfoF9n9RCCNo2Mg9j4=;
+        b=OiZMhTYKjK+8rNX8ASHmW4fIP0MIrS7byHUvJDxmUzNmr6QpCDszI7ByTghyl5KXyv
+         GFGd1N9zzoRxRig0DpfCMWal2jDq+2nIwxWzY0RYJBLCxY36IM6rMTVHaOOoO2RBxrQ7
+         yPjQPOvd9ub0/qgC9ZR1hZgqoaOe3NGPAU0IaO4N5RuBdgeBAU6XM2XY/jyZkZ2/dyYH
+         6+As9UMIqdlxYc8IIrbAXqecaxNXCUYpE+MKvfLYtSTaN5Fo4h29Hvv27B5g8gWlIsWM
+         uePGOMb+t2F2WYJ6ymHPumKeTgJ2kTW1lv7KY+exUKSJYm6/l/RYmRMe4vBz+gWV2DgL
+         RZUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AaoYh6FCL48C0R8R/wQ/0i195JUsJd9aoZEgjtS/br0=;
-        b=OJCiFMafybIYNF2/ysKlrh7njdrhKXUWqPJDfcilkvjyOC2/tKYh7S/kH24OfMJn43
-         r6wFVr08jrWACu9ozIyOzwPCSAR6zLTlLnxBE2PmMdLGbcr6yvD26n33DDaMgrouYlK/
-         MbPZ+28uguLXxDlRiT49fxpbPocsRrRNV7fl6k4pNUQ4W/HWUJIXeQRgeAOtZdhHjGRR
-         txCy/3LJ/yXTX05LexslPZ4BT3xBtt4X2tSzzfjqaWgSsk2fMNuysg9CFm7K62NZYea1
-         WsA6FpKdPH9KKV5wc41ct6uN/w9wtBdKsai1Wg6xF+3SnpnP3GR5yisE/Dyr4dUyQYHh
-         FSiA==
-X-Gm-Message-State: APjAAAWlpHITaff+EjOk6tPh6XaHTFzqORMxx4ri+xozgP83HffAdd1J
-        CcMAGId/si5CMAmQVSQClek=
-X-Google-Smtp-Source: APXvYqxQY8nl3lOx5d6jelT15hsEk1rIHHexz0keOnFjgqy476CmR9qmgJAEQI4QE3W1ASZQeLq/qg==
-X-Received: by 2002:a5d:9856:: with SMTP id p22mr8271529ios.231.1568232669164;
-        Wed, 11 Sep 2019 13:11:09 -0700 (PDT)
+        bh=iZ9ZspCWMcol1pKYB+J9B5Kr5gfoF9n9RCCNo2Mg9j4=;
+        b=KZy6Xsm4z573rwLNRVi350BvXqDrqXW4wRUzD+ZGJZf4CwUgiMFXfOu8w5i7WmYCZh
+         GgFwTa7+crU0M7Gmn5BIGNL2gblj2BYrEehz4Vx1bMuIx9NyiDA7mCun/+cUPXXwEZtF
+         dpmdFGXGOhiYyMs4ebk1FxFDmk/IvsUh/Li2UlBVHqEPaL4+y8gPJ0IXgNkLSAhXr9Dp
+         X1zD40eI8CDZVw+FyGYuGLQqmBx7szbdQFdgbh7G/qxYHkurqUPpjti06obNBKqY4H3Y
+         YhLDgfVzKgVOSQbQEzSgvv3B0eeFEB9Bg99Dr30Ev2tHoldBmWuBFRlQ7tXfxPrzSPBO
+         +abQ==
+X-Gm-Message-State: APjAAAVWr7vCKMlY/3sw6IKEb68hg3004Oqeyaf6XAAd2Z+5e3osGYzO
+        4D00xeMzTsut4uKfKjq9YOS+Z0dcrNs=
+X-Google-Smtp-Source: APXvYqz6kwA0HlBNs2udFzVW64nEXBbfaVgfCTnikbcqjJNuYOEolRHMh7yWphBvc/umsqxIuqPt1w==
+X-Received: by 2002:a02:2a87:: with SMTP id w129mr26432127jaw.41.1568233228997;
+        Wed, 11 Sep 2019 13:20:28 -0700 (PDT)
 Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id l1sm9837ioc.30.2019.09.11.13.11.07
+        by smtp.googlemail.com with ESMTPSA id w22sm5366713ior.79.2019.09.11.13.20.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 13:11:08 -0700 (PDT)
+        Wed, 11 Sep 2019 13:20:28 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/chrome: null check create_singlethread_workqueue
-Date:   Wed, 11 Sep 2019 15:10:59 -0500
-Message-Id: <20190911201100.11483-1-navid.emamdoost@gmail.com>
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Winslow <swinslow@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: gspca: null check create_singlethread_workqueue
+Date:   Wed, 11 Sep 2019 15:20:12 -0500
+Message-Id: <20190911202015.12431-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,28 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cros_usbpd_logger_probe the return value of
-create_singlethread_workqueue may be null, it should be checked.
+In sd_start the return value of create_singlethread_workqueue needs
+null check.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/platform/chrome/cros_usbpd_logger.c | 3 +++
+ drivers/media/usb/gspca/sq905c.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
-index 7c7b267626a0..c83397955cc3 100644
---- a/drivers/platform/chrome/cros_usbpd_logger.c
-+++ b/drivers/platform/chrome/cros_usbpd_logger.c
-@@ -209,6 +209,9 @@ static int cros_usbpd_logger_probe(struct platform_device *pd)
- 	/* Retrieve PD event logs periodically */
- 	INIT_DELAYED_WORK(&logger->log_work, cros_usbpd_log_check);
- 	logger->log_workqueue =	create_singlethread_workqueue("cros_usbpd_log");
-+	if (!logger->log_workqueue)
+diff --git a/drivers/media/usb/gspca/sq905c.c b/drivers/media/usb/gspca/sq905c.c
+index 3d7f6dcdd7a8..6ca947aef298 100644
+--- a/drivers/media/usb/gspca/sq905c.c
++++ b/drivers/media/usb/gspca/sq905c.c
+@@ -276,6 +276,9 @@ static int sd_start(struct gspca_dev *gspca_dev)
+ 	}
+ 	/* Start the workqueue function to do the streaming */
+ 	dev->work_thread = create_singlethread_workqueue(MODULE_NAME);
++	if (!dev->work_thread)
 +		return -ENOMEM;
 +
- 	queue_delayed_work(logger->log_workqueue, &logger->log_work,
- 			   CROS_USBPD_LOG_UPDATE_DELAY);
+ 	queue_work(dev->work_thread, &dev->work_struct);
  
+ 	return 0;
 -- 
 2.17.1
 
