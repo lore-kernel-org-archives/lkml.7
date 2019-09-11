@@ -2,141 +2,189 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BC8C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E0C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0BC2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WbGo5Hmz"
+	by mail.kernel.org (Postfix) with ESMTP id 135C82084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfIKKZi (ORCPT
+        id S1727705AbfIKK0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:25:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53927 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbfIKKZh (ORCPT
+        Wed, 11 Sep 2019 06:26:41 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:35302 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfIKK0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:25:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q18so2776118wmq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cVytbu5aDeImYPKa8pGIMJDrGZ6PUWapgttWO1YNSWo=;
-        b=WbGo5Hmz09242kK2X2Ks5uKjFCYXNT2i6lWaWWpoIN+qvvLyXoNLqTsd/1nDidIfV2
-         DQVN4B+puM2xskQIoKsxbaSQMlx9AiUrOLwVDieIgFbBoCitWqznFjicK88E/v9xXS3K
-         BN25w/Fa6IfYNrZLdGgUIYPdCBhRgedhJ/2rGI2IPa0QIANFJ5kDHIWvhJOGlaWJb2aV
-         w6whG54hVEfGCDgCh4JWZz3XIQN8XzZiMzmPQohhgPvGydLLkQGve+NqCWI7yeFo9olm
-         CelxyfcqCEsPYLNMEvfPEQA+NH12WAoyHPk8tORRcyaFb0AOnBbf6TX6tapfMVeOj2to
-         danw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cVytbu5aDeImYPKa8pGIMJDrGZ6PUWapgttWO1YNSWo=;
-        b=Mytmju4/IUwUlmeHOODvqaraV3lGSyuGfVkNT5+KxFAW8AgkxhvRCaDlKkFwqvfB8O
-         Z78PfwwUjDcEV74gARyWBynspGe6P3Lq2svhuy+eWBAswAjUb1KqcM0DKBNac2vgJCNh
-         WSSrrNchxDRtY69bE8gOYxRq4pvHtFEpWMqwrWVd21FtYd6TGxpaaGvMSEpHjK0TShUv
-         viEPS38w7bv1i8e72HszPDPgtped8ARUoJDRizpcRqj3iFhVPQFXtEQY0401omzQYWEd
-         USa8emukyfRLBGupBmJtSBZQJ7HNfpfiXlvSZ/NOcWHm5yzpdkYiy2LWGz9w+B5UaUG7
-         NmmA==
-X-Gm-Message-State: APjAAAWM3+IBN8xosRSrayEEOL+olEmu7Rld3KeLP3vNK6BF5RFVL44F
-        3ghNwFu2LH+KoQbiz8DYkSMdVA==
-X-Google-Smtp-Source: APXvYqzVMF0R+kyeDNgLI4QVwcAzQuyJbImC6/3qU7I+I0w6fwpvAl/Ay1oUpkLuzSS/Uus7LaWquA==
-X-Received: by 2002:a1c:f607:: with SMTP id w7mr3358169wmc.84.1568197535579;
-        Wed, 11 Sep 2019 03:25:35 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id e20sm2583505wme.3.2019.09.11.03.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 03:25:34 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 11:25:33 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
- HWEN pin
-Message-ID: <20190911102533.not4ta3xwgm6bhjo@holly.lan>
-References: <20190910212909.18095-1-andreas@kemnade.info>
- <20190910212909.18095-3-andreas@kemnade.info>
+        Wed, 11 Sep 2019 06:26:40 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1i7zpZ-00044U-VN; Wed, 11 Sep 2019 12:26:34 +0200
+Message-ID: <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057
+ (__sta_info_destroy_part2())
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Date:   Wed, 11 Sep 2019 12:26:32 +0200
+In-Reply-To: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com> (sfid-20190911_120605_906320_E6C720CE)
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+         (sfid-20190911_120605_906320_E6C720CE)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910212909.18095-3-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 11:29:09PM +0200, Andreas Kemnade wrote:
-> For now just enable it in the probe function to allow i2c
-> access. Disabling also means resetting the register values
-> to default and according to the datasheet does not give
-> power savings
-> 
-> Tested on Kobo Clara HD.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> changes in v2:
-> - simplification
-> - correct gpio direction initialisation
-> 
->  drivers/video/backlight/lm3630a_bl.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index 8f84f3684f04..9d0639d4202d 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -12,6 +12,8 @@
->  #include <linux/uaccess.h>
->  #include <linux/interrupt.h>
->  #include <linux/regmap.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio.h>
+Hi,
 
-Nitpicking... but I don't think linux/gpio.h is used anymore.
+> So I'm at LCA
 
+When did LCA move to Portugal? ;-))
 
->  #include <linux/pwm.h>
->  #include <linux/platform_data/lm3630a_bl.h>
->  
-> @@ -48,6 +50,7 @@ struct lm3630a_chip {
->  	struct lm3630a_platform_data *pdata;
->  	struct backlight_device *bleda;
->  	struct backlight_device *bledb;
-> +	struct gpio_desc *enable_gpio;
->  	struct regmap *regmap;
->  	struct pwm_device *pwmd;
->  };
-> @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *client,
->  	}
->  	pchip->pdata = pdata;
->  
-> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> +						GPIOD_OUT_HIGH);
-> +	if (IS_ERR(pchip->enable_gpio)) {
-> +		rval = PTR_ERR(pchip->enable_gpio);
-> +		return rval;
-> +	}
-> +
->  	/* chip initialize */
->  	rval = lm3630a_chip_init(pchip);
->  	if (rval < 0) {
-> -- 
-> 2.20.1
+> , reading email, using my laptop more than I normally do,
+> and with different networking than I normally do.
 > 
+> And I just had a 802.11 WARN_ON() trigger, followed by essentially a
+> dead machine due to some lock held (maybe rtnl_lock).
+
+yes, it's definitely stuck on the RTNL, all the lot of the workqueues
+are trying to acquire it (linkwatch, ipv6, but oddly enough even the
+mac80211 restart work).
+
+> It's possible that the lock held thing happened before, and is the
+> _reason_ for the delay, I don't know.
+
+No, we do have the lock in the WARN_ON(), somewhere around
+dev_close_many() it is acquired.
+
+> Previous resume looks normal:
+> [snip]
+>    wlp2s0: Limiting TX power to 23 (23 - 0) dBm as advertised by
+> 54:ec:2f:05:70:2c
+
+Is that the message you meant?
+
+> Another _almost_ successful suspend/resume:
+> [snip
+>    wlp2s0: RX AssocResp from 54:ec:2f:05:70:2c (capab=0x1011 status=0 aid=2)
+>    wlp2s0: associated
+>    wlp2s0: Limiting TX power to 23 (23 - 0) dBm as advertised by
+> 54:ec:2f:05:70:2c
+>    ath: EEPROM regdomain: 0x826c
+>    ath: EEPROM indicates we should expect a country code
+>    ath: doing EEPROM country->regdmn map search
+>    ath: country maps to regdmn code: 0x37
+>    ath: Country alpha2 being used: PT
+>    ath: Regpair used: 0x37
+>    ath: regdomain 0x826c dynamically updated by country element
+>    IPv6: ADDRCONF(NETDEV_CHANGE): wlp2s0: link becomes ready
+> 
+> I say _almost_, because I don't see the "No TX power limit" for the
+> country lookup (yes, Portugal) this time?
+
+because here you had it too, just a bit earlier. It usually comes when a
+beacon is received the first time, which depends on the AP timing.
+
+>    ath10k_pci 0000:02:00.0: wmi command 16387 timeout, restarting hardware
+>    ath10k_pci 0000:02:00.0: failed to set 5g txpower 23: -11
+>    ath10k_pci 0000:02:00.0: failed to setup tx power 23: -11
+>    ath10k_pci 0000:02:00.0: failed to recalc tx power: -11
+>    ath10k_pci 0000:02:00.0: failed to set inactivity time for vdev 0: -108
+>    ath10k_pci 0000:02:00.0: failed to setup powersave: -108
+> 
+> That certainly looks like something did try to set a power limit, but
+> eventually failed.
+
+Yeah, that does seem a bit fishy. Kalle would have to comment for
+ath10k.
+
+> Immediately after that:
+> 
+>    wlp2s0: deauthenticating from 54:ec:2f:05:70:2c by local choice
+> (Reason: 3=DEAUTH_LEAVING)
+
+I don't _think_ any of the above would be a reason to disconnect, but it
+clearly looks like the device got stuck at this point, since everything
+just fails afterwards.
+
+>    ath10k_pci 0000:02:00.0: failed to delete peer 54:ec:2f:05:70:2c
+> for vdev 0: -108
+> 
+> and this then results in:
+> 
+>    WARNING: CPU: 4 PID: 1246 at net/mac80211/sta_info.c:1057
+> __sta_info_destroy_part2+0x147/0x150 [mac80211]
+
+Not really a surprise. Perhaps we shouldn't even WARN_ON() this, if the
+driver is stuck completely and returning errors to everything that
+doesn't help so much.
+
+Then again, the stack trace was helpful this time:
+
+>     ieee80211_set_disassoc+0xc2/0x590 [mac80211]
+>     ieee80211_mgd_deauth.cold+0x4a/0x1b8 [mac80211]
+>     cfg80211_mlme_deauth+0xb3/0x1d0 [cfg80211]
+>     cfg80211_mlme_down+0x66/0x90 [cfg80211]
+>     cfg80211_disconnect+0x129/0x1e0 [cfg80211]
+>     cfg80211_leave+0x27/0x40 [cfg80211]
+>     cfg80211_netdev_notifier_call+0x1a7/0x4e0 [cfg80211]
+>     notifier_call_chain+0x4c/0x70
+>     __dev_close_many+0x57/0x100
+>     dev_close_many+0x8d/0x140
+>     dev_close.part.0+0x44/0x70
+>     cfg80211_shutdown_all_interfaces+0x71/0xd0 [cfg80211]
+>     cfg80211_rfkill_set_block+0x22/0x30 [cfg80211]
+>     rfkill_set_block+0x92/0x140 [rfkill]
+>     rfkill_fop_write+0x11f/0x1c0 [rfkill]
+>     vfs_write+0xb6/0x1a0
+
+
+Since we see that something actually did an rfkill operation. Did you
+push a button there?
+
+Like I said above, the fact that we get into notifier_call_chain() from
+rfkill_set_block() means that we acquired the RTNL here somewhere
+between these.
+
+>    ath10k_pci 0000:02:00.0: failed to recalculate rts/cts prot for vdev 0: -108
+>    ath10k_pci 0000:02:00.0: failed to set cts protection for vdev 0: -108
+> 
+> and it looks like it leaves some lock held.
+
+Yeah, the RTNL.
+
+You don't happen to have timing information on these logs, perhaps
+recorded in the logfile/journal?
+
+It seems odd to me, since the RTNL is acquired by
+cfg80211_rfkill_set_block() and that doesn't even have an error path, it
+just does
+        rtnl_lock();
+        cfg80211_shutdown_all_interfaces(&rdev->wiphy);
+        rtnl_unlock();
+
+The only explanation I therefore have is that something is just taking
+*forever* in that code path, hence my question about timing information
+on the logs.
+
+Looks like indeed the driver gives the device at least *3 seconds* for
+every command, see ath10k_wmi_cmd_send(), so most likely this would
+eventually have finished, but who knows how many firmware commands it
+would still have attempted to send...
+
+Perhaps the driver should mark the device as dead and fail quickly once
+it timed out once, or so, but I'll let Kalle comment on that.
+
+johannes
+
