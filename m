@@ -2,198 +2,163 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F3C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCCDC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46EF2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D3A2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfIKQZl (ORCPT
+        id S1729184AbfIKQZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:25:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56978 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 12:25:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48438 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfIKQZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:25:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728825AbfIKQZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:25:45 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C289F30983DE;
-        Wed, 11 Sep 2019 16:25:39 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5228860BEC;
-        Wed, 11 Sep 2019 16:25:38 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Wed, 11 Sep 2019 12:25:37 -0400
-Message-ID: <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
-In-Reply-To: <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id D46913D3C
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 16:25:44 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id j3so10684983wrn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:25:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jouLTsamzJ4avMDtLnEA4ZYZ2r8dstKdUGPZA1EeyPc=;
+        b=QZkn+VZ1VdH4nJGGCTXYwPguAmAvgEzhjVNpTZ6bgBcAeV5lxfbOkYjLQoQs6oXYvP
+         inIm707JDjSbExdUazJhfYtm3lYi5urr0yYjCmKV4d0dOk/qEtPLAvCtyg9EXuAz3noP
+         /Ip4c10saF+L8eB38XdeSJ0nsFM3j+5vdyla0IifAZNt9dX/eHnqNBq1Dcu8r6CY1bkj
+         KNfzSFBGikysYWcRwaQV/b63QVLXaz+JlLOq+NCjwchpmryZcUKPDXd6WDnQQCmtyuwY
+         wVy/P9IZMRnw1It65c5JOYw+NniPKihh5hYxh/sVNZq6fzyu4cI/A+Iu8y325Xd7Eui4
+         b8+Q==
+X-Gm-Message-State: APjAAAWRG9I9EXLaNJel7q0bYDbzHCCB0mZr0tU13twKz9keb0Klla54
+        IhnFE0mC1IKXEnLs5tg533HGHk371afcwCab/35DQa5HVGmsTndSmfkLZRGMPRmXR/hKkHo1ep2
+        b5G8bwddKb45u75iUIO/RD6Bs
+X-Received: by 2002:adf:db8e:: with SMTP id u14mr5211830wri.50.1568219143519;
+        Wed, 11 Sep 2019 09:25:43 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz9RLDSUAqf9dPaonHEiASXp5JqjZOlzrrW+BDIVOqMn9pjKU55MQl1oFpGGrhgDg26esMu6w==
+X-Received: by 2002:adf:db8e:: with SMTP id u14mr5211814wri.50.1568219143230;
+        Wed, 11 Sep 2019 09:25:43 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:102b:3795:6714:7df6? ([2001:b07:6468:f312:102b:3795:6714:7df6])
+        by smtp.gmail.com with ESMTPSA id d78sm4041480wmd.47.2019.09.11.09.25.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2019 09:25:42 -0700 (PDT)
+Subject: Re: [PATCH] KVM: LAPIC: Fix SynIC Timers inject timer interrupt w/o
+ LAPIC present
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1567680270-14022-1-git-send-email-wanpengli@tencent.com>
+ <87ftlakhn6.fsf@vitty.brq.redhat.com>
+ <CANRm+CyPxb+ZY2cTdbLL_LBKMJSOaMqnPGKc_ATc6-TMHW-rJw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <23b9c284-9317-2c9a-ed3d-6bdf9ac0dea5@redhat.com>
+Date:   Wed, 11 Sep 2019 18:25:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 11 Sep 2019 16:25:39 +0000 (UTC)
+In-Reply-To: <CANRm+CyPxb+ZY2cTdbLL_LBKMJSOaMqnPGKc_ATc6-TMHW-rJw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6 Sep 2019, at 16:50, Chuck Lever wrote:
-
->> On Sep 6, 2019, at 4:47 PM, Jason L Tibbitts III <tibbs@math.uh.edu> 
->> wrote:
+On 06/09/19 03:54, Wanpeng Li wrote:
+> On Thu, 5 Sep 2019 at 21:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >>
->>>>>>> "JBF" == J Bruce Fields <bfields@fieldses.org> writes:
+>> Wanpeng Li <kernellwp@gmail.com> writes:
 >>
->> JBF> Those readdir changes were client-side, right?  Based on that 
->> I'd
->> JBF> been assuming a client bug, but maybe it'd be worth getting a 
->> full
->> JBF> packet capture of the readdir reply to make sure it's legit.
+>>> From: Wanpeng Li <wanpengli@tencent.com>
+>>>
+>>> Reported by syzkaller:
+>>>
+>>>       kasan: GPF could be caused by NULL-ptr deref or user memory access
+>>>       general protection fault: 0000 [#1] PREEMPT SMP KASAN
+>>>       RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+>>>       Call Trace:
+>>>       kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+>>>       stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+>>>       stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+>>>       kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+>>>       vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+>>>       vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+>>>       kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+>>>       kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+>>>
+>>> The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
+>>> in addition, there is no lapic in the kernel, the counters value are small
+>>> enough in order that kvm_hv_process_stimers() inject this already-expired
+>>> timer interrupt into the guest through lapic in the kernel which triggers
+>>> the NULL deferencing. This patch fixes it by checking lapic_in_kernel,
+>>> discarding the inject if it is 0.
+>>>
+>>> Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>>> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>>> ---
+>>>  arch/x86/kvm/hyperv.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+>>> index c10a8b1..461fcc5 100644
+>>> --- a/arch/x86/kvm/hyperv.c
+>>> +++ b/arch/x86/kvm/hyperv.c
+>>> @@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
+>>>               .vector = stimer->config.apic_vector
+>>>       };
+>>>
+>>> -     return !kvm_apic_set_irq(vcpu, &irq, NULL);
+>>> +     if (lapic_in_kernel(vcpu))
+>>> +             return !kvm_apic_set_irq(vcpu, &irq, NULL);
+>>> +     return 0;
+>>>  }
+>>>
+>>>  static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
 >>
->> I have been working with bcodding on IRC for the past couple of days 
->> on
->> this.  Fortunately I was able to come up with way to fill up a 
->> directory
->> in such a way that it will fail with certainty and as a bonus doesn't
->> include any user data so I can feel OK about sharing packet captures. 
->>  I
->> have a capture alongside a kernel trace of the problematic operation 
->> in
->> https://www.math.uh.edu/~tibbs/nfs/.  Not that I can particularly 
->> tell
->> anything useful from that, but bcodding says that it seems to point 
->> to
->> some issue in sunrpc.
+>> Hm, but this basically means direct mode synthetic timers won't work
+>> when LAPIC is not in kernel but the feature will still be advertised to
+>> the guest, not good. Shall we stop advertizing it? Something like
+>> (completely untested):
 >>
->> And because I can easily reproduce this and I was able to do a 
->> bisect:
+>> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+>> index 3f5ad84853fb..1dfa594eaab6 100644
+>> --- a/arch/x86/kvm/hyperv.c
+>> +++ b/arch/x86/kvm/hyperv.c
+>> @@ -1856,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
 >>
->> 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d is the first bad commit
->> commit 2c94b8eca1a26cd46010d6e73a23da5f2e93a19d
->> Author: Chuck Lever <chuck.lever@oracle.com>
->> Date:   Mon Feb 11 11:25:41 2019 -0500
+>>                         ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+>>                         ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+>> -                       ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+>> +
+>> +                       /*
+>> +                        * Direct Synthetic timers only make sense with in-kernel
+>> +                        * LAPIC
+>> +                        */
+>> +                       if (lapic_in_kernel(vcpu))
+>> +                               ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
 >>
->>    SUNRPC: Use au_rslack when computing reply buffer size
->>
->>    au_rslack is significantly smaller than (au_cslack << 2). Using
->>    that value results in smaller receive buffers. In some cases this
->>    eliminates an extra segment in Reply chunks (RPC/RDMA).
->>
->>    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>
->> :040000 040000 d4d1ce2fbe0035c5bd9df976b8c448df85dcb505 
->> 7011a792dfe72ff9cd70d66e45d353f3d7817e3e M      net
->>
->> But of course, I can't say whether this is the actual bad commit or
->> whether it just introduced a behavior change which alters the 
->> conditions
->> under which the problem appears.
->
-> The first place I'd start looking is the XDR constants at the head of 
-> fs/nfs/nfs4xdr.c
-> having to do with READDIR.
+>>                         break;
+> 
+> Thanks, I fold this into v2, syzkaller even didn't check the cpuid, so
+> I still keep the discard inject part.
 
-Well, one thing is that I wonder about decode_readdir_maxsz including
-decode_verifier_maxsz since it is part of READDIR4resok, and so should 
-be
-included in the page data.. but that really doesn't matter here, I think 
-we
-just end up with a larger head.  Moving the start of the tail two words
-forward doesn't seem to fix things..
+Can you also include a beautified testcase or at least a link to the
+syzkaller source?
 
-I think the mic's xdr_buf_subsegment is getting partially split between
-leftover space in the pages and the tail, so the checks for the length 
-of
-the subbuf do not match the length of mic.  In that case, we usually 
-just
-have extra room in the tail to copy it over, but now that rslack is not 
-so
-slack, the only extra room (as determined in xdr_buf_read_netobj()) 
-would be
-extra space in the page data, which we can't use.
+Thanks,
 
-The problem is that xdr_buf_read_netobj() is using xdr_buf_subsegment() 
-with
-an offset in the response data to the mic, but xdr_buf_subsegement() 
-decides
-what to do based on offsets in the already set-up xdr_buf.  If the 
-server's
-response leaves a hole in the page_len less than the mic, then the mic
-subsegment straddles the page and the tail.  Then we try to copy it to 
-the
-end of the tail, but now there's not enough room.
-
-Instead, I think we want to make sure the mic falls squarely into the 
-tail
-every time.
-
-xdr_buf_read_netobj() is only used for the mic, so it seems like we can
-refactor it to just use the tail, or get rid of it altogether.  I'll see 
-if
-I can do that.
-
-Read on, if you want some numbers to check my work..
-
-Here's how to reproduce:
-Init an xdr_buf of 176, so rq_rcvsize is:
-  4  RPC_REPHDRSIZE
-19  auth->au_rslack
-21  .p_replen
------
-44<<2 = 176
-
-Then xdr_inline_pages() with:
-- offset 140:
-     21  resp.hdr
-      4  RPC_REPHDRSIZE
-     11  auth->au_ralign
-     -1  xdr pad fixup
-     -----
-     35<<2 = 140
-
-- base of 88 (that's static entries for . and ..)
-- len of 262056 (64 pages - base of 88)
-
-This gives us the following xdr_buf:
-
-struct xdr_buf {
-     head->iov_len = 140,
-     tail->iov_len = 32,
-     page_len = 262056,
-     buflen = 262232
-}
-
-Then, get a READDIR response of total length 232208:
-
-56 bytes to GSS data
-76 bytes to READDIR4resok
-262044 bytes of READDIR4resok
-32 bytes of mic
-
-That puts the mic at offset 262176.
-
-That all looks right, and the response is well-formed.
-
-Things go badly in xdr_read_netobj() with offset 262176:
-
-We return -ENOMEM when
-obj->len (28) is > than buf->buflen (262232) - buf->len (262208)
-
-Ben
+Paolo
