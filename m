@@ -2,153 +2,140 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A0DC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB353C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952AE2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90342085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfIKQen (ORCPT
+        id S1729086AbfIKQfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:34:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35424 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfIKQem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:34:42 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C20FC8A218D;
-        Wed, 11 Sep 2019 16:34:41 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-234.rdu2.redhat.com [10.10.123.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80D705C207;
-        Wed, 11 Sep 2019 16:34:38 +0000 (UTC)
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <1a8e6c0a-6ba6-d71f-974e-f8a9c623c25b@redhat.com>
-Date:   Wed, 11 Sep 2019 17:34:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 11 Sep 2019 12:35:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13950 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728828AbfIKQfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:35:23 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BGWPbE008827;
+        Wed, 11 Sep 2019 12:34:53 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uy4351360-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 12:34:53 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8BGTSmU023056;
+        Wed, 11 Sep 2019 16:34:52 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2uv467cjdr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 16:34:52 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BGYpIU13632112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 16:34:52 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3663112061;
+        Wed, 11 Sep 2019 16:34:51 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4A87112063;
+        Wed, 11 Sep 2019 16:34:49 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.164.37])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Sep 2019 16:34:49 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH] powerpc/prom_init: Undo relocation before entering secure mode
+Date:   Wed, 11 Sep 2019 13:34:33 -0300
+Message-Id: <20190911163433.12822-1-bauerman@linux.ibm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 11 Sep 2019 16:34:41 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909110152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 5:01 PM, Qian Cai wrote:
->
->> On Sep 11, 2019, at 11:05 AM, Waiman Long <longman@redhat.com> wrote:
->>
->> When allocating a large amount of static hugepages (~500-1500GB) on a
->> system with large number of CPUs (4, 8 or even 16 sockets), performance
->> degradation (random multi-second delays) was observed when thousands
->> of processes are trying to fault in the data into the huge pages. The
->> likelihood of the delay increases with the number of sockets and hence
->> the CPUs a system has.  This only happens in the initial setup phase
->> and will be gone after all the necessary data are faulted in.
->>
->> These random delays, however, are deemed unacceptable. The cause of
->> that delay is the long wait time in acquiring the mmap_sem when trying
->> to share the huge PMDs.
->>
->> To remove the unacceptable delays, we have to limit the amount of wait
->> time on the mmap_sem. So the new down_write_timedlock() function is
->> used to acquire the write lock on the mmap_sem with a timeout value of
->> 10ms which should not cause a perceivable delay. If timeout happens,
->> the task will abandon its effort to share the PMD and allocate its own
->> copy instead.
->>
->> When too many timeouts happens (threshold currently set at 256), the
->> system may be too large for PMD sharing to be useful without undue delay.
->> So the sharing will be disabled in this case.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->> include/linux/fs.h |  7 +++++++
->> mm/hugetlb.c       | 24 +++++++++++++++++++++---
->> 2 files changed, 28 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index 997a530ff4e9..e9d3ad465a6b 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -40,6 +40,7 @@
->> #include <linux/fs_types.h>
->> #include <linux/build_bug.h>
->> #include <linux/stddef.h>
->> +#include <linux/ktime.h>
->>
->> #include <asm/byteorder.h>
->> #include <uapi/linux/fs.h>
->> @@ -519,6 +520,12 @@ static inline void i_mmap_lock_write(struct address_space *mapping)
->> 	down_write(&mapping->i_mmap_rwsem);
->> }
->>
->> +static inline bool i_mmap_timedlock_write(struct address_space *mapping,
->> +					 ktime_t timeout)
->> +{
->> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
->> +}
->> +
->> static inline void i_mmap_unlock_write(struct address_space *mapping)
->> {
->> 	up_write(&mapping->i_mmap_rwsem);
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index 6d7296dd11b8..445af661ae29 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -4750,6 +4750,8 @@ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
->> 	}
->> }
->>
->> +#define PMD_SHARE_DISABLE_THRESHOLD	(1 << 8)
->> +
->> /*
->>  * Search for a shareable pmd page for hugetlb. In any case calls pmd_alloc()
->>  * and returns the corresponding pte. While this is not necessary for the
->> @@ -4770,11 +4772,24 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
->> 	pte_t *spte = NULL;
->> 	pte_t *pte;
->> 	spinlock_t *ptl;
->> +	static atomic_t timeout_cnt;
->>
->> -	if (!vma_shareable(vma, addr))
->> -		return (pte_t *)pmd_alloc(mm, pud, addr);
->> +	/*
->> +	 * Don't share if it is not sharable or locking attempt timed out
->> +	 * after 10ms. After 256 timeouts, PMD sharing will be permanently
->> +	 * disabled as it is just too slow.
-> It looks like this kind of policy interacts with kernel debug options like KASAN (which is going to slow the system down
-> anyway) could introduce tricky issues due to different timings on a debug kernel.
+The ultravisor will do an integrity check of the kernel image but we
+relocated it so the check will fail. Restore the original image by
+relocating it back to the kernel virtual base address.
 
-With respect to lockdep, down_write_timedlock() works like a trylock. So
-a lot of checking will be skipped. Also the lockdep code won't be run
-until the lock is acquired. So its execution time has no effect on the
-timeout.
+This works because during build vmlinux is linked with an expected virtual
+runtime address of KERNELBASE.
 
-Cheers,
-Longman
+Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
+ arch/powerpc/include/asm/elf.h         |  3 +++
+ arch/powerpc/kernel/prom_init.c        | 11 +++++++++++
+ arch/powerpc/kernel/prom_init_check.sh |  3 ++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/arch/powerpc/include/asm/elf.h b/arch/powerpc/include/asm/elf.h
+index 409c9bfb43d9..57c229a86f08 100644
+--- a/arch/powerpc/include/asm/elf.h
++++ b/arch/powerpc/include/asm/elf.h
+@@ -175,4 +175,7 @@ do {									\
+ 	ARCH_DLINFO_CACHE_GEOMETRY;					\
+ } while (0)
+ 
++/* Relocate the kernel image to @final_address */
++void relocate(unsigned long final_address);
++
+ #endif /* _ASM_POWERPC_ELF_H */
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 74f70f90eff0..44b1d404250e 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -3249,7 +3249,18 @@ static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
+ 	/* Switch to secure mode. */
+ 	prom_printf("Switching to secure mode.\n");
+ 
++	/*
++	 * The ultravisor will do an integrity check of the kernel image but we
++	 * relocated it so the check will fail. Restore the original image by
++	 * relocating it back to the kernel virtual base address.
++	 */
++	relocate(KERNELBASE);
++
+ 	ret = enter_secure_mode(kbase, fdt);
++
++	/* Relocate the kernel again. */
++	relocate(kbase);
++
+ 	if (ret != U_SUCCESS) {
+ 		prom_printf("Returned %d from switching to secure mode.\n", ret);
+ 		prom_rtas_os_term("Switch to secure mode failed.\n");
+diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
+index 160bef0d553d..16535ccc0fa0 100644
+--- a/arch/powerpc/kernel/prom_init_check.sh
++++ b/arch/powerpc/kernel/prom_init_check.sh
+@@ -26,7 +26,8 @@ _end enter_prom $MEM_FUNCS reloc_offset __secondary_hold
+ __secondary_hold_acknowledge __secondary_hold_spinloop __start
+ logo_linux_clut224 btext_prepare_BAT
+ reloc_got2 kernstart_addr memstart_addr linux_banner _stext
+-__prom_init_toc_start __prom_init_toc_end btext_setup_display TOC."
++__prom_init_toc_start __prom_init_toc_end btext_setup_display TOC.
++relocate"
+ 
+ NM="$1"
+ OBJ="$2"
