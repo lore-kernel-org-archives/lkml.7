@@ -2,164 +2,104 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2D2C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E45C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9642F2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1072085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmgDd6/9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMYQlJr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfIKScE (ORCPT
+        id S1730091AbfIKScG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:32:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54628 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729867AbfIKScD (ORCPT
+        Wed, 11 Sep 2019 14:32:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33771 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729867AbfIKScG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:32:03 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so4647875wmp.4;
-        Wed, 11 Sep 2019 11:32:01 -0700 (PDT)
+        Wed, 11 Sep 2019 14:32:06 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a22so21004449ljd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6Te7QE2Q2g9STJbNhhZtv5SiHSyMZyM+FEre3Dz6O8Y=;
-        b=jmgDd6/90ZK/KSjOdrNqJAxGaDbwNjQJv5BWKzzKlM6LwUpEtBrZ4S/M6pY1Y2zwVV
-         SYnUdgL2vXoRYvJP69g7kRU8ygDsin0HwQX37zUefUMQVvvH3BAdctndGQ6ajD6V9/p7
-         B1LcD9Q7jXCDeUw1PxdEbcIiApu7ZJyDqkv7hu7B4b4A8tl+7W7n43Ja8y2XVNmsXXPi
-         2JPPtO9FTxf2qhFuv126oXjMVF1OO2LnELKexrwxJc+me24+3CWUCeR0oF52zerphQst
-         zBF8s+lLPpx4Eftb2S04xTlTUUEcd1SSmuWlDD040Yc/OoyaxfqGL0I2+/RiA08WTukU
-         7idQ==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=osLb1I6IiQ2BmJysQ2eAtNr8jj+efIn6W4VanYf9QGY=;
+        b=PMYQlJr4db2/2U22T74KWGNQW5mdUGVyjgpKLcqJfnorAewoVIcQKwl1BzqDNkRD/U
+         cxRrYsZ+5fbA2rw3jGvtH6kbMcHDLEQRziuX1fV/qeeviWc9mjeu9Go/K8Q+4BKkOQh3
+         fCj8F4eTrGHyzDNZV1KSZaWrXjz7vSLKirSFrboYihd0hx3wGLfZCHqXfmABfpXdyxwL
+         hE3YLN0H2HgIbNATx0z0UPk8S/uV2rgr+OrOLuqmPzk48V6NG2h2DjXzFv9AXAv2nk4t
+         fIs85Xp7Ik+r6SVG6UZXj8iXV3yt0UYBJtyj28VPO8UmefhkEWY6cChbMI/TuWpR4r53
+         Fv3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Te7QE2Q2g9STJbNhhZtv5SiHSyMZyM+FEre3Dz6O8Y=;
-        b=AvqMrVhdS+y4k2C+F5j8z4JWxoLuQ63V3BSHwamMbVV7UasN7S4lm5KuwJZ5+NEGDW
-         4jeTheYzQGcQXWOKsuc0Km+2I5hwTU8Qg+gkCpLC0uJ8NUmujgWs3E5ErSslV0jLAT67
-         sec5ORsNSD0vOMPDkSmhqizV6yP492n3zhXErfanD94eENa/tj4LLdqRGSzS7vdymQKE
-         GXFh7JGCmdaRjyoxmyDXccC7l5iHa+UTgqdtNHaaqt9DyjujOU6KkudIMUQJ1OWb7Hn5
-         JxF4a24WXo3wOCoFc0jYIddhZDcu4C5AOSrhn1Pc9rYRdFLzJ/+Lbug7710/xZjWgF02
-         Ri4w==
-X-Gm-Message-State: APjAAAX1U2UPwYUFt3Gyx0A8KRZVZtkDqNouNaLI/VJs2nwBXlpSEQPi
-        zz7IU+ylV2yYPQybjEDJKiI=
-X-Google-Smtp-Source: APXvYqxLgk2nQMwVb7p2dfq9uG3VnutIy2nbjXTYamMxfezNSLjPILVR6BBa3EVv43hysi/02tOp5Q==
-X-Received: by 2002:a1c:5451:: with SMTP id p17mr5092099wmi.103.1568226721265;
-        Wed, 11 Sep 2019 11:32:01 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id i9sm5162622wmf.14.2019.09.11.11.31.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 11:32:00 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 20:31:58 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings documentation
- for sun8i-ce Crypto Engine
-Message-ID: <20190911183158.GA8264@Red>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-4-clabbe.montjoie@gmail.com>
- <20190907040116.lib532o2eqt4qnvv@flea>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=osLb1I6IiQ2BmJysQ2eAtNr8jj+efIn6W4VanYf9QGY=;
+        b=kv52RLXQDG1IT9mzhS6kCvGbXx467RthhZQu5LFNhRA5lUZQzDX/KV6x81AFQHy6uA
+         yZG15CVS1ttEqnvC27ivRZnHKfGLp6xfHu+R+A2uC51TFfHvdBiogdRMB7mLa6F5Na9r
+         GklTjrk+IKevvSdaIWXbmLIH+unhMXgyyxM23F6MDJxZJklzE5Z206zlN2R6OZSftuCJ
+         YL/uF4phZ/vELKACGVP+aUvgwsQXapy/xW2fRQV3sexhhsAB5di9GaJgSwkFXRfvPGd7
+         QcXotEZtCu/wR2jB2pBdLOcrr9zr1E/LtLrv6ZCPW73CjrmLCDL7/yrdMjK04szkwhMb
+         pNQg==
+X-Gm-Message-State: APjAAAX8Q+KiMiOjQVyxi5uzgGLoXiC4uTufTsxS3qKh6OV3MytWC/JT
+        IqxWehuPAvjEvOCqIxAdSQdd8jfqt+pEEYThy5vwhaE=
+X-Google-Smtp-Source: APXvYqyCsoJ6mzrOoMT8NBKAi3ATYgRzIfZ1hK0slPZgZIy1MyQ9VeF6irlc5ltIEgvnyeNHUIKcwsZY/jpbV/IbDLU=
+X-Received: by 2002:a2e:9881:: with SMTP id b1mr6584914ljj.134.1568226723574;
+ Wed, 11 Sep 2019 11:32:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190907040116.lib532o2eqt4qnvv@flea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Wed, 11 Sep 2019 20:31:37 +0200
+Message-ID: <CAEJqkghRENck2NNCoxFccdph6EwAhMsBAszjkx2cj6Krrkoi8g@mail.gmail.com>
+Subject: [Regression] 5.3-rc8 suspending from X broken with amdgpu
+To:     LKML <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:01:16AM +0300, Maxime Ripard wrote:
-> On Fri, Sep 06, 2019 at 08:45:45PM +0200, Corentin Labbe wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > Crypto Engine cryptographic accelerator driver.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 84 +++++++++++++++++++
-> >  1 file changed, 84 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-[...]
-> > +else:
-> > +  clocks:
-> > +    items:
-> > +      - description: Bus clock
-> > +      - description: Module clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: ahb
-> > +      - const: mod
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  reset-names:
-> > +    const: ahb
-> 
-> This prevents the usage of the additionalProperties property, which
-> you should really use.
-> 
-> What you can do instead is moving the clocks and clock-names
-> description under properties, with a minItems of 2 and a maxItems of
-> 3. Then you can restrict the length of that property to either 2 or 3
-> depending on the case here.
-> 
+Hello,
 
-Hello
+I am testing latest rc8/Linus git tree on my new
+Acer Nitro 5 (AN515-43-R8BF) Laptop.
 
-I fail to do this.
-I do the following (keeped only clock stuff)
-properties:
+The box has an Ryzen7 3750H APU+RX 560x hybrid GPU(s).
 
-  clocks:
-    items:
-      - description: Bus clock
-      - description: Module clock
-      - description: MBus clock
+Suspending ( closing the Lid ) from tty without X up
+is working fine, however with X running doing the same
+does not work. The display remains black.
 
-  clock-names:
-    items:
-      - const: ahb
-      - const: mod
-      - const: mbus
+It seems to be triggered from
 
-if:
-  properties:
-    compatible:
-      items:
-        const: allwinner,sun50i-h6-crypto
-then:
-  properties:
-      clocks:
-        minItems: 3
-        maxItems: 3
-      clock-names:
-        minItems: 3
-        maxItems: 3
-else:
-  properties:
-      clocks:
-        minItems: 2
-        maxItems: 2
-      clock-names:
-        minItems: 2
-        maxItems: 2
+ .. dcn10_hw_sequencer.c:932
+dcn10_verify_allow_pstate_change_high.cold+0xc/0x229 [amdgpu]
 
-With this, the dtb_check keep complain that a64 have two short clocks.
+The dmesg is way to big to post there so I uploaded it:
 
-Regards
+dmesg:
+ http://crazy.dev.frugalware.org/Nitro5/dmesg.one.txt
+lspci:
+ http://crazy.dev.frugalware.org/Nitro5/lspci.nnvv.txt
+ http://crazy.dev.frugalware.org/Nitro5/lspci.txt
+config:
+ http://crazy.dev.frugalware.org/Nitro5/config.nitro5-5.3-r8git
+
+I didn't tested any other rcX kernels so I cannot tell if all are affected,
+but 5.2.x kernels are working fine on this box.
+
+
+The dirty state of the build is because this patch, which fixes the
+NVME device on that box:
+ https://lkml.org/lkml/2019/9/11/569
+
+If you need more infos please let me know.
+Also I can test any kind patches.
+
+Best Regards,
+
+Gabriel C
