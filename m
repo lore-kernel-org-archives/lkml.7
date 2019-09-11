@@ -2,135 +2,167 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4A8C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1FBC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AB020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568220628;
-	bh=nR8hx3HK09Zo3Xccb+ticqxSNc/27NqZIk5X0xyz19Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O2DSk+1TCCLJ8TvUvKg5QkrjzRWetrHHaOCe0Z2VrC3dBXtyGX8CW2Iif6Piph5wy
-	 fVAF4gJEtla5t78sNypLh3TNdlJ+0PecRuIGDzwa6fPBEIqBbPACmqVmS74OAaIGFP
-	 xATwlqaRbmfUgG0/PrVe8blqzr0VxD1Cor0KA4vI=
+	by mail.kernel.org (Postfix) with ESMTP id 58C1A20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IRnSx9s7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfIKQu1 (ORCPT
+        id S1729499AbfIKQwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfIKQuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:50:25 -0400
-Received: from earth.universe (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E6A20872;
-        Wed, 11 Sep 2019 16:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568220623;
-        bh=nR8hx3HK09Zo3Xccb+ticqxSNc/27NqZIk5X0xyz19Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qRpE9q+loPKnhIWXbSWfUjhLzQKkgRzPW9r8UNqhhTfC44nsa5vhYzI2DjDyHfNw+
-         J01X3OoeBzxN4sn/3M3dRYZp6op74PWkO2La/TopQG7uwCQ9GZv3vGGJ2XBx5eZlty
-         WfhJVcXaVb5UV8wvoAGsYxCx2V6UlQJfDjFlIdQU=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 495773C0D39; Wed, 11 Sep 2019 17:50:21 +0100 (WEST)
-Date:   Wed, 11 Sep 2019 17:50:21 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: omap2plus_defconfig: Update for removed items
-Message-ID: <20190911165021.qr5i37mpnua3fvw5@earth.universe>
-References: <20190911145226.21088-1-aford173@gmail.com>
+        Wed, 11 Sep 2019 12:52:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55463 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729028AbfIKQwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:52:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g207so4302068wmg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d3ECIsRGngFyFH2jbVLH1ZsB1j4Lio7jznUTM12k5iY=;
+        b=IRnSx9s7SGPyQDYBtwkGT+C2HJBmux4cX3LA4BXnurVeqPWx0EP8o2Ufhr+KO9n/z8
+         N4qlTgJj9ufybjzzgfsRuqW+wWnA8RTLuCIg9ScooMYGPwv0/42uq/gEDyLbB7ThGgZ9
+         BFJsEE9avk8cp33uOWhlBR0blkSQc/ipzCw4iGpaLocv8PpmlNmVKll80E4p3DDz/IBT
+         vAZBEwS8LKPIy9EmdXeyf8udo8dLWl7Zi84/bdJtn/GaNYduECEMUujTe3t03buQ5rTO
+         G1lmAdpqNSEvzSyxx6MBgQ2jBwRKQQZgdWKlwNoghzrIb7oFZ/MQ9VroVEbddGAqp7tV
+         95PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d3ECIsRGngFyFH2jbVLH1ZsB1j4Lio7jznUTM12k5iY=;
+        b=nXwFxjlV0X20s52h7D6/1JDvJTIBmD9nowdo2PRb8RmBhBF4yqeKQUxVJEsjqHYabO
+         dJCHYcvC903/lRFCbfr9jbpYuTHTWWU6ef+kx4hf6OZMuIh6hMXFGrihrXAZQA6yMP7F
+         +dupGcoDC5QTZmfqxvdpSWtp/FNb42p2XCtCq5Cjf4vQ4oOrhVgLw2hiCjJeF0WvRdhg
+         QoEz+v3dPcTFsUoAuMxzqthbOZbAHaW14vopjOPwa6c165jhn3MxXrUGruRKb+Htsw9n
+         qw283UjTVWWcdk5X7+l3Airh7iqWNZ5Wvm1tSN9WwqWHaPo0NYue/j6NDoXWjaZKodmZ
+         LGfQ==
+X-Gm-Message-State: APjAAAWvIxSI1jjweGqu9KlPcQRgypJpAKwTZY09IYFxRBabDIZjvK/5
+        br3xZZCQYqlwhhEhBu8PxK5ql+L9yq77R4Ln8zynwXapLJqm+Rx+
+X-Google-Smtp-Source: APXvYqyAjDbqgEWsrcWwkGWJfLGnYNI/WRtw7/SvGsIIBoId+xJQcgCq6of6P7BahKsjibuh05TdGkeMujrV8W/eY4g=
+X-Received: by 2002:a05:600c:114e:: with SMTP id z14mr390682wmz.61.1568220718948;
+ Wed, 11 Sep 2019 09:51:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cquryzuhszuj65pm"
-Content-Disposition: inline
-In-Reply-To: <20190911145226.21088-1-aford173@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190911122646.13838-1-will@kernel.org>
+In-Reply-To: <20190911122646.13838-1-will@kernel.org>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 11 Sep 2019 17:51:38 +0100
+Message-ID: <CAKv+Gu8G_HHE+xerEQpGoy0wJ1iqhuFqRpL34At9ue2BpT+XeA@mail.gmail.com>
+Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
+ namespace offset
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Sep 2019 at 13:26, Will Deacon <will@kernel.org> wrote:
+>
+> Commit 8651ec01daed ("module: add support for symbol namespaces.")
+> broke linking for arm64 defconfig:
+>
+>   | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
+>   | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
+>   | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
+>   | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
+>
+> This is because the dummy initialisation of the 'namespace_offset' field
+> in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
+> support for PREL32 locations uses an offset from an absolute address (0)
+> in an effort to trick 'offset_to_pointer' into behaving as a NOP,
+> allowing non-namespaced symbols to be treated in the same way as those
+> belonging to a namespace.
+>
+> Unfortunately, place-relative relocations require a symbol reference
+> rather than an absolute value and, although x86 appears to get away with
+> this due to placing the kernel text at the top of the address space, it
+> almost certainly results in a runtime failure if the kernel is relocated
+> dynamically as a result of KASLR.
+>
+> Rework 'namespace_offset' so that a value of 0, which cannot occur for a
+> valid namespaced symbol, indicates that the corresponding symbol does
+> not belong to a namespace.
+>
+> Cc: Matthias Maennich <maennich@google.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>
+> Please note that I've not been able to test this at LPC, but it's been
+> submitted to kernelci.
+>
 
---cquryzuhszuj65pm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The build tests all passed, and the boot tests that have completed by
+now all look fine, so
 
-Hi,
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-On Wed, Sep 11, 2019 at 09:52:25AM -0500, Adam Ford wrote:
-> The omap panel-dpi driver was removed in
-> Commit 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
->=20
-> The tFP410 and DVI connector was remove in
-> Commit be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
->=20
-> This patch removes these items from the omap2plus_defconfig.
-
-The omapdrm specific drivers have generic replacements, that
-should be added to the defconfig instead:
-
-DRM_OMAP_PANEL_DPI -> DRM_PANEL_SIMPLE
-DRM_OMAP_ENCODER_TFP410 -> DRM_TI_TFP410
-
-Nothing should be required for DRM_OMAP_CONNECTOR_DVI.
-
--- Sebastian
-
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->=20
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap=
-2plus_defconfig
-> index c7bf9c493646..166b36be2ca6 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -349,12 +349,9 @@ CONFIG_OMAP5_DSS_HDMI=3Dy
->  CONFIG_OMAP2_DSS_SDI=3Dy
->  CONFIG_OMAP2_DSS_DSI=3Dy
->  CONFIG_DRM_OMAP_ENCODER_OPA362=3Dm
-> -CONFIG_DRM_OMAP_ENCODER_TFP410=3Dm
->  CONFIG_DRM_OMAP_ENCODER_TPD12S015=3Dm
-> -CONFIG_DRM_OMAP_CONNECTOR_DVI=3Dm
->  CONFIG_DRM_OMAP_CONNECTOR_HDMI=3Dm
->  CONFIG_DRM_OMAP_CONNECTOR_ANALOG_TV=3Dm
-> -CONFIG_DRM_OMAP_PANEL_DPI=3Dm
->  CONFIG_DRM_OMAP_PANEL_DSI_CM=3Dm
->  CONFIG_DRM_OMAP_PANEL_SONY_ACX565AKM=3Dm
->  CONFIG_DRM_OMAP_PANEL_LGPHILIPS_LB035Q02=3Dm
-> --=20
-> 2.17.1
->=20
-
---cquryzuhszuj65pm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl15JckACgkQ2O7X88g7
-+poVgRAAgMcfz1sNIFGJyjDqAyhgu3cqv4oHp9J6JpEc+oy01vP+KpXSncCd2V7q
-4qo1PkL++BZUN7uOYLNKK3f4KH8RSkITyzhTiY9Sj8nqASc+khTbYyCms+lePx3M
-vSgxevdTU4Nw3VzjR67z5IsXz8VyEwmDGyunTc8lhnkPupuSOUg8YW/3XA363Epu
-CYsHJSJykrVvtScBGs4dcgPD+eIPqfMTslhCMw8zxzAy3HBqsHqDu6tfYDAL1DB/
-K0L+QhILnkSKh+g8C0oC/sikdJTgwdHen0Lx9iYJqqaFutLabuP4FNovPMCt7bJ4
-ciHZV6etFcW4ci9sX7L9jgbn9oZtfMhifI5T2JfDxGrMfNWpRf3wehvsoL1Gqupe
-zUX0rgAb50PFGxkAn9mPnbEvtaKBP6tkLTVTDNThf2jbK5gn9yS6dXjES8q7XIJI
-t+/a8NiQRUmNBhlQNtdlY8g2mqmP9orSSZD0AUULhIw9tmEvCCdlRuFNLkm8/Wr6
-5S0QHbfMi+W7nlnEF3g7lRmtpbbwA7/glTCehYmuOvtFVZH9sBPu6XoESS2pyyMv
-2H1yrhxPUku8EnRgIsO3ZQDKF7xXT0F1teL2PQbO17HoaPWaBJq36HJ99UvUpGQU
-eegD9nrFhGv5mBQSxFwlNju5cuJ5k4yELT8CZjMkd08KJJfopkQ=
-=k12s
------END PGP SIGNATURE-----
-
---cquryzuhszuj65pm--
+>  include/asm-generic/export.h | 2 +-
+>  include/linux/export.h       | 2 +-
+>  kernel/module.c              | 2 ++
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+> index e2b5d0f569d3..d0912c7ac2fc 100644
+> --- a/include/asm-generic/export.h
+> +++ b/include/asm-generic/export.h
+> @@ -17,7 +17,7 @@
+>
+>  .macro __put, val, name
+>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> -       .long   \val - ., \name - ., 0 - .
+> +       .long   \val - ., \name - ., 0
+>  #elif defined(CONFIG_64BIT)
+>         .quad   \val, \name, 0
+>  #else
+> diff --git a/include/linux/export.h b/include/linux/export.h
+> index 2c5468d8ea9a..ef5d015d754a 100644
+> --- a/include/linux/export.h
+> +++ b/include/linux/export.h
+> @@ -68,7 +68,7 @@ extern struct module __this_module;
+>             "__ksymtab_" #sym ":                                \n"     \
+>             "   .long   " #sym "- .                             \n"     \
+>             "   .long   __kstrtab_" #sym "- .                   \n"     \
+> -           "   .long   0 - .                                   \n"     \
+> +           "   .long   0                                       \n"     \
+>             "   .previous                                       \n")
+>
+>  struct kernel_symbol {
+> diff --git a/kernel/module.c b/kernel/module.c
+> index f76efcf2043e..7ab244c4e1ba 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -547,6 +547,8 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
+>  static const char *kernel_symbol_namespace(const struct kernel_symbol *sym)
+>  {
+>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> +       if (!sym->namespace_offset)
+> +               return NULL;
+>         return offset_to_ptr(&sym->namespace_offset);
+>  #else
+>         return sym->namespace;
+> --
+> 2.23.0.162.g0b9fbb3734-goog
+>
