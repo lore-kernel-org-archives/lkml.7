@@ -2,190 +2,100 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE28ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18437C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC913206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AF02168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:06:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5Enin/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfIKNEh (ORCPT
+        id S1728021AbfIKNG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:04:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52812 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfIKNEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:04:37 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1BBDF11A1E
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 13:04:36 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id n6so10393154wrm.20
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 06:04:36 -0700 (PDT)
+        Wed, 11 Sep 2019 09:06:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51491 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbfIKNGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:06:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so3413926wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 06:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vM9T7JPTYaG7Q5phhjKWs9t8a740OJg6gDLyXdDlwy0=;
+        b=I5Enin/54z24EJiVGsjC9LBUp7DWLfqpIT7jKxNc6AR3TZtq81lDcq13DBQttTGJt7
+         vPD2PNtx66V200oc3BMwabrgL3o4m/cJQ1ehNZoSv90Cf06sRMjziKVZW+ZH9PrvrYil
+         gZxsW2TCCQswOahMWFtcHYYUlNy3su48MsoLV7kJSeaD760lYOsF1xCX+/H4NxwRVwe/
+         6LLzQTDo+lYiyVXTbC/SdEoieE4oehs91mafDcPNdHvDHI+RVpOA2SwCNwfY+4hHMHjg
+         LYqggun0YLgEr+dbnodTJAfx6Wr8E8XdZ7AgsXnaI+MKJcx+PGxz9fanOhjcsWILwS9O
+         qvFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5cZwRFkPnBfvd9KKrvlsF0v7o7pc2TdTfWhZUtnofjs=;
-        b=Xu3JiAb7XaRMBRMe7Ukvgso0V5WHituGO+izEFFZZrmEDetDkdjpbaJTYv0I3LW0nJ
-         Qpbz8DQ38WuYo3OohILp4qRUGlS16xigB8fnzkr8DpU9DbEL0U5Rl97dputLzHAVOsB7
-         yesj1yiPkmkhUT3UiHz3GAlFDPFGPwtBHa27EBnLs46kUgKsB2sKeUvpiSSPy13urONl
-         SIMDQV2fEeyOZMxuAH35YPQmoSXmg5oqTWZ4ygmlV0LD3wGCsDc+jV6+kGbl+5OjweYy
-         A1cs4BWBfn2CQZQZ61PrnUCOug231aVHsFEmLSNIVFkCUITI2ALhcQCLEUZdUp/qsEOi
-         uOeA==
-X-Gm-Message-State: APjAAAW9HVahcPr7QSMbwpscEMpR96wU2+sasQYiTIw1wXTMJCTA5dA/
-        0aPMLIQNypEYl/3fUbNal2/mCTPM8G3ddgs8bgWEKGWZLb2zmYz5W3EccCdIT8hgDEzpdjFwV8t
-        MSDUrdEDeLDLizCI2v1UakgQw
-X-Received: by 2002:adf:f48e:: with SMTP id l14mr29136120wro.234.1568207074753;
-        Wed, 11 Sep 2019 06:04:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzBF20UcHxsYOQf/lES4ZO/bVViSm+7jzfEb91Ml+VtQ6z82mrGbxsV6Pa7Uej4nDz/PD+EEQ==
-X-Received: by 2002:adf:f48e:: with SMTP id l14mr29136106wro.234.1568207074435;
-        Wed, 11 Sep 2019 06:04:34 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:102b:3795:6714:7df6? ([2001:b07:6468:f312:102b:3795:6714:7df6])
-        by smtp.gmail.com with ESMTPSA id y13sm42446736wrg.8.2019.09.11.06.04.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2019 06:04:33 -0700 (PDT)
-Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is
- preempted"
-To:     Waiman Long <longman@redhat.com>, Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
-        "# v3 . 10+" <stable@vger.kernel.org>
-References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
- <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
- <CANRm+CxVXsQCmEpxNJSifmQJk5cqoSifFq+huHJE1s7a-=0iXw@mail.gmail.com>
- <2dda32db-5662-f7a6-f52d-b835df1f45f1@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <9ef778df-c34a-897c-bcfa-780256fb78ff@redhat.com>
-Date:   Wed, 11 Sep 2019 15:04:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vM9T7JPTYaG7Q5phhjKWs9t8a740OJg6gDLyXdDlwy0=;
+        b=JozFADulTbESisZ3KZoCOY0ts0flMd65MOpcm+sBqfv7CzArZ93lx/CRjFbWK86YuA
+         WaRnicVbm+GcGr0/97n9B7EvUiKys82mBJUxDNYHUjNQ7Ww8MXjRqb5PqkkuGZCqph8I
+         wLyRFAusqh9bmrFeHN0fNgQP3BYprrrx8okSDkDxpKLDFy00X4/jqBXM+hprqjfOgIx0
+         BMuN78/bv/dEFhipcqe1lMFZ/xF0FmOs8gXkb+JPMgqcrgXNoE6z8R+Njp2eTlJQEkK/
+         b56w7RtUghCNaNYLbDjrStwNGOXk/xOVDheopub3q7eGyrMs1btUO5xu+g4XQWvFqLFy
+         7/nA==
+X-Gm-Message-State: APjAAAUMx4sNb1UDx6pf4JZQfLCaVtX3b/v4PoeDhSyOpnLP6IKcgLPc
+        pabAOKS8KkhQlPZcqpfpAwNiCwu83/fuxAagr30=
+X-Google-Smtp-Source: APXvYqxNKQL9xaxjmnWNWWXNRC6dWIh/CBKe7WZ4qYZ9SB53ifIDuCCxYRz0tpQWXrnndjDe+dtrLY6hF32GB2U9TzM=
+X-Received: by 2002:a05:600c:2047:: with SMTP id p7mr4157887wmg.13.1568207213658;
+ Wed, 11 Sep 2019 06:06:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2dda32db-5662-f7a6-f52d-b835df1f45f1@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190830215910.31590-1-daniel.baluta@nxp.com> <20190906012938.GB17926@Asurada-Nvidia.nvidia.com>
+ <20190911110017.GA2036@sirena.org.uk>
+In-Reply-To: <20190911110017.GA2036@sirena.org.uk>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 11 Sep 2019 16:06:41 +0300
+Message-ID: <CAEnQRZAid2xXu+6PxWDCBNDwS6c8DfNXEcNqseDPAsVJ7kEHeg@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: fsl_sai: Implement set_bclk_ratio
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/09/19 06:25, Waiman Long wrote:
-> On 9/10/19 6:56 AM, Wanpeng Li wrote:
->> On Mon, 9 Sep 2019 at 18:56, Waiman Long <longman@redhat.com> wrote:
->>> On 9/9/19 2:40 AM, Wanpeng Li wrote:
->>>> From: Wanpeng Li <wanpengli@tencent.com>
->>>>
->>>> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't wait if
->>>> vCPU is preempted), we found great regression caused by this commit.
->>>>
->>>> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each is 80 vCPUs.
->>>> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700-1800
->>>> records/s with this commit.
->>>>
->>>>           Host                       Guest                score
->>>>
->>>> vanilla + w/o kvm optimizes     vanilla               1700-1800 records/s
->>>> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 records/s
->>>> vanilla + w/ kvm optimizes      vanilla               4500-5000 records/s
->>>> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 records/s
->>>>
->>>> Exit from aggressive wait-early mechanism can result in yield premature and
->>>> incur extra scheduling latency in over-subscribe scenario.
->>>>
->>>> kvm optimizes:
->>>> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
->>>> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
->>>>
->>>> Tested-by: loobinliu@tencent.com
->>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>> Cc: Ingo Molnar <mingo@kernel.org>
->>>> Cc: Waiman Long <longman@redhat.com>
->>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
->>>> Cc: Radim Krčmář <rkrcmar@redhat.com>
->>>> Cc: loobinliu@tencent.com
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
->>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->>>> ---
->>>>  kernel/locking/qspinlock_paravirt.h | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
->>>> index 89bab07..e84d21a 100644
->>>> --- a/kernel/locking/qspinlock_paravirt.h
->>>> +++ b/kernel/locking/qspinlock_paravirt.h
->>>> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
->>>>       if ((loop & PV_PREV_CHECK_MASK) != 0)
->>>>               return false;
->>>>
->>>> -     return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
->>>> +     return READ_ONCE(prev->state) != vcpu_running;
->>>>  }
->>>>
->>>>  /*
->>> There are several possibilities for this performance regression:
->>>
->>> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause some
->>> cacheline contention issue depending on how that callback is implemented.
->>>
->>> 2) KVM may set the preempt flag for a short period whenver an vmexit
->>> happens even if a vmenter is executed shortly after. In this case, we
->>> may want to use a more durable vcpu suspend flag that indicates the vcpu
->>> won't get a real vcpu back for a longer period of time.
->>>
->>> Perhaps you can add a lock event counter to count the number of
->>> wait_early events caused by vcpu_is_preempted() being true to see if it
->>> really cause a lot more wait_early than without the vcpu_is_preempted()
->>> call.
->> pv_wait_again:1:179
->> pv_wait_early:1:189429
->> pv_wait_head:1:263
->> pv_wait_node:1:189429
->> pv_vcpu_is_preempted:1:45588
->> =========sleep 5============
->> pv_wait_again:1:181
->> pv_wait_early:1:202574
->> pv_wait_head:1:267
->> pv_wait_node:1:202590
->> pv_vcpu_is_preempted:1:46336
->>
->> The sampling period is 5s, 6% of wait_early events caused by
->> vcpu_is_preempted() being true.
-> 
-> 6% isn't that high. However, when one vCPU voluntarily releases its
-> vCPU, all the subsequently waiters in the queue will do the same. It is
-> a cascading effect. Perhaps we wait early too aggressive with the
-> original patch.
-> 
-> I also look up the email chain of the original commit. The patch
-> submitter did not provide any performance data to support this change.
-> The patch just looked reasonable at that time. So there was no
-> objection. Given that we now have hard evidence that this was not a good
-> idea. I think we should revert it.
-> 
-> Reviewed-by: Waiman Long <longman@redhat.com>
-> 
-> Thanks,
-> Longman
-> 
+On Wed, Sep 11, 2019 at 2:01 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Sep 05, 2019 at 06:29:39PM -0700, Nicolin Chen wrote:
+> > On Sat, Aug 31, 2019 at 12:59:10AM +0300, Daniel Baluta wrote:
+>
+> > > This is to allow machine drivers to set a certain bitclk rate
+> > > which might not be exactly rate * frame size.
+>
+> > Just a quick thought of mine: slot_width and slots could be
+> > set via set_dai_tdm_slot() actually, while set_bclk_ratio()
+> > would override that one with your change. I'm not sure which
+> > one could be more important...so would you mind elaborating
+> > your use case?
+>
+> The reason we have both operations is partly that some hardware
+> can configure the ratio but not do TDM and partly that setting
+> TDM slots forces us to configure the slot size depending on the
+> current stream configuration while just setting the ratio means
+> we can just fix the configuration once.  I'd say it's just a user
+> error to try to do both simultaneously.
 
-Queued, thanks.
-
-Paolo
+Yes, exactly. We wanted to have a better control of bclk freq.
+Sorry for the late answer, I'm traveling.
