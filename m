@@ -2,158 +2,148 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF4AC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C96ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123A42067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB032084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VZFyADzL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAZiwy34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbfIKRWv (ORCPT
+        id S1729434AbfIKR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:22:51 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38952 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729264AbfIKRWu (ORCPT
+        Wed, 11 Sep 2019 13:26:02 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34019 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbfIKR0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:22:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n7so26226038qtb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:22:50 -0700 (PDT)
+        Wed, 11 Sep 2019 13:26:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so11873170pgc.1;
+        Wed, 11 Sep 2019 10:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=0ExgZnqgklMWdIYiMJ2Wv1Hn7vtnSFHAJcrwJboP42E=;
-        b=VZFyADzL38joKkpJuBWRKTPWsj0AsFVHMPzQmYRB/9/C00xWTM+HXGJVBChxai54gS
-         ZPDKBIEv+3XmTYpkzKY7npox4Dpl/3w3jabJF7K01DBzkyOfowbsgdPSoZi4zbw7T8CS
-         lqhkLI0CL+AYPPCIzX//zUnH4CsC4l3bdqsfFiwzgR2Q0vLYsW54MCzPPN7qQrLcWHUO
-         1MJuuxIZkyUguMM0yxqT9xz9lWg2D9i4fcLnIxLFON/CwLmciDK0B0fnx/egtBiLgJ0o
-         KCSian6nIevP8C/tUooQePOnZKoolNdww5VPAbHN3PYUKhXRjSI+JcIY9AM13ZVeaekW
-         iTNg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dHzjWEjbmPZ/bJXnFMndg1gxGQSAtyDI2pcJRpM0tHQ=;
+        b=eAZiwy348jYbQ9tlPkJ6aw2DPNxIoNTmOn3/zeTYf2Bfd7KM24MTgiMA1meaVNBEMR
+         DbFpKTC2vaSHYL8T+Baf9pmU8A+aOQAD5Ni2VSPClPrhJUCsX8as6AQ/15NkRdN4BZuw
+         62Hhn0jY7AL8i/nT8S6G6mrKEftbh/lJVURnLMTpwXfkacEnvws3b7Q0G6ovCrRvlf0d
+         0z8hmePN55njAHE0LTQdofDEsaoAKCuCoP0YxEU12uRE++qnUydarz50FJ5fOiHA+pHP
+         uLpuCAjOFxYiin8vi1aLHJ8F7tSQ6nxlQtAVgvL2/pKYj3zwhOF2yZaEQU5mUy5hKIbg
+         Elsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=0ExgZnqgklMWdIYiMJ2Wv1Hn7vtnSFHAJcrwJboP42E=;
-        b=f8ltNAfhU0T2Nui7YFZDNa4BXbVABFPwg7HZDR7OeUkKaj7BtqjD9KnkmoX9IliSlb
-         PrxrGoqpHC8Qeo11Yqd02LNJDbEVPOoJxMh7wLcmG+8zgu5iTerG3QbOai2dU9aQ8mZy
-         yxxk3D75PhKEepamqNHnGc7mGw9DNdMupWkA92PwGdS/ePYbwHLNOUhK8Rssjow9DO/v
-         HFcZ4nk/Ktn/XSGi4ANe1T5BEbu2emfOAHf1nU0/Qteg9OXyBdbc3Ue4opusTovTqRhH
-         WZO1ILEnQCB+ttGW6/8zfTiGqTlc6oFuWFFCO04RqP9gtqA2oJU4FJCkkbK8lUo3yikB
-         c0WA==
-X-Gm-Message-State: APjAAAX/CapKsmIAaSdzRw4g7DIxMY5LHufLXujK/TY6/5u1tHgBsSQr
-        4/vRTZux8pzIVbZecl0BhL/m7A==
-X-Google-Smtp-Source: APXvYqzvv6U+xbTLnOSjGWjjWVRfXjmKj9b42wVs0jiW5KiIT6bDF2XD5HxHvxwGBrHtg23jdzyfgw==
-X-Received: by 2002:ac8:6983:: with SMTP id o3mr18706431qtq.31.1568222569708;
-        Wed, 11 Sep 2019 10:22:49 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w11sm12308601qtj.10.2019.09.11.10.22.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 10:22:49 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
-Date:   Wed, 11 Sep 2019 13:22:47 -0400
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dHzjWEjbmPZ/bJXnFMndg1gxGQSAtyDI2pcJRpM0tHQ=;
+        b=GxnacMwAOxgZ3HOkaj2odWTJXpA2rauntl7MTcxJkYdZrZ5w1mCOonI8qoXOoT67N7
+         Q3q7Xk4mZPvPrDPXhxYULBWH2d4m5xai/0uL39H9DRj6MZHaBlDUN+DWevBryC6KxvsT
+         QuZIihX93r1eAI0eJYDzJx1a60eC4YXJjHy8s0Qt5WyEPoWkCOhyiyycmIdm1GYXc4Ig
+         sDzQxkgtzpRTTDOCkJ/dI+r0Mi2eVLQETvmXTBblwCk2/1G+GQnUCb+gwJ69vxV1Lml3
+         j7gY3lZJbPmGdqexmKSW64wySHdVmUfEGVsc76GUkmxEbwgLZHQRAh1lmncUZ5m/1eIq
+         xohA==
+X-Gm-Message-State: APjAAAWBMtLOr9xrkQu6WiMgVvbdPcLjlaXcet5N039UWVDUhQMCCeN3
+        VzK0Vhvz/EXs2XcouYuh1UOiy5Ryyc9oSSBEwww=
+X-Google-Smtp-Source: APXvYqzMRDssqpgsK8fSzya4V0/uXkWx/h2Ddhu3BRv6cUncAazQPvzvWNQgRlC9+H9UkzbUl2Qwc438VsPYjvzuMzY=
+X-Received: by 2002:a17:90a:3546:: with SMTP id q64mr6696670pjb.13.1568222759459;
+ Wed, 11 Sep 2019 10:25:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
+ <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com>
+ <20190908131034.GD9466@kroah.com> <CAC5umyhZ_-Gdh7+EzNoHPs2zki2-dK1xBv5xpE5zwZPt_jvNEA@mail.gmail.com>
+ <20190911153602.GB13865@kroah.com>
+In-Reply-To: <20190911153602.GB13865@kroah.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Thu, 12 Sep 2019 02:25:48 +0900
+Message-ID: <CAC5umygQWrhN-=5g+87YeKYUzGGPGW01mtaVDJ3NERYbXBGKog@mail.gmail.com>
+Subject: Re: [PATCH 1/5] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C29A1EFA-148C-454E-91F1-93D5116FB640@lca.pw>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <20190911151451.GH29434@bombadil.infradead.org>
- <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
- <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
- <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+2019=E5=B9=B49=E6=9C=8812=E6=97=A5(=E6=9C=A8) 0:36 Greg Kroah-Hartman <greg=
+kh@linuxfoundation.org>:
+>
+> On Thu, Sep 12, 2019 at 12:25:28AM +0900, Akinobu Mita wrote:
+> > 2019=E5=B9=B49=E6=9C=888=E6=97=A5(=E6=97=A5) 22:10 Greg Kroah-Hartman <=
+gregkh@linuxfoundation.org>:
+> > >
+> > > On Sun, Sep 08, 2019 at 09:41:08PM +0900, Akinobu Mita wrote:
+> > > > Reading /sys/class/leds/<led>/trigger returns all available LED tri=
+ggers.
+> > > > However, the size of this file is limited to PAGE_SIZE because of t=
+he
+> > > > limitation for sysfs attribute.
+> > > >
+> > > > Enabling LED CPU trigger on systems with thousands of CPUs easily h=
+its
+> > > > PAGE_SIZE limit, and makes it impossible to see all available LED t=
+riggers
+> > > > and which trigger is currently activated.
+> > > >
+> > > > This converts /sys/class/leds/<led>/trigger to bin attribute and re=
+moves
+> > > > the PAGE_SIZE limitation.
+> > > >
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > > Cc: Dan Murphy <dmurphy@ti.com>
+> > > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > > > ---
+> > > >  drivers/leds/led-class.c    |  8 ++--
+> > > >  drivers/leds/led-triggers.c | 90 +++++++++++++++++++++++++++++++++=
++-----------
+> > > >  drivers/leds/leds.h         |  6 +++
+> > > >  include/linux/leds.h        |  5 ---
+> > > >  4 files changed, 79 insertions(+), 30 deletions(-)
+> > > >
+> > > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> > > > index 4793e77..8b5a1d1 100644
+> > > > --- a/drivers/leds/led-class.c
+> > > > +++ b/drivers/leds/led-class.c
+> > > > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct devic=
+e *dev,
+> > > >  static DEVICE_ATTR_RO(max_brightness);
+> > > >
+> > > >  #ifdef CONFIG_LEDS_TRIGGERS
+> > > > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_st=
+ore);
+> > > > -static struct attribute *led_trigger_attrs[] =3D {
+> > > > -     &dev_attr_trigger.attr,
+> > > > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write=
+, 0);
+> > >
+> > > BIN_ATTR_RW()?
+> >
+> > We can use BIN_ATTR_RW() by renaming led_trigger_{read,write}() to
+> > trigger_{read,write}().  But led_trigger_{read,write}() are not static
+> > functions.  These are defined as export symbols for led-class module.
+> >
+> > So trigger_{read,write}() will be too generic symbol names, won't they?
+>
+> Yes they would, sorry I didn't notice that.
+>
+> Wait, why are those functions being exported?  Who is calling a sysfs
+> function from a different code path than sysfs?
 
+led-class.c :)
 
-> On Sep 11, 2019, at 1:15 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 9/11/19 6:03 PM, Mike Kravetz wrote:
->> On 9/11/19 8:44 AM, Waiman Long wrote:
->>> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
->>>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
->>>>> When allocating a large amount of static hugepages (~500-1500GB) =
-on a
->>>>> system with large number of CPUs (4, 8 or even 16 sockets), =
-performance
->>>>> degradation (random multi-second delays) was observed when =
-thousands
->>>>> of processes are trying to fault in the data into the huge pages. =
-The
->>>>> likelihood of the delay increases with the number of sockets and =
-hence
->>>>> the CPUs a system has.  This only happens in the initial setup =
-phase
->>>>> and will be gone after all the necessary data are faulted in.
->>>> Can;t the application just specify MAP_POPULATE?
->>> Originally, I thought that this happened in the startup phase when =
-the
->>> pages were faulted in. The problem persists after steady state had =
-been
->>> reached though. Every time you have a new user process created, it =
-will
->>> have its own page table.
->> This is still at fault time.  Although, for the particular =
-application it
->> may be after the 'startup phase'.
->>=20
->>>                         It is the sharing of the of huge page shared
->>> memory that is causing problem. Of course, it depends on how the
->>> application is written.
->> It may be the case that some applications would find the delays =
-acceptable
->> for the benefit of shared pmds once they reach steady state.  As you =
-say, of
->> course this depends on how the application is written.
->>=20
->> I know that Oracle DB would not like it if PMD sharing is disabled =
-for them.
->> Based on what I know of their model, all processes which share PMDs =
-perform
->> faults (write or read) during the startup phase.  This is in =
-environments as
->> big or bigger than you describe above.  I have never looked at/for =
-delays in
->> these environments around pmd sharing (page faults), but that does =
-not mean
->> they do not exist.  I will try to get the DB group to give me access =
-to one
->> of their large environments for analysis.
->>=20
->> We may want to consider making the timeout value and disable =
-threshold user
->> configurable.
->=20
-> Making it configurable is certainly doable. They can be sysctl
-> parameters so that the users can reenable PMD sharing by making those
-> parameters larger.
-
-It could be a Kconfig option, so people don=E2=80=99t need to change the =
-setting every time
-after reinstalling the system. There are times people don=E2=80=99t care =
-too much
-about those random multi-second delays. For example, running a debug =
-kernel.
-
+led_trigger_{read,write}() are defined in led-triggers.c which is built
+into the kernel. led-class.c can be built as module.
