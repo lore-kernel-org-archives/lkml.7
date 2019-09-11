@@ -2,196 +2,122 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D44ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56580C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C66C2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337A120838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfIKQDD (ORCPT
+        id S1728954AbfIKQDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:03:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56110 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 12:03:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16353 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbfIKQDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:03:01 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2CEE883BA;
-        Wed, 11 Sep 2019 16:03:00 +0000 (UTC)
-Received: from [10.36.116.137] (ovpn-116-137.ams2.redhat.com [10.36.116.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AC1B60C05;
-        Wed, 11 Sep 2019 16:02:46 +0000 (UTC)
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
- <20190911113619.GP4023@dhcp22.suse.cz>
- <20190911080804-mutt-send-email-mst@kernel.org>
- <20190911121941.GU4023@dhcp22.suse.cz> <20190911122526.GV4023@dhcp22.suse.cz>
- <4748a572-57b3-31da-0dde-30138e550c3a@redhat.com>
- <20190911125413.GY4023@dhcp22.suse.cz>
- <736594d6-b9ae-ddb9-2b96-85648728ef33@redhat.com>
- <20190911132002.GA4023@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <6b4451e9-7f62-bb84-1604-a4aebc907766@redhat.com>
-Date:   Wed, 11 Sep 2019 18:02:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728909AbfIKQDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:03:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 09:03:06 -0700
+X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
+   d="scan'208";a="184526906"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 09:03:06 -0700
+Subject: [PATCH v2 1/3] MAINTAINERS: Reclaim the P: tag for Maintainer Entry
+ Profile
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joe Perches <joe@perches.com>, vishal.l.verma@intel.com,
+        linux-nvdimm@lists.01.org,
+        ksummit-discuss@lists.linuxfoundation.org
+Date:   Wed, 11 Sep 2019 08:48:48 -0700
+Message-ID: <156821692805.2951081.1395288717170089573.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-In-Reply-To: <20190911132002.GA4023@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 11 Sep 2019 16:03:01 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Something slightly similar is being performed by Nitesh's patch set. On
->> every free of a certain granularity, he records it in the bitmap. These
->> bits are "hints of free pages".
->>
->> A thread then walks over the bitmap and tries to allocate the "hints".
->> If the pages were already reused, the bit is silently cleared.
->>
->> Instead of allocating/freeing, we could only try to isolate the
->> pageblock, then test if free. (One of the usual issues to work around is
->> MAX_ORDER-1 crossing pageblocks, that might need special care)
-> 
-> OK, cool that I have reinvented the wheel ;). Allocation is indeed not
-> necessary as long as pages are isolated because nobody will allocate
-> them.
+Fixup some P: entries to be M: and delete the others that do not include an
+email address. The P: tag will be used to indicate the location of a
+Profile for a given MAINTAINERS entry.
 
-It's always good if you come to the same conclusion ;)
+Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ MAINTAINERS |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
->  
->> I think you should have a look at the rough idea of Nitesh's patch set
->> to see if something like that is going into a better direction. The
->> bitmap part is in place to do bulk reporting and avoid duplicate reports.
-> 
-> Let's see how much time I can find for that in my endless inbox whack a mole.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..3f171339df53 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -76,7 +76,6 @@ trivial patch so apply some common sense.
+ 
+ Descriptions of section entries:
+ 
+-	P: Person (obsolete)
+ 	M: Mail patches to: FullName <address@domain>
+ 	R: Designated reviewer: FullName <address@domain>
+ 	   These reviewers should be CCed on patches.
+@@ -811,7 +810,7 @@ S:	Orphan
+ F:	drivers/usb/gadget/udc/amd5536udc.*
+ 
+ AMD GEODE PROCESSOR/CHIPSET SUPPORT
+-P:	Andres Salomon <dilinger@queued.net>
++M:	Andres Salomon <dilinger@queued.net>
+ L:	linux-geode@lists.infradead.org (moderated for non-subscribers)
+ W:	http://www.amd.com/us-en/ConnectivitySolutions/TechnicalResources/0,,50_2334_2452_11363,00.html
+ S:	Supported
+@@ -10085,7 +10084,6 @@ F:	drivers/staging/media/tegra-vde/
+ 
+ MEDIA INPUT INFRASTRUCTURE (V4L/DVB)
+ M:	Mauro Carvalho Chehab <mchehab@kernel.org>
+-P:	LinuxTV.org Project
+ L:	linux-media@vger.kernel.org
+ W:	https://linuxtv.org
+ Q:	http://patchwork.kernel.org/project/linux-media/list/
+@@ -13452,7 +13450,6 @@ S:	Maintained
+ F:	arch/mips/ralink
+ 
+ RALINK RT2X00 WIRELESS LAN DRIVER
+-P:	rt2x00 project
+ M:	Stanislaw Gruszka <sgruszka@redhat.com>
+ M:	Helmut Schaa <helmut.schaa@googlemail.com>
+ L:	linux-wireless@vger.kernel.org
+@@ -13787,7 +13784,6 @@ S:	Supported
+ F:	drivers/net/ethernet/rocker/
+ 
+ ROCKETPORT DRIVER
+-P:	Comtrol Corp.
+ W:	http://www.comtrol.com
+ S:	Maintained
+ F:	Documentation/driver-api/serial/rocket.rst
+@@ -14668,15 +14664,13 @@ F:	drivers/video/fbdev/simplefb.c
+ F:	include/linux/platform_data/simplefb.h
+ 
+ SIMTEC EB110ATX (Chalice CATS)
+-P:	Ben Dooks
+-P:	Vincent Sanders <vince@simtec.co.uk>
++M:	Vincent Sanders <vince@simtec.co.uk>
+ M:	Simtec Linux Team <linux@simtec.co.uk>
+ W:	http://www.simtec.co.uk/products/EB110ATX/
+ S:	Supported
+ 
+ SIMTEC EB2410ITX (BAST)
+-P:	Ben Dooks
+-P:	Vincent Sanders <vince@simtec.co.uk>
++M:	Vincent Sanders <vince@simtec.co.uk>
+ M:	Simtec Linux Team <linux@simtec.co.uk>
+ W:	http://www.simtec.co.uk/products/EB2410ITX/
+ S:	Supported
 
-Can totally understand - it's only a single patch.
-
->  
->> I think main points we want (and what I am missing from callback idea
->> being discussed) are
->> 1. Do bulk reporting only when a certain threshold is reached
-> 
-> Is a time based approach too coarse?
-
-Usually that's then another parameter to fine tune, something to avoid
-when just reporting continuously. I wouldn't say it's a no go, but at
-least I would prefer right now to do it continuously.
-
-> 
->> 2. Report only bigger granularities (especially, avoid THP splits in the
->> hypervisor - >= 2MB proofed to be effective)
-> 
-> the callback has supported order based scan in some of its iteration.
-
-Missed that. But yeah, the other points are more important :)
-
-> 
->> 3. Avoid reporting what has just been reported.
-> 
-> Is the overhead of checking a pfn range in a bitmask that much of an
-> overhead to really care?
-
-It's all about remembering what has already been reported. Nitesh solved
-that via the bitmap. So he does exactly that. If we can optimize the
-bitmap out - perfect - but I don't see an easy way to do that :)
-
-> 
->> 4. Continuously report, not the "one time report everything" approach.
-> 
-> So you mean the allocator reporting this rather than an external code to
-> poll right? I do not know, how much this is nice to have than must have?
-
-I guess it is debatable - but I don't consider this one of the
-fundamental issues. How to identify what to report and remember what has
-already been reported is the main issue. Polling vs. notification is
-just the cherry on top - IMHO.
-
--- 
-
-Thanks,
-
-David / dhildenb
