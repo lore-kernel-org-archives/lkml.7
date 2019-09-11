@@ -2,144 +2,111 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB9C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E8C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389B820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D452089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568220019;
+	bh=IYlQzZjToZbYtDmhBVLvoXVdhbIE48lfVFIE1bOVOQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ODB1e7jGgkhclAEhzF3+z3golHf6STjsRVaCTAEOrEqueQZ5nbE+zZ/+rKquwmH+H
+	 /5LA8yr0E4MqdtZFCQK9hKZpZcNr8l/ZfAtIVVe1Fu0qqfQpzp1eC71/GUvWmiUCrq
+	 lfgKWcuY2CEM77J29bv1mLH0A1FsSv6YNUPbJT1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfIKQkB (ORCPT
+        id S1729151AbfIKQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:40:01 -0400
-Received: from 6.mo179.mail-out.ovh.net ([46.105.56.76]:38545 "EHLO
-        6.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbfIKQkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:40:00 -0400
-X-Greylist: delayed 2262 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 12:39:59 EDT
-Received: from player761.ha.ovh.net (unknown [10.109.159.222])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 0CFA5141187
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 18:02:16 +0200 (CEST)
-Received: from kaod.org (lfbn-1-2240-157.w90-76.abo.wanadoo.fr [90.76.60.157])
-        (Authenticated sender: clg@kaod.org)
-        by player761.ha.ovh.net (Postfix) with ESMTPSA id 50A7F9B791FC;
-        Wed, 11 Sep 2019 16:02:11 +0000 (UTC)
-Subject: Re: [PATCH v2] powerpc/xive: Fix bogus error code returned by OPAL
-To:     Greg Kurz <groug@kaod.org>, Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <a15c02b2-ac3a-21a7-db56-242cb864f79e@kaod.org>
-Date:   Wed, 11 Sep 2019 18:02:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 12:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727839AbfIKQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:40:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3014920838;
+        Wed, 11 Sep 2019 16:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568220017;
+        bh=IYlQzZjToZbYtDmhBVLvoXVdhbIE48lfVFIE1bOVOQ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SCJ519pKPOYYsA536PDlGELRLGoajfeziyypGF33UqFYKSFfKVwawoyiuNpwGt/A6
+         aSlZT1KxY4TptGNwGrbLQWFyS42WBYjgsrzOrlSFs2nrdj24OB46VWtUV5l+tm6Pmm
+         lKe27NFw4LJNUPUlhUMQxK7VaH62KDbiLzOkDtm0=
+Date:   Wed, 11 Sep 2019 17:40:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        gregkh@linuxfoundation.org,
+        Matthias Maennich <maennich@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
+ namespace offset
+Message-ID: <20190911164012.nalsccw6jku7gbpw@willie-the-truck>
+References: <20190911122646.13838-1-will@kernel.org>
+ <20190911133506.GB7837@linux-8ccs>
 MIME-Version: 1.0
-In-Reply-To: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 1911778042506414871
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdejtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911133506.GB7837@linux-8ccs>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/09/2019 17:52, Greg Kurz wrote:
-> There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
-> to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
-> Unfortunatelty, OPAL return values are signed 64-bit entities and
-> errors are supposed to be negative. If that happens, the linux code
-> confusingly treats 0xffffffff as a valid IRQ number and panics at some
-> point.
+On Wed, Sep 11, 2019 at 03:35:06PM +0200, Jessica Yu wrote:
+> +++ Will Deacon [11/09/19 13:26 +0100]:
+> > Commit 8651ec01daed ("module: add support for symbol namespaces.")
+> > broke linking for arm64 defconfig:
+> > 
+> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
+> >  | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
+> >  | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
+> >  | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
+> > 
+> > This is because the dummy initialisation of the 'namespace_offset' field
+> > in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
+> > support for PREL32 locations uses an offset from an absolute address (0)
+> > in an effort to trick 'offset_to_pointer' into behaving as a NOP,
+> > allowing non-namespaced symbols to be treated in the same way as those
+> > belonging to a namespace.
+> > 
+> > Unfortunately, place-relative relocations require a symbol reference
+> > rather than an absolute value and, although x86 appears to get away with
+> > this due to placing the kernel text at the top of the address space, it
+> > almost certainly results in a runtime failure if the kernel is relocated
+> > dynamically as a result of KASLR.
+> > 
+> > Rework 'namespace_offset' so that a value of 0, which cannot occur for a
+> > valid namespaced symbol, indicates that the corresponding symbol does
+> > not belong to a namespace.
+> > 
+> > Cc: Matthias Maennich <maennich@google.com>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> > 
+> > Please note that I've not been able to test this at LPC, but it's been
+> > submitted to kernelci.
 > 
-> A fix was recently merged in skiboot:
-> 
-> e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
-> 
-> but we need a workaround anyway to support older skiboots already
-> in the field.
-> 
-> Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
-> returned upon resource exhaustion.
-> 
-> Cc: stable@vger.kernel.org # v4.12+
-> Signed-off-by: Greg Kurz <groug@kaod.org>
+> Thanks for fixing this so quickly. I can confirm that this fixes the
+> build for arm64 defconfig and x86 built fine for me as well. I'll wait
+> a bit and apply this at the end of the day in case Matthias or anybody
+> else would like to confirm/test.
 
+FWIW, I've managed to boot arm64 Debian under QEMU and load/unload
+modules successfully with this patch applied on top of modules-next.
 
-
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-
-Thanks,
-
-C.
-
-> ---
-> v2: - fix syntax error in changelog
->     - Cc stable
->     - rename original OPAL wrapper
->     - rewrite fixup wrapper (style, use s64 and u32)
-> ---
->  arch/powerpc/include/asm/opal.h            |    2 +-
->  arch/powerpc/platforms/powernv/opal-call.c |    2 +-
->  arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
->  3 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 57bd029c715e..d5a0807d21db 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t vp,
->  int64_t opal_xive_set_vp_info(uint64_t vp,
->  			      uint64_t flags,
->  			      uint64_t report_cl_pair);
-> -int64_t opal_xive_allocate_irq(uint32_t chip_id);
-> +int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
->  int64_t opal_xive_free_irq(uint32_t girq);
->  int64_t opal_xive_sync(uint32_t type, uint32_t id);
->  int64_t opal_xive_dump(uint32_t type, uint32_t id);
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 29ca523c1c79..dccdc9df5213 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPAL_XIVE_SET_QUEUE_INFO);
->  OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
->  OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
->  OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
-> -OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
-> +OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
->  OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
->  OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
->  OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
-> diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-> index 37987c815913..ad8ee7dd7f57 100644
-> --- a/arch/powerpc/sysdev/xive/native.c
-> +++ b/arch/powerpc/sysdev/xive/native.c
-> @@ -231,6 +231,17 @@ static bool xive_native_match(struct device_node *node)
->  	return of_device_is_compatible(node, "ibm,opal-xive-vc");
->  }
->  
-> +static s64 opal_xive_allocate_irq(u32 chip_id)
-> +{
-> +	s64 irq = opal_xive_allocate_irq_raw(chip_id);
-> +
-> +	/*
-> +	 * Old versions of skiboot can incorrectly return 0xffffffff to
-> +	 * indicate no space, fix it up here.
-> +	 */
-> +	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
-> +}
-> +
->  #ifdef CONFIG_SMP
->  static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
->  {
-> 
-
+Will
