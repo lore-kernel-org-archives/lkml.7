@@ -4,166 +4,226 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186FCECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A24DECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE65920872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF2520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfIKH7D (ORCPT
+        id S1727175AbfIKIAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:59:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57680 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfIKH7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:59:03 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47684300183D;
-        Wed, 11 Sep 2019 07:59:02 +0000 (UTC)
-Received: from [10.36.117.155] (ovpn-117-155.ams2.redhat.com [10.36.117.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E8E360BEC;
-        Wed, 11 Sep 2019 07:58:59 +0000 (UTC)
-Subject: Re: [PATCH v2] KVM: s390: kvm_s390_vm_start_migration: check
- dirty_bitmap before using it as target for memset()
-To:     Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, stable@vger.kernel.org
-References: <20190911075218.29153-1-imammedo@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <a69e625a-9661-c859-6dfb-ab8e11cf46e0@redhat.com>
-Date:   Wed, 11 Sep 2019 09:58:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190911075218.29153-1-imammedo@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 11 Sep 2019 07:59:02 +0000 (UTC)
+        Wed, 11 Sep 2019 04:00:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65362 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726657AbfIKIAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 04:00:43 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8B7vV2Q044782;
+        Wed, 11 Sep 2019 04:00:26 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uxc00d8mv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 04:00:25 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8B7saxg007677;
+        Wed, 11 Sep 2019 08:00:14 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 2uv468ht5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 08:00:13 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8B80CP334865604
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 08:00:12 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA2C46E05D;
+        Wed, 11 Sep 2019 08:00:11 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D57F96E07D;
+        Wed, 11 Sep 2019 08:00:08 +0000 (GMT)
+Received: from [9.124.31.108] (unknown [9.124.31.108])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Sep 2019 08:00:08 +0000 (GMT)
+Message-ID: <1568188807.30609.6.camel@abdul.in.ibm.com>
+Subject: Re: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
+ fs/btrfs/locking.c:71!
+From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        mpe <mpe@ellerman.id.au>, Brian King <brking@linux.vnet.ibm.com>,
+        chandan <chandan@linux.vnet.ibm.com>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        David Sterba <dsterba@suse.com>, josef@toxicpanda.com,
+        linux-btrfs@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 11 Sep 2019 13:30:07 +0530
+In-Reply-To: <7139ac07-db63-b984-c416-d1c94337c9bf@suse.com>
+References: <1567500907.5082.12.camel@abdul>
+         <7139ac07-db63-b984-c416-d1c94337c9bf@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909110074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.09.19 09:52, Igor Mammedov wrote:
-> If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
-> kvm_s390_vm_start_migration(), kernel will oops with:
+On Tue, 2019-09-03 at 13:39 +0300, Nikolay Borisov wrote:
 > 
->   Unable to handle kernel pointer dereference in virtual kernel address space
->   Failing address: 0000000000000000 TEID: 0000000000000483
->   Fault in home space mode while using kernel ASCE.
->   AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
->   Oops: 0004 ilc:2 [#1] SMP
->   ...
->   Call Trace:
->   ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
->    [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
->    [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
->    [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
->    [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
->    [<00000000008bb2e2>] sys_ioctl+0x32/0x40
->    [<000000000175552c>] system_call+0x2b8/0x2d8
->   INFO: lockdep is turned off.
->   Last Breaking-Event-Address:
->    [<0000000000dbaf60>] __memset+0xc/0xa0
+> On 3.09.19 г. 11:55 ч., Abdul Haleem wrote:
+> > Greeting's
+> > 
+> > Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file system on my P9 box running mainline kernel 5.3.0-rc5
+> > 
+> > BUG_ON was first introduced by below commit
+> > 
+> > commit 00801ae4bb2be5f5af46502ef239ac5f4b536094
+> > Author: David Sterba <dsterba@suse.com>
+> > Date:   Thu May 2 16:53:47 2019 +0200
+> > 
+> >     btrfs: switch extent_buffer write_locks from atomic to int
+> >     
+> >     The write_locks is either 0 or 1 and always updated under the lock,
+> >     so we don't need the atomic_t semantics.
+> >     
+> >     Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+> >     Signed-off-by: David Sterba <dsterba@suse.com>
+> > 
+> > diff --git a/fs/btrfs/locking.c b/fs/btrfs/locking.c
+> > index 2706676279..98fccce420 100644
+> > --- a/fs/btrfs/locking.c
+> > +++ b/fs/btrfs/locking.c
+> > @@ -58,17 +58,17 @@ static void btrfs_assert_tree_read_locked(struct
+> > extent_buffer *eb)
+> >  
+> >  static void btrfs_assert_tree_write_locks_get(struct extent_buffer *eb)
+> >  {
+> > -       atomic_inc(&eb->write_locks);
+> > +       eb->write_locks++;
+> >  }
+> >  
+> >  static void btrfs_assert_tree_write_locks_put(struct extent_buffer *eb)
+> >  {
+> > -       atomic_dec(&eb->write_locks);
+> > +       eb->write_locks--;
+> >  }
+> >  
+> >  void btrfs_assert_tree_locked(struct extent_buffer *eb)
+> >  {
+> > -       BUG_ON(!atomic_read(&eb->write_locks));
+> > +       BUG_ON(!eb->write_locks);
+> >  }
+> >  
+> > 
+> > tests logs:
+> > avocado-misc-tests/io/disk/ltp_fs.py:LtpFs.test_fs_run;fs_fill-dir-ext3-61cd:  [ 3376.022096] EXT4-fs (nvme0n1): mounting ext3 file system using the ext4 subsystem
+> > EXT4-fs (nvme0n1): mounted filesystem with ordered data mode. Opts: (null)
+> > EXT4-fs (loop1): mounting ext2 file system using the ext4 subsystem
+> > EXT4-fs (loop1): mounted filesystem without journal. Opts: (null)
+> > EXT4-fs (loop1): mounting ext3 file system using the ext4 subsystem
+> > EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
+> > EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
+> > XFS (loop1): Mounting V5 Filesystem
+> > XFS (loop1): Ending clean mount
+> > XFS (loop1): Unmounting Filesystem
+> > BTRFS: device fsid 7c08f81b-6642-4a06-9182-2884e80d56ee devid 1 transid 5 /dev/loop1
+> > BTRFS info (device loop1): disk space caching is enabled
+> > BTRFS info (device loop1): has skinny extents
+> > BTRFS info (device loop1): enabling ssd optimizations
+> > BTRFS info (device loop1): creating UUID tree
+> > ------------[ cut here ]------------
+> > kernel BUG at fs/btrfs/locking.c:71!
+> > Oops: Exception in kernel mode, sig: 5 [#1]
+> > LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> > Dumping ftrace buffer:
+> >    (ftrace buffer empty)
+> > Modules linked in: fuse(E) vfat(E) fat(E) btrfs(E) xor(E)
+> > zstd_decompress(E) zstd_compress(E) raid6_pq(E) xfs(E) raid0(E)
+> > linear(E) dm_round_robin(E) dm_queue_length(E) dm_service_time(E)
+> > dm_multipath(E) loop(E) rpadlpar_io(E) rpaphp(E) lpfc(E) bnx2x(E)
+> > xt_CHECKSUM(E) xt_MASQUERADE(E) tun(E) bridge(E) stp(E) llc(E) kvm_pr(E)
+> > kvm(E) tcp_diag(E) udp_diag(E) inet_diag(E) unix_diag(E)
+> > af_packet_diag(E) netlink_diag(E) ip6t_rpfilter(E) ipt_REJECT(E)
+> > nf_reject_ipv4(E) ip6t_REJECT(E) nf_reject_ipv6(E) xt_conntrack(E)
+> > ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E)
+> > ip6table_mangle(E) ip6table_security(E) ip6table_raw(E) iptable_nat(E)
+> > nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
+> > iptable_mangle(E) iptable_security(E) iptable_raw(E) ebtable_filter(E)
+> > ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) sunrpc(E)
+> > raid10(E) xts(E) pseries_rng(E) vmx_crypto(E) sg(E) uio_pdrv_genirq(E)
+> > uio(E) binfmt_misc(E) sch_fq_codel(E) ip_tables(E)
+> >  ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sd_mod(E) ibmvscsi(E)
+> > scsi_transport_srp(E) ibmveth(E) nvmet_fc(E) nvmet(E) nvme_fc(E)
+> > nvme_fabrics(E) scsi_transport_fc(E) mdio(E) libcrc32c(E) ptp(E)
+> > pps_core(E) nvme(E) nvme_core(E) dm_mirror(E) dm_region_hash(E)
+> > dm_log(E) dm_mod(E) [last unloaded: lpfc]
+> > CPU: 14 PID: 1803 Comm: kworker/u32:8 Tainted: G            E     5.3.0-rc5-autotest-autotest #1
+> > Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
+> > NIP:  c00800000164dd70 LR: c00800000164df00 CTR: c000000000a817a0
+> > REGS: c00000000260b5d0 TRAP: 0700   Tainted: G            E      (5.3.0-rc5-autotest-autotest)
+> > MSR:  8000000102029033 <SF,VEC,EE,ME,IR,DR,RI,LE,TM[E]>  CR: 22444082  XER: 00000000
+> > CFAR: c00800000164defc IRQMASK: 0
+> > GPR00: c0080000015c55f4 c00000000260b860 c008000001703b00 c000000267a29af0
+> > GPR04: 0000000000000000 0000000000000001 0000000000000000 0000000000000000
+> > GPR08: 0000000000000000 0000000000000001 0000000000000000 0000000000000004
+> > GPR12: 0000000000004000 c00000001ec58e00 0000000000000000 0000000000000000
+> > GPR16: 0000000000010000 0000000000000004 0000000000000001 0000000000000001
+> > GPR20: 0000000000000000 0000000000000001 000000003e0f83e1 c00000025a7cbef0
+> > GPR24: c00000000260ba26 0000000040000000 c0000000014a26e8 0000000000000003
+> > GPR28: 0000000000000004 c00000025f2010a0 c000000267a29af0 0000000000000000
+> > NIP [c00800000164dd70] btrfs_assert_tree_locked+0x10/0x20 [btrfs]
+> > LR [c00800000164df00] btrfs_set_lock_blocking_write+0x60/0x100 [btrfs]
+> > Call Trace:
+> > [c00000000260b860] [c00000000260b8e0] 0xc00000000260b8e0 (unreliable)
+> > [c00000000260b890] [c0080000015c55f4] btrfs_set_path_blocking+0xb4/0xc0 [btrfs]
+> > [c00000000260b8e0] [c0080000015cb808] btrfs_search_slot+0x8e8/0xb80 [btrfs]
 > 
-> due to ms->dirty_bitmap being NULL, which might crash the host.
-> 
-> Make sure that ms->dirty_bitmap is set before using it or
-> return -ENIVAL otherwise.
+> Can you provide the line numbers btrfs_search_slot+0x8e8/0xb80
+> corresponds to?
 
-s/ENIVAL/EINVAL/
+btrfs_search_slot+0x8e8/0xb80 maps to fs/btrfs/ctree.c:2751
+                write_lock_level = BTRFS_MAX_LEVEL;
+    9a70:       08 00 40 39     li      r10,8
+    9a74:       08 00 a0 3a     li      r21,8
+>   9a78:       6c 00 41 91     stw     r10,108(r1)
+    9a7c:       1c f8 ff 4b     b       9298 <btrfs_search_slot+0x108>
+                b = btrfs_root_node(root);
 
-I assume Christian can fix that up when applying.
 
-> 
-> Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
-> Signed-off-by: Igor Mammedov <imammedo@redhat.com>
-> ---
-> Cc: stable@vger.kernel.org # v4.19+
-> 
-> v2:
->    - remove not true anym 'warning' clause in commit message
-> v2:
->    - drop WARN()
-> 
->  arch/s390/kvm/kvm-s390.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index f329dcb3f44c..2a40cd3e40b4 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -1018,6 +1018,8 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
->  	/* mark all the pages in active slots as dirty */
->  	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
->  		ms = slots->memslots + slotnr;
-> +		if (!ms->dirty_bitmap)
-> +			return -EINVAL;
->  		/*
->  		 * The second half of the bitmap is only used on x86,
->  		 * and would be wasted otherwise, so we put it to good
-> 
+and btrfs_assert_tree_locked+0x10/0x20 maps to ./fs/btrfs/locking.c:71
 
-You should keep the RB's, especially when only rephrasing the commit
-message ;)
+void btrfs_assert_tree_locked(struct extent_buffer *eb)
+{
+        BUG_ON(!eb->write_locks);
+      80:       14 01 23 81     lwz     r9,276(r3)
+      84:       34 00 29 7d     cntlzw  r9,r9
+      88:       7e d9 29 55     rlwinm  r9,r9,27,5,31
+      8c:       20 00 29 79     clrldi  r9,r9,32
+>     90:       00 00 09 0b     tdnei   r9,0
+      94:       20 00 80 4e     blr
+      98:       00 00 00 60     nop
+      9c:       00 00 42 60     ori     r2,r2,0
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+I have sent direct message attaching vmlinux and the obj dump for
+ctree.c and locking.c
 
 -- 
+Regard's
 
-Thanks,
+Abdul Haleem
+IBM Linux Technology Centre
 
-David / dhildenb
+
+
