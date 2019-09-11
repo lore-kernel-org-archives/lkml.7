@@ -2,113 +2,128 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B6EC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B33C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E1820863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YeChDvIW"
+	by mail.kernel.org (Postfix) with ESMTP id CA4BF20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568199134;
+	bh=iCVedO/QmNhov1vJqRrQAaYbfDxKK6l653/Reoc/8TE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TDyP2p2AIH7dFNI5yktQxvJjdOH/KVpCYPnR+UbdyK4GrlRhBCqya1ocbZTwr/nZU
+	 GglsuF3bdbey4nNKlVsm8u1D3loGj5fk9hBzJOTNiq+h5uvAAP5iggleuCHkQb4Vi7
+	 GfnbHtTBAJYeGG9/mUrpsJrExv/ZnXm/+5yGdLec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfIKKvw (ORCPT
+        id S1727652AbfIKKwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:51:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55248 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfIKKvw (ORCPT
+        Wed, 11 Sep 2019 06:52:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59674 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfIKKwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:51:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so2873021wmp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Uryc0/pqdqKJAZc5VoGKLbUrzv2t7H2FdK8rw8hlLgg=;
-        b=YeChDvIWXEB0TstAMgYAD4rorZ17PMeVJH48y0XNFopRTKZkFqUzX25bM6/kDkwlSB
-         viruUn+aG6aBu7i775BC0uPh+Nsgx/H/fOmG9216rwKNJhReVC/5NFTPYosGl7ssOqXf
-         Ip70bQ66StWipRujTpPgoTIYal+mCceDScD4Xpm6y026t3KvdNv8aQG0AX1QCn4xSqqg
-         J2DFJGyp8hAvpPJxNa+g/OKeKf5D0HyIxw3JdyOMhYjvFneVT7aV2X+MA1yMM361/1py
-         /X/tC/wr7UCCvVd8QF24ZWpp+8FpWc8i3kUAx2gpGTztEI/E2jSfyarbbeJ/q9Js94L+
-         T3Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uryc0/pqdqKJAZc5VoGKLbUrzv2t7H2FdK8rw8hlLgg=;
-        b=q350kOpSuzZSQTmgvoOxFiHRy172gnJdXugas1FGYaleqe+TdVASd+cWTwBRe+9bYN
-         tAvB4k1VmrMOxmFck1JxdSclg8O/8IuG1RB7R766J5vX35ZxQMjCo8/Yv6/XVrjg0r6Q
-         0Xg/U9+MzmVGeB7wVSRUIIK6vBVJal+OgX5Q50Aaz8lEewDIPmfoQjEZ4j3xEcf7Cpj/
-         vEqgm+0VdkI7ARzDd7NZ5M6aFKEfF3YhYL7+EpbUrKj/KW64HEww6H0mH8EAAHT0DIu/
-         +02VOHqfk6ljjgmCc7wF0Q8j2XzDHGT+nK0COL4JZtcemreK91XD5+emSY/xBYHEwlpU
-         fd1w==
-X-Gm-Message-State: APjAAAWsLdBrrusdw4o9xphMFXS9s+NLJ/2jl47czmqEfVxel1rN2IB3
-        4+ShyiYBRDy7ME2qW8sgCQuSqszR6QZ3Mw==
-X-Google-Smtp-Source: APXvYqxQ+TkhPae6YnwpETNmnZCKnGfRVMJswmmeya3cK+zZE7nfR1qS/48jxDEUAMDXwJhtaDBYyw==
-X-Received: by 2002:a1c:110:: with SMTP id 16mr3544521wmb.88.1568199110456;
-        Wed, 11 Sep 2019 03:51:50 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id b144sm2485131wmb.3.2019.09.11.03.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 03:51:49 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 11:51:48 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hns@goldelico.com
-Subject: Re: [PATCH] backlight: lm3630a: fix module aliases
-Message-ID: <20190911105148.4prmcr2f2r36sgrf@holly.lan>
-References: <20190910152359.7448-1-andreas@kemnade.info>
+        Wed, 11 Sep 2019 06:52:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fb8QmfcM6+bHa12eOMWxQHKCXWAsQRSOTaIAwdUDGXE=; b=dmS8IhYzgJSx2wo+NEVFycnHi
+        UlsetVnoOcYmgqf4uRccXocYARHtxRtkKS0Pudu1zhZ5F7Alsrvdss/TTak172MmZznVuzuq5g0id
+        hyWWCrMJFPL6/3TG1eT9DX3RTN7oWeqF0nUdyKSCe4GhBmD5Ztp26fJg6AS//5YX/OKFA=;
+Received: from [148.69.85.38] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i80Dk-0008Jn-0H; Wed, 11 Sep 2019 10:51:32 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 5A1D9D00330; Wed, 11 Sep 2019 11:51:31 +0100 (BST)
+Date:   Wed, 11 Sep 2019 11:51:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     shifu0704@thundersoft.com
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        robh+dt@kernel.org, dmurphy@ti.com, navada@ti.com
+Subject: Re: [PATCH v2] tas2770: add tas2770 smart PA kernel driver
+Message-ID: <20190911105131.GY2036@sirena.org.uk>
+References: <1568197529-4385-1-git-send-email-shifu0704@thundersoft.com>
+ <1568197529-4385-2-git-send-email-shifu0704@thundersoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H7DA0n3a+SnB4bJ2"
 Content-Disposition: inline
-In-Reply-To: <20190910152359.7448-1-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1568197529-4385-2-git-send-email-shifu0704@thundersoft.com>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 05:23:59PM +0200, Andreas Kemnade wrote:
-> Devicetree aliases are missing, so that module autoloading
-> does not work properly.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+--H7DA0n3a+SnB4bJ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Sep 11, 2019 at 06:25:29PM +0800, shifu0704@thundersoft.com wrote:
 
-> ---
->  drivers/video/backlight/lm3630a_bl.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index 3b45a1733198..9d67c07db2f2 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -617,12 +617,14 @@ static const struct i2c_device_id lm3630a_id[] = {
->  	{}
->  };
->  
-> +MODULE_DEVICE_TABLE(i2c, lm3630a_id);
+> +++ b/sound/soc/codecs/tas2770.c
+> @@ -0,0 +1,954 @@
+> +/*
+> + * SPDX-License-Identifier: GPL-2.0
+> + *
+> + * ALSA SoC Texas Instruments TAS2770 20-W Digital Input Mono Class-D
+> + * Audio Amplifier with Speaker I/V Sense
+> + *
+> + * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
+> + *	Author: Tracy Yi <tracy-yi@ti.com>
+> + *	Shi Fu <shifu0704@thundersoft.com>
+> + */
+
+This is a C style comment not a C++ style comment.
+
+> +static int tas2770_regmap_read(struct tas2770_priv *tas2770,
+> +			unsigned int reg, unsigned int *value)
+> +{
+> +	int result = 0;
+> +	int retry_count = TAS2770_I2C_RETRY_COUNT;
 > +
->  static const struct of_device_id lm3630a_match_table[] = {
->  	{ .compatible = "ti,lm3630a", },
->  	{ },
->  };
->  
-> -MODULE_DEVICE_TABLE(i2c, lm3630a_id);
-> +MODULE_DEVICE_TABLE(of, lm3630a_match_table);
->  
->  static struct i2c_driver lm3630a_i2c_driver = {
->  	.driver = {
-> -- 
-> 2.11.0
-> 
+> +	while (retry_count--) {
+> +		result = snd_soc_component_read(tas2770->component, reg,
+> +			value);
+> +		if (!result)
+> +			break;
+> +
+> +		msleep(20);
+> +	}
+> +	if (!retry_count)
+> +		return -ETIMEDOUT;
+
+This appears to be the same as the previous version?  It looks
+like we still have code to hande the device randomly resetting
+underneath the driver - like I said we really need to understand
+why that's being done, I'd strongly suggest splitting that code
+out into a separate patch so we can review the base driver and
+hopefully merge it while we discuss this reboot support.
+
+--H7DA0n3a+SnB4bJ2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl140bIACgkQJNaLcl1U
+h9DPdAgAg5/Xr71P8Q6mf/bfG1iLz+/TfNsplKMTskvGTVVtUue5zPE1ptG6WZ5L
+2fYEJ/CBBqbuGg2faUb8m0hBIGYcS/hTuOG/ZpQ9qJqZKYCYhHf9Vq5vnPEodiTx
+83K1JQrBDmNPmkgxMuGs6Bw4Hk+d4Rneyu/kPfRx3bi5FcwbdPYK+cUb0s/I31s9
+IWVodTlRPi4yhdEfjemx68QplB2JrQCDTDSLfKTlMRTzzxDJ1qGWxQ5JZji1yYhb
+JpfsEMRIZzoErRhlEu52AzJL0Fdb4OCejmlzpBfQ54xiyoBM7ZuLV++9FPWdlSYi
+PMt4GcEJZ6gS1UtdPYtizHwco2a1kw==
+=mutQ
+-----END PGP SIGNATURE-----
+
+--H7DA0n3a+SnB4bJ2--
