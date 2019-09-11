@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B03C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86221C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D3A20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5789920872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfIKQS0 (ORCPT
+        id S1729466AbfIKQSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:18:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40042 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 12:18:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56218 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbfIKQQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728964AbfIKQQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 12:16:23 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9B4E9A371A2;
-        Wed, 11 Sep 2019 16:16:22 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1034B99C41;
+        Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C29B5D9E2;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8D225D9E2;
         Wed, 11 Sep 2019 16:16:22 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 02F2A2032C; Wed, 11 Sep 2019 12:16:22 -0400 (EDT)
+        id 16EB820B4C; Wed, 11 Sep 2019 12:16:22 -0400 (EDT)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/26] saner calling conventions for nfs_fs_mount_common()
-Date:   Wed, 11 Sep 2019 12:15:56 -0400
-Message-Id: <20190911161621.19832-2-smayhew@redhat.com>
+Subject: [PATCH v3 05/26] nfs: don't bother setting/restoring export_path around do_nfs_root_mount()
+Date:   Wed, 11 Sep 2019 12:16:00 -0400
+Message-Id: <20190911161621.19832-6-smayhew@redhat.com>
 In-Reply-To: <20190911161621.19832-1-smayhew@redhat.com>
 References: <20190911161621.19832-1-smayhew@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 16:16:22 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -48,91 +48,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Allow it to take ERR_PTR() for server and return ERR_CAST() of it in
-such case.  All callers used to open-code that...
+nothing in it will be looking at that thing anyway
 
 Reviewed-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nfs/nfs4super.c | 16 +---------------
- fs/nfs/super.c     | 11 ++++-------
- 2 files changed, 5 insertions(+), 22 deletions(-)
+ fs/nfs/nfs4super.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 04c57066a11a..baece9857bcf 100644
+index d0237d8ffa2b..a0b66f98f6ba 100644
 --- a/fs/nfs/nfs4super.c
 +++ b/fs/nfs/nfs4super.c
-@@ -110,21 +110,12 @@ nfs4_remote_mount(struct file_system_type *fs_type, int flags,
- {
- 	struct nfs_mount_info *mount_info = info;
- 	struct nfs_server *server;
--	struct dentry *mntroot = ERR_PTR(-ENOMEM);
+@@ -233,12 +233,10 @@ struct dentry *nfs4_try_mount(int flags, const char *dev_name,
+ 	dfprintk(MOUNT, "--> nfs4_try_mount()\n");
  
- 	mount_info->set_security = nfs_set_sb_security;
+ 	export_path = data->nfs_server.export_path;
+-	data->nfs_server.export_path = "/";
+ 	root_mnt = nfs_do_root_mount(
+ 			nfs4_create_server(mount_info, &nfs_v4),
+ 			flags, mount_info,
+ 			data->nfs_server.hostname);
+-	data->nfs_server.export_path = export_path;
  
- 	/* Get a volume representation */
- 	server = nfs4_create_server(mount_info, &nfs_v4);
--	if (IS_ERR(server)) {
--		mntroot = ERR_CAST(server);
--		goto out;
--	}
--
--	mntroot = nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4);
--
--out:
--	return mntroot;
-+	return nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4);
- }
+ 	res = nfs_follow_remote_path(root_mnt, export_path);
  
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
-@@ -280,11 +271,6 @@ nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
+@@ -271,12 +269,10 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
+ 		return ERR_PTR(-ENOMEM);
  
- 	/* create a new volume representation */
- 	server = nfs4_create_referral_server(mount_info.cloned, mount_info.mntfh);
--	if (IS_ERR(server)) {
--		mntroot = ERR_CAST(server);
--		goto out;
--	}
--
- 	mntroot = nfs_fs_mount_common(server, flags, dev_name, &mount_info, &nfs_v4);
- out:
- 	nfs_free_fhandle(mount_info.mntfh);
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 703f595dce90..467d7a636f0b 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1903,9 +1903,6 @@ struct dentry *nfs_try_mount(int flags, const char *dev_name,
- 	else
- 		server = nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
+ 	export_path = data->mnt_path;
+-	data->mnt_path = "/";
+ 	root_mnt = nfs_do_root_mount(
+ 			nfs4_create_referral_server(mount_info.cloned,
+ 						    mount_info.mntfh),
+ 			flags, &mount_info, data->hostname);
+-	data->mnt_path = export_path;
  
--	if (IS_ERR(server))
--		return ERR_CAST(server);
--
- 	return nfs_fs_mount_common(server, flags, dev_name, mount_info, nfs_mod);
- }
- EXPORT_SYMBOL_GPL(nfs_try_mount);
-@@ -2641,6 +2638,9 @@ struct dentry *nfs_fs_mount_common(struct nfs_server *server,
- 	};
- 	int error;
- 
-+	if (IS_ERR(server))
-+		return ERR_CAST(server);
-+
- 	if (server->flags & NFS_MOUNT_UNSHARED)
- 		compare_super = NULL;
- 
-@@ -2789,10 +2789,7 @@ nfs_xdev_mount(struct file_system_type *fs_type, int flags,
- 	/* create a new volume representation */
- 	server = nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, data->fattr, data->authflavor);
- 
--	if (IS_ERR(server))
--		mntroot = ERR_CAST(server);
--	else
--		mntroot = nfs_fs_mount_common(server, flags,
-+	mntroot = nfs_fs_mount_common(server, flags,
- 				dev_name, &mount_info, nfs_mod);
- 
- 	dprintk("<-- nfs_xdev_mount() = %ld\n",
+ 	res = nfs_follow_remote_path(root_mnt, export_path);
+ 	dprintk("<-- nfs4_referral_mount() = %d%s\n",
 -- 
 2.17.2
 
