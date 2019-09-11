@@ -2,112 +2,104 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D41ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF58ECDE28
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4D52168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gousrssI"
+	by mail.kernel.org (Postfix) with ESMTP id EDE73222C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568188568;
+	bh=vwdg9KLjse6e40fTr8aUorTZdfy5Ppck3ADiYBkf1T4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jgYsjknJ+8u2OO5exPBV3Un/yOkCf8WkiattLIwzIb8caLn/xdspLa5i0/8KCO0S1
+	 RMYNFAPL0/UNQk4iOe+bRsdK/hxt40WY7XbFxQNtSp68tcekPyQaNMNbIGj2jl1rUR
+	 W1ECUjoRVDt1hfcAtiWzIDk0mw+d5HrRcpeNaw8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfIKHwz (ORCPT
+        id S1727014AbfIKH4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:52:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40412 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfIKHw2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:52:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so13140414pfb.7;
-        Wed, 11 Sep 2019 00:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=65psbidcDO0CPIrkMyNPrHv3R58h3YXHwN4mI+2C5o4=;
-        b=gousrssIPukQ29gCfHUWB/JlJvT3ZfwR9DvQ+acLhprClxxW12JQp3XblRh6dVkEr0
-         d58eh5oTTF+bUcW2Fx9nPHXzWqSRH635X7LUNLYNMDLTFzZ/bCjEfkEM8ASgoTpTE/2Q
-         Og+5qu6BYYKO0xkt6i2GC5s2av5Qooqs1L0eknjN8Wi8c5wHlVhH0opG5JtlkJOiyBHt
-         3UgSXiRWNHIucg97NiaXHUqBP/ZppS0x5ob6XlwBcV1tvepryyMDFz6s4rgsYqbztH0D
-         zdF67XMzIXLpIoabDv/RII70hePB8qrJy3GHoxaGwz8r1sDBZSRslKBpAtxlbFFaesdU
-         CUnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=65psbidcDO0CPIrkMyNPrHv3R58h3YXHwN4mI+2C5o4=;
-        b=K05VaZ7UtO8HemtGI9n/o2mnLao9NHY2pMh9l4q5iC3x2LbNY5rxnTi4AqrI/LlZRl
-         peXbYZwEqShojUOi8ynL9DPwJyrXlNBaJvYYZVlun2BWbGWeeqOWUiz+a0ZauoYt5UZ6
-         MbnOxjHg+5FVv7AlYpVaYVWA07mKuVHXs960OBcQHJAsdiiUt5dA4XmNLREN4kwXykq9
-         QipzrW07un85pzyBdkS76l48Uknt5dv35OWfzAW284UVL9gTnOJzplmFhVtTKzs6MLCs
-         M5KA6WKeJETFPzeWGn2UIi7Ca8yvl9ptbyEvPRguiVla/+PA4bq0hl6b/V4ZKG32z624
-         Rvfw==
-X-Gm-Message-State: APjAAAUJkBTLrlL/aLcjawztgmWOU/R/SUdw+QwMwOkPAm+E0nYcr7Mr
-        OjU2kC9tPKldjW5etSJ1qtpGEpB4RA4=
-X-Google-Smtp-Source: APXvYqyLxG3qHNsE28JgaCm3PaY2gBvHPOH0XnvA43dLZtsleF60v1vMfX/a4i4rKt34mlqcl18JPA==
-X-Received: by 2002:a17:90a:e292:: with SMTP id d18mr4093999pjz.100.1568188347317;
-        Wed, 11 Sep 2019 00:52:27 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u2sm8582445pgp.66.2019.09.11.00.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 00:52:26 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 06/11] drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
-Date:   Wed, 11 Sep 2019 00:52:10 -0700
-Message-Id: <20190911075215.78047-7-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-In-Reply-To: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+        Wed, 11 Sep 2019 03:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbfIKH4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 03:56:07 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A300820872;
+        Wed, 11 Sep 2019 07:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568188566;
+        bh=vwdg9KLjse6e40fTr8aUorTZdfy5Ppck3ADiYBkf1T4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lql4CiyQX+heooybFPSHweBYg47+93NbswFcMHmw9S7BaznL4jbaVGRLpH9+YLRxx
+         Y+fc/AIWCX3tOALBJNCE7HGMevBuYz4x0i7pGGvx67iZnKaXXFh8pqi75QvyL9whzx
+         blWuoauoUenq8nBmQuFaolKDEU/ODjPok59jw7eI=
+Date:   Wed, 11 Sep 2019 03:56:03 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+Message-ID: <20190911075603.GH2012@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-126-sashal@kernel.org>
+ <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+ <20190903165346.hwqlrin77cmzjiti@cantor>
+ <20190903194335.GG5281@sasha-vm>
+ <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+ <20190907220448.GB2012@sasha-vm>
+ <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-works with arbitrary firmware node.
+On Mon, Sep 09, 2019 at 05:28:08PM +0100, Jarkko Sakkinen wrote:
+>On Sat, Sep 07, 2019 at 06:04:48PM -0400, Sasha Levin wrote:
+>> On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
+>> > On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
+>> > > Right. I gave a go at backporting a few patches and this happens to be
+>> > > one of them. It will be a while before it goes in a stable tree
+>> > > (probably way after after LPC).
+>> >
+>> > It *semantically* depends on
+>> >
+>> > db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
+>> >
+>> > I.e. can cause crashes without the above patch. As a code change your
+>> > patch is fine but it needs the above patch backported to work in stable
+>> > manner.
+>> >
+>> > So... either I can backport that one (because ultimately I have
+>> > responsibility to do that as the maintainer) but if you want to finish
+>> > this one that is what you need to backport in addition and then it
+>> > should be fine.
+>>
+>> If you're ok with the backport of this commit, I can just add
+>> db4d8cb9c9f2 on top.
+>
+>Sure, I've already gave my promise to do that :-)
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+I think that the dependency in question is actually:
 
- drivers/gpu/drm/bridge/ti-tfp410.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	2677ca98ae377 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
 
-diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-index 61cc2354ef1b..d9c9c9ebad2b 100644
---- a/drivers/gpu/drm/bridge/ti-tfp410.c
-+++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-@@ -284,8 +284,8 @@ static int tfp410_get_connector_properties(struct tfp410 *dvi)
- 	else
- 		dvi->connector_type = DRM_MODE_CONNECTOR_DVID;
- 
--	dvi->hpd = fwnode_get_named_gpiod(&connector_node->fwnode,
--					"hpd-gpios", 0, GPIOD_IN, "hpd");
-+	dvi->hpd = fwnode_gpiod_get_index(&connector_node->fwnode,
-+					  "hpd", 0, GPIOD_IN, "hpd");
- 	if (IS_ERR(dvi->hpd)) {
- 		ret = PTR_ERR(dvi->hpd);
- 		dvi->hpd = NULL;
--- 
-2.23.0.162.g0b9fbb3734-goog
+Which is tricky to backport. I think I'll drop this patch for now and
+wait for your backport instead.
 
+--
+Thanks,
+Sasha
