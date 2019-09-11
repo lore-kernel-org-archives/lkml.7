@@ -2,121 +2,97 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC1C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBA7C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9367320863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568211396;
-	bh=FIfh8abaa8XlGAP/1eddhG+gO/seYnQRvWxG9Irag7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aAlTeISzf3Q2ofM7p0h1B9WaCg1cAORFnsvAGZlfM/4iCl55QmVPxdCVI3Hvf09XJ
-	 MeUQ0B8exzunY2q2aF5+Bs7wPeb/qxEzycnxcSg7O/a+au38ZE/nxCAAfB+lJzVO58
-	 SGMs9CKmMqmha7+3f0Ytf+Z0CNGyRXYIhD+nksMQ=
+	by mail.kernel.org (Postfix) with ESMTP id CF9C220863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfIKOQf (ORCPT
+        id S1728200AbfIKOQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:16:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42450 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKOQf (ORCPT
+        Wed, 11 Sep 2019 10:16:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58262 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKOQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:16:35 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f13so20923089qkm.9;
-        Wed, 11 Sep 2019 07:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bz1mSsuTl+E4vAwMyWtdro8hF2w1GwA4uT5lSquTwhw=;
-        b=XP5xHqZ7xOlRXj7HOW4YfjSKWQCcUqBQprIziluIiQnuAsTEkzCybcB7fFfJm27yPR
-         GDds5yZIiLTxvxACCXmb197OBE3R2vYBFbX5oUURMbg2GGKciF0uxI85nxPNfswKjMSJ
-         W0LYPjiH0p1Z6JT+dM8YBJOmfnn360bKFYmhkBPKstBRfZBnC9kt+Jn6sOkTNkutXH65
-         /3JoF0p9BKrGEW2kPfjAkiwAPxJyIapUHhtb2UtDTYd7m2R18FXNoDQX7EiN8uvrfeaY
-         m6jQPJfEBMe0sY3RlHXJKhkxcJ2G52HBucA1bVupG1GNaLxpC5whk5FvSs6tN/1JwvTL
-         mz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bz1mSsuTl+E4vAwMyWtdro8hF2w1GwA4uT5lSquTwhw=;
-        b=GZyPR5TpcteGzat3Yb8Xwr9/sMVUbZ4lm60BEK2n5M/nvqKk/NAi4maLuhtntQq0ID
-         fnMwQN/yKhIJUMsuJ0+aZPHkT6TFWI0j7bKIhdj4OlIEUqZGa9+MUKViS1z7giXuMdOX
-         Dv9AzbSCNwQlvpJNkKDNfnbYvvBPDp+4pxVTNBVTU89D9zyGdhVOHQErPwAIlTPO2WoT
-         WNGixiZ/1pg6ERnz8ax85eqi909t5xNYd7Yj1L8X5ezAR+lKn9obLcWb77Dnpr7BiZMy
-         gh0qGl8lBncn0aj/T+GIXzrWmBIQTFTpXVpFtx2GC5FV/Iv83mI+mIrT4wel1owgDH63
-         ++4w==
-X-Gm-Message-State: APjAAAWAxiz8uMkCST/4s8RJW8DiubtyrIVxnJJJFrOt7AqRzuqUKLLy
-        /Qj1xNqcvcsqZE700c1lbMQ=
-X-Google-Smtp-Source: APXvYqwuwH+uTdCa1/gFy0lDxUqqnquHphTP7vop0X2azQQu3OGdlEUhBiSQpiRxhOW6fyirrD/wFw==
-X-Received: by 2002:a37:a3cc:: with SMTP id m195mr34540776qke.443.1568211393921;
-        Wed, 11 Sep 2019 07:16:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:8b2])
-        by smtp.gmail.com with ESMTPSA id u23sm10041210qkm.49.2019.09.11.07.16.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 07:16:33 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 07:16:30 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, clm@fb.com,
-        dennisz@fb.com, newella@fb.com, Li Zefan <lizefan@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
-        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-Message-ID: <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
- <20190910125513.GA6399@blackbody.suse.cz>
- <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
- <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
+        Wed, 11 Sep 2019 10:16:39 -0400
+Received: from [148.69.85.38] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i83QC-0007xr-VZ; Wed, 11 Sep 2019 14:16:37 +0000
+Date:   Wed, 11 Sep 2019 16:16:36 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
+Message-ID: <20190911141635.lafrcjwvbhjm3ezy@wittgenstein>
+References: <20190910175852.GA15572@asgard.redhat.com>
+ <20190911064852.9f236d4c201b50e14d717c14@linux-foundation.org>
+ <20190911135236.73l6icwxqff7fkw5@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190911135236.73l6icwxqff7fkw5@wittgenstein>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Sep 11, 2019 at 10:18:53AM +0200, Paolo Valente wrote:
-> > The two being enabled at the same time doesn't make sense, so we can
-> > just switch over to bfq when bfq is selected as the iosched.  I asked
-> > what Paolo wanted to do in terms of interface a couple times now but
-> > didn't get an answer and he posted a patch which makes the two
-> > controllers conflict, so....  Paolo, so it looks like you want to
-> > rename all bfq files to drop the bfq prefix, right?
+On Wed, Sep 11, 2019 at 03:52:36PM +0200, Christian Brauner wrote:
+> On Wed, Sep 11, 2019 at 06:48:52AM -0700, Andrew Morton wrote:
+> > On Tue, 10 Sep 2019 18:58:52 +0100 Eugene Syromiatnikov <esyr@redhat.com> wrote:
+> > 
+> > > Previously, higher 32 bits of exit_signal fields were lost when
+> > > copied to the kernel args structure (that uses int as a type for the
+> > > respective field).  Moreover, as Oleg has noted[1], exit_signal is used
+> > > unchecked, so it has to be checked for sanity before use; for the legacy
+> > > syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
+> > > however, there's no such thing is done in clone3() code path, and that can
+> > > break at least thread_group_leader.
+> > > 
+> > > Checking user-passed exit_signal against ~CSIGNAL mask solves both
+> > > of these problems.
+> > > 
+> > > [1] https://lkml.org/lkml/2019/9/10/467
+> > > 
+> > > * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
+> > > args.exit_signal has bits set outside CSIGNAL mask.
+> > > (_do_fork): Note that exit_signal is expected to be checked for the
+> > > sanity by the caller.
+> > > 
+> > > Fixes: 7f192e3cd316 ("fork: add clone3")
+> > 
+> > What are the user-visible runtime effects of this bug?
+> > 
+> > Relatedly, should this fix be backported into -stable kernels?  If so, why?
 > 
-> Yep, mainly because ... this is the solution you voted and you
-> yourself proposed [1] :)
-> 
-> [1] https://patchwork.kernel.org/patch/10988261/
+> No, as I said in my other mail clone3() is not in any released kernel
+> yet. clone3() is going to be released in v5.3.
 
-So, that was then.  Since then the interface change has been published
-and userspace, at least some of them, already had to adjust.  Now, I
-don't have any opinion on the matter and flipping again will cause
-inconveniences to some subset of users.  It's your call.
+Sigh, I spoke to soon... Hm, this is placed in _do_fork(). There's a
+chance that this might be visible in legacy clone if anyone passes in an
+invalid signal greater than NSIG right now somehow, they'd now get
+EINVAL if I'm seeing this right.
 
-> >  I can implement
-> > the switching if so.
-> 
-> That would be perfect.
+So an alternative might be to only fix this in clone3() only right now
+and get this patch into 5.3 to not release clone3() with this bug from
+legacy clone duplicated.
+And we defer the actual legacy clone fix until after next merge window
+having it stew in linux-next for a couple of rcs. Distros often pull in
+rcs so if anyone notices a regression for legacy clone we'll know about
+it... valid_signal() checks at process exit time when the parent is
+supposed to be notifed will catch faulty signals anyway so it's not that
+big of a deal.
 
-Whichever way it gets decided, this is easy enough.  I'll prep a
-patch.
-
-Thanks.
-
--- 
-tejun
+Christian
