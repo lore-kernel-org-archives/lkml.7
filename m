@@ -3,101 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6D8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 22:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD3AC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 22:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8342085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 22:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439A02085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 22:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKf+Bx2M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfUFqn9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfIKWSo (ORCPT
+        id S1728987AbfIKWS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 18:18:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45159 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfIKWSn (ORCPT
+        Wed, 11 Sep 2019 18:18:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39427 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbfIKWSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 18:18:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so11127575ljb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:18:42 -0700 (PDT)
+        Wed, 11 Sep 2019 18:18:55 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i1so5738861pfa.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YYPZjqVFeTKtC5fFBJy5p2xhCEzihUmpj3JugWAlHQc=;
-        b=DKf+Bx2Mm7PKVq3sa6xruXc32c1xCVB9cgUxbSD/cezevVPHYtu67U93s3lL2jdvPM
-         LoN8IUOa4JhmpsA+Uu+ZQPZ2qQgX4+TBrHpnMxN4t3Bs8o62m9uhwQMVdgHEpDpzywv0
-         1tGCczjkYO4NhTJnWLP51NBeir3eAwCRcjQZUqvUmngkM8y0PtvoT4xNccwI33N2ZKQA
-         HEVmu3ldRwqhBdGjPeykuBArqowntCgD7SqMWOYwyG2y6YtzXMdDAl41zcaCFHSzIjRL
-         VSglC0PrgQ2xUsP2iL8MoEIjkSxyy47HvnKExeh0GZ0R2LyX+9iZYqXm7PHFEYt5sC2q
-         MlGA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XMh9vqXFV71BBXfbQeqQ2AI4/VRHGP8NHDiJ3hd+W2c=;
+        b=dfUFqn9GmQQfPInseKvxR8/MfpW8jptfI5OoFIgi0zvZOMbwaNSR10Eq+XBJSFsNYd
+         vGjgVyaCttoTF0bidKsGXaXdbNpRpMIva11M19yysOu907+gXXYL+v/A4NnXoUMCxDuO
+         rUorgIlhOWzW62Yag0jaeWo8A5lF25viT8ELc0+A/LeZzl8Y8c1xQ9g+REJ8UIGOgBuB
+         mqYMZ5Arjb8bcZc2LIvu52wngHmg07ljwecDu6tXfwOvyi6sErhzDq6bZQo9X03SNDGb
+         LZqK5p7G9e8iuZWNrfehZHgS7Yfjbe7yaJUCgBtFlus2nv2h13jIlVEzU25ZMgxHHe2+
+         X6/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YYPZjqVFeTKtC5fFBJy5p2xhCEzihUmpj3JugWAlHQc=;
-        b=bOS+yaHEZ8KErXCy1JqMN9pm/CozWYNBg0CUTdqLvaEIFA19NTC6iDYoGl2xDyDGcT
-         C5Zc1TcoLbpXl5ex/7k/A0M96WnsYpPc/JINuOXtIH+qmmF46iS3V13t0dY4GmcIl7ei
-         0ZQbZVB838RZmxjl/F9pYZKuYJ2aer2s/Ci7R+erj/q61c1OGYQPQOm4CTeKYu9ztVKf
-         LKO06LZjQPBdsdgdtiabOUxya4n/N8qqH2Q53jSKWKSFp9bISiKMRoqPbyGGa1OnxKKj
-         gL5W/7E98wWpf75/MQpCnhczcvSX5xZnJim13Y4PO40M0wPl5/X2GqbidGwTpOiqgVSw
-         RrvA==
-X-Gm-Message-State: APjAAAUm9JsEUls/SxXB5IBYwPV9QfRRkH623OVkeq0mHnpO4tesrUfo
-        EvzhvQENpCfLi9MTWDIwd4IJzlrTEuV+dZG61GuaWPA=
-X-Google-Smtp-Source: APXvYqy41t37T+leAmtkmNzYYvqmCCXlVPxMlzOZ/lNcbnh/UNjp/OXUUlj1Kl89C6uklAVHDh9iZl/ODTY4arlQqbc=
-X-Received: by 2002:a2e:9cd7:: with SMTP id g23mr24585040ljj.25.1568240321866;
- Wed, 11 Sep 2019 15:18:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAEJqkgjJEHmTT3N42BXkeb+2mDbteE1YwW25cgUpMk7A_sOWzg@mail.gmail.com>
- <6a47a06d-f8f1-1865-1919-5ede359d0b10@kernel.dk>
-In-Reply-To: <6a47a06d-f8f1-1865-1919-5ede359d0b10@kernel.dk>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Thu, 12 Sep 2019 00:18:15 +0200
-Message-ID: <CAEJqkgguW183DsU+JUPcV193HtDXzVsyUa4JEgVKrhumYTzpAg@mail.gmail.com>
-Subject: Re: [PATCH v2] Added QUIRKs for ADATA XPG SX8200 Pro 512GB
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Sagi Grimberg <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XMh9vqXFV71BBXfbQeqQ2AI4/VRHGP8NHDiJ3hd+W2c=;
+        b=p43+QBxDprsK3vQwsRQsa7MHGD2XALlS83FUaui5ecykXqnNJ+XKeqyfX5YSjx0l4R
+         /csGP745C7yNZWsRk7nDp/9Be6kLpXz0sLR4eHJzbOg/ExlEZ3k2hmVKPng0fobb1nVI
+         YZFYLYgYESJ2jInPEUhYPqwAqtT0kB0xQ3jzZ/MDbhsO84yFnCSlBElNjUfLX4nn7Q5E
+         jGU0ZthpbCUHvdtp8prGT8o9kWL02ZzsaNMS1JMKEji8nu6L0NTMnAYuP9H2VyIaxAaF
+         Njv2UAF9mNlLhbbIaovaxGgHnI46MYIw14fwMxHKjCLFFrmyLXs5JKGJcF/qByXbYcTR
+         MvqQ==
+X-Gm-Message-State: APjAAAWScDx685CgTlErU3WnPB6cuIrUD6LWvQptwJjclMjJoyLLrxM+
+        Ks5olREP8kDASRoxKLH9vpLVQ3TzVRDMYQ==
+X-Google-Smtp-Source: APXvYqzABztHQChdM8v4krHqAsKVKJHoGyO3bgM5SrAaN0DScRsQ2Ub9RLeinBiXp7kc3wggdgVYNw==
+X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr8084116pje.93.1568240333366;
+        Wed, 11 Sep 2019 15:18:53 -0700 (PDT)
+Received: from localhost ([49.248.179.160])
+        by smtp.gmail.com with ESMTPSA id d15sm22787418pfo.118.2019.09.11.15.18.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Sep 2019 15:18:52 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arm@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/4] Cleanup arm64 driver dependencies
+Date:   Thu, 12 Sep 2019 03:48:44 +0530
+Message-Id: <cover.1568239378.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mi., 11. Sept. 2019 um 23:33 Uhr schrieb Jens Axboe <axboe@kernel.dk>:
->
-> On 9/11/19 3:21 PM, Gabriel C wrote:
-> >   Booting with default_ps_max_latency_us >6000 makes the device fail.
-> >   Also SUBNQN is NULL and gives a warning on each boot/resume.
-> >    $ nvme id-ctrl /dev/nvme0 | grep ^subnqn
-> >      subnqn    : (null)
-> >
-> >   I use this device with an Acer Nitro 5 (AN515-43-R8BF) Laptop.
-> >   To be sure is not a Laptop issue only, I tested the device on
-> >   my server board too with the same results.
-> >   ( with 2x,4x link on the board and 4x on a PCI-E card ).
-> >
-> >   Signed-off-by: Gabriel Craciunescu <nix.or.die@gmail.com>
-> >   Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
->
-> For some reason your commit message is indented. Additionally, your
-> patch is whitespace damaged. So this won't apply anywhere.
+I was using initcall_debugging on a QCOM platform and ran across a bunch of
+driver initcalls that are enabled even if their SoC support is disabled.
 
-Gmail hates me it seems. Sry but I don't have an proper setup on that
-box right now.
-My Laptop died and I try to fix the usual issue for new Laptops on
-this one right now.
-I uploaded the git patch, if you accept it like this. If not I will
-re-send as soon I fix
-this laptop and have git* and other things proper set up.
+Here are some fixups for a subset of them.
 
-http://crazy.dev.frugalware.org/0001-Added-QUIRKs-for-ADATA-XPG-SX8200-Pro-512GB.patch
+Amit Kucheria (4):
+  arm64: Kconfig: Fix XGENE driver dependencies
+  arm64: Kconfig: Fix BRCMSTB driver dependencies
+  arm64: Kconfig: Fix VEXPRESS driver dependencies
+  arm64: Kconfig: Fix EXYNOS driver dependencies
 
-Best Regards,
+ arch/arm64/Kconfig.platforms   | 3 +++
+ drivers/bus/Kconfig            | 3 ++-
+ drivers/clk/Kconfig            | 3 ++-
+ drivers/clk/versatile/Kconfig  | 4 ++--
+ drivers/gpio/Kconfig           | 1 +
+ drivers/pci/controller/Kconfig | 1 +
+ drivers/phy/Kconfig            | 1 +
+ drivers/power/reset/Kconfig    | 3 ++-
+ drivers/regulator/Kconfig      | 1 +
+ drivers/soc/bcm/Kconfig        | 1 +
+ 10 files changed, 16 insertions(+), 5 deletions(-)
 
-Gabriel C
+-- 
+2.17.1
+
