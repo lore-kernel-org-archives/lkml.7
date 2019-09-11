@@ -2,405 +2,147 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4349C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6862AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9325020863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F75520863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t12WokXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfIKOj0 (ORCPT
+        id S1728373AbfIKOja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:39:26 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:35362 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfIKOjN (ORCPT
+        Wed, 11 Sep 2019 10:39:30 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40022 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbfIKOj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:39:13 -0400
-Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id 0Ef42100305gfCL06Ef4Rm; Wed, 11 Sep 2019 16:39:10 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0006TA-Vs; Wed, 11 Sep 2019 16:39:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1i83lv-0003PF-UY; Wed, 11 Sep 2019 16:39:03 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v2 4/5] gpio: Add GPIO Forwarder Helper
-Date:   Wed, 11 Sep 2019 16:38:57 +0200
-Message-Id: <20190911143858.13024-5-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190911143858.13024-1-geert+renesas@glider.be>
-References: <20190911143858.13024-1-geert+renesas@glider.be>
+        Wed, 11 Sep 2019 10:39:28 -0400
+Received: by mail-qk1-f194.google.com with SMTP id y144so12962517qkb.7;
+        Wed, 11 Sep 2019 07:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TwN6OrjdKt+44ku7KhvZUr2O4KlJSVZ8kmhB6V+j7N8=;
+        b=t12WokXoJJ4K4NUUnEOf7/c8b7WRfEQ6bn7vsO5yCVsQ9XAK4VVGkp9+O8v1rgippv
+         3E0ddwd9nqFUG00UzxFS30O6gPjS9LBm10a+Zm8ipspUkj7Oc5oFkw2uOfPp24PR7tuF
+         oOQY2CtT5G7ia1Sm/h4yz1/MZPIGGeHe6ArOVTBZryVmnIuUpLD7szxh+2ec/T4e3Mw1
+         OoujYt5HBky2ouplU++zanDJ6CrUhhX3FY30dAT9fysCmK0kFyQLucIUvxqCtf0rZ9Hp
+         PXtaD8GdMfehs9dCLuz7cfVqU/wqp/xdGjB+L9hPmo58yIpvgobuCwLCTTLpG7ZmcGEt
+         hBrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TwN6OrjdKt+44ku7KhvZUr2O4KlJSVZ8kmhB6V+j7N8=;
+        b=oD9UVBQNGsBRuWh9nxOOdsuudHkFIsqtdKbU7s9JpL5Ll/o9+KqoQsWtf+ZbzXIcRs
+         YYmGWNq+95dg1k3neJ0ALN5lcxhlPLiU2sMz8+PAyFgJ8KzpT0avvKyIYAyY2YIvo9iR
+         mrKz6L5ID4n4sGfwvVu5M0BY4zCtgANTyb0xrlsvyMCnhhMFCA97RQ3OXjx92z5oymbP
+         0DUu5FZ+Lmps1TOPM53uN/HAkIgKD8ipIiQPF88FGKdFKHV0/dMBMgruhdwW1fUVvj6W
+         ogq95YBJxJujRK41eIXx87r0/qo5bDnfA7qNFK21HL3IS0bRTOYlGiVWXnqs0nwf02G+
+         hM7w==
+X-Gm-Message-State: APjAAAW3fmiq3RiMiomH/47BGWQQU7JNPPjytvW81UUz+tAbWtYzQZSc
+        49CpNh3UfRr6ELLEKmOKYRg=
+X-Google-Smtp-Source: APXvYqzDyV+SgjNA5WEUzBQAIMOWaP+tdcQzaGUX0YOJ8JPSKoUht7TpayG/vdBITmUBUICF0Fd/pA==
+X-Received: by 2002:ae9:e00a:: with SMTP id m10mr37294490qkk.167.1568212766886;
+        Wed, 11 Sep 2019 07:39:26 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.172.89])
+        by smtp.gmail.com with ESMTPSA id d45sm12194380qtc.70.2019.09.11.07.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 07:39:25 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 75378C4A64; Wed, 11 Sep 2019 11:39:23 -0300 (-03)
+Date:   Wed, 11 Sep 2019 11:39:23 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     maowenan <maowenan@huawei.com>, vyasevich@gmail.com,
+        nhorman@tuxdriver.com, davem@davemloft.net,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
+ sctp_get_port_local
+Message-ID: <20190911143923.GE3499@localhost.localdomain>
+References: <20190910071343.18808-1-maowenan@huawei.com>
+ <20190910071343.18808-2-maowenan@huawei.com>
+ <20190910185710.GF15977@kadam>
+ <20190910192207.GE20699@kadam>
+ <53556c87-a351-4314-cbd9-49a39d0b41aa@huawei.com>
+ <20190911083038.GF20699@kadam>
+ <20190911143008.GD3499@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911143008.GD3499@localhost.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper for creating GPIO chips that merely forward all operations
-to other GPIOs.
+On Wed, Sep 11, 2019 at 11:30:08AM -0300, Marcelo Ricardo Leitner wrote:
+> On Wed, Sep 11, 2019 at 11:30:38AM +0300, Dan Carpenter wrote:
+> > On Wed, Sep 11, 2019 at 09:30:47AM +0800, maowenan wrote:
+> > > 
+> > > 
+> > > On 2019/9/11 3:22, Dan Carpenter wrote:
+> > > > On Tue, Sep 10, 2019 at 09:57:10PM +0300, Dan Carpenter wrote:
+> > > >> On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
+> > > >>> There are more parentheses in if clause when call sctp_get_port_local
+> > > >>> in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
+> > > >>> do cleanup.
+> > > >>>
+> > > >>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> > > >>> ---
+> > > >>>  net/sctp/socket.c | 3 +--
+> > > >>>  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > >>>
+> > > >>> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> > > >>> index 9d1f83b10c0a..766b68b55ebe 100644
+> > > >>> --- a/net/sctp/socket.c
+> > > >>> +++ b/net/sctp/socket.c
+> > > >>> @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
+> > > >>>  	 * detection.
+> > > >>>  	 */
+> > > >>>  	addr->v4.sin_port = htons(snum);
+> > > >>> -	if ((ret = sctp_get_port_local(sk, addr))) {
+> > > >>> +	if (sctp_get_port_local(sk, addr))
+> > > >>>  		return -EADDRINUSE;
+> > > >>
+> > > >> sctp_get_port_local() returns a long which is either 0,1 or a pointer
+> > > >> casted to long.  It's not documented what it means and neither of the
+> > > >> callers use the return since commit 62208f12451f ("net: sctp: simplify
+> > > >> sctp_get_port").
+> > > > 
+> > > > Actually it was commit 4e54064e0a13 ("sctp: Allow only 1 listening
+> > > > socket with SO_REUSEADDR") from 11 years ago.  That patch fixed a bug,
+> > > > because before the code assumed that a pointer casted to an int was the
+> > > > same as a pointer casted to a long.
+> > > 
+> > > commit 4e54064e0a13 treated non-zero return value as unexpected, so the current
+> > > cleanup is ok?
+> > 
+> > Yeah.  It's fine, I was just confused why we weren't preserving the
+> > error code and then I saw that we didn't return errors at all and got
+> > confused.
+> 
+> But please lets seize the moment and do the change Dean suggested.
 
-This will be used by the GPIO Aggregator.
+*Dan*, sorry.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-I expect this can be used by the GPIO inverter, too, after adding an
-"invert" flag, or a filter function that checks which offsets need
-inversion.
----
- drivers/gpio/Kconfig       |   3 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpiolib-fwd.c | 272 +++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpiolib-fwd.h |  16 +++
- 4 files changed, 292 insertions(+)
- create mode 100644 drivers/gpio/gpiolib-fwd.c
- create mode 100644 drivers/gpio/gpiolib-fwd.h
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 38e096e6925fa65d..29d3ce8debcca1f6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -47,6 +47,9 @@ config GPIOLIB_IRQCHIP
- 	select IRQ_DOMAIN
- 	bool
- 
-+config GPIOLIB_FWD
-+	tristate
-+
- config DEBUG_GPIO
- 	bool "Debug GPIO calls"
- 	depends on DEBUG_KERNEL
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d2fd19c15bae3fba..8a0e685c92b69855 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
-+obj-$(CONFIG_GPIOLIB_FWD)	+= gpiolib-fwd.o
- 
- # Device drivers. Generally keep list sorted alphabetically
- obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
-diff --git a/drivers/gpio/gpiolib-fwd.c b/drivers/gpio/gpiolib-fwd.c
-new file mode 100644
-index 0000000000000000..28dac8c60a981337
---- /dev/null
-+++ b/drivers/gpio/gpiolib-fwd.c
-@@ -0,0 +1,272 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// GPIO Forwarder Helper
-+//
-+// Copyright (C) 2019 Glider bvba
-+
-+#include <linux/bitmap.h>
-+#include <linux/bitops.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/overflow.h>
-+#include <linux/spinlock.h>
-+
-+#include "gpiolib.h"
-+#include "gpiolib-fwd.h"
-+
-+struct gpiochip_fwd {
-+	struct gpio_chip chip;
-+	struct gpio_desc **descs;
-+	union {
-+		struct mutex mlock;	/* protects tmp[] if can_sleep */
-+		spinlock_t slock;	/* protects tmp[] if !can_sleep */
-+	};
-+	unsigned long tmp[];		/* values and descs for multiple ops */
-+};
-+
-+static int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_get_direction(fwd->descs[offset]);
-+}
-+
-+static int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_direction_input(fwd->descs[offset]);
-+}
-+
-+static int gpio_fwd_direction_output(struct gpio_chip *chip,
-+				     unsigned int offset, int value)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_direction_output(fwd->descs[offset], value);
-+}
-+
-+static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_get_value(fwd->descs[offset]);
-+}
-+
-+static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned long *values, flags;
-+	struct gpio_desc **descs;
-+	unsigned int i, j = 0;
-+	int error;
-+
-+	if (chip->can_sleep)
-+		mutex_lock(&fwd->mlock);
-+	else
-+		spin_lock_irqsave(&fwd->slock, flags);
-+
-+	values = &fwd->tmp[0];
-+	bitmap_clear(values, 0, fwd->chip.ngpio);
-+	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
-+
-+	for_each_set_bit(i, mask, fwd->chip.ngpio)
-+		descs[j++] = fwd->descs[i];
-+
-+	error = gpiod_get_array_value(j, descs, NULL, values);
-+	if (!error) {
-+		j = 0;
-+		for_each_set_bit(i, mask, fwd->chip.ngpio)
-+			__assign_bit(i, bits, test_bit(j++, values));
-+	}
-+
-+	if (chip->can_sleep)
-+		mutex_unlock(&fwd->mlock);
-+	else
-+		spin_unlock_irqrestore(&fwd->slock, flags);
-+
-+	return error;
-+}
-+
-+static void gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	gpiod_set_value(fwd->descs[offset], value);
-+}
-+
-+static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				  unsigned long *bits)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned long *values, flags;
-+	struct gpio_desc **descs;
-+	unsigned int i, j = 0;
-+
-+	if (chip->can_sleep)
-+		mutex_lock(&fwd->mlock);
-+	else
-+		spin_lock_irqsave(&fwd->slock, flags);
-+
-+	values = &fwd->tmp[0];
-+	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
-+
-+	for_each_set_bit(i, mask, fwd->chip.ngpio) {
-+		__assign_bit(j, values, test_bit(i, bits));
-+		descs[j++] = fwd->descs[i];
-+	}
-+
-+	gpiod_set_array_value(j, descs, NULL, values);
-+
-+	if (chip->can_sleep)
-+		mutex_unlock(&fwd->mlock);
-+	else
-+		spin_unlock_irqrestore(&fwd->slock, flags);
-+}
-+
-+static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-+			       unsigned long config)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	chip = fwd->descs[offset]->gdev->chip;
-+	if (chip->set_config)
-+		return chip->set_config(chip, offset, config);
-+
-+	return -ENOTSUPP;
-+}
-+
-+static int gpio_fwd_init_valid_mask(struct gpio_chip *chip,
-+				    unsigned long *valid_mask,
-+				    unsigned int ngpios)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+	unsigned int i;
-+
-+	for (i = 0; i < ngpios; i++) {
-+		if (!gpiochip_line_is_valid(fwd->descs[i]->gdev->chip,
-+					    gpio_chip_hwgpio(fwd->descs[i])))
-+			clear_bit(i, valid_mask);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * gpiochip_fwd_create() - Create a new GPIO forwarder
-+ * @label: Name of the forwarder
-+ * @parent: Optional parent device pointer
-+ * @ngpios: Number of GPIOs in the forwarder.
-+ * @descs: Array containing the GPIO descriptors to forward to.
-+ *         This array must contain @ngpios entries, and must not be deallocated
-+ *         before the forwarder has been destroyed again.
-+ *
-+ * This function creates a new gpiochip, which forwards all GPIO operations to
-+ * the passed GPIO descriptors.
-+ *
-+ * Return: An opaque object pointer, or an ERR_PTR()-encoded negative error
-+ *         code on failure.
-+ */
-+struct gpiochip_fwd *gpiochip_fwd_create(const char *label,
-+					 struct device *parent,
-+					 unsigned int ngpios,
-+					 struct gpio_desc *descs[])
-+{
-+	struct gpiochip_fwd *fwd;
-+	struct gpio_chip *chip;
-+	unsigned int i;
-+	int error;
-+
-+	fwd = kzalloc(struct_size(fwd, tmp, BITS_TO_LONGS(ngpios) + ngpios),
-+		      GFP_KERNEL);
-+	if (!fwd)
-+		return ERR_PTR(-ENOMEM);
-+
-+	chip = &fwd->chip;
-+
-+	for (i = 0; i < ngpios; i++) {
-+		pr_debug("%s: gpio %u => gpio-%d (%s)\n", label, i,
-+			 desc_to_gpio(descs[i]), descs[i]->label ? : "?");
-+
-+		error = gpiod_request(descs[i], label);
-+		if (error) {
-+			gpiod_err(descs[i], "%s: Cannot request GPIO: %d\n",
-+				  label, error);
-+			goto free;
-+		}
-+
-+		if (gpiod_cansleep(descs[i]))
-+			chip->can_sleep = true;
-+		if (descs[i]->gdev->chip->set_config)
-+			chip->set_config = gpio_fwd_set_config;
-+		if (descs[i]->gdev->chip->init_valid_mask)
-+			chip->init_valid_mask = gpio_fwd_init_valid_mask;
-+	}
-+
-+	chip->label = label;
-+	chip->parent = parent;
-+	chip->owner = THIS_MODULE;
-+	chip->get_direction = gpio_fwd_get_direction;
-+	chip->direction_input = gpio_fwd_direction_input;
-+	chip->direction_output = gpio_fwd_direction_output;
-+	chip->get = gpio_fwd_get;
-+	chip->get_multiple = gpio_fwd_get_multiple;
-+	chip->set = gpio_fwd_set;
-+	chip->set_multiple = gpio_fwd_set_multiple;
-+	chip->base = -1;
-+	chip->ngpio = ngpios;
-+	fwd->descs = descs;
-+
-+	if (chip->can_sleep)
-+		mutex_init(&fwd->mlock);
-+	else
-+		spin_lock_init(&fwd->slock);
-+
-+	error = gpiochip_add_data(chip, fwd);
-+	if (error)
-+		goto free;
-+
-+	return fwd;
-+
-+free:
-+	while (i-- > 0)
-+		gpiod_free(descs[i]);
-+
-+	kfree(fwd);
-+
-+	return ERR_PTR(error);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_fwd_create);
-+
-+/**
-+ * gpiochip_fwd_destroy() - Destroy a new GPIO forwarder
-+ * @fwd: Opaque object pointer, as returned by gpiochip_fwd_create()
-+ *
-+ * This function destroys GPIO forwarder gpiochip, previously created by
-+ * gpiochip_fwd_create().
-+
-+ * Return: Zero.
-+ */
-+int gpiochip_fwd_destroy(struct gpiochip_fwd *fwd)
-+{
-+	unsigned int i;
-+
-+	if (IS_ERR_OR_NULL(fwd))
-+		return 0;
-+
-+	gpiochip_remove(&fwd->chip);
-+
-+	for (i = 0; i < fwd->chip.ngpio; i++)
-+		gpiod_free(fwd->descs[i]);
-+
-+	kfree(fwd);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_fwd_destroy);
-+
-+MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-+MODULE_DESCRIPTION("GPIO Forwarder Helper");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpio/gpiolib-fwd.h b/drivers/gpio/gpiolib-fwd.h
-new file mode 100644
-index 0000000000000000..68d299afc6883a9c
---- /dev/null
-+++ b/drivers/gpio/gpiolib-fwd.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * GPIO Forwarder Helper
-+ *
-+ * Copyright (C) 2019 Glider bvba
-+ */
-+
-+struct device;
-+struct gpio_desc;
-+struct gpiochip_fwd;
-+
-+struct gpiochip_fwd *gpiochip_fwd_create(const char *label,
-+					 struct device *parent,
-+					 unsigned int ngpios,
-+					 struct gpio_desc *descs[]);
-+int gpiochip_fwd_destroy(struct gpiochip_fwd *fwd);
--- 
-2.17.1
-
+> This was the last place saving this return value somewhere. It makes
+> sense to cleanup sctp_get_port_local() now and remove that masked
+> pointer return.
+> 
+> Then you may also cleanup:
+> socket.c:       return !!sctp_get_port_local(sk, &addr);
+> as it will be a direct map.
+> 
+>   Marcelo
+> 
