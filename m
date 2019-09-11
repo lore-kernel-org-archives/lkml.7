@@ -2,59 +2,95 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9CCECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E6EECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5E22168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC6B206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568190690;
+	bh=rWeYakoXmtNM70GDg08upNNplus9DmDXHOb2DqziQ/g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xOmzw6rYN/4pemBAYGiFnUwAKuwG6n7eg8kT/0v88ddFJKOxLOW93X1g4PJdyrn+k
+	 OmHLalekvAsompdMSTDcH/hS8vXUxZdpXjDZ7gfjp99erRRFpuOLD7DHi73ESYoG1H
+	 3E96NCy8K4AgzQZBnRf923sESj/o2KgYi9mbx834=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfIKIag (ORCPT
+        id S1727352AbfIKIb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:30:36 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40174 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfIKIaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:30:35 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 97D4015567B3E;
-        Wed, 11 Sep 2019 01:30:34 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 10:30:33 +0200 (CEST)
-Message-Id: <20190911.103033.1889508833586793614.davem@davemloft.net>
-To:     rdunlap@infradead.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiri@mellanox.com, idosch@mellanox.com
-Subject: Re: [PATCH] lib/Kconfig: fix OBJAGG in lib/ menu structure
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <34674398-54dc-a4d1-6052-67ad1a3b2fe9@infradead.org>
-References: <34674398-54dc-a4d1-6052-67ad1a3b2fe9@infradead.org>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 11 Sep 2019 01:30:35 -0700 (PDT)
+        Wed, 11 Sep 2019 04:31:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:43776 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726724AbfIKIb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 04:31:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E3E21000;
+        Wed, 11 Sep 2019 01:31:28 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E8103F67D;
+        Wed, 11 Sep 2019 01:31:25 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 09:31:24 +0100
+Message-ID: <86h85js083.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH 2/2] KVM: arm/arm64: Print the EC hex value with its exact width
+In-Reply-To: <1568169216-12632-3-git-send-email-yuzenghui@huawei.com>
+References: <1568169216-12632-1-git-send-email-yuzenghui@huawei.com>
+        <1568169216-12632-3-git-send-email-yuzenghui@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-Date: Mon, 9 Sep 2019 14:54:21 -0700
-
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Wed, 11 Sep 2019 03:33:36 +0100,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
-> Keep the "Library routines" menu intact by moving OBJAGG into it.
-> Otherwise OBJAGG is displayed/presented as an orphan in the
-> various config menus.
+> EC is the bits [31:26] of ESR_ELx on arm64 (HSR on arm). Print the
+> hex value with its exact width (8).
 > 
-> Fixes: 0a020d416d0a ("lib: introduce initial implementation of object aggregation manager")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  virt/kvm/arm/trace.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/trace.h b/virt/kvm/arm/trace.h
+> index 204d210d01c2..022b0a060034 100644
+> --- a/virt/kvm/arm/trace.h
+> +++ b/virt/kvm/arm/trace.h
+> @@ -42,7 +42,7 @@ TRACE_EVENT(kvm_exit,
+>  		__entry->vcpu_pc		= vcpu_pc;
+>  	),
+>  
+> -	TP_printk("%s: HSR_EC: 0x%04x (%s), PC: 0x%08lx",
+> +	TP_printk("%s: HSR_EC: 0x%02x (%s), PC: 0x%08lx",
+>  		  __print_symbolic(__entry->ret, kvm_arm_exception_type),
+>  		  __entry->esr_ec,
+>  		  __print_symbolic(__entry->esr_ec, kvm_arm_exception_class),
 
-Applied, thanks Randy.
+Although you're right that 8 bits ought to be enough, this is a change
+to the output of the tracepoint, which userspace could (does?) parse.
+I'm thus reluctant to change anything there, knowing that we don't
+lose any information, and just print two extra zeroes.
+
+Am I missing anything?
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
