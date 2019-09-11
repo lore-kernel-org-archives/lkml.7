@@ -2,271 +2,106 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FC6C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC0FC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D8A2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5ED2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568201784;
+	bh=WSBYT//F0n9vJ9lXGcy6U6Y+OjPG3w/fS5tHh2llcJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CAW8XHTyxdNRPuuYD2OHj8n3CMkVPmUd5HWhhnbDqn2UlBHtqCZYP1OX/5SpRblZF
+	 akAaeDb4QTNqJFRGvq3KE4/dlUkjpoYPelpIzRCbSRS2ts0wbCbVOZwke001WoMsrh
+	 IJ83dyFDcKEPN7zbE4b9FYqCjelIAPz0ReJUBVOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfIKLeT (ORCPT
+        id S1727697AbfIKLgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:34:19 -0400
-Received: from 8bytes.org ([81.169.241.247]:54066 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbfIKLeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:34:19 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 455B7386; Wed, 11 Sep 2019 13:34:18 +0200 (CEST)
-Date:   Wed, 11 Sep 2019 13:34:16 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Filippo Sironi <sironi@amazon.de>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: iommu/amd: Flushing and locking fixes
-Message-ID: <20190911113415.GA25943@8bytes.org>
-References: <1568137765-20278-1-git-send-email-sironi@amazon.de>
+        Wed, 11 Sep 2019 07:36:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51928 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727302AbfIKLgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:36:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 038DEAD08;
+        Wed, 11 Sep 2019 11:36:20 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 13:36:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+Message-ID: <20190911113619.GP4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190910124209.GY2063@dhcp22.suse.cz>
+ <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+ <20190910144713.GF2063@dhcp22.suse.cz>
+ <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+ <20190910175213.GD4023@dhcp22.suse.cz>
+ <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568137765-20278-1-git-send-email-sironi@amazon.de>
+In-Reply-To: <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Filippo,
+On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
+[...]
+> We don't put any limitations on the allocator other then that it needs to
+> clean up the metadata on allocation, and that it cannot allocate a page
+> that is in the process of being reported since we pulled it from the
+> free_list. If the page is a "Reported" page then it decrements the
+> reported_pages count for the free_area and makes sure the page doesn't
+> exist in the "Boundary" array pointer value, if it does it moves the
+> "Boundary" since it is pulling the page.
 
-On Tue, Sep 10, 2019 at 07:49:20PM +0200, Filippo Sironi wrote:
-> This patch series introduce patches to take the domain lock whenever we call
-> functions that end up calling __domain_flush_pages.  Holding the domain lock is
-> necessary since __domain_flush_pages traverses the device list, which is
-> protected by the domain lock.
-> 
-> The first patch in the series adds a completion right after an IOTLB flush in
-> attach_device.
+This is still a non-trivial limitation on the page allocation from an
+external code IMHO. I cannot give any explicit reason why an ordering on
+the free list might matter (well except for page shuffling which uses it
+to make physical memory pattern allocation more random) but the
+architecture seems hacky and dubious to be honest. It shoulds like the
+whole interface has been developed around a very particular and single
+purpose optimization.
 
-Thanks for pointing out these locking issues and your fixes. I have been
-looking into it a bit and it seems there is more problems to take care
-of.
+I remember that there was an attempt to report free memory that provided
+a callback mechanism [1], which was much less intrusive to the internals
+of the allocator yet it should provide a similar functionality. Did you
+see that approach? How does this compares to it? Or am I completely off
+when comparing them?
 
-The first problem is the racy access to domain->updated, which is best
-fixed by moving that info onto the stack don't keep it in the domain
-structure.
+[1] mostly likely not the latest version of the patchset
+http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
 
-Other than that, I think your patches are kind of the big hammer
-approach to fix it. As they are, they destroy the scalability of the
-dma-api path. So we need something more fine-grained, also if we keep in
-mind that the actual cases where we need to flush something in the
-dma-api path are very rare. The default should be to not take any lock
-in that path.
-
-How does the attached patch look to you? It is completly untested but
-should give an idea of a better way to fix these locking issues.
-
-Regards,
-
-	Joerg
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 61de81965c44..bb93a2bbb73d 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1435,9 +1435,10 @@ static void free_pagetable(struct protection_domain *domain)
-  * another level increases the size of the address space by 9 bits to a size up
-  * to 64 bits.
-  */
--static void increase_address_space(struct protection_domain *domain,
-+static bool increase_address_space(struct protection_domain *domain,
- 				   gfp_t gfp)
- {
-+	bool updated = false;
- 	unsigned long flags;
- 	u64 *pte;
- 
-@@ -1455,27 +1456,30 @@ static void increase_address_space(struct protection_domain *domain,
- 					iommu_virt_to_phys(domain->pt_root));
- 	domain->pt_root  = pte;
- 	domain->mode    += 1;
--	domain->updated  = true;
-+	updated		 = true;
- 
- out:
- 	spin_unlock_irqrestore(&domain->lock, flags);
- 
--	return;
-+	return updated;
- }
- 
- static u64 *alloc_pte(struct protection_domain *domain,
- 		      unsigned long address,
- 		      unsigned long page_size,
- 		      u64 **pte_page,
--		      gfp_t gfp)
-+		      gfp_t gfp,
-+		      bool *updated)
- {
- 	int level, end_lvl;
- 	u64 *pte, *page;
- 
- 	BUG_ON(!is_power_of_2(page_size));
- 
-+	*updated = false;
-+
- 	while (address > PM_LEVEL_SIZE(domain->mode))
--		increase_address_space(domain, gfp);
-+		*updated = increase_address_space(domain, gfp) || *updated;
- 
- 	level   = domain->mode - 1;
- 	pte     = &domain->pt_root[PM_LEVEL_INDEX(level, address)];
-@@ -1501,7 +1505,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 			if (cmpxchg64(pte, __pte, __npte) != __pte)
- 				free_page((unsigned long)page);
- 			else if (pte_level == PAGE_MODE_7_LEVEL)
--				domain->updated = true;
-+				*updated = true;
- 
- 			continue;
- 		}
-@@ -1617,6 +1621,7 @@ static int iommu_map_page(struct protection_domain *dom,
- 	struct page *freelist = NULL;
- 	u64 __pte, *pte;
- 	int i, count;
-+	bool updated;
- 
- 	BUG_ON(!IS_ALIGNED(bus_addr, page_size));
- 	BUG_ON(!IS_ALIGNED(phys_addr, page_size));
-@@ -1625,7 +1630,7 @@ static int iommu_map_page(struct protection_domain *dom,
- 		return -EINVAL;
- 
- 	count = PAGE_SIZE_PTE_COUNT(page_size);
--	pte   = alloc_pte(dom, bus_addr, page_size, NULL, gfp);
-+	pte   = alloc_pte(dom, bus_addr, page_size, NULL, gfp, &updated);
- 
- 	if (!pte)
- 		return -ENOMEM;
-@@ -1634,7 +1639,7 @@ static int iommu_map_page(struct protection_domain *dom,
- 		freelist = free_clear_pte(&pte[i], pte[i], freelist);
- 
- 	if (freelist != NULL)
--		dom->updated = true;
-+		updated = true;
- 
- 	if (count > 1) {
- 		__pte = PAGE_SIZE_PTE(__sme_set(phys_addr), page_size);
-@@ -1650,7 +1655,8 @@ static int iommu_map_page(struct protection_domain *dom,
- 	for (i = 0; i < count; ++i)
- 		pte[i] = __pte;
- 
--	update_domain(dom);
-+	if (updated)
-+		update_domain(dom);
- 
- 	/* Everything flushed out, free pages now */
- 	free_page_list(freelist);
-@@ -2041,6 +2047,13 @@ static int __attach_device(struct iommu_dev_data *dev_data,
- 	/* Attach alias group root */
- 	do_attach(dev_data, domain);
- 
-+	/*
-+	 * We might boot into a crash-kernel here. The crashed kernel
-+	 * left the caches in the IOMMU dirty. So we have to flush
-+	 * here to evict all dirty stuff.
-+	 */
-+	domain_flush_tlb_pde(domain);
-+
- 	ret = 0;
- 
- out_unlock:
-@@ -2162,13 +2175,6 @@ static int attach_device(struct device *dev,
- 	ret = __attach_device(dev_data, domain);
- 	spin_unlock_irqrestore(&amd_iommu_devtable_lock, flags);
- 
--	/*
--	 * We might boot into a crash-kernel here. The crashed kernel
--	 * left the caches in the IOMMU dirty. So we have to flush
--	 * here to evict all dirty stuff.
--	 */
--	domain_flush_tlb_pde(domain);
--
- 	return ret;
- }
- 
-@@ -2352,17 +2358,21 @@ static void update_device_table(struct protection_domain *domain)
- 	}
- }
- 
--static void update_domain(struct protection_domain *domain)
-+static void __update_domain(struct protection_domain *domain)
- {
--	if (!domain->updated)
--		return;
--
- 	update_device_table(domain);
- 
- 	domain_flush_devices(domain);
- 	domain_flush_tlb_pde(domain);
-+}
- 
--	domain->updated = false;
-+static void update_domain(struct protection_domain *domain)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&domain->lock, flags);
-+	__update_domain(domain);
-+	spin_unlock_irqrestore(&domain->lock, flags);
- }
- 
- static int dir2prot(enum dma_data_direction direction)
-@@ -3221,9 +3231,12 @@ static bool amd_iommu_is_attach_deferred(struct iommu_domain *domain,
- static void amd_iommu_flush_iotlb_all(struct iommu_domain *domain)
- {
- 	struct protection_domain *dom = to_pdomain(domain);
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&dom->lock, flags);
- 	domain_flush_tlb_pde(dom);
- 	domain_flush_complete(dom);
-+	spin_unlock_irqrestore(&dom->lock, flags);
- }
- 
- static void amd_iommu_iotlb_range_add(struct iommu_domain *domain,
-@@ -3285,10 +3298,9 @@ void amd_iommu_domain_direct_map(struct iommu_domain *dom)
- 
- 	/* Update data structure */
- 	domain->mode    = PAGE_MODE_NONE;
--	domain->updated = true;
- 
- 	/* Make changes visible to IOMMUs */
--	update_domain(domain);
-+	__update_domain(domain);
- 
- 	/* Page-table is not visible to IOMMU anymore, so free it */
- 	free_pagetable(domain);
-@@ -3331,9 +3343,8 @@ int amd_iommu_domain_enable_v2(struct iommu_domain *dom, int pasids)
- 
- 	domain->glx      = levels;
- 	domain->flags   |= PD_IOMMUV2_MASK;
--	domain->updated  = true;
- 
--	update_domain(domain);
-+	__update_domain(domain);
- 
- 	ret = 0;
- 
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 64edd5a9694c..143e1bf70c40 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -475,7 +475,6 @@ struct protection_domain {
- 	int glx;		/* Number of levels for GCR3 table */
- 	u64 *gcr3_tbl;		/* Guest CR3 table */
- 	unsigned long flags;	/* flags to find out type of domain */
--	bool updated;		/* complete domain flush required */
- 	unsigned dev_cnt;	/* devices assigned to this domain */
- 	unsigned dev_iommu[MAX_IOMMUS]; /* per-IOMMU reference count */
- };
+-- 
+Michal Hocko
+SUSE Labs
