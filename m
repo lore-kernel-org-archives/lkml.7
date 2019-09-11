@@ -2,70 +2,70 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61224ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009EEECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3566821D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B7C21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJt1wbxc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLTfU1Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfIKFNU (ORCPT
+        id S1727038AbfIKFNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 01:13:20 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43074 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfIKFMs (ORCPT
+        Wed, 11 Sep 2019 01:13:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46576 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfIKFMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 01:12:48 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u72so10881640pgb.10;
-        Tue, 10 Sep 2019 22:12:48 -0700 (PDT)
+        Wed, 11 Sep 2019 01:12:47 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so12864124pfg.13;
+        Tue, 10 Sep 2019 22:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Quna5dhwEKx+rAq2g69EwnMLgIT5ImG5uNLk/TAdGE4=;
-        b=FJt1wbxcOvsw1NxaBU/dPTHar140OLodCaSHmQbWZHNYlFmBwM78EnU1Tu5fKNNpO7
-         A2jihYwwI4L7XryVJjoKZBunJc4LF2LiXXxeHCRuHxnE0adivvy5pi84dXTTfsTh2xzf
-         mEBJyn1zwlQDi2Ht7SLZpVRu1t/xa5I60cE2ifJEW/XV5sosOa94vyaH59aWrLM/ho2u
-         90aKOWIsEp0YOrYWTV5ZfCU8Y3IIytiTzWVrtgyxBeuDlFunuItxKwBRqMqencksQ8mJ
-         uJd1u2jOnmLUXpMaGnDxTa7937ZWio350zwQ7ye2G7OcPlI1ZSBakJmSd2T5X7HMe9fz
-         i7eQ==
+        bh=WnwWtVtC6uezsNkuF5wmz268WUJO4EZ17z2Uk6qqhWs=;
+        b=dLTfU1UeiL5ZxW1r8ZEpwjgZ5ViCfEc+q+YYgTYl/Y7iJ1pU/GH8RxfGFzW8ymDy48
+         dHt+J2A9fw4ug8LqvBNkNf2gGU+MNKIf28rRNmxVyGrwVaZXAjhcmciUJVDWijvvdoFQ
+         GD6IS4AHr/GwSEAjl16rxr3VAOLEUT4W+hfS/nZ022f/71LZQxEy6HqIzpFQGCFzyc1H
+         hV+gEqj+y7asSUAOdIR8Kx+nkIlKlk4PIJpF3KA6OnsNi4b5rdz97GEIzoeq3t8ykeKO
+         XpXyaiqMeLDIfeXJGlTbAqGlVHR2Okuxn2uzTXxZIXiFRVp5WIoJ+cxiyApfHD/jXUXk
+         IWMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Quna5dhwEKx+rAq2g69EwnMLgIT5ImG5uNLk/TAdGE4=;
-        b=CbiyYntYbDgahHWn4BclVmHqNuj1arVoa1kTWKXaOzZ8KQJBlnNYoVI09+WYGSr8Wb
-         7YheKUKHwyykUNy0MP5kqQXyG3pc6+VHdND+DlSC5VA5p7qZBV4NKiKExXX1RiLq4CvD
-         21DuqoHVJOPAV2trt4M/rKtCe9FB0frVgTgBOLU8jWdM0ddSV1GoT4lpVkgy6x1XxPga
-         UTEvCI/2KcccW9YO+rvtldDOsv5ORWBmwl0IuTqDI754wJ6lJKt4mQ1e4fx0b2wOhhMu
-         efLyb1/mM0/be8dsoaA2DX7LMN1Z/DEkOHcAOIqCytHGHMv3I+AjiZ3DX5lPPYGXaR3L
-         2nrQ==
-X-Gm-Message-State: APjAAAW70JKdrISLP2QPA9Dy1d5tPKI3eYIAVIIUK/2GbLcX7G5Ub/ir
-        DXjdd667b/iRxcyIesAoMoM=
-X-Google-Smtp-Source: APXvYqw2AREs9xiEQAGYIQXwEB31ZMDQbSji6wbL9i8RjBUltOK8HlwMdV/h44zH9lwK+kXoavYqIw==
-X-Received: by 2002:a62:1a4d:: with SMTP id a74mr4708634pfa.179.1568178767612;
-        Tue, 10 Sep 2019 22:12:47 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p11sm22011149pff.136.2019.09.10.22.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=WnwWtVtC6uezsNkuF5wmz268WUJO4EZ17z2Uk6qqhWs=;
+        b=MRUCdC9eCcBsIUSfrSFohl1hKqkzp+RwEYeMbGsQwoKRD9p5VEYNuzMtymU+kCZrUS
+         CfBpP6luZVVixnxG1qWxbhxt+flKrsQL9QxLbRrMuui50nmx4V70URVAWKLiBuANTFpU
+         LiIT/ztaGsbetnJ/9JjXl8Si5hHalqNNeTsKZA6/vkCQOq+Ib3ubnHx4IVJ698UH8bvl
+         FVHan3aF+87GyRlOCYs41Wx5KTibBdtj/4ejeDAbznDcE8icLT3Pd9GWzrqts9QjbQRt
+         MYzJBNqIa8k5Clfplm1gboOuNnIdkaUtAHZp0H9UqkGu5KJwwz7KJ4dfrlMWwrhs7oqh
+         TcmQ==
+X-Gm-Message-State: APjAAAVuRlksVqAU86qt/V8rM/nFU3NzJBL1F9XLkLoUaMv2OU7AtcsX
+        zm2WcG+68H8K9D3wmIzYe5M=
+X-Google-Smtp-Source: APXvYqwdL0RzFYmbLLzoEArxUZpv4bPMUIKcrTFdLOvuq+s91/MZYaQNKw0JTxmKuQN7Dujs+6mpOQ==
+X-Received: by 2002:a62:e717:: with SMTP id s23mr40425298pfh.71.1568178766419;
         Tue, 10 Sep 2019 22:12:46 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id p11sm22011149pff.136.2019.09.10.22.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 22:12:45 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 09/14] software node: simplify property_entry_read_string_array()
-Date:   Tue, 10 Sep 2019 22:12:26 -0700
-Message-Id: <20190911051231.148032-10-dmitry.torokhov@gmail.com>
+Subject: [PATCH v4 08/14] software node: unify PROPERTY_ENTRY_XXX macros
+Date:   Tue, 10 Sep 2019 22:12:25 -0700
+Message-Id: <20190911051231.148032-9-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
 In-Reply-To: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
@@ -76,54 +76,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to treat string arrays and single strings separately, we can go
-exclusively by the element length in relation to data type size.
+We can unify string properties initializer macros with integer
+initializers.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ include/linux/property.h | 64 +++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a019b5e90d3b..9c3e566c753e 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -173,28 +173,21 @@ static int property_entry_read_string_array(const struct property_entry *props,
- 					    const char *propname,
- 					    const char **strings, size_t nval)
- {
--	const struct property_entry *prop;
- 	const void *pointer;
--	size_t array_len, length;
-+	size_t length;
-+	int array_len;
+diff --git a/include/linux/property.h b/include/linux/property.h
+index ec8f84d564a8..238e1507925f 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -245,37 +245,33 @@ struct property_entry {
+ };
  
- 	/* Find out the array length. */
--	prop = property_entry_get(props, propname);
--	if (!prop)
--		return -EINVAL;
+ /*
+- * Note: the below four initializers for the anonymous union are carefully
++ * Note: the below initializers for the anonymous union are carefully
+  * crafted to avoid gcc-4.4.4's problems with initialization of anon unions
+  * and structs.
+  */
+ 
+-#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _type_, _Type_, _val_, _len_)\
++#define __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_)				\
++	sizeof(((struct property_entry *)NULL)->value._elem_)
++
++#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _elem_, _Type_, _val_, _len_)\
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+-	.length = (_len_) * sizeof(_type_),				\
++	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
+ 	.is_array = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .pointer = _val_ },						\
+ }
+ 
+ #define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
+-	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u8, U8, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u8_data, U8, _val_, _len_)
+ #define PROPERTY_ENTRY_U16_ARRAY_LEN(_name_, _val_, _len_)		\
+-	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u16, U16, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u16_data, U16, _val_, _len_)
+ #define PROPERTY_ENTRY_U32_ARRAY_LEN(_name_, _val_, _len_)		\
+-	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u32, U32, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u32_data, U32, _val_, _len_)
+ #define PROPERTY_ENTRY_U64_ARRAY_LEN(_name_, _val_, _len_)		\
+-	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u64, U64, _val_, _len_)
 -
--	if (prop->is_array)
--		/* Find the length of an array. */
--		array_len = property_entry_count_elems_of_size(props, propname,
--							  sizeof(const char *));
--	else
--		/* The array length for a non-array string property is 1. */
--		array_len = 1;
-+	array_len = property_entry_count_elems_of_size(props, propname,
-+						       sizeof(const char *));
-+	if (array_len < 0)
-+		return array_len;
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u64_data, U64, _val_, _len_)
+ #define PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, _len_)		\
+-(struct property_entry) {						\
+-	.name = _name_,							\
+-	.length = (_len_) * sizeof(const char *),			\
+-	.is_array = true,						\
+-	.type = DEV_PROP_STRING,					\
+-	{ .pointer = _val_ },						\
+-}
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, str, STRING, _val_, _len_)
  
- 	/* Return how many there are if strings is NULL. */
- 	if (!strings)
- 		return array_len;
+ #define PROPERTY_ENTRY_U8_ARRAY(_name_, _val_)				\
+ 	PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
+@@ -288,30 +284,24 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING_ARRAY(_name_, _val_)			\
+ 	PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
  
--	array_len = min(nval, array_len);
-+	array_len = min_t(size_t, nval, array_len);
- 	length = array_len * sizeof(*strings);
+-#define __PROPERTY_ENTRY_INTEGER(_name_, _type_, _Type_, _val_)	\
+-(struct property_entry) {					\
+-	.name = _name_,						\
+-	.length = sizeof(_type_),				\
+-	.type = DEV_PROP_##_Type_,				\
+-	{ .value = { ._type_##_data = _val_ } },		\
++#define __PROPERTY_ENTRY_ELEMENT(_name_, _elem_, _Type_, _val_)		\
++(struct property_entry) {						\
++	.name = _name_,							\
++	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
++	.type = DEV_PROP_##_Type_,					\
++	{ .value = { ._elem_ = _val_ } },				\
+ }
  
- 	pointer = property_entry_find(props, propname, length);
+-#define PROPERTY_ENTRY_U8(_name_, _val_)		\
+-	__PROPERTY_ENTRY_INTEGER(_name_, u8, U8, _val_)
+-#define PROPERTY_ENTRY_U16(_name_, _val_)		\
+-	__PROPERTY_ENTRY_INTEGER(_name_, u16, U16, _val_)
+-#define PROPERTY_ENTRY_U32(_name_, _val_)		\
+-	__PROPERTY_ENTRY_INTEGER(_name_, u32, U32, _val_)
+-#define PROPERTY_ENTRY_U64(_name_, _val_)		\
+-	__PROPERTY_ENTRY_INTEGER(_name_, u64, U64, _val_)
+-
+-#define PROPERTY_ENTRY_STRING(_name_, _val_)		\
+-(struct property_entry) {				\
+-	.name = _name_,					\
+-	.length = sizeof(const char *),			\
+-	.type = DEV_PROP_STRING,			\
+-	{ .value = { .str = _val_ } },			\
+-}
++#define PROPERTY_ENTRY_U8(_name_, _val_)				\
++	__PROPERTY_ENTRY_ELEMENT(_name_, u8_data, U8, _val_)
++#define PROPERTY_ENTRY_U16(_name_, _val_)				\
++	__PROPERTY_ENTRY_ELEMENT(_name_, u16_data, U16, _val_)
++#define PROPERTY_ENTRY_U32(_name_, _val_)				\
++	__PROPERTY_ENTRY_ELEMENT(_name_, u32_data, U32, _val_)
++#define PROPERTY_ENTRY_U64(_name_, _val_)				\
++	__PROPERTY_ENTRY_ELEMENT(_name_, u64_data, U64, _val_)
++#define PROPERTY_ENTRY_STRING(_name_, _val_)				\
++	__PROPERTY_ENTRY_ELEMENT(_name_, str, STRING, _val_)
+ 
+ #define PROPERTY_ENTRY_BOOL(_name_)		\
+ (struct property_entry) {			\
 -- 
 2.23.0.162.g0b9fbb3734-goog
 
