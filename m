@@ -2,161 +2,132 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE32DC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B09C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6422082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE1421479
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="FFE/sT1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfIKKby (ORCPT
+        id S1727709AbfIKKcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:31:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35164 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfIKKby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:31:54 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6664518C429A;
-        Wed, 11 Sep 2019 10:31:53 +0000 (UTC)
-Received: from [10.36.117.155] (ovpn-117-155.ams2.redhat.com [10.36.117.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA1F25D6A5;
-        Wed, 11 Sep 2019 10:31:48 +0000 (UTC)
-Subject: Re: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
- <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
- <20190910161759.GI14442@C02TF0J2HF1T.local>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <eede2498-b2fa-9905-9020-31337045b00d@redhat.com>
-Date:   Wed, 11 Sep 2019 12:31:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190910161759.GI14442@C02TF0J2HF1T.local>
-Content-Type: text/plain; charset=utf-8
+        Wed, 11 Sep 2019 06:32:16 -0400
+Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:12632 "EHLO
+        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726702AbfIKKcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:32:16 -0400
+Received: from pps.filterd (m0127838.ppops.net [127.0.0.1])
+        by mx0a-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BAVb3B015973;
+        Wed, 11 Sep 2019 03:32:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version;
+ s=proofpoint20171006; bh=tLK6mq8+jPwD8iiIe9QesdNafwxSCFi6gv/K1ZHAG3M=;
+ b=FFE/sT1Q0kZKPHEuiGQV8fEMDb2jOZgSHtLtOh3oNuDr1uX1YeANsTn9vd72KqW6BuUP
+ yXQeUBdlIKgg+5EFWuGYZFKgdynQt0DwYHkPd9vTAP25z8MbAMMJ5EhDpkG3bTckZavL
+ iesTY5p+5U5BPs+3QA7JX0Ch677ooKJmkFT+g+9ZeSQcEeO5wUcbMJ8MPqRdIIVhgY8a
+ VkoeGynYdFitX0+KcXmaavVw9sScEYiromF4GSqc93J0KebQofVwfQcFKbtykiP4deFP
+ IEa5ECcRVtvHj2e1jcXnwE/23ijOx+8Gfyf7MBKWm9P+gDFTzYPFYpKRLNVXshUbVv8d jQ== 
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2056.outbound.protection.outlook.com [104.47.42.56])
+        by mx0a-002c1b01.pphosted.com with ESMTP id 2uvc3y07qm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 03:32:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E0tjQWllK3pkbkuQboFETCZUME5bNlQcwm4n5weSm+b3d5YhKVV41Z5J9XXDljebV6xHGcOhnHuhuHNgk1IzFaNyH4VSNxQLENuBTAylTRL07WK4B4KcaGeozvHxailz7bt1rmVmviiIzMZmqtDiYHHG6ha4ICrYcQEEtLDp+hneMcZAWYOBmTHD1tsYueV4OBegJ61D+IVwTQvkj6HkPkS8fSiPLnPND3FVgEcvIZh3j6sFEiIUBccOjLLBrXomVz6HNDCgJjffBCkGtvWgnCCcTca7ENYNF1TQDO11icqV2hjedrfXUO6bAoX/SxpJidHebIVflztRq0uz2DdUdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tLK6mq8+jPwD8iiIe9QesdNafwxSCFi6gv/K1ZHAG3M=;
+ b=Cnievq5S0ImkSdPN6IZHPCTPsg4ZoNBGcz7w/ezl3SIHQyLKsFgqk8jyufHmCfy3vddWPgRZcO1pFbsml4uT+yU6bnachTKplQEBJUTCFdhIcfvTGwWR9wf8UIbIouvfzNLQWASuygZcxjvR2mbK9tU14BqgmhXqZzeZKkW7lfMBlvLzFfAMv7RJnoByHEEcfFL1iUit/0ME93tnL+/ReC//jPBScl5fUrqiTs78MoPuaItajQLVGurmJFqdAKg9tW2v4bzHXofPz05K6Ct4ij3CeZDJSg6UYgDG6JodUULGk52BNHEsTU0quay2fXPEZ8jSk5grL2X6nM1KDP1lxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+Received: from CY4PR0201MB3588.namprd02.prod.outlook.com (52.132.98.38) by
+ CY4PR0201MB3524.namprd02.prod.outlook.com (52.132.103.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.20; Wed, 11 Sep 2019 10:32:08 +0000
+Received: from CY4PR0201MB3588.namprd02.prod.outlook.com
+ ([fe80::5598:9f2e:9d39:c737]) by CY4PR0201MB3588.namprd02.prod.outlook.com
+ ([fe80::5598:9f2e:9d39:c737%6]) with mapi id 15.20.2199.027; Wed, 11 Sep 2019
+ 10:32:08 +0000
+From:   Florian Schmidt <florian.schmidt@nutanix.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 1/2] trace-vmscan-postprocess: sync with tracepoints
+ updates
+Thread-Topic: [PATCH 1/2] trace-vmscan-postprocess: sync with tracepoints
+ updates
+Thread-Index: AQHVYki3Tm9nzAyXjk2sNXBveXCZqacb/poAgApVIAA=
+Date:   Wed, 11 Sep 2019 10:32:08 +0000
+Message-ID: <faf26ea1-ce58-2490-2b26-c31e7e6cc05c@nutanix.com>
+References: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+ <20190903111342.17731-2-florian.schmidt@nutanix.com>
+ <20190904204446.kceqzrg4zmnw3mm6@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20190904204446.kceqzrg4zmnw3mm6@ca-dmjordan1.us.oracle.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Wed, 11 Sep 2019 10:31:53 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR06CA0038.eurprd06.prod.outlook.com
+ (2603:10a6:208:aa::15) To CY4PR0201MB3588.namprd02.prod.outlook.com
+ (2603:10b6:910:8b::38)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [62.254.189.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 26b16c23-0f45-4ab2-7496-08d736a34c0b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR0201MB3524;
+x-ms-traffictypediagnostic: CY4PR0201MB3524:
+x-microsoft-antispam-prvs: <CY4PR0201MB3524ABF35655AFDB728B2826F7B10@CY4PR0201MB3524.namprd02.prod.outlook.com>
+x-proofpoint-crosstenant: true
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0157DEB61B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(346002)(366004)(39860400002)(199004)(189003)(51914003)(5660300002)(2906002)(6916009)(26005)(81166006)(81156014)(15650500001)(8676002)(54906003)(66946007)(2616005)(36756003)(11346002)(53936002)(478600001)(476003)(6436002)(256004)(14444005)(71190400001)(71200400001)(31696002)(53546011)(316002)(52116002)(6512007)(102836004)(4744005)(305945005)(76176011)(99286004)(6116002)(3846002)(66556008)(66446008)(66476007)(446003)(64756008)(86362001)(7736002)(386003)(6506007)(6246003)(186003)(31686004)(6486002)(8936002)(229853002)(14454004)(44832011)(486006)(25786009)(4326008)(66066001)(64030200001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR0201MB3524;H:CY4PR0201MB3588.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nutanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: erIphi9v79fjfH6Xr9hzERqgyzHERTKBId1EmgH/VI40VueTOp8j5PLmbb/gZWlK65Qya8plFB6JBCI28WvnaVOK0XTPrz+SofhV3797FXPO0fkaknX99hjXpFLDd5pLQ/GOatP5HzxjR8DJ3YJUwcFBovj3fpdB/aI9UGbOhDxeGBJbZ6q1CnNmZ3XxipvFO1/d6gImJKyphSQ5RzY18LWTinZczZ7lJpfAKc74osqY0gyL7UnwdAYQQq+NkjCvUiRFXwt2KLazkyNgtcZ2sKnU/SjeY2ufkKZ1wqwbiHsngIF3bKSaAOP+lE+4wbWG0mai/6MPZHEJaI03ATBkqcr7N7sXNg0f+y3PZlMYVUHlEB7LAi+mDpdxBtG84w4wvB5/4BgcSDQ2Ac6swOy5kU0dvc31BxIXVvTIC6fd8BQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <45901FA9AB66F74A993CFDF67B62F2C7@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26b16c23-0f45-4ab2-7496-08d736a34c0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 10:32:08.0812
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kgOMDPmGCjotFCABj3u50DbmYv0M9LB4tmib1GBKBw8g2sK1HeRMSNkY0l4Ly8Zbb/OjlH5+W0KvH9iFxHgTtGI4+Jvv2JoBNa1+V9/S4YM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0201MB3524
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-11_07:2019-09-11,2019-09-11 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.19 18:17, Catalin Marinas wrote:
-> On Tue, Sep 03, 2019 at 03:15:58PM +0530, Anshuman Khandual wrote:
->> @@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>  void vmemmap_free(unsigned long start, unsigned long end,
->>  		struct vmem_altmap *altmap)
->>  {
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +	/*
->> +	 * FIXME: We should have called remove_pagetable(start, end, true).
->> +	 * vmemmap and vmalloc virtual range might share intermediate kernel
->> +	 * page table entries. Removing vmemmap range page table pages here
->> +	 * can potentially conflict with a concurrent vmalloc() allocation.
->> +	 *
->> +	 * This is primarily because vmalloc() does not take init_mm ptl for
->> +	 * the entire page table walk and it's modification. Instead it just
->> +	 * takes the lock while allocating and installing page table pages
->> +	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
->> +	 * entry via memory hot remove can cause vmalloc() kernel page table
->> +	 * walk pointers to be invalid on the fly which can cause corruption
->> +	 * or worst, a crash.
->> +	 *
->> +	 * So free_empty_tables() gets called where vmalloc and vmemmap range
->> +	 * do not overlap at any intermediate level kernel page table entry.
->> +	 */
->> +	unmap_hotplug_range(start, end, true);
->> +	if (!vmalloc_vmemmap_overlap)
->> +		free_empty_tables(start, end);
->> +#endif
->>  }
->>  #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
-> 
-> I wonder whether we could simply ignore the vmemmap freeing altogether,
-> just leave it around and not unmap it. This way, we could call
-> unmap_kernel_range() for removing the linear map and we save some code.
-> 
-> For the linear map, I think we use just above 2MB of tables for 1GB of
-> memory mapped (worst case with 4KB pages we need 512 pte pages). For
-> vmemmap we'd use slightly above 2MB for a 64GB hotplugged memory. Do we
-> expect such memory to be re-plugged again in the same range? If we do,
-> then I shouldn't even bother with removing the vmmemmap.
-> 
-
-FWIW, I think we should do it cleanly.
-
-> I don't fully understand the use-case for memory hotremove, so any
-> additional info would be useful to make a decision here.
-> 
-
-Especially in virtual environment, hotremove will be relevant. For
-physical environments - I have no idea how important that is for ARM.
-
--- 
-
-Thanks,
-
-David / dhildenb
+SGkgRGFuaWVsLA0KDQpPbiAwNC8wOS8yMDE5IDIxOjQ0LCBEYW5pZWwgSm9yZGFuIHdyb3RlOg0K
+PiBPbiBUdWUsIFNlcCAwMywgMjAxOSBhdCAxMToxNDoxMkFNICswMDAwLCBGbG9yaWFuIFNjaG1p
+ZHQgd3JvdGU6DQo+PiBtbV92bXNjYW5fe2RpcmVjdF9yZWNsYWltX2JlZ2luLHdha2V1cF9rc3dh
+cGQsbHJ1X2lzb2xhdGUsbHJ1X3Nocmlua19hY3RpdmV9DQo+PiBjaGFuZ2VkIHRoZWlyIG91dHB1
+dCB0byB0aGUgcG9pbnQgd2hlcmUgdGhlIHNjcmlwdCB0aHJvd3Mgd2FybmluZ3MgYW5kDQo+PiBl
+cnJvcnMuIFVwZGF0ZSBpdCB0byBiZSBwcm9wZXJseSBpbiBsaW5lIHdpdGggdGhvc2UgY2hhbmdl
+cy4NCj4gDQo+IENvdWxkIHVzZSB0aGUgYXBwcm9wcmlhdGUgRml4ZXMgdGFncyBoZXJlLg0KDQpH
+b29kIHBvaW50LCBJJ2xsIGFkZA0KDQpGaXhlczogMzQ4MWMzN2ZmYTFkICgibW0vdm1zY2FuOiBk
+cm9wIG1heV93cml0ZXBhZ2UgYW5kIGNsYXNzem9uZV9pZHggDQpmcm9tIGRpcmVjdCByZWNsYWlt
+IGJlZ2luIHRlbXBsYXRlIikNCkZpeGVzOiAzYjc3NTk5OGVjYTcgKCJpbmNsdWRlL3RyYWNlL2V2
+ZW50cy92bXNjYW4uaDogZHJvcCB6b25lIGlkIGZyb20gDQprc3dhcGQgdHJhY2Vwb2ludHMiKQ0K
+DQppbiB2Mi4NCg0KVGhhbmtzIGZvciB0aGUgZmVlZGJhY2ssDQpGbG9yaWFuDQo=
