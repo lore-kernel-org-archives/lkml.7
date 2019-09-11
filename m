@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A48C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD74CECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAC420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67F02085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKGZhQsc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="px6b4SIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbfIKSVi (ORCPT
+        id S1730007AbfIKSVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:21:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36562 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729758AbfIKSVi (ORCPT
+        Wed, 11 Sep 2019 14:21:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38627 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729758AbfIKSVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:21:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t3so596345wmj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:21:35 -0700 (PDT)
+        Wed, 11 Sep 2019 14:21:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so25653832wrx.5;
+        Wed, 11 Sep 2019 11:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wlwkreJLiH000TkL/I+nagVzmxnKwtX6/RI0S+Wf63c=;
-        b=hKGZhQscUbNpwvhbBmzJE5rFZgRkwvD9/oiNRxYjGAsVkTilmapKoZdm3AUVR6aEfe
-         6ClFLL9oKo+3iXCtcEPH9xPwnNEC204wkwAoq4rwVV2LaW3dSQB7G6ZibmUJ4wOXb9xn
-         2HQs832KFhz+4iT/5nvPjXbRQGonAJQBRJ4+9oSZxYQEYX3PrZ/ysL0z27nS3jKNloWU
-         1QHBaAQdaHzvysoPDoUGyeYKBv2XOPac/RM/rREtrT+Lz1SNA8PAKCMgd++uWkcxWPAS
-         NNCN1NTQEhGY6I4r6qvcignOtM+WREgYmTKiEf04lUFKqYJ7S+5tsCgxUr4mSp1sGVVv
-         gB1w==
+        bh=+GO23KGSs5kHbgoAK5zj/r8U5QGqjyd8r2ZN58CM8zQ=;
+        b=px6b4SIHi7B132q4zg1w5hzHQ1m4CKKv3m/MiEVdt1uUL59NACme+DKlGdWGna5W5I
+         a1r/Pvvz4XYWlLcYo9eGBJ1ZzPHjIBVTZ8WtFaqjYN4hTxo1dH/WtSItfQaiICCpjKpQ
+         QVsKiSRVWKEZpX3svoLPnx5zSj1snwTefpaDm2GjaXjV9b1rYrEZDjBb6Jdo+1hsrnaK
+         Gtaxjd0125CDUo3p/qtr/VCxWaA566gjpD+FlWMAseaN3I5bSqXsd1HnpTwFN9yRXUjM
+         +UcdJu6U2kKikAVwNv2WgJoIpeXBxpbEQbERXYlhYk0twsoo923OXdhzZkyJDsmh9q2H
+         fO5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wlwkreJLiH000TkL/I+nagVzmxnKwtX6/RI0S+Wf63c=;
-        b=azW9cW+UOUfmx4UYwOptDylwxWSO4YLwe98G4q7kzifUxPwtu3Y6By+XamPnzaV4uM
-         zBbILn8XUxbsJiSPnSloS0r2OVU4Gyi0dXjU5WrdXwMCQwoCCLGI0+2liBkH/TmTh+Bn
-         fRg2xTxw9DH/T1Wc56sO9/3W+1Xivn2jbTxIn/G4nl/09WIFy2cjhUuu090B1E6p2ZgG
-         2E82a2JQoXAShBf8zYG8ZUREZe3MHMGLxWPXXZSS3n3x249ZJQEoCa907I+8BJHVEkVV
-         gpLqasGmLdM+JgmhngJIEVdpXlBK7qysU9gMlX0kQv7YL2+1F3j+3H0sqlkaL2t6x707
-         DFrg==
-X-Gm-Message-State: APjAAAXtTLr+wT4jH5lPGWMm41uKNrtiXQT86lUMkXQK4vbaMyBTlISo
-        wwxJsWIuIFVY6pYbXUqkD5E=
-X-Google-Smtp-Source: APXvYqyleXXjEorGaKD9ck8QMoH1+NVOdLcyINZOZd9kylDsAeiOy+WMu/ZstSjZJtQsIASujOMMLw==
-X-Received: by 2002:a1c:7314:: with SMTP id d20mr4832772wmb.107.1568226095056;
-        Wed, 11 Sep 2019 11:21:35 -0700 (PDT)
+        bh=+GO23KGSs5kHbgoAK5zj/r8U5QGqjyd8r2ZN58CM8zQ=;
+        b=oLvjX6JXot2JCdotPSygWp9zUkZ/mHWmf5vtkABtyEtR2yRemhufZC3vr5ukb1Q7iO
+         tEASdWcDQhL/MB/ujWck3FZdAo7DujztkMk8l85l2poVfeOWu8qoYyrcgmQUPDxX+TAD
+         ekOMBjnLzIpgL9NDIDY7tWVNhROCHGHGcba9+ixgzCsOKmvkEEld7IwkOxbEN5k6jT27
+         lWaDkbOJPygg0D0tGfnh2eAw1h8Ep86s80ZjEGHqDTQCV6Gzls4YwUrxgt2Q5r0fMS6j
+         H5XxPShF2iRfDwISNlgRqymxbuWoW4cM4PaJcF6Od8xnbDFFb7A/rm4uoNuR7OGg6kRc
+         REAg==
+X-Gm-Message-State: APjAAAWY72P6CEC3wyPJej9tswb6/nseq4ySdO2FUDHrj0DeqlhU+0Mf
+        FVBmYOIxNciodGcB0+02Hk8=
+X-Google-Smtp-Source: APXvYqxLJhyRMbR/c7ChtdkpyoJmx7ehdi/qJxEzmAmumCkVERS6ST//GMwU3xyqIByyT/h57RQx3Q==
+X-Received: by 2002:adf:de03:: with SMTP id b3mr30023354wrm.14.1568226104312;
+        Wed, 11 Sep 2019 11:21:44 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id q9sm2356753wmq.15.2019.09.11.11.21.34
+        by smtp.gmail.com with ESMTPSA id q9sm2356753wmq.15.2019.09.11.11.21.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 11:21:34 -0700 (PDT)
+        Wed, 11 Sep 2019 11:21:43 -0700 (PDT)
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
@@ -65,10 +65,11 @@ Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v3 1/3] powerpc: Don't add -mabi= flags when building with Clang
-Date:   Wed, 11 Sep 2019 11:20:49 -0700
-Message-Id: <20190911182049.77853-2-natechancellor@gmail.com>
+        stable@vger.kernel.org,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Subject: [PATCH v3 2/3] powerpc: Avoid clang warnings around setjmp and longjmp
+Date:   Wed, 11 Sep 2019 11:20:51 -0700
+Message-Id: <20190911182049.77853-3-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190911182049.77853-1-natechancellor@gmail.com>
 References: <20190911182049.77853-1-natechancellor@gmail.com>
@@ -79,108 +80,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building pseries_defconfig, building vdso32 errors out:
+Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
+setjmp is used") disabled -Wbuiltin-requires-header because of a warning
+about the setjmp and longjmp declarations.
 
-  error: unknown target ABI 'elfv1'
+r367387 in clang added another diagnostic around this, complaining that
+there is no jmp_buf declaration.
 
-This happens because -m32 in clang changes the target to 32-bit,
-which does not allow the ABI to be changed, as the setABI virtual
-function is not overridden:
+In file included from ../arch/powerpc/xmon/xmon.c:47:
+../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
+built-in function 'setjmp' requires the declaration of the 'jmp_buf'
+type, commonly provided in the header <setjmp.h>.
+[-Werror,-Wincomplete-setjmp-declaration]
+extern long setjmp(long *);
+            ^
+../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
+built-in function 'longjmp' requires the declaration of the 'jmp_buf'
+type, commonly provided in the header <setjmp.h>.
+[-Werror,-Wincomplete-setjmp-declaration]
+extern void longjmp(long *, long);
+            ^
+2 errors generated.
 
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/include/clang/Basic/TargetInfo.h#L1073-L1078
+We are not using the standard library's longjmp/setjmp implementations
+for obvious reasons; make this clear to clang by using -ffreestanding
+on these files.
 
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Basic/Targets/PPC.h#L327-L365
-
-Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-powerpc64le toolchain") added these flags to fix building big endian
-kernels with a little endian GCC.
-
-Clang doesn't need -mabi because the target triple controls the default
-value. -mlittle-endian and -mbig-endian manipulate the triple into
-either powerpc64-* or powerpc64le-*, which properly sets the default
-ABI:
-
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Driver/Driver.cpp#L450-L463
-
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/llvm/lib/Support/Triple.cpp#L1432-L1516
-
-https://github.com/llvm/llvm-project/blob/llvmorg-9.0.0-rc2/clang/lib/Basic/Targets/PPC.h#L377-L383
-
-Adding a debug print out in the PPC64TargetInfo constructor after line
-383 above shows this:
-
-$ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
-Default ABI: elfv1
-
-$ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
-Default ABI: elfv2
-
-$ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
-Default ABI: elfv1
-
-$ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
-Default ABI: elfv2
-
-Don't specify -mabi when building with clang to avoid the build error
-with -m32 and not change any code generation.
-
--mcall-aixdesc is not an implemented flag in clang so it can be
-safely excluded as well, see commit 238abecde8ad ("powerpc: Don't
-use gcc specific options on clang").
-
-pseries_defconfig successfully builds after this patch and
-powernv_defconfig and ppc44x_defconfig don't regress.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/240
-Reviewed-by: Daniel Axtens <dja@axtens.net>
+Cc: stable@vger.kernel.org # 4.14+
+Link: https://github.com/ClangBuiltLinux/linux/issues/625
+Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
+Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
 
-v1 -> v2:
+v1 -> v3:
 
-* Improve commit message
+* Use -ffreestanding instead of outright disabling the warning because
+  it is legitimate.
 
-v2 -> v3:
+I skipped v2 because the first patch in the series already had a v2.
 
-* Rebase and merge into a single series.
+ arch/powerpc/kernel/Makefile | 4 ++--
+ arch/powerpc/xmon/Makefile   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
- arch/powerpc/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 46ed198a3aa3..150925a2e06e 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -93,11 +93,13 @@ MULTIPLEWORD	:= -mmultiple
- endif
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index c9cc4b689e60..19f19c8c874b 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -5,8 +5,8 @@
+ 
+ CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+ 
+-# Disable clang warning for using setjmp without setjmp.h header
+-CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
++# Avoid clang warnings around longjmp/setjmp declarations
++CFLAGS_crash.o		+= -ffreestanding
  
  ifdef CONFIG_PPC64
-+ifndef CONFIG_CC_IS_CLANG
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
- aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
- endif
-+endif
+ CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
+diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+index f142570ad860..c3842dbeb1b7 100644
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for xmon
  
- ifndef CONFIG_CC_IS_CLANG
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
-@@ -143,6 +145,7 @@ endif
- endif
+-# Disable clang warning for using setjmp without setjmp.h header
+-subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
++# Avoid clang warnings around longjmp/setjmp declarations
++subdir-ccflags-y := -ffreestanding
  
- CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
-+ifndef CONFIG_CC_IS_CLANG
- ifdef CONFIG_CPU_LITTLE_ENDIAN
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
-@@ -151,6 +154,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
-+endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
- 
+ GCOV_PROFILE := n
+ KCOV_INSTRUMENT := n
 -- 
 2.23.0
 
