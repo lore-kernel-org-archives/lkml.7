@@ -2,121 +2,123 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6418CC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F8CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4042081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CC020863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfIKOJl convert rfc822-to-8bit (ORCPT
+        id S1727373AbfIKOLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:09:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50984 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726510AbfIKOJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:09:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 667AAB7F7;
-        Wed, 11 Sep 2019 14:09:39 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 16:09:39 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-Id: <20190911160939.19f776535770d12ff51a2af7@suse.de>
-In-Reply-To: <20190910113243.GA19207@rapoport-lnx>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
-        <20190905152150.f7ff6ef70726085de63df828@suse.de>
-        <20190905133251.GA3650@rapoport-lnx>
-        <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
-        <20190905154747.GB3650@rapoport-lnx>
-        <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
-        <20190906130223.GA17704@rapoport-lnx>
-        <20190909182242.c1ef9717d14b20212ef75954@suse.de>
-        <20190910113243.GA19207@rapoport-lnx>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Sep 2019 10:11:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17016 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfIKOLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:11:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 07:11:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,493,1559545200"; 
+   d="scan'208";a="209680498"
+Received: from ywu1-mobl.amr.corp.intel.com (HELO [10.251.4.169]) ([10.251.4.169])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Sep 2019 07:11:47 -0700
+Subject: Re: [PATCH 2/4] Documentation/process: describe relaxing disclosing
+ party NDAs
+To:     Sasha Levin <sashal@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
+        gregkh@linuxfoundation.org, ben@decadent.org.uk,
+        tglx@linutronix.de, labbott@redhat.com, andrew.cooper3@citrix.com,
+        tsoni@codeaurora.org, keescook@chromium.org, tony.luck@intel.com,
+        linux-doc@vger.kernel.org, dan.j.williams@intel.com
+References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
+ <20190910172649.74639177@viggo.jf.intel.com> <20190911101155.GN2012@sasha-vm>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <eab6a751-3f2c-0b10-c00b-4926197720fd@intel.com>
+Date:   Wed, 11 Sep 2019 07:11:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190911101155.GN2012@sasha-vm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 12:32:44 +0100
-Mike Rapoport <rppt@kernel.org> wrote:
+On 9/11/19 3:11 AM, Sasha Levin wrote:
+>> +Disclosing parties may have shared information about an issue under a
+>> +non-disclosure agreement with third parties.Â  In order to ensure that
+>> +these agreements do not interfere with the mitigation development
+>> +process, the disclosing party must provide explicit permission to
+>> +participate to any response team members affected by a non-disclosure
+>> +agreement.Â  Disclosing parties must resolve requests to do so in a
+>> +timely manner.
+> 
+> Can giving the permission be made explicitly along with the disclosure?
+> If it's disclosed with Microsoft under NDA, it makes it tricky for me to
+> participate in the "response team" context here unless premission is
+> given to do so.
 
-> [..]
+Hi Sasha,
 
-Patch below works on the same Origin.
+It is probably possible to do in advance.  But, probably only if we list
+the folks for which it needs to be done in advance in the process file.
+ It makes a lot of sense to have the stable maintainers as permanent
+members of any response team.
 
-Does memblocks_present() deal better with the one reserved page per node
-than sparse_memory_present_with_active_regions() ? Or is there a better
-explanation ? My debug prints didn't make sense out of it...
-
-Thomas.
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d50fafd7bf3a..e4b02b5f3487 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -669,6 +669,7 @@ config SGI_IP22
- config SGI_IP27
- 	bool "SGI IP27 (Origin200/2000)"
- 	select ARCH_HAS_PHYS_TO_DMA
-+	select ARCH_SPARSEMEM_ENABLE
- 	select FW_ARC
- 	select FW_ARC64
- 	select BOOT_ELF64
-@@ -2633,18 +2634,9 @@ config ARCH_FLATMEM_ENABLE
- 	def_bool y
- 	depends on !NUMA && !CPU_LOONGSON2
- 
--config ARCH_DISCONTIGMEM_ENABLE
--	bool
--	default y if SGI_IP27
--	help
--	  Say Y to support efficient handling of discontiguous physical memory,
--	  for architectures which are either NUMA (Non-Uniform Memory Access)
--	  or have huge holes in the physical address space for other reasons.
--	  See <file:Documentation/vm/numa.rst> for more.
--
- config ARCH_SPARSEMEM_ENABLE
- 	bool
--	select SPARSEMEM_STATIC
-+	select SPARSEMEM_STATIC if !SGI_IP27
- 
- config NUMA
- 	bool "NUMA Support"
-diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-index fb077a947575..370f2ba14a89 100644
---- a/arch/mips/sgi-ip27/ip27-memory.c
-+++ b/arch/mips/sgi-ip27/ip27-memory.c
-@@ -410,8 +410,6 @@ static void __init node_mem_init(cnodeid_t node)
- 
- 	memblock_reserve(slot_firstpfn << PAGE_SHIFT,
- 			 ((slot_freepfn - slot_firstpfn) << PAGE_SHIFT));
--
--	sparse_memory_present_with_active_regions(node);
- }
- 
- /*
-@@ -444,6 +442,7 @@ void __init prom_meminit(void)
- 		}
- 		__node_data[node] = &null_node;
- 	}
-+	memblocks_present();
- }
- 
- void __init prom_free_prom_memory(void)
-
--- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+But, I was hoping what I described above would be a bit more flexible
+than needing to have a list.  The downside is that the response team
+needs to explicitly ask every time for folks like you to be included.
