@@ -2,86 +2,129 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4613ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5768C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAEA21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9834C20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C+auiqPn"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BMMT6gr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfIKKyo (ORCPT
+        id S1727512AbfIKK6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:54:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34243 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfIKKyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:54:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46SzLR1JsGz9sDB;
-        Wed, 11 Sep 2019 20:54:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568199281;
-        bh=xZQ6AucVcELq6Dg2ZsMho6IYWPSOv3bhTWi0rIKj4PM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C+auiqPnRVBFXjH093vJoQoP70pfjJlor0CLjGlQjAezmnGuI1YfW4JJOmqZyYwUj
-         Ce28QiJGGfhH8J+tSXd+RLro1twVXbj5J9JSRHVPkxftwEZOZLw5Yeet8vr5AZhJl0
-         wQS805ND2592WsgTYm3Ac+0BBKHf75CJDaJihR6Nwha96RPnJ15pq1zkE8RSPNL4wJ
-         CDhwSsq6TsgsmIkk1438XRl3M+K+sJF0d3LxDFmW4OtSRMY5DX8iSjzE/lUWwbFvK9
-         e10ZCPqogpOvxLhYATUjvIvnJZT0irpFZCYlwDWlXGeKHNI+mmFyYcxN8tX0AUroIL
-         61FcnJAPB+O6A==
-Date:   Wed, 11 Sep 2019 20:54:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: strange set of patches in the y2038 tree
-Message-ID: <20190911205439.18e7073a@canb.auug.org.au>
+        Wed, 11 Sep 2019 06:58:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39864 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfIKK6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:58:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j16so19562616ljg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4/T0pBGAJHntS1Kbm8BWjyn4roEDB9HgEnnPwYPp6zU=;
+        b=BMMT6gr1xD18cZuT2TTRNbmmh75K7oPCt2ItEaNQ86K3SW0V75avif6iot3oOycBSF
+         mRLuGmijn5tAPGsHleo0et7lMUf8LfjAfhj3kzFt41/DDRnILbZ7aekiFmKwCuPcPype
+         /tvYS4eUinsdE71SUB/71Xcs3v9Pvp1a5TGF8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4/T0pBGAJHntS1Kbm8BWjyn4roEDB9HgEnnPwYPp6zU=;
+        b=XIJtSk46VjUbovYceSs2K5KHRphDn74HOASOrB1guc7tqNu/BHB4PIqjAnSYlNzYln
+         A3GIjejg4zIg54pWgjtnQSsxIXWJ3Na0qoba3h+DBnGWCrWYwi4ItI/+s/3qXL1xM10g
+         203RMNMauAiHAbOLq4IZ9pvnCa4Yeth20pCeXCCyUpLTlKOYDV2S+NTBFSim+ocn175r
+         d1oT+LD8NvgyNUNLuj7G459CBdaEbU9A1XN0YYWzVpIGdYiRldf3Tqo+deUxSGKn8mRY
+         498eYysUmu7m3jWniqjNFt1CwWCY4aTPn31mgAa37V9hJEAeVexh+CfNWIi2IQWU/b7f
+         tyrA==
+X-Gm-Message-State: APjAAAV2U7WjLL5XI9ZOjxPqZdI+hJE63gHz6VHMTx3qdsDxkkCEmiJ+
+        /zAtvQKV+IayJ6WLUEMc6eB7SA==
+X-Google-Smtp-Source: APXvYqyil2boGiMSLg0Y8NzlEW8ElwrhnTajdSrEDCt9REimsq6jzCwF0BLtCmTGvCXId1LN/qEiSg==
+X-Received: by 2002:a2e:50b:: with SMTP id 11mr23331127ljf.11.1568199496973;
+        Wed, 11 Sep 2019 03:58:16 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id x11sm5255046ljc.90.2019.09.11.03.58.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 03:58:16 -0700 (PDT)
+Subject: Re: [PATCH] Staging: octeon: Avoid several usecases of strcpy
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Sandro Volery <sandro@volery.com>
+Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        aaro.koskinen@iki.fi
+References: <20190911084956.GH15977@kadam>
+ <39D8B984-479C-42D5-8431-9FF7BD3A96D6@volery.com>
+ <20190911091659.GI15977@kadam>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <7a004f18-50cd-9ab0-40b0-051624f0fb95@rasmusvillemoes.dk>
+Date:   Wed, 11 Sep 2019 12:58:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gtZ+WBn0ZU=kkICxUgB5Yyp";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190911091659.GI15977@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gtZ+WBn0ZU=kkICxUgB5Yyp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/09/2019 11.16, Dan Carpenter wrote:
+> On Wed, Sep 11, 2019 at 11:04:38AM +0200, Sandro Volery wrote:
+>>
+>>
+>>> On 11 Sep 2019, at 10:52, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>>>
+>>> ﻿On Wed, Sep 11, 2019 at 08:23:59AM +0200, Sandro Volery wrote:
+>>>> strcpy was used multiple times in strcpy to write into dev->name.
+>>>> I replaced them with strscpy.
 
-Hi Arnd,
+Yes, that's obviously what the patch does. The commit log is supposed to
+explain _why_.
 
-You seem t have remerged a whole series of patches in your tree:
+>>>> Signed-off-by: Sandro Volery <sandro@volery.com>
+>>>> ---
+>>>> drivers/staging/octeon/ethernet.c | 16 ++++++++--------
+>>>> 1 file changed, 8 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/ethernet.c
+>>>> index 8889494adf1f..cf8e9a23ebf9 100644
+>>>> --- a/drivers/staging/octeon/ethernet.c
+>>>> +++ b/drivers/staging/octeon/ethernet.c
+>>>> @@ -784,7 +784,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
+>>>>            priv->imode = CVMX_HELPER_INTERFACE_MODE_DISABLED;
+>>>>            priv->port = CVMX_PIP_NUM_INPUT_PORTS;
+>>>>            priv->queue = -1;
+>>>> -            strcpy(dev->name, "pow%d");
+>>>> +            strscpy(dev->name, "pow%d", sizeof(dev->name));
+>>>
+>>> Is there a program which is generating a warning for this code?  We know
+>>> that "pow%d" is 6 characters and static analysis tools can understand
+>>> this code fine so we know it's safe.
+>>
+>> Well I was confused too but checkpatch complained about 
+>> it so I figured I'd clean it up quick
+> 
+> Ah.  It's a new checkpatch warning.  I don't care in that case.  I'm
+> fine with replacing all of these in that case.
 
-commits a55aa89aab90..ecc43067d9a5 are identical to commits
-a55aa89aab90..846e9b109913 apart from the commit message for commit
-e83dd16c24d8/654f7717ef51.  And you have both sets fo commits merged.
+But why? It actually gives _less_ compile-time checking (gcc and all
+static tools know perfectly well what strcpy is and does, but knows
+nothing of strscpy). And using sizeof() instead of ARRAY_SIZE() means a
+future reader is not even sure dev->name is not just a pointer.
 
---=20
-Cheers,
-Stephen Rothwell
+Moreover, it's very likely also a runtime and .text pessimization, again
+because gcc knows what strcpy does, so it can just do a few immediate
+stores (e.g. 0x25776f70 for the "pow%" part) instead of emitting an
+actual function call.
 
---Sig_/gtZ+WBn0ZU=kkICxUgB5Yyp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl140m8ACgkQAVBC80lX
-0GzR8Qf/d0+pILtP+Xqx9ZvfMHhr6kPR2bPvreAFZFizJEq/XGoVSsDXbN1hzXjq
-+RHOJiJAbYv8UZIxRgTwh5V5gtiSHUNvalUwAv45zrbP+fjwkPpNpXm7k+IukUz0
-NYnQUQdDToDO1NsBKznQ1eQmKil7AABuR42YqZOmSEeXgVQ2/x4eSqkkQjKGpCu0
-+2KulUI5jHsWR9Cjon6C3PCXs+46CIlI7PpOysJR6rMSNdLt3zbOOXWWCeuR3Hjs
-WGyODFL82Tv4hM49SNjaQLLg1SIRat2okxtnCU8wuv3TPy+08imcjfYnEia5iEmv
-fSBktyQsiJHm3oxT7nklkMdNtURUDA==
-=1tFq
------END PGP SIGNATURE-----
-
---Sig_/gtZ+WBn0ZU=kkICxUgB5Yyp--
+Rasmus
