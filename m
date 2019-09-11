@@ -2,88 +2,120 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45F7ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3693BECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A240D2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568222869;
-	bh=avmaTCGrf/lbFN8qYmfH/0IuryDuXNTXcd+Ii7NLHqM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ROFsMAL1mJejcCKTzRmXmywYWpl/spe4ZeilrnL6/P4mHfMzDYMi5fX13s6eiOqBJ
-	 DOCoc6CPowheF1IhYM5R4D+6H2nvopeo9qaof3Ei4550dCL+dYRD0EOsPLWqqSTceB
-	 608eRDMO704m27j90YznkZtlFiX8SEwjzgDAmPLc=
+	by mail.kernel.org (Postfix) with ESMTP id 180C92084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfIKR1t (ORCPT
+        id S1729654AbfIKR2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
+        Wed, 11 Sep 2019 13:28:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36536 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfIKR1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:27:48 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728897AbfIKR2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:28:42 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8982084F;
-        Wed, 11 Sep 2019 17:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568222868;
-        bh=avmaTCGrf/lbFN8qYmfH/0IuryDuXNTXcd+Ii7NLHqM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UqKNTtbh3Cb1I2mku0SqTtgVtOpxoe4iz15c1OPEZUt79sIqqCQ7YylE1IEfb4K1O
-         0T3IL+gm8mHrascQNABkSeLI5Vx0o9HOa9tsmMZGctnutgxvcejngJiu0INlkLMl54
-         CvhIMgdSF5w5WSDweUcoSZZ/AJy2lUjJiTgpSzCc=
-Received: by mail-wr1-f45.google.com with SMTP id y19so25509477wrd.3;
-        Wed, 11 Sep 2019 10:27:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAUTvQKSBBkvJ0egY/k+QgVJFRnWnktPBWgBOcT8Ln/94ILt7YBd
-        8+0WDxcHyxwSmZ4MDy2DIbiFtAz6FiWn0DXqpKU=
-X-Google-Smtp-Source: APXvYqyxQlQ0rE1nDNnXUWYV1saPJ4Y2RZ08uvicqCGXL1zEBlOw0R8w4NxllP0UAo/DIWobNk4NNw8nuCp+ukVevHM=
-X-Received: by 2002:a5d:500b:: with SMTP id e11mr27169535wrt.285.1568222866298;
- Wed, 11 Sep 2019 10:27:46 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9BB09A37191;
+        Wed, 11 Sep 2019 17:28:42 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-234.rdu2.redhat.com [10.10.123.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61251608C2;
+        Wed, 11 Sep 2019 17:28:40 +0000 (UTC)
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+From:   Waiman Long <longman@redhat.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <20190911151451.GH29434@bombadil.infradead.org>
+ <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
+ <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
+ <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
+Organization: Red Hat
+Message-ID: <81464111-2335-9dc4-3465-5800348d5aba@redhat.com>
+Date:   Wed, 11 Sep 2019 18:28:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
- <1567663210.1324.3.camel@mtkswgap22> <CACRpkdY7Vpy-fBHSXnjby0kK_tDWBtZaCwjCGxFy4HWeJ1FgEg@mail.gmail.com>
-In-Reply-To: <CACRpkdY7Vpy-fBHSXnjby0kK_tDWBtZaCwjCGxFy4HWeJ1FgEg@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 11 Sep 2019 10:27:34 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzqj_AwXL7r0nxh=9G5o7P4YNJaugCAm_ZpJyBoPZu9BtQ@mail.gmail.com>
-Message-ID: <CAGp9Lzqj_AwXL7r0nxh=9G5o7P4YNJaugCAm_ZpJyBoPZu9BtQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: mediatek: Check gpio pin number and use
- binary search in mtk_hw_pin_field_lookup()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Light Hsieh <light.hsieh@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 17:28:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 9/11/19 6:15 PM, Waiman Long wrote:
+> On 9/11/19 6:03 PM, Mike Kravetz wrote:
+>> On 9/11/19 8:44 AM, Waiman Long wrote:
+>>> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
+>>>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+>>>>> When allocating a large amount of static hugepages (~500-1500GB) on a
+>>>>> system with large number of CPUs (4, 8 or even 16 sockets), performance
+>>>>> degradation (random multi-second delays) was observed when thousands
+>>>>> of processes are trying to fault in the data into the huge pages. The
+>>>>> likelihood of the delay increases with the number of sockets and hence
+>>>>> the CPUs a system has.  This only happens in the initial setup phase
+>>>>> and will be gone after all the necessary data are faulted in.
+>>>> Can;t the application just specify MAP_POPULATE?
+>>> Originally, I thought that this happened in the startup phase when the
+>>> pages were faulted in. The problem persists after steady state had been
+>>> reached though. Every time you have a new user process created, it will
+>>> have its own page table.
+>> This is still at fault time.  Although, for the particular application it
+>> may be after the 'startup phase'.
+>>
+>>>                          It is the sharing of the of huge page shared
+>>> memory that is causing problem. Of course, it depends on how the
+>>> application is written.
+>> It may be the case that some applications would find the delays acceptable
+>> for the benefit of shared pmds once they reach steady state.  As you say, of
+>> course this depends on how the application is written.
+>>
+>> I know that Oracle DB would not like it if PMD sharing is disabled for them.
+>> Based on what I know of their model, all processes which share PMDs perform
+>> faults (write or read) during the startup phase.  This is in environments as
+>> big or bigger than you describe above.  I have never looked at/for delays in
+>> these environments around pmd sharing (page faults), but that does not mean
+>> they do not exist.  I will try to get the DB group to give me access to one
+>> of their large environments for analysis.
+>>
+>> We may want to consider making the timeout value and disable threshold user
+>> configurable.
+> Making it configurable is certainly doable. They can be sysctl
+> parameters so that the users can reenable PMD sharing by making those
+> parameters larger.
 
-That looks OK to me too
+I suspect that the customer's application may be generating a new
+process with its own address space for each transaction. That will be
+causing a lot of PMD sharing operations when hundreds of threads are
+pounding it simultaneously. I had inserted some instrumentation code to
+a test kernel that the customers used for testing, the number of
+timeouts after a certain time went up more than 20k.
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
+On the other hands, if the application is structured in such a way that
+there is limited number of separate address spaces with worker threads
+processing the transaction, PMD sharing will be less of a problem. It
+will be hard to convince users to make such a structural changes to
+their application.
 
-On Wed, Sep 11, 2019 at 2:29 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Thu, Sep 5, 2019 at 7:00 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
->
-> > v2 is the same as v1 except that commit message is corrected according
-> > to Linus' comment for v1:
-> >
-> > 1. remove Change-Id lines
-> > 2. correct sysfs as debugfs
->
-> Looks OK to me, but i need Sean's review on this, Sean?
->
-> Yours,
-> Linus Walleij
+Cheers,
+Longman
+
+
