@@ -2,346 +2,128 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CA4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3B9C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31147207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC6C206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NVoQxm/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfIKOXc (ORCPT
+        id S1727167AbfIKO0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:23:32 -0400
-Received: from 10.mo178.mail-out.ovh.net ([46.105.76.150]:49555 "EHLO
-        10.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfIKOXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:23:32 -0400
-X-Greylist: delayed 3606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 10:23:28 EDT
-Received: from player168.ha.ovh.net (unknown [10.109.143.145])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id AE18C785D5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:04:25 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player168.ha.ovh.net (Postfix) with ESMTPSA id 30D9F9980149;
-        Wed, 11 Sep 2019 13:04:09 +0000 (UTC)
-From:   Quentin Perret <qperret@qperret.net>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
-Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qperret@qperret.net
-Subject: [PATCH v8 3/4] thermal: cpu_cooling: Make the power-related code depend on IPA
-Date:   Wed, 11 Sep 2019 15:03:13 +0200
-Message-Id: <20190911130314.29973-4-qperret@qperret.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190911130314.29973-1-qperret@qperret.net>
-References: <20190911130314.29973-1-qperret@qperret.net>
-X-Ovh-Tracer-Id: 17354902642160327673
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
+        Wed, 11 Sep 2019 10:26:18 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39971 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfIKO0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:26:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46T42b1Yf2z9s4Y;
+        Thu, 12 Sep 2019 00:26:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1568211976;
+        bh=FwvxfqH3g3FLezSauT+DVJLwHdBUTERn647l2G3HzSQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NVoQxm/QaOV1g2QRT4A+EhYW7N/ZEu9pyvv0JHDCi0rB+UJCITUHhdkK6NefYH2jN
+         S/a45IvVdkPS5nFIMT2qkN9yqkjXGPAtBimAvKCRvkwk22SGrLDDH0G5lLaZuUEEny
+         15Q+LbcjTJ0a5Ik0FixryVLxyW9m4I4o0CAQMblfBrN56VHf+UG8hcudd0cPY3UBYo
+         assaiGcomf5JwfbGUO51+4ubCPRBbpKVM4wvv0HSTr7UYcCrQPxWgsMbTn0P5XGNcB
+         TAtsMfzxCy7peYEl95NpvKFN29ya5p2no5KG4tnFXPuEWsiUFfEYoxfteRgpjXyBk9
+         f+RHmnxXHlOzA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg Kurz <groug@kaod.org>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/xive: Fix bogus error code returned by OPAL
+In-Reply-To: <156812362556.1866243.7399893138425681517.stgit@bahia.tls.ibm.com>
+References: <156812362556.1866243.7399893138425681517.stgit@bahia.tls.ibm.com>
+Date:   Thu, 12 Sep 2019 00:26:19 +1000
+Message-ID: <87k1aezz78.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Perret <quentin.perret@arm.com>
+Hi Greg,
 
-The core CPU cooling infrastructure has power-related functions
-that have only one client: IPA. Since there can be no user of those
-functions if IPA is not compiled in, make sure to guard them with
-checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
-unnecessarily.
+Couple of comments ...
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Quentin Perret <quentin.perret@arm.com>
----
- drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
- 1 file changed, 104 insertions(+), 110 deletions(-)
+Greg Kurz <groug@kaod.org> writes:
+> There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+> to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+> Unfortunatelty, OPAL return values are signed 64-bit entities and
+> errors are supposed to be negative. If that happens, the linux code
+> confusingly treats 0xffffffff as a valid IRQ number and panics at some
+> point.
+>
+> A fix was recently merged in skiboot:
+>
+> e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+>
+> but we need a workaround anyway to support older skiboots already
+> on the field.
+  ^
+  in
+ 
+>
+> Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+> returned upon resource exhaustion.
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index 4c5db59a619b..498f59ab64b2 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -46,7 +46,9 @@
-  */
- struct freq_table {
- 	u32 frequency;
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
- 	u32 power;
-+#endif
- };
- 
- /**
-@@ -96,28 +98,6 @@ static DEFINE_IDA(cpufreq_ida);
- static DEFINE_MUTEX(cooling_list_lock);
- static LIST_HEAD(cpufreq_cdev_list);
- 
--/* Below code defines functions to be used for cpufreq as cooling device */
--
--/**
-- * get_level: Find the level for a particular frequency
-- * @cpufreq_cdev: cpufreq_cdev for which the property is required
-- * @freq: Frequency
-- *
-- * Return: level corresponding to the frequency.
-- */
--static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
--			       unsigned int freq)
--{
--	struct freq_table *freq_table = cpufreq_cdev->freq_table;
--	unsigned long level;
--
--	for (level = 1; level <= cpufreq_cdev->max_level; level++)
--		if (freq > freq_table[level].frequency)
--			break;
--
--	return level - 1;
--}
--
- /**
-  * cpufreq_thermal_notifier - notifier callback for cpufreq policy change.
-  * @nb:	struct notifier_block * with callback info.
-@@ -171,6 +151,27 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-+/**
-+ * get_level: Find the level for a particular frequency
-+ * @cpufreq_cdev: cpufreq_cdev for which the property is required
-+ * @freq: Frequency
-+ *
-+ * Return: level corresponding to the frequency.
-+ */
-+static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
-+			       unsigned int freq)
-+{
-+	struct freq_table *freq_table = cpufreq_cdev->freq_table;
-+	unsigned long level;
-+
-+	for (level = 1; level <= cpufreq_cdev->max_level; level++)
-+		if (freq > freq_table[level].frequency)
-+			break;
-+
-+	return level - 1;
-+}
-+
- /**
-  * update_freq_table() - Update the freq table with power numbers
-  * @cpufreq_cdev:	the cpufreq cooling device in which to update the table
-@@ -319,80 +320,6 @@ static u32 get_dynamic_power(struct cpufreq_cooling_device *cpufreq_cdev,
- 	return (raw_cpu_power * cpufreq_cdev->last_load) / 100;
- }
- 
--/* cpufreq cooling device callback functions are defined below */
--
--/**
-- * cpufreq_get_max_state - callback function to get the max cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: fill this variable with the max cooling state.
-- *
-- * Callback for the thermal cooling device to return the cpufreq
-- * max cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
--				 unsigned long *state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--
--	*state = cpufreq_cdev->max_level;
--	return 0;
--}
--
--/**
-- * cpufreq_get_cur_state - callback function to get the current cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: fill this variable with the current cooling state.
-- *
-- * Callback for the thermal cooling device to return the cpufreq
-- * current cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
--				 unsigned long *state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--
--	*state = cpufreq_cdev->cpufreq_state;
--
--	return 0;
--}
--
--/**
-- * cpufreq_set_cur_state - callback function to set the current cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: set this variable to the current cooling state.
-- *
-- * Callback for the thermal cooling device to change the cpufreq
-- * current cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
--				 unsigned long state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--	unsigned int clip_freq;
--
--	/* Request state should be less than max_level */
--	if (WARN_ON(state > cpufreq_cdev->max_level))
--		return -EINVAL;
--
--	/* Check if the old cooling action is same as new cooling action */
--	if (cpufreq_cdev->cpufreq_state == state)
--		return 0;
--
--	clip_freq = cpufreq_cdev->freq_table[state].frequency;
--	cpufreq_cdev->cpufreq_state = state;
--	cpufreq_cdev->clipped_freq = clip_freq;
--
--	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
--
--	return 0;
--}
--
- /**
-  * cpufreq_get_requested_power() - get the current power
-  * @cdev:	&thermal_cooling_device pointer
-@@ -536,22 +463,88 @@ static int cpufreq_power2state(struct thermal_cooling_device *cdev,
- 				      power);
- 	return 0;
- }
-+#endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
-+
-+/* cpufreq cooling device callback functions are defined below */
-+
-+/**
-+ * cpufreq_get_max_state - callback function to get the max cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: fill this variable with the max cooling state.
-+ *
-+ * Callback for the thermal cooling device to return the cpufreq
-+ * max cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+
-+	*state = cpufreq_cdev->max_level;
-+	return 0;
-+}
-+
-+/**
-+ * cpufreq_get_cur_state - callback function to get the current cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: fill this variable with the current cooling state.
-+ *
-+ * Callback for the thermal cooling device to return the cpufreq
-+ * current cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+
-+	*state = cpufreq_cdev->cpufreq_state;
-+
-+	return 0;
-+}
-+
-+/**
-+ * cpufreq_set_cur_state - callback function to set the current cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: set this variable to the current cooling state.
-+ *
-+ * Callback for the thermal cooling device to change the cpufreq
-+ * current cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	unsigned int clip_freq;
-+
-+	/* Request state should be less than max_level */
-+	if (WARN_ON(state > cpufreq_cdev->max_level))
-+		return -EINVAL;
-+
-+	/* Check if the old cooling action is same as new cooling action */
-+	if (cpufreq_cdev->cpufreq_state == state)
-+		return 0;
-+
-+	clip_freq = cpufreq_cdev->freq_table[state].frequency;
-+	cpufreq_cdev->cpufreq_state = state;
-+	cpufreq_cdev->clipped_freq = clip_freq;
-+
-+	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
-+
-+	return 0;
-+}
- 
- /* Bind cpufreq callbacks to thermal cooling device ops */
- 
- static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
--	.get_max_state = cpufreq_get_max_state,
--	.get_cur_state = cpufreq_get_cur_state,
--	.set_cur_state = cpufreq_set_cur_state,
--};
--
--static struct thermal_cooling_device_ops cpufreq_power_cooling_ops = {
- 	.get_max_state		= cpufreq_get_max_state,
- 	.get_cur_state		= cpufreq_get_cur_state,
- 	.set_cur_state		= cpufreq_set_cur_state,
--	.get_requested_power	= cpufreq_get_requested_power,
--	.state2power		= cpufreq_state2power,
--	.power2state		= cpufreq_power2state,
- };
- 
- /* Notifier for cpufreq policy change */
-@@ -659,18 +652,19 @@ __cpufreq_cooling_register(struct device_node *np,
- 			pr_debug("%s: freq:%u KHz\n", __func__, freq);
- 	}
- 
-+	cooling_ops = &cpufreq_cooling_ops;
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
- 	if (capacitance) {
- 		ret = update_freq_table(cpufreq_cdev, capacitance);
- 		if (ret) {
- 			cdev = ERR_PTR(ret);
- 			goto remove_ida;
- 		}
--
--		cooling_ops = &cpufreq_power_cooling_ops;
--	} else {
--		cooling_ops = &cpufreq_cooling_ops;
-+		cooling_ops->get_requested_power = cpufreq_get_requested_power;
-+		cooling_ops->state2power = cpufreq_state2power;
-+		cooling_ops->power2state = cpufreq_power2state;
- 	}
--
-+#endif
- 	cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
- 						  cooling_ops);
- 	if (IS_ERR(cdev))
--- 
-2.22.1
+This should go to stable, any idea what versions it should go back to?
+Probably whenever the xive code was introduced?
 
+> Signed-off-by: Greg Kurz <groug@kaod.org>
+> ---
+>  arch/powerpc/sysdev/xive/native.c |   13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+> index 37987c815913..c35583f84f9f 100644
+> --- a/arch/powerpc/sysdev/xive/native.c
+> +++ b/arch/powerpc/sysdev/xive/native.c
+> @@ -231,6 +231,15 @@ static bool xive_native_match(struct device_node *node)
+>  	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+>  }
+>  
+> +static int64_t opal_xive_allocate_irq_fixup(uint32_t chip_id)
+          ^                                    ^
+          Can you use s64 here and u32 here ....
+
+Instead of calling this opal_xive_allocate_irq_fixup() and relying on
+all callers to call the fixup, can we rename the opal wrapper and leave
+this function's name unchanged, eg:
+
+-OPAL_CALL(opal_xive_allocate_irq,              OPAL_XIVE_ALLOCATE_IRQ);
++OPAL_CALL(opal_xive_allocate_irq_raw,          OPAL_XIVE_ALLOCATE_IRQ);
+
+
+> +{
+> +	s64 irq = opal_xive_allocate_irq(chip_id);
+> +
+> +#define XIVE_ALLOC_NO_SPACE	0xffffffff /* No possible space */
+> +	return
+> +		irq == XIVE_ALLOC_NO_SPACE ? OPAL_RESOURCE : irq;
+> +}
+
+I don't really like the #define and the weird indenting and so on, can
+we instead do it like:
+
+	/*
+         * Old versions of skiboot can incorrectly return 0xffffffff to
+         * indicate no space, fix it up here.
+         */
+	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
+
+cheers
