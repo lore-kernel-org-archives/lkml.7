@@ -2,129 +2,124 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79959C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B33C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579732053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABB7207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="JhSfdGDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfIKOoB (ORCPT
+        id S1728231AbfIKOtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:44:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726149AbfIKOoB (ORCPT
+        Wed, 11 Sep 2019 10:49:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35675 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbfIKOtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:44:01 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BEhlx5108020
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:44:00 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uy1n6bdgf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:43:56 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 11 Sep 2019 15:42:38 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Sep 2019 15:42:36 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BEgZPu53477490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 14:42:35 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70FECAE059;
-        Wed, 11 Sep 2019 14:42:35 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 737ADAE056;
-        Wed, 11 Sep 2019 14:42:34 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.207.74])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 11 Sep 2019 14:42:34 +0000 (GMT)
-Date:   Wed, 11 Sep 2019 15:42:31 +0100
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Cao jin <caoj.fnst@cn.fujitsu.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/memblock: fix typo in memblock doc
-References: <20190911030856.18010-1-caoj.fnst@cn.fujitsu.com>
+        Wed, 11 Sep 2019 10:49:08 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k10so25604375qth.2;
+        Wed, 11 Sep 2019 07:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A5XOn0vC4GPgnCNAb2xJhPh7fm7Qsc3YVcoeu66V0ow=;
+        b=JhSfdGDLWHQchSsKTTbaYL2d3lanGWh1bU6snzqMqlYUsbTmgquu741IO2y4CzLnnn
+         xFF9+5sLDaKVVLzlMzpM5GNJHAe0EdZjfADYanypoGJBIcqS7xQozfjP/J0VtWg1MKnl
+         T/6lk/ytL2NJX3N6br94MvUgja326wcjG36kI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A5XOn0vC4GPgnCNAb2xJhPh7fm7Qsc3YVcoeu66V0ow=;
+        b=ff6sIchsU4uoVZRWEn9qoCOcItZquiEFzjLbiiLqY1L1A1ajNuOuxEULRzvAU92zxW
+         FctkfGNuiTLZDpHbsmFAMGHeuk/BqYs00SOhJQwKuj1g9yie0oIA4PIIgdE5yWH78br4
+         4xQgepGnAnoRyA4SlFOuMu5WmsLYy+Qyk9aezBlsoeY5vExg9lcDCQZCFEGcSQf25OsB
+         8HPRqqO6aD6dB4iuQMUX/UCGMUNw1hIPpxz1HckScm7Kr9xt6JrrtYpTZGnLnL39S5Rh
+         dfFqKlGP0wrLv+MXkeZKWNdcqilAaJDtKy0SmGyemzlkNvHA5/H0x5HcIWcQ+KauG1Ey
+         DP2w==
+X-Gm-Message-State: APjAAAV8OQ0bYPbvnzFdW6yWoMmhY5kANGBpuPvuDRv57vgb+we1fAbm
+        FitCrox00novGB6HqTr+Llw2vl7zeYwVy6dv/Bc=
+X-Google-Smtp-Source: APXvYqwWsmekgnVOZyP3ztRXLVkJUawqY8waZNluPJpoBtGqhHcgvfBOQH1tISxUZoQoAh6xx+1tOYTyMaOU7g5POGA=
+X-Received: by 2002:ac8:2e94:: with SMTP id h20mr36118219qta.234.1568213346860;
+ Wed, 11 Sep 2019 07:49:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911030856.18010-1-caoj.fnst@cn.fujitsu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19091114-0016-0000-0000-000002AA0E49
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091114-0017-0000-0000-0000330A9B22
-Message-Id: <20190911144230.GB6429@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909110138
+References: <20190910213734.3112330-1-vijaykhemka@fb.com> <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
+In-Reply-To: <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 11 Sep 2019 14:48:54 +0000
+Message-ID: <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
+Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Vijay Khemka <vijaykhemka@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:08:56AM +0800, Cao jin wrote:
-> elaboarte -> elaborate
-> architecure -> architecture
-> compltes -> completes
-> 
-> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-> ---
->  mm/memblock.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 7d4f61ae666a..0d0f92003d18 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -83,16 +83,16 @@
->   * Note, that both API variants use implict assumptions about allowed
->   * memory ranges and the fallback methods. Consult the documentation
->   * of :c:func:`memblock_alloc_internal` and
-> - * :c:func:`memblock_alloc_range_nid` functions for more elaboarte
-> + * :c:func:`memblock_alloc_range_nid` functions for more elaborate
+Hi Ben,
 
-While on it, could you please replace the
-:c:func:`memblock_alloc_range_nid` construct with
-memblock_alloc_range_nid()?
+On Tue, 10 Sep 2019 at 22:05, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 9/10/19 2:37 PM, Vijay Khemka wrote:
+> > HW checksum generation is not working for AST2500, specially with IPV6
+> > over NCSI. All TCP packets with IPv6 get dropped. By disabling this
+> > it works perfectly fine with IPV6.
+> >
+> > Verified with IPV6 enabled and can do ssh.
+>
+> How about IPv4, do these packets have problem? If not, can you continue
+> advertising NETIF_F_IP_CSUM but take out NETIF_F_IPV6_CSUM?
+>
+> >
+> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> > ---
+> >  drivers/net/ethernet/faraday/ftgmac100.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+> > index 030fed65393e..591c9725002b 100644
+> > --- a/drivers/net/ethernet/faraday/ftgmac100.c
+> > +++ b/drivers/net/ethernet/faraday/ftgmac100.c
+> > @@ -1839,8 +1839,9 @@ static int ftgmac100_probe(struct platform_device *pdev)
+> >       if (priv->use_ncsi)
+> >               netdev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER;
+> >
+> > -     /* AST2400  doesn't have working HW checksum generation */
+> > -     if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac")))
+> > +     /* AST2400  and AST2500 doesn't have working HW checksum generation */
+> > +     if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac") ||
+> > +                of_device_is_compatible(np, "aspeed,ast2500-mac")))
 
-And that would be really great to see all the :c:func:`foo` changed to
-foo().
+Do you recall under what circumstances we need to disable hardware checksumming?
 
->   * description.
->   *
->   * As the system boot progresses, the architecture specific
->   * :c:func:`mem_init` function frees all the memory to the buddy page
->   * allocator.
->   *
-> - * Unless an architecure enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-> + * Unless an architecture enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
->   * memblock data structures will be discarded after the system
-> - * initialization compltes.
-> + * initialization completes.
->   */
->  
->  #ifndef CONFIG_NEED_MULTIPLE_NODES
-> -- 
-> 2.21.0
-> 
-> 
-> 
+Cheers,
 
--- 
-Sincerely yours,
-Mike.
+Joel
 
+> >               netdev->hw_features &= ~NETIF_F_HW_CSUM;
+> >       if (np && of_get_property(np, "no-hw-checksum", NULL))
+> >               netdev->hw_features &= ~(NETIF_F_HW_CSUM | NETIF_F_RXCSUM);
+> >
+>
+>
+> --
+> Florian
