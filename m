@@ -2,155 +2,131 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0C6ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835FDECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60992085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38502085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T10RJz72"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lzzM8L2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfIKITC (ORCPT
+        id S1727254AbfIKIUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:19:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34983 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfIKITB (ORCPT
+        Wed, 11 Sep 2019 04:20:04 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53903 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfIKIUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:19:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g7so23493560wrx.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 01:18:58 -0700 (PDT)
+        Wed, 11 Sep 2019 04:20:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q18so2304533wmq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 01:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=R6bNyRB3okcLgmMwzrbkbbFt8yg4QtbotOgZ2XtiVFQ=;
-        b=T10RJz72P4bazLOmVQcxgR86fu6+qGr1JftyGJUuSDSuJccnd7vnWx7F+SNdOVW//i
-         dOaN5N9S5adBx5TFmelByaEo4t5VgpA2m00JbgDiWz854afZSstaupDlHffRMzRX7BW2
-         ZVep8klfo0LjL8jDbGF9aBeqfc5LA2Gvq+MrL4GAcIk2e5Z6wy+EzBeW9rGl2x0GJFdL
-         ENacUnjM+CLhVcMXW45xALoU7qPPovZHx4xK9O8WUkQgISEOMTordF9jLBmq07SbwTX1
-         IPhe76cE//tEyQNVvZ2aEZ2AgtdRegAuQFcgTKjoEz53rrrZUSW8mjDTQLaM34MgxpoN
-         /dPw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=73Mk7Z9yNYBR9L0eb9oAsrN33Ivf779654SN9226Yx0=;
+        b=lzzM8L2DKputz7E8BnA9+EcELiqTMUGOY69T7jjCa9uf+uWvwuzpYYhL8Nv5LJzUtX
+         pslPCUzteUedVsAO7Uh+akynz719MT5rU3CXAGnZCX0ho9qVu76a27TAVjsgM+zyeS0A
+         ksacMXfdU7LVCHgRBpm9gajfZbu7oGrLchB/8Y3McmIxN2Ul3PI2FPJ6afqOio//N9LI
+         ta5N/T+t0ETYEJ3C2risxGC6eu0pHf9Q4eQXPLAVzrsLwff2DyzqLQjOsshK+m9pnUg8
+         AU6Bi9iICYiPINavXSkRjPjWy0lqtq5O3QvUmqqLA1ovJHhVXc3YwX7OtEYjLY+gIZdo
+         OoQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=R6bNyRB3okcLgmMwzrbkbbFt8yg4QtbotOgZ2XtiVFQ=;
-        b=duy2RPN6L4G8uSc3WvIgMPyQ3OvO+9yWGI5vZhGDmXAz/2Sl03aRgcFlblUF9KxTvm
-         VnXDOlzI7CX6AIPoV56EjGAF3nZiyjcbxW1AJEQpow44/3YyxX57ruiqebSJvqw17NLq
-         U3BzLNnVONjx0eF57dyFDoWDRie3ClUuEeFMnBpzgymfLPe3n1Lw3SZE/EmKAtEe0CVV
-         DJqEqkH8cEx6Kk8I8MX7IYAyie7G86qlAoDdmwIoDRLMhtP0+jvdMjnpjMyHGXp82dbB
-         ENp3AzPkS/zF5AGaTphvn0ydDKiPuwvlP5lDc1sV9fiyTRA1k5a+Vh3rNyRFE8wuUI8X
-         lBaQ==
-X-Gm-Message-State: APjAAAVr/NiC69ZtENyePAyxHwkJM5qQp7EUe/Pyxj4UZZ+ZrRjpL/rM
-        EXZVyOuipj7qTlQ7vtTiUXrfGg==
-X-Google-Smtp-Source: APXvYqyaxsKPBE9EBNbij/laaS2aOwsuKWjup0/f8wFbbig3B2MTtBQMOp7JkuMQ9CVJLVGmj4pNvg==
-X-Received: by 2002:adf:dec2:: with SMTP id i2mr13353996wrn.92.1568189937470;
-        Wed, 11 Sep 2019 01:18:57 -0700 (PDT)
-Received: from wifi-122_dhcprange-167.wifi.unimo.it (wifi-122_dhcprange-167.wifi.unimo.it. [155.185.122.167])
-        by smtp.gmail.com with ESMTPSA id h125sm2539418wmf.31.2019.09.11.01.18.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 01:18:56 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
-Date:   Wed, 11 Sep 2019 10:18:53 +0200
-Cc:     =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, clm@fb.com,
-        dennisz@fb.com, newella@fb.com, Li Zefan <lizefan@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
-        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
- <20190910125513.GA6399@blackbody.suse.cz>
- <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
-To:     Tejun Heo <tj@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=73Mk7Z9yNYBR9L0eb9oAsrN33Ivf779654SN9226Yx0=;
+        b=qy5/7mNDb8qcdp82qfiDxazFjCJjIj4sS2cHWv9d+fh8ciFJ6mpv6eNOyUQCOfRmfZ
+         vHI0Rcg19Cyz63400Y5fs97vEBv9S5IDarSYgBYUGa+q5I9KDBM/cBOElFkLgZhrcgtc
+         qDD/eTX31WXlJ9tTdiEF/OrSb0/ZWLCiBPgCedQj+fr5+1hAR1ToJ7DYfCXxq/pc2339
+         q/tgQFkAQniEn+im/r1Xw8oIQJ3O+XCkHPQO5sB7I5xAnZ4ITuOF12rYJJO6COirEJnh
+         JdGG/nsMl/wwqmoutAQNqbcDAAOPZAGVnYIJEL/HuAtQ1IlLhipSayEOR95nALhZdSry
+         eAHQ==
+X-Gm-Message-State: APjAAAWvh3It+GKfWPVBhRHi5EsNWFXIKVv7sU+NzQSvA6qQrLcBBOny
+        XAjgrbEYfdp9n4rSBJlR7juHWA==
+X-Google-Smtp-Source: APXvYqwuImgeWs/pa+4thE+4R4gw3Ydri3nAjPDaSD8LYzbWB31nR0x1yXh0fLg4sEsBe7+K+ixaIg==
+X-Received: by 2002:a7b:c752:: with SMTP id w18mr2765612wmk.63.1568189997578;
+        Wed, 11 Sep 2019 01:19:57 -0700 (PDT)
+Received: from ziepe.ca ([148.69.85.38])
+        by smtp.gmail.com with ESMTPSA id a13sm36163114wrf.73.2019.09.11.01.19.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Sep 2019 01:19:56 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i7xr1-0002Mq-Vn; Wed, 11 Sep 2019 05:19:55 -0300
+Date:   Wed, 11 Sep 2019 05:19:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190911081955.GA9070@ziepe.ca>
+References: <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+ <20190812175615.GI24457@ziepe.ca>
+ <20190812211537.GE20634@iweiny-DESK2.sc.intel.com>
+ <20190813114842.GB29508@ziepe.ca>
+ <20190813174142.GB11882@iweiny-DESK2.sc.intel.com>
+ <20190813180022.GF29508@ziepe.ca>
+ <20190813203858.GA12695@iweiny-DESK2.sc.intel.com>
+ <20190814122308.GB13770@ziepe.ca>
+ <20190904222549.GC31319@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904222549.GC31319@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 04, 2019 at 03:25:50PM -0700, Ira Weiny wrote:
+> On Wed, Aug 14, 2019 at 09:23:08AM -0300, Jason Gunthorpe wrote:
+> > On Tue, Aug 13, 2019 at 01:38:59PM -0700, Ira Weiny wrote:
+> > > On Tue, Aug 13, 2019 at 03:00:22PM -0300, Jason Gunthorpe wrote:
+> > > > On Tue, Aug 13, 2019 at 10:41:42AM -0700, Ira Weiny wrote:
+> > > > 
+> > > > > And I was pretty sure uverbs_destroy_ufile_hw() would take care of (or ensure
+> > > > > that some other thread is) destroying all the MR's we have associated with this
+> > > > > FD.
+> > > > 
+> > > > fd's can't be revoked, so destroy_ufile_hw() can't touch them. It
+> > > > deletes any underlying HW resources, but the FD persists.
+> > > 
+> > > I misspoke.  I should have said associated with this "context".  And of course
+> > > uverbs_destroy_ufile_hw() does not touch the FD.  What I mean is that the
+> > > struct file which had file_pins hanging off of it would be getting its file
+> > > pins destroyed by uverbs_destroy_ufile_hw().  Therefore we don't need the FD
+> > > after uverbs_destroy_ufile_hw() is done.
+> > > 
+> > > But since it does not block it may be that the struct file is gone before the
+> > > MR is actually destroyed.  Which means I think the GUP code would blow up in
+> > > that case...  :-(
+> > 
+> > Oh, yes, that is true, you also can't rely on the struct file living
+> > longer than the HW objects either, that isn't how the lifetime model
+> > works.
+> 
+> Reviewing all these old threads...  And this made me think.  While the HW
+> objects may out live the struct file.
+> 
+> They _are_ going away in a finite amount of time right?  It is not like they
+> could be held forever right?
 
+Yes, at least until they become shared between FDs
 
-> Il giorno 10 set 2019, alle ore 18:08, Tejun Heo <tj@kernel.org> ha =
-scritto:
->=20
-> Hello, Michal.
->=20
-> On Tue, Sep 10, 2019 at 02:55:14PM +0200, Michal Koutn=C3=BD wrote:
->> This adds the generic io.weight attribute. How will this compose with
->> the weight from IO schedulers? (AFAIK, only BFQ allows proportional
->> control as of now. +CC Paolo.)
->=20
-> The two being enabled at the same time doesn't make sense, so we can
-> just switch over to bfq when bfq is selected as the iosched.  I asked
-> what Paolo wanted to do in terms of interface a couple times now but
-> didn't get an answer and he posted a patch which makes the two
-> controllers conflict, so....  Paolo, so it looks like you want to
-> rename all bfq files to drop the bfq prefix, right?
-
-Yep, mainly because ... this is the solution you voted and you
-yourself proposed [1] :)
-
-[1] https://patchwork.kernel.org/patch/10988261/
-
->  I can implement
-> the switching if so.
->=20
-
-That would be perfect.
-
-Thanks,
-Paolo
-
->> I see this attributes are effectively per-cgroup per-device. =
-Apparently,
->> one device should have only one weight across hierarchy. Would it =
-make
->> sense to have io.bfq.weight and io.cost.weight with disjunctive =
-devices?
->=20
-> It never makes sense to have both enabled, so I don't think that
-> interface makes sense.
->=20
->>> +		.name =3D "cost.qos",
->>> +		.flags =3D CFTYPE_ONLY_ON_ROOT,
->>> [...]
->>> +		.name =3D "cost.model",
->>> +		.flags =3D CFTYPE_ONLY_ON_ROOT,
->> I'm concerned that these aren't true cgroup attributes. The root =
-cgroup
->> would act as container for global configuration options. Wouldn't =
-these
->> values better fit as (configurable) attributes of the respective
->> devices?
->=20
-> Initially, I put them under block device sysfs but it was too clumsy
-> with different config file formats and all.  I think it's better to
-> have global controller configs at the root cgroup.
->=20
->> Secondly, how is CFTYPE_ONLY_ON_ROOT supposed to be presented in =
-cgroup
->> namespaces?
->=20
-> Not at all.  These are system-wide configs.  cgroup namespaces
-> shouldn't have anything which aren't in non-root cgroups.
->=20
-> Thanks.
->=20
-> --=20
-> tejun
-
+Jason
