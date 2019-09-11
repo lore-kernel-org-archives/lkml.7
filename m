@@ -2,123 +2,76 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE19C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D097DC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A592084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A560721D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568216168;
-	bh=qxZQXSziXo+H6d/nno1dmQLnRFxQwJr3Dw8uDFe2odo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZVU/v/79aryZFmRMy5BHZV4mSevG6PVijuh1GU3Ds36Ct0fF9Ly6NtBBggFUSYoT9
-	 X8Dz+qGIuNKBHi29kxKYroYe+PBYdlF09cTlp5VB6cpx5Sk05U+D9rCF4O3ZlMkzDR
-	 Zvo5xusiGWF8FTOrkNVhCYr11cUF8YJIVEVhUpSQ=
+	s=default; t=1568216258;
+	bh=JvhEKo5sJxKbvrRJORSRpT3enJMDSzYje/TP+fAxgNU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CVDId+xpWdp6IPocQLiajL1XDjdGn6PKgWN+attFhMSehcz3dbqywWxX1mh6xUKvw
+	 7HQFN93qAPIOT5v8iBPISA6ducVfKKOYGHIYkVN/YqId3KH/iZTZAIpKGdX7YYFooo
+	 tVXmW8QoievLR55jmrp6PtAVVC+TJ0fm0jo5X7jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfIKPgH (ORCPT
+        id S1728572AbfIKPhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
+        Wed, 11 Sep 2019 11:37:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbfIKPgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:36:07 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CF9206A1;
-        Wed, 11 Sep 2019 15:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568216166;
-        bh=qxZQXSziXo+H6d/nno1dmQLnRFxQwJr3Dw8uDFe2odo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rhyFuL/9goMGIHfRJC27hH2SlluHVfsAP5kFre9S7h8dVxwZ1nHouElayo3hE/g2O
-         4OaX8r6nHmzqwEv4d+DZ9v+GCUiGsX6vkvSIljm/UZfOgtRWaDGFQOs8f345UT4qMe
-         X7p16CYetPBInxHrgDYfiPFVQfaAts5ILEu6tX2Q=
-Date:   Wed, 11 Sep 2019 16:36:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/5] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190911153602.GB13865@kroah.com>
-References: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
- <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com>
- <20190908131034.GD9466@kroah.com>
- <CAC5umyhZ_-Gdh7+EzNoHPs2zki2-dK1xBv5xpE5zwZPt_jvNEA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyhZ_-Gdh7+EzNoHPs2zki2-dK1xBv5xpE5zwZPt_jvNEA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728287AbfIKPhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:37:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E400828;
+        Wed, 11 Sep 2019 08:37:36 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E6AF3F67D;
+        Wed, 11 Sep 2019 08:37:34 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 16:37:31 +0100
+Message-ID: <867e6esv2c.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <suzuki.poulose@arm.com>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
+In-Reply-To: <1568169216-12632-2-git-send-email-yuzenghui@huawei.com>
+References: <1568169216-12632-1-git-send-email-yuzenghui@huawei.com>
+        <1568169216-12632-2-git-send-email-yuzenghui@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:25:28AM +0900, Akinobu Mita wrote:
-> 2019年9月8日(日) 22:10 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >
-> > On Sun, Sep 08, 2019 at 09:41:08PM +0900, Akinobu Mita wrote:
-> > > Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> > > However, the size of this file is limited to PAGE_SIZE because of the
-> > > limitation for sysfs attribute.
-> > >
-> > > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> > > PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> > > and which trigger is currently activated.
-> > >
-> > > This converts /sys/class/leds/<led>/trigger to bin attribute and removes
-> > > the PAGE_SIZE limitation.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Dan Murphy <dmurphy@ti.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > > ---
-> > >  drivers/leds/led-class.c    |  8 ++--
-> > >  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
-> > >  drivers/leds/leds.h         |  6 +++
-> > >  include/linux/leds.h        |  5 ---
-> > >  4 files changed, 79 insertions(+), 30 deletions(-)
-> > >
-> > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > > index 4793e77..8b5a1d1 100644
-> > > --- a/drivers/leds/led-class.c
-> > > +++ b/drivers/leds/led-class.c
-> > > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *dev,
-> > >  static DEVICE_ATTR_RO(max_brightness);
-> > >
-> > >  #ifdef CONFIG_LEDS_TRIGGERS
-> > > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store);
-> > > -static struct attribute *led_trigger_attrs[] = {
-> > > -     &dev_attr_trigger.attr,
-> > > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
-> >
-> > BIN_ATTR_RW()?
+On Wed, 11 Sep 2019 03:33:35 +0100,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
-> We can use BIN_ATTR_RW() by renaming led_trigger_{read,write}() to
-> trigger_{read,write}().  But led_trigger_{read,write}() are not static
-> functions.  These are defined as export symbols for led-class module.
+> Commit 49dfe94fe5ad ("KVM: arm/arm64: Fix TRACE_INCLUDE_PATH") fixes
+> TRACE_INCLUDE_PATH to the correct relative path to the define_trace.h
+> and explains why did the old one work.
 > 
-> So trigger_{read,write}() will be too generic symbol names, won't they?
+> The same fix should be applied to virt/kvm/arm/vgic/trace.h.
+> 
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 
-Yes they would, sorry I didn't notice that.
+Applied to -next with Masahiro's RB.
 
-Wait, why are those functions being exported?  Who is calling a sysfs
-function from a different code path than sysfs?
+Thanks,
 
-thanks,
+	M.
 
-greg k-h
+-- 
+Jazz is not dead, it just smells funny.
