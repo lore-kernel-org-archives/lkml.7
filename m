@@ -2,102 +2,98 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AFFC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4F2ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE49C2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C362084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiZMhTYK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hf05DHew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbfIKUUa (ORCPT
+        id S1730519AbfIKUZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:20:30 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35456 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbfIKUU3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:20:29 -0400
-Received: by mail-io1-f65.google.com with SMTP id f4so48266422ion.2;
-        Wed, 11 Sep 2019 13:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iZ9ZspCWMcol1pKYB+J9B5Kr5gfoF9n9RCCNo2Mg9j4=;
-        b=OiZMhTYKjK+8rNX8ASHmW4fIP0MIrS7byHUvJDxmUzNmr6QpCDszI7ByTghyl5KXyv
-         GFGd1N9zzoRxRig0DpfCMWal2jDq+2nIwxWzY0RYJBLCxY36IM6rMTVHaOOoO2RBxrQ7
-         yPjQPOvd9ub0/qgC9ZR1hZgqoaOe3NGPAU0IaO4N5RuBdgeBAU6XM2XY/jyZkZ2/dyYH
-         6+As9UMIqdlxYc8IIrbAXqecaxNXCUYpE+MKvfLYtSTaN5Fo4h29Hvv27B5g8gWlIsWM
-         uePGOMb+t2F2WYJ6ymHPumKeTgJ2kTW1lv7KY+exUKSJYm6/l/RYmRMe4vBz+gWV2DgL
-         RZUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iZ9ZspCWMcol1pKYB+J9B5Kr5gfoF9n9RCCNo2Mg9j4=;
-        b=KZy6Xsm4z573rwLNRVi350BvXqDrqXW4wRUzD+ZGJZf4CwUgiMFXfOu8w5i7WmYCZh
-         GgFwTa7+crU0M7Gmn5BIGNL2gblj2BYrEehz4Vx1bMuIx9NyiDA7mCun/+cUPXXwEZtF
-         dpmdFGXGOhiYyMs4ebk1FxFDmk/IvsUh/Li2UlBVHqEPaL4+y8gPJ0IXgNkLSAhXr9Dp
-         X1zD40eI8CDZVw+FyGYuGLQqmBx7szbdQFdgbh7G/qxYHkurqUPpjti06obNBKqY4H3Y
-         YhLDgfVzKgVOSQbQEzSgvv3B0eeFEB9Bg99Dr30Ev2tHoldBmWuBFRlQ7tXfxPrzSPBO
-         +abQ==
-X-Gm-Message-State: APjAAAVWr7vCKMlY/3sw6IKEb68hg3004Oqeyaf6XAAd2Z+5e3osGYzO
-        4D00xeMzTsut4uKfKjq9YOS+Z0dcrNs=
-X-Google-Smtp-Source: APXvYqz6kwA0HlBNs2udFzVW64nEXBbfaVgfCTnikbcqjJNuYOEolRHMh7yWphBvc/umsqxIuqPt1w==
-X-Received: by 2002:a02:2a87:: with SMTP id w129mr26432127jaw.41.1568233228997;
-        Wed, 11 Sep 2019 13:20:28 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id w22sm5366713ior.79.2019.09.11.13.20.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 13:20:28 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Winslow <swinslow@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: gspca: null check create_singlethread_workqueue
-Date:   Wed, 11 Sep 2019 15:20:12 -0500
-Message-Id: <20190911202015.12431-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 11 Sep 2019 16:25:27 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:35838 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729054AbfIKUZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 16:25:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KHbCcZ8BvWWbKPSh5z+H7SgPQzQ4ifBlCer1pX9BQL0=; b=hf05DHewho7GMIGCsH6/PGeoio
+        TGv5pVTLJKtBGYQuR9O23JhXG5QQBFQf0V2+KLqVOFIomAerLdkInBvA12Nh22VovQPgot39NQJJF
+        064uTu5vshQfNEAFAkSfKJs+GTMkN5eWl7TkiwuP9es2KdReiUOZjp8+XSaY1uEhNT6s=;
+Received: from p200300ccff0b59001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:5900:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i89Aw-0003L7-B7; Wed, 11 Sep 2019 22:25:14 +0200
+Date:   Wed, 11 Sep 2019 22:25:13 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        <lee.jones@linaro.org>, <jingoohan1@gmail.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
+ HWEN pin
+Message-ID: <20190911222513.489b5235@aktux>
+In-Reply-To: <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
+References: <20190910212909.18095-1-andreas@kemnade.info>
+        <20190910212909.18095-3-andreas@kemnade.info>
+        <20190911102533.not4ta3xwgm6bhjo@holly.lan>
+        <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sd_start the return value of create_singlethread_workqueue needs
-null check.
+On Wed, 11 Sep 2019 13:48:36 -0500
+Dan Murphy <dmurphy@ti.com> wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/media/usb/gspca/sq905c.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/gspca/sq905c.c b/drivers/media/usb/gspca/sq905c.c
-index 3d7f6dcdd7a8..6ca947aef298 100644
---- a/drivers/media/usb/gspca/sq905c.c
-+++ b/drivers/media/usb/gspca/sq905c.c
-@@ -276,6 +276,9 @@ static int sd_start(struct gspca_dev *gspca_dev)
- 	}
- 	/* Start the workqueue function to do the streaming */
- 	dev->work_thread = create_singlethread_workqueue(MODULE_NAME);
-+	if (!dev->work_thread)
-+		return -ENOMEM;
-+
- 	queue_work(dev->work_thread, &dev->work_struct);
- 
- 	return 0;
--- 
-2.17.1
+> >> @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *clien=
+t,
+> >>   	}
+> >>   	pchip->pdata =3D pdata;
+> >>  =20
+> >> +	pchip->enable_gpio =3D devm_gpiod_get_optional(&client->dev, "enable=
+",
+> >> +						GPIOD_OUT_HIGH);
+> >> +	if (IS_ERR(pchip->enable_gpio)) {
+> >> +		rval =3D PTR_ERR(pchip->enable_gpio);
+> >> +		return rval; =20
+>=20
+> the enable gpio is optional so if it fails you log the error and move on
+>
+well, if the gpio is not there, then it returns NULL.
+It might return e.g. -EDEFER. So I need to check for errors here.
+=20
+> Also on driver removal did you want to set the GPIO to low to disable=20
+> the device to save power?
+>=20
+page 5 of the datasheet says:
 
+Ishdn =3D Typ. 1=C2=B5A max. 4=C2=B5A.
+For HWEN=3DVin, I2c shutdown  (I guess this means outputs powered off)
+ond for HWEN=3DGND.
+
+So are we really saving something here?
+
+Regards,
+Andreas
