@@ -2,112 +2,155 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE457C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3324EC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEDD207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32F12081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fNFTn4tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbfIKRqN (ORCPT
+        id S1729757AbfIKRqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:46:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56044 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbfIKRqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:46:13 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC0AA2A09B2;
-        Wed, 11 Sep 2019 17:46:12 +0000 (UTC)
-Received: from asgard.redhat.com (ovpn-112-27.ams2.redhat.com [10.36.112.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B484A5D6A5;
-        Wed, 11 Sep 2019 17:46:05 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 18:45:40 +0100
-From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH v3] fork: check exit_signal passed in clone3() call
-Message-ID: <4b38fa4ce420b119a4c6345f42fe3cec2de9b0b5.1568223594.git.esyr@redhat.com>
-References: <cover.1568223594.git.esyr@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1568223594.git.esyr@redhat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 11 Sep 2019 17:46:12 +0000 (UTC)
+        Wed, 11 Sep 2019 13:46:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49514 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729735AbfIKRqP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:46:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHgc0g174577;
+        Wed, 11 Sep 2019 17:43:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=Pb5WjMUsVaTlVO0wSI4Ye0S4dRAE3PuojCAmFvOzGjQ=;
+ b=fNFTn4tKKIr78GW9Kv+VoT4MiNJGk4PQ0XBCe408niyns2ckkaxjoAk2u7ssN3NjLpMl
+ Bx5zpjO0AQD+i7TEof1VpEmV/6j+GpBWGRGJqKHWYePmt+aNPNE8Xi5aNwAYLz7qqAsG
+ RBMJJzIQadKJ5p5N/meX18uXRmF1f5bg2oUJGANeSYD0Te3Y+CrbXKLyfXbJyOlTZrgI
+ TxPxFoNbIwJfQKkZSH+aA+k5kvvEoAWiwMuvtwueuCmzR+0M/LkSOKswH9/UqDgZ808j
+ evdmKpfmqKTKerUntQlxS+6w8sX04mpfLneZBkhDgszmJBdDNKt0hph8k9K22zZWMzxu +w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2uw1jkkpf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:43:40 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BHcnam044036;
+        Wed, 11 Sep 2019 17:43:39 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2uxk0tfveq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 17:43:39 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BHhciQ014105;
+        Wed, 11 Sep 2019 17:43:38 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 10:43:38 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+Date:   Wed, 11 Sep 2019 13:43:37 -0400
+Cc:     Jason L Tibbitts III <tibbs@math.uh.edu>,
+        Bruce Fields <bfields@fieldses.org>,
+        Wolfgang Walter <linux@stwm.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CD5EF2C8-DB99-467B-8048-B290BAD44D4B@oracle.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+ <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+ <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+ <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
+ <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+To:     Benjamin Coddington <bcodding@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, higher 32 bits of exit_signal fields were lost when
-copied to the kernel args structure (that uses int as a type for the
-respective field).  Moreover, as Oleg has noted[1], exit_signal is used
-unchecked, so it has to be checked for sanity before use; for the legacy
-syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
-however, there's no such thing is done in clone3() code path, and that can
-break at least thread_group_leader.
 
-Adding checks that user-passed exit_signal fits into int and passes
-valid_signal() check solves both of these problems.
 
-[1] https://lkml.org/lkml/2019/9/10/467
+> On Sep 11, 2019, at 1:40 PM, Benjamin Coddington <bcodding@redhat.com> =
+wrote:
+>=20
+> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
+>=20
+>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>=20
+>>>=20
+>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
+>>>=20
+>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington =
+<bcodding@redhat.com> wrote:
+>>>>>=20
+>>>=20
+>>>>> Instead, I think we want to make sure the mic falls squarely into =
+the tail
+>>>>> every time.
+>>>>=20
+>>>> I'm not clear how you could do that. The length of the page data is =
+not
+>>>> known to the client before it parses the reply. Are you suggesting =
+that
+>>>> gss_unwrap should do it somehow?
+>>>=20
+>>> Is it too niave to always put the mic at the end of the tail?
+>>=20
+>> The size of the page content is variable.
+>>=20
+>> The only way the MIC will fall into the tail is if the page content =
+is
+>> exactly the largest expected size. When the page content is smaller =
+than
+>> that, the receive logic will place part or all of the MIC in ->pages.
+>=20
+> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be =
+renamed
+> and repurposed to be "move the mic from wherever it is to the end of
+> xdr_buf's tail".
+>=20
+> But now I see what you mean, and I also see that it is already trying =
+to do
+> that.. and we don't want to overlap the copy..
+>=20
+> So, really, we need the tail to be larger than twice the mic.. less 1. =
+ That
+> means the fix is probably just increasing rslack for krb5i.
 
-* kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
-args.exit_signal is greater than UINT_MAX or is not a valid signal.
-(_do_fork): Note that exit_signal is expected to be checked for the
-sanity by the caller.
+What's the justification for that particular maximum size? Are you sure =
+the
+page contents are not spilling into the tail?
 
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Reported-by: Oleg Nesterov <oleg@redhat.com>
-Co-authored-by: Oleg Nesterov <oleg@redhat.com>
-Co-authored-by: Dmitry V. Levin <ldv@altlinux.org>
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
----
- kernel/fork.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--
+Chuck Lever
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2852d0e..f98314b 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2338,6 +2338,8 @@ struct mm_struct *copy_init_mm(void)
-  *
-  * It copies the process, and if successful kick-starts
-  * it and waits for it to finish using the VM if required.
-+ *
-+ * args->exit_signal is expected to be checked for sanity by the caller.
-  */
- long _do_fork(struct kernel_clone_args *args)
- {
-@@ -2562,6 +2564,15 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
- 	if (copy_from_user(&args, uargs, size))
- 		return -EFAULT;
- 
-+	/*
-+	 * Two separate checks are needed, as valid_signal() takes unsigned long
-+	 * as an argument, and struct kernel_clone_args uses int type
-+	 * for the exit_signal field.
-+	 */
-+	if (unlikely((args.exit_signal > UINT_MAX) ||
-+		     !valid_signal(args.exit_signal)))
-+		return -EINVAL;
-+
- 	*kargs = (struct kernel_clone_args){
- 		.flags		= args.flags,
- 		.pidfd		= u64_to_user_ptr(args.pidfd),
--- 
-2.1.4
+
 
