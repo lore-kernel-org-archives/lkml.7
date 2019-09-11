@@ -2,114 +2,113 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA97FC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62BBC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AB22075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC1C2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:06:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qdsaUQYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfIKQFb (ORCPT
+        id S1728918AbfIKQGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:05:31 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:11590 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728818AbfIKQFa (ORCPT
+        Wed, 11 Sep 2019 12:06:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36712 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728703AbfIKQGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:05:30 -0400
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BG1xOc026275;
-        Wed, 11 Sep 2019 16:05:01 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uxxgjdyry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 16:05:01 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id A8B01A1;
-        Wed, 11 Sep 2019 16:05:00 +0000 (UTC)
-Received: from [16.116.129.27] (unknown [16.116.129.27])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id A08DD47;
-        Wed, 11 Sep 2019 16:04:58 +0000 (UTC)
-Subject: Re: [PATCH V2 5/8] x86/platform/uv: Add UV Hubbed/Hubless Proc FS
- Files
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
- <20190910145840.055590900@stormcage.eag.rdlabs.hpecorp.net>
- <20190911060456.GC104115@gmail.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <1d7a8b2f-80e0-33bf-85f4-2de719747eeb@hpe.com>
-Date:   Wed, 11 Sep 2019 09:05:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Wed, 11 Sep 2019 12:06:39 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AF88C33A;
+        Wed, 11 Sep 2019 18:06:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568217997;
+        bh=F2dlj/MFhkCIb/9CSt/w8Fw5jSo4ioGNSYWJmqdIqPY=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qdsaUQYM6hhd68U1apolZTzXB9co1nILTU0yuAVKimxwB0wlDzP++mspv/miVEfr+
+         An2oEmr6fbOzXHdV1hL2ArT97vQ9oQH32eOL8jyob6Pmp8r24Q37cG3PkZrB4R6ECs
+         BwWHzNIl91Psdsne5U5s8D+NNwhFBw7ylnvXCuGE=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 2/9] dt-bindings: display, renesas,du: Document cmms
+ property
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
+        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-3-jacopo+renesas@jmondi.org>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <2bcbb30c-db36-38a1-dcff-4f4269c11ad6@ideasonboard.com>
+Date:   Wed, 11 Sep 2019 17:06:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190911060456.GC104115@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190906135436.10622-3-jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-11_08:2019-09-11,2019-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- spamscore=0 phishscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 mlxscore=0 impostorscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909110146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacopo,
+
+On 06/09/2019 14:54, Jacopo Mondi wrote:
+> Document the newly added 'cmms' property which accepts a list of phandle
+> and channel index pairs that point to the CMM units available for each
+> Display Unit output video channel.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> index c97dfacad281..1773b0a2f54f 100644
+> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> @@ -45,6 +45,10 @@ Required Properties:
+>      instance that serves the DU channel, and the channel index identifies the
+>      LIF instance in that VSP.
+> 
+> +  - renesas,cmms: A list of phandles to the CMM instances present in the SoC,
+> +    one for each available DU channel. The property shall not be specified for
+> +    SoCs that do not provide any CMM (such as V3M and V3H).
+> +
+>  Required nodes:
+> 
+>  The connections to the DU output video ports are modeled using the OF graph
+> @@ -91,6 +95,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+>  			 <&cpg CPG_MOD 721>;
+>  		clock-names = "du.0", "du.1", "du.2", "du.3";
+>  		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+> +		renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+
+Should these be comma separated in the same fashion as the vsps are
+separated?
+
+I don't really mind either way though ...
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
 
-On 9/10/2019 11:04 PM, Ingo Molnar wrote:
 > 
-> * Mike Travis <mike.travis@hpe.com> wrote:
-> 
->> @@ -1596,7 +1687,7 @@ static void __init uv_system_init_hub(vo
->>   	uv_nmi_setup();
->>   	uv_cpu_init();
->>   	uv_scir_register_cpu_notifier();
->> -	proc_mkdir("sgi_uv", NULL);
->> +	uv_setup_proc_files(0);
-> 
-> This slipped through previously: platform drivers have absolutely no
-> business mucking in /proc.
-> 
-> Please describe the hardware via sysfs as pretty much everyone else does.
-> 
-> Thanks,
-> 
-> 	Ingo
+>  		ports {
+>  			#address-cells = <1>;
+> --
+> 2.23.0
 > 
 
-If I was doing it now I definitely would put it in the sysfs realm.  The 
-problem is Jack did it back in (I think) 2007.  The earliest commit I 
-could find:
-
-commit a3d732f93785da17e0137210deadb4616f5536fc
-Author: Cliff Wickman <cpw@sgi.com>
-Date:   Mon Nov 10 16:16:31 2008 -0600
-
-     x86, UV: fix redundant creation of sgi_uv
-
-     Impact: fix double entry creation in /proc
-
-And in the past 12 years probably a hundred user programs are now keying 
-of the presence of /proc/sgi_uv to signal this is indeed a UV system. 
-Changing the location of this node also affects all the UV utilities 
-including those not written by us.
