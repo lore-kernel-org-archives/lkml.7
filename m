@@ -2,115 +2,82 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF3C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA6CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555032089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:02:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Ob2WcKnD"
+	by mail.kernel.org (Postfix) with ESMTP id 4EFB52089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfIKLCU (ORCPT
+        id S1727421AbfIKLEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:02:20 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39242 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfIKLCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:02:20 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j16so19574201ljg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=UnTxdulsUUoW4MpbjOz0YKEvbNh2+pBrrEt0pc1iTEY=;
-        b=Ob2WcKnDVzkZwjpLgbluTx3iqYajdJ2DODeTyESW1TZpIwQOdUyjdsE56rYtwFwt2o
-         vBHbj91NUsX2nOIrtjuQFtM5PvLBFXFOuX1qow3GG0qSqk48qu90ef+ZdRUE0SEODX+j
-         4A5l8K0SW7YGwUIBaZ2T3+eF8n20cTVGmnJvXrWCez7G8/aw/Q4JeC2DD1qck35C0wvV
-         sG/9ovLmpbqikwoeV9Bp6YBNBeZLVWS1Ol7sSgShU808PXkCBpas1n+Rq25ehBoz58Gq
-         TYBRJNVkl9PPBhK1CBlnXOFsyw+qu08HMpMM/J8a9R27bRvxwAQ9yttZQ6YgmKsM0HG+
-         SxOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UnTxdulsUUoW4MpbjOz0YKEvbNh2+pBrrEt0pc1iTEY=;
-        b=NYRpcsBgRZ775A9e8/NoDAKqGXscGEaL1D0yOHCMTYyaJQFUN+CdEwyHlnwqguQfnU
-         Rx1fVFQjAK4kasoP5yJlAr9zVfZD8gdZ8ex/10kj4bCHwTcui6nyoLyz523sVcnmF1h7
-         qVHUsHTExK3T/0+PkntzjBNH425yoH+yj2ckAsoun/tkqyYLNnxUkQV4gJ4QBYj3A+9q
-         d22gzYMSZG47CLMeEiDxRwL5VNwRFDbmQIP5pXvBln2AxYuZURHa3hRyUF4B7ccObTST
-         gHZMx9xLQ8L0VlbhOxccCdcS0eKaTuT1W010I6H6drvYLT3JuYkoO04/AojfnY94hMLT
-         uRdQ==
-X-Gm-Message-State: APjAAAXegkBMubF4pihovsY89QxXkQ5b9OyJ23aZ3B7WRFW5B/BG/Qym
-        /akGzxAZO78Vi/zChVQH+Vpwsw==
-X-Google-Smtp-Source: APXvYqzrabH5jqIXFRRKoZkb0A3Gq2y2775Mog1g0hbWCWbCyy1Z3PbubQS3H6F+3FkRG2x9faJgfQ==
-X-Received: by 2002:a2e:a303:: with SMTP id l3mr22113052lje.124.1568199738009;
-        Wed, 11 Sep 2019 04:02:18 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:8e6:86de:79c0:860e:c175:7d39? ([2a00:1fa0:8e6:86de:79c0:860e:c175:7d39])
-        by smtp.gmail.com with ESMTPSA id b9sm4570882ljd.52.2019.09.11.04.02.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 04:02:17 -0700 (PDT)
-Subject: Re: [PATCH bpf-next 01/11] samples: bpf: makefile: fix HDR_PROBE
- "echo"
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
- <20190910103830.20794-2-ivan.khoronzhuk@linaro.org>
- <55803f7e-a971-d71a-fcc2-76ae1cf813bf@cogentembedded.com>
- <20190910145359.GD3053@khorivan>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <4251fe86-ccc7-f1ce-e954-2d488d2a95a9@cogentembedded.com>
-Date:   Wed, 11 Sep 2019 14:02:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Sep 2019 07:04:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33698 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726702AbfIKLEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:04:53 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7C7FF3505FC5728DA15A;
+        Wed, 11 Sep 2019 19:04:50 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Sep 2019
+ 19:04:42 +0800
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@kernel.org>, <linuxarm@huawei.com>
+References: <20190910093114.GA19821@kroah.com>
+ <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
+ <20190910110451.GP2063@dhcp22.suse.cz> <20190910111252.GA8970@kroah.com>
+ <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
+ <20190910125339.GZ2063@dhcp22.suse.cz> <20190911053334.GH4023@dhcp22.suse.cz>
+ <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
+ <20190911064926.GJ4023@dhcp22.suse.cz>
+ <3b977388-5f25-d0b5-bdc9-f963a9be2bd1@huawei.com>
+ <20190911073451.GM4023@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <d828d48c-cae7-f3c2-fb2e-c8b25995cbef@huawei.com>
+Date:   Wed, 11 Sep 2019 19:03:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190910145359.GD3053@khorivan>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190911073451.GM4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.2019 17:54, Ivan Khoronzhuk wrote:
+On 2019/9/11 15:34, Michal Hocko wrote:
+> On Wed 11-09-19 15:22:30, Yunsheng Lin wrote:
+> [...]
+>> It seems that there is no protection that prevent setting the node
+>> of device to an invalid node.
+>> And the kernel does have a few different check now:
+>> 1) some does " < 0" check;
+>> 2) some does "== NUMA_NO_NODE" check;
+>> 3) some does ">= MAX_NUMNODES" check;
+>> 4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
+>>
+>> We need to be consistent about the checking, right?
+> 
+> You can try and chase each of them and see what to do with them. I
+> suspect they are a result of random attempts to fortify the code in many
+> cases. Consistency is certainly good but spreading more checks all over
+> the place just adds more cargo cult. Each check should be reasonably
+> justified.
 
->> Hello!
->>
->> On 10.09.2019 13:38, Ivan Khoronzhuk wrote:
->>
->>> echo should be replaced on echo -e to handle \n correctly, but instead,
->>
->>  s/on/with/?
-> s/echo/printf/ instead of s/echo/echo -e/
-
-    I only pointed that 'on' is incorrect there. You replace something /with/ 
-something other...
+Ok, Let me focus on making the node_to_cpumask_map() NUMA_NO_NODE aware
+by only checking "node == NUMA_NO_NODE" first.
 
 > 
-> printf looks better.
-> 
->>
->>> replace it on printf as some systems can't handle echo -e.
->>
->>   Likewise?
 
-    Same grammatical mistake.
-
-> I can guess its Mac vs Linux, but it does mean nothing if it's defined as
-> implementation dependent, can be any.
- >
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> [...]
-
-MBR, Sergei
