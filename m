@@ -4,94 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47349C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F66FC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C17206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62AE2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cmmp18ls"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hBNyoV0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfIKOBr (ORCPT
+        id S1728071AbfIKOBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:01:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:60989 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbfIKOBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:01:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46T3VF03T7z9s00;
-        Thu, 12 Sep 2019 00:01:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568210503;
-        bh=fVMbp9nUjHjHrCSnRjagqE1opDXIVQcKULOOuwAY5Gw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Cmmp18lsxXrtg+WLT7Hjugy4dCUkN+MUEt1qp36XFEKILh1KsNC2QfPTlgRRa3JV0
-         fyKXzssxF2xKDPshchX5Q0EPkX0tZmp/5pWGd255yzDBsTW7Qa9Y270bb18mJMNXph
-         Kod0X0A4jVIxdRQl88pHpspVdqGpb4Vs9JqwSl5vStmwYkLtNrQsVKdOWGIcVyCS79
-         3dp/GYAFOqrbaI8vZ5z91G71OCT2DsEky+v4kZ+OEEaj5MHwAWlZM7sTX0bTezO/jD
-         PEPW/QfeTmNv9iCAQOnMkBUIOt087oxOCIAj4nTg6r4vEClG4+gDdeLh/9JAbD66rY
-         TjWobL0+3jjaw==
-Date:   Thu, 12 Sep 2019 00:01:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>
-Subject: linux-next: Fixes tag needs some work in the overlayfs tree
-Message-ID: <20190912000118.1f100f62@canb.auug.org.au>
+        Wed, 11 Sep 2019 10:01:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45979 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfIKOBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:01:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id f12so45945627iog.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 07:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gVldwPHBEEmbVAp0mqxQZ8yLS+V+O/vse0Nw9BG4UF4=;
+        b=hBNyoV0eH/Hs1sEwCVhxj9P0JoyfQUrF0U3/ZXzz5girYAggowVoFY2+1JI1EFRFpQ
+         Fjsdy0gmaNawhrBqh3dirr4WnLeBVcC85YwTMGzVZcowXPgFcVvsoCQ2eF8suXeCJVkz
+         JzE011UVXk9nKhJXe1Y50RbHaKbNCH5/fiOGC5eeYN5XB9LkSZHr4wCn93Q4fqtTOCHy
+         ptj6s8zn2e1a8JDLxhyaflKp/gsslZYNCH3Xqp+OJsjpf3peoaBVI2T8yCpbdH7MD6Fo
+         bl/p/zPK8SVvwuHoAbYY/baFe/qYTBigkc9dQIQv9bno/q7j4HmDRzajYYWIY4yFWnXz
+         WJBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gVldwPHBEEmbVAp0mqxQZ8yLS+V+O/vse0Nw9BG4UF4=;
+        b=uHV9d6R0u3Qet2h+UM4iknEBu/56Jsx3coP+Dm9hWECES0u/x2oode7rwyRYx8PFFa
+         dNA25CFDnaTkn36TFuXfBQV9pnuZ8K8YVjoOmGm7sxLFpxccVSY+C50pHHP7m6uVpWiD
+         KmpTBFJ/UD7RDpHLYwZCOzmBJqX+amTeMeUAhjDaIb+iFZiRSC44/lut0UvVRXrgUXIY
+         mic8rZQwFt0xxggFPbv2LkEFXUz4vef+DVvenyCiYdAdTtSoywcqzUXhlb/QuIVAf1ZH
+         j5wKje4zT4u4a76ybx9VptXX9fdpxWoq5x8mSg/Ca3dsBxolkZmo33aO1UFQgG/Mo6Ua
+         LIBA==
+X-Gm-Message-State: APjAAAUwKjyI51BCEGQeYvHeD7qA1m//4OeLwjL4a8vq4MAvikF0YWCh
+        Q7CvqliF7YmgZp+/YaKvcU9BvMJ+AdtX4+FTKoagPg==
+X-Google-Smtp-Source: APXvYqxA0bdjqPHqQ2NueNxICWH/tLLMJq1Vz+tJAm+kZ8i8BExfLfIhffXcQQNYtvksdWYGm4ADVKWY6+G86Koreqs=
+X-Received: by 2002:a05:6638:93b:: with SMTP id 27mr1396480jak.36.1568210511727;
+ Wed, 11 Sep 2019 07:01:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/v4Tg2.DtvRlV4lcMmHHChS6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+ <20190905161759.28036-5-mathieu.poirier@linaro.org> <20190910143601.GD3362@kroah.com>
+In-Reply-To: <20190910143601.GD3362@kroah.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 11 Sep 2019 08:01:40 -0600
+Message-ID: <CANLsYkwkq2fLWsGXHxr2tSBLHdfe4JXgu8ehuD1FOEQeDAPNnA@mail.gmail.com>
+Subject: Re: [BACKPORT 4.14.y 04/18] usb: dwc3: Allow disabling of
+ metastability workaround
+To:     Greg KH <greg@kroah.com>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/v4Tg2.DtvRlV4lcMmHHChS6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 10 Sep 2019 at 08:36, Greg KH <greg@kroah.com> wrote:
+>
+> On Thu, Sep 05, 2019 at 10:17:45AM -0600, Mathieu Poirier wrote:
+> > From: Roger Quadros <rogerq@ti.com>
+> >
+> > commit 42bf02ec6e420e541af9a47437d0bdf961ca2972 upstream
+> >
+> > Some platforms (e.g. TI's DRA7 USB2 instance) have more trouble
+> > with the metastability workaround as it supports only
+> > a High-Speed PHY and the PHY can enter into an Erratic state [1]
+> > when the controller is set in SuperSpeed mode as part of
+> > the metastability workaround.
+> >
+> > This causes upto 2 seconds delay in enumeration on DRA7's USB2
+> > instance in gadget mode.
+> >
+> > If these platforms can be better off without the workaround,
+> > provide a device tree property to suggest that so the workaround
+> > is avoided.
+> >
+> > [1] Device mode enumeration trace showing PHY Erratic Error.
+> >      irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event (00000901): Erratic Error [U0]
+> >      irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event (00000901): Erratic Error [U0]
+> >      irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event (00000901): Erratic Error [U0]
+>
+> Does the DT also need to get updated with this new id for this?  Is that
+> a separate patch somewhere?
 
-Hi all,
+The upstream commit is:
 
-In commit
+b8c9c6fa2002 ARM: dts: dra7: Disable USB metastability workaround for USB2
 
-  f31e81889715 ("ovl: Fix dereferencing possible ERR_PTR()")
+Should I just send the latter or you prefer a resend with both patches?
 
-Fixes tag
+Thanks,
+Mathieu
 
-  Fixes: 9b6faee0747 ("ovl: check ERR_PTR() return value from ovl_encode_fh=
-()")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/v4Tg2.DtvRlV4lcMmHHChS6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl14/i4ACgkQAVBC80lX
-0Gw2aAgAnGgInmxdP9Nvb94U9XadS7+gWfTag4J8hJ8iTHijasZ+x0zzxmyB4s4g
-r7xP13iYgcdVfGKOGrh4zhiBf6TOJyKnj8Nb67oQSFvXAr+JYe6ZbLsD7BM9B2XV
-mUe8os1+fo97qN92xP8sAWTbpUIzr+tZaDPuwJa6j58AJpxwOYqN0et/0knX2XGt
-yTvGEJPHso1+a7AL0SP2bxaXixUtShuvB80P8NTbEVP0l5Y/gC0/Q+DgOZiP8oAT
-mJ2SDdkb3Rgj0Ft2Bnst4fNHp9zOO2S0J3QDCee97Q8/+VF41jyKUxtTqR8is+e/
-z5dfGImXz1eIodvHmmG5hayInaSrPQ==
-=cDDB
------END PGP SIGNATURE-----
-
---Sig_/v4Tg2.DtvRlV4lcMmHHChS6--
+>
+> thanks,
+>
+> greg k-h
