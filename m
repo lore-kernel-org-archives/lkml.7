@@ -2,114 +2,477 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613ACC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A879C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1BD2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C572084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568197770;
+	bh=2QH9tO++sD0K1VC26C41JauePumM5ZNCTIM+ZgvwDfI=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ybBGVkyolElAK6wPQNkCuU0dqtpHTeKWWsfEF8ruMPHmUJx4//Pii17lWZ2JidGMs
+	 EOKAN9LNNnFJigAMrRg7u5PavKUbNVYmi/UFYpiKK7iTakBurO67yd2ov8egLyd5MQ
+	 4tZpNyxry08fZZPcB4L8Xhww2F8NqLKsU7LDrmHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfIKK1Z (ORCPT
+        id S1727621AbfIKK33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:27:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56068 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 06:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbfIKK1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:27:25 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726702AbfIKK32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:29:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF52B10DCCA9;
-        Wed, 11 Sep 2019 10:27:24 +0000 (UTC)
-Received: from [10.36.117.155] (ovpn-117-155.ams2.redhat.com [10.36.117.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B79160852;
-        Wed, 11 Sep 2019 10:27:23 +0000 (UTC)
-Subject: Re: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-To:     Oscar Salvador <osalvador@suse.de>, n-horiguchi@ah.jp.nec.com
-Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190910103016.14290-3-osalvador@suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <a2ec3629-3671-cdb4-70e8-2c7e327444e9@redhat.com>
-Date:   Wed, 11 Sep 2019 12:27:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F8D2082C;
+        Wed, 11 Sep 2019 10:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568197766;
+        bh=2QH9tO++sD0K1VC26C41JauePumM5ZNCTIM+ZgvwDfI=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=lCE390KFYmAWmZPIxkVfJEsfInsTl4uvMYnQRhhv63zcaEXPWj1T6DfKycsZtxi58
+         rykHZYgwLMzQUe2pvUUwXRAcxVh9y9Fx1UhLC/iu1F8XG7FDlJI5uvJAW5i1P77DXT
+         ltfYAV4Yr7iV9j3260uIJ8UTBziw+4YR2rFwKl+I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190910103016.14290-3-osalvador@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 11 Sep 2019 10:27:24 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190904211126.47518-4-saravanak@google.com>
+References: <20190904211126.47518-1-saravanak@google.com> <20190904211126.47518-4-saravanak@google.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com, kbuild test robot <lkp@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v11 3/6] of: property: Add functional dependency link from DT bindings
+User-Agent: alot/0.8.1
+Date:   Wed, 11 Sep 2019 03:29:25 -0700
+Message-Id: <20190911102926.A9F8D2082C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.19 12:30, Oscar Salvador wrote:
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> 
-> Currently madvise_inject_error() pins the target via get_user_pages_fast.
-> The call to get_user_pages_fast is only to get the respective page
-> of a given address, but it is the job of the memory-poisoning handler
-> to deal with races, so drop the refcount grabbed by get_user_pages_fast.
-> 
+Quoting Saravana Kannan (2019-09-04 14:11:22)
+> Add device links after the devices are created (but before they are
+> probed) by looking at common DT bindings like clocks and
+> interconnects.
+>=20
+> Automatically adding device links for functional dependencies at the
+> framework level provides the following benefits:
+>=20
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
+>=20
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+>=20
+> - Supplier devices like clock providers, interconnect providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+>=20
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources.
 
-Oh, and another question "it is the job of the memory-poisoning handler"
-- is that already properly implemented? (newbee question ¯\_(ツ)_/¯)
+The clk framework disables unused clks at late_initcall_sync. What do
+you mean clk framework doesn't turn them off because of a clear signal?
 
--- 
+> This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+>=20
+>   By linking devices before they are probed, we give suppliers a clear
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+>=20
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+>=20
 
-Thanks,
+Are there tabs above? Indentation looks off.
 
-David / dhildenb
+> diff --git a/Documentation/admin-guide/kernel-parameters.rst b/Documentat=
+ion/admin-guide/kernel-parameters.rst
+> index d05d531b4ec9..6d421694d98e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.rst
+> +++ b/Documentation/admin-guide/kernel-parameters.rst
+> @@ -127,6 +127,7 @@ parameter is applicable::
+>         NET     Appropriate network support is enabled.
+>         NUMA    NUMA support is enabled.
+>         NFS     Appropriate NFS support is enabled.
+> +       OF      Devicetree is enabled.
+>         OSS     OSS sound support is enabled.
+>         PV_OPS  A paravirtualized kernel is enabled.
+>         PARIDE  The ParIDE (parallel port IDE) subsystem is enabled.
+
+This could be split off and applied for dt_cpu_ftrs=3D in
+Documentation/admin-guide/kernel-parameters.txt
+
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index d7fa75e31f22..23b5ee5b0570 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/string.h>
+> +#include <linux/moduleparam.h>
+> =20
+>  #include "of_private.h"
+> =20
+> @@ -985,6 +986,245 @@ of_fwnode_device_get_match_data(const struct fwnode=
+_handle *fwnode,
+>         return of_device_get_match_data(dev);
+>  }
+> =20
+> +static bool of_is_ancestor_of(struct device_node *test_ancestor,
+
+Maybe add kernel-doc indicating that this function returns with the
+of_node requiring an of_node_put() call on it, unless it returns false
+in which case it doesn't?
+
+> +                             struct device_node *child)
+> +{
+> +       of_node_get(child);
+> +       while (child) {
+> +               if (child =3D=3D test_ancestor) {
+> +                       of_node_put(child);
+> +                       return false;
+> +               }
+> +               child =3D of_get_next_parent(child);
+> +       }
+> +       return true;
+> +}
+> +
+> +/**
+> + * of_link_to_phandle - Add device link to supplier from supplier phandle
+> + * @dev: consumer device
+> + * @sup_np: phandle to supplier device tree node
+> + *
+> + * Given a phandle to a supplier device tree node (@sup_np), this functi=
+on
+> + * finds the device that owns the supplier device tree node and creates a
+> + * device link from @dev consumer device to the supplier device. This fu=
+nction
+> + * doesn't create device links for invalid scenarios such as trying to c=
+reate a
+> + * link with a parent device as the consumer of its child device. In such
+> + * cases, it returns an error.
+
+Doesn't device links have problems with making cycles between providers
+and consumers? We have some scenarios where two clk providers are
+consumers of each other but it isn't a parent child relationship.
+They're peers on the SoC bus and there isn't a cycle in the clk tree but
+there is a cycle between the two device nodes and providers. I don't see
+the avoidance here but maybe I missed something?
+
+> + *
+> + * Returns:
+> + * - 0 if link successfully created to supplier
+> + * - -EAGAIN if linking to the supplier should be reattempted
+> + * - -EINVAL if the supplier link is invalid and should not be created
+> + * - -ENODEV if there is no device that corresponds to the supplier phan=
+dle
+> + */
+> +static int of_link_to_phandle(struct device *dev, struct device_node *su=
+p_np)
+> +{
+> +       struct device *sup_dev;
+> +       u32 dl_flags =3D DL_FLAG_AUTOPROBE_CONSUMER;
+
+Is it really a u32 instead of an unsigned int or unsigned long?
+
+> +       int ret =3D 0;
+> +       struct device_node *tmp_np =3D sup_np;
+> +
+> +       of_node_get(sup_np);
+> +       /*
+> +        * Find the device node that contains the supplier phandle.  It m=
+ay be
+> +        * @sup_np or it may be an ancestor of @sup_np.
+> +        */
+> +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> +               sup_np =3D of_get_next_parent(sup_np);
+
+I don't get this. This is assuming that drivers are only probed for
+device nodes that have a compatible string? What about drivers that make
+sub-devices for clk support that have drivers in drivers/clk/ that then
+attach at runtime later? This happens sometimes for MFDs that want to
+split the functionality across the driver tree to the respective
+subsystems.
+
+> +       if (!sup_np) {
+> +               dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np=
+);
+> +               return -ENODEV;
+> +       }
+> +
+> +       /*
+> +        * Don't allow linking a device node as a consumer of one of its
+> +        * descendant nodes. By definition, a child node can't be a funct=
+ional
+> +        * dependency for the parent node.
+> +        */
+> +       if (!of_is_ancestor_of(dev->of_node, sup_np)) {
+> +               dev_dbg(dev, "Not linking to %pOFP - is descendant\n", su=
+p_np);
+> +               of_node_put(sup_np);
+> +               return -EINVAL;
+> +       }
+> +       sup_dev =3D get_dev_from_fwnode(&sup_np->fwnode);
+> +       of_node_put(sup_np);
+> +       if (!sup_dev)
+> +               return -EAGAIN;
+> +       if (!device_link_add(dev, sup_dev, dl_flags))
+> +               ret =3D -EAGAIN;
+> +       put_device(sup_dev);
+> +       return ret;
+> +}
+> +
+> +/**
+> + * parse_prop_cells - Property parsing function for suppliers
+> + *
+> + * @np:                Pointer to device tree node containing a list
+> + * @prop_name: Name of property to be parsed. Expected to hold phandle v=
+alues
+> + * @index:     For properties holding a list of phandles, this is the in=
+dex
+> + *             into the list.
+> + * @list_name: Property name that is known to contain list of phandle(s)=
+ to
+> + *             supplier(s)
+> + * @cells_name:        property name that specifies phandles' arguments =
+count
+> + *
+> + * This is a helper function to parse properties that have a known fixed=
+ name
+> + * and are a list of phandles and phandle arguments.
+> + *
+> + * Returns:
+> + * - phandle node pointer with refcount incremented. Caller must of_node=
+_put()
+> + *   on it when done.
+> + * - NULL if no phandle found at index
+> + */
+> +static struct device_node *parse_prop_cells(struct device_node *np,
+> +                                           const char *prop_name, int in=
+dex,
+> +                                           const char *list_name,
+> +                                           const char *cells_name)
+> +{
+> +       struct of_phandle_args sup_args;
+> +
+> +       if (strcmp(prop_name, list_name))
+> +               return NULL;
+> +
+> +       if (of_parse_phandle_with_args(np, list_name, cells_name, index,
+> +                                      &sup_args))
+> +               return NULL;
+> +
+> +       return sup_args.np;
+> +}
+> +
+> +static struct device_node *parse_clocks(struct device_node *np,
+> +                                       const char *prop_name, int index)
+> +{
+> +       return parse_prop_cells(np, prop_name, index, "clocks", "#clock-c=
+ells");
+> +}
+
+Can this use of_parse_clkspec() instead? If it is exported out of the
+clk framework (which is weird to me for other reasons) then it should
+work to call that with the index passed in to this function. Ideally we
+don't have more than one place where we parse clock specifiers for a
+node.
+
+Another question is what happens for devices that are in DT but are
+using "clock-ranges"? As far as I know there are some DTS files that use
+that property to only send the clocks to some bus node that then lets
+devices find the "clocks" and "clock-names" properties from the bus node
+instead of from the node that corresponds to their device.
+
+> +
+> +static struct device_node *parse_interconnects(struct device_node *np,
+> +                                              const char *prop_name, int=
+ index)
+> +{
+> +       return parse_prop_cells(np, prop_name, index, "interconnects",
+> +                               "#interconnect-cells");
+> +}
+> +
+> +static int strcmp_suffix(const char *str, const char *suffix)
+
+And this doesn't go to lib/string.c why?
+
+> +{
+> +       unsigned int len, suffix_len;
+> +
+> +       len =3D strlen(str);
+> +       suffix_len =3D strlen(suffix);
+> +       if (len <=3D suffix_len)
+> +               return -1;
+> +       return strcmp(str + len - suffix_len, suffix);
+> +}
+> +
+> +static struct device_node *parse_regulators(struct device_node *np,
+> +                                           const char *prop_name, int in=
+dex)
+> +{
+> +       if (index || strcmp_suffix(prop_name, "-supply"))
+> +               return NULL;
+> +
+> +       return of_parse_phandle(np, prop_name, 0);
+> +}
+> +
+> +/**
+> + * struct supplier_bindings - Property parsing functions for suppliers
+> + *
+> + * @parse_prop: function name
+> + *     parse_prop() finds the node corresponding to a supplier phandle
+> + * @parse_prop.np: Pointer to device node holding supplier phandle prope=
+rty
+> + * @parse_prop.prop_name: Name of property holding a phandle value
+> + * @parse_prop.index: For properties holding a list of phandles, this is=
+ the
+> + *                   index into the list
+
+This is interesting kernel-doc. I've never seen it before. Does it work?
+
+> + *
+> + * Returns:
+> + * parse_prop() return values are
+> + * - phandle node pointer with refcount incremented. Caller must of_node=
+_put()
+> + *   on it when done.
+> + * - NULL if no phandle found at index
+> + */
+> +struct supplier_bindings {
+> +       struct device_node *(*parse_prop)(struct device_node *np,
+> +                                         const char *prop_name, int inde=
+x);
+
+Maybe this should be a typedef instead of a struct unless you plan to
+put more members in this struct? Or are arrays of function pointers
+impossible?
+
+> +};
+> +
+> +static const struct supplier_bindings bindings[] =3D {
+
+This variable name is really bad. Please make it much more specific to
+this file instead of being called 'bindings' so that grepping for it and
+looking for it in kallsyms isn't difficult.
+
+> +       { .parse_prop =3D parse_clocks, },
+> +       { .parse_prop =3D parse_interconnects, },
+> +       { .parse_prop =3D parse_regulators, },
+> +       {},
+
+Nitpick: Don't put a comma after the sentinel so that it causes a
+compile error to follow it with another "valid" entry.
+
+> +};
+> +
+> +/**
+> + * of_link_property - Create device links to suppliers listed in a prope=
+rty
+> + * @dev: Consumer device
+> + * @con_np: The consumer device tree node which contains the property
+> + * @prop_name: Name of property to be parsed
+> + *
+> + * This function checks if the property @prop_name that is present in the
+> + * @con_np device tree node is one of the known common device tree bindi=
+ngs
+> + * that list phandles to suppliers. If @prop_name isn't one, this functi=
+on
+> + * doesn't do anything.
+> + *
+> + * If @prop_name is one, this function attempts to create device links f=
+rom the
+> + * consumer device @dev to all the devices of the suppliers listed in
+> + * @prop_name.
+> + *
+> + * Any failed attempt to create a device link will NOT result in an imme=
+diate
+> + * return.  of_link_property() must create links to all the available su=
+pplier
+> + * devices even when attempts to create a link to one or more suppliers =
+fail.
+> + */
+> +static int of_link_property(struct device *dev, struct device_node *con_=
+np,
+> +                            const char *prop_name)
+> +{
+> +       struct device_node *phandle;
+> +       const struct supplier_bindings *s =3D bindings;
+> +       unsigned int i =3D 0;
+> +       bool matched =3D false;
+> +       int ret =3D 0;
+> +
+> +       /* Do not stop at first failed link, link all available suppliers=
+. */
+> +       while (!matched && s->parse_prop) {
+> +               while ((phandle =3D s->parse_prop(con_np, prop_name, i)))=
+ {
+> +                       matched =3D true;
+> +                       i++;
+> +                       if (of_link_to_phandle(dev, phandle) =3D=3D -EAGA=
+IN)
+> +                               ret =3D -EAGAIN;
+
+And don't break?
+
+> +                       of_node_put(phandle);
+> +               }
+> +               s++;
+> +       }
+> +       return ret;
+> +}
+> +
+> +static int __of_link_to_suppliers(struct device *dev,
+
+Why the double underscore?
+
+> +                                 struct device_node *con_np)
+> +{
+> +       struct device_node *child;
+> +       struct property *p;
+> +       int ret =3D 0;
+> +
+> +       for_each_property_of_node(con_np, p)
+> +               if (of_link_property(dev, con_np, p->name))
+> +                       ret =3D -EAGAIN;
+
+Same comment.
+
+> +
+> +       return ret;
+> +}
