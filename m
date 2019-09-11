@@ -2,95 +2,91 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0BAC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C958BC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EE92082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60172082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbfIKTyB (ORCPT
+        id S1730426AbfIKTyd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 15:54:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63887 "EHLO mga07.intel.com"
+        Wed, 11 Sep 2019 15:54:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40196 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfIKTyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 15:54:01 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 12:54:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
-   d="scan'208";a="184583231"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Sep 2019 12:53:58 -0700
-Date:   Wed, 11 Sep 2019 12:53:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH 0/3] fix emulation error on Windows bootup
-Message-ID: <20190911195359.GK1045@linux.intel.com>
-References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
- <b35c8b24-7531-5a5d-1518-eaf9567359ae@redhat.com>
+        id S1728837AbfIKTyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 15:54:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EEA3D3018FC5;
+        Wed, 11 Sep 2019 19:54:31 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-117-150.ams2.redhat.com [10.36.117.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2B7B5D9E2;
+        Wed, 11 Sep 2019 19:54:25 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v12)
+References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
+        <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
+        <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
+        <7db64714-3dc5-b322-1edc-736b08ee7d63@redhat.com>
+        <87ef0mr6qj.fsf@oldenburg2.str.redhat.com>
+        <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com>
+Date:   Wed, 11 Sep 2019 21:54:23 +0200
+In-Reply-To: <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com> (Carlos
+        O'Donell's message of "Wed, 11 Sep 2019 15:45:14 -0400")
+Message-ID: <877e6er4ls.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b35c8b24-7531-5a5d-1518-eaf9567359ae@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 11 Sep 2019 19:54:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 05:51:05PM +0200, Paolo Bonzini wrote:
-> On 27/08/19 15:07, Jan Dakinevich wrote:
-> > This series intended to fix (again) a bug that was a subject of the 
-> > following change:
-> > 
-> >   6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
-> > 
-> > Suddenly, that fix had a couple mistakes. First, ctxt->have_exception was 
-> > not set if fault happened during instruction decoding. Second, returning 
-> > value of inject_emulated_instruction was used to make the decision to 
-> > reenter guest, but this could happen iff on nested page fault, that is not 
-> > the scope where this bug could occur.
-> > 
-> > However, I have still deep doubts about 3rd commit in the series. Could
-> > you please, make me an advise if it is the correct handling of guest page 
-> > fault?
-> > 
-> > Jan Dakinevich (3):
-> >   KVM: x86: fix wrong return code
-> >   KVM: x86: set ctxt->have_exception in x86_decode_insn()
-> >   KVM: x86: always stop emulation on page fault
-> > 
-> >  arch/x86/kvm/emulate.c | 4 +++-
-> >  arch/x86/kvm/x86.c     | 4 +++-
-> >  2 files changed, 6 insertions(+), 2 deletions(-)
-> > 
-> 
-> Queued, thanks.  I added the WARN_ON_ONCE that Sean suggested.
+* Carlos O'Donell:
 
-Which version did you queue?  It sounds like you queued v1, which breaks
-VMware backdoor emulation due to incorrect patch ordering.  v3[*] fixes
-the ordering issue and adds the WARN_ON_ONCE.
+> On 9/11/19 3:08 PM, Florian Weimer wrote:
+>> * Carlos O'Donell:
+>> 
+>>> It would be easier to merge the patch set if it were just an unconditional
+>>> registration like we do for set_robust_list().
+>> 
+>> Note that this depends on the in-tree system call numbers list, which I
+>> still need to finish according to Joseph's specifications.
+>
+> Which work is this? Do you have a URL reference to WIP?
 
-[*] https://patchwork.kernel.org/cover/11120627/
+  <https://sourceware.org/ml/libc-alpha/2019-05/msg00630.html>
+  <https://sourceware.org/ml/libc-alpha/2019-06/msg00015.html>
+
+I think realistically this is needed for the Y2038 work as well if we
+want to support building glibc with older kernel headers.  “glibc 2.31
+will have Y2038 support and rseq support, but only if it runs on a
+current and it happens to have been built against sufficiently recent
+kernel headers” is a bit difficult to explain.  The current kernel part
+is easy enough to understand, but the impact of the kernel headers on
+the feature set has always been tough to explain.  Especially if you
+factor in vendor kernels with system call backports.
+
+Thanks,
+Florian
