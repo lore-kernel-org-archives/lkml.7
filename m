@@ -2,256 +2,367 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11316C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F02C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59412089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E8020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="W7fFHP1i"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TYmke4Ji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbfIKQke (ORCPT
+        id S1728890AbfIKQlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:40:34 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:19938
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728794AbfIKQke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:40:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I+ko8AggwGvNInEXoWOvqefVR9guaUtvViNSq0heQCf+1M+MVx+RARWI0msVrRFbf8bnkqC1MVsr4WbSqDC/5bYm2R85PnDmQjlUuFVmdV0ruTwFuchhH5+2mDZkN9JYSonblsDzBWrp3v7/dC5AjPWyu3QUhUM+XRMecH5bVewbnIOh6n1oB2CA76h6qR7ITdJKtCGNV/dz0XvA7j13dGm4icAvMax/WlAM+XyRCNi67h6H1NrT0yvL0Cv4JM8AmvdTZMyoi4e9qZUhWp1X2YqBhW77bNBClpP4D6EA032PNfht6pDDsodFdIC5EvnckJm5yNVaM05/d9jZ1sdm7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gKs8tz1Ilj5YSp6Cr+wPxtHLLXOVeI+umVS1qr6dcCY=;
- b=FaPMKMfJxCzI3t09yL2phtecl2ihpCkF32lVIiGp/+CmFmklUKOPnEaR2RWUEbq1i44DEkbJk1XxF8t3MmG52rUv5IicGZXzzE4sccAFgAVbqHpi6RCJJqmZs5uKB6EXuL/pn5RWO7xnYmxKyRtpYIElMX3jtsrqLZ+yvYQMftWdRn1GBRC250B8O9dspFXemDtNncNnTguGK75fPOAS5PpdQgjDEcj6NaM2LBK63ijsX601PyUuixaHDp1ebOnvqYmEQ8npZG/qkW0umi0nOSltfXz/tfmV1bYhWV7cHMr6n8/qtLOMKyULoKcr64ZD97FZLG3rLc6IXmSPbZ3BqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gKs8tz1Ilj5YSp6Cr+wPxtHLLXOVeI+umVS1qr6dcCY=;
- b=W7fFHP1i5GMEshfHN6LlX9epKcq3WdLMVZ3jioyedKLp4xLJ3e3G778Dhyqe+B7I0eAV0UVsCrsou6buJt3eLuHUJkfuhWLg0omPpUXo+8u10ciIKqK08c7EbFaiiISxWaBHUt3oGNwRMVNqtOsF+vU1uIFLEM00I3v6rlignJg=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6129.eurprd05.prod.outlook.com (20.178.117.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Wed, 11 Sep 2019 16:38:49 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 16:38:49 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Topic: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Index: AQHVYUZdAS6KYIr8SUO1vQ8myuXcNacjy68wgALDGQCAABfpQIAAEvsA
-Date:   Wed, 11 Sep 2019 16:38:49 +0000
-Message-ID: <AM0PR05MB48667E374853D485788D8159D1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190902042436.23294-1-parav@mellanox.com>
-        <AM0PR05MB4866F76F807409ED887537D7D1B70@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190911145610.453b32ec@x1.home>
- <AM0PR05MB48668DFF8E816F0D2D3041BFD1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
-In-Reply-To: <AM0PR05MB48668DFF8E816F0D2D3041BFD1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00ec339f-cacd-449b-e11e-08d736d685e6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6129;
-x-ms-traffictypediagnostic: AM0PR05MB6129:|AM0PR05MB6129:
-x-ms-exchange-purlcount: 4
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB6129A38C71988C208F2E679BD1B10@AM0PR05MB6129.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(13464003)(54534003)(189003)(199004)(256004)(229853002)(2940100002)(11346002)(446003)(74316002)(76176011)(81166006)(6436002)(7736002)(53546011)(102836004)(76116006)(8676002)(8936002)(966005)(81156014)(110136005)(478600001)(54906003)(71200400001)(71190400001)(14444005)(6506007)(305945005)(14454004)(316002)(99286004)(86362001)(66946007)(52536014)(66476007)(66556008)(64756008)(66446008)(55016002)(7696005)(5660300002)(3846002)(2906002)(6116002)(4326008)(476003)(66066001)(53936002)(186003)(6246003)(53376002)(9686003)(6306002)(486006)(33656002)(26005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6129;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 40Y1SuZyZgBfow1zPJKsIDjK8+IJ+KxBWcxw8ZVzKwrRAomDAwIyYsYnCKjgsZ580OTAzCXhCNk/XXcU9zvGrHdCsCV19+tTPg3JjIndhT5djuCGFUJ0piZysOnr75je/vKFirXxnkavZFCz8I+l6f/7YhRQicUoGspAtGbb8Qqu4+5+OQWDkcyFLw1ZeehkwOyAr9lq1Gva4fWQT0qIrDm/PuOCp6jIBaFXVBpvdVuux5SIAW1CMR7Lo23zvVH3PWRfC6iwIC35PlaELTS/typfXeraYkEZ4hSXk8Upw596HF3BxgIRLNzs767uprcINk2xewmZBygPgq5+Q267OlgpfVTjuHcqXA4pQJlBcPW68xnV7lv/v9OUwrqek22gQJc7vvFZnD4JoM0FjkiQaJJm4XZbrzc8IHSYhhObaUc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Sep 2019 12:41:01 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37472 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbfIKQlB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:41:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BGd43i141111;
+        Wed, 11 Sep 2019 16:40:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=VFpmtg3e/Aku2YtAZH7JPHfHkoiJ5a4bkDvJ9ThkoTE=;
+ b=TYmke4Ji/D/b6KBrM2hrn51WRqdC3jm24SP9gFQbFVPBzaVGN1OUMpmlN/x3f9cbxUah
+ UwuKdmdmrJPgwEfZ49zCoT7882qzSMSgELPStofE6RBdGqyc6o8CH8qL5QtJ+xrqw7Mk
+ jtARwXhwDSlKkdfBVlqkHjfYlbpwDTzszi+8/XnsAOdxYBnwkZ62b2Jy8+XE+on1cpOM
+ Zmq7ikHofxH8V2pQ6ljEG020SdsbD7XvnkcdwZwTWaosLvZ59T2A0GcA4ommatq8p4m6
+ VugqSZrNbX2LOtAMReucIkbHZnJBVaGWOOZqdkZ3xd4a8eWueveA+MONBDyHmLnNHSs4 ug== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2uw1m93e2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 16:40:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BGcxQF078349;
+        Wed, 11 Sep 2019 16:40:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uxj88yyhr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 16:40:26 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BGeLaM031363;
+        Wed, 11 Sep 2019 16:40:21 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 09:40:20 -0700
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joe Perches <joe@perches.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steve French <stfrench@microsoft.com>,
+        Olof Johansson <olof@lixom.net>, linux-nvdimm@lists.01.org,
+        ksummit-discuss@lists.linuxfoundation.org
+Subject: Re: [PATCH v2 0/3] Maintainer Entry Profiles
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 11 Sep 2019 12:40:16 -0400
+In-Reply-To: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Dan Williams's message of "Wed, 11 Sep 2019 08:48:42 -0700")
+Message-ID: <yq1o8zqeqhb.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00ec339f-cacd-449b-e11e-08d736d685e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 16:38:49.2856
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 754g59yC8m3Qdoo1fKZTCX/ZLdQ/5B2AXw2Po1NNNonty2DHUfJ5pfv512urUVypzpt7RZvzorpP3VguugeHzA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6129
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Dan!
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Parav Pandit
-> Sent: Wednesday, September 11, 2019 10:31 AM
-> To: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
-> cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
->=20
-> Hi Alex,
->=20
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, September 11, 2019 8:56 AM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
-> > cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; netdev@vger.kernel.org
-> > Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
-> >
-> > On Mon, 9 Sep 2019 20:42:32 +0000
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >
-> > > Hi Alex,
-> > >
-> > > > -----Original Message-----
-> > > > From: Parav Pandit <parav@mellanox.com>
-> > > > Sent: Sunday, September 1, 2019 11:25 PM
-> > > > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> > > > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
-> > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
-> > > > Subject: [PATCH v3 0/5] Introduce variable length mdev alias
-> > > >
-> > > > To have consistent naming for the netdevice of a mdev and to have
-> > > > consistent naming of the devlink port [1] of a mdev, which is
-> > > > formed using phys_port_name of the devlink port, current UUID is
-> > > > not usable because UUID is too long.
-> > > >
-> > > > UUID in string format is 36-characters long and in binary 128-bit.
-> > > > Both formats are not able to fit within 15 characters limit of
-> > > > netdev
-> > name.
-> > > >
-> > > > It is desired to have mdev device naming consistent using UUID.
-> > > > So that widely used user space framework such as ovs [2] can make
-> > > > use of mdev representor in similar way as PCIe SR-IOV VF and PF
-> > representors.
-> > > >
-> > > > Hence,
-> > > > (a) mdev alias is created which is derived using sha1 from the
-> > > > mdev
-> > name.
-> > > > (b) Vendor driver describes how long an alias should be for the
-> > > > child mdev created for a given parent.
-> > > > (c) Mdev aliases are unique at system level.
-> > > > (d) alias is created optionally whenever parent requested.
-> > > > This ensures that non networking mdev parents can function without
-> > > > alias creation overhead.
-> > > >
-> > > > This design is discussed at [3].
-> > > >
-> > > > An example systemd/udev extension will have,
-> > > >
-> > > > 1. netdev name created using mdev alias available in sysfs.
-> > > >
-> > > > mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-> > > > mdev 12 character alias=3Dcd5b146a80a5
-> > > >
-> > > > netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet l=
-ink
-> > > > m =3D mediated device
-> > > >
-> > > > 2. devlink port phys_port_name created using mdev alias.
-> > > > devlink phys_port_name=3Dpcd5b146a80a5
-> > > >
-> > > > This patchset enables mdev core to maintain unique alias for a mdev=
-.
-> > > >
-> > > > Patch-1 Introduces mdev alias using sha1.
-> > > > Patch-2 Ensures that mdev alias is unique in a system.
-> > > > Patch-3 Exposes mdev alias in a sysfs hirerchy, update
-> > > > Documentation
-> > > > Patch-4 Introduces mdev_alias() API.
-> > > > Patch-5 Extends mtty driver to optionally provide alias generation.
-> > > > This also enables to test UUID based sha1 collision and trigger
-> > > > error handling for duplicate sha1 results.
-> > > >
-> > > > [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
-> > > > [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
-> > > > [3] https://patchwork.kernel.org/cover/11084231/
-> > > >
-> > > > ---
-> > > > Changelog:
-> > > > v2->v3:
-> > > >  - Addressed comment from Yunsheng Lin
-> > > >  - Changed strcmp() =3D=3D0 to !strcmp()
-> > > >  - Addressed comment from Cornelia Hunk
-> > > >  - Merged sysfs Documentation patch with syfs patch
-> > > >  - Added more description for alias return value
-> > >
-> > > Did you get a chance review this updated series?
-> > > I addressed Cornelia's and yours comment.
-> > > I do not think allocating alias memory twice, once for comparison
-> > > and once for storing is good idea or moving alias generation logic
-> > > inside the mdev_list_lock(). So I didn't address that suggestion of
-> Cornelia.
-> >
-> > Sorry, I'm at LPC this week.  I agree, I don't think the double
-> > allocation is necessary, I thought the comment was sufficient to
-> > clarify null'ing the variable.  It's awkward, but seems correct.
-> >
-> > I'm not sure what we do with this patch series though, has the real
-> > consumer of this even been proposed? =20
+> At last years Plumbers Conference I proposed the Maintainer Entry
+> Profile as a document that a maintainer can provide to set contributor
+> expectations and provide fodder for a discussion between maintainers
+> about the merits of different maintainer policies.
 
-Jiri already acked to use mdev_alias() to generate phys_port_name several d=
-ays back in the discussion we had in [1].
-After concluding in the thread [1], I proceed with mdev_alias().
-mlx5_core patches are not yet present on netdev mailing list, but we all ag=
-ree to use it in mdev_alias() in devlink phys_port_name generation.
-So we have collective agreement on how to proceed forward.
-I wasn't probably clear enough in previous email reply about it, so adding =
-link here.
+This looks pretty good to me.
 
-[1] https://patchwork.kernel.org/cover/11084231/#22838955
+After the Plumbers session last year I wrote this for SCSI based on a
+prior version by Christoph. It's gone a bit stale but I'll update it to
+match your template.
 
-> It feels optimistic to include
-> > at this point.  We've used the sample driver as a placeholder in the
-> > past for mdev_uuid(), but we arrived at that via a conversion rather
-> > than explicitly adding the API.  Please let me know where the consumer
-> > patches stand, perhaps it would make more sense for them to go in
-> > together rather than risk adding an unused API.  Thanks,
-> >
-> Given that consumer patch series is relatively large (around 15+ patches)=
-, I
-> was considering to merge this one as pre-series to it.
-> Its ok to combine this with consumer patch series.
-> But wanted to have it reviewed beforehand, so that churn is less in actua=
-l
-> consumer series which is more mlx5_core and devlink/netdev centric.
-> So if you can add Review-by, it will be easier to combine with consumer
-> series.
->=20
-> And if we merge it with consumer series, it will come through Dave Miller=
-'s
-> tree instead of your tree.
-> Would that work for you?
+-- 
+Martin K. Petersen	Oracle Linux Engineering
+
+
+
+================================================
+Linux SCSI Subsystem Patch Submission Guidelines
+================================================
+Martin K. Petersen <martin.petersen@oracle.com>
+
+
+Release cycles and when to submit patches
+=========================================
+Each release cycle consists of:
+
+* an 8 week submission window in which new core features and driver updates
+  are added (scsi-queue)
+
+* a 2 week merge window where it is customary not to post patches
+
+* an 8 week stabilization window before final release where only bug fix
+  patches are merged (scsi-fixes)
+
+The submission/stabilization cycle may be shorter or longer than 8 weeks.
+However, 8 weeks is the most common. Note that the code *submission window*
+for the *next* kernel release overlaps with the *stabilization window* for the
+*current* release:
+
++-------------+---------------------------------+-------------+-----------------
+| Week  1 | 2 |  3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |  11  |  12  | 13 | 14 | .....
++-------------+---------------------------------+-------------+-----------------
+
++-------------+---------------------------------+-------------+
+| 4.x merge   |    4.x stabilization window     | 4.x release |
+| window      | rc1 rc2 rc3 rc4 rc5 rc6 rc7 rc8 |             |
++-------------+---------------------------------+-------------+
+| Merge fixes | Big bug fixes.............small |   Stable    |
++-------------+---------------------------------+-------------+
+
+              +---------------------------------+-------------+-----------------
+              |    4.x+1 submission window      | 4.x+1 merge | 4.x+1 stabili-
+              |                                 | window      | zation window
+	      |                                 |             | rc1 rc2 rc3 ...
+              +---------------------------------+-------------+-----------------
+              | Big features/updates......small | Merge fixes | Big bug fixes..
+              +---------------------------------+-------------+-----------------
+
+
+Bug Fixes (4.x/scsi-fixes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+During the two week merge window only fixes related to the merge process or
+any critical functional deficiences discovered in the newly submitted code
+will be merged.
+
+During the subsequent stabilization window (rc cycle) the expectation is that
+bug fix patches will become increasingly smaller and simpler. In other words:
+There may be enough fallout from a merged driver update to justify sending a
+5-patch remedial bug fix series during rc1/rc2. But at the end of the rc cycle
+patches must be trivial one-liners.
+
+After the final 4.x has been released, subsequent bug fixes will have to go
+through the stable-kernel-rules.rst process.
+
+
+New Features/Core Code Changes/Driver Updates (4.x+1/scsi-queue)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+New features for 4.x+1 should be sent to linux-scsi once the merge window is
+over. I.e. once rc1 has been released. This ensures there is enough time to
+undergo several review cycles before the submission window is closed.
+
+At the end of the submission window (rc7/rc8) the expectation is that posted
+patches will be small and fairly simple. No patch series.
+
+Only critical patches are merged during the last (rc8) submission window week
+to ensure sufficient zeroday test robot and linux-next coverage before sending
+Linus the final pull request.
+
+
+GIT Trees
+=========
+The SCSI patch submission trees can be found at:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git
+
+There are two concurrently active branches:
+
+* 4.x/scsi-fixes for bug fixes to the current kernel rc
+
+* 4.x+1/scsi-queue for new features and driver submissions for the next merge
+  window
+
+Both trees are usually based on Linus' 4.x-rc1.
+
+Patches accepted into 4.x/scsi-fixes are typically submitted to Linus on a
+weekly basis. Patches accepted into 4.x+1/scsi-queue are submitted at the
+beginning of the merge window.
+
+It is sometimes necessary to set up a separate 4.x+1/scsi-postmerge branch
+which contains patches that depend on newly merged functionality in other
+subsystems such as block or libata. The postmerge tree will be submitted to
+Linus at the end of the merge window once all external dependencies have been
+merged.
+
+
+Patch Submission Process
+========================
+* All modifications to files under drivers/scsi should go through the SCSI
+  tree.
+
+* Read Documentation/process/submitting-patches.rst
+
+* Send the patch or patch series to linux-scsi@vger.kernel.org
+
+* Please make sure to Cc: the maintainer of the driver/component you are
+  changing.
+
+* Do not use custom To: and Cc: for individual patches. We want to see the
+  whole series, even patches that potentially need to go through a different
+  subsystem tree.
+
+* Clearly indicate in the introductory letter which tree your submission is
+  aimed at (scsi-fixes or scsi-queue). For individual patches you can indicate
+  the desired tree below the --- separator.
+
+* As a rule of thumb, any patch that goes through the scsi-fixes tree should
+  have a stable tag unless it was a regression introduced in the current
+  release.
+
+* If the patch is a bugfix, please add:
+
+    Fixes: 1234deadbeef ("Implement foobarbaz")
+    Cc: <stable@vger.kernel.org> # v4.x+
+
+  Where the v4.x indicates when commit 1234deadbeef was added to the kernel.
+
+* When posting a revised patch or series, please manually add any Acked-by:,
+  Reviewed-by:, or Tested-by: tags you may have received. Tags are only valid
+  if the patch has not changed significantly. Rebasing without conflicts and
+  typo fixes are generally OK and do not invalidate tags.
+
+* Please CC: everyone that provided feedback when posting a revised
+  patch or series.
+
+* Custom patch number formatting often confuses patchwork. Please use git
+  send-email -v instead of manually adding version numbers to individual
+  patches. To send version 3 of a 10 patch series from the tip of the current
+  tree you can do:
+
+    git send-email -10 -v3 --compose --to=linux-scsi@vger.kernel.org
+
+* Please put a change log after a --- separator in each revised patch. If the
+  reason for the repost is global (i.e. a rebase) it is fine to put the
+  changelog in the cover letter.
+
+
+Patch Acceptance Criteria
+=========================
+* A patch needs two positive reviews (non-author Signed-off-by:, Acked-by:,
+  Reviewed-by:, or Tested-by:).
+
+* A Tested-by: is worth a thousand reviews.
+
+* For drivers, at least one review is required from somebody outside the
+  submitting company.
+
+* Nobody has expressed any concerns about the patch on linux-scsi.
+
+* The patch must apply cleanly. Use checkpatch and git send-email.
+
+* The patch must compile without warnings (make C=1 CF="-D__CHECK_ENDIAN__")
+  and does not incur any zeroday test robot complaints.
+
+* The patch must have a commit message that describes, comprehensively and in
+  plain English, what the patch does.
+
+  - Do not link to vendor bugzilla entries that require special access
+    credentials. If there is anything of importance in bugzilla, put it in the
+    commit message.
+
+  - The bigger and more intrusive the patch, the bigger the accompanying
+    commit message needs to be. "fooscsi: Add PCI id for model XYZ" is fine as
+    a one-liner. "fooscsi: Rewrite DMA allocation and queue setup" most likely
+    needs several paragraphs of discussion in the commit message.
+
+
+Patch Review Communities
+========================
+While core SCSI folks generally perform a cursory review of every patch,
+it is imperative that contributors with an interest in a particular
+component form small communities that can review and test each other's
+code. Such informal communities exist for several components or
+sub-subsystems underneath the SCSI tree.
+
+The best way to facilitate that your patch gets merged is to review patches
+submitted by your fellow contributors and hope that they return the favor.
+
+
+Patch Reviewer Responsibilities
+===============================
+If you provide feedback to a patch and the patch author addresses your
+concerns in a new version, you are expected to respond to the new
+patch. Many code contributions series fail to make forward progress
+because reviewers do not ack or nack the changes they requested to be
+made. Please make sure to always follow up when your review comments are
+being addressed.
+
+
+Driver Maintainer Responsibilities
+==================================
+Many of the actively developed SCSI subsystem drivers have one or more
+official maintainers. These maintainers are often employed by the company
+manufacturing the hardware in question and therefore have a vested interest in
+making sure the driver is working correctly.
+
+A driver maintainer must review and respond to *all submitted patches* to the
+driver in a timely manner (5 business days). This includes:
+
+* Proposed functional changes to the driver code
+
+* Security fixes
+
+* Trivial and typo patches
+
+* Changes compelled by kernel interface changes
+
+* Patches required to work correctly on architectures not commercially
+  supported by the hardware manufacturer
+
+
+Patch Acceptance Status
+=======================
+* Submitted patches and their current status can be viewed in patchwork at:
+
+    https://patchwork.kernel.org/project/linux-scsi/list/
+
+* If a submitted patch is not visible in patchwork, it does not exist. Please
+  repost.
+
+* If only a portion of a patch series visible in patchwork, the series does
+  not exist. Please repost.
+
+* Once a patch has been merged, you will receive a mail indicating into which
+  tree it has been accepted.
+
+* Patches that have not received sufficient Acked-by:, Reviewed-by:, or
+  Tested-by: tags after two weeks get moved to "Deferred" status. This
+  indicates that it necessary to resubmit the patches to the linux-scsi list.
+
+* Patches submitted to linux-scsi but which need to go through another
+  subsystem tree will be set to "Not Applicable" status.
+
+* Patches which require rework will be set to "Changes Requested" status.
+
+* Patches which have been obsoleted by a later version will be set to
+  "Superceded" status.
