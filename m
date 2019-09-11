@@ -2,114 +2,86 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA400ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B2CC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD272085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9388C20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568217103;
+	bh=Uczy1nWWXP1lJHSzhWk6sxFS/eif8Lw60mqF97ksP3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuopZQAq4DAIG212rUMsORH6aGWrdekp3PVkxUcNYGzdp/Pn7+X6Cn4V4JSk26QVH
+	 WPaTnlQDhiOhvhM1+0B7bYDMpJzpyej9gC1TPE56pzKBCNNpjA9iWM5tChO4ykSdC+
+	 ntNhQeXMDIVcQmo0/88ecjKoPONuW9R/pj/bxwow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfIKPvL (ORCPT
+        id S1728814AbfIKPvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:51:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56448 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 11:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbfIKPvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:51:11 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728298AbfIKPvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:51:42 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E1B487E423
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 15:51:10 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id j2so2435967wre.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 08:51:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MYNEXJF4GkgPzBLfLPqtcFS1AbXG16xNG5ruRxPdF1M=;
-        b=IHg4k/EoEJOZsL1hJmQblePN3nEMQDHKfcdnW2ariZVVqHrCCttcDzvgcfsJWEdK3N
-         pAPfJef/fWXsbd5yK6NFp11+h/bAz+XENhmcNVoKjI4UXg8shD8LuMkSw09civ7bmbw2
-         hysMuQhxrjO1aHhH/UNZmWb9czUdWlrHX9n+LfZ4wWxS4k/I/3f9xWQnWf0yOwJ+UU+Q
-         2IZfQDzgPV4bpJUK5CaM5DM/s18fRJdg3DjD7wVoi1CcxBGrZwx1qcIw8qjD/SZ3+QbI
-         A7/jgwAVD2S3VOZfdEOqFfnPpULsFoustci9ZMWwBBQc/IGiDvjQ+Y1dcEK0QOATsPR/
-         K8Xg==
-X-Gm-Message-State: APjAAAVW3sqKlseLZ7tjNdy2waXAyostQuUArYhVEe2Vw55DKaU6+vwn
-        3+TBE7KgleE35XnOOPEqk4Tg+4iG0jbppY9GNOjsLtcr+6cUQZGkYTUO6KTmfrDJG2TFe9BFLqi
-        h/YiBk0cZKlcOKOWJ9sCKp3Cg
-X-Received: by 2002:a7b:c761:: with SMTP id x1mr4475055wmk.100.1568217069595;
-        Wed, 11 Sep 2019 08:51:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwrcjV0TF/QpLhw2Hb2TkuwW5WlkfcWes3bPsKS74TJB47gt2uRH2r+YUum/UKrt2ooDWkz7w==
-X-Received: by 2002:a7b:c761:: with SMTP id x1mr4475030wmk.100.1568217069325;
-        Wed, 11 Sep 2019 08:51:09 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:102b:3795:6714:7df6? ([2001:b07:6468:f312:102b:3795:6714:7df6])
-        by smtp.gmail.com with ESMTPSA id r65sm4352320wmr.9.2019.09.11.08.51.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2019 08:51:08 -0700 (PDT)
-Subject: Re: [PATCH 0/3] fix emulation error on Windows bootup
-To:     Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b35c8b24-7531-5a5d-1518-eaf9567359ae@redhat.com>
-Date:   Wed, 11 Sep 2019 17:51:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A322085B;
+        Wed, 11 Sep 2019 15:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568217100;
+        bh=Uczy1nWWXP1lJHSzhWk6sxFS/eif8Lw60mqF97ksP3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SH65DPofMkz2oRMUW1teQt1DcLR/MLtCe/iriqPc6UgvRohdq5uNgw33jpXQ7EvQr
+         PExhgtkYd1u/LIK2La6XBJGj2Tkx1gRcQ8ltIgUIGWDXmqE+T7EeqvMPPPxJtRBPYM
+         wi0vLwXsKgZUJlND0mqhU4DlGxM3IWaPVXwtunEI=
+Date:   Wed, 11 Sep 2019 16:51:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
+        ben@decadent.org.uk, tglx@linutronix.de, labbott@redhat.com,
+        andrew.cooper3@citrix.com, tsoni@codeaurora.org,
+        keescook@chromium.org, tony.luck@intel.com,
+        linux-doc@vger.kernel.org, dan.j.williams@intel.com
+Subject: Re: [PATCH 4/4] Documentation/process: add transparency promise to
+ list subscription
+Message-ID: <20190911155137.GC14152@kroah.com>
+References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
+ <20190910172652.4FFF6CA3@viggo.jf.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1566911210-30059-1-git-send-email-jan.dakinevich@virtuozzo.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910172652.4FFF6CA3@viggo.jf.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/19 15:07, Jan Dakinevich wrote:
-> This series intended to fix (again) a bug that was a subject of the 
-> following change:
+On Tue, Sep 10, 2019 at 10:26:52AM -0700, Dave Hansen wrote:
 > 
->   6ea6e84 ("KVM: x86: inject exceptions produced by x86_decode_insn")
+> From: Dave Hansen <dave.hansen@linux.intel.com>
 > 
-> Suddenly, that fix had a couple mistakes. First, ctxt->have_exception was 
-> not set if fault happened during instruction decoding. Second, returning 
-> value of inject_emulated_instruction was used to make the decision to 
-> reenter guest, but this could happen iff on nested page fault, that is not 
-> the scope where this bug could occur.
+> Transparency is good.  It it essential for everyone working under an
+> embargo to know who is involved and who else is a "knower".  Being
+> transparent allows everyone to always make informed decisions about
+> ongoing participating in a mitigation effort.
 > 
-> However, I have still deep doubts about 3rd commit in the series. Could
-> you please, make me an advise if it is the correct handling of guest page 
-> fault?
-> 
-> Jan Dakinevich (3):
->   KVM: x86: fix wrong return code
->   KVM: x86: set ctxt->have_exception in x86_decode_insn()
->   KVM: x86: always stop emulation on page fault
-> 
->  arch/x86/kvm/emulate.c | 4 +++-
->  arch/x86/kvm/x86.c     | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
+> Add a step to the subscription process which will notify existing
+> subscribers when a new one is added.
 
-Queued, thanks.  I added the WARN_ON_ONCE that Sean suggested.
+As I don't run the mailing list software here, I don't know how much of
+a burden adding this support to it would be, so I'll defer to Thomas.
 
-Paolo
+We could just have something like "All new people need to announce
+themselves" rule like many other private mailing lists have at times.
+That would put the burden on the new person once, instead of the list
+manager for every time a new person is added.
+
+thanks,
+
+greg k-h
