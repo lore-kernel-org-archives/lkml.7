@@ -2,157 +2,172 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C527CC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5854AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9176F20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568208914;
-	bh=1CRAQnptUQ4fQ04kIuiUfCC3gBXzF737L9SvzOevbac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tFloYlAKrYYe2CYsS1kzLdpCafBEqYUK8HxOxV/CxxDCtiq9A+VmgmcDG2c0tTTSO
-	 brHfG3r3XlGS/FqOI8PI3mKvR3GIsDKRD4Q7wVNdqXvMteQu0EWNkYTG3obK+UCF36
-	 ar8cUcVu2AXgQFLyiQgo0yOvby9oMuvFTLviJdro=
+	by mail.kernel.org (Postfix) with ESMTP id 2228A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="OcLNUXkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfIKNfN (ORCPT
+        id S1727979AbfIKNh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:35:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfIKNfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:35:13 -0400
-Received: from linux-8ccs (unknown [92.117.136.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 130002084D;
-        Wed, 11 Sep 2019 13:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568208911;
-        bh=1CRAQnptUQ4fQ04kIuiUfCC3gBXzF737L9SvzOevbac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vx40CWwnYOZaGQp9qelZ59grtAhs4U/GgPAcPKAtQRp22lMWc5KkeO4z3YeGLx3Xb
-         kLLtJWWAOL3FIbBX5fSprpUm9DAuJdBJaullDLf8GI0uNS41cFquXQ97wDT7y0rZsk
-         DpaX9JtFLvf7qaJ7Oo1eZoyjOpZB/YDrdDQ/bwEM=
-Date:   Wed, 11 Sep 2019 15:35:06 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        gregkh@linuxfoundation.org,
-        Matthias Maennich <maennich@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
- namespace offset
-Message-ID: <20190911133506.GB7837@linux-8ccs>
-References: <20190911122646.13838-1-will@kernel.org>
+        Wed, 11 Sep 2019 09:37:28 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:1606 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfIKNh2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:37:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 7097D3F738;
+        Wed, 11 Sep 2019 15:37:20 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=OcLNUXkS;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IHW01YaWejTE; Wed, 11 Sep 2019 15:37:16 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 184183F734;
+        Wed, 11 Sep 2019 15:37:13 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 7EE4F3601AA;
+        Wed, 11 Sep 2019 15:37:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568209033; bh=3PG6dFlWy4tEZtyh5/983yf4ihrAZIfnFudxICqTBHc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OcLNUXkSt2k+0/N++IkRpPqmWylBGN+sIwbM85W0AEJhGtK1DqkhvjvWXRDUafbqP
+         nPrUbSVRyJHkmOjRfhAbgcrHhViBbxkqfz6BlnPKtdY52+yY4NBfzBncHi8zwQaSUf
+         Ww8v/qSNU815lB0Ku2OZPgTZivBbeb3/7X6rl96g=
+Subject: Re: [PATCH v2 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
+        "linux-graphics-maintainer@vmware.com" 
+        <linux-graphics-maintainer@vmware.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20190911124022.22423-1-thomas_os@shipmail.org>
+ <20190911124022.22423-2-thomas_os@shipmail.org>
+ <b63de7ad-21e3-b825-91a4-c4317e82b6c3@amd.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <cb55bcfa-2767-9e32-989f-9688c1bc99df@shipmail.org>
+Date:   Wed, 11 Sep 2019 15:37:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190911122646.13838-1-will@kernel.org>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b63de7ad-21e3-b825-91a4-c4317e82b6c3@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Will Deacon [11/09/19 13:26 +0100]:
->Commit 8651ec01daed ("module: add support for symbol namespaces.")
->broke linking for arm64 defconfig:
->
->  | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
->  | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
->  | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
->  | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
->
->This is because the dummy initialisation of the 'namespace_offset' field
->in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
->support for PREL32 locations uses an offset from an absolute address (0)
->in an effort to trick 'offset_to_pointer' into behaving as a NOP,
->allowing non-namespaced symbols to be treated in the same way as those
->belonging to a namespace.
->
->Unfortunately, place-relative relocations require a symbol reference
->rather than an absolute value and, although x86 appears to get away with
->this due to placing the kernel text at the top of the address space, it
->almost certainly results in a runtime failure if the kernel is relocated
->dynamically as a result of KASLR.
->
->Rework 'namespace_offset' so that a value of 0, which cannot occur for a
->valid namespaced symbol, indicates that the corresponding symbol does
->not belong to a namespace.
->
->Cc: Matthias Maennich <maennich@google.com>
->Cc: Jessica Yu <jeyu@kernel.org>
->Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->Cc: Catalin Marinas <catalin.marinas@arm.com>
->Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
->Reported-by: kbuild test robot <lkp@intel.com>
->Signed-off-by: Will Deacon <will@kernel.org>
->---
->
->Please note that I've not been able to test this at LPC, but it's been
->submitted to kernelci.
+On 9/11/19 3:27 PM, Lendacky, Thomas wrote:
+> On 9/11/19 7:40 AM, Thomas Hellström (VMware) wrote:
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+>> When SEV or SME is enabled and active, vm_get_page_prot() typically
+>> returns with the encryption bit set. This means that users of
+>> pgprot_modify(, vm_get_page_prot()) (mprotect_fixup, do_mmap) end up with
+>> a value of vma->vm_pg_prot that is not consistent with the intended
+>> protection of the PTEs. This is also important for fault handlers that
+>> rely on the VMA vm_page_prot to set the page protection. Fix this by
+>> not allowing pgprot_modify() to change the encryption bit, similar to
+>> how it's done for PAT bits.
+>>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Christoph Hellwig <hch@infradead.org>
+>> Cc: Christian König <christian.koenig@amd.com>
+>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+>> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+>> ---
+>>   arch/x86/include/asm/pgtable.h       | 7 +++++--
+>>   arch/x86/include/asm/pgtable_types.h | 2 +-
+>>   2 files changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+>> index 0bc530c4eb13..1e6bb4c25334 100644
+>> --- a/arch/x86/include/asm/pgtable.h
+>> +++ b/arch/x86/include/asm/pgtable.h
+>> @@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>>   	return __pmd(val);
+>>   }
+>>   
+>> -/* mprotect needs to preserve PAT bits when updating vm_page_prot */
+>> +/*
+>> + * mprotect needs to preserve PAT and encryption bits when updating
+>> + * vm_page_prot
+>> + */
+>>   #define pgprot_modify pgprot_modify
+>>   static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>>   {
+>>   	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+>> -	pgprotval_t addbits = pgprot_val(newprot);
+>> +	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
+>>   	return __pgprot(preservebits | addbits);
+>>   }
+>>   
+>> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+>> index b5e49e6bac63..e13084b3d6cb 100644
+>> --- a/arch/x86/include/asm/pgtable_types.h
+>> +++ b/arch/x86/include/asm/pgtable_types.h
+>> @@ -123,7 +123,7 @@
+>>    */
+>>   #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+>>   			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+>> -			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+>> +			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | sme_me_mask)
+> There is a _PAGE_ENC definition that you could use to make this more
+> consistent with the current definition.
 
-Thanks for fixing this so quickly. I can confirm that this fixes the
-build for arm64 defconfig and x86 built fine for me as well. I'll wait
-a bit and apply this at the end of the day in case Matthias or anybody
-else would like to confirm/test.
+Ah yes.
+
+I'll wait a bit to see if there are more concerns and include this in 
+the next version.
 
 Thanks,
 
-Jessica
+Thomas
 
-> include/asm-generic/export.h | 2 +-
-> include/linux/export.h       | 2 +-
-> kernel/module.c              | 2 ++
-> 3 files changed, 4 insertions(+), 2 deletions(-)
+
+
 >
->diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
->index e2b5d0f569d3..d0912c7ac2fc 100644
->--- a/include/asm-generic/export.h
->+++ b/include/asm-generic/export.h
->@@ -17,7 +17,7 @@
+> Thanks,
+> Tom
 >
-> .macro __put, val, name
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->-	.long	\val - ., \name - ., 0 - .
->+	.long	\val - ., \name - ., 0
-> #elif defined(CONFIG_64BIT)
-> 	.quad	\val, \name, 0
-> #else
->diff --git a/include/linux/export.h b/include/linux/export.h
->index 2c5468d8ea9a..ef5d015d754a 100644
->--- a/include/linux/export.h
->+++ b/include/linux/export.h
->@@ -68,7 +68,7 @@ extern struct module __this_module;
-> 	    "__ksymtab_" #sym ":				\n"	\
-> 	    "	.long	" #sym "- .				\n"	\
-> 	    "	.long	__kstrtab_" #sym "- .			\n"	\
->-	    "	.long	0 - .					\n"	\
->+	    "	.long	0					\n"	\
-> 	    "	.previous					\n")
->
-> struct kernel_symbol {
->diff --git a/kernel/module.c b/kernel/module.c
->index f76efcf2043e..7ab244c4e1ba 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -547,6 +547,8 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
-> static const char *kernel_symbol_namespace(const struct kernel_symbol *sym)
-> {
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->+	if (!sym->namespace_offset)
->+		return NULL;
-> 	return offset_to_ptr(&sym->namespace_offset);
-> #else
-> 	return sym->namespace;
->-- 
->2.23.0.162.g0b9fbb3734-goog
->
+>>   #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+>>   
+>>   /*
+>>
+
