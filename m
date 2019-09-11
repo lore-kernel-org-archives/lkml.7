@@ -2,171 +2,198 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65164C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA42ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3086C206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568214977;
-	bh=oH1PCIhuJxx+zZdUOIQWsOSLw//F7pZDG6B3I3NuI0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uevojCuhdM6hmYe7yTM8a1SA5979EZilLDppyxc7yrREH/V5CXotnLpJwI/I4XQ/9
-	 /2Upfz/ncpd915cIPgiJqC4YRNir7zrQ52r74UyOdN1hOaf21ML6Yyx2bOYmSctMBe
-	 VurV+pLEQd/eYFgYZLLVZPdvq+kljHeYMpbVjbWA=
+	by mail.kernel.org (Postfix) with ESMTP id B08FE21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="P+MDd2FC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfIKPQQ (ORCPT
+        id S1728383AbfIKPTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:16:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50452 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728513AbfIKPQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:16:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 78FB8B7DF;
-        Wed, 11 Sep 2019 15:16:13 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 17:16:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH] memcg, kmem: do not fail __GFP_NOFAIL charges
-Message-ID: <20190911151612.GI4023@dhcp22.suse.cz>
-References: <31131c2d-a936-8bbf-e58d-a3baaa457340@gmail.com>
- <20190906125608.32129-1-mhocko@kernel.org>
- <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
- <20190909112245.GH27159@dhcp22.suse.cz>
- <20190911120002.GQ4023@dhcp22.suse.cz>
- <20190911073740.b5c40cd47ea845884e25e265@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911073740.b5c40cd47ea845884e25e265@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 11 Sep 2019 11:19:23 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45002 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfIKPTX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:19:23 -0400
+Received: by mail-qk1-f194.google.com with SMTP id i78so21131487qke.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 08:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZU9ZAjmx+sYl629AtpqCVueI4p9/wYdOG6Cg3kJEbbA=;
+        b=P+MDd2FC4Tc061IIYYh+fnI7tLbvNzMEPGfTHDCLdu2V2A1iaUfoGPOyKo1ZcCp2tM
+         vDlQak9qwdFXMTF01sdF9NaWHYqP1Z/eiHE2pYAG4FrrFsTi2bCatToJIx7hX7STqCMC
+         e85SYvrxtgXBNTGH/ehZFacewWsbP3akXbDmXt6EUDu/lp7mYlWlv1TyYoYV+BNcPW4F
+         TyQwa7/S4+maJvqyBvr3GUHM1ID8EHp3pq+TdjfeKrIVUgE8Tw3I5En61hXz9Gu0JACc
+         WwgWy0IYjBit1gDB8Hqa1cVn0uxte+0fby7CvbIJdCpE5oqr9900yYQW4eRFZ2W0lIU6
+         oFtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZU9ZAjmx+sYl629AtpqCVueI4p9/wYdOG6Cg3kJEbbA=;
+        b=jIU5KVap59D3aJZofaQf01qibb63k9GiUd5+1OrBWoI7w7mRJ4aqT6EezB80NqvekO
+         ap+X4GbzHl/f0FZoOTS8mekkv2L2kLIVluT5z4f7eq0sB198Qo+ENLgnPD1a7VqmR80U
+         wyrLOnf14EgBpdiyQjwaRFPyNr8Z6JTB5R02W6hA1xE4n83cGuedEQKLBes5F/Qnycir
+         soYq6Pp8A6rxReoz4eH1ynCMZrwaRaXKZwDkPpPTAXBIWb2fAl8c+drDu5t05VNogJz8
+         olx4ViIrC2F//kLvhP4RvuYVjTJrRCuCPqtwmR2oP72b7GHBdZBsPyXBXvyIN09el+Xc
+         b4vw==
+X-Gm-Message-State: APjAAAVUq1t5OUKpRMbjroMcRokRjORTcRP8jyEfRKmJHjLB5cE2Lu6U
+        YFf5pkBTXK6ZjXTiviBZZ4opRQ==
+X-Google-Smtp-Source: APXvYqwsPae0vNSwigouHMUxOlp4cnOUahDfeE+W9gnOtVKDwdJdfx2UhKXwYdremGpJnC+o/jmyHQ==
+X-Received: by 2002:a37:49d6:: with SMTP id w205mr35829035qka.191.1568215161746;
+        Wed, 11 Sep 2019 08:19:21 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g194sm11256279qke.46.2019.09.11.08.19.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 08:19:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
+Date:   Wed, 11 Sep 2019 11:19:19 -0400
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
+References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 07:37:40, Andrew Morton wrote:
-> On Wed, 11 Sep 2019 14:00:02 +0200 Michal Hocko <mhocko@kernel.org> wrote:
-> 
-> > On Mon 09-09-19 13:22:45, Michal Hocko wrote:
-> > > On Fri 06-09-19 11:24:55, Shakeel Butt wrote:
-> > [...]
-> > > > I wonder what has changed since
-> > > > <http://lkml.kernel.org/r/20180525185501.82098-1-shakeelb@google.com/>.
-> > > 
-> > > I have completely forgot about that one. It seems that we have just
-> > > repeated the same discussion again. This time we have a poor user who
-> > > actually enabled the kmem limit.
-> > > 
-> > > I guess there was no real objection to the change back then. The primary
-> > > discussion revolved around the fact that the accounting will stay broken
-> > > even when this particular part was fixed. Considering this leads to easy
-> > > to trigger crash (with the limit enabled) then I guess we should just
-> > > make it less broken and backport to stable trees and have a serious
-> > > discussion about discontinuing of the limit. Start by simply failing to
-> > > set any limit in the current upstream kernels.
-> > 
-> > Any more concerns/objections to the patch? I can add a reference to your
-> > earlier post Shakeel if you want or to credit you the way you prefer.
-> > 
-> > Also are there any objections to start deprecating process of kmem
-> > limit? I would see it in two stages
-> > - 1st warn in the kernel log
-> > 	pr_warn("kmem.limit_in_bytes is deprecated and will be removed.
-> > 	        "Please report your usecase to linux-mm@kvack.org if you "
-> > 		"depend on this functionality."
-> 
-> pr_warn_once() :)
-> 
-> > - 2nd fail any write to kmem.limit_in_bytes
-> > - 3rd remove the control file completely
-> 
-> Sounds good to me.
-
-Here we go
-
-From 512822e551fe2960040c23b12c7b27a5fdab9013 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Wed, 11 Sep 2019 17:02:33 +0200
-Subject: [PATCH] memcg, kmem: deprecate kmem.limit_in_bytes
-
-Cgroup v1 memcg controller has exposed a dedicated kmem limit to users
-which turned out to be really a bad idea because there are paths which
-cannot shrink the kernel memory usage enough to get below the limit
-(e.g. because the accounted memory is not reclaimable). There are cases
-when the failure is even not allowed (e.g. __GFP_NOFAIL). This means
-that the kmem limit is in excess to the hard limit without any way to
-shrink and thus completely useless. OOM killer cannot be invoked to
-handle the situation because that would lead to a premature oom killing.
-
-As a result many places might see ENOMEM returning from kmalloc and
-result in unexpected errors. E.g. a global OOM killer when there is a
-lot of free memory because ENOMEM is translated into VM_FAULT_OOM in #PF
-path and therefore pagefault_out_of_memory would result in OOM killer.
-
-Please note that the kernel memory is still accounted to the overall
-limit along with the user memory so removing the kmem specific limit
-should still allow to contain kernel memory consumption. Unlike the kmem
-one, though, it invokes memory reclaim and targeted memcg oom killing if
-necessary.
-
-Start the deprecation process by crying to the kernel log. Let's see
-whether there are relevant usecases and simply return to EINVAL in the
-second stage if nobody complains in few releases.
-
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- Documentation/admin-guide/cgroup-v1/memory.rst | 3 +++
- mm/memcontrol.c                                | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
-index 41bdc038dad9..e53fc2f31549 100644
---- a/Documentation/admin-guide/cgroup-v1/memory.rst
-+++ b/Documentation/admin-guide/cgroup-v1/memory.rst
-@@ -87,6 +87,9 @@ Brief summary of control files.
- 				     node
- 
-  memory.kmem.limit_in_bytes          set/show hard limit for kernel memory
-+                                     This knob is deprecated it shouldn't be
-+                                     used. It is planned to be removed in
-+                                     a foreseeable future.
-  memory.kmem.usage_in_bytes          show current kernel memory allocation
-  memory.kmem.failcnt                 show the number of kernel memory usage
- 				     hits limits
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index e18108b2b786..113969bc57e8 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3518,6 +3518,9 @@ static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
- 			ret = mem_cgroup_resize_max(memcg, nr_pages, true);
- 			break;
- 		case _KMEM:
-+			pr_warn_once("kmem.limit_in_bytes is deprecated and will be removed. "
-+				     "Please report your usecase to linux-mm@kvack.org if you "
-+				     "depend on this functionality.\n");
- 			ret = memcg_update_kmem_max(memcg, nr_pages);
- 			break;
- 		case _TCP:
--- 
-2.20.1
 
 
--- 
-Michal Hocko
-SUSE Labs
+> On Sep 11, 2019, at 4:39 AM, Walter Wu <walter-zh.wu@mediatek.com> =
+wrote:
+>=20
+> This patch is KASAN's report adds the alloc/free stack for page =
+allocator
+> in order to help programmer to see memory corruption caused by the =
+page.
+>=20
+> By default, KASAN doesn't record alloc or free stack for page =
+allocator.
+> It is difficult to fix up the page use-after-free or double-free =
+issue.
+>=20
+> We add the following changing:
+> 1) KASAN enable PAGE_OWNER by default to get the alloc stack of the =
+page.
+> 2) Add new feature option to get the free stack of the page.
+>=20
+> The new feature KASAN_DUMP_PAGE depends on DEBUG_PAGEALLOC, it will =
+help
+> to record free stack of the page, it is very helpful for solving the =
+page
+> use-after-free or double-free issue.
+>=20
+> When KASAN_DUMP_PAGE is enabled then KASAN's report will show the last
+> alloc and free stack of the page, it should be:
+>=20
+> BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+> Write of size 1 at addr ffffffc0d60e4000 by task cat/115
+> ...
+> prep_new_page+0x1c8/0x218
+> get_page_from_freelist+0x1ba0/0x28d0
+> __alloc_pages_nodemask+0x1d4/0x1978
+> kmalloc_order+0x28/0x58
+> kmalloc_order_trace+0x28/0xe0
+> kmalloc_pagealloc_uaf+0x2c/0x80
+> page last free stack trace:
+> __free_pages_ok+0x116c/0x1630
+> __free_pages+0x50/0x78
+> kfree+0x1c4/0x250
+> kmalloc_pagealloc_uaf+0x38/0x80
+>=20
+> Changes since v1:
+> - slim page_owner and move it into kasan
+> - enable the feature by default
+>=20
+> Changes since v2:
+> - enable PAGE_OWNER by default
+> - use DEBUG_PAGEALLOC to get page information
+>=20
+> cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> cc: Vlastimil Babka <vbabka@suse.cz>
+> cc: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> ---
+> lib/Kconfig.kasan | 15 +++++++++++++++
+> 1 file changed, 15 insertions(+)
+>=20
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 4fafba1a923b..4d59458c0c5a 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -41,6 +41,7 @@ config KASAN_GENERIC
+> 	select SLUB_DEBUG if SLUB
+> 	select CONSTRUCTORS
+> 	select STACKDEPOT
+> +	select PAGER_OWNER
+> 	help
+> 	  Enables generic KASAN mode.
+> 	  Supported in both GCC and Clang. With GCC it requires version =
+4.9.2
+> @@ -63,6 +64,7 @@ config KASAN_SW_TAGS
+> 	select SLUB_DEBUG if SLUB
+> 	select CONSTRUCTORS
+> 	select STACKDEPOT
+> +	select PAGER_OWNER
+> 	help
+> 	  Enables software tag-based KASAN mode.
+> 	  This mode requires Top Byte Ignore support by the CPU and =
+therefore
+> @@ -135,6 +137,19 @@ config KASAN_S390_4_LEVEL_PAGING
+> 	  to 3TB of RAM with KASan enabled). This options allows to =
+force
+> 	  4-level paging instead.
+>=20
+> +config KASAN_DUMP_PAGE
+> +	bool "Dump the last allocation and freeing stack of the page"
+> +	depends on KASAN
+> +	select DEBUG_PAGEALLOC
+> +	help
+> +	  By default, KASAN enable PAGE_OWNER only to record alloc stack
+> +	  for page allocator. It is difficult to fix up page =
+use-after-free
+> +	  or double-free issue.
+> +	  This feature depends on DEBUG_PAGEALLOC, it will extra record
+> +	  free stack of page. It is very helpful for solving the page
+> +	  use-after-free or double-free issue.
+> +	  This option will have a small memory overhead.
+> +
+> config TEST_KASAN
+> 	tristate "Module for testing KASAN for bug detection"
+> 	depends on m && KASAN
+> =E2=80=94=20
+
+The new config looks redundant and confusing. It looks to me more of a =
+document update
+in Documentation/dev-tools/kasan.txt to educate developers to select =
+PAGE_OWNER and
+DEBUG_PAGEALLOC if needed.
+
