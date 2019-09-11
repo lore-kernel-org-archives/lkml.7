@@ -2,114 +2,109 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC44C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3127C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6A72089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hbCKQv4p"
+	by mail.kernel.org (Postfix) with ESMTP id D40DB222BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfIKMJa (ORCPT
+        id S1727931AbfIKMKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:09:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33603 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfIKMJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:09:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id u16so24295662wrr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=o7ho9r/iGAZKzQvAqY97r1IQvfNPAaA5ba/IicHvJwY=;
-        b=hbCKQv4py8zWlw03EKgXl+QThGu53cVPGc8fO4vQ7/CX0yf/KLp4ExowJzXLbBZ/e/
-         3xOS8KJIrctJKezc458qBgahXgbvhMyQnRXNIpBUKyUdLhST6KaTmUh4vduaWSHtc4By
-         Y9T+uW8NUp8MAFRXVroJkKRzzUSJ23TigHPCU1AEL3SUguyPLsVOsY1p8gLGUeRteVC3
-         ceDfFRVmplx7J/u6kv9utEj0K3xVPVGjZwaQ3PoKUDSZ3GSYgJnclMVPhICpzOzARL9N
-         gu42UYqMYWmM76Ea1iecVl6+IjbYNQ9CBPCvPKgefKrsecEmcqqvseRF8qM8sNSkhuIr
-         tZOA==
+        Wed, 11 Sep 2019 08:10:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58746 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727904AbfIKMKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:10:06 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A31DEAC5F9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:10:06 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id c8so9545684qtd.20
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:10:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o7ho9r/iGAZKzQvAqY97r1IQvfNPAaA5ba/IicHvJwY=;
-        b=oQnS4xK0xIYFSUPnB+G4Hkw8w+Oz9rPwr5UBLIWrhuNmxR+lf4+87/2HdPFbn1GwDv
-         RJYM/pGrSZDKT+nLGKfkpjUzdH4f9XkjWAnmsT44XsLEzxLk/Xs0FjXx6Jm+qFRiIgbn
-         z373F3JLWRQY4FxXiRzpynGLh/34WI+znjcYRHKuxxVDJ2ZoyCygJMjWQNz7Cr4gioHp
-         muQ6/NMwfZXSITB2aR7SdGbXS1E9dYsDzbugYZb3jytx1uypeiIwhCxUg9eqntykNfKp
-         8T+zXa/MpTmhDscm84L8ckr4p9anfnQkxrAvY3O1MpD8PnkbY0habot26KoIhMqEDx6+
-         EzZg==
-X-Gm-Message-State: APjAAAWRAxiOtFuhjCUQcJCgSRTdlrPJWyxa6QG2lZRLFtSCPF7Y2q4o
-        R4qVbGsbao+ZOwkkiOGmJPvR5Q==
-X-Google-Smtp-Source: APXvYqxe6ABFSX/fr9kAyogvKjvlUZiuw+kj/+U6iGNWVgjD3zHmuy8L8HzR76Xsw3m0waD0JpWu5w==
-X-Received: by 2002:a5d:4709:: with SMTP id y9mr29734798wrq.129.1568203766000;
-        Wed, 11 Sep 2019 05:09:26 -0700 (PDT)
-Received: from localhost.localdomain ([148.69.85.38])
-        by smtp.gmail.com with ESMTPSA id n7sm20135743wrx.42.2019.09.11.05.09.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=nO3SYHGDRWEzxT3/abFXM0Gu89GIuWvlxuxu/SDZ8iw=;
+        b=NaV3wCE/DPhHR4bkVPOTvmbtXcsFAV6J2C59Ou87gH4y91I+2rVPV1GvlQcyn+aP7I
+         3oHszQFjMZ9DhpDFMM+UE62UjlrYJaFq4fiWQn/k1gio+2tu3PQYmzn6ZzRZHR0SdGsx
+         Oc2EHiYdP7UuTxjdzHwrdGsh8X1JLAdhBFpnBZdLkPwfOTvq3uoemlELTRS6R+8kv09T
+         qzRnE1PtoXfNxsPOlSv32vyQAIf3cQnnAO+fTGmT1SreI6vAYV0j0X3d+VAy52Wr71y6
+         XbJkrubSuQjQS77JBAHrFVmVKzg4DbmlRDBD9LRvxlf1PRh9w1gq4YE0jAPahJk56Ey7
+         zMQQ==
+X-Gm-Message-State: APjAAAU7EzExwGUwsTE1FXWd2VeCRLalg3M2P8A6tVdr8naP5ZiWUu6k
+        ustbFKxviTV25/AZMV2odKLPfXwutQssrpKBlQc3lpghFHo9mekdAeUziIsxoyIbojEmuHuWpWw
+        YYDFM3IxEHGf2gGMbDlQJVbPs
+X-Received: by 2002:ad4:5494:: with SMTP id q20mr21893382qvy.8.1568203805669;
+        Wed, 11 Sep 2019 05:10:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxpfN8qjonuIyL61v7mAfTW2LcQ+Fqop0jhY4LwumZnvN9ZVZG/z8lBS94ag/ZEibKr7bFsQA==
+X-Received: by 2002:ad4:5494:: with SMTP id q20mr21893369qvy.8.1568203805473;
+        Wed, 11 Sep 2019 05:10:05 -0700 (PDT)
+Received: from redhat.com ([80.74.107.118])
+        by smtp.gmail.com with ESMTPSA id h29sm12975276qtb.46.2019.09.11.05.10.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 05:09:25 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/11] mmc: mtk-sd: Re-store SDIO IRQs mask at system resume
-Date:   Wed, 11 Sep 2019 14:09:20 +0200
-Message-Id: <20190911120920.9026-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Sep 2019 05:10:04 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 08:10:00 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v2] vhost: block speculation of translated descriptors
+Message-ID: <20190911120908.28410-1-mst@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.22.0.678.g13338e74b8
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-the driver. However, this still means msdc_runtime_suspend|resume() gets
-called during system suspend/resume, via pm_runtime_force_suspend|resume().
+iovec addresses coming from vhost are assumed to be
+pre-validated, but in fact can be speculated to a value
+out of range.
 
-This means during system suspend/resume, the register context of the mtk-sd
-device most likely loses its register context, even in cases when SDIO IRQs
-have been enabled.
+Userspace address are later validated with array_index_nospec so we can
+be sure kernel info does not leak through these addresses, but vhost
+must also not leak userspace info outside the allowed memory table to
+guests.
 
-To re-enable the SDIO IRQs during system resume, the mtk-sd driver
-currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-the SDIO card, but this isn't the recommended solution. Instead, it's
-better to deal with this locally in the mtk-sd driver, so let's do that.
+Following the defence in depth principle, make sure
+the address is not validated out of node range.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Tested-by: Jason Wang <jasowang@redhat.com>
 ---
 
-Changes in v3:
-	- Fix the code to do the restore in msdc_restore_reg().
+changes from v1: fix build on 32 bit
 
----
- drivers/mmc/host/mtk-sd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/vhost/vhost.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 6946bb040a28..189e42674d85 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -2435,6 +2435,9 @@ static void msdc_restore_reg(struct msdc_host *host)
- 	} else {
- 		writel(host->save_para.pad_tune, host->base + tune_reg);
- 	}
-+
-+	if (sdio_irq_claimed(host->mmc))
-+		__msdc_enable_sdio_irq(host, 1);
- }
- 
- static int msdc_runtime_suspend(struct device *dev)
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 5dc174ac8cac..34ea219936e3 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2071,8 +2071,10 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+ 		_iov = iov + ret;
+ 		size = node->size - addr + node->start;
+ 		_iov->iov_len = min((u64)len - s, size);
+-		_iov->iov_base = (void __user *)(unsigned long)
+-			(node->userspace_addr + addr - node->start);
++		_iov->iov_base = (void __user *)
++			((unsigned long)node->userspace_addr +
++			 array_index_nospec((unsigned long)(addr - node->start),
++					    node->size));
+ 		s += size;
+ 		addr += size;
+ 		++ret;
 -- 
-2.17.1
-
+MST
