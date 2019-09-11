@@ -2,69 +2,107 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C270FC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4BBC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A88620838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6820D20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfIKQHh (ORCPT
+        id S1729033AbfIKQH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:07:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35907 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbfIKQHg (ORCPT
+        Wed, 11 Sep 2019 12:07:59 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52526 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729017AbfIKQH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:07:36 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i859U-000298-Ft; Wed, 11 Sep 2019 16:07:28 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@oss.oracle.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ocfs2: fix spelling mistake "ambigous" -> "ambiguous"
-Date:   Wed, 11 Sep 2019 17:07:28 +0100
-Message-Id: <20190911160728.24322-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Sep 2019 12:07:59 -0400
+Received: from callcc.thunk.org (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8BG7Uor002355
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 12:07:32 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 7CEFF42049E; Wed, 11 Sep 2019 12:07:29 -0400 (EDT)
+Date:   Wed, 11 Sep 2019 12:07:29 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190911160729.GF2740@mit.edu>
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc>
+ <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc>
+ <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Sep 10, 2019 at 07:21:54PM +0100, Linus Torvalds wrote:
+> On Tue, Sep 10, 2019 at 6:33 PM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
+> >
+> > While gnome-session is obviously at fault here by requiring
+> > *blocking* randomness at the boot path, it's still not requesting
+> > much, just (5 * 16) bytes to be exact.
 
-There is a spelling mistake in a mlog_bug_on_msg message. Fix it.
+It doesn't matter how much randomness it's requesting.  With the new
+cryptographic random number generator, the CRNG is either
+initialized.... or it's not.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/ocfs2/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Just out of curiosity, what happens if you apply a patch like this
+> (intentionally whitespace-damaged, I don't want anybody to pick it up
+> without thinking about it) thing...
 
-diff --git a/fs/ocfs2/inode.c b/fs/ocfs2/inode.c
-index 7ad9d6590818..7c9dfd50c1c1 100644
---- a/fs/ocfs2/inode.c
-+++ b/fs/ocfs2/inode.c
-@@ -534,7 +534,7 @@ static int ocfs2_read_locked_inode(struct inode *inode,
- 	 */
- 	mlog_bug_on_msg(!!(fe->i_flags & cpu_to_le32(OCFS2_SYSTEM_FL)) !=
- 			!!(args->fi_flags & OCFS2_FI_FLAG_SYSFILE),
--			"Inode %llu: system file state is ambigous\n",
-+			"Inode %llu: system file state is ambiguous\n",
- 			(unsigned long long)args->fi_blkno);
- 
- 	if (S_ISCHR(le16_to_cpu(fe->i_mode)) ||
--- 
-2.20.1
+> Which I think is what the code really wants - it's only using jiffies
+> because that is the only thing _guaranteed_ to change at all. But with
+> the sum, you get the best of both worlds, and should basically make
+> the entropy estimation use the "better of two counters".
+> 
+> Ted, comments? I'd hate to revert the ext4 thing just because it
+> happens to expose a bad thing in user space.
 
+Unfortuantely, I very much doubt this is going to work.  That's
+because the add_disk_randomness() path is only used for legacy
+/dev/random (which actually only still exists because of some insane
+PCI compliance issues which a number of end users really care about
+--- or they care about because it makes the insane PCI complaince labs
+go away).
+
+Also, because by default, the vast majority of disks have
+/sys/block/XXX/queue/add_random set to zero by default.
+
+So the the way we get entropy these days for initializing the CRNG is
+via the add_interrupt_randomness() path, where do something really
+fast, and we assume that we get enough uncertainity from 8 interrupts
+to give us one bit of entropy (64 interrupts to give us a byte of
+entropy), and that we need 512 bits of entropy to consider the CRNG
+fully initialized.  (Yeah, there's a lot of conservatism in those
+estimates, and so what we could do is decide to say, cut down the
+number of bits needed to initialize the CRNG to be 256 bits, since
+that's the size of the CHACHA20 cipher.)
+
+Ultimately, though, we need to find *some* way to fix userspace's
+assumptions that they can always get high quality entropy in early
+boot, or we need to get over people's distrust of Intel and RDRAND.
+Otherwise, future performance improvements in any part of the system
+which reduces the number of interrupts is always going to potentially
+result in somebody's misconfigured system or badly written
+applications to fail to boot.  :-(
+
+					- Ted
