@@ -2,118 +2,105 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA01EECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55689ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD51121928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568182028;
-	bh=NyFgLdAtL7G7r4VwV0PMLVYuv4D/PpdH1+bqEr6kBWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uQeUv6PGQ1NiOTHhY7seLuTpcBlbWYYja7Ty6C7lQNueZee+B74NYWH2r6+28DCY3
-	 y4SUOlZ3M0V7yxRX7PE7nzgt23IRoLoiZSdxf/FXKMtgTSQCFh0nYMinKy1x683z6f
-	 5glzeFhfQ0L+QvGVz4SFONY8CLfKBps9t1wQX7nc=
+	by mail.kernel.org (Postfix) with ESMTP id 2BC5921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfIKGHH (ORCPT
+        id S1726872AbfIKGIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 02:07:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34930 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfIKGHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 02:07:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g7so23101936wrx.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 23:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WfMAZ45br/Di2RY5jgIjhxqqeQk5rlQZL/Ma6yQGV2w=;
-        b=G0+ibcruLLFVXgwzGOifA/mXRgBnp7n9juLLu6caUueN/7sVmTQRtosDg8+K4O3QXA
-         qPoFMpSzPpFULdkmSYrKMVbugWgazUUnkLqujuwjg/sojtBA8Sz4b+pn1PL9cjy67APm
-         TvBO9trOeSIgCW8pCU+oqcI/TbgcEyXzPSug0xK0WA6p7SOJO16zHoH4ZqvdsmNrWQiX
-         jWnKyIXyfMZpmdj2HVJdfg5BNxyQZU7FPD6wa+55G+D1zXzNsyTBkPao19IzlP0kV1DS
-         7h2jRuIy2k44NnuknyuLD0PKsM7cskdnY7kCCDUb6sDSSShuUYIary0RVdlAE2YxJaC/
-         yBlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WfMAZ45br/Di2RY5jgIjhxqqeQk5rlQZL/Ma6yQGV2w=;
-        b=QzFj8CUv/WSv6iCyJdXH0PSaLVAVqQHksnq3lQ6p/pl5u7jJE0bVKMojp8Pg7qk/fY
-         5TBsixzAfKmMguCe9EzRbwEhFOuQtCBBeC7TZSG5AEygOhBqVHRh1LkUTJxYaEquwdCw
-         GzxFK0Mt410ETy+Y+rma07Xvav+n0Nt0yhYg9rzKg60hmxdNPBra+UqGN9X0Obag472X
-         5URdgz5xLvt4luR7E48tWbb/1Bd8TpefCMtg1+rbLe7ZiITybUPeVlSAoTcKN85UnZn2
-         5y8MrLH2QqdVbTATzSpyp0Ni0usox/7H2Ji/iS1tZZBSi7dXF2vKi6IKh6zb8uNm4AFj
-         MMKQ==
-X-Gm-Message-State: APjAAAXbV5B0qGxeoMq8NUwN8lXRD4XC3sd0JblHN5tLgdEcdxwCAKBE
-        7n/IvjE8EdO13on9C/4dJD8=
-X-Google-Smtp-Source: APXvYqyZVOUkPGs97UVwQ35ctn0ys/nsz7s0hl3kwHBc8r+CMtC2xYcmEzBWNmcsNaa6QbNGNsZYXw==
-X-Received: by 2002:a5d:54cd:: with SMTP id x13mr5753758wrv.12.1568182025419;
-        Tue, 10 Sep 2019 23:07:05 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y3sm18570625wrw.83.2019.09.10.23.07.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 23:07:04 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 08:07:02 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] x86/platform/uv: Setup UV functions for Hubless UV
- Systems
-Message-ID: <20190911060702.GD104115@gmail.com>
-References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
- <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
+        Wed, 11 Sep 2019 02:08:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32425 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726724AbfIKGIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 02:08:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 23:08:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="asc'?scan'208";a="187086206"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga003.jf.intel.com with ESMTP; 10 Sep 2019 23:08:16 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] PTP: introduce new versions of IOCTLs
+In-Reply-To: <20190910154452.GB4016@localhost>
+References: <20190909075940.12843-1-felipe.balbi@linux.intel.com> <20190910154452.GB4016@localhost>
+Date:   Wed, 11 Sep 2019 09:08:12 +0300
+Message-ID: <87h85jnz5f.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-* Mike Travis <mike.travis@hpe.com> wrote:
 
-> +/* Initialize UV hubless systems */
-> +static __init int uv_system_init_hubless(void)
-> +{
-> +	int rc;
-> +
-> +	/* Setup PCH NMI handler */
-> +	uv_nmi_setup_hubless();
-> +
-> +	/* Init kernel/BIOS interface */
-> +	rc = uv_bios_init();
-> +
-> +	return rc;
-> +}
+Hi,
 
-Am I the only one who immediately sees the trivial C transformation 
-through which this function could lose a local variable and become 4 
-lines shorter?
+Richard Cochran <richardcochran@gmail.com> writes:
+> On Mon, Sep 09, 2019 at 10:59:39AM +0300, Felipe Balbi wrote:
+>
+>>  	case PTP_PEROUT_REQUEST:
+>> +	case PTP_PEROUT_REQUEST2:
+>
+> ...
+>
+>> +		if (((req.perout.flags & ~PTP_PEROUT_VALID_FLAGS) ||
+>> +			req.perout.rsv[0] || req.perout.rsv[1] ||
+>> +			req.perout.rsv[2] || req.perout.rsv[3]) &&
+>> +			cmd =3D=3D PTP_PEROUT_REQUEST2) {
+>> +			err =3D -EINVAL;
+>> +			break;
+>
+> ...
+>
+>> +/*
+>> + * Bits of the ptp_perout_request.flags field:
+>> + */
+>> +#define PTP_PEROUT_VALID_FLAGS (~0)
+>
+> I think you meant (0) here, or I am confused...
 
-And this function got two Reviewed-by tags...
+Argh. What a brain fart!
 
-Thanks,
+Sorry about that. I'll go fix that ASAP.
 
-	Ingo
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl14j0wACgkQzL64meEa
+mQaROxAAwYSzWNaWJpQhoKv07ei+YmJcT2fS0MB/KBwDiEpNoHGCVmOEb9feMWFh
+f+8ukRVkRIn8a8okSChN6+CXV8AVXg5p4o23o23WCEbm4an+BgZinKdNKBRHUpqY
+rXGu2RiWll55PmJERJ9gtb1vEmU3fMZFVovAJg++VPvgTr3vy/0q6/J89ldIXPKp
+XeHsTTEeqjs5gnz6Nu5436/JslFKNTJtt09loNqAhUY9GPNfThp3V/o0WTGvFaHz
+HauDeLvZ5677jukO6ZnslzL+Q+cwh2A1L4md7o6W4RQfjz2g4KInuf4woL8msuDc
+3j4pXNUsiae8Fhuy+WFE9+yzjZp1Wo6gB5xJ4utO0JWUvtR9y3v9oy8fDY8kqeY9
+CxmoR6abJ3f+w476kG49NUTtlfjmDhYs8cE+41LXwWuoATttICQMhdBrBXlYda6X
+bTPnp2kUSAWz53qtFUyRntvNSjr6exbhZ7esU8bvOrJxnD31BOIxlax2mnGW9PkO
++7I1Ct2z8qEkV6sEyloZrhldCP6On9U79kPak6v+NxUAewnYBalElJ70x9EsDjjW
+4Na/Bi+gKlCcujV1DaAhqNaGjbtRNCsyWV+93L/zEhbpX6Taw0UOhJznH36MlCFu
+Cg/bP9pqqp5Yp6SMyo1iLxk/EyGMc5Mm0aJNlokEApvnJvByo6k=
+=9ECB
+-----END PGP SIGNATURE-----
+--=-=-=--
