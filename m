@@ -2,174 +2,163 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3028CC4740C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 04:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7528DC4740A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 04:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A5021D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 04:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568175518;
-	bh=7c7GlzBskBZbL7rcVg8E2DYHT4VS1V6YJLvUXB9+vV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FMqnp8zIaXuKYgEOg9t91Pb1Wa+QiYNoH/3JM3ReoDVzK1LBSMHdjsXAIZJyarNN1
-	 bOTm5tJlQi/UxWLzMy3dFvaFXJRK7xiWVszVQKset8Vt17oLI19nqVhDQoXhI3NqKF
-	 WuWpGYzJr2MiP1F+Rq91ugFYjIXaeRgqp+YLpucY=
+	by mail.kernel.org (Postfix) with ESMTP id 416EB21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 04:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfIKESh (ORCPT
+        id S1726565AbfIKEZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 00:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
+        Wed, 11 Sep 2019 00:25:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53382 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfIKESg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 00:18:36 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725798AbfIKEZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 00:25:59 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ED56222BF
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568175515;
-        bh=7c7GlzBskBZbL7rcVg8E2DYHT4VS1V6YJLvUXB9+vV4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sHU923gADX/4/c2YXRf5CezaTMdKk+H/Ni92tFgJCnANvZuXjbGqL4X8Bj3EZPpZ9
-         tatGIfgFzhHKDDlxmVfgYHyLrtpRX1Ix8D32pAMEhlfyVWBBvITPqX00sptKXhnJ7I
-         VGCMbBvy/6pFeY5GblQKJbOiO7LGQo9Uexh+Wnjw=
-Received: by mail-wm1-f43.google.com with SMTP id n10so1745840wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 21:18:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGKOQ34yI/01Nm6HgZ7JEHbcME0+Eipp6aEbmmp2rY+BbMecIV
-        h4oqJMZkx5rYWUVYxHsskEj0588SD45v19n8Y8lz3A==
-X-Google-Smtp-Source: APXvYqwg1qq5dVOWeEEGfJkv7fZ1PKesGKnfSIg+MgwbZJWl8lM+JFjdoxwcXfyPWnGxYJ11xlF3c9dkmgJDG7kwSQA=
-X-Received: by 2002:a05:600c:285:: with SMTP id 5mr2250397wmk.161.1568175513734;
- Tue, 10 Sep 2019 21:18:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190905103541.4161-1-thomas_os@shipmail.org> <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com> <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org> <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
- <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
-In-Reply-To: <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 10 Sep 2019 21:18:22 -0700
-X-Gmail-Original-Message-ID: <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
-Message-ID: <CALCETrWEzctRxiv9AY0hhPGNPhv8k0POCMzMi30Bgh2aPY7R3w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        pv-drivers@vmware.com, Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 343C718CB511;
+        Wed, 11 Sep 2019 04:25:58 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-46.rdu2.redhat.com [10.10.120.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42E6119C6A;
+        Wed, 11 Sep 2019 04:25:54 +0000 (UTC)
+Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is
+ preempted"
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
+        "# v3 . 10+" <stable@vger.kernel.org>
+References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
+ <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com>
+ <CANRm+CxVXsQCmEpxNJSifmQJk5cqoSifFq+huHJE1s7a-=0iXw@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2dda32db-5662-f7a6-f52d-b835df1f45f1@redhat.com>
+Date:   Wed, 11 Sep 2019 05:25:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CANRm+CxVXsQCmEpxNJSifmQJk5cqoSifFq+huHJE1s7a-=0iXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Wed, 11 Sep 2019 04:25:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 12:26 PM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
+On 9/10/19 6:56 AM, Wanpeng Li wrote:
+> On Mon, 9 Sep 2019 at 18:56, Waiman Long <longman@redhat.com> wrote:
+>> On 9/9/19 2:40 AM, Wanpeng Li wrote:
+>>> From: Wanpeng Li <wanpengli@tencent.com>
+>>>
+>>> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't wait if
+>>> vCPU is preempted), we found great regression caused by this commit.
+>>>
+>>> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each is 80 vCPUs.
+>>> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700-1800
+>>> records/s with this commit.
+>>>
+>>>           Host                       Guest                score
+>>>
+>>> vanilla + w/o kvm optimizes     vanilla               1700-1800 records/s
+>>> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 records/s
+>>> vanilla + w/ kvm optimizes      vanilla               4500-5000 records/s
+>>> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 records/s
+>>>
+>>> Exit from aggressive wait-early mechanism can result in yield premature and
+>>> incur extra scheduling latency in over-subscribe scenario.
+>>>
+>>> kvm optimizes:
+>>> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
+>>> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
+>>>
+>>> Tested-by: loobinliu@tencent.com
+>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Ingo Molnar <mingo@kernel.org>
+>>> Cc: Waiman Long <longman@redhat.com>
+>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>>> Cc: loobinliu@tencent.com
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
+>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>>> ---
+>>>  kernel/locking/qspinlock_paravirt.h | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
+>>> index 89bab07..e84d21a 100644
+>>> --- a/kernel/locking/qspinlock_paravirt.h
+>>> +++ b/kernel/locking/qspinlock_paravirt.h
+>>> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
+>>>       if ((loop & PV_PREV_CHECK_MASK) != 0)
+>>>               return false;
+>>>
+>>> -     return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
+>>> +     return READ_ONCE(prev->state) != vcpu_running;
+>>>  }
+>>>
+>>>  /*
+>> There are several possibilities for this performance regression:
+>>
+>> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause some
+>> cacheline contention issue depending on how that callback is implemented.
+>>
+>> 2) KVM may set the preempt flag for a short period whenver an vmexit
+>> happens even if a vmenter is executed shortly after. In this case, we
+>> may want to use a more durable vcpu suspend flag that indicates the vcpu
+>> won't get a real vcpu back for a longer period of time.
+>>
+>> Perhaps you can add a lock event counter to count the number of
+>> wait_early events caused by vcpu_is_preempted() being true to see if it
+>> really cause a lot more wait_early than without the vcpu_is_preempted()
+>> call.
+> pv_wait_again:1:179
+> pv_wait_early:1:189429
+> pv_wait_head:1:263
+> pv_wait_node:1:189429
+> pv_vcpu_is_preempted:1:45588
+> =========sleep 5============
+> pv_wait_again:1:181
+> pv_wait_early:1:202574
+> pv_wait_head:1:267
+> pv_wait_node:1:202590
+> pv_vcpu_is_preempted:1:46336
 >
-> On 9/10/19 6:11 PM, Andy Lutomirski wrote:
-> >
-> >> On Sep 5, 2019, at 8:24 AM, Christoph Hellwig <hch@infradead.org> wrot=
-e:
-> >>
-> >>> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellstr=C3=B6m (VMwa=
-re) wrote:
-> >>>> On 9/5/19 4:15 PM, Dave Hansen wrote:
-> >>>> Hi Thomas,
-> >>>>
-> >>>> Thanks for the second batch of patches!  These look much improved on=
- all
-> >>>> fronts.
-> >>> Yes, although the TTM functionality isn't in yet. Hopefully we won't =
-have to
-> >>> bother you with those though, since this assumes TTM will be using th=
-e dma
-> >>> API.
-> >> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
-> >> branch:
-> >>
-> >>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dm=
-a-mmap-improvements
-> >>
-> >> they should allow to fault dma api pages in the page fault handler.  B=
-ut
-> >> this is totally hot off the press and not actually tested for the last
-> >> few patches.  Note that I've also included your two patches from this
-> >> series to handle SEV.
-> > I read that patch, and it seems like you=E2=80=99ve built in the assump=
-tion that all pages in the mapping use identical protection or, if not, tha=
-t the same fake vma hack that TTM already has is used to fudge around it.  =
-Could it be reworked slightly to avoid this?
-> >
-> > I wonder if it=E2=80=99s a mistake to put the encryption bits in vm_pag=
-e_prot at all.
->
->  From my POW, the encryption bits behave quite similar in behaviour to
-> the caching mode bits, and they're also in vm_page_prot. They're the
-> reason TTM needs to modify the page protection in the fault handler in
-> the first place.
->
-> The problem seen in TTM is that we want to be able to change the
-> vm_page_prot from the fault handler, but it's problematic since we have
-> the mmap_sem typically only in read mode. Hence the fake vma hack. From
-> what I can tell it's reasonably well-behaved, since pte_modify() skips
-> the bits TTM updates, so mprotect() and mremap() works OK. I think
-> split_huge_pmd may run into trouble, but we don't support it (yet) with
-> TTM.
+> The sampling period is 5s, 6% of wait_early events caused by
+> vcpu_is_preempted() being true.
 
-One thing I'm confused about: does TTM move individual pages between
-main memory and device memory or does it move whole mappings?  If it
-moves individual pages, then a single mapping could have PTEs from
-dma_alloc_coherent() space and from PCI space.  How can this work with
-vm_page_prot?  I guess you might get lucky and have both have the same
-protection bits, but that seems like an unfortunate thing to rely on.
+6% isn't that high. However, when one vCPU voluntarily releases its
+vCPU, all the subsequently waiters in the queue will do the same. It is
+a cascading effect. Perhaps we wait early too aggressive with the
+original patch.
 
-As a for-real example, take a look at arch/x86/entry/vdso/vma.c.  The
-"vvar" VMA contains multiple pages that are backed by different types
-of memory.  There's a page of ordinary kernel memory.  Historically
-there was a page of genuine MMIO memory, but that's gone now.  If the
-system is a SEV guest with pvclock enabled, then there's a page of
-decrypted memory.   They all share a VMA, they're instantiated in
-.fault, and there is no hackery involved.  Look at vvar_fault().
+I also look up the email chain of the original commit. The patch
+submitter did not provide any performance data to support this change.
+The patch just looked reasonable at that time. So there was no
+objection. Given that we now have hard evidence that this was not a good
+idea. I think we should revert it.
 
-So, Christoph, can't you restructure your code a bit to compute the
-caching and encryption state per page instead of once in
-dma_mmap_prepare() and insert the pages accordingly?  You might need
-to revert 6d958546ff611c9ae09b181e628c1c5d5da5ebda depending on
-exactly how you structure it.
+Reviewed-by: Waiman Long <longman@redhat.com>
 
->
-> We could probably get away with a WRITE_ONCE() update of the
-> vm_page_prot before taking the page table lock since
->
-> a) We're locking out all other writers.
-> b) We can't race with another fault to the same vma since we hold an
-> address space lock ("buffer object reservation")
-> c) When we need to update there are no valid page table entries in the
-> vma, since it only happens directly after mmap(), or after an
-> unmap_mapping_range() with the same address space lock. When another
-> reader (for example split_huge_pmd()) sees a valid page table entry, it
-> also sees the new page protection and things are fine.
->
-> But that would really be a special case. To solve this properly we'd
-> probably need an additional lock to protect the vm_flags and
-> vm_page_prot, taken after mmap_sem and i_mmap_lock.
->
+Thanks,
+Longman
 
-This is all horrible IMO.
