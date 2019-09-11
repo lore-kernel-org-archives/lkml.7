@@ -2,147 +2,104 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6862AC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAE4C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F75520863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t12WokXo"
+	by mail.kernel.org (Postfix) with ESMTP id 7694720863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfIKOja (ORCPT
+        id S1728322AbfIKOjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:39:30 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40022 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfIKOj2 (ORCPT
+        Wed, 11 Sep 2019 10:39:25 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:34306 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728211AbfIKOjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:39:28 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y144so12962517qkb.7;
-        Wed, 11 Sep 2019 07:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TwN6OrjdKt+44ku7KhvZUr2O4KlJSVZ8kmhB6V+j7N8=;
-        b=t12WokXoJJ4K4NUUnEOf7/c8b7WRfEQ6bn7vsO5yCVsQ9XAK4VVGkp9+O8v1rgippv
-         3E0ddwd9nqFUG00UzxFS30O6gPjS9LBm10a+Zm8ipspUkj7Oc5oFkw2uOfPp24PR7tuF
-         oOQY2CtT5G7ia1Sm/h4yz1/MZPIGGeHe6ArOVTBZryVmnIuUpLD7szxh+2ec/T4e3Mw1
-         OoujYt5HBky2ouplU++zanDJ6CrUhhX3FY30dAT9fysCmK0kFyQLucIUvxqCtf0rZ9Hp
-         PXtaD8GdMfehs9dCLuz7cfVqU/wqp/xdGjB+L9hPmo58yIpvgobuCwLCTTLpG7ZmcGEt
-         hBrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TwN6OrjdKt+44ku7KhvZUr2O4KlJSVZ8kmhB6V+j7N8=;
-        b=oD9UVBQNGsBRuWh9nxOOdsuudHkFIsqtdKbU7s9JpL5Ll/o9+KqoQsWtf+ZbzXIcRs
-         YYmGWNq+95dg1k3neJ0ALN5lcxhlPLiU2sMz8+PAyFgJ8KzpT0avvKyIYAyY2YIvo9iR
-         mrKz6L5ID4n4sGfwvVu5M0BY4zCtgANTyb0xrlsvyMCnhhMFCA97RQ3OXjx92z5oymbP
-         0DUu5FZ+Lmps1TOPM53uN/HAkIgKD8ipIiQPF88FGKdFKHV0/dMBMgruhdwW1fUVvj6W
-         ogq95YBJxJujRK41eIXx87r0/qo5bDnfA7qNFK21HL3IS0bRTOYlGiVWXnqs0nwf02G+
-         hM7w==
-X-Gm-Message-State: APjAAAW3fmiq3RiMiomH/47BGWQQU7JNPPjytvW81UUz+tAbWtYzQZSc
-        49CpNh3UfRr6ELLEKmOKYRg=
-X-Google-Smtp-Source: APXvYqzDyV+SgjNA5WEUzBQAIMOWaP+tdcQzaGUX0YOJ8JPSKoUht7TpayG/vdBITmUBUICF0Fd/pA==
-X-Received: by 2002:ae9:e00a:: with SMTP id m10mr37294490qkk.167.1568212766886;
-        Wed, 11 Sep 2019 07:39:26 -0700 (PDT)
-Received: from localhost.localdomain ([177.220.172.89])
-        by smtp.gmail.com with ESMTPSA id d45sm12194380qtc.70.2019.09.11.07.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 07:39:25 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 75378C4A64; Wed, 11 Sep 2019 11:39:23 -0300 (-03)
-Date:   Wed, 11 Sep 2019 11:39:23 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     maowenan <maowenan@huawei.com>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
- sctp_get_port_local
-Message-ID: <20190911143923.GE3499@localhost.localdomain>
-References: <20190910071343.18808-1-maowenan@huawei.com>
- <20190910071343.18808-2-maowenan@huawei.com>
- <20190910185710.GF15977@kadam>
- <20190910192207.GE20699@kadam>
- <53556c87-a351-4314-cbd9-49a39d0b41aa@huawei.com>
- <20190911083038.GF20699@kadam>
- <20190911143008.GD3499@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911143008.GD3499@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 11 Sep 2019 10:39:13 -0400
+Received: from ramsan ([84.194.98.4])
+        by laurent.telenet-ops.be with bizsmtp
+        id 0Ef42100205gfCL01Ef4Ro; Wed, 11 Sep 2019 16:39:10 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i83lv-0006T7-V5; Wed, 11 Sep 2019 16:39:03 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1i83lv-0003PC-Tp; Wed, 11 Sep 2019 16:39:03 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v2 3/5] gpio: Export gpio_name_to_desc() to modular GPIO code
+Date:   Wed, 11 Sep 2019 16:38:56 +0200
+Message-Id: <20190911143858.13024-4-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190911143858.13024-1-geert+renesas@glider.be>
+References: <20190911143858.13024-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:30:08AM -0300, Marcelo Ricardo Leitner wrote:
-> On Wed, Sep 11, 2019 at 11:30:38AM +0300, Dan Carpenter wrote:
-> > On Wed, Sep 11, 2019 at 09:30:47AM +0800, maowenan wrote:
-> > > 
-> > > 
-> > > On 2019/9/11 3:22, Dan Carpenter wrote:
-> > > > On Tue, Sep 10, 2019 at 09:57:10PM +0300, Dan Carpenter wrote:
-> > > >> On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
-> > > >>> There are more parentheses in if clause when call sctp_get_port_local
-> > > >>> in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
-> > > >>> do cleanup.
-> > > >>>
-> > > >>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> > > >>> ---
-> > > >>>  net/sctp/socket.c | 3 +--
-> > > >>>  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > >>>
-> > > >>> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> > > >>> index 9d1f83b10c0a..766b68b55ebe 100644
-> > > >>> --- a/net/sctp/socket.c
-> > > >>> +++ b/net/sctp/socket.c
-> > > >>> @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
-> > > >>>  	 * detection.
-> > > >>>  	 */
-> > > >>>  	addr->v4.sin_port = htons(snum);
-> > > >>> -	if ((ret = sctp_get_port_local(sk, addr))) {
-> > > >>> +	if (sctp_get_port_local(sk, addr))
-> > > >>>  		return -EADDRINUSE;
-> > > >>
-> > > >> sctp_get_port_local() returns a long which is either 0,1 or a pointer
-> > > >> casted to long.  It's not documented what it means and neither of the
-> > > >> callers use the return since commit 62208f12451f ("net: sctp: simplify
-> > > >> sctp_get_port").
-> > > > 
-> > > > Actually it was commit 4e54064e0a13 ("sctp: Allow only 1 listening
-> > > > socket with SO_REUSEADDR") from 11 years ago.  That patch fixed a bug,
-> > > > because before the code assumed that a pointer casted to an int was the
-> > > > same as a pointer casted to a long.
-> > > 
-> > > commit 4e54064e0a13 treated non-zero return value as unexpected, so the current
-> > > cleanup is ok?
-> > 
-> > Yeah.  It's fine, I was just confused why we weren't preserving the
-> > error code and then I saw that we didn't return errors at all and got
-> > confused.
-> 
-> But please lets seize the moment and do the change Dean suggested.
+Make gpio_name_to_desc() global, and export its symbol, so modular GPIO
+driver can make use of this function.
 
-*Dan*, sorry.
+This will be used by the GPIO Aggregator.
 
-> This was the last place saving this return value somewhere. It makes
-> sense to cleanup sctp_get_port_local() now and remove that masked
-> pointer return.
-> 
-> Then you may also cleanup:
-> socket.c:       return !!sctp_get_port_local(sk, &addr);
-> as it will be a direct map.
-> 
->   Marcelo
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpiolib.c | 3 ++-
+ drivers/gpio/gpiolib.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index c2cf01fb72a9de87..c0caafd111e6ff51 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -288,7 +288,7 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
+ /*
+  * Convert a GPIO name to its descriptor
+  */
+-static struct gpio_desc *gpio_name_to_desc(const char * const name)
++struct gpio_desc *gpio_name_to_desc(const char * const name)
+ {
+ 	struct gpio_device *gdev;
+ 	unsigned long flags;
+@@ -315,6 +315,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ 
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(gpio_name_to_desc);
+ 
+ /*
+  * Takes the names from gc->names and checks if they are all unique. If they
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index b8b10a409c7b9c65..240d2868a3024b52 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -117,6 +117,7 @@ struct gpio_desc {
+ 	const char		*name;
+ };
+ 
++struct gpio_desc *gpio_name_to_desc(const char * const name);
+ int gpiod_request(struct gpio_desc *desc, const char *label);
+ void gpiod_free(struct gpio_desc *desc);
+ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+-- 
+2.17.1
+
