@@ -2,99 +2,80 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B51CECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E58ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F5D20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20A320CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfIKJCc (ORCPT
+        id S1727308AbfIKJEv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:02:32 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45343 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKJCb (ORCPT
+        Wed, 11 Sep 2019 05:04:51 -0400
+Received: from mxout012.mail.hostpoint.ch ([217.26.49.172]:13203 "EHLO
+        mxout012.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726696AbfIKJEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:02:31 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1i7yW7-0005Rk-R0; Wed, 11 Sep 2019 11:02:23 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1i7yVz-0006vQ-1a; Wed, 11 Sep 2019 11:02:15 +0200
-Date:   Wed, 11 Sep 2019 11:02:15 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        The j1939 authors <linux-can@vger.kernel.org>,
-        Bastian Stender <bst@pengutronix.de>,
-        Elenita Hinds <ecathinds@gmail.com>,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
-        kbuild test robot <lkp@intel.com>,
-        Maxime Jayat <maxime.jayat@mobile-devices.fr>,
-        Robin van der Gracht <robin@protonic.nl>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20190911090215.n776azhwewfbr6xf@pengutronix.de>
-References: <20190911004103.3480fa40@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911004103.3480fa40@canb.auug.org.au>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:56:05 up 116 days, 15:14, 66 users,  load average: 0.12, 0.07,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 11 Sep 2019 05:04:50 -0400
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
+        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7yYJ-000Dkw-Uz; Wed, 11 Sep 2019 11:04:39 +0200
+Received: from [213.55.220.251] (helo=[100.66.103.90])
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7yYJ-000NhF-QB; Wed, 11 Sep 2019 11:04:39 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+From:   Sandro Volery <sandro@volery.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] Staging: octeon: Avoid several usecases of strcpy
+Date:   Wed, 11 Sep 2019 11:04:38 +0200
+Message-Id: <39D8B984-479C-42D5-8431-9FF7BD3A96D6@volery.com>
+References: <20190911084956.GH15977@kadam>
+Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
+        aaro.koskinen@iki.fi, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190911084956.GH15977@kadam>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+X-Mailer: iPhone Mail (17A5831c)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
 
-On Wed, Sep 11, 2019 at 12:41:03AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commit
-> 
->   9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-> 
-> is missing a Signed-off-by from its author.
-> 
-> [Not sure if I should complain about this one ...]
 
-Here is the original pull request message for this patch series:
-"The final patch is the collective effort of many entities (The j1939
-authors: Oliver Hartkopp, Bastian Stender, Elenita Hinds, kbuild test
-robot, Kurt Van Dijck, Maxime Jayat, Robin van der Gracht, Oleksij
-Rempel, Marc Kleine-Budde). It adds support of SAE J1939 protocol to the
-CAN networking stack."
-https://www.mail-archive.com/netdev@vger.kernel.org/msg313476.html
+> On 11 Sep 2019, at 10:52, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> 
+> ﻿On Wed, Sep 11, 2019 at 08:23:59AM +0200, Sandro Volery wrote:
+>> strcpy was used multiple times in strcpy to write into dev->name.
+>> I replaced them with strscpy.
+>> 
+>> Signed-off-by: Sandro Volery <sandro@volery.com>
+>> ---
+>> drivers/staging/octeon/ethernet.c | 16 ++++++++--------
+>> 1 file changed, 8 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/ethernet.c
+>> index 8889494adf1f..cf8e9a23ebf9 100644
+>> --- a/drivers/staging/octeon/ethernet.c
+>> +++ b/drivers/staging/octeon/ethernet.c
+>> @@ -784,7 +784,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
+>>            priv->imode = CVMX_HELPER_INTERFACE_MODE_DISABLED;
+>>            priv->port = CVMX_PIP_NUM_INPUT_PORTS;
+>>            priv->queue = -1;
+>> -            strcpy(dev->name, "pow%d");
+>> +            strscpy(dev->name, "pow%d", sizeof(dev->name));
+> 
+> Is there a program which is generating a warning for this code?  We know
+> that "pow%d" is 6 characters and static analysis tools can understand
+> this code fine so we know it's safe.
 
-Since the patch can be hardly assigned to one author we deiced to use
-address of CAN mailing list.
-
-Best regards,
-Oleksij Rempel
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Well I was confused too but checkpatch complained about 
+it so I figured I'd clean it up quick
