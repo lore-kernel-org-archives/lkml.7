@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C203DC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC9ECDE2A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2E620863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769A12085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="tCg85+ZH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DwUHUSdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbfIKRrh (ORCPT
+        id S1729879AbfIKRru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:47:37 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:18378 "EHLO
+        Wed, 11 Sep 2019 13:47:50 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:22362 "EHLO
         mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbfIKRrg (ORCPT
+        with ESMTP id S1729782AbfIKRrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 13:47:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568224051;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568224054;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dkjt0qMhGxLVTBpvMP6aAPlNlv/UnmzG7T8esfy3ij4=;
-        b=tCg85+ZHQcuEWedm5g4+uftTdIEv7RZShgTyZAIgXKJ+QVfyYk2iRVnzmPSAca2X1L
-        mZCc/8sffGM76CPt9d+RpdmWlOnorn0qH9iztkSuR2Iax5G3ki1dyU1daG10XncRnyG8
-        oQGftLQ/C0czW5sEBHFpqHMuw9d6Jnxjqn/aJbd6+3DeMuWmwM3jBi3hOd3tQpbMMyQ+
-        DpGQ2O2OqgLT/0Hu5+ICGsL0S5KzjABX+mwY5Mndynk0mbS8zAG4QcAh+fpECgHVEPW3
-        Fp/nDhRzMx4Xh5j3aLL7rim4txcafKCSi2rsP5s66K15oa23GrkNnUDeRHOePfqWOtUC
-        o6Tg==
+        bh=9bpVfrWumTLzwbXZnEeTQC1ZDdnPwSUlf2P3XT0k/to=;
+        b=DwUHUSditlBSE4xQfHtJJVG0EXrO7osEm1S36KcejWPrER6P1V2d7bPvS+I59qB5ao
+        yVSlxXu5IoK5bK3Hn0I2yg/MlDvj/Fx5hmuvIrP7IV3KF+baApk465qoOSQhNbzPCSJm
+        222X/a3fIyaLxsG5zlx6Sfe9ChSfXBSwMd3BddlT0ws/Ug84+heQl41TgEXk/kob3Oum
+        E+dPZRJdm+Gk1j0tChzXDsv7xo8aWRL+B9nxXyn3cTqClNvI9gps/1aQVKqFY9CXwArm
+        s6A8TlsIrPxjz8EKdbFq/E5gHezeEq0fLhzJ+EFMwH2Pv8z0EbBr9c/ISoDNk2kaaveO
+        i7LQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7Nk1d2C6Y"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8BHlG8nt
+        with ESMTPSA id u036f9v8BHlH8nv
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Wed, 11 Sep 2019 19:47:16 +0200 (CEST)
+        Wed, 11 Sep 2019 19:47:17 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>,
@@ -60,9 +60,9 @@ Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 3/8] DTS: bindings: omap: update bindings documentation
-Date:   Wed, 11 Sep 2019 19:47:09 +0200
-Message-Id: <2316bdb65c4223d54aefa74043a02d588cdeb04a.1568224033.git.hns@goldelico.com>
+Subject: [PATCH v3 5/8] cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if run in multi_regulator mode
+Date:   Wed, 11 Sep 2019 19:47:11 +0200
+Message-Id: <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1568224032.git.hns@goldelico.com>
 References: <cover.1568224032.git.hns@goldelico.com>
@@ -73,105 +73,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* clarify that we now need either "ti,omap3430" or "ti,omap3630" or "ti,am3517" for omap3 chips
-* clarify that "ti,omap3" has no default
-* clarify that AM33x is not an "ti,omap3"
-* clarify that the list of boards is incomplete
-* remove some "ti,am33xx", "ti,omap3"
-* add some missing "ti,omap4"
+In preparation for using the multi_regulator capability of
+this driver for handling the ABB LDO for OPP1G of the omap36xx
+we have to take care that the (legacy) vdd-supply name is
+cpu0-supply = <&vcc>;
+
+To do this we add another field to the SoC description table which
+optionally can specify a list of regulator names.
+
+For omap36xx we define "cpu0-supply" and "vbb-supply".
+
+The default remains "vdd-supply" and "vbb-supply".
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
 ---
- .../devicetree/bindings/arm/omap/omap.txt     | 30 +++++++++++--------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ .../devicetree/bindings/cpufreq/ti-cpufreq.txt       |  6 +++++-
+ drivers/cpufreq/ti-cpufreq.c                         | 12 ++++++++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index b301f753ed2c..e77635c5422c 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -43,7 +43,7 @@ SoC Families:
+diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+index 0c38e4b8fc51..1758051798fe 100644
+--- a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
++++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+@@ -15,12 +15,16 @@ In 'cpus' nodes:
  
- - OMAP2 generic - defaults to OMAP2420
-   compatible = "ti,omap2"
--- OMAP3 generic - defaults to OMAP3430
-+- OMAP3 generic
-   compatible = "ti,omap3"
- - OMAP4 generic - defaults to OMAP4430
-   compatible = "ti,omap4"
-@@ -51,6 +51,8 @@ SoC Families:
-   compatible = "ti,omap5"
- - DRA7 generic - defaults to DRA742
-   compatible = "ti,dra7"
-+- AM33x generic
-+  compatible = "ti,am33xx"
- - AM43x generic - defaults to AM4372
-   compatible = "ti,am43"
+ In 'operating-points-v2' table:
+ - compatible: Should be
+-	- 'operating-points-v2-ti-cpu' for am335x, am43xx, and dra7xx/am57xx SoCs
++	- 'operating-points-v2-ti-cpu' for am335x, am43xx, and dra7xx/am57xx,
++	  omap34xx, omap36xx and am3517 SoCs
+ - syscon: A phandle pointing to a syscon node representing the control module
+ 	  register space of the SoC.
  
-@@ -63,12 +65,14 @@ SoCs:
+ Optional properties:
+ --------------------
++- "vdd-supply", "vbb-supply": to define two regulators for dra7xx
++- "cpu0-supply", "vbb-supply": to define two regulators for omap36xx
++
+ For each opp entry in 'operating-points-v2' table:
+ - opp-supported-hw: Two bitfields indicating:
+ 	1. Which revision of the SoC the OPP is supported by
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index f2f58d689320..1a3073a3093e 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -41,6 +41,7 @@
+ struct ti_cpufreq_data;
  
- - OMAP3430
-   compatible = "ti,omap3430", "ti,omap3"
-+  legacy: "ti,omap34xx" - please do not use any more
- - AM3517
-   compatible = "ti,am3517", "ti,omap3"
- - OMAP3630
--  compatible = "ti,omap36xx", "ti,omap3"
--- AM33xx
--  compatible = "ti,am33xx", "ti,omap3"
-+  compatible = "ti,omap3630", "ti,omap3"
-+  legacy: "ti,omap36xx" - please do not use any more
-+- AM335x
-+  compatible = "ti,am33xx"
+ struct ti_cpufreq_soc_data {
++	const char * const *reg_names;
+ 	unsigned long (*efuse_xlate)(struct ti_cpufreq_data *opp_data,
+ 				     unsigned long efuse);
+ 	unsigned long efuse_fallback;
+@@ -164,7 +165,10 @@ static struct ti_cpufreq_soc_data omap34xx_soc_data = {
+  *    seems to always read as 0).
+  */
  
- - OMAP4430
-   compatible = "ti,omap4430", "ti,omap4"
-@@ -110,19 +114,19 @@ SoCs:
- - AM4372
-   compatible = "ti,am4372", "ti,am43"
++static const char * const omap3_reg_names[] = {"cpu0", "vbb"};
++
+ static struct ti_cpufreq_soc_data omap36xx_soc_data = {
++	.reg_names = omap3_reg_names,
+ 	.efuse_xlate = omap3_efuse_xlate,
+ 	.efuse_offset = OMAP3_CONTROL_DEVICE_STATUS - OMAP3_SYSCON_BASE,
+ 	.efuse_shift = 9,
+@@ -298,7 +302,7 @@ static int ti_cpufreq_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct opp_table *ti_opp_table;
+ 	struct ti_cpufreq_data *opp_data;
+-	const char * const reg_names[] = {"vdd", "vbb"};
++	const char * const default_reg_names[] = {"vdd", "vbb"};
+ 	int ret;
  
--Boards:
-+Boards (incomplete list of examples):
+ 	match = dev_get_platdata(&pdev->dev);
+@@ -354,9 +358,13 @@ static int ti_cpufreq_probe(struct platform_device *pdev)
+ 	opp_data->opp_table = ti_opp_table;
  
- - OMAP3 BeagleBoard : Low cost community board
--  compatible = "ti,omap3-beagle", "ti,omap3"
-+  compatible = "ti,omap3-beagle", "ti,omap3430", "ti,omap3"
- 
- - OMAP3 Tobi with Overo : Commercial expansion board with daughter board
--  compatible = "gumstix,omap3-overo-tobi", "gumstix,omap3-overo", "ti,omap3"
-+  compatible = "gumstix,omap3-overo-tobi", "gumstix,omap3-overo", "ti,omap3430", "ti,omap3"
- 
- - OMAP4 SDP : Software Development Board
--  compatible = "ti,omap4-sdp", "ti,omap4430"
-+  compatible = "ti,omap4-sdp", "ti,omap4430", "ti,omap4"
- 
- - OMAP4 PandaBoard : Low cost community board
--  compatible = "ti,omap4-panda", "ti,omap4430"
-+  compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4"
- 
- - OMAP4 DuoVero with Parlor : Commercial expansion board with daughter board
-   compatible = "gumstix,omap4-duovero-parlor", "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
-@@ -134,16 +138,16 @@ Boards:
-   compatible = "variscite,var-dvk-om44", "variscite,var-som-om44", "ti,omap4460", "ti,omap4";
- 
- - OMAP3 EVM : Software Development Board for OMAP35x, AM/DM37x
--  compatible = "ti,omap3-evm", "ti,omap3"
-+  compatible = "ti,omap3-evm", "ti,omap3630", "ti,omap3"
- 
- - AM335X EVM : Software Development Board for AM335x
--  compatible = "ti,am335x-evm", "ti,am33xx", "ti,omap3"
-+  compatible = "ti,am335x-evm", "ti,am33xx"
- 
- - AM335X Bone : Low cost community board
--  compatible = "ti,am335x-bone", "ti,am33xx", "ti,omap3"
-+  compatible = "ti,am335x-bone", "ti,am33xx"
- 
- - AM3359 ICEv2 : Low cost Industrial Communication Engine EVM.
--  compatible = "ti,am3359-icev2", "ti,am33xx", "ti,omap3"
-+  compatible = "ti,am3359-icev2", "ti,am33xx"
- 
- - AM335X OrionLXm : Substation Automation Platform
-   compatible = "novatech,am335x-lxm", "ti,am33xx"
+ 	if (opp_data->soc_data->multi_regulator) {
++		const char * const *reg_names = default_reg_names;
++
++		if (opp_data->soc_data->reg_names)
++			reg_names = opp_data->soc_data->reg_names;
+ 		ti_opp_table = dev_pm_opp_set_regulators(opp_data->cpu_dev,
+ 							 reg_names,
+-							 ARRAY_SIZE(reg_names));
++							 ARRAY_SIZE(default_reg_names));
+ 		if (IS_ERR(ti_opp_table)) {
+ 			dev_pm_opp_put_supported_hw(opp_data->opp_table);
+ 			ret =  PTR_ERR(ti_opp_table);
 -- 
 2.19.1
 
