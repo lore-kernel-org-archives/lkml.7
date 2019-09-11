@@ -2,172 +2,752 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F166C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0563C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DA02075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823CC2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyxucMx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfIKQTG (ORCPT
+        id S1729056AbfIKQUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:19:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48561 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfIKQTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:19:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 09:19:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
-   d="scan'208";a="200547850"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Sep 2019 09:19:02 -0700
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Message-ID: <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
-Date:   Wed, 11 Sep 2019 09:19:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 11 Sep 2019 12:20:51 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34699 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbfIKQUv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:20:51 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q203so21390983qke.1;
+        Wed, 11 Sep 2019 09:20:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CbaHeo6tWFXCzIrdNOu/53eDkfpQ9UL3rQH6Fu0Drp4=;
+        b=oyxucMx2yfIyuqBzRMuVqLEG4NczPoy+FzfSKfBRYd/pNAxlF2BreMyWHquXKZZPZ3
+         55p6GCW+IfVFVeaBn3wR7w4vR5AgigHB0FrWR3bR2uxARNgp5QELcWv7pG0Af6T7hL6X
+         BJlTlIEIkEnjjpYMVq2kQvw5uSwiLUbPzdpfRMht/hHrGtLNVV2lGiw+6/GyWs76R5uT
+         f5UdW6Y+IrI1iRFUiW26sA0GytZ7xWrJADtciVcybAtt16lfPFfJU5NPXpIU9R1RloCI
+         wxk2lv5dyy3aIS3m1nido7FtMPs1M1CMmWH2SM+ZVsFreDidiyE4WCP6c15LS4bRXf7c
+         j8xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CbaHeo6tWFXCzIrdNOu/53eDkfpQ9UL3rQH6Fu0Drp4=;
+        b=L3JnMvvwIvbFvsZWK5U3R8oYguvQ/HVjpj1Q1Glvxb0YMCprsrKLSsQbdT4XMLzGAM
+         xNyD0eJjcaf/bT9+oYaDw76MxHIfd5Iu5cpt9/NRIamu2eNoJOHe2kVtd+xUJqV9nfAK
+         oriW3pr0FH7ryWpikQyFOH6eLbXocokuQMi19yobDL/3DQ94XRxymafOnzRVGs0KkMAB
+         WImtQ8oKL00hUA0tACjj8VAVtPtIrCnNBP7hFL5+SMUFTH63XzicUJWkFhfZBfWi5MtF
+         ogbEm56A6u1KjrXz6ljRhHYqS0+nSzdYD8tDuQijZkTtpIAAeg3iaX2bnTj4KC1knGrf
+         vK0Q==
+X-Gm-Message-State: APjAAAUXAuAkqFFwH38MiiIP0qNfou9qLywFzL/LyVLumnRdayX3TUor
+        2v7CJH29k4T+d9XfWX5PtPDL/rZX40ab6usz5eQ=
+X-Google-Smtp-Source: APXvYqw00mU2GbGYdBenrRoLL8DOdf2+YNTaG58v290ACTC1Pym3MDAzgk4nL193fDPE7GHy8tgK75w35fSrd7y4CB0=
+X-Received: by 2002:ae9:f44c:: with SMTP id z12mr2679005qkl.26.1568218849486;
+ Wed, 11 Sep 2019 09:20:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190911140204.GA52872@aaronlu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190902005938.7734-1-rodrigorsdc@gmail.com> <20190902005938.7734-2-rodrigorsdc@gmail.com>
+ <5cd4ad2f84280d8567d8c82e745a3189cecbde49.camel@analog.com>
+ <20190908120905.4a1ffedc@archlinux> <4b20e66b44a113af6a2dfff5cb5592979b918101.camel@analog.com>
+In-Reply-To: <4b20e66b44a113af6a2dfff5cb5592979b918101.camel@analog.com>
+From:   Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Date:   Wed, 11 Sep 2019 13:20:36 -0300
+Message-ID: <CAOeBkLrdSAk4H=BcDnFqR4x14kQDR+PYPxqgJk67ZfXfBq_nTw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] staging: iio: accel: adis16240: move out of staging
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "jic23@kernel.org" <jic23@kernel.org>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 7:02 AM, Aaron Lu wrote:
-> Hi Tim & Julien,
-> 
-> On Fri, Sep 06, 2019 at 11:30:20AM -0700, Tim Chen wrote:
->> On 8/7/19 10:10 AM, Tim Chen wrote:
->>
->>> 3) Load balancing between CPU cores
->>> -----------------------------------
->>> Say if one CPU core's sibling threads get forced idled
->>> a lot as it has mostly incompatible tasks between the siblings,
->>> moving the incompatible load to other cores and pulling
->>> compatible load to the core could help CPU utilization.
->>>
->>> So just considering the load of a task is not enough during
->>> load balancing, task compatibility also needs to be considered.
->>> Peter has put in mechanisms to balance compatible tasks between
->>> CPU thread siblings, but not across cores.
->>>
->>> Status:
->>> I have not seen patches on this issue.  This issue could lead to
->>> large variance in workload performance based on your luck
->>> in placing the workload among the cores.
->>>
->>
->> I've made an attempt in the following two patches to address
->> the load balancing of mismatched load between the siblings.
->>
->> It is applied on top of Aaron's patches:
->> - sched: Fix incorrect rq tagged as forced idle
->> - wrapper for cfs_rq->min_vruntime
->>   https://lore.kernel.org/lkml/20190725143127.GB992@aaronlu/
->> - core vruntime comparison
->>   https://lore.kernel.org/lkml/20190725143248.GC992@aaronlu/
-> 
-> So both of you are working on top of my 2 patches that deal with the
-> fairness issue, but I had the feeling Tim's alternative patches[1] are
-> simpler than mine and achieves the same result(after the force idle tag
+Hi,
 
-I think Julien's result show that my patches did not do as well as
-your patches for fairness. Aubrey did some other testing with the same
-conclusion.  So I think keeping the forced idle time balanced is not
-enough for maintaining fairness.
+Em seg, 9 de set de 2019 =C3=A0s 02:53, Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> escreveu:
+>
+> On Sun, 2019-09-08 at 12:09 +0100, Jonathan Cameron wrote:
+> > On Mon, 2 Sep 2019 13:26:02 +0000
+> > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> >
+> > > On Sun, 2019-09-01 at 21:59 -0300, Rodrigo Carvalho wrote:
+> > > > Move ADIS16240 driver from staging to mainline.
+> > > >
+> > > > The ADIS16240 is a fully integrated digital shock detection
+> > > > and recorder system.
+> > >
+> > > Hey,
+> > >
+> > > Comments inline.
+> > >
+> > > I'll probably take a look in the next days again.
+> > > There seem to be some ABI/sysfs attributes that need to be resolved b=
+efore moving this out of staging.
+> >
+> > Absolutely. It is a 'new' type of device so there are definitely some
+> > corners that need discussing before we move out of staging and commit
+> > to maintaining the ABI moving forwards.
+> >
+> > That is the real reason this driver was still in staging!  No one
+> > had been through the process of proposing the ABI and responding to
+> > questions etc.
+> >
+> > The issue with impact sensors has always been that they don't really fi=
+t
+> > our normal model for buffers or triggers.
+> >
+> > So normally a trigger (if exposed in IIO) is used as one trigger
+> > causes 1 set of samples (so like a frame trigger for a camera).
+> >
+> > These devices tend to work in a mode where one trigger causes data
+> > to be captured for a period of time.  In this part that's the event
+> > recorder function
+> >
+> > No one is realistically going to buy an impact sensor to just use it
+> > as an accelerometer which is what this driver is currently doing.
+> > I suppose we could just leave support in that form for now, but
+> > I'm no sure how much use it is to anyone.
+> >
+> > Analog Devices people, worth working out how to support the event
+> > recorder?  For that someone needs to have hardware as it is complex
+> > to say the least!
+>
+> Worth it: yes.
+> But we don't have any resources to allocate for this [at this point in ti=
+me].
+>
+> >
+> > We could move it out but might be worth adding a comment somewhere
+> > saying this only really supports direct access to channels, and
+> > not the event recorder functionality.
+> >
+>
+> I guess, I would vote for leaving it in staging.
+> It's also a way to mark it as a work-in-progress/not-done/still-needs-som=
+ething kind of thing.
+> If we move it now, it gets the status of "everything-resolved" which is n=
+ot yet the case.
+>
+> Thanks for the insight/background info.
+> Much of it was discussed before my time.
 
-Will love to see if my load balancing patches help for your workload.
+How about adis16203? Is it more simple to move this driver out of staging?
 
-Tim
+> >
+> > Jonathan
+>
+> Alex
+>
+> >
+> >
+> > > > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> > > > ---
+> > > >  drivers/iio/accel/Kconfig             |  12 +
+> > > >  drivers/iio/accel/Makefile            |   1 +
+> > > >  drivers/iio/accel/adis16240.c         | 454 ++++++++++++++++++++++=
+++++
+> > > >  drivers/staging/iio/accel/Kconfig     |  12 -
+> > > >  drivers/staging/iio/accel/Makefile    |   1 -
+> > > >  drivers/staging/iio/accel/adis16240.c | 454 ----------------------=
+----
+> > > >  6 files changed, 467 insertions(+), 467 deletions(-)
+> > > >  create mode 100644 drivers/iio/accel/adis16240.c
+> > > >  delete mode 100644 drivers/staging/iio/accel/adis16240.c
+> > >
+> > > Looks like MAINTAINERS file also needs to be updated, also with the D=
+T bindings file.
+> > > I think checkpatch usually complains about these.
+> > >
+> > > > diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> > > > index d4ef35aeb579..91fd8741c95f 100644
+> > > > --- a/drivers/iio/accel/Kconfig
+> > > > +++ b/drivers/iio/accel/Kconfig
+> > > > @@ -30,6 +30,18 @@ config ADIS16209
+> > > >     To compile this driver as a module, say M here: the module will=
+ be
+> > > >     called adis16209.
+> > > >
+> > > > +config ADIS16240
+> > > > + tristate "Analog Devices ADIS16240 Programmable Impact Sensor and=
+ Recorder"
+> > > > + depends on SPI
+> > > > + select IIO_ADIS_LIB
+> > > > + select IIO_ADIS_LIB_BUFFER if IIO_BUFFER
+> > > > + help
+> > > > +   Say Y here to build support for Analog Devices adis16240 progra=
+mmable
+> > > > +   impact Sensor and recorder.
+> > > > +
+> > > > +   To compile this driver as a module, say M here: the module will=
+ be
+> > > > +   called adis16240.
+> > > > +
+> > > >  config ADXL345
+> > > >   tristate
+> > > >
+> > > > diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefil=
+e
+> > > > index 56bd0215e0d4..f7e025a86dd9 100644
+> > > > --- a/drivers/iio/accel/Makefile
+> > > > +++ b/drivers/iio/accel/Makefile
+> > > > @@ -6,6 +6,7 @@
+> > > >  # When adding new entries keep the list in alphabetical order
+> > > >  obj-$(CONFIG_ADIS16201) +=3D adis16201.o
+> > > >  obj-$(CONFIG_ADIS16209) +=3D adis16209.o
+> > > > +obj-$(CONFIG_ADIS16240) +=3D adis16240.o
+> > > >  obj-$(CONFIG_ADXL345) +=3D adxl345_core.o
+> > > >  obj-$(CONFIG_ADXL345_I2C) +=3D adxl345_i2c.o
+> > > >  obj-$(CONFIG_ADXL345_SPI) +=3D adxl345_spi.o
+> > > > diff --git a/drivers/iio/accel/adis16240.c b/drivers/iio/accel/adis=
+16240.c
+> > > > new file mode 100644
+> > > > index 000000000000..82099db4bf0c
+> > > > --- /dev/null
+> > > > +++ b/drivers/iio/accel/adis16240.c
+> > > > @@ -0,0 +1,454 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > +/*
+> > > > + * ADIS16240 Programmable Impact Sensor and Recorder driver
+> > > > + *
+> > > > + * Copyright 2010 Analog Devices Inc.
+> > > > + */
+> > > > +
+> > > > +#include <linux/interrupt.h>
+> > > > +#include <linux/irq.h>
+> > > > +#include <linux/gpio.h>
+> > > > +#include <linux/delay.h>
+> > > > +#include <linux/device.h>
+> > > > +#include <linux/kernel.h>
+> > > > +#include <linux/spi/spi.h>
+> > > > +#include <linux/slab.h>
+> > > > +#include <linux/sysfs.h>
+> > > > +#include <linux/list.h>
+> > > > +#include <linux/module.h>
+> > > > +
+> > > > +#include <linux/iio/iio.h>
+> > > > +#include <linux/iio/sysfs.h>
+> > > > +#include <linux/iio/buffer.h>
+> > > > +#include <linux/iio/imu/adis.h>
+> > > > +
+> > > > +#define ADIS16240_STARTUP_DELAY  220 /* ms */
+> > > > +
+> > > > +/* Flash memory write count */
+> > > > +#define ADIS16240_FLASH_CNT      0x00
+> > > > +
+> > > > +/* Output, power supply */
+> > > > +#define ADIS16240_SUPPLY_OUT     0x02
+> > > > +
+> > > > +/* Output, x-axis accelerometer */
+> > > > +#define ADIS16240_XACCL_OUT      0x04
+> > > > +
+> > > > +/* Output, y-axis accelerometer */
+> > > > +#define ADIS16240_YACCL_OUT      0x06
+> > > > +
+> > > > +/* Output, z-axis accelerometer */
+> > > > +#define ADIS16240_ZACCL_OUT      0x08
+> > > > +
+> > > > +/* Output, auxiliary ADC input */
+> > > > +#define ADIS16240_AUX_ADC        0x0A
+> > > > +
+> > > > +/* Output, temperature */
+> > > > +#define ADIS16240_TEMP_OUT       0x0C
+> > > > +
+> > > > +/* Output, x-axis acceleration peak */
+> > > > +#define ADIS16240_XPEAK_OUT      0x0E
+> > > > +
+> > > > +/* Output, y-axis acceleration peak */
+> > > > +#define ADIS16240_YPEAK_OUT      0x10
+> > > > +
+> > > > +/* Output, z-axis acceleration peak */
+> > > > +#define ADIS16240_ZPEAK_OUT      0x12
+> > > > +
+> > > > +/* Output, sum-of-squares acceleration peak */
+> > > > +#define ADIS16240_XYZPEAK_OUT    0x14
+> > > > +
+> > > > +/* Output, Capture Buffer 1, X and Y acceleration */
+> > > > +#define ADIS16240_CAPT_BUF1      0x16
+> > > > +
+> > > > +/* Output, Capture Buffer 2, Z acceleration */
+> > > > +#define ADIS16240_CAPT_BUF2      0x18
+> > > > +
+> > > > +/* Diagnostic, error flags */
+> > > > +#define ADIS16240_DIAG_STAT      0x1A
+> > > > +This looks like it could be converted to IIO_CHAN_INFO_SAMP_FREQ a=
+ttribute.
+> > > > +/* Diagnostic, event counter */
+> > > > +#define ADIS16240_EVNT_CNTR      0x1C
+> > > > +
+> > > > +/* Diagnostic, check sum value from firmware test */
+> > > > +#define ADIS16240_CHK_SUM        0x1E
+> > > > +
+> > > > +/* Calibration, x-axis acceleration offset adjustment */
+> > > > +#define ADIS16240_XACCL_OFF      0x20
+> > > > +
+> > > > +/* Calibration, y-axis acceleration offset adjustment */
+> > > > +#define ADIS16240_YACCL_OFF      0x22
+> > > > +
+> > > > +/* Calibration, z-axis acceleration offset adjustment */
+> > > > +#define ADIS16240_ZACCL_OFF      0x24
+> > > > +This looks like it could be converted to IIO_CHAN_INFO_SAMP_FREQ a=
+ttribute.
+> > > > +/* Clock, hour and minute */
+> > > > +#define ADIS16240_CLK_TIME       0x2E
+> > > > +
+> > > > +/* Clock, month and day */
+> > > > +#define ADIS16240_CLK_DATE       0x30
+> > > > +
+> > > > +/* Clock, year */
+> > > > +#define ADIS16240_CLK_YEAR       0x32
+> > > > +
+> > > > +/* Wake-up setting, hour and minute */
+> > > > +#define ADIS16240_WAKE_TIME      0x34
+> > > > +
+> > > > +/* Wake-up setting, month and day */
+> > > > +#define ADIS16240_WAKE_DATE      0x36
+> > > > +
+> > > > +/* Alarm 1 amplitude threshold */
+> > > > +#define ADIS16240_ALM_MAG1       0x38
+> > > > +
+> > > > +/* Alarm 2 amplitude threshold */
+> > > > +#define ADIS16240_ALM_MAG2       0x3A
+> > > > +
+> > > > +/* Alarm control */
+> > > > +#define ADIS16240_ALM_CTRL       0x3C
+> > > > +
+> > > > +/* Capture, external trigger control */
+> > > > +#define ADIS16240_XTRIG_CTRL     0x3E
+> > > > +
+> > > > +/* Capture, address pointer */
+> > > > +#define ADIS16240_CAPT_PNTR      0x40
+> > > > +
+> > > > +/* Capture, configuration and control */
+> > > > +#define ADIS16240_CAPT_CTRL      0x42
+> > > > +
+> > > > +/* General-purpose digital input/output control */
+> > > > +#define ADIS16240_GPIO_CTRL      0x44
+> > > > +
+> > > > +/* Miscellaneous control */
+> > > > +#define ADIS16240_MSC_CTRL       0x46
+> > > > +
+> > > > +/* Internal sample period (rate) control */
+> > > > +#define ADIS16240_SMPL_PRD       0x48
+> > > > +
+> > > > +/* System command */
+> > > > +#define ADIS16240_GLOB_CMD       0x4A
+> > > > +
+> > > > +/* MSC_CTRL */
+> > > > +
+> > > > +/* Enables sum-of-squares output (XYZPEAK_OUT) */
+> > > > +#define ADIS16240_MSC_CTRL_XYZPEAK_OUT_EN        BIT(15)
+> > > > +
+> > > > +/* Enables peak tracking output (XPEAK_OUT, YPEAK_OUT, and ZPEAK_O=
+UT) */
+> > > > +#define ADIS16240_MSC_CTRL_X_Y_ZPEAK_OUT_EN      BIT(14)
+> > > > +
+> > > > +/* Self-test enable: 1 =3D apply electrostatic force, 0 =3D disabl=
+ed */
+> > > > +#define ADIS16240_MSC_CTRL_SELF_TEST_EN          BIT(8)
+> > > > +
+> > > > +/* Data-ready enable: 1 =3D enabled, 0 =3D disabled */
+> > > > +#define ADIS16240_MSC_CTRL_DATA_RDY_EN           BIT(2)
+> > > > +
+> > > > +/* Data-ready polarity: 1 =3D active high, 0 =3D active low */
+> > > > +#define ADIS16240_MSC_CTRL_ACTIVE_HIGH           BIT(1)
+> > > > +
+> > > > +/* Data-ready line selection: 1 =3D DIO2, 0 =3D DIO1 */
+> > > > +#define ADIS16240_MSC_CTRL_DATA_RDY_DIO2 BIT(0)
+> > > > +
+> > > > +/* DIAG_STAT */
+> > > > +
+> > > > +/* Alarm 2 status: 1 =3D alarm active, 0 =3D alarm inactive */
+> > > > +#define ADIS16240_DIAG_STAT_ALARM2      BIT(9)
+> > > > +
+> > > > +/* Alarm 1 status: 1 =3D alarm active, 0 =3D alarm inactive */
+> > > > +#define ADIS16240_DIAG_STAT_ALARM1      BIT(8)
+> > > > +
+> > > > +/* Capture buffer full: 1 =3D capture buffer is full */
+> > > > +#define ADIS16240_DIAG_STAT_CPT_BUF_FUL BIT(7)
+> > > > +
+> > > > +/* Flash test, checksum flag: 1 =3D mismatch, 0 =3D match */
+> > > > +#define ADIS16240_DIAG_STAT_CHKSUM      BIT(6)
+> > > > +
+> > > > +/* Power-on, self-test flag: 1 =3D failure, 0 =3D pass */
+> > > > +#define ADIS16240_DIAG_STAT_PWRON_FAIL_BIT  5
+> > > > +
+> > > > +/* Power-on self-test: 1 =3D in-progress, 0 =3D complete */
+> > > > +#define ADIS16240_DIAG_STAT_PWRON_BUSY  BIT(4)
+> > > > +
+> > > > +/* SPI communications failure */
+> > > > +#define ADIS16240_DIAG_STAT_SPI_FAIL_BIT 3
+> > > > +
+> > > > +/* Flash update failure */
+> > > > +#define ADIS16240_DIAG_STAT_FLASH_UPT_BIT        2
+> > > > +
+> > > > +/* Power supply above 3.625 V */
+> > > > +#define ADIS16240_DIAG_STAT_POWER_HIGH_BIT       1
+> > > > +
+> > > > + /* Power supply below 2.225 V */
+> > > > +#define ADIS16240_DIAG_STAT_POWER_LOW_BIT        0
+> > > > +
+> > > > +/* GLOB_CMD */
+> > > > +
+> > > > +#define ADIS16240_GLOB_CMD_RESUME        BIT(8)
+> > > > +#define ADIS16240_GLOB_CMD_SW_RESET      BIT(7)
+> > > > +#define ADIS16240_GLOB_CMD_STANDBY       BIT(2)
+> > > > +
+> > > > +#define ADIS16240_ERROR_ACTIVE          BIT(14)
+> > > > +
+> > > > +/* At the moment triggers are only used for ring buffer
+> > > > + * filling. This may change!
+> > > > + */
+> > > > +
+> > > > +enum adis16240_scan {
+> > > > + ADIS16240_SCAN_ACC_X,
+> > > > + ADIS16240_SCAN_ACC_Y,
+> > > > + ADIS16240_SCAN_ACC_Z,
+> > > > + ADIS16240_SCAN_SUPPLY,
+> > > > + ADIS16240_SCAN_AUX_ADC,
+> > > > + ADIS16240_SCAN_TEMP,
+> > > > +};
+> > > > +
+> > > > +static ssize_t adis16240_spi_read_signed(struct device *dev,
+> > > > +                                  struct device_attribute *attr,
+> > > > +                                  char *buf,
+> > > > +                                  unsigned int bits)
+> > > > +{
+> > > > + struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> > > > + struct adis *st =3D iio_priv(indio_dev);
+> > > > + int ret;
+> > > > + s16 val =3D 0;
+> > > > + unsigned int shift =3D 16 - bits;
+> > > > + struct iio_dev_attr *this_attr =3D to_iio_dev_attr(attr);
+> > > > +
+> > > > + ret =3D adis_read_reg_16(st,
+> > > > +                        this_attr->address, (u16 *)&val);
+> >
+> > Check for odd line breaks.  That looks like it'll fit under 80 chars
+> > just fine.
+> >
+> > > > + if (ret)
+> > > > +         return ret;
+> > > > +
+> > > > + if (val & ADIS16240_ERROR_ACTIVE)
+> > > > +         adis_check_status(st);
+> > > > +
+> > > > + val =3D (s16)(val << shift) >> shift;
+> >
+> > Use sign_extend32 (added after this driver I think!)
+> >
+> > > > + return sprintf(buf, "%d\n", val);
+> > > > +}
+> > > > +
+> > > > +static ssize_t adis16240_read_12bit_signed(struct device *dev,
+> > > > +                                    struct device_attribute *attr,
+> > > > +                                    char *buf)
+> > > > +{
+> > > > + return adis16240_spi_read_signed(dev, attr, buf, 12);
+> > > > +}
+> > > > +
+> > > > +static IIO_DEVICE_ATTR(in_accel_xyz_squared_peak_raw, 0444,
+> > > > +                adis16240_read_12bit_signed, NULL,
+> > > > +                ADIS16240_XYZPEAK_OUT);
+> > > > +
+> > > > +static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("4096");
+> > > > +
+> > > > +static const u8 adis16240_addresses[][2] =3D {
+> > > > + [ADIS16240_SCAN_ACC_X] =3D { ADIS16240_XACCL_OFF, ADIS16240_XPEAK=
+_OUT },
+> > > > + [ADIS16240_SCAN_ACC_Y] =3D { ADIS16240_YACCL_OFF, ADIS16240_YPEAK=
+_OUT },
+> > > > + [ADIS16240_SCAN_ACC_Z] =3D { ADIS16240_ZACCL_OFF, ADIS16240_ZPEAK=
+_OUT },
+> > > > +};
+> > > > +
+> > > > +static int adis16240_read_raw(struct iio_dev *indio_dev,
+> > > > +                       struct iio_chan_spec const *chan,
+> > > > +                       int *val, int *val2,
+> > > > +                       long mask)
+> > > > +{
+> > > > + struct adis *st =3D iio_priv(indio_dev);
+> > > > + int ret;
+> > > > + u8 addr;
+> > > > + s16 val16;
+> > > > +
+> > > > + switch (mask) {
+> > > > + case IIO_CHAN_INFO_RAW:
+> > > > +         return adis_single_conversion(indio_dev, chan,
+> > > > +                         ADIS16240_ERROR_ACTIVE, val);
+> > > > + case IIO_CHAN_INFO_SCALE:
+> > > > +         switch (chan->type) {
+> > > > +         case IIO_VOLTAGE:
+> > > > +                 if (chan->channel =3D=3D 0) {
+> > > > +                         *val =3D 4;
+> > > > +                         *val2 =3D 880000; /* 4.88 mV */
+> > > > +                         return IIO_VAL_INT_PLUS_MICRO;
+> > > > +                 }
+> > > > +                 return -EINVAL;
+> > > > +         case IIO_TEMP:
+> > > > +                 *val =3D 244; /* 0.244 C */
+> > > > +                 *val2 =3D 0;
+> > >
+> > > This looks like a bug in the original driver.
+> > > I think *val =3D 0, and *val2 =3D 244 ?
 
-> fix), so unless there is something I missed, I think we should go with
-> the simpler one?
-> 
-> [1]: https://lore.kernel.org/lkml/b7a83fcb-5c34-9794-5688-55c52697fd84@linux.intel.com/
-> 
+I have doubt about this. Also in adis16203, adis16209 and
+adis16201 decimal parts are in *val and not in *val2 on
+IIO_TEMP. What do you think? If it is really a bug, I can send
+a patch.
 
+> > > > +                 return IIO_VAL_INT_PLUS_MICRO;
+> > > > +         case IIO_ACCEL:
+> > > > +                 *val =3D 0;
+> > > > +                 *val2 =3D IIO_G_TO_M_S_2(51400); /* 51.4 mg */
+> > > > +                 return IIO_VAL_INT_PLUS_MICRO;
+> > > > +         default:
+> > > > +                 return -EINVAL;
+> > > > +         }
+> > > > +         break;
+> > > > + case IIO_CHAN_INFO_PEAK_SCALE:
+> > > > +         *val =3D 0;
+> > > > +         *val2 =3D IIO_G_TO_M_S_2(51400); /* 51.4 mg */
+> > > > +         return IIO_VAL_INT_PLUS_MICRO;
+> > > > + case IIO_CHAN_INFO_OFFSET:
+> > > > +         *val =3D 25000 / 244 - 0x133; /* 25 C =3D 0x133 */
+> > > > +         return IIO_VAL_INT;
+> > > > + case IIO_CHAN_INFO_CALIBBIAS:
+> > > > +         addr =3D adis16240_addresses[chan->scan_index][0];
+> > > > +         ret =3D adis_read_reg_16(st, addr, &val16);
+> > > > +         if (ret)
+> > > > +                 return ret;
+> > > > +         *val =3D sign_extend32(val16, 9);
+> > > > +         return IIO_VAL_INT;
+> > > > + case IIO_CHAN_INFO_PEAK:
+> > > > +         addr =3D adis16240_addresses[chan->scan_index][1];
+> > > > +         ret =3D adis_read_reg_16(st, addr, &val16);
+> > > > +         if (ret)
+> > > > +                 return ret;
+> > > > +         *val =3D sign_extend32(val16, 9);
+> > > > +         return IIO_VAL_INT;
+> > > > + }
+> > > > + return -EINVAL;
+> > > > +}
+> > > > +
+> > > > +static int adis16240_write_raw(struct iio_dev *indio_dev,
+> > > > +                        struct iio_chan_spec const *chan,
+> > > > +                        int val,
+> > > > +                        int val2,
+> > > > +                        long mask)
+> > > > +{
+> > > > + struct adis *st =3D iio_priv(indio_dev);
+> > > > + u8 addr;
+> > > > +
+> > > > + switch (mask) {
+> > > > + case IIO_CHAN_INFO_CALIBBIAS:
+> > > > +         addr =3D adis16240_addresses[chan->scan_index][0];
+> > > > +         return adis_write_reg_16(st, addr, val & GENMASK(9, 0));
+> > > > + }
+> > > > + return -EINVAL;
+> > > > +}
+> > > > +
+> > > > +static const struct iio_chan_spec adis16240_channels[] =3D {
+> > > > + ADIS_SUPPLY_CHAN(ADIS16240_SUPPLY_OUT, ADIS16240_SCAN_SUPPLY, 0, =
+10),
+> > > > + ADIS_AUX_ADC_CHAN(ADIS16240_AUX_ADC, ADIS16240_SCAN_AUX_ADC, 0, 1=
+0),
+> > > > + ADIS_ACCEL_CHAN(X, ADIS16240_XACCL_OUT, ADIS16240_SCAN_ACC_X,
+> > > > +                 BIT(IIO_CHAN_INFO_CALIBBIAS) | BIT(IIO_CHAN_INFO_=
+PEAK),
+> > > > +                 0, 10),
+> > > > + ADIS_ACCEL_CHAN(Y, ADIS16240_YACCL_OUT, ADIS16240_SCAN_ACC_Y,
+> > > > +                 BIT(IIO_CHAN_INFO_CALIBBIAS) | BIT(IIO_CHAN_INFO_=
+PEAK),
+> > > > +                 0, 10),
+> > > > + ADIS_ACCEL_CHAN(Z, ADIS16240_ZACCL_OUT, ADIS16240_SCAN_ACC_Z,
+> > > > +                 BIT(IIO_CHAN_INFO_CALIBBIAS) | BIT(IIO_CHAN_INFO_=
+PEAK),
+> > > > +                 0, 10),
+> > > > + ADIS_TEMP_CHAN(ADIS16240_TEMP_OUT, ADIS16240_SCAN_TEMP, 0, 10),
+> > > > + IIO_CHAN_SOFT_TIMESTAMP(6)
+> > > > +};
+> > > > +
+> > > > +static struct attribute *adis16240_attributes[] =3D {
+> > > > + &iio_dev_attr_in_accel_xyz_squared_peak_raw.dev_attr.attr,
+> > >
+> > > This one looks a bit weird/rare.
+> > > I am not sure about it's use-case/need right now (at this point in ti=
+me).
+> > >
+> > > Maybe we could just drop it?
+> > > Since I did not write the initial driver, I don't know yet what it wa=
+s supposed to be/do.
+> >
+> > For an impact sensor it's a fairly useful thing I suspect as it is givi=
+ng the maximum
+> > acceleration in any direction that occured (once you square root it in =
+userspace.)
+> >
+> > > In any case, if we want to add it, it looks like it needs an ABI docu=
+mentation.
+> >
+> > Agreed. Needs docs.  We actually have a modifier for it so can be handl=
+ed
+> > as a channel. IIO_MOD_SUM_SQUARED_X_Y_Z :)
+> >
+> >
+> > >
+> > > > + &iio_const_attr_sampling_frequency_available.dev_attr.attr,
+> > >
+> > > This looks like it could be converted to IIO_CHAN_INFO_SAMP_FREQ attr=
+ibute.
+> > >
+> > >
+> > > > + NULL
+> > > > +};
+> > > > +
+> > > > +static const struct attribute_group adis16240_attribute_group =3D =
+{
+> > > > + .attrs =3D adis16240_attributes,
+> > > > +};
+> > > > +
+> > > > +static const struct iio_info adis16240_info =3D {
+> > > > + .attrs =3D &adis16240_attribute_group,
+> > > > + .read_raw =3D adis16240_read_raw,
+> > > > + .write_raw =3D adis16240_write_raw,
+> > > > + .update_scan_mode =3D adis_update_scan_mode,
+> > > > +};
+> > > > +
+> > > > +static const char * const adis16240_status_error_msgs[] =3D {
+> > > > + [ADIS16240_DIAG_STAT_PWRON_FAIL_BIT] =3D "Power on, self-test fai=
+led",
+> > > > + [ADIS16240_DIAG_STAT_SPI_FAIL_BIT] =3D "SPI failure",
+> > > > + [ADIS16240_DIAG_STAT_FLASH_UPT_BIT] =3D "Flash update failed",
+> > > > + [ADIS16240_DIAG_STAT_POWER_HIGH_BIT] =3D "Power supply above 3.62=
+5V",
+> > > > + [ADIS16240_DIAG_STAT_POWER_LOW_BIT] =3D "Power supply below 2.225=
+V",
+> > > > +};
+> > > > +
+> > > > +static const struct adis_data adis16240_data =3D {
+> > > > + .write_delay =3D 35,
+> > > > + .read_delay =3D 35,
+> > > > + .msc_ctrl_reg =3D ADIS16240_MSC_CTRL,
+> > > > + .glob_cmd_reg =3D ADIS16240_GLOB_CMD,
+> > > > + .diag_stat_reg =3D ADIS16240_DIAG_STAT,
+> > > > +
+> > > > + .self_test_mask =3D ADIS16240_MSC_CTRL_SELF_TEST_EN,
+> > > > + .self_test_no_autoclear =3D true,
+> > > > + .startup_delay =3D ADIS16240_STARTUP_DELAY,
+> > > > +
+> > > > + .status_error_msgs =3D adis16240_status_error_msgs,
+> > > > + .status_error_mask =3D BIT(ADIS16240_DIAG_STAT_PWRON_FAIL_BIT) |
+> > > > +         BIT(ADIS16240_DIAG_STAT_SPI_FAIL_BIT) |
+> > > > +         BIT(ADIS16240_DIAG_STAT_FLASH_UPT_BIT) |
+> > > > +         BIT(ADIS16240_DIAG_STAT_POWER_HIGH_BIT) |
+> > > > +         BIT(ADIS16240_DIAG_STAT_POWER_LOW_BIT),
+> > > > +};
+> > > > +
+> > > > +static int adis16240_probe(struct spi_device *spi)
+> > > > +{
+> > > > + int ret;
+> > > > + struct adis *st;
+> > > > + struct iio_dev *indio_dev;
+> > > > +
+> > > > + /* setup the industrialio driver allocated elements */
+> >
+> > I would review comments and decide whether they actually add anything.
+> > This one for example - I'm not convinced!
+> >
+> > > > + indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> > > > + if (!indio_dev)
+> > > > +         return -ENOMEM;
+> > > > + st =3D iio_priv(indio_dev);
+> > > > + /* this is only used for removal purposes */
+> > > > + spi_set_drvdata(spi, indio_dev);
+> > > > +
+> > > > + indio_dev->name =3D spi->dev.driver->name;
+> > > > + indio_dev->dev.parent =3D &spi->dev;
+> > > > + indio_dev->info =3D &adis16240_info;
+> > > > + indio_dev->channels =3D adis16240_channels;
+> > > > + indio_dev->num_channels =3D ARRAY_SIZE(adis16240_channels);
+> > > > + indio_dev->modes =3D INDIO_DIRECT_MODE;
+> > > > +
+> > > > + ret =3D adis_init(st, indio_dev, spi, &adis16240_data);
+> > > > + if (ret)
+> > > > +         return ret;
+> >
+> > Might be nice to look at adding some white space after error handling
+> > blocks like this.  A blank line in locations like this make it
+> > easier for the eye to follow the code.
+> >
+> > > > + ret =3D adis_setup_buffer_and_trigger(st, indio_dev, NULL);
+> > > > + if (ret)
+> > > > +         return ret;
+> > > > +
+> > > > + /* Get the device into a sane initial state */
+> > > > + ret =3D adis_initial_startup(st);
+> > > > + if (ret)
+> > > > +         goto error_cleanup_buffer_trigger;
+> > > > + ret =3D iio_device_register(indio_dev);
+> > > > + if (ret)
+> > > > +         goto error_cleanup_buffer_trigger;
+> > > > + return 0;
+> > > > +
+> > > > +error_cleanup_buffer_trigger:
+> > > > + adis_cleanup_buffer_and_trigger(st, indio_dev);
+> > > > + return ret;
+> > > > +}
+> > > > +
+> > > > +static int adis16240_remove(struct spi_device *spi)
+> > > > +{
+> > > > + struct iio_dev *indio_dev =3D spi_get_drvdata(spi);
+> > > > + struct adis *st =3D iio_priv(indio_dev);
+> > > > +
+> > > > + iio_device_unregister(indio_dev);
+> > > > + adis_cleanup_buffer_and_trigger(st, indio_dev);
+> > > > +
+> > > > + return 0;
+> > > > +}
+> > > > +
+> > > > +static const struct of_device_id adis16240_of_match[] =3D {
+> > > > + { .compatible =3D "adi,adis16240" },
+> > > > + { },
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, adis16240_of_match);
+> > > > +
+> > > > +static struct spi_driver adis16240_driver =3D {
+> > > > + .driver =3D {
+> > > > +         .name =3D "adis16240",
+> > > > +         .of_match_table =3D adis16240_of_match,
+> > > > + },
+> > > > + .probe =3D adis16240_probe,
+> > > > + .remove =3D adis16240_remove,
+> > > > +};
+> > > > +module_spi_driver(adis16240_driver);
+> > > > +
+> > > > +MODULE_AUTHOR("Barry Song <21cnbao@gmail.com>");
+> > > > +MODULE_DESCRIPTION("Analog Devices Programmable Impact Sensor and =
+Recorder");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > +MODULE_ALIAS("spi:adis16240");
+> > ...
+
+Thanks,
+Rodrigo
