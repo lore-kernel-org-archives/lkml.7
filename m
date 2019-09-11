@@ -5,20 +5,20 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F062C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793C7C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3510D20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F89B20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfIKSu4 (ORCPT
+        id S1730354AbfIKSvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:50:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39426 "EHLO mga06.intel.com"
+        Wed, 11 Sep 2019 14:51:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39427 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbfIKSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730266AbfIKSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 14:50:45 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +26,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 11:50:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="196980903"
+   d="scan'208";a="196980896"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga002.jf.intel.com with ESMTP; 11 Sep 2019 11:50:41 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -50,9 +50,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH 13/13] KVM: Dynamically size memslot array based on number of used slots
-Date:   Wed, 11 Sep 2019 11:50:38 -0700
-Message-Id: <20190911185038.24341-14-sean.j.christopherson@intel.com>
+Subject: [PATCH 11/13] KVM: Ensure validity of memslot with respect to kvm_get_dirty_log()
+Date:   Wed, 11 Sep 2019 11:50:36 -0700
+Message-Id: <20190911185038.24341-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190911185038.24341-1-sean.j.christopherson@intel.com>
 References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
@@ -63,99 +63,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the memslot logic doesn't assume memslots are always non-NULL,
-dynamically size the array of memslots instead of unconditionally
-allocating memory for the maximum number of memslots.
-
-Note, because a to-be-deleted memslot must first be invalidated, the
-array size cannot be immediately reduced when deleting a memslot.
-However, consecutive deletions will realize the memory savings, i.e.
-a second deletion will trim the entry.
+Rework kvm_get_dirty_log() so that it "returns" the associated memslot
+on success.  A future patch will rework memslot handling such that
+id_to_memslot() can return NULL, returning the memslot makes it more
+obvious that the validity of the memslot has been verified, i.e.
+precludes the need to add validity checks in the arch code that are
+technically unnecessary.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- include/linux/kvm_host.h |  5 ++++-
- virt/kvm/kvm_main.c      | 31 ++++++++++++++++++++++++++++---
- 2 files changed, 32 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_pr.c |  6 +-----
+ arch/s390/kvm/kvm-s390.c     | 12 ++----------
+ include/linux/kvm_host.h     |  2 +-
+ virt/kvm/kvm_main.c          | 27 +++++++++++++++++++--------
+ 4 files changed, 23 insertions(+), 24 deletions(-)
 
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index 5368a5dbac22..f41a136d247f 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1860,7 +1860,6 @@ static int kvmppc_vcpu_run_pr(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
+ static int kvm_vm_ioctl_get_dirty_log_pr(struct kvm *kvm,
+ 					 struct kvm_dirty_log *log)
+ {
+-	struct kvm_memslots *slots;
+ 	struct kvm_memory_slot *memslot;
+ 	struct kvm_vcpu *vcpu;
+ 	ulong ga, ga_end;
+@@ -1870,15 +1869,12 @@ static int kvm_vm_ioctl_get_dirty_log_pr(struct kvm *kvm,
+ 
+ 	mutex_lock(&kvm->slots_lock);
+ 
+-	r = kvm_get_dirty_log(kvm, log, &is_dirty);
++	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
+ 	if (r)
+ 		goto out;
+ 
+ 	/* If nothing is dirty, don't bother messing with page tables. */
+ 	if (is_dirty) {
+-		slots = kvm_memslots(kvm);
+-		memslot = id_to_memslot(slots, log->slot);
+-
+ 		ga = memslot->base_gfn << PAGE_SHIFT;
+ 		ga_end = ga + (memslot->npages << PAGE_SHIFT);
+ 
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 36d4de1b1409..074f0d7771b6 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -613,9 +613,8 @@ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm,
+ {
+ 	int r;
+ 	unsigned long n;
+-	struct kvm_memslots *slots;
+ 	struct kvm_memory_slot *memslot;
+-	int is_dirty = 0;
++	int is_dirty;
+ 
+ 	if (kvm_is_ucontrol(kvm))
+ 		return -EINVAL;
+@@ -626,14 +625,7 @@ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm,
+ 	if (log->slot >= KVM_USER_MEM_SLOTS)
+ 		goto out;
+ 
+-	slots = kvm_memslots(kvm);
+-	memslot = id_to_memslot(slots, log->slot);
+-	r = -ENOENT;
+-	if (!memslot->dirty_bitmap)
+-		goto out;
+-
+-	kvm_arch_sync_dirty_log(kvm, memslot);
+-	r = kvm_get_dirty_log(kvm, log, &is_dirty);
++	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
+ 	if (r)
+ 		goto out;
+ 
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 40ea5df50faa..8feb61bfbd1a 100644
+index feb40a184847..049e20876b8f 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -433,11 +433,14 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
-  */
- struct kvm_memslots {
- 	u64 generation;
--	struct kvm_memory_slot memslots[KVM_MEM_SLOTS_NUM];
- 	/* The mapping table from slot id to the index in memslots[]. */
- 	short id_to_index[KVM_MEM_SLOTS_NUM];
- 	atomic_t lru_slot;
- 	int used_slots;
-+	struct kvm_memory_slot memslots[];
-+	/*
-+	 * WARNING: 'memslots' is dynamically-sized.  It *MUST* be at the end.
-+	 */
- };
+@@ -808,7 +808,7 @@ void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm, struct kvm_memory_slot *slot)
+ #else /* !CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT */
+ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log);
+ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+-		      int *is_dirty);
++		      int *is_dirty, struct kvm_memory_slot **memslot);
+ #endif
  
- struct kvm {
+ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e2571a9ccfc4..f952a0bec67a 100644
+index 85062477be90..11b130e9f223 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -535,7 +535,7 @@ static struct kvm_memslots *kvm_alloc_memslots(void)
- 		return NULL;
- 
- 	for (i = 0; i < KVM_MEM_SLOTS_NUM; i++)
--		slots->id_to_index[i] = slots->memslots[i].id = -1;
-+		slots->id_to_index[i] = -1;
- 
- 	return slots;
- }
-@@ -933,6 +933,32 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
- 	return old_memslots;
+@@ -1123,31 +1123,42 @@ static int kvm_vm_ioctl_set_memory_region(struct kvm *kvm,
  }
  
-+/*
-+ * Note, at a minimum, the current number of used slots must be allocated, even
-+ * when deleting a memslot, as we need a complete duplicate of the memslots for
-+ * use when invalidating a memslot prior to deleting/moving the memslot.
+ #ifndef CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT
+-int kvm_get_dirty_log(struct kvm *kvm,
+-			struct kvm_dirty_log *log, int *is_dirty)
++/**
++ * kvm_get_dirty_log - get a snapshot of dirty pages
++ * @kvm:	pointer to kvm instance
++ * @log:	slot id and address to which we copy the log
++ * @is_dirty:	set to '1' if any dirty pages were found
++ * @memslot:	set to the associated memslot, always valid on success
 + */
-+static struct kvm_memslots *kvm_dup_memslots(struct kvm_memslots *old,
-+					     enum kvm_mr_change change)
-+{
-+	struct kvm_memslots *slots;
-+	size_t old_size, new_size;
-+
-+	old_size = sizeof(struct kvm_memslots) +
-+		   (sizeof(struct kvm_memory_slot) * old->used_slots);
-+
-+	if (change == KVM_MR_CREATE)
-+		new_size = old_size + sizeof(struct kvm_memory_slot);
-+	else
-+		new_size = old_size;
-+
-+	slots = kvzalloc(new_size, GFP_KERNEL_ACCOUNT);
-+	if (likely(slots))
-+		memcpy(slots, old, old_size);
-+
-+	return slots;
-+}
-+
- static int kvm_set_memslot(struct kvm *kvm,
- 			   const struct kvm_userspace_memory_region *mem,
- 			   const struct kvm_memory_slot *old,
-@@ -943,10 +969,9 @@ static int kvm_set_memslot(struct kvm *kvm,
++int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
++		      int *is_dirty, struct kvm_memory_slot **memslot)
+ {
  	struct kvm_memslots *slots;
- 	int r;
+-	struct kvm_memory_slot *memslot;
+ 	int i, as_id, id;
+ 	unsigned long n;
+ 	unsigned long any = 0;
  
--	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-+	slots = kvm_dup_memslots(__kvm_memslots(kvm, as_id), change);
- 	if (!slots)
- 		return -ENOMEM;
--	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
++	*memslot = NULL;
++	*is_dirty = 0;
++
+ 	as_id = log->slot >> 16;
+ 	id = (u16)log->slot;
+ 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+ 		return -EINVAL;
  
- 	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE) {
- 		/*
+ 	slots = __kvm_memslots(kvm, as_id);
+-	memslot = id_to_memslot(slots, id);
+-	if (!memslot->dirty_bitmap)
++	*memslot = id_to_memslot(slots, id);
++	if (!(*memslot)->dirty_bitmap)
+ 		return -ENOENT;
+ 
+-	n = kvm_dirty_bitmap_bytes(memslot);
++	kvm_arch_sync_dirty_log(kvm, *memslot);
++
++	n = kvm_dirty_bitmap_bytes(*memslot);
+ 
+ 	for (i = 0; !any && i < n/sizeof(long); ++i)
+-		any = memslot->dirty_bitmap[i];
++		any = (*memslot)->dirty_bitmap[i];
+ 
+-	if (copy_to_user(log->dirty_bitmap, memslot->dirty_bitmap, n))
++	if (copy_to_user(log->dirty_bitmap, (*memslot)->dirty_bitmap, n))
+ 		return -EFAULT;
+ 
+ 	if (any)
 -- 
 2.22.0
 
