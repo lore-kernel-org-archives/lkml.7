@@ -2,139 +2,132 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4CC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34794C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4780E20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiplzaXs"
+	by mail.kernel.org (Postfix) with ESMTP id 0B78A206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568220359;
+	bh=FxFoVzGZnxzVmHT/ajZsQATIhSFY4/l83yxp9r3+px4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M6tNhBHdf5rqbXULUISFTUuwQaWY3kZmdcBedHS19ipQqsEDRdNqlQlWz6svQItSm
+	 iqq3aNExP24qO3Sr9ECyCa+Xi8Audx4rkwj+LVA+FFE/w70YGC7ccJh3G0AwKvu8xE
+	 Z6OFq8/WR9D2T7G4E6UbxH4RpGDcBuylaEAmjhiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbfIKQog (ORCPT
+        id S1729319AbfIKQp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:44:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33379 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbfIKQog (ORCPT
+        Wed, 11 Sep 2019 12:45:58 -0400
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:47098 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729003AbfIKQp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:44:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r17so2642327wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:44:34 -0700 (PDT)
+        Wed, 11 Sep 2019 12:45:58 -0400
+Received: by mail-lj1-f170.google.com with SMTP id e17so20630941ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CIzlo4K5/PjwxwRPJcn0L8E28gxLYoETPgMFHBnxBGM=;
-        b=RiplzaXsZoN/l8/1QB2+PKmfBVYwqpeO8FjSnlnUnzxJBUYAaqG8Zm1oboRrHXiUgK
-         shFRnhEZ9eAh5ONRTyBJDmTxG56+hxS9st+TCG401AIBpGfhNFuCfPkL/dcJCWBB0VQD
-         X760P9SJ0S3MpF0ZGewpEpp8cHqbAFGYiZffb1lKQ6ej5txVcZzNhSZqqlBLsjymKFgD
-         S1tQjzpdK8PA1rlsT7cr9AOOK94cRX5NGAP1ZHEviIDK+Q89HaLqqsdpqxy2M0ctDDbq
-         KAzP+tv0EsEdBVkVUh5M6A6MLsCnd3jTrRLqj/6zi4SuSH/7MmYIU0IMTDMjeaznIdVu
-         hAVA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wf1+jULNUBIRfuJ/ktIVdHO9nr5Te4e7BDdkxRDxruc=;
+        b=NiGsioIWb1UrmV45MfrUxasndeSXyXrMUZYdOcd3rJFap5jXHj8y8efpflvu/A89aC
+         +Eb6BGydyvMIPB/pNWEOTC2hB+shmjmGnnFt1qyQ4ahtmT/L1kXFudMp/Tn9yUYjwqW2
+         ZmmpG2iBfK5s/ihr9utJJ9/iI0iLKcbwFjrTA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CIzlo4K5/PjwxwRPJcn0L8E28gxLYoETPgMFHBnxBGM=;
-        b=oXtpzFpFIO+rwn6xlOb+unOxvBGu2XcLNMjIbckKVBKjBhVAv6t5ykmaruvNpu8C2c
-         2g4SDxpdUJxtQ2SwfSD6wgO/0MCMMFWLyVc+k3c7K0BwYyqBzlnP4mWfh8+wf8GTgqpY
-         YVtGX3uW+JNCjHVQgh6rRvxHq7t8X+YhRKwZE8YRDiP4SB8ZMvMS9t5hl+cPSiWxy9t+
-         JwOOkgwChGkVEb40jDO4LG5X/cKNHU7WDgZMI0uwBdiVf60UgfUYGJLOV3bncoLAJd3T
-         beizCALeeyiHddq/iCgtQkULJJRZZbgATHNafkQvzNQVMY2DsnpnKwrgUL4qvoC8KGhV
-         0L3g==
-X-Gm-Message-State: APjAAAUcJvC0ndGLlxT0EbrQ1y4vsBNOHXFfblkGgVvw+jC92ybJHWBt
-        OInlMcEzvmdl+nFYyFxwZP/nng==
-X-Google-Smtp-Source: APXvYqxHBemyp1FBv7D6CS0N0RcxK4MROGEnSaZVxrdDnq4ihO2G7EZFt4VzOaMlrSi5x9kUIGNK2Q==
-X-Received: by 2002:a7b:cd12:: with SMTP id f18mr4926073wmj.111.1568220273954;
-        Wed, 11 Sep 2019 09:44:33 -0700 (PDT)
-Received: from [192.168.0.103] (146-241-81-247.dyn.eolo.it. [146.241.81.247])
-        by smtp.gmail.com with ESMTPSA id w125sm7064842wmg.32.2019.09.11.09.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 09:44:33 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
-Date:   Wed, 11 Sep 2019 18:44:31 +0200
-Cc:     =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, clm@fb.com,
-        dennisz@fb.com, newella@fb.com, Li Zefan <lizefan@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
-        Rik van Riel <riel@surriel.com>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <37CB2690-F1B9-4159-B6A9-77BDB0FF906D@linaro.org>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
- <20190910125513.GA6399@blackbody.suse.cz>
- <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
- <A69EF8D0-8156-46DB-A4DA-C5334764116E@linaro.org>
- <20190911141630.GV2263813@devbig004.ftw2.facebook.com>
-To:     Tejun Heo <tj@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wf1+jULNUBIRfuJ/ktIVdHO9nr5Te4e7BDdkxRDxruc=;
+        b=nu/nnCso/9UgFI3vuRCZ1qKmriGth3erMSd2qWiAyJ7cAQ7CcfbssD1pu0EGF6sjYB
+         AYpmwR+L1fN696seizdocxYfw5pXXMPgjdQR966VFUtjV2jLX5/Gdg9L8MzmQJQ63GW+
+         fbOOyKzApJGJixPK/yGwxPwR476EGFAtQ6Ur7Xpc14rwj0sWigyENBfAe9ek17/V9Akv
+         pDMxOXf1Jnv3j+FtCm18XIYj9RaOQZ95yBic05E2JT635ecyqXDdo+bYMXIONIvTk02T
+         eN0CUJZMC1n4ByO6pDdQR6LsQiyMfC6fXhSDrYY/W3TnxzGeGQbnb40nZAYDauP3QFj+
+         8e2g==
+X-Gm-Message-State: APjAAAWSs2TgyGIAa7NYObKoODa804w/UNuau/J4KaSHfh1weBHfFWZF
+        ulf8ZXi6TM/hOQQ1C4WqYsUb0KZD+9/0tA==
+X-Google-Smtp-Source: APXvYqydCEeGB9c6ffHdgpk1zoW5/+K/0vu1Q+H4pVNaDDWPXHIET4VvzNTik1+ce/bdhA0FYOsGjg==
+X-Received: by 2002:a2e:99c1:: with SMTP id l1mr18181222ljj.8.1568220355620;
+        Wed, 11 Sep 2019 09:45:55 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id d12sm5288221lfn.93.2019.09.11.09.45.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2019 09:45:54 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id j16so20681890ljg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:45:54 -0700 (PDT)
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr16069144ljo.180.1568220354002;
+ Wed, 11 Sep 2019 09:45:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc> <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc> <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu>
+In-Reply-To: <20190911160729.GF2740@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Sep 2019 17:45:38 +0100
+X-Gmail-Original-Message-ID: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+Message-ID: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 5:07 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >
+> > Ted, comments? I'd hate to revert the ext4 thing just because it
+> > happens to expose a bad thing in user space.
+>
+> Unfortuantely, I very much doubt this is going to work.  That's
+> because the add_disk_randomness() path is only used for legacy
+> /dev/random [...]
+>
+> Also, because by default, the vast majority of disks have
+> /sys/block/XXX/queue/add_random set to zero by default.
 
+Gaah. I was looking at the input randomness, since I thought that was
+where the added randomness that Ahmed got things to work with came
+from.
 
-> Il giorno 11 set 2019, alle ore 16:16, Tejun Heo <tj@kernel.org> ha =
-scritto:
->=20
-> Hello,
->=20
-> On Wed, Sep 11, 2019 at 10:18:53AM +0200, Paolo Valente wrote:
->>> The two being enabled at the same time doesn't make sense, so we can
->>> just switch over to bfq when bfq is selected as the iosched.  I =
-asked
->>> what Paolo wanted to do in terms of interface a couple times now but
->>> didn't get an answer and he posted a patch which makes the two
->>> controllers conflict, so....  Paolo, so it looks like you want to
->>> rename all bfq files to drop the bfq prefix, right?
->>=20
->> Yep, mainly because ... this is the solution you voted and you
->> yourself proposed [1] :)
->>=20
->> [1] https://patchwork.kernel.org/patch/10988261/
->=20
-> So, that was then.  Since then the interface change has been published
-> and userspace, at least some of them, already had to adjust.  Now, I
-> don't have any opinion on the matter and flipping again will cause
-> inconveniences to some subset of users.  It's your call.
->=20
+And that then made me just look at the legacy disk randomness (for the
+obvious disk IO reasons) and I didn't look further.
 
-Ok, then let's go for removing bfq prefix, as expected, e.g., by
-systemd community [1].  A few days ago I reposted a patch removing the
-prefix from all involved parameters [2], it should make all legacy
-software work again.
+> So the the way we get entropy these days for initializing the CRNG is
+> via the add_interrupt_randomness() path, where do something really
+> fast, and we assume that we get enough uncertainity from 8 interrupts
+> to give us one bit of entropy (64 interrupts to give us a byte of
+> entropy), and that we need 512 bits of entropy to consider the CRNG
+> fully initialized.  (Yeah, there's a lot of conservatism in those
+> estimates, and so what we could do is decide to say, cut down the
+> number of bits needed to initialize the CRNG to be 256 bits, since
+> that's the size of the CHACHA20 cipher.)
 
-[1] https://github.com/systemd/systemd/issues/7057
-[2] https://lkml.org/lkml/2019/9/9/47
+So that's 4k interrupts if I counted right, and yeah, maybe Ahmed was
+just close enough before, and the merging of the inode table IO then
+took him below that limit.
 
->>> I can implement
->>> the switching if so.
->>=20
->> That would be perfect.
->=20
-> Whichever way it gets decided, this is easy enough.  I'll prep a
-> patch.
->=20
+> Ultimately, though, we need to find *some* way to fix userspace's
+> assumptions that they can always get high quality entropy in early
+> boot, or we need to get over people's distrust of Intel and RDRAND.
 
-Thank you for that too,
-Paolo
+Well, even on a PC, sometimes rdrand just isn't there. AMD has screwed
+it up a few times, and older Intel chips just don't have it.
 
-> Thanks.
->=20
-> --=20
-> tejun
+So I'd be inclined to either lower the limit regardless - and perhaps
+make the "user space asked for randomness much too early" be a big
+*warning* instead of being a basically fatal hung machine?
 
+                Linus
