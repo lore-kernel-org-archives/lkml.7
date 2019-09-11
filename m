@@ -2,208 +2,107 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01201ECDE2A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE33C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E9C2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="F/E+pdbJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2C1602075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbfIKTnE (ORCPT
+        id S1730378AbfIKTpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 15:43:04 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38870 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfIKTnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 15:43:04 -0400
-Received: by mail-qt1-f196.google.com with SMTP id b2so26771373qtq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:43:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2ZFP/ET73683mUucItfq4m0bSDDy3ddeJPRfTUbNCzY=;
-        b=F/E+pdbJUdtectzMGAX889EbfD+uvoPzdWknjWGrU2IW/P478uxNiNntIC52eaMqHI
-         OikuFaF+/CXQ3+ggRtSe/VC7P7hjt/RxxD+1jGmM9aos260dY3y8bFYpWysulvGFvbKp
-         wJTamap6WyoQnblbLcYiRFCf5ZjMyXLrw5KzQACIMvVJDqL8+m832uu5lHYCLHniK7Cq
-         bCudo8I+6O0+Ss6FJX8SuP8jMh6NT2atv6chpB+NRsyBA7kdQ3EK2hxhFmvPLrNylaez
-         2XzETAVZ2F2w/Bs0iqQ/KQpFO7tbZXsnck+yvBzRH/6tzcGe7rzBsyoLC+y3+nCDGF02
-         kRpw==
+        Wed, 11 Sep 2019 15:45:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51110 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728395AbfIKTpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 15:45:19 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 411B559451
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 19:45:18 +0000 (UTC)
+Received: by mail-qk1-f198.google.com with SMTP id q12so26239681qkm.22
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:45:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2ZFP/ET73683mUucItfq4m0bSDDy3ddeJPRfTUbNCzY=;
-        b=L2TFGBlZqnUp61aYHKfMsSy46V5823M7bvk0umHIVPeWC82QWGCGNgUBCh4+67JxsA
-         Vq/nt6xiaNZ02TzC1symil+aaAJGRjt1yMtmeiGQ6Xi/v/k7TST9E/MjnI6g+uAL+0XD
-         H0QSefYFEWjAs78L/uADwCeWEw/ISG4rGE70dpWsfHZC1Uwkkpd7VvnFz0QCJqWowr7x
-         f9nHCY7qvWh0qdaKi+/Y/AQTP+VDloOpRdRqS5j80mkYc1E9OVl+gL8UoN5Pjvbl0Pb7
-         zDE6nWZ1xV/5n65vza/vPcclkxL8M356VXH/s0DICSWVTCznGqUwr3XoRKBhwZ8E7+fV
-         ynQA==
-X-Gm-Message-State: APjAAAWrmLO5dh439anenpBLBbhQIlWrIJmDnvgezXjS2dLrv0iBePP3
-        6IyRKZZzCaHxSzHGNsGSEGMM1g==
-X-Google-Smtp-Source: APXvYqyMP7XfaOeg5LLvUE/BNydmp/CtjUORRyf03puYgED/dSeKx2o6ASaMkBTNwu/NMrzFldyWog==
-X-Received: by 2002:ac8:6704:: with SMTP id e4mr37307655qtp.244.1568230982535;
-        Wed, 11 Sep 2019 12:43:02 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h27sm9858623qkl.75.2019.09.11.12.42.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 12:42:56 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <1a8e6c0a-6ba6-d71f-974e-f8a9c623c25b@redhat.com>
-Date:   Wed, 11 Sep 2019 15:42:54 -0400
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7i0Etx6MLYI/45jnP4DYISG5JeNZkAJR7nS2nO9OITA=;
+        b=U8xA+yTUo5xmPf77t4nO40TqA77PsxTyLT1DkC+aKe3dajvjgszXoh06ZEenUE2oOO
+         mTnA25atCSDmmwm00fn6o7YQtOPoekqYtgnpb82Qo8hbgpjcFO3v4xXVorBxADgVgQFx
+         xxNeWiCv5tsgns+fndD2/F2RjNFkMXsfATTnnEoBMBzr31lFvLVzCo3O4xKrzypHJakU
+         KORO2844IXaJXR2G+744Z4+Pd/6fTkTFtXHukItT/l5GgV6yWhrm1Na4ozU3KteEyq5U
+         NwJhzFEUQ7ROpC2Bpt5DfkJ0GoNBlqH8L84E1+qNp56N080EkZnJZTcFChKYOWk/Jgcy
+         9yGw==
+X-Gm-Message-State: APjAAAWlz7BPojxjnj9dO6ulZjAOd2OlSo96sNVv3zLrg4eG/B+S9o20
+        OwNEUjCyjLHXJQ7voZercYi7+HgQ4S5jrAbWWH7iqomiV+HBD3qBORWsfdie3ppRnhK/wvYfQ8A
+        m6jjwXe6dPVofd2d7RM4xy8Va
+X-Received: by 2002:ac8:688:: with SMTP id f8mr18556206qth.51.1568231117499;
+        Wed, 11 Sep 2019 12:45:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqymdm0tl7ApS6BtYz0XIfOtihacBxBgcLFt4hc1wZ8x+mNF59Zj9qGHloLFh99pIpLmjDzc6w==
+X-Received: by 2002:ac8:688:: with SMTP id f8mr18556165qth.51.1568231117225;
+        Wed, 11 Sep 2019 12:45:17 -0700 (PDT)
+Received: from [192.168.1.4] (192-0-145-99.cpe.teksavvy.com. [192.0.145.99])
+        by smtp.gmail.com with ESMTPSA id t40sm13404749qta.36.2019.09.11.12.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2019 12:45:16 -0700 (PDT)
+Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v12)
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <70714929-2CE3-42F4-BD31-427077C9E24E@lca.pw>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
- <1a8e6c0a-6ba6-d71f-974e-f8a9c623c25b@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
+ <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
+ <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
+ <7db64714-3dc5-b322-1edc-736b08ee7d63@redhat.com>
+ <87ef0mr6qj.fsf@oldenburg2.str.redhat.com>
+From:   Carlos O'Donell <carlos@redhat.com>
+Organization: Red Hat
+Message-ID: <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com>
+Date:   Wed, 11 Sep 2019 15:45:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <87ef0mr6qj.fsf@oldenburg2.str.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/11/19 3:08 PM, Florian Weimer wrote:
+> * Carlos O'Donell:
+> 
+>> It would be easier to merge the patch set if it were just an unconditional
+>> registration like we do for set_robust_list().
+> 
+> Note that this depends on the in-tree system call numbers list, which I
+> still need to finish according to Joseph's specifications.
 
+Which work is this? Do you have a URL reference to WIP?
 
-> On Sep 11, 2019, at 12:34 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 9/11/19 5:01 PM, Qian Cai wrote:
->>=20
->>> On Sep 11, 2019, at 11:05 AM, Waiman Long <longman@redhat.com> =
-wrote:
->>>=20
->>> When allocating a large amount of static hugepages (~500-1500GB) on =
-a
->>> system with large number of CPUs (4, 8 or even 16 sockets), =
-performance
->>> degradation (random multi-second delays) was observed when thousands
->>> of processes are trying to fault in the data into the huge pages. =
-The
->>> likelihood of the delay increases with the number of sockets and =
-hence
->>> the CPUs a system has.  This only happens in the initial setup phase
->>> and will be gone after all the necessary data are faulted in.
->>>=20
->>> These random delays, however, are deemed unacceptable. The cause of
->>> that delay is the long wait time in acquiring the mmap_sem when =
-trying
->>> to share the huge PMDs.
->>>=20
->>> To remove the unacceptable delays, we have to limit the amount of =
-wait
->>> time on the mmap_sem. So the new down_write_timedlock() function is
->>> used to acquire the write lock on the mmap_sem with a timeout value =
-of
->>> 10ms which should not cause a perceivable delay. If timeout happens,
->>> the task will abandon its effort to share the PMD and allocate its =
-own
->>> copy instead.
->>>=20
->>> When too many timeouts happens (threshold currently set at 256), the
->>> system may be too large for PMD sharing to be useful without undue =
-delay.
->>> So the sharing will be disabled in this case.
->>>=20
->>> Signed-off-by: Waiman Long <longman@redhat.com>
->>> ---
->>> include/linux/fs.h |  7 +++++++
->>> mm/hugetlb.c       | 24 +++++++++++++++++++++---
->>> 2 files changed, 28 insertions(+), 3 deletions(-)
->>>=20
->>> diff --git a/include/linux/fs.h b/include/linux/fs.h
->>> index 997a530ff4e9..e9d3ad465a6b 100644
->>> --- a/include/linux/fs.h
->>> +++ b/include/linux/fs.h
->>> @@ -40,6 +40,7 @@
->>> #include <linux/fs_types.h>
->>> #include <linux/build_bug.h>
->>> #include <linux/stddef.h>
->>> +#include <linux/ktime.h>
->>>=20
->>> #include <asm/byteorder.h>
->>> #include <uapi/linux/fs.h>
->>> @@ -519,6 +520,12 @@ static inline void i_mmap_lock_write(struct =
-address_space *mapping)
->>> 	down_write(&mapping->i_mmap_rwsem);
->>> }
->>>=20
->>> +static inline bool i_mmap_timedlock_write(struct address_space =
-*mapping,
->>> +					 ktime_t timeout)
->>> +{
->>> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
->>> +}
->>> +
->>> static inline void i_mmap_unlock_write(struct address_space =
-*mapping)
->>> {
->>> 	up_write(&mapping->i_mmap_rwsem);
->>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>> index 6d7296dd11b8..445af661ae29 100644
->>> --- a/mm/hugetlb.c
->>> +++ b/mm/hugetlb.c
->>> @@ -4750,6 +4750,8 @@ void =
-adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
->>> 	}
->>> }
->>>=20
->>> +#define PMD_SHARE_DISABLE_THRESHOLD	(1 << 8)
->>> +
->>> /*
->>> * Search for a shareable pmd page for hugetlb. In any case calls =
-pmd_alloc()
->>> * and returns the corresponding pte. While this is not necessary for =
-the
->>> @@ -4770,11 +4772,24 @@ pte_t *huge_pmd_share(struct mm_struct *mm, =
-unsigned long addr, pud_t *pud)
->>> 	pte_t *spte =3D NULL;
->>> 	pte_t *pte;
->>> 	spinlock_t *ptl;
->>> +	static atomic_t timeout_cnt;
->>>=20
->>> -	if (!vma_shareable(vma, addr))
->>> -		return (pte_t *)pmd_alloc(mm, pud, addr);
->>> +	/*
->>> +	 * Don't share if it is not sharable or locking attempt timed =
-out
->>> +	 * after 10ms. After 256 timeouts, PMD sharing will be =
-permanently
->>> +	 * disabled as it is just too slow.
->> It looks like this kind of policy interacts with kernel debug options =
-like KASAN (which is going to slow the system down
->> anyway) could introduce tricky issues due to different timings on a =
-debug kernel.
->=20
-> With respect to lockdep, down_write_timedlock() works like a trylock. =
-So
-> a lot of checking will be skipped. Also the lockdep code won't be run
-> until the lock is acquired. So its execution time has no effect on the
-> timeout.
+> (We have something that should work for us as long as we can get large
+> machines from the lab, but I agree that it's not very useful if glibc
+> bot-cycle time is roughly one business day.)
 
-No only lockdep, but also things like KASAN, debug_pagealloc, =
-page_poison, kmemleak, debug
-objects etc that  all going to slow down things in huge_pmd_share(), and =
-make it tricky to get a
-right timeout value for those debug kernels without changing the =
-previous behavior.=
+Yeah, we have to discuss how to accelerate this.
+
+-- 
+Cheers,
+Carlos.
