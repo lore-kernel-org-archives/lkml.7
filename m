@@ -2,131 +2,90 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA67FC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F8DC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9559120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:02:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7jCP9O6"
+	by mail.kernel.org (Postfix) with ESMTP id 3A25320838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfIKVCP (ORCPT
+        id S1730667AbfIKVHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 17:02:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43962 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728877AbfIKVCP (ORCPT
+        Wed, 11 Sep 2019 17:07:35 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38463 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbfIKVHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 17:02:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d15so14451459pfo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 14:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BmSGku8jGWaQdEnWgjS8EmzhMwO0vQvjKEtMVStz3ho=;
-        b=o7jCP9O619jk1A8fcSgzAWayhUVzV5ZQt3XJGgqVC4Cr2Y27xwM0ppsCKWoztQnBFe
-         tlxVQygRIqQmFJPuPR0h2TaKn4X28eymj7iEHy5QfNAzcyw+h1PHy6PhWu/NIY0vZMBD
-         n8pKo9xFCJvpTQpvkgIwlpo9ZNi2ZaT4Bkcdn6IxwAkMN5z2jFsk2bu8EFNjZl6wMEPv
-         YZC/7ZBuOj536hHif/679mreNnVxNJUZkYm1f6nUwWPEsPE5MNIzLc6w4DQkazrLePDv
-         5uZcD2N56xzSI7oEnq+PfQ5t/ZsBvVzrsSMF1zLSk6B4FwV1Anb0Q3Zq6mkj+Sm0LfyE
-         8ZLA==
+        Wed, 11 Sep 2019 17:07:34 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j31so245231qta.5;
+        Wed, 11 Sep 2019 14:07:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BmSGku8jGWaQdEnWgjS8EmzhMwO0vQvjKEtMVStz3ho=;
-        b=bPM1U3QdDe3MAIZfv9LqEm2z8WiUQeFED0OTo8Fcq7i6pUZ9YtAk0vWPhQbWHA7ph3
-         lBDnnCQOG0hvKJ4t6b9hXX4qiWQ+flVnfIwsbt5AdFVpeu4FFwKOhbuRvv915J4j076U
-         OT+TSkC3gcYgZTazklBtiKTMYxwievMdhkPQ4lwcMucIiSuBXeXccVoLEh73qpycGP9p
-         m4lbxb9Sg4zxfBHI0S0dB4n0+qSHZ8WuRw4xK1OuGc9/pGlBLWrQxgpRZFWExlopSq3J
-         dueTEuKCxJaFDBPHqRGWoZUsCPUXiSUnXd4JHM9osVnBxokXSRpzqAGXXPtD49SuMDRu
-         tp9A==
-X-Gm-Message-State: APjAAAUB+m3df2jO5TVHRHp6qKA8J0Pyyqt7jAnBKYexqKzFJrSGDA3c
-        ugaKtliDO3W257IFvexaZ9fG7RP1KR35V5LydcCIVg==
-X-Google-Smtp-Source: APXvYqypx9sTdaUqWPw1cVmR3te2mC9wx57XFuE4p0MZXxepRD5h/5pwdXHJeHB20U1iiWL6kUo2AHVEcIsr6mTHga0=
-X-Received: by 2002:a65:690b:: with SMTP id s11mr34339694pgq.10.1568235730928;
- Wed, 11 Sep 2019 14:02:10 -0700 (PDT)
+        bh=AFuB2QpmFZeeFcW1/wDZ3Q3qc6SL3R+R31YUNn2vg8g=;
+        b=i1PQfPLVIgwVLpHDiD7It9LdELRRY2gF65WSTOPg+AmmjzZe3lyYdaCX6PIO2+LMkA
+         HVxeO4ymGXjgOfF4okV55tE+Qgf2T3e1LG8LMnlhJ5BV+mHwuE8Zp55rD9f9NfJ4Xhpl
+         RACSJFLV0Edl16Fv4AEcPTKti10qnVTdsSEpob8gLoePIZscURT4dVW+3n0orYITXvCM
+         B/BAow/3ZToJigKOEz/3BxGLPbmoGOvjbWMx5iKMy824K9M99UmewVdvw4Bbzcup3oXQ
+         JuVWJvDHlnQXKMHRgD5mvWeM1QmKN62VCEG2lsHyFJSJ9jQNgFQxkODTmjoYIc9Jo8u5
+         uhng==
+X-Gm-Message-State: APjAAAUkaJCJYFoAn2KqzyaSRIu5d3+y03zUjnQaR96qARQAGn3XYuur
+        OMO8AKhzPA4t1OUwFCZAEYqZ5MCqY2bnsSY4Fk4=
+X-Google-Smtp-Source: APXvYqxmXppy4+77gx+LlXeaQMHszT42JLyi2myisyPCzAxn3WpjRosxEgQuBtMuYRI4gv0BJqTsq3M7LCuPPknqN5Q=
+X-Received: by 2002:ac8:32ec:: with SMTP id a41mr36952783qtb.18.1568236053461;
+ Wed, 11 Sep 2019 14:07:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911182049.77853-1-natechancellor@gmail.com> <20190911182049.77853-4-natechancellor@gmail.com>
-In-Reply-To: <20190911182049.77853-4-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 11 Sep 2019 14:01:59 -0700
-Message-ID: <CAKwvOdnh+YoACaX4Oxk7ZiEQAQ2VgA6W=Dtbk7gzK5yJduFvGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
- reference to bcmp
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20190911183632.4317-1-krzk@kernel.org>
+In-Reply-To: <20190911183632.4317-1-krzk@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Sep 2019 23:07:17 +0200
+Message-ID: <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:21 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> r370454 gives LLVM the ability to convert certain loops into a reference
-> to bcmp as an optimization; this breaks prom_init_check.sh:
+> Hi,
 >
->   CALL    arch/powerpc/kernel/prom_init_check.sh
-> Error: External symbol 'bcmp' referenced from prom_init.c
-> make[2]: *** [arch/powerpc/kernel/Makefile:196: prom_init_check] Error 1
->
-> bcmp is defined in lib/string.c as a wrapper for memcmp so this could be
-> added to the whitelist. However, commit 450e7dd4001f ("powerpc/prom_init:
-> don't use string functions from lib/") copied memcmp as prom_memcmp to
-> avoid KASAN instrumentation so having bcmp be resolved to regular memcmp
-> would break that assumption. Furthermore, because the compiler is the
-> one that inserted bcmp, we cannot provide something like prom_bcmp.
->
-> To prevent LLVM from being clever with optimizations like this, use
-> -ffreestanding to tell LLVM we are not hosted so it is not free to make
-> transformations like this.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/647
-> Link: https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+> Unfortunately the patches were applied right after closing the linux-next.
 
-The above link doesn't work for me (HTTP 404).  PEBKAC?
-https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+Hi Krzysztof,
 
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->
-> New patch in the series so no previous version.
->
->  arch/powerpc/kernel/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 19f19c8c874b..aa78b3f6271e 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -21,7 +21,7 @@ CFLAGS_prom_init.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
->  CFLAGS_btext.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
->  CFLAGS_prom.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
->
-> -CFLAGS_prom_init.o += $(call cc-option, -fno-stack-protector)
-> +CFLAGS_prom_init.o += $(call cc-option, -fno-stack-protector) -ffreestanding
->
->  ifdef CONFIG_FUNCTION_TRACER
->  # Do not trace early boot code
-> --
-> 2.23.0
->
+I took a look at these and am not convinced this is right:
 
+> 1. Fix boot of Exynos7 due to wrong address/size of memory node,
 
--- 
-Thanks,
-~Nick Desaulniers
+The current state is clearly broken and a fix is needed, but
+I'm not sure this is the right fix. Why do you have 32-bit physical
+addressing on a 64-bit chip? I looked at commit ef72171b3621
+that introduced it, and it seems it would be better to just
+revert back to 64-bit addresses.
+
+> 2. Move GPU under /soc node,
+
+No problem
+
+> 3. Minor cleanup of #address-cells.
+
+IIRC, an interrupt-controller is required to have a #address-cells
+property, even if that is normally zero. I don't remember the
+details, but the gic binding lists it as mandatory, and I think
+the PCI interrupt-map relies on it. I would just drop this patch.
+
+    Arnd
