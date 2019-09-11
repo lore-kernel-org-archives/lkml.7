@@ -2,154 +2,199 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A55C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B5C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39996206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gRFfgemO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YjuW5xnH"
+	by mail.kernel.org (Postfix) with ESMTP id 36766206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfIKMzO (ORCPT
+        id S1728036AbfIKMz5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:55:14 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:28295 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfIKMzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:55:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1568206512; x=1599742512;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=mxx5CNki3IHFe8OFMIZ/K37jVE5tbD0cPTdXfTmj0HA=;
-  b=gRFfgemOPPpwJAQkjXgofrWtONJCfeh8sxed8DYgNbv2X5xAWkG+WS+U
-   Qd1/bWaQai0noCmJHl1fJjZ1nIriH9T6qoHLBbxqsPKAhCgDJgV6MGGbb
-   Et5pv9JThNOMIeigru6odoeB1/q8ClV8Of225Enx1uTZqrVeCuBDCKefd
-   7w9RhoSJRoUZzFdudf0gC3GoVQ8uUoe4nT/0h9pbyU0egFDIZUYrTReWg
-   12/th00YYqX3QfRXJVd5ZqBDRZX0W16svSYXJXS1qsT4RinkNSSPlP07a
-   c50RmnTlv2RGGQ8MyxjyZmnhfjhV9eIfbcejloPATfe7Ib2wV/OpU0WcB
-   Q==;
-IronPort-SDR: 59qypxNeGBTp+wrdZ23akAAf4qzIFcUAmzfhAyBbQJzRLwJoOA9n+hzq3/fgE5RJSeuplp8E1G
- YRjPxhPQyms2my+yPmzNuBBnk6crvT5rxVRwxbCAwYCWsDyHkWafJaCn+aZyebIrgn7geoJLnj
- jejJZh/HvO/o+y0dymM8LntTuxvpsKkVqNKdSm2YjxmQINKT6icoRs3NmfAxHVAhu2imPasBkx
- lfGF3JzRDpT0lrDLLcFkm3YtpjCk1ZSCA4sjAnlrxocl58Oqd6xOFE5vAY/BV/NLQsIeZpxVn7
- Aeo=
-X-IronPort-AV: E=Sophos;i="5.64,493,1559491200"; 
-   d="scan'208";a="224773197"
-Received: from mail-by2nam01lp2050.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.50])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Sep 2019 20:55:10 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IOHRJ7S7VCkIEhhxpb/SCy6cDaZgc0UgWY+5KG7SutYZcf+oqmV7ILyNloqeYstplhMvS9a63c9WCxU58t+aezUZpxX2yWwfBmW8UmCEeBK+AEjZrVseQVAI5tSPz20l1dUmzQJAUf2Hb86oVkkbC7Z4Bj7GM9nnsgUBVqDtLdd1YEn1sI72CWDLHjbsAQ1AUYYEf/c/XYNZxh+qCZV+YV+FmoOQxeikhIBDovG94aFDLXduAMBRDSbNgas6jEbBKw5T5QwCSlz4Q6X9NCrRho3SkRrtiyll48aBa6JEA87wvD9zAqKD2FJUnmGMYStlFInIdRvcVNdNuuZZCMKAGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxx5CNki3IHFe8OFMIZ/K37jVE5tbD0cPTdXfTmj0HA=;
- b=KhKnwx0wXQ7VJbCBARpEdnZjn+pUqxEQYBubujer92+tGotMRqz04HPGj8TOgJNWPs+mk8odfq9EdeqMp6wIz/Y/xM09lbb/F6SwiFcg01EYQTP7gi3GwdGbWWBcoi/pnXEWz5LwTEnTRGWXnrYFCPTNoVmxUVrmwQE24TMSAl8Y6xVs9prJ6Ld9slPbUFDCBToHKuRBoMCWouxC66/mwi8wzge3kE9lT+Hlqj+GR3z3d4h24ynIaUUSHRsMSwDDS8FS8EtJOW9ko7W1pAHpXe9CLtG+fytOF+yaGsIkb/Sfuq4FsIav+TiM7wXgf2rL05s+tT0ohmeXLOqBEIekyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxx5CNki3IHFe8OFMIZ/K37jVE5tbD0cPTdXfTmj0HA=;
- b=YjuW5xnHDJ50xgqWt1BGYohL7RpOjlm52rObnMC3xAc4TjdaiL6CSOdKY/byd+Q+OpdAhaW3siyzAk7u89E+PH1ATh/HoUlviguGK9QKKW0pf7vaDHRtg5uIFw3rQfaJE2JF7npXmwZVI83tNXio5Mz+pRgjlOKIAr6lRlECPas=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB5536.namprd04.prod.outlook.com (20.178.245.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.15; Wed, 11 Sep 2019 12:55:09 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9c2b:ac1b:67b8:f371]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9c2b:ac1b:67b8:f371%2]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 12:55:09 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Allison Randal <allison@lohutok.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Kangjie Lu <kjlu@umn.edu>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei213@huawei.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] scsi: ufs-hisi: Use PTR_ERR_OR_ZERO() in
- ufs_hisi_get_resource()
-Thread-Topic: [PATCH] scsi: ufs-hisi: Use PTR_ERR_OR_ZERO() in
- ufs_hisi_get_resource()
-Thread-Index: AQHVZXjxzhPiQX5u6EWxRGwM6AldQKcmdR3Q
-Date:   Wed, 11 Sep 2019 12:55:09 +0000
-Message-ID: <MN2PR04MB6991E9732236A682DB8E9A2DFCB10@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <9e667f19-434e-ed30-78cb-9ddc6323c51e@web.de>
-In-Reply-To: <9e667f19-434e-ed30-78cb-9ddc6323c51e@web.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cfd1524b-07d9-4627-41ce-08d736b7471d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5536;
-x-ms-traffictypediagnostic: MN2PR04MB5536:
-x-microsoft-antispam-prvs: <MN2PR04MB5536DADD3066B4DEF04BCD71FCB10@MN2PR04MB5536.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:153;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(189003)(199004)(5660300002)(110136005)(6436002)(81156014)(66476007)(229853002)(9686003)(66066001)(66556008)(76176011)(55016002)(305945005)(53936002)(11346002)(446003)(52536014)(26005)(2171002)(186003)(478600001)(33656002)(102836004)(81166006)(6506007)(14454004)(99286004)(6246003)(4326008)(2906002)(86362001)(3846002)(6116002)(66446008)(7696005)(66946007)(76116006)(2501003)(4744005)(316002)(8676002)(74316002)(7736002)(54906003)(8936002)(256004)(476003)(7416002)(486006)(25786009)(71190400001)(64756008)(71200400001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5536;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: s72nUB/8H7lwifCv5USx8CCG8WA1RJAvp9SXcTwsDSgA8fRvbexsW5dh0froGc+OB4Ko6SItMnzyyIE0ATlBHJJUptOjw4UZnGFYh5VxHO+aLbbp9bUHEDu0z+CtYse60Srxon73T0NOR5d6cPl8GrCJ2g6v+0BFZ8mAkBpmO8m4Z/B3NnRl/8PBmf1gfiVSuWG8bU+utkoFjefifMNn855Ar4UN9sFf6JF/RhNVl+KQ8dZy2lzOZoLvjVQTeBr32Ma7N9DnOwlLZeKr1y3cyqXIENidrOay+F91awv+F80Qwm9gGbFhe5U/sGSVwcSKDx+4gjYIHlw0JXY1IHswDLatkqYCJK1FPSBGGYgKliP82gbEBIV5Gm/LPZk9LCs77OqTq69ZEb6cKYmBxVN0yX9TZOU9gpd/SBIo3xebz+k=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 08:55:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40880 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727342AbfIKMz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:55:57 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34FA530BA1B6;
+        Wed, 11 Sep 2019 12:55:56 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE2B710016EB;
+        Wed, 11 Sep 2019 12:55:21 +0000 (UTC)
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190910124209.GY2063@dhcp22.suse.cz>
+ <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+ <20190910144713.GF2063@dhcp22.suse.cz>
+ <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+ <20190910175213.GD4023@dhcp22.suse.cz>
+ <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
+ <20190911113619.GP4023@dhcp22.suse.cz>
+ <20190911080804-mutt-send-email-mst@kernel.org>
+ <20190911121941.GU4023@dhcp22.suse.cz> <20190911122526.GV4023@dhcp22.suse.cz>
+ <4748a572-57b3-31da-0dde-30138e550c3a@redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <87e0f863-6a49-c07e-49a7-c8a5bdb745ba@redhat.com>
+Date:   Wed, 11 Sep 2019 08:55:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfd1524b-07d9-4627-41ce-08d736b7471d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 12:55:09.4838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NfivUfFHN/AUlMRVBA/58Ow+7157qJtjVLuE47caKe21ldQzXS3RvF5UD9AY3hfj0g4/4z6bgDc6z+AFnZg4Gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5536
+In-Reply-To: <4748a572-57b3-31da-0dde-30138e550c3a@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 11 Sep 2019 12:55:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gRnJvbTogTWFya3VzIEVsZnJpbmcgPGVsZnJpbmdAdXNlcnMuc291cmNlZm9yZ2UubmV0
-Pg0KPiBEYXRlOiBTYXQsIDcgU2VwIDIwMTkgMTQ6MjU6MzEgKzAyMDANCj4gDQo+IFNpbXBsaWZ5
-IHRoaXMgZnVuY3Rpb24gaW1wbGVtZW50YXRpb24gYnkgdXNpbmcgYSBrbm93biBmdW5jdGlvbi4N
-Cj4gDQo+IEdlbmVyYXRlZCBieTogc2NyaXB0cy9jb2NjaW5lbGxlL2FwaS9wdHJfcmV0LmNvY2Np
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJrdXMgRWxmcmluZyA8ZWxmcmluZ0B1c2Vycy5zb3Vy
-Y2Vmb3JnZS5uZXQ+DQpSZXZpZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5j
-b20+DQoNCj4gLS0tDQo+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMgfCA1ICstLS0tDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtaGlzaS5jIGIvZHJpdmVycy9zY3NpL3Vm
-cy91ZnMtaGlzaS5jIGluZGV4DQo+IGY0ZDFkY2E5NjJjNC4uYTBlYTU3YzE5ZGJjIDEwMDY0NA0K
-PiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMNCj4gKysrIGIvZHJpdmVycy9zY3Np
-L3Vmcy91ZnMtaGlzaS5jDQo+IEBAIC00NTQsMTAgKzQ1NCw3IEBAIHN0YXRpYyBpbnQgdWZzX2hp
-c2lfZ2V0X3Jlc291cmNlKHN0cnVjdCB1ZnNfaGlzaV9ob3N0DQo+ICpob3N0KQ0KPiAgICAgICAg
-IC8qIGdldCByZXNvdXJjZSBvZiB1ZnMgc3lzIGN0cmwgKi8NCj4gICAgICAgICBtZW1fcmVzID0g
-cGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAxKTsNCj4gICAgICAg
-ICBob3N0LT51ZnNfc3lzX2N0cmwgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCBtZW1fcmVz
-KTsNCj4gLSAgICAgICBpZiAoSVNfRVJSKGhvc3QtPnVmc19zeXNfY3RybCkpDQo+IC0gICAgICAg
-ICAgICAgICByZXR1cm4gUFRSX0VSUihob3N0LT51ZnNfc3lzX2N0cmwpOw0KPiAtDQo+IC0gICAg
-ICAgcmV0dXJuIDA7DQo+ICsgICAgICAgcmV0dXJuIFBUUl9FUlJfT1JfWkVSTyhob3N0LT51ZnNf
-c3lzX2N0cmwpOw0KPiAgfQ0KPiANCj4gIHN0YXRpYyB2b2lkIHVmc19oaXNpX3NldF9wbV9sdmwo
-c3RydWN0IHVmc19oYmEgKmhiYSkNCj4gLS0NCj4gMi4yMy4wDQoNCg==
+
+On 9/11/19 8:42 AM, David Hildenbrand wrote:
+> On 11.09.19 14:25, Michal Hocko wrote:
+>> On Wed 11-09-19 14:19:41, Michal Hocko wrote:
+>>> On Wed 11-09-19 08:08:38, Michael S. Tsirkin wrote:
+>>>> On Wed, Sep 11, 2019 at 01:36:19PM +0200, Michal Hocko wrote:
+>>>>> On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
+>>>>> [...]
+>>>>>> We don't put any limitations on the allocator other then that it needs to
+>>>>>> clean up the metadata on allocation, and that it cannot allocate a page
+>>>>>> that is in the process of being reported since we pulled it from the
+>>>>>> free_list. If the page is a "Reported" page then it decrements the
+>>>>>> reported_pages count for the free_area and makes sure the page doesn't
+>>>>>> exist in the "Boundary" array pointer value, if it does it moves the
+>>>>>> "Boundary" since it is pulling the page.
+>>>>> This is still a non-trivial limitation on the page allocation from an
+>>>>> external code IMHO. I cannot give any explicit reason why an ordering on
+>>>>> the free list might matter (well except for page shuffling which uses it
+>>>>> to make physical memory pattern allocation more random) but the
+>>>>> architecture seems hacky and dubious to be honest. It shoulds like the
+>>>>> whole interface has been developed around a very particular and single
+>>>>> purpose optimization.
+>>>>>
+>>>>> I remember that there was an attempt to report free memory that provided
+>>>>> a callback mechanism [1], which was much less intrusive to the internals
+>>>>> of the allocator yet it should provide a similar functionality. Did you
+>>>>> see that approach? How does this compares to it? Or am I completely off
+>>>>> when comparing them?
+>>>>>
+>>>>> [1] mostly likely not the latest version of the patchset
+>>>>> http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
+>>>> Linus nacked that one. He thinks invoking callbacks with lots of
+>>>> internal mm locks is too fragile.
+>>> I would be really curious how much he would be happy about injecting
+>>> other restrictions on the allocator like this patch proposes. This is
+>>> more intrusive as it has a higher maintenance cost longterm IMHO.
+>> Btw. I do agree that callbacks with internal mm locks are not great
+>> either. We do have a model for that in mmu_notifiers and it is something
+>> I do consider PITA, on the other hand it is mostly sleepable part of the
+>> interface which makes it the real pain. The above callback mechanism was
+>> explicitly documented with restrictions and that the context is
+>> essentially atomic with no access to particular struct pages and no
+>> expensive operations possible. So in the end I've considered it
+>> acceptably painful. Not that I want to override Linus' nack but if
+>> virtualization usecases really require some form of reporting and no
+>> other way to do that push people to invent even more interesting
+>> approaches then we should simply give them/you something reasonable
+>> and least intrusive to our internals.
+>>
+> The issue with "[PATCH v14 4/5] mm: support reporting free page blocks"
+>  is that it cannot really handle the use case we have here if I am not
+> wrong. While a page is getting processed by the hypervisor (e.g.
+> MADV_DONTNEED), it must not get reused.
+>
+> "Some page blocks may
+> leave the free list after zone->lock is released, so it is the caller's
+> responsibility to either detect or prevent the use of such pages."
+>
+> If I'm not wrong, this only made sense to speed up migration in the
+> hypervisor, where you can deal with false positives differently.
+
+Another difference between the two approaches is the origin from where
+the reporting request is getting generated. (If I remember correctly)
+In Alexander's series or in my series [1], VM is able to report pages
+dynamically without any requirement of host intervention.
+
+[1] https://lkml.org/lkml/2019/8/12/593
+
+
+-- 
+Thanks
+Nitesh
+
