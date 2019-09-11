@@ -2,100 +2,156 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18437C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A2AC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AF02168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35BE206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5Enin/5"
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="CzsmEeLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfIKNG4 (ORCPT
+        id S1727911AbfIKNIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:06:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51491 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbfIKNGz (ORCPT
+        Wed, 11 Sep 2019 09:08:50 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:58156 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfIKNIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:06:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so3413926wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 06:06:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vM9T7JPTYaG7Q5phhjKWs9t8a740OJg6gDLyXdDlwy0=;
-        b=I5Enin/54z24EJiVGsjC9LBUp7DWLfqpIT7jKxNc6AR3TZtq81lDcq13DBQttTGJt7
-         vPD2PNtx66V200oc3BMwabrgL3o4m/cJQ1ehNZoSv90Cf06sRMjziKVZW+ZH9PrvrYil
-         gZxsW2TCCQswOahMWFtcHYYUlNy3su48MsoLV7kJSeaD760lYOsF1xCX+/H4NxwRVwe/
-         6LLzQTDo+lYiyVXTbC/SdEoieE4oehs91mafDcPNdHvDHI+RVpOA2SwCNwfY+4hHMHjg
-         LYqggun0YLgEr+dbnodTJAfx6Wr8E8XdZ7AgsXnaI+MKJcx+PGxz9fanOhjcsWILwS9O
-         qvFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vM9T7JPTYaG7Q5phhjKWs9t8a740OJg6gDLyXdDlwy0=;
-        b=JozFADulTbESisZ3KZoCOY0ts0flMd65MOpcm+sBqfv7CzArZ93lx/CRjFbWK86YuA
-         WaRnicVbm+GcGr0/97n9B7EvUiKys82mBJUxDNYHUjNQ7Ww8MXjRqb5PqkkuGZCqph8I
-         wLyRFAusqh9bmrFeHN0fNgQP3BYprrrx8okSDkDxpKLDFy00X4/jqBXM+hprqjfOgIx0
-         BMuN78/bv/dEFhipcqe1lMFZ/xF0FmOs8gXkb+JPMgqcrgXNoE6z8R+Njp2eTlJQEkK/
-         b56w7RtUghCNaNYLbDjrStwNGOXk/xOVDheopub3q7eGyrMs1btUO5xu+g4XQWvFqLFy
-         7/nA==
-X-Gm-Message-State: APjAAAUMx4sNb1UDx6pf4JZQfLCaVtX3b/v4PoeDhSyOpnLP6IKcgLPc
-        pabAOKS8KkhQlPZcqpfpAwNiCwu83/fuxAagr30=
-X-Google-Smtp-Source: APXvYqxNKQL9xaxjmnWNWWXNRC6dWIh/CBKe7WZ4qYZ9SB53ifIDuCCxYRz0tpQWXrnndjDe+dtrLY6hF32GB2U9TzM=
-X-Received: by 2002:a05:600c:2047:: with SMTP id p7mr4157887wmg.13.1568207213658;
- Wed, 11 Sep 2019 06:06:53 -0700 (PDT)
+        Wed, 11 Sep 2019 09:08:50 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 09:08:49 EDT
+Received: from [192.168.1.47] (unknown [50.34.216.97])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail3.candelatech.com (Postfix) with ESMTPSA id 4D7DE104F;
+        Wed, 11 Sep 2019 06:03:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 4D7DE104F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1568207025;
+        bh=XIn3JBORtKzOkERfGjA3+iWzadACjJyAvSCJ/fogVqA=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=CzsmEeLIiQrpfB+wLCa7XQ8FXXHnDjxlpGIfPOi68TLjouBlWMdKbC+N/VH+BHLCS
+         InupJwTM0AK4i+yPeXA3RNJ1+VM/pj8ZcG1bZdo+jZLXFasa0bGpjtwb+ohIx+K3KY
+         56+I9JUpJk4JZ7/mO6xiUBOyvT4kdLGGAwQUK2xY=
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057
+ (__sta_info_destroy_part2())
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+ <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+ <CAHk-=wj_jneK+UYzHhjwsH0XxP0knM+2o2OeFVEz-FjuQ77-ow@mail.gmail.com>
+ <30679d3f86731475943856196478677e70a349a9.camel@sipsolutions.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <2d673d55-eb27-8573-b8ae-a493335723cf@candelatech.com>
+Date:   Wed, 11 Sep 2019 06:03:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-References: <20190830215910.31590-1-daniel.baluta@nxp.com> <20190906012938.GB17926@Asurada-Nvidia.nvidia.com>
- <20190911110017.GA2036@sirena.org.uk>
-In-Reply-To: <20190911110017.GA2036@sirena.org.uk>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 11 Sep 2019 16:06:41 +0300
-Message-ID: <CAEnQRZAid2xXu+6PxWDCBNDwS6c8DfNXEcNqseDPAsVJ7kEHeg@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: fsl_sai: Implement set_bclk_ratio
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <30679d3f86731475943856196478677e70a349a9.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 2:01 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Sep 05, 2019 at 06:29:39PM -0700, Nicolin Chen wrote:
-> > On Sat, Aug 31, 2019 at 12:59:10AM +0300, Daniel Baluta wrote:
->
-> > > This is to allow machine drivers to set a certain bitclk rate
-> > > which might not be exactly rate * frame size.
->
-> > Just a quick thought of mine: slot_width and slots could be
-> > set via set_dai_tdm_slot() actually, while set_bclk_ratio()
-> > would override that one with your change. I'm not sure which
-> > one could be more important...so would you mind elaborating
-> > your use case?
->
-> The reason we have both operations is partly that some hardware
-> can configure the ratio but not do TDM and partly that setting
-> TDM slots forces us to configure the slot size depending on the
-> current stream configuration while just setting the ratio means
-> we can just fix the configuration once.  I'd say it's just a user
-> error to try to do both simultaneously.
 
-Yes, exactly. We wanted to have a better control of bclk freq.
-Sorry for the late answer, I'm traveling.
+
+On 09/11/2019 05:04 AM, Johannes Berg wrote:
+> On Wed, 2019-09-11 at 12:58 +0100, Linus Torvalds wrote:
+>>
+>> And I didn't think about it or double-check, because the errors that
+>> then followed later _looked_ like that TX power failing that I thought
+>> hadn't happened.
+>
+> Yeah, it could be something already got stuck there, hard to say.
+>
+>>> Since we see that something actually did an rfkill operation. Did you
+>>> push a button there?
+>>
+>> No, I tried to turn off and turn on Wifi manually (no button, just the
+>> settings panel).
+>
+> That does usually also cause rfkill, so that explains how we got down
+> this particular code path.
+>
+>> I didn't notice the WARN_ON(), I just noticed that there was no
+>> networking, and "turn it off and on again" is obviously the first
+>> thing to try ;)
+>
+> :-)
+>
+>> Sep 11 10:27:13 xps13 kernel: WARNING: CPU: 4 PID: 1246 at
+>> net/mac80211/sta_info.c:1057 __sta_info_destroy_part2+0x147/0x150
+>> [mac80211]
+>>
+>> but if you want full logs I can send them in private to you.
+>
+> No, it's fine, though maybe Kalle does - he was stepping out for a while
+> but said he'd look later.
+>
+> This is the interesting time - 10:27:13 we get one of the first
+> failures. Really the first one was this:
+>
+>> Sep 11 10:27:07 xps13 kernel: ath10k_pci 0000:02:00.0: wmi command 16387 timeout, restarting hardware
+>
+>
+>> I do suspect it's atheros and suspend/resume or something. The
+>> wireless clearly worked for a while after the resume, but then at some
+>> point it stopped.
+>
+> I'm not really sure it's related to suspend/resume at all, the firmware
+> seems to just have gotten stuck, and the device and firmware most likely
+> got reset over the suspend/resume anyway.
+>
+>>> The only explanation I therefore have is that something is just taking
+>>> *forever* in that code path, hence my question about timing information
+>>> on the logs.
+>>
+>> Yeah, maybe it would time out everything eventually. But not for a
+>> long time. It hadn't cleared up by
+>>
+>>   Sep 11 10:36:21 xps13 gnome-session-f[6837]: gnome-session-failed:
+>> Fatal IO error 0 (Success) on X server :0.
+>
+> Ok, that's way longer than I would have guessed even! That's over 9
+> minutes, that'd be close to 200 commands having to be issued and timing
+> out ...
+>
+> I don't know. What I wrote before is basically all I can say, I think
+> the driver gets stuck somewhere waiting for the device "forever", and
+> the stack just doesn't get to release the lock, causing all the follow-
+> up problems.
+
+It looks to me like the ath10k firmware is not responding to commands and/or
+is out of its WMI tx credits.  The code often takes a lock and then blocks for up to 3
+or so seconds waiting for a response from the firmware, and the mac80211 calling
+code is often already holding rtnl.  Pretty much every mac80211 call will cause a
+WMI message and thus potentially hit this timeout.
+
+This can easily cause rtnl to be held for 3 seconds, but after that, I believe
+upstream ath10k will now time out and kill the firmware and restart.  (I run
+a significantly modified ath10k driver, and that is how mine works, at least.)
+
+In this case, it looks like restarting the firmware/NIC failed, and I guess
+that must get it in a state where it is still blocking and trying to talk
+to the firmware?  Or maybe deadlock down inside ath10k driver.
+
+For what it's worth, we see that WARN_ON often when ath10k firmware crashes, but it
+seems to not be a big deal and the system normally recovers fine.
+
+Out of curiosity, I'm interested to know what ath10k NIC chipset this is from.
+
+Thanks,
+Ben
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
