@@ -2,91 +2,78 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C958BC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3734C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60172082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC205206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YuuZ1SR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfIKTyd convert rfc822-to-8bit (ORCPT
+        id S1730442AbfIKT5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 15:54:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40196 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbfIKTyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 15:54:32 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EEA3D3018FC5;
-        Wed, 11 Sep 2019 19:54:31 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-117-150.ams2.redhat.com [10.36.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2B7B5D9E2;
-        Wed, 11 Sep 2019 19:54:25 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Carlos O'Donell <carlos@redhat.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
+        Wed, 11 Sep 2019 15:57:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfIKT5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 15:57:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9jE3mtkHHko+7r8PMAvmKkCu21SGOTAKiQ2sFX5q1e8=; b=YuuZ1SR9/A3UTMvsgjSd5CDmd
+        Bht4qf7T7gzPP6ceP3qR0rUCabFLX3Ofmr1X48wwNvc7OioQfaRQY15yoV7wM8Md+Lttifi18jP4N
+        2zoqeakteIneE6RomJ18Svhc3HMcSNpA9808NWbTJed7wGaWgOW4NIpEuLgedepcI9h5LOFReSKD8
+        3JDMy6OdPsmFtRfTBIR+HfAyJMgJ+Jnj8cBaaEyynEzWbevqJ6Z1x/AzF0dzQP9Uw1L3uZzKSJVM/
+        TwSAA+eEApViP9KU8PZo0eQ0O/NEK3imDNt2fcN+0/CxKA18HaTn+i8NqOpUxE/Zb8FY+MwvYdPuH
+        GiGSo8+Vg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1i88kL-0007F3-I8; Wed, 11 Sep 2019 19:57:45 +0000
+Date:   Wed, 11 Sep 2019 12:57:45 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v12)
-References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
-        <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
-        <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
-        <7db64714-3dc5-b322-1edc-736b08ee7d63@redhat.com>
-        <87ef0mr6qj.fsf@oldenburg2.str.redhat.com>
-        <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com>
-Date:   Wed, 11 Sep 2019 21:54:23 +0200
-In-Reply-To: <4a6f6326-ea82-e031-0fe0-7263ed97e797@redhat.com> (Carlos
-        O'Donell's message of "Wed, 11 Sep 2019 15:45:14 -0400")
-Message-ID: <877e6er4ls.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+Message-ID: <20190911195745.GI29434@bombadil.infradead.org>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 11 Sep 2019 19:54:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911150537.19527-6-longman@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Carlos O'Donell:
+On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+> To remove the unacceptable delays, we have to limit the amount of wait
+> time on the mmap_sem. So the new down_write_timedlock() function is
+> used to acquire the write lock on the mmap_sem with a timeout value of
+> 10ms which should not cause a perceivable delay. If timeout happens,
+> the task will abandon its effort to share the PMD and allocate its own
+> copy instead.
 
-> On 9/11/19 3:08 PM, Florian Weimer wrote:
->> * Carlos O'Donell:
->> 
->>> It would be easier to merge the patch set if it were just an unconditional
->>> registration like we do for set_robust_list().
->> 
->> Note that this depends on the in-tree system call numbers list, which I
->> still need to finish according to Joseph's specifications.
->
-> Which work is this? Do you have a URL reference to WIP?
+If you do a v2, this is *NOT* the mmap_sem.  It's the i_mmap_rwsem
+which protects a very different data structure from the mmap_sem.
 
-  <https://sourceware.org/ml/libc-alpha/2019-05/msg00630.html>
-  <https://sourceware.org/ml/libc-alpha/2019-06/msg00015.html>
-
-I think realistically this is needed for the Y2038 work as well if we
-want to support building glibc with older kernel headers.  “glibc 2.31
-will have Y2038 support and rseq support, but only if it runs on a
-current and it happens to have been built against sufficiently recent
-kernel headers” is a bit difficult to explain.  The current kernel part
-is easy enough to understand, but the impact of the kernel headers on
-the feature set has always been tough to explain.  Especially if you
-factor in vendor kernels with system call backports.
-
-Thanks,
-Florian
+> +static inline bool i_mmap_timedlock_write(struct address_space *mapping,
+> +					 ktime_t timeout)
+> +{
+> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
+> +}
