@@ -2,112 +2,151 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF0ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729A3ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3279C20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNoM3s7R"
+	by mail.kernel.org (Postfix) with ESMTP id 4FDF120863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfIKIh3 (ORCPT
+        id S1727122AbfIKIjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:37:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42962 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfIKIh3 (ORCPT
+        Wed, 11 Sep 2019 04:39:32 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3075 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726018AbfIKIjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:37:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p3so11155638pgb.9;
-        Wed, 11 Sep 2019 01:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XcgXl6vcI7fky/pyqfiJ2ZU/L3oI062mhDlNkD5vbkY=;
-        b=TNoM3s7RpMnHi7rVVC8z/RaWTFsUbcW2SItU6YdhdWxyDWyI0MwwmvDcrfMNR0XIXa
-         hNEOtQqvM5bTpCrsUdjlbzf8sQTfQ3/JQRc1jnh4VLsYkuSFqBcgf+t2h2EQkjazO6cF
-         9CvFluD2KBoabY9jevT51GUg8RQbjQEJL4zfCwTInYOS5lsIPuKDPvnOAYk7DS0DhTxB
-         o1jqDvZJ8v90TOrqVZkfpDBfrLUrFa2nMxehVLSIWMYzWnHTQv0LUYwvIvtk3ARPkHjr
-         coEDdt65vcq1EC4rdh1bzGKF8I200cDPBVMDZSr6+YOauIcrRQYflY+4SDjNnGJ6xkjF
-         dwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XcgXl6vcI7fky/pyqfiJ2ZU/L3oI062mhDlNkD5vbkY=;
-        b=h0c0SuCMXAuCRhrlIOaABmWsIMMAthKhERqq+l8kpvUxBAg9oB5xzAByvP5Ee09MWB
-         rPceCSx+MJ2RFyavzyLpyFI4pwjY6+4IW543Q43oqu3Sv5N2USrGRDWsTJ4Ch76QSySb
-         nbi60XJuNzFQFjIabI/gkwd5cBdDu8Px7KhA19ALRmnu+OT9xvKsqt9CVSHh+nHlunhk
-         l83T1EpI8OqpZlNK4OhACdcEype0g6bNgj8GEagM6dyQbeFcTUydHTYn2Sf+msWDHMEK
-         ig+y+hcyWY2YG8jFL03nCh8hptZEohhNekZX6NB7VjV7pltPqFPneHRMjgC7GyVpT3W3
-         RDLw==
-X-Gm-Message-State: APjAAAUiQijZsJIoovsJIpbOlsAixODREQdDy6iNjY3BhPK/NByhFAZY
-        BcjJHyTXUAEsNNs7eyotdWM=
-X-Google-Smtp-Source: APXvYqxGnmNFIw1jCzeXu52A256RgHcF15CP6NRxYaVRdLJYFAuDQkWCJhlUPQelWxrS25JnzmSu5A==
-X-Received: by 2002:a17:90a:f0cc:: with SMTP id fa12mr4072557pjb.138.1568191048048;
-        Wed, 11 Sep 2019 01:37:28 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u69sm18469729pgu.77.2019.09.11.01.37.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 01:37:27 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 01:37:25 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4 06/14] software node: get rid of property_set_pointer()
-Message-ID: <20190911083725.GF145199@dtor-ws>
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
- <20190911051231.148032-7-dmitry.torokhov@gmail.com>
- <CAHp75Ve5NvhzOQ96OgbPh1LdsAtvk+A=aVu-oXKdhnB4PpL_og@mail.gmail.com>
+        Wed, 11 Sep 2019 04:39:32 -0400
+X-UUID: 1da5aa5210c14e98850fc278477b392b-20190911
+X-UUID: 1da5aa5210c14e98850fc278477b392b-20190911
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1427945322; Wed, 11 Sep 2019 16:39:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Sep 2019 16:39:23 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Sep 2019 16:39:23 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Qian Cai <cai@lca.pw>, Vlastimil Babka <vbabka@suse.cz>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
+Date:   Wed, 11 Sep 2019 16:39:21 +0800
+Message-ID: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Ve5NvhzOQ96OgbPh1LdsAtvk+A=aVu-oXKdhnB4PpL_og@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:29:10AM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 11, 2019 at 8:15 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > Instead of explicitly setting values of integer types when copying
-> > property entries lets just copy entire value union when processing
-> > non-array values.
-> >
-> > When handling array values assign the pointer there using the newly
-> > introduced "raw" pointer union member. This allows us to remove
-> > property_set_pointer().
-> >
-> > In property_get_pointer() we do not need to handle each data type
-> > separately, we can simply return either the raw pointer or pointer to
-> > values union.
-> 
-> Same as before, typechecking is good thing to have for my point of view.
-> Others may have different opinions.
+This patch is KASAN's report adds the alloc/free stack for page allocator
+in order to help programmer to see memory corruption caused by the page.
 
-OK, I'll just point out that typechecking is a red herring here as
-everything was and still is accessed through void pointers, and we
-trusted the type set on property. Users of static properties should use
-PROPERTY_ENTRY_XXX() for initialization and do not poke into struct
-property_entry directly.
+By default, KASAN doesn't record alloc or free stack for page allocator.
+It is difficult to fix up the page use-after-free or double-free issue.
 
-I suppose it is up to Rafael to decide here.
+We add the following changing:
+1) KASAN enable PAGE_OWNER by default to get the alloc stack of the page.
+2) Add new feature option to get the free stack of the page.
 
-Thanks.
+The new feature KASAN_DUMP_PAGE depends on DEBUG_PAGEALLOC, it will help
+to record free stack of the page, it is very helpful for solving the page
+use-after-free or double-free issue.
 
+When KASAN_DUMP_PAGE is enabled then KASAN's report will show the last
+alloc and free stack of the page, it should be:
+
+BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+Write of size 1 at addr ffffffc0d60e4000 by task cat/115
+...
+ prep_new_page+0x1c8/0x218
+ get_page_from_freelist+0x1ba0/0x28d0
+ __alloc_pages_nodemask+0x1d4/0x1978
+ kmalloc_order+0x28/0x58
+ kmalloc_order_trace+0x28/0xe0
+ kmalloc_pagealloc_uaf+0x2c/0x80
+page last free stack trace:
+ __free_pages_ok+0x116c/0x1630
+ __free_pages+0x50/0x78
+ kfree+0x1c4/0x250
+ kmalloc_pagealloc_uaf+0x38/0x80
+
+Changes since v1:
+- slim page_owner and move it into kasan
+- enable the feature by default
+
+Changes since v2:
+- enable PAGE_OWNER by default
+- use DEBUG_PAGEALLOC to get page information
+
+cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+cc: Vlastimil Babka <vbabka@suse.cz>
+cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+---
+ lib/Kconfig.kasan | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+index 4fafba1a923b..4d59458c0c5a 100644
+--- a/lib/Kconfig.kasan
++++ b/lib/Kconfig.kasan
+@@ -41,6 +41,7 @@ config KASAN_GENERIC
+ 	select SLUB_DEBUG if SLUB
+ 	select CONSTRUCTORS
+ 	select STACKDEPOT
++	select PAGER_OWNER
+ 	help
+ 	  Enables generic KASAN mode.
+ 	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
+@@ -63,6 +64,7 @@ config KASAN_SW_TAGS
+ 	select SLUB_DEBUG if SLUB
+ 	select CONSTRUCTORS
+ 	select STACKDEPOT
++	select PAGER_OWNER
+ 	help
+ 	  Enables software tag-based KASAN mode.
+ 	  This mode requires Top Byte Ignore support by the CPU and therefore
+@@ -135,6 +137,19 @@ config KASAN_S390_4_LEVEL_PAGING
+ 	  to 3TB of RAM with KASan enabled). This options allows to force
+ 	  4-level paging instead.
+ 
++config KASAN_DUMP_PAGE
++	bool "Dump the last allocation and freeing stack of the page"
++	depends on KASAN
++	select DEBUG_PAGEALLOC
++	help
++	  By default, KASAN enable PAGE_OWNER only to record alloc stack
++	  for page allocator. It is difficult to fix up page use-after-free
++	  or double-free issue.
++	  This feature depends on DEBUG_PAGEALLOC, it will extra record
++	  free stack of page. It is very helpful for solving the page
++	  use-after-free or double-free issue.
++	  This option will have a small memory overhead.
++
+ config TEST_KASAN
+ 	tristate "Module for testing KASAN for bug detection"
+ 	depends on m && KASAN
 -- 
-Dmitry
+2.18.0
+
