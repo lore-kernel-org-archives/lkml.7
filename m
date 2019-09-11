@@ -2,130 +2,154 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11325C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BABC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24A52085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A172085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfIKPwO (ORCPT
+        id S1728839AbfIKPw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:52:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40344 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfIKPwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:52:13 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7E671918644;
-        Wed, 11 Sep 2019 15:52:12 +0000 (UTC)
-Received: from localhost (ovpn-116-185.ams2.redhat.com [10.36.116.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C4A860BEC;
-        Wed, 11 Sep 2019 15:52:10 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 17:52:08 +0200
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v5 0/4] virtio-fs: shared file system for virtual machines
-Message-ID: <20190911155208.GA20527@stefanha-x1.localdomain>
-References: <20190910151206.4671-1-mszeredi@redhat.com>
+        Wed, 11 Sep 2019 11:52:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727581AbfIKPw0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:52:26 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BFq2YY073022
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:52:25 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uy3kagtp8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 11:52:24 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
+        Wed, 11 Sep 2019 16:52:23 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Sep 2019 16:52:19 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BFqI8A49741954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 15:52:18 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C220652063;
+        Wed, 11 Sep 2019 15:52:18 +0000 (GMT)
+Received: from bahia.lan (unknown [9.145.58.141])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 832F952054;
+        Wed, 11 Sep 2019 15:52:18 +0000 (GMT)
+Subject: [PATCH v2] powerpc/xive: Fix bogus error code returned by OPAL
+From:   Greg Kurz <groug@kaod.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 11 Sep 2019 17:52:18 +0200
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <20190910151206.4671-1-mszeredi@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 11 Sep 2019 15:52:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091115-0016-0000-0000-000002AA163A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091115-0017-0000-0000-0000330AA387
+Message-Id: <156821713818.1985334.14123187368108582810.stgit@bahia.lan>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=763 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909110144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+Unfortunatelty, OPAL return values are signed 64-bit entities and
+errors are supposed to be negative. If that happens, the linux code
+confusingly treats 0xffffffff as a valid IRQ number and panics at some
+point.
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A fix was recently merged in skiboot:
 
-On Tue, Sep 10, 2019 at 05:12:02PM +0200, Miklos Szeredi wrote:
-> I've folded the series from Vivek and fixed a couple of TODO comments
-> myself.  AFAICS two issues remain that need to be resolved in the short
-> term, one way or the other: freeze/restore and full virtqueue.
+e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
 
-I have researched freeze/restore and come to the conclusion that it
-needs to be a future feature.  It will probably come together with live
-migration support for reasons mentioned below.
+but we need a workaround anyway to support older skiboots already
+in the field.
 
-Most virtio devices have fairly simply power management freeze/restore
-functions that shut down the device and bring it back to the state held
-in memory, respectively.  virtio-fs, as well as virtio-9p and
-virtio-gpu, are different because they contain session state.  It is not
-easily possible to bring back the state held in memory after the device
-has been reset.
+Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+returned upon resource exhaustion.
 
-The following areas of the FUSE protocol are stateful and need special
-attention:
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Greg Kurz <groug@kaod.org>
+---
+v2: - fix syntax error in changelog
+    - Cc stable
+    - rename original OPAL wrapper
+    - rewrite fixup wrapper (style, use s64 and u32)
+---
+ arch/powerpc/include/asm/opal.h            |    2 +-
+ arch/powerpc/platforms/powernv/opal-call.c |    2 +-
+ arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
 
- * FUSE_INIT - this is pretty easy, we must re-negotiate the same
-   settings as before.
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 57bd029c715e..d5a0807d21db 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t vp,
+ int64_t opal_xive_set_vp_info(uint64_t vp,
+ 			      uint64_t flags,
+ 			      uint64_t report_cl_pair);
+-int64_t opal_xive_allocate_irq(uint32_t chip_id);
++int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
+ int64_t opal_xive_free_irq(uint32_t girq);
+ int64_t opal_xive_sync(uint32_t type, uint32_t id);
+ int64_t opal_xive_dump(uint32_t type, uint32_t id);
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 29ca523c1c79..dccdc9df5213 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPAL_XIVE_SET_QUEUE_INFO);
+ OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
+ OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
+ OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
+-OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
++OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
+ OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
+ OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
+ OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 37987c815913..ad8ee7dd7f57 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -231,6 +231,17 @@ static bool xive_native_match(struct device_node *node)
+ 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+ }
+ 
++static s64 opal_xive_allocate_irq(u32 chip_id)
++{
++	s64 irq = opal_xive_allocate_irq_raw(chip_id);
++
++	/*
++	 * Old versions of skiboot can incorrectly return 0xffffffff to
++	 * indicate no space, fix it up here.
++	 */
++	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
++}
++
+ #ifdef CONFIG_SMP
+ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
 
- * FUSE_LOOKUP -> fuse_inode (inode_map)
-
-   The session contains a set of inode numbers that have been looked up
-   using FUSE_LOOKUP.  They are ephemeral in the current virtiofsd
-   implementation and vary across device reset.  Therefore we are unable
-   to restore the same inode numbers upon restore.
-
-   The solution is persistent inode numbers in virtiofsd.  This is also
-   needed to make open_by_handle_at(2) work and probably for live
-   migration.
-
- * FUSE_OPEN -> fh (fd_map)
-
-   The session contains FUSE file handles for open files.  There is
-   currently no way of re-opening a file so that a specific fh is
-   returned.  A mechanism to do so probably isn't necessary if the
-   driver can update the fh to the new one produced by the device for
-   all open files instead.
-
- * FUSE_OPENDIR -> fh (dirp_map)
-
-   Same story as for FUSE_OPEN but for open directories.
-
- * FUSE_GETLK/SETLK/SETLKW -> (inode->posix_locks and fcntl(F_OFD_GET/SETLK))
-
-   The session contains file locks.  The driver must reacquire them upon
-   restore.  It's unclear what to do when locking fails.
-
-Live migration has the same problem since the FUSE session will be moved
-to a new virtio-fs device instance.  It makes sense to tackle both
-features together.  This is something that can be implemented in the
-next year, but it's not a quick fix.
-
-Stefan
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl15GCgACgkQnKSrs4Gr
-c8igAgf/aNAbXEnx1hxe1ARrpZRbdhkuuHJ/eV/iEWLUuRcNmDT2c7mrvoekWt5L
-j6w1ePRZfFn0FEZrpLNo45HfKfnfPwazWm7NTi1vlz2EdrRXKibFEjMwqZuFlkSO
-iVIpS5k3LHEk2P587Kye/Tek1JnevDKOOCZB1PIpxuQ3aRZXZKcYmWECp5dC+hR1
-PGt2w5O9L4qbiAFF32Gn5Y4DWxi3N+p6dcdtH09Zlh8AONhiH/z8rag5ZPQaMWhS
-HcWhqpxgBo3MHs0Da+PrWZ8U81DmuRXirLYcr5HaeDqM7mMow2hxF12KWiZ/ovP2
-7mjCdT/9OGlWNyES9XYexdsEM4fsyw==
-=41cO
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
