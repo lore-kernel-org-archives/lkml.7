@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B72C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E987C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC792085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA132085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q06ncsND"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UChTsU1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfIKSBw (ORCPT
+        id S1729978AbfIKSBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:01:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55974 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbfIKSBX (ORCPT
+        Wed, 11 Sep 2019 14:01:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52580 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729769AbfIKSBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 14:01:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1H8u000904;
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1H9n088970;
         Wed, 11 Sep 2019 13:01:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1568224877;
-        bh=FmX84wdoIvKOF4QfyScCM6+x89vt6CsCWXDGcqUhLqw=;
+        bh=oUljA5ErHiv3YWcu3yuKsuunIS40fEW3qS+g1aItKiw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=q06ncsNDgn4TyFv8BrgKqptSB419/FBge+C95IAVTWOfDXA9YBs5Poo7wVVqCUfHd
-         QvcE4ZZXvMAIrmyJRddj9CCrpMa9GYPjHp0K5iSOFo0zh6mk11SEaaogQBLaXVIvst
-         xHaspIacKmgt+dbqgXMgUqGVzVoSE7UZBTgOTFTA=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1H7o102539;
+        b=UChTsU1dCAtXaIyQ71deQGp1W/ZAu97k1O0muKusVMoUrsyU/4x1jEKCmyBrsvBQB
+         9aBLxWdKhZ9OtcUdC74uE492ZoXVZk9GknEFyu33rEaoegfdTYqMRSgAZdbluictvB
+         fEYLDllfPQ4z7N0Ciy1VnKP3nFLCmTFF833nVimU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8BI1HXw009326
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Wed, 11 Sep 2019 13:01:17 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 11
  Sep 2019 13:01:17 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 11 Sep 2019 13:01:17 -0500
+ Frontend Transport; Wed, 11 Sep 2019 13:01:16 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1Hrd040990;
-        Wed, 11 Sep 2019 13:01:17 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8BI1GMV040976;
+        Wed, 11 Sep 2019 13:01:16 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 3/9] dt: bindings: Add multicolor class dt bindings documention
-Date:   Wed, 11 Sep 2019 13:01:09 -0500
-Message-ID: <20190911180115.21035-4-dmurphy@ti.com>
+Subject: [PATCH v5 1/9] leds: multicolor: Add sysfs interface definition
+Date:   Wed, 11 Sep 2019 13:01:07 -0500
+Message-ID: <20190911180115.21035-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190911180115.21035-1-dmurphy@ti.com>
 References: <20190911180115.21035-1-dmurphy@ti.com>
@@ -66,116 +67,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the LEDs multicolor class framework.
+Add a documentation of LED Multicolor LED class specific
+sysfs attributes.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../bindings/leds/leds-class-multicolor.txt   | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ .../ABI/testing/sysfs-class-led-multicolor    | 73 +++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
 new file mode 100644
-index 000000000000..5d36327b18fc
+index 000000000000..4ea54c2ad4c8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-@@ -0,0 +1,96 @@
-+* Multicolor LED properties
++++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+@@ -0,0 +1,73 @@
++What:		/sys/class/leds/<led>/brightness
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The multicolor class will redirect the device drivers call back
++		function for brightness control to the multicolor class
++		brightness control function.
 +
-+Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
-+can be grouped together and also provide a modeling mechanism so that the
-+cluster LEDs can vary in hue and intensity to produce a wide range of colors.
++		Writing to this file will update all LEDs within the group to a
++		calculated percentage of what each color LED in the group is set
++		to.  The percentage is calculated via the equation below:
 +
-+The nodes and properties defined in this document are unique to the multicolor
-+LED class.  Common LED nodes and properties are inherited from the common.txt
-+within this documentation directory.
++		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
 +
-+Required LED Child properties:
-+	- color : For multicolor LED support this property should be defined as
-+		  LED_COLOR_ID_MULTI and further definition can be found in
-+		  include/linux/leds/common.h.
++		For additional details please refer to
++		Documentation/leds/leds-class-multicolor.rst.
 +
-+led-controller@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "ti,lp5024";
-+	reg = <0x29>;
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/max_brightness.
 +
-+	multi-led@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_;
++What:		/sys/class/leds/<led>/colors/color_mix
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The values written to this file should contain the intensity
++		values of each multicolor LED within the colors directory. The
++		index of given color is reported by the color_id file present in
++		colors/<color> directory. The index determines the position in
++		the sequence of	intensities on which the related intensity
++		should be passed to this file.
 +
++		For additional details please refer to
++		Documentation/leds/leds-class-multicolor.rst.
 +
-+		led@3 {
-+			reg = <3>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
++What:		/sys/class/leds/<led>/colors/<led_color>/color_id
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read only
++		This file when read will return the index of the color in the
++		color_mix.
 +
-+		led@4 {
-+			reg = <4>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
++		For additional details please refer to
++		Documentation/leds/leds-class-multicolor.rst.
 +
-+		led@5 {
-+			reg = <5>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
++What:		/sys/class/leds/<led>/colors/<led_color>/intensity
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The led_color directory is dynamically created based on the
++		colors defined by the registrar of the class.
++		The led_color can be but not limited to red, green, blue,
++		white, amber, yellow and violet.  There is one directory per color
++		presented.  The brightness file is created under each
++		led_color directory and controls the individual LED color
++		setting.
 +
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+		reg = <2>;
-+		ti,led-bank = <2 3 5>;
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/colors/<led_color>/max_intensity.
 +
-+		led@6 {
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+			led-sources = <6 9 15>;
-+		};
++What:		/sys/class/leds/<led>/colors/<led_color>/max_intensity
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read only
++		Maximum intensity level for the LED color, default is
++		255 (LED_FULL).
 +
-+		led@7 {
-+			reg = <0x7>;
-+			color = <LED_COLOR_ID_GREEN>;
-+			led-sources = <7 10 16>;
-+		};
-+
-+		led@8 {
-+			reg = <0x8>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			led-sources = <8 11 17>;
-+		};
-+	};
-+
-+	multi-led@4 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <4>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+
-+		led@12 {
-+			reg = <12>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@13 {
-+			reg = <13>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@14 {
-+			reg = <14>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+
-+};
++		If the LED does not support different intensity levels, this
++		should be 1.
 -- 
 2.22.0.214.g8dca754b1e
 
