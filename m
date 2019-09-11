@@ -2,290 +2,95 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6E3C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEBAECDE2A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DA32089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F0E20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:16:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ojylFW7d";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kuou501Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfIKQQu (ORCPT
+        id S1729190AbfIKQQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:16:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56234 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfIKQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:16:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 11 Sep 2019 12:16:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37970 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729149AbfIKQQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:16:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2900760C72; Wed, 11 Sep 2019 16:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568218608;
+        bh=tn8EIOlw52p10Je+it7oNkaaHTfUPXTl86tPFg9hjf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ojylFW7dnyYRTd/m6Je9Pflrh3J/HiQswu7GR89Oy0hd9ICzLsjlBLdHrXU4Oc1vH
+         crQ+JZ9X+/YAM94thTMlbDpLjAOhF5IpNLuwRAg/MpzSqrB2eeY6GyxvfVnK0P4Jsk
+         LJB6id1yKoAMBNZzhE8QeudvPbXBHEL7hjq63mrk=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C85272A09A9;
-        Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9448B5DC18;
-        Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 7DB1F20EF2; Wed, 11 Sep 2019 12:16:22 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 23/26] NFS: rename nfs_fs_context pointer arg in a few functions
-Date:   Wed, 11 Sep 2019 12:16:18 -0400
-Message-Id: <20190911161621.19832-24-smayhew@redhat.com>
-In-Reply-To: <20190911161621.19832-1-smayhew@redhat.com>
-References: <20190911161621.19832-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 11 Sep 2019 16:16:23 +0000 (UTC)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 099F8607CA;
+        Wed, 11 Sep 2019 16:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568218607;
+        bh=tn8EIOlw52p10Je+it7oNkaaHTfUPXTl86tPFg9hjf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kuou501Yo7RboC4JSk3MoJZMFT5F2MdaLY69J+9td8eHy5AUlddXETD4NaMngglZH
+         hGYp7phS6po6tVrVSqrTxerKL4tgX3IDdo+23t2Cdebt09QAw975vUKh+d2RHu3/wB
+         OGka20x77a2XvwIyS8hSV65fbtCyUEF+8rSy+J1s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 099F8607CA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Wed, 11 Sep 2019 10:16:46 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        mkshah@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH RFC 09/14] drivers: pinctrl: msm: fix use of deprecated
+ gpiolib APIs
+Message-ID: <20190911161646.GC30053@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-10-ilina@codeaurora.org>
+ <CACRpkdbhNY8N=LMG6wwYw9bAnL4HmAqj8WMpsLsqvh8PvaQ52A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbhNY8N=LMG6wwYw9bAnL4HmAqj8WMpsLsqvh8PvaQ52A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split out from commit "NFS: Add fs_context support."
-
-Rename cfg to ctx in nfs_init_server(), nfs_verify_authflavors(),
-and nfs_request_mount().  No functional changes.
-
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfs/client.c | 62 ++++++++++++++++++++++++-------------------------
- fs/nfs/super.c  | 54 +++++++++++++++++++++---------------------
- 2 files changed, 58 insertions(+), 58 deletions(-)
-
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 1afd796a3706..511d1d629786 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -648,27 +648,27 @@ EXPORT_SYMBOL_GPL(nfs_init_client);
-  * Create a version 2 or 3 client
-  */
- static int nfs_init_server(struct nfs_server *server,
--			   const struct nfs_fs_context *cfg,
-+			   const struct nfs_fs_context *ctx,
- 			   struct nfs_subversion *nfs_mod)
- {
- 	struct rpc_timeout timeparms;
- 	struct nfs_client_initdata cl_init = {
--		.hostname = cfg->nfs_server.hostname,
--		.addr = (const struct sockaddr *)&cfg->nfs_server.address,
--		.addrlen = cfg->nfs_server.addrlen,
-+		.hostname = ctx->nfs_server.hostname,
-+		.addr = (const struct sockaddr *)&ctx->nfs_server.address,
-+		.addrlen = ctx->nfs_server.addrlen,
- 		.nfs_mod = nfs_mod,
--		.proto = cfg->nfs_server.protocol,
--		.net = cfg->net,
-+		.proto = ctx->nfs_server.protocol,
-+		.net = ctx->net,
- 		.timeparms = &timeparms,
- 		.cred = server->cred,
--		.nconnect = cfg->nfs_server.nconnect,
-+		.nconnect = ctx->nfs_server.nconnect,
- 	};
- 	struct nfs_client *clp;
- 	int error;
- 
--	nfs_init_timeout_values(&timeparms, cfg->nfs_server.protocol,
--				cfg->timeo, cfg->retrans);
--	if (cfg->flags & NFS_MOUNT_NORESVPORT)
-+	nfs_init_timeout_values(&timeparms, ctx->nfs_server.protocol,
-+				ctx->timeo, ctx->retrans);
-+	if (ctx->flags & NFS_MOUNT_NORESVPORT)
- 		set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
- 
- 	/* Allocate or find a client reference we can use */
-@@ -679,46 +679,46 @@ static int nfs_init_server(struct nfs_server *server,
- 	server->nfs_client = clp;
- 
- 	/* Initialise the client representation from the mount data */
--	server->flags = cfg->flags;
--	server->options = cfg->options;
-+	server->flags = ctx->flags;
-+	server->options = ctx->options;
- 	server->caps |= NFS_CAP_HARDLINKS|NFS_CAP_SYMLINKS|NFS_CAP_FILEID|
- 		NFS_CAP_MODE|NFS_CAP_NLINK|NFS_CAP_OWNER|NFS_CAP_OWNER_GROUP|
- 		NFS_CAP_ATIME|NFS_CAP_CTIME|NFS_CAP_MTIME;
- 
--	if (cfg->rsize)
--		server->rsize = nfs_block_size(cfg->rsize, NULL);
--	if (cfg->wsize)
--		server->wsize = nfs_block_size(cfg->wsize, NULL);
-+	if (ctx->rsize)
-+		server->rsize = nfs_block_size(ctx->rsize, NULL);
-+	if (ctx->wsize)
-+		server->wsize = nfs_block_size(ctx->wsize, NULL);
- 
--	server->acregmin = cfg->acregmin * HZ;
--	server->acregmax = cfg->acregmax * HZ;
--	server->acdirmin = cfg->acdirmin * HZ;
--	server->acdirmax = cfg->acdirmax * HZ;
-+	server->acregmin = ctx->acregmin * HZ;
-+	server->acregmax = ctx->acregmax * HZ;
-+	server->acdirmin = ctx->acdirmin * HZ;
-+	server->acdirmax = ctx->acdirmax * HZ;
- 
- 	/* Start lockd here, before we might error out */
- 	error = nfs_start_lockd(server);
- 	if (error < 0)
- 		goto error;
- 
--	server->port = cfg->nfs_server.port;
--	server->auth_info = cfg->auth_info;
-+	server->port = ctx->nfs_server.port;
-+	server->auth_info = ctx->auth_info;
- 
- 	error = nfs_init_server_rpcclient(server, &timeparms,
--					  cfg->selected_flavor);
-+					  ctx->selected_flavor);
- 	if (error < 0)
- 		goto error;
- 
- 	/* Preserve the values of mount_server-related mount options */
--	if (cfg->mount_server.addrlen) {
--		memcpy(&server->mountd_address, &cfg->mount_server.address,
--			cfg->mount_server.addrlen);
--		server->mountd_addrlen = cfg->mount_server.addrlen;
-+	if (ctx->mount_server.addrlen) {
-+		memcpy(&server->mountd_address, &ctx->mount_server.address,
-+			ctx->mount_server.addrlen);
-+		server->mountd_addrlen = ctx->mount_server.addrlen;
- 	}
--	server->mountd_version = cfg->mount_server.version;
--	server->mountd_port = cfg->mount_server.port;
--	server->mountd_protocol = cfg->mount_server.protocol;
-+	server->mountd_version = ctx->mount_server.version;
-+	server->mountd_port = ctx->mount_server.port;
-+	server->mountd_protocol = ctx->mount_server.protocol;
- 
--	server->namelen  = cfg->namlen;
-+	server->namelen  = ctx->namlen;
- 	return 0;
- 
- error:
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index d44de53c17a6..9aa27093d8b6 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -726,11 +726,11 @@ bool nfs_auth_info_match(const struct nfs_auth_info *auth_info,
- EXPORT_SYMBOL_GPL(nfs_auth_info_match);
- 
- /*
-- * Ensure that a specified authtype in cfg->auth_info is supported by
-- * the server. Returns 0 and sets cfg->selected_flavor if it's ok, and
-+ * Ensure that a specified authtype in ctx->auth_info is supported by
-+ * the server. Returns 0 and sets ctx->selected_flavor if it's ok, and
-  * -EACCES if not.
-  */
--static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
-+static int nfs_verify_authflavors(struct nfs_fs_context *ctx,
- 				  rpc_authflavor_t *server_authlist,
- 				  unsigned int count)
- {
-@@ -753,7 +753,7 @@ static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
- 	for (i = 0; i < count; i++) {
- 		flavor = server_authlist[i];
- 
--		if (nfs_auth_info_match(&cfg->auth_info, flavor))
-+		if (nfs_auth_info_match(&ctx->auth_info, flavor))
- 			goto out;
- 
- 		if (flavor == RPC_AUTH_NULL)
-@@ -761,7 +761,7 @@ static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
- 	}
- 
- 	if (found_auth_null) {
--		flavor = cfg->auth_info.flavors[0];
-+		flavor = ctx->auth_info.flavors[0];
- 		goto out;
- 	}
- 
-@@ -770,8 +770,8 @@ static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
- 	return -EACCES;
- 
- out:
--	cfg->selected_flavor = flavor;
--	dfprintk(MOUNT, "NFS: using auth flavor %u\n", cfg->selected_flavor);
-+	ctx->selected_flavor = flavor;
-+	dfprintk(MOUNT, "NFS: using auth flavor %u\n", ctx->selected_flavor);
- 	return 0;
- }
- 
-@@ -779,50 +779,50 @@ static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
-  * Use the remote server's MOUNT service to request the NFS file handle
-  * corresponding to the provided path.
-  */
--static int nfs_request_mount(struct nfs_fs_context *cfg,
-+static int nfs_request_mount(struct nfs_fs_context *ctx,
- 			     struct nfs_fh *root_fh,
- 			     rpc_authflavor_t *server_authlist,
- 			     unsigned int *server_authlist_len)
- {
- 	struct nfs_mount_request request = {
- 		.sap		= (struct sockaddr *)
--						&cfg->mount_server.address,
--		.dirpath	= cfg->nfs_server.export_path,
--		.protocol	= cfg->mount_server.protocol,
-+						&ctx->mount_server.address,
-+		.dirpath	= ctx->nfs_server.export_path,
-+		.protocol	= ctx->mount_server.protocol,
- 		.fh		= root_fh,
--		.noresvport	= cfg->flags & NFS_MOUNT_NORESVPORT,
-+		.noresvport	= ctx->flags & NFS_MOUNT_NORESVPORT,
- 		.auth_flav_len	= server_authlist_len,
- 		.auth_flavs	= server_authlist,
--		.net		= cfg->net,
-+		.net		= ctx->net,
- 	};
- 	int status;
- 
--	if (cfg->mount_server.version == 0) {
--		switch (cfg->version) {
-+	if (ctx->mount_server.version == 0) {
-+		switch (ctx->version) {
- 			default:
--				cfg->mount_server.version = NFS_MNT3_VERSION;
-+				ctx->mount_server.version = NFS_MNT3_VERSION;
- 				break;
- 			case 2:
--				cfg->mount_server.version = NFS_MNT_VERSION;
-+				ctx->mount_server.version = NFS_MNT_VERSION;
- 		}
- 	}
--	request.version = cfg->mount_server.version;
-+	request.version = ctx->mount_server.version;
- 
--	if (cfg->mount_server.hostname)
--		request.hostname = cfg->mount_server.hostname;
-+	if (ctx->mount_server.hostname)
-+		request.hostname = ctx->mount_server.hostname;
- 	else
--		request.hostname = cfg->nfs_server.hostname;
-+		request.hostname = ctx->nfs_server.hostname;
- 
- 	/*
- 	 * Construct the mount server's address.
- 	 */
--	if (cfg->mount_server.address.sa_family == AF_UNSPEC) {
--		memcpy(request.sap, &cfg->nfs_server.address,
--		       cfg->nfs_server.addrlen);
--		cfg->mount_server.addrlen = cfg->nfs_server.addrlen;
-+	if (ctx->mount_server.address.sa_family == AF_UNSPEC) {
-+		memcpy(request.sap, &ctx->nfs_server.address,
-+		       ctx->nfs_server.addrlen);
-+		ctx->mount_server.addrlen = ctx->nfs_server.addrlen;
- 	}
--	request.salen = cfg->mount_server.addrlen;
--	nfs_set_port(request.sap, &cfg->mount_server.port, 0);
-+	request.salen = ctx->mount_server.addrlen;
-+	nfs_set_port(request.sap, &ctx->mount_server.port, 0);
- 
- 	/*
- 	 * Now ask the mount server to map our export path
--- 
-2.17.2
-
+On Wed, Sep 11 2019 at 04:19 -0600, Linus Walleij wrote:
+>On Thu, Aug 29, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>
+>> Replace gpiochip_irqchip_add() and gpiochip_set_chained_irqchip() calls
+>> by populating the gpio_irq_chip data structures instead.
+>>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>
+>This is mostly fixed upstream I think, but:
+>
+>> +       chip->irq.fwnode = pctrl->dev->fwnode;
+>
+>This fwnode assignment is missing though.
+>
+>Sorry for the constant churn and required rebasing...
+>
+Not a problem. Will rebase.
