@@ -2,103 +2,119 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EDDC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A86CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B1F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F3B222BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568196711;
+	bh=gZ6bs0LnQLjGM5VBVpFb9Y9GrE9uVAF7+RmNqjsXlYI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mSDfPLcH7TbyzRiv44ZYrkmB34zv9f+mNk+/ZgkxdyVO3WNFBV/YIQfM01Jh87sDU
+	 xjEtWgj990fTdn/Rgb9fygyIG6wgWXY9Myg0BNh1mVu4SW2ArNOihDLvAA0fwCpjAi
+	 ezA+YJBOIrbZYWfpzazmQlWbNcV1v6O9fI13dsSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfIKKLT (ORCPT
+        id S1727669AbfIKKLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:11:19 -0400
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:56842 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726724AbfIKKLS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:11:18 -0400
-Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
- 2019 18:11:15 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
- (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
- 2019 18:11:14 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Wed, 11 Sep 2019 18:11:14 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "tony.luck@intel.com" <tony.luck@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
-        David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjIgMi80XSB4ODYvbWNlOiBNYWtlIDQgZnVuY3Rp?=
- =?utf-8?Q?ons_non-static?=
-Thread-Topic: [PATCH v2 2/4] x86/mce: Make 4 functions non-static
-Thread-Index: AdVnqQDOV1imTHrsT2SgiPNqZp0lI///0PUA//6MTLA=
-Date:   Wed, 11 Sep 2019 10:11:14 +0000
-Message-ID: <511656950c0342178cceb024ece0bf0b@zhaoxin.com>
-References: <5b5bf41a26674a1c9d67cd7b3822a304@zhaoxin.com>
- <20190910123741.GG23931@zn.tnic>
-In-Reply-To: <20190910123741.GG23931@zn.tnic>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 06:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbfIKKLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:11:50 -0400
+Received: from [192.168.7.66] (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E27207FC;
+        Wed, 11 Sep 2019 10:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568196709;
+        bh=gZ6bs0LnQLjGM5VBVpFb9Y9GrE9uVAF7+RmNqjsXlYI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ffS1OydmfU0f9nYgyOKGyEy/cao5T2q2LocmnSscBCKO32tMbtkddqOeFt2bdx6iT
+         1CfOMBz97zLKEGzAgD2pt+sZeyS1n6aG2XoK2GwwrOn+0vbzHEy8XQs//NN09oHRV6
+         HmzBmjPN8Wrb9+kFAVVWV0mxBioNjn7BgmQgBYxI=
+Subject: Re: [PATCH] cpupower : Handle set and info subcommands for powerpc
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     trenn@suse.com, shuah <shuah@kernel.org>
+References: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3326dc53-f8a1-dd7b-5ae8-b86ef5ef8b24@kernel.org>
+Date:   Wed, 11 Sep 2019 04:11:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBTZXAgMTAsIDIwMTksIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj5PbiBUdWUsIFNl
-cCAxMCwgMjAxOSBhdCAwODoxOToyMEFNICswMDAwLCBUb255IFcgV2FuZy1vYyB3cm90ZToNCj4+
-IFRoZXNlIGZ1bmN0aW9ucyBhcmUgZGVjbGFyZWQgc3RhdGljIGFuZCBjYW5ub3QgYmUgdXNlZCBp
-biBvdGhlcnMNCj4+IC5jIHNvdXJjZSBmaWxlLiB0aGlzIGNvbW1pdCByZW1vdmVzIHRoZSBzdGF0
-aWMgYXR0cmlidXRlIGFuZCBhZGRzDQo+PiB0aGUgZGVjbGFyYXRpb24gdG8gdGhlIGhlYWRlciBm
-b3IgdGhlc2UgZnVuY3Rpb25zLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFRvbnkgVyBXYW5nLW9j
-IDxUb255V1dhbmctb2NAemhhb3hpbi5jb20+DQo+PiAtLS0NCj4+ICBhcmNoL3g4Ni9rZXJuZWwv
-Y3B1L21jZS9pbnRlbC5jICAgIHwgOCArKysrLS0tLQ0KPj4gIGFyY2gveDg2L2tlcm5lbC9jcHUv
-bWNlL2ludGVybmFsLmggfCA4ICsrKysrKysrDQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNl
-cnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9r
-ZXJuZWwvY3B1L21jZS9pbnRlbC5jIGIvYXJjaC94ODYva2VybmVsL2NwdS9tY2UvaW50ZWwuYw0K
-Pj4gaW5kZXggODhjZDk1OS4uZWVlNGIxMiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L2tlcm5l
-bC9jcHUvbWNlL2ludGVsLmMNCj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2ludGVs
-LmMNCj4+IEBAIC00MjMsNyArNDIzLDcgQEAgdm9pZCBjbWNpX2Rpc2FibGVfYmFuayhpbnQgYmFu
-aykNCj4+ICAJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmNtY2lfZGlzY292ZXJfbG9jaywg
-ZmxhZ3MpOw0KPj4gIH0NCj4+DQo+PiAtc3RhdGljIHZvaWQgaW50ZWxfaW5pdF9jbWNpKHZvaWQp
-DQo+PiArdm9pZCBpbnRlbF9pbml0X2NtY2kodm9pZCkNCj4+ICB7DQo+PiAgCWludCBiYW5rczsN
-Cj4+DQo+PiBAQCAtNDQyLDcgKzQ0Miw3IEBAIHN0YXRpYyB2b2lkIGludGVsX2luaXRfY21jaSh2
-b2lkKQ0KPj4gIAljbWNpX3JlY2hlY2soKTsNCj4+ICB9DQo+Pg0KPj4gLXN0YXRpYyB2b2lkIGlu
-dGVsX2luaXRfbG1jZSh2b2lkKQ0KPj4gK3ZvaWQgaW50ZWxfaW5pdF9sbWNlKHZvaWQpDQo+PiAg
-ew0KPj4gIAl1NjQgdmFsOw0KPj4NCj4+IEBAIC00NTUsNyArNDU1LDcgQEAgc3RhdGljIHZvaWQg
-aW50ZWxfaW5pdF9sbWNlKHZvaWQpDQo+PiAgCQl3cm1zcmwoTVNSX0lBMzJfTUNHX0VYVF9DVEws
-IHZhbCB8IE1DR19FWFRfQ1RMX0xNQ0VfRU4pOw0KPj4gIH0NCj4+DQo+PiAtc3RhdGljIHZvaWQg
-aW50ZWxfY2xlYXJfbG1jZSh2b2lkKQ0KPj4gK3ZvaWQgaW50ZWxfY2xlYXJfbG1jZSh2b2lkKQ0K
-Pj4gIHsNCj4+ICAJdTY0IHZhbDsNCj4+DQo+PiBAQCAtNDY3LDcgKzQ2Nyw3IEBAIHN0YXRpYyB2
-b2lkIGludGVsX2NsZWFyX2xtY2Uodm9pZCkNCj4+ICAJd3Jtc3JsKE1TUl9JQTMyX01DR19FWFRf
-Q1RMLCB2YWwpOw0KPj4gIH0NCj4+DQo+PiAtc3RhdGljIHZvaWQgaW50ZWxfcHBpbl9pbml0KHN0
-cnVjdCBjcHVpbmZvX3g4NiAqYykNCj4+ICt2b2lkIGludGVsX3BwaW5faW5pdChzdHJ1Y3QgY3B1
-aW5mb194ODYgKmMpDQo+DQo+VGhhdCBvbmUgZG9lc24ndCBuZWVkIHRvIGdldCBleHBvcnRlZC4N
-Cj4NCj5UaGlzIGNhbiBlYXNpbHkgYmUgbWlzc2VkIGJlY2F1c2UgeW91J3JlIGV4cG9ydGluZyB0
-aGVtIGluIG9uZSBwYXRjaCBhbmQNCj51c2luZyB0aGVtIGluIGFub3RoZXIuIERvIHRoZSBleHBv
-cnRzIGluIHRoZSBzYW1lIHBhdGNoIHdoZXJlIHlvdSB1c2UNCj50aGVtIGZvciB0aGUgZmlyc3Qg
-dGltZS4NCg0KR290IGl0LCB3aWxsIGZpeCB0aGlzIGluIHYzLg0KDQpTaW5jZXJlbHkNClRvbnlX
-V2FuZy1vYw0KDQo=
+On 9/11/19 3:54 AM, Abhishek Goel wrote:
+> Cpupower tool has set and info options which are not being used by
+> POWER machines. For powerpc, we will return directly for these two
+> subcommands. This removes the ambiguous error message while using set
+> option in case of power systems.
+
+What is the error message you see? Please include it in the commit log.
+
+> 
+> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+> ---
+>   tools/power/cpupower/utils/cpupower-info.c | 5 +++++
+>   tools/power/cpupower/utils/cpupower-set.c  | 5 +++++
+>   2 files changed, 10 insertions(+)
+> 
+> diff --git a/tools/power/cpupower/utils/cpupower-info.c b/tools/power/cpupower/utils/cpupower-info.c
+> index 4c9d342b70ff..674b707a76af 100644
+> --- a/tools/power/cpupower/utils/cpupower-info.c
+> +++ b/tools/power/cpupower/utils/cpupower-info.c
+> @@ -39,6 +39,11 @@ int cmd_info(int argc, char **argv)
+>   	} params = {};
+>   	int ret = 0;
+>   
+> +	#ifdef __powerpc__
+> +	printf(_("Cannot read info as system does not support performance bias setting\n"));
+> +	return 0;
+> +	#endif
+> +
+
+I am not in favor of bailing out this early with this ifdef switch.
+I would rather see this checked somehow(?) when the ambiguous error
+happens.
+
+>   	setlocale(LC_ALL, "");
+>   	textdomain(PACKAGE);
+>   
+> diff --git a/tools/power/cpupower/utils/cpupower-set.c b/tools/power/cpupower/utils/cpupower-set.c
+> index 3cd95c6cb974..c95b29278780 100644
+> --- a/tools/power/cpupower/utils/cpupower-set.c
+> +++ b/tools/power/cpupower/utils/cpupower-set.c
+> @@ -41,6 +41,11 @@ int cmd_set(int argc, char **argv)
+>   	int perf_bias = 0;
+>   	int ret = 0;
+>   
+> +	#ifdef __powerpc__
+> +	printf(_("System does not support performance bias setting\n"));
+> +	return 0;
+> +	#endif
+> +
+
+Same here.
+
+>   	setlocale(LC_ALL, "");
+>   	textdomain(PACKAGE);
+>   
+> 
+
+thanks,
+-- Shuah
