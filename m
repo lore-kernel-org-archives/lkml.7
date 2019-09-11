@@ -2,148 +2,76 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C96ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4ADC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB032084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAZiwy34"
+	by mail.kernel.org (Postfix) with ESMTP id 14C372085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfIKR0C (ORCPT
+        id S1729549AbfIKR0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:26:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34019 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbfIKR0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:26:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so11873170pgc.1;
-        Wed, 11 Sep 2019 10:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dHzjWEjbmPZ/bJXnFMndg1gxGQSAtyDI2pcJRpM0tHQ=;
-        b=eAZiwy348jYbQ9tlPkJ6aw2DPNxIoNTmOn3/zeTYf2Bfd7KM24MTgiMA1meaVNBEMR
-         DbFpKTC2vaSHYL8T+Baf9pmU8A+aOQAD5Ni2VSPClPrhJUCsX8as6AQ/15NkRdN4BZuw
-         62Hhn0jY7AL8i/nT8S6G6mrKEftbh/lJVURnLMTpwXfkacEnvws3b7Q0G6ovCrRvlf0d
-         0z8hmePN55njAHE0LTQdofDEsaoAKCuCoP0YxEU12uRE++qnUydarz50FJ5fOiHA+pHP
-         uLpuCAjOFxYiin8vi1aLHJ8F7tSQ6nxlQtAVgvL2/pKYj3zwhOF2yZaEQU5mUy5hKIbg
-         Elsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dHzjWEjbmPZ/bJXnFMndg1gxGQSAtyDI2pcJRpM0tHQ=;
-        b=GxnacMwAOxgZ3HOkaj2odWTJXpA2rauntl7MTcxJkYdZrZ5w1mCOonI8qoXOoT67N7
-         Q3q7Xk4mZPvPrDPXhxYULBWH2d4m5xai/0uL39H9DRj6MZHaBlDUN+DWevBryC6KxvsT
-         QuZIihX93r1eAI0eJYDzJx1a60eC4YXJjHy8s0Qt5WyEPoWkCOhyiyycmIdm1GYXc4Ig
-         sDzQxkgtzpRTTDOCkJ/dI+r0Mi2eVLQETvmXTBblwCk2/1G+GQnUCb+gwJ69vxV1Lml3
-         j7gY3lZJbPmGdqexmKSW64wySHdVmUfEGVsc76GUkmxEbwgLZHQRAh1lmncUZ5m/1eIq
-         xohA==
-X-Gm-Message-State: APjAAAWBMtLOr9xrkQu6WiMgVvbdPcLjlaXcet5N039UWVDUhQMCCeN3
-        VzK0Vhvz/EXs2XcouYuh1UOiy5Ryyc9oSSBEwww=
-X-Google-Smtp-Source: APXvYqzMRDssqpgsK8fSzya4V0/uXkWx/h2Ddhu3BRv6cUncAazQPvzvWNQgRlC9+H9UkzbUl2Qwc438VsPYjvzuMzY=
-X-Received: by 2002:a17:90a:3546:: with SMTP id q64mr6696670pjb.13.1568222759459;
- Wed, 11 Sep 2019 10:25:59 -0700 (PDT)
+        Wed, 11 Sep 2019 13:26:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48178 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728897AbfIKR0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:26:23 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CB7B030A76BE;
+        Wed, 11 Sep 2019 17:26:22 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F300F5DA5B;
+        Wed, 11 Sep 2019 17:26:21 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
+        "Bruce Fields" <bfields@fieldses.org>,
+        "Wolfgang Walter" <linux@stwm.de>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        km@cm4all.com, linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Date:   Wed, 11 Sep 2019 13:26:21 -0400
+Message-ID: <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+In-Reply-To: <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+ <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+ <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+ <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
+ <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
+ <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
+ <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
 MIME-Version: 1.0
-References: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
- <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com>
- <20190908131034.GD9466@kroah.com> <CAC5umyhZ_-Gdh7+EzNoHPs2zki2-dK1xBv5xpE5zwZPt_jvNEA@mail.gmail.com>
- <20190911153602.GB13865@kroah.com>
-In-Reply-To: <20190911153602.GB13865@kroah.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Thu, 12 Sep 2019 02:25:48 +0900
-Message-ID: <CAC5umygQWrhN-=5g+87YeKYUzGGPGW01mtaVDJ3NERYbXBGKog@mail.gmail.com>
-Subject: Re: [PATCH 1/5] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 11 Sep 2019 17:26:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B49=E6=9C=8812=E6=97=A5(=E6=9C=A8) 0:36 Greg Kroah-Hartman <greg=
-kh@linuxfoundation.org>:
->
-> On Thu, Sep 12, 2019 at 12:25:28AM +0900, Akinobu Mita wrote:
-> > 2019=E5=B9=B49=E6=9C=888=E6=97=A5(=E6=97=A5) 22:10 Greg Kroah-Hartman <=
-gregkh@linuxfoundation.org>:
-> > >
-> > > On Sun, Sep 08, 2019 at 09:41:08PM +0900, Akinobu Mita wrote:
-> > > > Reading /sys/class/leds/<led>/trigger returns all available LED tri=
-ggers.
-> > > > However, the size of this file is limited to PAGE_SIZE because of t=
-he
-> > > > limitation for sysfs attribute.
-> > > >
-> > > > Enabling LED CPU trigger on systems with thousands of CPUs easily h=
-its
-> > > > PAGE_SIZE limit, and makes it impossible to see all available LED t=
-riggers
-> > > > and which trigger is currently activated.
-> > > >
-> > > > This converts /sys/class/leds/<led>/trigger to bin attribute and re=
-moves
-> > > > the PAGE_SIZE limitation.
-> > > >
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > > Cc: Dan Murphy <dmurphy@ti.com>
-> > > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > > > ---
-> > > >  drivers/leds/led-class.c    |  8 ++--
-> > > >  drivers/leds/led-triggers.c | 90 +++++++++++++++++++++++++++++++++=
-+-----------
-> > > >  drivers/leds/leds.h         |  6 +++
-> > > >  include/linux/leds.h        |  5 ---
-> > > >  4 files changed, 79 insertions(+), 30 deletions(-)
-> > > >
-> > > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > > > index 4793e77..8b5a1d1 100644
-> > > > --- a/drivers/leds/led-class.c
-> > > > +++ b/drivers/leds/led-class.c
-> > > > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct devic=
-e *dev,
-> > > >  static DEVICE_ATTR_RO(max_brightness);
-> > > >
-> > > >  #ifdef CONFIG_LEDS_TRIGGERS
-> > > > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_st=
-ore);
-> > > > -static struct attribute *led_trigger_attrs[] =3D {
-> > > > -     &dev_attr_trigger.attr,
-> > > > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write=
-, 0);
-> > >
-> > > BIN_ATTR_RW()?
-> >
-> > We can use BIN_ATTR_RW() by renaming led_trigger_{read,write}() to
-> > trigger_{read,write}().  But led_trigger_{read,write}() are not static
-> > functions.  These are defined as export symbols for led-class module.
-> >
-> > So trigger_{read,write}() will be too generic symbol names, won't they?
->
-> Yes they would, sorry I didn't notice that.
->
-> Wait, why are those functions being exported?  Who is calling a sysfs
-> function from a different code path than sysfs?
 
-led-class.c :)
+On 11 Sep 2019, at 12:39, Chuck Lever wrote:
 
-led_trigger_{read,write}() are defined in led-triggers.c which is built
-into the kernel. led-class.c can be built as module.
+>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
+>> <bcodding@redhat.com> wrote:
+>>
+
+>> Instead, I think we want to make sure the mic falls squarely into the 
+>> tail
+>> every time.
+>
+> I'm not clear how you could do that. The length of the page data is 
+> not
+> known to the client before it parses the reply. Are you suggesting 
+> that
+> gss_unwrap should do it somehow?
+
+Is it too niave to always put the mic at the end of the tail?
+
+Ben
