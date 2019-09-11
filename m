@@ -2,27 +2,28 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9724ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F996C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A101B2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F1F2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfIKSZ4 (ORCPT
+        id S1730077AbfIKSZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:25:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59904 "EHLO mx1.suse.de"
+        Wed, 11 Sep 2019 14:25:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60022 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728117AbfIKSZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:25:53 -0400
+        id S1729985AbfIKSZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:25:56 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62098AC28;
-        Wed, 11 Sep 2019 18:25:51 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 09BFBAE53;
+        Wed, 11 Sep 2019 18:25:54 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
         marc.zyngier@arm.com, robh+dt@kernel.org
@@ -31,10 +32,12 @@ Cc:     f.fainelli@gmail.com, will@kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, mbrugger@suse.com,
         linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
         linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-Subject: [PATCH v6 0/4] Raspberry Pi 4 DMA addressing support
-Date:   Wed, 11 Sep 2019 20:25:42 +0200
-Message-Id: <20190911182546.17094-1-nsaenzjulienne@suse.de>
+Subject: [PATCH v6 4/4] mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
+Date:   Wed, 11 Sep 2019 20:25:46 +0200
+Message-Id: <20190911182546.17094-5-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190911182546.17094-1-nsaenzjulienne@suse.de>
+References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,111 +45,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-this series attempts to address some issues we found while bringing up
-the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
-up of these discussions:
-v5: https://lkml.org/lkml/2019/9/9/170
-v4: https://lkml.org/lkml/2019/9/6/352
-v3: https://lkml.org/lkml/2019/9/2/589
-v2: https://lkml.org/lkml/2019/8/20/767
-v1: https://lkml.org/lkml/2019/7/31/922
-RFC: https://lkml.org/lkml/2019/7/17/476
+These zones usage has evolved with time and the comments were outdated.
+This joins both ZONE_DMA and ZONE_DMA32 explanation and gives up to date
+examples on how they are used on different architectures.
 
-The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
-only address the first GB: their DMA address range is
-0xc0000000-0xfc000000 which is aliased to the first GB of physical
-memory 0x00000000-0x3c000000. Note that only some peripherals have these
-limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
-view of the address space by virtue of being hooked up trough a second
-interconnect.
-
-Part of this is solved on arm32 by setting up the machine specific
-'.dma_zone_size = SZ_1G', which takes care of reserving the coherent
-memory area at the right spot. That said no buffer bouncing (needed for
-dma streaming) is available at the moment, but that's a story for
-another series.
-
-Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
-ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
-arch code as if all peripherals where be able to address the first 4GB
-of memory.
-
-In the light of this, the series implements the following changes:
-
-- Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
-  area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
-  the RPi4 is the only arm64 device with such DMA addressing limitations
-  so this hardcoded solution was deemed preferable.
-
-- Properly set ARCH_ZONE_DMA_BITS.
-
-- Reserve the CMA area in a place suitable for all peripherals.
-
-This series has been tested on multiple devices both by checking the
-zones setup matches the expectations and by double-checking physical
-addresses on pages allocated on the three relevant areas GFP_DMA,
-GFP_DMA32, GFP_KERNEL:
-
-- On an RPi4 with variations on the ram memory size. But also forcing
-  the situation where all three memory zones are nonempty by setting a 3G
-  ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
-
-- On a Synquacer box[1] with 32G of memory.
-
-- On a Cavium ThunderX2 with 256GB of memory.
-
-- On an ACPI based Huawei TaiShan server[2] with 256G of memory.
-
-- On a QEMU virtual machine running arm64's OpenSUSE Tumbleweed.
-
-That's all.
-
-Regards,
-Nicolas
-
-[1] https://www.96boards.org/product/developerbox/
-[2] https://e.huawei.com/en/products/cloud-computing-dc/servers/taishan-server/taishan-2280-v2
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
 ---
 
-Changes in v6:
-- Fix bug in max_zone_phys()
-
-Changes in v5:
-- Fix issue with swiotlb initialization
-
-Changes in v4:
-- Rebased to linux-next
-- Fix issue when NUMA=n and ZONE_DMA=n
-- Merge two max_zone_dma*_phys() functions
-
 Changes in v3:
-- Fixed ZONE_DMA's size to 1G
-- Update mmzone.h's comment to match changes in arm64
-- Remove all dma-direct patches
+- Update comment to match changes in arm64
 
 Changes in v2:
-- Update comment to reflect new zones split
-- ZONE_DMA will never be left empty
 - Try another approach merging both ZONE_DMA comments into one
 - Address Christoph's comments
 - If this approach doesn't get much traction I'll just drop the patch
   from the series as it's not really essential
 
-Nicolas Saenz Julienne (4):
-  arm64: mm: use arm64_dma_phys_limit instead of calling
-    max_zone_dma_phys()
-  arm64: rename variables used to calculate ZONE_DMA32's size
-  arm64: use both ZONE_DMA and ZONE_DMA32
-  mm: refresh ZONE_DMA and ZONE_DMA32 comments in 'enum zone_type'
+ include/linux/mmzone.h | 45 ++++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 19 deletions(-)
 
- arch/arm64/Kconfig            |  4 ++
- arch/arm64/include/asm/page.h |  2 +
- arch/arm64/mm/init.c          | 71 +++++++++++++++++++++++++----------
- include/linux/mmzone.h        | 45 ++++++++++++----------
- 4 files changed, 83 insertions(+), 39 deletions(-)
-
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 3f38c30d2f13..bf1b916c9ecb 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -357,33 +357,40 @@ struct per_cpu_nodestat {
+ #endif /* !__GENERATING_BOUNDS.H */
+ 
+ enum zone_type {
+-#ifdef CONFIG_ZONE_DMA
+ 	/*
+-	 * ZONE_DMA is used when there are devices that are not able
+-	 * to do DMA to all of addressable memory (ZONE_NORMAL). Then we
+-	 * carve out the portion of memory that is needed for these devices.
+-	 * The range is arch specific.
++	 * ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
++	 * to DMA to all of the addressable memory (ZONE_NORMAL).
++	 * On architectures where this area covers the whole 32 bit address
++	 * space ZONE_DMA32 is used. ZONE_DMA is left for the ones with smaller
++	 * DMA addressing constraints. This distinction is important as a 32bit
++	 * DMA mask is assumed when ZONE_DMA32 is defined. Some 64-bit
++	 * platforms may need both zones as they support peripherals with
++	 * different DMA addressing limitations.
++	 *
++	 * Some examples:
++	 *
++	 *  - i386 and x86_64 have a fixed 16M ZONE_DMA and ZONE_DMA32 for the
++	 *    rest of the lower 4G.
++	 *
++	 *  - arm only uses ZONE_DMA, the size, up to 4G, may vary depending on
++	 *    the specific device.
++	 *
++	 *  - arm64 has a fixed 1G ZONE_DMA and ZONE_DMA32 for the rest of the
++	 *    lower 4G.
+ 	 *
+-	 * Some examples
++	 *  - powerpc only uses ZONE_DMA, the size, up to 2G, may vary
++	 *    depending on the specific device.
+ 	 *
+-	 * Architecture		Limit
+-	 * ---------------------------
+-	 * parisc, ia64, sparc	<4G
+-	 * s390, powerpc	<2G
+-	 * arm			Various
+-	 * alpha		Unlimited or 0-16MB.
++	 *  - s390 uses ZONE_DMA fixed to the lower 2G.
+ 	 *
+-	 * i386, x86_64 and multiple other arches
+-	 * 			<16M.
++	 *  - ia64 and riscv only use ZONE_DMA32.
++	 *
++	 *  - parisc uses neither.
+ 	 */
++#ifdef CONFIG_ZONE_DMA
+ 	ZONE_DMA,
+ #endif
+ #ifdef CONFIG_ZONE_DMA32
+-	/*
+-	 * x86_64 needs two ZONE_DMAs because it supports devices that are
+-	 * only able to do DMA to the lower 16M but also 32 bit devices that
+-	 * can only do DMA areas below 4G.
+-	 */
+ 	ZONE_DMA32,
+ #endif
+ 	/*
 -- 
 2.23.0
 
