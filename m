@@ -2,94 +2,92 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9EDECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBA4ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCBB2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC472089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfIKJVq (ORCPT
+        id S1727425AbfIKJV6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:21:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3346 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfIKJVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:21:45 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 02:21:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="360082463"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 11 Sep 2019 02:21:43 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1i7yoo-0005Ii-4t; Wed, 11 Sep 2019 12:21:42 +0300
-Date:   Wed, 11 Sep 2019 12:21:42 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4 06/14] software node: get rid of property_set_pointer()
-Message-ID: <20190911092142.GL2680@smile.fi.intel.com>
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
- <20190911051231.148032-7-dmitry.torokhov@gmail.com>
- <CAHp75Ve5NvhzOQ96OgbPh1LdsAtvk+A=aVu-oXKdhnB4PpL_og@mail.gmail.com>
- <20190911083725.GF145199@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911083725.GF145199@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 11 Sep 2019 05:21:58 -0400
+Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:11331 "EHLO
+        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726579AbfIKJV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:21:57 -0400
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
+        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7yor-000O7j-Ec; Wed, 11 Sep 2019 11:21:45 +0200
+Received: from [213.55.220.251] (helo=[100.66.103.90])
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1i7yor-000El9-4u; Wed, 11 Sep 2019 11:21:45 +0200
+X-Authenticated-Sender-Id: sandro@volery.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+From:   Sandro Volery <sandro@volery.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] Staging: octeon: Avoid several usecases of strcpy
+Date:   Wed, 11 Sep 2019 11:21:44 +0200
+Message-Id: <C1B40FAD-9F8F-449D-B10C-334BAC76797D@volery.com>
+References: <20190911091659.GI15977@kadam>
+Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        aaro.koskinen@iki.fi
+In-Reply-To: <20190911091659.GI15977@kadam>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+X-Mailer: iPhone Mail (17A5831c)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 01:37:25AM -0700, Dmitry Torokhov wrote:
-> On Wed, Sep 11, 2019 at 11:29:10AM +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 11, 2019 at 8:15 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > Instead of explicitly setting values of integer types when copying
-> > > property entries lets just copy entire value union when processing
-> > > non-array values.
-> > >
-> > > When handling array values assign the pointer there using the newly
-> > > introduced "raw" pointer union member. This allows us to remove
-> > > property_set_pointer().
-> > >
-> > > In property_get_pointer() we do not need to handle each data type
-> > > separately, we can simply return either the raw pointer or pointer to
-> > > values union.
-> > 
-> > Same as before, typechecking is good thing to have for my point of view.
-> > Others may have different opinions.
+
+On 11 Sep 2019, at 11:17, Dan Carpenter <dan.carpenter@oracle.com> wrote:
 > 
-> OK, I'll just point out that typechecking is a red herring here as
-> everything was and still is accessed through void pointers, and we
-> trusted the type set on property. Users of static properties should use
-> PROPERTY_ENTRY_XXX() for initialization and do not poke into struct
-> property_entry directly.
+> ﻿On Wed, Sep 11, 2019 at 11:04:38AM +0200, Sandro Volery wrote:
+>> 
+>> 
+>>>> On 11 Sep 2019, at 10:52, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>>> 
+>>> ﻿On Wed, Sep 11, 2019 at 08:23:59AM +0200, Sandro Volery wrote:
+>>>> strcpy was used multiple times in strcpy to write into dev->name.
+>>>> I replaced them with strscpy.
+>>>> 
+>>>> Signed-off-by: Sandro Volery <sandro@volery.com>
+>>>> ---
+>>>> drivers/staging/octeon/ethernet.c | 16 ++++++++--------
+>>>> 1 file changed, 8 insertions(+), 8 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/ethernet.c
+>>>> index 8889494adf1f..cf8e9a23ebf9 100644
+>>>> --- a/drivers/staging/octeon/ethernet.c
+>>>> +++ b/drivers/staging/octeon/ethernet.c
+>>>> @@ -784,7 +784,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
+>>>>           priv->imode = CVMX_HELPER_INTERFACE_MODE_DISABLED;
+>>>>           priv->port = CVMX_PIP_NUM_INPUT_PORTS;
+>>>>           priv->queue = -1;
+>>>> -            strcpy(dev->name, "pow%d");
+>>>> +            strscpy(dev->name, "pow%d", sizeof(dev->name));
+>>> 
+>>> Is there a program which is generating a warning for this code?  We know
+>>> that "pow%d" is 6 characters and static analysis tools can understand
+>>> this code fine so we know it's safe.
+>> 
+>> Well I was confused too but checkpatch complained about 
+>> it so I figured I'd clean it up quick
 > 
-> I suppose it is up to Rafael to decide here.
+> Ah.  It's a new checkpatch warning.  I don't care in that case.  I'm
+> fine with replacing all of these in that case.
 
-Yes, and perhaps Mika as they were the main authors of the idea and
-implementation.
+Alright thanks. Can you review this?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Sandro V
