@@ -2,119 +2,137 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AE0C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDA2C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8606820CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43EF20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568216698;
+	bh=W4sq4g8vHz/1RaxHr/60DG1a5MmEGKJJ2sUuzxXyeYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2WiTcSemPBSDRWRwzy96V0bbtsBoFkVBiQCicsm56SyrBdZlw++nAMseoEYNM1UG0
+	 XS0ulF3lgWWBwQVqJh2RWHJXvuP779gJm1G4gLoCxQeESVQp39WvXPOcfjQit1Ysf+
+	 iVLFmZds1FVNZ+pJEXdeMojdc+g+LZaD/ztVi3BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfIKPom (ORCPT
+        id S1728728AbfIKPo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:44:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53446 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 11:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbfIKPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:44:41 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728266AbfIKPo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:44:57 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61BBAA371AF;
-        Wed, 11 Sep 2019 15:44:41 +0000 (UTC)
-Received: from [10.10.125.194] (ovpn-125-194.rdu2.redhat.com [10.10.125.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 176E35D6A5;
-        Wed, 11 Sep 2019 15:44:38 +0000 (UTC)
-Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Hillf Danton <hdanton@sina.com>
-References: <20190911031348.9648-1-hdanton@sina.com>
- <c48cd3d8-699d-a614-b12d-1ddef71691f3@I-love.SAKURA.ne.jp>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, axboe@kernel.dk,
-        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5D791666.7080302@redhat.com>
-Date:   Wed, 11 Sep 2019 10:44:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB0E2087E;
+        Wed, 11 Sep 2019 15:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568216696;
+        bh=W4sq4g8vHz/1RaxHr/60DG1a5MmEGKJJ2sUuzxXyeYQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hOTRMBbis1WBB6PGeKfz9LCOfEiuFKIC8PH+F7brFo4uDcQQbVg58lIi+WChMzzOb
+         EeZThZmdKdvg15pu1OjQmxWpcUzceuqfiTLOZ9uV5Po7f+TFKduekYKR5bVXIVzjsy
+         l4+vbdNgaMBarvV9b+9x5atzXmgOFOnEOuVth5BY=
+Date:   Wed, 11 Sep 2019 16:44:53 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
+        ben@decadent.org.uk, tglx@linutronix.de, labbott@redhat.com,
+        andrew.cooper3@citrix.com, tsoni@codeaurora.org,
+        keescook@chromium.org, tony.luck@intel.com,
+        linux-doc@vger.kernel.org, dan.j.williams@intel.com
+Subject: Re: [PATCH 2/4] Documentation/process: describe relaxing disclosing
+ party NDAs
+Message-ID: <20190911154453.GA14152@kroah.com>
+References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
+ <20190910172649.74639177@viggo.jf.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <c48cd3d8-699d-a614-b12d-1ddef71691f3@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 11 Sep 2019 15:44:41 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910172649.74639177@viggo.jf.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/11/2019 05:07 AM, Tetsuo Handa wrote:
-> On 2019/09/11 12:13, Hillf Danton wrote:
->>
->> On Tue, 10 Sep 2019 11:06:03 -0500 From: Mike Christie <mchristi@redhat.com>
->>>
->>>> Really? Without any privilege check? So any random user can tap into
->>>> __GFP_NOIO allocations?
->>>
->>> That was a mistake on my part. I will add it in.
->>>
->> You may alternatively madvise a nutcracker as long as you would have
->> added a sledgehammer under /proc instead of a gavel.
->>
->> --- a/include/uapi/asm-generic/mman-common.h
->> +++ b/include/uapi/asm-generic/mman-common.h
->> @@ -45,6 +45,7 @@
->>  #define MADV_SEQUENTIAL	2		/* expect sequential page references */
->>  #define MADV_WILLNEED	3		/* will need these pages */
->>  #define MADV_DONTNEED	4		/* don't need these pages */
->> +#define MADV_NOIO	5		/* set PF_MEMALLOC_NOIO */
->>  
->>  /* common parameters: try to keep these consistent across architectures */
->>  #define MADV_FREE	8		/* free pages only if memory pressure */
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -716,6 +716,7 @@ madvise_behavior_valid(int behavior)
->>  	case MADV_WILLNEED:
->>  	case MADV_DONTNEED:
->>  	case MADV_FREE:
->> +	case MADV_NOIO:
->>  #ifdef CONFIG_KSM
->>  	case MADV_MERGEABLE:
->>  	case MADV_UNMERGEABLE:
->> @@ -813,6 +814,11 @@ SYSCALL_DEFINE3(madvise, unsigned long,
->>  	if (!madvise_behavior_valid(behavior))
->>  		return error;
->>  
->> +	if (behavior == MADV_NOIO) {
->> +		current->flags |= PF_MEMALLOC_NOIO;
+On Tue, Sep 10, 2019 at 10:26:49AM -0700, Dave Hansen wrote:
 > 
-> Yes, for "modifying p->flags when p != current" is not permitted.
+> From: Dave Hansen <dave.hansen@linux.intel.com>
 > 
-> But I guess that there is a problem. Setting PF_MEMALLOC_NOIO causes
-> current_gfp_context() to mask __GFP_IO | __GFP_FS, but the OOM killer cannot
-> be invoked when __GFP_FS is masked. As a result, any userspace thread which
-> has PF_MEMALLOC_NOIO cannot invoke the OOM killer. If the userspace thread
-> which uses PF_MEMALLOC_NOIO is involved in memory reclaiming activities,
-> the memory reclaiming activities won't be able to make forward progress when
-> the userspace thread triggered e.g. a page fault. Can the "userspace components
-> that can run in the IO path" survive without any memory allocation?
+> Hardware companies like Intel have lots of information which they
+> want to disclose to some folks but not others.  Non-disclosure
+> agreements are a tool of choice for helping to ensure that the
+> flow of information is controlled.
 > 
-
-Yes and no, when they can they will have preallocated the resources they
-need to make forward progress similar to how kernel storage drivers do.
-However for some resources, like in the network layer, both userspace
-and kernel drivers are not able to preallocate and may fail.
-
-
->> +		return 0;
->> +	}
->> +
->>  	if (start & ~PAGE_MASK)
->>  		return error;
->>  	len = (len_in + ~PAGE_MASK) & PAGE_MASK;
+> But, they have caused problems in mitigation development.  It
+> can be hard for individual developers employed by companies to
+> figure out how they can participate, especially if their
+> employer is under an NDA.
 > 
+> To make this easier for developers, make it clear to disclosing
+> parties that they are expected to give permission for individuals
+> to participate in mitigation efforts.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Ben Hutchings <ben@decadent.org.uk>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+> Cc: Trilok Soni <tsoni@codeaurora.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+> ---
+> 
+>  b/Documentation/process/embargoed-hardware-issues.rst |    7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff -puN Documentation/process/embargoed-hardware-issues.rst~hw-sec-0 Documentation/process/embargoed-hardware-issues.rst
+> --- a/Documentation/process/embargoed-hardware-issues.rst~hw-sec-0	2019-09-10 08:39:02.835488131 -0700
+> +++ b/Documentation/process/embargoed-hardware-issues.rst	2019-09-10 08:39:02.838488131 -0700
+> @@ -74,6 +74,13 @@ unable to enter into any non-disclosure
+>  is aware of the sensitive nature of such issues and offers a Memorandum of
+>  Understanding instead.
+>  
+> +Disclosing parties may have shared information about an issue under a
+> +non-disclosure agreement with third parties.  In order to ensure that
+> +these agreements do not interfere with the mitigation development
+> +process, the disclosing party must provide explicit permission to
+> +participate to any response team members affected by a non-disclosure
+> +agreement.  Disclosing parties must resolve requests to do so in a
+> +timely manner.
 
+I wrote a fun long rant of a response here, but deleted it so now I feel
+better.  But that doesn't help anyone but myself, so here's my censored
+response instead...
+
+Intel had months of review time for this document before this was
+published.  Your lawyers had it and never objected to this lack of
+inclusion at all, and explictitly said that the document as written was
+fine with them.  So I'm sorry, but it is much too late to add something
+like this to the document at this point in time.
+
+If your legal department has any remaining objections like this, please
+bring it up in the proper legal forum where all of the other companies
+that already discussed this in can review and discuss it.  As it is,
+including something like this would require their buy-in anyway, and
+obviously that did not happen with this proposal.
+
+So no, I'm not going to apply this change, sorry.
+
+Oh, and cute use of the term, "timely manner", as if we are going to
+fall for that one again... :)
+
+greg k-h
