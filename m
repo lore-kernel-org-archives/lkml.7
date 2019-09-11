@@ -2,283 +2,119 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D10C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC09C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999882089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KGGr4lwK"
+	by mail.kernel.org (Postfix) with ESMTP id 35C032089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568201442;
+	bh=k77V0MPAFdx1Jg694rYvf1EyWYhe2DxcVjGmMcHMLS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VBrf8RsnRXf/7F++sA/RXRT2gzbUOVrQG1SOav+WblSHLVdlJDO6zr0q1Fq+0OUHT
+	 vA1jEEuPaYayZuT9Ca+ZqU+rJWoGCsG36jdlUSIzZsOb7sRFVTLVOD1J8jnmUKLBE2
+	 rMf6lsexuJePjWhj9PV8+TA888ZYly1NO7Lpqn9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfIKLWs (ORCPT
+        id S1727422AbfIKLal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:22:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32944 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfIKLWs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:22:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so13485350pfl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pkwRxBWez//tgnNY67r4tBQEIVs9nHPA6VoL+BmQ3fc=;
-        b=KGGr4lwK80br0/KBbevVOKaJAL1zydrz2Pdo/hghZuQ2MdO2EgWqG/CJNs1IBrafkQ
-         jyykp0kqt2KI2FA6O4JLK3MbJnuhEpN+1QWSTc0VQ3izHAYmcFWggkIcw40uThWB8gge
-         LXPBuQE5G756v+EGwlxdfY5CrbSEKnOKJbWoiiKMOUSC7KF289J1Une2ixOoq3Vz0vMJ
-         BGAOMnQMlozFAaWjxwpzz3mD8MxrDdckBhsgbTJb8s8AUUzlA/xk5WWaPAcnASfF9tQd
-         OdNdY+KlQnfTGSFj6FyLPO5LmcOAxl4h7eaDTHGM2XcOHtfz9c405GakujBcmKUwnpOF
-         1kyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pkwRxBWez//tgnNY67r4tBQEIVs9nHPA6VoL+BmQ3fc=;
-        b=dcecPQ48Be9rdqssaz3VRtnAPGKMv3W4Iwp3WOi7oOzG8VkdPnnFohty8O/gKtcUXp
-         fTvCd2p5jAycrwJw6+cyWWSyC+one9610cqr0xtRXp4ewiC7iA0hmhYu3q/+AgKKbj+z
-         qhjX5Tq7454wFwIu73OMvembNaf6LD76NOwAgENzrFbeUHMvsW9YBxiXu248mcGFwld5
-         eZwfchHNOuGayyvsoYOW2deZe9O+LuNoK8qqotVkZl4qRg5KQLDLjvuABZFC9RAgKJYB
-         9crTQ6SQhjJaIuRxtamJcWs+QUAlscpULz+dZKXZzdmTZaiCse5upoUJGjDEzjUoAJIQ
-         XZ4A==
-X-Gm-Message-State: APjAAAXbz069kt9RGKDXN0Dy2tfPCymKXtB5u397HPkvcReqIvuUJa4J
-        Yf/frVno0qrLnaRx9yAwX5jwOQ==
-X-Google-Smtp-Source: APXvYqy1+YS2F6mrTwZq72oHmjVYp+1o5S6ajSqckbSgpCdNlxDU0+XiGVGYEEOKRO7wQjFHjo/RGQ==
-X-Received: by 2002:a63:2c8:: with SMTP id 191mr32122799pgc.139.1568200966777;
-        Wed, 11 Sep 2019 04:22:46 -0700 (PDT)
-Received: from localhost.localdomain ([117.252.68.28])
-        by smtp.gmail.com with ESMTPSA id x5sm24032659pfi.165.2019.09.11.04.22.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Sep 2019 04:22:45 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     jarkko.sakkinen@linux.intel.com, dhowells@redhat.com
-Cc:     keyrings@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH] KEYS: asym_tpm: Use common tpm_buf for asymmetric keys
-Date:   Wed, 11 Sep 2019 16:51:50 +0530
-Message-Id: <1568200910-31368-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 11 Sep 2019 07:30:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:45910 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfIKLal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:30:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35F6B28;
+        Wed, 11 Sep 2019 04:30:40 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 394263F59C;
+        Wed, 11 Sep 2019 04:30:37 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 12:30:35 +0100
+Message-ID: <86ftl3rrxg.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>
+Subject: Re: [RFC PATCH 3/3] Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0801MB1676847C0A84473797BF4346F4B10@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20190829063952.18470-1-jianyong.wu@arm.com>
+        <20190829063952.18470-4-jianyong.wu@arm.com>
+        <4d04867c-2188-9574-fbd1-2356c6b99b7d@kernel.org>
+        <HE1PR0801MB16768ED94EA50010EEF634EAF4BA0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+        <86h85osbzz.wl-maz@kernel.org>
+        <HE1PR0801MB16768BE47D3D1F0662DDC3C7F4B70@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+        <86blvtsodw.wl-maz@kernel.org>
+        <HE1PR0801MB16769814863B26F3B5DC708FF4B60@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+        <HE1PR0801MB1676847C0A84473797BF4346F4B10@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to utilize common heap based tpm_buf code for TPM based
-asymmetric keys rather than using stack based tpm_buf code.
+On Wed, 11 Sep 2019 11:06:18 +0100,
+"Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com> wrote:
+> 
+> Hi Marc,
+> 
+> I think there are three points for the migration issue of ptp_kvm,
+> where a VM using ptp_kvm migrates to a host without ptp_kvm support.
+> 
+> First: how does it impact the VM having migrated?
+> I run a VM with ptp_kvm support in guest but not support in
+> host. the ptp0 will return 0 when get time from it which can't pass
+> the check of chrony, then chrony will choose another clocksource.
+> From this point, VM will only get lost in precision of time sync.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- crypto/asymmetric_keys/asym_tpm.c | 99 ++++++++++++++++-----------------------
- 1 file changed, 41 insertions(+), 58 deletions(-)
+"only" is a bit of an understatement. Once the guest has started
+relying on a service, it seems rather harsh to pretend this service
+doesn't exist anymore. It could well be that the VM cannot perform its
+function if the precision is not good enough.
 
-diff --git a/crypto/asymmetric_keys/asym_tpm.c b/crypto/asymmetric_keys/asym_tpm.c
-index ec3f309..d16d893 100644
---- a/crypto/asymmetric_keys/asym_tpm.c
-+++ b/crypto/asymmetric_keys/asym_tpm.c
-@@ -21,10 +21,6 @@
- #define TPM_ORD_LOADKEY2	65
- #define TPM_ORD_UNBIND		30
- #define TPM_ORD_SIGN		60
--#define TPM_LOADKEY2_SIZE		59
--#define TPM_FLUSHSPECIFIC_SIZE		18
--#define TPM_UNBIND_SIZE			63
--#define TPM_SIGN_SIZE			63
- 
- #define TPM_RT_KEY                      0x00000001
- 
-@@ -68,16 +64,13 @@ static int tpm_loadkey2(struct tpm_buf *tb,
- 		return ret;
- 
- 	/* build the request buffer */
--	INIT_BUF(tb);
--	store16(tb, TPM_TAG_RQU_AUTH1_COMMAND);
--	store32(tb, TPM_LOADKEY2_SIZE + keybloblen);
--	store32(tb, TPM_ORD_LOADKEY2);
--	store32(tb, keyhandle);
--	storebytes(tb, keyblob, keybloblen);
--	store32(tb, authhandle);
--	storebytes(tb, nonceodd, TPM_NONCE_SIZE);
--	store8(tb, cont);
--	storebytes(tb, authdata, SHA1_DIGEST_SIZE);
-+	tpm_buf_reset(tb, TPM_TAG_RQU_AUTH1_COMMAND, TPM_ORD_LOADKEY2);
-+	tpm_buf_append_u32(tb, keyhandle);
-+	tpm_buf_append(tb, keyblob, keybloblen);
-+	tpm_buf_append_u32(tb, authhandle);
-+	tpm_buf_append(tb, nonceodd, TPM_NONCE_SIZE);
-+	tpm_buf_append_u8(tb, cont);
-+	tpm_buf_append(tb, authdata, SHA1_DIGEST_SIZE);
- 
- 	ret = trusted_tpm_send(tb->data, MAX_BUF_SIZE);
- 	if (ret < 0) {
-@@ -101,12 +94,9 @@ static int tpm_loadkey2(struct tpm_buf *tb,
-  */
- static int tpm_flushspecific(struct tpm_buf *tb, uint32_t handle)
- {
--	INIT_BUF(tb);
--	store16(tb, TPM_TAG_RQU_COMMAND);
--	store32(tb, TPM_FLUSHSPECIFIC_SIZE);
--	store32(tb, TPM_ORD_FLUSHSPECIFIC);
--	store32(tb, handle);
--	store32(tb, TPM_RT_KEY);
-+	tpm_buf_reset(tb, TPM_TAG_RQU_COMMAND, TPM_ORD_FLUSHSPECIFIC);
-+	tpm_buf_append_u32(tb, handle);
-+	tpm_buf_append_u32(tb, TPM_RT_KEY);
- 
- 	return trusted_tpm_send(tb->data, MAX_BUF_SIZE);
- }
-@@ -155,17 +145,14 @@ static int tpm_unbind(struct tpm_buf *tb,
- 		return ret;
- 
- 	/* build the request buffer */
--	INIT_BUF(tb);
--	store16(tb, TPM_TAG_RQU_AUTH1_COMMAND);
--	store32(tb, TPM_UNBIND_SIZE + bloblen);
--	store32(tb, TPM_ORD_UNBIND);
--	store32(tb, keyhandle);
--	store32(tb, bloblen);
--	storebytes(tb, blob, bloblen);
--	store32(tb, authhandle);
--	storebytes(tb, nonceodd, TPM_NONCE_SIZE);
--	store8(tb, cont);
--	storebytes(tb, authdata, SHA1_DIGEST_SIZE);
-+	tpm_buf_reset(tb, TPM_TAG_RQU_AUTH1_COMMAND, TPM_ORD_UNBIND);
-+	tpm_buf_append_u32(tb, keyhandle);
-+	tpm_buf_append_u32(tb, bloblen);
-+	tpm_buf_append(tb, blob, bloblen);
-+	tpm_buf_append_u32(tb, authhandle);
-+	tpm_buf_append(tb, nonceodd, TPM_NONCE_SIZE);
-+	tpm_buf_append_u8(tb, cont);
-+	tpm_buf_append(tb, authdata, SHA1_DIGEST_SIZE);
- 
- 	ret = trusted_tpm_send(tb->data, MAX_BUF_SIZE);
- 	if (ret < 0) {
-@@ -241,17 +228,14 @@ static int tpm_sign(struct tpm_buf *tb,
- 		return ret;
- 
- 	/* build the request buffer */
--	INIT_BUF(tb);
--	store16(tb, TPM_TAG_RQU_AUTH1_COMMAND);
--	store32(tb, TPM_SIGN_SIZE + bloblen);
--	store32(tb, TPM_ORD_SIGN);
--	store32(tb, keyhandle);
--	store32(tb, bloblen);
--	storebytes(tb, blob, bloblen);
--	store32(tb, authhandle);
--	storebytes(tb, nonceodd, TPM_NONCE_SIZE);
--	store8(tb, cont);
--	storebytes(tb, authdata, SHA1_DIGEST_SIZE);
-+	tpm_buf_reset(tb, TPM_TAG_RQU_AUTH1_COMMAND, TPM_ORD_SIGN);
-+	tpm_buf_append_u32(tb, keyhandle);
-+	tpm_buf_append_u32(tb, bloblen);
-+	tpm_buf_append(tb, blob, bloblen);
-+	tpm_buf_append_u32(tb, authhandle);
-+	tpm_buf_append(tb, nonceodd, TPM_NONCE_SIZE);
-+	tpm_buf_append_u8(tb, cont);
-+	tpm_buf_append(tb, authdata, SHA1_DIGEST_SIZE);
- 
- 	ret = trusted_tpm_send(tb->data, MAX_BUF_SIZE);
- 	if (ret < 0) {
-@@ -519,7 +503,7 @@ static int tpm_key_decrypt(struct tpm_key *tk,
- 			   struct kernel_pkey_params *params,
- 			   const void *in, void *out)
- {
--	struct tpm_buf *tb;
-+	struct tpm_buf tb;
- 	uint32_t keyhandle;
- 	uint8_t srkauth[SHA1_DIGEST_SIZE];
- 	uint8_t keyauth[SHA1_DIGEST_SIZE];
-@@ -533,14 +517,14 @@ static int tpm_key_decrypt(struct tpm_key *tk,
- 	if (strcmp(params->encoding, "pkcs1"))
- 		return -ENOPKG;
- 
--	tb = kzalloc(sizeof(*tb), GFP_KERNEL);
--	if (!tb)
--		return -ENOMEM;
-+	r = tpm_buf_init(&tb, 0, 0);
-+	if (r)
-+		return r;
- 
- 	/* TODO: Handle a non-all zero SRK authorization */
- 	memset(srkauth, 0, sizeof(srkauth));
- 
--	r = tpm_loadkey2(tb, SRKHANDLE, srkauth,
-+	r = tpm_loadkey2(&tb, SRKHANDLE, srkauth,
- 				tk->blob, tk->blob_len, &keyhandle);
- 	if (r < 0) {
- 		pr_devel("loadkey2 failed (%d)\n", r);
-@@ -550,16 +534,16 @@ static int tpm_key_decrypt(struct tpm_key *tk,
- 	/* TODO: Handle a non-all zero key authorization */
- 	memset(keyauth, 0, sizeof(keyauth));
- 
--	r = tpm_unbind(tb, keyhandle, keyauth,
-+	r = tpm_unbind(&tb, keyhandle, keyauth,
- 		       in, params->in_len, out, params->out_len);
- 	if (r < 0)
- 		pr_devel("tpm_unbind failed (%d)\n", r);
- 
--	if (tpm_flushspecific(tb, keyhandle) < 0)
-+	if (tpm_flushspecific(&tb, keyhandle) < 0)
- 		pr_devel("flushspecific failed (%d)\n", r);
- 
- error:
--	kzfree(tb);
-+	tpm_buf_destroy(&tb);
- 	pr_devel("<==%s() = %d\n", __func__, r);
- 	return r;
- }
-@@ -643,7 +627,7 @@ static int tpm_key_sign(struct tpm_key *tk,
- 			struct kernel_pkey_params *params,
- 			const void *in, void *out)
- {
--	struct tpm_buf *tb;
-+	struct tpm_buf tb;
- 	uint32_t keyhandle;
- 	uint8_t srkauth[SHA1_DIGEST_SIZE];
- 	uint8_t keyauth[SHA1_DIGEST_SIZE];
-@@ -681,15 +665,14 @@ static int tpm_key_sign(struct tpm_key *tk,
- 		goto error_free_asn1_wrapped;
- 	}
- 
--	r = -ENOMEM;
--	tb = kzalloc(sizeof(*tb), GFP_KERNEL);
--	if (!tb)
-+	r = tpm_buf_init(&tb, 0, 0);
-+	if (r)
- 		goto error_free_asn1_wrapped;
- 
- 	/* TODO: Handle a non-all zero SRK authorization */
- 	memset(srkauth, 0, sizeof(srkauth));
- 
--	r = tpm_loadkey2(tb, SRKHANDLE, srkauth,
-+	r = tpm_loadkey2(&tb, SRKHANDLE, srkauth,
- 			 tk->blob, tk->blob_len, &keyhandle);
- 	if (r < 0) {
- 		pr_devel("loadkey2 failed (%d)\n", r);
-@@ -699,15 +682,15 @@ static int tpm_key_sign(struct tpm_key *tk,
- 	/* TODO: Handle a non-all zero key authorization */
- 	memset(keyauth, 0, sizeof(keyauth));
- 
--	r = tpm_sign(tb, keyhandle, keyauth, in, in_len, out, params->out_len);
-+	r = tpm_sign(&tb, keyhandle, keyauth, in, in_len, out, params->out_len);
- 	if (r < 0)
- 		pr_devel("tpm_sign failed (%d)\n", r);
- 
--	if (tpm_flushspecific(tb, keyhandle) < 0)
-+	if (tpm_flushspecific(&tb, keyhandle) < 0)
- 		pr_devel("flushspecific failed (%d)\n", r);
- 
- error_free_tb:
--	kzfree(tb);
-+	tpm_buf_destroy(&tb);
- error_free_asn1_wrapped:
- 	kfree(asn1_wrapped);
- 	pr_devel("<==%s() = %d\n", __func__, r);
+The analogy is the Spectre-v2 mitigation, which is implemented as a
+hypercall. Nothing will break if you migrate to a host that doesn't
+support the mitigation, but the guest will now be unsafe. Is that
+acceptable? the answer is of course "no".
+
+> Second: how to check the failure of the ptp kvm service
+> when there is no ptp kvm service, hypercall will go into default
+> ops, so we can check the return value which can inform us the
+> failure.
+
+Sure. But that's still an issue. The VM relied on the service, and the
+service isn't available anymore.
+
+> Third: how to inform VMM
+> There is ioctl cmd call "KVM_CHECK_EXTENSION" in kvm, which may do
+> that thing. Accordingly, qemu should be offered the support which
+> will block us.  We can try to add this support in kvm but we are not
+> sure the response from qemu side.
+
+It doesn't matter whether QEMU implements that check or . The
+important thing is that we give userspace a way to check this for
+this, and having a capability that can be checked against is probably
+the right thing to do.
+
+Thanks,
+
+	M.
+
 -- 
-2.7.4
-
+Jazz is not dead, it just smells funny.
