@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97646C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDECC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FE8222BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC87D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfIKPiU (ORCPT
+        id S1728750AbfIKPiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:38:20 -0400
+        Wed, 11 Sep 2019 11:38:24 -0400
 Received: from mail-sh.amlogic.com ([58.32.228.43]:11629 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728672AbfIKPiS (ORCPT
+        with ESMTP id S1728709AbfIKPiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:38:18 -0400
+        Wed, 11 Sep 2019 11:38:21 -0400
 Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 11 Sep 2019
- 23:39:08 +0800
+ 23:39:09 +0800
 From:   Jianxin Pan <jianxin.pan@amlogic.com>
 To:     Kevin Hilman <khilman@baylibre.com>,
         <linux-amlogic@lists.infradead.org>
@@ -41,9 +41,9 @@ CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Qiufang Dai <qiufang.dai@amlogic.com>,
         Tao Zeng <tao.zeng@amlogic.com>
-Subject: [PATCH v3 1/4] soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
-Date:   Wed, 11 Sep 2019 11:38:07 -0400
-Message-ID: <1568216290-84219-2-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH v3 3/4] dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+Date:   Wed, 11 Sep 2019 11:38:09 -0400
+Message-ID: <1568216290-84219-4-git-send-email-jianxin.pan@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
 References: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
@@ -55,34 +55,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the SoC IDs for the A113L Amlogic A1 SoC.
+Add the compatible for the Amlogic A1 Based AD401 board.
 
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 6d0d04f..3c86d8d 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -40,6 +40,7 @@ static const struct meson_gx_soc_id {
- 	{ "G12A", 0x28 },
- 	{ "G12B", 0x29 },
- 	{ "SM1", 0x2b },
-+	{ "A1", 0x2c },
- };
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 0ef45ac..ee5703c 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -159,5 +159,7 @@ properties:
  
- static const struct meson_gx_package_id {
-@@ -68,6 +69,7 @@ static const struct meson_gx_package_id {
- 	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
- 	{ "S905X3", 0x2b, 0x5, 0xf },
-+	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
- 
- static inline unsigned int socinfo_to_major(u32 socinfo)
+       - description: Boards with the Amlogic Meson A1 A113L SoC
+         items:
++          - enum:
++              - amlogic,ad401
+           - const: amlogic,a1
+ ...
 -- 
 2.7.4
 
