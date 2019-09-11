@@ -3,109 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2511BC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DADCC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40F62075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7062075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfIKOVQ (ORCPT
+        id S1728176AbfIKOVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:21:16 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63115 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKOVQ (ORCPT
+        Wed, 11 Sep 2019 10:21:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728110AbfIKOVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:21:16 -0400
-Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8BEKgld005032;
-        Wed, 11 Sep 2019 23:20:42 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
- Wed, 11 Sep 2019 23:20:42 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8BEKg1D005028
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 11 Sep 2019 23:20:42 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Mike Christie <mchristi@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, axboe@kernel.dk,
-        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
-References: <20190911031348.9648-1-hdanton@sina.com>
- <20190911135237.11248-1-hdanton@sina.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <6cff2ae9-4436-8df7-55a7-59e2e80b1054@i-love.sakura.ne.jp>
-Date:   Wed, 11 Sep 2019 23:20:38 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Sep 2019 10:21:20 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BEF0CV105567
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:21:19 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uy2ew8dt2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:21:19 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 11 Sep 2019 15:21:17 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Sep 2019 15:21:14 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BELD0W35062012
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 14:21:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C7A45206C;
+        Wed, 11 Sep 2019 14:21:13 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.74])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 85A0552054;
+        Wed, 11 Sep 2019 14:21:10 +0000 (GMT)
+Date:   Wed, 11 Sep 2019 15:21:07 +0100
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <mike.rapoport@gmail.com>,
+        Chester Lin <clin@suse.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the arm tree
+References: <20190911001459.6ccc76ee@canb.auug.org.au>
+ <20190910142128.GR13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190911135237.11248-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910142128.GR13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19091114-4275-0000-0000-000003647F66
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091114-4276-0000-0000-00003876D745
+Message-Id: <20190911142106.GA6429@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909110133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/11 22:52, Hillf Danton wrote:
-> 
-> On Wed, 11 Sep 2019 19:07:34 +0900
->>
->> But I guess that there is a problem.
-> 
-> Not a new one. (see commit 7dea19f9ee63)
-> 
->> Setting PF_MEMALLOC_NOIO causes
->> current_gfp_context() to mask __GFP_IO | __GFP_FS, but the OOM killer cannot
->> be invoked when __GFP_FS is masked. As a result, any userspace thread which
->> has PF_MEMALLOC_NOIO cannot invoke the OOM killer.
-> 
-> Correct.
-> 
->> If the userspace thread
->> which uses PF_MEMALLOC_NOIO is involved in memory reclaiming activities,
->> the memory reclaiming activities won't be able to make forward progress when
->> the userspace thread triggered e.g. a page fault. Can the "userspace components
->> that can run in the IO path" survive without any memory allocation?
-> 
-> Good question.
-> 
-> It can be solved without oom killer involved because user should be
-> aware of the risk of PF_MEMALLOC_NOIO if they ask for the convenience.
-> OTOH we are able to control any abuse of it as you worry, knowing that
-> the combination of __GFP_FS and oom killer can not get more than 50 users
-> works done, and we have to pay as much attention as we can to the decisions
-> they make. In case of PF_MEMALLOC_NOIO, we simply fail the allocation
-> rather than killing a random victim.
+On Tue, Sep 10, 2019 at 03:21:28PM +0100, Russell King - ARM Linux admin wrote:
+> This is correctly signed off, but Mike didn't send the patch correctly.
+> It missed a From: line for the proper author, so the patch was committed
+> as if Mike had authored it, which he didn't.
 
-According to commit c288983dddf71421 ("mm/page_alloc.c: make sure OOM victim can
-try allocations with no watermarks once"), memory allocation failure from a page
-fault results in invocation of the OOM killer via pagefault_out_of_memory() which
-after all kills a random victim.
+Sorry about that, haven't used the patch system for couple of years now.
+Would you like me to resubmit the patch?
+ 
+> On Wed, Sep 11, 2019 at 12:14:59AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Commit
+> > 
+> >   2505b9ba9c37 ("ARM: 8904/1: skip nomap memblocks while finding the lowmem/highmem boundary")
+> > 
+> > is missing a Signed-off-by from its author.
+> > 
+> > -- 
+> > Cheers,
+> > Stephen Rothwell
+> 
+> 
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
 
-> 
-> 
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -3854,6 +3854,8 @@ __alloc_pages_may_oom(gfp_t gfp_mask, un
->  	 * out_of_memory). Once filesystems are ready to handle allocation
->  	 * failures more gracefully we should just bail out here.
->  	 */
-> +	if (current->flags & PF_MEMALLOC_NOIO)
-> +		goto out;
->  
->  	/* The OOM killer may not free memory on a specific node */
->  	if (gfp_mask & __GFP_THISNODE)
-> 
-> 
+-- 
+Sincerely yours,
+Mike.
+
