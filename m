@@ -2,518 +2,161 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3C0ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D41ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115482089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAQJAZoY"
+	by mail.kernel.org (Postfix) with ESMTP id E68F121928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfIKHXa (ORCPT
+        id S1727285AbfIKHXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:23:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33750 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKHXa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:23:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so13112780pfl.0;
-        Wed, 11 Sep 2019 00:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oKV4GsZnEZWAQLx3e3imwuEzlIM1AAdEg50y7BKvHwU=;
-        b=KAQJAZoYSC/KfFx5zpLWEuI7KCgJK1GY0GxEi78Pw7OoLNJCe08boyTwO6+NxlrtDj
-         8GMN1T3k3ptfuhgFMwiJkOrBDBhu/rPxAHdIiJ67SI+DB1drRGiV7chfSncVA/do87NM
-         E0RxhgwdDhh1L3xp9sXe3eeHg1YPa8VHbSBpbBBJqIzSEIeVYeIKlnlKOuNoiD392398
-         qZQ+Igyn7cdLoZWDgv0CjT3SBDRWXiMcTxD16ApjFjiAl5PCHWf8bKnzw5mpfE1XfXXi
-         JAjntlPAIBIpwJXOeOdVKFZgS48E6PCw3wxKBVGMKELczOK6Kkx4tQ73QlnSLzRhz13A
-         YnBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oKV4GsZnEZWAQLx3e3imwuEzlIM1AAdEg50y7BKvHwU=;
-        b=UcWLFon3md0C+++dddV+TYCLKW7gKHBq88reiYefXXg+sPkTxQyqPQQPpFMQAINWsS
-         swJtPIf7T4VKud7mEu/dWaVLyHJuaveqAbDLKxGAx8YgWkABKljuOzSx0lq2yxhOOe4F
-         h4wxi6xVM+9n6RWbC1jY+9ZVCyQjNL3LtZT7CZkfCgmJeS1SknANMHPvnZMFC7pdvefN
-         PQXIJNhMchZoPlH5dWRP9hyXiZTUUrNRI0DWPzvzr311QT0oKogi15l9lPnxY+qB1Hzs
-         +xPZFs3Jhz9mvzqvuH9u5C96RGxEodpA5Y4kmOzJh/ySBRjRcxywOjMvuBdZRsZS1qg0
-         NLXw==
-X-Gm-Message-State: APjAAAX/RZL1oGzhdz+M4rMb95Cjdu4FhxefkfX4otHVpgG8bJntKEPc
-        3Z7LibWZIVa6K6dIVNWM6oo=
-X-Google-Smtp-Source: APXvYqyRJ/eYasKrO4ruUe5r+8Lp+MVsWkx9v0ncHSNF1JaKqogleHjd56Awdj/NNZZfLUfm/mmS9g==
-X-Received: by 2002:a62:5214:: with SMTP id g20mr40546439pfb.103.1568186608324;
-        Wed, 11 Sep 2019 00:23:28 -0700 (PDT)
-Received: from gli-arch.genesyslogic.com.tw ([122.146.30.3])
-        by smtp.gmail.com with ESMTPSA id t12sm22565440pfe.58.2019.09.11.00.23.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 00:23:27 -0700 (PDT)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [PATCH V9 5/5] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-Date:   Wed, 11 Sep 2019 15:23:44 +0800
-Message-Id: <2d08c47490a349d7ee5682749f68604adc62f19f.1568184581.git.benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1568184581.git.benchuanggli@gmail.com>
-References: <cover.1568184581.git.benchuanggli@gmail.com>
+        Wed, 11 Sep 2019 03:23:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2210 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726735AbfIKHXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 03:23:52 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 76821790CCCDCFF3A76D;
+        Wed, 11 Sep 2019 15:23:49 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Sep 2019
+ 15:23:41 +0800
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@kernel.org>, <linuxarm@huawei.com>
+References: <20190909095347.GB6314@kroah.com>
+ <9598b359-ab96-7d61-687a-917bee7a5cd9@huawei.com>
+ <20190910093114.GA19821@kroah.com>
+ <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
+ <20190910110451.GP2063@dhcp22.suse.cz> <20190910111252.GA8970@kroah.com>
+ <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
+ <20190910125339.GZ2063@dhcp22.suse.cz> <20190911053334.GH4023@dhcp22.suse.cz>
+ <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
+ <20190911064926.GJ4023@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <3b977388-5f25-d0b5-bdc9-f963a9be2bd1@huawei.com>
+Date:   Wed, 11 Sep 2019 15:22:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190911064926.GJ4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+On 2019/9/11 14:49, Michal Hocko wrote:
+> On Wed 11-09-19 14:15:51, Yunsheng Lin wrote:
+>> On 2019/9/11 13:33, Michal Hocko wrote:
+>>> On Tue 10-09-19 14:53:39, Michal Hocko wrote:
+>>>> On Tue 10-09-19 20:47:40, Yunsheng Lin wrote:
+>>>>> On 2019/9/10 19:12, Greg KH wrote:
+>>>>>> On Tue, Sep 10, 2019 at 01:04:51PM +0200, Michal Hocko wrote:
+>>>>>>> On Tue 10-09-19 18:58:05, Yunsheng Lin wrote:
+>>>>>>>> On 2019/9/10 17:31, Greg KH wrote:
+>>>>>>>>> On Tue, Sep 10, 2019 at 02:43:32PM +0800, Yunsheng Lin wrote:
+>>>>>>>>>> On 2019/9/9 17:53, Greg KH wrote:
+>>>>>>>>>>> On Mon, Sep 09, 2019 at 02:04:23PM +0800, Yunsheng Lin wrote:
+>>>>>>>>>>>> Currently a device does not belong to any of the numa nodes
+>>>>>>>>>>>> (dev->numa_node is NUMA_NO_NODE) when the node id is neither
+>>>>>>>>>>>> specified by fw nor by virtual device layer and the device has
+>>>>>>>>>>>> no parent device.
+>>>>>>>>>>>
+>>>>>>>>>>> Is this really a problem?
+>>>>>>>>>>
+>>>>>>>>>> Not really.
+>>>>>>>>>> Someone need to guess the node id when it is not specified, right?
+>>>>>>>>>
+>>>>>>>>> No, why?  Guessing guarantees you will get it wrong on some systems.
+>>>>>>>>>
+>>>>>>>>> Are you seeing real problems because the id is not being set?  What
+>>>>>>>>> problem is this fixing that you can actually observe?
+>>>>>>>>
+>>>>>>>> When passing the return value of dev_to_node() to cpumask_of_node()
+>>>>>>>> without checking the node id if the node id is not valid, there is
+>>>>>>>> global-out-of-bounds detected by KASAN as below:
+>>>>>>>
+>>>>>>> OK, I seem to remember this being brought up already. And now when I
+>>>>>>> think about it, we really want to make cpumask_of_node NUMA_NO_NODE
+>>>>>>> aware. That means using the same trick the allocator does for this
+>>>>>>> special case.
+>>>>>>
+>>>>>> That seems reasonable to me, and much more "obvious" as to what is going
+>>>>>> on.
+>>>>>>
+>>>>>
+>>>>> Ok, thanks for the suggestion.
+>>>>>
+>>>>> For arm64 and x86, there are two versions of cpumask_of_node().
+>>>>>
+>>>>> when CONFIG_DEBUG_PER_CPU_MAPS is defined, the cpumask_of_node()
+>>>>>    in arch/x86/mm/numa.c is used, which does partial node id checking:
+>>>>>
+>>>>> const struct cpumask *cpumask_of_node(int node)
+>>>>> {
+>>>>>         if (node >= nr_node_ids) {
+>>>>>                 printk(KERN_WARNING
+>>>>>                         "cpumask_of_node(%d): node > nr_node_ids(%u)\n",
+>>>>>                         node, nr_node_ids);
+>>>>>                 dump_stack();
+>>>>>                 return cpu_none_mask;
+>>>>>         }
+>>>>>         if (node_to_cpumask_map[node] == NULL) {
+>>>>>                 printk(KERN_WARNING
+>>>>>                         "cpumask_of_node(%d): no node_to_cpumask_map!\n",
+>>>>>                         node);
+>>>>>                 dump_stack();
+>>>>>                 return cpu_online_mask;
+>>>>>         }
+>>>>>         return node_to_cpumask_map[node];
+>>>>> }
+>>>>>
+>>>>> when CONFIG_DEBUG_PER_CPU_MAPS is undefined, the cpumask_of_node()
+>>>>>    in arch/x86/include/asm/topology.h is used:
+>>>>>
+>>>>> static inline const struct cpumask *cpumask_of_node(int node)
+>>>>> {
+>>>>>         return node_to_cpumask_map[node];
+>>>>> }
+>>>>
+>>>> I would simply go with. There shouldn't be any need for heavy weight
+>>>> checks that CONFIG_DEBUG_PER_CPU_MAPS has.
+>>>>
+>>>> static inline const struct cpumask *cpumask_of_node(int node)
+>>>> {
+>>>> 	/* A nice comment goes here */
+>>>> 	if (node == NUMA_NO_NODE)
+>>
+>> How about "(unsigned int)node >= nr_node_ids", this is suggested
+>> by Peter, it checks the case where the node id set by fw is bigger
+>> or equal than nr_node_ids, and still handle the < 0 case, which
+>> includes NUMA_NO_NODE.
+> 
+> Isn't that a plain bug? Is something like that really happening?
 
-Add support for the GL9750 and GL9755 chipsets.
+I have not seen one happened before except the NUMA_NO_NODE case.
+Even with NUMA_NO_NODE case, we did not see it until we turn on
+the KASAN detection.
 
-Enable v4 mode and wait 5ms after set 1.8V signal enable for GL9750/
-GL9755. Fix the value of SDHCI_MAX_CURRENT register and use the vendor
-tuning flow for GL9750.
+It seems that there is no protection that prevent setting the node
+of device to an invalid node.
+And the kernel does have a few different check now:
+1) some does " < 0" check;
+2) some does "== NUMA_NO_NODE" check;
+3) some does ">= MAX_NUMNODES" check;
+4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
 
-Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
----
- drivers/mmc/host/Kconfig          |   1 +
- drivers/mmc/host/Makefile         |   2 +-
- drivers/mmc/host/sdhci-pci-core.c |   2 +
- drivers/mmc/host/sdhci-pci-gli.c  | 353 ++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci-pci.h      |   5 +
- 5 files changed, 362 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 931770f17087..9fbfff514d6c 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -94,6 +94,7 @@ config MMC_SDHCI_PCI
- 	depends on MMC_SDHCI && PCI
- 	select MMC_CQHCI
- 	select IOSF_MBI if X86
-+	select MMC_SDHCI_IO_ACCESSORS
- 	help
- 	  This selects the PCI Secure Digital Host Controller Interface.
- 	  Most controllers found today are PCI devices.
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 73578718f119..661445415090 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MMC_MXS)		+= mxs-mmc.o
- obj-$(CONFIG_MMC_SDHCI)		+= sdhci.o
- obj-$(CONFIG_MMC_SDHCI_PCI)	+= sdhci-pci.o
- sdhci-pci-y			+= sdhci-pci-core.o sdhci-pci-o2micro.o sdhci-pci-arasan.o \
--				   sdhci-pci-dwc-mshc.o
-+				   sdhci-pci-dwc-mshc.o sdhci-pci-gli.o
- obj-$(subst m,y,$(CONFIG_MMC_SDHCI_PCI))	+= sdhci-pci-data.o
- obj-$(CONFIG_MMC_SDHCI_ACPI)	+= sdhci-acpi.o
- obj-$(CONFIG_MMC_SDHCI_PXAV3)	+= sdhci-pxav3.o
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 4154ee11b47d..e5835fbf73bc 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1682,6 +1682,8 @@ static const struct pci_device_id pci_ids[] = {
- 	SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
- 	SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
- 	SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
-+	SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
-+	SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
- 	SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
- 	/* Generic SD host controller */
- 	{PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-new file mode 100644
-index 000000000000..041261bf9f7e
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Genesys Logic, Inc.
-+ *
-+ * Authors: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-+ *
-+ * Version: v0.9.0 (2019-08-08)
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/pci.h>
-+#include <linux/mmc/mmc.h>
-+#include <linux/delay.h>
-+#include "sdhci.h"
-+#include "sdhci-pci.h"
-+
-+/*  Genesys Logic extra registers */
-+#define SDHCI_GLI_9750_WT         0x800
-+#define   SDHCI_GLI_9750_WT_EN      BIT(0)
-+#define   GLI_9750_WT_EN_ON	    0x1
-+#define   GLI_9750_WT_EN_OFF	    0x0
-+
-+#define SDHCI_GLI_9750_DRIVING      0x860
-+#define   SDHCI_GLI_9750_DRIVING_1    GENMASK(11, 0)
-+#define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
-+#define   GLI_9750_DRIVING_1_VALUE    0xFFF
-+#define   GLI_9750_DRIVING_2_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_PLL	      0x864
-+#define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
-+#define   SDHCI_GLI_9750_PLL_TX2_DLY    GENMASK(22, 20)
-+#define   GLI_9750_PLL_TX2_INV_VALUE    0x1
-+#define   GLI_9750_PLL_TX2_DLY_VALUE    0x0
-+
-+#define SDHCI_GLI_9750_SW_CTRL      0x874
-+#define   SDHCI_GLI_9750_SW_CTRL_4    GENMASK(7, 6)
-+#define   GLI_9750_SW_CTRL_4_VALUE    0x3
-+
-+#define SDHCI_GLI_9750_MISC            0x878
-+#define   SDHCI_GLI_9750_MISC_TX1_INV    BIT(2)
-+#define   SDHCI_GLI_9750_MISC_RX_INV     BIT(3)
-+#define   SDHCI_GLI_9750_MISC_TX1_DLY    GENMASK(6, 4)
-+#define   GLI_9750_MISC_TX1_INV_VALUE    0x0
-+#define   GLI_9750_MISC_RX_INV_ON        0x1
-+#define   GLI_9750_MISC_RX_INV_OFF       0x0
-+#define   GLI_9750_MISC_RX_INV_VALUE     GLI_9750_MISC_RX_INV_OFF
-+#define   GLI_9750_MISC_TX1_DLY_VALUE    0x5
-+
-+#define SDHCI_GLI_9750_TUNING_CONTROL	          0x540
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_EN          BIT(4)
-+#define   GLI_9750_TUNING_CONTROL_EN_ON             0x1
-+#define   GLI_9750_TUNING_CONTROL_EN_OFF            0x0
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1    BIT(16)
-+#define   SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2    GENMASK(20, 19)
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE    0x1
-+#define   GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE    0x2
-+
-+#define SDHCI_GLI_9750_TUNING_PARAMETERS           0x544
-+#define   SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY    GENMASK(2, 0)
-+#define   GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE    0x1
-+
-+#define GLI_MAX_TUNING_LOOP 40
-+
-+/* Genesys Logic chipset */
-+static inline void gl9750_wt_on(struct sdhci_host *host)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9750_WT_EN_ON)
-+		return;
-+
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_ON);
-+
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
-+
-+static inline void gl9750_wt_off(struct sdhci_host *host)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-+	wt_enable = FIELD_GET(SDHCI_GLI_9750_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9750_WT_EN_OFF)
-+		return;
-+
-+	wt_value &= ~SDHCI_GLI_9750_WT_EN;
-+	wt_value |= FIELD_PREP(SDHCI_GLI_9750_WT_EN, GLI_9750_WT_EN_OFF);
-+
-+	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-+}
-+
-+static void gli_set_9750(struct sdhci_host *host)
-+{
-+	u32 driving_value;
-+	u32 pll_value;
-+	u32 sw_ctrl_value;
-+	u32 misc_value;
-+	u32 parameter_value;
-+	u32 control_value;
-+	u16 ctrl2;
-+
-+	gl9750_wt_on(host);
-+
-+	driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-+	pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-+	sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+	control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_1);
-+	driving_value &= ~(SDHCI_GLI_9750_DRIVING_2);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_1,
-+				    GLI_9750_DRIVING_1_VALUE);
-+	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
-+				    GLI_9750_DRIVING_2_VALUE);
-+	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
-+
-+	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
-+	sw_ctrl_value |= FIELD_PREP(SDHCI_GLI_9750_SW_CTRL_4,
-+				    GLI_9750_SW_CTRL_4_VALUE);
-+	sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
-+
-+	/* reset the tuning flow after reinit and before starting tuning */
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_INV;
-+	pll_value &= ~SDHCI_GLI_9750_PLL_TX2_DLY;
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_INV,
-+				GLI_9750_PLL_TX2_INV_VALUE);
-+	pll_value |= FIELD_PREP(SDHCI_GLI_9750_PLL_TX2_DLY,
-+				GLI_9750_PLL_TX2_DLY_VALUE);
-+
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+	misc_value &= ~SDHCI_GLI_9750_MISC_TX1_DLY;
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_INV,
-+				 GLI_9750_MISC_TX1_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+				 GLI_9750_MISC_RX_INV_VALUE);
-+	misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_TX1_DLY,
-+				 GLI_9750_MISC_TX1_DLY_VALUE);
-+
-+	parameter_value &= ~SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY;
-+	parameter_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY,
-+				      GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE);
-+
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1;
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_1,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_1_VALUE);
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_GLITCH_2,
-+				    GLI_9750_TUNING_CONTROL_GLITCH_2_VALUE);
-+
-+	sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
-+	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+
-+	/* disable tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	/* enable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_ON);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* write tuning parameters */
-+	sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
-+
-+	/* disable tuning parameters control */
-+	control_value &= ~SDHCI_GLI_9750_TUNING_CONTROL_EN;
-+	control_value |= FIELD_PREP(SDHCI_GLI_9750_TUNING_CONTROL_EN,
-+				    GLI_9750_TUNING_CONTROL_EN_OFF);
-+	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-+
-+	/* clear tuned clk */
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
-+{
-+	u32 misc_value;
-+
-+	gl9750_wt_on(host);
-+
-+	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-+	misc_value &= ~SDHCI_GLI_9750_MISC_RX_INV;
-+	if (b) {
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_ON);
-+	} else {
-+		misc_value |= FIELD_PREP(SDHCI_GLI_9750_MISC_RX_INV,
-+					 GLI_9750_MISC_RX_INV_OFF);
-+	}
-+	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-+
-+	gl9750_wt_off(host);
-+}
-+
-+static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-+{
-+	int i;
-+	int rx_inv;
-+
-+	for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-+		gli_set_9750_rx_inv(host, !!rx_inv);
-+		sdhci_start_tuning(host);
-+
-+		for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-+			u16 ctrl;
-+
-+			sdhci_send_tuning(host, opcode);
-+
-+			if (!host->tuning_done) {
-+				sdhci_abort_tuning(host, opcode);
-+				break;
-+			}
-+
-+			ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-+				if (ctrl & SDHCI_CTRL_TUNED_CLK)
-+					return 0; /* Success! */
-+				break;
-+			}
-+		}
-+	}
-+	if (!host->tuning_done) {
-+		pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-+			mmc_hostname(host->mmc));
-+		return -ETIMEDOUT;
-+	}
-+
-+	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-+		mmc_hostname(host->mmc));
-+	sdhci_reset_tuning(host);
-+
-+	return -EAGAIN;
-+}
-+
-+static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
-+{
-+	host->mmc->retune_period = 0;
-+	if (host->tuning_mode == SDHCI_TUNING_MODE_1)
-+		host->mmc->retune_period = host->tuning_count;
-+
-+	gli_set_9750(host);
-+	host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
-+	sdhci_end_tuning(host);
-+
-+	return 0;
-+}
-+
-+static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
-+{
-+	struct sdhci_host *host = slot->host;
-+
-+	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+	sdhci_enable_v4_mode(host);
-+
-+	return 0;
-+}
-+
-+static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-+{
-+	/*
-+	 * According to Section 3.6.1 signal voltage switch procedure in
-+	 * SD Host Controller Simplified Spec. 4.20, steps 6~8 are as
-+	 * follows:
-+	 * (6) Set 1.8V Signal Enable in the Host Control 2 register.
-+	 * (7) Wait 5ms. 1.8V voltage regulator shall be stable within this
-+	 *     period.
-+	 * (8) If 1.8V Signal Enable is cleared by Host Controller, go to
-+	 *     step (12).
-+	 *
-+	 * Wait 5ms after set 1.8V signal enable in Host Control 2 register
-+	 * to ensure 1.8V signal enable bit is set by GL9750/GL9755.
-+	 */
-+	usleep_range(5000, 5500);
-+}
-+
-+static void sdhci_gl9750_reset(struct sdhci_host *host, u8 mask)
-+{
-+	sdhci_reset(host, mask);
-+	gli_set_9750(host);
-+}
-+
-+static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 value;
-+
-+	value = readl(host->ioaddr + reg);
-+	if (unlikely(reg == SDHCI_MAX_CURRENT && !(value & 0xff)))
-+		value |= 0xc8;
-+
-+	return value;
-+}
-+
-+static const struct sdhci_ops sdhci_gl9755_ops = {
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9755 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9755,
-+	.ops            = &sdhci_gl9755_ops,
-+};
-+
-+static const struct sdhci_ops sdhci_gl9750_ops = {
-+	.read_l                 = sdhci_gl9750_readl,
-+	.set_clock		= sdhci_set_clock,
-+	.enable_dma		= sdhci_pci_enable_dma,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_gl9750_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+	.voltage_switch		= sdhci_gli_voltage_switch,
-+	.platform_execute_tuning = gl9750_execute_tuning,
-+};
-+
-+const struct sdhci_pci_fixes sdhci_gl9750 = {
-+	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-+	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-+	.probe_slot	= gli_probe_slot_gl9750,
-+	.ops            = &sdhci_gl9750_ops,
-+};
-+
-diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-index e5dc6e44c7a4..738ba5afcc20 100644
---- a/drivers/mmc/host/sdhci-pci.h
-+++ b/drivers/mmc/host/sdhci-pci.h
-@@ -65,6 +65,9 @@
- 
- #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
- 
-+#define PCI_DEVICE_ID_GLI_9755		0x9755
-+#define PCI_DEVICE_ID_GLI_9750		0x9750
-+
- /*
-  * PCI device class and mask
-  */
-@@ -185,5 +188,7 @@ int sdhci_pci_enable_dma(struct sdhci_host *host);
- extern const struct sdhci_pci_fixes sdhci_arasan;
- extern const struct sdhci_pci_fixes sdhci_snps;
- extern const struct sdhci_pci_fixes sdhci_o2;
-+extern const struct sdhci_pci_fixes sdhci_gl9750;
-+extern const struct sdhci_pci_fixes sdhci_gl9755;
- 
- #endif /* __SDHCI_PCI_H */
--- 
-2.23.0
+We need to be consistent about the checking, right?
 
