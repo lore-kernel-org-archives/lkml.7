@@ -2,138 +2,78 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B81C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BD2C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DB02084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726DD2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8BDKJ3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfIKRgs (ORCPT
+        id S1729637AbfIKRj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:36:48 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52259 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729349AbfIKRgs (ORCPT
+        Wed, 11 Sep 2019 13:39:56 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:45782 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbfIKRj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:36:48 -0400
-Received: from callcc.thunk.org (38.85.69.148.rev.vodafone.pt [148.69.85.38] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8BHaOjG004821
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 13:36:27 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 37C7442049E; Wed, 11 Sep 2019 13:36:24 -0400 (EDT)
-Date:   Wed, 11 Sep 2019 13:36:24 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190911173624.GI2740@mit.edu>
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc>
- <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
- <20190910173243.GA3992@darwi-home-pc>
- <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+        Wed, 11 Sep 2019 13:39:56 -0400
+Received: by mail-lj1-f175.google.com with SMTP id q64so10288379ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iZ4bkMZvPLT1/Opm4QEPQHR0cQUQ8Cpe6sY/FCCAjMI=;
+        b=Q8BDKJ3DdYjGlgXI69cvGQJzrbAPvpSd4xRgsKeI+qMffujhmvMwKSEkU5pWb2aEgK
+         qmpUX/grcxYWXnZ4B58oIl8a4ChOPpsZoNYuA9R5C2JfdBxm2nWd8RtERWbCaSbrUgmo
+         bVKvz5pnVAXkIDuorb82kF4NMB1gTrEREpva1GiKoQs6qBJUBW0H8X4RYUECdbOzO48v
+         ZUJrAXrMAvmhoOnskAZNDzyNVC8ivxJlqmJRtkew+4sUS5Du9js0kN5GKPceiT7dHM80
+         /HZxUsCAkI0F278//twmhpCYJjTcFaIgI3pxo+KW63SoDLsblQYNLGPUr0QoziDiu8jd
+         goCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iZ4bkMZvPLT1/Opm4QEPQHR0cQUQ8Cpe6sY/FCCAjMI=;
+        b=V+Vvip7twW4b/6lOn/fXMvbfubjXDq68sOwFIaZ2tp17iO2m0Uu2LIsMS7wcBerItj
+         0gr1OhcEKG4RxfOlHbMsm2dkZMWv1oja5i+7uqt+G/J3d6XrwUZU55DZ/Mx8JxkMcLMb
+         lF46EDgxkU2rUKDv8eABwnZP+FkZpIgbj9YXaZJl03rNiBIlSZI3w89R8g+LkESahtBl
+         b+Mt5KnxPZtwA5zegLEAr3M1SHm17bx6txPKjhz87d9BcvoTWbOt1su9r5a2fiIRXbt4
+         StLe7WkeEgY53wibu8q3OdLAQKw782ouzX6IwdvlRjmKULpc3TNz8kgahdhjXj5hcLm5
+         XRNg==
+X-Gm-Message-State: APjAAAW87KiuTIPkFY6Ny4jRQhqwkTUbFUfU5OU2zRbHEASb8g0pXRBA
+        sZC3cjBpa853cHDsWLNaq+Hxnx9WHVbQYuyvGg==
+X-Google-Smtp-Source: APXvYqxcEcaGL0kpZ9AoRZdVstIXRl31pitmLJg80TtGS10CvByWqy2SM92NjYkIfrzUKloNxit7KLak9j503SvALSI=
+X-Received: by 2002:a2e:9114:: with SMTP id m20mr23592932ljg.103.1568223594710;
+ Wed, 11 Sep 2019 10:39:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAEJqkgivvhQ=tOOuLjY=iwBVCKQhmmjpfNDa1yJ5SreNQubw6Q@mail.gmail.com>
+ <4581016e-b421-e794-e603-807d37aa1bf3@grimberg.me>
+In-Reply-To: <4581016e-b421-e794-e603-807d37aa1bf3@grimberg.me>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Wed, 11 Sep 2019 19:39:28 +0200
+Message-ID: <CAEJqkghexeFHwaGkNUp+SmdhtU6Mf8cZ=Kn9pfrUkX3hEz-MOg@mail.gmail.com>
+Subject: Re: [PATCH] Added QUIRKs for ADATA XPG SX8200 Pro 512GB
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 06:00:19PM +0100, Linus Torvalds wrote:
->     [    0.231255] random: get_random_bytes called from
-> start_kernel+0x323/0x4f5 with crng_init=0
-> 
-> and that's this code:
-> 
->         add_latent_entropy();
->         add_device_randomness(command_line, strlen(command_line));
->         boot_init_stack_canary();
-> 
-> in particular, it's the boot_init_stack_canary() thing that asks for a
-> random number for the canary.
-> 
-> I don't actually see the 'crng init done' until much much later:
-> 
->     [   21.741125] random: crng init done
+Am Mi., 11. Sept. 2019 um 19:21 Uhr schrieb Sagi Grimberg <sagi@grimberg.me>:
+>
+> This does not apply on nvme-5.4, can you please respin a patch
+> that cleanly applies?
 
-Yes, that's super early in the boot sequence.  IIRC the stack canary
-gets reinitialized later (or maybe it was only for the other CPU's in
-SMP mode; I don't recall the details of the top of my head).
-
-I think this one always fails, and perhaps we should have a way of
-suppressing it --- but that's correct the in-kernel interface doesn't
-block.
-
-The /dev/urandom device doesn't block either, despite security
-eggheads continually asking me to change it to block ala getrandom(2),
-but I have always pushed because because I *know* changing
-/dev/urandom to block would be asking for userspace regressions.
-
-The compromise we came up with was that since getrandom(2) is a new
-interface, we could make this have the behavior that the security
-heads wanted, which is to make blocking unconditional, since the
-theory was that *this* interface would be sane, and that userspace
-applications which used it too early was buggy, and we could make it
-*their* problem.
-
-People have suggested adding a new getrandom flag, GRND_I_KNOW_THIS_IS_INSECURE,
-or some such, which wouldn't block and would return "best efforts"
-randomness.  I haven't been super enthusiastic about such a flag
-because I *know* it would be insecure.   However, the next time a massive
-security bug shows up on the front pages of the Wall Street Journal,
-or on some web site such as https://factorable.net, it won't be the kernel's fault
-since the flag will be GRND_INSECURE_BROKEN_APPLICATION, or some such.
-It doesn't really solve the problem, though.
-
-> But this does show that
-> 
->  (a) we have the same issue in the kernel, and we don't block there
-
-Ultimately, I think the only right answer is to make it the
-bootloader's responsibility to get us some decent entropy at boot
-time.  There are patches to allow ARM systems to pass in entropy via
-the device tree.  And in theory (assuming you trust the UEFI BIOS ---
-stop laughing in the back!) we can use that get entropy which will
-solve the problem for UEFI boot systems.  I've been talking to Ron
-Minnich about trying to get this support into the NERF bootloader, at
-which point new servers from the Open Compute Project will have a
-solution as well.  (We can probably also get solutions for Chrome OS
-devices, since those have TPM-like which are trusted to have a
-comptently engineered hardware RNG --- I'm not sure I would trust all
-TPM devices in commodity hardware, but again, at least we can shift
-blame off of the kernel.  :-P)
-
-Still, these are all point solutions, and don't really solve the
-problem on older systems, or non-x86 systems.
-
->  (b) initializing the crng really can be a timing problem
-> 
-> The interrupt thing is only going to get worse as disks turn into
-> ssd's and some of them end up using polling rather than interrupts..
-> So we're likely to see _fewer_ interrupts in the future, not more.
-
-Yeah, agreed.  Maybe we should have an "insecure_randomness" boot
-option which blindly forces the CRNG to be initialized at boot, so
-that at least people can get to a command line, if insecurely?  I
-don't have any good ideas about how to solve this problem in general.
-:-( :-( :-(
-
-						- Ted
+Sure , just tell me from where to pull nvme-5.4 tree.
+My match was against current Linus tree.
