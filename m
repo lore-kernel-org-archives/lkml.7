@@ -2,90 +2,166 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D48FC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0C2C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFE22085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568203207;
-	bh=TRZPhDUn3fCmyadj4io3KMR6sEvY1Axe1o0mYIWtiqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CYBKYqp6ltxpZAFwZCN1F6W69oOoZcklKs/GpiqWF0W+O1r6NcXPBnbUYCwCaXz6r
-	 yC+dKiIDfxOpjy5oOoyCal5X3f0tznwPdRimQqA9k++vGEMeo2JLuexYX339VdYJIJ
-	 SGdf9d/u2TPBkqq+73s87ZcKMNtA/kwS9I2B/R9Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5DE2120863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfIKMAG (ORCPT
+        id S1727819AbfIKMBq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:00:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42922 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726702AbfIKMAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:00:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A9D9B64B;
-        Wed, 11 Sep 2019 12:00:04 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 14:00:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH] memcg, kmem: do not fail __GFP_NOFAIL charges
-Message-ID: <20190911120002.GQ4023@dhcp22.suse.cz>
-References: <31131c2d-a936-8bbf-e58d-a3baaa457340@gmail.com>
- <20190906125608.32129-1-mhocko@kernel.org>
- <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
- <20190909112245.GH27159@dhcp22.suse.cz>
+        Wed, 11 Sep 2019 08:01:46 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:63453 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726702AbfIKMBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:01:46 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
+ 2019 20:01:43 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
+ 2019 20:01:42 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Wed, 11 Sep 2019 20:01:42 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v3 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Topic: [PATCH v3 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Index: AdVoiub5gZKio2HTQDWXvSoK1k+0yg==
+Date:   Wed, 11 Sep 2019 12:01:42 +0000
+Message-ID: <9d6769dca6394638a013ccad2c8f964c@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909112245.GH27159@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-09-19 13:22:45, Michal Hocko wrote:
-> On Fri 06-09-19 11:24:55, Shakeel Butt wrote:
-[...]
-> > I wonder what has changed since
-> > <http://lkml.kernel.org/r/20180525185501.82098-1-shakeelb@google.com/>.
-> 
-> I have completely forgot about that one. It seems that we have just
-> repeated the same discussion again. This time we have a poor user who
-> actually enabled the kmem limit.
-> 
-> I guess there was no real objection to the change back then. The primary
-> discussion revolved around the fact that the accounting will stay broken
-> even when this particular part was fixed. Considering this leads to easy
-> to trigger crash (with the limit enabled) then I guess we should just
-> make it less broken and backport to stable trees and have a serious
-> discussion about discontinuing of the limit. Start by simply failing to
-> set any limit in the current upstream kernels.
+All Zhaoxin newer CPUs support MCE that compatible with Intel's
+"Machine-Check Architecture", so add support for Zhaoxin MCE in
+mce/core.c.
 
-Any more concerns/objections to the patch? I can add a reference to your
-earlier post Shakeel if you want or to credit you the way you prefer.
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+v2->v3:
+ - Make ifelse-case to switch-case
+ - Simplify Zhaoxin CPU FMS checking
 
-Also are there any objections to start deprecating process of kmem
-limit? I would see it in two stages
-- 1st warn in the kernel log
-	pr_warn("kmem.limit_in_bytes is deprecated and will be removed.
-	        "Please report your usecase to linux-mm@kvack.org if you "
-		"depend on this functionality."
-- 2nd fail any write to kmem.limit_in_bytes
-- 3rd remove the control file completely
+ arch/x86/kernel/cpu/mce/core.c | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 743370e..7bcd8c1 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -488,8 +488,9 @@ int mce_usable_address(struct mce *m)
+ 	if (!(m->status & MCI_STATUS_ADDRV))
+ 		return 0;
+ 
+-	/* Checks after this one are Intel-specific: */
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	/* Checks after this one are Intel/Zhaoxin-specific: */
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
++	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
+ 		return 1;
+ 
+ 	if (!(m->status & MCI_STATUS_MISCV))
+@@ -507,10 +508,13 @@ EXPORT_SYMBOL_GPL(mce_usable_address);
+ 
+ bool mce_is_memory_error(struct mce *m)
+ {
+-	if (m->cpuvendor == X86_VENDOR_AMD ||
+-	    m->cpuvendor == X86_VENDOR_HYGON) {
++	switch (m->cpuvendor) {
++	case X86_VENDOR_AMD:
++	case X86_VENDOR_HYGON:
+ 		return amd_mce_is_memory_error(m);
+-	} else if (m->cpuvendor == X86_VENDOR_INTEL) {
++
++	case X86_VENDOR_INTEL:
++	case X86_VENDOR_ZHAOXIN:
+ 		/*
+ 		 * Intel SDM Volume 3B - 15.9.2 Compound Error Codes
+ 		 *
+@@ -527,9 +531,10 @@ bool mce_is_memory_error(struct mce *m)
+ 		return (m->status & 0xef80) == BIT(7) ||
+ 		       (m->status & 0xef00) == BIT(8) ||
+ 		       (m->status & 0xeffc) == 0xc;
+-	}
+ 
+-	return false;
++	default:
++		return false;
++	}
+ }
+ EXPORT_SYMBOL_GPL(mce_is_memory_error);
+ 
+@@ -1697,6 +1702,18 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 		if (c->x86 == 6 && c->x86_model == 45)
+ 			quirk_no_way_out = quirk_sandybridge_ifu;
+ 	}
++
++	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
++		/*
++		 * All newer Zhaoxin CPUs support MCE broadcasting. Enable
++		 * synchronization with a one second timeout.
++		 */
++		if (c->x86 > 6 || (c->x86_model == 0x19 || c->x86_model == 0x1f)) {
++			if (cfg->monarch_timeout < 0)
++				cfg->monarch_timeout = USEC_PER_SEC;
++		}
++	}
++
+ 	if (cfg->monarch_timeout < 0)
+ 		cfg->monarch_timeout = 0;
+ 	if (cfg->bootlog != 0)
+@@ -2014,15 +2031,16 @@ static void mce_disable_error_reporting(void)
+ static void vendor_disable_error_reporting(void)
+ {
+ 	/*
+-	 * Don't clear on Intel or AMD or Hygon CPUs. Some of these MSRs
+-	 * are socket-wide.
++	 * Don't clear on Intel or AMD or Hygon or Zhaoxin CPUs. Some of these
++	 * MSRs are socket-wide.
+ 	 * Disabling them for just a single offlined CPU is bad, since it will
+ 	 * inhibit reporting for all shared resources on the socket like the
+ 	 * last level cache (LLC), the integrated memory controller (iMC), etc.
+ 	 */
+ 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL ||
+ 	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
+-	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
++	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN)
+ 		return;
+ 
+ 	mce_disable_error_reporting();
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
