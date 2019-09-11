@@ -2,100 +2,94 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63378C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97099C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CBD2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6926F2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkfYoycL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oxT+BZVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbfIKU0O (ORCPT
+        id S1730544AbfIKU0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:26:14 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37942 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbfIKU0O (ORCPT
+        Wed, 11 Sep 2019 16:26:44 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46351 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729186AbfIKU0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:26:14 -0400
-Received: by mail-io1-f65.google.com with SMTP id k5so23746799iol.5;
-        Wed, 11 Sep 2019 13:26:13 -0700 (PDT)
+        Wed, 11 Sep 2019 16:26:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so14397614pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 13:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=ry5hLNX1d0tX2Sbto+75KAiWlIHP1VB3CEPnkog+XmA=;
-        b=MkfYoycL5g0bbwtR2rEAFu67nBhW2JYmojWOMxdeePTFfu6VHDObm/4Fxwpe7sPect
-         z0s1yIhIr68nM6r47cW5JBmLZTAnEQ1FOJTro873qPNx4vD123OxcsAXX0w4Zk20rphl
-         SHd1FqqddDbbfhIAxGzfQAUK5plaQo8qh/qZbbYqZ0wDIW0GzpVZsnBQflLcCLT+S9HK
-         +ksXwz8wH0mO6w+P9lDOAiDNeFF4qcWZsxvNvaMJBdljYDd83QR9KSQKT1wALDS0gPjX
-         6BZ4M/C6S9CxbvkJvdKLToVYGO5EvhuHbHr973U+06arh0tWffUnLg4yoRGdt4UnYWRy
-         tVUg==
+        bh=/UAVegAIhAQSbSpxp8ObJcBzX5BUzT4wfrwqu1iDBBk=;
+        b=oxT+BZVm4Jpx0PjvWILzqeEtF1mbhyvkXEf3lhC2bCY8sRmbVDBWqBU7lOF+CiJD01
+         XVmySZONj7sivHkdA43Lt/12LXmiNZ9jYQ/QU3+fW1taqFRn7GprRwN1uoRH936ePocu
+         WHGvYzzO1YnlKR29pnFLUrmVAvxDwakA1dxUktqhznHs8J3H3Y6rqfgA/yhyQjeTNhtA
+         AWmMCDZ5JK74g1+UFJ/kO3AgwJeB+qqM6xcuNrlNvSipgTvK/KQpv7FxGZ6re/HtaL9t
+         bucpnOOAs+aojx8Q2A8JrIq3anfFZIfkEy00QrRNUNqLHP0A/TjjF2bVJfA4o4Kjen3U
+         R4qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ry5hLNX1d0tX2Sbto+75KAiWlIHP1VB3CEPnkog+XmA=;
-        b=uADRvGOf3umVD9wwYC90t8C8MBDn62dSZS/k/tadnzAg6zmlC+txbKeienwkqT0NTw
-         aBnLewTHW+mx4IWXq3fMQkUDIsmIEEPLR0bEKi5ZCdwruyPcjdNBZ0mqlxoE85sIlOeE
-         nUqGnvC/3+i18S8oc1EyXQEi+ftQbeC1/0k7Mb9XeShi8GubTcSxGT6cKYA98Hg9TKi+
-         Cgjw/pVQXDCWzdbZtIhtVX8mImQG3n3Hy+sD9On7AMmTNCf+S6UwDiAzGF3CV2QEcBik
-         3UbAj3zmQrLSFKYtaieu++EJScKCFmOhKo76orSCTNShtG55KBqMZtxZfap2cQBGWK1f
-         tgMA==
-X-Gm-Message-State: APjAAAWzYnm3YR9q2ZZGWkQVX02QV0MJg+Nkk+C1vFiTgz8s54XNSEFE
-        3CvJK5ObrM62lpjQxa125GA=
-X-Google-Smtp-Source: APXvYqwlo5pNy0gVHX7ssYwO+u4telVjGeapJYGI38KL7lLCP8a9EdfJPxFGjXTPPdh1c5G56lvoHQ==
-X-Received: by 2002:a6b:b445:: with SMTP id d66mr12103059iof.269.1568233573261;
-        Wed, 11 Sep 2019 13:26:13 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id q5sm14635474iob.65.2019.09.11.13.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 13:26:12 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: usb: null check create_singlethread_workqueue
-Date:   Wed, 11 Sep 2019 15:26:00 -0500
-Message-Id: <20190911202603.13689-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        bh=/UAVegAIhAQSbSpxp8ObJcBzX5BUzT4wfrwqu1iDBBk=;
+        b=Xvkbs4adUJSqXNt9jspG8A9JmIWysOX465U57y0DRBc8Fl6hbW+ypkRwkILOmBrtRO
+         M4nDhOo1N7+hwC/LIDEhicBsFupoWee3r0L99CdgixJK9P8zxWx2UTe5vGRv6CxHfDob
+         8T0XETiG5ypageOZkRksFksbQkbBLSukOxJnivX1iIRrrIoUTQZTDJjEwS097gdA8ntq
+         msqWk5qQx1LpiUuE78JuIz84MBBLMLEGtr+8+TzdWYzOyOOEh3ga4Pm5MnkDFd3EQwdL
+         S42sTiy8NA6FjaRfQnvt0mTm9XWz6cF3NjXkmFyC1/CLE1yqUi763UYdwLxnj1gIQFCf
+         0CmQ==
+X-Gm-Message-State: APjAAAXbOD8ygZofPA9bkDs7vWStb6/Tj3HeoQb9pHKF3SPMRyrBhxEc
+        BMY3ECSRh9woz56JFvVV974=
+X-Google-Smtp-Source: APXvYqyOwlwOHp7+hXZnTE3WUluW+R15WCGJp4Eo+ix7mwC6XAvc6HKFCgQoHJqj98v4wfUkNiLpvA==
+X-Received: by 2002:a62:d45a:: with SMTP id u26mr42945149pfl.137.1568233603357;
+        Wed, 11 Sep 2019 13:26:43 -0700 (PDT)
+Received: from localhost.localdomain ([1.39.178.185])
+        by smtp.gmail.com with ESMTPSA id e10sm33196577pfh.77.2019.09.11.13.26.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 11 Sep 2019 13:26:42 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org, osalvador@suse.de, mhocko@suse.com,
+        david@redhat.com, pasha.tatashin@soleen.com,
+        dan.j.williams@intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] mm/memory_hotplug.c: s/is/if
+Date:   Thu, 12 Sep 2019 02:02:34 +0530
+Message-Id: <1568233954-3913-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sd_start return value of create_singlethread_workqueue needs null
-check.
+Corrected typo in documentation.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- drivers/media/usb/gspca/sq905.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/memory_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/gspca/sq905.c b/drivers/media/usb/gspca/sq905.c
-index 863c485f4275..97799cfb832e 100644
---- a/drivers/media/usb/gspca/sq905.c
-+++ b/drivers/media/usb/gspca/sq905.c
-@@ -378,6 +378,9 @@ static int sd_start(struct gspca_dev *gspca_dev)
- 	}
- 	/* Start the workqueue function to do the streaming */
- 	dev->work_thread = create_singlethread_workqueue(MODULE_NAME);
-+	if (!dev->work_thread)
-+		return -ENOMEM;
-+
- 	queue_work(dev->work_thread, &dev->work_struct);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index dc0118f..5a404d3 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1795,7 +1795,7 @@ void __remove_memory(int nid, u64 start, u64 size)
+ {
  
- 	return 0;
+ 	/*
+-	 * trigger BUG() is some memory is not offlined prior to calling this
++	 * trigger BUG() if some memory is not offlined prior to calling this
+ 	 * function
+ 	 */
+ 	if (try_remove_memory(nid, start, size))
 -- 
-2.17.1
+1.9.1
 
