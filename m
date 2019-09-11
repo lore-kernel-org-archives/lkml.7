@@ -2,245 +2,131 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6960C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3069BC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF932089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066B62168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568221243;
+	bh=3w6xF3foq1hxXmdkkCHS1s5w3xVpNEx7uKE/4HZvrkY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TZjk5SrnwifsBOWaZWrCNS2XSE1jBvkOYWdX6XVKK0NPkexP34kYFofnebxtzv6Q7
+	 xIWkSK998NQbaW3oLhsPjHyWxn7YJtv4qOahfv43GGqkYxeWpVUIdlely//dnmID6u
+	 6yq0my5R+djZw1vrk9xu1DKtDb3+uqkvePum0UTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfIKQ6A (ORCPT
+        id S1729303AbfIKRAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:58:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35524 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729583AbfIKQ57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:57:59 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A6FF1918644;
-        Wed, 11 Sep 2019 16:57:58 +0000 (UTC)
-Received: from t460p.redhat.com (ovpn-117-113.phx2.redhat.com [10.3.117.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B4D3860BEC;
-        Wed, 11 Sep 2019 16:57:55 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT v3 5/5] rcutorture: Avoid problematic critical section nesting on RT
-Date:   Wed, 11 Sep 2019 17:57:29 +0100
-Message-Id: <20190911165729.11178-6-swood@redhat.com>
-In-Reply-To: <20190911165729.11178-1-swood@redhat.com>
-References: <20190911165729.11178-1-swood@redhat.com>
+        Wed, 11 Sep 2019 13:00:42 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40413 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfIKRAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:00:41 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w18so5137689lfk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hI3EB/9BDPeGlAj5JSZDGYA2f1JCFRdoSzkNrQAXirE=;
+        b=CGKf9ffZA0sDKRiYz4VTL4pJ6O/i9q/3SuKL2cMKY0lYCwrIgBzzQc9qpL02hJUCVf
+         zhRFfXilE/dIFAK6zLlsU05aZBlAW8SlX2gIrBCON7ulaV9IINxTNXZGi6/Lfghu5RUo
+         Ttenh548bV73virB1och/bEQUdMXAWdJlPKp4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hI3EB/9BDPeGlAj5JSZDGYA2f1JCFRdoSzkNrQAXirE=;
+        b=c+3UELMlvXpsUV6eyou0WT8YCD2PCzZr+VsrSHRQ0rKszP0uQhfYLvdWoShanm4LVS
+         QU0MWeggXTQYFA9s4KoCxDYHHwmytoiuOb+Ol2cTz5Vp+eSowmEWQF5ZPy6ZS+tfVm5k
+         OfTRhGkNLdIjSwe/Sg463wDrVzrouxwsQB+lZUWVsDxg1o/aUIFLnGYVKDR1rsomzWWd
+         svOyiWSCzNFLCs9FMkBReek8mQDYrYn7WnvVjpaPRAVBqXB0hYpphrsvRFaE2INofN/W
+         dml95q8+vdrubU2mA5iDGrSShwvHmggElL15apCFicCcKJQjNlAj8T5cgsGcieE8QAbS
+         H7Tw==
+X-Gm-Message-State: APjAAAUO4FHCl+60THQxVXal9oZLn+VgHYtGdHlNfNlXzAUPjie2p6os
+        Ua4tNnreb8z6T/lKBvP6vJO/X5maj4eDOQ==
+X-Google-Smtp-Source: APXvYqwuw22AlyB+GUVhQjJXXO8ejvkYvS2KU2Xm3XgT/yzvF+xkYXywVXpHG2TG7/Ymlj+g2aJ/bw==
+X-Received: by 2002:ac2:5196:: with SMTP id u22mr25025912lfi.130.1568221237378;
+        Wed, 11 Sep 2019 10:00:37 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id q24sm5451408lfa.94.2019.09.11.10.00.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Sep 2019 10:00:36 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id q64so10172185ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:00:36 -0700 (PDT)
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr16107533ljo.180.1568221235850;
+ Wed, 11 Sep 2019 10:00:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 11 Sep 2019 16:57:58 +0000 (UTC)
+References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
+ <20190910042107.GA1517@darwi-home-pc> <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc> <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+In-Reply-To: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Sep 2019 18:00:19 +0100
+X-Gmail-Original-Message-ID: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+Message-ID: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcutorture was generating some nesting scenarios that are not
-reasonable.  Constrain the state selection to avoid them.
+On Wed, Sep 11, 2019 at 5:45 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> So I'd be inclined to either lower the limit regardless - and perhaps
+> make the "user space asked for randomness much too early" be a big
+> *warning* instead of being a basically fatal hung machine?
 
-Example #1:
+Hmm. Just testing - normally I run my laptop with TRUST_CPU enabled,
+so I never see this any more, but warning (rather than waiting) is
+what we still do for the kernel.
 
-1. preempt_disable()
-2. local_bh_disable()
-3. preempt_enable()
-4. local_bh_enable()
+And I see
 
-On PREEMPT_RT, BH disabling takes a local lock only when called in
-non-atomic context.  Thus, atomic context must be retained until after BH
-is re-enabled.  Likewise, if BH is initially disabled in non-atomic
-context, it cannot be re-enabled in atomic context.
+    [    0.231255] random: get_random_bytes called from
+start_kernel+0x323/0x4f5 with crng_init=0
 
-Example #2:
+and that's this code:
 
-1. rcu_read_lock()
-2. local_irq_disable()
-3. rcu_read_unlock()
-4. local_irq_enable()
+        add_latent_entropy();
+        add_device_randomness(command_line, strlen(command_line));
+        boot_init_stack_canary();
 
-If the thread is preempted between steps 1 and 2,
-rcu_read_unlock_special.b.blocked will be set, but it won't be
-acted on in step 3 because IRQs are disabled.  Thus, reporting of the
-quiescent state will be delayed beyond the local_irq_enable().
+in particular, it's the boot_init_stack_canary() thing that asks for a
+random number for the canary.
 
-For now, these scenarios will continue to be tested on non-PREEMPT_RT
-kernels, until debug checks are added to ensure that they are not
-happening elsewhere.
+I don't actually see the 'crng init done' until much much later:
 
-Signed-off-by: Scott Wood <swood@redhat.com>
----
-v3: Limit to RT kernels, and remove one constraint that, while it
-is bad on both RT and non-RT (missing a schedule), does not oops or
-otherwise prevent using rcutorture.  It wolud be added once debug checks
-are implemented.
+    [   21.741125] random: crng init done
 
- kernel/rcu/rcutorture.c | 96 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 82 insertions(+), 14 deletions(-)
+but part of that may be that my early boot is slow due to having an
+encrypted disk and so the bootup ends up waiting for me to type the
+passphrase.
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index efaa5b3f4d3f..ecb82cc432af 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -60,10 +60,13 @@
- #define RCUTORTURE_RDR_RBH	 0x08	/*  ... rcu_read_lock_bh(). */
- #define RCUTORTURE_RDR_SCHED	 0x10	/*  ... rcu_read_lock_sched(). */
- #define RCUTORTURE_RDR_RCU	 0x20	/*  ... entering another RCU reader. */
--#define RCUTORTURE_RDR_NBITS	 6	/* Number of bits defined above. */
-+#define RCUTORTURE_RDR_ATOM_BH	 0x40	/*  ... disabling bh while atomic */
-+#define RCUTORTURE_RDR_ATOM_RBH	 0x80	/*  ... RBH while atomic */
-+#define RCUTORTURE_RDR_NBITS	 8	/* Number of bits defined above. */
- #define RCUTORTURE_MAX_EXTEND	 \
- 	(RCUTORTURE_RDR_BH | RCUTORTURE_RDR_IRQ | RCUTORTURE_RDR_PREEMPT | \
--	 RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED)
-+	 RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED | \
-+	 RCUTORTURE_RDR_ATOM_BH | RCUTORTURE_RDR_ATOM_RBH)
- #define RCUTORTURE_RDR_MAX_LOOPS 0x7	/* Maximum reader extensions. */
- 					/* Must be power of two minus one. */
- #define RCUTORTURE_RDR_MAX_SEGS (RCUTORTURE_RDR_MAX_LOOPS + 3)
-@@ -1092,31 +1095,52 @@ static void rcutorture_one_extend(int *readstate, int newstate,
- 	WARN_ON_ONCE((idxold >> RCUTORTURE_RDR_SHIFT) > 1);
- 	rtrsp->rt_readstate = newstate;
- 
--	/* First, put new protection in place to avoid critical-section gap. */
-+	/*
-+	 * First, put new protection in place to avoid critical-section gap.
-+	 * Disable preemption around the ATOM disables to ensure that
-+	 * in_atomic() is true.
-+	 */
- 	if (statesnew & RCUTORTURE_RDR_BH)
- 		local_bh_disable();
-+	if (statesnew & RCUTORTURE_RDR_RBH)
-+		rcu_read_lock_bh();
- 	if (statesnew & RCUTORTURE_RDR_IRQ)
- 		local_irq_disable();
- 	if (statesnew & RCUTORTURE_RDR_PREEMPT)
- 		preempt_disable();
--	if (statesnew & RCUTORTURE_RDR_RBH)
--		rcu_read_lock_bh();
- 	if (statesnew & RCUTORTURE_RDR_SCHED)
- 		rcu_read_lock_sched();
-+	preempt_disable();
-+	if (statesnew & RCUTORTURE_RDR_ATOM_BH)
-+		local_bh_disable();
-+	if (statesnew & RCUTORTURE_RDR_ATOM_RBH)
-+		rcu_read_lock_bh();
-+	preempt_enable();
- 	if (statesnew & RCUTORTURE_RDR_RCU)
- 		idxnew = cur_ops->readlock() << RCUTORTURE_RDR_SHIFT;
- 
--	/* Next, remove old protection, irq first due to bh conflict. */
-+	/*
-+	 * Next, remove old protection, in decreasing order of strength
-+	 * to avoid unlock paths that aren't safe in the stronger
-+	 * context.  Disable preemption around the ATOM enables in
-+	 * case the context was only atomic due to IRQ disabling.
-+	 */
-+	preempt_disable();
- 	if (statesold & RCUTORTURE_RDR_IRQ)
- 		local_irq_enable();
--	if (statesold & RCUTORTURE_RDR_BH)
-+	if (statesold & RCUTORTURE_RDR_ATOM_BH)
- 		local_bh_enable();
-+	if (statesold & RCUTORTURE_RDR_ATOM_RBH)
-+		rcu_read_unlock_bh();
-+	preempt_enable();
- 	if (statesold & RCUTORTURE_RDR_PREEMPT)
- 		preempt_enable();
--	if (statesold & RCUTORTURE_RDR_RBH)
--		rcu_read_unlock_bh();
- 	if (statesold & RCUTORTURE_RDR_SCHED)
- 		rcu_read_unlock_sched();
-+	if (statesold & RCUTORTURE_RDR_BH)
-+		local_bh_enable();
-+	if (statesold & RCUTORTURE_RDR_RBH)
-+		rcu_read_unlock_bh();
- 	if (statesold & RCUTORTURE_RDR_RCU)
- 		cur_ops->readunlock(idxold >> RCUTORTURE_RDR_SHIFT);
- 
-@@ -1152,6 +1176,12 @@ static int rcutorture_extend_mask_max(void)
- 	int mask = rcutorture_extend_mask_max();
- 	unsigned long randmask1 = torture_random(trsp) >> 8;
- 	unsigned long randmask2 = randmask1 >> 3;
-+	unsigned long preempts = RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED;
-+	unsigned long preempts_irq = preempts | RCUTORTURE_RDR_IRQ;
-+	unsigned long nonatomic_bhs = RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
-+	unsigned long atomic_bhs = RCUTORTURE_RDR_ATOM_BH |
-+				   RCUTORTURE_RDR_ATOM_RBH;
-+	unsigned long tmp;
- 
- 	WARN_ON_ONCE(mask >> RCUTORTURE_RDR_SHIFT);
- 	/* Mostly only one bit (need preemption!), sometimes lots of bits. */
-@@ -1159,11 +1189,49 @@ static int rcutorture_extend_mask_max(void)
- 		mask = mask & randmask2;
- 	else
- 		mask = mask & (1 << (randmask2 % RCUTORTURE_RDR_NBITS));
--	/* Can't enable bh w/irq disabled. */
--	if ((mask & RCUTORTURE_RDR_IRQ) &&
--	    ((!(mask & RCUTORTURE_RDR_BH) && (oldmask & RCUTORTURE_RDR_BH)) ||
--	     (!(mask & RCUTORTURE_RDR_RBH) && (oldmask & RCUTORTURE_RDR_RBH))))
--		mask |= RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
-+
-+	/*
-+	 * Can't enable bh w/irq disabled.
-+	 */
-+	tmp = atomic_bhs | nonatomic_bhs;
-+	if (mask & RCUTORTURE_RDR_IRQ)
-+		mask |= oldmask & tmp;
-+
-+	/*
-+	 * Ideally these sequences would be detected in debug builds
-+	 * (regardless of RT), but until then don't stop testing
-+	 * them on non-RT.
-+	 */
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL)) {
-+		/*
-+		 * Can't release the outermost rcu lock in an irq disabled
-+		 * section without preemption also being disabled, if irqs
-+		 * had ever been enabled during this RCU critical section
-+		 * (could leak a special flag and delay reporting the qs).
-+		 */
-+		if ((oldmask & RCUTORTURE_RDR_RCU) &&
-+		    (mask & RCUTORTURE_RDR_IRQ) &&
-+		    !(mask & preempts))
-+			mask |= RCUTORTURE_RDR_RCU;
-+
-+		/* Can't modify atomic bh in non-atomic context */
-+		if ((oldmask & atomic_bhs) && (mask & atomic_bhs) &&
-+		    !(mask & preempts_irq)) {
-+			mask |= oldmask & preempts_irq;
-+			if (mask & RCUTORTURE_RDR_IRQ)
-+				mask |= oldmask & tmp;
-+		}
-+		if ((mask & atomic_bhs) && !(mask & preempts_irq))
-+			mask |= RCUTORTURE_RDR_PREEMPT;
-+
-+		/* Can't modify non-atomic bh in atomic context */
-+		tmp = nonatomic_bhs;
-+		if (oldmask & preempts_irq)
-+			mask &= ~tmp;
-+		if ((oldmask | mask) & preempts_irq)
-+			mask |= oldmask & tmp;
-+	}
-+
- 	return mask ?: RCUTORTURE_RDR_RCU;
- }
- 
--- 
-1.8.3.1
+But this does show that
 
+ (a) we have the same issue in the kernel, and we don't block there
+
+ (b) initializing the crng really can be a timing problem
+
+The interrupt thing is only going to get worse as disks turn into
+ssd's and some of them end up using polling rather than interrupts..
+So we're likely to see _fewer_ interrupts in the future, not more.
+
+            Linus
