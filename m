@@ -2,367 +2,137 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F02C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E425EC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E8020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TYmke4Ji"
+	by mail.kernel.org (Postfix) with ESMTP id BF3F8206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfIKQlB (ORCPT
+        id S1729274AbfIKQlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:41:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37472 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbfIKQlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:41:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BGd43i141111;
-        Wed, 11 Sep 2019 16:40:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=VFpmtg3e/Aku2YtAZH7JPHfHkoiJ5a4bkDvJ9ThkoTE=;
- b=TYmke4Ji/D/b6KBrM2hrn51WRqdC3jm24SP9gFQbFVPBzaVGN1OUMpmlN/x3f9cbxUah
- UwuKdmdmrJPgwEfZ49zCoT7882qzSMSgELPStofE6RBdGqyc6o8CH8qL5QtJ+xrqw7Mk
- jtARwXhwDSlKkdfBVlqkHjfYlbpwDTzszi+8/XnsAOdxYBnwkZ62b2Jy8+XE+on1cpOM
- Zmq7ikHofxH8V2pQ6ljEG020SdsbD7XvnkcdwZwTWaosLvZ59T2A0GcA4ommatq8p4m6
- VugqSZrNbX2LOtAMReucIkbHZnJBVaGWOOZqdkZ3xd4a8eWueveA+MONBDyHmLnNHSs4 ug== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uw1m93e2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 16:40:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BGcxQF078349;
-        Wed, 11 Sep 2019 16:40:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uxj88yyhr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 16:40:26 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BGeLaM031363;
-        Wed, 11 Sep 2019 16:40:21 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 09:40:20 -0700
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joe Perches <joe@perches.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steve French <stfrench@microsoft.com>,
-        Olof Johansson <olof@lixom.net>, linux-nvdimm@lists.01.org,
-        ksummit-discuss@lists.linuxfoundation.org
-Subject: Re: [PATCH v2 0/3] Maintainer Entry Profiles
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Wed, 11 Sep 2019 12:40:16 -0400
-In-Reply-To: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Wed, 11 Sep 2019 08:48:42 -0700")
-Message-ID: <yq1o8zqeqhb.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 11 Sep 2019 12:41:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38798 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728794AbfIKQlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:41:07 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CDF7310C0931;
+        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
+Received: from localhost (ovpn-116-29.ams2.redhat.com [10.36.116.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EC1519C6A;
+        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH] s390/cio: fix intparm documentation
+Date:   Wed, 11 Sep 2019 18:41:03 +0200
+Message-Id: <20190911164103.16156-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110154
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The common I/O layer is maintaining an "intparm" inspired by
+the hardware intparm for driver usage. This "intparm" is not
+only applicaple for ssch, but also for hsch/csch. The kerneldoc
+states that it is only updated for hsch/csch if no prior request
+is pending; however, this is not what the code does (whether
+that would actually desireable is a different issue.)
 
-Hi Dan!
+Let's at least fix the kerneldoc for now.
 
-> At last years Plumbers Conference I proposed the Maintainer Entry
-> Profile as a document that a maintainer can provide to set contributor
-> expectations and provide fodder for a discussion between maintainers
-> about the merits of different maintainer policies.
+Fixes: b2ffd8e9a76e ("[S390] cio: Add docbook comments.")
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
+ drivers/s390/cio/device_ops.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-This looks pretty good to me.
-
-After the Plumbers session last year I wrote this for SCSI based on a
-prior version by Christoph. It's gone a bit stale but I'll update it to
-match your template.
-
+diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
+index d722458c5928..65841af15748 100644
+--- a/drivers/s390/cio/device_ops.c
++++ b/drivers/s390/cio/device_ops.c
+@@ -124,9 +124,7 @@ EXPORT_SYMBOL(ccw_device_is_multipath);
+ /**
+  * ccw_device_clear() - terminate I/O request processing
+  * @cdev: target ccw device
+- * @intparm: interruption parameter; value is only used if no I/O is
+- *	     outstanding, otherwise the intparm associated with the I/O request
+- *	     is returned
++ * @intparm: interruption parameter to be returned upon conclusion of csch
+  *
+  * ccw_device_clear() calls csch on @cdev's subchannel.
+  * Returns:
+@@ -179,6 +177,9 @@ int ccw_device_clear(struct ccw_device *cdev, unsigned long intparm)
+  * completed during the time specified by @expires. If a timeout occurs, the
+  * channel program is terminated via xsch, hsch or csch, and the device's
+  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -256,6 +257,9 @@ int ccw_device_start_timeout_key(struct ccw_device *cdev, struct ccw1 *cpa,
+  * Start a S/390 channel program. When the interrupt arrives, the
+  * IRQ handler is called, either immediately, delayed (dev-end missing,
+  * or sense required) or never (no IRQ handler registered).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -287,6 +291,9 @@ int ccw_device_start_key(struct ccw_device *cdev, struct ccw1 *cpa,
+  * Start a S/390 channel program. When the interrupt arrives, the
+  * IRQ handler is called, either immediately, delayed (dev-end missing,
+  * or sense required) or never (no IRQ handler registered).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -322,6 +329,9 @@ int ccw_device_start(struct ccw_device *cdev, struct ccw1 *cpa,
+  * completed during the time specified by @expires. If a timeout occurs, the
+  * channel program is terminated via xsch, hsch or csch, and the device's
+  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -343,11 +353,12 @@ int ccw_device_start_timeout(struct ccw_device *cdev, struct ccw1 *cpa,
+ /**
+  * ccw_device_halt() - halt I/O request processing
+  * @cdev: target ccw device
+- * @intparm: interruption parameter; value is only used if no I/O is
+- *	     outstanding, otherwise the intparm associated with the I/O request
+- *	     is returned
++ * @intparm: interruption parameter to be returned upon conclusion of hsch
+  *
+  * ccw_device_halt() calls hsch on @cdev's subchannel.
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_clear().
+  * Returns:
+  *  %0 on success,
+  *  -%ENODEV on device not operational,
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.1
 
-
-
-================================================
-Linux SCSI Subsystem Patch Submission Guidelines
-================================================
-Martin K. Petersen <martin.petersen@oracle.com>
-
-
-Release cycles and when to submit patches
-=========================================
-Each release cycle consists of:
-
-* an 8 week submission window in which new core features and driver updates
-  are added (scsi-queue)
-
-* a 2 week merge window where it is customary not to post patches
-
-* an 8 week stabilization window before final release where only bug fix
-  patches are merged (scsi-fixes)
-
-The submission/stabilization cycle may be shorter or longer than 8 weeks.
-However, 8 weeks is the most common. Note that the code *submission window*
-for the *next* kernel release overlaps with the *stabilization window* for the
-*current* release:
-
-+-------------+---------------------------------+-------------+-----------------
-| Week  1 | 2 |  3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |  11  |  12  | 13 | 14 | .....
-+-------------+---------------------------------+-------------+-----------------
-
-+-------------+---------------------------------+-------------+
-| 4.x merge   |    4.x stabilization window     | 4.x release |
-| window      | rc1 rc2 rc3 rc4 rc5 rc6 rc7 rc8 |             |
-+-------------+---------------------------------+-------------+
-| Merge fixes | Big bug fixes.............small |   Stable    |
-+-------------+---------------------------------+-------------+
-
-              +---------------------------------+-------------+-----------------
-              |    4.x+1 submission window      | 4.x+1 merge | 4.x+1 stabili-
-              |                                 | window      | zation window
-	      |                                 |             | rc1 rc2 rc3 ...
-              +---------------------------------+-------------+-----------------
-              | Big features/updates......small | Merge fixes | Big bug fixes..
-              +---------------------------------+-------------+-----------------
-
-
-Bug Fixes (4.x/scsi-fixes)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-During the two week merge window only fixes related to the merge process or
-any critical functional deficiences discovered in the newly submitted code
-will be merged.
-
-During the subsequent stabilization window (rc cycle) the expectation is that
-bug fix patches will become increasingly smaller and simpler. In other words:
-There may be enough fallout from a merged driver update to justify sending a
-5-patch remedial bug fix series during rc1/rc2. But at the end of the rc cycle
-patches must be trivial one-liners.
-
-After the final 4.x has been released, subsequent bug fixes will have to go
-through the stable-kernel-rules.rst process.
-
-
-New Features/Core Code Changes/Driver Updates (4.x+1/scsi-queue)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-New features for 4.x+1 should be sent to linux-scsi once the merge window is
-over. I.e. once rc1 has been released. This ensures there is enough time to
-undergo several review cycles before the submission window is closed.
-
-At the end of the submission window (rc7/rc8) the expectation is that posted
-patches will be small and fairly simple. No patch series.
-
-Only critical patches are merged during the last (rc8) submission window week
-to ensure sufficient zeroday test robot and linux-next coverage before sending
-Linus the final pull request.
-
-
-GIT Trees
-=========
-The SCSI patch submission trees can be found at:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git
-
-There are two concurrently active branches:
-
-* 4.x/scsi-fixes for bug fixes to the current kernel rc
-
-* 4.x+1/scsi-queue for new features and driver submissions for the next merge
-  window
-
-Both trees are usually based on Linus' 4.x-rc1.
-
-Patches accepted into 4.x/scsi-fixes are typically submitted to Linus on a
-weekly basis. Patches accepted into 4.x+1/scsi-queue are submitted at the
-beginning of the merge window.
-
-It is sometimes necessary to set up a separate 4.x+1/scsi-postmerge branch
-which contains patches that depend on newly merged functionality in other
-subsystems such as block or libata. The postmerge tree will be submitted to
-Linus at the end of the merge window once all external dependencies have been
-merged.
-
-
-Patch Submission Process
-========================
-* All modifications to files under drivers/scsi should go through the SCSI
-  tree.
-
-* Read Documentation/process/submitting-patches.rst
-
-* Send the patch or patch series to linux-scsi@vger.kernel.org
-
-* Please make sure to Cc: the maintainer of the driver/component you are
-  changing.
-
-* Do not use custom To: and Cc: for individual patches. We want to see the
-  whole series, even patches that potentially need to go through a different
-  subsystem tree.
-
-* Clearly indicate in the introductory letter which tree your submission is
-  aimed at (scsi-fixes or scsi-queue). For individual patches you can indicate
-  the desired tree below the --- separator.
-
-* As a rule of thumb, any patch that goes through the scsi-fixes tree should
-  have a stable tag unless it was a regression introduced in the current
-  release.
-
-* If the patch is a bugfix, please add:
-
-    Fixes: 1234deadbeef ("Implement foobarbaz")
-    Cc: <stable@vger.kernel.org> # v4.x+
-
-  Where the v4.x indicates when commit 1234deadbeef was added to the kernel.
-
-* When posting a revised patch or series, please manually add any Acked-by:,
-  Reviewed-by:, or Tested-by: tags you may have received. Tags are only valid
-  if the patch has not changed significantly. Rebasing without conflicts and
-  typo fixes are generally OK and do not invalidate tags.
-
-* Please CC: everyone that provided feedback when posting a revised
-  patch or series.
-
-* Custom patch number formatting often confuses patchwork. Please use git
-  send-email -v instead of manually adding version numbers to individual
-  patches. To send version 3 of a 10 patch series from the tip of the current
-  tree you can do:
-
-    git send-email -10 -v3 --compose --to=linux-scsi@vger.kernel.org
-
-* Please put a change log after a --- separator in each revised patch. If the
-  reason for the repost is global (i.e. a rebase) it is fine to put the
-  changelog in the cover letter.
-
-
-Patch Acceptance Criteria
-=========================
-* A patch needs two positive reviews (non-author Signed-off-by:, Acked-by:,
-  Reviewed-by:, or Tested-by:).
-
-* A Tested-by: is worth a thousand reviews.
-
-* For drivers, at least one review is required from somebody outside the
-  submitting company.
-
-* Nobody has expressed any concerns about the patch on linux-scsi.
-
-* The patch must apply cleanly. Use checkpatch and git send-email.
-
-* The patch must compile without warnings (make C=1 CF="-D__CHECK_ENDIAN__")
-  and does not incur any zeroday test robot complaints.
-
-* The patch must have a commit message that describes, comprehensively and in
-  plain English, what the patch does.
-
-  - Do not link to vendor bugzilla entries that require special access
-    credentials. If there is anything of importance in bugzilla, put it in the
-    commit message.
-
-  - The bigger and more intrusive the patch, the bigger the accompanying
-    commit message needs to be. "fooscsi: Add PCI id for model XYZ" is fine as
-    a one-liner. "fooscsi: Rewrite DMA allocation and queue setup" most likely
-    needs several paragraphs of discussion in the commit message.
-
-
-Patch Review Communities
-========================
-While core SCSI folks generally perform a cursory review of every patch,
-it is imperative that contributors with an interest in a particular
-component form small communities that can review and test each other's
-code. Such informal communities exist for several components or
-sub-subsystems underneath the SCSI tree.
-
-The best way to facilitate that your patch gets merged is to review patches
-submitted by your fellow contributors and hope that they return the favor.
-
-
-Patch Reviewer Responsibilities
-===============================
-If you provide feedback to a patch and the patch author addresses your
-concerns in a new version, you are expected to respond to the new
-patch. Many code contributions series fail to make forward progress
-because reviewers do not ack or nack the changes they requested to be
-made. Please make sure to always follow up when your review comments are
-being addressed.
-
-
-Driver Maintainer Responsibilities
-==================================
-Many of the actively developed SCSI subsystem drivers have one or more
-official maintainers. These maintainers are often employed by the company
-manufacturing the hardware in question and therefore have a vested interest in
-making sure the driver is working correctly.
-
-A driver maintainer must review and respond to *all submitted patches* to the
-driver in a timely manner (5 business days). This includes:
-
-* Proposed functional changes to the driver code
-
-* Security fixes
-
-* Trivial and typo patches
-
-* Changes compelled by kernel interface changes
-
-* Patches required to work correctly on architectures not commercially
-  supported by the hardware manufacturer
-
-
-Patch Acceptance Status
-=======================
-* Submitted patches and their current status can be viewed in patchwork at:
-
-    https://patchwork.kernel.org/project/linux-scsi/list/
-
-* If a submitted patch is not visible in patchwork, it does not exist. Please
-  repost.
-
-* If only a portion of a patch series visible in patchwork, the series does
-  not exist. Please repost.
-
-* Once a patch has been merged, you will receive a mail indicating into which
-  tree it has been accepted.
-
-* Patches that have not received sufficient Acked-by:, Reviewed-by:, or
-  Tested-by: tags after two weeks get moved to "Deferred" status. This
-  indicates that it necessary to resubmit the patches to the linux-scsi list.
-
-* Patches submitted to linux-scsi but which need to go through another
-  subsystem tree will be set to "Not Applicable" status.
-
-* Patches which require rework will be set to "Changes Requested" status.
-
-* Patches which have been obsoleted by a later version will be set to
-  "Superceded" status.
