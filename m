@@ -2,106 +2,75 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F395C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD28C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032CC2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJxgSrwx"
+	by mail.kernel.org (Postfix) with ESMTP id 688032084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfIKOwu (ORCPT
+        id S1728316AbfIKOwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:52:50 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37634 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbfIKOws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:52:48 -0400
-Received: by mail-io1-f65.google.com with SMTP id r4so46440205iop.4;
-        Wed, 11 Sep 2019 07:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EK6qCrLs052uo8saG/CKa8ACsOJwz6xJszIlrDZpsn0=;
-        b=EJxgSrwxeKZnsDxcEKl73+la0dwFwYX53cwgBqHkUzfOWdRkYE1XxsiDi4DrMNJIMR
-         Huj0+fS8TUIXfbu1WeaeSOSEWJu+b1sZzSPtc9ZT8dMDVMnG7QCx5o4v8y5V2leVJ56q
-         f99gBbjGPULCbdirwzwaa/++SJrrJzkUtv/jscMiHbSeFamYbaDaO2HFlvO8fInoeEzi
-         UiFsGXrbMxO6Um0muMOiSruK/WVsGTrAxZaQp4Z5xHc10NOy4hB8sAALYxVhvHhJO4vs
-         sTjqzQJVaoqNj9Z0fh5YESgsloEsoGJRWtY546a46OFbfT1osPKkAHd3FiG6PUHRAGlw
-         YScQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EK6qCrLs052uo8saG/CKa8ACsOJwz6xJszIlrDZpsn0=;
-        b=c6EligcLbwWRyQzt4E6vOQQMrRjwZZ4k6H9XpVvNHRDP8Yfym/PcncUu1+OT/xj7Hb
-         wnE1DiIyr29bm/ACOG0gTdupndr7mG0fE5N0x4lVwoeKnK1vnnV2fMPSCqGTaIyGgWca
-         nOeIUi2NROiqoIzgexdAOGTF9tykyx8GpUaF2Tgz2gtFrdwGC4of+GBK/ahkM0xJ2PlL
-         UVu1cu0eA1NdvVZ7mQgDDHn/aENuSQyjf/bLyVG7wykUjwjCv28GTmPnXv3eUULT7ZeZ
-         E7bIHb8SwhB+is6GXWiOaljkfcE78CdKOfODi9txgCfbZ0PHqU7gdGIWvP/flrfpGsiq
-         ycyw==
-X-Gm-Message-State: APjAAAXAb6d2BluCTz0nBeu0RSm/3AAX5OgS38AOWddFYVM4YKMFbmT0
-        XaLVcbsiuI89I4YLSfCwPFiwFW09
-X-Google-Smtp-Source: APXvYqwmkuACqYgeZMs8kyMj9c/8J+l6z2tWpsZtI2fuCEHycQPjmI33v7tLfm0zVUbqyA5tbqGiKA==
-X-Received: by 2002:a6b:acc5:: with SMTP id v188mr43578191ioe.268.1568213567401;
-        Wed, 11 Sep 2019 07:52:47 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id p25sm17109904ioo.35.2019.09.11.07.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 07:52:46 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: omap2plus_defconfig: Update for moved item
-Date:   Wed, 11 Sep 2019 09:52:26 -0500
-Message-Id: <20190911145226.21088-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190911145226.21088-1-aford173@gmail.com>
-References: <20190911145226.21088-1-aford173@gmail.com>
+        Wed, 11 Sep 2019 10:52:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbfIKOwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 10:52:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3F0DF10F2E8D;
+        Wed, 11 Sep 2019 14:52:53 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62AD019C58;
+        Wed, 11 Sep 2019 14:52:48 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id E25B3220292; Wed, 11 Sep 2019 10:52:47 -0400 (EDT)
+Date:   Wed, 11 Sep 2019 10:52:47 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <mszeredi@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v5 0/4] virtio-fs: shared file system for virtual machines
+Message-ID: <20190911145247.GA7271@redhat.com>
+References: <20190910151206.4671-1-mszeredi@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910151206.4671-1-mszeredi@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 11 Sep 2019 14:52:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running make savedefconfig ARCH=arm, CONFIG_DMA_CMA
-changed location.  To help facilitate future changes to
-omap2plus_defconfig, this patch re-syncs the omap2plus file
-with the updated location generated by make savedefconfig.
+On Tue, Sep 10, 2019 at 05:12:02PM +0200, Miklos Szeredi wrote:
+> Git tree for this version is available here:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#virtiofs-v5
+> 
+> Only post patches that actually add virtiofs (virtiofs-v5-base..virtiofs-v5).
+> 
+> I've folded the series from Vivek and fixed a couple of TODO comments
+> myself.  AFAICS two issues remain that need to be resolved in the short
+> term, one way or the other: freeze/restore and full virtqueue.
 
-No items were removed or added during this patch.
+Hi Miklos,
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+We are already handling full virtqueue by waiting a bit and retrying.
+I think TODO in virtio_fs_enqueue_req() is stale. Caller already
+handles virtqueue full situation by retrying.
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 166b36be2ca6..a0449d3b48a5 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -128,7 +128,6 @@ CONFIG_PCI_ENDPOINT_CONFIGFS=y
- CONFIG_PCI_EPF_TEST=m
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
--CONFIG_DMA_CMA=y
- CONFIG_OMAP_OCP2SCP=y
- CONFIG_CONNECTOR=m
- CONFIG_MTD=y
-@@ -537,6 +536,7 @@ CONFIG_CRC_T10DIF=y
- CONFIG_CRC_ITU_T=y
- CONFIG_CRC7=y
- CONFIG_LIBCRC32C=y
-+CONFIG_DMA_CMA=y
- CONFIG_FONTS=y
- CONFIG_FONT_8x8=y
- CONFIG_FONT_8x16=y
--- 
-2.17.1
+Havind said that, this could be improved by using some sort of wait
+queue or completion privimitve.
 
+Thanks
+Vivek
