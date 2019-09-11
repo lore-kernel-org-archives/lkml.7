@@ -2,123 +2,115 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89D3C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF3C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6652168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568199638;
-	bh=6CkPkTexnyeUrJ/816Xs3QnneqgRrUamwtCeRc3RdDw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oD3vlvJ/CmON3dWvaAGEbyu9lRaHU9y/bic+/1ImEoHG1ZcLTXdtINjDyYgLl0Njd
-	 IxXAgQU1eB26ra0qbfC4cYRG/3DU6YXUm5NGKs/S1VsJEXehVSQZ3V5NJyAuAPL/Ts
-	 PoQvi2aw1NMZFHOozaAeilEcijsBG+NJZsooqmiA=
+	by mail.kernel.org (Postfix) with ESMTP id 555032089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Ob2WcKnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfIKLAi (ORCPT
+        id S1727757AbfIKLCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbfIKLAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:00:37 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BE820CC7;
-        Wed, 11 Sep 2019 11:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568199636;
-        bh=6CkPkTexnyeUrJ/816Xs3QnneqgRrUamwtCeRc3RdDw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GsyuQay4M3D0T6k12JN9vA6vAC8zi/uNCkurc567Yfsj5mi0QNuV4KF18EBKu0XLb
-         /K76WGe50DO8+dtS04M61v++esDJbSgw5DaP3GtQqnFE7G5KQzhWZnt3GSzKdMBYdK
-         GF2qwcjLTfnYc8QYeHUWCUQaTKLgD9KR6p7FqwVY=
-Date:   Wed, 11 Sep 2019 06:11:55 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, ben@decadent.org.uk,
-        tglx@linutronix.de, labbott@redhat.com, andrew.cooper3@citrix.com,
-        tsoni@codeaurora.org, keescook@chromium.org, tony.luck@intel.com,
-        linux-doc@vger.kernel.org, dan.j.williams@intel.com
-Subject: Re: [PATCH 2/4] Documentation/process: describe relaxing disclosing
- party NDAs
-Message-ID: <20190911101155.GN2012@sasha-vm>
-References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
- <20190910172649.74639177@viggo.jf.intel.com>
+        Wed, 11 Sep 2019 07:02:20 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39242 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfIKLCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:02:20 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j16so19574201ljg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 04:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=UnTxdulsUUoW4MpbjOz0YKEvbNh2+pBrrEt0pc1iTEY=;
+        b=Ob2WcKnDVzkZwjpLgbluTx3iqYajdJ2DODeTyESW1TZpIwQOdUyjdsE56rYtwFwt2o
+         vBHbj91NUsX2nOIrtjuQFtM5PvLBFXFOuX1qow3GG0qSqk48qu90ef+ZdRUE0SEODX+j
+         4A5l8K0SW7YGwUIBaZ2T3+eF8n20cTVGmnJvXrWCez7G8/aw/Q4JeC2DD1qck35C0wvV
+         sG/9ovLmpbqikwoeV9Bp6YBNBeZLVWS1Ol7sSgShU808PXkCBpas1n+Rq25ehBoz58Gq
+         TYBRJNVkl9PPBhK1CBlnXOFsyw+qu08HMpMM/J8a9R27bRvxwAQ9yttZQ6YgmKsM0HG+
+         SxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UnTxdulsUUoW4MpbjOz0YKEvbNh2+pBrrEt0pc1iTEY=;
+        b=NYRpcsBgRZ775A9e8/NoDAKqGXscGEaL1D0yOHCMTYyaJQFUN+CdEwyHlnwqguQfnU
+         Rx1fVFQjAK4kasoP5yJlAr9zVfZD8gdZ8ex/10kj4bCHwTcui6nyoLyz523sVcnmF1h7
+         qVHUsHTExK3T/0+PkntzjBNH425yoH+yj2ckAsoun/tkqyYLNnxUkQV4gJ4QBYj3A+9q
+         d22gzYMSZG47CLMeEiDxRwL5VNwRFDbmQIP5pXvBln2AxYuZURHa3hRyUF4B7ccObTST
+         gHZMx9xLQ8L0VlbhOxccCdcS0eKaTuT1W010I6H6drvYLT3JuYkoO04/AojfnY94hMLT
+         uRdQ==
+X-Gm-Message-State: APjAAAXegkBMubF4pihovsY89QxXkQ5b9OyJ23aZ3B7WRFW5B/BG/Qym
+        /akGzxAZO78Vi/zChVQH+Vpwsw==
+X-Google-Smtp-Source: APXvYqzrabH5jqIXFRRKoZkb0A3Gq2y2775Mog1g0hbWCWbCyy1Z3PbubQS3H6F+3FkRG2x9faJgfQ==
+X-Received: by 2002:a2e:a303:: with SMTP id l3mr22113052lje.124.1568199738009;
+        Wed, 11 Sep 2019 04:02:18 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:8e6:86de:79c0:860e:c175:7d39? ([2a00:1fa0:8e6:86de:79c0:860e:c175:7d39])
+        by smtp.gmail.com with ESMTPSA id b9sm4570882ljd.52.2019.09.11.04.02.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 04:02:17 -0700 (PDT)
+Subject: Re: [PATCH bpf-next 01/11] samples: bpf: makefile: fix HDR_PROBE
+ "echo"
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
+ <20190910103830.20794-2-ivan.khoronzhuk@linaro.org>
+ <55803f7e-a971-d71a-fcc2-76ae1cf813bf@cogentembedded.com>
+ <20190910145359.GD3053@khorivan>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <4251fe86-ccc7-f1ce-e954-2d488d2a95a9@cogentembedded.com>
+Date:   Wed, 11 Sep 2019 14:02:11 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190910172649.74639177@viggo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190910145359.GD3053@khorivan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:26:49AM -0700, Dave Hansen wrote:
->
->From: Dave Hansen <dave.hansen@linux.intel.com>
->
->Hardware companies like Intel have lots of information which they
->want to disclose to some folks but not others.  Non-disclosure
->agreements are a tool of choice for helping to ensure that the
->flow of information is controlled.
->
->But, they have caused problems in mitigation development.  It
->can be hard for individual developers employed by companies to
->figure out how they can participate, especially if their
->employer is under an NDA.
->
->To make this easier for developers, make it clear to disclosing
->parties that they are expected to give permission for individuals
->to participate in mitigation efforts.
->
->Cc: Jonathan Corbet <corbet@lwn.net>
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: Sasha Levin <sashal@kernel.org>
->Cc: Ben Hutchings <ben@decadent.org.uk>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Laura Abbott <labbott@redhat.com>
->Cc: Andrew Cooper <andrew.cooper3@citrix.com>
->Cc: Trilok Soni <tsoni@codeaurora.org>
->Cc: Kees Cook <keescook@chromium.org>
->Cc: Tony Luck <tony.luck@intel.com>
->Cc: linux-doc@vger.kernel.org
->Cc: linux-kernel@vger.kernel.org
->Acked-by: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
->---
->
-> b/Documentation/process/embargoed-hardware-issues.rst |    7 +++++++
-> 1 file changed, 7 insertions(+)
->
->diff -puN Documentation/process/embargoed-hardware-issues.rst~hw-sec-0 Documentation/process/embargoed-hardware-issues.rst
->--- a/Documentation/process/embargoed-hardware-issues.rst~hw-sec-0	2019-09-10 08:39:02.835488131 -0700
->+++ b/Documentation/process/embargoed-hardware-issues.rst	2019-09-10 08:39:02.838488131 -0700
->@@ -74,6 +74,13 @@ unable to enter into any non-disclosure
-> is aware of the sensitive nature of such issues and offers a Memorandum of
-> Understanding instead.
->
->+Disclosing parties may have shared information about an issue under a
->+non-disclosure agreement with third parties.  In order to ensure that
->+these agreements do not interfere with the mitigation development
->+process, the disclosing party must provide explicit permission to
->+participate to any response team members affected by a non-disclosure
->+agreement.  Disclosing parties must resolve requests to do so in a
->+timely manner.
+On 10.09.2019 17:54, Ivan Khoronzhuk wrote:
 
-Can giving the permission be made explicitly along with the disclosure?
-If it's disclosed with Microsoft under NDA, it makes it tricky for me to
-participate in the "response team" context here unless premission is
-given to do so.
+>> Hello!
+>>
+>> On 10.09.2019 13:38, Ivan Khoronzhuk wrote:
+>>
+>>> echo should be replaced on echo -e to handle \n correctly, but instead,
+>>
+>>  s/on/with/?
+> s/echo/printf/ instead of s/echo/echo -e/
 
---
-Thanks,
-Sasha
+    I only pointed that 'on' is incorrect there. You replace something /with/ 
+something other...
+
+> 
+> printf looks better.
+> 
+>>
+>>> replace it on printf as some systems can't handle echo -e.
+>>
+>>   Likewise?
+
+    Same grammatical mistake.
+
+> I can guess its Mac vs Linux, but it does mean nothing if it's defined as
+> implementation dependent, can be any.
+ >
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> [...]
+
+MBR, Sergei
