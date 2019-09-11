@@ -2,73 +2,141 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D15EECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD7ECDE28
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F922089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAFE2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfIKJZT (ORCPT
+        id S1727443AbfIKJ1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:25:19 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3742 "EHLO mga09.intel.com"
+        Wed, 11 Sep 2019 05:27:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:44278 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfIKJZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:25:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 02:25:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="214619764"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2019 02:25:16 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i7ysE-0005Lw-SK; Wed, 11 Sep 2019 12:25:14 +0300
-Date:   Wed, 11 Sep 2019 12:25:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190911092514.GM2680@smile.fi.intel.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+        id S1727420AbfIKJ1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:27:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 064E0337;
+        Wed, 11 Sep 2019 02:27:13 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 723133F71F;
+        Wed, 11 Sep 2019 02:27:12 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 10:27:10 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
+ 2 and 3
+Message-ID: <20190911092710.GO9720@e119886-lin.cambridge.arm.com>
+References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
+ <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
+ <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
+ <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911075215.78047-5-dmitry.torokhov@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
-> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-> works with arbitrary firmware node.
+On Tue, Sep 10, 2019 at 09:51:41PM +0530, Pankaj Dubey wrote:
+> On Tue, 10 Sep 2019 at 19:59, Andrew Murray <andrew.murray@arm.com> wrote:
+> >
+> > On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
+> > > From: Anvesh Salveru <anvesh.s@samsung.com>
+> > >
+> > > In some platforms, PCIe PHY may have issues which will prevent linkup
+> > > to happen in GEN3 or high speed. In case equalization fails, link will
+> > > fallback to GEN1.
+> > >
+> > > Designware controller gives flexibility to disable GEN3 equalization
+> > > completely or only phase 2 and 3.
+> >
+> > Do some platforms have issues conducting phase 2 and 3 when they successfully
+> > conduct phase 0 and 1?
+> >
+> 
+> Yes, it is possible.
+> 
+> > >
+> > > Platform drivers can disable equalization phase 2 and 3, by setting
+> > > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+> > >
+> > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
+> > >  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+> > >  2 files changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index bf82091..97a8268 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > >       if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> > >               val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > >
+> > > +     if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
+> > > +             val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+> > > +
 
-I'm wondering if it's possible to step forward and replace
-fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
-in other cases in this series.
+Also is it harmless to set both DWC_EQUALIZATION_DISABLE and
+DWC_EQ_PHASE_2_3_DISABLE? (Which is permitted here).
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
 
+Andrew Murray
 
+> > >       dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > >  }
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index a1453c5..b541508 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -31,6 +31,7 @@
+> > >
+> > >  /* Parameters for PCIe Quirks */
+> > >  #define DWC_EQUALIZATION_DISABLE     0x1
+> > > +#define DWC_EQ_PHASE_2_3_DISABLE     0x2
+> >
+> > It only makes sense for either DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE
+> > to be specified, though if dwc_pci_quirk intends to hold other quirks should these
+> > be numbers and not bit fields?
+> >
+> Yes, you are right in a given platform it will be either
+> DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE.
+> 
+> Intention behind making it bit-field was to add other quirks in future.
+> 
+> > Thanks,
+> >
+> > Andrew Murray
+> >
+> > >
+> > >  /* Synopsys-specific PCIe configuration registers */
+> > >  #define PCIE_PORT_LINK_CONTROL               0x710
+> > > @@ -65,6 +66,7 @@
+> > >
+> > >  #define PCIE_PORT_GEN3_RELATED               0x890
+> > >  #define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > > +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE BIT(9)
+> > >
+> > >  #define PCIE_ATU_VIEWPORT            0x900
+> > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> > > --
+> > > 2.7.4
+> > >
