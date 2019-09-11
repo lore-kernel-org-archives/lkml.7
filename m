@@ -2,172 +2,134 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5854AC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB59C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2228A2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A510D206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="OcLNUXkS"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="A2crms8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfIKNh2 (ORCPT
+        id S1727854AbfIKNlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:37:28 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:1606 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfIKNh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:37:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 7097D3F738;
-        Wed, 11 Sep 2019 15:37:20 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=OcLNUXkS;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IHW01YaWejTE; Wed, 11 Sep 2019 15:37:16 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 184183F734;
-        Wed, 11 Sep 2019 15:37:13 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 7EE4F3601AA;
-        Wed, 11 Sep 2019 15:37:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568209033; bh=3PG6dFlWy4tEZtyh5/983yf4ihrAZIfnFudxICqTBHc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OcLNUXkSt2k+0/N++IkRpPqmWylBGN+sIwbM85W0AEJhGtK1DqkhvjvWXRDUafbqP
-         nPrUbSVRyJHkmOjRfhAbgcrHhViBbxkqfz6BlnPKtdY52+yY4NBfzBncHi8zwQaSUf
-         Ww8v/qSNU815lB0Ku2OZPgTZivBbeb3/7X6rl96g=
-Subject: Re: [PATCH v2 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Wed, 11 Sep 2019 09:41:09 -0400
+Received: from mail-eopbgr770048.outbound.protection.outlook.com ([40.107.77.48]:61393
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726954AbfIKNlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:41:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hap/dnUWzLB0gl8YHojihDstMhVlSRAnFLyEa5QtSdAKS7R3NxcuUbHPR+R+xexLjAGMpQI3PE2TaCAx1I040j4by6HU8fUtgtjAeD06dRgIWTpMeXsogWE8NF2g/025HRLMYHloQGgHwDqoKw7bsq6jltBWEADsj1UeJa3hTM69yKhCEqr0mdh3mDBU9/e7krVFWAc5PSu530p2u5r8fGEU5a/k7YKdyuiQGQdmqqEberD7fuPCXpIp1r2HGDUInyBV+hTQz4Okk8eecvrPqtgbrhckqZDroaVT1JEcLJwQ7viwBfyKscZBCGV6oQ0Ej2wh98uIUpE1vbh/Z8g3tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gc6BSiUPFRVTn+QOvF+8v8MEOEBoeX2zN/6DeU9qkh4=;
+ b=ZDhlO93LWbp0fzUE/QlyxO9PnjqK/1+JlUOauKxZRfrfcwFldDMRBNyRPS3r8m1xVeYEbF9l8K0xh4seVJq0V97H+M4C27+jD4jqW9HZ/tnXtgB8kx6B74UzMcg80GRM+sknCbssG6BL9LzX0dePo4rMIdOJ5fhjxPGWDKOPw0fGZz/64eJeqkfHJzJA/CYM0V39RZ4wQ9ieMoW2jSkBGg5UA7ZSRaf2CORqPXEsrCp+kVWUU4E8fViArRth4KaRv2rgl6Ovw1RalV2uZQhvEvTIc+hIV6J9QGTVtbWANiu1mGeUiM3q7N5U3KcNCP11f5/sE8MefGEjHj2O9T71ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gc6BSiUPFRVTn+QOvF+8v8MEOEBoeX2zN/6DeU9qkh4=;
+ b=A2crms8ZaLA7hn5Q5sjEfVeCxnwWtrK8y1Rqrci4C0aAv6NbwAp1cbnFwquracq2B2747gc0B+t6yLjnRZ32Vjvuqt1YnxL+5HLuXeFfHQzYpPUkaa6QhBYmNg9/h5EMD4F/r/+TQ86G0li1fi3dGkNFr3uihAPkvIVMgCLatBE=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0165.namprd12.prod.outlook.com (10.172.78.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Wed, 11 Sep 2019 13:41:04 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2263.016; Wed, 11 Sep
+ 2019 13:41:04 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "manasi.d.navare@intel.com" <manasi.d.navare@intel.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
-        "linux-graphics-maintainer@vmware.com" 
-        <linux-graphics-maintainer@vmware.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20190911124022.22423-1-thomas_os@shipmail.org>
- <20190911124022.22423-2-thomas_os@shipmail.org>
- <b63de7ad-21e3-b825-91a4-c4317e82b6c3@amd.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <cb55bcfa-2767-9e32-989f-9688c1bc99df@shipmail.org>
-Date:   Wed, 11 Sep 2019 15:37:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <b63de7ad-21e3-b825-91a4-c4317e82b6c3@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] drm: fix warnings in DSC
+Thread-Topic: [PATCH] drm: fix warnings in DSC
+Thread-Index: AQHVaH2noNv/TEfIRUGOThl8NI3eqacmfB2A
+Date:   Wed, 11 Sep 2019 13:41:03 +0000
+Message-ID: <8235afe0-1796-1647-8a39-84ab354e290a@amd.com>
+References: <20190911084759.6946-1-benjamin.gaignard@st.com>
+In-Reply-To: <20190911084759.6946-1-benjamin.gaignard@st.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
+x-clientproxiedby: YTXPR0101CA0034.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00::47) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8b2ac86-f4d4-49e4-1fa0-08d736bdb0a2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB0165;
+x-ms-traffictypediagnostic: CY4PR1201MB0165:
+x-microsoft-antispam-prvs: <CY4PR1201MB01657F1F8177ACA5EA6C8EA18CB10@CY4PR1201MB0165.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0157DEB61B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(376002)(366004)(136003)(199004)(189003)(8936002)(186003)(53546011)(6246003)(102836004)(6512007)(2616005)(5660300002)(26005)(476003)(486006)(25786009)(76176011)(52116002)(305945005)(7736002)(36756003)(64756008)(66446008)(66556008)(66476007)(256004)(2501003)(66946007)(6116002)(316002)(110136005)(3846002)(54906003)(2201001)(229853002)(71200400001)(71190400001)(31696002)(99286004)(58126008)(6486002)(65956001)(478600001)(31686004)(8676002)(66066001)(65806001)(14454004)(11346002)(4326008)(446003)(53936002)(6506007)(386003)(81166006)(81156014)(6436002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0165;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5vjcXF+E7lRIDHi6OK4iPq24rSk8pkF+mua8stvKx+1/Gw8Z3pfzJ+Ikwb1zPZsMw712UlJRr4Hb7xxdy7dIvGrFQ29xqE9ccJxQCvyTJad8eukwM0HfEDC5U1UrEatC0Z9T+uVDrFXSfjukZeG+ov2SZJQy9Zdk9oXXLg30Qs3NiECvoj/zk7R2FiY7vOAwkk5AjRJ2FI82fQAl4nWLbMRp+qg89hHUfYitqqXLjZc1UWAKBAse8PCYNmmJRZGGcm/iKxe6PPEVQrxFdMDCDVSNCDd5JObAgl8700j8Iin4sqLDqe6mtI+gc977meJj5JsW/8qnqujpQ7fqtPdA17PFdR86KKuu0iZG9AZkjMHvq8dJu1q5DhwwzKta/CelOKYC2t/PQovKEFWeAbJMcqoIov8YbbbbA+bGE1zgM70=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CECBB06CA9059745AABDFDC74C33DF3C@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8b2ac86-f4d4-49e4-1fa0-08d736bdb0a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 13:41:03.9646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MVwwV/wqXG7qkTqYRQwDAFnzyGtcZ1eFqT2Y4lmId9ck03lpK1YR1xFPvaUfP4EgEiHdb5dJhYlxT8/BWqMzLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 3:27 PM, Lendacky, Thomas wrote:
-> On 9/11/19 7:40 AM, Thomas Hellström (VMware) wrote:
->> From: Thomas Hellstrom <thellstrom@vmware.com>
->>
->> When SEV or SME is enabled and active, vm_get_page_prot() typically
->> returns with the encryption bit set. This means that users of
->> pgprot_modify(, vm_get_page_prot()) (mprotect_fixup, do_mmap) end up with
->> a value of vma->vm_pg_prot that is not consistent with the intended
->> protection of the PTEs. This is also important for fault handlers that
->> rely on the VMA vm_page_prot to set the page protection. Fix this by
->> not allowing pgprot_modify() to change the encryption bit, similar to
->> how it's done for PAT bits.
->>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: Andy Lutomirski <luto@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Christoph Hellwig <hch@infradead.org>
->> Cc: Christian König <christian.koenig@amd.com>
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Cc: Tom Lendacky <thomas.lendacky@amd.com>
->> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
->> ---
->>   arch/x86/include/asm/pgtable.h       | 7 +++++--
->>   arch/x86/include/asm/pgtable_types.h | 2 +-
->>   2 files changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
->> index 0bc530c4eb13..1e6bb4c25334 100644
->> --- a/arch/x86/include/asm/pgtable.h
->> +++ b/arch/x86/include/asm/pgtable.h
->> @@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
->>   	return __pmd(val);
->>   }
->>   
->> -/* mprotect needs to preserve PAT bits when updating vm_page_prot */
->> +/*
->> + * mprotect needs to preserve PAT and encryption bits when updating
->> + * vm_page_prot
->> + */
->>   #define pgprot_modify pgprot_modify
->>   static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
->>   {
->>   	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
->> -	pgprotval_t addbits = pgprot_val(newprot);
->> +	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
->>   	return __pgprot(preservebits | addbits);
->>   }
->>   
->> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
->> index b5e49e6bac63..e13084b3d6cb 100644
->> --- a/arch/x86/include/asm/pgtable_types.h
->> +++ b/arch/x86/include/asm/pgtable_types.h
->> @@ -123,7 +123,7 @@
->>    */
->>   #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
->>   			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
->> -			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
->> +			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | sme_me_mask)
-> There is a _PAGE_ENC definition that you could use to make this more
-> consistent with the current definition.
-
-Ah yes.
-
-I'll wait a bit to see if there are more concerns and include this in 
-the next version.
-
-Thanks,
-
-Thomas
-
-
-
->
-> Thanks,
-> Tom
->
->>   #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
->>   
->>   /*
->>
-
+T24gMjAxOS0wOS0xMSA0OjQ3IGEubS4sIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPiBSZW1v
+dmUgYWx3YXlzIGZhbHNlIGNvbXBhcmlzb25zIGR1ZSB0byBsaW1pdGVkIHJhbmdlIG9mIG5mbF9i
+cGdfb2Zmc2V0DQo+IGFuZCBzY2FsZV9pbmNyZW1lbnRfaW50ZXJ2YWwgZmllbGRzLg0KPiBXYXJu
+aW5ncyBkZXRlY3RlZCB3aGVuIGNvbXBpbGluZyB3aXRoIFc9MS4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQoNClJldmll
+d2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkN
+Cg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZHNjLmMgfCAxMSAtLS0tLS0tLS0tLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9kcm1fZHNjLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2RzYy5jDQo+IGlu
+ZGV4IDc3ZjRlNWFlNDE5Ny4uMjdlNWM2MDM2NjU4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vZHJtX2RzYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZHNjLmMNCj4gQEAg
+LTMzNiwxMiArMzM2LDYgQEAgaW50IGRybV9kc2NfY29tcHV0ZV9yY19wYXJhbWV0ZXJzKHN0cnVj
+dCBkcm1fZHNjX2NvbmZpZyAqdmRzY19jZmcpDQo+ICAJZWxzZQ0KPiAgCQl2ZHNjX2NmZy0+bmZs
+X2JwZ19vZmZzZXQgPSAwOw0KPiAgDQo+IC0JLyogMl4xNiAtIDEgKi8NCj4gLQlpZiAodmRzY19j
+ZmctPm5mbF9icGdfb2Zmc2V0ID4gNjU1MzUpIHsNCj4gLQkJRFJNX0RFQlVHX0tNUygiTmZsQnBn
+T2Zmc2V0IGlzIHRvbyBsYXJnZSBmb3IgdGhpcyBzbGljZSBoZWlnaHRcbiIpOw0KPiAtCQlyZXR1
+cm4gLUVSQU5HRTsNCj4gLQl9DQo+IC0NCj4gIAkvKiBOdW1iZXIgb2YgZ3JvdXBzIHVzZWQgdG8g
+Y29kZSB0aGUgZW50aXJlIHNsaWNlICovDQo+ICAJZ3JvdXBzX3RvdGFsID0gZ3JvdXBzX3Blcl9s
+aW5lICogdmRzY19jZmctPnNsaWNlX2hlaWdodDsNCj4gIA0KPiBAQCAtMzcxLDExICszNjUsNiBA
+QCBpbnQgZHJtX2RzY19jb21wdXRlX3JjX3BhcmFtZXRlcnMoc3RydWN0IGRybV9kc2NfY29uZmln
+ICp2ZHNjX2NmZykNCj4gIAkJdmRzY19jZmctPnNjYWxlX2luY3JlbWVudF9pbnRlcnZhbCA9IDA7
+DQo+ICAJfQ0KPiAgDQo+IC0JaWYgKHZkc2NfY2ZnLT5zY2FsZV9pbmNyZW1lbnRfaW50ZXJ2YWwg
+PiA2NTUzNSkgew0KPiAtCQlEUk1fREVCVUdfS01TKCJTY2FsZUluY3JlbWVudEludGVydmFsIGlz
+IGxhcmdlIGZvciBzbGljZSBoZWlnaHRcbiIpOw0KPiAtCQlyZXR1cm4gLUVSQU5HRTsNCj4gLQl9
+DQo+IC0NCj4gIAkvKg0KPiAgCSAqIERTQyBzcGVjIG1lbnRpb25zIHRoYXQgYml0c19wZXJfcGl4
+ZWwgc3BlY2lmaWVzIHRoZSB0YXJnZXQNCj4gIAkgKiBiaXRzL3BpeGVsIChicHApIHJhdGUgdGhh
+dCBpcyB1c2VkIGJ5IHRoZSBlbmNvZGVyLA0KPiANCg==
