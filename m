@@ -2,217 +2,87 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EB8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E41C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245642084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC03320863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0YuCD7s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZwPECIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfIKQVw (ORCPT
+        id S1729083AbfIKQYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:21:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39203 "EHLO
+        Wed, 11 Sep 2019 12:24:05 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38143 "EHLO
         mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728878AbfIKQVv (ORCPT
+        with ESMTP id S1728878AbfIKQYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:21:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n7so25976790qtb.6;
-        Wed, 11 Sep 2019 09:21:50 -0700 (PDT)
+        Wed, 11 Sep 2019 12:24:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id b2so25966870qtq.5;
+        Wed, 11 Sep 2019 09:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JcZbgDNJKwCwHsBDRhP3QKGes3mgqqZKrMVOxPvswps=;
-        b=o0YuCD7suiIEWQOjij3YtZKXbdvA60SXFyba4j/1/SL7uBkbxOLL4V35YTffO2iEtr
-         BVOPJdE4ImI4z0Er3ZeWwm+FNt3mO8ArvoHj0S0rYFklVmrn1R4vEx8VoRSLqCk7DuQc
-         YVFqByIZw8xI8g0F8Ge7gmCz2lqiGOawtYtmE+JKsRaMyjJx3pashyK/mgttgQ7Gdl5h
-         cJZfJsV/XjC/9WqcgjtSF8W4veL/9MWMPjO0UwWP8SVoRAnVcVc6XKE8dCzDqw89SHBf
-         a3mg6ZTOfol1Bqj471XyiKSleTOQhAdQRn7xeZ9FSPqp0XNGBabDF75XDI16gNi4Vi1G
-         mXWQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bnfqvKEw5aP7UOEOx3W9CaWGunUzL+uqs10GsHrVCfw=;
+        b=NZwPECIkWJiT0fSn6+EXIFAJjvPXWFANy47Z7/MYkI02KbGTvRm6cQO4BMCfTXp/fi
+         WnJsb19mf0JCzWKwvFLtpjZfyo3kOylT4miFCP/jblS1V9OHR5dy9Hu8ieAMlWTC6IR/
+         1SJsZxTAowJCFmHI0Vn67zovAr1oC63WVsqe0RVBprZ5N7ToQcFkmfBdIoRdQPxCifUv
+         2dC2NkXdBqxqWmTMzg0b2zwNdkkYOpeV03ITq3pvlCVD4Js9dd3Fb2nZBNIFs2IdFfmK
+         F0KIN+utoFzEEypmv/aoXrabLJjn4FXndwkWffXkjoSsB+sxQSoizkNHlFlwj0L5/FR4
+         Hqlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JcZbgDNJKwCwHsBDRhP3QKGes3mgqqZKrMVOxPvswps=;
-        b=bk2Gd64BAlDjg2Ber39W+UT/FWYSEiAKkruc9AT+WKeiVQm5x1M7LhJuKrL2aW/ZoV
-         Qj6GiB9SLJowE6bq5wn3RRNkh2mUi3xmLq+k8Ur8/d3ytuWWOVVPNSpgFlELPTSaWVxn
-         fcbde8SM2qAFBjMWr6OISsb195iW4tVoI76KeTJBGpkecs+K9rwgHWYc6/e0ZXQ5z+Np
-         ki5sBZuf5OT1LbZbTmG29x7AXJjyM6AbVwYkMEME5M2LU2FLeKF/+DWKVItAr4QOQFcD
-         GICOGkh0PYWsByrYop3ZKUy/zg/SnjaOzoBLuM8Ksa3RKTjb4gGHuQXu4CarYHh9906K
-         MPrw==
-X-Gm-Message-State: APjAAAVy+0ARn0X2MXd2GoKp12GPSzUj+KsydrHkjTAQ42Q3sJFeoWKc
-        Pr/H3p3tEKpGVG3pvlA4utb5aRCCAHlCrBpkAfs=
-X-Google-Smtp-Source: APXvYqxbV+Cod+KBMeeG3G4TkNWpy0azEMoi/IQlC861WbSBmrxogwmVpwaVck5fDx/QJSsquwwfMbAZ3fN00+wPYzM=
-X-Received: by 2002:ac8:7089:: with SMTP id y9mr36687897qto.363.1568218910200;
- Wed, 11 Sep 2019 09:21:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bnfqvKEw5aP7UOEOx3W9CaWGunUzL+uqs10GsHrVCfw=;
+        b=rvZxhhrsBCwbhh3Sw7ZPkbSGW2xMF9MeDAcmVF55HfrNYsoytZUbqO4mj1h65SfQ5+
+         2KDjAUi2eoaHdD/i7yezRNf0EqhQv1lqk61dA1OX9wRNa3KZAeBqS6TMgRUoaH2UBOQV
+         NOCSUlnDBXSq+a19c3vZUJohaw8NJ27jyVs2Ym2i1IHgCdWlr5MMiKmwxKLBc9BDoNn5
+         g610snLSwNQFMepr9gyaoM/lM36ah9iO2m8Naqz8f1MLfuzrnaf1BmItD/VEWfkBa9DI
+         zZuFFHu+bPaa3V9Om06tDZ4/o12WotwCDedwuF4x+uQz1wygQLtc/LqGeeYlazHaV02P
+         BtDQ==
+X-Gm-Message-State: APjAAAWtDgI5+Kzk06fsTubSCYtuzV5SOReun1tU0r8oied2LfuoTUgY
+        KX/3Bp2C+4hOs7N5uMLUSVo=
+X-Google-Smtp-Source: APXvYqyOrMgmZtG9BR8En0nRXNNcI5IdgfImVx8JhPlqNuKJolWpipdRHV24z/lyq2y5BlMOuSsJIg==
+X-Received: by 2002:ac8:2e58:: with SMTP id s24mr31750641qta.52.1568219043497;
+        Wed, 11 Sep 2019 09:24:03 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f016:e600:cd79:21fe:b069:7c04])
+        by smtp.gmail.com with ESMTPSA id b192sm10268684qkg.39.2019.09.11.09.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 09:24:01 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 8B566C4A64; Wed, 11 Sep 2019 13:23:59 -0300 (-03)
+Date:   Wed, 11 Sep 2019 13:23:59 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] sctp: Fix the link time qualifier of
+ 'sctp_ctrlsock_exit()'
+Message-ID: <20190911162359.GJ3431@localhost.localdomain>
+References: <20190911160239.10734-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-References: <20190902005938.7734-1-rodrigorsdc@gmail.com> <20190902171417.qbj7rwi43tr77mr5@smtp.gmail.com>
- <20190908115227.65046733@archlinux>
-In-Reply-To: <20190908115227.65046733@archlinux>
-From:   Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Date:   Wed, 11 Sep 2019 13:21:38 -0300
-Message-ID: <CAOeBkLr1=muqefrLU+HjauX_7pF+x90yew4wQ9j-L3hCDkcKQg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        alexandru.ardelean@analog.com, linux-iio@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911160239.10734-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Sep 11, 2019 at 06:02:39PM +0200, Christophe JAILLET wrote:
+> The '.exit' functions from 'pernet_operations' structure should be marked
+> as __net_exit, not __net_init.
+> 
+> Fixes: 8e2d61e0aed2 ("sctp: fix race on protocol/netns initialization")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Thanks for comments. I will send a v2.
-
-Em dom, 8 de set de 2019 =C3=A0s 07:52, Jonathan Cameron <jic23@kernel.org>=
- escreveu:
->
-> On Mon, 2 Sep 2019 14:14:18 -0300
-> Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
->
-> > Hi Rodrigo,
-> >
-> > This dt doc looks overal fine IMHO.
-> > I would just add some inline comments about the cpha and cpol
-> > properties.
-> >
-> > On 09/01, Rodrigo Carvalho wrote:
-> > > This patch add device tree binding documentation for ADIS16240.
-> > >
-> > > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > > ---
-> > > I have doubt about what maintainer I may to put in that documentation=
-. I
-> > > put Alexandru as maintainer because he reviewed my last patch on this
-> > > driver, so I think that he is a good candidate.
-> > >  .../bindings/iio/accel/adi,adis16240.yaml     | 55 +++++++++++++++++=
-++
-> > >  1 file changed, 55 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,a=
-dis16240.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis1624=
-0.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > > new file mode 100644
-> > > index 000000000000..08019b51611c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> > > @@ -0,0 +1,55 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> > > +
-> > > +maintainers:
-> > > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > +
-> > > +description: |
-> > > +  ADIS16240 Programmable Impact Sensor and Recorder driver that supp=
-orts
-> > > +  SPI interface.
-> > > +    https://www.analog.com/en/products/adis16240.html
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,adis16240
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  spi-cpha: true
-> > > +
-> > > +  spi-cpol: true
-> > Boolean properties don't require to be explicitly set. It would also be
-> > nice to add a description pointing to the spi-bus documentation. Like
-> > this:
-> >
-> >   spi-cpha:
-> >     description: |
-> >       See Documentation/devicetree/bindings/spi/spi-bus.txt
-> >     maxItems: 1
-> >
-> >   spi-cpol:
-> >     description: |
-> >       See Documentation/devicetree/bindings/spi/spi-bus.txt
-> >     maxItems: 1
-> >
-> > As far as I know, spi-cpol and spi-cpha stand for SPI chip polarity and
-> > SPI chip phase respectively. By default, it is assumed that SPI
-> > input/output data is available at uprising clock edges, however, some
-> > chips may work with different configuration (taking input data and/or
-> > push it out in falling edges). I'm not 100% sure but, from what I've
-> > seen on IIO, cpol is set to invert the input/output logic (making IO be
-> > taken on falling edges) while cpha is usually set when MISO valid out
-> > data is available on SCLK falling edge. If anyone has more comments
-> > about this please, add them here, I'm curious about it. :)
-> >
->
-> They may well be constant for a given device (some will cope with
-> several combinations).  So the binding should reflect if they 'must'
-> be set.
->
-> Adding the cross reference is indeed nice.
->
-> Jonathan
->
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +    spi0 {
-> > > +        #address-cells =3D <1>;
-> > > +        #size-cells =3D <0>;
-> > > +
-> > > +        /* Example for a SPI device node */
-> > > +        accelerometer@0 {
-> > > +            compatible =3D "adi,adis16240";
-> > > +            reg =3D <0>;
-> > > +            spi-max-frequency =3D <2500000>;
-> > > +            spi-cpol;
-> > > +            spi-cpha;
-> > > +            interrupt-parent =3D <&gpio0>;
-> > > +            interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        };
-> > > +    };
-> > > --
-> > > 2.23.0.rc1
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Gr=
-oups "Kernel USP" group.
-> > > To unsubscribe from this group and stop receiving emails from it, sen=
-d an email to kernel-usp+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web visit https://groups.google.com/d/=
-msgid/kernel-usp/20190902005938.7734-1-rodrigorsdc%40gmail.com.
->
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
