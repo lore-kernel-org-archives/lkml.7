@@ -2,142 +2,132 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3212ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EF7ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AF221D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="C08mn024"
+	by mail.kernel.org (Postfix) with ESMTP id 2893D21D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568181560;
+	bh=3ypS9+H2EwN0SpLc6Y2kISgYfwEUW1gRWh6xPU0C5BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uM/zCADMdEWR7WX9YypvQEG461PYzVAiyOuak4vRCPm6aw/Od5uxeC0TyJDoE+xxO
+	 eBHiEBiLl+ZBf78srq1dzrMmdW3Lg87HPcMFGC9WT5FkDGfLlhLej2DQJ6mka/9zxw
+	 x6vv5PbBsIRlVXZjRxtBNQWMZ1M9dWTJCU7V8vBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfIKF6w (ORCPT
+        id S1726884AbfIKF7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 01:58:52 -0400
-Received: from gateway30.websitewelcome.com ([192.185.198.26]:38007 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725616AbfIKF6w (ORCPT
+        Wed, 11 Sep 2019 01:59:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39684 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfIKF7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 01:58:52 -0400
-X-Greylist: delayed 1330 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 01:58:51 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id BE51D3E2F
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 00:36:40 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7vJ2iQ11jiQer7vJ2igpY3; Wed, 11 Sep 2019 00:36:40 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QW8Cjbds0p1BI81ZMmirUfnVh51hLTx7oCbg0nDi9BU=; b=C08mn0247w1HM7YgYgPU9P42ln
-        lgAo+3lCI6Jcv/4DS7qbd+aKdAq82wyLPlZ/bM9w2GFID6wTc/iu1lYnLE4AWLs0oO38KLd64JPtV
-        NZllHTqjWdv6dLptdCtG8k3o2yhWvntuvqRz80lYJP9RbVTvlxwiaB0JFz3B1pIfz8d1b9BkG0u94
-        5SV2efmrHsg5iehwFVmci5pIj3Hn5/oP2t4Gm5Y743UdGJzLCpOqS5cOiA8bJs/xFCFhfBqplKyyf
-        hA4V1SQRY7k/tLmnYxHFLMBY+bEvmnvf3lrbFLkeF+36AX63BKUGaASrryeta3n7tHdO+v1icAhT0
-        /v4pvLUw==;
-Received: from [148.69.85.38] (port=52756 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1i7vJ1-003qzX-C1; Wed, 11 Sep 2019 00:36:39 -0500
-Date:   Wed, 11 Sep 2019 06:36:04 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Timur Tabi <timur@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] video: fbdev: fsl-diu-fb: mark expected switch fall-throughs
-Message-ID: <20190911113604.GA31512@embeddedor>
+        Wed, 11 Sep 2019 01:59:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q12so1926206wmj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 22:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=L+VskumO8DZY0fNQAHQAEHwj13ZWS0q3JEkxtqeOHLU=;
+        b=dF7u80VkNW9G8z99FnhuunK2Ag9xEHuQemKMEAG/npZhR/qTKHU8i/U+32jCYphKL+
+         TxbYEq3vKLSA/WdVcDs/rDoU5txX7prHcEX0S7aXJ7z8B1J/747DDqotyZUNIzr8Ur88
+         mhb+sgNxKhfYtBR2QO3N73kKi5r9YMxGxAk+DfpmcuiJfVmfZ4Z7fcuUfNEdH8i3VhaJ
+         ouEb3EbxH/kY2Js+THlhr0ynwMb9lUujH6C5lEjPOfl6Wa2IBSRriNx1Bya8cvTQ73Wa
+         Cj6333PNnTcaip5FoeO1YNsnWNJHfMD7LAIhH95g3blfg30lnzLPJUeC+9blAFOnFzYA
+         V5lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=L+VskumO8DZY0fNQAHQAEHwj13ZWS0q3JEkxtqeOHLU=;
+        b=Nygz6DVr6TrfmSqFvBrWyc+8k+Wrvj3Swf3kSu65hwGSfqVd6LGeUO4dS/RZJDDnBZ
+         wbNs1ZHKmF3wG2zGpXxRQV8XKVYA5s0PR7eLIk4hcjhZDMXD90phjjP8HqN9I4Xdu1YN
+         dyaV+q1jOb+P0prilIG/TQ8QFI9BSxfrBIkNKeIrYPjeaSfcofyGCN3mzv8IkUtCs2AH
+         fRDY+mVV0cMqoFZQ7vYxhuI0BGdNDFxxhZD9T5MegM5hEfaummf6sxFTmmD11pj5o+Ac
+         VY41ih12FGXSeFDMZHgOlNikkR17wACVbxK0W4B7syPfSOaxll6Io0jwVuzL1YdElX0t
+         Hxrg==
+X-Gm-Message-State: APjAAAXzzKPppDWu19Wbjad5jECO4RltdwPnEOVDQBiUCgtaaCvtrSLz
+        iCAhaf0YlGkkP6iZ3/WIRVw=
+X-Google-Smtp-Source: APXvYqxUjCgvWp2pqomx5+bl7HzZBn2ZOB3oncrk3JlryEbTlKwp7t7r5MmS9Mhk3gqM7VQLLWMFNQ==
+X-Received: by 2002:a7b:cc8e:: with SMTP id p14mr2308170wma.124.1568181556667;
+        Tue, 10 Sep 2019 22:59:16 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y6sm1508390wmi.14.2019.09.10.22.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 22:59:16 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 07:59:14 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 0/2] Fix SEV user-space mapping of unencrypted coherent
+ memory
+Message-ID: <20190911055913.GB104115@gmail.com>
+References: <20190910133542.64523-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 148.69.85.38
-X-Source-L: No
-X-Exim-ID: 1i7vJ1-003qzX-C1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [148.69.85.38]:52756
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190910133542.64523-1-thomas_os@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
 
-Fix the following warnings (Building: mpc512x_defconfig powerpc):
+* Thomas Hellstr�m (VMware) <thomas_os@shipmail.org> wrote:
 
-drivers/video/fbdev/fsl-diu-fb.c: In function ‘fsl_diu_ioctl’:
-./include/linux/device.h:1750:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/video/fbdev/fsl-diu-fb.c:1287:3: note: in expansion of macro ‘dev_warn’
-   dev_warn(info->dev,
-   ^~~~~~~~
-drivers/video/fbdev/fsl-diu-fb.c:1290:2: note: here
-  case MFB_SET_PIXFMT:
-  ^~~~
-In file included from ./include/linux/acpi.h:15:0,
-                 from ./include/linux/i2c.h:13,
-                 from ./include/uapi/linux/fb.h:6,
-                 from ./include/linux/fb.h:6,
-                 from drivers/video/fbdev/fsl-diu-fb.c:20:
-./include/linux/device.h:1750:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/video/fbdev/fsl-diu-fb.c:1296:3: note: in expansion of macro ‘dev_warn’
-   dev_warn(info->dev,
-   ^~~~~~~~
-drivers/video/fbdev/fsl-diu-fb.c:1299:2: note: here
-  case MFB_GET_PIXFMT:
-  ^~~~
+> With SEV and sometimes with SME encryption, The dma api coherent memory is
+> typically unencrypted, meaning the linear kernel map has the encryption
+> bit cleared. However, default page protection returned from vm_get_page_prot()
+> has the encryption bit set. So to compute the correct page protection we need
+> to clear the encryption bit.
+> 
+> Also, in order for the encryption bit setting to survive across do_mmap() and
+> mprotect_fixup(), We need to make pgprot_modify() aware of it and not touch it.
+> Therefore make sme_me_mask part of _PAGE_CHG_MASK and make sure
+> pgprot_modify() preserves also cleared bits that are part of _PAGE_CHG_MASK,
+> not just set bits. The use of pgprot_modify() is currently quite limited and
+> easy to audit.
+> 
+> (Note that the encryption status is not logically encoded in the pfn but in
+> the page protection even if an address line in the physical address is used).
+> 
+> The patchset has seen some sanity testing by exporting dma_pgprot() and
+> using it in the vmwgfx mmap handler with SEV enabled.
+> 
+> Changes since:
+> RFC:
+> - Make sme_me_mask port of _PAGE_CHG_MASK rather than using it by its own in
+>   pgprot_modify().
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/video/fbdev/fsl-diu-fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+Could you please add a "why is this patch-set needed", not just describe 
+the "what does this patch set do"? I've seen zero discussion in the three 
+changelogs of exactly why we'd want this, which drivers and features are 
+affected and in what way, etc.
 
-diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-index d19f58263b4e..3e410b9eb272 100644
---- a/drivers/video/fbdev/fsl-diu-fb.c
-+++ b/drivers/video/fbdev/fsl-diu-fb.c
-@@ -1287,6 +1287,7 @@ static int fsl_diu_ioctl(struct fb_info *info, unsigned int cmd,
- 		dev_warn(info->dev,
- 			 "MFB_SET_PIXFMT value of 0x%08x is deprecated.\n",
- 			 MFB_SET_PIXFMT_OLD);
-+		/* fall through */
- 	case MFB_SET_PIXFMT:
- 		if (copy_from_user(&pix_fmt, buf, sizeof(pix_fmt)))
- 			return -EFAULT;
-@@ -1296,6 +1297,7 @@ static int fsl_diu_ioctl(struct fb_info *info, unsigned int cmd,
- 		dev_warn(info->dev,
- 			 "MFB_GET_PIXFMT value of 0x%08x is deprecated.\n",
- 			 MFB_GET_PIXFMT_OLD);
-+		/* fall through */
- 	case MFB_GET_PIXFMT:
- 		pix_fmt = ad->pix_fmt;
- 		if (copy_to_user(buf, &pix_fmt, sizeof(pix_fmt)))
--- 
-2.23.0
+It's called a "fix" but doesn't explain what bad behavior it fixes.
 
+Thanks,
+
+	Ingo
