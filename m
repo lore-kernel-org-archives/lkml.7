@@ -3,128 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A64EC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEA8C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B13A21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D1F2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfIKMIu (ORCPT
+        id S1727868AbfIKMJI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:08:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60678 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 08:09:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55037 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727373AbfIKMIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:08:49 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        id S1727656AbfIKMJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:09:07 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 10F9F7E426
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:08:49 +0000 (UTC)
-Received: by mail-qk1-f199.google.com with SMTP id n135so24642362qke.23
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:08:49 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A61983F42
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 12:09:07 +0000 (UTC)
+Received: by mail-ed1-f70.google.com with SMTP id a22so6466849edx.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 05:09:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=enh0zIvHZGYnRPPPLW+6aSKLca0Arx8DkKfrIqKoLus=;
-        b=BCvindC1Ph6b4wBE1KSQ8Amhw3z9pHRZfr9i0MozI2OGS6mOOHDSXcu2rQe6CsoTLu
-         rURzpa0oXjT1JYrGiF18hn3+3JzYMkBElRA5oWDAVAkV3mM9CJapwWxJKjOcd20h6l8k
-         OpxeRLMzp+xo8Re4x8F2mZdutlrXC4JY0Q5HGa4ai7s7iWSRTgooyoePaBwbsOlkID9L
-         x+SAqJFD5ayZ+hetCo30oLzIGKzhpJEtxiMU7VgelgZlgMGiVnfY9Z1LEYK9bSYStX0+
-         vtx2qGXXPuU6vTJ8yuPPH3r5w9hGMpHVFriVaHY+39VSPf+1M3NslWvJEvuR3dw+AGz2
-         OW5A==
-X-Gm-Message-State: APjAAAWL4+ZQmgK87eZHJmgf950pHav6XyMBfXpBOEGpdQ0Zo7WzByhv
-        qmEPGYxMFR5SLmDAePU4Ox73LdXQu6EAODYMDX2t+Gug+M68dnbSwaTph8M7gZdEl7reitcCYAy
-        HlPAAPrxZ9P2xSTQYDYjiT2Hi
-X-Received: by 2002:ac8:3564:: with SMTP id z33mr18649588qtb.291.1568203728303;
-        Wed, 11 Sep 2019 05:08:48 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzeft2UuPFTSdxyb4bOFOk8mjCIC7+wIdafGuW+Aj+RlGHxCc75dN/Ohnmz48toLx7v9uY0nw==
-X-Received: by 2002:ac8:3564:: with SMTP id z33mr18649552qtb.291.1568203728135;
-        Wed, 11 Sep 2019 05:08:48 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id x12sm8228721qtb.32.2019.09.11.05.08.40
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=wiKMwbrFTWMlvoFQ+WcXmY6U5v89DRZRbjwpcrU0/0g=;
+        b=JZ/zDj+tdiGbZXrS6UbxLj0csVlC0qVs0iTdapBIUH8V9IAxZoYhPSCAmt6d1HkpgO
+         evg7kHmHl1qUFGnozyZ124UlPS6CuracHi9Er0pbIQQmG0ouzVkp/wx2E0nwkRf10fzr
+         x47+J3Bogw72abTB6lWhdIh84MxByOc+ttiZwHzFSG/StgOUs6sH//ntjOIusMWaA0LU
+         lp+SqQ8L7csNPdMmYnwQkSmQuFGfLBvbu9usydNlRYc8K4lAlzh6gaEFwluEMZ7/b83G
+         8WCbYMnh9VXq/K7VzEaB3Qw6Oxfy0LTJdPVDBrBuFkTCieIwN0ET112nlwAMNKjIS/u+
+         3rHA==
+X-Gm-Message-State: APjAAAW0DiJF4ozb3dtXM16L1n5rKPQbYeJyk2gXlfMt0uI1NhdQdalr
+        AqUd0ROfAnTfzm60yhOcQAp4nlPaCoL60xfYF5+jRh245LeE5KPy1zOe8ncnCCjWI6ydxYuu5HU
+        0LoKrfFwSbD8uzRldSeLh5r/N
+X-Received: by 2002:a50:baab:: with SMTP id x40mr10586842ede.60.1568203744134;
+        Wed, 11 Sep 2019 05:09:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBwHHyUEXDcXl266h1mS0CBQ840+QtMXzXaW5MgM+DIbavLEYSLwUZNv6e85xX5gKfbNSrNw==
+X-Received: by 2002:a50:baab:: with SMTP id x40mr10586809ede.60.1568203743936;
+        Wed, 11 Sep 2019 05:09:03 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id o4sm4097666edq.84.2019.09.11.05.09.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 05:08:47 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 08:08:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190911080804-mutt-send-email-mst@kernel.org>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
- <20190911113619.GP4023@dhcp22.suse.cz>
+        Wed, 11 Sep 2019 05:09:03 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 0D6111804C6; Wed, 11 Sep 2019 13:09:02 +0100 (WEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Yonghong Song <yhs@fb.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf\@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Subject: Re: [PATCH] bpf: validate bpf_func when BPF_JIT is enabled
+In-Reply-To: <fd8b6f04-3902-12e9-eab1-fa85b7e44dd5@intel.com>
+References: <20190909223236.157099-1-samitolvanen@google.com> <4f4136f5-db54-f541-2843-ccb35be25ab4@fb.com> <20190910172253.GA164966@google.com> <c7c7668e-6336-0367-42b3-2f6026c466dd@fb.com> <fd8b6f04-3902-12e9-eab1-fa85b7e44dd5@intel.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 11 Sep 2019 13:09:01 +0100
+Message-ID: <87impzt4pu.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911113619.GP4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 01:36:19PM +0200, Michal Hocko wrote:
-> On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-> [...]
-> > We don't put any limitations on the allocator other then that it needs to
-> > clean up the metadata on allocation, and that it cannot allocate a page
-> > that is in the process of being reported since we pulled it from the
-> > free_list. If the page is a "Reported" page then it decrements the
-> > reported_pages count for the free_area and makes sure the page doesn't
-> > exist in the "Boundary" array pointer value, if it does it moves the
-> > "Boundary" since it is pulling the page.
-> 
-> This is still a non-trivial limitation on the page allocation from an
-> external code IMHO. I cannot give any explicit reason why an ordering on
-> the free list might matter (well except for page shuffling which uses it
-> to make physical memory pattern allocation more random) but the
-> architecture seems hacky and dubious to be honest. It shoulds like the
-> whole interface has been developed around a very particular and single
-> purpose optimization.
-> 
-> I remember that there was an attempt to report free memory that provided
-> a callback mechanism [1], which was much less intrusive to the internals
-> of the allocator yet it should provide a similar functionality. Did you
-> see that approach? How does this compares to it? Or am I completely off
-> when comparing them?
-> 
-> [1] mostly likely not the latest version of the patchset
-> http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+Björn Töpel <bjorn.topel@intel.com> writes:
 
-Linus nacked that one. He thinks invoking callbacks with lots of
-internal mm locks is too fragile.
+> On 2019-09-11 09:42, Yonghong Song wrote:
+>> I am not an expert in XDP testing. Toke, Björn, could you give some
+>> suggestions what to test for XDP performance here?
+>
+> I ran the "xdp_rxq_info" sample with and without Sami's patch:
+
+Thanks for doing this!
+
+> $ sudo ./xdp_rxq_info --dev enp134s0f0 --action XDP_DROP
+>
+> Before:
+>
+> Running XDP on dev:enp134s0f0 (ifindex:6) action:XDP_DROP options:no_touch
+> XDP stats       CPU     pps         issue-pps
+> XDP-RX CPU      20      23923874    0
+> XDP-RX CPU      total   23923874
+>
+> RXQ stats       RXQ:CPU pps         issue-pps
+> rx_queue_index   20:20  23923878    0
+> rx_queue_index   20:sum 23923878
+>
+> After Sami's patch:
+>
+> Running XDP on dev:enp134s0f0 (ifindex:6) action:XDP_DROP options:no_touch
+> XDP stats       CPU     pps         issue-pps
+> XDP-RX CPU      20      22998700    0
+> XDP-RX CPU      total   22998700
+>
+> RXQ stats       RXQ:CPU pps         issue-pps
+> rx_queue_index   20:20  22998705    0
+> rx_queue_index   20:sum 22998705
+>
+>
+> So, roughly ~4% for this somewhat naive scenario.
+
+Or (1/22998700 - 1/23923874) * 10**9 == 1.7 nanoseconds of overhead.
+
+I guess that is not *too* bad; but it's still chipping away at
+performance; anything we could do to lower the overhead?
+
+-Toke
