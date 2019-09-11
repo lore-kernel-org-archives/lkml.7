@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30660ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D5DECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9E4222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5E6222BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFoxoJEc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge/EeQoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfIKFMz (ORCPT
+        id S1726995AbfIKFNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 01:12:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32909 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbfIKFMt (ORCPT
+        Wed, 11 Sep 2019 01:13:06 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38430 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726941AbfIKFMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 01:12:49 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so10912205pgn.0;
-        Tue, 10 Sep 2019 22:12:49 -0700 (PDT)
+        Wed, 11 Sep 2019 01:12:55 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p9so4913274plk.5;
+        Tue, 10 Sep 2019 22:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+lAoewH+jhsvt3QeezehbGtMBLTUm9LftrXq9l91DQ0=;
-        b=VFoxoJEckEcZIGDTxpPt7UGaWMAQrO3tkzFDjvrIZMfM4bK/YZWAu9wd9ILoV0gVBV
-         RmRC2FZKNa2rU/kK/Wl/yoYr/ll+BPWPlT7IiyRtH0y+n1ymHU7ZqsMVz1WZQDwegPki
-         JVazvV4FNcz6T7zE6N1MtKrV7KjKzmOdEUGTbEO0RClpqMrviAhEZlW0V7Hkm3qROx4K
-         OzmcZdr2x0p8+Y5NIHfCBypAvKN8ViuyqCxjhmunkMYv4wz2/JGA6wcVIgGvsI8eSjhp
-         E+483k/AGkQrdjHqIiTBfdtgDWD2dgid34j1eZ9wKkmMwSgsLDD0WFx1Gxr+8GTJ0Evn
-         U4Ow==
+        bh=gm/hCgpnzaPrHHZ/aR0dzYOcB5B3Hpj/g7rPPbjysyo=;
+        b=ge/EeQoTSdNzd/rNC2nGLo/0qQUgNcs86a8i8BAd4VD52vlRii1Og0wgaMBNJV9Y5+
+         l0ewhWqj+gIH8H23D6luD1mx0/ZOVxwC+WquAkxJ+90WOvSyHGab6Ji0hjIYr6b7y6Re
+         QIPdiACXjzLaGxhj5evNMv6Fo/qTzSgbuOx3wgHxPirFr2z2CuV8QsR49D5V6txz3aWw
+         HxcaWv2mNvw5ZsQmtVFKVlASxnfu2w0HM53E+fiu+dj8A7FLgnigRzYEf5UI2yxjXH/z
+         98vbU90hhMSOhhNxgzUo3iOCPiB4qvBhJJSYaIFruS5hyjNdDyNVTYy0r+YQyZTK6VOC
+         e5/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+lAoewH+jhsvt3QeezehbGtMBLTUm9LftrXq9l91DQ0=;
-        b=gmxBFZ/wyjmA1at/Ixr+5RtJwOZY3cnNon1NK6y9ll3kssSfcJXeFcjetCCs/WRVN2
-         tIQIhJf8rrVd7AuMwtJWSr1hBN7P2a0yKZWreNPEBh8STzRBHErdpSdCMb9jmB/GfsK9
-         hKWnVcY62sczQFL9qTMmuXh5JcZAt0foh2WAC7PFhVVyZM3uf+TjQ1SBMb9nem35VMc0
-         tHoL7oqC4TQYHLTXNq8+BAKM9OYdfx6i5Xg/0z1E1nvesWeAB41ghWuvPGfCDT3A9SEg
-         azL4muDcmajrFpYD8MbQkAkZSErwqMulLmqBQuHv0NDD+XO5Fwe60sWTLK/ZEqV1PWUA
-         cPAw==
-X-Gm-Message-State: APjAAAUI4S+mYdq3MQrr4HwU3tCfm0M8ojX/ZYEMCrPjLEIv4tmqgrCN
-        9eByjs9yIrKnfEZvL7hZFtQ=
-X-Google-Smtp-Source: APXvYqxCtF6ozo7kQje77FWoQfLW4x1y4DZ5T4Y2lgvx2KNuRoeZ1DZU6y2TLJbsZM2AkxWOAr502g==
-X-Received: by 2002:a17:90b:8d7:: with SMTP id ds23mr3254538pjb.141.1568178768687;
-        Tue, 10 Sep 2019 22:12:48 -0700 (PDT)
+        bh=gm/hCgpnzaPrHHZ/aR0dzYOcB5B3Hpj/g7rPPbjysyo=;
+        b=cewHXIQXv3dxRucn40hFEFijiF5MMGOEwwxIp/BXGM+uF0fl2Q6ZF+HOthLG9KdlYH
+         eQ9fwUf1vZ2acRDqyS0irdvJ4EuC29lSz4dpG5/K7T4G1NnLPIV7EYtCTr4jtD1W1Sf/
+         FuLHwzRQT4n0GdUUxhwW7n4Iu6xWI//7p4IoPfsW5wuVr/bSsFrQgHLUk148CyAAR3xu
+         UonQa2xAFWexZ15Tqj2kVSYIPK1SbBFIMdgSFpXkn0c7LdnC7o4ovRL8YMu49L4UMao0
+         01EvzltL5O1UwKg39hIwLT655oFeCuUugYZijm2eWUEsh3+K4PtaMZFVWo6bfn7KXDdb
+         IKUg==
+X-Gm-Message-State: APjAAAV9nnTtV0Kdf951TwvItFkoZv2h66q1tP6t/I4KfjmEbuQSVrhV
+        28FDZRt7+xbSlJ+kk+FyTCA=
+X-Google-Smtp-Source: APXvYqxCN8xHj1/tJrUJLanYOX5QM8tQ7EGhpG/qJaI0k1L87m1Llsg1JAnyL2f1gPvGXM9+1aLFRA==
+X-Received: by 2002:a17:902:bd05:: with SMTP id p5mr33681188pls.339.1568178773116;
+        Tue, 10 Sep 2019 22:12:53 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p11sm22011149pff.136.2019.09.10.22.12.47
+        by smtp.gmail.com with ESMTPSA id p11sm22011149pff.136.2019.09.10.22.12.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 22:12:47 -0700 (PDT)
+        Tue, 10 Sep 2019 22:12:52 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 10/14] software node: rename is_array to is_inline
-Date:   Tue, 10 Sep 2019 22:12:27 -0700
-Message-Id: <20190911051231.148032-11-dmitry.torokhov@gmail.com>
+Subject: [PATCH v4 13/14] platform/x86: intel_cht_int33fe: use inline reference properties
+Date:   Tue, 10 Sep 2019 22:12:30 -0700
+Message-Id: <20190911051231.148032-14-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
 In-Reply-To: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
@@ -76,108 +76,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We do not need a special flag to know if we are dealing with an array,
-as we can get that data from ratio between element length and the data
-size, however we do need a flag to know whether the data is stored
-directly inside property_entry or separately.
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    |  9 +++++----
- include/linux/property.h | 12 +++++++-----
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c | 81 ++++++++++++------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 9c3e566c753e..83e2a706a86e 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -108,7 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
- 	if (!prop->length)
- 		return NULL;
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 1d5d877b9582..4177c5424931 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -46,30 +46,6 @@ struct cht_int33fe_data {
+ 	struct fwnode_handle *dp;
+ };
  
--	if (prop->is_array)
-+	if (!prop->is_inline)
- 		return prop->pointer;
+-static const struct software_node nodes[];
+-
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+-static struct software_node_ref_args mux_ref;
+-
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -105,8 +81,18 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
  
- 	return &prop->value;
-@@ -205,7 +205,7 @@ static void property_entry_free_data(const struct property_entry *p)
- 	const char * const *src_str;
- 	size_t i, nval;
++/*
++ * We are not using inline property here because those are constant,
++ * and we need to adjust this one at runtime to point to real
++ * software node.
++ */
++static struct software_node_ref_args fusb302_mux_refs[] = {
++	{ .node = NULL },
++};
++
+ static const struct property_entry fusb302_props[] = {
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
++	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
+ 	{ }
+ };
  
--	if (p->is_array) {
-+	if (!p->is_inline) {
- 		if (p->type == DEV_PROP_STRING && p->pointer) {
- 			src_str = p->pointer;
- 			nval = p->length / sizeof(const char *);
-@@ -250,7 +250,7 @@ static int property_entry_copy_data(struct property_entry *dst,
- 	const void *pointer = property_get_pointer(src);
- 	const void *new;
+@@ -122,6 +108,8 @@ static const u32 snk_pdo[] = {
+ 	PDO_VAR(5000, 12000, 3000),
+ };
  
--	if (src->is_array) {
-+	if (!src->is_inline) {
- 		if (!src->length)
- 			return -ENODATA;
++static const struct software_node nodes[];
++
+ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_STRING("data-role", "dual"),
+ 	PROPERTY_ENTRY_STRING("power-role", "dual"),
+@@ -129,15 +117,21 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
  
-@@ -264,15 +264,16 @@ static int property_entry_copy_data(struct property_entry *dst,
- 				return -ENOMEM;
- 		}
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
  
--		dst->is_array = true;
- 		dst->pointer = new;
- 	} else if (src->type == DEV_PROP_STRING) {
- 		new = kstrdup(src->value.str, GFP_KERNEL);
- 		if (!new && src->value.str)
- 			return -ENOMEM;
+@@ -173,9 +167,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ {
+ 	software_node_unregister_nodes(nodes);
  
-+		dst->is_inline = true;
- 		dst->value.str = new;
- 	} else {
-+		dst->is_inline = true;
- 		dst->value = src->value;
+-	if (mux_ref.node) {
+-		fwnode_handle_put(software_node_fwnode(mux_ref.node));
+-		mux_ref.node = NULL;
++	if (fusb302_mux_refs[0].node) {
++		fwnode_handle_put(
++			software_node_fwnode(fusb302_mux_refs[0].node));
++		fusb302_mux_refs[0].node = NULL;
  	}
  
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 238e1507925f..ac7823d58cfe 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -222,15 +222,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
-  * struct property_entry - "Built-in" device property representation.
-  * @name: Name of the property.
-  * @length: Length of data making up the value.
-- * @is_array: True when the property is an array.
-+ * @is_inline: True when the property value is stored directly in
-+ *     &struct property_entry instance.
-  * @type: Type of the data in unions.
-- * @pointer: Pointer to the property (an array of items of the given type).
-- * @value: Value of the property (when it is a single item of the given type).
-+ * @pointer: Pointer to the property when it is stored separately from
-+ *     the &struct property_entry instance.
-+ * @value: Value of the property when it is stored inline.
-  */
- struct property_entry {
- 	const char *name;
- 	size_t length;
--	bool is_array;
-+	bool is_inline;
- 	enum dev_prop_type type;
- 	union {
- 		const void *pointer;
-@@ -257,7 +259,6 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
--	.is_array = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .pointer = _val_ },						\
- }
-@@ -288,6 +289,7 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
-+	.is_inline = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .value = { ._elem_ = _val_ } },				\
- }
+ 	if (data->dp) {
+@@ -187,25 +182,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ 
+ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+ {
++	const struct software_node *mux_ref_node;
+ 	int ret;
+ 
+-	ret = software_node_register_nodes(nodes);
+-	if (ret)
+-		return ret;
+-
+-	/* The devices that are not created in this driver need extra steps. */
+-
+ 	/*
+ 	 * There is no ACPI device node for the USB role mux, so we need to wait
+ 	 * until the mux driver has created software node for the mux device.
+ 	 * It means we depend on the mux driver. This function will return
+ 	 * -EPROBE_DEFER until the mux device is registered.
+ 	 */
+-	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
+-	if (!mux_ref.node) {
+-		ret = -EPROBE_DEFER;
+-		goto err_remove_nodes;
+-	}
++	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
++	if (!mux_ref_node)
++		return -EPROBE_DEFER;
++
++	/*
++	 * Update node used in "usb-role-switch" property. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
++	 */
++	fusb302_mux_refs[0].node = mux_ref_node;
++
++	ret = software_node_register_nodes(nodes);
++	if (ret)
++		return ret;
++
++	/* The devices that are not created in this driver need extra steps. */
+ 
+ 	/*
+ 	 * The DP connector does have ACPI device node. In this case we can just
 -- 
 2.23.0.162.g0b9fbb3734-goog
 
