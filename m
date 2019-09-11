@@ -5,80 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D9C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4FEECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF06D2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1D921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfIKPiX (ORCPT
+        id S1728775AbfIKPju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:38:23 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:11629 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728599AbfIKPiT (ORCPT
+        Wed, 11 Sep 2019 11:39:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34291 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbfIKPju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:38:19 -0400
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 11 Sep 2019
- 23:39:09 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Tao Zeng <tao.zeng@amlogic.com>
-Subject: [PATCH v3 2/4] dt-bindings: arm: amlogic: add A1 bindings
-Date:   Wed, 11 Sep 2019 11:38:08 -0400
-Message-ID: <1568216290-84219-3-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
+        Wed, 11 Sep 2019 11:39:50 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i84ih-0007gj-Fc; Wed, 11 Sep 2019 15:39:47 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bus: qcom: fix spelling mistake "ambigous" -> "ambiguous"
+Date:   Wed, 11 Sep 2019 16:39:47 +0100
+Message-Id: <20190911153947.10203-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings for the new Amlogic A1 SoC family.
+From: Colin Ian King <colin.king@canonical.com>
 
-A1 is an application processor designed for smart audio and IoT applications,
-with dual core Cortex-A35.
+There is a spelling mistake on the documentation. Fix it.
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 99015ce..0ef45ac 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -156,4 +156,8 @@ properties:
-               - seirobotics,sei610
-               - khadas,vim3l
-           - const: amlogic,sm1
-+
-+      - description: Boards with the Amlogic Meson A1 A113L SoC
-+        items:
-+          - const: amlogic,a1
- ...
+diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+index 5a7d567f6833..5058aa2c63b2 100644
+--- a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
++++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+@@ -71,7 +71,7 @@ Optional subnodes:
+ 
+ The following optional properties are properties that can be tagged onto
+ any device subnode. We are assuming that there can be only ONE device per
+-chipselect subnode, else the properties will become ambigous.
++chipselect subnode, else the properties will become ambiguous.
+ 
+ Optional properties arrays for SLOW chip selects:
+ - qcom,xmem-recovery-cycles: recovery cycles is the time the memory continues to
 -- 
-2.7.4
+2.20.1
 
