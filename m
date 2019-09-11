@@ -2,132 +2,106 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EF7ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAD5ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2893D21D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568181560;
-	bh=3ypS9+H2EwN0SpLc6Y2kISgYfwEUW1gRWh6xPU0C5BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uM/zCADMdEWR7WX9YypvQEG461PYzVAiyOuak4vRCPm6aw/Od5uxeC0TyJDoE+xxO
-	 eBHiEBiLl+ZBf78srq1dzrMmdW3Lg87HPcMFGC9WT5FkDGfLlhLej2DQJ6mka/9zxw
-	 x6vv5PbBsIRlVXZjRxtBNQWMZ1M9dWTJCU7V8vBM=
+	by mail.kernel.org (Postfix) with ESMTP id 3060B21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOHRN2LD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfIKF7T (ORCPT
+        id S1726906AbfIKF7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 01:59:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39684 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKF7S (ORCPT
+        Wed, 11 Sep 2019 01:59:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45194 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfIKF7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 01:59:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q12so1926206wmj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 22:59:17 -0700 (PDT)
+        Wed, 11 Sep 2019 01:59:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 4so10932744pgm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Sep 2019 22:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=L+VskumO8DZY0fNQAHQAEHwj13ZWS0q3JEkxtqeOHLU=;
-        b=dF7u80VkNW9G8z99FnhuunK2Ag9xEHuQemKMEAG/npZhR/qTKHU8i/U+32jCYphKL+
-         TxbYEq3vKLSA/WdVcDs/rDoU5txX7prHcEX0S7aXJ7z8B1J/747DDqotyZUNIzr8Ur88
-         mhb+sgNxKhfYtBR2QO3N73kKi5r9YMxGxAk+DfpmcuiJfVmfZ4Z7fcuUfNEdH8i3VhaJ
-         ouEb3EbxH/kY2Js+THlhr0ynwMb9lUujH6C5lEjPOfl6Wa2IBSRriNx1Bya8cvTQ73Wa
-         Cj6333PNnTcaip5FoeO1YNsnWNJHfMD7LAIhH95g3blfg30lnzLPJUeC+9blAFOnFzYA
-         V5lA==
+        bh=Z8bM74aV0Gm1NNmyfLGAjx3pN/OjFJf2r4RfCm9oqoo=;
+        b=BOHRN2LDxWkitqnOtoRNf5XxHi74PnBd2fVeqX1kJtxLe8Or3gvVe+rIkD1BXp7bpJ
+         HkSj04Pw7PF8pwiKzD756dKaStqPdZ2TO7WJRp0fiODPdqneBj1UXBxKmY0GOkRRbLat
+         9Lss5hEcP4gxp4Qq/4kzCFLrnQUA/u4LmLHr3dJ5KgIsqlKXEeDscPCcNwJ9f8z8KZOy
+         b8ZoCtCVtbAnQJh8Bzpdt1GN+E12h1AQOSfh/PU1qevNta7D/FrbxXRHEcT9AZdtfuEU
+         SH7aUBoJ7ILbRvdYwk0S8AaayNUZXwTBFsqSLJQaQre465sMjSNsXB+OQnaxQxCJn1pC
+         w9EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=L+VskumO8DZY0fNQAHQAEHwj13ZWS0q3JEkxtqeOHLU=;
-        b=Nygz6DVr6TrfmSqFvBrWyc+8k+Wrvj3Swf3kSu65hwGSfqVd6LGeUO4dS/RZJDDnBZ
-         wbNs1ZHKmF3wG2zGpXxRQV8XKVYA5s0PR7eLIk4hcjhZDMXD90phjjP8HqN9I4Xdu1YN
-         dyaV+q1jOb+P0prilIG/TQ8QFI9BSxfrBIkNKeIrYPjeaSfcofyGCN3mzv8IkUtCs2AH
-         fRDY+mVV0cMqoFZQ7vYxhuI0BGdNDFxxhZD9T5MegM5hEfaummf6sxFTmmD11pj5o+Ac
-         VY41ih12FGXSeFDMZHgOlNikkR17wACVbxK0W4B7syPfSOaxll6Io0jwVuzL1YdElX0t
-         Hxrg==
-X-Gm-Message-State: APjAAAXzzKPppDWu19Wbjad5jECO4RltdwPnEOVDQBiUCgtaaCvtrSLz
-        iCAhaf0YlGkkP6iZ3/WIRVw=
-X-Google-Smtp-Source: APXvYqxUjCgvWp2pqomx5+bl7HzZBn2ZOB3oncrk3JlryEbTlKwp7t7r5MmS9Mhk3gqM7VQLLWMFNQ==
-X-Received: by 2002:a7b:cc8e:: with SMTP id p14mr2308170wma.124.1568181556667;
-        Tue, 10 Sep 2019 22:59:16 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y6sm1508390wmi.14.2019.09.10.22.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 22:59:16 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 07:59:14 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 0/2] Fix SEV user-space mapping of unencrypted coherent
- memory
-Message-ID: <20190911055913.GB104115@gmail.com>
-References: <20190910133542.64523-1-thomas_os@shipmail.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Z8bM74aV0Gm1NNmyfLGAjx3pN/OjFJf2r4RfCm9oqoo=;
+        b=ZfKBm38U8lOzug3yLJNx1QlsY7rCuF46l7ptLJjPBqbkRS9rP/CP4utg0Y+Vk/fVUr
+         KPE0/HA4H8hDgXKyrJyqpAItwkyLRc80hHcJfobvPX2zOACjEKh243oF6sgHWsCvqSe7
+         gk7t3W3uEFjP/3aF9oBXxJMZ0n64jo8iuFlMfbIs6xneoSMp378pKsJy9yzYPQ4BrwrE
+         wz8+1Ho1eHrFV3XMrSUBvuvVbp6SWjLB306q29PHhl04SbCssol+PO2AEVwck7ROJkMA
+         4+963FK2EYpRe+R+KxOffp4vhC8eoPf3vjZHkWn4T1oBPRFVcbPImMloW/HS0ggv8Ra4
+         xwRw==
+X-Gm-Message-State: APjAAAUYHzUk0g3cq3BfdLZDbmUC4xbsjf7cNSSQFaEq8CNCplnAv9DS
+        jyqEObdflFLdIR7SzT/SM2VJKbmGQSs=
+X-Google-Smtp-Source: APXvYqypS0dXymbRXAvx2kwVeb1S+kI+5zoYOOA7IrCfv/NzkfUpMkc3qrHQzM/ygDzzL9FG8LTYdw==
+X-Received: by 2002:a62:e910:: with SMTP id j16mr41357212pfh.123.1568181582511;
+        Tue, 10 Sep 2019 22:59:42 -0700 (PDT)
+Received: from LGEARND20B15 ([27.122.242.75])
+        by smtp.gmail.com with ESMTPSA id k8sm16736280pgm.14.2019.09.10.22.59.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Sep 2019 22:59:42 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 14:59:38 +0900
+From:   Austin Kim <austindh.kim@gmail.com>
+To:     marek.behun@nic.cz
+Cc:     linux-kernel@vger.kernel.org, austindh.kim@gmail.com
+Subject: [PATCH] bus: moxtet: Update proper type 'size_t' to 'ssize_t'
+Message-ID: <20190911055938.GA130589@LGEARND20B15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190910133542.64523-1-thomas_os@shipmail.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The simple_write_to_buffer() returns ssize_t type value,
+which is either positive or negative.
 
-* Thomas Hellström (VMware) <thomas_os@shipmail.org> wrote:
+However 'res' is declared as size_t(unsigned int)
+which contains non-negative type.
 
-> With SEV and sometimes with SME encryption, The dma api coherent memory is
-> typically unencrypted, meaning the linear kernel map has the encryption
-> bit cleared. However, default page protection returned from vm_get_page_prot()
-> has the encryption bit set. So to compute the correct page protection we need
-> to clear the encryption bit.
-> 
-> Also, in order for the encryption bit setting to survive across do_mmap() and
-> mprotect_fixup(), We need to make pgprot_modify() aware of it and not touch it.
-> Therefore make sme_me_mask part of _PAGE_CHG_MASK and make sure
-> pgprot_modify() preserves also cleared bits that are part of _PAGE_CHG_MASK,
-> not just set bits. The use of pgprot_modify() is currently quite limited and
-> easy to audit.
-> 
-> (Note that the encryption status is not logically encoded in the pfn but in
-> the page protection even if an address line in the physical address is used).
-> 
-> The patchset has seen some sanity testing by exporting dma_pgprot() and
-> using it in the vmwgfx mmap handler with SEV enabled.
-> 
-> Changes since:
-> RFC:
-> - Make sme_me_mask port of _PAGE_CHG_MASK rather than using it by its own in
->   pgprot_modify().
+So 'res < 0' statement is always false,
+this cannot execute execptional-case  handling.
 
-Could you please add a "why is this patch-set needed", not just describe 
-the "what does this patch set do"? I've seen zero discussion in the three 
-changelogs of exactly why we'd want this, which drivers and features are 
-affected and in what way, etc.
+To prevent this case,
+update proper type 'size_t' to 'ssize_t' for execptional handling.
 
-It's called a "fix" but doesn't explain what bad behavior it fixes.
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+---
+ drivers/bus/moxtet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
+index 1ee4570..288a9e4 100644
+--- a/drivers/bus/moxtet.c
++++ b/drivers/bus/moxtet.c
+@@ -514,7 +514,7 @@ static ssize_t output_write(struct file *file, const char __user *buf,
+ 	struct moxtet *moxtet = file->private_data;
+ 	u8 bin[TURRIS_MOX_MAX_MODULES];
+ 	u8 hex[sizeof(bin) * 2 + 1];
+-	size_t res;
++	ssize_t res;
+ 	loff_t dummy = 0;
+ 	int err, i;
+ 
+-- 
+2.6.2
 
-	Ingo
