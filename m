@@ -2,273 +2,186 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7523C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974F9C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F10D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA9420578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="alZY/QHO";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HKmG0Zbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730448AbfIKSvd (ORCPT
+        id S1730457AbfIKSwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:51:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39421 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbfIKSun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:50:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 11:50:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="196980868"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 11 Sep 2019 11:50:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/13] KVM: PPC: Move memslot memory allocation into prepare_memory_region()
-Date:   Wed, 11 Sep 2019 11:50:27 -0700
-Message-Id: <20190911185038.24341-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190911185038.24341-1-sean.j.christopherson@intel.com>
-References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+        Wed, 11 Sep 2019 14:52:14 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:22480 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729758AbfIKSwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:52:14 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8BIkwMk022615;
+        Wed, 11 Sep 2019 11:51:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Psmjm4TrrjahD1mccl3eyjBfOgfZTuFXftlDbmifvpU=;
+ b=alZY/QHOFiL+gZynVDXPbhLaGqxB4rDolLz1HXxq0ivFqabmuTT/phGeJoiiZRZ81Mcz
+ Ayk8j34ULiask0AZX6th7DtiQ1RBnOSJo0BPK6QPZV3URTsrBW0Q4KFXDXEaGVl2fnbM
+ 7B0E7aOhT0OY6owR3kuxC7wLfUXStqDRIkM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2uy2yah581-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 11 Sep 2019 11:51:05 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 11 Sep 2019 11:50:42 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 11 Sep 2019 11:50:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jDE8FNWuPzTyCvlHV53PbVJQyUAUCBPIKQsjOSWKOxkEEFmhrQCbCL3VexuedgRI5ojexQlQ76ZVEFnlzRWOGYyJ7F67XrfSDTjHhpsNGT00P7EPXoEUmMEYOE3dFU3UaM0dLS7MAHiM1CLvcxnXOK3+sQqzffx+kJ80vDjFWIkBGIbz9Iq/rQoAGk8g4pzqqkgSm4lNvHvqIq8rEgmoKkQnl0OkLToTsk1Ath53ruGjRKr5CiqNItuH/GI+cm2YITW0ggjW7pJvjQisREYhBFG6AamfHNOe85fvabJroM/CYFSOhrx0AQu+3R4RDt8UW9uOJ7QrNUNsoRWjEMJXnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Psmjm4TrrjahD1mccl3eyjBfOgfZTuFXftlDbmifvpU=;
+ b=TG1P2I1qY5F7tgyBAuxbQwV/deWQJio9hQatMuFkda8cUiXDgP+DoDEccD19ltKCeCXWXCM3d8G3FfTJsIyK5o1DVcAUjeg7MNk5yzLCZKn9ub5CAvYd3dgbx9qZeEaF0awChq1d5ohqArN/hBSqfEEHI6vDXecK+CCeJ6O3nZrCiE/J+IPn/aXDG/Wz+/Ya+yjDARZiQsLCrj7wQj+Bs0IhVDbUFGk/T88GyTACkT7ID7gZBYf1V/3fjFffyWydUhcNeo2HLOm9D76d5kZoxoZ5Ui5amcoYDOqXXn1k0FXsxJ99qCiq/2pAnnatRhHCbBXq6MPnQXWIQ9qphRr6PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Psmjm4TrrjahD1mccl3eyjBfOgfZTuFXftlDbmifvpU=;
+ b=HKmG0ZbemNVo1UQHVuZ/ScHySNxPH97iKlaUoaLI0wFi0e/O0DRgFmo1amsKfI9XERF7cgbSi/fohluUB8gsNf/OP7wcNKq/hUyXMGh3GeCO3nteE/DGtQID8J5tUJWw5ZMNgxj+gp4kFMheoDEtfMT1RUwBJ1wfvS+F/grsBZE=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1304.namprd15.prod.outlook.com (10.172.181.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.19; Wed, 11 Sep 2019 18:50:41 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::38b1:336:13e6:b02b]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::38b1:336:13e6:b02b%7]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
+ 18:50:41 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
+Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Topic: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Index: AQHVaCL3HHZ/0IxjZ0GB2KAMVKzdAqcld28A//+WvACAAAU0AIABRQWAgAB2ZwD//48zAA==
+Date:   Wed, 11 Sep 2019 18:50:41 +0000
+Message-ID: <76733CEB-14E1-4158-B642-5B7F74F97DE4@fb.com>
+References: <20190910213734.3112330-1-vijaykhemka@fb.com>
+ <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
+ <0797B1F1-883D-4129-AC16-794957ACCF1B@fb.com>
+ <D79D04CC-4A02-4E51-8FDF-48B7C7EB6CC2@fb.com>
+ <8A8392C8-5E5E-444D-AB1B-E0FAD3C29425@fb.com>
+ <c9876340-c8d0-ba8b-2ae1-9900958f1834@gmail.com>
+In-Reply-To: <c9876340-c8d0-ba8b-2ae1-9900958f1834@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::1:a2f5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: da7b063a-a3c6-4c08-6c53-08d736e8f1c7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1304;
+x-ms-traffictypediagnostic: CY4PR15MB1304:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR15MB1304E623E5374FE58F3A066DDDB10@CY4PR15MB1304.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0157DEB61B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(376002)(396003)(366004)(346002)(199004)(189003)(76176011)(81166006)(7736002)(81156014)(2616005)(11346002)(6512007)(53546011)(6246003)(6506007)(53936002)(99286004)(476003)(71190400001)(71200400001)(486006)(4326008)(316002)(25786009)(446003)(2201001)(110136005)(54906003)(36756003)(305945005)(478600001)(46003)(14444005)(91956017)(6116002)(256004)(186003)(2501003)(6436002)(102836004)(8676002)(5660300002)(2906002)(14454004)(33656002)(66556008)(66446008)(66476007)(66946007)(229853002)(86362001)(64756008)(8936002)(6486002)(76116006)(7416002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1304;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eDfDMmzBEHkpQUiSblesHmXpsgQaKkao/mx12Nriwrk0sfAXXF8RnRH44oPCu2Lx2BhW6zJ5qmZ6FINGq2HjKEGJ3iu5CTm1MGYA9+yYrs9ZWkDecwd4R6FBqZYrdH3yGwWojv+/IJSWHtWw+ZxGmgJWp94KKYDsRE1vkNDIObQecbfSYnMSnZAxhwCtwtAI5aRQWuGNLH03eSw6W/s/zd+CbrrF6h+WYZajQNA87mgxHcbUg0wy6lskuhVDA/HBDxBqrSbQPamZ+SEzgCcc13VRJ8sw7bLUM1ZrivvOCMmWfd1MgRzw2S1OptrhPwHPA2OYFYxaISiFxHF1uqSMJ5FJvdYk7+5oXBJgBrBWGLx95oIWqMbwhjg2S915P9wQO190xSW9g7YvWzRhnqZH3ZRbXz2nyP7B408KAfn11+E=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CF91FAE597BD7049BC70796950CBA69C@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: da7b063a-a3c6-4c08-6c53-08d736e8f1c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 18:50:41.1906
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kmnSXSt+Zl4dM0Ka29PooPFdPMK4avCERRzLJwdG7cNY1pW4uowEff1nFCqu/xOnRdrkjkSaOalzse7MWlTLJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1304
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-11_08:2019-09-11,2019-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ clxscore=1015 mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=428 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909110171
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate the rmap array during kvm_arch_prepare_memory_region() to pave
-the way for removing kvm_arch_create_memslot() altogether.  Moving PPC's
-memory allocation only changes the order of kernel memory allocations
-between PPC and common KVM code.
-
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/powerpc/include/asm/kvm_ppc.h |  8 ++------
- arch/powerpc/kvm/book3s.c          | 12 ++++--------
- arch/powerpc/kvm/book3s_hv.c       | 25 ++++++++++++-------------
- arch/powerpc/kvm/book3s_pr.c       | 11 ++---------
- arch/powerpc/kvm/booke.c           |  9 ++-------
- arch/powerpc/kvm/powerpc.c         |  4 ++--
- 6 files changed, 24 insertions(+), 45 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
-index 2484e6a8f5ca..cfe19560da1b 100644
---- a/arch/powerpc/include/asm/kvm_ppc.h
-+++ b/arch/powerpc/include/asm/kvm_ppc.h
-@@ -203,9 +203,6 @@ extern void kvmppc_core_destroy_vm(struct kvm *kvm);
- extern void kvmppc_core_free_memslot(struct kvm *kvm,
- 				     struct kvm_memory_slot *free,
- 				     struct kvm_memory_slot *dont);
--extern int kvmppc_core_create_memslot(struct kvm *kvm,
--				      struct kvm_memory_slot *slot,
--				      unsigned long npages);
- extern int kvmppc_core_prepare_memory_region(struct kvm *kvm,
- 				struct kvm_memory_slot *memslot,
- 				const struct kvm_userspace_memory_region *mem);
-@@ -280,7 +277,8 @@ struct kvmppc_ops {
- 	void (*flush_memslot)(struct kvm *kvm, struct kvm_memory_slot *memslot);
- 	int (*prepare_memory_region)(struct kvm *kvm,
- 				     struct kvm_memory_slot *memslot,
--				     const struct kvm_userspace_memory_region *mem);
-+				     const struct kvm_userspace_memory_region *mem,
-+				     enum kvm_mr_change change);
- 	void (*commit_memory_region)(struct kvm *kvm,
- 				     const struct kvm_userspace_memory_region *mem,
- 				     const struct kvm_memory_slot *old,
-@@ -294,8 +292,6 @@ struct kvmppc_ops {
- 	void (*mmu_destroy)(struct kvm_vcpu *vcpu);
- 	void (*free_memslot)(struct kvm_memory_slot *free,
- 			     struct kvm_memory_slot *dont);
--	int (*create_memslot)(struct kvm_memory_slot *slot,
--			      unsigned long npages);
- 	int (*init_vm)(struct kvm *kvm);
- 	void (*destroy_vm)(struct kvm *kvm);
- 	int (*get_smmu_info)(struct kvm *kvm, struct kvm_ppc_smmu_info *info);
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index 9524d92bc45d..c21acd9a7ea1 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -840,12 +840,6 @@ void kvmppc_core_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- 	kvm->arch.kvm_ops->free_memslot(free, dont);
- }
- 
--int kvmppc_core_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
--			       unsigned long npages)
--{
--	return kvm->arch.kvm_ops->create_memslot(slot, npages);
--}
--
- void kvmppc_core_flush_memslot(struct kvm *kvm, struct kvm_memory_slot *memslot)
- {
- 	kvm->arch.kvm_ops->flush_memslot(kvm, memslot);
-@@ -853,9 +847,11 @@ void kvmppc_core_flush_memslot(struct kvm *kvm, struct kvm_memory_slot *memslot)
- 
- int kvmppc_core_prepare_memory_region(struct kvm *kvm,
- 				struct kvm_memory_slot *memslot,
--				const struct kvm_userspace_memory_region *mem)
-+				const struct kvm_userspace_memory_region *mem,
-+				enum kvm_mr_change change)
- {
--	return kvm->arch.kvm_ops->prepare_memory_region(kvm, memslot, mem);
-+	return kvm->arch.kvm_ops->prepare_memory_region(kvm, memslot, mem,
-+							change);
- }
- 
- void kvmppc_core_commit_memory_region(struct kvm *kvm,
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index ec1804f822af..a28e2fb185d3 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -4433,20 +4433,20 @@ static void kvmppc_core_free_memslot_hv(struct kvm_memory_slot *free,
- 	}
- }
- 
--static int kvmppc_core_create_memslot_hv(struct kvm_memory_slot *slot,
--					 unsigned long npages)
--{
--	slot->arch.rmap = vzalloc(array_size(npages, sizeof(*slot->arch.rmap)));
--	if (!slot->arch.rmap)
--		return -ENOMEM;
--
--	return 0;
--}
--
- static int kvmppc_core_prepare_memory_region_hv(struct kvm *kvm,
--					struct kvm_memory_slot *memslot,
--					const struct kvm_userspace_memory_region *mem)
-+					struct kvm_memory_slot *slot,
-+					const struct kvm_userspace_memory_region *mem,
-+					enum kvm_mr_change change)
- {
-+	unsigned long npages = mem->memory_size >> PAGE_SHIFT;
-+
-+	if (change == KVM_MR_CREATE) {
-+		slot->arch.rmap = vzalloc(array_size(npages,
-+					  sizeof(*slot->arch.rmap)));
-+		if (!slot->arch.rmap)
-+			return -ENOMEM;
-+	}
-+
- 	return 0;
- }
- 
-@@ -5388,7 +5388,6 @@ static struct kvmppc_ops kvm_ops_hv = {
- 	.set_spte_hva = kvm_set_spte_hva_hv,
- 	.mmu_destroy  = kvmppc_mmu_destroy_hv,
- 	.free_memslot = kvmppc_core_free_memslot_hv,
--	.create_memslot = kvmppc_core_create_memslot_hv,
- 	.init_vm =  kvmppc_core_init_vm_hv,
- 	.destroy_vm = kvmppc_core_destroy_vm_hv,
- 	.get_smmu_info = kvm_vm_ioctl_get_smmu_info_hv,
-diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
-index cc65af8fe6f7..5fceb1da5fde 100644
---- a/arch/powerpc/kvm/book3s_pr.c
-+++ b/arch/powerpc/kvm/book3s_pr.c
-@@ -1903,7 +1903,8 @@ static void kvmppc_core_flush_memslot_pr(struct kvm *kvm,
- 
- static int kvmppc_core_prepare_memory_region_pr(struct kvm *kvm,
- 					struct kvm_memory_slot *memslot,
--					const struct kvm_userspace_memory_region *mem)
-+					const struct kvm_userspace_memory_region *mem,
-+					enum kvm_mr_change change)
- {
- 	return 0;
- }
-@@ -1923,13 +1924,6 @@ static void kvmppc_core_free_memslot_pr(struct kvm_memory_slot *free,
- 	return;
- }
- 
--static int kvmppc_core_create_memslot_pr(struct kvm_memory_slot *slot,
--					 unsigned long npages)
--{
--	return 0;
--}
--
--
- #ifdef CONFIG_PPC64
- static int kvm_vm_ioctl_get_smmu_info_pr(struct kvm *kvm,
- 					 struct kvm_ppc_smmu_info *info)
-@@ -2073,7 +2067,6 @@ static struct kvmppc_ops kvm_ops_pr = {
- 	.set_spte_hva = kvm_set_spte_hva_pr,
- 	.mmu_destroy  = kvmppc_mmu_destroy_pr,
- 	.free_memslot = kvmppc_core_free_memslot_pr,
--	.create_memslot = kvmppc_core_create_memslot_pr,
- 	.init_vm = kvmppc_core_init_vm_pr,
- 	.destroy_vm = kvmppc_core_destroy_vm_pr,
- 	.get_smmu_info = kvm_vm_ioctl_get_smmu_info_pr,
-diff --git a/arch/powerpc/kvm/booke.c b/arch/powerpc/kvm/booke.c
-index be9a45874194..cf2845e147c5 100644
---- a/arch/powerpc/kvm/booke.c
-+++ b/arch/powerpc/kvm/booke.c
-@@ -1806,15 +1806,10 @@ void kvmppc_core_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- {
- }
- 
--int kvmppc_core_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
--			       unsigned long npages)
--{
--	return 0;
--}
--
- int kvmppc_core_prepare_memory_region(struct kvm *kvm,
- 				      struct kvm_memory_slot *memslot,
--				      const struct kvm_userspace_memory_region *mem)
-+				      const struct kvm_userspace_memory_region *mem,
-+				      enum kvm_mr_change change)
- {
- 	return 0;
- }
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index 3e566c2e6066..8b723b164fe1 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -689,7 +689,7 @@ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			    unsigned long npages)
- {
--	return kvmppc_core_create_memslot(kvm, slot, npages);
-+	return 0;
- }
- 
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
-@@ -697,7 +697,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				   const struct kvm_userspace_memory_region *mem,
- 				   enum kvm_mr_change change)
- {
--	return kvmppc_core_prepare_memory_region(kvm, memslot, mem);
-+	return kvmppc_core_prepare_memory_region(kvm, memslot, mem, change);
- }
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
--- 
-2.22.0
-
+DQoNCu+7v09uIDkvMTEvMTksIDExOjM0IEFNLCAiRmxvcmlhbiBGYWluZWxsaSIgPGYuZmFpbmVs
+bGlAZ21haWwuY29tPiB3cm90ZToNCg0KICAgIE9uIDkvMTEvMTkgMTE6MzAgQU0sIFZpamF5IEto
+ZW1rYSB3cm90ZToNCiAgICA+IA0KICAgID4gDQogICAgPiBPbiA5LzEwLzE5LCA0OjA4IFBNLCAi
+TGludXgtYXNwZWVkIG9uIGJlaGFsZiBvZiBWaWpheSBLaGVta2EiIDxsaW51eC1hc3BlZWQtYm91
+bmNlcyt2aWpheWtoZW1rYT1mYi5jb21AbGlzdHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2Ygdmlq
+YXlraGVta2FAZmIuY29tPiB3cm90ZToNCiAgICA+IA0KICAgID4gICAgIA0KICAgID4gICAgIA0K
+ICAgID4gICAgIE9uIDkvMTAvMTksIDM6NTAgUE0sICJMaW51eC1hc3BlZWQgb24gYmVoYWxmIG9m
+IFZpamF5IEtoZW1rYSIgPGxpbnV4LWFzcGVlZC1ib3VuY2VzK3ZpamF5a2hlbWthPWZiLmNvbUBs
+aXN0cy5vemxhYnMub3JnIG9uIGJlaGFsZiBvZiB2aWpheWtoZW1rYUBmYi5jb20+IHdyb3RlOg0K
+ICAgID4gICAgIA0KICAgID4gICAgICAgICANCiAgICA+ICAgICAgICAgDQogICAgPiAgICAgICAg
+IE9uIDkvMTAvMTksIDM6MDUgUE0sICJGbG9yaWFuIEZhaW5lbGxpIiA8Zi5mYWluZWxsaUBnbWFp
+bC5jb20+IHdyb3RlOg0KICAgID4gICAgICAgICANCiAgICA+ICAgICAgICAgICAgIE9uIDkvMTAv
+MTkgMjozNyBQTSwgVmlqYXkgS2hlbWthIHdyb3RlOg0KICAgID4gICAgICAgICAgICAgPiBIVyBj
+aGVja3N1bSBnZW5lcmF0aW9uIGlzIG5vdCB3b3JraW5nIGZvciBBU1QyNTAwLCBzcGVjaWFsbHkg
+d2l0aCBJUFY2DQogICAgPiAgICAgICAgICAgICA+IG92ZXIgTkNTSS4gQWxsIFRDUCBwYWNrZXRz
+IHdpdGggSVB2NiBnZXQgZHJvcHBlZC4gQnkgZGlzYWJsaW5nIHRoaXMNCiAgICA+ICAgICAgICAg
+ICAgID4gaXQgd29ya3MgcGVyZmVjdGx5IGZpbmUgd2l0aCBJUFY2Lg0KICAgID4gICAgICAgICAg
+ICAgPiANCiAgICA+ICAgICAgICAgICAgID4gVmVyaWZpZWQgd2l0aCBJUFY2IGVuYWJsZWQgYW5k
+IGNhbiBkbyBzc2guDQogICAgPiAgICAgICAgICAgICANCiAgICA+ICAgICAgICAgICAgIEhvdyBh
+Ym91dCBJUHY0LCBkbyB0aGVzZSBwYWNrZXRzIGhhdmUgcHJvYmxlbT8gSWYgbm90LCBjYW4geW91
+IGNvbnRpbnVlDQogICAgPiAgICAgICAgICAgICBhZHZlcnRpc2luZyBORVRJRl9GX0lQX0NTVU0g
+YnV0IHRha2Ugb3V0IE5FVElGX0ZfSVBWNl9DU1VNPw0KICAgID4gICAgICAgICANCiAgICA+ICAg
+ICAgICAgSSBjaGFuZ2VkIGNvZGUgZnJvbSAobmV0ZGV2LT5od19mZWF0dXJlcyAmPSB+TkVUSUZf
+Rl9IV19DU1VNKSB0byANCiAgICA+ICAgICAgICAgKG5ldGRldi0+aHdfZmVhdHVyZXMgJj0gfk5F
+VElGX0ZfIElQVjZfQ1NVTSkuIEFuZCBpdCBpcyBub3Qgd29ya2luZy4gDQogICAgPiAgICAgICAg
+IERvbid0IGtub3cgd2h5LiBJUFY0IHdvcmtzIHdpdGhvdXQgYW55IGNoYW5nZSBidXQgSVB2NiBu
+ZWVkcyBIV19DU1VNDQogICAgPiAgICAgICAgIERpc2FibGVkLg0KICAgID4gICAgIA0KICAgID4g
+ICAgIE5vdyBJIGNoYW5nZWQgdG8NCiAgICA+ICAgICBuZXRkZXYtPmh3X2ZlYXR1cmVzICY9ICh+
+TkVUSUZfRl9IV19DU1VNKSB8IE5FVElGX0ZfSVBfQ1NVTTsNCiAgICA+ICAgICBBbmQgaXQgd29y
+a3MuDQogICAgPiANCiAgICA+IEkgaW52ZXN0aWdhdGVkIG1vcmUgb24gdGhlc2UgZmVhdHVyZXMg
+YW5kIGZvdW5kIHRoYXQgd2UgY2Fubm90IHNldCBORVRJRl9GX0lQX0NTVU0gDQogICAgPiBXaGls
+ZSBORVRJRl9GX0hXX0NTVU0gaXMgc2V0LiBTbyBJIGRpc2FibGVkIE5FVElGX0ZfSFdfQ1NVTSBm
+aXJzdCBhbmQgZW5hYmxlZA0KICAgID4gTkVUSUZfRl9JUF9DU1VNIGluIG5leHQgc3RhdGVtZW50
+LiBBbmQgaXQgd29ya3MgZmluZS4NCiAgICA+IA0KICAgID4gQnV0IGFzIHBlciBsaW5lIDE2NiBp
+biBpbmNsdWRlL2xpbnV4L3NrYnVmZi5oLCAgDQogICAgPiAqICAgTkVUSUZfRl9JUF9DU1VNIGFu
+ZCBORVRJRl9GX0lQVjZfQ1NVTSBhcmUgYmVpbmcgZGVwcmVjYXRlZCBpbiBmYXZvciBvZg0KICAg
+ID4gICogICBORVRJRl9GX0hXX0NTVU0uIE5ldyBkZXZpY2VzIHNob3VsZCB1c2UgTkVUSUZfRl9I
+V19DU1VNIHRvIGluZGljYXRlDQogICAgPiAgKiAgIGNoZWNrc3VtIG9mZmxvYWQgY2FwYWJpbGl0
+eS4NCiAgICA+IA0KICAgID4gUGxlYXNlIHN1Z2dlc3Qgd2hpY2ggb2YgYmVsb3cgMiBJIHNob3Vs
+ZCBkby4gQXMgYm90aCB3b3JrcyBmb3IgbWUuDQogICAgPiAxLiBEaXNhYmxlIGNvbXBsZXRlbHkg
+TkVUSUZfRl9IV19DU1VNIGFuZCBkbyBub3RoaW5nLiBUaGlzIGlzIG9yaWdpbmFsIHBhdGNoLg0K
+ICAgID4gMi4gRW5hYmxlIE5FVElGX0ZfSVBfQ1NVTSBpbiBhZGRpdGlvbiB0byAxLiBJIGNhbiBo
+YXZlIHYyIGlmIHRoaXMgaXMgYWNjZXB0ZWQuDQogICAgDQogICAgU291bmRzIGxpa2UgMiB3b3Vs
+ZCBsZWF2ZSB0aGUgb3B0aW9uIG9mIG9mZmxvYWRpbmcgSVB2NCBjaGVja3N1bQ0KICAgIG9mZmxv
+YWQsIHNvIHRoYXQgd291bGQgYmUgYSBiZXR0ZXIgbWlkZGxlIGdyb3VwIHRoYW4gZmxhdCBvdXQg
+ZGlzYWJsZQ0KICAgIGNoZWNrc3VtIG9mZmxvYWQgZm9yIGJvdGggSVB2NCBhbmQgSVB2Niwgbm8/
+DQpTb3VuZHMgZ29vZCwgSSB3aWxsIGhhdmUgdjIgYWZ0ZXIgbG90IG1vcmUgdGVzdGluZy4NCiAg
+ICAtLSANCiAgICBGbG9yaWFuDQogICAgDQoNCg==
