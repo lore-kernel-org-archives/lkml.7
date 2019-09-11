@@ -2,118 +2,158 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE3DC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF4AC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650D92084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123A42067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:22:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="nQIeaSRK"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VZFyADzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfIKRVi (ORCPT
+        id S1729577AbfIKRWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:21:38 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:45738 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbfIKRVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:21:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=sPMO8vcrRK/jL3rN+4QkorWNycje82WGvrWvZkHcz44=; b=nQIeaSRKdjHALYED3UM4qdoZaj
-        ay1z5xTneTJmZeyPryoIfinTJ7Wa2z7azMYWQHLs4Sq+6Xoh9/zr8lMELMLwGMA8HD1OnMEmmvnsv
-        Am+q25RuMlzHUpmF3HDg0AFOx+q4GjftewUadKNHpwEsJKVgMGEkex/C99DpuZ78XkSk=;
-Received: from p200300ccff0b59001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:5900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i86J7-0006kp-9U; Wed, 11 Sep 2019 19:21:29 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i86J7-0003M5-0o; Wed, 11 Sep 2019 19:21:29 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 2/2] backlight: lm3630a: add an enable gpio for the HWEN pin
-Date:   Wed, 11 Sep 2019 19:21:06 +0200
-Message-Id: <20190911172106.12843-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190911172106.12843-1-andreas@kemnade.info>
-References: <20190911172106.12843-1-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Sep 2019 13:22:51 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38952 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729264AbfIKRWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:22:50 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n7so26226038qtb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0ExgZnqgklMWdIYiMJ2Wv1Hn7vtnSFHAJcrwJboP42E=;
+        b=VZFyADzL38joKkpJuBWRKTPWsj0AsFVHMPzQmYRB/9/C00xWTM+HXGJVBChxai54gS
+         ZPDKBIEv+3XmTYpkzKY7npox4Dpl/3w3jabJF7K01DBzkyOfowbsgdPSoZi4zbw7T8CS
+         lqhkLI0CL+AYPPCIzX//zUnH4CsC4l3bdqsfFiwzgR2Q0vLYsW54MCzPPN7qQrLcWHUO
+         1MJuuxIZkyUguMM0yxqT9xz9lWg2D9i4fcLnIxLFON/CwLmciDK0B0fnx/egtBiLgJ0o
+         KCSian6nIevP8C/tUooQePOnZKoolNdww5VPAbHN3PYUKhXRjSI+JcIY9AM13ZVeaekW
+         iTNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0ExgZnqgklMWdIYiMJ2Wv1Hn7vtnSFHAJcrwJboP42E=;
+        b=f8ltNAfhU0T2Nui7YFZDNa4BXbVABFPwg7HZDR7OeUkKaj7BtqjD9KnkmoX9IliSlb
+         PrxrGoqpHC8Qeo11Yqd02LNJDbEVPOoJxMh7wLcmG+8zgu5iTerG3QbOai2dU9aQ8mZy
+         yxxk3D75PhKEepamqNHnGc7mGw9DNdMupWkA92PwGdS/ePYbwHLNOUhK8Rssjow9DO/v
+         HFcZ4nk/Ktn/XSGi4ANe1T5BEbu2emfOAHf1nU0/Qteg9OXyBdbc3Ue4opusTovTqRhH
+         WZO1ILEnQCB+ttGW6/8zfTiGqTlc6oFuWFFCO04RqP9gtqA2oJU4FJCkkbK8lUo3yikB
+         c0WA==
+X-Gm-Message-State: APjAAAX/CapKsmIAaSdzRw4g7DIxMY5LHufLXujK/TY6/5u1tHgBsSQr
+        4/vRTZux8pzIVbZecl0BhL/m7A==
+X-Google-Smtp-Source: APXvYqzvv6U+xbTLnOSjGWjjWVRfXjmKj9b42wVs0jiW5KiIT6bDF2XD5HxHvxwGBrHtg23jdzyfgw==
+X-Received: by 2002:ac8:6983:: with SMTP id o3mr18706431qtq.31.1568222569708;
+        Wed, 11 Sep 2019 10:22:49 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w11sm12308601qtj.10.2019.09.11.10.22.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 10:22:49 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
+Date:   Wed, 11 Sep 2019 13:22:47 -0400
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C29A1EFA-148C-454E-91F1-93D5116FB640@lca.pw>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <20190911151451.GH29434@bombadil.infradead.org>
+ <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
+ <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
+ <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For now just enable it in the probe function to allow i2c
-access. Disabling also means resetting the register values
-to default and according to the datasheet does not give
-power savings.
 
-Tested on Kobo Clara HD.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-changes in v2:
-- simplification
-- correct gpio direction initialisation
+> On Sep 11, 2019, at 1:15 PM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> On 9/11/19 6:03 PM, Mike Kravetz wrote:
+>> On 9/11/19 8:44 AM, Waiman Long wrote:
+>>> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
+>>>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+>>>>> When allocating a large amount of static hugepages (~500-1500GB) =
+on a
+>>>>> system with large number of CPUs (4, 8 or even 16 sockets), =
+performance
+>>>>> degradation (random multi-second delays) was observed when =
+thousands
+>>>>> of processes are trying to fault in the data into the huge pages. =
+The
+>>>>> likelihood of the delay increases with the number of sockets and =
+hence
+>>>>> the CPUs a system has.  This only happens in the initial setup =
+phase
+>>>>> and will be gone after all the necessary data are faulted in.
+>>>> Can;t the application just specify MAP_POPULATE?
+>>> Originally, I thought that this happened in the startup phase when =
+the
+>>> pages were faulted in. The problem persists after steady state had =
+been
+>>> reached though. Every time you have a new user process created, it =
+will
+>>> have its own page table.
+>> This is still at fault time.  Although, for the particular =
+application it
+>> may be after the 'startup phase'.
+>>=20
+>>>                         It is the sharing of the of huge page shared
+>>> memory that is causing problem. Of course, it depends on how the
+>>> application is written.
+>> It may be the case that some applications would find the delays =
+acceptable
+>> for the benefit of shared pmds once they reach steady state.  As you =
+say, of
+>> course this depends on how the application is written.
+>>=20
+>> I know that Oracle DB would not like it if PMD sharing is disabled =
+for them.
+>> Based on what I know of their model, all processes which share PMDs =
+perform
+>> faults (write or read) during the startup phase.  This is in =
+environments as
+>> big or bigger than you describe above.  I have never looked at/for =
+delays in
+>> these environments around pmd sharing (page faults), but that does =
+not mean
+>> they do not exist.  I will try to get the DB group to give me access =
+to one
+>> of their large environments for analysis.
+>>=20
+>> We may want to consider making the timeout value and disable =
+threshold user
+>> configurable.
+>=20
+> Making it configurable is certainly doable. They can be sysctl
+> parameters so that the users can reenable PMD sharing by making those
+> parameters larger.
 
-changes in v3:
-- removed legacy include
-
- drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 8f84f3684f04..d9e67b9b2571 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -12,6 +12,7 @@
- #include <linux/uaccess.h>
- #include <linux/interrupt.h>
- #include <linux/regmap.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/pwm.h>
- #include <linux/platform_data/lm3630a_bl.h>
- 
-@@ -48,6 +49,7 @@ struct lm3630a_chip {
- 	struct lm3630a_platform_data *pdata;
- 	struct backlight_device *bleda;
- 	struct backlight_device *bledb;
-+	struct gpio_desc *enable_gpio;
- 	struct regmap *regmap;
- 	struct pwm_device *pwmd;
- };
-@@ -535,6 +537,13 @@ static int lm3630a_probe(struct i2c_client *client,
- 	}
- 	pchip->pdata = pdata;
- 
-+	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(pchip->enable_gpio)) {
-+		rval = PTR_ERR(pchip->enable_gpio);
-+		return rval;
-+	}
-+
- 	/* chip initialize */
- 	rval = lm3630a_chip_init(pchip);
- 	if (rval < 0) {
--- 
-2.20.1
+It could be a Kconfig option, so people don=E2=80=99t need to change the =
+setting every time
+after reinstalling the system. There are times people don=E2=80=99t care =
+too much
+about those random multi-second delays. For example, running a debug =
+kernel.
 
