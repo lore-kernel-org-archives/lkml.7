@@ -2,94 +2,124 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4BBECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A053ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88909222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F7320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:07:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="JYU0GE2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfIKIGh (ORCPT
+        id S1727134AbfIKIHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:06:37 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:50060 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKIGh (ORCPT
+        Wed, 11 Sep 2019 04:07:18 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:41402 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKIHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:06:37 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8B86Ipg018361, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8B86Ipg018361
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 11 Sep 2019 16:06:19 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Wed, 11 Sep
- 2019 16:06:18 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpW+aItOW/l+WzsF0=?= <james.tai@realtek.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>
-CC:     DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>
-Subject: RE: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX evaluation board
-Thread-Topic: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX
- evaluation board
-Thread-Index: AQHVY8FprGHksjiwU0q9UKXzrLrLWqccQJYAgAnWzrA=
-Date:   Wed, 11 Sep 2019 08:06:17 +0000
-Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8DA278@RTITMBSVM04.realtek.com.tw>
-References: <20190905080835.1376-1-james.tai@realtek.com>
- <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 04:07:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 940063F40C;
+        Wed, 11 Sep 2019 10:07:10 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=JYU0GE2U;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 84x-f4TQbqt3; Wed, 11 Sep 2019 10:07:09 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id CEA633F226;
+        Wed, 11 Sep 2019 10:07:07 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 580ED3600A6;
+        Wed, 11 Sep 2019 10:07:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568189227; bh=u/h97ZxeSEeN+yEKNAxoghUNzv548g//K2qNiA3G/3E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JYU0GE2UbuYtgGD3cjPHNxIXKN1E7kVW5BBDtVrGQKyWC02Hy1mkNKgu9OjqkmueD
+         2L2uJ2VLmT+9gtoRVx2yBKDQj8fsBdBHO/l3np7t9Y3Bs1UHxfSR2s9m0DT1MNapHi
+         tRR2GXnjArabrzm1C1HVoLBlYWs8uJ8p+LRqZ++Y=
+Subject: Re: [PATCH 0/2] Fix SEV user-space mapping of unencrypted coherent
+ memory
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190910133542.64523-1-thomas_os@shipmail.org>
+ <20190911055913.GB104115@gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <e50cc9fc-4c3e-90c7-1139-f414766b648f@shipmail.org>
+Date:   Wed, 11 Sep 2019 10:07:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190911055913.GB104115@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogcmVhbHRlazogQWRkIHN1cHBvcnQgZm9y
-IFJlYWx0ZWsgUlREMTZYWA0KPiBldmFsdWF0aW9uIGJvYXJkDQo+IA0KPiBPbiBUaHUsIFNlcCA1
-LCAyMDE5IGF0IDEwOjEwIEFNIDxqYW1lc3RhaS5za3lAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
-ID4gKw0KPiA+ICsvIHsNCj4gPiArICAgICAgIG1vZGVsPSAiUmVhbHRlayBNam9sbmlyIEV2YWx1
-YXRpb24gQm9hcmQiOw0KPiA+ICsgICAgICAgbW9kZWxfaGV4PSA8MHgwMDAwMDY1Mz47DQo+IA0K
-PiBUaGUgJ21vZGVfaGV4JyBwcm9wZXJ0eSBpcyByYXRoZXIgdW51c3VhbCwgcGxlYXNlIGRyb3Ag
-dGhhdCBmb3Igbm93Lg0KDQpJIHdpbGwgcmVtb3ZlIHRoZSAnbW9kZV9oZXgnIHByb3BlcnR5IGlu
-IG5ldyB2ZXJzaW9uIHBhdGNoLg0KDQo+IA0KPiA+ICsgICAgICAgY2hvc2VuIHsNCj4gPiArICAg
-ICAgICAgICAgICAgYm9vdGFyZ3MgPSAiY29uc29sZT10dHlTMCwxMTUyMDAgZWFybHljb24iOw0K
-PiA+ICsgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICBtZW1vcnlAMCB7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDAgMHgwIDB4MCAweDgwMDAwMDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+
-ICsgICAgICAgdWFydDA6IHNlcmlhbDBAOTgwMDc4MDAgew0KPiA+ICsgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOw0KPiA+ICsgICAgICAgICAgICAgICByZWcg
-PSA8MHgwIDB4OTgwMDc4MDAgMHgwIDB4NDAwPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICA8MHgwIDB4OTgwMDcwMDAgMHgwIDB4MTAwPjsNCj4gPiArICAgICAgICAgICAgICAgcmVnLXNo
-aWZ0ID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICByZWctaW8td2lkdGggPSA8ND47DQo+ID4g
-KyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA2OCA0PjsNCj4gPiArICAgICAgICAgICAg
-ICAgY2xvY2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgc3Rh
-dHVzID0gIm9rYXkiOw0KPiA+ICsgICAgICAgfTsNCj4gDQo+IFRoaXMgbG9va3MgbGlrZSBhbiBv
-bi1jaGlwIHVhcnQuIFBsZWFzZSBtb3ZlIHRoYXQgaW50byBydGQxNnh4LmR0c2kgaW5zdGVhZCwg
-YW5kDQo+IGp1c3QgbWFyayBpdCBhcyAnc3RhdHVzPSJkaXNhYmxlZCInIHRoZXJlIGlmIHRoZXJl
-IGFyZSBtdWx0aXBsZSB1YXJ0cyAoYW5kIGFkZCB0aGUNCj4gb3RoZXIgb25lcyBhcyB3ZWxsKSwg
-dGhlbiBlbmFibGUgaXQgZm9yIHRoZSBib2FyZCBoZXJlLg0KDQpZZXMuIEl0IGlzIG9uLWNoaXAg
-dWFydC4NCkkgd2lsbCBtb3ZlIHVhcnQwIGludG8gJ3J0ZDE2eHguZHRzaScgYW5kIG1hcmsgaXQg
-YXMgJ3N0YXR1cz0iZGlzYWJsZWQiICcuDQoNCj4gVGhlcmUgc2hvdWxkIGFsc28gYmUgYW4gJ2Fs
-aWFzZXMnLiBZb3Ugbm9ybWFsbHkgYWxzbyB3YW50IHRvIGFkZA0KDQpJIHdpbGwgYWRkIGFsaWFz
-ZXMgaW4gbmV3IHZlcnNpb24gcGF0Y2guDQoNCj4gYWxpYXNlcyB7DQo+ICAgICAgICAgc2VyaWFs
-MCA9ICZ1YXJ0MDsNCj4gfTsNCj4gDQo+IGNob3NlbiB7DQo+ICAgICAgICBzdGRvdXQtcGF0aD0g
-InNlcmlhbDA6MTE1MjAwbjgiDQo+IH07DQo+IA0KPiBpbiB0aGUgYm9hcmQgZmlsZSB0byBtYWtl
-IGVhcmx5Y29uIHdvcmsgcmlnaHQuDQoNCk9LLCBJIHVuZGVyc3RhbmQuDQoNCj4gICAgICAgQXJu
-ZA0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJp
-bnRpbmcgdGhpcyBlLW1haWwuDQo=
+On 9/11/19 7:59 AM, Ingo Molnar wrote:
+> * Thomas Hellström (VMware) <thomas_os@shipmail.org> wrote:
+>
+>> With SEV and sometimes with SME encryption, The dma api coherent memory is
+>> typically unencrypted, meaning the linear kernel map has the encryption
+>> bit cleared. However, default page protection returned from vm_get_page_prot()
+>> has the encryption bit set. So to compute the correct page protection we need
+>> to clear the encryption bit.
+>>
+>> Also, in order for the encryption bit setting to survive across do_mmap() and
+>> mprotect_fixup(), We need to make pgprot_modify() aware of it and not touch it.
+>> Therefore make sme_me_mask part of _PAGE_CHG_MASK and make sure
+>> pgprot_modify() preserves also cleared bits that are part of _PAGE_CHG_MASK,
+>> not just set bits. The use of pgprot_modify() is currently quite limited and
+>> easy to audit.
+>>
+>> (Note that the encryption status is not logically encoded in the pfn but in
+>> the page protection even if an address line in the physical address is used).
+>>
+>> The patchset has seen some sanity testing by exporting dma_pgprot() and
+>> using it in the vmwgfx mmap handler with SEV enabled.
+>>
+>> Changes since:
+>> RFC:
+>> - Make sme_me_mask port of _PAGE_CHG_MASK rather than using it by its own in
+>>    pgprot_modify().
+> Could you please add a "why is this patch-set needed", not just describe
+> the "what does this patch set do"? I've seen zero discussion in the three
+> changelogs of exactly why we'd want this, which drivers and features are
+> affected and in what way, etc.
+>
+> It's called a "fix" but doesn't explain what bad behavior it fixes.
+>
+> Thanks,
+>
+> 	Ingo
+
+I'll update the changelog to be more clear about that.
+
+Thanks,
+
+Thomas
+
+
