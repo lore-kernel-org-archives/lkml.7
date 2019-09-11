@@ -2,106 +2,292 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC0FC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974F5C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5ED2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568201784;
-	bh=WSBYT//F0n9vJ9lXGcy6U6Y+OjPG3w/fS5tHh2llcJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CAW8XHTyxdNRPuuYD2OHj8n3CMkVPmUd5HWhhnbDqn2UlBHtqCZYP1OX/5SpRblZF
-	 akAaeDb4QTNqJFRGvq3KE4/dlUkjpoYPelpIzRCbSRS2ts0wbCbVOZwke001WoMsrh
-	 IJ83dyFDcKEPN7zbE4b9FYqCjelIAPz0ReJUBVOQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7A0A920CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 11:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfIKLgX (ORCPT
+        id S1727748AbfIKLgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 07:36:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51928 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727302AbfIKLgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:36:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 038DEAD08;
-        Wed, 11 Sep 2019 11:36:20 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 13:36:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190911113619.GP4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
+        Wed, 11 Sep 2019 07:36:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:45990 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727302AbfIKLgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:36:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85C471570;
+        Wed, 11 Sep 2019 04:36:36 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CFF3F59C;
+        Wed, 11 Sep 2019 04:36:35 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 12:36:34 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, maz@kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] PCI: amlogic: meson: Add support for G12A
+Message-ID: <20190911113633.GR9720@e119886-lin.cambridge.arm.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-4-git-send-email-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1567950178-4466-4-git-send-email-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-[...]
-> We don't put any limitations on the allocator other then that it needs to
-> clean up the metadata on allocation, and that it cannot allocate a page
-> that is in the process of being reported since we pulled it from the
-> free_list. If the page is a "Reported" page then it decrements the
-> reported_pages count for the free_area and makes sure the page doesn't
-> exist in the "Boundary" array pointer value, if it does it moves the
-> "Boundary" since it is pulling the page.
+On Sun, Sep 08, 2019 at 01:42:55PM +0000, Neil Armstrong wrote:
+> Add support for the Amlogic G12A SoC using a separate shared PHY.
+> 
+> This adds support for fetching a PHY phandle and call the PHY init,
+> reset and power on/off calls instead of writing in the PHY register or
+> toggling the PHY reset line.
+> 
+> The MIPI clock is also made optional since it is used for setting up
 
-This is still a non-trivial limitation on the page allocation from an
-external code IMHO. I cannot give any explicit reason why an ordering on
-the free list might matter (well except for page shuffling which uses it
-to make physical memory pattern allocation more random) but the
-architecture seems hacky and dubious to be honest. It shoulds like the
-whole interface has been developed around a very particular and single
-purpose optimization.
+Is it worth indicating here that the MIPI clock is *only required* for
+the G12A (or controllers with a shared phy)? It's still required for
+AXG. It's not optional for G12A - it's ignored.
 
-I remember that there was an attempt to report free memory that provided
-a callback mechanism [1], which was much less intrusive to the internals
-of the allocator yet it should provide a similar functionality. Did you
-see that approach? How does this compares to it? Or am I completely off
-when comparing them?
+> the PHY reference clock chared with the DSI controller on AXG.
 
-[1] mostly likely not the latest version of the patchset
-http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
+s/chared/shared/
 
--- 
-Michal Hocko
-SUSE Labs
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 101 ++++++++++++++++++++-----
+>  1 file changed, 84 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index ab79990798f8..3fadad381762 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/resource.h>
+>  #include <linux/types.h>
+> +#include <linux/phy/phy.h>
+>  
+>  #include "pcie-designware.h"
+>  
+> @@ -96,12 +97,18 @@ struct meson_pcie_rc_reset {
+>  	struct reset_control *apb;
+>  };
+>  
+> +struct meson_pcie_param {
+> +	bool has_shared_phy;
+> +};
+> +
+>  struct meson_pcie {
+>  	struct dw_pcie pci;
+>  	struct meson_pcie_mem_res mem_res;
+>  	struct meson_pcie_clk_res clk_res;
+>  	struct meson_pcie_rc_reset mrst;
+>  	struct gpio_desc *reset_gpio;
+> +	struct phy *phy;
+> +	const struct meson_pcie_param *param;
+>  };
+>  
+>  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+> @@ -123,10 +130,12 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+>  
+> -	mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> -	if (IS_ERR(mrst->phy))
+> -		return PTR_ERR(mrst->phy);
+> -	reset_control_deassert(mrst->phy);
+> +	if (!mp->param->has_shared_phy) {
+> +		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> +		if (IS_ERR(mrst->phy))
+> +			return PTR_ERR(mrst->phy);
+> +		reset_control_deassert(mrst->phy);
+> +	}
+>  
+>  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+>  	if (IS_ERR(mrst->port))
+> @@ -180,6 +189,9 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>  	if (IS_ERR(mp->mem_res.cfg_base))
+>  		return PTR_ERR(mp->mem_res.cfg_base);
+>  
+> +	if (mp->param->has_shared_phy)
+> +		return 0;
+> +
+
+It may be more consistent if, rather than returning here, you wrapped
+the following 3 lines by the if statement.
+
+>  	/* Meson SoC has two PCI controllers use same phy register*/
+
+I guess this comment should now be updated to refer to AXG?
+
+>  	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
+>  	if (IS_ERR(mp->mem_res.phy_base))
+> @@ -188,19 +200,33 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> -static void meson_pcie_power_on(struct meson_pcie *mp)
+> +static int meson_pcie_power_on(struct meson_pcie *mp)
+>  {
+> -	writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> +	int ret = 0;
+> +
+> +	if (mp->param->has_shared_phy)
+> +		ret = phy_power_on(mp->phy);
+
+I haven't seen any phy_[init/exit] calls, should there be any?
+
+> +	else
+> +		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> +
+> +	return ret;
+>  }
+>  
+> -static void meson_pcie_reset(struct meson_pcie *mp)
+> +static int meson_pcie_reset(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> -
+> -	reset_control_assert(mrst->phy);
+> -	udelay(PCIE_RESET_DELAY);
+> -	reset_control_deassert(mrst->phy);
+> -	udelay(PCIE_RESET_DELAY);
+> +	int ret = 0;
+> +
+> +	if (mp->param->has_shared_phy) {
+> +		ret = phy_reset(mp->phy);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		reset_control_assert(mrst->phy);
+> +		udelay(PCIE_RESET_DELAY);
+> +		reset_control_deassert(mrst->phy);
+> +		udelay(PCIE_RESET_DELAY);
+> +	}
+>  
+>  	reset_control_assert(mrst->port);
+>  	reset_control_assert(mrst->apb);
+> @@ -208,6 +234,8 @@ static void meson_pcie_reset(struct meson_pcie *mp)
+>  	reset_control_deassert(mrst->port);
+>  	reset_control_deassert(mrst->apb);
+>  	udelay(PCIE_RESET_DELAY);
+> +
+> +	return 0;
+>  }
+>  
+>  static inline struct clk *meson_pcie_probe_clock(struct device *dev,
+> @@ -250,9 +278,11 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  	if (IS_ERR(res->port_clk))
+>  		return PTR_ERR(res->port_clk);
+>  
+> -	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> -	if (IS_ERR(res->mipi_gate))
+> -		return PTR_ERR(res->mipi_gate);
+> +	if (!mp->param->has_shared_phy) {
+> +		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> +		if (IS_ERR(res->mipi_gate))
+> +			return PTR_ERR(res->mipi_gate);
+> +	}
+>  
+>  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+>  	if (IS_ERR(res->general_clk))
+> @@ -524,6 +554,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+>  
+>  static int meson_pcie_probe(struct platform_device *pdev)
+>  {
+> +	const struct meson_pcie_param *match_data;
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct meson_pcie *mp;
+> @@ -537,6 +568,20 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+>  
+> +	match_data = of_device_get_match_data(dev);
+> +	if (!match_data) {
+> +		dev_err(dev, "failed to get match data\n");
+> +		return -ENODEV;
+> +	}
+> +	mp->param = match_data;
+> +
+> +	if (mp->param->has_shared_phy) {
+> +		mp->phy = devm_phy_get(dev, "pcie");
+> +		if (IS_ERR(mp->phy)) {
+> +			return PTR_ERR(mp->phy);
+> +		}
+> +	}
+> +
+>  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>  	if (IS_ERR(mp->reset_gpio)) {
+>  		dev_err(dev, "get reset gpio failed\n");
+> @@ -555,8 +600,17 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	meson_pcie_power_on(mp);
+> -	meson_pcie_reset(mp);
+> +	ret = meson_pcie_power_on(mp);
+> +	if (ret) {
+> +		dev_err(dev, "phy power on failed, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = meson_pcie_reset(mp);
+> +	if (ret) {
+> +		dev_err(dev, "reset failed, %d\n", ret);
+> +		return ret;
+> +	}
+>  
+>  	ret = meson_pcie_probe_clocks(mp);
+>  	if (ret) {
+> @@ -575,9 +629,22 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static struct meson_pcie_param meson_pcie_axg_param = {
+> +	.has_shared_phy = false,
+> +};
+> +
+> +static struct meson_pcie_param meson_pcie_g12a_param = {
+> +	.has_shared_phy = true,
+> +};
+> +
+>  static const struct of_device_id meson_pcie_of_match[] = {
+>  	{
+>  		.compatible = "amlogic,axg-pcie",
+> +		.data = &meson_pcie_axg_param,
+> +	},
+> +	{
+> +		.compatible = "amlogic,g12a-pcie",
+> +		.data = &meson_pcie_g12a_param,
+
+Here, we hard-code knowledge about the SOCs regarding if they have shared phys
+or not. I guess the alternative would have been to assume there is a shared
+phy if the DT has a phandle for it. I.e. instead of mp->param->has_shared_phy
+everywhere you could test for mp->phy. Though I guess at least with the
+current approach you guard against bad DTs, this seems OK.
+
+Thanks,
+
+Andrew Murray
+
+>  	},
+>  	{},
+>  };
+> -- 
+> 2.17.1
+> 
