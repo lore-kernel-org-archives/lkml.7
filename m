@@ -2,83 +2,82 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AC0C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7410C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF802089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Rm+awrlF"
+	by mail.kernel.org (Postfix) with ESMTP id ADC792087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfIKPko (ORCPT
+        id S1728559AbfIKPoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:40:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47444 "EHLO mail.skyhub.de"
+        Wed, 11 Sep 2019 11:44:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50096 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfIKPko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:40:44 -0400
-Received: from zn.tnic (p200300EC2F0BA90014C938BBBD6B6EBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:a900:14c9:38bb:bd6b:6ebd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728266AbfIKPog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:44:36 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B24551EC0260;
-        Wed, 11 Sep 2019 17:40:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568216442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0XkV/Gz/13IJqBOxxhh8TZyo4mSOacc++RqAW+iwqYU=;
-        b=Rm+awrlFXc/u5Sl6OTsLWmDmUyXs+19HWvYRVtZl6m3kvelXHxxph/I0vUx0Z1fYSe0Ka4
-        uvfPk+iWYyRXW277fmgy4zT7wKAcRMzoo5FDxNamwczHPsw9Fl9/mcQGRNB3c9o8vPaasQ
-        KHvihBjW5AJSvyMHIf5rygWvJKM7T0Y=
-Date:   Wed, 11 Sep 2019 17:40:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xiaochun Lee <lixiaochun.2888@163.com>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: Re: [PATCH] x86/mce: add a switch of CONFIG_X86_MCELOG_LEGACY
-Message-ID: <20190911154037.GB27910@zn.tnic>
-References: <1568215730-11471-1-git-send-email-lixiaochun.2888@163.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C03F2DA980;
+        Wed, 11 Sep 2019 15:44:36 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-131.rdu2.redhat.com [10.10.124.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DED2D19C78;
+        Wed, 11 Sep 2019 15:44:33 +0000 (UTC)
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+ <20190911151451.GH29434@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
+Date:   Wed, 11 Sep 2019 16:44:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190911151451.GH29434@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1568215730-11471-1-git-send-email-lixiaochun.2888@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 11 Sep 2019 15:44:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:28:50PM +0800, Xiaochun Lee wrote:
-> From: Xiaochun Lee <lixc17@lenovo.com>
-> 
-> Add CONFIG_X86_MCELOG_LEGACY to control the
-> behavior of several functions be compiled.
+On 9/11/19 4:14 PM, Matthew Wilcox wrote:
+> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
+>> When allocating a large amount of static hugepages (~500-1500GB) on a
+>> system with large number of CPUs (4, 8 or even 16 sockets), performance
+>> degradation (random multi-second delays) was observed when thousands
+>> of processes are trying to fault in the data into the huge pages. The
+>> likelihood of the delay increases with the number of sockets and hence
+>> the CPUs a system has.  This only happens in the initial setup phase
+>> and will be gone after all the necessary data are faulted in.
+> Can;t the application just specify MAP_POPULATE?
 
-... because?
+Originally, I thought that this happened in the startup phase when the
+pages were faulted in. The problem persists after steady state had been
+reached though. Every time you have a new user process created, it will
+have its own page table. It is the sharing of the of huge page shared
+memory that is causing problem. Of course, it depends on how the
+application is written.
 
-Your commit messages structure should look something like this:
+Anyway, MAP_POPULATE will not be useful in this case.
 
-Problem is A.
+Thanks,
+Longman
 
-It happens because of B.
-
-Fix it by doing C.
-
-(Potentially do D).
-
-For more detailed info, see
-Documentation/process/submitting-patches.rst, Section "2) Describe your
-changes".
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
