@@ -2,112 +2,118 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CF4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61077C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3458E20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVV9XS/4"
+	by mail.kernel.org (Postfix) with ESMTP id 35EA72089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfIKQ46 (ORCPT
+        id S1729522AbfIKQ47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Sep 2019 12:56:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40118 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729242AbfIKQ46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 12:56:58 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38637 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbfIKQ45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:56:57 -0400
-Received: by mail-qt1-f195.google.com with SMTP id b2so26100788qtq.5;
-        Wed, 11 Sep 2019 09:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XDbZC3bZF8XpaYb842hmO7yVtcVxNizf0TkhRdb4yTk=;
-        b=rVV9XS/4n7H2anFF9L1lNCNAafr+hk0uEihHOz+hRzTLef7wnIA9vnzKj2/KkNQbqa
-         9HnYOl9stj2kk070wkUJLbJq2j9PhpzQJ9fo04rtXMNi6F7IHTUFuoo/djNcyIR7CIBJ
-         UVQbzGyVqks8MdZ/OH58a7xftUdt8/47KRCKyT44eTG6oUjys2NRz/wcOED0qmrn0S4H
-         jmvt5HjzxuXiabL2lU4jXXlXcfwACrdgmTrjcklvnR/7N4kDuH+kdv2lS0z5YSAAK4nD
-         GFtF6NyogU6UwBJRyeYGL80O5qmzLdHwXoydkd+3hukR1HKDdqVJStbvaaeKFjZOf0Qu
-         ixUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XDbZC3bZF8XpaYb842hmO7yVtcVxNizf0TkhRdb4yTk=;
-        b=K9jpl5TY87Av9wfKPDzNzbdryc+HMFTCV76k4g873d10xmRX4VRHXfoo1JE9CUrJiv
-         SZ3lrYaIDKPP5hWitPKhjuMq4dcz7BAvLUsWOJhFW91UnpidLbcBkRlrZixrWJKERkN+
-         C6sM7Yyev6UDpb8gAGJrm4KiWS0bvBzaXvb0aklfi5dwEqlJfq4Kgoztff7b1szfGl1q
-         0tY35ly7uQ1gtWnOwppdhCLU5qdGXTbS0zXVpZi85/KzUl7POqdGKR8rlAHUMantghw5
-         wr68ZA05xItqb29jd4jwIBUkZGWsmOQxseG83/C+Ltohsb2DwkPZAFDOM4NCUnfGYkAr
-         wrzw==
-X-Gm-Message-State: APjAAAVCPo/zIrGZ6RR2ZQqRz7W4V5vlo72YhtYxFcGNqbRvzUcYAQhf
-        i8D3NCu0VAspcbZanOZ8hCs=
-X-Google-Smtp-Source: APXvYqxAf+YKCqdV0BFUy0qCOEjs4Yx9hU9Tt9M9uTLF5LH5uEZ3a8uBzOA/oLI8SwPl5DaRqi4aTg==
-X-Received: by 2002:ac8:5353:: with SMTP id d19mr36361769qto.231.1568221017076;
-        Wed, 11 Sep 2019 09:56:57 -0700 (PDT)
-Received: from Debian.gxnx00eri1wudnlrc5f3ppaydc.bx.internal.cloudapp.net ([40.71.170.81])
-        by smtp.gmail.com with ESMTPSA id m22sm9665103qkk.28.2019.09.11.09.56.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 09:56:56 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 16:56:55 +0000
-From:   Amol Grover <frextrite@gmail.com>
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: media: Fix alignment to match open parenthesis
-Message-ID: <20190911165655.GA22041@Debian.gxnx00eri1wudnlrc5f3ppaydc.bx.internal.cloudapp.net>
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3947030832E9;
+        Wed, 11 Sep 2019 16:56:58 +0000 (UTC)
+Received: from [10.10.125.194] (ovpn-125-194.rdu2.redhat.com [10.10.125.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 36AEA10018F8;
+        Wed, 11 Sep 2019 16:56:56 +0000 (UTC)
+Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
+To:     Martin Raiber <martin@urbackup.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <20190909162804.5694-1-mchristi@redhat.com>
+ <5D76995B.1010507@redhat.com>
+ <BYAPR04MB5816DABF3C5071D13D823990E7B60@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <0102016d1f7af966-334f093b-2a62-4baa-9678-8d90d5fba6d9-000000@eu-west-1.amazonses.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5D792758.2060706@redhat.com>
+Date:   Wed, 11 Sep 2019 11:56:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0102016d1f7af966-334f093b-2a62-4baa-9678-8d90d5fba6d9-000000@eu-west-1.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 11 Sep 2019 16:56:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK: Alignment should match open parenthesis
+On 09/11/2019 03:40 AM, Martin Raiber wrote:
+> On 10.09.2019 10:35 Damien Le Moal wrote:
+>> Mike,
+>>
+>> On 2019/09/09 19:26, Mike Christie wrote:
+>>> Forgot to cc linux-mm.
+>>>
+>>> On 09/09/2019 11:28 AM, Mike Christie wrote:
+>>>> There are several storage drivers like dm-multipath, iscsi, and nbd that
+>>>> have userspace components that can run in the IO path. For example,
+>>>> iscsi and nbd's userspace deamons may need to recreate a socket and/or
+>>>> send IO on it, and dm-multipath's daemon multipathd may need to send IO
+>>>> to figure out the state of paths and re-set them up.
+>>>>
+>>>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+>>>> memalloc_*_save/restore functions to control the allocation behavior,
+>>>> but for userspace we would end up hitting a allocation that ended up
+>>>> writing data back to the same device we are trying to allocate for.
+>>>>
+>>>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+>>>> through procfs. It currently only supports PF_MEMALLOC_NOIO, but
+>>>> depending on what other drivers and userspace file systems need, for
+>>>> the final version I can add the other flags for that file or do a file
+>>>> per flag or just do a memalloc_noio file.
+>> Awesome. That probably will be the perfect solution for the problem we hit with
+>> tcmu-runner a while back (please see this thread:
+>> https://www.spinics.net/lists/linux-fsdevel/msg148912.html).
+>>
+>> I think we definitely need nofs as well for dealing with cases where the backend
+>> storage for the user daemon is a file.
+>>
+>> I will give this patch a try as soon as possible (I am traveling currently).
+>>
+>> Best regards.
+> 
+> I had issues with this as well, and work on this is appreciated! In my
+> case it is a loop block device on a fuse file system.
+> Setting PF_LESS_THROTTLE was the one that helped the most, though, so
+> add an option for that as well? I set this via prctl() for the thread
+> calling it (was easiest to add to).
+> 
+> Sorry, I have no idea about the current rationale, but wouldn't it be
+> better to have a way to mask a set of block devices/file systems not to
+> write-back to in a thread. So in my case I'd specify that the fuse
+> daemon threads cannot write-back to the file system and loop device
+> running on top of the fuse file system, while all other block
+> devices/file systems can be write-back to (causing less swapping/OOM
+> issues).
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- drivers/staging/media/imx/imx-media-csi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'm not sure I understood you.
 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 367e39f5b382..773b3d6964cf 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -627,8 +627,8 @@ static int csi_idmac_start(struct csi_priv *priv)
- 	}
- 
- 	priv->nfb4eof_irq = ipu_idmac_channel_irq(priv->ipu,
--						 priv->idmac_ch,
--						 IPU_IRQ_NFB4EOF);
-+						  priv->idmac_ch,
-+						  IPU_IRQ_NFB4EOF);
- 	ret = devm_request_irq(priv->dev, priv->nfb4eof_irq,
- 			       csi_idmac_nfb4eof_interrupt, 0,
- 			       "imx-smfc-nfb4eof", priv);
-@@ -1472,7 +1472,7 @@ static void csi_try_fmt(struct csi_priv *priv,
- 			imx_media_enum_mbus_format(&code, 0,
- 						   CS_SEL_ANY, false);
- 			*cc = imx_media_find_mbus_format(code,
--							CS_SEL_ANY, false);
-+							 CS_SEL_ANY, false);
- 			sdformat->format.code = (*cc)->codes[0];
- 		}
- 
--- 
-2.20.1
+The storage daemons I mentioned normally kick off N threads per M
+devices. The threads handle duties like IO and error handling for those
+devices. Those threads would set the flag, so those IO/error-handler
+related operations do not end up writing back to them. So it works
+similar to how storage drivers work in the kernel where iscsi_tcp has an
+xmit thread and that does memalloc_noreclaim_save. Only the threads for
+those specific devices being would set the flag.
+
+In your case, it sounds like you have a thread/threads that would
+operate on multiple devices and some need the behavior and some do not.
+Is that right?
+
 
