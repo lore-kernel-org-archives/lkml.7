@@ -2,153 +2,115 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED598C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD6C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB16C2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568226375;
-	bh=Ih6q6C0Ey30P2dlsz+uDKXdLbs5oAKqU5nDPKbljbi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HV2A6mgAVG0Z5EAhh6+tfHAW4mUG4zDqrngJ9fCzcN6zx+Az/rNWJFvVtkXRbq8ZI
-	 6x1IftU8kR4VUhSpceS5QpW30LHvp4r53Q8qDyWUg0Jh1NnRH+lgwq2Nz70vy4f8Is
-	 Q3oSz9qskmDTyDMH5MSSuRo7hnTmUijbh5GoFgsM=
+	by mail.kernel.org (Postfix) with ESMTP id 2CE71208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfIKS0P (ORCPT
+        id S1730108AbfIKS0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:26:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Wed, 11 Sep 2019 14:26:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43328 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbfIKS0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:26:14 -0400
-Received: from linux-8ccs (ip5f5ade65.dynamic.kabel-deutschland.de [95.90.222.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728198AbfIKS0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 14:26:36 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53FC220863;
-        Wed, 11 Sep 2019 18:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568226373;
-        bh=Ih6q6C0Ey30P2dlsz+uDKXdLbs5oAKqU5nDPKbljbi0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eXp/lwwVvWeEMbRvy3kuxSz/AaCEA3vwhWofMQlcUiNHEwd2d9u/hKgUSbuDKHs62
-         yfGnWux9k7HS7uMGj4a7Qnq0+S/Ms6J/PzTf5vdVVCwqHK7q1LzPVwWClrKGzwFeyo
-         JBLtX5XN6jtYKxMI32h8dwTT1n8uVVW6draC3nE4=
-Date:   Wed, 11 Sep 2019 20:26:07 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        gregkh@linuxfoundation.org,
-        Matthias Maennich <maennich@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] module: Fix link failure due to invalid relocation on
- namespace offset
-Message-ID: <20190911182607.GB640@linux-8ccs>
-References: <20190911122646.13838-1-will@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id E4FFF8AC6FB;
+        Wed, 11 Sep 2019 18:26:34 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-117-150.ams2.redhat.com [10.36.117.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 868C919C6A;
+        Wed, 11 Sep 2019 18:26:28 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Carlos O'Donell <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v12)
+References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
+        <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
+Date:   Wed, 11 Sep 2019 20:26:21 +0200
+In-Reply-To: <20190807142726.2579-2-mathieu.desnoyers@efficios.com> (Mathieu
+        Desnoyers's message of "Wed, 7 Aug 2019 10:27:22 -0400")
+Message-ID: <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190911122646.13838-1-will@kernel.org>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 11 Sep 2019 18:26:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Will Deacon [11/09/19 13:26 +0100]:
->Commit 8651ec01daed ("module: add support for symbol namespaces.")
->broke linking for arm64 defconfig:
->
->  | lib/crypto/arc4.o: In function `__ksymtab_arc4_setkey':
->  | arc4.c:(___ksymtab+arc4_setkey+0x8): undefined reference to `no symbol'
->  | lib/crypto/arc4.o: In function `__ksymtab_arc4_crypt':
->  | arc4.c:(___ksymtab+arc4_crypt+0x8): undefined reference to `no symbol'
->
->This is because the dummy initialisation of the 'namespace_offset' field
->in 'struct kernel_symbol' when using EXPORT_SYMBOL on architectures with
->support for PREL32 locations uses an offset from an absolute address (0)
->in an effort to trick 'offset_to_pointer' into behaving as a NOP,
->allowing non-namespaced symbols to be treated in the same way as those
->belonging to a namespace.
->
->Unfortunately, place-relative relocations require a symbol reference
->rather than an absolute value and, although x86 appears to get away with
->this due to placing the kernel text at the top of the address space, it
->almost certainly results in a runtime failure if the kernel is relocated
->dynamically as a result of KASLR.
->
->Rework 'namespace_offset' so that a value of 0, which cannot occur for a
->valid namespaced symbol, indicates that the corresponding symbol does
->not belong to a namespace.
->
->Cc: Matthias Maennich <maennich@google.com>
->Cc: Jessica Yu <jeyu@kernel.org>
->Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->Cc: Catalin Marinas <catalin.marinas@arm.com>
->Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
->Reported-by: kbuild test robot <lkp@intel.com>
->Signed-off-by: Will Deacon <will@kernel.org>
+* Mathieu Desnoyers:
 
-Applied, thanks everyone!
+> +#ifdef SHARED
+> +  if (rtld_active ())
+> +    {
+> +      /* Register rseq ABI to the kernel.   */
+> +      (void) rseq_register_current_thread ();
+> +    }
+> +#else
 
-Jessica
+I think this will need *another* check for the inner libc in an audit
+module.  See what we do in malloc.  __libc_multiple_libcs is supposed to
+cover that, but it's unfortunately not reliable.
 
->---
->
->Please note that I've not been able to test this at LPC, but it's been
->submitted to kernelci.
->
-> include/asm-generic/export.h | 2 +-
-> include/linux/export.h       | 2 +-
-> kernel/module.c              | 2 ++
-> 3 files changed, 4 insertions(+), 2 deletions(-)
->
->diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
->index e2b5d0f569d3..d0912c7ac2fc 100644
->--- a/include/asm-generic/export.h
->+++ b/include/asm-generic/export.h
->@@ -17,7 +17,7 @@
->
-> .macro __put, val, name
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->-	.long	\val - ., \name - ., 0 - .
->+	.long	\val - ., \name - ., 0
-> #elif defined(CONFIG_64BIT)
-> 	.quad	\val, \name, 0
-> #else
->diff --git a/include/linux/export.h b/include/linux/export.h
->index 2c5468d8ea9a..ef5d015d754a 100644
->--- a/include/linux/export.h
->+++ b/include/linux/export.h
->@@ -68,7 +68,7 @@ extern struct module __this_module;
-> 	    "__ksymtab_" #sym ":				\n"	\
-> 	    "	.long	" #sym "- .				\n"	\
-> 	    "	.long	__kstrtab_" #sym "- .			\n"	\
->-	    "	.long	0 - .					\n"	\
->+	    "	.long	0					\n"	\
-> 	    "	.previous					\n")
->
-> struct kernel_symbol {
->diff --git a/kernel/module.c b/kernel/module.c
->index f76efcf2043e..7ab244c4e1ba 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -547,6 +547,8 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
-> static const char *kernel_symbol_namespace(const struct kernel_symbol *sym)
-> {
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->+	if (!sym->namespace_offset)
->+		return NULL;
-> 	return offset_to_ptr(&sym->namespace_offset);
-> #else
-> 	return sym->namespace;
->-- 
->2.23.0.162.g0b9fbb3734-goog
->
+I believe without that additional check, the first audit module we load
+will claim rseq, and the main program will not have control over the
+rseq area.  Reversed roles would be desirable here.
+
+In October, I hope to fix __libc_multiple_libcs, and then you can use
+just that.  (We have a Fedora patch that is supposed to fix it, I need
+to documen the mechanism and upstream it.)
+
+> +/* Advertise Restartable Sequences registration ownership across
+> +   application and shared libraries.
+> +
+> +   Libraries and applications must check whether this variable is zero or
+> +   non-zero if they wish to perform rseq registration on their own. If it
+> +   is zero, it means restartable sequence registration is not handled, and
+> +   the library or application is free to perform rseq registration. In
+> +   that case, the library or application is taking ownership of rseq
+> +   registration, and may set __rseq_handled to 1. It may then set it back
+> +   to 0 after it completes unregistering rseq.
+> +
+> +   If __rseq_handled is found to be non-zero, it means that another
+> +   library (or the application) is currently handling rseq registration.
+> +
+> +   Typical use of __rseq_handled is within library constructors and
+> +   destructors, or at program startup.  */
+> +
+> +int __rseq_handled;
+
+Are there any programs that use __rseq_handled *today*?
+
+I'm less convinced that we actually need this.  I don't think we have
+ever done anything like that before, and I don't think it's necessary.
+Any secondary rseq library just needs to note if it could perform
+registration, and if it failed to do so, do not perform unregistration
+in a pthread destructor callback.
+
+Sure, there's the matter of pthread destructor ordering, but that
+problem is not different from any other singleton (thread-local or not),
+and the fix for the last time this has come up (TLS destructors vs
+dlclose) was to upgrade glibc.
+
+Thanks,
+Florian
