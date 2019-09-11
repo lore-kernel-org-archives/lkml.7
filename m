@@ -2,136 +2,122 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F27FECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBED5ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC24206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BE721479
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lkeMbkJ5"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JG6jeoYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfIKIb5 (ORCPT
+        id S1727120AbfIKIfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:31:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51404 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfIKIb5 (ORCPT
+        Wed, 11 Sep 2019 04:35:31 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:47998 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfIKIfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:31:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8B8TH2i075190;
-        Wed, 11 Sep 2019 08:30:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=W0E9UrNnjyuvzRi0UEiwPQk0ehPpo7nENdV93FQVjtM=;
- b=lkeMbkJ5cNu4BeQ8TQNsTBayCeOZhg0R1vGYiuWG9XEGINyRokMdLTZQqvnWfQCibF0k
- feb+JrneQmuxeAiCyh+Fnp4CzZstOVSRyIhrPdQzItGqXpqH0fQsPUoNSoI7vBlopbWd
- fAHI9a5QqnB0L0X55Ytf6NSWslnSqQzPIJh9tioKKb1Fi6cZVqebgvVdNg3lMbkwAHeA
- bTu1wBg0QJ7tgrwJCX73NYGd/SrYk7p5vXrbhyRZQMtW7CsJV/jgYuAiWikwmbIapLlC
- mkLEWa0YF4Fvj7rwdM4bxwpp/Ziuo1ccV2UMDvAy5JMTvQx23KmGI9kbmMRAXsVvayC8 +Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2uw1m90bq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 08:30:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8B8TFXA171239;
-        Wed, 11 Sep 2019 08:30:51 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2uxk0syw0x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 08:30:51 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8B8UmX7015696;
-        Wed, 11 Sep 2019 08:30:48 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Sep 2019 01:30:48 -0700
-Date:   Wed, 11 Sep 2019 11:30:38 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     maowenan <maowenan@huawei.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
- sctp_get_port_local
-Message-ID: <20190911083038.GF20699@kadam>
-References: <20190910071343.18808-1-maowenan@huawei.com>
- <20190910071343.18808-2-maowenan@huawei.com>
- <20190910185710.GF15977@kadam>
- <20190910192207.GE20699@kadam>
- <53556c87-a351-4314-cbd9-49a39d0b41aa@huawei.com>
+        Wed, 11 Sep 2019 04:35:31 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x8B8ZPmY004596
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 17:35:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x8B8ZPmY004596
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568190926;
+        bh=UbX3WXF/x+Rp6FshhKSMSv77yFQt2MJQYXIacczcOm4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JG6jeoYkIoyz9hVMNylQov1lsadJ2Ymk3kcG9THkhfzDB8Qn8Od+1+s0ZZOcLUDVM
+         1lB4XH1BOtZ/bgRDoPLV4+8XoCf+UMs0FreaCRdlnowCCLxHEMjx3nvcRB9HYWcIxF
+         6n7GTRrARLGqFJneU1JbnQOG5+irb8BZOd50v9WAGuI4vt42irBbO3KLyfsT50YQhd
+         PLLUp3iraO/oHZ0ZYjUCIthcBTkySj+/r4VE+J0nYpGDkm9GPtVkIsP0Ec3HUF6DSh
+         V07P9LxtPMOQ5WcjjlLzkDLhJ3DRNPS1HFbW4DJwbhjuJdvVOVj1mpyC7nCnNJfxlw
+         3XMVokxUZswJQ==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id i17so6503669ual.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 01:35:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAWLr2+UdsbNATU+8iIcDgsGwevVjwoPKswyTL0V9HXyKVZmbtLx
+        X+v5wbS/WEdURG5DQie3GX+PR3vlTwKm5fam45w=
+X-Google-Smtp-Source: APXvYqw2os4SpkKt9TYxK/NIhy5fZfjI/sZqp463uL6bUWD5LsVyITxvYtnxTtE218CqYv1VBusgmxJzlWgdcXn4jzs=
+X-Received: by 2002:a9f:3f8a:: with SMTP id k10mr16907716uaj.121.1568190924800;
+ Wed, 11 Sep 2019 01:35:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53556c87-a351-4314-cbd9-49a39d0b41aa@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909110080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909110080
+References: <20190905054647.1235-1-james.tai@realtek.com> <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
+ <43B123F21A8CFE44A9641C099E4196FFCF8DA1D0@RTITMBSVM04.realtek.com.tw> <CAK8P3a39VrC1Xn+HZc5gvh1-nUYKywDGjTfO9WPCqim89WtGAg@mail.gmail.com>
+In-Reply-To: <CAK8P3a39VrC1Xn+HZc5gvh1-nUYKywDGjTfO9WPCqim89WtGAg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 11 Sep 2019 17:34:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
+Message-ID: <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Add support for Realtek SOC
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     =?UTF-8?B?SmFtZXMgVGFpW+aItOW/l+WzsF0=?= <james.tai@realtek.com>,
+        "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Thierry Reding <treding@nvidia.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 09:30:47AM +0800, maowenan wrote:
-> 
-> 
-> On 2019/9/11 3:22, Dan Carpenter wrote:
-> > On Tue, Sep 10, 2019 at 09:57:10PM +0300, Dan Carpenter wrote:
-> >> On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
-> >>> There are more parentheses in if clause when call sctp_get_port_local
-> >>> in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
-> >>> do cleanup.
-> >>>
-> >>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> >>> ---
-> >>>  net/sctp/socket.c | 3 +--
-> >>>  1 file changed, 1 insertion(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> >>> index 9d1f83b10c0a..766b68b55ebe 100644
-> >>> --- a/net/sctp/socket.c
-> >>> +++ b/net/sctp/socket.c
-> >>> @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
-> >>>  	 * detection.
-> >>>  	 */
-> >>>  	addr->v4.sin_port = htons(snum);
-> >>> -	if ((ret = sctp_get_port_local(sk, addr))) {
-> >>> +	if (sctp_get_port_local(sk, addr))
-> >>>  		return -EADDRINUSE;
-> >>
-> >> sctp_get_port_local() returns a long which is either 0,1 or a pointer
-> >> casted to long.  It's not documented what it means and neither of the
-> >> callers use the return since commit 62208f12451f ("net: sctp: simplify
-> >> sctp_get_port").
-> > 
-> > Actually it was commit 4e54064e0a13 ("sctp: Allow only 1 listening
-> > socket with SO_REUSEADDR") from 11 years ago.  That patch fixed a bug,
-> > because before the code assumed that a pointer casted to an int was the
-> > same as a pointer casted to a long.
-> 
-> commit 4e54064e0a13 treated non-zero return value as unexpected, so the current
-> cleanup is ok?
+On Wed, Sep 11, 2019 at 5:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Sep 11, 2019 at 9:46 AM James Tai[=E6=88=B4=E5=BF=97=E5=B3=B0] <j=
+ames.tai@realtek.com> wrote:
+> > > Subject: Re: [PATCH] ARM: Add support for Realtek SOC
+>
+> > > > @@ -148,6 +148,7 @@ endif
+> > > >  textofs-$(CONFIG_ARCH_MSM8X60) :=3D 0x00208000
+> > > >  textofs-$(CONFIG_ARCH_MSM8960) :=3D 0x00208000
+> > > >  textofs-$(CONFIG_ARCH_MESON) :=3D 0x00208000
+> > > > +textofs-$(CONFIG_ARCH_REALTEK) :=3D 0x00208000
+> > > >  textofs-$(CONFIG_ARCH_AXXIA) :=3D 0x00308000
+> > >
+> > > Can you explain why this is needed for your platform?
+> > >
+> > We need to reserve memory (0x00000000 ~ 0x001B0000) for rom and boot co=
+de.
+>
+> Ok.
 
-Yeah.  It's fine, I was just confused why we weren't preserving the
-error code and then I saw that we didn't return errors at all and got
-confused.
 
-regards,
-dan carpenter
+I do not like this much.
 
+This platform is ARCH_MULTI_V7.
+
+ARM_PATCH_PHYS_VIRT allows you to place the kernel image
+anywhere in memory as long as the base is aligned at 16MB.
+
+The minimum 'textofs-y :=3D 0x0008000' + extra 16MB offset
+will create a space (0x00000000 ~ 0x01008000).
+
+This is more than needed, but it is not a big deal
+to waste some megabytes of memory.
+
+
+--=20
+Best Regards
+Masahiro Yamada
