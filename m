@@ -2,104 +2,117 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58762ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BAC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A352084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1112075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JpETj/iK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zmn0VYxj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ELVDQ4yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfIKSro (ORCPT
+        id S1730183AbfIKSsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:47:44 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39258 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbfIKSro (ORCPT
+        Wed, 11 Sep 2019 14:48:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60890 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbfIKSsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:47:44 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AD66A33A;
-        Wed, 11 Sep 2019 20:47:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568227661;
-        bh=KGr+ltcxu64n49g8h9L3ywBI+jkxl+RQR7VhdlE4cJE=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JpETj/iKwnMtritZEVl5flVUOI3mJVXYKqbR87HUBNQegHcJKpabd5dhVeIs4JsbL
-         2q+VZaiFex4VZHsfkXm2Nxf1fh9u+AX1StMUpAkSCbt6NTcwGu0Uw1zJsb7aIjVgKL
-         7qyTD7sfZhAv7WwxN6w0sWqsCSofX3/jeu/ii4YY=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 7/9] drm: rcar-du: crtc: Register GAMMA_LUT properties
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-8-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <26faa0ef-c32b-df4c-a68b-ed4994aff1b0@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 19:47:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 14:48:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 09CC460A50; Wed, 11 Sep 2019 18:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568227695;
+        bh=fqLyZWfORQEC6v2+nP26Sy1WzgSPYbYDAMK27hsI/aM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Zmn0VYxjz9scf466LpHylBrRTkA2pA87LGVT89iiuYIuLXGwPHR1DYgX3FGiwmobS
+         t+QCf0mnrQE34HEKrj2FVXLJWMbnGg00k1c+uS9U6DL4OSlAbkh93773cXZTkJdPXk
+         cd1r9XzktA6BDPbemGmGON23N1VwkRuUO5MMHrvo=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6633560256;
+        Wed, 11 Sep 2019 18:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568227694;
+        bh=fqLyZWfORQEC6v2+nP26Sy1WzgSPYbYDAMK27hsI/aM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ELVDQ4yBwmWuMQqmVGmxRYOhTtlyRU6jCwAb3UnUg0v9ooHc0HPskOWE89vdnBX8c
+         4eFlpirL9TxhLpPpLbUhMzNgtwIR3iCm8UGMDqdPlni9ZRfN8TbtNlstGC1/lXFnmK
+         /qKvzz3JVyycQejo+UVgQZ1uvFkEJzaWP6DdAEjA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6633560256
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+        <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+        <87ef0mlmqg.fsf@tynnyri.adurom.net>
+        <383b145b608e0fe3a35ffb0ceb99fdf938d4e2bb.camel@sipsolutions.net>
+Date:   Wed, 11 Sep 2019 21:48:09 +0300
+In-Reply-To: <383b145b608e0fe3a35ffb0ceb99fdf938d4e2bb.camel@sipsolutions.net>
+        (Johannes Berg's message of "Wed, 11 Sep 2019 20:23:33 +0200")
+Message-ID: <87zhjak6ty.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-8-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Johannes Berg <johannes@sipsolutions.net> writes:
 
-On 06/09/2019 14:54, Jacopo Mondi wrote:
-> Enable the GAMMA_LUT KMS property using the framework helpers to
-> register the property and set the associated gamma table maximum size.
-> 
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> On Wed, 2019-09-11 at 21:19 +0300, Kalle Valo wrote:
+>> > Looks like indeed the driver gives the device at least *3 seconds* for
+>> > every command, see ath10k_wmi_cmd_send(), so most likely this would
+>> > eventually have finished, but who knows how many firmware commands it
+>> > would still have attempted to send...
+>> 
+>> 3 seconds is a bit short but in normal cases it should be enough. Of
+>> course we could increase the delay but I'm skeptic it would help here.
+>
+> I was thinking 3 seconds is way too long :-)
 
-LGTM.
+Heh :)
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> > Perhaps the driver should mark the device as dead and fail quickly once
+>> > it timed out once, or so, but I'll let Kalle comment on that.
+>> 
+>> Actually we do try to restart the device when a timeout happens in
+>> ath10k_wmi_cmd_send():
+>> 
+>>         if (ret == -EAGAIN) {
+>>                 ath10k_warn(ar, "wmi command %d timeout, restarting hardware\n",
+>>                             cmd_id);
+>>                 queue_work(ar->workqueue, &ar->restart_work);
+>>         }
+>
+> Yeah, and this is the problem, in a sense, I'd think. It seems to me
+> that at this point the code needs to tag the device as "dead" and
+> immediately return from any further commands submitted to it with an
+> error (e.g. -EIO).
 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index 3dac605c3a67..dc59eeec990c 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -1082,6 +1082,7 @@ static const struct drm_crtc_funcs crtc_funcs_gen3 = {
->  	.set_crc_source = rcar_du_crtc_set_crc_source,
->  	.verify_crc_source = rcar_du_crtc_verify_crc_source,
->  	.get_crc_sources = rcar_du_crtc_get_crc_sources,
-> +	.gamma_set = drm_atomic_helper_legacy_gamma_set,
->  };
->  
->  /* -----------------------------------------------------------------------------
-> @@ -1205,6 +1206,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
->  	if (rcdu->cmms[swindex]) {
->  		rcrtc->cmm = rcdu->cmms[swindex];
->  		rgrp->cmms_mask |= BIT(hwindex % 2);
-> +
-> +		drm_mode_crtc_set_gamma_size(crtc, CM2_LUT_SIZE);
-> +		drm_crtc_enable_color_mgmt(crtc, 0, false, CM2_LUT_SIZE);
->  	}
->  
->  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
-> 
+Yeah, ath10k_core_restart() is supposed change to state
+ATH10K_STATE_RESTARTING but very few mac80211 ops in ath10k_ops are
+checking for it, and to me it looks like quite late even. I think a
+proper fix for ops which can sleep is to check ar->state is
+ATH10K_STATE_ON and for ops which cannot sleep check
+ATH10K_FLAG_CRASH_FLUSH.
 
+But of course this just fixes the symptoms, the root cause for timeouts
+needs to be found as well.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
