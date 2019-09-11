@@ -2,224 +2,100 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF522ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2083DECDE28
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4B20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqnkc1X9"
+	by mail.kernel.org (Postfix) with ESMTP id EC0AB20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfIKHw0 (ORCPT
+        id S1727278AbfIKHwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:52:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40404 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfIKHwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:52:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so13140282pfb.7;
-        Wed, 11 Sep 2019 00:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=51aUTOSnvcLQf+P79cmPrM9loBkdI6A9ZLwOiaZPzyo=;
-        b=rqnkc1X9ZeB2/DP9qO/oHLGiURvCmamjolmF3Fi+jRUhdmjxd3j34i69Fyl6VjDFnA
-         ckXXTEUt99zUl9YchvNhE2apQQ+Y3I0yPxw5Fmq8Geza5q+WP5LqsCZV00vAUrCjqehi
-         qEJXvvFMePJG8Xm3mpQ/Uw8FM6RokIJG85+U4CD2LuiiCU5GLyhWCz0nmdHzutNV46HV
-         4Ju4ywnPItQl21foHDgKVubG/IAric4zSBh5isuJpuSSNlaa61tU/PW8AKBrW7uhAsEv
-         WZ12EYycqLndOS7mr9pO8oFHcknnPVDkERR9rCncABQrqVY9j/X4yh/dGF3b95UIdV4q
-         +33g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=51aUTOSnvcLQf+P79cmPrM9loBkdI6A9ZLwOiaZPzyo=;
-        b=C5Fyy5SH9WPGVFxAx967elc2tH17PTqa0Wlg1qRN/pM23AOb/PWR9l0RYjtMiyJTs4
-         81jBG69DqCyYvhThpjI9D4FMDncT5U18+Yj6NW3Z6ZgKV2f95tKZZU7BFuzOfr/r6hQS
-         4zleC7aPPQ+4JfEIzJWdkAtE50DKl/Th1Lu3N8TuJiR1wg72H8/yxOqCfRNuQAaaeqgC
-         bEWCvPpcppJ5vCz/Yyc4eMpPZbfOZbFzU1Bt22CVe3+0m5K7EIy4odvwgQsUv+A5idRz
-         Ctbcyq5dDok2irVN/VFqlSt3acLsJhwgK6NEl1W+HahX9wiR5TJ+xc+/MKv337fRWYDB
-         DGzQ==
-X-Gm-Message-State: APjAAAXaoh4IPpq0FS4eXTNqkzRnG8tQh0yiuUI01sbvgS5zWC93r9Ph
-        3Rta4XUSX56jUPhonaHJYHc=
-X-Google-Smtp-Source: APXvYqwwsqargbsvdE+AwGvCGluX6ER3qn1ywDXmPbRRF3Tq0baH5IbrPOldSSRvHdB6bkMY9+ApPg==
-X-Received: by 2002:a17:90a:b88b:: with SMTP id o11mr4084973pjr.42.1568188342330;
-        Wed, 11 Sep 2019 00:52:22 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u2sm8582445pgp.66.2019.09.11.00.52.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 00:52:20 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 02/11] gpiolib: introduce devm_fwnode_gpiod_get_index()
-Date:   Wed, 11 Sep 2019 00:52:06 -0700
-Message-Id: <20190911075215.78047-3-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-In-Reply-To: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Sep 2019 03:52:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40046 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727208AbfIKHw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 03:52:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B4E55316E536;
+        Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
+Received: from dell-r430-03.lab.eng.brq.redhat.com (dell-r430-03.lab.eng.brq.redhat.com [10.37.153.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AD0B6012A;
+        Wed, 11 Sep 2019 07:52:23 +0000 (UTC)
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, david@redhat.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, imbrenda@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2] KVM: s390: kvm_s390_vm_start_migration: check dirty_bitmap before using it as target for memset()
+Date:   Wed, 11 Sep 2019 03:52:18 -0400
+Message-Id: <20190911075218.29153-1-imammedo@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_fwnode_get_index_gpiod_from_child() is too long, besides the fwnode
-in question does not have to be a child of device node. Let's rename it
-to devm_fwnode_gpiod_get_index() and keep the old name for compatibility
-for now.
+If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+kvm_s390_vm_start_migration(), kernel will oops with:
 
-Also let's add a devm_fwnode_gpiod_get() wrapper as majority of the
-callers need a single GPIO.
+  Unable to handle kernel pointer dereference in virtual kernel address space
+  Failing address: 0000000000000000 TEID: 0000000000000483
+  Fault in home space mode while using kernel ASCE.
+  AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+  Oops: 0004 ilc:2 [#1] SMP
+  ...
+  Call Trace:
+  ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+   [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+   [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+   [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+   [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+   [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+   [<000000000175552c>] system_call+0x2b8/0x2d8
+  INFO: lockdep is turned off.
+  Last Breaking-Event-Address:
+   [<0000000000dbaf60>] __memset+0xc/0xa0
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+due to ms->dirty_bitmap being NULL, which might crash the host.
+
+Make sure that ms->dirty_bitmap is set before using it or
+return -ENIVAL otherwise.
+
+Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
 ---
+Cc: stable@vger.kernel.org # v4.19+
 
- drivers/gpio/gpiolib-devres.c | 19 ++++++++--------
- include/linux/gpio/consumer.h | 41 ++++++++++++++++++++++++++---------
- 2 files changed, 40 insertions(+), 20 deletions(-)
+v2:
+   - remove not true anym 'warning' clause in commit message
+v2:
+   - drop WARN()
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 0acc2cc6e868..190ce7c43b4e 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -185,12 +185,11 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
- EXPORT_SYMBOL(devm_gpiod_get_from_of_node);
- 
- /**
-- * devm_fwnode_get_index_gpiod_from_child - get a GPIO descriptor from a
-- *					    device's child node
-+ * devm_fwnode_gpiod_get_index - get a GPIO descriptor from a given node
-  * @dev:	GPIO consumer
-+ * @fwnode:	firmware node containing GPIO reference
-  * @con_id:	function within the GPIO consumer
-  * @index:	index of the GPIO to obtain in the consumer
-- * @child:	firmware node (child of @dev)
-  * @flags:	GPIO initialization flags
-  * @label:	label to attach to the requested GPIO
-  *
-@@ -200,11 +199,11 @@ EXPORT_SYMBOL(devm_gpiod_get_from_of_node);
-  * On successful request the GPIO pin is configured in accordance with
-  * provided @flags.
-  */
--struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
--						const char *con_id, int index,
--						struct fwnode_handle *child,
--						enum gpiod_flags flags,
--						const char *label)
-+struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
-+					      struct fwnode_handle *fwnode,
-+					      const char *con_id, int index,
-+					      enum gpiod_flags flags,
-+					      const char *label)
- {
- 	char prop_name[32]; /* 32 is max size of property name */
- 	struct gpio_desc **dr;
-@@ -224,7 +223,7 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
- 			snprintf(prop_name, sizeof(prop_name), "%s",
- 					    gpio_suffixes[i]);
- 
--		desc = fwnode_get_named_gpiod(child, prop_name, index, flags,
-+		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
- 					      label);
- 		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
- 			break;
-@@ -239,7 +238,7 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
- 
- 	return desc;
- }
--EXPORT_SYMBOL(devm_fwnode_get_index_gpiod_from_child);
-+EXPORT_SYMBOL(devm_fwnode_gpiod_get_index);
- 
- /**
-  * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b70af921c614..dc0ddcd30515 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -176,11 +176,11 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 					 const char *propname, int index,
- 					 enum gpiod_flags dflags,
- 					 const char *label);
--struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
--						const char *con_id, int index,
--						struct fwnode_handle *child,
--						enum gpiod_flags flags,
--						const char *label);
-+struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
-+					      struct fwnode_handle *child,
-+					      const char *con_id, int index,
-+					      enum gpiod_flags flags,
-+					      const char *label);
- 
- #else /* CONFIG_GPIOLIB */
- 
-@@ -531,6 +531,29 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 	return ERR_PTR(-ENOSYS);
- }
- 
-+static inline
-+struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
-+					      struct fwnode_handle *fwnode,
-+					      const char *con_id, int index,
-+					      enum gpiod_flags flags,
-+					      const char *label)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+#endif /* CONFIG_GPIOLIB */
-+
-+static inline
-+struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
-+					struct fwnode_handle *fwnode,
-+					const char *con_id,
-+					enum gpiod_flags flags,
-+					const char *label)
-+{
-+	return devm_fwnode_gpiod_get_index(dev, fwnode, con_id, 0,
-+					   flags, label);
-+}
-+
- static inline
- struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
- 						const char *con_id, int index,
-@@ -538,11 +561,10 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
- 						enum gpiod_flags flags,
- 						const char *label)
- {
--	return ERR_PTR(-ENOSYS);
-+	return devm_fwnode_gpiod_get_index(dev, child, con_id, index,
-+					   flags, label);
- }
- 
--#endif /* CONFIG_GPIOLIB */
--
- static inline
- struct gpio_desc *devm_fwnode_get_gpiod_from_child(struct device *dev,
- 						   const char *con_id,
-@@ -550,8 +572,7 @@ struct gpio_desc *devm_fwnode_get_gpiod_from_child(struct device *dev,
- 						   enum gpiod_flags flags,
- 						   const char *label)
- {
--	return devm_fwnode_get_index_gpiod_from_child(dev, con_id, 0, child,
--						      flags, label);
-+	return devm_fwnode_gpiod_get_index(dev, child, con_id, 0, flags, label);
- }
- 
- #if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_OF_GPIO)
+ arch/s390/kvm/kvm-s390.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index f329dcb3f44c..2a40cd3e40b4 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -1018,6 +1018,8 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
+ 	/* mark all the pages in active slots as dirty */
+ 	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+ 		ms = slots->memslots + slotnr;
++		if (!ms->dirty_bitmap)
++			return -EINVAL;
+ 		/*
+ 		 * The second half of the bitmap is only used on x86,
+ 		 * and would be wasted otherwise, so we put it to good
 -- 
-2.23.0.162.g0b9fbb3734-goog
+2.18.1
 
