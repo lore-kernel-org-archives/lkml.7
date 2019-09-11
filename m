@@ -2,100 +2,247 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2083DECDE28
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F23ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0AB20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BB020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1LmxtXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfIKHwc (ORCPT
+        id S1727301AbfIKHwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:52:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40046 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfIKHw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:52:28 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B4E55316E536;
-        Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
-Received: from dell-r430-03.lab.eng.brq.redhat.com (dell-r430-03.lab.eng.brq.redhat.com [10.37.153.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AD0B6012A;
-        Wed, 11 Sep 2019 07:52:23 +0000 (UTC)
-From:   Igor Mammedov <imammedo@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, david@redhat.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, imbrenda@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v2] KVM: s390: kvm_s390_vm_start_migration: check dirty_bitmap before using it as target for memset()
-Date:   Wed, 11 Sep 2019 03:52:18 -0400
-Message-Id: <20190911075218.29153-1-imammedo@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 11 Sep 2019 07:52:27 +0000 (UTC)
+        Wed, 11 Sep 2019 03:52:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36533 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727232AbfIKHw3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 03:52:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j191so568919pgd.3;
+        Wed, 11 Sep 2019 00:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xxrtIfSruvrXHw4q7jKv1F46B8PQJ0pGIOgebDon1hA=;
+        b=O1LmxtXZigIBphs1DwmQApvNXGIG79sP7qyLAVkvGSf0mot+9HkTtFO9nlSA9x9iuE
+         bk0I+rZnmjBksAXZyI8+E/CperrUyDsD69KfZhCZihiSyMhdj0xYtKtUJFC67/apf9E4
+         gqf/kpiiu4h4nhR5h1zyiu+eYrCLsYYrD4lD5d88Lci955PhIZxkJBO6y/5d6IH2roeO
+         gNBxeNCDqio4x/X0vl/m7m6ibp9dtqCwrydybiIwP6679vHLyQg4WrWk3DBv07emPet5
+         KqxsrYNdqjNQgS/0UI7FND112zt+0GeU2C+1QBNoMYdQr9QqP14W7ccGA9jhWJKF79fc
+         grUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xxrtIfSruvrXHw4q7jKv1F46B8PQJ0pGIOgebDon1hA=;
+        b=UC5Ju+xSZEA+4VOE3dATsmJFlkA0TND3uWQElTFsf4SWXT1+FDJVon6bJYwPTj2Pid
+         achXxfyPTSx98cxwAlE29tklmKyyNCl8Ftkp01auGjRwMaeeD0UAQC5LjepT+Emg+len
+         0WaHPN5Ealp4Do9eZBl8gvZjopvOCMZJsBagXaGXkoviEMZOY4eILZFM2BG6CZ40CFix
+         AZD+AkpH3zXmSwLAbuMuBKShg2rD46Ap5DGW4ZmFiU4JQs2xojby8Ynb5QY4ghOpUZ8M
+         VCX+H46KUTTMr1BwQnE2GQIjzvg4mLcZwUr48sF0f+GnRbxQ40toZNOxa691X0TrwUgJ
+         ZE3g==
+X-Gm-Message-State: APjAAAV/MLddHZAGNKfPlGrWvcY+qm1sguDFygLt09Hoq60HZENubcBr
+        wKEujne4/4JIiLHRfaBZj8Y=
+X-Google-Smtp-Source: APXvYqxzV10kyx30B4mcUy5MrnFZL1M7/hU1vEaVzNb1qZE6gzjvIGja4ITH+2F73YPFiJrPwJXuOw==
+X-Received: by 2002:a62:db84:: with SMTP id f126mr41629628pfg.25.1568188348113;
+        Wed, 11 Sep 2019 00:52:28 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id u2sm8582445pgp.66.2019.09.11.00.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 00:52:27 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 07/11] gpliolib: make fwnode_get_named_gpiod() static
+Date:   Wed, 11 Sep 2019 00:52:11 -0700
+Message-Id: <20190911075215.78047-8-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
+In-Reply-To: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
-kvm_s390_vm_start_migration(), kernel will oops with:
+Now that there are no external users of fwnode_get_named_gpiod() we can
+make it static.
 
-  Unable to handle kernel pointer dereference in virtual kernel address space
-  Failing address: 0000000000000000 TEID: 0000000000000483
-  Fault in home space mode while using kernel ASCE.
-  AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
-  Oops: 0004 ilc:2 [#1] SMP
-  ...
-  Call Trace:
-  ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
-   [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
-   [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
-   [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
-   [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
-   [<00000000008bb2e2>] sys_ioctl+0x32/0x40
-   [<000000000175552c>] system_call+0x2b8/0x2d8
-  INFO: lockdep is turned off.
-  Last Breaking-Event-Address:
-   [<0000000000dbaf60>] __memset+0xc/0xa0
-
-due to ms->dirty_bitmap being NULL, which might crash the host.
-
-Make sure that ms->dirty_bitmap is set before using it or
-return -ENIVAL otherwise.
-
-Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
-Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
-Cc: stable@vger.kernel.org # v4.19+
 
-v2:
-   - remove not true anym 'warning' clause in commit message
-v2:
-   - drop WARN()
+ drivers/gpio/gpiolib.c        | 108 ++++++++++++++--------------------
+ include/linux/gpio/consumer.h |  13 ----
+ 2 files changed, 43 insertions(+), 78 deletions(-)
 
- arch/s390/kvm/kvm-s390.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index f329dcb3f44c..2a40cd3e40b4 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -1018,6 +1018,8 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
- 	/* mark all the pages in active slots as dirty */
- 	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
- 		ms = slots->memslots + slotnr;
-+		if (!ms->dirty_bitmap)
-+			return -EINVAL;
- 		/*
- 		 * The second half of the bitmap is only used on x86,
- 		 * and would be wasted otherwise, so we put it to good
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f15e3880aae5..54db2c42e9a0 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4314,6 +4314,49 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
+ 	return count;
+ }
+ 
++static struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
++						const char *propname, int index,
++						enum gpiod_flags dflags,
++						const char *label)
++{
++	unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
++	struct gpio_desc *desc = ERR_PTR(-ENODEV);
++	int ret;
++
++	if (!fwnode)
++		return ERR_PTR(-EINVAL);
++
++	if (is_of_node(fwnode)) {
++		desc = gpiod_get_from_of_node(to_of_node(fwnode),
++					      propname, index,
++					      dflags,
++					      label);
++		return desc;
++	} else if (is_acpi_node(fwnode)) {
++		struct acpi_gpio_info info;
++
++		desc = acpi_node_get_gpiod(fwnode, propname, index, &info);
++		if (IS_ERR(desc))
++			return desc;
++
++		acpi_gpio_update_gpiod_flags(&dflags, &info);
++		acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
++	}
++
++	/* Currently only ACPI takes this path */
++	ret = gpiod_request(desc, label);
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = gpiod_configure_flags(desc, propname, lflags, dflags);
++	if (ret < 0) {
++		gpiod_put(desc);
++		return ERR_PTR(ret);
++	}
++
++	return desc;
++}
++
+ /**
+  * fwnode_gpiod_get_index - obtain a GPIO from firmware node
+  * @fwnode:	handle of the firmware node
+@@ -4574,71 +4617,6 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(gpiod_get_index);
+ 
+-/**
+- * fwnode_get_named_gpiod - obtain a GPIO from firmware node
+- * @fwnode:	handle of the firmware node
+- * @propname:	name of the firmware property representing the GPIO
+- * @index:	index of the GPIO to obtain for the consumer
+- * @dflags:	GPIO initialization flags
+- * @label:	label to attach to the requested GPIO
+- *
+- * This function can be used for drivers that get their configuration
+- * from opaque firmware.
+- *
+- * The function properly finds the corresponding GPIO using whatever is the
+- * underlying firmware interface and then makes sure that the GPIO
+- * descriptor is requested before it is returned to the caller.
+- *
+- * Returns:
+- * On successful request the GPIO pin is configured in accordance with
+- * provided @dflags.
+- *
+- * In case of error an ERR_PTR() is returned.
+- */
+-struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+-					 const char *propname, int index,
+-					 enum gpiod_flags dflags,
+-					 const char *label)
+-{
+-	unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+-	struct gpio_desc *desc = ERR_PTR(-ENODEV);
+-	int ret;
+-
+-	if (!fwnode)
+-		return ERR_PTR(-EINVAL);
+-
+-	if (is_of_node(fwnode)) {
+-		desc = gpiod_get_from_of_node(to_of_node(fwnode),
+-					      propname, index,
+-					      dflags,
+-					      label);
+-		return desc;
+-	} else if (is_acpi_node(fwnode)) {
+-		struct acpi_gpio_info info;
+-
+-		desc = acpi_node_get_gpiod(fwnode, propname, index, &info);
+-		if (IS_ERR(desc))
+-			return desc;
+-
+-		acpi_gpio_update_gpiod_flags(&dflags, &info);
+-		acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
+-	}
+-
+-	/* Currently only ACPI takes this path */
+-	ret = gpiod_request(desc, label);
+-	if (ret)
+-		return ERR_PTR(ret);
+-
+-	ret = gpiod_configure_flags(desc, propname, lflags, dflags);
+-	if (ret < 0) {
+-		gpiod_put(desc);
+-		return ERR_PTR(ret);
+-	}
+-
+-	return desc;
+-}
+-EXPORT_SYMBOL_GPL(fwnode_get_named_gpiod);
+-
+ /**
+  * gpiod_get_index_optional - obtain an optional GPIO from a multi-index GPIO
+  *                            function
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 5215fdba6b9a..2f5e825f4601 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -172,10 +172,6 @@ int desc_to_gpio(const struct gpio_desc *desc);
+ /* Child properties interface */
+ struct fwnode_handle;
+ 
+-struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+-					 const char *propname, int index,
+-					 enum gpiod_flags dflags,
+-					 const char *label);
+ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+ 					 const char *con_id, int index,
+ 					 enum gpiod_flags flags,
+@@ -526,15 +522,6 @@ static inline int desc_to_gpio(const struct gpio_desc *desc)
+ /* Child properties interface */
+ struct fwnode_handle;
+ 
+-static inline
+-struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+-					 const char *propname, int index,
+-					 enum gpiod_flags dflags,
+-					 const char *label)
+-{
+-	return ERR_PTR(-ENOSYS);
+-}
+-
+ static inline
+ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+ 					 const char *con_id, int index,
 -- 
-2.18.1
+2.23.0.162.g0b9fbb3734-goog
 
