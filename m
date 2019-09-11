@@ -2,120 +2,86 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A62C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19006C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCA42084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06C52084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfIKRco (ORCPT
+        id S1729580AbfIKReJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:32:44 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:40357 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbfIKRco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:32:44 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i86Tw-0002nA-MY; Wed, 11 Sep 2019 11:32:40 -0600
-Received: from 110.8.30.213.rev.vodafone.pt ([213.30.8.110] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i86Tv-0005Lh-OI; Wed, 11 Sep 2019 11:32:40 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-References: <20190910175852.GA15572@asgard.redhat.com>
-Date:   Wed, 11 Sep 2019 12:32:17 -0500
-In-Reply-To: <20190910175852.GA15572@asgard.redhat.com> (Eugene
-        Syromiatnikov's message of "Tue, 10 Sep 2019 18:58:52 +0100")
-Message-ID: <87d0g691su.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 11 Sep 2019 13:34:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25335 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728897AbfIKReJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:34:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 10:34:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="384774516"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Sep 2019 10:34:08 -0700
+Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 11 Sep 2019 10:34:08 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.68]) by
+ FMSMSX114.amr.corp.intel.com ([169.254.6.218]) with mapi id 14.03.0439.000;
+ Wed, 11 Sep 2019 10:34:08 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "me@tobin.cc" <me@tobin.cc>,
+        "stfrench@microsoft.com" <stfrench@microsoft.com>,
+        "ksummit-discuss@lists.linuxfoundation.org" 
+        <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 2/3] Maintainer Handbook:
+ Maintainer Entry Profile
+Thread-Topic: [Ksummit-discuss] [PATCH v2 2/3] Maintainer Handbook:
+ Maintainer Entry Profile
+Thread-Index: AQHVaLpqINt3BK3afk2+UTXTBVR/lqcnMh2A
+Date:   Wed, 11 Sep 2019 17:34:08 +0000
+Message-ID: <78b0d48ac797d565b0dd98de02fc21bd2ce5769a.camel@intel.com>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <156821693396.2951081.7340292149329436920.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156821693396.2951081.7340292149329436920.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.164]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E8972A5658F548449D6EC7503DE2C959@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1i86Tv-0005Lh-OI;;;mid=<87d0g691su.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=213.30.8.110;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18Q8+CvTzcoLi+RF1BzgBUOMruIPSj6/JI=
-X-SA-Exim-Connect-IP: 213.30.8.110
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eugene Syromiatnikov <esyr@redhat.com> writes:
-
-> Previously, higher 32 bits of exit_signal fields were lost when
-> copied to the kernel args structure (that uses int as a type for the
-> respective field).  Moreover, as Oleg has noted[1], exit_signal is used
-> unchecked, so it has to be checked for sanity before use; for the legacy
-> syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
-> however, there's no such thing is done in clone3() code path, and that can
-> break at least thread_group_leader.
->
-> Checking user-passed exit_signal against ~CSIGNAL mask solves both
-> of these problems.
->
-> [1] https://lkml.org/lkml/2019/9/10/467
->
-> * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
-> args.exit_signal has bits set outside CSIGNAL mask.
-> (_do_fork): Note that exit_signal is expected to be checked for the
-> sanity by the caller.
->
-> Fixes: 7f192e3cd316 ("fork: add clone3")
-> Reported-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-> ---
->  kernel/fork.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2852d0e..9dee2ab 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2338,6 +2338,8 @@ struct mm_struct *copy_init_mm(void)
->   *
->   * It copies the process, and if successful kick-starts
->   * it and waits for it to finish using the VM if required.
-> + *
-> + * args->exit_signal is expected to be checked for sanity by the caller.
->   */
->  long _do_fork(struct kernel_clone_args *args)
->  {
-> @@ -2562,6 +2564,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  	if (copy_from_user(&args, uargs, size))
->  		return -EFAULT;
->  
-> +	/*
-> +	 * exit_signal is confined to CSIGNAL mask in legacy syscalls,
-> +	 * so it is used unchecked deeper in syscall handling routines;
-> +	 * moreover, copying to struct kernel_clone_args.exit_signals
-> +	 * trims higher 32 bits, so it is has to be checked that they
-> +	 * are zero.
-> +	 */
-> +	if (unlikely(args.exit_signal & ~((u64)CSIGNAL)))
-> +		return -EINVAL;
-> +
->  	*kargs = (struct kernel_clone_args){
->  		.flags		= args.flags,
->  		.pidfd		= u64_to_user_ptr(args.pidfd),
+T24gV2VkLCAyMDE5LTA5LTExIGF0IDA4OjQ4IC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQoN
+Cj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gaW5kZXggM2YxNzEz
+MzlkZjUzLi5lNWQxMTFhODZlNjEgMTAwNjQ0DQo+IC0tLSBhL01BSU5UQUlORVJTDQo+ICsrKyBi
+L01BSU5UQUlORVJTDQo+IEBAIC05OCw2ICs5OCwxMCBAQCBEZXNjcmlwdGlvbnMgb2Ygc2VjdGlv
+biBlbnRyaWVzOg0KPiAgCSAgIE9ic29sZXRlOglPbGQgY29kZS4gU29tZXRoaW5nIHRhZ2dlZCBv
+YnNvbGV0ZSBnZW5lcmFsbHkgbWVhbnMNCj4gIAkJCWl0IGhhcyBiZWVuIHJlcGxhY2VkIGJ5IGEg
+YmV0dGVyIHN5c3RlbSBhbmQgeW91DQo+ICAJCQlzaG91bGQgYmUgdXNpbmcgdGhhdC4NCj4gKwlQ
+OiBTdWJzeXN0ZW0gUHJvZmlsZSBkb2N1bWVudCBmb3IgbW9yZSBkZXRhaWxzIHN1Ym1pdHRpbmcN
+Cj4gKwkgICBwYXRjaGVzIHRvIHRoZSBnaXZlbiBzdWJzeXN0ZW0uIFRoaXMgaXMgZWl0aGVyIGFu
+IGluLXRyZWUgZmlsZSwNCj4gKwkgICBvciBhIFVSSS4gU2VlIERvY3VtZW50YXRpb24vbWFpbnRh
+aW5lci9tYWludGFpbmVyLWVudHJ5LXByb2ZpbGUucnN0DQo+ICsJICAgZm9yIGRldGFpbHMuDQoN
+CkNvbnNpZGVyaW5nIGVhY2ggbWFpbnRhaW5lciBlbnRyeSBvciBkcml2ZXIgbWF5IG5vdCBoYXZl
+IGEgc3ViZGlyZWN0b3J5DQp1bmRlciBEb2N1bWVudGF0aW9uLyB0byBwdXQgdGhlc2UgdW5kZXIs
+IHdvdWxkIGl0IGJlIGJldHRlciB0byBjb2xsZWN0DQp0aGVtIGluIG9uZSBwbGFjZSwgc2F5IERv
+Y3VtZW50YXRpb24vbWFpbnRhaW5lci1lbnRyeS1wcm9maWxlcy8gPw0K
