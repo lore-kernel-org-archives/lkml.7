@@ -2,151 +2,108 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729A3ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF2ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDF120863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F90E20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DUgrt1P1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfIKIjc (ORCPT
+        id S1727152AbfIKIlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:39:32 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:3075 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726018AbfIKIjc (ORCPT
+        Wed, 11 Sep 2019 04:41:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35032 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfIKIlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:39:32 -0400
-X-UUID: 1da5aa5210c14e98850fc278477b392b-20190911
-X-UUID: 1da5aa5210c14e98850fc278477b392b-20190911
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1427945322; Wed, 11 Sep 2019 16:39:24 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Sep 2019 16:39:23 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Sep 2019 16:39:23 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Qian Cai <cai@lca.pw>, Vlastimil Babka <vbabka@suse.cz>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
-Date:   Wed, 11 Sep 2019 16:39:21 +0800
-Message-ID: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 11 Sep 2019 04:41:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8B8dTsY028594;
+        Wed, 11 Sep 2019 08:41:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=xGO9SBAbulRLI7ZbRakTvABa/JaF87+OoWtKT13pbQg=;
+ b=DUgrt1P17LA7+GB2zwXXKjr6o0liEZ+Z/cOoOr26XPv+RfaSurzXWIfMV/+sZMjbeUl8
+ MPFXEC5QTLfyFlPJdbOvHoTPf+qgb9SIemU65U8dxhJnMEw9ft4JIZFYH+rY7bzApVXf
+ PxUb6QxiZJH+hhMkqX/MCUU9tUMq5zotLkE/6sndqLpi2tpuk0jEl92eSfL2uvqk+eqr
+ WyDqkEYvVRRB1hBLmpoqIYipvAr2Pr73SQdVzKmGhk99yERyOQ9wSfMKdBbhunJsM4em
+ ajdDyfhdcmcykuIikw0fB/otFpmEglzb+k8gO+Q/7xkBpaWqlRHU7FV7Exsb0eM1e2mZ vQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2uw1jy8d54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 08:41:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8B8c85I192973;
+        Wed, 11 Sep 2019 08:41:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2uxk0t0864-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 08:41:27 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8B8fJYx019409;
+        Wed, 11 Sep 2019 08:41:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 01:41:19 -0700
+Date:   Wed, 11 Sep 2019 11:41:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sandro Volery <sandro@volery.com>
+Cc:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: exfat: Avoid use of strcpy
+Message-ID: <20190911084111.GG15977@kadam>
+References: <20190911055749.GA10786@volery>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911055749.GA10786@volery>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9376 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is KASAN's report adds the alloc/free stack for page allocator
-in order to help programmer to see memory corruption caused by the page.
+On Wed, Sep 11, 2019 at 07:57:49AM +0200, Sandro Volery wrote:
+> Replaced strcpy with strscpy in exfat_core.c.
+> 
+> Signed-off-by: Sandro Volery <sandro@volery.com>
+> ---
+>  drivers/staging/exfat/exfat_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+> index da8c58149c35..c71b145e8a24 100644
+> --- a/drivers/staging/exfat/exfat_core.c
+> +++ b/drivers/staging/exfat/exfat_core.c
+> @@ -2964,7 +2964,7 @@ s32 resolve_path(struct inode *inode, char *path, struct chain_t *p_dir,
+>  	if (strlen(path) >= (MAX_NAME_LENGTH * MAX_CHARSET_SIZE))
+>  		return FFS_INVALIDPATH;
+>  
+> -	strcpy(name_buf, path);
+> +	strscpy(name_buf, path, sizeof(name_buf));
 
-By default, KASAN doesn't record alloc or free stack for page allocator.
-It is difficult to fix up the page use-after-free or double-free issue.
+It checked strlen() earlier so we know that it can't overflow but, oh
+wow, the "name_buf" is a shared buffer.  wow wow wow.  This seems very
+racy.
 
-We add the following changing:
-1) KASAN enable PAGE_OWNER by default to get the alloc stack of the page.
-2) Add new feature option to get the free stack of the page.
-
-The new feature KASAN_DUMP_PAGE depends on DEBUG_PAGEALLOC, it will help
-to record free stack of the page, it is very helpful for solving the page
-use-after-free or double-free issue.
-
-When KASAN_DUMP_PAGE is enabled then KASAN's report will show the last
-alloc and free stack of the page, it should be:
-
-BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
-Write of size 1 at addr ffffffc0d60e4000 by task cat/115
-...
- prep_new_page+0x1c8/0x218
- get_page_from_freelist+0x1ba0/0x28d0
- __alloc_pages_nodemask+0x1d4/0x1978
- kmalloc_order+0x28/0x58
- kmalloc_order_trace+0x28/0xe0
- kmalloc_pagealloc_uaf+0x2c/0x80
-page last free stack trace:
- __free_pages_ok+0x116c/0x1630
- __free_pages+0x50/0x78
- kfree+0x1c4/0x250
- kmalloc_pagealloc_uaf+0x38/0x80
-
-Changes since v1:
-- slim page_owner and move it into kasan
-- enable the feature by default
-
-Changes since v2:
-- enable PAGE_OWNER by default
-- use DEBUG_PAGEALLOC to get page information
-
-cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-cc: Vlastimil Babka <vbabka@suse.cz>
-cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
----
- lib/Kconfig.kasan | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 4fafba1a923b..4d59458c0c5a 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -41,6 +41,7 @@ config KASAN_GENERIC
- 	select SLUB_DEBUG if SLUB
- 	select CONSTRUCTORS
- 	select STACKDEPOT
-+	select PAGER_OWNER
- 	help
- 	  Enables generic KASAN mode.
- 	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
-@@ -63,6 +64,7 @@ config KASAN_SW_TAGS
- 	select SLUB_DEBUG if SLUB
- 	select CONSTRUCTORS
- 	select STACKDEPOT
-+	select PAGER_OWNER
- 	help
- 	  Enables software tag-based KASAN mode.
- 	  This mode requires Top Byte Ignore support by the CPU and therefore
-@@ -135,6 +137,19 @@ config KASAN_S390_4_LEVEL_PAGING
- 	  to 3TB of RAM with KASan enabled). This options allows to force
- 	  4-level paging instead.
- 
-+config KASAN_DUMP_PAGE
-+	bool "Dump the last allocation and freeing stack of the page"
-+	depends on KASAN
-+	select DEBUG_PAGEALLOC
-+	help
-+	  By default, KASAN enable PAGE_OWNER only to record alloc stack
-+	  for page allocator. It is difficult to fix up page use-after-free
-+	  or double-free issue.
-+	  This feature depends on DEBUG_PAGEALLOC, it will extra record
-+	  free stack of page. It is very helpful for solving the page
-+	  use-after-free or double-free issue.
-+	  This option will have a small memory overhead.
-+
- config TEST_KASAN
- 	tristate "Module for testing KASAN for bug detection"
- 	depends on m && KASAN
--- 
-2.18.0
+regards,
+dan carpenter
 
