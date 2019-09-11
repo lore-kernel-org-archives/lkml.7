@@ -2,103 +2,84 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE4FC49ED9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 02:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172BCC49ED7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 02:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66F92171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 02:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4312171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 02:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfIKCnH (ORCPT
+        id S1726957AbfIKCoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 22:43:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51194 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726579AbfIKCnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 22:43:06 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7AFF71699A46C51D7781;
-        Wed, 11 Sep 2019 10:43:05 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 11 Sep 2019 10:42:59 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>
-Subject: [PATCH V2 net-next 3/7] net: hns3: fix shaper parameter algorithm
-Date:   Wed, 11 Sep 2019 10:40:35 +0800
-Message-ID: <1568169639-43658-4-git-send-email-tanhuazhong@huawei.com>
+        Tue, 10 Sep 2019 22:44:11 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51914 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfIKCoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 22:44:10 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C76021A0523;
+        Wed, 11 Sep 2019 04:44:08 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 87D121A051A;
+        Wed, 11 Sep 2019 04:44:02 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9CEE9402DE;
+        Wed, 11 Sep 2019 10:43:54 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2] ASoC: fsl_mqs: add DT binding documentation
+Date:   Wed, 11 Sep 2019 10:42:38 -0400
+Message-Id: <cff8bff1e8d3334fa308ddfcec266a5284e3c858.1568169346.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568169639-43658-1-git-send-email-tanhuazhong@huawei.com>
-References: <1568169639-43658-1-git-send-email-tanhuazhong@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+Add the DT binding documentation for NXP MQS driver
 
-Currently when hns3 driver configures the tm shaper to limit
-bandwidth below 20Mbit using the parameters calculated by
-hclge_shaper_para_calc(), the actual bandwidth limited by tm
-hardware module is not accurate enough, for example, 1.28 Mbit
-when the user is configuring 1 Mbit.
-
-This patch adjusts the ir_calc to be closer to ir, and
-always calculate the ir_b parameter when user is configuring
-a small bandwidth. Also, removes an unnecessary parenthesis
-when calculating denominator.
-
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/sound/fsl,mqs.txt     | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,mqs.txt
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index e829101..9f0e35f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -81,16 +81,13 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
- 		return 0;
- 	} else if (ir_calc > ir) {
- 		/* Increasing the denominator to select ir_s value */
--		while (ir_calc > ir) {
-+		while (ir_calc >= ir && ir) {
- 			ir_s_calc++;
- 			ir_calc = DIVISOR_IR_B_126 / (tick * (1 << ir_s_calc));
- 		}
- 
--		if (ir_calc == ir)
--			*ir_b = 126;
--		else
--			*ir_b = (ir * tick * (1 << ir_s_calc) +
--				 (DIVISOR_CLK >> 1)) / DIVISOR_CLK;
-+		*ir_b = (ir * tick * (1 << ir_s_calc) + (DIVISOR_CLK >> 1)) /
-+			DIVISOR_CLK;
- 	} else {
- 		/* Increasing the numerator to select ir_u value */
- 		u32 numerator;
-@@ -104,7 +101,7 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
- 		if (ir_calc == ir) {
- 			*ir_b = 126;
- 		} else {
--			u32 denominator = (DIVISOR_CLK * (1 << --ir_u_calc));
-+			u32 denominator = DIVISOR_CLK * (1 << --ir_u_calc);
- 			*ir_b = (ir * tick + (denominator >> 1)) / denominator;
- 		}
- 	}
+diff --git a/Documentation/devicetree/bindings/sound/fsl,mqs.txt b/Documentation/devicetree/bindings/sound/fsl,mqs.txt
+new file mode 100644
+index 000000000000..a1dbe181204a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,mqs.txt
+@@ -0,0 +1,20 @@
++fsl,mqs audio CODEC
++
++Required properties:
++
++  - compatible : Must contain one of "fsl,imx6sx-mqs", "fsl,codec-mqs"
++		"fsl,imx8qm-mqs", "fsl,imx8qxp-mqs".
++  - clocks : A list of phandles + clock-specifiers, one for each entry in
++	     clock-names
++  - clock-names : Must contain "mclk"
++  - gpr : The gpr node.
++
++Example:
++
++mqs: mqs {
++	compatible = "fsl,imx6sx-mqs";
++	gpr = <&gpr>;
++	clocks = <&clks IMX6SX_CLK_SAI1>;
++	clock-names = "mclk";
++	status = "disabled";
++};
 -- 
-2.7.4
+2.21.0
 
