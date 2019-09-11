@@ -2,106 +2,130 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E7CECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82692ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771F02085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D692085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSNca9TI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfIKPXX (ORCPT
+        id S1728481AbfIKPZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:23:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44502 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfIKPXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:23:23 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7BEF1DA2;
-        Wed, 11 Sep 2019 15:23:22 +0000 (UTC)
-Received: from [10.10.125.194] (ovpn-125-194.rdu2.redhat.com [10.10.125.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9212C60BEC;
-        Wed, 11 Sep 2019 15:23:21 +0000 (UTC)
-Subject: Re: [RFC PATCH] Add proc interface to set PF_MEMALLOC flags
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-References: <20190909162804.5694-1-mchristi@redhat.com>
- <5D76995B.1010507@redhat.com>
- <ee39d997-ee07-22c7-3e59-a436cef4d587@I-love.SAKURA.ne.jp>
-Cc:     axboe@kernel.dk, James.Bottomley@HansenPartnership.com,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5D791169.2090807@redhat.com>
-Date:   Wed, 11 Sep 2019 10:23:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        Wed, 11 Sep 2019 11:25:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42082 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfIKPZl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:25:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w22so13870097pfi.9;
+        Wed, 11 Sep 2019 08:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tZpvg5cxS2JHNuCcfb8U6RrEOvGWDHm2trij5oevORs=;
+        b=tSNca9TIi5ARLjisuukAuGJRj7fDSg15c4hp0ZTvffMzMVxMH9bz5PtryQDu75MT63
+         xGEewIuKGsZyLLPozANSVTcH37S4bhohg7lyh0U8/7CX9JPFDbyCGa1e7YAg4e3fs5Hv
+         bhSIC+y47dMj+WHqQ2fo+VWqjQnk45BYfGrkl+4MDhU4I6zWoDZ4cwtUTZl4a0nKBrpC
+         IvU8za+osNwHVtmtJJRDGGelEv6s3TZjjw/SRjp5v23Ihsm1ycqFl0zPDu9l1x3gssaW
+         QNpZYUcnnQgwVZLpQlsLZBzJ+qnMPQaR5MELMnBId4jl0Wfa96s/wYTO3waLdbrm4wH4
+         Hddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tZpvg5cxS2JHNuCcfb8U6RrEOvGWDHm2trij5oevORs=;
+        b=Ui+tDT1p4Iz/82g/2F1nQlkIxl4n2t3TdGzeOTH/cJDE0LT/ABJ4gXlm5BL9cjg/5z
+         CferFJZrnJYEDLF2pS9/UUxWkYroOnZq7n5cjJVdR+BElty59ZUrFYYpZRJ22WtdzzBz
+         pA4FTHN2lhpVqF4TahF1ppXT0ZxynZvpRZI7QJUSLMG8eybm6IT//Wh98G6aE0j7zHBR
+         C9jtRvVBJqOjOJ47oAD4bRo8eIgioRKQ88gz3g8LeVUZ+467eVxat4EoWFP+Nx2AkPJw
+         90vINd15MzraKEd/++gtKXH8528aWZH+el1W+dcUQSEhs0YocZa6XGw0dLRqNckQ+yfl
+         ylRA==
+X-Gm-Message-State: APjAAAWejAoQBqM4xUxBPORjA66AyjFl451yQ19dwlKLzs/75BPu1c3q
+        n46mKFymGQ5XM8IeK5wcTEBXIbF0siVKiB7LXnE=
+X-Google-Smtp-Source: APXvYqxb3fZu9dA/+SpsctPld2M4SO6RblnjK5MCs1xrjm21ps3uLR70SapOcrdZwEw8Y/HzMJ44ZQfjIIOMJHxOVpo=
+X-Received: by 2002:a63:dd0c:: with SMTP id t12mr32085443pgg.82.1568215540133;
+ Wed, 11 Sep 2019 08:25:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ee39d997-ee07-22c7-3e59-a436cef4d587@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 11 Sep 2019 15:23:23 +0000 (UTC)
+References: <1567946472-10075-1-git-send-email-akinobu.mita@gmail.com>
+ <1567946472-10075-2-git-send-email-akinobu.mita@gmail.com> <20190908131034.GD9466@kroah.com>
+In-Reply-To: <20190908131034.GD9466@kroah.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Thu, 12 Sep 2019 00:25:28 +0900
+Message-ID: <CAC5umyhZ_-Gdh7+EzNoHPs2zki2-dK1xBv5xpE5zwZPt_jvNEA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/10/2019 05:12 PM, Tetsuo Handa wrote:
-> On 2019/09/10 3:26, Mike Christie wrote:
->> Forgot to cc linux-mm.
->>
->> On 09/09/2019 11:28 AM, Mike Christie wrote:
->>> There are several storage drivers like dm-multipath, iscsi, and nbd that
->>> have userspace components that can run in the IO path. For example,
->>> iscsi and nbd's userspace deamons may need to recreate a socket and/or
->>> send IO on it, and dm-multipath's daemon multipathd may need to send IO
->>> to figure out the state of paths and re-set them up.
->>>
->>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
->>> memalloc_*_save/restore functions to control the allocation behavior,
->>> but for userspace we would end up hitting a allocation that ended up
->>> writing data back to the same device we are trying to allocate for.
->>>
->>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
->>> through procfs. It currently only supports PF_MEMALLOC_NOIO, but
->>> depending on what other drivers and userspace file systems need, for
->>> the final version I can add the other flags for that file or do a file
->>> per flag or just do a memalloc_noio file.
-> 
-> Interesting patch. But can't we instead globally mask __GFP_NOFS / __GFP_NOIO
-> than playing games with per a thread masking (which suffers from inability to
-> propagate current thread's mask to other threads indirectly involved)?
+2019=E5=B9=B49=E6=9C=888=E6=97=A5(=E6=97=A5) 22:10 Greg Kroah-Hartman <greg=
+kh@linuxfoundation.org>:
+>
+> On Sun, Sep 08, 2019 at 09:41:08PM +0900, Akinobu Mita wrote:
+> > Reading /sys/class/leds/<led>/trigger returns all available LED trigger=
+s.
+> > However, the size of this file is limited to PAGE_SIZE because of the
+> > limitation for sysfs attribute.
+> >
+> > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> > PAGE_SIZE limit, and makes it impossible to see all available LED trigg=
+ers
+> > and which trigger is currently activated.
+> >
+> > This converts /sys/class/leds/<led>/trigger to bin attribute and remove=
+s
+> > the PAGE_SIZE limitation.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Dan Murphy <dmurphy@ti.com>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > ---
+> >  drivers/leds/led-class.c    |  8 ++--
+> >  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++---=
+--------
+> >  drivers/leds/leds.h         |  6 +++
+> >  include/linux/leds.h        |  5 ---
+> >  4 files changed, 79 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> > index 4793e77..8b5a1d1 100644
+> > --- a/drivers/leds/led-class.c
+> > +++ b/drivers/leds/led-class.c
+> > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *d=
+ev,
+> >  static DEVICE_ATTR_RO(max_brightness);
+> >
+> >  #ifdef CONFIG_LEDS_TRIGGERS
+> > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store)=
+;
+> > -static struct attribute *led_trigger_attrs[] =3D {
+> > -     &dev_attr_trigger.attr,
+> > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0)=
+;
+>
+> BIN_ATTR_RW()?
 
-If I understood you, then that had been discussed in the past:
+We can use BIN_ATTR_RW() by renaming led_trigger_{read,write}() to
+trigger_{read,write}().  But led_trigger_{read,write}() are not static
+functions.  These are defined as export symbols for led-class module.
 
-https://www.spinics.net/lists/linux-fsdevel/msg149035.html
-
-We only need this for specific threads which implement part of a storage
-driver in userspace.
-
-> 
->>> +static ssize_t memalloc_write(struct file *file, const char __user *buf,
->>> +			      size_t count, loff_t *ppos)
->>> +{
->>> +	struct task_struct *task;
->>> +	char buffer[5];
->>> +	int rc = count;
->>> +
->>> +	memset(buffer, 0, sizeof(buffer));
->>> +	if (count != sizeof(buffer) - 1)
->>> +		return -EINVAL;
->>> +
->>> +	if (copy_from_user(buffer, buf, count))
-> 
-> copy_from_user() / copy_to_user() might involve memory allocation
-> via page fault which has to be done under the mask? Moreover, since
-> just open()ing this file can involve memory allocation, do we forbid
-> open("/proc/thread-self/memalloc") ?
-
-I was having the daemons set the flag when they initialize.
+So trigger_{read,write}() will be too generic symbol names, won't they?
