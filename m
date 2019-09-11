@@ -2,150 +2,142 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EE4ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4348CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E61A2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAE52081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b/O+vgIW";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CMcyNlmu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jc9Nf8+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfIKRsl (ORCPT
+        id S1729760AbfIKRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:48:41 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58726 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729646AbfIKRsl (ORCPT
+        Wed, 11 Sep 2019 13:50:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38273 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbfIKRuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:48:41 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8BHhrqV005445;
-        Wed, 11 Sep 2019 10:48:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=jBcQKaH5LdenjvKb2ODTu+8ZtI396yTYtzxscCRirbk=;
- b=b/O+vgIW3ZKOsJpEvap+43SUnl5lQ6s8dt1irCpOExiE/23SXSIBpzxXBb3e6rauY9Iz
- hYzqgR8JiYSg/b0z8zxY+UFyGvwaAVIq2BZAGau5rG4WxtdKXNTbLgtdkOC3rcRjRQA2
- TkEUiBnCdNbE1fAr230KrTdlullarWrkjOw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2uy315rvfy-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 11 Sep 2019 10:48:29 -0700
-Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
- ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 11 Sep 2019 10:48:29 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 11 Sep 2019 10:48:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mLo8nLXe2NWNgXJVvrDp/jMhBCQd85FLcbASq83S0kbfpE3+9dNqEaakgOg4JqV9Veh2Snf6c2/o3lMlyLvVawtKsMobtltDXlKriRgap0sqcH3U4iGAEJcZsviocEQaw/s2ocZEkVnG7EyOSP2+CQLNjGqseYWLcf+DpzLpV1Bpf9RsazMHMCc3/R3xBocUXvN5Hide7WmKhRkN8qdEy1Jj5583yX/E6gqqdmOY7FXfN//Wj1tefp4WSIfeLDETGM1AHS1LqHzMJEitxGI4hC+pTHH8fJxwChnskHNcr6HS5kq69Ptm+9gza0HiH+QVWBOBeDLytRqlVdpDXYsEnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jBcQKaH5LdenjvKb2ODTu+8ZtI396yTYtzxscCRirbk=;
- b=DExd8Cc1/xOSPcqqGfYPU/b+UaWrTFshZwMAzpRtMV4do0PXzWaQQd44i+IqEwRMJzsp/f0mbMfB57I1JAa/mKdkvuT6ovL+GOdjY/6ov41uOSO9JbDcxriE2m3otBJCoM50Z/ey+N2Qx2WsyshbkhEcIqfQ7/C+XM0HWJY1Im2O3GfesVMYdTXuSJR37b3rAnmf21DK75IUospuLzzmJy8RJI++oAGDHngqTkvydnkm+17uQOJbdMLVKGf4r1Io9C3OexNK+hhHeqD4u6FsfIFnkb+vbeE9nJ7iMe5No9EJPg2baVYBmU8GUR8viTx//vgah+nibN+ljKOSbIlZow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jBcQKaH5LdenjvKb2ODTu+8ZtI396yTYtzxscCRirbk=;
- b=CMcyNlmuI1+CGpJKTiRzeJ7/yIA3d13MKYMplEb59mAX/SstktWMwof31Pmw52Refh0jLiBH2Y04CNQnSGlnN5NaQ2D3/c/Bvk8EKLGcqRXpg5kAGwrNagIl5G+0mzok2K5vA/cJgLdgRuR3MlNh19shjuy3Wihtpf07RVi0/nc=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1735.namprd15.prod.outlook.com (10.174.53.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Wed, 11 Sep 2019 17:48:28 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::38b1:336:13e6:b02b]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::38b1:336:13e6:b02b%7]) with mapi id 15.20.2241.018; Wed, 11 Sep 2019
- 17:48:28 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Rashmica Gupta <rashmica.g@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
-Thread-Topic: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
-Thread-Index: AQHVaJq7WAtiKansOkK5PsarCtqTlacmS6yA
-Date:   Wed, 11 Sep 2019 17:48:28 +0000
-Message-ID: <39AE527D-F629-4AD7-980C-61C55C5B8718@fb.com>
-References: <20190904061245.30770-1-rashmica.g@gmail.com>
-In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::1:a2f5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 184b43eb-096c-4a32-a506-08d736e040c4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1735;
-x-ms-traffictypediagnostic: CY4PR15MB1735:
-x-microsoft-antispam-prvs: <CY4PR15MB173514C64C2D7ABC2E47CEB7DDB10@CY4PR15MB1735.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:337;
-x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(366004)(39860400002)(396003)(189003)(199004)(2201001)(66446008)(64756008)(305945005)(7736002)(8676002)(81156014)(81166006)(4326008)(8936002)(5660300002)(86362001)(91956017)(76116006)(256004)(14444005)(53936002)(99286004)(6512007)(4744005)(71190400001)(6246003)(6486002)(71200400001)(36756003)(25786009)(2501003)(66946007)(66556008)(66476007)(110136005)(54906003)(478600001)(316002)(15650500001)(14454004)(102836004)(6506007)(446003)(11346002)(486006)(2616005)(476003)(6436002)(33656002)(6116002)(2906002)(186003)(46003)(76176011)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1735;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nbwWDL8gxJuJykVH61Nkut1QogRYCiclf0AH9JmPcGkMPCgMVHiJc3GHjdl20yUr8z7DwkEeOLI9C1M6Utvxcw1wbLj0tRCNRshUt1GHzsgKbbibrzrurIKguFNaXxE6G/go9UtOe57pNaAx0z2TwrYa+0H+UXvBJzX6exQkyzQsitRwjO6ZQhW9wpFBAcwwja2cG1A9B7tJcXszPMbUGJFHiiq4qKO5rhz7B2n1Ssii44xFfaKZ1oUh6jhFaJfo0plQHr/+BdbVQeYwgNTBXt2CnKVnOcJ1BKnvMqvmUALOp2bhoNMIQFva8PTHOZEY85Ka9Z2fK0GtxRIO+4qUYJIuQakdNyendGc5ayzddzZKe81PaOOQyjTEC4s0YY3ys5aS/nWghAYplI1EhW92iFlCgfwqM/S267LlANIkEPs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0850C97D1AD5DA42B0602E19CF283F98@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 13:50:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id k5so22572356iol.5;
+        Wed, 11 Sep 2019 10:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BiVtPEqM908NUB3dBSJY2gAQDyOXwRsQwEkRcPZywqI=;
+        b=jc9Nf8+GW9nZpQ0ok6swsNOLkv+pGqsSyc21nizbrfEMW5OQZTAYm96rg9TIObiBCt
+         XHJngLQdhpxII/jMetLaSjWWHddk+kc/6WlV6Rp5+ONZJ7lo9qA/4x3vO97qduAHC/Th
+         ItwIUifaX2DGdTlFMc54yWpK8kM0fvXp6akMNLJpOBl47p2BXp/oE/sf9T72YQqwLto9
+         9dUIzTM4+awJdTHsMN7TjQ8pJhcccTbf9h1Ms1Qc17ZJeuUt/80RKtfHmmwkQyBWZpkz
+         q2dsHwVpM24jqLYSfhJv9bSmw1LY+mIBL5JMRx2hQmIBIUNThCkmEvpxKsr0VzRUdMM8
+         BHMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BiVtPEqM908NUB3dBSJY2gAQDyOXwRsQwEkRcPZywqI=;
+        b=lGKzQwP95M0H3IPHjOp/FJ5hUVMIw+REtqM54dnMtNu17NtV3cvaPhxcNPTBooGWBI
+         nIYouiZAW+61ngGKwhHWt66QVVyXgD0ZHGO0MZkEwW1Z5woCWv886Cr3YZHKd9oMwGS9
+         +dC4TPvCwldDoQ/EQy9wAvLuXNqBCCfc32y3T4Z/DJrn2BQsZi/YqomnzrEczMHu4oVK
+         VCRW1G1JZti8p5ChCcvMNvCMKeY2mYzSBQcuwJs59U2j6GROLWloNl8yUazAVQmbmTH7
+         KpOe0N2izE9qu9wRX+QdveQ8kHQEW/qpQkh7IvMZVuoCLT7hTcwfn7Iay6HmxcCQSG22
+         heZA==
+X-Gm-Message-State: APjAAAU5v3fnTs86+OaSUhlrZbHlZAxwdVB93OYsmjP9HthWn38reRI1
+        lM7tftpVEz+I9DD7OXwjf+G0NHQ/goZlSaGhjQg=
+X-Google-Smtp-Source: APXvYqxIT4Dcqge2c5gC0lT0eUdANFfKovs5IBIuAHz7cTm/bLxKVUyS8v9G9EAwjfRfiW5heNFtoExzCoI5CJy/qRU=
+X-Received: by 2002:a6b:8e92:: with SMTP id q140mr13229896iod.205.1568224205056;
+ Wed, 11 Sep 2019 10:50:05 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 184b43eb-096c-4a32-a506-08d736e040c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 17:48:28.1948
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ecZpug9A0LiyU7nDZ9dJx0ao1IaxbfhPZzM53gHZ+jrvkZxn6TeHZ4DRxibrILt8VkmBnRxqgXa1XOk0BiRQHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1735
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-11_08:2019-09-11,2019-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 clxscore=1015 mlxscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 bulkscore=0 impostorscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909110164
-X-FB-Internal: deliver
+References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
+ <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
+ <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
+ <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
+ <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
+ <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
+ <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
+ <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
+ <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
+ <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com>
+ <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com>
+ <CAHCN7xL59cXgbe1YTbNvTjptO9bMnuxprCP7ok5kRuc8UO9Fcw@mail.gmail.com>
+ <D7B54A39-D8A3-4EDF-8B47-66D59319B3F4@goldelico.com> <F65E947E-784A-4540-B926-BF3ECB0C01EC@goldelico.com>
+ <285FED38-2B2B-4813-9FD2-396C53E9B1B2@goldelico.com> <CAHCN7xKyTnNojwRqsXcE1AsDKtJikBpXoUo8ED=89ZR9-ko9hA@mail.gmail.com>
+ <65A23326-70B4-46E3-992D-74256B056900@goldelico.com> <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
+ <BF829797-492C-4120-AC69-F8B83572FD38@goldelico.com> <D3E8B5DC-AB53-4F46-8ABB-F839A11EB31C@goldelico.com>
+In-Reply-To: <D3E8B5DC-AB53-4F46-8ABB-F839A11EB31C@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 11 Sep 2019 12:49:53 -0500
+Message-ID: <CAHCN7xKq1CszKxax+7sG4O_V+iBYLSDVtDC480gvGV+KVb2-sw@mail.gmail.com>
+Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Nishanth Menon <nm@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDkvMTEvMTksIDU6MTYgQU0sICJMaW51eC1hc3BlZWQgb24gYmVoYWxmIG9mIFJh
-c2htaWNhIEd1cHRhIiA8bGludXgtYXNwZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxp
-c3RzLm96bGFicy5vcmcgb24gYmVoYWxmIG9mIHJhc2htaWNhLmdAZ21haWwuY29tPiB3cm90ZToN
-Cg0KICAgIEZpeGVzOiAzNjFiNzkxMTlhNGI3ICgnZ3BpbzogQWRkIEFzcGVlZCBkcml2ZXInKQ0K
-ICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IFJhc2htaWNhIEd1cHRhIDxyYXNobWljYS5nQGdtYWls
-LmNvbT4NCiAgICAtLS0NCiAgICAgZHJpdmVycy9ncGlvL2dwaW8tYXNwZWVkLmMgfCAyICstDQog
-ICAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KICAgIA0K
-ICAgIGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQuYyBiL2RyaXZlcnMvZ3Bp
-by9ncGlvLWFzcGVlZC5jDQogICAgaW5kZXggOWRlZmUyNWQ0NzIxLi43Nzc1MmIyNjI0ZTggMTAw
-NjQ0DQogICAgLS0tIGEvZHJpdmVycy9ncGlvL2dwaW8tYXNwZWVkLmMNCiAgICArKysgYi9kcml2
-ZXJzL2dwaW8vZ3Bpby1hc3BlZWQuYw0KICAgIEBAIC0xMTY1LDcgKzExNjUsNyBAQCBzdGF0aWMg
-aW50IF9faW5pdCBhc3BlZWRfZ3Bpb19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQ0KICAgICAJZ3Bpby0+Y2hpcC5iYXNlID0gLTE7DQogICAgIA0KICAgICAJLyogQWxsb2NhdGUg
-YSBjYWNoZSBvZiB0aGUgb3V0cHV0IHJlZ2lzdGVycyAqLw0KICAgIC0JYmFua3MgPSBncGlvLT5j
-b25maWctPm5yX2dwaW9zID4+IDU7DQogICAgKwliYW5rcyA9IChncGlvLT5jb25maWctPm5yX2dw
-aW9zID4+IDUpICsgMTsNCklmIG51bWJlciBvZiBncGlvcyBhcmUgMzIgdGhlbiBpdCBzaG91bGQg
-YmUgb25seSAxIGJhbmssIGFzIHBlciBhYm92ZSBpdCBpcyAyIGJhbmsuDQogICAgIAlncGlvLT5k
-Y2FjaGUgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwNCiAgICAgCQkJCSAgICBiYW5rcywgc2l6
-ZW9mKHUzMiksIEdGUF9LRVJORUwpOw0KICAgICAJaWYgKCFncGlvLT5kY2FjaGUpDQogICAgLS0g
-DQogICAgMi4yMC4xDQogICAgDQogICAgDQoNCg==
+On Wed, Sep 11, 2019 at 12:43 PM H. Nikolaus Schaller <hns@goldelico.com> w=
+rote:
+>
+> Hi Adam,
+>
+> > Am 11.09.2019 um 18:01 schrieb H. Nikolaus Schaller <hns@goldelico.com>=
+:
+> >
+> >>
+> >> Am 11.09.2019 um 17:56 schrieb Adam Ford <aford173@gmail.com>:
+> >>
+> >>> There are some subtleties for testing.
+> >>>
+> >>> * I have added turbo-mode; to OPP6 / OPP1G
+> >>> * which means they are available but not used by the ondemand govenor
+> >>> * to enable them one has to echo 1 >/sys/devices/system/cpu/cpufreq/b=
+oost
+> >>
+> >> Will that be documented somewhere? If not, can we put a comment in the
+> >> device tree so people know how to enable it?
+> >
+> > It seems to be pretty standard on i86 systems if you google for "turbo =
+mode".
+> > I have added it to the commit message which adds the vbb regulator.
+>
+> And, I am not sure if DT maintainers will accept comments about the
+> Linux /sys implementation in device tree files or bindings. Those
+> should be independent of Linux.
+
+OK.
+>
+> Basically the turbo-mode property is a hint to the OPP system (which
+> may or may not use of it).
+>
+> So I think it is indeed better to have it in the commit message and
+> not the code.
+
+That makes sense.
+
+>
+> One more thought: as long as we do not have junction temperature monitori=
+ng
+> we should keep it off by default... We may even remove the turbo-mode
+> designator if we have the 90=C2=B0C limit and smart reflex working.
+
+We're almost there!
+
+adam
+>
+> BR,
+> Nikolaus
+>
