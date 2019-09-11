@@ -2,156 +2,226 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A2AC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D089C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35BE206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:08:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="CzsmEeLI"
+	by mail.kernel.org (Postfix) with ESMTP id DE846206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfIKNIu (ORCPT
+        id S1727976AbfIKNLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:08:50 -0400
-Received: from mail2.candelatech.com ([208.74.158.173]:58156 "EHLO
-        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbfIKNIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:08:50 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 09:08:49 EDT
-Received: from [192.168.1.47] (unknown [50.34.216.97])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail3.candelatech.com (Postfix) with ESMTPSA id 4D7DE104F;
-        Wed, 11 Sep 2019 06:03:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 4D7DE104F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-        s=default; t=1568207025;
-        bh=XIn3JBORtKzOkERfGjA3+iWzadACjJyAvSCJ/fogVqA=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=CzsmEeLIiQrpfB+wLCa7XQ8FXXHnDjxlpGIfPOi68TLjouBlWMdKbC+N/VH+BHLCS
-         InupJwTM0AK4i+yPeXA3RNJ1+VM/pj8ZcG1bZdo+jZLXFasa0bGpjtwb+ohIx+K3KY
-         56+I9JUpJk4JZ7/mO6xiUBOyvT4kdLGGAwQUK2xY=
-Subject: Re: WARNING at net/mac80211/sta_info.c:1057
- (__sta_info_destroy_part2())
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
- <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
- <CAHk-=wj_jneK+UYzHhjwsH0XxP0knM+2o2OeFVEz-FjuQ77-ow@mail.gmail.com>
- <30679d3f86731475943856196478677e70a349a9.camel@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-From:   Ben Greear <greearb@candelatech.com>
-Message-ID: <2d673d55-eb27-8573-b8ae-a493335723cf@candelatech.com>
-Date:   Wed, 11 Sep 2019 06:03:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Wed, 11 Sep 2019 09:11:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:47408 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbfIKNLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:11:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0C341000;
+        Wed, 11 Sep 2019 06:11:13 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 568163F67D;
+        Wed, 11 Sep 2019 06:11:13 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 14:11:11 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, maz@kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] arm64: dts: khadas-vim3: add commented support for
+ PCIe
+Message-ID: <20190911131111.GX9720@e119886-lin.cambridge.arm.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-7-git-send-email-narmstrong@baylibre.com>
+ <20190911125035.GU9720@e119886-lin.cambridge.arm.com>
+ <bf7b735d-e682-52db-ea8c-4ccd786f0ed9@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <30679d3f86731475943856196478677e70a349a9.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf7b735d-e682-52db-ea8c-4ccd786f0ed9@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 02:58:18PM +0200, Neil Armstrong wrote:
+> On 11/09/2019 14:50, Andrew Murray wrote:
+> > On Sun, Sep 08, 2019 at 01:42:58PM +0000, Neil Armstrong wrote:
+> >> The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> >> lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> >> an USB3.0 Type A connector and a M.2 Key M slot.
+> >> The PHY driving these differential lines is shared between
+> >> the USB3.0 controller and the PCIe Controller, thus only
+> >> a single controller can use it.
+> >>
+> >> The needed DT configuration when the MCU is configured to mux
+> >> the PCIe/USB3.0 differential lines to the M.2 Key M slot is
+> >> added commented and may uncommented to disable USB3.0 from the
+> > 
+> > *and may be*
+> > 
+> >> USB Complex and enable the PCIe controller.
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  | 22 +++++++++++++++++++
+> >>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  | 22 +++++++++++++++++++
+> >>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  4 ++++
+> >>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 22 +++++++++++++++++++
+> >>  4 files changed, 70 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> >> index 3a6a1e0c1e32..0577b1435cbb 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+> >> @@ -14,3 +14,25 @@
+> >>  / {
+> >>  	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
+> >>  };
+> >> +
+> >> +/*
+> >> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> >> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> >> + * an USB3.0 Type A connector and a M.2 Key M slot.
+> >> + * The PHY driving these differential lines is shared between
+> >> + * the USB3.0 controller and the PCIe Controller, thus only
+> >> + * a single controller can use it.
+> >> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+> >> + * to the M.2 Key M slot, uncomment the following block to disable
+> >> + * USB3.0 from the USB Complex and enable the PCIe controller.
+> >> + */
+> >> +/*
+> >> +&pcie {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb {
+> >> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+> >> +	phy-names = "usb2-phy0", "usb2-phy1";
+> >> +};
+> > 
+> > I assume there is no way other way to determine from the hardware which way
+> > the mux is set?
+> 
+> No, it would be simpler :-/ The MUX is on-board and the MCU drives the MUX selection.
+> 
+> You can look at the https://dl.khadas.com/Hardware/VIM3/Schematic/VIM3_V11_Sch.pdf
+> The PCIE_EN signal is driven by the STM8S MCU.
 
+Ah I see.
 
-On 09/11/2019 05:04 AM, Johannes Berg wrote:
-> On Wed, 2019-09-11 at 12:58 +0100, Linus Torvalds wrote:
->>
->> And I didn't think about it or double-check, because the errors that
->> then followed later _looked_ like that TX power failing that I thought
->> hadn't happened.
->
-> Yeah, it could be something already got stuck there, hard to say.
->
->>> Since we see that something actually did an rfkill operation. Did you
->>> push a button there?
->>
->> No, I tried to turn off and turn on Wifi manually (no button, just the
->> settings panel).
->
-> That does usually also cause rfkill, so that explains how we got down
-> this particular code path.
->
->> I didn't notice the WARN_ON(), I just noticed that there was no
->> networking, and "turn it off and on again" is obviously the first
->> thing to try ;)
->
-> :-)
->
->> Sep 11 10:27:13 xps13 kernel: WARNING: CPU: 4 PID: 1246 at
->> net/mac80211/sta_info.c:1057 __sta_info_destroy_part2+0x147/0x150
->> [mac80211]
->>
->> but if you want full logs I can send them in private to you.
->
-> No, it's fine, though maybe Kalle does - he was stepping out for a while
-> but said he'd look later.
->
-> This is the interesting time - 10:27:13 we get one of the first
-> failures. Really the first one was this:
->
->> Sep 11 10:27:07 xps13 kernel: ath10k_pci 0000:02:00.0: wmi command 16387 timeout, restarting hardware
->
->
->> I do suspect it's atheros and suspend/resume or something. The
->> wireless clearly worked for a while after the resume, but then at some
->> point it stopped.
->
-> I'm not really sure it's related to suspend/resume at all, the firmware
-> seems to just have gotten stuck, and the device and firmware most likely
-> got reset over the suspend/resume anyway.
->
->>> The only explanation I therefore have is that something is just taking
->>> *forever* in that code path, hence my question about timing information
->>> on the logs.
->>
->> Yeah, maybe it would time out everything eventually. But not for a
->> long time. It hadn't cleared up by
->>
->>   Sep 11 10:36:21 xps13 gnome-session-f[6837]: gnome-session-failed:
->> Fatal IO error 0 (Success) on X server :0.
->
-> Ok, that's way longer than I would have guessed even! That's over 9
-> minutes, that'd be close to 200 commands having to be issued and timing
-> out ...
->
-> I don't know. What I wrote before is basically all I can say, I think
-> the driver gets stuck somewhere waiting for the device "forever", and
-> the stack just doesn't get to release the lock, causing all the follow-
-> up problems.
+> 
+> > 
+> > Otherwise phy_g12a_usb3_pcie_xlate could determine the hardware mode, and
+> > reject the phy instance with the wrong mode. Thus resulting in either the
+> > PCI or USB to fail their probe. And avoiding the need to modify the DT on
+> > boot.
+> 
+> Yep, it would have been simpler this way. Maybe a board vendor will set a gpio ?
+> who knows, but for actual boards it's static or with 0ohm resistors, and for the
+> VIM3 we only know by asking the MCU.
+> 
+> Maybe we could add a fake PHY as a MCU MFD subdevice, wrapping calls to the
+> right PHY. But for now the MCU has no upstream driver anyway.
 
-It looks to me like the ath10k firmware is not responding to commands and/or
-is out of its WMI tx credits.  The code often takes a lock and then blocks for up to 3
-or so seconds waiting for a response from the firmware, and the mac80211 calling
-code is often already holding rtnl.  Pretty much every mac80211 call will cause a
-WMI message and thus potentially hit this timeout.
-
-This can easily cause rtnl to be held for 3 seconds, but after that, I believe
-upstream ath10k will now time out and kill the firmware and restart.  (I run
-a significantly modified ath10k driver, and that is how mine works, at least.)
-
-In this case, it looks like restarting the firmware/NIC failed, and I guess
-that must get it in a state where it is still blocking and trying to talk
-to the firmware?  Or maybe deadlock down inside ath10k driver.
-
-For what it's worth, we see that WARN_ON often when ath10k firmware crashes, but it
-seems to not be a big deal and the system normally recovers fine.
-
-Out of curiosity, I'm interested to know what ath10k NIC chipset this is from.
+OK
 
 Thanks,
-Ben
 
--- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+Andrew Murray
+
+> 
+> Neil
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> >> + */
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+> >> index b73deb282120..1ef5c2f04f67 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+> >> @@ -14,3 +14,25 @@
+> >>  / {
+> >>  	compatible = "khadas,vim3", "amlogic,s922x", "amlogic,g12b";
+> >>  };
+> >> +
+> >> +/*
+> >> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> >> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> >> + * an USB3.0 Type A connector and a M.2 Key M slot.
+> >> + * The PHY driving these differential lines is shared between
+> >> + * the USB3.0 controller and the PCIe Controller, thus only
+> >> + * a single controller can use it.
+> >> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+> >> + * to the M.2 Key M slot, uncomment the following block to disable
+> >> + * USB3.0 from the USB Complex and enable the PCIe controller.
+> >> + */
+> >> +/*
+> >> +&pcie {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb {
+> >> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+> >> +	phy-names = "usb2-phy0", "usb2-phy1";
+> >> +};
+> >> + */
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> >> index 8647da7d6609..eac5720dc15f 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> >> @@ -246,6 +246,10 @@
+> >>  	linux,rc-map-name = "rc-khadas";
+> >>  };
+> >>  
+> >> +&pcie {
+> >> +	reset-gpios = <&gpio GPIOA_8 GPIO_ACTIVE_LOW>;
+> >> +};
+> >> +
+> >>  &pwm_ef {
+> >>          status = "okay";
+> >>          pinctrl-0 = <&pwm_e_pins>;
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> >> index 5233bd7cacfb..d9c7cbedce53 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> >> @@ -68,3 +68,25 @@
+> >>  	clock-names = "clkin1";
+> >>  	status = "okay";
+> >>  };
+> >> +
+> >> +/*
+> >> + * The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> >> + * lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> >> + * an USB3.0 Type A connector and a M.2 Key M slot.
+> >> + * The PHY driving these differential lines is shared between
+> >> + * the USB3.0 controller and the PCIe Controller, thus only
+> >> + * a single controller can use it.
+> >> + * If the MCU is configured to mux the PCIe/USB3.0 differential lines
+> >> + * to the M.2 Key M slot, uncomment the following block to disable
+> >> + * USB3.0 from the USB Complex and enable the PCIe controller.
+> >> + */
+> >> +/*
+> >> +&pcie {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb {
+> >> +	phys = <&usb2_phy0>, <&usb2_phy1>;
+> >> +	phy-names = "usb2-phy0", "usb2-phy1";
+> >> +};
+> >> + */
+> >> -- 
+> >> 2.17.1
+> >>
+> 
