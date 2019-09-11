@@ -2,201 +2,73 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A363ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D15EECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBB42089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F922089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfIKJXx (ORCPT
+        id S1727418AbfIKJZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:23:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58154 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 05:25:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3742 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbfIKJXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:23:53 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F82E7BDD2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:23:52 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id f19so23119588qtq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 02:23:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mYSD9hRnX/6v3ywsydqfkpFUdOIKRrBI76zwVnPyG4o=;
-        b=N6G+isrkTJ01lXD9/zy+SfTf9d+sOHAyZokCSRI6ju6cQfLNJcC7/6B+PFaWNkrufO
-         SXbzxjMiyQRSjMjie/7piWD0tLr93TpErcXFnV7RWQCZDDecVyzCorp7yqHYlrTujADa
-         9kD/jaOjghEaeHE01IVS2hXIGf1u+jaPgYG0O+xz4hYic61CrYQcgVYo3i3clnbTvU7S
-         ZE/41SKgWZVCfPk2jEWEVuEihc9cCvTL6g+abl3A1WeI9DHxekM4AT/0d8leAO29Uoot
-         J6MAMYWeWgKkvDIQpgUw3y+XdygoycSdS26lZSZJw0r6LUiUmGcebWZLeoG+KTJEfJxn
-         u3pA==
-X-Gm-Message-State: APjAAAVhVjRhuj03ve2rjhvE0Ao5GUIOqBpGI2VTsyZ/p1DJzxRm6rmI
-        ivQQe5xBoVeJ0niLMnigtoAfdNajRRJrCX7wxZkhZxs3TMhtJ0XESyZvZNmQDnjFIJOkgOvAEgt
-        bYC+Ii++GpAvlHyP2aRlZVHZ6
-X-Received: by 2002:a37:a503:: with SMTP id o3mr33610733qke.115.1568193831418;
-        Wed, 11 Sep 2019 02:23:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz8QR5cKcd/uXRYlQ318mPxE6jSP+97aQIMCCQ/RUZeDP873f/PJ5B1bFEAkiTG92ijMAd8cg==
-X-Received: by 2002:a37:a503:: with SMTP id o3mr33610704qke.115.1568193831205;
-        Wed, 11 Sep 2019 02:23:51 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id r13sm5657063qkm.48.2019.09.11.02.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 02:23:50 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 05:23:40 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [virtio-dev] Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190911051819-mutt-send-email-mst@kernel.org>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910161818.GF2797@work-vm>
- <f74117db-225d-92cb-9476-22c0f752659d@redhat.com>
+        id S1726579AbfIKJZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:25:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 02:25:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="214619764"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2019 02:25:16 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i7ysE-0005Lw-SK; Wed, 11 Sep 2019 12:25:14 +0300
+Date:   Wed, 11 Sep 2019 12:25:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
+Subject: Re: [PATCH 04/11] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190911092514.GM2680@smile.fi.intel.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-5-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f74117db-225d-92cb-9476-22c0f752659d@redhat.com>
+In-Reply-To: <20190911075215.78047-5-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 06:22:37PM +0200, David Hildenbrand wrote:
-> On 10.09.19 18:18, Dr. David Alan Gilbert wrote:
-> > * Alexander Duyck (alexander.duyck@gmail.com) wrote:
-> >> On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >>>
-> >>> On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
-> >>>> On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >>>>>
-> >>>>> I wanted to review "mm: Introduce Reported pages" just realize that I
-> >>>>> have no clue on what is going on so returned to the cover and it didn't
-> >>>>> really help much. I am completely unfamiliar with virtio so please bear
-> >>>>> with me.
-> >>>>>
-> >>>>> On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
-> >>>>> [...]
-> >>>>>> This series provides an asynchronous means of reporting to a hypervisor
-> >>>>>> that a guest page is no longer in use and can have the data associated
-> >>>>>> with it dropped. To do this I have implemented functionality that allows
-> >>>>>> for what I am referring to as unused page reporting
-> >>>>>>
-> >>>>>> The functionality for this is fairly simple. When enabled it will allocate
-> >>>>>> statistics to track the number of reported pages in a given free area.
-> >>>>>> When the number of free pages exceeds this value plus a high water value,
-> >>>>>> currently 32, it will begin performing page reporting which consists of
-> >>>>>> pulling pages off of free list and placing them into a scatter list. The
-> >>>>>> scatterlist is then given to the page reporting device and it will perform
-> >>>>>> the required action to make the pages "reported", in the case of
-> >>>>>> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> >>>>>> and as such they are forced out of the guest. After this they are placed
-> >>>>>> back on the free list,
-> >>>>>
-> >>>>> And here I am reallly lost because "forced out of the guest" makes me
-> >>>>> feel that those pages are no longer usable by the guest. So how come you
-> >>>>> can add them back to the free list. I suspect understanding this part
-> >>>>> will allow me to understand why we have to mark those pages and prevent
-> >>>>> merging.
-> >>>>
-> >>>> Basically as the paragraph above mentions "forced out of the guest"
-> >>>> really is just the hypervisor calling MADV_DONTNEED on the page in
-> >>>> question. So the behavior is the same as any userspace application
-> >>>> that calls MADV_DONTNEED where the contents are no longer accessible
-> >>>> from userspace and attempting to access them will result in a fault
-> >>>> and the page being populated with a zero fill on-demand page, or a
-> >>>> copy of the file contents if the memory is file backed.
-> >>>
-> >>> As I've said I have no idea about virt so this doesn't really tell me
-> >>> much. Does that mean that if somebody allocates such a page and tries to
-> >>> access it then virt will handle a fault and bring it back?
-> >>
-> >> Actually I am probably describing too much as the MADV_DONTNEED is the
-> >> hypervisor behavior in response to the virtio-balloon notification. A
-> >> more thorough explanation of it can be found by just running "man
-> >> madvise", probably best just to leave it at that since I am probably
-> >> confusing things by describing hypervisor behavior in a kernel patch
-> >> set.
-> >>
-> >> For the most part all the page reporting really does is provide a way
-> >> to incrementally identify unused regions of memory in the buddy
-> >> allocator. That in turn is used by virtio-balloon in a polling thread
-> >> to report to the hypervisor what pages are not in use so that it can
-> >> make a decision on what to do with the pages now that it knows they
-> >> are unused.
-> >>
-> >> All this is providing is just a report and it is optional if the
-> >> hypervisor will act on it or not. If the hypervisor takes some sort of
-> >> action on the page, then the expectation is that the hypervisor will
-> >> use some sort of mechanism such as a page fault to discover when the
-> >> page is used again.
-> > 
-> > OK, that's interestingly different (but OK) from some other schemes that
-> > hav ebeen described which *require* the guest to somehow indicate the
-> > page is in use before starting to use the page again.
-> > 
-> 
-> virtio-balloon also has a mode where the guest would not have to
-> indicate to the host before re-using a page. Only
-> VIRTIO_BALLOON_F_MUST_TELL_HOST enforces this. So it's not completely new.
+On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
+> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> works with arbitrary firmware node.
 
-VIRTIO_BALLOON_F_MUST_TELL_HOST is a bit different.
-When it's not set, guest still must tell host about
-pages in use, it just can batch these notifications
-sending them possibly after page has been used.
-So even with VIRTIO_BALLOON_F_MUST_TELL_HOST off you don't
-skip the notification.
+I'm wondering if it's possible to step forward and replace
+fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
+in other cases in this series.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-From hypervisor point of view, this feature is very much like adding
-page to the balloon and immediately taking it out of the balloon again,
-just doing it in one operation.
-
-The main difference is the contents of the page, which matters
-with poisoning: in that case hypervisor is expected to hand
-back page with the poisoning content. Not so with regular
-deflate where page contents is undefined.
-
-Well and also the new interface is optimized for large chunks
-of memory since we'll likely be dealing with such.
-
-> > Dave
-> 
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
