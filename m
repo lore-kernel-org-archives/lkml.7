@@ -2,140 +2,92 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB353C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C773C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90342085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A9F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:39:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="ighaW8uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfIKQfY (ORCPT
+        id S1729100AbfIKQjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:35:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13950 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728828AbfIKQfX (ORCPT
+        Wed, 11 Sep 2019 12:39:55 -0400
+Received: from smtp113.ord1c.emailsrvr.com ([108.166.43.113]:59718 "EHLO
+        smtp113.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728828AbfIKQjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:35:23 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8BGWPbE008827;
-        Wed, 11 Sep 2019 12:34:53 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uy4351360-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 12:34:53 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8BGTSmU023056;
-        Wed, 11 Sep 2019 16:34:52 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 2uv467cjdr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 16:34:52 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8BGYpIU13632112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Sep 2019 16:34:52 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3663112061;
-        Wed, 11 Sep 2019 16:34:51 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4A87112063;
-        Wed, 11 Sep 2019 16:34:49 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.164.37])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Sep 2019 16:34:49 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH] powerpc/prom_init: Undo relocation before entering secure mode
-Date:   Wed, 11 Sep 2019 13:34:33 -0300
-Message-Id: <20190911163433.12822-1-bauerman@linux.ibm.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 11 Sep 2019 12:39:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1568219994;
+        bh=ShXCPuRTmrlcXQzNVyVjvWiPOGKA9ghbqXSw5ScsjpY=;
+        h=From:To:Subject:Date:From;
+        b=ighaW8uwiJSs2+yv0J1Fj6FHIvEo+xB+FivBVZujCIPewmG5OsbTMmrWIvohtlegp
+         gJEyD0z+VVKM/b6UJXE6BtIAg0kVA1FqgwBhe6fvwL59GytokCuLVczuxzAtRMKMHP
+         //bDXfwK6xaZoQqVmsGnPxKCDa7ZDWM6MEg2/wPU=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp15.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9F8E620138;
+        Wed, 11 Sep 2019 12:39:53 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Wed, 11 Sep 2019 12:39:54 -0400
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Abbott <abbotti@mev.co.uk>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] devices.txt: improve entry for comedi (char major 98)
+Date:   Wed, 11 Sep 2019 17:39:41 +0100
+Message-Id: <20190911163941.16664-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909110152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ultravisor will do an integrity check of the kernel image but we
-relocated it so the check will fail. Restore the original image by
-relocating it back to the kernel virtual base address.
+Describe how the comedi minor device numbers are split across comedi
+devices and comedi subdevices.
 
-This works because during build vmlinux is linked with an expected virtual
-runtime address of KERNELBASE.
+Replace the current, long dead URL with an official URL for the Comedi
+project.
 
-Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 ---
- arch/powerpc/include/asm/elf.h         |  3 +++
- arch/powerpc/kernel/prom_init.c        | 11 +++++++++++
- arch/powerpc/kernel/prom_init_check.sh |  3 ++-
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/devices.txt | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/elf.h b/arch/powerpc/include/asm/elf.h
-index 409c9bfb43d9..57c229a86f08 100644
---- a/arch/powerpc/include/asm/elf.h
-+++ b/arch/powerpc/include/asm/elf.h
-@@ -175,4 +175,7 @@ do {									\
- 	ARCH_DLINFO_CACHE_GEOMETRY;					\
- } while (0)
+diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-guide/devices.txt
+index e56e00655153..1c5d2281efc9 100644
+--- a/Documentation/admin-guide/devices.txt
++++ b/Documentation/admin-guide/devices.txt
+@@ -1647,8 +1647,17 @@
+ 		  0 = /dev/comedi0	First comedi device
+ 		  1 = /dev/comedi1	Second comedi device
+ 		    ...
++		 47 = /dev/comedi47	48th comedi device
  
-+/* Relocate the kernel image to @final_address */
-+void relocate(unsigned long final_address);
+-		See http://stm.lbl.gov/comedi.
++		Minors 48 to 255 are reserved for comedi subdevices with
++		pathnames of the form "/dev/comediX_subdY", where "X" is the
++		minor number of the associated comedi device and "Y" is the
++		subdevice number.  These subdevice minors are assigned
++		dynamically, so there is no fixed mapping from subdevice
++		pathnames to minor numbers.
 +
- #endif /* _ASM_POWERPC_ELF_H */
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index 74f70f90eff0..44b1d404250e 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -3249,7 +3249,18 @@ static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
- 	/* Switch to secure mode. */
- 	prom_printf("Switching to secure mode.\n");
++		See http://www.comedi.org/ for information about the Comedi
++		project.
  
-+	/*
-+	 * The ultravisor will do an integrity check of the kernel image but we
-+	 * relocated it so the check will fail. Restore the original image by
-+	 * relocating it back to the kernel virtual base address.
-+	 */
-+	relocate(KERNELBASE);
-+
- 	ret = enter_secure_mode(kbase, fdt);
-+
-+	/* Relocate the kernel again. */
-+	relocate(kbase);
-+
- 	if (ret != U_SUCCESS) {
- 		prom_printf("Returned %d from switching to secure mode.\n", ret);
- 		prom_rtas_os_term("Switch to secure mode failed.\n");
-diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-index 160bef0d553d..16535ccc0fa0 100644
---- a/arch/powerpc/kernel/prom_init_check.sh
-+++ b/arch/powerpc/kernel/prom_init_check.sh
-@@ -26,7 +26,8 @@ _end enter_prom $MEM_FUNCS reloc_offset __secondary_hold
- __secondary_hold_acknowledge __secondary_hold_spinloop __start
- logo_linux_clut224 btext_prepare_BAT
- reloc_got2 kernstart_addr memstart_addr linux_banner _stext
--__prom_init_toc_start __prom_init_toc_end btext_setup_display TOC."
-+__prom_init_toc_start __prom_init_toc_end btext_setup_display TOC.
-+relocate"
- 
- NM="$1"
- OBJ="$2"
+   98 block	User-mode virtual block device
+ 		  0 = /dev/ubda		First user-mode block device
+-- 
+2.23.0
+
