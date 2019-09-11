@@ -2,100 +2,91 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F2EC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507ABC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE0E2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDC22084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ESsau/uU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ss3lFDmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbfIKRf2 (ORCPT
+        id S1729634AbfIKRf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 11 Sep 2019 13:35:28 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43070 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbfIKRf1 (ORCPT
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32770 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbfIKRf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Sep 2019 13:35:27 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l22so26220654qtp.10
+Received: by mail-ot1-f66.google.com with SMTP id g25so22118748otl.0
         for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mJD6iQtvN/UCjy4Ek8D93A8B4R/KlP3wDuq4/HX54Nk=;
-        b=ESsau/uU7KkgWzaER4y2/52TBwwEMzglevQZgPhz8mpsh/psDnnwjhgCfMZx2xn7RO
-         pTQMc4weP+eRGMm7La/QZypjUcjwfXOSY31sJWbO9DllIrfBVvcSDUt15jbMJJ5IQnkr
-         fNnSmRkOk62gX4p8GqROfsCMVJkvswWy3bjYmTudOEQNz3hvX2e1t+Df2R313l4H0CQ7
-         xDhRgrN7QroVOiWA7CvNIccCpQ6PsgEbUr3mVULnSlr7MoIuZxR5jpA5CMZYoQMPR7xY
-         CTfHGHAhQCmh+Th+AdcgeGVctHvcOXk7cadtaOtxfl2XVnRMAexGlG1idU8BFky60sgz
-         u38g==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TEfrk6KvUm4zkJzNEnqhME9vQpfgK19PybX3jXtohZo=;
+        b=Ss3lFDmf2x1zmO1RCvXlfUtFdYVJh0kNCj3udMihFRoZiN/GWtF+/4KvyzEQubX/KW
+         iBu3xQLy7jsvT6xaWVkJLfsbEL/t5g94+kfe3NqgjagfCJbtbHrjENvnn8uOMcZFuWca
+         +zDutqYLaEIojaveCLCcZw7YstXFgG9iDo2/M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mJD6iQtvN/UCjy4Ek8D93A8B4R/KlP3wDuq4/HX54Nk=;
-        b=h8uS75hoXYuoKs+MH5Tk/nic5gHzuUtcDuWmvDOBzi9BokkahSV6khseuURcjRhzZu
-         Ere6JWVjy/yyw0fp5ntgVZ7ISC4pt0fUIgrvJy5Ly0h3V31f9LKDjjAgcj27CzhGAtnT
-         GpDzEQT2m8sP/f8VO5+HttHnJiVHaluPJ37PdIXg2mowAYo+hGtnLpCIYWdjCvu1YYSl
-         pSJtBaEJtTapOms7R41bSAhNKbKwnCRHh53y6DvpNBnjSSNvhHoqyN0UWqyolreEpDKn
-         IFuLf1WiaW58vDm+qw+4sjIQil24Pg+keBklJB4XwEhPcIgt+balPvqZ1mvtz7xYBami
-         aYEA==
-X-Gm-Message-State: APjAAAVA3jQocs06QdDc+bV3w0z3hHblWCyY3wnSfFBn32XU6Scu1jM6
-        HdTTjXtDviymqSVqEE1xy8AlIA==
-X-Google-Smtp-Source: APXvYqwcOywenx8LVLVD6JO3ednMqGYhwk73RQ5i92GZvWMV25FAZF2IFj/VjnedRzlUY75Dl91o7g==
-X-Received: by 2002:aed:22cc:: with SMTP id q12mr37648607qtc.232.1568223320208;
-        Wed, 11 Sep 2019 10:35:20 -0700 (PDT)
-Received: from ovpn-125-217.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c204sm850853qkb.90.2019.09.11.10.35.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Sep 2019 10:35:19 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     airlied@linux.ie, daniel@ffwll.ch
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, emil.l.velikov@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [RFC PATCH] gpu: no need to compile drm/ if CONFIG_DRM=n
-Date:   Wed, 11 Sep 2019 13:34:53 -0400
-Message-Id: <20190911173453.958-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TEfrk6KvUm4zkJzNEnqhME9vQpfgK19PybX3jXtohZo=;
+        b=LoxeHihWOGn8XGIQ65jUZ50mup0AGpm4wzo+JbHRZlvW/+EJEbX9Xoq7ZebNrOIiuW
+         ebKX6FYukdVQNcBHEdlx4jefkVc+SOm/SH5YhEgyNXbwcF+ozxayTpPSm6gcEW3YqRZW
+         ZX87h19hmrF5ObBQyIo8t3L9mBCoSccRht6+/C6ZEixT9Gmpc3kizx04mRrvt/Xe8swH
+         3wyP0pb2A7DsDjXXMr+QteaA8F51hPRP1ONtd3VaXQ03siTQiUyinSab0elvNau3QmUW
+         ftcnwufQyX1ZU4x15SaQlkqhhmtrZgWDQCpFOCIb0teBMqRx+vXhVua7tXyjvyEd9ixO
+         gxLg==
+X-Gm-Message-State: APjAAAUmxnmmc9qPB9VWymKkPhZIXvQT1ApAGRHrdl7leuxX0CJsmIXO
+        pgb/18/V7n4XQCSu8/PUlBYYeF520Sn1bnONEWuwpQ==
+X-Google-Smtp-Source: APXvYqw3z/39J3ppM7jVmY15tndaCB9Zdaqc203+jWogzJDkjqR8oemXGl5cld6feJSozj9QyZvIBinE9kz+zlDrRX0=
+X-Received: by 2002:a9d:6a95:: with SMTP id l21mr4192885otq.127.1568223326279;
+ Wed, 11 Sep 2019 10:35:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190829212417.257397-1-davidriley@chromium.org>
+ <20190910200651.118628-1-davidriley@chromium.org> <20190911051240.2k2olzsc3xnqaggl@sirius.home.kraxel.org>
+In-Reply-To: <20190911051240.2k2olzsc3xnqaggl@sirius.home.kraxel.org>
+From:   David Riley <davidriley@chromium.org>
+Date:   Wed, 11 Sep 2019 10:35:15 -0700
+Message-ID: <CAASgrz3rA-i3AjT3UuG7gPTHzdHppNLR3C0j23DEgqxivXtPmg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] drm/virtio: Rewrite virtio_gpu_queue_ctrl_buffer
+ using fenced version.
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit c0e09200dc08 ("drm: reorganise drm tree to be more future
-proof.") changed the behavior from only compiling drm/ if CONFIG_DRM=y
-to always compiling drm/. This restores the behavior, so people don't
-need to waste time compiling stuff they don't need.
+They were based off of  Linus' https://github.com/torvalds/linux
+master from yesterday.
 
-Fixes: c0e09200dc08 ("drm: reorganise drm tree to be more future proof.")
----
- drivers/gpu/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I can rebase onto drm-misc-next.
 
-diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
-index f17d01f076c7..a793b9ace34b 100644
---- a/drivers/gpu/Makefile
-+++ b/drivers/gpu/Makefile
-@@ -3,5 +3,6 @@
- # taken to initialize them in the correct order. Link order is the only way
- # to ensure this currently.
- obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
--obj-y			+= drm/ vga/
-+obj-$(CONFIG_DRM)		+= drm/
-+obj-y				+= vga/
- obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
--- 
-2.20.1 (Apple Git-117)
-
+On Tue, Sep 10, 2019 at 10:12 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> On Tue, Sep 10, 2019 at 01:06:50PM -0700, David Riley wrote:
+> > Factor function in preparation to generating scatterlist prior to locking.
+>
+> Patches are looking good now, but they don't apply.  What tree was used
+> to create them?
+>
+> Latest virtio-gpu driver bits are in drm-misc-next (see
+> https://cgit.freedesktop.org/drm/drm-misc).
+>
+> cheers,
+>   Gerd
