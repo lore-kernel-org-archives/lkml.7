@@ -2,142 +2,83 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF45C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AC0C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63B72085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF802089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Rm+awrlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfIKPkh (ORCPT
+        id S1728780AbfIKPko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:40:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43574 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 11:40:44 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47444 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfIKPkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:40:37 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727581AbfIKPko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 11:40:44 -0400
+Received: from zn.tnic (p200300EC2F0BA90014C938BBBD6B6EBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:a900:14c9:38bb:bd6b:6ebd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2BCB53084029;
-        Wed, 11 Sep 2019 15:40:37 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C6FA5C21E;
-        Wed, 11 Sep 2019 15:40:35 +0000 (UTC)
-Received: from zmail25.collab.prod.int.phx2.redhat.com (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A9C2118089C8;
-        Wed, 11 Sep 2019 15:40:34 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 11:40:34 -0400 (EDT)
-From:   Frediano Ziglio <fziglio@redhat.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Message-ID: <964578816.11586547.1568216434638.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190805105401.29874-1-kraxel@redhat.com>
-References: <20190805105401.29874-1-kraxel@redhat.com>
-Subject: Re: [PATCH v2] drm/qxl: get vga ioports
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B24551EC0260;
+        Wed, 11 Sep 2019 17:40:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1568216442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0XkV/Gz/13IJqBOxxhh8TZyo4mSOacc++RqAW+iwqYU=;
+        b=Rm+awrlFXc/u5Sl6OTsLWmDmUyXs+19HWvYRVtZl6m3kvelXHxxph/I0vUx0Z1fYSe0Ka4
+        uvfPk+iWYyRXW277fmgy4zT7wKAcRMzoo5FDxNamwczHPsw9Fl9/mcQGRNB3c9o8vPaasQ
+        KHvihBjW5AJSvyMHIf5rygWvJKM7T0Y=
+Date:   Wed, 11 Sep 2019 17:40:37 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Xiaochun Lee <lixiaochun.2888@163.com>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
+Subject: Re: [PATCH] x86/mce: add a switch of CONFIG_X86_MCELOG_LEGACY
+Message-ID: <20190911154037.GB27910@zn.tnic>
+References: <1568215730-11471-1-git-send-email-lixiaochun.2888@163.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.33.32.18, 10.4.195.2]
-Thread-Topic: drm/qxl: get vga ioports
-Thread-Index: d9HGlWxFC1mjLzRge3s5uc+6p+5ECg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 11 Sep 2019 15:40:37 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <1568215730-11471-1-git-send-email-lixiaochun.2888@163.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 11:28:50PM +0800, Xiaochun Lee wrote:
+> From: Xiaochun Lee <lixc17@lenovo.com>
 > 
-> qxl has two modes: "native" (used by the drm driver) and "vga" (vga
-> compatibility mode, typically used for boot display and firmware
-> framebuffers).
-> 
-> Accessing any vga ioport will switch the qxl device into vga mode.
-> The qxl driver never does that, but other drivers accessing vga ports
-> can trigger that too and therefore disturb qxl operation.  So aquire
-> the legacy vga ioports from vgaarb to avoid that.
-> 
-> Reproducer: Boot kvm guest with both qxl and i915 vgpu, with qxl being
-> first in pci scan order.
-> 
-> v2: Skip this for secondary qxl cards which don't have vga mode in the
->     first place (Frediano).
-> 
-> Cc: Frediano Ziglio <fziglio@redhat.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Add CONFIG_X86_MCELOG_LEGACY to control the
+> behavior of several functions be compiled.
 
-Acked-by: Frediano Ziglio <fziglio@redhat.com>
+... because?
 
-> ---
->  drivers/gpu/drm/qxl/qxl_drv.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> index b57a37543613..fcb48ac60598 100644
-> --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> @@ -63,6 +63,11 @@ module_param_named(num_heads, qxl_num_crtc, int, 0400);
->  static struct drm_driver qxl_driver;
->  static struct pci_driver qxl_pci_driver;
->  
-> +static bool is_vga(struct pci_dev *pdev)
-> +{
-> +	return pdev->class == PCI_CLASS_DISPLAY_VGA << 8;
-> +}
-> +
->  static int
->  qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  {
-> @@ -87,9 +92,17 @@ qxl_pci_probe(struct pci_dev *pdev, const struct
-> pci_device_id *ent)
->  	if (ret)
->  		goto disable_pci;
->  
-> +	if (is_vga(pdev)) {
-> +		ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
-> +		if (ret) {
-> +			DRM_ERROR("can't get legacy vga ioports\n");
-> +			goto disable_pci;
-> +		}
-> +	}
-> +
->  	ret = qxl_device_init(qdev, &qxl_driver, pdev);
->  	if (ret)
-> -		goto disable_pci;
-> +		goto put_vga;
->  
->  	ret = qxl_modeset_init(qdev);
->  	if (ret)
-> @@ -109,6 +122,9 @@ qxl_pci_probe(struct pci_dev *pdev, const struct
-> pci_device_id *ent)
->  	qxl_modeset_fini(qdev);
->  unload:
->  	qxl_device_fini(qdev);
-> +put_vga:
-> +	if (is_vga(pdev))
-> +		vga_put(pdev, VGA_RSRC_LEGACY_IO);
->  disable_pci:
->  	pci_disable_device(pdev);
->  free_dev:
-> @@ -126,6 +142,8 @@ qxl_pci_remove(struct pci_dev *pdev)
->  
->  	qxl_modeset_fini(qdev);
->  	qxl_device_fini(qdev);
-> +	if (is_vga(pdev))
-> +		vga_put(pdev, VGA_RSRC_LEGACY_IO);
->  
->  	dev->dev_private = NULL;
->  	kfree(qdev);
+Your commit messages structure should look something like this:
 
-Frediano
+Problem is A.
+
+It happens because of B.
+
+Fix it by doing C.
+
+(Potentially do D).
+
+For more detailed info, see
+Documentation/process/submitting-patches.rst, Section "2) Describe your
+changes".
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
