@@ -2,57 +2,60 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A9C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23E5C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36455206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78100206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2nPb2Ez"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J1a9/Mrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfIKNPF (ORCPT
+        id S1728098AbfIKNPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:15:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42968 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbfIKNPF (ORCPT
+        Wed, 11 Sep 2019 09:15:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44867 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbfIKNPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:15:05 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w22so13648724pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 06:15:04 -0700 (PDT)
+        Wed, 11 Sep 2019 09:15:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so11489188pgl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 06:15:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=vtC3RazXzeFZetJddN0/LRTlwPvo9DJjWZdotj+TRx4=;
-        b=M2nPb2Ez0HjNcUp+BHaiCNfkWF6hykMlJ14HyWMHQCsYNT68/6MYRHhGYTVlh8nrca
-         JsIDHwsnt7MeGfREMA4zA9G8PssI9JQ0AutJMaHOelzPBUK1IUjcjsWCHugFhfAYBQ02
-         GhDIyM4jYcEzDvHtytUgVYrXm4HNj9h1SvQG9eQ4koaLQEyOCetDcRFiTEobq6rl31qP
-         BKHMaD0YTE91VWGr6pkJukv9dqOTXZn6buFwBQZOtZFoRcXd1OJzmu+AJ02s45q79fka
-         SjRmWMpc0lo54y2ihJLxKT/7nwJsesJIZEVCk8Bzlr7QCJO/S7CjnfeKv+ejg5OT5w0n
-         uzIQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=IYDEgSPFjLDdl06FdD0mska3UeVnMuFPlikdbTqLEfM=;
+        b=J1a9/MrhnWPIbUboK3cTgk4A0tTd9DLQObD6dYFIakNwJKr2+u3gkFlDUCe0XKce9D
+         pZv9fXqKXZMYYVNfzRbj7Os02QlKqaIuYgH7Tj0c6hEoVSPW3hbHqpkpnSgQ6WEXyb1O
+         yvrng83hWy1kfk1yYA/DLexdjHP0zAsUxlkD3ED+tcxcgJA/uOY9PCnlxfMyjUivBG1h
+         2Q/P6lAfT5Vk+1NfOLW9bRGEBcu0S9PPSLFxQYovvAhR9ZfHE5lonybtEjgkQSxcKpsg
+         w1vp3uFe5lfuJjA80CMor5ePiv2Y2WTo1/FaqhhT1KtpvQsr+5CMJBGwB7arYsVYqmDT
+         KVDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vtC3RazXzeFZetJddN0/LRTlwPvo9DJjWZdotj+TRx4=;
-        b=X89bfHO29h75sbNzQK0OeaE8ymY3k9vVrscNOnMNv77U9VkNhs2+fZuFaqanxr23wb
-         UWhPvDAUqsJt4IbK+1/SebI/k3olL8IBCr34TPgqHZsnmFzmmGzQsadLQ56sIKvEe6LX
-         iGTe3Sle4VzK2fG0nmM0AyYJR0HBk45qER9qyIjQp6wG/831z8GoWdQ0x1dkY2gY65aO
-         sPSXvOTgEHbBZgTMuZPHo3k57KUYkJYjSGG1k3l1On7i2wWS+Fcw8ayxeemGJn3q6LAa
-         XJ8IqBa7YD251Cvi1UCDGXxsU4K+iUdzaub9JahNtNkg14Evdql4J3e7kUDDc6Paed4q
-         GxTA==
-X-Gm-Message-State: APjAAAVAV1zAA1MIdzR4LeEtmhfWQgPvfhrytUGZHbBQ4AwMb263+ytF
-        tQyPT7hHcydx/zT9/X4ExJivVg==
-X-Google-Smtp-Source: APXvYqyIQMGYC4Wx0HmfyI10qNNUAaz17fVKaZnhq3xD8841c5N4lw0IeH/ZClcAX5YgPHNeo6Z+Gg==
-X-Received: by 2002:a17:90a:8d0c:: with SMTP id c12mr5471391pjo.119.1568207704284;
-        Wed, 11 Sep 2019 06:15:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=IYDEgSPFjLDdl06FdD0mska3UeVnMuFPlikdbTqLEfM=;
+        b=XtnsiJd4AXMsZQ5CBcsbfWu0s/BmKzfVgBo7QZttVzORHWt27lv2YeJdqLvCe+QlBy
+         WbaLo3fITCatSpyAHvKGwJSSJjGsbK1DPu/FpTZ0FkHoJBwRCuGZYPUJz/Y84cLk3MBN
+         v72JhxsNnvdWa4oaYcGikoEQ98VPl71B4oDDnF4wPZrDJXgyMXB7WxmtadUSOx9hdGv/
+         TTByhrsQrTdAe6oDtwi2hcp9DC86qw0G3G4yZtfBIOIc3/dDVMCWD9ssUlIm9gZhUL/j
+         VO5d7ns421LvMJ333q+QBOBEPkppp4+G8kYCtoIFwaFWUTxQN7EOrvoNbC4hwq/SQx7d
+         x2zQ==
+X-Gm-Message-State: APjAAAWNrkUFIRQyP6OXTc06q/Ufm1vxdvV4UGn+4GxZejSBtCI6v6/p
+        C6outHQDq1WSuh2+BKOmX/PMOA==
+X-Google-Smtp-Source: APXvYqw2qxF4aItLm2cOKVKCuUlHw2cFWiRODNKosJ8OSFSExNiQMVi49VYbhUeQmYlaXx6Xm7Mlxw==
+X-Received: by 2002:a17:90a:bb86:: with SMTP id v6mr5257821pjr.84.1568207708381;
+        Wed, 11 Sep 2019 06:15:08 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id e21sm6420120pgr.43.2019.09.11.06.14.59
+        by smtp.gmail.com with ESMTPSA id e21sm6420120pgr.43.2019.09.11.06.15.04
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Sep 2019 06:15:03 -0700 (PDT)
+        Wed, 11 Sep 2019 06:15:07 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         asutoshd@codeaurora.org
@@ -60,119 +63,71 @@ Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
         linus.walleij@linaro.org, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] Add MMC software queue support
-Date:   Wed, 11 Sep 2019 21:14:39 +0800
-Message-Id: <cover.1568206300.git.baolin.wang@linaro.org>
+Subject: [PATCH v2 1/4] mmc: host: cqhci: Move the struct cqhci_slot into header file
+Date:   Wed, 11 Sep 2019 21:14:40 +0800
+Message-Id: <e02fdcf8b06756678d4ed09a22073dfcd2c39205.1568206300.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1568206300.git.baolin.wang@linaro.org>
+References: <cover.1568206300.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1568206300.git.baolin.wang@linaro.org>
+References: <cover.1568206300.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+The struct cqhci_slot will be used by MMC software queue introducing by
+following patches, thus move it to the header file.
 
-Now the MMC read/write stack will always wait for previous request is
-completed by mmc_blk_rw_wait(), before sending a new request to hardware,
-or queue a work to complete request, that will bring context switching
-overhead, especially for high I/O per second rates, to affect the IO
-performance.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/mmc/host/cqhci.c |   10 ----------
+ drivers/mmc/host/cqhci.h |   11 ++++++++++-
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-Thus this patch set will introduce the MMC software command queue support
-based on command queue engine's interfaces, and set the queue depth as 2,
-that means we do not need wait for previous request is completed and can
-queue 2 requests in flight. It is enough to let the irq handler always
-trigger the next request without a context switch and then ask the blk_mq
-layer for the next one to get queued, as well as avoiding a long latency.
-
-Moreover we can expand the MMC software queue interface to support
-MMC packed request or packed command instead of adding new interfaces,
-according to previosus discussion.
-
-Below are some comparison data with fio tool. The fio command I used
-is like below with changing the '--rw' parameter and enabling the direct
-IO flag to measure the actual hardware transfer speed in 4K block size.
-
-./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
-
-My eMMC card working at HS400 Enhanced strobe mode:
-[    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
-[    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB 
-[    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
-[    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
-[    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
-
-1. Without MMC software queue
-I tested 3 times for each case and output a average speed.
-
-1) Sequential read:
-Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
-Average speed: 28.7MiB/s
-
-2) Random read:
-Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
-Average speed: 14.3MiB/s
-
-3) Sequential write:
-Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
-Average speed: 24.7MiB/s
-
-4) Random write:
-Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
-Average speed: 19.2MiB/s
-
-2. With MMC software queue
-I tested 3 times for each case and output a average speed.
-
-1) Sequential read:
-Speed: 44.1MiB/s, 42.3MiB/s, 44.4MiB/s
-Average speed: 43.6MiB/s
-
-2) Random read:
-Speed: 30.6MiB/s, 30.9MiB/s, 30.5MiB/s
-Average speed: 30.6MiB/s
-
-3) Sequential write:
-Speed: 44.1MiB/s, 45.9MiB/s, 44.2MiB/s
-Average speed: 44.7MiB/s
-
-4) Random write:
-Speed: 45.1MiB/s, 43.3MiB/s, 42.4MiB/s
-Average speed: 43.6MiB/s
-
-Form above data, we can see the MMC software queue can help to improve the
-performance obviously.
-
-Any comments are welcome. Thanks a lot.
-
-Changes from v1:
- - Add request_done ops for sdhci_ops.
- - Replace virtual command queue with software queue for functions and
- variables.
- - Rename the software queue file and add sqhci.h header file.
-
-Baolin Wang (4):
-  mmc: host: cqhci: Move the struct cqhci_slot into header file
-  mmc: Add MMC software queue support
-  mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-  mmc: host: sdhci-sprd: Add software queue support
-
- drivers/mmc/core/block.c      |   61 ++++++++
- drivers/mmc/core/mmc.c        |   13 +-
- drivers/mmc/core/queue.c      |   25 ++-
- drivers/mmc/host/Kconfig      |    9 ++
- drivers/mmc/host/Makefile     |    1 +
- drivers/mmc/host/cqhci.c      |   10 --
- drivers/mmc/host/cqhci.h      |   17 +-
- drivers/mmc/host/sdhci-sprd.c |   26 ++++
- drivers/mmc/host/sdhci.c      |   12 +-
- drivers/mmc/host/sdhci.h      |    2 +
- drivers/mmc/host/sqhci.c      |  345 +++++++++++++++++++++++++++++++++++++++++
- drivers/mmc/host/sqhci.h      |   35 +++++
- include/linux/mmc/host.h      |    3 +
- 13 files changed, 536 insertions(+), 23 deletions(-)
- create mode 100644 drivers/mmc/host/sqhci.c
- create mode 100644 drivers/mmc/host/sqhci.h
-
+diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+index f7bdae5..57ff1cc 100644
+--- a/drivers/mmc/host/cqhci.c
++++ b/drivers/mmc/host/cqhci.c
+@@ -21,16 +21,6 @@
+ #define DCMD_SLOT 31
+ #define NUM_SLOTS 32
+ 
+-struct cqhci_slot {
+-	struct mmc_request *mrq;
+-	unsigned int flags;
+-#define CQHCI_EXTERNAL_TIMEOUT	BIT(0)
+-#define CQHCI_COMPLETED		BIT(1)
+-#define CQHCI_HOST_CRC		BIT(2)
+-#define CQHCI_HOST_TIMEOUT	BIT(3)
+-#define CQHCI_HOST_OTHER	BIT(4)
+-};
+-
+ static inline u8 *get_desc(struct cqhci_host *cq_host, u8 tag)
+ {
+ 	return cq_host->desc_base + (tag * cq_host->slot_sz);
+diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+index def76e9..7b07bf24f 100644
+--- a/drivers/mmc/host/cqhci.h
++++ b/drivers/mmc/host/cqhci.h
+@@ -141,7 +141,16 @@
+ struct cqhci_host_ops;
+ struct mmc_host;
+ struct mmc_request;
+-struct cqhci_slot;
++
++struct cqhci_slot {
++	struct mmc_request *mrq;
++	unsigned int flags;
++#define CQHCI_EXTERNAL_TIMEOUT	BIT(0)
++#define CQHCI_COMPLETED		BIT(1)
++#define CQHCI_HOST_CRC		BIT(2)
++#define CQHCI_HOST_TIMEOUT	BIT(3)
++#define CQHCI_HOST_OTHER	BIT(4)
++};
+ 
+ struct cqhci_host {
+ 	const struct cqhci_host_ops *ops;
 -- 
 1.7.9.5
 
