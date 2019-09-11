@@ -2,97 +2,88 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B82AECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D8AECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AA720CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="IvFzUB7W"
+	by mail.kernel.org (Postfix) with ESMTP id D5D392089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 10:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfIKK6r (ORCPT
+        id S1727719AbfIKK7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 06:58:47 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:50253 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfIKK6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 06:58:46 -0400
-Received: by mail-wm1-f46.google.com with SMTP id c10so2894972wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 03:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=labbott.name; s=google;
-        h=from:content-transfer-encoding:mime-version:date:subject:message-id
-         :to;
-        bh=lemYNYtgToTykhs7Hiz/YSCcKOw/D2ARLV0H11ZZBBY=;
-        b=IvFzUB7WwNzJRlMhu8byrfbS8LXHYPxcg0v3HICGqp4Cvf/Ye460dAGdm6RKKqaE1N
-         9Rb+YDOHFnrHRBfMc8ImaTvXYe8H75QzuQ2DhP+orG8BUEGv/oUV+8NMsFov3nMvoI5f
-         +948wrbtZlM1LzHUmq++uYr52hQLI3mT1OmKk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version:date
-         :subject:message-id:to;
-        bh=lemYNYtgToTykhs7Hiz/YSCcKOw/D2ARLV0H11ZZBBY=;
-        b=EtFjZj6NpbgtV2VbdhVKETLWq45BwQL0MacTCv6+7GD8KhVFaC6+mZUuUgXoBQWbGL
-         mxgB//4wFk5pI73Oj1ZwwFsIVIWUxEpx7LYn1tPW9JOo+6Edz0RGSIMbHsSYLHVyCkGu
-         Pw25titJVhoyUMTfkYx63eUukVu0YHNTBEqW2oC9JQvMCCKmIE0QBEUCGwVFYt8BLwDp
-         o2iFvXkVVZKdSQWCVUH9lBysO51zYgESAvyJFCqJ77HZZ0hX1/LxoYznIo2CYCoybU/c
-         lyp3Mr2UzQCVmmX7lj6d4xbveDqwD3bJPoJy6Av0tyHsqe7xtFWe1e9+/SeBMLGnHDKB
-         G6aA==
-X-Gm-Message-State: APjAAAVnp+7qZaano/oR9V/tFX0vlCeRDCZmx0EoIOBT9rVeCULYNSrv
-        b6oXeFnIVTewcpmAtR4gvfXLj/EHBdFEjwi3
-X-Google-Smtp-Source: APXvYqwL4TtccIE8dhvRYLYt0IBVInmLIOqgs4VNLbtCgIQeCotJUztSLQmt5dQq1tsQ1g3P6oe2vg==
-X-Received: by 2002:a7b:cc13:: with SMTP id f19mr3575179wmh.141.1568199523816;
-        Wed, 11 Sep 2019 03:58:43 -0700 (PDT)
-Received: from [10.93.12.198] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id b144sm2512313wmb.3.2019.09.11.03.58.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 03:58:43 -0700 (PDT)
-From:   Laura Abbott <laura@labbott.name>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Date:   Wed, 11 Sep 2019 06:58:41 -0400
-Subject: Results: Linux Foundation Technical Advisory Board Election 2019
-Message-Id: <8DB2E3F6-F5E9-4762-B19E-332C3B313ED1@labbott.name>
-To:     ksummit-discuss@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-X-Mailer: Apple Mail (2.3273)
+        Wed, 11 Sep 2019 06:59:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:45654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbfIKK7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 06:59:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCDB428;
+        Wed, 11 Sep 2019 03:59:37 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5402E3F59C;
+        Wed, 11 Sep 2019 03:59:37 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 11:59:35 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com,
+        repk@triplefau.lt, maz@kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] PCI: amlogic: Fix probed clock names
+Message-ID: <20190911105935.GQ9720@e119886-lin.cambridge.arm.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-3-git-send-email-narmstrong@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567950178-4466-3-git-send-email-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following are the results of the 2019 Technical Advisory Board (TAB) =
-elections:
+On Sun, Sep 08, 2019 at 01:42:54PM +0000, Neil Armstrong wrote:
+> Fix the clock names used in the probe function according
+> to the bindings.
+> 
+> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-1. Greg Kroah-Hartman
-2. Jonathan Corbet
-3. Steven Rostedt
-4. Ted Ts=E2=80=99o
-5. Sasha Levin
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Thank you to all of the candidates for stepping up and running this =
-year. We
-appreciate your willingness to serve the kernel community.
-
-We had 174 people vote this year. Because of the way CIVS works, we =
-don't
-have the full count of votes for each person, only the aggregated score =
-and
-who "won" against each person. Results are available to those who are =
-interested.
-A big thank you to everyone who helped with the electronic voting this =
-year,
-whether participating in a test vote or proofreading my e-mails =
-explaining
-voting procedures.
-
-Congratulations to all the elected candidates!
-
-Thanks,
-Laura=
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 541f37a6f6a5..ab79990798f8 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -250,15 +250,15 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  	if (IS_ERR(res->port_clk))
+>  		return PTR_ERR(res->port_clk);
+>  
+> -	res->mipi_gate = meson_pcie_probe_clock(dev, "pcie_mipi_en", 0);
+> +	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+>  	if (IS_ERR(res->mipi_gate))
+>  		return PTR_ERR(res->mipi_gate);
+>  
+> -	res->general_clk = meson_pcie_probe_clock(dev, "pcie_general", 0);
+> +	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+>  	if (IS_ERR(res->general_clk))
+>  		return PTR_ERR(res->general_clk);
+>  
+> -	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
+> +	res->clk = meson_pcie_probe_clock(dev, "pclk", 0);
+>  	if (IS_ERR(res->clk))
+>  		return PTR_ERR(res->clk);
+>  
+> -- 
+> 2.17.1
+> 
