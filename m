@@ -2,159 +2,131 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC849C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA67FC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82192085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 20:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9559120838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 21:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7jCP9O6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfIKU6h (ORCPT
+        id S1730663AbfIKVCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 16:58:37 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:46610 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730545AbfIKU6g (ORCPT
+        Wed, 11 Sep 2019 17:02:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43962 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728877AbfIKVCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 16:58:36 -0400
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BKuTwo030715;
-        Wed, 11 Sep 2019 20:58:17 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uxpwjgd84-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Sep 2019 20:58:17 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 080C19A;
-        Wed, 11 Sep 2019 20:58:17 +0000 (UTC)
-Received: from [16.116.129.27] (unknown [16.116.129.27])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id C296A46;
-        Wed, 11 Sep 2019 20:58:15 +0000 (UTC)
-Subject: Re: [PATCH 4/8] x86/platform/uv: Setup UV functions for Hubless UV
- Systems
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
- <20190910145839.975787119@stormcage.eag.rdlabs.hpecorp.net>
- <20190911060702.GD104115@gmail.com>
- <e3a3d64d-87ff-d6de-c550-9a3249b687dd@hpe.com>
-Message-ID: <e10cd5c2-c0b0-60f6-ee49-12ff62a483ef@hpe.com>
-Date:   Wed, 11 Sep 2019 13:58:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 17:02:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d15so14451459pfo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 14:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BmSGku8jGWaQdEnWgjS8EmzhMwO0vQvjKEtMVStz3ho=;
+        b=o7jCP9O619jk1A8fcSgzAWayhUVzV5ZQt3XJGgqVC4Cr2Y27xwM0ppsCKWoztQnBFe
+         tlxVQygRIqQmFJPuPR0h2TaKn4X28eymj7iEHy5QfNAzcyw+h1PHy6PhWu/NIY0vZMBD
+         n8pKo9xFCJvpTQpvkgIwlpo9ZNi2ZaT4Bkcdn6IxwAkMN5z2jFsk2bu8EFNjZl6wMEPv
+         YZC/7ZBuOj536hHif/679mreNnVxNJUZkYm1f6nUwWPEsPE5MNIzLc6w4DQkazrLePDv
+         5uZcD2N56xzSI7oEnq+PfQ5t/ZsBvVzrsSMF1zLSk6B4FwV1Anb0Q3Zq6mkj+Sm0LfyE
+         8ZLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BmSGku8jGWaQdEnWgjS8EmzhMwO0vQvjKEtMVStz3ho=;
+        b=bPM1U3QdDe3MAIZfv9LqEm2z8WiUQeFED0OTo8Fcq7i6pUZ9YtAk0vWPhQbWHA7ph3
+         lBDnnCQOG0hvKJ4t6b9hXX4qiWQ+flVnfIwsbt5AdFVpeu4FFwKOhbuRvv915J4j076U
+         OT+TSkC3gcYgZTazklBtiKTMYxwievMdhkPQ4lwcMucIiSuBXeXccVoLEh73qpycGP9p
+         m4lbxb9Sg4zxfBHI0S0dB4n0+qSHZ8WuRw4xK1OuGc9/pGlBLWrQxgpRZFWExlopSq3J
+         dueTEuKCxJaFDBPHqRGWoZUsCPUXiSUnXd4JHM9osVnBxokXSRpzqAGXXPtD49SuMDRu
+         tp9A==
+X-Gm-Message-State: APjAAAUB+m3df2jO5TVHRHp6qKA8J0Pyyqt7jAnBKYexqKzFJrSGDA3c
+        ugaKtliDO3W257IFvexaZ9fG7RP1KR35V5LydcCIVg==
+X-Google-Smtp-Source: APXvYqypx9sTdaUqWPw1cVmR3te2mC9wx57XFuE4p0MZXxepRD5h/5pwdXHJeHB20U1iiWL6kUo2AHVEcIsr6mTHga0=
+X-Received: by 2002:a65:690b:: with SMTP id s11mr34339694pgq.10.1568235730928;
+ Wed, 11 Sep 2019 14:02:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e3a3d64d-87ff-d6de-c550-9a3249b687dd@hpe.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-11_10:2019-09-11,2019-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=971 clxscore=1015
- priorityscore=1501 spamscore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909110187
+References: <20190911182049.77853-1-natechancellor@gmail.com> <20190911182049.77853-4-natechancellor@gmail.com>
+In-Reply-To: <20190911182049.77853-4-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 11 Sep 2019 14:01:59 -0700
+Message-ID: <CAKwvOdnh+YoACaX4Oxk7ZiEQAQ2VgA6W=Dtbk7gzK5yJduFvGQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
+ reference to bcmp
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 11:21 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> r370454 gives LLVM the ability to convert certain loops into a reference
+> to bcmp as an optimization; this breaks prom_init_check.sh:
+>
+>   CALL    arch/powerpc/kernel/prom_init_check.sh
+> Error: External symbol 'bcmp' referenced from prom_init.c
+> make[2]: *** [arch/powerpc/kernel/Makefile:196: prom_init_check] Error 1
+>
+> bcmp is defined in lib/string.c as a wrapper for memcmp so this could be
+> added to the whitelist. However, commit 450e7dd4001f ("powerpc/prom_init:
+> don't use string functions from lib/") copied memcmp as prom_memcmp to
+> avoid KASAN instrumentation so having bcmp be resolved to regular memcmp
+> would break that assumption. Furthermore, because the compiler is the
+> one that inserted bcmp, we cannot provide something like prom_bcmp.
+>
+> To prevent LLVM from being clever with optimizations like this, use
+> -ffreestanding to tell LLVM we are not hosted so it is not free to make
+> transformations like this.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/647
+> Link: https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+
+The above link doesn't work for me (HTTP 404).  PEBKAC?
+https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> New patch in the series so no previous version.
+>
+>  arch/powerpc/kernel/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 19f19c8c874b..aa78b3f6271e 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -21,7 +21,7 @@ CFLAGS_prom_init.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
+>  CFLAGS_btext.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
+>  CFLAGS_prom.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
+>
+> -CFLAGS_prom_init.o += $(call cc-option, -fno-stack-protector)
+> +CFLAGS_prom_init.o += $(call cc-option, -fno-stack-protector) -ffreestanding
+>
+>  ifdef CONFIG_FUNCTION_TRACER
+>  # Do not trace early boot code
+> --
+> 2.23.0
+>
 
 
-On 9/11/2019 1:44 PM, Mike Travis wrote:
-> 
-> 
-> On 9/10/2019 11:07 PM, Ingo Molnar wrote:
->>
->> * Mike Travis <mike.travis@hpe.com> wrote:
->>
->>> +/* Initialize UV hubless systems */
->>> +static __init int uv_system_init_hubless(void)
->>> +{
->>> +    int rc;
->>> +
->>> +    /* Setup PCH NMI handler */
->>> +    uv_nmi_setup_hubless();
->>> +
->>> +    /* Init kernel/BIOS interface */
->>> +    rc = uv_bios_init();
->>> +
->>> +    return rc;
->>> +}
-> 
-> This looks like an excessive cleanup error by me.  The original was:
-> 
->> +static __init int uv_system_init_hubless(void)
->> +{
->> +       int rc;
->> +
->> +       /* Setup PCH NMI handler */
->> +       uv_nmi_setup_hubless();
->> +
->> +       /* Init kernel/BIOS interface */
->> +       rc = uv_bios_init();
->> +
->> +       /* Create user access node if UVsystab available */
->> +       if (rc >= 0)
->> +               uv_setup_proc_files(1);
->> +
->> +       return rc;
->> +}
->> +
-> 
-> Hubbed UV's do not have a non-UV BIOS, but hubless systems in theory 
-> can.   So uv_bios_init can fail on hubless systems if it has some other 
-> BIOS (unlikely but possible).  So I removed too much in this cleanup. 
-> I'll send another patch set that puts this back.
-
-I discovered the problem... In a rearrangement of the patches this 
-change does happen but in a later patch [5/8]:
-
-  /* Initialize UV hubless systems */
-  static __init int uv_system_init_hubless(void)
-  {
-@@ -1468,6 +1555,10 @@ static __init int uv_system_init_hubless
-         /* Init kernel/BIOS interface */
-         rc = uv_bios_init();
-
-+       /* Create user access node if UVsystab available */
-+       if (rc >= 0)
-+               uv_setup_proc_files(1);
-+
-         return rc;
-  }
-
-The mistake you saw [in patch 3/8] is very short lived... Hopefully no 
-need for another patch set?
-
-> 
-> Thanks,
-> Mike
-> 
->>
->> Am I the only one who immediately sees the trivial C transformation
->> through which this function could lose a local variable and become 4
->> lines shorter?
->>
->> And this function got two Reviewed-by tags...
->>
->> Thanks,
->>
->>     Ingo
->>
+-- 
+Thanks,
+~Nick Desaulniers
