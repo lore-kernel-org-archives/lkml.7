@@ -2,152 +2,145 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBC4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82327ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C0221479
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A8020863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnMbF78z"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NZI+1q0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfIKSo5 (ORCPT
+        id S1730164AbfIKSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:44:57 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36269 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbfIKSo4 (ORCPT
+        Wed, 11 Sep 2019 14:45:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39220 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbfIKSp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:44:56 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y22so14282341pfr.3;
-        Wed, 11 Sep 2019 11:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TqRe5lHOX4M4V547/WzO3Xh0zpwoYhwfsfhLh4/QmNw=;
-        b=cnMbF78zIN2X9zEOosJXsLy6lBLW8nW1rFohkwPEIwEa6uF/WOsmr2xAEaCVe9SAaN
-         i7+2cu7+E+HD86A9dgw7KnHv3DgSkf6MbdVO6kYHFHGtBoMfaXxiHoGeuuUYZoXnYMZY
-         Ekg3XH3c4rxVxhQhmfQv/GmEOMWlbMfF3zq/YKsRPvNNmuh+7DmnXbZDJakCr3JItly7
-         E/L6ZmHXOf49bDukg+osrL8HBIaUPKtSIS4xFCHloTkspkUpLF4eXYWTwugwaG0JCCW0
-         hiovc2vqED7iGDoHu2Ad6HClqB4Wpnka75/Wpcf8D3WPpKG4j8ii4SVkKr6u3WFJeoyc
-         0Vmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=TqRe5lHOX4M4V547/WzO3Xh0zpwoYhwfsfhLh4/QmNw=;
-        b=MnMGdjcDifEe/3XJJvLL22t94wfRVYEu9C9reGnG+P5OetVVt8TycdUPSikygzkZHe
-         4mclQpCsiWaxAutzBIixigRuwgLN2LA7YqlTcsIJAep1pVxsDJi5tiotLi0U8WEWGfFh
-         Xzo6QUCot01JP5SxL0EnXHuM71UIf/jDoczTAk4l81WFsDhS9CxXoBdK9ZAWttL/F3OU
-         uekx72wtdG7cbYG9BxQ5kN25jfDxzG7YWSxYzPy9HRXt6snvy6YoURWPS8BzqwZerqUR
-         Xa3aIPSe3GScootZhVvf1fjEh7FxSvlB+Cm52Q1F2RD5mzslZaVeh8G4ju9ofCcp4VIa
-         w7+w==
-X-Gm-Message-State: APjAAAU8MDrTFetIw22BKHOh8mx58wECuOUo7k7M0XpMMtPyUeYsJjTG
-        veSAl13H0i8tlgWjaM07RtI=
-X-Google-Smtp-Source: APXvYqywaaDO+l8UX/soexCNWT1d0rN20NelYgx+BVxfqR8t062U5VDK59Nz1VPcLeOY/YWISW81Sg==
-X-Received: by 2002:a62:cb:: with SMTP id 194mr46108963pfa.130.1568227496001;
-        Wed, 11 Sep 2019 11:44:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g26sm23692017pfi.103.2019.09.11.11.44.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 11:44:54 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 11:44:53 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/7] usb: mtu3: support ip-sleep wakeup for MT8183
-Message-ID: <20190911184453.GA2628@roeck-us.net>
-References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
- <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
+        Wed, 11 Sep 2019 14:45:29 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6DCF433A;
+        Wed, 11 Sep 2019 20:45:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568227527;
+        bh=sjCW7JSo4kvqe4WkZUZxf5nFAWDwc6hbCCHe0yH1A/8=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NZI+1q0gf4BwoHG44RQSapiX3XpQ3hyCQ+2BGe5I1MBU3DRO+HDHHSWvXkZbHOtBi
+         LVrqHgLM4ZxCEbmtZ5UvDnW47HCUCldKr2PK1CgOpRH845RvsYUzgP+CD7Uaqprdvx
+         rDae32UC5PpPSTnnxB6+yHwO7/pUT+sirJUMWm0g=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 4/9] drm: rcar-du: Claim CMM support for Gen3 SoCs
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
+        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-5-jacopo+renesas@jmondi.org>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <5c158192-48aa-6b1f-a6d3-13cbdad110d7@ideasonboard.com>
+Date:   Wed, 11 Sep 2019 19:45:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190906135436.10622-5-jacopo+renesas@jmondi.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 03:40:50PM +0800, Chunfeng Yun wrote:
-> Support USB wakeup by ip-sleep mode for MT8183, it's similar to
-> MT8173
+Hi Jacopo,
+
+On 06/09/2019 14:54, Jacopo Mondi wrote:
+> Add CMM to the list of supported features for Gen3 SoCs that provide it:
+> - R8A7795
+> - R8A7796
+> - R8A77965
+> - R8A7799x
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Leave R8A77970 out as V3M and V3H are the only Gen3 SoCs that do not
+> support CMM.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+LGTM.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
-> v3: changes micros define
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 12 ++++++++----
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.h |  1 +
+>  2 files changed, 9 insertions(+), 4 deletions(-)
 > 
-> v2: no changes
-> ---
->  drivers/usb/mtu3/mtu3_host.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 6df37c2a9678..018480a8f35c 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -276,7 +276,8 @@ static const struct rcar_du_device_info rcar_du_r8a7795_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(3) | BIT(2) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -309,7 +310,8 @@ static const struct rcar_du_device_info rcar_du_r8a7796_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(2) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -338,7 +340,8 @@ static const struct rcar_du_device_info rcar_du_r8a77965_info = {
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+>  		  | RCAR_DU_FEATURE_VSP1_SOURCE
+>  		  | RCAR_DU_FEATURE_INTERLACED
+> -		  | RCAR_DU_FEATURE_TVM_SYNC,
+> +		  | RCAR_DU_FEATURE_TVM_SYNC
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(3) | BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> @@ -386,7 +389,8 @@ static const struct rcar_du_device_info rcar_du_r8a77970_info = {
+>  static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
+>  	.gen = 3,
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+> -		  | RCAR_DU_FEATURE_VSP1_SOURCE,
+> +		  | RCAR_DU_FEATURE_VSP1_SOURCE
+> +		  | RCAR_DU_FEATURE_CMM,
+>  	.channels_mask = BIT(1) | BIT(0),
+>  	.routes = {
+>  		/*
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> index 1327cd0df90a..a00dccc447aa 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> @@ -28,6 +28,7 @@ struct rcar_du_encoder;
+>  #define RCAR_DU_FEATURE_VSP1_SOURCE	BIT(1)	/* Has inputs from VSP1 */
+>  #define RCAR_DU_FEATURE_INTERLACED	BIT(2)	/* HW supports interlaced */
+>  #define RCAR_DU_FEATURE_TVM_SYNC	BIT(3)	/* Has TV switch/sync modes */
+> +#define RCAR_DU_FEATURE_CMM		BIT(4)	/* Has CMM */
+>  
+>  #define RCAR_DU_QUIRK_ALIGN_128B	BIT(0)	/* Align pitches to 128 bytes */
+>  
 > 
-> diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-> index c871b94f3e6f..4f8208885ebd 100644
-> --- a/drivers/usb/mtu3/mtu3_host.c
-> +++ b/drivers/usb/mtu3/mtu3_host.c
-> @@ -18,6 +18,12 @@
->  #include "mtu3.h"
->  #include "mtu3_dr.h"
->  
-> +/* mt8183 etc */
-> +#define PERI_WK_CTRL0	0x20
-> +#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
-> +#define WC0_IS_P	BIT(12)	/* polarity */
-> +#define WC0_IS_EN	BIT(6)
-> +
 
-For 64-bit builds, this results in:
-
-drivers/usb/mtu3/mtu3_host.c: In function ‘ssusb_wakeup_ip_sleep_set’:
-./include/linux/bits.h:6:19: warning:
-	conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’}
-	changes value from ‘18446744073441120320’ to ‘4026536000’ [-Woverflow]
-
-since WC0_IS_C() is sign extended to 64 bit and then truncated.
-
-Observed with gcc 7.4.0 and 8.3.0.
-
-Guenter
-
->  /* mt8173 etc */
->  #define PERI_WK_CTRL1	0x4
->  #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
-> @@ -30,7 +36,8 @@
->  #define SSC_SPM_INT_EN		BIT(1)
->  
->  enum ssusb_uwk_vers {
-> -	SSUSB_UWK_V1 = 1,
-> +	SSUSB_UWK_V0 = 0,
-> +	SSUSB_UWK_V1,
->  	SSUSB_UWK_V2,
->  };
->  
-> @@ -43,6 +50,11 @@ static void ssusb_wakeup_ip_sleep_set(struct ssusb_mtk *ssusb, bool enable)
->  	u32 reg, msk, val;
->  
->  	switch (ssusb->uwk_vers) {
-> +	case SSUSB_UWK_V0:
-> +		reg = ssusb->uwk_reg_base + PERI_WK_CTRL0;
-> +		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
-> +		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
-> +		break;
->  	case SSUSB_UWK_V1:
->  		reg = ssusb->uwk_reg_base + PERI_WK_CTRL1;
->  		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
