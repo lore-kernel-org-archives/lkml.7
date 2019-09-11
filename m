@@ -2,82 +2,88 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261DEC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45F7ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D542084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A240D2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568222869;
+	bh=avmaTCGrf/lbFN8qYmfH/0IuryDuXNTXcd+Ii7NLHqM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ROFsMAL1mJejcCKTzRmXmywYWpl/spe4ZeilrnL6/P4mHfMzDYMi5fX13s6eiOqBJ
+	 DOCoc6CPowheF1IhYM5R4D+6H2nvopeo9qaof3Ei4550dCL+dYRD0EOsPLWqqSTceB
+	 608eRDMO704m27j90YznkZtlFiX8SEwjzgDAmPLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfIKR1T (ORCPT
+        id S1729652AbfIKR1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:27:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43712 "EHLO mx1.redhat.com"
+        Wed, 11 Sep 2019 13:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728897AbfIKR1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:27:18 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728897AbfIKR1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:27:48 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B97A4307D945;
-        Wed, 11 Sep 2019 17:27:18 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E7805D9E2;
-        Wed, 11 Sep 2019 17:27:17 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Wed, 11 Sep 2019 13:27:17 -0400
-Message-ID: <7D8C7BBD-8266-4A5A-9C95-0C8B57C10333@redhat.com>
-In-Reply-To: <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BA8982084F;
+        Wed, 11 Sep 2019 17:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568222868;
+        bh=avmaTCGrf/lbFN8qYmfH/0IuryDuXNTXcd+Ii7NLHqM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UqKNTtbh3Cb1I2mku0SqTtgVtOpxoe4iz15c1OPEZUt79sIqqCQ7YylE1IEfb4K1O
+         0T3IL+gm8mHrascQNABkSeLI5Vx0o9HOa9tsmMZGctnutgxvcejngJiu0INlkLMl54
+         CvhIMgdSF5w5WSDweUcoSZZ/AJy2lUjJiTgpSzCc=
+Received: by mail-wr1-f45.google.com with SMTP id y19so25509477wrd.3;
+        Wed, 11 Sep 2019 10:27:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAUTvQKSBBkvJ0egY/k+QgVJFRnWnktPBWgBOcT8Ln/94ILt7YBd
+        8+0WDxcHyxwSmZ4MDy2DIbiFtAz6FiWn0DXqpKU=
+X-Google-Smtp-Source: APXvYqyxQlQ0rE1nDNnXUWYV1saPJ4Y2RZ08uvicqCGXL1zEBlOw0R8w4NxllP0UAo/DIWobNk4NNw8nuCp+ukVevHM=
+X-Received: by 2002:a5d:500b:: with SMTP id e11mr27169535wrt.285.1568222866298;
+ Wed, 11 Sep 2019 10:27:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 11 Sep 2019 17:27:18 +0000 (UTC)
+References: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
+ <1567663210.1324.3.camel@mtkswgap22> <CACRpkdY7Vpy-fBHSXnjby0kK_tDWBtZaCwjCGxFy4HWeJ1FgEg@mail.gmail.com>
+In-Reply-To: <CACRpkdY7Vpy-fBHSXnjby0kK_tDWBtZaCwjCGxFy4HWeJ1FgEg@mail.gmail.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Wed, 11 Sep 2019 10:27:34 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzqj_AwXL7r0nxh=9G5o7P4YNJaugCAm_ZpJyBoPZu9BtQ@mail.gmail.com>
+Message-ID: <CAGp9Lzqj_AwXL7r0nxh=9G5o7P4YNJaugCAm_ZpJyBoPZu9BtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: mediatek: Check gpio pin number and use
+ binary search in mtk_hw_pin_field_lookup()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Light Hsieh <light.hsieh@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+That looks OK to me too
 
-On 11 Sep 2019, at 13:26, Benjamin Coddington wrote:
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
+On Wed, Sep 11, 2019 at 2:29 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
->>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
->>> <bcodding@redhat.com> wrote:
->>>
+> On Thu, Sep 5, 2019 at 7:00 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
 >
->>> Instead, I think we want to make sure the mic falls squarely into 
->>> the tail
->>> every time.
->>
->> I'm not clear how you could do that. The length of the page data is 
->> not
->> known to the client before it parses the reply. Are you suggesting 
->> that
->> gss_unwrap should do it somehow?
+> > v2 is the same as v1 except that commit message is corrected according
+> > to Linus' comment for v1:
+> >
+> > 1. remove Change-Id lines
+> > 2. correct sysfs as debugfs
 >
-> Is it too niave to always put the mic at the end of the tail?
-
-Naive, even..?
-
-Ben
+> Looks OK to me, but i need Sean's review on this, Sean?
+>
+> Yours,
+> Linus Walleij
