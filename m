@@ -2,104 +2,73 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96CAECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5F8ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F08921928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:18:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQhc9gXZ"
+	by mail.kernel.org (Postfix) with ESMTP id CCDED21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 05:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfIKFSA (ORCPT
+        id S1726618AbfIKFYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 01:18:00 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37788 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfIKFSA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 01:18:00 -0400
-Received: by mail-yw1-f67.google.com with SMTP id u65so1688284ywe.4;
-        Tue, 10 Sep 2019 22:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=B1gkHH/vtIQIzLRopG5WCX6poJs+AROQ9wwzxaKQiMI=;
-        b=pQhc9gXZVHi+8+PbiXQ0kw6JEVpXEbAfwQAWlXD2WA75qPjWhFJjLDJmLmUYDus413
-         kOo8J3ryUV/KuURCOY0cobUadf3NuXLBFdcOq5ax0iVOzgFsoOoDXGy1NzCB1jbvUUvM
-         iRbsdYapI4imKDYMfJZ2DKXOuSBf89u9M8E5/4cBkePmFpMWtkGZOEn0vxxR3YhW8Tw7
-         5NRlVHl9Na6zb831hXbfrKz78rhJogsBOKRrDSHh3m77t3g4zM9+FJbRlT/3Ey/ycXhg
-         5+mDuuP6CxRrdrru9C1rYnumCuhkz0snvAe8pCfsDvwzNDElrlobWCBmoXZ3/sdMzgA9
-         iPKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=B1gkHH/vtIQIzLRopG5WCX6poJs+AROQ9wwzxaKQiMI=;
-        b=r48AoxdEFxFcgq8Cis+9nNv6kk1H3lIhp4y2/Q/aR0vmgEaJU/lXZDsFiCpFbQ2GVR
-         i9r8bkISRQJO/vENuerUwRL8S2BLt3zVW8R/OIDGerb83fQiMM/Zatan7ZeT4BFwlPtA
-         YLaBe4SFPNvBUhDSfteaUjvkZl1AAmP3mpIgcTfDIJeYNBD8ZWZdvlwHxYOGThee513/
-         6SYlKpoWUelKAiDVQZcLQ58I8TnQrbsBHxdh4Mhy0x23mRXK0Di1UUzTTOXtPFFBHTks
-         WOcEmMCUjRL5+2wPyUOBgaXcentx6A/+be3HvtplkzldrGKLEZrlLzLB80ICk/aM9+hg
-         Hu2w==
-X-Gm-Message-State: APjAAAWutLbx8ymD9WCSziKvI7GbyPmFgoIGmwMIas8Z6hWJ7QFZJaqO
-        4k59dR574tA78xGofppSnm9yh2UGXGIVYOmhdhU=
-X-Google-Smtp-Source: APXvYqwjH/NeuhnI2cFmY+Mf24H5HyFtcFN1CuwMilu3VYb09XsGdzbn/Z5C5Q/WkDO8XoEv3gEW+y9MYWPucXBE0dU=
-X-Received: by 2002:a0d:e64b:: with SMTP id p72mr23178254ywe.347.1568179079047;
- Tue, 10 Sep 2019 22:17:59 -0700 (PDT)
-MIME-Version: 1.0
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Wed, 11 Sep 2019 14:17:48 +0900
-Message-ID: <CAHjaAcStAfarJoPG0tbSY0BVcp0-7Lvah2FdpmC_eCFfxaSVFw@mail.gmail.com>
-Subject: Re: [PATCH v2] Fix fTPM on AMD Zen+ CPUs
-To:     ivan.lazeev@gmail.com
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterhuewe@gmx.de
+        Wed, 11 Sep 2019 01:24:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50332 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfIKFYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 01:24:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 22:24:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="178908590"
+Received: from mjtillin-mobl1.ger.corp.intel.com ([10.252.1.17])
+  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2019 22:24:10 -0700
+Message-ID: <7783b8532d544ee38517b8c6a20dea97c3589618.camel@intel.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the net-next
+ tree
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Malamud <alex.malamud@intel.com>
+Date:   Wed, 11 Sep 2019 08:24:09 +0300
+In-Reply-To: <20190911004229.74d2763a@canb.auug.org.au>
+References: <20190911004229.74d2763a@canb.auug.org.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > And why is this allocating memory inside the acpi table walker? It
-> > seems to me like the memory should be allocated once the mapping is
-> > made.
-> >
->
-> Yes, this looks bad. Letting the walker build the list and then using
-> it is, probably, a better idea.
->
-> > Maybe all the mappings should be created from the ACPI ranges right
-> > away?
-> >
->
-> I don't know if it's a good idea to just map them all instead of doing
-> so only for relevant ones. Maybe it is safe, here I need an advice
-> from a more knowledgeable person.
->
+On Wed, 2019-09-11 at 00:42 +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   aa43ae121675 ("iwlwifi: LTR updates")
+> 
+> is missing a Signed-off-by from its committer.
 
-Vanya,
-I also made a patch series to solve AMD's fTPM. My patch link is here,
-https://lkml.org/lkml/2019/9/9/132 .
+Oops, that was my fault.  What can we do about it? Is it enough if I
+give my s-o-b publicly here?
 
-The maintainer, Jarkko, wanted me to remark on your patch, so I would
-like to cooperate with you.
+I hereby sign off this change:
 
-Your patch is good for me. If you are fine, I would like to take your
-patch and merge it with my patch series. I also would like to change
-some points Jason mentioned before.
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 
-Of course, I will leave your commit message and sign-off-by note.
-According to the guideline below, I will just add co-developed-by and
-sign-off-by notes behind you.
-https://www.kernel.org/doc/html/v5.2/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
 
-If you have any idea about our co-work, please let me know.
-I hope we can solve AMD's fTPM problem soon.
+--
+Cheers,
+Luca.
 
-Seunghun
