@@ -2,89 +2,273 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E86C49ED7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A183DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF96321928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EC821928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 03:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfIKDJL (ORCPT
+        id S1726778AbfIKDLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Sep 2019 23:09:11 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:40705 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726657AbfIKDJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Sep 2019 23:09:10 -0400
-X-IronPort-AV: E=Sophos;i="5.64,491,1559491200"; 
-   d="scan'208";a="75262210"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 11 Sep 2019 11:09:09 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 051084CE030A;
-        Wed, 11 Sep 2019 11:08:56 +0800 (CST)
-Received: from TSAO.g08.fujitsu.local (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Wed, 11 Sep 2019 11:09:11 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     <rppt@linux.ibm.com>
-Subject: [PATCH] mm/memblock: fix typo in memblock doc
-Date:   Wed, 11 Sep 2019 11:08:56 +0800
-Message-ID: <20190911030856.18010-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 10 Sep 2019 23:11:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27145 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfIKDLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Sep 2019 23:11:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Sep 2019 20:11:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,491,1559545200"; 
+   d="scan'208";a="268616138"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
+  by orsmga001.jf.intel.com with ESMTP; 10 Sep 2019 20:11:19 -0700
+Date:   Wed, 11 Sep 2019 11:08:51 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com
+Subject: Re: [RFC PATCH 3/4] virtio: introudce a mdev based transport
+Message-ID: <20190911030851.GA27733@___>
+References: <20190910081935.30516-1-jasowang@redhat.com>
+ <20190910081935.30516-4-jasowang@redhat.com>
+ <20190911014726.GA14798@___>
+ <8428eec1-b53c-9efc-1260-4e5ce2651461@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: 051084CE030A.A9008
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8428eec1-b53c-9efc-1260-4e5ce2651461@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-elaboarte -> elaborate
-architecure -> architecture
-compltes -> completes
+On Wed, Sep 11, 2019 at 10:52:03AM +0800, Jason Wang wrote:
+> On 2019/9/11 上午9:47, Tiwei Bie wrote:
+> > On Tue, Sep 10, 2019 at 04:19:34PM +0800, Jason Wang wrote:
+> > > This path introduces a new mdev transport for virtio. This is used to
+> > > use kernel virtio driver to drive the mediated device that is capable
+> > > of populating virtqueue directly.
+> > > 
+> > > A new virtio-mdev driver will be registered to the mdev bus, when a
+> > > new virtio-mdev device is probed, it will register the device with
+> > > mdev based config ops. This means, unlike the exist hardware
+> > > transport, this is a software transport between mdev driver and mdev
+> > > device. The transport was implemented through:
+> > > 
+> > > - configuration access was implemented through parent_ops->read()/write()
+> > > - vq/config callback was implemented through parent_ops->ioctl()
+> > > 
+> > > This transport is derived from virtio MMIO protocol and was wrote for
+> > > kernel driver. But for the transport itself, but the design goal is to
+> > > be generic enough to support userspace driver (this part will be added
+> > > in the future).
+> > > 
+> > > Note:
+> > > - current mdev assume all the parameter of parent_ops was from
+> > >    userspace. This prevents us from implementing the kernel mdev
+> > >    driver. For a quick POC, this patch just abuse those parameter and
+> > >    assume the mdev device implementation will treat them as kernel
+> > >    pointer. This should be addressed in the formal series by extending
+> > >    mdev_parent_ops.
+> > > - for a quick POC, I just drive the transport from MMIO, I'm pretty
+> > >    there's lot of optimization space for this.
+> > > 
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >   drivers/vfio/mdev/Kconfig        |   7 +
+> > >   drivers/vfio/mdev/Makefile       |   1 +
+> > >   drivers/vfio/mdev/virtio_mdev.c  | 500 +++++++++++++++++++++++++++++++
+> > >   include/uapi/linux/virtio_mdev.h | 131 ++++++++
+> > >   4 files changed, 639 insertions(+)
+> > >   create mode 100644 drivers/vfio/mdev/virtio_mdev.c
+> > >   create mode 100644 include/uapi/linux/virtio_mdev.h
+> > > 
+> > [...]
+> > > diff --git a/include/uapi/linux/virtio_mdev.h b/include/uapi/linux/virtio_mdev.h
+> > > new file mode 100644
+> > > index 000000000000..8040de6b960a
+> > > --- /dev/null
+> > > +++ b/include/uapi/linux/virtio_mdev.h
+> > > @@ -0,0 +1,131 @@
+> > > +/*
+> > > + * Virtio mediated device driver
+> > > + *
+> > > + * Copyright 2019, Red Hat Corp.
+> > > + *
+> > > + * Based on Virtio MMIO driver by ARM Ltd, copyright ARM Ltd. 2011
+> > > + *
+> > > + * This header is BSD licensed so anyone can use the definitions to implement
+> > > + * compatible drivers/servers.
+> > > + *
+> > > + * Redistribution and use in source and binary forms, with or without
+> > > + * modification, are permitted provided that the following conditions
+> > > + * are met:
+> > > + * 1. Redistributions of source code must retain the above copyright
+> > > + *    notice, this list of conditions and the following disclaimer.
+> > > + * 2. Redistributions in binary form must reproduce the above copyright
+> > > + *    notice, this list of conditions and the following disclaimer in the
+> > > + *    documentation and/or other materials provided with the distribution.
+> > > + * 3. Neither the name of IBM nor the names of its contributors
+> > > + *    may be used to endorse or promote products derived from this software
+> > > + *    without specific prior written permission.
+> > > + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS'' AND
+> > > + * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> > > + * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+> > > + * ARE DISCLAIMED.  IN NO EVENT SHALL IBM OR CONTRIBUTORS BE LIABLE
+> > > + * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> > > + * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+> > > + * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> > > + * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+> > > + * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+> > > + * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+> > > + * SUCH DAMAGE.
+> > > + */
+> > > +#ifndef _LINUX_VIRTIO_MDEV_H
+> > > +#define _LINUX_VIRTIO_MDEV_H
+> > > +
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/vringh.h>
+> > > +#include <uapi/linux/virtio_net.h>
+> > > +
+> > > +/*
+> > > + * Ioctls
+> > > + */
+> > > +
+> > > +struct virtio_mdev_callback {
+> > > +	irqreturn_t (*callback)(void *);
+> > > +	void *private;
+> > > +};
+> > > +
+> > > +#define VIRTIO_MDEV 0xAF
+> > > +#define VIRTIO_MDEV_SET_VQ_CALLBACK _IOW(VIRTIO_MDEV, 0x00, \
+> > > +					 struct virtio_mdev_callback)
+> > > +#define VIRTIO_MDEV_SET_CONFIG_CALLBACK _IOW(VIRTIO_MDEV, 0x01, \
+> > > +					struct virtio_mdev_callback)
+> > > +
+> > > +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
+> > > +
+> > > +/*
+> > > + * Control registers
+> > > + */
+> > > +
+> > > +/* Magic value ("virt" string) - Read Only */
+> > > +#define VIRTIO_MDEV_MAGIC_VALUE		0x000
+> > > +
+> > > +/* Virtio device version - Read Only */
+> > > +#define VIRTIO_MDEV_VERSION		0x004
+> > > +
+> > > +/* Virtio device ID - Read Only */
+> > > +#define VIRTIO_MDEV_DEVICE_ID		0x008
+> > > +
+> > > +/* Virtio vendor ID - Read Only */
+> > > +#define VIRTIO_MDEV_VENDOR_ID		0x00c
+> > > +
+> > > +/* Bitmask of the features supported by the device (host)
+> > > + * (32 bits per set) - Read Only */
+> > > +#define VIRTIO_MDEV_DEVICE_FEATURES	0x010
+> > > +
+> > > +/* Device (host) features set selector - Write Only */
+> > > +#define VIRTIO_MDEV_DEVICE_FEATURES_SEL	0x014
+> > > +
+> > > +/* Bitmask of features activated by the driver (guest)
+> > > + * (32 bits per set) - Write Only */
+> > > +#define VIRTIO_MDEV_DRIVER_FEATURES	0x020
+> > > +
+> > > +/* Activated features set selector - Write Only */
+> > > +#define VIRTIO_MDEV_DRIVER_FEATURES_SEL	0x024
+> > > +
+> > > +/* Queue selector - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_SEL		0x030
+> > > +
+> > > +/* Maximum size of the currently selected queue - Read Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NUM_MAX	0x034
+> > > +
+> > > +/* Queue size for the currently selected queue - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NUM		0x038
+> > > +
+> > > +/* Ready bit for the currently selected queue - Read Write */
+> > > +#define VIRTIO_MDEV_QUEUE_READY		0x044
+> > > +
+> > > +/* Alignment of virtqueue - Read Only */
+> > > +#define VIRTIO_MDEV_QUEUE_ALIGN		0x048
+> > > +
+> > > +/* Queue notifier - Write Only */
+> > > +#define VIRTIO_MDEV_QUEUE_NOTIFY	0x050
+> > > +
+> > > +/* Device status register - Read Write */
+> > > +#define VIRTIO_MDEV_STATUS		0x060
+> > > +
+> > > +/* Selected queue's Descriptor Table address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_DESC_LOW	0x080
+> > > +#define VIRTIO_MDEV_QUEUE_DESC_HIGH	0x084
+> > > +
+> > > +/* Selected queue's Available Ring address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_LOW	0x090
+> > > +#define VIRTIO_MDEV_QUEUE_AVAIL_HIGH	0x094
+> > > +
+> > > +/* Selected queue's Used Ring address, 64 bits in two halves */
+> > > +#define VIRTIO_MDEV_QUEUE_USED_LOW	0x0a0
+> > > +#define VIRTIO_MDEV_QUEUE_USED_HIGH	0x0a4
+> > > +
+> > > +/* Configuration atomicity value */
+> > > +#define VIRTIO_MDEV_CONFIG_GENERATION	0x0fc
+> > > +
+> > > +/* The config space is defined by each driver as
+> > > + * the per-driver configuration space - Read Write */
+> > > +#define VIRTIO_MDEV_CONFIG		0x100
+> > IIUC, we can use above registers with virtio-mdev parent's
+> > read()/write() to access the mdev device from kernel driver.
+> > As you suggested, it's a choice to build vhost-mdev on top
+> > of this abstraction as well. But virtio is the frontend
+> > device which lacks some vhost backend features, e.g. get
+> > vring base, set vring base, negotiate vhost features, etc.
+> > So I'm wondering, does it make sense to reserve some space
+> > for vhost-mdev in kernel to do vhost backend specific setups?
+> > Or do you have any other thoughts?
+> 
+> 
+> Good point. It's just a quick POC, I plan to add vhost features in the next
+> release:
+> 
+> 1) set/get virtqueue state (e.g vring base)
+> 2) dirty page tracking
+> 3) for vhost features, if you mean _F_LOG_ALL, it could be done by 2), for
+> IOTLB, it requires more thought on the API since current IOTLB API is no
+> implemented through ioctl ...
+> 
+> 
+> > 
+> > Besides, I'm also wondering, what's the purpose of making
+> > above registers part of UAPI?
+> 
+> 
+> Sorry if it brings confusion. If we do vhost-mdev on top of this, there's no
+> need for this to go for UAPI.
+> 
+> 
+> > And if we make them part
+> > of UAPI, do we also need to make them part of virtio spec?
+> 
+> 
+> Yes, but I do not think we should put it into UAPI. Technically, userspace
+> can use this transport as well with some modification on the interrupt part,
+> e.g using eventfd. But is there any value for doing this instead of vhost?
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
- mm/memblock.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Yeah, I agree. As we already have vhost, I don't see the value
+to make virtio become "virtio + vhost".
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 7d4f61ae666a..0d0f92003d18 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -83,16 +83,16 @@
-  * Note, that both API variants use implict assumptions about allowed
-  * memory ranges and the fallback methods. Consult the documentation
-  * of :c:func:`memblock_alloc_internal` and
-- * :c:func:`memblock_alloc_range_nid` functions for more elaboarte
-+ * :c:func:`memblock_alloc_range_nid` functions for more elaborate
-  * description.
-  *
-  * As the system boot progresses, the architecture specific
-  * :c:func:`mem_init` function frees all the memory to the buddy page
-  * allocator.
-  *
-- * Unless an architecure enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-+ * Unless an architecture enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-  * memblock data structures will be discarded after the system
-- * initialization compltes.
-+ * initialization completes.
-  */
- 
- #ifndef CONFIG_NEED_MULTIPLE_NODES
--- 
-2.21.0
-
-
-
+Thanks,
+Tiwei
