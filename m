@@ -2,120 +2,135 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64050C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4A8C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3809320838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:47:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="EIcFZCwi"
+	by mail.kernel.org (Postfix) with ESMTP id F2AB020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568220628;
+	bh=nR8hx3HK09Zo3Xccb+ticqxSNc/27NqZIk5X0xyz19Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O2DSk+1TCCLJ8TvUvKg5QkrjzRWetrHHaOCe0Z2VrC3dBXtyGX8CW2Iif6Piph5wy
+	 fVAF4gJEtla5t78sNypLh3TNdlJ+0PecRuIGDzwa6fPBEIqBbPACmqVmS74OAaIGFP
+	 xATwlqaRbmfUgG0/PrVe8blqzr0VxD1Cor0KA4vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfIKQrs (ORCPT
+        id S1729470AbfIKQu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:47:48 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38340 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729061AbfIKQrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:47:48 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 7so14695561oip.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UyBgw3AODQFVN+4HIEsd/XrS1E/piEwo3I8b+tw/RVY=;
-        b=EIcFZCwiNCLKLgzI01OETGWXiJMvC3C5nUTiqtRi7Ez04rFp7Y2XUZR31V/+BVso0Y
-         dfhQpSmWtVm7DhlL5OGmTxV+ccvXfV7MLve0lCBUILV9MyHRdqwUKevxzs/TNmvLgipA
-         deuNb39T14E0bLyiv4cwPjNEmsxKOh6Dr+XwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UyBgw3AODQFVN+4HIEsd/XrS1E/piEwo3I8b+tw/RVY=;
-        b=Pjj8V2fwLDOryDN1maQyXDSxuhE7JQFO14ojXfUFXhbD6HjPAzSjdHu1LHvUKyo/Bp
-         kUuf2/dQhZVnNMflImOCPqLCaL1c2RUgevL0GHBpgTr6LWPI7ORg4zq14J5V8BQGqwVA
-         hNuTLcYlV947Y7AjnRqM4kVlKwcRS/LYEyyBM3LZdtL5Xgmw26Q7/CaVyVyoLeQ5S36p
-         tGDFNV8AYyAWJ4NGxvNVK6lN651XX1s9L+BbVfzX85TN3rp0mYQGyZuMsDQPxkCK9Dwr
-         82gYopo/nLyINRdJroHAdb1Nk6JbqC1NS91k7VZhgZkFamS6qDnTNBi/zS4cptzUTC64
-         +UbQ==
-X-Gm-Message-State: APjAAAUy8Y9AZHDnWBk0yFovSrz/pG2gEwGKrPXvtOilmKYrM60uqoD7
-        59Y4eNi9K9J4BHcBWli02HAn1mtp+c63sTOvZF7fng==
-X-Google-Smtp-Source: APXvYqxngOKuvwOss0eH9pdiMhxCTkuwo4+ViAGBU4DgcVhDRVJWpB8/f0oP/5Qxbgfe/M/nLmd4UEdfjzMDgWGeT2Q=
-X-Received: by 2002:aca:ab84:: with SMTP id u126mr4754572oie.115.1568220465630;
- Wed, 11 Sep 2019 09:47:45 -0700 (PDT)
+        Wed, 11 Sep 2019 12:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729393AbfIKQuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:50:25 -0400
+Received: from earth.universe (unknown [148.69.85.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E6A20872;
+        Wed, 11 Sep 2019 16:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568220623;
+        bh=nR8hx3HK09Zo3Xccb+ticqxSNc/27NqZIk5X0xyz19Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qRpE9q+loPKnhIWXbSWfUjhLzQKkgRzPW9r8UNqhhTfC44nsa5vhYzI2DjDyHfNw+
+         J01X3OoeBzxN4sn/3M3dRYZp6op74PWkO2La/TopQG7uwCQ9GZv3vGGJ2XBx5eZlty
+         WfhJVcXaVb5UV8wvoAGsYxCx2V6UlQJfDjFlIdQU=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 495773C0D39; Wed, 11 Sep 2019 17:50:21 +0100 (WEST)
+Date:   Wed, 11 Sep 2019 17:50:21 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: omap2plus_defconfig: Update for removed items
+Message-ID: <20190911165021.qr5i37mpnua3fvw5@earth.universe>
+References: <20190911145226.21088-1-aford173@gmail.com>
 MIME-Version: 1.0
-References: <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com> <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com> <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com> <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
-In-Reply-To: <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Wed, 11 Sep 2019 12:47:34 -0400
-Message-ID: <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cquryzuhszuj65pm"
+Content-Disposition: inline
+In-Reply-To: <20190911145226.21088-1-aford173@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > So both of you are working on top of my 2 patches that deal with the
-> > fairness issue, but I had the feeling Tim's alternative patches[1] are
-> > simpler than mine and achieves the same result(after the force idle tag
->
-> I think Julien's result show that my patches did not do as well as
-> your patches for fairness. Aubrey did some other testing with the same
-> conclusion.  So I think keeping the forced idle time balanced is not
-> enough for maintaining fairness.
->
-There are two main issues - vruntime comparison issue and the
-forced idle issue.  coresched_idle thread patch is addressing
-the forced idle issue as scheduler is no longer overloading idle
-thread for forcing idle. If I understand correctly, Tim's patch
-also tries to fix the forced idle issue. On top of fixing forced
-idle issue, we also need to fix that vruntime comparison issue
-and I think thats where Aaron's patch helps.
 
-I think comparing parent's runtime also will have issues once
-the task group has a lot more threads with different running
-patterns. One example is a task group with lot of active threads
-and a thread with fairly less activity. So when this less active
-thread is competing with a thread in another group, there is a
-chance that it loses continuously for a while until the other
-group catches up on its vruntime.
+--cquryzuhszuj65pm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As discussed during LPC, probably start thinking along the lines
-of global vruntime or core wide vruntime to fix the vruntime
-comparison issue?
+Hi,
 
-Thanks,
-Vineeth
+On Wed, Sep 11, 2019 at 09:52:25AM -0500, Adam Ford wrote:
+> The omap panel-dpi driver was removed in
+> Commit 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+>=20
+> The tFP410 and DVI connector was remove in
+> Commit be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
+>=20
+> This patch removes these items from the omap2plus_defconfig.
+
+The omapdrm specific drivers have generic replacements, that
+should be added to the defconfig instead:
+
+DRM_OMAP_PANEL_DPI -> DRM_PANEL_SIMPLE
+DRM_OMAP_ENCODER_TFP410 -> DRM_TI_TFP410
+
+Nothing should be required for DRM_OMAP_CONNECTOR_DVI.
+
+-- Sebastian
+
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>=20
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap=
+2plus_defconfig
+> index c7bf9c493646..166b36be2ca6 100644
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
+> @@ -349,12 +349,9 @@ CONFIG_OMAP5_DSS_HDMI=3Dy
+>  CONFIG_OMAP2_DSS_SDI=3Dy
+>  CONFIG_OMAP2_DSS_DSI=3Dy
+>  CONFIG_DRM_OMAP_ENCODER_OPA362=3Dm
+> -CONFIG_DRM_OMAP_ENCODER_TFP410=3Dm
+>  CONFIG_DRM_OMAP_ENCODER_TPD12S015=3Dm
+> -CONFIG_DRM_OMAP_CONNECTOR_DVI=3Dm
+>  CONFIG_DRM_OMAP_CONNECTOR_HDMI=3Dm
+>  CONFIG_DRM_OMAP_CONNECTOR_ANALOG_TV=3Dm
+> -CONFIG_DRM_OMAP_PANEL_DPI=3Dm
+>  CONFIG_DRM_OMAP_PANEL_DSI_CM=3Dm
+>  CONFIG_DRM_OMAP_PANEL_SONY_ACX565AKM=3Dm
+>  CONFIG_DRM_OMAP_PANEL_LGPHILIPS_LB035Q02=3Dm
+> --=20
+> 2.17.1
+>=20
+
+--cquryzuhszuj65pm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl15JckACgkQ2O7X88g7
++poVgRAAgMcfz1sNIFGJyjDqAyhgu3cqv4oHp9J6JpEc+oy01vP+KpXSncCd2V7q
+4qo1PkL++BZUN7uOYLNKK3f4KH8RSkITyzhTiY9Sj8nqASc+khTbYyCms+lePx3M
+vSgxevdTU4Nw3VzjR67z5IsXz8VyEwmDGyunTc8lhnkPupuSOUg8YW/3XA363Epu
+CYsHJSJykrVvtScBGs4dcgPD+eIPqfMTslhCMw8zxzAy3HBqsHqDu6tfYDAL1DB/
+K0L+QhILnkSKh+g8C0oC/sikdJTgwdHen0Lx9iYJqqaFutLabuP4FNovPMCt7bJ4
+ciHZV6etFcW4ci9sX7L9jgbn9oZtfMhifI5T2JfDxGrMfNWpRf3wehvsoL1Gqupe
+zUX0rgAb50PFGxkAn9mPnbEvtaKBP6tkLTVTDNThf2jbK5gn9yS6dXjES8q7XIJI
+t+/a8NiQRUmNBhlQNtdlY8g2mqmP9orSSZD0AUULhIw9tmEvCCdlRuFNLkm8/Wr6
+5S0QHbfMi+W7nlnEF3g7lRmtpbbwA7/glTCehYmuOvtFVZH9sBPu6XoESS2pyyMv
+2H1yrhxPUku8EnRgIsO3ZQDKF7xXT0F1teL2PQbO17HoaPWaBJq36HJ99UvUpGQU
+eegD9nrFhGv5mBQSxFwlNju5cuJ5k4yELT8CZjMkd08KJJfopkQ=
+=k12s
+-----END PGP SIGNATURE-----
+
+--cquryzuhszuj65pm--
