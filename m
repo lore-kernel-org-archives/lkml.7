@@ -2,131 +2,87 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98371ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD99BECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6991521928
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757F321A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osjI2/rU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfIKJbc (ORCPT
+        id S1727365AbfIKJeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:31:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51820 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfIKJbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:31:32 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8316C098D09
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:31:31 +0000 (UTC)
-Received: by mail-qk1-f200.google.com with SMTP id 72so24216856qki.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 02:31:31 -0700 (PDT)
+        Wed, 11 Sep 2019 05:34:46 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42503 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfIKJeq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:34:46 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y23so19294260lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 02:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LFTqrDSGPqM5Rbf4MHh4Cpzi8wVBsnY38oD1BczrIT4=;
+        b=osjI2/rUKypUftfsqOHyrN59YoxOwshy1+/i/o5n1NWMpuQPUpCQUKOHKTvA0LzR0l
+         DJ3dM+/OF+TmuYuxQgZ4Wt5LuWd9fB5REMpxJdptzIuzXmoZwebXEvZ+Bhe6dyKv0dL1
+         3b/CWDNSltOrJMoPdbhe9qpcDlEekT0D7rSSMMRoOm4QqeBVDEcQr9NvyM3utFUv+4f/
+         O9Q3xd1AbUmF0lBlAANYfPYJFZav4dWuqd8lUZFEik5khcr9FIJ00+Nhm0srdVQA3juO
+         TWQXAPjOuYUm9Jr3z4XMNiatqem/btCwFCF+pjGY28M4VTSZqCemgW5lwm+Vt5pCrXBq
+         IpMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ut3tihE7bTGmYZVRoILxbz8fluSN7bHwSi8fhoDIScQ=;
-        b=sOCgP6EwA2+M2+1yunt0gVSkCumdBIDjadmWkBH0wLP5/jaC19anwosFdyy2ItIZbA
-         sOUbIrooTHv8fjU/Ke+Egne2Z2vg4UbcdK8c+gRDMOdcdAX0LZkeBjNrmptRZIEJgnZp
-         mFh+jnA+5izsU7bEfCyCzJ1oryfvFuh2A/KuTv24rIIGRsFUx8vo8VsTMPgvYnCQr96j
-         peG2HbUXbH6K/u9Ws4Kq/+KS7THuTfp1Bd1CAuHbWjc/BqcqM3hcGYOFGigHVkJnTEva
-         1sctR+l8bUDAv62/CjfuMyBI2rjpVhc1dNL10dVY6LYtvX42+cmGdmlpoXRfidqETC9F
-         iaiw==
-X-Gm-Message-State: APjAAAUr/NUu6SLv8G5wbLayXbldtXO0vkweWyO/ftxZo6+wZW2sKBao
-        qTQYmEV8JFQ0jCwbn3HQT49z14mIWCeRgIEvBfKUejCFCSDaP7VWHhUdlvegsN0CZMLCzUYcrU8
-        ErFmSLAzMCJH7gZcNB+pror4v
-X-Received: by 2002:ae9:f20f:: with SMTP id m15mr16057179qkg.199.1568194291043;
-        Wed, 11 Sep 2019 02:31:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzfzPT6SmbrsRtarE+GakuNnjpB2pyzd8QrqvF/zQOj7HHkg+hOJA0Po72fFkFP2UoCQrr4Cg==
-X-Received: by 2002:ae9:f20f:: with SMTP id m15mr16057160qkg.199.1568194290901;
-        Wed, 11 Sep 2019 02:31:30 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id c29sm13406696qtc.89.2019.09.11.02.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 02:31:30 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 05:31:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Matej Genci <matej.genci@nutanix.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] virtio: add VIRTIO_RING_NO_LEGACY
-Message-ID: <20190911053030-mutt-send-email-mst@kernel.org>
-References: <20190910175335.231660-1-matej.genci@nutanix.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LFTqrDSGPqM5Rbf4MHh4Cpzi8wVBsnY38oD1BczrIT4=;
+        b=cIvwQ6aAgpnayL/V/6b3Fw1Y7m/EKNy0ojlbBVJ3SVU94PwrAGjqfOyk92ByMehQ3g
+         ky03qshSPpb5jKNeNzRiRe3m1h4CEODZBLRA0rtsQ6ovXBVCkX7ECoHjvYz4XsiWpnzU
+         b7fQsbsd4p1BFTJSxXTrAmQxk6mpYSwCkEhJ8TR7DcDFJ3r6ZBdY1LF+uAX58W7fSmlm
+         CxS2OCRomoXaE/DArxUR7i7QLwvtfDk0SDc2dZEwkq/RVIvRtKkWhXiXh5cbaAJcKXw+
+         cOz/VBSvI6dsDlAgIQ67EAoo5WvID/QsC6vHpxWO9NYNruH34kwq6KN9XrQeEaX4M1To
+         540g==
+X-Gm-Message-State: APjAAAUeXvKG5rHml3NrafFeBvSogY8z69GHEHWkzddPhl/GetpXlaeA
+        vZ0kZAxboD9f0QdroeX/ffLeBfBXAIbJ6915vQ3AKaGas6Lb5A==
+X-Google-Smtp-Source: APXvYqzo6t7hRvy0qG83lG9IT1ljukS0U1MgOkKKQb3y96ro+RFSmsfHLUjuc7xmYEc36vZpOaTczbQjCjOq9/rUa/8=
+X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr18956643ljj.108.1568194483710;
+ Wed, 11 Sep 2019 02:34:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910175335.231660-1-matej.genci@nutanix.com>
+References: <1567054348-19685-1-git-send-email-srinath.mannam@broadcom.com> <1567054348-19685-2-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1567054348-19685-2-git-send-email-srinath.mannam@broadcom.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Sep 2019 10:34:32 +0100
+Message-ID: <CACRpkdZe2btC-vjRq1rPaHA9pXUi8N_cZT-RQ5m=PxjmkASieA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: iproc-gpio: Fix incorrect pinconf configurations
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Li Jin <li.jin@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 05:53:44PM +0000, Matej Genci wrote:
-> Add macro to disable legacy functions vring_init and vring_size.
-> 
-> Signed-off-by: Matej Genci <matej.genci@nutanix.com>
+On Thu, Aug 29, 2019 at 5:52 AM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
 
-And I guess we should be able to define this macro in
-drivers/virtio/virtio_pci_modern.c
-?
+> From: Li Jin <li.jin@broadcom.com>
+>
+> Fix drive strength for AON/CRMU controller; fix pull-up/down setting
+> for CCM/CDRU controller.
+>
+> Fixes: 616043d58a89 ("pinctrl: Rename gpio driver from cygnus to iproc")
+> Signed-off-by: Li Jin <li.jin@broadcom.com>
 
-Will be handy to make sure we don't mask too much.
+No response from maintainers for two weeks, so patch applied.
 
-> ---
-> 
-> V2: Put all legacy APIs inside guards.
-> 
-> ---
->  include/uapi/linux/virtio_ring.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
-> index 4c4e24c291a5..efe5a421b4ea 100644
-> --- a/include/uapi/linux/virtio_ring.h
-> +++ b/include/uapi/linux/virtio_ring.h
-> @@ -118,6 +118,8 @@ struct vring_used {
->  	struct vring_used_elem ring[];
->  };
->  
-> +#ifndef VIRTIO_RING_NO_LEGACY
-> +
->  struct vring {
->  	unsigned int num;
->  
-> @@ -128,6 +130,8 @@ struct vring {
->  	struct vring_used *used;
->  };
->  
-> +#endif /* VIRTIO_RING_NO_LEGACY */
-> +
->  /* Alignment requirements for vring elements.
->   * When using pre-virtio 1.0 layout, these fall out naturally.
->   */
-> @@ -135,6 +139,8 @@ struct vring {
->  #define VRING_USED_ALIGN_SIZE 4
->  #define VRING_DESC_ALIGN_SIZE 16
->  
-> +#ifndef VIRTIO_RING_NO_LEGACY
-> +
->  /* The standard layout for the ring is a continuous chunk of memory which looks
->   * like this.  We assume num is a power of 2.
->   *
-> @@ -195,6 +201,8 @@ static inline int vring_need_event(__u16 event_idx, __u16 new_idx, __u16 old)
->  	return (__u16)(new_idx - event_idx - 1) < (__u16)(new_idx - old);
->  }
->  
-> +#endif /* VIRTIO_RING_NO_LEGACY */
-> +
->  struct vring_packed_desc_event {
->  	/* Descriptor Ring Change Event Offset/Wrap Counter. */
->  	__le16 off_wrap;
-> -- 
-> 2.22.0
-> 
+Yours,
+Linus Walleij
