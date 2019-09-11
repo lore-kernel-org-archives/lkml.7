@@ -2,105 +2,87 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B83C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B70ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774292081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A233C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbfIKRPb (ORCPT
+        id S1729497AbfIKRR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:15:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33248 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbfIKRPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:15:31 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 783A81DB0;
-        Wed, 11 Sep 2019 17:15:30 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-234.rdu2.redhat.com [10.10.123.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CEEB060872;
-        Wed, 11 Sep 2019 17:15:27 +0000 (UTC)
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <20190911151451.GH29434@bombadil.infradead.org>
- <19d9ea18-bd20-e02f-c1de-70e7322f5f22@redhat.com>
- <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <5229662c-d709-7aca-be4c-53dea1a49fda@redhat.com>
-Date:   Wed, 11 Sep 2019 18:15:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 11 Sep 2019 13:17:56 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62683 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbfIKRR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:17:56 -0400
+Received: from 38.85.69.148.rev.vodafone.pt (148.69.85.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 8c4416ec4a1609a8; Wed, 11 Sep 2019 19:17:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the pm tree
+Date:   Wed, 11 Sep 2019 19:17:52 +0200
+Message-ID: <3207595.z7mfiUyZYE@kreacher>
+In-Reply-To: <20190911072741.GA981@kuha.fi.intel.com>
+References: <20190911003306.74ca7251@canb.auug.org.au> <20190911072741.GA981@kuha.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <40a511a4-5771-f9a9-40b6-64e39478bbcb@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 11 Sep 2019 17:15:30 +0000 (UTC)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 6:03 PM, Mike Kravetz wrote:
-> On 9/11/19 8:44 AM, Waiman Long wrote:
->> On 9/11/19 4:14 PM, Matthew Wilcox wrote:
->>> On Wed, Sep 11, 2019 at 04:05:37PM +0100, Waiman Long wrote:
->>>> When allocating a large amount of static hugepages (~500-1500GB) on a
->>>> system with large number of CPUs (4, 8 or even 16 sockets), performance
->>>> degradation (random multi-second delays) was observed when thousands
->>>> of processes are trying to fault in the data into the huge pages. The
->>>> likelihood of the delay increases with the number of sockets and hence
->>>> the CPUs a system has.  This only happens in the initial setup phase
->>>> and will be gone after all the necessary data are faulted in.
->>> Can;t the application just specify MAP_POPULATE?
->> Originally, I thought that this happened in the startup phase when the
->> pages were faulted in. The problem persists after steady state had been
->> reached though. Every time you have a new user process created, it will
->> have its own page table.
-> This is still at fault time.  Although, for the particular application it
-> may be after the 'startup phase'.
->
->>                          It is the sharing of the of huge page shared
->> memory that is causing problem. Of course, it depends on how the
->> application is written.
-> It may be the case that some applications would find the delays acceptable
-> for the benefit of shared pmds once they reach steady state.  As you say, of
-> course this depends on how the application is written.
->
-> I know that Oracle DB would not like it if PMD sharing is disabled for them.
-> Based on what I know of their model, all processes which share PMDs perform
-> faults (write or read) during the startup phase.  This is in environments as
-> big or bigger than you describe above.  I have never looked at/for delays in
-> these environments around pmd sharing (page faults), but that does not mean
-> they do not exist.  I will try to get the DB group to give me access to one
-> of their large environments for analysis.
->
-> We may want to consider making the timeout value and disable threshold user
-> configurable.
+On Wednesday, September 11, 2019 9:27:41 AM CEST Heikki Krogerus wrote:
+> On Wed, Sep 11, 2019 at 12:33:06AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > In commit
+> > 
+> >   fd3f7275826f ("software node: Initialize the return value in software_node_find_by_name()")
+> > 
+> > Fixes tag
+> > 
+> >   Fixes: 1666faedb567 ("software node: Add software_node_get_reference_args()")
+> > 
+> > has these problem(s):
+> > 
+> >   - Subject does not match target commit subject
+> >     Just use
+> > 	git log -1 --format='Fixes: %h ("%s")'
+> > 
+> > Did you mean
+> > 
+> > Fixes: 1666faedb567 ("software node: Add software_node_find_by_name()")
+> > 
+> > or
+> > 
+> > Fixes: b06184acf751 ("software node: Add software_node_get_reference_args()")
+> 
+> Rafael, it seems you have rebased your branch.
 
-Making it configurable is certainly doable. They can be sysctl
-parameters so that the users can reenable PMD sharing by making those
-parameters larger.
+No, I haven't.
 
-Cheers,
-Longman
+Actually, the commit ID is correct, but the name isn't.
+
+You'd have been unlikely to get a valid commit ID matching anything with
+"software node" in the subject had it been rebased. :-)
+
+> Do you want me to resend those fixes, or can you fix the tags in them
+> yourself?
+
+I fixed that tag up.
+
+Thanks,
+Rafael
+
+
 
