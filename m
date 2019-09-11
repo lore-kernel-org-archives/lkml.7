@@ -2,94 +2,99 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C7C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75709C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A42084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464382084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 13:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="Ys5/jlky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfIKNb2 (ORCPT
+        id S1728052AbfIKNbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 09:31:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbfIKNb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 09:31:28 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 11 Sep 2019 09:31:37 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:58932 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfIKNbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 09:31:37 -0400
+Received: from [192.168.1.47] (unknown [50.34.216.97])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02E0A309BDB9;
-        Wed, 11 Sep 2019 13:31:28 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 35A9D1001B13;
-        Wed, 11 Sep 2019 13:31:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 11 Sep 2019 15:31:27 +0200 (CEST)
-Date:   Wed, 11 Sep 2019 15:31:20 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
-Message-ID: <20190911133119.GA17580@redhat.com>
-References: <20190910175852.GA15572@asgard.redhat.com>
+        by mail3.candelatech.com (Postfix) with ESMTPSA id DA216104F;
+        Wed, 11 Sep 2019 06:31:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com DA216104F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1568208696;
+        bh=YdP3oSrdXhMHhpGVAboAGD7aHS6BEGqjs9AhHf3Di+Q=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=Ys5/jlkyIN75x90bnEJTleorbHVXgGm1upqLv7E6ICwjFoHXeHsnNyhGntRQ3BFAs
+         5ttIW6AXsda1K4EFruw7zzY2PpNspSj0d7QzFVhBjcEpCNq03DZeF1FdB5tQ5NH2Ta
+         x/dhXH6O7WXgW2XWOvlzAhWW4J7lX7r25d6XmVPI=
+Subject: Re: WARNING at net/mac80211/sta_info.c:1057
+ (__sta_info_destroy_part2())
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAHk-=wgBuu8PiYpD7uWgxTSY8aUOJj6NJ=ivNQPYjAKO=cRinA@mail.gmail.com>
+ <feecebfcceba521703f13c8ee7f5bb9016924cb6.camel@sipsolutions.net>
+ <CAHk-=wj_jneK+UYzHhjwsH0XxP0knM+2o2OeFVEz-FjuQ77-ow@mail.gmail.com>
+ <30679d3f86731475943856196478677e70a349a9.camel@sipsolutions.net>
+ <2d673d55-eb27-8573-b8ae-a493335723cf@candelatech.com>
+ <CAHk-=wgAXAw=U_kthB9mG+MBocpawxCzo=6WDrbGgOUr+ac3CA@mail.gmail.com>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <4f00154a-41f2-b6f2-264f-10b3b6907fd7@candelatech.com>
+Date:   Wed, 11 Sep 2019 06:31:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910175852.GA15572@asgard.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 11 Sep 2019 13:31:28 +0000 (UTC)
+In-Reply-To: <CAHk-=wgAXAw=U_kthB9mG+MBocpawxCzo=6WDrbGgOUr+ac3CA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/10, Eugene Syromiatnikov wrote:
+
+
+On 09/11/2019 06:21 AM, Linus Torvalds wrote:
+> On Wed, Sep 11, 2019 at 2:03 PM Ben Greear <greearb@candelatech.com> wrote:
+>>
+>> Out of curiosity, I'm interested to know what ath10k NIC chipset this is from.
 >
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2338,6 +2338,8 @@ struct mm_struct *copy_init_mm(void)
->   *
->   * It copies the process, and if successful kick-starts
->   * it and waits for it to finish using the VM if required.
-> + *
-> + * args->exit_signal is expected to be checked for sanity by the caller.
+> It's a Dell XPS 13 9380, with
+>
+>   02:00.0 Network controller: Qualcomm Atheros QCA6174 802.11ac
+> Wireless Network Adapter (rev 32)
+>         Subsystem: Bigfoot Networks, Inc. Killer 1435 Wireless-AC
+>
+> (numeric PCI ID 168c:003e, subsystem 1a56:143a).
+>
+> The ath10k driver says
+>
+>     qca6174 hw3.2 target 0x05030000 chip_id 0x00340aff sub 1a56:143a
+>     firmware ver WLAN.RM.4.4.1-00140-QCARMSWPZ-1 api 6 features
+> wowlan,ignore-otp,mfp crc32 29eb8ca1
+>     board_file api 2 bmi_id N/A crc32 4ed3569e
+>
+> if that tells you anything more.
 
-not sure this comment is really useful but it doesn't hurt
+That means it is something I have never used nor have firmware for, but
+the WMI logic should be similar to what I described and have experienced
+with other chips.
 
->  long _do_fork(struct kernel_clone_args *args)
->  {
-> @@ -2562,6 +2564,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  	if (copy_from_user(&args, uargs, size))
->  		return -EFAULT;
->  
-> +	/*
-> +	 * exit_signal is confined to CSIGNAL mask in legacy syscalls,
-> +	 * so it is used unchecked deeper in syscall handling routines;
-> +	 * moreover, copying to struct kernel_clone_args.exit_signals
-> +	 * trims higher 32 bits, so it is has to be checked that they
-> +	 * are zero.
-> +	 */
-> +	if (unlikely(args.exit_signal & ~((u64)CSIGNAL)))
-> +		return -EINVAL;
+Thanks,
+Ben
 
-OK, agreed. As you pointed out, this doesn't guarantee valid_signal(exit_signal).
-But we do no really care as long as it is non-negative, it acts as exit_signal==0.
-
-I have no idea if we want to deny exit_signal >= _NSIG in clone3(), this was always
-allowed...
-
-I think this needs the "CC: stable" tag.
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
