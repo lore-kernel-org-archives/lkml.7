@@ -2,94 +2,243 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8801ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87089ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD0E20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5078220863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 08:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axEEe+Hj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u0pbm4Yk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfIKI3Y (ORCPT
+        id S1727328AbfIKI31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 04:29:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35486 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfIKI3X (ORCPT
+        Wed, 11 Sep 2019 04:29:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46264 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfIKI30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 04:29:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so13214175pfw.2;
-        Wed, 11 Sep 2019 01:29:23 -0700 (PDT)
+        Wed, 11 Sep 2019 04:29:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d17so10693645wrq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 01:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cseoKH3oBWC+0X9v3aYbIoBEhdfQYccTgVaRfgik0vY=;
-        b=axEEe+Hjd0qUgXBA1Q21wmIpdcJgt6M+zh4nEhFd4PLZ6yE800H0StSMvYyrLcj9FD
-         xxTwdDrCrNN76gaUisORRQp/nUjrhoh6HuWA0YUQvY74dp/svbC3kDNNxrMO6nkB9u6r
-         UFbWzG/lf91E+KrnCzPUXLVVtpuMLe9rwnz1tMQ4Rre/zPDllih8QlYuTwpf7eutTM5V
-         f4kwhqb4hpFwQDX8++Vh65W2xsA1NbQjbE8Wft81gzoKK0rC3h/qYktUmByaedCQqctH
-         OTrpBxs4s1cFJtXgYriQg+kd/6vKl4sLcsqJUxTyNlOVHq1LEtpmOGh+JvHsjjFyiko4
-         8Qxg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zw/nRHbA6gamXFMmZttwtsUXOgGchhd99CivFz+b1ms=;
+        b=u0pbm4YkiCRxVqqTlQ17p+Il0Iq7bPi7W8wjju8PlHbUVeulbXKRqd9omxqw5yeMVe
+         /4ZRs6QTvbxt6r3tPNXanJbHRqH8t2HYKXN8n5Yf3Y/bfPCgSFYzjmwJejNbVJVzZEtl
+         GsfTsXrQ9kKT/+4AjWaDBEWjJYJALxmMyhFSQ6V7Lu3IeeR5l7yGBrGdeLSAX5E/dVyD
+         0sqhmY1l0mg7KjOVKiw6XfTWzvAFqWDg9tuaAINSjscPW8bxXY+3NdNAAp/EdsvGoDAP
+         Et1IKxclqpqnG4r/ju0lJkqb2EstcCx0tsWb+mLBtc2E5x0IlxUnHhlxfw/wtyKMIb/M
+         BueQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cseoKH3oBWC+0X9v3aYbIoBEhdfQYccTgVaRfgik0vY=;
-        b=fcldAj6DqcO4PhRqyeb4vQh97F2ywxIO5Kft/Cnfen8J49/0aGQLGYjW5yNFlEfBCk
-         +ivgYSAPgvrF7EwpDkdDtoihlBJoZLlCQdB39Emr+AxoNep6eoBC0YULmsgyqXlRV5yQ
-         /X3oBWoyW9LaQ/5HR5BvGolu4E2gWblexrFv8T1M06akMnb3Pawtu8wLuYDI63F/73f/
-         sBK/knNlQqlCAENa1sbLBlbFKhiU6/EVdTuJgOnfoFU1nn3t7qr2pHIuQcCmWtAsGmI1
-         iqbcrGB0ihBe5Kr4G47vivXMpM1J3lnucRkePIPt1LgTOL4MNlrVkltSOjN5Xynu0nNl
-         s3Tw==
-X-Gm-Message-State: APjAAAX2gOI5P5nuKEqYaN03nOVIA1sM8gPuWZrd6MPm9lSPpLOX3DSp
-        GZBQSPncPWwngHhi0Iw+SfEbOXcLP/Ppvb49Nqs=
-X-Google-Smtp-Source: APXvYqy6XpTQ8EVzyGevKYt5w3jlnSBHVa6lohTLSVwPQuOiYvSW1aa0QNMhJpSwaRZWYGp4s1Cd9oXq+GMf5EoB61k=
-X-Received: by 2002:a63:c842:: with SMTP id l2mr31756878pgi.4.1568190562807;
- Wed, 11 Sep 2019 01:29:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zw/nRHbA6gamXFMmZttwtsUXOgGchhd99CivFz+b1ms=;
+        b=o37kcM/BParG27UY9Sz5o08pvcqwWQOk65+RF0r/AS5hUFeJebo0r9rkhI3khroS8i
+         kNJzmu1F7g48N7h1nSuCsnRQaChL1oL65f7m9M8JxdYqqtH0Nlau0QkLbEfgo4st+H+n
+         2LEAif2XRyH/LaTJklKVikqAknR97AgoClCsxvpMJ7avd+0QSsbjcw4GKnBvakqrIeqI
+         UlS5V+NZtRZOaZBqoy18xCo9SNdoxFm+u/RaTYKtYWlYf6ziANzJ/z3ktOs7VN4NgMN2
+         FM/VUoRyemrdo5pf5BCB10SZJdIfC7H12TyiRarXh2ZF8l6Te0IUel6hn8iu+JE0nWJy
+         QEqA==
+X-Gm-Message-State: APjAAAW+WXcCvv8+xA5gOFruABnGt9JcIwcjMPSkjkBmRLdM1pPU5YUk
+        lK8JI1q5OTyG2lpBcBCuGfS7IQ==
+X-Google-Smtp-Source: APXvYqzitrYD1GNdHxRYy6bTZs5uxP1EO8paIe/T9nQnXD2+EkqWuheIGfM1+1JX7yJBlp5XGl+wLA==
+X-Received: by 2002:a5d:43cc:: with SMTP id v12mr2981046wrr.75.1568190563862;
+        Wed, 11 Sep 2019 01:29:23 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a13sm36205561wrf.73.2019.09.11.01.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 01:29:22 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 09:29:20 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Milton Miller II <miltonm@us.ibm.com>
+Cc:     Tomer Maimon <tmaimon77@gmail.com>, mpm@selenic.com,
+        herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au, devicetree@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] hwrng: npcm: add NPCM RNG driver
+Message-ID: <20190911082920.4vxw7om5aqcfrxmy@holly.lan>
+References: <20190909123840.154745-3-tmaimon77@gmail.com>
+ <20190909123840.154745-1-tmaimon77@gmail.com>
+ <OFDC101E51.54765CB8-ON00258471.006F34B7-00258471.0072BCA7@notes.na.collabserv.com>
 MIME-Version: 1.0
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com> <20190911051231.148032-7-dmitry.torokhov@gmail.com>
-In-Reply-To: <20190911051231.148032-7-dmitry.torokhov@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Sep 2019 11:29:10 +0300
-Message-ID: <CAHp75Ve5NvhzOQ96OgbPh1LdsAtvk+A=aVu-oXKdhnB4PpL_og@mail.gmail.com>
-Subject: Re: [PATCH v4 06/14] software node: get rid of property_set_pointer()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OFDC101E51.54765CB8-ON00258471.006F34B7-00258471.0072BCA7@notes.na.collabserv.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 8:15 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Instead of explicitly setting values of integer types when copying
-> property entries lets just copy entire value union when processing
-> non-array values.
->
-> When handling array values assign the pointer there using the newly
-> introduced "raw" pointer union member. This allows us to remove
-> property_set_pointer().
->
-> In property_get_pointer() we do not need to handle each data type
-> separately, we can simply return either the raw pointer or pointer to
-> values union.
+On Tue, Sep 10, 2019 at 08:53:13PM +0000, Milton Miller II wrote:
+> On September 9, 2019 around 7:40AM in somet timezone, Tomer Maimon wrote:
+> >+#define NPCM_RNG_TIMEOUT_USEC	20000
+> >+#define NPCM_RNG_POLL_USEC	1000
+> 
+> ...
+> 
+> >+static int npcm_rng_init(struct hwrng *rng)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	u32 val;
+> >+
+> >+	val = readl(priv->base + NPCM_RNGCS_REG);
+> >+	val |= NPCM_RNG_ENABLE;
+> >+	writel(val, priv->base + NPCM_RNGCS_REG);
+> >+
+> >+	return 0;
+> >+}
+> >+
+> >+static void npcm_rng_cleanup(struct hwrng *rng)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	u32 val;
+> >+
+> >+	val = readl(priv->base + NPCM_RNGCS_REG);
+> >+	val &= ~NPCM_RNG_ENABLE;
+> >+	writel(val, priv->base + NPCM_RNGCS_REG);
+> >+}
+> >+
+> >+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max,
+> >bool wait)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	int retval = 0;
+> >+	int ready;
+> >+
+> >+	pm_runtime_get_sync((struct device *)priv->rng.priv);
+> >+
+> >+	while (max >= sizeof(u32)) {
+> >+		ready = readl(priv->base + NPCM_RNGCS_REG) &
+> >+			NPCM_RNG_DATA_VALID;
+> >+		if (!ready) {
+> >+			if (wait) {
+> >+				if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
+> >+						       ready,
+> >+						       ready & NPCM_RNG_DATA_VALID,
+> >+						       NPCM_RNG_POLL_USEC,
+> >+						       NPCM_RNG_TIMEOUT_USEC))
+> >+					break;
+> >+			} else {
+> >+				break;
+> 
+> This break is too far from the condition and deeply nested to follow.
+> 
+> And looking further, readl_poll_timeout will read and check the condition before
+> calling usleep, so the the initial readl and check is redundant
+> 
+> Rearrange to make wait determine if you call readl_poll_timeout or 
+> readl / compare / break.
+> 
+> >+			}
+> >+		}
+> >+
+> >+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
+> >+		retval += sizeof(u32);
+> >+		buf += sizeof(u32);
+> >+		max -= sizeof(u32);
+> >+	}
+> >+
+> >+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
+> >+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
+> >+
+> >+	return retval || !wait ? retval : -EIO;
+> >+}
+> >+
+> >+static int npcm_rng_probe(struct platform_device *pdev)
+> >+{
+> >+	struct npcm_rng *priv;
+> >+	struct resource *res;
+> >+	bool pm_dis = false;
+> >+	u32 quality;
+> >+	int ret;
+> >+
+> >+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> >+	if (!priv)
+> >+		return -ENOMEM;
+> >+
+> >+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >+	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> >+	if (IS_ERR(priv->base))
+> >+		return PTR_ERR(priv->base);
+> >+
+> >+	priv->rng.name = pdev->name;
+> >+#ifndef CONFIG_PM
+> >+	pm_dis = true;
+> >+	priv->rng.init = npcm_rng_init;
+> >+	priv->rng.cleanup = npcm_rng_cleanup;
+> >+#endif
+> 
+> if you move this down you can use one if (ENABLED_CONFIG_PM) {}
+> 
+> >+	priv->rng.read = npcm_rng_read;
+> >+	priv->rng.priv = (unsigned long)&pdev->dev;
+> >+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
+> >+		priv->rng.quality = 1000;
+> >+	else
+> >+		priv->rng.quality = quality;
+> >+
+> >+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
+> >+	if (pm_dis)
+> >+		writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
+> >+	else
+> >+		writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+> >+		       priv->base + NPCM_RNGCS_REG);
+> 
+> wait ... if we know the whole value here, why read/modify/write the value
+> in the init and cleanup hook?   Save the io read and write the known value
+>  ... define the value to be written for clarity between enable/disable if
+> needed
+> 
+> 
+> 
+> >+
+> >+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> >+	if (ret) {
+> >+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
+> >+			ret);
+> 
+> need to disable if CONFIG_PM ?
+> 
+> >+		return ret;
+> >+	}
+> >+
+> >+	dev_set_drvdata(&pdev->dev, priv);
+> 
+> This should probably be before the register.
+> 
+> >+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
+> 
+> So every 100ms power off, and if userspace does a read we
+> will poll every 1ms for upto 20ms.
+> 
+> If userspace says try once a second with -ENODELAY so no wait,
+> it never gets data.
 
-Same as before, typechecking is good thing to have for my point of view.
-Others may have different opinions.
+I didn't follow this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+In the time before the device is suspended it should have generated
+data and this can be sent to the userspace. Providing the suspend delay
+is longer than the buffer size of the hardware then there won't
+necessarily be performance problems because the device is "full" when
+it is suspended.
+
+Of course if the hardware loses state when it is suspended then the
+driver would need extra code on the PM paths to preserve the data...
+
+
+Daniel.
