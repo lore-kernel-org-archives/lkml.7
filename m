@@ -2,113 +2,114 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D20FECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA97FC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEB02089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="E7Oked1X"
+	by mail.kernel.org (Postfix) with ESMTP id B2AB22075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfIKQEM (ORCPT
+        id S1728903AbfIKQFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:04:12 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33018 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728825AbfIKQEM (ORCPT
+        Wed, 11 Sep 2019 12:05:31 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:11590 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728818AbfIKQFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:04:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rPqLQQZmMWfIlYV8Oxuof345Z2bJ62xEOdAOhKOltWw=; b=E7Oked1XqrIgsf0xHW15O7jX1
-        E1oZ+iVps9y6o6tndbcXQuXbcsDH0vrr1oV/ElWTy5Hixxjd8Wg/6ffzy2GGll47M2txqq0PCs0sV
-        KGDByU00KdWiWjBUAJKAYJ8hUyk2+QqT+VfAvctMK39J6EhKf2xfA32Hm1VUJGvE2HyA2muV/y5V7
-        pBecImwee7skziMkTmbe/+vo7JpY2XZLxiDyo+FcIjwEOurs63jGwcpMCtDAvf96hc+P3Oh8FHVps
-        DsfNflfSpsIbYnMqcpECWTlxsD23xjTmNRySMMce8T4fmsEqiZss6jWO5IFQN1kTd1S9w1kdutCHw
-        fJwgk8P9w==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58994)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i856G-0007JX-Eg; Wed, 11 Sep 2019 17:04:08 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i856C-00044H-Vp; Wed, 11 Sep 2019 17:04:05 +0100
-Date:   Wed, 11 Sep 2019 17:04:04 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <mike.rapoport@gmail.com>,
-        Chester Lin <clin@suse.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm tree
-Message-ID: <20190911160404.GX13294@shell.armlinux.org.uk>
-References: <20190911001459.6ccc76ee@canb.auug.org.au>
- <20190910142128.GR13294@shell.armlinux.org.uk>
- <20190911142106.GA6429@linux.ibm.com>
+        Wed, 11 Sep 2019 12:05:30 -0400
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8BG1xOc026275;
+        Wed, 11 Sep 2019 16:05:01 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2uxxgjdyry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Sep 2019 16:05:01 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id A8B01A1;
+        Wed, 11 Sep 2019 16:05:00 +0000 (UTC)
+Received: from [16.116.129.27] (unknown [16.116.129.27])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id A08DD47;
+        Wed, 11 Sep 2019 16:04:58 +0000 (UTC)
+Subject: Re: [PATCH V2 5/8] x86/platform/uv: Add UV Hubbed/Hubless Proc FS
+ Files
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190910145839.604369497@stormcage.eag.rdlabs.hpecorp.net>
+ <20190910145840.055590900@stormcage.eag.rdlabs.hpecorp.net>
+ <20190911060456.GC104115@gmail.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <1d7a8b2f-80e0-33bf-85f4-2de719747eeb@hpe.com>
+Date:   Wed, 11 Sep 2019 09:05:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911142106.GA6429@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190911060456.GC104115@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-11_08:2019-09-11,2019-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ spamscore=0 phishscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 mlxscore=0 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909110146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 03:21:07PM +0100, Mike Rapoport wrote:
-> On Tue, Sep 10, 2019 at 03:21:28PM +0100, Russell King - ARM Linux admin wrote:
-> > This is correctly signed off, but Mike didn't send the patch correctly.
-> > It missed a From: line for the proper author, so the patch was committed
-> > as if Mike had authored it, which he didn't.
-> 
-> Sorry about that, haven't used the patch system for couple of years now.
-> Would you like me to resubmit the patch?
 
-No, I recommitted with the correct author.  The patch system takes
-standard formatted patches (in the format you'd send to the mailing
-lists, complete with the From: header in the first line of the
-description, as if you're passing a patch along from someone else)
-with the exception of the KernelVersion: header which needs to appear
-somewhere before the patch (which can be either body or header.)
 
->  
-> > On Wed, Sep 11, 2019 at 12:14:59AM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Commit
-> > > 
-> > >   2505b9ba9c37 ("ARM: 8904/1: skip nomap memblocks while finding the lowmem/highmem boundary")
-> > > 
-> > > is missing a Signed-off-by from its author.
-> > > 
-> > > -- 
-> > > Cheers,
-> > > Stephen Rothwell
-> > 
-> > 
-> > 
-> > -- 
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> > According to speedtest.net: 11.9Mbps down 500kbps up
+On 9/10/2019 11:04 PM, Ingo Molnar wrote:
 > 
-> -- 
-> Sincerely yours,
-> Mike.
+> * Mike Travis <mike.travis@hpe.com> wrote:
 > 
+>> @@ -1596,7 +1687,7 @@ static void __init uv_system_init_hub(vo
+>>   	uv_nmi_setup();
+>>   	uv_cpu_init();
+>>   	uv_scir_register_cpu_notifier();
+>> -	proc_mkdir("sgi_uv", NULL);
+>> +	uv_setup_proc_files(0);
+> 
+> This slipped through previously: platform drivers have absolutely no
+> business mucking in /proc.
+> 
+> Please describe the hardware via sysfs as pretty much everyone else does.
+> 
+> Thanks,
+> 
+> 	Ingo
 > 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+If I was doing it now I definitely would put it in the sysfs realm.  The 
+problem is Jack did it back in (I think) 2007.  The earliest commit I 
+could find:
+
+commit a3d732f93785da17e0137210deadb4616f5536fc
+Author: Cliff Wickman <cpw@sgi.com>
+Date:   Mon Nov 10 16:16:31 2008 -0600
+
+     x86, UV: fix redundant creation of sgi_uv
+
+     Impact: fix double entry creation in /proc
+
+And in the past 12 years probably a hundred user programs are now keying 
+of the presence of /proc/sgi_uv to signal this is indeed a UV system. 
+Changing the location of this node also affects all the UV utilities 
+including those not written by us.
