@@ -2,92 +2,147 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05CCC49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8985C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A353720863
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568203340;
-	bh=Qc3hlFF9+Xg0m7O9h3ZwZt5x8AAS+U9qpshK4Qhom80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yZqDsiItdBRS/aztjs+pd11UNigrNv3tcZEiDZDTJXpoY/I3tUmY4nCiZe97tgAtB
-	 uLxiRuj/Mlpeu75gDdfZYvQvqe9AjVHReQ9v0qw0Itc0ENOXqyCKBT/0C3Kmi8kZ+w
-	 XvTP/QnPVyqNezeZ/hZhlLacAWlpejuHycQZUU7U=
+	by mail.kernel.org (Postfix) with ESMTP id B4B952085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfIKMCT (ORCPT
+        id S1727887AbfIKMCh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:02:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43992 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726702AbfIKMCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:02:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3217B660;
-        Wed, 11 Sep 2019 12:02:17 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 14:02:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org, linuxarm@huawei.com
-Subject: Re: [PATCH] driver core: ensure a device has valid node id in
- device_add()
-Message-ID: <20190911120217.GR4023@dhcp22.suse.cz>
-References: <20190910111252.GA8970@kroah.com>
- <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
- <20190910125339.GZ2063@dhcp22.suse.cz>
- <20190911053334.GH4023@dhcp22.suse.cz>
- <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
- <20190911064926.GJ4023@dhcp22.suse.cz>
- <3b977388-5f25-d0b5-bdc9-f963a9be2bd1@huawei.com>
- <20190911073451.GM4023@dhcp22.suse.cz>
- <d828d48c-cae7-f3c2-fb2e-c8b25995cbef@huawei.com>
- <97ad9ede-3a69-bd9e-e6c9-c2a893459565@huawei.com>
+        Wed, 11 Sep 2019 08:02:37 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:9709 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726702AbfIKMCg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:02:36 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
+ 2019 20:02:34 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 11 Sep
+ 2019 20:02:33 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Wed, 11 Sep 2019 20:02:32 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v3 3/4] x86/mce: Add Zhaoxin CMCI support
+Thread-Topic: [PATCH v3 3/4] x86/mce: Add Zhaoxin CMCI support
+Thread-Index: AdVojJfosRAOCbb9RkOU4TIYwHY5Wg==
+Date:   Wed, 11 Sep 2019 12:02:32 +0000
+Message-ID: <82ca6cf70596452998019ed5cdd659b3@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97ad9ede-3a69-bd9e-e6c9-c2a893459565@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 19:41:44, Yunsheng Lin wrote:
-> On 2019/9/11 19:03, Yunsheng Lin wrote:
-> > On 2019/9/11 15:34, Michal Hocko wrote:
-> >> On Wed 11-09-19 15:22:30, Yunsheng Lin wrote:
-> >> [...]
-> >>> It seems that there is no protection that prevent setting the node
-> >>> of device to an invalid node.
-> >>> And the kernel does have a few different check now:
-> >>> 1) some does " < 0" check;
-> >>> 2) some does "== NUMA_NO_NODE" check;
-> >>> 3) some does ">= MAX_NUMNODES" check;
-> >>> 4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
-> >>>
-> >>> We need to be consistent about the checking, right?
-> >>
-> >> You can try and chase each of them and see what to do with them. I
-> >> suspect they are a result of random attempts to fortify the code in many
-> >> cases. Consistency is certainly good but spreading more checks all over
-> >> the place just adds more cargo cult. Each check should be reasonably
-> >> justified.
-> > 
-> > Ok, Let me focus on making the node_to_cpumask_map() NUMA_NO_NODE aware
-> > by only checking "node == NUMA_NO_NODE" first.
-> 
-> Hi, Michal
->     It that ok for me to add your name to "Suggested-by" tag, since I am
-> going to quote some of your words on the commit log.
+All Zhaoxin newer CPUs support CMCI that compatible with Intel's
+"Machine-Check Architecture", so add support for Zhaoxin CMCI in
+mce/core.c and mce/intel.c.
 
-Sure, no problem. Thanks!
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+v2->v3:
+ - Rework mce_zhaoxin_feature_init() as static
+ - Rework comment about Zhaoxin MCA SVAD and CMCI
+ - Simplify Zhaoxin CPU FMS checking
+
+v1->v2:
+ - Fix redefinition of "mce_zhaoxin_feature_init"
+
+ arch/x86/kernel/cpu/mce/core.c  | 25 +++++++++++++++++++++++++
+ arch/x86/kernel/cpu/mce/intel.c |  5 ++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 7bcd8c1..65c5a1f 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1777,6 +1777,27 @@ static void mce_centaur_feature_init(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
++static void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c)
++{
++	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
++
++	/*
++	 * These CPUs have MCA bank 8, that only has one error called SVAD
++	 * (System View Address Decoder) which be controlled by IA32_MC8.CTL.0
++	 * If enabled, the prefetch on these CPUs will cause SVAD machine
++	 * check exception when virtual machine startup and cause system
++	 * panic. Always disable bank 8 SVAD error by default.
++	 */
++	if ((c->x86 == 7 && c->x86_model == 0x1b) ||
++	    (c->x86_model == 0x19 || c->x86_model == 0x1f)) {
++		if (this_cpu_read(mce_num_banks) > 8)
++			mce_banks[8].ctl = 0;
++	}
++
++	intel_init_cmci();
++	mce_adjust_timer = cmci_intel_adjust_timer;
++}
++
+ static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
+ {
+ 	switch (c->x86_vendor) {
+@@ -1798,6 +1819,10 @@ static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
+ 		mce_centaur_feature_init(c);
+ 		break;
+ 
++	case X86_VENDOR_ZHAOXIN:
++		mce_zhaoxin_feature_init(c);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index 70799a5..87c473f 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -84,9 +84,12 @@ static int cmci_supported(int *banks)
+ 	 * Vendor check is not strictly needed, but the initial
+ 	 * initialization is vendor keyed and this
+ 	 * makes sure none of the backdoors are entered otherwise.
++	 * Checks the vendor are Intel/Zhaoxin-specific:
+ 	 */
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
++	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
+ 		return 0;
++
+ 	if (!boot_cpu_has(X86_FEATURE_APIC) || lapic_get_maxlvt() < 6)
+ 		return 0;
+ 	rdmsrl(MSR_IA32_MCG_CAP, cap);
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
