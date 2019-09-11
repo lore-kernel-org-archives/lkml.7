@@ -2,102 +2,118 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA3C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CC3C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CA720838
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0855F2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfIKQw3 (ORCPT
+        id S1729394AbfIKQxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 12:52:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51603 "EHLO mga03.intel.com"
+        Wed, 11 Sep 2019 12:53:46 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:48026 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729061AbfIKQw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:52:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 09:52:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
-   d="scan'208";a="184538858"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Sep 2019 09:52:23 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i85qy-0001nV-3A; Wed, 11 Sep 2019 19:52:24 +0300
-Date:   Wed, 11 Sep 2019 19:52:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190911165224.GR2680@smile.fi.intel.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911094929.GV13294@shell.armlinux.org.uk>
- <20190911095511.GB108334@dtor-ws>
- <20190911101016.GW13294@shell.armlinux.org.uk>
+        id S1729028AbfIKQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:53:45 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1i85s8-00013U-0b; Wed, 11 Sep 2019 10:53:37 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190828215429.4572-1-logang@deltatee.com>
+ <20190828215429.4572-14-logang@deltatee.com>
+ <92d61426-65a2-827c-936b-55f12f3d6afb@grimberg.me>
+ <ca4ebcd9-fa5d-5ddf-c2a7-70318410dd97@deltatee.com>
+ <7954e8a4-6026-2210-7192-94a4e483facf@grimberg.me>
+ <b23c72b2-c9db-cb8e-5519-63eb195b7fd4@deltatee.com>
+ <ca811aea-c4ae-10ee-15a5-2332d5a9e29a@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <19da6ca1-3cde-3f29-59ee-923c562e6487@deltatee.com>
+Date:   Wed, 11 Sep 2019 10:53:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911101016.GW13294@shell.armlinux.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ca811aea-c4ae-10ee-15a5-2332d5a9e29a@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: hch@lst.de, maxg@mellanox.com, kbusch@kernel.org, axboe@fb.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v8 13/13] nvmet-passthru: support block accounting
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:10:16AM +0100, Russell King - ARM Linux admin wrote:
-> On Wed, Sep 11, 2019 at 02:55:11AM -0700, Dmitry Torokhov wrote:
-> > On Wed, Sep 11, 2019 at 10:49:29AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Wed, Sep 11, 2019 at 12:46:19PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Sep 11, 2019 at 10:39:14AM +0100, Russell King - ARM Linux admin wrote:
-> > > > > On Wed, Sep 11, 2019 at 12:25:14PM +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, Sep 11, 2019 at 12:52:08AM -0700, Dmitry Torokhov wrote:
-> > > > > > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> > > > > > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
-> > > > > > > works with arbitrary firmware node.
-> > > e > > 
-> > > > > > I'm wondering if it's possible to step forward and replace
-> > > > > > fwnode_get_gpiod_index by gpiod_get() / gpiod_get_index() here and
-> > > > > > in other cases in this series.
-> > > > > 
-> > > > > No, those require a struct device, but we have none.  There are network
-> > > > > drivers where there is a struct device for the network complex, but only
-> > > > > DT nodes for the individual network interfaces.  So no, gpiod_* really
-> > > > > doesn't work.
-> > > > 
-> > > > In the following patch the node is derived from struct device. So, I believe
-> > > > some cases can be handled differently.
 
-> Referring back to my comment, notice that I said we have none for the
-> phylink case, so it's not possible there.
+
+On 2019-09-09 5:15 p.m., Sagi Grimberg wrote:
 > 
-> I'm not sure why Andy replied the way he did, unless he mis-read my
-> comment.
+>>>>>> Support block disk accounting by setting the RQF_IO_STAT flag
+>>>>>> and gendisk in the request.
+>>>>>>
+>>>>>> After this change, IO counts will be reflected correctly in
+>>>>>> /proc/diskstats for drives being used by passthru.
+>>>>>>
+>>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>>> ---
+>>>>>>     drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
+>>>>>>     1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/nvme/target/io-cmd-passthru.c
+>>>>>> b/drivers/nvme/target/io-cmd-passthru.c
+>>>>>> index 7557927a3451..63f12750a80d 100644
+>>>>>> --- a/drivers/nvme/target/io-cmd-passthru.c
+>>>>>> +++ b/drivers/nvme/target/io-cmd-passthru.c
+>>>>>> @@ -410,6 +410,9 @@ static struct request
+>>>>>> *nvmet_passthru_blk_make_request(struct nvmet_req *req,
+>>>>>>         if (unlikely(IS_ERR(rq)))
+>>>>>>             return rq;
+>>>>>>     +    if (blk_queue_io_stat(q) && cmd->common.opcode !=
+>>>>>> nvme_cmd_flush)
+>>>>>> +        rq->rq_flags |= RQF_IO_STAT;
+>>>>
+>>>> Thanks for the review!
+>>>>
+>>>>> Does flush has data bytes in the request? Why the special casing?
+>>>>
+>>>> Well it was special cased in the vanilla blk account flow... But I
+>>>> think
+>>>> it's required to be special cased so the IO and in_flight counts don't
+>>>> count flushes (as they do not for regular block device traffic).
+>>>
+>>> I think that the accounting exclude I/O that is yielded from the flush
+>>> sequence. Don't think its relevant here...
+>>
+>> What? Per blk_account_io_done(), RQF_FLUSH_SEQ will not be set by us for
+>> passthru commands and I don't think it's appropriate to do so. Thus, if
+>> we set RQF_IO_STAT for passthru flush commands, they will be counted
+>> which we do not want.
+> 
+> Have you considered to have nvmet_passthru_blk_make_request set RQF_FUA
+> for nvme_cmd_flush? this way blk_insert_flush will be called and
+> RQF_FLUSH_SEQ will be set and you don't need to worry about this
+> special casing...
 
-It is a first patch which does the change. Mostly my reply was to Dmitry and
-your comment clarifies the case with this patch, thanks!
+Well, I haven't done that mostly because I'm not sure of all the side
+effects of doing so. However, I've tried it and everything seems to
+still work, so I'll make that change for v9 which I'll probably send out
+after the merge window.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Logan
