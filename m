@@ -2,124 +2,101 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B33C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA75C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABB7207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7868820863
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 14:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="JhSfdGDL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbyNlW7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfIKOtI (ORCPT
+        id S1728238AbfIKOwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 10:49:08 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35675 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbfIKOtI (ORCPT
+        Wed, 11 Sep 2019 10:52:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33525 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbfIKOwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 10:49:08 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k10so25604375qth.2;
-        Wed, 11 Sep 2019 07:49:07 -0700 (PDT)
+        Wed, 11 Sep 2019 10:52:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id m11so46497530ioo.0;
+        Wed, 11 Sep 2019 07:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A5XOn0vC4GPgnCNAb2xJhPh7fm7Qsc3YVcoeu66V0ow=;
-        b=JhSfdGDLWHQchSsKTTbaYL2d3lanGWh1bU6snzqMqlYUsbTmgquu741IO2y4CzLnnn
-         xFF9+5sLDaKVVLzlMzpM5GNJHAe0EdZjfADYanypoGJBIcqS7xQozfjP/J0VtWg1MKnl
-         T/6lk/ytL2NJX3N6br94MvUgja326wcjG36kI=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NGTdt9F3ZZ0dAl/NdWgfhoQHQnI6Jo5dypLz9RxIFA4=;
+        b=GbyNlW7h2LT7nD3Ki7aDD9R1X05eplw0cyGNnFV9cKkIE8KMZE8Z5Wi32J3x9MuD6d
+         zED3Dr8G52vVyizid/Bfl4ycAopbtx6KJ82zD56iixaf5vJMVq9adv8MxHqXJE7i9rB3
+         LXwhDREw4vrAttqxN5ia3975x/V78DTDCq9/JFA8r4htJgk2YgUNzlacu+5f1be+4+V2
+         6gT1D9PPSf5hIgpKrxPjYbJLLDYbAALoFHUuIrqvxLpuTy9W1VVINDSfjoqicZ+OAZGH
+         YxhKsUFVpHWC6lRx3F4J6r3XOenJMbPiqY8tVGxJp/hYw5oKLCQIfhMv9S2fR+nuT/x6
+         NqYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A5XOn0vC4GPgnCNAb2xJhPh7fm7Qsc3YVcoeu66V0ow=;
-        b=ff6sIchsU4uoVZRWEn9qoCOcItZquiEFzjLbiiLqY1L1A1ajNuOuxEULRzvAU92zxW
-         FctkfGNuiTLZDpHbsmFAMGHeuk/BqYs00SOhJQwKuj1g9yie0oIA4PIIgdE5yWH78br4
-         4xQgepGnAnoRyA4SlFOuMu5WmsLYy+Qyk9aezBlsoeY5vExg9lcDCQZCFEGcSQf25OsB
-         8HPRqqO6aD6dB4iuQMUX/UCGMUNw1hIPpxz1HckScm7Kr9xt6JrrtYpTZGnLnL39S5Rh
-         dfFqKlGP0wrLv+MXkeZKWNdcqilAaJDtKy0SmGyemzlkNvHA5/H0x5HcIWcQ+KauG1Ey
-         DP2w==
-X-Gm-Message-State: APjAAAV8OQ0bYPbvnzFdW6yWoMmhY5kANGBpuPvuDRv57vgb+we1fAbm
-        FitCrox00novGB6HqTr+Llw2vl7zeYwVy6dv/Bc=
-X-Google-Smtp-Source: APXvYqwWsmekgnVOZyP3ztRXLVkJUawqY8waZNluPJpoBtGqhHcgvfBOQH1tISxUZoQoAh6xx+1tOYTyMaOU7g5POGA=
-X-Received: by 2002:ac8:2e94:: with SMTP id h20mr36118219qta.234.1568213346860;
- Wed, 11 Sep 2019 07:49:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190910213734.3112330-1-vijaykhemka@fb.com> <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
-In-Reply-To: <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 11 Sep 2019 14:48:54 +0000
-Message-ID: <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
-Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NGTdt9F3ZZ0dAl/NdWgfhoQHQnI6Jo5dypLz9RxIFA4=;
+        b=Vx8WybcSZmZPGxLNoKaWE3tLGXD7fuJSJT/S0Ux3DxY3Q6j3Fkj2+YWa9tDOqYzizf
+         EDs7p/i3eBaOQdVxa8efN2JZOp5IGF2SKIEUB4a7pgxytcT/u9bLVl0/fAjB6t16yFne
+         EO1mzqI/oHB+LF74DbryFwWobvTSSTxPi5N54TO3TwETMVHXRrnzPuoCXBp6jN7IY3U5
+         bkDFK0S0B5Qog2wPn6puSTlFohm4T7yM79S04S/YeKu+EnTu6t2g1TJOKq+yNAIVPQh1
+         DT1oBF1bEz5BWSMJZA31mkJBwxFxBt5PJtw6QBm2NE0n6Fq+r+tP1cdzbkkpoAONZOOm
+         Kp3w==
+X-Gm-Message-State: APjAAAXyHxNoHa2lZj8Jz89lsSH9Ge5xSD8iP1BldK5twbzLCsyfT7X0
+        SNbZsiWFoFICyYadx2rAtJXLYJh1
+X-Google-Smtp-Source: APXvYqzVP2bjj9XYcMcE3MUN8QMaHKh++5QvZJUYU65sh0Dv0wdc0Q1dzhJAnOiiWC/xGnT3dclImQ==
+X-Received: by 2002:a5d:894a:: with SMTP id b10mr17475319iot.49.1568213565885;
+        Wed, 11 Sep 2019 07:52:45 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id p25sm17109904ioo.35.2019.09.11.07.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 07:52:44 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: omap2plus_defconfig: Update for removed items
+Date:   Wed, 11 Sep 2019 09:52:25 -0500
+Message-Id: <20190911145226.21088-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+The omap panel-dpi driver was removed in
+Commit 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-On Tue, 10 Sep 2019 at 22:05, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 9/10/19 2:37 PM, Vijay Khemka wrote:
-> > HW checksum generation is not working for AST2500, specially with IPV6
-> > over NCSI. All TCP packets with IPv6 get dropped. By disabling this
-> > it works perfectly fine with IPV6.
-> >
-> > Verified with IPV6 enabled and can do ssh.
->
-> How about IPv4, do these packets have problem? If not, can you continue
-> advertising NETIF_F_IP_CSUM but take out NETIF_F_IPV6_CSUM?
->
-> >
-> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> > ---
-> >  drivers/net/ethernet/faraday/ftgmac100.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> > index 030fed65393e..591c9725002b 100644
-> > --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> > +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> > @@ -1839,8 +1839,9 @@ static int ftgmac100_probe(struct platform_device *pdev)
-> >       if (priv->use_ncsi)
-> >               netdev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-> >
-> > -     /* AST2400  doesn't have working HW checksum generation */
-> > -     if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac")))
-> > +     /* AST2400  and AST2500 doesn't have working HW checksum generation */
-> > +     if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac") ||
-> > +                of_device_is_compatible(np, "aspeed,ast2500-mac")))
+The tFP410 and DVI connector was remove in
+Commit be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
 
-Do you recall under what circumstances we need to disable hardware checksumming?
+This patch removes these items from the omap2plus_defconfig.
 
-Cheers,
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Joel
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index c7bf9c493646..166b36be2ca6 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -349,12 +349,9 @@ CONFIG_OMAP5_DSS_HDMI=y
+ CONFIG_OMAP2_DSS_SDI=y
+ CONFIG_OMAP2_DSS_DSI=y
+ CONFIG_DRM_OMAP_ENCODER_OPA362=m
+-CONFIG_DRM_OMAP_ENCODER_TFP410=m
+ CONFIG_DRM_OMAP_ENCODER_TPD12S015=m
+-CONFIG_DRM_OMAP_CONNECTOR_DVI=m
+ CONFIG_DRM_OMAP_CONNECTOR_HDMI=m
+ CONFIG_DRM_OMAP_CONNECTOR_ANALOG_TV=m
+-CONFIG_DRM_OMAP_PANEL_DPI=m
+ CONFIG_DRM_OMAP_PANEL_DSI_CM=m
+ CONFIG_DRM_OMAP_PANEL_SONY_ACX565AKM=m
+ CONFIG_DRM_OMAP_PANEL_LGPHILIPS_LB035Q02=m
+-- 
+2.17.1
 
-> >               netdev->hw_features &= ~NETIF_F_HW_CSUM;
-> >       if (np && of_get_property(np, "no-hw-checksum", NULL))
-> >               netdev->hw_features &= ~(NETIF_F_HW_CSUM | NETIF_F_RXCSUM);
-> >
->
->
-> --
-> Florian
