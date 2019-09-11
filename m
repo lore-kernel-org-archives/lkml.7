@@ -2,67 +2,82 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658E4C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0155C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FAB2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938E92084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:21:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Enw8fEVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfIKRVU (ORCPT
+        id S1729593AbfIKRV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:21:20 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43528 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbfIKRVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:21:20 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t84so14785981oih.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 10:21:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A1/ETkpc6G5lmIiqCjrYZygtKs+ulwm0ZGxJ4xV62tI=;
-        b=AGLr9rL6e2DdV6PvDqGuCbHgbLuX12DxhOqs8mNkp3pM3Z43BEORtqhnQjWCjXVh1d
-         JVb/u2DY/2VN4LayCng42iOkyKQYbKFhn+boBNa/FvPDpRsVTA0pwX4vzgu3n0LLGbZb
-         ZngCRMpx9ARElSjFe82vmJLRngwVd2j0SpAbepbO/I2SPPTDdKkBkmFB7yN95yPv2v8W
-         U8ydG1/w9/dPQo8LycqZIINn9FVbZTvvxuqitB9EYIJudvoMyAcR+F6yBhRF45wv/VvQ
-         IbtgeBByS7rzaYIIj6JeIvHZG6h2L+A6St49C4xgEH9l5nWEjY+NNjBOTsg6+ehVCOW9
-         Kmww==
-X-Gm-Message-State: APjAAAVrM8hjctov4sz87Lb2ZuV5XF1eo2x7N3sgT78YGhFpbeijZscS
-        2p0rioUs1pZEYbSg23yrT18=
-X-Google-Smtp-Source: APXvYqxqZ+haTwVi3/MKjiTUTVQ1QsehIAv7tF1qipiAoQyKJTn6/7c+pIHjMecml9oTBwCRiMA/PA==
-X-Received: by 2002:aca:c550:: with SMTP id v77mr4881558oif.93.1568222478126;
-        Wed, 11 Sep 2019 10:21:18 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id o4sm7789027otp.43.2019.09.11.10.21.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Sep 2019 10:21:17 -0700 (PDT)
-Subject: Re: [PATCH] Added QUIRKs for ADATA XPG SX8200 Pro 512GB
-To:     Gabriel C <nix.or.die@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
-References: <CAEJqkgivvhQ=tOOuLjY=iwBVCKQhmmjpfNDa1yJ5SreNQubw6Q@mail.gmail.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <4581016e-b421-e794-e603-807d37aa1bf3@grimberg.me>
-Date:   Wed, 11 Sep 2019 10:21:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 13:21:29 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:45194 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729130AbfIKRV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:21:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LQxw/u540K2TPFsuUGW/nsJsLYCtpA6SW4wjQ2RiCn4=; b=Enw8fEVpNTlLP3CEbfW/3P9zv7
+        q6ZAWTnc0G0NtMPIWDXHVUSl5TYA2UAZbpLvdUBpVN2QBgr22U+sVuFtpzUJRScehYULw5zunqHgW
+        FvRUUiBY1bq1tpy/XM6ndBlK6ORNyaGPgXv7qV6fnFBFE0X+FT36SFVXY9LwLOUq6Dvc=;
+Received: from p200300ccff0b59001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:5900:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i86It-0006kA-J3; Wed, 11 Sep 2019 19:21:15 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i86It-0003Lz-0Q; Wed, 11 Sep 2019 19:21:15 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3 0/2] backlight_lm3630a: add enable_gpios property
+Date:   Wed, 11 Sep 2019 19:21:04 +0200
+Message-Id: <20190911172106.12843-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAEJqkgivvhQ=tOOuLjY=iwBVCKQhmmjpfNDa1yJ5SreNQubw6Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This does not apply on nvme-5.4, can you please respin a patch
-that cleanly applies?
+To be able to handle the HWEN pin of the lm3630a, add
+an enable gpio to the driver and a property.
+
+Tested on Kobo Clara HD.
+
+Changes in v2:
+simplification and reordering
+
+Changes in v3:
+added acked-by
+removed legacy include
+
+Andreas Kemnade (2):
+  dt-bindings: backlight: lm3630a: add enable_gpios
+  backlight: lm3630a: add an enable gpio for the HWEN pin
+
+ .../bindings/leds/backlight/lm3630a-backlight.yaml       | 5 +++++
+ drivers/video/backlight/lm3630a_bl.c                     | 9 +++++++++
+ 2 files changed, 14 insertions(+)
+
+-- 
+2.20.1
+
