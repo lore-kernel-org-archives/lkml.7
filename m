@@ -2,131 +2,115 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F53C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14864C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750ED20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFDA2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 12:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568204735;
-	bh=A8VTRAGYafaJl21LZ5JJHFgvY4AYbgK54wYUKUZ0wds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CBMdG7VCVZ87QZTYZynEvHX5J4mjTTFyeUhjDwX8F3hX8bSqwTRlNfjJwFg1TFfyi
-	 b6xxY530LUhf0HkcnL3TaZ6CLs1qikWOH0Wd8LBMbCiq3tRQ9Ct3jvJFHocziNkXsr
-	 Zyp2aq2yJ1h7kEcnDDakoc+Ax2ZOLUT2wkz/DeLg=
+	s=default; t=1568204764;
+	bh=2pPMn/FVFbCJXIco4hndCy4yU4apLjVYE56Muit6qTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TsbyW5h4+sjwhziUo8Fo4bw0KOh8AqbRrl6ozLwM8HhjGG+w4IwOXStl0BZapGqU7
+	 7hVgos3Su0eGcKmZPrb0y3rgbfvSI6TClpHEiROkITUSS3C3oAbHaNGUmIz+PhmObO
+	 Eatc4lYmsjht4yzsM6mOibfeEQb+iIlt5Ny03t4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfIKMZe (ORCPT
+        id S1727963AbfIKM0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 08:25:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34540 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727933AbfIKMZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 08:25:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 086ACB7F4;
-        Wed, 11 Sep 2019 12:25:31 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 14:25:26 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190911122526.GV4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
- <20190911113619.GP4023@dhcp22.suse.cz>
- <20190911080804-mutt-send-email-mst@kernel.org>
- <20190911121941.GU4023@dhcp22.suse.cz>
+        Wed, 11 Sep 2019 08:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726911AbfIKM0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 08:26:03 -0400
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C6D20872;
+        Wed, 11 Sep 2019 12:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568204763;
+        bh=2pPMn/FVFbCJXIco4hndCy4yU4apLjVYE56Muit6qTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=btzmfK97dcowxxq/8O16K0PTIHFX9tbMeTa4kmm/4lheEz68VruqQERLYbjUHM7pT
+         UQuI7VeW+2AwHOtw1j1+hzWgSQZUCqL1FzHNEviy7J4EEGFE/Q6uZpmOIjk/HmSi+A
+         nvQJ+0cyNIOUl0sZ8SvdEO6tyrB/Dxykx+hTJkDY=
+Received: by mail-lj1-f178.google.com with SMTP id y23so19453563ljn.5;
+        Wed, 11 Sep 2019 05:26:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAWeURmGifab4o3ALSzzcE0gRRftC/AlKNN+3E9Huz4aGCo7Hx01
+        ZL7rpbeH+LueER2NNNmXJJJPnuuCGjtipjV6xvA=
+X-Google-Smtp-Source: APXvYqw8gd+xprNyWbgdYgqyXgDC15vF70jPsWIWsn6xVgL8eKxH8DV9rxOR9uhU6qghey5K9nKVIBQo3AdRVaPcC8k=
+X-Received: by 2002:a2e:b4e3:: with SMTP id s3mr23885542ljm.143.1568204760929;
+ Wed, 11 Sep 2019 05:26:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911121941.GU4023@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237@eucas1p2.samsung.com>
+ <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
+ <20190911110446.32058-1-m.falkowski@samsung.com> <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
+ <d7e938e8-d42e-be22-ce76-561159064180@samsung.com>
+In-Reply-To: <d7e938e8-d42e-be22-ce76-561159064180@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 11 Sep 2019 14:25:49 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdM_A5Enmv_GOJuKLvfBBwi-z3qWiW4WG9L-dmuW9T5Wg@mail.gmail.com>
+Message-ID: <CAJKOXPdM_A5Enmv_GOJuKLvfBBwi-z3qWiW4WG9L-dmuW9T5Wg@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: arm: samsung: Convert Samsung Exynos
+ IOMMU H/W, System MMU to dt-schema
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Maciej Falkowski <m.falkowski@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Andrzej Hajda <a.hajda@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 14:19:41, Michal Hocko wrote:
-> On Wed 11-09-19 08:08:38, Michael S. Tsirkin wrote:
-> > On Wed, Sep 11, 2019 at 01:36:19PM +0200, Michal Hocko wrote:
-> > > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-> > > [...]
-> > > > We don't put any limitations on the allocator other then that it needs to
-> > > > clean up the metadata on allocation, and that it cannot allocate a page
-> > > > that is in the process of being reported since we pulled it from the
-> > > > free_list. If the page is a "Reported" page then it decrements the
-> > > > reported_pages count for the free_area and makes sure the page doesn't
-> > > > exist in the "Boundary" array pointer value, if it does it moves the
-> > > > "Boundary" since it is pulling the page.
-> > > 
-> > > This is still a non-trivial limitation on the page allocation from an
-> > > external code IMHO. I cannot give any explicit reason why an ordering on
-> > > the free list might matter (well except for page shuffling which uses it
-> > > to make physical memory pattern allocation more random) but the
-> > > architecture seems hacky and dubious to be honest. It shoulds like the
-> > > whole interface has been developed around a very particular and single
-> > > purpose optimization.
-> > > 
-> > > I remember that there was an attempt to report free memory that provided
-> > > a callback mechanism [1], which was much less intrusive to the internals
-> > > of the allocator yet it should provide a similar functionality. Did you
-> > > see that approach? How does this compares to it? Or am I completely off
-> > > when comparing them?
-> > > 
-> > > [1] mostly likely not the latest version of the patchset
-> > > http://lkml.kernel.org/r/1502940416-42944-5-git-send-email-wei.w.wang@intel.com
-> > 
-> > Linus nacked that one. He thinks invoking callbacks with lots of
-> > internal mm locks is too fragile.
-> 
-> I would be really curious how much he would be happy about injecting
-> other restrictions on the allocator like this patch proposes. This is
-> more intrusive as it has a higher maintenance cost longterm IMHO.
+On Wed, 11 Sep 2019 at 13:57, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Krzyszotf,
+>
+> On 2019-09-11 13:36, Krzysztof Kozlowski wrote:
+> > On Wed, 11 Sep 2019 at 13:05, Maciej Falkowski <m.falkowski@samsung.com> wrote:
+> >> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
+> >> to newer dt-schema format.
+> >>
+> >> Update clock description.
+> >>
+> >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> >> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> >> ---
+> >> Hi Krzysztof,
+> >>
+> >> Thank you for feedback.
+> >>
+> >> v3:
+> >>
+> >> - remove obsolete interrupts description and
+> >> set its maxItems to one. There are some incompatible
+> >> files which will be fixed with another patch.
+> > Driver stopped supporting two IRQ lines in commit
+> > 7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
+> > errors). The second IRQ line in Exynos3250 DTS seems to be ignored.
+> >
+> > The patch now looks good to me:
+> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > However for some reasons you did not CC the IOMMU maintainers. Please
+> > use scripts/get_maintainer.pl to get the list of folks to CC.
+>
+> Frankly I don't see any reason to spam IOMMU ml or maintainer with this
+> discussion about dt-binding conversion. This patch will be merged via dt
+> tree if I got it right.
 
-Btw. I do agree that callbacks with internal mm locks are not great
-either. We do have a model for that in mmu_notifiers and it is something
-I do consider PITA, on the other hand it is mostly sleepable part of the
-interface which makes it the real pain. The above callback mechanism was
-explicitly documented with restrictions and that the context is
-essentially atomic with no access to particular struct pages and no
-expensive operations possible. So in the end I've considered it
-acceptably painful. Not that I want to override Linus' nack but if
-virtualization usecases really require some form of reporting and no
-other way to do that push people to invent even more interesting
-approaches then we should simply give them/you something reasonable
-and least intrusive to our internals.
--- 
-Michal Hocko
-SUSE Labs
+Indeed usually subsystem maintainers are not interested in DT schema
+conversion although they are mentioned as maintainers for this file so
+it is nice to CC them... I would not call spamming when there is
+explicit pattern for CCing.
+
+Best regards,
+Krzysztof
