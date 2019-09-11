@@ -2,157 +2,118 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4117ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B11CC49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8012084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74072075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 18:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Fbg0AjCo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HCaGG62/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfIKSkd (ORCPT
+        id S1730118AbfIKSnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 14:40:33 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39178 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbfIKSkd (ORCPT
+        Wed, 11 Sep 2019 14:43:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46794 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729975AbfIKSnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 14:40:33 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E7FCA33A;
-        Wed, 11 Sep 2019 20:40:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568227230;
-        bh=Cm4wbCtI9Gzn79VIY7AbQ+F58/Qss2DHcbMDeHO/vJs=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Fbg0AjCoUSm7qfE40KzniJtnT5TizMqaZtackRBNACafqaOFix0cU/S0G2GsgWZZp
-         SFELE0Ia/I4Nb/23kJ/cdIM7+BoZiojzlMpKdY7M4iDuFnnNgY/yuy2FzHt77y2Kar
-         M20BaTZ9u+k9ljLFN33eSXoPzHPeJm8fJ1pqJ5Sk=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 6/9] drm: rcar-du: crtc: Enable and disable CMMs
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-7-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <bc443263-5f20-f022-34c8-1e521243dec1@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 19:40:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 14:43:46 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BIhVqx057041;
+        Wed, 11 Sep 2019 18:43:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=PpbjP/K7FS/mhoPoFUIAdpkmq3dsAewLE9s1QyDDJa0=;
+ b=HCaGG62/OUogK5kDUJX8eKcIBNc4qkq3JHV4gsLrMxOSiF7DUUB1GD2yojxzvJSfgdUg
+ IQYJJrnn7v/KN1sxGkSUaFj166y2WV1bnFPxNoHoPNPtTvY72YOdyOUs6D6Tbe3PUnID
+ 56xXRSPU2lbOT4UyD0y7EEFzUX4M06yq9XROHZbGJIOHDd7NZLSPvq8PLba/DGHnpBlT
+ +UAk/glklN7aPmijNmla+bbMPeBYI6Ux/Awt8ZVLTyjqM3vzdA8glvG9eSlMZcih8q5l
+ PDQrddNfimBTaovRvWH/Xk+vm+SnXUFSuTCUzRSHc37abpQsn2qIPA2L05rNs8Jb0Jqp ag== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2uw1m943vv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 18:43:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8BIhXnt024817;
+        Wed, 11 Sep 2019 18:43:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uxj893hsy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Sep 2019 18:43:41 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8BIhdlD029626;
+        Wed, 11 Sep 2019 18:43:40 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Sep 2019 11:43:39 -0700
+Date:   Wed, 11 Sep 2019 21:43:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-nvdimm@lists.01.org, bpf@vger.kernel.org
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+Message-ID: <20190911184332.GL20699@kadam>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-7-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909110171
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9377 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909110171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-On 06/09/2019 14:54, Jacopo Mondi wrote:
-> Enable/disable the CMM associated with a CRTC at CRTC start and stop
-> time and enable the CMM unit through the Display Extensional Functions
-> register at group setup time.
-> 
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
->  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
->  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index 23f1d6cc1719..3dac605c3a67 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -21,6 +21,7 @@
->  #include <drm/drm_plane_helper.h>
->  #include <drm/drm_vblank.h>
->  
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_drv.h"
->  #include "rcar_du_encoder.h"
-> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
->  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
->  		rcar_du_vsp_disable(rcrtc);
->  
-> +	if (rcrtc->cmm)
-> +		rcar_cmm_disable(rcrtc->cmm);
+On Wed, Sep 11, 2019 at 08:48:59AM -0700, Dan Williams wrote:
+> +Coding Style Addendum
+> +---------------------
+> +libnvdimm expects multi-line statements to be double indented. I.e.
 > +
->  	/*
->  	 * Select switch sync mode. This stops display operation and configures
->  	 * the HSYNC and VSYNC signals as inputs.
-> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
->  	}
->  
->  	rcar_du_crtc_start(rcrtc);
-> +
-> +	if (rcrtc->cmm)
-> +		rcar_cmm_enable(rcrtc->cmm);
->  }
->  
->  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> index 9eee47969e77..25d0fc125d7a 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
->  
->  	rcar_du_group_setup_pins(rgrp);
->  
-> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
-> +		u32 defr7 = DEFR7_CODE
-> +			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
-> +			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> +
-> +		rcar_du_group_write(rgrp, DEFR7, defr7);
-> +	}
-> +
+> +        if (x...
+> +                        && ...y) {
 
-What's the effect here on platforms with a CMM, but with
-CONFIG_DRM_RCAR_CMM unset?
+That looks horrible and it causes a checkpatch warning.  :(  Why not
+do it the same way that everyone else does it.
 
-Will this incorrectly configure the DU ?
+	if (blah_blah_x && <-- && has to be on the first line for checkpatch
+	    blah_blah_y) { <-- [tab][space][space][space][space]blah
 
-Will it stall the display if the DU tries to interact with another
-module which is not enabled?
+Now all the conditions are aligned visually which makes it readable.
+They aren't aligned with the indent block so it's easy to tell the
+inside from the if condition.
 
+I kind of hate all this extra documentation because now everyone thinks
+they can invent new hoops to jump through.
 
->  	if (rcdu->info->gen >= 2) {
->  		rcar_du_group_setup_defr8(rgrp);
->  		rcar_du_group_setup_didsr(rgrp);
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> index bc87f080b170..fb9964949368 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> @@ -197,6 +197,11 @@
->  #define DEFR6_MLOS1		(1 << 2)
->  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
->  
-> +#define DEFR7			0x000ec
-> +#define DEFR7_CODE		(0x7779 << 16)
-> +#define DEFR7_CMME1		BIT(6)
-> +#define DEFR7_CMME0		BIT(4)
-> +
->  /* -----------------------------------------------------------------------------
->   * R8A7790-only Control Registers
->   */
-> 
+Speaking of hoops, the BPF documentation says that you have to figure
+out which tree a patch applies to instead of just working against
+linux-next.  Is there an automated way to do that?  I looked through my
+inbox and there are a bunch of patches marked as going through the
+bpf-next tree but about half were marked incorrectly so it looks like
+everyone who tries to tag their patches is going to do it badly anyway.
+
+regards,
+dan carpenter
 
