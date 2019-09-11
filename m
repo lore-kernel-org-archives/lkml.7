@@ -2,212 +2,82 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E91C49ED6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C0C49ED6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4482081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1DA207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 17:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfIKRpj (ORCPT
+        id S1729733AbfIKRqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 13:45:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34010 "EHLO mga06.intel.com"
+        Wed, 11 Sep 2019 13:46:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50946 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbfIKRpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 13:45:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 10:45:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,494,1559545200"; 
-   d="scan'208";a="200562914"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Sep 2019 10:45:38 -0700
-Subject: Re: [PATCH v2 3/3] libnvdimm, MAINTAINERS: Maintainer Entry Profile
-To:     Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Vishal Verma <vishal.l.verma@intel.com>, linux-nvdimm@lists.01.org,
-        ksummit-discuss@lists.linuxfoundation.org
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.jiang@intel.com; prefer-encrypt=mutual; keydata=
- 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
- o6nmKbYpUAltQObU2w==
-Message-ID: <67708305-438f-8abe-66f1-f1daff5f8057@intel.com>
-Date:   Wed, 11 Sep 2019 10:45:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729660AbfIKRqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 13:46:01 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA5D6307D98A;
+        Wed, 11 Sep 2019 17:46:01 +0000 (UTC)
+Received: from asgard.redhat.com (ovpn-112-27.ams2.redhat.com [10.36.112.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AF3F10018FF;
+        Wed, 11 Sep 2019 17:45:54 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 18:45:27 +0100
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: [PATCH v3] fork: check exit_signal passed in clone3() call
+Message-ID: <cover.1568223594.git.esyr@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 11 Sep 2019 17:46:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello.
+
+As was agreed[1][2], clone3 should fail if the provided exit_signal
+value fails valid_signal() check, hence the new version.
+
+Changees since v2[3][4]:
+ - Rewrite the check to check exit_signal against valid_signal().
+
+Changes since v1[5]:
+ - Check changed to comparison against negated CSIGNAL to address
+   the bug reported by Oleg[6].
+ - Added a comment to _do_fork that exit_signal has to be checked
+   by the caller.
+
+[1] https://lkml.org/lkml/2019/9/11/503
+[2] https://lkml.org/lkml/2019/9/11/518
+[3] https://lkml.org/lkml/2019/9/10/764
+[4] https://lkml.org/lkml/2019/9/10/765
+[5] https://lkml.org/lkml/2019/9/10/411
+[6] https://lkml.org/lkml/2019/9/10/467
 
 
-On 9/11/19 8:48 AM, Dan Williams wrote:
-> Document the basic policies of the libnvdimm subsystem and provide a first
-> example of a Maintainer Entry Profile for others to duplicate and edit.
-> 
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Eugene Syromiatnikov (1):
+  fork: check exit_signal passed in clone3() call
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+ kernel/fork.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> ---
->  Documentation/nvdimm/maintainer-entry-profile.rst |   64 +++++++++++++++++++++
->  MAINTAINERS                                       |    4 +
->  2 files changed, 68 insertions(+)
->  create mode 100644 Documentation/nvdimm/maintainer-entry-profile.rst
-> 
-> diff --git a/Documentation/nvdimm/maintainer-entry-profile.rst b/Documentation/nvdimm/maintainer-entry-profile.rst
-> new file mode 100644
-> index 000000000000..c102950f2257
-> --- /dev/null
-> +++ b/Documentation/nvdimm/maintainer-entry-profile.rst
-> @@ -0,0 +1,64 @@
-> +LIBNVDIMM Maintainer Entry Profile
-> +==================================
-> +
-> +Overview
-> +--------
-> +The libnvdimm subsystem manages persistent memory across multiple
-> +architectures. The mailing list, is tracked by patchwork here:
-> +https://patchwork.kernel.org/project/linux-nvdimm/list/
-> +...and that instance is configured to give feedback to submitters on
-> +patch acceptance and upstream merge. Patches are merged to either the
-> +'libnvdimm-fixes', or 'libnvdimm-for-next' branch. Those branches are
-> +available here:
-> +https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
-> +
-> +In general patches can be submitted against the latest -rc, however if
-> +the incoming code change is dependent on other pending changes then the
-> +patch should be based on the libnvdimm-for-next branch. However, since
-> +persistent memory sits at the intersection of storage and memory there
-> +are cases where patches are more suitable to be merged through a
-> +Filesystem or the Memory Management tree. When in doubt copy the nvdimm
-> +list and the maintainers will help route.
-> +
-> +Submissions will be exposed to the kbuild robot for compile regression
-> +testing. It helps to get a success notification from that infrastructure
-> +before submitting, but it is not required.
-> +
-> +
-> +Submit Checklist Addendum
-> +-------------------------
-> +There are unit tests for the subsystem via the ndctl utility:
-> +https://github.com/pmem/ndctl
-> +Those tests need to be passed before the patches go upstream, but not
-> +necessarily before initial posting. Contact the list if you need help
-> +getting the test environment set up.
-> +
-> +
-> +Key Cycle Dates
-> +---------------
-> +New submissions can be sent at any time, but if they intend to hit the
-> +next merge window they should be sent before -rc4, and ideally
-> +stabilized in the libnvdimm-for-next branch by -rc6. Of course if a
-> +patch set requires more than 2 weeks of review -rc4 is already too late
-> +and some patches may require multiple development cycles to review.
-> +
-> +
-> +Coding Style Addendum
-> +---------------------
-> +libnvdimm expects multi-line statements to be double indented. I.e.
-> +
-> +        if (x...
-> +                        && ...y) {
-> +
-> +
-> +Review Cadence
-> +--------------
-> +In general, please wait up to one week before pinging for feedback. A
-> +private mail reminder is preferred. Alternatively ask for other
-> +developers that have Reviewed-by tags for libnvdimm changes to take a
-> +look and offer their opinion.
-> +
-> +
-> +Style Cleanup Patches
-> +---------------------
-> +Standalone style-cleanups are welcome.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e5d111a86e61..2be1e18a368e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9185,6 +9185,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	linux-nvdimm@lists.01.org
-> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
->  S:	Supported
->  F:	drivers/nvdimm/blk.c
-> @@ -9195,6 +9196,7 @@ M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dan Williams <dan.j.williams@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	linux-nvdimm@lists.01.org
-> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
->  S:	Supported
->  F:	drivers/nvdimm/btt*
-> @@ -9204,6 +9206,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	linux-nvdimm@lists.01.org
-> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
->  S:	Supported
->  F:	drivers/nvdimm/pmem*
-> @@ -9223,6 +9226,7 @@ M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Keith Busch <keith.busch@intel.com>
->  M:	Ira Weiny <ira.weiny@intel.com>
->  L:	linux-nvdimm@lists.01.org
-> +P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git
->  S:	Supported
-> 
+-- 
+2.1.4
+
