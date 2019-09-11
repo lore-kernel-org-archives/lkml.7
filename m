@@ -2,103 +2,141 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE3CECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E64ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485AE2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7297C21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 07:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOa47PqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfIKHWg convert rfc822-to-8bit (ORCPT
+        id S1727150AbfIKHWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 03:22:36 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:45536 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfIKHWf (ORCPT
+        Wed, 11 Sep 2019 03:22:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46356 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfIKHWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 03:22:35 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8B7MKAk020343
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 11 Sep 2019 16:22:20 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8B7MK2T021862;
-        Wed, 11 Sep 2019 16:22:20 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8B7MDR1021065;
-        Wed, 11 Sep 2019 16:22:20 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-936117; Wed, 11 Sep 2019 16:21:14 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Wed,
- 11 Sep 2019 16:21:13 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     "osalvador@suse.de" <osalvador@suse.de>
-CC:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/10] Hwpoison soft-offline rework
-Thread-Topic: [PATCH 00/10] Hwpoison soft-offline rework
-Thread-Index: AQHVZ8LTy7PIWQBirkyAnAoCBs9f5aclXX4AgAAOxICAAAOJAIAADMoA
-Date:   Wed, 11 Sep 2019 07:21:12 +0000
-Message-ID: <20190911072112.GA12499@hori.linux.bs1.fc.nec.co.jp>
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190911052956.GA9729@hori.linux.bs1.fc.nec.co.jp>
- <20190911062246.GA31960@hori.linux.bs1.fc.nec.co.jp>
- <59dce1bc205b10f67f17cf9d2e1e7a04@suse.de>
-In-Reply-To: <59dce1bc205b10f67f17cf9d2e1e7a04@suse.de>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <80CDEFCDA81BC34D9226C8BC8FBFE853@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Sep 2019 03:22:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m3so11035397pgv.13;
+        Wed, 11 Sep 2019 00:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bsBBaQCwC1K7f7nPpRPamyzrfm3OUMCwJTP3+3GPnBU=;
+        b=TOa47PqY/EJ2uUx/RG/nWlpKJYh8LyN32mcJUK/VScoTn6hHB3uEOr6Q7elpW0O35Y
+         wUjUphKzvuRoixYzHCT7MO6hzQzmpXSxpdZ8/eiC/JhbF45ZfM9WAd2AxWXwKHZrtEaV
+         DTCJuZia2EbXmqfSQITpgn8ap/7iHCV27hQpOXDvox3JjnkNTJoH0aL82MxKWfNoklNL
+         vGYynuzYElBTiw1kW9MOBCHOL/oNRxyrjmtHgFCSK6WxpYNu7ASMCdTCGjvpnggH9cy5
+         imdbIU/mBPIy0zy1lGkGIj1njA6XpYp9ISLVDA5lPvEtN3skSe8frg+C6DZY4k6+57si
+         scMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bsBBaQCwC1K7f7nPpRPamyzrfm3OUMCwJTP3+3GPnBU=;
+        b=pkaTOt4kF3/GwphGgjuvI29QzsnzCAB9Q0AAjyohIpvGmYkLXwd6UexCEnrTS0Gs9u
+         nxzQu0KWmLAg6TrTJ2bi3G+GBZiP/ZMD54RgrE0cBCiqyf1t7xyw4SpZlKE5TCnaBbK1
+         rnUgaUCbTYygitzLmFhKhTVlgR3jGRd/90X9AQKeNZm4611/s6lqcO5A6JIP8nbrd4yj
+         /tQ1A9mSVE2jXx5VwYcHLQqNqykumMt/6qU2w6PQfjVshB4l9iJAnjKYftt/nyBumXyF
+         vzhAtfD+yLF4nlqYnZtO3ueLBtiy36CfuPp8+mwrZOhCFM1f3+Huk/AQJ9YSIQ67Lkhn
+         +0iA==
+X-Gm-Message-State: APjAAAW5OQqKvdjaAt3voKzJz4alurJAclWUi8nMHapXrsq7YsjYEo5n
+        sXYkyguae0e9jLMhkKQyVOc=
+X-Google-Smtp-Source: APXvYqy3gYoy4ykaSNVVN0RlnHzxLN1uwoGZ0ilR2f6kFpF18m1tuoe8eHiTLjrwam/XV0V4n3UVXg==
+X-Received: by 2002:a63:f357:: with SMTP id t23mr32221336pgj.421.1568186564742;
+        Wed, 11 Sep 2019 00:22:44 -0700 (PDT)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id u65sm20878456pfu.104.2019.09.11.00.22.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 00:22:44 -0700 (PDT)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnsonm@danlj.org, ben.chuang@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [PATCH V9 2/5] mmc: sdhci: Add PLL Enable support to internal clock setup
+Date:   Wed, 11 Sep 2019 15:23:01 +0800
+Message-Id: <b6701eb41e7558b2d19b31eb20a3f7d39b06e5f6.1568184581.git.benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1568184581.git.benchuanggli@gmail.com>
+References: <cover.1568184581.git.benchuanggli@gmail.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 08:35:26AM +0200, osalvador@suse.de wrote:
-> On 2019-09-11 08:22, Naoya Horiguchi wrote:
-> > I found another panic ...
-> 
-> Hi Naoya,
-> 
-> Thanks for giving it a try. Are these testcase public?
-> I will definetely take a look and try to solve these cases.
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-It's available on https://github.com/Naoya-Horiguchi/mm_regression.
-The README is a bit obsolete (sorry about that ...,) but you can run
-the testcase like below:
+The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+setup as part of the internal clock setup as described in 3.2.1 Internal
+Clock Setup Sequence of SD Host Controller Simplified Specification
+Version 4.20.
 
-  $ git clone https://github.com/Naoya-Horiguchi/mm_regression
-  $ cd mm_regression
-  mm_regression $ git clone https://github.com/Naoya-Horiguchi/test_core 
-  mm_regression $ make
-  // you might need to install some dependencies like numa library and mce-inject tool
-  mm_regression $ make update_recipes
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/sdhci.c | 23 +++++++++++++++++++++++
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 24 insertions(+)
 
-To run the single testcase, run the commands like below:
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index bed0760a6c2a..9106ebc7a422 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1653,6 +1653,29 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+ 		udelay(10);
+ 	}
+ 
++	if (host->version >= SDHCI_SPEC_410 && host->v4_mode) {
++		clk |= SDHCI_CLOCK_PLL_EN;
++		clk &= ~SDHCI_CLOCK_INT_STABLE;
++		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++		/* Wait max 150 ms */
++		timeout = ktime_add_ms(ktime_get(), 150);
++		while (1) {
++			bool timedout = ktime_after(ktime_get(), timeout);
++
++			clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++			if (clk & SDHCI_CLOCK_INT_STABLE)
++				break;
++			if (timedout) {
++				pr_err("%s: PLL clock never stabilised.\n",
++				       mmc_hostname(host->mmc));
++				sdhci_dumpregs(host);
++				return;
++			}
++			udelay(10);
++		}
++	}
++
+ 	clk |= SDHCI_CLOCK_CARD_EN;
+ 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+ }
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 199712e7adbb..72601a4d2e95 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -114,6 +114,7 @@
+ #define  SDHCI_DIV_HI_MASK	0x300
+ #define  SDHCI_PROG_CLOCK_MODE	0x0020
+ #define  SDHCI_CLOCK_CARD_EN	0x0004
++#define  SDHCI_CLOCK_PLL_EN	0x0008
+ #define  SDHCI_CLOCK_INT_STABLE	0x0002
+ #define  SDHCI_CLOCK_INT_EN	0x0001
+ 
+-- 
+2.23.0
 
-  mm_regression $ RECIPEFILES=cases/page_migration/hugetlb_migratepages_allocate1_noovercommit.auto2 bash run.sh
-  mm_regression $ RECIPEFILES=cases/cases/mce_ksm_soft-offline_avoid_access.auto2 bash run.sh
-  
-You can run a set of many testcases with the commands like below:
-
-  mm_regression $ RECIPEFILES=cases/cases/mce_ksm_* bash run.sh
-  // run all ksm related testcases. I reproduced the panic with this command.
-
-  mm_regression $ run_class=simple bash run.sh
-  // run the set of minimum testcases I run for each releases.
-
-Hopefully this will help you.
-
-Thanks,
-Naoya Horiguchi
