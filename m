@@ -2,205 +2,201 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE81ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A363ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990BC21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBB42089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 09:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfIKJXP (ORCPT
+        id S1727273AbfIKJXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 05:23:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:44230 "EHLO foss.arm.com"
+        Wed, 11 Sep 2019 05:23:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58154 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbfIKJXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 05:23:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F0FB337;
-        Wed, 11 Sep 2019 02:23:13 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA1923F71F;
-        Wed, 11 Sep 2019 02:23:12 -0700 (PDT)
-Date:   Wed, 11 Sep 2019 10:23:11 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: Re: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
-Message-ID: <20190911092310.GN9720@e119886-lin.cambridge.arm.com>
-References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
- <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
- <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
- <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
+        id S1726928AbfIKJXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 05:23:53 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3F82E7BDD2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:23:52 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id f19so23119588qtq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 02:23:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mYSD9hRnX/6v3ywsydqfkpFUdOIKRrBI76zwVnPyG4o=;
+        b=N6G+isrkTJ01lXD9/zy+SfTf9d+sOHAyZokCSRI6ju6cQfLNJcC7/6B+PFaWNkrufO
+         SXbzxjMiyQRSjMjie/7piWD0tLr93TpErcXFnV7RWQCZDDecVyzCorp7yqHYlrTujADa
+         9kD/jaOjghEaeHE01IVS2hXIGf1u+jaPgYG0O+xz4hYic61CrYQcgVYo3i3clnbTvU7S
+         ZE/41SKgWZVCfPk2jEWEVuEihc9cCvTL6g+abl3A1WeI9DHxekM4AT/0d8leAO29Uoot
+         J6MAMYWeWgKkvDIQpgUw3y+XdygoycSdS26lZSZJw0r6LUiUmGcebWZLeoG+KTJEfJxn
+         u3pA==
+X-Gm-Message-State: APjAAAVhVjRhuj03ve2rjhvE0Ao5GUIOqBpGI2VTsyZ/p1DJzxRm6rmI
+        ivQQe5xBoVeJ0niLMnigtoAfdNajRRJrCX7wxZkhZxs3TMhtJ0XESyZvZNmQDnjFIJOkgOvAEgt
+        bYC+Ii++GpAvlHyP2aRlZVHZ6
+X-Received: by 2002:a37:a503:: with SMTP id o3mr33610733qke.115.1568193831418;
+        Wed, 11 Sep 2019 02:23:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz8QR5cKcd/uXRYlQ318mPxE6jSP+97aQIMCCQ/RUZeDP873f/PJ5B1bFEAkiTG92ijMAd8cg==
+X-Received: by 2002:a37:a503:: with SMTP id o3mr33610704qke.115.1568193831205;
+        Wed, 11 Sep 2019 02:23:51 -0700 (PDT)
+Received: from redhat.com ([80.74.107.118])
+        by smtp.gmail.com with ESMTPSA id r13sm5657063qkm.48.2019.09.11.02.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 02:23:50 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 05:23:40 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [virtio-dev] Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+Message-ID: <20190911051819-mutt-send-email-mst@kernel.org>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190910124209.GY2063@dhcp22.suse.cz>
+ <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+ <20190910144713.GF2063@dhcp22.suse.cz>
+ <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+ <20190910161818.GF2797@work-vm>
+ <f74117db-225d-92cb-9476-22c0f752659d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <f74117db-225d-92cb-9476-22c0f752659d@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 09:46:28PM +0530, Pankaj Dubey wrote:
-> On Tue, 10 Sep 2019 at 19:56, Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
-> > > From: Anvesh Salveru <anvesh.s@samsung.com>
-> > >
-> > > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > > to happen in GEN3 or high speed. In case equalization fails, link will
-> > > fallback to GEN1.
-> >
-> > When you refer to "high speed", do you mean "higher speeds" as in GEN3,
-> > GEN4, etc?
-> >
+On Tue, Sep 10, 2019 at 06:22:37PM +0200, David Hildenbrand wrote:
+> On 10.09.19 18:18, Dr. David Alan Gilbert wrote:
+> > * Alexander Duyck (alexander.duyck@gmail.com) wrote:
+> >> On Tue, Sep 10, 2019 at 7:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >>>
+> >>> On Tue 10-09-19 07:42:43, Alexander Duyck wrote:
+> >>>> On Tue, Sep 10, 2019 at 5:42 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >>>>>
+> >>>>> I wanted to review "mm: Introduce Reported pages" just realize that I
+> >>>>> have no clue on what is going on so returned to the cover and it didn't
+> >>>>> really help much. I am completely unfamiliar with virtio so please bear
+> >>>>> with me.
+> >>>>>
+> >>>>> On Sat 07-09-19 10:25:03, Alexander Duyck wrote:
+> >>>>> [...]
+> >>>>>> This series provides an asynchronous means of reporting to a hypervisor
+> >>>>>> that a guest page is no longer in use and can have the data associated
+> >>>>>> with it dropped. To do this I have implemented functionality that allows
+> >>>>>> for what I am referring to as unused page reporting
+> >>>>>>
+> >>>>>> The functionality for this is fairly simple. When enabled it will allocate
+> >>>>>> statistics to track the number of reported pages in a given free area.
+> >>>>>> When the number of free pages exceeds this value plus a high water value,
+> >>>>>> currently 32, it will begin performing page reporting which consists of
+> >>>>>> pulling pages off of free list and placing them into a scatter list. The
+> >>>>>> scatterlist is then given to the page reporting device and it will perform
+> >>>>>> the required action to make the pages "reported", in the case of
+> >>>>>> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> >>>>>> and as such they are forced out of the guest. After this they are placed
+> >>>>>> back on the free list,
+> >>>>>
+> >>>>> And here I am reallly lost because "forced out of the guest" makes me
+> >>>>> feel that those pages are no longer usable by the guest. So how come you
+> >>>>> can add them back to the free list. I suspect understanding this part
+> >>>>> will allow me to understand why we have to mark those pages and prevent
+> >>>>> merging.
+> >>>>
+> >>>> Basically as the paragraph above mentions "forced out of the guest"
+> >>>> really is just the hypervisor calling MADV_DONTNEED on the page in
+> >>>> question. So the behavior is the same as any userspace application
+> >>>> that calls MADV_DONTNEED where the contents are no longer accessible
+> >>>> from userspace and attempting to access them will result in a fault
+> >>>> and the page being populated with a zero fill on-demand page, or a
+> >>>> copy of the file contents if the memory is file backed.
+> >>>
+> >>> As I've said I have no idea about virt so this doesn't really tell me
+> >>> much. Does that mean that if somebody allocates such a page and tries to
+> >>> access it then virt will handle a fault and bring it back?
+> >>
+> >> Actually I am probably describing too much as the MADV_DONTNEED is the
+> >> hypervisor behavior in response to the virtio-balloon notification. A
+> >> more thorough explanation of it can be found by just running "man
+> >> madvise", probably best just to leave it at that since I am probably
+> >> confusing things by describing hypervisor behavior in a kernel patch
+> >> set.
+> >>
+> >> For the most part all the page reporting really does is provide a way
+> >> to incrementally identify unused regions of memory in the buddy
+> >> allocator. That in turn is used by virtio-balloon in a polling thread
+> >> to report to the hypervisor what pages are not in use so that it can
+> >> make a decision on what to do with the pages now that it knows they
+> >> are unused.
+> >>
+> >> All this is providing is just a report and it is optional if the
+> >> hypervisor will act on it or not. If the hypervisor takes some sort of
+> >> action on the page, then the expectation is that the hypervisor will
+> >> use some sort of mechanism such as a page fault to discover when the
+> >> page is used again.
+> > 
+> > OK, that's interestingly different (but OK) from some other schemes that
+> > hav ebeen described which *require* the guest to somehow indicate the
+> > page is in use before starting to use the page again.
+> > 
 > 
-> Yes. Will reword the commit message as "higher speeds"
-> 
-> > >
-> > > Designware controller has support for disabling GEN3 equalization if
-> > > required. This patch enables the designware driver to disable the PCIe
-> > > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
-> >
-> > Thus limiting to GEN2 speeds max, right?
-> >
-> > Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and above
-> > even though we advertise GEN3 and above speeds? I.e. the IP advertises
-> > GEN3 but the phy can't handle it, we can't change what the IP advertises
-> > and so we disable equalization to limit to GEN2?
-> >
-> > I notice many of the other dwc drivers (dra7xx, keystone, tegra194, imx6)
-> > seem to use the device tree to specify a max-link-speed and then impose
-> > that limit by changing the value in PCI_EXP_LNKCAP. Is your
-> > PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the PCI_EXP_LNKCAP
-> > approach, or does your approach add something else?
-> >
-> 
-> No, max speed will be still as per advertised by link or it will be
-> equal to the limited speed as per DT property if any.
-> This register will prohibit to perform all phases of equalization and
-> thus allowing link to happen in maximum supported/advertised speed.
-> 
-> This is not to limit max link speed, this register helps link to
-> happen in higher speeds (GEN3/4) without going through equalization
-> phases. It is intended to use only if at all link fails to latch up in
-> GEN3/4 due to failure in equalization phases.
+> virtio-balloon also has a mode where the guest would not have to
+> indicate to the host before re-using a page. Only
+> VIRTIO_BALLOON_F_MUST_TELL_HOST enforces this. So it's not completely new.
 
-I thought that for GEN3 and beyond equalization was *required* - with only
-phases 2 and 3 being optional. Therefore I'm suprised to see that if
-equalization does fail we continue to train the link anyway. Have I
-understood this correctly?
+VIRTIO_BALLOON_F_MUST_TELL_HOST is a bit different.
+When it's not set, guest still must tell host about
+pages in use, it just can batch these notifications
+sending them possibly after page has been used.
+So even with VIRTIO_BALLOON_F_MUST_TELL_HOST off you don't
+skip the notification.
 
-Also are there any plans to provide patches to use this quirk on any
-drivers?
 
+From hypervisor point of view, this feature is very much like adding
+page to the balloon and immediately taking it out of the balloon again,
+just doing it in one operation.
+
+The main difference is the contents of the page, which matters
+with poisoning: in that case hypervisor is expected to hand
+back page with the poisoning content. Not so with regular
+deflate where page contents is undefined.
+
+Well and also the new interface is optimized for large chunks
+of memory since we'll likely be dealing with such.
+
+> > Dave
 > 
-> > >
-> > > Platform drivers can disable equalization by setting the dwc_pci_quirk
-> > > flag DWC_EQUALIZATION_DISABLE.
-> > >
-> > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
-> > >  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
-> > >  2 files changed, 14 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 7d25102..bf82091 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > >               break;
-> > >       }
-> > >       dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > > +
-> > > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > > +
-> > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
-> > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-> > > +
-> > > +     dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> >
-> > The problem here is that even when DWC_EQUALIZATION_DISABLE is not set
-> > the driver will read and write PCIE_PORT_GEN3_RELATED when it is not
-> > needed. How about something like:
-> >
-> > > +
-> > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
-> > > +             val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-> > > +             dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > > +     }
-> >
 > 
-> Yes, before posting we taught about it, but then next patchset is
-> adding one more quirk and in that case we need to repeat read and
-> write under each if condition. I hope that repetition should be fine.
-
-I understand. I think the repetition is prefered over needlessly reading and
-writing registers.
-
-Given these quirks are so similar, I wouldn't have a problem with them being
-in the same patch.
-
-Thanks,
-
-Andrew Murray
-
+> -- 
 > 
-> > >  }
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index ffed084..a1453c5 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -29,6 +29,9 @@
-> > >  #define LINK_WAIT_MAX_IATU_RETRIES   5
-> > >  #define LINK_WAIT_IATU                       9
-> > >
-> > > +/* Parameters for PCIe Quirks */
-> > > +#define DWC_EQUALIZATION_DISABLE     0x1
-> >
-> > How about using BIT(1) instead? Thus implying that you can combine
-> > quirks.
-> >
+> Thanks,
 > 
-> Agreed.
-> 
-> > Thanks,
-> >
-> > Andrew Murray
-> >
-> > > +
-> > >  /* Synopsys-specific PCIe configuration registers */
-> > >  #define PCIE_PORT_LINK_CONTROL               0x710
-> > >  #define PORT_LINK_MODE_MASK          GENMASK(21, 16)
-> > > @@ -60,6 +63,9 @@
-> > >  #define PCIE_MSI_INTR0_MASK          0x82C
-> > >  #define PCIE_MSI_INTR0_STATUS                0x830
-> > >
-> > > +#define PCIE_PORT_GEN3_RELATED               0x890
-> > > +#define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
-> > > +
-> > >  #define PCIE_ATU_VIEWPORT            0x900
-> > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
-> > >  #define PCIE_ATU_REGION_OUTBOUND     0
-> > > @@ -244,6 +250,7 @@ struct dw_pcie {
-> > >       struct dw_pcie_ep       ep;
-> > >       const struct dw_pcie_ops *ops;
-> > >       unsigned int            version;
-> > > +     unsigned int            dwc_pci_quirk;
-> > >  };
-> > >
-> > >  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
-> > > --
-> > > 2.7.4
-> > >
+> David / dhildenb
