@@ -2,157 +2,288 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25877ECDE20
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A535ECDE20
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEFD2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7658A216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 19:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Rgk/yjgG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFQM0oja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfIKTEv (ORCPT
+        id S1730243AbfIKTFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 15:04:51 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39356 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730199AbfIKTEv (ORCPT
+        Wed, 11 Sep 2019 15:05:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43254 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730020AbfIKTFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 15:04:51 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 36AFD33A;
-        Wed, 11 Sep 2019 21:04:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568228688;
-        bh=u1q/I3vU1x1bIgyh6oYR6LSkB6UUhuCroJOI5wBjTsA=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Rgk/yjgGWdTGMdRwARlsFOBcsqkc+jS5c3sHZ5gfncZO29DV5bmZP3THzCv7EyEWB
-         TCKFEzCLzPI0K4dQmawhPGdp9Wn6kvMMTz6Q7PGYp4y4cFsr3jpIVcnMNO8NRB+l+F
-         /jeQDinQ9vRXTBoiTIqOaG5nDpSmLhv+PHsxIgCM=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM
- documentation
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-2-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <92e70575-85b7-6f76-2fb0-3c2ba904df1c@ideasonboard.com>
-Date:   Wed, 11 Sep 2019 20:04:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Sep 2019 15:05:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id r8so23446517iol.10;
+        Wed, 11 Sep 2019 12:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CRqcj7+NuoI4D3cZX40T5TKikuDO93RhQlD6Y+l1eos=;
+        b=TFQM0ojamkh1ySloLepkw4Vnnp+z3PWbYhYVqfkdh4RxgGEuHC8TPTbpPbHy6x2JD0
+         JRUofNZKnBYbutyDTigYjqzOBsaCkSSp2rSl7dz9AfUYw8IZrQ5RGdVORUbixBiivPyC
+         4We9ZWshElKuWJ4fE3UjLaRxLawGRNLiFCDws2ba2evyAajjVJrUdSZU/0jqB3xkeLkD
+         hw3FRKk6X/U5TAhBdki7UmmeY8N76FyqymbXsNA/JGyt+cYmtdrsN94M7mM7DTwRm4ZJ
+         ZngIcxjzCos1Tl9aSuDs9N8sMuShcXcZ5ykpNKaAi0c9WhRK14DBUow1s2/49M/VHyx4
+         ZBpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CRqcj7+NuoI4D3cZX40T5TKikuDO93RhQlD6Y+l1eos=;
+        b=j6H7by2tByfOYiXdO3MfJS8ZNIYTtxunrzZ6hdvJevuKSxRjA9/ZUMZ6/jFLlWM/8f
+         BTsPrWllCJTBeyuaET1raa2R67qIwvcg6SIatPjIooLM/ouZBrt5MFIN1qWhB61sT+MO
+         FZwWjxqu4EsGaQtQIqB7LyhqHYPdFHL7hXqSQE+b8u5VisIgO2n023cml6LNOsbmNg0N
+         HRxwxtRtsyjxwn0A0AvAnJYK6GrV58Ou5qy7JbkMh0RSC2QIlD90utba/0BwGQuX57v+
+         ALl8CEYDMoui677JPortJUUhlcheRQzbs2TqumCMX3l80i2DK5VUbCtrV8V1ndFYwkxA
+         zLEg==
+X-Gm-Message-State: APjAAAUM8FGwVArkWyKNo2LTOOdo3oOb5SJYJNe2ZJ7/m5w5dRb7P4UP
+        62AAXkB0s8tFThzdGhKwZ5VmFIsh6qVwtSBY8qzjI9Z0
+X-Google-Smtp-Source: APXvYqyW3zpytIyyY4lkLih9aeq6GQUikYQE55Vk06YhYYlczXfzgPpsPg7ZSwNMCyW0TtkF3zR3Lv4zwFuvzF0J46Y=
+X-Received: by 2002:a02:b395:: with SMTP id p21mr40570622jan.52.1568228743054;
+ Wed, 11 Sep 2019 12:05:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-2-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <cover.1568224032.git.hns@goldelico.com> <9254e741d1b43d824f0697ec54fe9c132903e244.1568224033.git.hns@goldelico.com>
+In-Reply-To: <9254e741d1b43d824f0697ec54fe9c132903e244.1568224033.git.hns@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 11 Sep 2019 14:05:31 -0500
+Message-ID: <CAHCN7x+rK3aoLN7bKOn69JDsfJX69VSJBTuSRe78_YidmbOzEA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] cpufreq: ti-cpufreq: add support for omap34xx and omap36xx
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+On Wed, Sep 11, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> This adds code and tables to read the silicon revision and
+> eFuse (speed binned / 720 MHz grade) bits for selecting
+> opp-v2 table entries.
+>
+> Since these bits are not always part of the syscon register
+> range (like for am33xx, am43, dra7), we add code to directly
+> read the register values using ioremap() if syscon access fails.
+>
+> The format of the opp-supported-hw entries is that it has
+> two 32 bit bitfields. E.g.:
+>
+>         opp-supported-hw = <0xffffffff 3>
+>
+> The first value is matched against the bit position of the
+> silicon revision which is (see TRM)
+>
+> omap34xx:
+> BIT(0)  ES1.0
+> BIT(1)  ES2.0
+> BIT(2)  ES2.1
+> BIT(3)  ES3.0
+> BIT(4)  ES3.1
+> BIT(7)  ES3.1.2
+>
+> omap36xx:
+> BIT(0)  ES1.0
+> BIT(1)  ES1.1
+> BIT(2)  ES1.2
+>
+> The second value is matched against the speed grade eFuse:
+>
+> BIT(0)  no high speed OPP
+> BIT(1)  high speed OPP
+>
+> This means for the example above that it is always enabled
+> while e.g.
+>
+>         opp-supported-hw = <0x1 2>
+>
+> enables the OPP only for ES1.0 BIT(0) and if the high speed
+> eFuse is set BIT(1).
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Reviewed-by: Tony Lindgren <tony@atomide.com>
 
-On 06/09/2019 14:54, Jacopo Mondi wrote:
-> Add device tree bindings documentation for the Renesas R-Car Display
-> Unit Color Management Module.
-> 
-> CMM is the image enhancement module available on each R-Car DU video
-> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+For the entire series, I tested on the Logic PD devices:
+DM3730 Torpedo, OMAP3530 SOM-LV, DM3730 SOM-LV and AM3517-EVM
+
+Tested-by: Adam Ford <aford173@gmail.com>
+
 > ---
->  .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> new file mode 100644
-> index 000000000000..9e5922689cd7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/cpufreq/ti-cpufreq.c | 91 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 89 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+> index 2ad1ae17932d..f2f58d689320 100644
+> --- a/drivers/cpufreq/ti-cpufreq.c
+> +++ b/drivers/cpufreq/ti-cpufreq.c
+> @@ -31,6 +31,11 @@
+>  #define DRA7_EFUSE_OD_MPU_OPP                  BIT(1)
+>  #define DRA7_EFUSE_HIGH_MPU_OPP                        BIT(2)
+>
+> +#define OMAP3_CONTROL_DEVICE_STATUS            0x4800244C
+> +#define OMAP3_CONTROL_IDCODE                   0x4830A204
+> +#define OMAP34xx_ProdID_SKUID                  0x4830A20C
+> +#define OMAP3_SYSCON_BASE      (0x48000000 + 0x2000 + 0x270)
 > +
-> +title: Renesas R-Car Color Management Module (CMM)
+>  #define VERSION_COUNT                          2
+>
+>  struct ti_cpufreq_data;
+> @@ -84,6 +89,13 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+>         return calculated_efuse;
+>  }
+>
+> +static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
+> +                                     unsigned long efuse)
+> +{
+> +       /* OPP enable bit ("Speed Binned") */
+> +       return BIT(efuse);
+> +}
 > +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
+>  static struct ti_cpufreq_soc_data am3x_soc_data = {
+>         .efuse_xlate = amx3_efuse_xlate,
+>         .efuse_fallback = AM33XX_800M_ARM_MPU_MAX_FREQ,
+> @@ -111,6 +123,56 @@ static struct ti_cpufreq_soc_data dra7_soc_data = {
+>         .multi_regulator = true,
+>  };
+>
+> +/*
+> + * OMAP35x TRM (SPRUF98K):
+> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
+> + *  Control OMAP Status Register 15:0 (Address 0x4800 244C)
+> + *    to separate between omap3503, omap3515, omap3525, omap3530
+> + *    and feature presence.
+> + *    There are encodings for versions limited to 400/266MHz
+> + *    but we ignore.
+> + *    Not clear if this also holds for omap34xx.
+> + *  some eFuse values e.g. CONTROL_FUSE_OPP1_VDD1
+> + *    are stored in the SYSCON register range
+> + *  Register 0x4830A20C [ProdID.SKUID] [0:3]
+> + *    0x0 for normal 600/430MHz device.
+> + *    0x8 for 720/520MHz device.
+> + *    Not clear what omap34xx value is.
+> + */
 > +
-> +description: |+
-> +  Renesas R-Car color management module connected to R-Car DU video channels.
-> +  It provides image enhancement functions such as 1-D look-up tables (LUT),
-> +  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
-
-s/CMU/CLU/
-
-
-> +  space conversion (CSC).
+> +static struct ti_cpufreq_soc_data omap34xx_soc_data = {
+> +       .efuse_xlate = omap3_efuse_xlate,
+> +       .efuse_offset = OMAP34xx_ProdID_SKUID - OMAP3_SYSCON_BASE,
+> +       .efuse_shift = 3,
+> +       .efuse_mask = BIT(3),
+> +       .rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
+> +       .multi_regulator = false,
+> +};
 > +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - renesas,r8a7795-cmm
-> +        - renesas,r8a7796-cmm
-> +        - renesas,r8a77965-cmm
-> +        - renesas,r8a77990-cmm
-> +        - renesas,r8a77995-cmm
-> +      - enum:
-> +        - renesas,rcar-gen3-cmm
-> +        - renesas,rcar-gen2-cmm
-> +  reg:
-> +    maxItems: 1
+> +/*
+> + * AM/DM37x TRM (SPRUGN4M)
+> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
+> + *  Control Device Status Register 15:0 (Address 0x4800 244C)
+> + *    to separate between am3703, am3715, dm3725, dm3730
+> + *    and feature presence.
+> + *   Speed Binned = Bit 9
+> + *     0 800/600 MHz
+> + *     1 1000/800 MHz
+> + *  some eFuse values e.g. CONTROL_FUSE_OPP 1G_VDD1
+> + *    are stored in the SYSCON register range.
+> + *  There is no 0x4830A20C [ProdID.SKUID] register (exists but
+> + *    seems to always read as 0).
+> + */
 > +
-> +  clocks:
-> +    maxItems: 1
+> +static struct ti_cpufreq_soc_data omap36xx_soc_data = {
+> +       .efuse_xlate = omap3_efuse_xlate,
+> +       .efuse_offset = OMAP3_CONTROL_DEVICE_STATUS - OMAP3_SYSCON_BASE,
+> +       .efuse_shift = 9,
+> +       .efuse_mask = BIT(9),
+> +       .rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
+> +       .multi_regulator = false,
+> +};
 > +
-> +  resets:
-> +    maxItems: 1
+>  /**
+>   * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
+>   * @opp_data: pointer to ti_cpufreq_data context
+> @@ -127,7 +189,17 @@ static int ti_cpufreq_get_efuse(struct ti_cpufreq_data *opp_data,
+>
+>         ret = regmap_read(opp_data->syscon, opp_data->soc_data->efuse_offset,
+>                           &efuse);
+> -       if (ret) {
+> +       if (ret == -EIO) {
+> +               /* not a syscon register! */
+> +               void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
+> +                               opp_data->soc_data->efuse_offset, 4);
 > +
-> +  power-domains:
-> +    maxItems: 1
+> +               if (!regs)
+> +                       return -ENOMEM;
+> +               efuse = readl(regs);
+> +               iounmap(regs);
+> +               }
+> +       else if (ret) {
+>                 dev_err(dev,
+>                         "Failed to read the efuse value from syscon: %d\n",
+>                         ret);
+> @@ -158,7 +230,17 @@ static int ti_cpufreq_get_rev(struct ti_cpufreq_data *opp_data,
+>
+>         ret = regmap_read(opp_data->syscon, opp_data->soc_data->rev_offset,
+>                           &revision);
+> -       if (ret) {
+> +       if (ret == -EIO) {
+> +               /* not a syscon register! */
+> +               void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
+> +                               opp_data->soc_data->rev_offset, 4);
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - resets
-> +  - power-domains
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a7796-sysc.h>
-> +
-> +    cmm0: cmm@fea40000 {
-> +         compatible = "renesas,r8a7796-cmm";
-> +         reg = <0 0xfea40000 0 0x1000>;
-> +         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +         clocks = <&cpg CPG_MOD 711>;
-> +         resets = <&cpg 711>;
-> +    };
+> +               if (!regs)
+> +                       return -ENOMEM;
+> +               revision = readl(regs);
+> +               iounmap(regs);
+> +               }
+> +       else if (ret) {
+>                 dev_err(dev,
+>                         "Failed to read the revision number from syscon: %d\n",
+>                         ret);
+> @@ -190,6 +272,11 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
+>         { .compatible = "ti,am33xx", .data = &am3x_soc_data, },
+>         { .compatible = "ti,am43", .data = &am4x_soc_data, },
+>         { .compatible = "ti,dra7", .data = &dra7_soc_data },
+> +       { .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
+> +       { .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
+> +       /* legacy */
+> +       { .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
+> +       { .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
+>         {},
+>  };
+>
 > --
-> 2.23.0
-> 
-
+> 2.19.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
