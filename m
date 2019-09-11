@@ -2,135 +2,215 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF02C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF3AC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7D3206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 15:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21C02075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 16:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fP8AO1YE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfIKP60 (ORCPT
+        id S1728868AbfIKQBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 11:58:26 -0400
-Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:47529 "EHLO
-        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbfIKP60 (ORCPT
+        Wed, 11 Sep 2019 12:01:48 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41708 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbfIKQBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 11:58:26 -0400
-X-Greylist: delayed 3601 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 11:58:25 EDT
-Received: from player688.ha.ovh.net (unknown [10.109.143.249])
-        by mo68.mail-out.ovh.net (Postfix) with ESMTP id BB5F4142F53
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 16:40:52 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player688.ha.ovh.net (Postfix) with ESMTPSA id 4ED3C99ECC49;
-        Wed, 11 Sep 2019 14:40:44 +0000 (UTC)
-Date:   Wed, 11 Sep 2019 16:40:43 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/xive: Fix bogus error code returned by OPAL
-Message-ID: <20190911164043.5548afa1@bahia.lan>
-In-Reply-To: <87k1aezz78.fsf@mpe.ellerman.id.au>
-References: <156812362556.1866243.7399893138425681517.stgit@bahia.tls.ibm.com>
-        <87k1aezz78.fsf@mpe.ellerman.id.au>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 537054258809641393
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdefgdehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+        Wed, 11 Sep 2019 12:01:47 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j10so25821868qtp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 09:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=SzFYnOnqYRRD6oxfohm7GaTRApau1VSO8et7sdvAxw4=;
+        b=fP8AO1YEJfmo1iSSlsVCCw128xF/ewA8VemLrD++gV3EuoRdYfWj5LGmMLdu19lK4s
+         9zlJY92ZHUnz8AH9KmdUzzjMuRJkhMtseQEihRbLApkujfj9Oacj8sSEv0S9bp5m5L2P
+         0s0HfThhl6kHvvwdsCAzApVOD5G+ChCuptHjBZjkPs/npao4zDC+Uk+EQGQ7BXiP8NFk
+         zZuMrvwi5ek2GUs/E7YBQJsP8kx9aDaANfBUgpE23o4kmuy2S/lBVl52ydKaTkzFcbvk
+         cnNRSTf2/N88bVMUqK/e3TinHy4A7UR1PGtMx2yWphZeeekzfos9ZbSMyrUX84rCLBNX
+         16rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=SzFYnOnqYRRD6oxfohm7GaTRApau1VSO8et7sdvAxw4=;
+        b=fqmys62r+fo+MxHt7QxjkEEMOxO7i9RG1zUlTUEswBbg+1A8sEHjCy4UUKOWkhCq3r
+         tI+RiKnp1NiPe6Ha4s2fcxGrLzBWhY/w1EZ+oDQ7t22hjIwMpReS5unhTLmYg84I3pxk
+         Mnn4YWJMeRlEqc02jDKTtjis5jFHmqIybFWIGaBX9K7td4f3j3RdnkbZFTBVpbUubxB/
+         dhxbmG7jJKLF14qHX4DtbY+tnbqetNMNM/JMYejix2OQVBUt+HwyQ3h/3ELpZM4HfztH
+         e0Wwg0aKhokmMgkSCqBJjMQBTYGlUTqSsCjvH4FKD//aRrbvTzTDxiyZUbVDLB30DYZW
+         CqWw==
+X-Gm-Message-State: APjAAAVjamKn+/OzuYVwk1Yy6yhNOAObfUplVZBGCIECgk3y2G+pk4Pa
+        S6k+iRlwb4++stslwy7N5FSW7A==
+X-Google-Smtp-Source: APXvYqyPRa3MTbsa/Kmfswg0Bvkx67oWrfiDmXUWdRKwYuZ+uMqrlFSoglXlepuG5gVaVEYCQcG8yg==
+X-Received: by 2002:ac8:546:: with SMTP id c6mr11563196qth.151.1568217704576;
+        Wed, 11 Sep 2019 09:01:44 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l22sm8529363qtp.8.2019.09.11.09.01.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 09:01:44 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
+ PMD
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20190911150537.19527-6-longman@redhat.com>
+Date:   Wed, 11 Sep 2019 12:01:42 -0400
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B97932F4-7A2D-4265-9BB2-BF6E19B45DB7@lca.pw>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190911150537.19527-6-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 00:26:19 +1000
-Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-> Hi Greg,
-> 
 
-Bom dia ! :)
+> On Sep 11, 2019, at 11:05 AM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> When allocating a large amount of static hugepages (~500-1500GB) on a
+> system with large number of CPUs (4, 8 or even 16 sockets), =
+performance
+> degradation (random multi-second delays) was observed when thousands
+> of processes are trying to fault in the data into the huge pages. The
+> likelihood of the delay increases with the number of sockets and hence
+> the CPUs a system has.  This only happens in the initial setup phase
+> and will be gone after all the necessary data are faulted in.
+>=20
+> These random delays, however, are deemed unacceptable. The cause of
+> that delay is the long wait time in acquiring the mmap_sem when trying
+> to share the huge PMDs.
+>=20
+> To remove the unacceptable delays, we have to limit the amount of wait
+> time on the mmap_sem. So the new down_write_timedlock() function is
+> used to acquire the write lock on the mmap_sem with a timeout value of
+> 10ms which should not cause a perceivable delay. If timeout happens,
+> the task will abandon its effort to share the PMD and allocate its own
+> copy instead.
+>=20
+> When too many timeouts happens (threshold currently set at 256), the
+> system may be too large for PMD sharing to be useful without undue =
+delay.
+> So the sharing will be disabled in this case.
+>=20
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+> include/linux/fs.h |  7 +++++++
+> mm/hugetlb.c       | 24 +++++++++++++++++++++---
+> 2 files changed, 28 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 997a530ff4e9..e9d3ad465a6b 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -40,6 +40,7 @@
+> #include <linux/fs_types.h>
+> #include <linux/build_bug.h>
+> #include <linux/stddef.h>
+> +#include <linux/ktime.h>
+>=20
+> #include <asm/byteorder.h>
+> #include <uapi/linux/fs.h>
+> @@ -519,6 +520,12 @@ static inline void i_mmap_lock_write(struct =
+address_space *mapping)
+> 	down_write(&mapping->i_mmap_rwsem);
+> }
+>=20
+> +static inline bool i_mmap_timedlock_write(struct address_space =
+*mapping,
+> +					 ktime_t timeout)
+> +{
+> +	return down_write_timedlock(&mapping->i_mmap_rwsem, timeout);
+> +}
+> +
+> static inline void i_mmap_unlock_write(struct address_space *mapping)
+> {
+> 	up_write(&mapping->i_mmap_rwsem);
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 6d7296dd11b8..445af661ae29 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4750,6 +4750,8 @@ void adjust_range_if_pmd_sharing_possible(struct =
+vm_area_struct *vma,
+> 	}
+> }
+>=20
+> +#define PMD_SHARE_DISABLE_THRESHOLD	(1 << 8)
+> +
+> /*
+>  * Search for a shareable pmd page for hugetlb. In any case calls =
+pmd_alloc()
+>  * and returns the corresponding pte. While this is not necessary for =
+the
+> @@ -4770,11 +4772,24 @@ pte_t *huge_pmd_share(struct mm_struct *mm, =
+unsigned long addr, pud_t *pud)
+> 	pte_t *spte =3D NULL;
+> 	pte_t *pte;
+> 	spinlock_t *ptl;
+> +	static atomic_t timeout_cnt;
+>=20
+> -	if (!vma_shareable(vma, addr))
+> -		return (pte_t *)pmd_alloc(mm, pud, addr);
+> +	/*
+> +	 * Don't share if it is not sharable or locking attempt timed =
+out
+> +	 * after 10ms. After 256 timeouts, PMD sharing will be =
+permanently
+> +	 * disabled as it is just too slow.
 
-> Couple of comments ...
-> 
-> Greg Kurz <groug@kaod.org> writes:
-> > There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
-> > to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
-> > Unfortunatelty, OPAL return values are signed 64-bit entities and
-> > errors are supposed to be negative. If that happens, the linux code
-> > confusingly treats 0xffffffff as a valid IRQ number and panics at some
-> > point.
-> >
-> > A fix was recently merged in skiboot:
-> >
-> > e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
-> >
-> > but we need a workaround anyway to support older skiboots already
-> > on the field.
->   ^
->   in
->  
-> >
-> > Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
-> > returned upon resource exhaustion.
-> 
-> This should go to stable, any idea what versions it should go back to?
-> Probably whenever the xive code was introduced?
-> 
+It looks like this kind of policy interacts with kernel debug options =
+like KASAN (which is going to slow the system down
+anyway) could introduce tricky issues due to different timings on a =
+debug kernel.
 
-Yes I guess so. This would mean v4.12. I'll add the appropriate stable
-tag before re-posting, and address all the other remarks of course.
+> +	 */
+> +	if (!vma_shareable(vma, addr) ||
+> +	   (atomic_read(&timeout_cnt) >=3D PMD_SHARE_DISABLE_THRESHOLD))
+> +		goto out_no_share;
+> +
+> +	if (!i_mmap_timedlock_write(mapping, ms_to_ktime(10))) {
+> +		if (atomic_inc_return(&timeout_cnt) =3D=3D
+> +		    PMD_SHARE_DISABLE_THRESHOLD)
+> +			pr_info("Hugetlbfs PMD sharing disabled because =
+of timeouts!\n");
+> +		goto out_no_share;
+> +	}
+>=20
+> -	i_mmap_lock_write(mapping);
+> 	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
+> 		if (svma =3D=3D vma)
+> 			continue;
+> @@ -4806,6 +4821,9 @@ pte_t *huge_pmd_share(struct mm_struct *mm, =
+unsigned long addr, pud_t *pud)
+> 	pte =3D (pte_t *)pmd_alloc(mm, pud, addr);
+> 	i_mmap_unlock_write(mapping);
+> 	return pte;
+> +
+> +out_no_share:
+> +	return (pte_t *)pmd_alloc(mm, pud, addr);
+> }
+>=20
+> /*
+> --=20
+> 2.18.1
+>=20
+>=20
 
-> > Signed-off-by: Greg Kurz <groug@kaod.org>
-> > ---
-> >  arch/powerpc/sysdev/xive/native.c |   13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-> > index 37987c815913..c35583f84f9f 100644
-> > --- a/arch/powerpc/sysdev/xive/native.c
-> > +++ b/arch/powerpc/sysdev/xive/native.c
-> > @@ -231,6 +231,15 @@ static bool xive_native_match(struct device_node *node)
-> >  	return of_device_is_compatible(node, "ibm,opal-xive-vc");
-> >  }
-> >  
-> > +static int64_t opal_xive_allocate_irq_fixup(uint32_t chip_id)
->           ^                                    ^
->           Can you use s64 here and u32 here ....
-> 
-> Instead of calling this opal_xive_allocate_irq_fixup() and relying on
-> all callers to call the fixup, can we rename the opal wrapper and leave
-> this function's name unchanged, eg:
-> 
-> -OPAL_CALL(opal_xive_allocate_irq,              OPAL_XIVE_ALLOCATE_IRQ);
-> +OPAL_CALL(opal_xive_allocate_irq_raw,          OPAL_XIVE_ALLOCATE_IRQ);
-> 
-> 
-> > +{
-> > +	s64 irq = opal_xive_allocate_irq(chip_id);
-> > +
-> > +#define XIVE_ALLOC_NO_SPACE	0xffffffff /* No possible space */
-> > +	return
-> > +		irq == XIVE_ALLOC_NO_SPACE ? OPAL_RESOURCE : irq;
-> > +}
-> 
-> I don't really like the #define and the weird indenting and so on, can
-> we instead do it like:
-> 
-> 	/*
->          * Old versions of skiboot can incorrectly return 0xffffffff to
->          * indicate no space, fix it up here.
->          */
-> 	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
-> 
-> cheers
