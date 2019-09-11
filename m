@@ -2,158 +2,186 @@ Return-Path: <SRS0=Kqgt=XG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623A4ECDE27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F75ECDE27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DAD21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C5B21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Sep 2019 06:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568184375;
-	bh=qIBVFBd3Uzn1ZDrcBL8VAS5pV0/6Y6gy5xboCpJ+3/g=;
+	s=default; t=1568184570;
+	bh=qxRJLtexTYWHXUMGy3c3HCC+Hc5nikzHFmYAbPW2rkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JswTR1zHHKF7XPMIsuSMrm0UHS8fuOlxH89b9AnKKQQhzFvf66eUAFOotHO2qT5Ze
-	 LM7EHTI9L2nVnsjWhPcyj2o62lqsI5zVwzZUqWQk+Gsb3DeoyEQXZZz4JHzmGOsSts
-	 bBtaK1m4oDUhyEUepqeWo8yegCiguYdRqSiOvvo4=
+	b=LQAfdWeNRwZfh4zeJA9ulu714bNpaHguRZI7LdcdSM+P1S3Yf9pxZMLL2UQkYKdtT
+	 E4gmITHPk6lfV7XxpRyGKAn/yrPlmdzVz92Nl2MUJTQfE8hCEbRVpkIIYyMMIxs2Q6
+	 RqM8ZWA413MsO3ALHfGEoj5yrrhvYGVGmGyoc/J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfIKGqO (ORCPT
+        id S1726863AbfIKGt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 02:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfIKGqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 02:46:14 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C39E21928;
-        Wed, 11 Sep 2019 06:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568184372;
-        bh=qIBVFBd3Uzn1ZDrcBL8VAS5pV0/6Y6gy5xboCpJ+3/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y714A/OZ45VZt+Bk1N9sfI0EdgWcR7HUGZ9LgvsRB4mLhZ0T6qhLi2kX+E7Til6gF
-         pq2q/RPs2GxKEJXiXnSRX6X8xzZNNtZDW79t9kbutbowD1zlW70J8WhOFQinZBckzb
-         S3BXq+PGPVQZkJQ3slRkMVX+7x18y6zvP/QslzsI=
-Date:   Wed, 11 Sep 2019 14:45:58 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Fancy Fang <chen.fang@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        LnxRevLi <LnxRevLi@nxp.com>, Jana Build <jana.build@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] clk: imx7ulp: remove IMX7ULP_CLK_MIPI_PLL clock
-Message-ID: <20190911064556.GD17142@dragon>
-References: <20190823003600.8317-1-chen.fang@nxp.com>
- <20190823003600.8317-2-chen.fang@nxp.com>
+        Wed, 11 Sep 2019 02:49:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42558 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726118AbfIKGt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 02:49:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 94BC5B6FE;
+        Wed, 11 Sep 2019 06:49:27 +0000 (UTC)
+Date:   Wed, 11 Sep 2019 08:49:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190911064926.GJ4023@dhcp22.suse.cz>
+References: <20190909095347.GB6314@kroah.com>
+ <9598b359-ab96-7d61-687a-917bee7a5cd9@huawei.com>
+ <20190910093114.GA19821@kroah.com>
+ <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
+ <20190910110451.GP2063@dhcp22.suse.cz>
+ <20190910111252.GA8970@kroah.com>
+ <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
+ <20190910125339.GZ2063@dhcp22.suse.cz>
+ <20190911053334.GH4023@dhcp22.suse.cz>
+ <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190823003600.8317-2-chen.fang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 12:37:35AM +0000, Fancy Fang wrote:
-> The mipi pll clock comes from the MIPI PHY PLL output, so
-> it should not be a fixed clock.
+On Wed 11-09-19 14:15:51, Yunsheng Lin wrote:
+> On 2019/9/11 13:33, Michal Hocko wrote:
+> > On Tue 10-09-19 14:53:39, Michal Hocko wrote:
+> >> On Tue 10-09-19 20:47:40, Yunsheng Lin wrote:
+> >>> On 2019/9/10 19:12, Greg KH wrote:
+> >>>> On Tue, Sep 10, 2019 at 01:04:51PM +0200, Michal Hocko wrote:
+> >>>>> On Tue 10-09-19 18:58:05, Yunsheng Lin wrote:
+> >>>>>> On 2019/9/10 17:31, Greg KH wrote:
+> >>>>>>> On Tue, Sep 10, 2019 at 02:43:32PM +0800, Yunsheng Lin wrote:
+> >>>>>>>> On 2019/9/9 17:53, Greg KH wrote:
+> >>>>>>>>> On Mon, Sep 09, 2019 at 02:04:23PM +0800, Yunsheng Lin wrote:
+> >>>>>>>>>> Currently a device does not belong to any of the numa nodes
+> >>>>>>>>>> (dev->numa_node is NUMA_NO_NODE) when the node id is neither
+> >>>>>>>>>> specified by fw nor by virtual device layer and the device has
+> >>>>>>>>>> no parent device.
+> >>>>>>>>>
+> >>>>>>>>> Is this really a problem?
+> >>>>>>>>
+> >>>>>>>> Not really.
+> >>>>>>>> Someone need to guess the node id when it is not specified, right?
+> >>>>>>>
+> >>>>>>> No, why?  Guessing guarantees you will get it wrong on some systems.
+> >>>>>>>
+> >>>>>>> Are you seeing real problems because the id is not being set?  What
+> >>>>>>> problem is this fixing that you can actually observe?
+> >>>>>>
+> >>>>>> When passing the return value of dev_to_node() to cpumask_of_node()
+> >>>>>> without checking the node id if the node id is not valid, there is
+> >>>>>> global-out-of-bounds detected by KASAN as below:
+> >>>>>
+> >>>>> OK, I seem to remember this being brought up already. And now when I
+> >>>>> think about it, we really want to make cpumask_of_node NUMA_NO_NODE
+> >>>>> aware. That means using the same trick the allocator does for this
+> >>>>> special case.
+> >>>>
+> >>>> That seems reasonable to me, and much more "obvious" as to what is going
+> >>>> on.
+> >>>>
+> >>>
+> >>> Ok, thanks for the suggestion.
+> >>>
+> >>> For arm64 and x86, there are two versions of cpumask_of_node().
+> >>>
+> >>> when CONFIG_DEBUG_PER_CPU_MAPS is defined, the cpumask_of_node()
+> >>>    in arch/x86/mm/numa.c is used, which does partial node id checking:
+> >>>
+> >>> const struct cpumask *cpumask_of_node(int node)
+> >>> {
+> >>>         if (node >= nr_node_ids) {
+> >>>                 printk(KERN_WARNING
+> >>>                         "cpumask_of_node(%d): node > nr_node_ids(%u)\n",
+> >>>                         node, nr_node_ids);
+> >>>                 dump_stack();
+> >>>                 return cpu_none_mask;
+> >>>         }
+> >>>         if (node_to_cpumask_map[node] == NULL) {
+> >>>                 printk(KERN_WARNING
+> >>>                         "cpumask_of_node(%d): no node_to_cpumask_map!\n",
+> >>>                         node);
+> >>>                 dump_stack();
+> >>>                 return cpu_online_mask;
+> >>>         }
+> >>>         return node_to_cpumask_map[node];
+> >>> }
+> >>>
+> >>> when CONFIG_DEBUG_PER_CPU_MAPS is undefined, the cpumask_of_node()
+> >>>    in arch/x86/include/asm/topology.h is used:
+> >>>
+> >>> static inline const struct cpumask *cpumask_of_node(int node)
+> >>> {
+> >>>         return node_to_cpumask_map[node];
+> >>> }
+> >>
+> >> I would simply go with. There shouldn't be any need for heavy weight
+> >> checks that CONFIG_DEBUG_PER_CPU_MAPS has.
+> >>
+> >> static inline const struct cpumask *cpumask_of_node(int node)
+> >> {
+> >> 	/* A nice comment goes here */
+> >> 	if (node == NUMA_NO_NODE)
 > 
-> MIPI PHY PLL is in the MIPI DSI space, and it is used as
-> the bit clock for transferring the pixel data out and its
-> output clock is configured according to the display mode.
-> 
-> So it should be used only for MIPI DSI and not be exported
-> out for other usages.
-> 
-> Signed-off-by: Fancy Fang <chen.fang@nxp.com>
-> ---
->  .../devicetree/bindings/clock/imx7ulp-clock.txt   |  1 -
->  drivers/clk/imx/clk-imx7ulp.c                     |  3 +--
->  include/dt-bindings/clock/imx7ulp-clock.h         | 15 +++++++--------
->  3 files changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> index a4f8cd478f92..93d89adb7afe 100644
-> --- a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> @@ -82,7 +82,6 @@ pcc2: pcc2@403f0000 {
->  		 <&scg1 IMX7ULP_CLK_APLL_PFD0>,
->  		 <&scg1 IMX7ULP_CLK_UPLL>,
->  		 <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>,
-> -		 <&scg1 IMX7ULP_CLK_MIPI_PLL>,
->  		 <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>,
->  		 <&scg1 IMX7ULP_CLK_ROSC>,
->  		 <&scg1 IMX7ULP_CLK_SPLL_BUS_CLK>;
-> diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
-> index 2022d9bead91..459b120b71d5 100644
-> --- a/drivers/clk/imx/clk-imx7ulp.c
-> +++ b/drivers/clk/imx/clk-imx7ulp.c
-> @@ -28,7 +28,7 @@ static const char * const scs_sels[]		= { "dummy", "sosc", "sirc", "firc", "dumm
->  static const char * const ddr_sels[]		= { "apll_pfd_sel", "upll", };
->  static const char * const nic_sels[]		= { "firc", "ddr_clk", };
->  static const char * const periph_plat_sels[]	= { "dummy", "nic1_bus_clk", "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
-> -static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "mpll", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
-> +static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "dummy", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
->  static const char * const arm_sels[]		= { "divcore", "dummy", "dummy", "hsrun_divcore", };
->  
->  /* used by sosc/sirc/firc/ddr/spll/apll dividers */
-> @@ -75,7 +75,6 @@ static void __init imx7ulp_clk_scg1_init(struct device_node *np)
->  	clks[IMX7ULP_CLK_SOSC]		= imx_obtain_fixed_clk_hw(np, "sosc");
->  	clks[IMX7ULP_CLK_SIRC]		= imx_obtain_fixed_clk_hw(np, "sirc");
->  	clks[IMX7ULP_CLK_FIRC]		= imx_obtain_fixed_clk_hw(np, "firc");
-> -	clks[IMX7ULP_CLK_MIPI_PLL]	= imx_obtain_fixed_clk_hw(np, "mpll");
->  	clks[IMX7ULP_CLK_UPLL]		= imx_obtain_fixed_clk_hw(np, "upll");
->  
->  	/* SCG1 */
-> diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-bindings/clock/imx7ulp-clock.h
-> index 6f66f9005c81..f8d34fb4378f 100644
-> --- a/include/dt-bindings/clock/imx7ulp-clock.h
-> +++ b/include/dt-bindings/clock/imx7ulp-clock.h
-> @@ -49,15 +49,14 @@
->  #define IMX7ULP_CLK_NIC1_DIV		36
->  #define IMX7ULP_CLK_NIC1_BUS_DIV	37
->  #define IMX7ULP_CLK_NIC1_EXT_DIV	38
-> -#define IMX7ULP_CLK_MIPI_PLL		39
-> -#define IMX7ULP_CLK_SIRC		40
-> -#define IMX7ULP_CLK_SOSC_BUS_CLK	41
-> -#define IMX7ULP_CLK_FIRC_BUS_CLK	42
-> -#define IMX7ULP_CLK_SPLL_BUS_CLK	43
-> -#define IMX7ULP_CLK_HSRUN_SYS_SEL	44
-> -#define IMX7ULP_CLK_HSRUN_CORE_DIV	45
-> +#define IMX7ULP_CLK_SIRC		39
-> +#define IMX7ULP_CLK_SOSC_BUS_CLK	40
-> +#define IMX7ULP_CLK_FIRC_BUS_CLK	41
-> +#define IMX7ULP_CLK_SPLL_BUS_CLK	42
-> +#define IMX7ULP_CLK_HSRUN_SYS_SEL	43
-> +#define IMX7ULP_CLK_HSRUN_CORE_DIV	44
+> How about "(unsigned int)node >= nr_node_ids", this is suggested
+> by Peter, it checks the case where the node id set by fw is bigger
+> or equal than nr_node_ids, and still handle the < 0 case, which
+> includes NUMA_NO_NODE.
 
-No.  These clock IDs need to be stable, as they are referred by DT.
-If you want to remove an ID, just remove it, keep others unchanged.
+Isn't that a plain bug? Is something like that really happening?
 
-Shawn
-
->  
-> -#define IMX7ULP_CLK_SCG1_END		46
-> +#define IMX7ULP_CLK_SCG1_END		45
->  
->  /* PCC2 */
->  #define IMX7ULP_CLK_DMA1		0
-> -- 
-> 2.17.1
+> Maybe define a macro like below to do that in order to do
+> the node checking consistently through kernel:
 > 
+> #define numa_node_valid(node)	((unsigned int)(node) < nr_node_ids)
+> 
+> 
+> >> 		return node_to_cpumask_map[numa_mem_id()];
+> >>         return node_to_cpumask_map[node];
+> >> }
+> > 
+> > Sleeping over this and thinking more about the actual semantic the above
+> > is wrong. We cannot really copy the page allocator logic. Why? Simply
+> > because the page allocator doesn't enforce the near node affinity. It
+> > just picks it up as a preferred node but then it is free to fallback to
+> > any other numa node. This is not the case here and node_to_cpumask_map will
+> > only restrict to the particular node's cpus which would have really non
+> > deterministic behavior depending on where the code is executed. So in
+> > fact we really want to return cpu_online_mask for NUMA_NO_NODE.
+> 
+> From below, if the __GFP_THISNODE is set, the fallback is not performed.
+
+__GFP_THISNODE is a very specific situation when the caller knows which
+node should be used for the allocation. NUMA_NO_NODE && __GFP_THISNODE
+is a bug and I would dare to call it an undefined behavior.
+
+> For node_to_cpumask_map() case, maybe we can return the cpumask that is
+> on the node of cpu_to_node(raw_smp_processor_id()) for NUMA_NO_NODE,
+> because the current cpu does belong to a node, and the node does have at
+> least one cpu, which is the cpu is calling the node_to_cpumask_map().
+> 
+> Make any sense?
+
+No. Please read the above paragraph again. NUMA_NO_NODE really means no
+node affinity. So all cpus should be usable. Making any assumptions
+about a local context is just wrong.
+-- 
+Michal Hocko
+SUSE Labs
