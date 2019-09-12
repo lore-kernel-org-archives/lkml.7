@@ -2,104 +2,93 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F43C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE99C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AABC2081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:56:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rbhXD03T"
+	by mail.kernel.org (Postfix) with ESMTP id 0B85E20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfILL4r (ORCPT
+        id S1731470AbfILL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:56:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:49461 "EHLO ozlabs.org"
+        Thu, 12 Sep 2019 07:58:50 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:43287 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731283AbfILL4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:56:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46TcgX5mw6z9s00;
-        Thu, 12 Sep 2019 21:56:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568289404;
-        bh=/N+GHb6Q4DSPJrXliJOICdcpLmYvTsamZ3rmrW6spnM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rbhXD03TQsGooid4wLhTUDWO8BmwB61GgK6QV47Gleif8ZA1Ksd/zqo744wIPwn7T
-         qVfbJe9T7sttEx2975c6u00CGZzr2bCz+WNeBNvheQwQ7bwv0pM7jXkm3GsSbn2Sry
-         y9Ip/LV0UPI0Youx2TgIZpB6xC4pfOC1V8x0m5hAlS7usCFLaLlq9NrQgAKp8PXXIp
-         TnlJ9daSM/2Ueetj7N1dBm3cxPrT2pRU5epPXJaB1uwphRckKU7K0nOuIihxu53JS7
-         l2zBBaYD1qDT1k7zfJgGdm4p2+hXRkQGn4s5ZvgQgAhCIr7BZbFcGQn85pfn01aXlZ
-         q1yHvuZ35JU6A==
-Date:   Thu, 12 Sep 2019 21:55:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: linux-next: manual merge of the arm64 tree with the dma-mapping
- tree
-Message-ID: <20190912215558.473206de@canb.auug.org.au>
+        id S1730386AbfILL6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 07:58:49 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8CBwOk1011171;
+        Thu, 12 Sep 2019 13:58:24 +0200
+Date:   Thu, 12 Sep 2019 13:58:24 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190912115824.GB11016@1wt.eu>
+References: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc>
+ <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ga3xg0O0/4COl5KooqPVUmq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ga3xg0O0/4COl5KooqPVUmq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Sep 12, 2019 at 12:34:45PM +0100, Linus Torvalds wrote:
+> An alternative might be to make getrandom() just return an error
+> instead of waiting. Sure, fill the buffer with "as random as we can"
+> stuff, but then return -EINVAL because you called us too early.
 
-Hi all,
+That's probably one of the most sensible approaches. I must say I feel
+quite annoyed by what randomness has become due to the misuse of poor
+random sources by security components suddenly forcing all these sources
+to become strong and having to become unavailable for everything which
+doesn't need strong random. And most of the time the stuff which doesn't
+need a strong random happens during early boot. It can range from issuing
+a MAC address before setting a link up (when you have no chance to get
+entropy) to providing a UUID for a file system, or use of ephemeral
+randoms for session keys for the first access to a device for its
+configuration. A number of these often end up with a system not
+booting, unable to self-configure itself, or not being available when
+expected.
 
-Today's linux-next merge of the arm64 tree got a conflict in:
+It's too late now to change existing applications, but probably that
+doing something like above would at least allow applications to
+implement a fall back with the choice of "hey Mr user, there's not
+enough entropy yet to propose you a secure password, so please type
+20 random chars on the keyboard so that I can complete it", or
+conversely "the syscall failed but I know I can still use the
+buffer's contents for a MAC address".
 
-  arch/arm64/include/asm/dma-mapping.h
+But having to make the syscall to wait longer is never going to serve
+anyone. Two minutes is an eternity for certain devices, and some from
+the security world will consider that the syscall waited long enough
+to produce a good security so it's OK to use it as a reliable source.
+Failing immediately with whatever could be obtained is by far the
+best solution in my opinion as the application has to take the
+responsibility for using that buffer's contents.
 
-between commit:
-
-  5489c8e0cf03 ("arm64: use asm-generic/dma-mapping.h")
-
-from the dma-mapping tree and commit:
-
-  b907b80d7ae7 ("arm64: remove pointless __KERNEL__ guards")
-
-from the arm64 tree.
-
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Ga3xg0O0/4COl5KooqPVUmq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16Mk4ACgkQAVBC80lX
-0Gx5OQf5AWmAI7PcuY5qrjVrmxOGfiAYSFFQviVgTYqxbX8Yuu63JNeEmjP4YVwy
-pdCT2f531PKRdnfR9J2F0jselppcHQf4dhMaMGvd+MKa4eqdsDpDLVrlAheAm+d/
-1rxjDHfWtr2R2zryvkiaqezpFMBuwf5VmQG2vRFsFB1f41VxPOllIHX9/A6qEqVA
-+Ql7V5EQNnATNlW8+yY1txHRWDTseylgHJAxy+Uq2cYM9r9H1md3/eiRgGphuECO
-YbezVvHJs+9+hpME3ICs5gx8Pfo8To0a4n5/GnXiNWI1iMOHXOC7USr9XJ81sdaP
-ODFwSLJuIipCg2tsTaW89pTH6WhIww==
-=zu/j
------END PGP SIGNATURE-----
-
---Sig_/Ga3xg0O0/4COl5KooqPVUmq--
+Willy
+-- still dreaming about the day boot loaders will collect entropy from
+the DDR training phase and pass it to the kernel.
