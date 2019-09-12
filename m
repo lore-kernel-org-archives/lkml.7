@@ -2,84 +2,75 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D27DC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D57DC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA6420CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568293910;
-	bh=1BVRp6Jdhq2LIzfXH91FkdH1Pyx1eRvvXJVHjQ5DMrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bd9fAbA+wpjM3Y607lUFHEMToCjMk+NT/hUXDX8mQhonsFxVKTg0twV55sYpNBG+6
-	 OyTPfdHj3sU/QlffytK6C0bKKGtt2v6zwgaSRfHRvndgoD7AIqB73gP7q4Rjc2a2jG
-	 tNplu73uxQbX6/zYDl2BFIS/huepn2YhdFVIPR8E=
+	by mail.kernel.org (Postfix) with ESMTP id E4E2C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732058AbfILNLt (ORCPT
+        id S1732018AbfILNOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:11:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        Thu, 12 Sep 2019 09:14:00 -0400
+Received: from fieldses.org ([173.255.197.46]:34772 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731283AbfILNLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:11:48 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC3C2084D;
-        Thu, 12 Sep 2019 13:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568293908;
-        bh=1BVRp6Jdhq2LIzfXH91FkdH1Pyx1eRvvXJVHjQ5DMrw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pwR5uMriy0MozL8gyPhsCQ6j9MrbR7tKEdL3o9VMuwaAacTIvttZSreG0nYE1A/7m
-         sJnTtIoSHNhRMxBHiYtv9f7iKLVSGDrt9iOTH2xscPYScJmgOMuwYOebUu4fDpOE6A
-         rpbKjPwmaGwU6DBvfsFwrXM/5Fwfr20h6y3KNRC8=
-Date:   Thu, 12 Sep 2019 14:11:44 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: fix function types in COND_SYSCALL
-Message-ID: <20190912131143.u3rncvqdgx4z3ckz@willie-the-truck>
-References: <20190910224044.100388-1-samitolvanen@google.com>
- <20190911151545.GD3360@blommer>
+        id S1731283AbfILNN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:13:59 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4E3DB1C8C; Thu, 12 Sep 2019 09:13:59 -0400 (EDT)
+Date:   Thu, 12 Sep 2019 09:13:59 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>, chuck.lever@oracle.com,
+        tibbs@math.uh.edu, linux@stwm.de, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, km@cm4all.com
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+Message-ID: <20190912131359.GB31879@fieldses.org>
+References: <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
+ <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
+ <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
+ <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
+ <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
+ <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
+ <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
+ <EC2B51FB-8C22-4513-B59F-0F0741F694EB@redhat.com>
+ <c8bc4f95e7a097b01e5fff9ce5324e32ee9d8821.camel@hammerspace.com>
+ <57185A91-0AC8-4805-B6CE-67D629F814C2@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911151545.GD3360@blommer>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <57185A91-0AC8-4805-B6CE-67D629F814C2@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 04:15:46PM +0100, Mark Rutland wrote:
-> On Tue, Sep 10, 2019 at 03:40:44PM -0700, Sami Tolvanen wrote:
-> > Define a weak function in COND_SYSCALL instead of a weak alias to
-> > sys_ni_syscall, which has an incompatible type. This fixes indirect
-> > call mismatches with Control-Flow Integrity (CFI) checking.
-> > 
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Thu, Sep 12, 2019 at 09:08:51AM -0400, Benjamin Coddington wrote:
 > 
-> This looks correct to me, builds fine, and I asume has been tested, so FWIW:
+> On 12 Sep 2019, at 8:53, Trond Myklebust wrote:
+> > Let's please just scrap this function and rewrite it as a generic
+> > function for reading the MIC. It clearly is not a generic function for
+> > reading arbitrary netobjs, and modifications like the above just make
+> > the misnomer painfully obvious.
+> >
+> > Let's rewrite it as xdr_buf_read_mic() so that we can simplify it where
+> > possible.
 > 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> In looking at this, I came to the conclusion that we can drop the ifdeffery
-> around our SYSCALL_DEFINE0(), COND_SYSCALL(), and SYS_NI(), which I evidently
-> cargo-culted from x86 (where the ifdeffery is actually necessary).
+> Ok.  I want to assume the mic will not land in the head, but I am not sure..
+> Is there a scenario where the mic might land in the head, or is that bit of
+> the current function left over from other uses?
 
-Curious: why is it required on x86?
+Any reply that doesn't have page data?
 
-> I can send a follow up for that.
+A reply that ends up shorter than expected due to failure of an early op
+in the compound?
 
-Yes, please.
+(Unless I'm missing something.  I haven't looked at this code in a
+while.  Though it was problem me that wrote it originally--apologies for
+that....)
 
-Will
+--b.
