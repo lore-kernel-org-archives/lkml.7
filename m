@@ -7,172 +7,198 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD629C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E25C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9F5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED7B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfILJER (ORCPT
+        id S1730605AbfILJEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:04:17 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:49104 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730175AbfILJEP (ORCPT
+        Thu, 12 Sep 2019 05:04:22 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:17493 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730571AbfILJEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:04:15 -0400
-X-UUID: 0abdc5f495c342769c8ae9b057f1da33-20190912
-X-UUID: 0abdc5f495c342769c8ae9b057f1da33-20190912
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Thu, 12 Sep 2019 05:04:20 -0400
+X-UUID: 8c39693336454b4b99f520b792409639-20190912
+X-UUID: 8c39693336454b4b99f520b792409639-20190912
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2122001776; Thu, 12 Sep 2019 17:04:09 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Sep
- 2019 17:04:07 +0800
+        with ESMTP id 541960630; Thu, 12 Sep 2019 17:04:13 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Sep
+ 2019 17:04:09 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Thu, 12 Sep 2019 17:04:06 +0800
+ 15.0.1395.4 via Frontend Transport; Thu, 12 Sep 2019 17:04:09 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
+        Daniel Vetter <daniel@ffwll.ch>,
         <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
 CC:     <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
         <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
         <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, "Jitao Shi" <jitao.shi@mediatek.com>
-Subject: [PATCH 1/3] drm/panel: panel-innolux: Allow 2 reset pins for panel
-Date:   Thu, 12 Sep 2019 17:04:02 +0800
-Message-ID: <20190912090404.89822-2-jitao.shi@mediatek.com>
+        <stonea168@163.com>, Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH 3/3] drm/panel: panel-innolux: Add support for P097PFZ behind SSD2858
+Date:   Thu, 12 Sep 2019 17:04:04 +0800
+Message-ID: <20190912090404.89822-4-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190912090404.89822-1-jitao.shi@mediatek.com>
 References: <20190912090404.89822-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24906.005
-X-TM-AS-Result: No-3.482500-8.000000-10
-X-TMASE-MatchedRID: ddD75cirPhHnC5LyYJwD3+w8wbnnSw8bE1YUt4FjGjGOUV82NDH4AkAc
-        6DyoS2rIR3nAM7y+sxETtSzome9IZ7CiYRGPyK4M8pRHzcG+oi3YuVu0X/rOkEjINjnv2/BMaeB
-        VQN/hzxi+9mDuGGWszp+Jh3xpp8VmhHuyNMgLmzZuh7qwx+D6T215iJF8eE6rEcWQUCNHW2cqEb
-        nPD99jLOLzNWBegCW2xl8lw85EaVQLbigRnpKlKZx+7GyJjhAUHVoP4CnZRLgKlej7lZNBBZnY9
-        iocmdMNe2YXCayCdjwmnmSLDgNB1oXzGOuEat/KMrIruREPgvSMLZHCmHrIk/tVq5MU5p/aP3dL
-        jnWr1vEPbJpLSCH/cqQVCHnxhZ/op8zfhMu4/LNfCOKFKuVYGg==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--3.482500-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24906.005
-X-TM-SNTS-SMTP: E4F648F69210E4E188561AB3D0B1E5421CA2CF56404EA44D23DA6D017FC8E07B2000:8
+X-TM-SNTS-SMTP: 8277112D4DE284E7189B77DFE9C77F681CBCBFC38380D94183C83199343503D02000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is useful when there is a bridge between the SoC and the
-panel.
+Add driver to setup P097PFZ behing SSD2858 (4 to 8 lanes bridge).
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/gpu/drm/panel/panel-innolux-p079zca.c | 39 ++++++++++++-------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/panel/panel-innolux-p079zca.c | 103 +++++++++++++++++-
+ 1 file changed, 102 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-index d92d1c98878c..8db404fb5eeb 100644
+index 8db404fb5eeb..a658ccba30a0 100644
 --- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
 +++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-@@ -54,7 +54,7 @@ struct innolux_panel {
+@@ -138,7 +138,7 @@ static int innolux_panel_prepare(struct drm_panel *panel)
+ 		if (!innolux->enable_gpio[i])
+ 			break;
  
- 	struct backlight_device *backlight;
- 	struct regulator_bulk_data *supplies;
--	struct gpio_desc *enable_gpio;
-+	struct gpio_desc *enable_gpio[2];
- 
- 	bool prepared;
- 	bool enabled;
-@@ -82,7 +82,7 @@ static int innolux_panel_disable(struct drm_panel *panel)
- static int innolux_panel_unprepare(struct drm_panel *panel)
- {
- 	struct innolux_panel *innolux = to_innolux_panel(panel);
--	int err;
-+	int err, i;
- 
- 	if (!innolux->prepared)
- 		return 0;
-@@ -102,7 +102,8 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
- 	if (innolux->desc->sleep_mode_delay)
- 		msleep(innolux->desc->sleep_mode_delay);
- 
--	gpiod_set_value_cansleep(innolux->enable_gpio, 0);
-+	for (i = 0; i < ARRAY_SIZE(innolux->enable_gpio); i++)
-+		gpiod_set_value_cansleep(innolux->enable_gpio[i], 0);
- 
- 	if (innolux->desc->power_down_delay)
- 		msleep(innolux->desc->power_down_delay);
-@@ -120,22 +121,27 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
- static int innolux_panel_prepare(struct drm_panel *panel)
- {
- 	struct innolux_panel *innolux = to_innolux_panel(panel);
--	int err;
-+	int err, i;
- 
- 	if (innolux->prepared)
- 		return 0;
- 
--	gpiod_set_value_cansleep(innolux->enable_gpio, 0);
-+	for (i = 0; i < ARRAY_SIZE(innolux->enable_gpio); i++)
-+		gpiod_set_value_cansleep(innolux->enable_gpio[i], 0);
- 
- 	err = regulator_bulk_enable(innolux->desc->num_supplies,
- 				    innolux->supplies);
- 	if (err < 0)
- 		return err;
- 
--	/* p079zca: t2 (20ms), p097pfg: t4 (15ms) */
--	usleep_range(20000, 21000);
-+	for (i = 0; i < ARRAY_SIZE(innolux->enable_gpio); i++) {
-+		if (!innolux->enable_gpio[i])
-+			break;
- 
--	gpiod_set_value_cansleep(innolux->enable_gpio, 1);
-+		/* p079zca: t2 (20ms), p097pfg: t4 (15ms) */
-+		usleep_range(20000, 21000);
-+		gpiod_set_value_cansleep(innolux->enable_gpio[i], 1);
-+	}
- 
- 	/* p079zca: t4, p097pfg: t5 */
- 	usleep_range(20000, 21000);
-@@ -195,7 +201,8 @@ static int innolux_panel_prepare(struct drm_panel *panel)
- 	return 0;
- 
- poweroff:
--	gpiod_set_value_cansleep(innolux->enable_gpio, 0);
-+	for (i = 0; i < ARRAY_SIZE(innolux->enable_gpio); i++)
-+		gpiod_set_value_cansleep(innolux->enable_gpio[i], 0);
- 	regulator_bulk_disable(innolux->desc->num_supplies, innolux->supplies);
- 
- 	return err;
-@@ -475,12 +482,14 @@ static int innolux_panel_add(struct mipi_dsi_device *dsi,
- 	if (err < 0)
- 		return err;
- 
--	innolux->enable_gpio = devm_gpiod_get_optional(dev, "enable",
--						       GPIOD_OUT_HIGH);
--	if (IS_ERR(innolux->enable_gpio)) {
--		err = PTR_ERR(innolux->enable_gpio);
--		dev_dbg(dev, "failed to get enable gpio: %d\n", err);
--		innolux->enable_gpio = NULL;
-+	for (i = 0; i < ARRAY_SIZE(innolux->enable_gpio); i++) {
-+		innolux->enable_gpio[i] = devm_gpiod_get_index_optional(dev,
-+						"enable", i, GPIOD_OUT_HIGH);
-+		if (IS_ERR(innolux->enable_gpio[i])) {
-+			err = PTR_ERR(innolux->enable_gpio[i]);
-+			dev_err(dev, "failed to get enable gpio: %d\n", err);
-+			innolux->enable_gpio[i] = NULL;
-+		}
+-		/* p079zca: t2 (20ms), p097pfg: t4 (15ms) */
++		/* p079zca: t2 (20ms), p097pfg: t4 (15ms); ssd2858: 20ms */
+ 		usleep_range(20000, 21000);
+ 		gpiod_set_value_cansleep(innolux->enable_gpio[i], 1);
  	}
+@@ -162,6 +162,18 @@ static int innolux_panel_prepare(struct drm_panel *panel)
+ 				goto poweroff;
+ 			}
  
- 	innolux->backlight = devm_of_find_backlight(dev);
++			/*
++			 * If the command list contains exit sleep mode or set
++			 * display on, wait the appropriate time (needed for
++			 * displays behind a bridge).
++			 */
++			/* T6: 120ms - 1000ms*/
++			if (cmd->data[0] == MIPI_DCS_EXIT_SLEEP_MODE)
++				msleep(120);
++			 /* T7: 5ms */
++			if (cmd->data[0] == MIPI_DCS_SET_DISPLAY_ON)
++				usleep_range(5000, 6000);
++
+ 			/*
+ 			 * Included by random guessing, because without this
+ 			 * (or at least, some delay), the panel sometimes
+@@ -410,6 +422,92 @@ static const struct panel_desc innolux_p097pfg_panel_desc = {
+ 	.sleep_mode_delay = 100, /* T15 */
+ };
+ 
++static const char * const innolux_p097pfg_ssd2858_supply_names[] = {
++	"avdd",
++	"avee",
++	"pp1800",
++	"pp3300",
++	"pp1200-bridge",
++	"vddio-bridge",
++};
++
++static const struct drm_display_mode innolux_p097pfg_ssd2858_mode = {
++	.clock = 211660,
++	.hdisplay = 1536,
++	.hsync_start = 1536 + 140,
++	.hsync_end = 1536 + 140 + 10,
++	.htotal = 1536 + 140 + 10 + 10,
++	.vdisplay = 2048,
++	.vsync_start = 2048 + 20,
++	.vsync_end = 2048 + 20 + 2,
++	.vtotal = 2048 + 20 + 2 + 10,
++	.vrefresh = 60,
++};
++
++static const struct panel_init_cmd innolux_p097pfg_ssd2858_init_cmds[] = {
++	/* SSD2858 config */
++	_INIT_CMD(0xff, 0x00),
++	/* LOCKCNT=0x1f4, MRX=0, POSTDIV=1 (/2), MULT=0x49
++	 * 27 Mhz => 985.5 Mhz
++	 */
++	_INIT_CMD(0x00, 0x08, 0x01, 0xf4, 0x01, 0x49),
++	/* MTXDIV=1, SYSDIV=3 (=> 4) */
++	_INIT_CMD(0x00, 0x0c, 0x00, 0x00, 0x00, 0x03),
++	/* MTXVPF=24bpp, MRXLS=4 lanes, MRXVB=bypass, MRXECC=1, MRXEOT=1
++	 * MRXEE=1
++	 */
++	_INIT_CMD(0x00, 0x14, 0x0c, 0x3d, 0x80, 0x0f),
++	_INIT_CMD(0x00, 0x20, 0x15, 0x92, 0x56, 0x7d),
++	_INIT_CMD(0x00, 0x24, 0x00, 0x00, 0x30, 0x00),
++
++	_INIT_CMD(0x10, 0x08, 0x01, 0x20, 0x08, 0x45),
++	_INIT_CMD(0x10, 0x1c, 0x00, 0x00, 0x00, 0x00),
++	_INIT_CMD(0x20, 0x0c, 0x00, 0x00, 0x00, 0x04),
++	/* Pixel clock 985.5 Mhz * 0x49/0x4b = 959 Mhz */
++	_INIT_CMD(0x20, 0x10, 0x00, 0x4b, 0x00, 0x49),
++	_INIT_CMD(0x20, 0xa0, 0x00, 0x00, 0x00, 0x00),
++	/* EOT=1, LPE = 0, LSOUT=4 lanes, LPD=25 */
++	_INIT_CMD(0x60, 0x08, 0x00, 0xd9, 0x00, 0x08),
++	_INIT_CMD(0x60, 0x14, 0x01, 0x00, 0x01, 0x06),
++	/* DSI0 enable (default: probably not needed) */
++	_INIT_CMD(0x60, 0x80, 0x00, 0x00, 0x00, 0x0f),
++	/* DSI1 enable */
++	_INIT_CMD(0x60, 0xa0, 0x00, 0x00, 0x00, 0x0f),
++
++	/* HSA=0x18, VSA=0x02, HBP=0x50, VBP=0x0c */
++	_INIT_CMD(0x60, 0x0c, 0x0c, 0x50, 0x02, 0x18),
++	/* VACT= 0x800 (2048), VFP= 0x14, HFP=0x50 */
++	_INIT_CMD(0x60, 0x10, 0x08, 0x00, 0x14, 0x50),
++	/* HACT=0x300 (768) */
++	_INIT_CMD(0x60, 0x84, 0x00, 0x00, 0x03, 0x00),
++	_INIT_CMD(0x60, 0xa4, 0x00, 0x00, 0x03, 0x00),
++
++	/* Take panel out of sleep. */
++	_INIT_CMD(0xff, 0x01),
++	_INIT_CMD(0x11),
++	_INIT_CMD(0x29),
++	_INIT_CMD(0xff, 0x00),
++
++	{},
++};
++
++static const struct panel_desc innolux_p097pfg_ssd2858_panel_desc = {
++	.mode = &innolux_p097pfg_ssd2858_mode,
++	.bpc = 8,
++	.size = {
++		.width = 147,
++		.height = 196,
++	},
++	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
++		 MIPI_DSI_MODE_LPM,
++	.format = MIPI_DSI_FMT_RGB888,
++	.init_cmds = innolux_p097pfg_ssd2858_init_cmds,
++	.lanes = 4,
++	.supply_names = innolux_p097pfg_ssd2858_supply_names,
++	.num_supplies = ARRAY_SIZE(innolux_p097pfg_ssd2858_supply_names),
++	.sleep_mode_delay = 100, /* T15 */
++};
++
+ static int innolux_panel_get_modes(struct drm_panel *panel)
+ {
+ 	struct innolux_panel *innolux = to_innolux_panel(panel);
+@@ -451,6 +549,9 @@ static const struct of_device_id innolux_of_match[] = {
+ 	{ .compatible = "innolux,p097pfg",
+ 	  .data = &innolux_p097pfg_panel_desc
+ 	},
++	{ .compatible = "innolux,p097pfg_ssd2858",
++	  .data = &innolux_p097pfg_ssd2858_panel_desc
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, innolux_of_match);
 -- 
 2.21.0
 
