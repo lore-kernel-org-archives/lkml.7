@@ -2,134 +2,336 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE62C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804A520830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC7520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2E++I2N"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="X9BwuCAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731515AbfILMCd (ORCPT
+        id S1731570AbfILMC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:02:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40534 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731106AbfILMCd (ORCPT
+        Thu, 12 Sep 2019 08:02:56 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46841 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfILMCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:02:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v38so23696488edm.7;
-        Thu, 12 Sep 2019 05:02:32 -0700 (PDT)
+        Thu, 12 Sep 2019 08:02:55 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 201so24127375qkd.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=U/0egg2l/8/sf6OVNLDHzc/+TeOVJmdKP2W9EOOrXuM=;
-        b=M2E++I2Ns2RrNNsY01QnhgBt0bkK9Ydxw1b0fze7A88rWXXpYBezAHPpV61/rVxlRw
-         R1O7RuqhD0Hng0BwD9q0eNUnmS7OVPEWg7huYIRveHh9mQqiy2E0TA8PrGizkKs5dsm0
-         PlXWRf03hbC0TK8xLq70xq0jm/qsjSf5DsRymVao9zyiQLf8gzHSGg8SOJTruCxLR/Tn
-         9MUGPhrNdR745VODf31HpM6HvoglvgLTgsaUnogpfECuZkmR+Z451gq5sZ/aZY9JGZCO
-         /zMBAdc+CiwjYwamTpYJAyjcE6/KB3a9l2Cg7EPxKODJt6TNJaFLfmkIs+99A+G6kz/c
-         2pXw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=NJ+V9WdH/Mr55CbE+4tCVIXroMyvqDzfmVNb8fYQdC4=;
+        b=X9BwuCAMyL0HkIMHQZTrYkcKYoxesQQBc03dGTAerff++yYqnueCFUG+9R5d+jXfsD
+         ILAnkSwukAjd9PMBWa9h1go0l+VstSm5Hci3nDYtrAlFN5FC8VzMhHh/wM1ypkfVi7I5
+         xC2NQpOkaZGRGDDblnEmqtsCDwJjKPhPf1gxSpyhFJAfAnHkZToO0QVL3o7qmb6yq3kl
+         /fPKJ36uZKtumx4PMe051elYi1fZr6YsGFpQtmalR3a03is+1tETesXYb8nLmi7YOgWT
+         YbiZACAjO9JVtxcJOF8Fl8Vh+s/Y/AMgZMpVqQHjcJCPht1J5olzVhZ4edarhiUmbZFX
+         4ajw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=U/0egg2l/8/sf6OVNLDHzc/+TeOVJmdKP2W9EOOrXuM=;
-        b=cq1wxI17Mf2lHvxPKTO+hqbUWeoE6yRkJXedEwG4dZfxcq359o95HBY7YRY8OCCCYR
-         Hk9ov0SQkGPFDUToBGXDSgi6QabJDcpBctkqn3viV6BWeVrENOVUs7OBejS8aUTEY/np
-         oyUIHkv66tL3j8gJYP0wuy8uB3bgUhu4O6CH5Y+ChSnsQEZTkVDZLOdh+EUXh2kZS0Pk
-         O9cDjD0LvOXm5tmgwTs2mls0hHb2b4eG4HsY8c6pccTqdqhmRNxWgKoUx4x0SNdCd48A
-         vw9n8aRHLzHbcjjSrDLl5aZlLXMn6XhC2q4tiY3WCEXCX6evRSQcfHeNCDcHG3d/LAhU
-         XEtA==
-X-Gm-Message-State: APjAAAUDlGTiN02jMh6GaEv55hvedc9IQzL/S1efCCwxxYl7X1qbCn2g
-        F8ekTl8doZ36Ba/IM7AZU3fiHaZwPkWHbiusnPZwh4tZ
-X-Google-Smtp-Source: APXvYqz597d5U5MNfZEgYrRho9of5Rjo/0gxEoj4ox7+gwGIILWVaE1rASXHQ0kSA+O8fLHkpVKtvY4eMrkvGTdm5GU=
-X-Received: by 2002:a05:6402:611:: with SMTP id n17mr42169718edv.33.1568289751677;
- Thu, 12 Sep 2019 05:02:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190912041817.23984-1-huangfq.daxian@gmail.com>
- <87tv9hew2k.fsf@vitty.brq.redhat.com> <CABXRUiTD=yRRQFfSdS=2e9QaO-PEgvZ=LBar927rL04G59nHxQ@mail.gmail.com>
- <87r24leqf4.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87r24leqf4.fsf@vitty.brq.redhat.com>
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Date:   Thu, 12 Sep 2019 20:02:20 +0800
-Message-ID: <CABXRUiR0YSANWukwij0LNaJK24CiRFy878TE1AqVDAa91R-edg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NJ+V9WdH/Mr55CbE+4tCVIXroMyvqDzfmVNb8fYQdC4=;
+        b=qT78JywTaj+1n9b9tUAzR/N31CuDakQvsJHChj8nBqQCVafTb3HDH4ep3GZfiLHWMn
+         7ayiKuHMblBe2DN7Qg4yCM8YsjCpGD58ixb4BVRbxuImN4bgS3PGOA4SkrQOiyAGLGFN
+         njCNvLH+9wE6s6SoBy3v4zZTuSLh7bYCKMMcO12wyt57dzNy86u/j3MdSIV3Yioisg8j
+         MO+GVMmjkTmUzOLllRBU0aNsqeTWQX2zw8BmkiXxbpuBCwr/AIApWuqlFPREZvW7iVBn
+         icpdLuvJPFwya86fps6MsCDM9jDUNBD+n3h0TPYWfJD12v3064hUz6s4nzA8rCWhxih1
+         UDiQ==
+X-Gm-Message-State: APjAAAViD56xryRePJ/ckcNCdv44NnwizdiATYyKoe7/dlD1ZT21fiw8
+        /sdyU6xKhS/s2E2s9SzEx4HPEg==
+X-Google-Smtp-Source: APXvYqxW3gfyTl86Ie7fIUSZxIf33R/kZjhqzOjknmiTByk8wlOSZatDorFjLent8xT63ngd7QqDdQ==
+X-Received: by 2002:a05:620a:7c8:: with SMTP id 8mr1592111qkb.299.1568289774048;
+        Thu, 12 Sep 2019 05:02:54 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a72sm12098951qkg.77.2019.09.12.05.02.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 05:02:53 -0700 (PDT)
+Message-ID: <1568289769.5576.138.camel@lca.pw>
+Subject: Re: [PATCH] zswap: Add CONFIG_ZSWAP_IO_SWITCH
+From:   Qian Cai <cai@lca.pw>
+To:     Hui Zhu <teawaterz@linux.alibaba.com>, sjenning@redhat.com,
+        ddstreet@ieee.org, akpm@linux-foundation.org, mhocko@suse.com,
+        willy@infradead.org, chris@chris-wilson.co.uk, hannes@cmpxchg.org,
+        ziqian.lzq@antfin.com, osandov@fb.com, ying.huang@intel.com,
+        aryabinin@virtuozzo.com, vovoy@chromium.org,
+        richard.weiyang@gmail.com, jgg@ziepe.ca, dan.j.williams@intel.com,
+        rppt@linux.ibm.com, jglisse@redhat.com, b.zolnierkie@samsung.com,
+        axboe@kernel.dk, dennis@kernel.org, josef@toxicpanda.com,
+        tj@kernel.org, oleg@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Date:   Thu, 12 Sep 2019 08:02:49 -0400
+In-Reply-To: <1568258490-25359-1-git-send-email-teawaterz@linux.alibaba.com>
+References: <1568258490-25359-1-git-send-email-teawaterz@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=8812=
-=E6=97=A5=E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=886:53=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Fuqian Huang <huangfq.daxian@gmail.com> writes:
->
-> > Vitaly Kuznetsov <vkuznets@redhat.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=
-=8812=E6=97=A5=E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=884:51=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> >>
-> >> Fuqian Huang <huangfq.daxian@gmail.com> writes:
-> >>
-> >> > Emulation of VMPTRST can incorrectly inject a page fault
-> >> > when passed an operand that points to an MMIO address.
-> >> > The page fault will use uninitialized kernel stack memory
-> >> > as the CR2 and error code.
-> >> >
-> >> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL=
-_ERROR
-> >> > exit to userspace;
-> >>
-> >> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
-> >> is not a proper reaction to a userspace-induced condition (or ever).
-> >>
-> >> I also looked at VMPTRST's description in Intel's manual and I can't
-> >> find and explicit limitation like "this must be normal memory". We're
-> >> just supposed to inject #PF "If a page fault occurs in accessing the
-> >> memory destination operand."
-> >>
-> >> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
-> >> think that nobody should be doing that I'd rather prefer injecting #GP=
-.
-> >>
-> >> Please tell me what I'm missing :-)
-> >
-> > I found it during the code review, and it looks like the problem the
-> > commit 353c0956a618 ("KVM: x86: work around leak of uninitialized
-> > stack contents (CVE-2019-7222)")
-> > mentions. So I fixed it in a similar way.
-> >
->
-> Oh, yes, I'm not against the fix at all, I was just wondering about why
-> you think we need to kill the guest in this case.
+On Thu, 2019-09-12 at 11:21 +0800, Hui Zhu wrote:
+> I use zswap to handle the swap IO issue in a VM that uses a swap file.
+> This VM has 4G memory and 2 CPUs.  And I set up 4G swap in /swapfile.
+> This is test script:
+> cat 1.sh
+> ./usemem --sleep 3600 -M -a -n 1 $((3 * 1024 * 1024 * 1024)) &
+> sleep 10
+> echo 1 > /proc/sys/vm/drop_caches
+> ./usemem -S -f /test2 $((2 * 1024 * 1024 * 1024)) &
+> while [ True ]; do ./usemem -a -n 1 $((1 * 1024 * 1024 * 1024)); done
+> 
+> Without ZSWAP:
+> echo 100 > /proc/sys/vm/swappiness
+> swapon /swapfile
+> sh 1.sh
+> ...
+> ...
+> 1207959552 bytes / 2076479 usecs = 568100 KB/s
+> 61088 usecs to free memory
+> 1207959552 bytes / 2035439 usecs = 579554 KB/s
+> 55073 usecs to free memory
+> 2415919104 bytes / 24054408 usecs = 98081 KB/s
+> 3741 usecs to free memory
+> 1207959552 bytes / 1954371 usecs = 603594 KB/s
+> 53161 usecs to free memory
+> ...
+> ...
+> 
+> With ZSWAP:
+> echo 100 > /proc/sys/vm/swappiness
+> swapon /swapfile
+> echo lz4 > /sys/module/zswap/parameters/compressor
+> echo zsmalloc > /sys/module/zswap/parameters/zpool
+> echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
+> echo 20 > /sys/module/zswap/parameters/max_pool_percent
+> echo 1 > /sys/module/zswap/parameters/enabled
+> sh 1.sh
+> 1207959552 bytes / 3619283 usecs = 325934 KB/s
+> 194825 usecs to free memory
+> 1207959552 bytes / 3439563 usecs = 342964 KB/s
+> 218419 usecs to free memory
+> 2415919104 bytes / 19508762 usecs = 120935 KB/s
+> 5632 usecs to free memory
+> 1207959552 bytes / 3329369 usecs = 354315 KB/s
+> 179764 usecs to free memory
+> 
+> The normal io speed is increased from 98081 KB/s to 120935 KB/s.
+> But I found 2 issues of zswap in this machine:
+> 1. Because the disk of VM has the file cache in the host layer,
+>    so normal swap speed is higher than with zswap.
+> 2. Because zswap need allocates memory to store the compressed pages,
+>    it will make memory capacity worse.
+> For example:
+> Command "./usemem -a -n 1 $((7 * 1024 * 1024 * 1024))" request 7G memory
+> from this machine.
+> It will work OK without zswap but got OOM when zswap is opened.
+> 
+> This commit adds CONFIG_ZSWAP_IO_SWITCH that try to handle the issues
+> and let zswap keep save IO.
+> It add two parameters read_in_flight_limit and write_in_flight_limit to
+> zswap.
+> In zswap_frontswap_store, pages will be stored to zswap only when
+> the IO in flight number of swap device is bigger than
+> zswap_read_in_flight_limit or zswap_write_in_flight_limit
+> when zswap is enabled.
+> Then the zswap just work when the IO in flight number of swap device
+> is low.
 
-I don't know what is the proper way to handle this case, I just initialize =
-the
-memory to avoid information leakage.
-(Actually, I am not an expert on KVM's code)
-I will be appreciated if the bug is fixed. :)
+There isn't sufficient information for users to decide when they should enable
+this kconfig. Also, It describes your specific workload, but not clear to me how
+this benefit other people's workloads in general.
 
->
-> --
-> Vitaly
+> 
+> This is the test result:
+> echo 100 > /proc/sys/vm/swappiness
+> swapon /swapfile
+> echo lz4 > /sys/module/zswap/parameters/compressor
+> echo zsmalloc > /sys/module/zswap/parameters/zpool
+> echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
+> echo 20 > /sys/module/zswap/parameters/max_pool_percent
+> echo 1 > /sys/module/zswap/parameters/enabled
+> echo 3 > /sys/module/zswap/parameters/read_in_flight_limit
+> echo 50 > /sys/module/zswap/parameters/write_in_flight_limit
+> sh 1.sh
+> ...
+> 1207959552 bytes / 2320861 usecs = 508280 KB/s
+> 106164 usecs to free memory
+> 1207959552 bytes / 2343916 usecs = 503280 KB/s
+> 79386 usecs to free memory
+> 2415919104 bytes / 20136015 usecs = 117167 KB/s
+> 4411 usecs to free memory
+> 1207959552 bytes / 1833403 usecs = 643419 KB/s
+> 70452 usecs to free memory
+> ...
+> killall usemem
+> ./usemem -a -n 1 $((7 * 1024 * 1024 * 1024))
+> 8455716864 bytes / 14457505 usecs = 571159 KB/s
+> 365961 usecs to free memory
+> 
+> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+> ---
+>  include/linux/swap.h |  3 +++
+>  mm/Kconfig           | 11 +++++++++++
+>  mm/page_io.c         | 16 +++++++++++++++
+>  mm/zswap.c           | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 85 insertions(+)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index de2c67a..82b621f 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -389,6 +389,9 @@ extern void end_swap_bio_write(struct bio *bio);
+>  extern int __swap_writepage(struct page *page, struct writeback_control *wbc,
+>  	bio_end_io_t end_write_func);
+>  extern int swap_set_page_dirty(struct page *page);
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +extern void swap_io_in_flight(struct page *page, unsigned int inflight[2]);
+> +#endif
+>  
+>  int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
+>  		unsigned long nr_pages, sector_t start_block);
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 56cec63..d077e51 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -546,6 +546,17 @@ config ZSWAP
+>  	  they have not be fully explored on the large set of potential
+>  	  configurations and workloads that exist.
+>  
+> +config ZSWAP_IO_SWITCH
+> +	bool "Compressed cache for swap pages according to the IO status"
+> +	depends on ZSWAP
+> +	def_bool n
+> +	help
+> +	  Add two parameters read_in_flight_limit and write_in_flight_limit to
+> +	  ZSWAP.  When ZSWAP is enabled, pages will be stored to zswap only
+> +	  when the IO in flight number of swap device is bigger than
+> +	  zswap_read_in_flight_limit or zswap_write_in_flight_limit.
+> +	  If unsure, say "n".
+> +
+>  config ZPOOL
+>  	tristate "Common API for compressed memory storage"
+>  	help
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 24ee600..e66b050 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -434,3 +434,19 @@ int swap_set_page_dirty(struct page *page)
+>  		return __set_page_dirty_no_writeback(page);
+>  	}
+>  }
+> +
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +void swap_io_in_flight(struct page *page, unsigned int inflight[2])
+> +{
+> +	struct swap_info_struct *sis = page_swap_info(page);
+> +
+> +	if (!sis->bdev) {
+> +		inflight[0] = 0;
+> +		inflight[1] = 0;
+> +		return;
+> +	}
+> +
+> +	part_in_flight_rw(bdev_get_queue(sis->bdev), sis->bdev->bd_part,
+> +					  inflight);
+> +}
+> +#endif
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 0e22744..1255645 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -62,6 +62,13 @@ static u64 zswap_reject_compress_poor;
+>  static u64 zswap_reject_alloc_fail;
+>  /* Store failed because the entry metadata could not be allocated (rare) */
+>  static u64 zswap_reject_kmemcache_fail;
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +/* Store failed because zswap_read_in_flight_limit or
+> + * zswap_write_in_flight_limit is bigger than IO in flight number of
+> + * swap device
+> + */
+> +static u64 zswap_reject_io;
+> +#endif
+>  /* Duplicate store was encountered (rare) */
+>  static u64 zswap_duplicate_entry;
+>  
+> @@ -114,6 +121,22 @@ static bool zswap_same_filled_pages_enabled = true;
+>  module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
+>  		   bool, 0644);
+>  
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +/* zswap will not try to store the page if zswap_read_in_flight_limit is
+> + * bigger than IO read in flight number of swap device
+> + */
+> +static unsigned int zswap_read_in_flight_limit;
+> +module_param_named(read_in_flight_limit, zswap_read_in_flight_limit,
+> +		   uint, 0644);
+> +
+> +/* zswap will not try to store the page if zswap_write_in_flight_limit is
+> + * bigger than IO write in flight number of swap device
+> + */
+> +static unsigned int zswap_write_in_flight_limit;
+> +module_param_named(write_in_flight_limit, zswap_write_in_flight_limit,
+> +		   uint, 0644);
+> +#endif
+> +
+>  /*********************************
+>  * data structures
+>  **********************************/
+> @@ -1009,6 +1032,34 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+>  		goto reject;
+>  	}
+>  
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +	if (zswap_read_in_flight_limit || zswap_write_in_flight_limit) {
+> +		unsigned int inflight[2];
+> +		bool should_swap = false;
+> +
+> +		swap_io_in_flight(page, inflight);
+> +
+> +		if (zswap_write_in_flight_limit &&
+> +			inflight[1] < zswap_write_in_flight_limit)
+> +			should_swap = true;
+> +
+> +		if (zswap_read_in_flight_limit &&
+> +			(should_swap ||
+> +			 (!should_swap && !zswap_write_in_flight_limit))) {
+> +			if (inflight[0] < zswap_read_in_flight_limit)
+> +				should_swap = true;
+> +			else
+> +				should_swap = false;
+> +		}
+> +
+> +		if (should_swap) {
+> +			zswap_reject_io++;
+> +			ret = -EIO;
+> +			goto reject;
+> +		}
+> +	}
+> +#endif
+> +
+>  	/* reclaim space if needed */
+>  	if (zswap_is_full()) {
+>  		zswap_pool_limit_hit++;
+> @@ -1264,6 +1315,10 @@ static int __init zswap_debugfs_init(void)
+>  			   zswap_debugfs_root, &zswap_reject_kmemcache_fail);
+>  	debugfs_create_u64("reject_compress_poor", 0444,
+>  			   zswap_debugfs_root, &zswap_reject_compress_poor);
+> +#ifdef CONFIG_ZSWAP_IO_SWITCH
+> +	debugfs_create_u64("reject_io", 0444,
+> +			   zswap_debugfs_root, &zswap_reject_io);
+> +#endif
+>  	debugfs_create_u64("written_back_pages", 0444,
+>  			   zswap_debugfs_root, &zswap_written_back_pages);
+>  	debugfs_create_u64("duplicate_entry", 0444,
