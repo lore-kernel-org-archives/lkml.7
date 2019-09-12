@@ -2,265 +2,143 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDC5C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A74FC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B9820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F9420684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VsK63YxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732653AbfILORS (ORCPT
+        id S1732656AbfILOSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:17:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732639AbfILORR (ORCPT
+        Thu, 12 Sep 2019 10:18:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35253 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732565AbfILOSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:17:17 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CE7X5k006871;
-        Thu, 12 Sep 2019 10:16:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp18ubpt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 10:16:54 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CE7tkK007616;
-        Thu, 12 Sep 2019 10:16:51 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp18ubks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 10:16:51 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CE5ZPb008328;
-        Thu, 12 Sep 2019 14:16:46 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma05wdc.us.ibm.com with ESMTP id 2uv467cdks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 14:16:46 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CEGj7M23921038
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 14:16:46 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2E8913605E;
-        Thu, 12 Sep 2019 14:16:45 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 678BC136066;
-        Thu, 12 Sep 2019 14:16:43 +0000 (GMT)
-Received: from [9.199.32.243] (unknown [9.199.32.243])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 14:16:43 +0000 (GMT)
-Subject: Re: [PATCH 2/3] powperc/mm: read TLB Block Invalidate Characteristics
-To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190830120712.22971-1-ldufour@linux.ibm.com>
- <20190830120712.22971-3-ldufour@linux.ibm.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <e809e33f-58df-ec99-44e8-9b1ae0b6bfe0@linux.ibm.com>
-Date:   Thu, 12 Sep 2019 19:46:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 10:18:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t6so12988191otp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=as20/K/wrQh0VcPp2JWZkYWpNUtTzdFQp/D51GEnJ2A=;
+        b=VsK63YxZZ74Soq7i8sbb6fh8HuUwyRP41aJpm+IyEEVxbFiT+L+HI7tHr2Vtr0PsHQ
+         fDXFh2WJkHcBM2sQqx1nz4YhINjpIBCvGC9TrFffsfvAIt4gr3yYNVISifAiKggfChWB
+         2eA96VKb6o3jBW1xy3BW5dlaSz0jNJM08lR86GYMPhTh3k+K1N87uSTRdNbiDRyiowpt
+         ZwXe3nzkYOIn1ZNixxsiuJTCR4BF0L25n4IU8DzNBCsoClLT/Gf5jHWOcunpLH27oWeT
+         r5TNuXp8viQJvL/EuRe9CAFlXbBTqM99aMDd+dlIzc3ACil8+YLF6nLcaSfVseT69/36
+         Ivxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=as20/K/wrQh0VcPp2JWZkYWpNUtTzdFQp/D51GEnJ2A=;
+        b=L2PVdtbTAQnOsCi/LNZlqVIjTus8KkbfqrD2kjugygWTJLuqm5fw7AnMKkTSyhoyGM
+         oHCi5IQud2rY/RWoiEiycyTrWjKYXsiQVbC5eH/1zZogG2qGjbYnR7U0XM7p8DNrTmJC
+         +vc1Wiw1U5zyI7w95aFHl5IAV9WIqHNRehSxpfti8x+xkg3txODhHSMXtWYhsmPJsyeb
+         Io6gIgfDzhfKRvdsBHvF5Lrn+dzD39J8Y2CxS34nZC0fuxgdbf72kce02y7TDujl8G6r
+         CBDx83eQOvIA85la2ednppzpBiy258osi4fnxL/+hcOqZIkY4VHbMq+Xo7CHYenwOTZx
+         3f1A==
+X-Gm-Message-State: APjAAAW3lj8ElV0cNhYq9rCWqdbv/4lhG7S3Wvzkv2WjPsYQm0uODGEu
+        XCG4CG3dPRJQmkorT6oOqL+grVyj9DjBTjUpqyixFA==
+X-Google-Smtp-Source: APXvYqww7bFfGwyc5qF49rVm8WTD42K5tWa0xz3KchY2iJm2zV03eJqbCs0F8Uc+E8PPkm5kQfSl9zD6BO6JdIqdc4I=
+X-Received: by 2002:a9d:6d15:: with SMTP id o21mr10806424otp.363.1568297884741;
+ Thu, 12 Sep 2019 07:18:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190830120712.22971-3-ldufour@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120149
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
+ <CANiq72k2so3ZcqA3iRziGY=Shd_B1=qGoXXROeAF7Y3+pDmqyA@mail.gmail.com>
+ <e9cb9bc8bd7fe38a5bb6ff7b7222b512acc7b018.camel@perches.com> <5eebafcb85a23a59f01681e73c83b387c59f4a4b.camel@perches.com>
+In-Reply-To: <5eebafcb85a23a59f01681e73c83b387c59f4a4b.camel@perches.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 12 Sep 2019 07:17:51 -0700
+Message-ID: <CAPcyv4iu13D5P+ExdeW8OGMV8g49fMUy52xbYZM+bewwVSwhjg@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Joe Perches <joe@perches.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 5:37 PM, Laurent Dufour wrote:
-> The PAPR document specifies the TLB Block Invalidate Characteristics which
-> is telling which couple base page size / page size is supported by the
-> H_BLOCK_REMOVE hcall.
-> 
-> A new set of feature is added to the mmu_psize_def structure to record per
-> base page size which page size is supported by H_BLOCK_REMOVE.
-> 
-> A new init service is added to read the characteristics. The size of the
-> buffer is set to twice the number of known page size, plus 10 bytes to
-> ensure we have enough place.
-> 
+On Thu, Sep 12, 2019 at 4:02 AM Joe Perches <joe@perches.com> wrote:
+>
+> (cut down the cc-list)
+>
+> On Thu, 2019-09-12 at 03:18 -0700, Joe Perches wrote:
+> > On Thu, 2019-09-12 at 10:24 +0200, Miguel Ojeda wrote:
+> > > On Thu, Sep 12, 2019 at 9:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > Now I come to find that CodingStyle has settled on clang-format (in
+> > > > the last 15 months) as the new standard which is a much better answer
+> > > > to me than a manually specified style open to interpretation. I'll
+> > > > take a look at getting libnvdimm converted over.
+> > >
+> > > Note that clang-format cannot do everything as we want within the
+> > > kernel just yet, but it is a close enough approximation -- it is near
+> > > the point where we could simply agree to use it and stop worrying
+> > > about styling issues. However, that would mean everyone needs to have
+> > > a recent clang-format available, which I think is the biggest obstacle
+> > > at the moment.
+> >
+> > I don't think that's close to true yet for clang-format.
+> >
+> > For instance: clang-format does not do anything with
+> > missing braces, or coalescing multi-part strings,
+> > or any number of other nominal coding style defects
+> > like all the for_each macros, aligning or not aligning
+> > columnar contents appropriately, etc...
+> >
+> > clang-format as yet has no taste.
 
+Ok, good to confirm that we do not yet have an objective standard for
+coding style. This means it's not yet something process documentation
+can better standardize for contributors and will be subject to ongoing
+taste debates. Lets reclaim the time to talk about objective items
+that *can* clarified across maintainers.
 
-So this is not really the base page size/actual page size combination. 
-This is related to H_BLOCK_REMOVE hcall, block size supported by that 
-HCALL and what page size combination is supported with that specific 
-block size.
-
-We should add that TLB block invalidate characteristics format in this 
-patch.
-
-
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> >
+> > I believe it'll take a lot of work to improve it to a point
+> > where its formatting is acceptable and appropriate.
+> .
+>
+> Just fyi:
+>
+> Here's the difference that clang-format produces from the current
+> nvdimm sources to the patch series I posted.
+>
+> clang-format does some OK, some not OK, some really bad.
+> (e.g.: __stringify)
+>
+> My git branch for my patches is 20190911_nvdimm, and
+> using Stephen Rothwell's git tree for -next:
+>
+> $ git checkout next-20190904
+> $ clang-format -i drivers/nvdimm/*.[ch]
+> $ git diff --stat -p 20190911_nvdimm -- drivers/nvdimm/ > nvdimm.clang-diff
 > ---
->   arch/powerpc/include/asm/book3s/64/mmu.h |   3 +
->   arch/powerpc/platforms/pseries/lpar.c    | 107 +++++++++++++++++++++++
->   2 files changed, 110 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-> index 23b83d3593e2..675895dfe39f 100644
-> --- a/arch/powerpc/include/asm/book3s/64/mmu.h
-> +++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-> @@ -12,11 +12,14 @@
->    *    sllp  : is a bit mask with the value of SLB L || LP to be or'ed
->    *            directly to a slbmte "vsid" value
->    *    penc  : is the HPTE encoding mask for the "LP" field:
-> + *    hblk  : H_BLOCK_REMOVE supported block size for this page size in
-> + *            segment who's base page size is that page size.
->    *
->    */
->   struct mmu_psize_def {
->   	unsigned int	shift;	/* number of bits */
->   	int		penc[MMU_PAGE_COUNT];	/* HPTE encoding */
-> +	int		hblk[MMU_PAGE_COUNT];	/* H_BLOCK_REMOVE support */
->   	unsigned int	tlbiel;	/* tlbiel supported for that page size */
->   	unsigned long	avpnm;	/* bits to mask out in AVPN in the HPTE */
->   	union {
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-> index 4f76e5f30c97..375e19b3cf53 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -1311,6 +1311,113 @@ static void do_block_remove(unsigned long number, struct ppc64_tlb_batch *batch,
->   		(void)call_block_remove(pix, param, true);
->   }
->   
-> +static inline void __init set_hblk_bloc_size(int bpsize, int psize,
-> +					     unsigned int block_size)
-> +{
-> +	struct mmu_psize_def *def = &mmu_psize_defs[bpsize];
-> +
-> +	if (block_size > def->hblk[psize])
-> +		def->hblk[psize] = block_size;
-> +}
-> +
-> +static inline void __init check_lp_set_hblk(unsigned int lp,
-> +					    unsigned int block_size)
-> +{
-> +	unsigned int bpsize, psize;
-> +
-> +
-> +	/* First, check the L bit, if not set, this means 4K */
-> +	if ((lp & 0x80) == 0) {
+[..]
+>  25 files changed, 895 insertions(+), 936 deletions(-)
 
+So, I'm lamenting the damage either of these mass conversions is going
+to do git blame flows. To be honest I regret broaching Coding Style
+standardization because it's taking the air out of the room for the
+wider discussion of the maintainer/contributor topics we might be able
+to agree.
 
-What is that 0x80? We should have #define for most of those.
-
-> +		set_hblk_bloc_size(MMU_PAGE_4K, MMU_PAGE_4K, block_size);
-> +		return;
-> +	}
-> +
-> +	/* PAPR says to look at bits 2-7 (0 = MSB) */
-> +	lp &= 0x3f;
-
-Also convert that to #define?
-
-> +	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++) {
-> +		struct mmu_psize_def *def =  &mmu_psize_defs[bpsize];
-> +
-> +		for (psize = 0; psize < MMU_PAGE_COUNT; psize++) {
-> +			if (def->penc[psize] == lp) {
-> +				set_hblk_bloc_size(bpsize, psize, block_size);
-> +				return;
-> +			}
-> +		}
-> +	}
-> +}
-> +
-> +#define SPLPAR_TLB_BIC_TOKEN		50
-> +#define SPLPAR_TLB_BIC_MAXLENGTH	(MMU_PAGE_COUNT*2 + 10)
-> +static int __init read_tlbbi_characteristics(void)
-> +{
-> +	int call_status;
-> +	unsigned char local_buffer[SPLPAR_TLB_BIC_MAXLENGTH];
-> +	int len, idx, bpsize;
-> +
-> +	if (!firmware_has_feature(FW_FEATURE_BLOCK_REMOVE)) {
-> +		pr_info("H_BLOCK_REMOVE is not supported");
-> +		return 0;
-> +	}
-> +
-> +	memset(local_buffer, 0, SPLPAR_TLB_BIC_MAXLENGTH);
-> +
-> +	spin_lock(&rtas_data_buf_lock);
-> +	memset(rtas_data_buf, 0, RTAS_DATA_BUF_SIZE);
-> +	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
-> +				NULL,
-> +				SPLPAR_TLB_BIC_TOKEN,
-> +				__pa(rtas_data_buf),
-> +				RTAS_DATA_BUF_SIZE);
-> +	memcpy(local_buffer, rtas_data_buf, SPLPAR_TLB_BIC_MAXLENGTH);
-> +	local_buffer[SPLPAR_TLB_BIC_MAXLENGTH - 1] = '\0';
-> +	spin_unlock(&rtas_data_buf_lock);
-> +
-> +	if (call_status != 0) {
-> +		pr_warn("%s %s Error calling get-system-parameter (0x%x)\n",
-> +			__FILE__, __func__, call_status);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * The first two (2) bytes of the data in the buffer are the length of
-> +	 * the returned data, not counting these first two (2) bytes.
-> +	 */
-> +	len = local_buffer[0] * 256 + local_buffer[1] + 2;
-> +	if (len >= SPLPAR_TLB_BIC_MAXLENGTH) {
-> +		pr_warn("%s too large returned buffer %d", __func__, len);
-> +		return 0;
-> +	}
-> +
-> +	idx = 2;
-> +	while (idx < len) {
-> +		unsigned int block_size = local_buffer[idx++];
-> +		unsigned int npsize;
-> +
-> +		if (!block_size)
-> +			break;
-> +
-> +		block_size = 1 << block_size;
-> +		if (block_size != 8)
-> +			/* We only support 8 bytes size TLB invalidate buffer */
-> +			pr_warn("Unsupported H_BLOCK_REMOVE block size : %d\n",
-> +				block_size);
-> +
-> +		for (npsize = local_buffer[idx++];  npsize > 0; npsize--)
-> +			check_lp_set_hblk((unsigned int) local_buffer[idx++],
-> +					  block_size);
-> +	}
-> +
-> +	for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++)
-> +		for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
-> +			if (mmu_psize_defs[bpsize].hblk[idx])
-> +				pr_info("H_BLOCK_REMOVE supports base psize:%d psize:%d block size:%d",
-> +					bpsize, idx,
-> +					mmu_psize_defs[bpsize].hblk[idx]);
-> +
-> +	return 0;
-> +}
-> +machine_arch_initcall(pseries, read_tlbbi_characteristics);
-> +
-
-Why a machine_arch_initcall() ? Can't we do this similar to how we do 
-segment-page-size parsing from device tree? Also this should be hash 
-translation mode specific.
-
->   /*
->    * Take a spinlock around flushes to avoid bouncing the hypervisor tlbie
->    * lock.
-> 
-
+As for libnvdimm at this point I'd rather start with objective
+checkpatch error cleanups and defer the personal taste items.
