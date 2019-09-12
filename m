@@ -2,110 +2,117 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B4EC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26AFC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393E9206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:12:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="H+x8OaMw"
+	by mail.kernel.org (Postfix) with ESMTP id 889A220856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfILWMq (ORCPT
+        id S1727035AbfILWPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 18:12:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46529 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfILWMq (ORCPT
+        Thu, 12 Sep 2019 18:15:11 -0400
+Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:55312 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726429AbfILWPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:12:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i8so25268090edn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uw+By8uPhtt1B4rmiquJCFolZneVMTSbfQHHffSvIIQ=;
-        b=H+x8OaMwIVhaQKjfeCoic7a24QjeAQPuJJocr2jMyn+QXyrVvZs9p37huRZtIsi4TW
-         BXo9pQJRqUgJeizoGJkSR1BIah7CTPiic0FmVyqByMwdzsyJmBKDrsOZ86RQVS9acyqj
-         Ci4acuuGe4J0jem2ju6d0EbSWs/3KQPPcH1VE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uw+By8uPhtt1B4rmiquJCFolZneVMTSbfQHHffSvIIQ=;
-        b=KxeP/KnpJKJ0iadXgMGARpao/cQY+mWPHWet6IQ8OffQhe9ZY/JGfueC912YOQWEAO
-         MPwpYDXb2vHCYDs/gDauZa7DnN91avG8D0OEy5u1FAeKD8GEkpIjsWuZKUAO6hTMhb8K
-         7ccYI9yH+Bb7lraD2rdWoK/WXfUGl6ApXZ/Wk+1E1Hm902EZp2uCDqbXmw/uwC15SbSK
-         qVQnzWyTevmMmuWysV/d/OsMEEeZutaNMe7BHbJTGfHAy51X/+dXzEx3vyIskqtRlM1z
-         i5lvgl809eBzJFxqjDzF8zBRqf7pafFDofINZVWskfXKrKMlaiqessGvVvNy/CYxUvSv
-         Ji4Q==
-X-Gm-Message-State: APjAAAVXLzRzwpllB2Wxty/S2EMHLUh5v/Lg3ZlCBvwVLYnOF6KtlgkA
-        1FSAu2/R/wpmxZMx8C388mu+Pg==
-X-Google-Smtp-Source: APXvYqx6evvaLgxc7RWLH1l0TKA3Dk9l5nArd4TkqR24aHD7dPyHk5X+q2asFpxQd3F7Zm29wPwT3g==
-X-Received: by 2002:a17:906:4547:: with SMTP id s7mr4297335ejq.55.1568326364163;
-        Thu, 12 Sep 2019 15:12:44 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id d24sm5071574edp.88.2019.09.12.15.12.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 15:12:43 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Jakub Jelinek <jakub@redhat.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <CANiq72=3Vz-_6ctEzDQgTA44jmfSn_XZTS8wP1GHgm31Xm8ECw@mail.gmail.com>
- <20190906163028.GC9749@gate.crashing.org> <20190906163918.GJ2120@tucnak>
- <CAKwvOd=MT_=U250tR+t0jTtj7SxKJjnEZ1FmR3ir_PHjcXFLVw@mail.gmail.com>
- <20190906220347.GD9749@gate.crashing.org>
- <CAKwvOdnWBV35SCRHwMwXf+nrFc+D1E7BfRddb20zoyVJSdecCA@mail.gmail.com>
- <20190906225606.GF9749@gate.crashing.org>
- <CAKwvOdk-AQVJnD6-=Z0eUQ6KPvDp2eS2zUV=-oL2K2JBCYaOeQ@mail.gmail.com>
- <20190907001411.GG9749@gate.crashing.org>
- <CAKwvOdnaBD3Dg3pmZqX2-=Cd0n30ByMT7KUNZKhq0bsDdFeXpg@mail.gmail.com>
- <20190907131127.GH9749@gate.crashing.org>
- <CAKwvOdmhcaHpnqhMwzpYdjjwfAhgzq7fqA0Hu8b19E5w3AHz4w@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <e4bf09bf-3aa7-aa7b-529b-f930dc75be4a@rasmusvillemoes.dk>
-Date:   Fri, 13 Sep 2019 00:12:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 18:15:11 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 58571181D3368;
+        Thu, 12 Sep 2019 22:15:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pin05_49dff1f532f1d
+X-Filterd-Recvd-Size: 3395
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 12 Sep 2019 22:15:07 +0000 (UTC)
+Message-ID: <2e3b15aea8645f38cea9442a4b6eb95f5b33eec6.camel@perches.com>
+Subject: Re: [PATCH 00/13] nvdimm: Use more common kernel coding style
+From:   Joe Perches <joe@perches.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Thu, 12 Sep 2019 15:15:06 -0700
+In-Reply-To: <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com>
+References: <cover.1568256705.git.joe@perches.com>
+         <x498sqtvclx.fsf@segfault.boston.devel.redhat.com>
+         <CANiq72kTsf=0rEufDMo7BzMNv1dqc5=ws7fSd=H_e=cpHR24Kg@mail.gmail.com>
+         <4df0a07ec8f1391acfa987ecef184a50e7831000.camel@perches.com>
+         <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdmhcaHpnqhMwzpYdjjwfAhgzq7fqA0Hu8b19E5w3AHz4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09/2019 23.54, Nick Desaulniers wrote:
-> On Sat, Sep 7, 2019 at 6:11 AM Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
->>
->> On Fri, Sep 06, 2019 at 06:04:54PM -0700, Nick Desaulniers wrote:
->>
->>> How would you even write a version check for that?
->>
->> I wouldn't.  Please stop using that straw man.  I'm not saying version
->> checks are good, or useful for most things.  I am saying they are not.
+On Thu, 2019-09-12 at 23:58 +0200, Miguel Ojeda wrote:
+> On Thu, Sep 12, 2019 at 11:08 PM Joe Perches <joe@perches.com> wrote:
+> > Please name the major projects and then point to their
+> > .clang-format equivalents.
+> > 
+> > Also note the size/scope/complexity of the major projects.
 > 
-> Then please help Rasmus with a suggestion on how best to detect and
-> safely make use of the feature you implemented.  As is, the patch in
-> question is using version checks.
+> Mozilla, WebKit, LLVM and Microsoft. They have their style distributed
+> with the official clang-format, not sure if they enforce it.
+> 
+> Same for Chromium/Chrome, but it looks like they indeed enforce it:
 
-I was just about to send out an updated version. I'm just going to do
-the check in Kconfig - I didn't realize how easy it had become to do
-that kind of thing until Masahiro pointed me at his RFC patch from December.
+thanks for that list.
 
-Rasmus
+> > I used the latest one, and quite a bit of the conversion
+> > was unpleasant to read.
+> 
+> It would be good to see particularly bad snippets to see if we can do
+> something about them (and, if needed, try to improve clang-format to
+> support whatever we need).
+
+As I mentioned earlier, look at the __stringify conversion.
+Also the C() blocks.
+
+btw: emacs 'mark-whole-buffer indent-region',
+the tool I used for each file in patch 1, also
+made a mess of the C() block.
+
+> Did you tweak the parameters with the new ones?
+
+No.  I used
+
+$ clang-format --version
+clang-format version 10.0.0 (git://github.com/llvm/llvm-project.git 305b961f64b75e73110e309341535f6d5a48ed72)
+
+and the existing .clang_format from
+next-20190904 35394d031b710e832849fca60d0f53b513f0c390
+
+> I am preparing an RFC
+> patch for an updated .clang-format configuration that improves quite a
+> bit the results w.r.t. to the current one (and allows for some leeway
+> on the developer's side, which helps prevent some cases too).
+
+Well, one day no doubt an automated tool will be
+more useful for the kernel.  Hope you keep at it
+and good luck.
+
+> > Marking sections _no_auto_format_ isn't really a
+> > good solution is it?
+> 
+> I am thinking about special tables that are hand-crafted or very
+> complex macros. For those, yes, I think it is a fine solution. That is
+> why clang-format has that feature to begin with, and you can see an
+> example in Mozilla's style guide which points here:
+> 
+>   https://github.com/mozilla/gecko-dev/blob/master/xpcom/io/nsEscape.cpp#L22
+> 
+> Cheers,
+> Miguel
+
