@@ -2,98 +2,216 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BA0C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C65C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FCF20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AA320693
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpikCFZE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pwZQOAaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfILLnM (ORCPT
+        id S1731428AbfILLpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:43:12 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37223 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbfILLnM (ORCPT
+        Thu, 12 Sep 2019 07:45:02 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:25255 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730268AbfILLpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:43:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r195so7305045wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 04:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qWyJzqvAlMobWBOwV84TIJK/7mR78qLFljNw2iai2k=;
-        b=GpikCFZEyylw5f9E8A87RDuGOumm+W2OeNuk24B+SmRHZVmOGNCH8PQr8+/pNMfq0d
-         1HbSspDZJifdwUFR26ynCGM3hOZkbyognj7zQSYymANtlgsSsKrIvxdf/Vzj0NLJqV0g
-         WROTwuvDkBOYGFvGWKX7ZUFhsE9ImjOdKqKZDeDYbkSdTi2NTKxm5Tml2y5ALB3gBBVs
-         7PsBv8NbkuFc4wYbRowazOj3M2DDxE/2Uj4VtHljyc7i5a2tneanddakI0hZj8YBVARL
-         Ah+fCevZ1NdOxszhHzs0tscerO0n6sVT2cw7VnlC19A8bpDkEajok/6KKazQfSZfSVJK
-         XhIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qWyJzqvAlMobWBOwV84TIJK/7mR78qLFljNw2iai2k=;
-        b=HCclAy+spHGDSgNAM5STsIPSo7Fmcl08vFyst8AYI5Xn2Vmo/pdINRMwuUgXi2q306
-         ogV1roMW66myfc9iNuyZCmfQxY0B3NgoPQrAe/5vuBToIIe21noC0nwMFCHrDMZlmRSu
-         pWHsxgqTDsxix19XwOXsZSmvSYZib3YqfYjbC0k8NRr8ppwzwIAFyxKK/y3QFHIwXVWa
-         nd29HLvObeYNugTgrZNA8fOSiUGaPoe+UboGm8pYQnwQ2k8CC9HiEFcJLKCLb6G8mkcj
-         YjClUaIwXMaCn6PG/0XZzyxeaatDOdmeGdLtZhegDiNb1/HCWKCH3bDwxlf93jBEJsms
-         JQ3A==
-X-Gm-Message-State: APjAAAUO1uRlHZnFRzNMFo1EdpWa76kUhKyxLNDCGHYzhdtfB4sovE+E
-        bpXyfcH1ZhoMtO7m/bRZvBbRac8G
-X-Google-Smtp-Source: APXvYqxQJNDvhUPj1LBZ1bHoKivBJHr8WZG4mqpwyi62mAotEWrGMbEIWQLyXh9Yw8zJQRC6blUOOw==
-X-Received: by 2002:a1c:4e14:: with SMTP id g20mr8196245wmh.112.1568288589980;
-        Thu, 12 Sep 2019 04:43:09 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id h21sm19074876wrc.71.2019.09.12.04.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 04:43:09 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: cleanup long line in rtw_mlme_ext.c
-Date:   Thu, 12 Sep 2019 13:42:57 +0200
-Message-Id: <20190912114257.17529-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 12 Sep 2019 07:45:02 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190912114459epoutp0254a259ad86fb3f05085560a58497b003~DrkNOg_Ak0568605686epoutp02d
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 11:44:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190912114459epoutp0254a259ad86fb3f05085560a58497b003~DrkNOg_Ak0568605686epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568288699;
+        bh=vMENaR9B8BHnzZviypx8NCdd3+Dx8BLuVaaHmhNr/ho=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=pwZQOAaS0CLHI0ZbPKYTqjhCyK7fP2RfKS6gydjlNLDHHu93aFtveg/nUI1sPfL7f
+         mHMHWsFFjaNTVROrGhdj5ThenfspB+GFysFcAKWJkLNxFodnFsYNNge+p4hWoz5Va6
+         G0heW3xlYwM7LqabfPH+CNYvySLrlDgCcWb910JQ=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20190912114458epcas5p4e3b6a74007c7b6ff108ce910587ff60f~DrkMVmcUZ1345913459epcas5p4C;
+        Thu, 12 Sep 2019 11:44:58 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B9.A3.04150.ABF2A7D5; Thu, 12 Sep 2019 20:44:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190912114457epcas5p3583f05a2afb308b54f44ace2cc803e60~DrkLhIta92662026620epcas5p39;
+        Thu, 12 Sep 2019 11:44:57 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190912114457epsmtrp1436d255d8900f29a80d1aa24a9b4479f~DrkLgYaQQ1846618466epsmtrp1U;
+        Thu, 12 Sep 2019 11:44:57 +0000 (GMT)
+X-AuditID: b6c32a49-a5bff70000001036-0a-5d7a2fba1418
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BA.0D.03706.9BF2A7D5; Thu, 12 Sep 2019 20:44:57 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190912114456epsmtip1bd2ed9030e341c49ccd64436466d31f4~DrkKOnUEA0370503705epsmtip1f;
+        Thu, 12 Sep 2019 11:44:56 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Jingoo Han'" <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+In-Reply-To: <20190911092710.GO9720@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH 2/2] PCI: dwc: Add support to disable equalization phase
+ 2 and 3
+Date:   Thu, 12 Sep 2019 17:14:53 +0530
+Message-ID: <23be01d5695f$804e4380$80eaca80$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG9FaICAAHvETL7ZYFipwvZlNiGfgIRhyJ4AoVEedEBndD0KAGBf8IBAaGhC6KnDdVyQA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7bCmhu4u/apYgz0dwhbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uLxrDpvF2XnH2Sze/H7B7sDhsWbeGkaPnbPusnss2FTq0bdlFaPH
+        lv2fGT0+b5ILYIvisklJzcksSy3St0vgyljUWlywW6ai/d1O9gbGr6JdjJwcEgImEns777F0
+        MXJxCAnsZpT4OWMfE4TziVGibeF3NgjnG6NE74NJ7DAty05dZ4dI7GWU6N94Car/NaPEgZ7d
+        YFVsAvoS537MYwWxRQR0Jb6ues4GYjML/GOUmHfUEMTmFHCSmL/3AFhcWCBM4tqJVYwgNouA
+        qsTyxVvBenkFLCVerO2HsgUlTs58wgIxR15i+9s5zBAXKUj8fLoMaleYxJ3jWxkhasQlXh49
+        AnaphMBnNokjhz4DFXEAOS4Sf7bzQfQKS7w6vgXqMymJl/1tUHa+xI/Fk5ghelsYJSYfn8sK
+        kbCXOHBlDgvIHGYBTYn1u/QhdvFJ9P5+wgQxnleio00IolpN4vvzM1Bnykg8bF7KBGF7SCxf
+        dol9AqPiLCSfzULy2SwkH8xCWLaAkWUVo2RqQXFuemqxaYFhXmq5XnFibnFpXrpecn7uJkZw
+        WtLy3ME465zPIUYBDkYlHl4LnapYIdbEsuLK3EOMEhzMSiK8Pm8qY4V4UxIrq1KL8uOLSnNS
+        iw8xSnOwKInzTmK9GiMkkJ5YkpqdmlqQWgSTZeLglGpgzEj13txrqasp2Xxzxa6ErV8VJ3sf
+        63m9YNKPJT2CAvdnbf15upRx8nOW1mXXvi3eLBluO6vl9bcY3g4Diz2tNXO3Rxc3pO+usVy6
+        ZneocWpFkYFR7s/1Lu0Wmos3vrpsUVS+a4mS1qW3bqcOCji6HU++e/SlGmdYvtvllV+n+xs9
+        mtyw/euyk0osxRmJhlrMRcWJAPvhOKRHAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsWy7bCSnO5O/apYg+6TkhbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uLxrDpvF2XnH2Sze/H7B7sDhsWbeGkaPnbPusnss2FTq0bdlFaPH
+        lv2fGT0+b5ILYIvisklJzcksSy3St0vgyljUWlywW6ai/d1O9gbGr6JdjJwcEgImEstOXWfv
+        YuTiEBLYzSixfv56VoiEjMTk1SugbGGJlf+eQxW9ZJTo6bvGCJJgE9CXOPdjHliRiICuxNdV
+        z9lAipgFWpgkmvf9YYLo6GCWWPbiNVgVp4CTxPy9B4CqODiEBUIkjh7PBwmzCKhKLF+8FayE
+        V8BS4sXafihbUOLkzCcsIOXMAnoSbRvB9jILyEtsfzuHGeI4BYmfT5dB3RAmcef4VqgacYmX
+        R4+wT2AUnoVk0iyESbOQTJqFpGMBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzg
+        2NLS3MF4eUn8IUYBDkYlHt4HmlWxQqyJZcWVuYcYJTiYlUR4fd5UxgrxpiRWVqUW5ccXleak
+        Fh9ilOZgURLnfZp3LFJIID2xJDU7NbUgtQgmy8TBKdXAmLNmXnfjuYpGxQdBBWJP2E5uEOFs
+        /GChwCJyo+nOjDvyTUoHFsuFVP+ZeqyjR3Lzvrj5RstevJyzosipYJvp+VCpY4mV+/keJIhN
+        8Ai0WvDylN3/zdVPui7y3glNX/OtvadCqkGJIddWU4Bff/3fW6t5OJbbl8deVXmyesFpv1ZN
+        i6yirb3JSizFGYmGWsxFxYkABGnTh6kCAAA=
+X-CMS-MailID: 20190912114457epcas5p3583f05a2afb308b54f44ace2cc803e60
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4
+References: <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+        <CGME20190910122520epcas5p1faeb16f7c38ee057ce93783a637e6bf4@epcas5p1.samsung.com>
+        <1568118302-10505-2-git-send-email-pankaj.dubey@samsung.com>
+        <20190910140502.GL9720@e119886-lin.cambridge.arm.com>
+        <CAGcde9Fm+WGamjAC6R4jmaShMYxAoCsofggfwdJ7viYt3NE_sQ@mail.gmail.com>
+        <20190911092710.GO9720@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove comparsion to NULL and unnecessary parentheses to avoid line
-length over 80 characters and follow kernel coding style.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-index 18dc9fc1c04a..e984b4605e91 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-@@ -507,7 +507,7 @@ static void issue_probersp(struct adapter *padapter, unsigned char *da)
- 		pwps_ie = rtw_get_wps_ie(cur_network->ies+_FIXED_IE_LENGTH_, cur_network->ie_length-_FIXED_IE_LENGTH_, NULL, &wps_ielen);
- 
- 		/* inerset & update wps_probe_resp_ie */
--		if ((pmlmepriv->wps_probe_resp_ie != NULL) && pwps_ie && (wps_ielen > 0)) {
-+		if (pmlmepriv->wps_probe_resp_ie && pwps_ie && wps_ielen > 0) {
- 			uint wps_offset, remainder_ielen;
- 			u8 *premainder_ie;
- 
--- 
-2.23.0
+> From: Andrew Murray <andrew.murray@arm.com>
+> 
+> On Tue, Sep 10, 2019 at 09:51:41PM +0530, Pankaj Dubey wrote:
+> > On Tue, 10 Sep 2019 at 19:59, Andrew Murray <andrew.murray@arm.com>
+> wrote:
+> > >
+> > > On Tue, Sep 10, 2019 at 05:55:02PM +0530, Pankaj Dubey wrote:
+> > > > From: Anvesh Salveru <anvesh.s@samsung.com>
+> > > >
+> > > > In some platforms, PCIe PHY may have issues which will prevent
+> > > > linkup to happen in GEN3 or high speed. In case equalization
+> > > > fails, link will fallback to GEN1.
+> > > >
+> > > > Designware controller gives flexibility to disable GEN3
+> > > > equalization completely or only phase 2 and 3.
+> > >
+> > > Do some platforms have issues conducting phase 2 and 3 when they
+> > > successfully conduct phase 0 and 1?
+> > >
+> >
+> > Yes, it is possible.
+> >
+> > > >
+> > > > Platform drivers can disable equalization phase 2 and 3, by
+> > > > setting dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+> > > >
+> > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-designware.c | 3 +++
+> > > > drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+> > > >  2 files changed, 5 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > index bf82091..97a8268 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > @@ -472,5 +472,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > > >       if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> > > >               val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > > >
+> > > > +     if (pci->dwc_pci_quirk & DWC_EQ_PHASE_2_3_DISABLE)
+> > > > +             val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+> > > > +
+> 
+> Also is it harmless to set both DWC_EQUALIZATION_DISABLE and
+> DWC_EQ_PHASE_2_3_DISABLE? (Which is permitted here).
+> 
+
+Yes, it will be harmless.
+
+> Thanks,
+> 
+> Andrew Murray
+> 
+> > > >       dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);  }
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > index a1453c5..b541508 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > @@ -31,6 +31,7 @@
+> > > >
+> > > >  /* Parameters for PCIe Quirks */
+> > > >  #define DWC_EQUALIZATION_DISABLE     0x1
+> > > > +#define DWC_EQ_PHASE_2_3_DISABLE     0x2
+> > >
+> > > It only makes sense for either DWC_EQUALIZATION_DISABLE or
+> > > DWC_EQ_PHASE_2_3_DISABLE to be specified, though if dwc_pci_quirk
+> > > intends to hold other quirks should these be numbers and not bit
+fields?
+> > >
+> > Yes, you are right in a given platform it will be either
+> > DWC_EQUALIZATION_DISABLE or DWC_EQ_PHASE_2_3_DISABLE.
+> >
+> > Intention behind making it bit-field was to add other quirks in future.
+> >
+> > > Thanks,
+> > >
+> > > Andrew Murray
+> > >
+> > > >
+> > > >  /* Synopsys-specific PCIe configuration registers */
+> > > >  #define PCIE_PORT_LINK_CONTROL               0x710
+> > > > @@ -65,6 +66,7 @@
+> > > >
+> > > >  #define PCIE_PORT_GEN3_RELATED               0x890
+> > > >  #define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > > > +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE BIT(9)
+> > > >
+> > > >  #define PCIE_ATU_VIEWPORT            0x900
+> > > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> > > > --
+> > > > 2.7.4
+> > > >
 
