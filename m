@@ -2,193 +2,206 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5B5C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2530C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570922075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6062075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qSf3nUDL"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RO0j8/wW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732322AbfILNtr (ORCPT
+        id S1732350AbfILNuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:49:47 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:44730 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732266AbfILNtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:49:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Tg9y2BcKz9tynD;
-        Thu, 12 Sep 2019 15:49:42 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qSf3nUDL; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wo9dfjP_jZ3y; Thu, 12 Sep 2019 15:49:42 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Tg9y18Gtz9tyn0;
-        Thu, 12 Sep 2019 15:49:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568296182; bh=S5Rj/VsPllO/e67elAP3xa/DfriYgmF1nk3PLh8/2RU=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=qSf3nUDLKiLU2lBqGhyyAhITHckttWe3DqGacdZRODYCzyQ/gEjLCXajrgbmbIyi2
-         7+Pf20K6FQk3+TkVuOS9qg9SbjUu2xe+21tJi5GeflaFB1anVm3RNxdjlczgEBlbw1
-         kQMNRgAXS97IZdSs89QMtmKaSd7j80YxaBg8VcXQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B44EE8B93B;
-        Thu, 12 Sep 2019 15:49:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id uXCJ-p7asimr; Thu, 12 Sep 2019 15:49:43 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 74CB98B933;
-        Thu, 12 Sep 2019 15:49:43 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 568E16B736; Thu, 12 Sep 2019 13:49:43 +0000 (UTC)
-Message-Id: <412c7eaa6a373d8f82a3c3ee01e6a65a1a6589de.1568295907.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1568295907.git.christophe.leroy@c-s.fr>
-References: <cover.1568295907.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 3/4] powerpc: Add support for GENERIC_EARLY_IOREMAP
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        hch@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 12 Sep 2019 13:49:43 +0000 (UTC)
+        Thu, 12 Sep 2019 09:50:19 -0400
+Received: from mail-eopbgr690099.outbound.protection.outlook.com ([40.107.69.99]:41455
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731420AbfILNuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:50:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C3I4zWumsb3u7Uz1RGCK+byGQkgZY9EVX+lJV8WquRC04EZEWIZfexGkPDbwAY0UUL7+97iBcxHNfAg/GFk5UQu11RbuzqZ2IbF0dGtVACc5heAtdsAFR5tWG/UHpnlFF6i+MGJEOfGsVhl7nJG9D8XYzTF0aYso6LOYLE5eSkTr5KxQ6eFwQRumZLk+8BSwMplxolrZlQRyrtUxBlDJNpIojWSHBSosuyla2lHgP47m92OZwf3UT8+zBTWI+QpbuQJr1LcsklMEXyHhBJ4gNhdD9B5w94hi3Mg/dxmMXdsIbmutvoYbSHgwQObCZ1e6BvOoKJUPK83haR/XwTum2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EufRYZ0Hn3z1noUB0hWEcnEZHRxrVu+DY8xVMCLznLU=;
+ b=khJ+uJBbkvSrWa7wloog3to78vOegHDgaIEaI/elyCkx16uUVG/M86GbBBERok/wTWJ8TpFCxMAZOzb0vQKqyW4MkO3vjbciyDvpLfMQcfeGtQ4veuz1fQ6sT4SSClo9xTVppysgyru7a/69iV3P86wgB5w/frPo3j9YDORTTRAptX7wZeo09yCH9h1KhBTFYI/iJy9gbwOEJRM3oJ2cD5Q6ouvilQbAMcm2fC7XJ6p7yXEY/j7EGX/gvNXm/+igNTKxDv21tiVIftRu2Kt+txY6A29I0v35xTQhYU6f7H83D3dbgydljp4vvt8UGuFahX0xfdLZyTSz1CSYLvdBsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EufRYZ0Hn3z1noUB0hWEcnEZHRxrVu+DY8xVMCLznLU=;
+ b=RO0j8/wW1AgXQmgYx/WVhHZLGtGS0iGAvNP9vlCpWp5TG7bAEfalzeF/xsxNOhwTkVelnoFpMdPWdNcMlt7XT+fSPxVguQ5OkWFklDPJ/795pPyAk/o2JT3R6WpiacA0bvrk+1SxBj7J1tpjFPpWvVjkEDE33lNVT1j1iJI0GHk=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1322.namprd21.prod.outlook.com (20.179.53.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.6; Thu, 12 Sep 2019 13:50:15 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639%6]) with mapi id 15.20.2263.005; Thu, 12 Sep 2019
+ 13:50:15 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH][PATCH net-next] hv_netvsc: Add the support of hibernation
+Thread-Topic: [PATCH][PATCH net-next] hv_netvsc: Add the support of
+ hibernation
+Thread-Index: AQHVaPnrTXkpPrlV+ESDlk6ioSqLf6coDp1g
+Date:   Thu, 12 Sep 2019 13:50:15 +0000
+Message-ID: <DM6PR21MB1337EEC46A276CAD9FAA5EB4CAB00@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1568245063-69693-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <1568245063-69693-1-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-12T13:50:14.1664906Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cf330f8a-bf0f-452f-9456-da47fa75c1da;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 74d12904-728f-4f0b-cbad-08d7378823f5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1322;
+x-ms-traffictypediagnostic: DM6PR21MB1322:|DM6PR21MB1322:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR21MB132281832B3FFA0CC41ECB7ECAB00@DM6PR21MB1322.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1148;
+x-forefront-prvs: 01583E185C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(40224003)(199004)(189003)(13464003)(76176011)(256004)(81156014)(14444005)(52536014)(66476007)(8936002)(81166006)(476003)(25786009)(11346002)(8990500004)(10090500001)(486006)(229853002)(66066001)(2906002)(3846002)(102836004)(8676002)(6116002)(26005)(5024004)(7696005)(2501003)(33656002)(6246003)(6306002)(186003)(6506007)(99286004)(316002)(66946007)(64756008)(66446008)(86362001)(53546011)(74316002)(66556008)(478600001)(110136005)(446003)(6436002)(76116006)(7736002)(1511001)(55016002)(22452003)(6636002)(305945005)(5660300002)(53936002)(71190400001)(71200400001)(966005)(9686003)(14454004)(2201001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1322;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7xQWIdvXYJ7VZQxd7MuUHPf2s/rFiOTcWUQn4D7TVj6MPeBQPYbqYxn7h4JGC/yLcThK6vGkMUKLeAYTDgJ78L3urntOB1OANH8Gv1Fn/PWCrYsjE3p2f/cKMJofuLUDBZIr0Mi2bCa66zyvvy6oZbYuRCpoJsjZxyY29i0jX9aJV6KZ80zLP8QqFQa+1xTu6w4P3toPnH58BOW9VUGvZNECT/b0QtSu39H+betrVWcyH6oIkAA5EXBuf+6LX6NBkCiaTp7hvjct7Cm2j6zAghM4/qEFzvDyy7OS0P6gpez31fLlLcaUzwFlr8IuLG0F6PCRxc+DlFIogTcGN9j69X37wy21klTE77sXa+MgCFmgSYFBoWdN1T6taPfyiURnywoXJAIQXZxC0MPnXplGaoqG8R8+Chqki4qyA5ed2+w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74d12904-728f-4f0b-cbad-08d7378823f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 13:50:15.3261
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3O9Nv6T6dPbhpmyt2QUO+n3+UBJ0K3GBC4/oBi1HVKi/ZCo1IL0JAeONiu5xKHOxwxuvM/1NwYTyj0FIvmxpOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1322
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for GENERIC_EARLY_IOREMAP.
 
-Let's define 16 slots of 256Kbytes each for early ioremap.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/Kbuild   |  1 +
- arch/powerpc/include/asm/fixmap.h | 12 ++++++++++++
- arch/powerpc/kernel/setup_32.c    |  3 +++
- arch/powerpc/kernel/setup_64.c    |  3 +++
- 5 files changed, 20 insertions(+)
+> -----Original Message-----
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Wednesday, September 11, 2019 7:38 PM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; sashal@kernel.org; davem@davemloft.net;
+> linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Subject: [PATCH][PATCH net-next] hv_netvsc: Add the support of hibernatio=
+n
+>=20
+> The existing netvsc_detach() and netvsc_attach() APIs make it easy to
+> implement the suspend/resume callbacks.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>=20
+> This patch is basically a pure Hyper-V specific change and it has a
+> build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
+> Implement
+> suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin=
+'s
+> Hyper-V tree's hyperv-next branch:
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.k
+> ernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fhyperv%2Flinux.git%2
+> Flog%2F%3Fh%3Dhyperv-
+> next&amp;data=3D02%7C01%7Chaiyangz%40microsoft.com%7C0b84e40c446
+> 648cc35fb08d737110e28%7C72f988bf86f141af91ab2d7cd011db47%7C1%7
+> C0%7C637038418703112019&amp;sdata=3Dqd7DGFCJZ%2BDTix0VGcCe1JucV
+> O97E0gILpVpcxlA6EE%3D&amp;reserved=3D0
+>=20
+> I request this patch should go through Sasha's tree rather than the
+> net-next tree.
+>=20
+>  drivers/net/hyperv/hyperv_net.h |  3 +++
+>  drivers/net/hyperv/netvsc_drv.c | 59
+> +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+>=20
+> diff --git a/drivers/net/hyperv/hyperv_net.h
+> b/drivers/net/hyperv/hyperv_net.h
+> index ecc9af0..b8763ee 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -952,6 +952,9 @@ struct net_device_context {
+>  	u32 vf_alloc;
+>  	/* Serial number of the VF to team with */
+>  	u32 vf_serial;
+> +
+> +	/* Used to temporarily save the config info across hibernation */
+> +	struct netvsc_device_info *saved_netvsc_dev_info;
+>  };
+>=20
+>  /* Per channel data */
+> diff --git a/drivers/net/hyperv/netvsc_drv.c
+> b/drivers/net/hyperv/netvsc_drv.c
+> index afdcc56..f920959 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -2392,6 +2392,63 @@ static int netvsc_remove(struct hv_device *dev)
+>  	return 0;
+>  }
+>=20
+> +static int netvsc_suspend(struct hv_device *dev)
+> +{
+> +	struct net_device_context *ndev_ctx;
+> +	struct net_device *vf_netdev, *net;
+> +	struct netvsc_device *nvdev;
+> +	int ret;
+> +
+> +	net =3D hv_get_drvdata(dev);
+> +
+> +	ndev_ctx =3D netdev_priv(net);
+> +	cancel_delayed_work_sync(&ndev_ctx->dwork);
+> +
+> +	rtnl_lock();
+> +
+> +	nvdev =3D rtnl_dereference(ndev_ctx->nvdev);
+> +	if (nvdev =3D=3D NULL) {
+> +		ret =3D -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	cancel_work_sync(&nvdev->subchan_work);
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 6a7c797fa9d2..8fe252962518 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -161,6 +161,7 @@ config PPC
- 	select GENERIC_CMOS_UPDATE
- 	select GENERIC_CPU_AUTOPROBE
- 	select GENERIC_CPU_VULNERABILITIES	if PPC_BARRIER_NOSPEC
-+	select GENERIC_EARLY_IOREMAP
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_IRQ_SHOW_LEVEL
- 	select GENERIC_PCI_IOMAP		if PCI
-diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-index 9a1d2fc6ceb7..30829120659c 100644
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -12,3 +12,4 @@ generic-y += preempt.h
- generic-y += vtime.h
- generic-y += msi.h
- generic-y += simd.h
-+generic-y += early_ioremap.h
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 722289a1d000..d5c4d357bd33 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -15,6 +15,7 @@
- #define _ASM_FIXMAP_H
- 
- #ifndef __ASSEMBLY__
-+#include <linux/sizes.h>
- #include <asm/page.h>
- #include <asm/pgtable.h>
- #ifdef CONFIG_HIGHMEM
-@@ -64,6 +65,14 @@ enum fixed_addresses {
- 		       FIX_IMMR_SIZE,
- #endif
- 	/* FIX_PCIE_MCFG, */
-+	__end_of_permanent_fixed_addresses,
-+
-+#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
-+#define FIX_BTMAPS_SLOTS	16
-+#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-+
-+	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-+	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
- 	__end_of_fixed_addresses
- };
- 
-@@ -71,6 +80,7 @@ enum fixed_addresses {
- #define FIXADDR_START		(FIXADDR_TOP - __FIXADDR_SIZE)
- 
- #define FIXMAP_PAGE_NOCACHE PAGE_KERNEL_NCG
-+#define FIXMAP_PAGE_IO	PAGE_KERNEL_NCG
- 
- #include <asm-generic/fixmap.h>
- 
-@@ -85,5 +95,7 @@ static inline void __set_fixmap(enum fixed_addresses idx,
- 	map_kernel_page(__fix_to_virt(idx), phys, flags);
- }
- 
-+#define __early_set_fixmap	__set_fixmap
-+
- #endif /* !__ASSEMBLY__ */
- #endif
-diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
-index a7541edf0cdb..dcffe927f5b9 100644
---- a/arch/powerpc/kernel/setup_32.c
-+++ b/arch/powerpc/kernel/setup_32.c
-@@ -44,6 +44,7 @@
- #include <asm/asm-prototypes.h>
- #include <asm/kdump.h>
- #include <asm/feature-fixups.h>
-+#include <asm/early_ioremap.h>
- 
- #include "setup.h"
- 
-@@ -80,6 +81,8 @@ notrace void __init machine_init(u64 dt_ptr)
- 	/* Configure static keys first, now that we're relocated. */
- 	setup_feature_keys();
- 
-+	early_ioremap_setup();
-+
- 	/* Enable early debugging if any specified (see udbg.h) */
- 	udbg_early_init();
- 
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index 44b4c432a273..b85f6a1cc3a1 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -65,6 +65,7 @@
- #include <asm/hw_irq.h>
- #include <asm/feature-fixups.h>
- #include <asm/kup.h>
-+#include <asm/early_ioremap.h>
- 
- #include "setup.h"
- 
-@@ -338,6 +339,8 @@ void __init early_setup(unsigned long dt_ptr)
- 	apply_feature_fixups();
- 	setup_feature_keys();
- 
-+	early_ioremap_setup();
-+
- 	/* Initialize the hash table or TLB handling */
- 	early_init_mmu();
- 
--- 
-2.13.3
+This looks redundant because netvsc_detach() cancels subchan_work.
+
+Thanks,
+- Haiyang
 
