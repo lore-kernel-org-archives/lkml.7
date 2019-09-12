@@ -2,120 +2,164 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE51C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096F3C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8BE20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oMeGLKfj"
+	by mail.kernel.org (Postfix) with ESMTP id C813D20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568296091;
+	bh=7oylp5CxOhNpYn3U2ca6Im+P2+1WJynqgSDAjEI39AM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=giOCbZ0LBnhMBB5klglObpsxHaBHqVfhZtt1vWhlnG4XKBj3O4ZaruSAD04xTG33h
+	 YQGqGJt4yZph3+wGk4STdRilG6UaJ9IFQZVe88eRVZFlXZiT2WTYKcUHJwEItKrIqY
+	 3gh+4fsMAEBS9NbjU7A+AJe34OywWWVGuOagwId4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbfILNsG (ORCPT
+        id S1732316AbfILNsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:48:06 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46341 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732262AbfILNsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:48:06 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v11so29555614qto.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rKkk8JOcHxODl2WFnm1Rghz+daQvfyVneTOsrZmsJ4k=;
-        b=oMeGLKfj0ZzTBSi+GKe9O02YwndGj3Ia4Nwi4Q7OXG4tD/6XWsn/cteOXh+cXL63h1
-         rzM4QokqWOhUDvER/NKcfzZAjx1FSVZFgxsvsBhIjsaQ10TnR9hf+URAGZ5W84aKdrFA
-         kVzXvYlNz0OwGFOQ1iM16sOdYVdaksS9BpU4oE0misV5seyzXCEdZR7b7vlJMfYRGKsB
-         QKR0mGRgJVmyx13h8/rphW7k2ggS3bLFiDiXIlaEb8SnJdUOT0AZlbm6rj1RWOj/rV/Y
-         EPOFyTMmGYu22gs851nSlU4KjUqLCjAV0fgY7gpYaV3W64mahKEtb53wH4Uh1ugSN044
-         GQFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rKkk8JOcHxODl2WFnm1Rghz+daQvfyVneTOsrZmsJ4k=;
-        b=oDQfuiBhRVVY8LzE91edKHqzdFn8aKqfvAOb4RJXxRfTz0lw8wdx0xFFs+ea8AC6BG
-         2TZSopZ8MFrCcuQfn4Zy1WAtzzf5P8AgX2jt05hlmpGVV+T0Ft1chrWr/3Mjb/gkn6mm
-         wUnB2cKR7rmGEThAIuUcLVpp+Kwul8+zZIX5ZsdVO8Kx50Hsf9W9oZrJeoS7t+5B/HYE
-         mmtKT43ce6cDd1UBXMO7/qbm2LD3u+TLZ/EwwvsJ/w07QsBFA0DC/fhF81V5MIi6RV1v
-         3E+xBu7aJwY15uiUErsMbHxp58Y7DrQBL8cxiT3hrm7CQhuio8SaEukTC5vs+9VRuxGO
-         oQag==
-X-Gm-Message-State: APjAAAUhaWxZJhGL5cxr6Sbl9BH34unehgvtXbpcmPKoSuRWCPlQ7Pbc
-        kFPqou9pT8S1mUpECeQ0s7K6z+N2ixo=
-X-Google-Smtp-Source: APXvYqxCe2JMNq1Ggi+fPGa/aLOY3Yy1INyO1KSi1s+atLHs2+agFimmaZvKZC3WEMTxCIm/3yjdxw==
-X-Received: by 2002:ac8:5296:: with SMTP id s22mr40614483qtn.139.1568296085053;
-        Thu, 12 Sep 2019 06:48:05 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h29sm15126219qtb.46.2019.09.12.06.48.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 06:48:04 -0700 (PDT)
-Message-ID: <1568296082.5576.141.camel@lca.pw>
-Subject: Re: [PATCH] powerpc/mm/radix: remove useless kernel messages
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        aneesh.kumar@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 12 Sep 2019 09:48:02 -0400
-In-Reply-To: <1566570120-16529-1-git-send-email-cai@lca.pw>
-References: <1566570120-16529-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 12 Sep 2019 09:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732258AbfILNsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:48:09 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D101620856;
+        Thu, 12 Sep 2019 13:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568296088;
+        bh=7oylp5CxOhNpYn3U2ca6Im+P2+1WJynqgSDAjEI39AM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QHIHYTTUG0NmDONZPRScPVrmpwDctw+3rsAT8BN0mvlQSXhWRIY4Ulel4ozHUDQqA
+         jY6h1RaMoBzke1010tIkiHGJwgoDvUL2y8xLVAFT9Lw3TsvGyHcO8h+ehjkFBBtiLc
+         RtVuu3abN+g6I3Z1AiIgRTaKPGaJHm/bfeIDuFGM=
+Date:   Thu, 12 Sep 2019 14:48:02 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 4/4] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load (v2)
+Message-ID: <20190912134802.mhxyy25xemy5sycm@willie-the-truck>
+References: <20190906082305.GU2349@hirez.programming.kicks-ass.net>
+ <20190908134909.12389-1-mathieu.desnoyers@efficios.com>
+ <CAHk-=wg3AANn8K3OyT7KRNvVC5s0rvWVxXJ=_R+TAd3CGdcF+A@mail.gmail.com>
+ <137355288.1941.1568108882233.JavaMail.zimbra@efficios.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <137355288.1941.1568108882233.JavaMail.zimbra@efficios.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael, Aneesh, please take a take at this trivial patch.
+On Tue, Sep 10, 2019 at 05:48:02AM -0400, Mathieu Desnoyers wrote:
+> ----- On Sep 8, 2019, at 5:51 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+> 
+> > On Sun, Sep 8, 2019 at 6:49 AM Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> +static void sync_runqueues_membarrier_state(struct mm_struct *mm)
+> >> +{
+> >> +       int membarrier_state = atomic_read(&mm->membarrier_state);
+> >> +       bool fallback = false;
+> >> +       cpumask_var_t tmpmask;
+> >> +
+> >> +       if (!zalloc_cpumask_var(&tmpmask, GFP_NOWAIT)) {
+> >> +               /* Fallback for OOM. */
+> >> +               fallback = true;
+> >> +       }
+> >> +
+> >> +       /*
+> >> +        * For each cpu runqueue, if the task's mm match @mm, ensure that all
+> >> +        * @mm's membarrier state set bits are also set in in the runqueue's
+> >> +        * membarrier state. This ensures that a runqueue scheduling
+> >> +        * between threads which are users of @mm has its membarrier state
+> >> +        * updated.
+> >> +        */
+> >> +       cpus_read_lock();
+> >> +       rcu_read_lock();
+> >> +       for_each_online_cpu(cpu) {
+> >> +               struct rq *rq = cpu_rq(cpu);
+> >> +               struct task_struct *p;
+> >> +
+> >> +               p = task_rcu_dereference(&rq->curr);
+> >> +               if (p && p->mm == mm) {
+> >> +                       if (!fallback)
+> >> +                               __cpumask_set_cpu(cpu, tmpmask);
+> >> +                       else
+> >> +                               smp_call_function_single(cpu, ipi_sync_rq_state,
+> >> +                                                        mm, 1);
+> >> +               }
+> >> +       }
+> > 
+> > I really absolutely detest this whole "fallback" code.
+> > 
+> > It will never get any real testing, and the code is just broken.
+> > 
+> > Why don't you just use the mm_cpumask(mm) unconditionally? Yes, it
+> > will possibly call too many CPU's, but this fallback code is just
+> > completely disgusting.
+> > 
+> > Do a simple and clean implementation. Then, if you can show real
+> > performance issues (which I doubt), maybe do something else, but even
+> > then you should never do something that will effectively create cases
+> > that have absolutely zero test-coverage.
+> 
+> A few points worth mentioning here:
+> 
+> 1) As I stated earlier, using mm_cpumask in its current form is not
+>    an option for membarrier. For two reasons:
+> 
+>    A) The mask is not populated on all architectures (e.g. arm64 does
+>       not populate it),
+> 
+>    B) Even if it was populated on all architectures, we would need to
+>       carefully audit and document every spot where this mm_cpumask
+>       is set or cleared within each architecture code, and ensure we
+>       have the required memory barriers between user-space memory
+>       accesses and those stores, documenting those requirements into
+>       each architecture code in the process. This seems to be a lot of
+>       useless error-prone code churn.
+> 
+> 2) I should actually use GFP_KERNEL rather than GFP_NOWAIT in this
+>    membarrier registration code. But it can still fail. However, the other
+>    membarrier code using the same fallback pattern (private and global
+>    expedited) documents that those membarrier commands do not block in
+>    the membarrier(2) man page, so GFP_NOWAIT is appropriate in those cases.
+> 
+> 3) Testing-wise, I fully agree with your argument of lacking test coverage.
+>    One option I'm considering would be to add a selftest based on the
+>    fault-injection infrastructure, which would ensure that we have coverage
+>    of the failure case in the kernel selftests.
+> 
+> Thoughts ?
 
-On Fri, 2019-08-23 at 10:22 -0400, Qian Cai wrote:
-> Booting a POWER9 PowerNV system generates a few messages below with
-> "____ptrval____" due to the pointers printed without a specifier
-> extension (i.e unadorned %p) are hashed to prevent leaking information
-> about the kernel memory layout.
-> 
-> radix-mmu: Initializing Radix MMU
-> radix-mmu: Partition table (____ptrval____)
-> radix-mmu: Mapped 0x0000000000000000-0x0000000040000000 with 1.00 GiB
-> pages (exec)
-> radix-mmu: Mapped 0x0000000040000000-0x0000002000000000 with 1.00 GiB
-> pages
-> radix-mmu: Mapped 0x0000200000000000-0x0000202000000000 with 1.00 GiB
-> pages
-> radix-mmu: Process table (____ptrval____) and radix root for kernel:
-> (____ptrval____)
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/powerpc/mm/book3s64/radix_pgtable.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> index b4ca9e95e678..b6692ee9411d 100644
-> --- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-> +++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> @@ -386,7 +386,6 @@ static void __init radix_init_pgtable(void)
->  	 * physical address here.
->  	 */
->  	register_process_table(__pa(process_tb), 0, PRTB_SIZE_SHIFT - 12);
-> -	pr_info("Process table %p and radix root for kernel: %p\n", process_tb, init_mm.pgd);
->  	asm volatile("ptesync" : : : "memory");
->  	asm volatile(PPC_TLBIE_5(%0,%1,2,1,1) : :
->  		     "r" (TLBIEL_INVAL_SET_LPID), "r" (0));
-> @@ -420,7 +419,6 @@ static void __init radix_init_partition_table(void)
->  	mmu_partition_table_set_entry(0, dw0, 0);
->  
->  	pr_info("Initializing Radix MMU\n");
-> -	pr_info("Partition table %p\n", partition_tb);
->  }
->  
->  void __init radix_init_native(void)
+So the man page for sys_membarrier states that the expedited variants "never
+block", which feels pretty strong. Do any other system calls claim to
+provide this guarantee without a failure path if blocking is necessary?
+Given that the whole thing is preemptible, I'm also curious as to how
+exactly userspace relies on this non-blocking guarantee.  I'd have thought
+that you could either just bite the bullet and block in the rare case that
+you need to when allocating the cpumask, or you could just return
+-EWOULDBLOCK on allocation failure, given that I suspect there are very few
+users of this system call right now and it's not yet supported by glibc
+afaik.
+
+Will
