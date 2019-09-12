@@ -4,365 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C805C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16FC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3367E2081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434072081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZEvGYnH"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="iaKWGezU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfILPEk (ORCPT
+        id S1732978AbfILPKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:04:40 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:33159 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732592AbfILPEk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:04:40 -0400
-Received: by mail-vk1-f196.google.com with SMTP id q186so5224574vkb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 08:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xFNNCOgYKpq2tfIBsvM5Q2EFA3f47YwR/HKpQvuH55A=;
-        b=AZEvGYnHobz+aCT+xnfAm+qo5L3S6S0AsimwkFQLGvUSD1g9sEjVwzSPupFnLuhUGb
-         BkJp+eA6AN7OZp6PYY//MtWmqLqL6DjY5KT59ehRnTV2w9kilGBb7+zg/Lm/9PMIMAwU
-         yaaC8yubvTQWQ6q22ByA5EqaO/cu2bJABaQNJwntZBiI1668H2QIAG4W1vWCf5PQ+bDq
-         sINOBDMlzXWVnhASAglbBurBC1bHAK3wSNkv5g0+e/5v1+GpIoJZnk06vF4hCc0oDjQv
-         D1HUQ8r+Gz0ca+OaEINpNDWtZQXKgcLdrHScU/jJAu6Cw7ZBMW6ODoMZtB8VK4iX2sol
-         2Y1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xFNNCOgYKpq2tfIBsvM5Q2EFA3f47YwR/HKpQvuH55A=;
-        b=JWKk0SDU061CtRJgW61lHip8fI37petWsTprQqQhuOz4x8HoctKDE1AV3jjV0J1l1u
-         7/m+uzLT9XC5NDMiPfb+1Z6cMWX8q5VSowrMhjJEP0aGZ4+rfwSLOK6ps+qBpTbf8tnS
-         Kx90zwOkrU31qI0slGw0ytBpPJ9vRcxhhFLks2FZaF2Om37YzjmkwGaIJRu3sQZw++m7
-         aD/BKDBN+ZD4hSy4nyGIZ9meQqi/p4UQ3wGgYrQGTQ0F+47+Uz8VrPI2iB6ex3qGyHxe
-         Yn2TQrOVFUQvuKIMOL9veIdGbS+JxhknICsMbURhr1MjzG8oU42dftNewgJ2S+dtK6l7
-         6JHg==
-X-Gm-Message-State: APjAAAXAzjnGDiZ4wd6iLvV8YHDWuU+NbneYV8pIoxhkOcW+TXXiE42m
-        vrBgQHPgttjHmsOC8xFvnnlc+CXKeM3yH88sN4dA3A==
-X-Google-Smtp-Source: APXvYqzDZaA8bVUczMnOc9xu5hIchlU6tSMAYQmK9E71nFn77GkeKYvDio8gEXBBxH2xAQd8ycVUZdJh7BnvQANMu2s=
-X-Received: by 2002:a1f:8c50:: with SMTP id o77mr7663416vkd.52.1568300678305;
- Thu, 12 Sep 2019 08:04:38 -0700 (PDT)
+        Thu, 12 Sep 2019 11:10:18 -0400
+Received: from mail-eopbgr150043.outbound.protection.outlook.com ([40.107.15.43]:20316
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732715AbfILPKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:10:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NJ6sSftcgdjM8LTkcnIP5/LzQR+1LZQFgnMp2mP54xU55py8W0ob5piwgS15eqqxbkL8g4qAwBV4CsMOCHh33iS+2fMmppDoLlza66N5og98ZIpzbkZP5ihPmhnqCs790jwGEW5NRzEc1HbtmEIw8K1T/DOnxd9d+DLTcSao/twN0dMg8AKDoHLWQ1B8Fatc4xy7nGxQ6+DYSVecBRw2cQIlKB3pB/R8XQ8EwaJhh+3UB49cpocTTWsCiJ34nyfSZxKvkDCnrpQuH3jj6gMH0jaN/V+KwlTv0vxk3d3tOTcGsiK65Kct6aAIU7JO+WYKGcka84AEQCrWCffGTdROGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HClE9pg+iaUzcloG3yF69u+OwIYyr3ZX25d4/JnowfE=;
+ b=TJTgDtl8cuiM9qLWx9WvOdvSM4a0nbzrw0j89JhhwqQlwMJuqDMP4AHxqBrN+78jHPThZe6fW7Ay3M5COx58DHGIyFBb+LRDcrtfJv4c1eqnDKcOww56t/mcsSwgBduh97aq9FHrCb1W7PSrSv1njmW7lJRijuB62P60uHtjDAWnWaGRyPmxzIBRybUimC/OQQUpHq7j02LGOvXk2bZqxSO4fqR0ioy9kEse7/nElA3tnJ54SJuo02RTvMwHU5YoQKOpjpNF3J+UEvbw21hsOsemt8dLgIGGBLOHUQ2ccVw41NsNpp72K3V+dWJ/praPMAOqQ8Y9QogVcYixqiL8Fg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HClE9pg+iaUzcloG3yF69u+OwIYyr3ZX25d4/JnowfE=;
+ b=iaKWGezUh6YkWP/CgMHTlOSHZPakrgRwFdCBqGPqdB7vOzhLh6oGlQVHGzHyLGoVTYHsMS6idgqq/8pEAgYX7hvlZqOsRDWudzvAvQuRyn6CHliM8R13amiFedPPYhhBBAQ341MMo+7RCwNFc6P7HoCwSkFvVVAPGA80i9G2tl8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5616.eurprd05.prod.outlook.com (20.177.203.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Thu, 12 Sep 2019 15:10:12 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2241.022; Thu, 12 Sep 2019
+ 15:10:12 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Selvin Xavier <selvin.xavier@broadcom.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RDMA/bnxt_re: fix spelling mistake "missin_resp" ->
+ "missing_resp"
+Thread-Topic: [PATCH] RDMA/bnxt_re: fix spelling mistake "missin_resp" ->
+ "missing_resp"
+Thread-Index: AQHVaXws6N6XSST4B0exfPzef9SRcQ==
+Date:   Thu, 12 Sep 2019 15:10:12 +0000
+Message-ID: <20190912150957.GA9160@mellanox.com>
+References: <20190911092856.11146-1-colin.king@canonical.com>
+In-Reply-To: <20190911092856.11146-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DM5PR1401CA0007.namprd14.prod.outlook.com
+ (2603:10b6:4:4a::17) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [199.167.24.153]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 631c54bd-6dc9-4e11-8fea-08d737934f06
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5616;
+x-ms-traffictypediagnostic: VI1PR05MB5616:
+x-microsoft-antispam-prvs: <VI1PR05MB561626A0E3A6BC22BC665347CFB00@VI1PR05MB5616.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 01583E185C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(189003)(199004)(229853002)(8936002)(66066001)(26005)(6916009)(256004)(14444005)(316002)(2906002)(36756003)(186003)(6116002)(3846002)(4744005)(1076003)(386003)(14454004)(5660300002)(102836004)(6506007)(6436002)(54906003)(6486002)(476003)(66556008)(52116002)(11346002)(66446008)(71200400001)(66946007)(25786009)(64756008)(478600001)(446003)(86362001)(71190400001)(6512007)(81166006)(99286004)(2616005)(76176011)(4326008)(6246003)(53936002)(33656002)(81156014)(8676002)(66476007)(486006)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5616;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eL3jK6/RTYrzkfxEkwxW8HPzHLIlEHzwVFbpkGOQI8WwsSLsEqd2L0jGrEJH/+qMCJ/ferGchYkFjcm41m3Imt5nO0J7cYjJ1tWbI5iVw7MtkhUMMSuhWVCKj1i/vBIxkL41kNu7W6iJNn2zeY3+j+QNpX8dFBuB1LNizEFgWmbcJS382o08GzOr6H4ryN3/2H4J9a8pTX4SiPboqgQDj7OF80WBqp/f3yjg/nUA4+eOHbIVK9+Kd6J8ZYUDGgGKKF1Hdo8uccqQL8qjWp/JlHeoDVVpTqjoEHHyk7BQBOItgwAzV9G9uAnN8rTFl9Bn1Ljw15MKzNAFN/g+8oiL2tUiucfapivrCVBONZhEFqcbUtVRzgyRUoOX8HPSccXAebWF5Pn2qu0gvhFBxvf1HkAPQ2k2UzRwKYLVPAuRF1Y=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F312E810625BCB45B0A68D063AFAB0B9@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org> <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Sep 2019 17:04:01 +0200
-Message-ID: <CAPDyKFpzeF6Adu9qBTFazTzbe=rv90x1UjKqC2LvCDpoXBJfVQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] thermal: Add generic power domain warming device driver.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
-        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 631c54bd-6dc9-4e11-8fea-08d737934f06
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 15:10:12.3403
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dqs8FfpgKARC94iuGywyWD5z6oeRfeiYmQ3o0VLaFcpqD/QV0ZAR114E3SH+qW1FyOqiA5mhCFLACIQfwlK1Xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5616
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 at 19:14, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Resources modeled as power domains in linux kenrel
-> can  be used to warm the SoC(eg. mx power domain on sdm845).
-> To support this feature, introduce a generic power domain
-> warming device driver that can be plugged into the thermal framework
-> (The thermal framework itself requires further modifiction to
-> support a warming device in place of a cooling device.
-> Those extensions are not introduced in this patch series).
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+On Wed, Sep 11, 2019 at 10:28:56AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> There is a spelling mistake in a literal string, fix it.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
-> v1->v2:
->         - Make power domain based warming device driver a generic
->         driver in the thermal framework. v1 implemented this as a
->         Qualcomm specific driver.
->         - Rename certain variables as per review suggestions on the
->         mailing list.
->
->  drivers/thermal/Kconfig              |  11 +++
->  drivers/thermal/Makefile             |   2 +
->  drivers/thermal/pwr_domain_warming.c | 174 +++++++++++++++++++++++++++++++++++
->  3 files changed, 187 insertions(+)
->  create mode 100644 drivers/thermal/pwr_domain_warming.c
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364..eeb6018 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -187,6 +187,17 @@ config DEVFREQ_THERMAL
->
->           If you want this support, you should say Y here.
->
-> +config PWR_DOMAIN_WARMING_THERMAL
-> +       bool "Power Domain based warming device"
-> +       depends on PM_GENERIC_DOMAINS
-> +       depends on PM_GENERIC_DOMAINS_OF
+>  drivers/infiniband/hw/bnxt_re/hw_counters.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/infiniband/hw/bnxt_re/hw_counters.c b/drivers/infini=
+band/hw/bnxt_re/hw_counters.c
+> index 604b71875f5f..3421a0b15983 100644
+> --- a/drivers/infiniband/hw/bnxt_re/hw_counters.c
+> +++ b/drivers/infiniband/hw/bnxt_re/hw_counters.c
+> @@ -74,7 +74,7 @@ static const char * const bnxt_re_stat_name[] =3D {
+>  	[BNXT_RE_SEQ_ERR_NAKS_RCVD]     =3D "seq_err_naks_rcvd",
+>  	[BNXT_RE_MAX_RETRY_EXCEEDED]    =3D "max_retry_exceeded",
+>  	[BNXT_RE_RNR_NAKS_RCVD]         =3D "rnr_naks_rcvd",
+> -	[BNXT_RE_MISSING_RESP]          =3D "missin_resp",
+> +	[BNXT_RE_MISSING_RESP]          =3D "missing_resp",
 
-PM_GENERIC_DOMAINS_OF can't be set unless PM_GENERIC_DOMAINS is set too.
+Broadcom folks, can you confirm if this is OK? Is the string ABI for
+this driver?
 
-So I assume it's sufficient to depend on PM_GENERIC_DOMAINS_OF?
-
-> +       help
-> +         This implements the generic power domain based warming
-> +         mechanism through increasing the performance state of
-> +         a power domain.
-> +
-> +         If you want this support, you should say Y here.
-> +
->  config THERMAL_EMULATION
->         bool "Thermal emulation mode support"
->         help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7..382c64a 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->
-> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pwr_domain_warming.o
-> +
->  # platform thermal drivers
->  obj-y                          += broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
-> new file mode 100644
-> index 0000000..3dd792b
-> --- /dev/null
-> +++ b/drivers/thermal/pwr_domain_warming.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd
-> + */
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/thermal.h>
-> +
-> +struct pd_warming_device {
-> +       struct thermal_cooling_device *cdev;
-> +       struct device *dev;
-> +       int max_state;
-> +       int cur_state;
-> +       bool runtime_resumed;
-> +};
-> +
-> +static const struct of_device_id pd_wdev_match_table[] = {
-> +       { .compatible = "thermal-power-domain-wdev", .data = NULL },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, pd_wdev_match_table);
-> +
-> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = pd_wdev->max_state;
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = dev_pm_genpd_get_performance_state(pd_wdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = pd_wdev->dev;
-> +       int ret;
-> +
-> +       ret = dev_pm_genpd_set_performance_state(dev, state);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (state && !pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_get_sync(dev);
-> +               pd_wdev->runtime_resumed = true;
-> +       } else if (!state && pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_put(dev);
-> +               pd_wdev->runtime_resumed = false;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> +       .get_max_state = pd_wdev_get_max_state,
-> +       .get_cur_state = pd_wdev_get_cur_state,
-> +       .set_cur_state = pd_wdev_set_cur_state,
-> +};
-> +
-> +static int pd_wdev_create(struct device *dev, const char *name)
-> +{
-> +       struct pd_warming_device *pd_wdev;
-> +       int state_count;
-> +
-> +       pd_wdev = devm_kzalloc(dev, sizeof(*pd_wdev), GFP_KERNEL);
-> +       if (!pd_wdev)
-> +               return -ENOMEM;
-> +
-> +       state_count = dev_pm_genpd_performance_state_count(dev);
-> +       if (state_count < 0)
-> +               return state_count;
-> +
-> +       pd_wdev->dev = dev;
-> +       pd_wdev->max_state = state_count - 1;
-> +       pd_wdev->runtime_resumed = false;
-> +
-> +       pm_runtime_enable(dev);
-> +
-> +       pd_wdev->cdev = thermal_of_cooling_device_register
-> +                                       (dev->of_node, name,
-> +                                        pd_wdev,
-> +                                        &pd_warming_device_ops);
-> +       if (IS_ERR(pd_wdev->cdev)) {
-> +               dev_err(dev, "unable to register %s cooling device\n", name);
-> +               pm_runtime_disable(dev);
-> +
-> +               return PTR_ERR(pd_wdev->cdev);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev, *pd_dev;
-> +       const char *pd_name;
-> +       int id, count, ret = 0;
-> +
-> +       count = of_count_phandle_with_args(dev->of_node, "power-domains",
-> +                                          "#power-domain-cells");
-
-Perhaps this should be converted to genpd OF helper function instead,
-that allows the caller to know how many power-domains there are
-specified for a device node.
-
-> +
-> +       if (count > 1) {
-> +               for (id = 0; id < count; id++) {
-> +                       ret = of_property_read_string_index
-> +                                       (dev->of_node, "power-domain-names",
-> +                                        id, &pd_name);
-> +                       if (ret) {
-> +                               dev_err(dev, "Error reading the power domain name %d\n", ret);
-> +                               continue;
-> +                       }
-
-It looks a bit awkward that you want to re-use the power-domain-names
-as the name for the cooling (warming) device. This isn't really what
-we use the "*-names" bindings for in general, I think.
-
-Anyway, if you want a name corresponding to the actual attached PM
-domain, perhaps re-using "->name" from the struct generic_pm_domain is
-better. We can add a genpd helper for that, no problem. Of course it
-also means that you must call dev_pm_domain_attach_by_id() first, to
-attach the device and then get the name of the genpd, but that should
-be fine.
-
-> +
-> +                       pd_dev = dev_pm_domain_attach_by_id(dev, id);
-> +                       if (IS_ERR(pd_dev)) {
-> +                               dev_err(dev, "Error attaching power domain %s %ld\n", pd_name, PTR_ERR(pd_dev));
-> +                               continue;
-> +                       }
-> +
-> +                       ret = pd_wdev_create(pd_dev, pd_name);
-> +                       if (ret) {
-> +                               dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
-> +                               dev_pm_domain_detach(pd_dev, false);
-> +                               continue;
-> +                       }
-
-I am wondering about the use case of having multiple PM domains
-attached to the cooling (warming) device. Is that really needed?
-Perhaps you can elaborate on that a bit?
-
-> +               }
-> +       } else if (count == 1) {
-> +               ret = of_property_read_string_index(dev->of_node,
-> +                                                   "power-domain-names",
-> +                                                   0, &pd_name);
-> +               if (ret) {
-> +                       dev_err(dev, "Error reading the power domain name %d\n", ret);
-> +                       goto exit;
-> +               }
-
-According to my comment above, perhaps we simply don't have to use the
-"power-domain-names" binding at all.
-
-Also, I don't think this is really safe, as there is no guarantee that
-there is PM domain attached to the device, just because you found the
-DT property "power-domain-names".
-
-Probably better to check pm_domain pointer for the device.
-
-> +
-> +               ret = pd_wdev_create(dev, pd_name);
-> +               if (ret) {
-> +                       dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
-> +                       goto exit;
-> +               }
-> +       } else  {
-> +               ret = -EINVAL;
-> +       }
-> +
-> +exit:
-> +       return ret;
-> +}
-> +
-> +static struct platform_driver pd_wdev_driver = {
-> +       .driver = {
-> +               .name = "qcom-rpmhpd-cdev",
-
-Probably rename to a more generic name (leftover from earlier version I assume).
-
-> +               .of_match_table = pd_wdev_match_table,
-> +       },
-> +       .probe = pd_wdev_probe,
-> +};
-> +module_platform_driver(pd_wdev_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm RPMHPD cooling device driver");
-
-Ditto.
-
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.1.4
->
-
-Kind regards
-Uffe
+Jason
