@@ -4,82 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8320C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A7AC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6085206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F90520856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jm6q7ISk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PA9DbItK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbfILNnT (ORCPT
+        id S1732244AbfILNoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:43:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36161 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732165AbfILNnS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:43:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x80so19430438lff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nZt0B3xrqHLHU4EvkiZMlrE7A5+KS8ARbT0ipn5PjfE=;
-        b=jm6q7ISk/RfhVugAWF5YSK2afzSWJDBFxAi7oi9VZErcMD7Z1AukPdyibpKG5vTRe2
-         jFmOIewoNoWhvEzTu8X+x7EZuqE5RgFfWm3QrjW9c7PRikJmv8w8KZZyC7lhn5ToHLsi
-         8XpXAxjCiIU7RE4ufk8iJES4+77c9H0I6HlpdQdUX0nzjFrPt5P/AEtOMdDE48SUtVDA
-         IMuBfP9lUYg0hfWM2zCvqW7YnBHHe1rBnGBF0zfYgc5u5c2j5sy9alNvTo/hs6te+GAa
-         okus/w6Gb3Wa+mgHCt1IeKaxQmCg+St1kGqBkfGbyPfJQujHkOtvzQZ7U64Y+Q4RpTW6
-         DYaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nZt0B3xrqHLHU4EvkiZMlrE7A5+KS8ARbT0ipn5PjfE=;
-        b=jIvi3BhFEZPqHCOrTFY3Db4+7p0Ce1BvZqV5qCtyonV+ca5f46bUaUAnZpdz/59ijc
-         PGohs+qZL/le61a+oAl0bVFitKoSM0INLKyFpABf/lEeG2yqgFYZLJY5B415+/7S8jeY
-         bH0WrRDzQPok4jIR9z/6jZgH5cE1BJb0Cyz0mgLmmpg75/7siwYChivjjFXHLp8PjYSt
-         U6GUJtTCe9bPG+AKvRvJFZDF0DxQ09QNp9UqUGPlxNJlkaoYVVyOGofk+R+tT78wr6hR
-         kuBCaTvMCicGufPwrKzP0KDRmp4iq+PMbyJOx8815Kr9plAaoTw1F9P8Pv2M8Qv/zkyG
-         jg+g==
-X-Gm-Message-State: APjAAAXnyYH6UPerYshYVFVBQ00AtS9HcmFTAtmjyRyBmUna7Uh0bAvk
-        F9ppOuVmQCuZtaCe+xTSnfDzUITV11wRZ7WB6w3a3g==
-X-Google-Smtp-Source: APXvYqwunbF7TyfIhMcANFX4yAMKAnnsZW2NFILSXWz0Zd7gn78zVLaU+lihiMnQ0FO7JFF52e8A7qNnUVzqrPH/nXc=
-X-Received: by 2002:a19:48c3:: with SMTP id v186mr27989255lfa.141.1568295796494;
- Thu, 12 Sep 2019 06:43:16 -0700 (PDT)
+        Thu, 12 Sep 2019 09:44:19 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39751 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731283AbfILNoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:44:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Tg3c4shxz9s7T;
+        Thu, 12 Sep 2019 23:44:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568295855;
+        bh=Cnv4+khfML5daX7u0yJp0trudJnS360W+hZ6z7qUYSo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PA9DbItKEukRd8VthZ6RjjULpGvwsJLj1NoQ3jCvr6Q0v55SJUAicH7NkxyCNV8eL
+         G6UETro3PasCGBKWUewmRIYSfys45zCwq6fPdQck4AZEl351XirDQSBeO7H19UCIzO
+         uMcBgO/eh8q835F4FSucpZPj767eq+IELb838z1S0Q76aMGaXR1hKytE9jM9cUCvV2
+         Cj8F2YX3GaX5cjHek/n+Cpws0svnJK1VJmYWGbUhpZyN2fDbIT1mZq+EgsLm03estp
+         8fb/pnehQBL+y4jE6qrfzI7KQHvap/dxugrVZPH+CBF1Q0i8HOVVaEfEHhoc3ID+t5
+         2ABTGfvnbOUMA==
+Date:   Thu, 12 Sep 2019 23:44:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the configfs tree with the vfs-fixes
+ tree
+Message-ID: <20190912234412.38998b12@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com> <1567663210.1324.3.camel@mtkswgap22>
-In-Reply-To: <1567663210.1324.3.camel@mtkswgap22>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 14:43:04 +0100
-Message-ID: <CACRpkdbBMiHk4DV3r=aLU+T+9bPQBLUiTaW6L+L=J=ec0guBmA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: mediatek: Check gpio pin number and use
- binary search in mtk_hw_pin_field_lookup()
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/DKU+xGk5GDUWWRExFeopTVV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 7:00 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
+--Sig_/DKU+xGk5GDUWWRExFeopTVV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> v2 is the same as v1 except that commit message is corrected according
-> to Linus' comment for v1:
->
-> 1. remove Change-Id lines
-> 2. correct sysfs as debugfs
+Hi all,
 
-Patches applied with Sean's ACK.
+Today's linux-next merge of the configfs tree got a conflict in:
 
-Yours,
-Linus Walleij
+  fs/configfs/symlink.c
+
+between commit:
+
+  e272d4fb74d6 ("configfs: fix a deadlock in configfs_symlink()")
+
+from the vfs-fixes tree and commit:
+
+  351e5d869e5a ("configfs: fix a deadlock in configfs_symlink()")
+
+from the configfs tree.
+
+These are slightly different version of the same fix.
+
+I fixed it up (I used the former version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DKU+xGk5GDUWWRExFeopTVV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16S6wACgkQAVBC80lX
+0GwIWgf+JsBvOediGgSa/jUOFbjXma+67AVDNxH8cHfeIr7ezolPvzKK05TU+St2
+QASYltdXPi7D/CkfQXHYtumvlzAZcMrEDNqRjxXZBcwEIp8L7Y9F/K63r08iBeu0
+CbvhVbPHmO9jA/bij9uS1zKSoFyUKTc38tw+gZBErLAPKDODbmE/SKFQepDDW6/w
+fdO+npXXhj+4159g0h3m9gSi0zQW6pdeJ5kxs7EEcbfajyae7YUFu3vchBBAAFf6
+S8RbYcH5pHgQU0VMnxASxJdwsThD8Ar7O/RbKFln/gQKfxhLamndK3woO5nXmHUG
+i53FOGCwpsogmqcO7pw0F7kDQJeFAw==
+=6Hv8
+-----END PGP SIGNATURE-----
+
+--Sig_/DKU+xGk5GDUWWRExFeopTVV--
