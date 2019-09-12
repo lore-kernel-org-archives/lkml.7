@@ -2,130 +2,224 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C0ECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8295DECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56873214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568279971;
-	bh=rf0WRInmJ5z8W2m0J3lIfwQT5dpCz3RmvzbaY+xFu2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fg0JT/25pWJ1aIxTprtwEU3VbAGNbxS7SqLsJxxmG1awnfU493P7epQsj7zJHDoOk
-	 L1Hs4iItVXGbM8xhR4Vn000tjpfEYhosw1OvFL1BZgthmpIqRc69lIP7CrmVgYr94z
-	 W4hOjAqNsD/QeG5UnO3QpXB4BPp7BB+BKisOcvDY=
+	by mail.kernel.org (Postfix) with ESMTP id 4D1E0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AqYTLRF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfILJTa (ORCPT
+        id S1730722AbfILJTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:19:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730428AbfILJT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:19:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E344B61F;
-        Thu, 12 Sep 2019 09:19:27 +0000 (UTC)
-Date:   Thu, 12 Sep 2019 11:19:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190912091925.GM4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
- <20190910124209.GY2063@dhcp22.suse.cz>
- <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
- <20190910144713.GF2063@dhcp22.suse.cz>
- <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
- <20190910175213.GD4023@dhcp22.suse.cz>
- <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
- <20190911113619.GP4023@dhcp22.suse.cz>
- <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
+        Thu, 12 Sep 2019 05:19:39 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53404 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbfILJTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:19:39 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 999C933A;
+        Thu, 12 Sep 2019 11:19:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568279975;
+        bh=yVCvYCZZbPxG0tkBqHv6UMSt42gUfp0M7InihfE/bsw=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AqYTLRF28dITFTbmjDNlkAbLHUJWyOimtLE658EvBMR8vY3PSvcdGAPOHHr1FMvfR
+         WT/STnAUL1zQllbx7I3cKO3c4NX57PInCgVhHkI6cNszsJU3gcSMfoJxvWVBwntmFn
+         894tu3o/oxIUTdSj61TWMw+sPuGDYSIJHfd74gWk=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 6/9] drm: rcar-du: crtc: Enable and disable CMMs
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-7-jacopo+renesas@jmondi.org>
+ <bc443263-5f20-f022-34c8-1e521243dec1@ideasonboard.com>
+ <20190912080720.bn7bmu2o3gacrpf4@uno.localdomain>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <a0f0554d-1bb0-fefa-a5d5-a252f7426c36@ideasonboard.com>
+Date:   Thu, 12 Sep 2019 10:19:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190912080720.bn7bmu2o3gacrpf4@uno.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 08:12:03, Alexander Duyck wrote:
-> On Wed, Sep 11, 2019 at 4:36 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-> > [...]
-> > > We don't put any limitations on the allocator other then that it needs to
-> > > clean up the metadata on allocation, and that it cannot allocate a page
-> > > that is in the process of being reported since we pulled it from the
-> > > free_list. If the page is a "Reported" page then it decrements the
-> > > reported_pages count for the free_area and makes sure the page doesn't
-> > > exist in the "Boundary" array pointer value, if it does it moves the
-> > > "Boundary" since it is pulling the page.
-> >
-> > This is still a non-trivial limitation on the page allocation from an
-> > external code IMHO. I cannot give any explicit reason why an ordering on
-> > the free list might matter (well except for page shuffling which uses it
-> > to make physical memory pattern allocation more random) but the
-> > architecture seems hacky and dubious to be honest. It shoulds like the
-> > whole interface has been developed around a very particular and single
-> > purpose optimization.
+Hi Jacopo,
+
+On 12/09/2019 09:07, Jacopo Mondi wrote:
+> Hi Kieran,
 > 
-> How is this any different then the code that moves a page that will
-> likely be merged to the tail though?
+> On Wed, Sep 11, 2019 at 07:40:27PM +0100, Kieran Bingham wrote:
+>> Hi Jacopo,
+>>
+>> On 06/09/2019 14:54, Jacopo Mondi wrote:
+>>> Enable/disable the CMM associated with a CRTC at CRTC start and stop
+>>> time and enable the CMM unit through the Display Extensional Functions
+>>> register at group setup time.
+>>>
+>>> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>> ---
+>>>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
+>>>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+>>>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+>>>  3 files changed, 20 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+>>> index 23f1d6cc1719..3dac605c3a67 100644
+>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+>>> @@ -21,6 +21,7 @@
+>>>  #include <drm/drm_plane_helper.h>
+>>>  #include <drm/drm_vblank.h>
+>>>
+>>> +#include "rcar_cmm.h"
+>>>  #include "rcar_du_crtc.h"
+>>>  #include "rcar_du_drv.h"
+>>>  #include "rcar_du_encoder.h"
+>>> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>>>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>>>  		rcar_du_vsp_disable(rcrtc);
+>>>
+>>> +	if (rcrtc->cmm)
+>>> +		rcar_cmm_disable(rcrtc->cmm);
+>>> +
+>>>  	/*
+>>>  	 * Select switch sync mode. This stops display operation and configures
+>>>  	 * the HSYNC and VSYNC signals as inputs.
+>>> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>>>  	}
+>>>
+>>>  	rcar_du_crtc_start(rcrtc);
+>>> +
+>>> +	if (rcrtc->cmm)
+>>> +		rcar_cmm_enable(rcrtc->cmm);
+>>>  }
+>>>
+>>>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>> index 9eee47969e77..25d0fc125d7a 100644
+>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+>>> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>>>
+>>>  	rcar_du_group_setup_pins(rgrp);
+>>>
+>>> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+>>> +		u32 defr7 = DEFR7_CODE
+>>> +			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
+>>> +			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+>>> +
+>>> +		rcar_du_group_write(rgrp, DEFR7, defr7);
+>>> +	}
+>>> +
+>>
+>> What's the effect here on platforms with a CMM, but with
+>> CONFIG_DRM_RCAR_CMM unset?
+>>
+>> Will this incorrectly configure the DU ?
+>>
+>> Will it stall the display if the DU tries to interact with another
+>> module which is not enabled?
+> 
+> I recall I tested that (that's why I had to add stubs for CMM
+> functions, as I had linkage errors otherwise) and thing seems to be
+> fine as the CMM configuration/enblement resolve to an empty function.
 
-I guess you are referring to the page shuffling. If that is the case
-then this is an integral part of the allocator for a reason and it is
-very well obvious in the code including the consequences. I do not
-really like an idea of hiding similar constrains behind a generic
-looking feature which is completely detached from the allocator and so
-any future change of the allocator might subtly break it.
+Yes, I see the stubs to allow for linkage, but it's the hardware I'm
+concerned about. If it passes the tests and doesn't break then that's
+probably ok ... but I'm really weary that we're enabling a hardware
+pipeline with a disabled component in the middle.
 
-> In our case the "Reported" page is likely going to be much more
-> expensive to allocate and use then a standard page because it will be
-> faulted back in. In such a case wouldn't it make sense for us to want
-> to keep the pages that don't require faults ahead of those pages in
-> the free_list so that they are more likely to be allocated?
 
-OK, I was suspecting this would pop out. And this is exactly why I
-didn't like an idea of an external code imposing a non obvious constrains
-to the allocator. You simply cannot count with any ordering with the
-page allocator. We used to distinguish cache hot/cold pages in the past
-and pushed pages to the specific end of the free list but that has been
-removed. There are other potential changes like that possible. Shuffling
-is a good recent example.
+> Would you prefer to have this guarded by an #if IS_ENABLED() ?
 
-Anyway I am not a maintainer of this code. I would really like to hear
-opinions from Mel and Vlastimil here (now CCed - the thread starts
-http://lkml.kernel.org/r/20190907172225.10910.34302.stgit@localhost.localdomain.
--- 
-Michal Hocko
-SUSE Labs
+I don't think we need a compile time conditional, but I'd say it
+probably needs to be more about whether the CMM has actually probed or not
+
+Aha, and I see that in rcar_du_cmm_init() we already do a
+call to rcar_cmm_init(), which if fails will leave rcdu->cmms[i] as
+NULL. So that's catered for, which results in the rgrp->cmms_mask being
+correctly representative of whether there is a CMM connected or not.
+
+ ... so I think that means the ...
+ "if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM))" is somewhat redundant:
+
+
+This could be:
+
+  if (rgrp->cmms_mask) {
+	u32 defr7 = DEFR7_CODE
+		  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
+		  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+
+  rcar_du_group_write(rgrp, DEFR7, defr7);
+
+Or in fact, if we don't mind writing 0 to DEFR7 when there is no CMM
+(which is safe by the looks of things as DEFR7 is available on all
+platforms), then we can even remove the outer conditional, and leave
+this all up to the ternary operators to write the correct value to the
+defr7.
+
+
+Phew ... net result - your current code *is* safe with the
+CONFIG_DRM_RCAR_CMM option disabled. I'll leave it up to you if you want
+to simplify the code here and remove the RCAR_DU_FEATURE_CMM.
+
+As this RCAR_DU_FEATURE_CMM flag is only checked here, removing it would
+however simplify all of the rcar_du_device_info structures.
+
+So - with or without the _FEATURE_CMM" simplification, this patch looks
+functional and safe so:
+
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+
+> Thanks
+>    j
+>>
+>>
+>>>  	if (rcdu->info->gen >= 2) {
+>>>  		rcar_du_group_setup_defr8(rgrp);
+>>>  		rcar_du_group_setup_didsr(rgrp);
+>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+>>> index bc87f080b170..fb9964949368 100644
+>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+>>> @@ -197,6 +197,11 @@
+>>>  #define DEFR6_MLOS1		(1 << 2)
+>>>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>>>
+>>> +#define DEFR7			0x000ec
+>>> +#define DEFR7_CODE		(0x7779 << 16)
+>>> +#define DEFR7_CMME1		BIT(6)
+>>> +#define DEFR7_CMME0		BIT(4)
+>>> +
+>>>  /* -----------------------------------------------------------------------------
+>>>   * R8A7790-only Control Registers
+>>>   */
+>>>
+>>
+
