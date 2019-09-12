@@ -2,121 +2,88 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFACECDE27
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D207C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD96121479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E9B20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMdlODbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbfILJXr (ORCPT
+        id S1730754AbfILJYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:23:47 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39781 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730631AbfILJXq (ORCPT
+        Thu, 12 Sep 2019 05:24:00 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32991 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730631AbfILJYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:23:46 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n7so28781728qtb.6;
-        Thu, 12 Sep 2019 02:23:45 -0700 (PDT)
+        Thu, 12 Sep 2019 05:24:00 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a22so22924448ljd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jl+H0+uX1IOSI/fyzT/2iUsy9Q4lcJb9u/sfxFKGTJw=;
+        b=hMdlODbj073dx02dv5oIX/qOGyDzwdmK3xTUiIzMW0bc2gUynMZWzxpECRwajafo7X
+         7BnZKF1OSFqkNOcodg3mGbskxQ6FPHihOEbrnulie0o4zIaXH7UT0sHwzLABTGH7amSr
+         9DJDa8ZZQUJjAPQs/nRD/86j6HmrGxm0SJJQN6gvI1Rhdn1miVW/QQ0bkEXSh3cYI6GP
+         W6sqa/xdsGAfAFD4UsTJxK4AXx9jT/On2MquMiBT5GPY1aqiZw91X19r2xuUCiUvRcrr
+         BvjDvbvX9ftWqOQvGoP8JCyEQbumy3VjIQK0QrTY0qBfkBU6j/iEyvS1xhywt8wLoSEb
+         xDdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QXQcfTndnrpIGvk9sB9a9gWQqmEHMhawitV9TbB2g8E=;
-        b=EFC7Pzc2RJMO0kYGJY36B6M/KiGYRXH34bY3unVZ4f8E0v6kvTTDr1MhCuFTowLzj7
-         tj5RG4fkbt5/xCdfAxg7gFGlN7GA7q4JnDrhVGD7kTU9IeJnx9p7DZsRCD8w476mlLn/
-         UW/vayWu0r1BQqBEGEajHhBBN4gUlxvedR5iU8vS4Pw/5bUdtz7zDegk4bxTpIjIC9GP
-         0SqOacOUHywwYNrShU4Fei9l32K+S12f57O9zSrxehjdOhzMZXp7Vl4BSXd737Ue7XXT
-         4NoGM0rDHwyPCNrlfTa+ehntgy/DTJm+IBYiBJQHz467FTCLxIZvESTTLDefx8a5jUKa
-         dn2w==
-X-Gm-Message-State: APjAAAVs+OGWqJr76OkTp0nWYIVHgiBhTqOQ/fb5JNQeOQZyaaaHmj/0
-        2BlOcbBx+7ZGBoFHyCgk2XSpRZYz9ck+A+/GrSA=
-X-Google-Smtp-Source: APXvYqziwk60aLJSQdoVYvx52qn+2u/NADJ4HuF3YjYBj52OuDv7Y0SaYvYRwH+Wen8XN74tjClsdCK2jrcZk15F5go=
-X-Received: by 2002:ad4:4529:: with SMTP id l9mr21307225qvu.45.1568280224996;
- Thu, 12 Sep 2019 02:23:44 -0700 (PDT)
+        bh=jl+H0+uX1IOSI/fyzT/2iUsy9Q4lcJb9u/sfxFKGTJw=;
+        b=RcPNTYEaCTkI4VvRMYApsK8kzLrf/24mN+iXC26EADnIKJjnt7Em0PvKQHJMJWZT6J
+         auxtXZb7g8jbB+JXzBZbirHSdxQyFAnRkMz3EZj/rQ6lCqOiDJzzFvq8qJ2Ek5Vajdrt
+         raydrxeSeXZBGILBYlqDpZgxd//dvP1NNC14B5aOH/28Y8dcL0c1uWYbd8nYd7XXZ/x2
+         JIBpQDC2dLWi0imq2uqQ6tTmKlGngR5kV3KkAYquubrDYcsnV6vPKrXUExq4tbk5fpqB
+         uYGf/QBPN3JUKULEKvuCQhJSZ745+psf7G6mpqVqBKp9+0tpTeyoVk6uwOle/P0riLF/
+         LOGw==
+X-Gm-Message-State: APjAAAU2MhsiR7DTDzW7CIoS/04Nq628M3PaZRsDLiFGKl+oQ3gjPmT0
+        yQ7iZPJOhNA79uhXXni+EYEk1jTeKjk3AZV4EdochQ==
+X-Google-Smtp-Source: APXvYqzeaMMjJTFhSN8F612U3D0kPm5YwPyNT+ELra/vDUKA/lIFZz6RClqk+CtlOJt5UfROulsYDvNlZq7t06R7XaE=
+X-Received: by 2002:a2e:9dc3:: with SMTP id x3mr22319922ljj.108.1568280236403;
+ Thu, 12 Sep 2019 02:23:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1568239378.git.amit.kucheria@linaro.org> <f6cefef2bf6b34ec6eb82d3614054734fa5e8dd1.1568239378.git.amit.kucheria@linaro.org>
-In-Reply-To: <f6cefef2bf6b34ec6eb82d3614054734fa5e8dd1.1568239378.git.amit.kucheria@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 12 Sep 2019 11:23:29 +0200
-Message-ID: <CAK8P3a0uxZWF85+v73KtvQECErA64yPE7BT3VRZMa=oq3rFtRA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: Kconfig: Fix XGENE driver dependencies
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        arm-soc <arm@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+References: <20190910170246.GA56792@dtor-ws>
+In-Reply-To: <20190910170246.GA56792@dtor-ws>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 10:23:44 +0100
+Message-ID: <CACRpkdZLKriRzROqNyWE97n_gavWgZRXoqMMEyP_F9DFgYtobQ@mail.gmail.com>
+Subject: Re: [PATCH] regulator: da9211: fix obtaining "enable" GPIO
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:19 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Push various XGENE drivers behind ARCH_XGENE dependency so that it
-> doesn't get enabled by default on other platforms.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/Kconfig.platforms   | 3 +++
->  drivers/clk/Kconfig            | 2 +-
->  drivers/gpio/Kconfig           | 1 +
->  drivers/pci/controller/Kconfig | 1 +
->  drivers/phy/Kconfig            | 1 +
->  drivers/power/reset/Kconfig    | 2 +-
->  6 files changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 4778c775de1b..cdf4e452e34c 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -281,6 +281,9 @@ config ARCH_VULCAN
->
->  config ARCH_XGENE
->         bool "AppliedMicro X-Gene SOC Family"
-> +       select COMMON_CLK_XGENE
-> +       select PCI_XGENE
-> +       select GPIO_XGENE
->         help
->           This enables support for AppliedMicro X-Gene SOC Family
+On Tue, Sep 10, 2019 at 6:02 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-I'd rather not 'select' drivers that might be optional, the 'default y'
-should be sufficient as long as it's in theory possible to have
-them disabled or as loadable modules.
-
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 801fa1cd0321..9b2790d3f18a 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -225,7 +225,7 @@ config CLK_QORIQ
+> This fixes 11da04af0d3b, as devm_gpiod_get_from_of_node() does
+> not do translation "con-id" -> "con-id-gpios" that our bindings expects,
+> and therefore it was wrong to change connection ID to be simply "enable"
+> when moving to using devm_gpiod_get_from_of_node().
 >
->  config COMMON_CLK_XGENE
->         bool "Clock driver for APM XGene SoC"
-> -       default ARCH_XGENE
-> +       depends on ARCH_XGENE
->         depends on ARM64 || COMPILE_TEST
->         ---help---
->           Sypport for the APM X-Gene SoC reference, PLL, and device clocks.
+> Fixes: 11da04af0d3b ("regulator: da9211: Pass descriptors instead of GPIO numbers")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-This breaks compile-testing, and existing defconfigs
-that don't list the driver.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-       Arnd
+Mark: please tag both of these for stable.
+
+Yours,
+Linus Walleij
