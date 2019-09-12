@@ -2,241 +2,561 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65E3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD65C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7FD20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1D0214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rF17s6tJ"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="I8c18DFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbfILOmb (ORCPT
+        id S1732798AbfILOni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:42:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:29162 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbfILOma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:42:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46ThLp3CQXz9typD;
-        Thu, 12 Sep 2019 16:42:26 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rF17s6tJ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id CVQlmJ3AEH2k; Thu, 12 Sep 2019 16:42:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46ThLp1t53z9typC;
-        Thu, 12 Sep 2019 16:42:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568299346; bh=otnUrb4pzuxU7Yp0+QroZ8OVT4O1umudoLeJqQl5wZo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rF17s6tJhq8MvFO5HaHkJAy0j4vJJMc9gH1QsIdlkc0uGkrBFzY6mm7WqD7gp6Y2w
-         pDwud6FagAuEx2hmyDZDo1d1qU6dEAs2y6kNIO4poGfjfz3+JYPoadusOPxMP4DNCT
-         uG/GxTT9Ndmwpf9KkQmrv+QnUdDjo6qRIVZu/AVs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C98AA8B940;
-        Thu, 12 Sep 2019 16:42:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 67GVoWa0YCuH; Thu, 12 Sep 2019 16:42:27 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A5BBC8B933;
-        Thu, 12 Sep 2019 16:42:25 +0200 (CEST)
-Subject: Re: [PATCH V2 0/2] mm/debug: Add tests for architecture exported page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <527edfce-c986-de4c-e286-34a70f6a2790@c-s.fr>
-Date:   Thu, 12 Sep 2019 16:42:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Sep 2019 10:43:38 -0400
+Received: from mail-eopbgr680134.outbound.protection.outlook.com ([40.107.68.134]:35905
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732654AbfILOnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:43:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dCOne72fujca/xg6Lq3JCQ56EgIrgs0hA7b4COMDUknrVXq+Eo32/wikDGzlj+dZB3+qmmv3ya6zcJ4MYSJXKaDsTWE/njmu2hURtjFCqg+/ZeedHtYF7MnnikOIYM0xkMWmCRQ4JwVJof0xIPXvpd0iL3enCDwoSqGye4LJSGQGaNMiGQpclx43j1aBqWgQnRi05RaUDuq1xWVaN9qbvS3lg2b6BswW+0+osLpyjbc9NNJNg3rOqxO9O4xKv7nfdx4Uqr5d1yaKJFWhGvc1+Ud3Sdmn9/+QTnVR/fXaFsQq+PK+Riuj7u2s+WXe/20D1B1GrBkYJZujZAFa5xiorw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jJQg4I3Pn2kbYuMiQl9Krr22+D3F/ndD1y4QjXzNSig=;
+ b=m9XBdkGCSt9Fw/YqQjHQ0nUc/DrOcZVgrk99W5ndxdQjsPTmxSCP2vrerPLGPi4WM25I1bnuD31fJRK9QToSIdHR6fF2O8HiCnuL9R8+4uOauw9EdcABg04Wve2dGlZpQz4NvQDCANaV/SbL/oYPrl0o9meUI6Cmxg16MAnHlhZ0cStR0ZjjnMeiLEx6cdyUA4NCzn9J8UE+GYugDi5yItFqfPf5X4YWDPX+OwSwEZjGa969If9qBsRkAJNadwbb+3OqE5xI+TmkrT9REngyCf+HGI86vr+y0fYPTGsknm5Lkzfqjgw5BNM4eDBcYY4VX37jr38LlFA6lo0MxYnjMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jJQg4I3Pn2kbYuMiQl9Krr22+D3F/ndD1y4QjXzNSig=;
+ b=I8c18DFugaiEWjDQAOwK8CTFM5alMpZjr6FJpxw1dCeMzCm5A07VVuzZg7cOHi9nAvGuA8S4D7Y8JHTTOEWOx+06y2GtZbnZhOwcDETwkyGzIFlh0bSbzdEhSdZRpc1xhpyhsaHJEI/ZPXpg6VajrNL8W+zBgMnD3tI6FKRhHaU=
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com (10.255.109.88) by
+ DM6PR21MB1515.namprd21.prod.outlook.com (20.180.23.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.5; Thu, 12 Sep 2019 14:43:28 +0000
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759]) by DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759%5]) with mapi id 15.20.2284.008; Thu, 12 Sep 2019
+ 14:43:28 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v4] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V
+ frame buffer driver
+Thread-Topic: [PATCH v4] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVaXhwzj544vu4jE2LAKxOlpvHuw==
+Date:   Thu, 12 Sep 2019 14:43:28 +0000
+Message-ID: <20190912144240.3477-1-weh@microsoft.com>
+Reply-To: Wei Hu <weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR04CA0158.apcprd04.prod.outlook.com (2603:1096:4::20)
+ To DM6PR21MB1401.namprd21.prod.outlook.com (2603:10b6:5:22d::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [167.220.255.49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9f0d2b1-a09a-4ff2-5724-08d7378f92ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1515;
+x-ms-traffictypediagnostic: DM6PR21MB1515:|DM6PR21MB1515:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB1515A69FEC2DC5B12561D0F0BBB00@DM6PR21MB1515.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01583E185C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(1250700005)(66946007)(3450700001)(8936002)(81166006)(305945005)(50226002)(7736002)(14444005)(66446008)(64756008)(66556008)(256004)(66476007)(6636002)(71200400001)(71190400001)(6436002)(6486002)(22452003)(26005)(99286004)(316002)(6506007)(386003)(6116002)(186003)(3846002)(81156014)(8676002)(2906002)(110136005)(43066004)(5660300002)(30864003)(1511001)(476003)(2616005)(52116002)(486006)(1076003)(102836004)(14454004)(36756003)(53936002)(2201001)(25786009)(2501003)(66066001)(4326008)(107886003)(478600001)(10090500001)(10290500003)(86362001)(6512007)(7416002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1515;H:DM6PR21MB1401.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M6kvTvf/05KkbLKfSDAf7rPwdqS2jsECNW32rqtGnJzWD+KTrh4ntPvYY0jukxLqYxh4IdaIYoRFLdu24qY2a0+y/ShWdpgyQmJyQbdYRNeZzG/GZrZSLvq3kxgCFIO2nPE9Jo1aIiRsuiUP6RWTNw2JzXIEeTSwMKUm/VBJb3q/NPvNy8qb8ArG8pyR/Zd/bPOzFFS8yUI5ASpV0KfVc/nNOwQYU4J1sY2wQ8uHGah0pPA1Fz4qt8eH9JRAo8jBEBrGicbQaDcwpDSZasqL8B4MJAGPbcluHZiUrS3l5vJmkrU8c/mO2Sp42haPK4zgBE74SQktWfsNZ30WVnI/QlcS4tWBYBRj6JaBmjw6soz04XySMPlk9VnPYAxxHU4UqsdJLEXcpgwJyfvRXSk74+UXiz+8hltp/h2c6wuWUYk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9f0d2b1-a09a-4ff2-5724-08d7378f92ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 14:43:28.4696
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BtOGfJyasx5OPTupRNLC8sMlnkGfpKlokbilLKQW1M5WnwqbTO+jTjOFSkLYdIBM9+Z4RGTYLpdwDe5qhv4nRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1515
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Without deferred IO support, hyperv_fb driver informs the host to refresh
+the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
+is screen update or not. This patch supports deferred IO for screens in
+graphics mode and also enables the frame buffer on-demand refresh. The
+highest refresh rate is still set at 20Hz.
 
-I didn't get patch 1 of this series, and it is not on linuxppc-dev 
-patchwork either. Can you resend ?
+Currently Hyper-V only takes a physical address from guest as the starting
+address of frame buffer. This implies the guest must allocate contiguous
+physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+accept address from MMIO region as frame buffer address. Due to these
+limitations on Hyper-V host, we keep a shadow copy of frame buffer
+in the guest. This means one more copy of the dirty rectangle inside
+guest when doing the on-demand refresh. This can be optimized in the
+future with help from host. For now the host performance gain from deferred
+IO outweighs the shadow copy impact in the guest.
 
-Thanks
-Christophe
+Signed-off-by: Wei Hu <weh@microsoft.com>
+---
+    v2: Incorporated review comments from Michael Kelley
+    - Increased dirty rectangle by one row in deferred IO case when sending
+    to Hyper-V.
+    - Corrected the dirty rectangle size in the text mode.
+    - Added more comments.
+    - Other minor code cleanups.
 
-Le 12/09/2019 à 08:02, Anshuman Khandual a écrit :
-> This series adds a test validation for architecture exported page table
-> helpers. Patch in the series adds basic transformation tests at various
-> levels of the page table. Before that it exports gigantic page allocation
-> function from HugeTLB.
-> 
-> This test was originally suggested by Catalin during arm64 THP migration
-> RFC discussion earlier. Going forward it can include more specific tests
-> with respect to various generic MM functions like THP, HugeTLB etc and
-> platform specific tests.
-> 
-> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-> 
-> Testing:
-> 
-> Successfully build and boot tested on both arm64 and x86 platforms without
-> any test failing. Only build tested on some other platforms.
-> 
-> But I would really appreciate if folks can help validate this test on other
-> platforms and report back problems. All suggestions, comments and inputs
-> welcome. Thank you.
-> 
-> Changes in V2:
-> 
-> - Fixed small typo error in MODULE_DESCRIPTION()
-> - Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
-> - Fixed dynamic page table level folding problems on x86 as per Kirril
-> - Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
-> - Allocate and free pte table with pte_alloc_one/pte_free per Kirill
-> - Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
-> - Changed RANDOM_NZVALUE value from 0xbe to 0xff
-> - Changed allocation, usage, free sequence for saved_ptep
-> - Renamed VMA_FLAGS as VMFLAGS
-> - Implemented a new method for random vaddr generation
-> - Implemented some other cleanups
-> - Dropped extern reference to mm_alloc()
-> - Created and exported new alloc_gigantic_page_order()
-> - Dropped the custom allocator and used new alloc_gigantic_page_order()
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> - Added fallback mechanism for PMD aligned memory allocation failure
-> 
-> Changes in RFC V2:
-> 
-> https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
-> 
-> - Moved test module and it's config from lib/ to mm/
-> - Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
-> - Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
-> - Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
-> - Dropped loadable module config option
-> - Basic tests now use memory blocks with required size and alignment
-> - PUD aligned memory block gets allocated with alloc_contig_range()
-> - If PUD aligned memory could not be allocated it falls back on PMD aligned
->    memory block from page allocator and pud_* tests are skipped
-> - Clear and populate tests now operate on real in memory page table entries
-> - Dummy mm_struct gets allocated with mm_alloc()
-> - Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
-> - Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
-> 
-> Original RFC V1:
-> 
-> https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Steven Price <Steven.Price@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sri Krishna chowdary <schowdary@nvidia.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Anshuman Khandual (2):
->    mm/hugetlb: Make alloc_gigantic_page() available for general use
->    mm/pgtable/debug: Add test validating architecture page table helpers
-> 
->   arch/x86/include/asm/pgtable_64_types.h |   2 +
->   include/linux/hugetlb.h                 |   9 +
->   mm/Kconfig.debug                        |  14 +
->   mm/Makefile                             |   1 +
->   mm/arch_pgtable_test.c                  | 429 ++++++++++++++++++++++++
->   mm/hugetlb.c                            |  24 +-
->   6 files changed, 477 insertions(+), 2 deletions(-)
->   create mode 100644 mm/arch_pgtable_test.c
-> 
+    v3: Incorporated more review comments
+    - Removed a few unnecessary variable tests
+
+    v4: Incorporated test and review feedback from Dexuan Cui
+    - Not disable interrupt while acquiring docopy_lock in
+      hvfb_update_work(). This avoids significant bootup delay in
+      large vCPU count VMs.
+
+ drivers/video/fbdev/Kconfig     |   1 +
+ drivers/video/fbdev/hyperv_fb.c | 216 +++++++++++++++++++++++++++++---
+ 2 files changed, 197 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index 1b2f5f31fb6f..e781f89a1824 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -2241,6 +2241,7 @@ config FB_HYPERV
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
++	select FB_DEFERRED_IO
+ 	help
+ 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+=20
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_f=
+b.c
+index fe319fc39bec..711c46a5d5d2 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -237,6 +237,7 @@ struct synthvid_msg {
+ #define RING_BUFSIZE (256 * 1024)
+ #define VSP_TIMEOUT (10 * HZ)
+ #define HVFB_UPDATE_DELAY (HZ / 20)
++#define HVFB_ONDEMAND_THROTTLE (HZ / 20)
+=20
+ struct hvfb_par {
+ 	struct fb_info *info;
+@@ -256,6 +257,17 @@ struct hvfb_par {
+ 	bool synchronous_fb;
+=20
+ 	struct notifier_block hvfb_panic_nb;
++
++	/* Memory for deferred IO and frame buffer itself */
++	unsigned char *dio_vp;
++	unsigned char *mmio_vp;
++	unsigned long mmio_pp;
++	spinlock_t docopy_lock; /* Lock to protect memory copy */
++
++	/* Dirty rectangle, protected by delayed_refresh_lock */
++	int x1, y1, x2, y2;
++	bool delayed_refresh;
++	spinlock_t delayed_refresh_lock;
+ };
+=20
+ static uint screen_width =3D HVFB_WIDTH;
+@@ -264,6 +276,7 @@ static uint screen_width_max =3D HVFB_WIDTH;
+ static uint screen_height_max =3D HVFB_HEIGHT;
+ static uint screen_depth;
+ static uint screen_fb_size;
++static uint dio_fb_size; /* FB size for deferred IO */
+=20
+ /* Send message to Hyper-V host */
+ static inline int synthvid_send(struct hv_device *hdev,
+@@ -350,28 +363,92 @@ static int synthvid_send_ptr(struct hv_device *hdev)
+ }
+=20
+ /* Send updated screen area (dirty rectangle) location to host */
+-static int synthvid_update(struct fb_info *info)
++static int
++synthvid_update(struct fb_info *info, int x1, int y1, int x2, int y2)
+ {
+ 	struct hv_device *hdev =3D device_to_hv_device(info->device);
+ 	struct synthvid_msg msg;
+=20
+ 	memset(&msg, 0, sizeof(struct synthvid_msg));
++	if (x2 =3D=3D INT_MAX)
++		x2 =3D info->var.xres;
++	if (y2 =3D=3D INT_MAX)
++		y2 =3D info->var.yres;
+=20
+ 	msg.vid_hdr.type =3D SYNTHVID_DIRT;
+ 	msg.vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_dirt);
+ 	msg.dirt.video_output =3D 0;
+ 	msg.dirt.dirt_count =3D 1;
+-	msg.dirt.rect[0].x1 =3D 0;
+-	msg.dirt.rect[0].y1 =3D 0;
+-	msg.dirt.rect[0].x2 =3D info->var.xres;
+-	msg.dirt.rect[0].y2 =3D info->var.yres;
++	msg.dirt.rect[0].x1 =3D (x1 > x2) ? 0 : x1;
++	msg.dirt.rect[0].y1 =3D (y1 > y2) ? 0 : y1;
++	msg.dirt.rect[0].x2 =3D
++		(x2 < x1 || x2 > info->var.xres) ? info->var.xres : x2;
++	msg.dirt.rect[0].y2 =3D
++		(y2 < y1 || y2 > info->var.yres) ? info->var.yres : y2;
+=20
+ 	synthvid_send(hdev, &msg);
+=20
+ 	return 0;
+ }
+=20
++static void hvfb_docopy(struct hvfb_par *par,
++			unsigned long offset,
++			unsigned long size)
++{
++	if (!par || !par->mmio_vp || !par->dio_vp || !par->fb_ready ||
++	    size =3D=3D 0 || offset >=3D dio_fb_size)
++		return;
++
++	if (offset + size > dio_fb_size)
++		size =3D dio_fb_size - offset;
++
++	memcpy(par->mmio_vp + offset, par->dio_vp + offset, size);
++}
++
++/* Deferred IO callback */
++static void synthvid_deferred_io(struct fb_info *p,
++				 struct list_head *pagelist)
++{
++	struct hvfb_par *par =3D p->par;
++	struct page *page;
++	unsigned long start, end;
++	int y1, y2, miny, maxy;
++	unsigned long flags;
++
++	miny =3D INT_MAX;
++	maxy =3D 0;
++
++	/*
++	 * Merge dirty pages. It is possible that last page cross
++	 * over the end of frame buffer row yres. This is taken care of
++	 * in synthvid_update function by clamping the y2
++	 * value to yres.
++	 */
++	list_for_each_entry(page, pagelist, lru) {
++		start =3D page->index << PAGE_SHIFT;
++		end =3D start + PAGE_SIZE - 1;
++		y1 =3D start / p->fix.line_length;
++		y2 =3D end / p->fix.line_length;
++		miny =3D min_t(int, miny, y1);
++		maxy =3D max_t(int, maxy, y2);
++
++		/* Copy from dio space to mmio address */
++		if (par->fb_ready) {
++			spin_lock_irqsave(&par->docopy_lock, flags);
++			hvfb_docopy(par, start, PAGE_SIZE);
++			spin_unlock_irqrestore(&par->docopy_lock, flags);
++		}
++	}
++
++	if (par->fb_ready)
++		synthvid_update(p, 0, miny, p->var.xres, maxy + 1);
++}
++
++static struct fb_deferred_io synthvid_defio =3D {
++	.delay		=3D HZ / 20,
++	.deferred_io	=3D synthvid_deferred_io,
++};
+=20
+ /*
+  * Actions on received messages from host:
+@@ -618,7 +695,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 	msg->vid_hdr.type =3D SYNTHVID_VRAM_LOCATION;
+ 	msg->vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_vram_location);
+-	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D info->fix.smem_start;
++	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D par->mmio_pp;
+ 	msg->vram.is_vram_gpa_specified =3D 1;
+ 	synthvid_send(hdev, msg);
+=20
+@@ -628,7 +705,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 		ret =3D -ETIMEDOUT;
+ 		goto out;
+ 	}
+-	if (msg->vram_ack.user_ctx !=3D info->fix.smem_start) {
++	if (msg->vram_ack.user_ctx !=3D par->mmio_pp) {
+ 		pr_err("Unable to set VRAM location\n");
+ 		ret =3D -ENODEV;
+ 		goto out;
+@@ -645,19 +722,79 @@ static int synthvid_send_config(struct hv_device *hde=
+v)
+=20
+ /*
+  * Delayed work callback:
+- * It is called at HVFB_UPDATE_DELAY or longer time interval to process
+- * screen updates. It is re-scheduled if further update is necessary.
++ * It is scheduled to call whenever update request is received and it has
++ * not been called in last HVFB_ONDEMAND_THROTTLE time interval.
+  */
+ static void hvfb_update_work(struct work_struct *w)
+ {
+ 	struct hvfb_par *par =3D container_of(w, struct hvfb_par, dwork.work);
+ 	struct fb_info *info =3D par->info;
++	unsigned long flags;
++	int x1, x2, y1, y2;
++	int j;
++
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
++	/* Reset the request flag */
++	par->delayed_refresh =3D false;
++
++	/* Store the dirty rectangle to local variables */
++	x1 =3D par->x1;
++	x2 =3D par->x2;
++	y1 =3D par->y1;
++	y2 =3D par->y2;
++
++	/* Clear dirty rectangle */
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
++
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
+=20
++	if (x1 > info->var.xres || x2 > info->var.xres ||
++	    y1 > info->var.yres || y2 > info->var.yres || x2 <=3D x1)
++		return;
++
++	/* Copy the dirty rectangle to frame buffer memory */
++	spin_lock(&par->docopy_lock);
++	for (j =3D y1; j < y2; j++) {
++		hvfb_docopy(par,
++			    j * info->fix.line_length +
++			    (x1 * screen_depth / 8),
++			    (x2 - x1) * screen_depth / 8);
++	}
++	spin_unlock(&par->docopy_lock);
++
++	/* Refresh */
+ 	if (par->fb_ready)
+-		synthvid_update(info);
++		synthvid_update(info, x1, y1, x2, y2);
++}
+=20
+-	if (par->update)
+-		schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
++/*
++ * Control the on-demand refresh frequency. It schedules a delayed
++ * screen update if it has not yet.
++ */
++static void hvfb_ondemand_refresh_throttle(struct hvfb_par *par,
++					   int x1, int y1, int w, int h)
++{
++	unsigned long flags;
++	int x2 =3D x1 + w;
++	int y2 =3D y1 + h;
++
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
++
++	/* Merge dirty rectangle */
++	par->x1 =3D min_t(int, par->x1, x1);
++	par->y1 =3D min_t(int, par->y1, y1);
++	par->x2 =3D max_t(int, par->x2, x2);
++	par->y2 =3D max_t(int, par->y2, y2);
++
++	/* Schedule a delayed screen update if not yet */
++	if (par->delayed_refresh =3D=3D false) {
++		schedule_delayed_work(&par->dwork,
++				      HVFB_ONDEMAND_THROTTLE);
++		par->delayed_refresh =3D true;
++	}
++
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
+ }
+=20
+ static int hvfb_on_panic(struct notifier_block *nb,
+@@ -669,7 +806,8 @@ static int hvfb_on_panic(struct notifier_block *nb,
+ 	par =3D container_of(nb, struct hvfb_par, hvfb_panic_nb);
+ 	par->synchronous_fb =3D true;
+ 	info =3D par->info;
+-	synthvid_update(info);
++	hvfb_docopy(par, 0, dio_fb_size);
++	synthvid_update(info, 0, 0, INT_MAX, INT_MAX);
+=20
+ 	return NOTIFY_DONE;
+ }
+@@ -730,7 +868,10 @@ static void hvfb_cfb_fillrect(struct fb_info *p,
+=20
+ 	cfb_fillrect(p, rect);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, rect->dx, rect->dy,
++					       rect->width, rect->height);
+ }
+=20
+ static void hvfb_cfb_copyarea(struct fb_info *p,
+@@ -740,7 +881,10 @@ static void hvfb_cfb_copyarea(struct fb_info *p,
+=20
+ 	cfb_copyarea(p, area);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, area->dx, area->dy,
++					       area->width, area->height);
+ }
+=20
+ static void hvfb_cfb_imageblit(struct fb_info *p,
+@@ -750,7 +894,10 @@ static void hvfb_cfb_imageblit(struct fb_info *p,
+=20
+ 	cfb_imageblit(p, image);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, image->dx, image->dy,
++					       image->width, image->height);
+ }
+=20
+ static struct fb_ops hvfb_ops =3D {
+@@ -809,6 +956,9 @@ static int hvfb_getmem(struct hv_device *hdev, struct f=
+b_info *info)
+ 	resource_size_t pot_start, pot_end;
+ 	int ret;
+=20
++	dio_fb_size =3D
++		screen_width * screen_height * screen_depth / 8;
++
+ 	if (gen2vm) {
+ 		pot_start =3D 0;
+ 		pot_end =3D -1;
+@@ -843,9 +993,14 @@ static int hvfb_getmem(struct hv_device *hdev, struct =
+fb_info *info)
+ 	if (!fb_virt)
+ 		goto err2;
+=20
++	/* Allocate memory for deferred IO */
++	par->dio_vp =3D vzalloc(round_up(dio_fb_size, PAGE_SIZE));
++	if (par->dio_vp =3D=3D NULL)
++		goto err3;
++
+ 	info->apertures =3D alloc_apertures(1);
+ 	if (!info->apertures)
+-		goto err3;
++		goto err4;
+=20
+ 	if (gen2vm) {
+ 		info->apertures->ranges[0].base =3D screen_info.lfb_base;
+@@ -857,16 +1012,23 @@ static int hvfb_getmem(struct hv_device *hdev, struc=
+t fb_info *info)
+ 		info->apertures->ranges[0].size =3D pci_resource_len(pdev, 0);
+ 	}
+=20
++	/* Physical address of FB device */
++	par->mmio_pp =3D par->mem->start;
++	/* Virtual address of FB device */
++	par->mmio_vp =3D (unsigned char *) fb_virt;
++
+ 	info->fix.smem_start =3D par->mem->start;
+-	info->fix.smem_len =3D screen_fb_size;
+-	info->screen_base =3D fb_virt;
+-	info->screen_size =3D screen_fb_size;
++	info->fix.smem_len =3D dio_fb_size;
++	info->screen_base =3D par->dio_vp;
++	info->screen_size =3D dio_fb_size;
+=20
+ 	if (!gen2vm)
+ 		pci_dev_put(pdev);
+=20
+ 	return 0;
+=20
++err4:
++	vfree(par->dio_vp);
+ err3:
+ 	iounmap(fb_virt);
+ err2:
+@@ -884,6 +1046,7 @@ static void hvfb_putmem(struct fb_info *info)
+ {
+ 	struct hvfb_par *par =3D info->par;
+=20
++	vfree(par->dio_vp);
+ 	iounmap(info->screen_base);
+ 	vmbus_free_mmio(par->mem->start, screen_fb_size);
+ 	par->mem =3D NULL;
+@@ -909,6 +1072,12 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	init_completion(&par->wait);
+ 	INIT_DELAYED_WORK(&par->dwork, hvfb_update_work);
+=20
++	par->delayed_refresh =3D false;
++	spin_lock_init(&par->delayed_refresh_lock);
++	spin_lock_init(&par->docopy_lock);
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
++
+ 	/* Connect to VSP */
+ 	hv_set_drvdata(hdev, info);
+ 	ret =3D synthvid_connect_vsp(hdev);
+@@ -960,6 +1129,10 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	info->fbops =3D &hvfb_ops;
+ 	info->pseudo_palette =3D par->pseudo_palette;
+=20
++	/* Initialize deferred IO */
++	info->fbdefio =3D &synthvid_defio;
++	fb_deferred_io_init(info);
++
+ 	/* Send config to host */
+ 	ret =3D synthvid_send_config(hdev);
+ 	if (ret)
+@@ -981,6 +1154,7 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	return 0;
+=20
+ error:
++	fb_deferred_io_cleanup(info);
+ 	hvfb_putmem(info);
+ error2:
+ 	vmbus_close(hdev->channel);
+@@ -1003,6 +1177,8 @@ static int hvfb_remove(struct hv_device *hdev)
+ 	par->update =3D false;
+ 	par->fb_ready =3D false;
+=20
++	fb_deferred_io_cleanup(info);
++
+ 	unregister_framebuffer(info);
+ 	cancel_delayed_work_sync(&par->dwork);
+=20
+--=20
+2.20.1
+
