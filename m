@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194AC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23259C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6E4208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBE6208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfILUIJ (ORCPT
+        id S1727811AbfILUIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:08:09 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35554 "EHLO mga01.intel.com"
+        Thu, 12 Sep 2019 16:08:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:35560 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbfILUH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:07:58 -0400
+        id S1727446AbfILUIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:08:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 13:07:58 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 13:08:01 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="336688254"
+   d="scan'208";a="336688279"
 Received: from chang-linux-3.sc.intel.com ([172.25.66.185])
-  by orsmga004.jf.intel.com with ESMTP; 12 Sep 2019 13:07:57 -0700
+  by orsmga004.jf.intel.com with ESMTP; 12 Sep 2019 13:08:00 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
@@ -38,10 +38,12 @@ Cc:     ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
         "H . Peter Anvin" <hpa@zytor.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v8 12/17] x86/entry/64: Document GSBASE handling in the paranoid path
-Date:   Thu, 12 Sep 2019 13:06:53 -0700
-Message-Id: <1568318818-4091-13-git-send-email-chang.seok.bae@intel.com>
+        Andi Kleen <ak@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v8 17/17] Documentation/x86/64: Add documentation for GS/FS addressing mode
+Date:   Thu, 12 Sep 2019 13:06:58 -0700
+Message-Id: <1568318818-4091-18-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
 References: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
@@ -50,10 +52,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On FSGSBASE systems, the way to handle GS base in the paranoid path is
-different from the existing SWAPGS-based entry/exit path handling. Document
-the reason and what has to be done for FSGSBASE enabled systems.
+From: Thomas Gleixner <tglx@linutronix.de>
 
+Explain how the GS/FS based addressing can be utilized in user space
+applications along with the differences between the generic prctl() based
+GS/FS base control and the FSGSBASE version available on newer CPUs.
+
+Originally-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -63,32 +69,235 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
 ---
 
 Changes from v7:
-* Massaged doc and changelog by Thomas
-* Used 'GS base' consistently, instead of 'GSBASE'
+* Rewritten the documentation and changelog by Thomas
+* Included compiler version info additionally
 ---
- Documentation/x86/entry_64.rst | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/x86/x86_64/fsgs.rst  | 200 +++++++++++++++++++++++++++++++++++++
+ Documentation/x86/x86_64/index.rst |   1 +
+ 2 files changed, 201 insertions(+)
+ create mode 100644 Documentation/x86/x86_64/fsgs.rst
 
-diff --git a/Documentation/x86/entry_64.rst b/Documentation/x86/entry_64.rst
-index a48b3f6..0499a40 100644
---- a/Documentation/x86/entry_64.rst
-+++ b/Documentation/x86/entry_64.rst
-@@ -108,3 +108,12 @@ We try to only use IST entries and the paranoid entry code for vectors
- that absolutely need the more expensive check for the GS base - and we
- generate all 'normal' entry points with the regular (faster) paranoid=0
- variant.
+diff --git a/Documentation/x86/x86_64/fsgs.rst b/Documentation/x86/x86_64/fsgs.rst
+new file mode 100644
+index 0000000..791063c
+--- /dev/null
++++ b/Documentation/x86/x86_64/fsgs.rst
+@@ -0,0 +1,200 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+On FSGSBASE systems, however, user space can set GS without kernel
-+interaction. It means the value of GS base itself does not imply anything,
-+whether a kernel value or a user space value. So, there is no longer a safe
-+way to check whether the exception is entering from user mode or kernel
-+mode in the paranoid entry code path. So the GS base value needs to be read
-+out, saved and the kernel GS base value written. On exit, the saved GS base
-+value needs to be restored unconditionally. The non-paranoid entry/exit
-+code still uses SWAPGS unconditionally as the state is known.
++Using FS and GS segments in user space applications
++===================================================
++
++The x86 architecture supports segmentation. Instructions which access
++memory can use segment register based addressing mode. The following
++notation is used to address a byte within a segment:
++
++  Segment-register:Byte-address
++
++The segment base address is added to the Byte-address to compute the
++resulting virtual address which is accessed. This allows to access multiple
++instances of data with the identical Byte-address, i.e. the same code. The
++selection of a particular instance is purely based on the base-address in
++the segment register.
++
++In 32-bit mode the CPU provides 6 segments, which also support segment
++limits. The limits can be used to enforce address space protections.
++
++In 64-bit mode the CS/SS/DS/ES segments are ignored and the base address is
++always 0 to provide a full 64bit address space. The FS and GS segments are
++still functional in 64-bit mode.
++
++Common FS and GS usage
++------------------------------
++
++The FS segment is commonly used to address Thread Local Storage (TLS). FS
++is usually managed by runtime code or a threading library. Variables
++declared with the '__thread' storage class specifier are instantiated per
++thread and the compiler emits the FS: address prefix for accesses to these
++variables. Each thread has its own FS base address so common code can be
++used without complex address offset calculations to access the per thread
++instances. Applications should not use FS for other purposes when they use
++runtimes or threading libraries which manage the per thread FS.
++
++The GS segment has no common use and can be used freely by
++applications. There is no storage class specifier similar to __thread which
++would cause the compiler to use GS based addressing modes. Newer versions
++of GCC and Clang support GS based addressing via address space identifiers.
++
++
++Reading and writing the FS/GS base address
++------------------------------------------
++
++There exist two mechanisms to read and write the FS/FS base address:
++
++ - the arch_prctl() system call
++
++ - the FSGSBASE instruction family
++
++Accessing FS/GS base with arch_prctl()
++--------------------------------------
++
++ The arch_prctl(2) based mechanism is available on all 64bit CPUs and all
++ kernel versions.
++
++ Reading the base:
++
++   arch_prctl(ARCH_GET_FS, &fsbase);
++   arch_prctl(ARCH_GET_GS, &gsbase);
++
++ Writing the base:
++
++   arch_prctl(ARCH_SET_FS, fsbase);
++   arch_prctl(ARCH_SET_GS, gsbase);
++
++ The ARCH_SET_GS prctl may be disabled depending on kernel configuration
++ and security settings.
++
++Accessing FS/GS base with the FSGSBASE instructions
++---------------------------------------------------
++
++ With the Ivy Bridge CPU generation Intel introduced a new set of
++ instructions to access the FS and GS base registers directly from user
++ space. These instructions are also supported on AMD Family 17H CPUs. The
++ following instructions are available:
++
++  =============== ===========================
++  RDFSBASE %reg   Read the FS base register
++  RDGSBASE %reg   Read the GS base register
++  WRFSBASE %reg   Write the FS base register
++  WRGSBASE %reg   Write the GS base register
++  =============== ===========================
++
++ The instructions avoid the overhead of the arch_prctl() syscall and allow
++ more flexible usage of the FS/GS addressing modes in user space
++ applications. This does not prevent conflicts between threading libraries
++ and runtimes which utilize FS and applications which want to use it for
++ their own purpose.
++
++FSGSBASE instructions enablement
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++ The instructions are enumerated in CPUID leaf 7, bit 0 of EBX. If
++ available /proc/cpuinfo shows 'fsgsbase' in the flag entry of the CPUs.
++
++ The availability of the instructions is not enabling them
++ automatically. The kernel has to enable them explicitly in CR4. The
++ reason for this is that older kernels make assumptions about the values in
++ the GS register and enforce them when GS base is set via
++ arch_prctl(). Allowing user space to write arbitrary values to GS base
++ would violate these assumptions and cause malfunction.
++
++ On kernels which do not enable FSGSBASE the execution of the FSGSBASE
++ instructions will fault with a #UD exception.
++
++ The kernel provides reliable information about the enabled state in the
++ ELF AUX vector. If the HWCAP2_FSGSBASE bit is set in the AUX vector, the
++ kernel has FSGSBASE instructions enabled and applications can use them.
++ The following code example shows how this detection works::
++
++   #include <sys/auxv.h>
++   #include <elf.h>
++
++   /* Will be eventually in asm/hwcap.h */
++   #ifndef HWCAP2_FSGSBASE
++   #define HWCAP2_FSGSBASE        (1 << 1)
++   #endif
++
++   ....
++
++   unsigned val = getauxval(AT_HWCAP2);
++
++   if (val & HWCAP2_FSGSBASE)
++        printf("FSGSBASE enabled\n");
++
++FSGSBASE instructions compiler support
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++GCC version 4.6.4 and newer provide instrinsics for the FSGSBASE
++instructions. Clang 5 supports them as well.
++
++  =================== ===========================
++  _readfsbase_u64()   Read the FS base register
++  _readfsbase_u64()   Read the GS base register
++  _writefsbase_u64()  Write the FS base register
++  _writegsbase_u64()  Write the GS base register
++  =================== ===========================
++
++To utilize these instrinsics <immintrin.h> must be included in the source
++code and the compiler option -mfsgsbase has to be added.
++
++Compiler support for FS/GS based addressing
++-------------------------------------------
++
++GCC version 6 and newer provide support for FS/GS based addressing via
++Named Address Spaces. GCC implements the following address space
++identifiers for x86:
++
++  ========= ====================================
++  __seg_fs  Variable is addressed relative to FS
++  __seg_gs  Variable is addressed relative to GS
++  ========= ====================================
++
++The preprocessor symbols __SEG_FS and __SEG_GS are defined when these
++address spaces are supported. Code which implements fallback modes should
++check whether these symbols are defined. Usage example::
++
++  #ifdef __SEG_GS
++
++  long data0 = 0;
++  long data1 = 1;
++
++  long __seg_gs *ptr;
++
++  /* Check whether FSGSBASE is enabled by the kernel (HWCAP2_FSGSBASE) */
++  ....
++
++  /* Set GS to point to data0 */
++  _writegsbase_u64(&data0);
++
++  /* Access offset 0 of GS */
++  ptr = 0;
++  print("data0 = %ld\n", *ptr);
++
++  /* Set GS to point to data1 */
++  _writegsbase_u64(&data1);
++  /* ptr still addresses offset 0! */
++  print("data1 = %ld\n", *ptr);
++
++
++Clang does not provide these address space identifiers, but it provides
++an attribute based mechanism in Clang 2.6 and newer versions:
++
++ ==================================== =====================================
++  __attribute__((address_space(256))  Variable is addressed relative to GS
++  __attribute__((address_space(257))  Variable is addressed relative to FS
++ ==================================== =====================================
++
++FS/GS based addressing with inline assembly
++-------------------------------------------
++
++In case the compiler does not support address spaces, inline assembly can
++be used for FS/GS based addressing mode::
++
++	mov %fs:offset, %reg
++	mov %gs:offset, %reg
++
++	mov %reg, %fs:offset
++	mov %reg, %gs:offset
+\ No newline at end of file
+diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
+index d6eaaa5..a56070f 100644
+--- a/Documentation/x86/x86_64/index.rst
++++ b/Documentation/x86/x86_64/index.rst
+@@ -14,3 +14,4 @@ x86_64 Support
+    fake-numa-for-cpusets
+    cpu-hotplug-spec
+    machinecheck
++   fsgs
 -- 
 2.7.4
 
