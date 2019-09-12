@@ -2,175 +2,94 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0353BECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6786C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE0A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F20206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfILI7P (ORCPT
+        id S1730515AbfILJBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:59:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33688 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbfILI7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:59:14 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e12so16227035oie.0;
-        Thu, 12 Sep 2019 01:59:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=07+QEZTfn9RypDDP0lnGrecYssAORdm1hEOMhmeJ4sQ=;
-        b=qB29lOZJwO2tvSVVpPI8hVkGV53UZRntu+VETEohIp9cgwQ0GOgisfHFTxRfPdNgcm
-         9Ms8gmKQb8a8y2dghFQVV+Q5LVR+OVqU4YuHf1kMhTzHBKZTkNa6+Vrrrs1fOiAbyTLC
-         TP8J4g5ZorKV8H4n1lrGFcuBqjihNXySK1Ou288MTZkBL7SvbAaW0Kr8DAaGuN8XIBxG
-         /v7bodccIGoU/bImy7Bat7F8iBaUAadk94kTXpDUMUIX86oOmY225uGkuaDW3C0aeJxr
-         Zcvwfh9fEBAYswRpowHBCQAGFcKch1ekWf/k53SdIvvscq+dAa5FM9S9b6Jw+FgnouHk
-         B3sg==
-X-Gm-Message-State: APjAAAUrL3d8WZD7jpFr0ZE9Z+KtcoGqXw2vpK0VSn99MrZXTNYY/Rua
-        0MJsvru99UyvZvSMuIamMGkX4KWU7ATOjMQgMMc=
-X-Google-Smtp-Source: APXvYqwaLUUcAadCv0DqnSsH8fSMIu/3zsuqD2+TF8HGL+/gSXVIvL0eI/76KPAWOFUO1FnvkEwE9GdgkicOmpaXifE=
-X-Received: by 2002:a05:6808:8e3:: with SMTP id d3mr7305993oic.153.1568278753086;
- Thu, 12 Sep 2019 01:59:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be> <CACRpkdZstL3PMtLN3VCDmHq7vSNdO0Q8Wf1sYb5VnwCMs=0uJQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZstL3PMtLN3VCDmHq7vSNdO0Q8Wf1sYb5VnwCMs=0uJQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Sep 2019 10:59:01 +0200
-Message-ID: <CAMuHMdWcxgXfBb9sBNunOwxftO0+pEB3oAHgufyiGUn3B8uv2Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>, adelva@google.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Sep 2019 05:01:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47556 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbfILJBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:01:03 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 137FDC053FDF;
+        Thu, 12 Sep 2019 09:01:03 +0000 (UTC)
+Received: from thuth.com (ovpn-204-41.brq.redhat.com [10.40.204.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A00AB60C63;
+        Thu, 12 Sep 2019 09:00:55 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
+Date:   Thu, 12 Sep 2019 11:00:50 +0200
+Message-Id: <20190912090050.20295-1-thuth@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 12 Sep 2019 09:01:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
+an interrupt, we convert them from the legacy struct kvm_s390_interrupt
+to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
+However, this function does not take care of all types of interrupts
+that we can inject into the guest later (see do_inject_vcpu()). Since we
+do not clear out the s390irq values before calling s390int_to_s390irq(),
+there is a chance that we copy unwanted data from the kernel stack
+into the guest memory later if the interrupt data has not been properly
+initialized by s390int_to_s390irq().
 
-On Thu, Sep 12, 2019 at 10:56 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Jul 5, 2019 at 5:05 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > character devices.  Access control to these devices is provided by
-> > standard UNIX file system permissions, on an all-or-nothing basis:
-> > either a GPIO controller is accessible for a user, or it is not.
-> > Currently no mechanism exists to control access to individual GPIOs.
-> >
-> > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > and expose them as a new gpiochip.  This is useful for implementing
-> > access control, and assigning a set of GPIOs to a specific user.
-> > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > machine, as the VM can just grab the full virtual GPIO controller, and
-> > no longer needs to care about which GPIOs to grab and which not,
-> > reducing the attack surface.
-> >
-> > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > attribute file in sysfs:
-> >
-> >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> > Likewise, virtual GPIO controllers can be destroyed after use:
-> >
-> >     $ echo gpio-virt-agg.<N> \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Aggregating GPIOs and exposing them as a new gpiochip was suggested in
-> > response to my proof-of-concept for GPIO virtualization with QEMU[1][2].
-> >
-> > Sample session on r8a7791/koelsch:
-> >
-> >   - Disable the leds node in arch/arm/boot/dts/r8a7791-koelsch.dts
-> >
-> >   - Create virtual aggregators:
-> >
-> >     $ echo "e6052000.gpio 19 20" \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> >     gpio-virt-agg gpio-virt-agg.0: GPIO 0 => e6052000.gpio/19
-> >     gpio-virt-agg gpio-virt-agg.0: GPIO 1 => e6052000.gpio/20
-> >     gpiochip_find_base: found new base at 778
-> >     gpio gpiochip8: (gpio-virt-agg.0): added GPIO chardev (254:8)
-> >     gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-virt-agg.0)
-> >
-> >     $ echo "e6052000.gpio 21, e6050000.gpio 20 21 22" \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 0 => e6052000.gpio/21
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 1 => e6050000.gpio/20
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 2 => e6050000.gpio/21
-> >     gpio-virt-agg gpio-virt-agg.1: GPIO 3 => e6050000.gpio/22
-> >     gpiochip_find_base: found new base at 774
-> >     gpio gpiochip9: (gpio-virt-agg.1): added GPIO chardev (254:9)
-> >     gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-virt-agg.1)
-> >
-> >   - Adjust permissions on /dev/gpiochip[89] (optional)
-> >
-> >   - Control LEDs:
-> >
-> >     $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
-> >     $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
-> >     $ gpioset gpiochip9 0=0     # LED8 OFF
-> >     $ gpioset gpiochip9 0=1     # LED8 ON
-> >
-> >   - Destroy virtual aggregators:
-> >
-> >     $ echo gpio-virt-agg.0 \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >     $ echo gpio-virt-agg.1 \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > Thanks for your comments!
-> >
-> > References:
-> >   - [1] "[PATCH QEMU POC] Add a GPIO backend"
-> >         (https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1-geert+renesas@glider.be/)
-> >   - [2] "Getting To Blinky: Virt Edition / Making device pass-through
-> >          work on embedded ARM"
-> >         (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
->
-> I'm looping in my friends at Google for this discussion.
->
-> They need a virtualized gpio_chip for their Android emulator,
-> and their current approach for other devices has been around
-> using virtio in most cases and an emulated AC97 for the
-> audio case as far as I remember.
->
-> It would be great to have their input on this so we can create a
-> virtualization/aggregate that works for all.
->
-> Please include adelva@google.com on future postings of this!
+Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
+interrupt: s390int_to_s390irq() does not handle it, but the function
+__deliver_pfault_init() will later copy the uninitialized stack data
+from the ext.ext_params2 into the guest memory.
 
-I've sent v2 yesterday:
-https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/
+Fix it by handling that interrupt type in s390int_to_s390irq(), too.
+And while we're at it, make sure that s390int_to_s390irq() now
+directly returns -EINVAL for unknown interrupt types, so that we
+do not run into this problem again in case we add more interrupt
+types to do_inject_vcpu() sometime in the future.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/s390/kvm/interrupt.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-                        Geert
-
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 3e7efdd9228a..165dea4c7f19 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -1960,6 +1960,16 @@ int s390int_to_s390irq(struct kvm_s390_interrupt *s390int,
+ 	case KVM_S390_MCHK:
+ 		irq->u.mchk.mcic = s390int->parm64;
+ 		break;
++	case KVM_S390_INT_PFAULT_INIT:
++		irq->u.ext.ext_params = s390int->parm;
++		irq->u.ext.ext_params2 = s390int->parm64;
++		break;
++	case KVM_S390_RESTART:
++	case KVM_S390_INT_CLOCK_COMP:
++	case KVM_S390_INT_CPU_TIMER:
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 	return 0;
+ }
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.18.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
