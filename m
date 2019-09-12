@@ -2,151 +2,194 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49C3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF8CC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3F720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j62+pDUo"
+	by mail.kernel.org (Postfix) with ESMTP id B53B82081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfILTr3 (ORCPT
+        id S1726944AbfILTxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 15:47:29 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55356 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfILTr3 (ORCPT
+        Thu, 12 Sep 2019 15:53:05 -0400
+Received: from mailfilter03-out40.webhostingserver.nl ([195.211.72.99]:55572
+        "EHLO mailfilter03-out40.webhostingserver.nl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726132AbfILTxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 15:47:29 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8CJlOfX074523;
-        Thu, 12 Sep 2019 14:47:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568317644;
-        bh=VZv6M3mg7dY3vZcVeFZf11mw+86t0hc40BSEvN1ocIM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=j62+pDUoVzz742J9qmVwbyPhOu+yrXeBDW0Ewlbohg0rV+/brUQNCABJigxDG6/w0
-         0dyI9CO3JCahnKq8eIp+jfq3cUYs1oUegEVuasyw/vsW/KZNWPf+RyAgpuH1csR7Rd
-         pfvfVe78Ini/CpmbbpAZiFaXZYtECA0+jppDhZMo=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8CJlO05128908
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Sep 2019 14:47:24 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
- Sep 2019 14:47:24 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 12 Sep 2019 14:47:23 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8CJlO7P087354;
-        Thu, 12 Sep 2019 14:47:24 -0500
-Subject: Re: [PATCH v2] leds: lm3532: Fix optional led-max-microamp prop error
- handling
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190911182730.22409-1-dmurphy@ti.com>
- <fe7c340b-65b9-f3eb-eb7a-f359f258ccca@gmail.com>
- <412da003-353d-895a-fa45-8e640b814734@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6f17cfe4-299a-53d3-b6f4-ab5f3fe7b291@ti.com>
-Date:   Thu, 12 Sep 2019 14:47:32 -0500
+        Thu, 12 Sep 2019 15:53:04 -0400
+X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Sep 2019 15:53:01 EDT
+X-Halon-ID: a1826e13-d594-11e9-ba6d-001a4a4cb9a5
+Received: from s198.webhostingserver.nl (unknown [195.211.72.171])
+        by mailfilter03.webhostingserver.nl (Halon) with ESMTPSA
+        id a1826e13-d594-11e9-ba6d-001a4a4cb9a5;
+        Thu, 12 Sep 2019 19:36:35 +0000 (UTC)
+Received: from cust-178-250-146-69.breedbanddelft.nl ([178.250.146.69] helo=[10.8.0.10])
+        by s198.webhostingserver.nl with esmtpa (Exim 4.92.2)
+        (envelope-from <ftoth@telfort.nl>)
+        id 1i8Utk-00F8TM-4J; Thu, 12 Sep 2019 21:36:56 +0200
+Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+To:     "Moore, Robert" <robert.moore@intel.com>,
+        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nv@vosn.de" <nv@vosn.de>
+Newsgroups: gmane.linux.kernel,gmane.linux.acpi.devel
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+From:   Ferry Toth <ftoth@telfort.nl>
+Message-ID: <4929b1d2-c2a7-4efd-89e4-f02205e79c01@telfort.nl>
+Date:   Thu, 12 Sep 2019 21:36:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <412da003-353d-895a-fa45-8e640b814734@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-SendingUser: hidden
+X-SendingServer: hidden
+X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+X-Authenticated-Id: hidden
+X-SendingUser: hidden
+X-SendingServer: hidden
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Op 12-09-19 om 16:19 schreef Moore, Robert:
+> Nikolaus,
+> The ability to unload an ACPI table (especially AML tables such as SSDTs) is in the process of being deprecated in ACPICA -- since it is also deprecated in the current ACPI specification. This is being done because of the difficulty of deleting the namespace entries for the table.  FYI, Windows does not properly support this function either.
 
-On 9/12/19 2:12 PM, Jacek Anaszewski wrote:
-> On 9/12/19 8:32 PM, Jacek Anaszewski wrote:> Hi Dan,
->> Thank you for the update.
->>
->> On 9/11/19 8:27 PM, Dan Murphy wrote:
->>> Fix the error handling for the led-max-microamp property.
->>> Need to check if the property is present and then if it is
->>> retrieve the setting and its max boundary
->>>
->>> Reported-by: Pavel Machek <pavel@ucw.cz>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>
->>> v2 - Changed full scale current check to use min function
->>>
->>>   drivers/leds/leds-lm3532.c | 14 +++++++++-----
->>>   1 file changed, 9 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
->>> index 62ace6698d25..a1742dc1f6fa 100644
->>> --- a/drivers/leds/leds-lm3532.c
->>> +++ b/drivers/leds/leds-lm3532.c
->>> @@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
->>>   			goto child_out;
->>>   		}
->>>   
->>> -		ret = fwnode_property_read_u32(child, "led-max-microamp",
->>> -					       &led->full_scale_current);
->>> -
->>> -		if (led->full_scale_current > LM3532_FS_CURR_MAX)
->>> -			led->full_scale_current = LM3532_FS_CURR_MAX;
->>> +		if (fwnode_property_present(child, "led-max-microamp")) {
->>> +			if (fwnode_property_read_u32(child, "led-max-microamp",
->>> +						     &led->full_scale_current))
->>> +				dev_err(&priv->client->dev,
->>> +					"Failed getting led-max-microamp\n");
->>> +			else
->>> +				min(led->full_scale_current,
->>> +				    LM3532_FS_CURR_MAX);
-> I didn't previously notice lack of assignment of min() return value.
->
-> I've amended that and while at it improved a bit this construction to
-> avoid some indentations and line breaks:
->
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> index 62ace6698d25..0507c6575c08 100644
-> --- a/drivers/leds/leds-lm3532.c
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -601,11 +601,14 @@ static int lm3532_parse_node(struct lm3532_data *priv)
->                  goto child_out;
->          }
->
-> -       ret = fwnode_property_read_u32(child, "led-max-microamp",
-> -                                      &led->full_scale_current);
-> -
-> -       if (led->full_scale_current > LM3532_FS_CURR_MAX)
-> -               led->full_scale_current = LM3532_FS_CURR_MAX;
-> +       if (fwnode_property_present(child, "led-max-microamp") &&
-> +           fwnode_property_read_u32(child, "led-max-microamp",
-> +                                    &led->full_scale_current))
-> +               dev_err(&priv->client->dev,
-> +                       "Failed getting led-max-microamp\n");
-> +       else
-> +               led->full_scale_current = min(led->full_scale_current,
-> +                                             LM3532_FS_CURR_MAX);
->
->          if (led->mode == LM3532_BL_MODE_ALS) {
->                  led->mode = LM3532_ALS_CTRL;
->
->
-> Please let me know in case of any doubts.
+I really hope this is not the case. On x86 loading/unloading SSDTs has 
+proven to be a powerful way to handle reconfigurable hardware without 
+rebooting and without requiring dedicated platform drivers. Same for 
+user plugable hardware on i2c/spi busses.
 
-This looks fine.  It always passed for me because I never set the FSC 
-above max
+This has worked before and will violate the "don't break user space" rule.
 
-Dan
+I don't see why Windows is an example to follow. On Windows platform 
+drivers don't get compiled into the kernel and don't need to be upstreamed.
+
+> Bob
+> 
+> 
+> -----Original Message-----
+> From: Nikolaus Voss [mailto:nikolaus.voss@loewensteinmedical.de]
+> Sent: Thursday, September 12, 2019 1:08 AM
+> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>
+> Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; nv@vosn.de; Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> Subject: [PATCH] ACPICA: make acpi_load_table() return table index
+> 
+> For unloading an ACPI table, it is necessary to provide the index of the table. The method intended for dynamically loading or hotplug addition of tables, acpi_load_table(), should provide this information via an optional pointer to the loaded table index.
+> 
+> This patch fixes the table unload function of acpi_configfs.
+> 
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> ---
+>   drivers/acpi/acpi_configfs.c   | 2 +-
+>   drivers/acpi/acpica/dbfileio.c | 2 +-
+>   drivers/acpi/acpica/tbxfload.c | 8 ++++++--
+>   drivers/firmware/efi/efi.c     | 2 +-
+>   include/acpi/acpixf.h          | 3 ++-
+>   5 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c index 57d9d574d4dde..77f81242a28e6 100644
+> --- a/drivers/acpi/acpi_configfs.c
+> +++ b/drivers/acpi/acpi_configfs.c
+> @@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+>   	if (!table->header)
+>   		return -ENOMEM;
+>   
+> -	ret = acpi_load_table(table->header);
+> +	ret = acpi_load_table(table->header, &table->index);
+>   	if (ret) {
+>   		kfree(table->header);
+>   		table->header = NULL;
+> diff --git a/drivers/acpi/acpica/dbfileio.c b/drivers/acpi/acpica/dbfileio.c index c6e25734dc5cd..e1b6e54a96ac1 100644
+> --- a/drivers/acpi/acpica/dbfileio.c
+> +++ b/drivers/acpi/acpica/dbfileio.c
+> @@ -93,7 +93,7 @@ acpi_status acpi_db_load_tables(struct acpi_new_table_desc *list_head)
+>   	while (table_list_head) {
+>   		table = table_list_head->table;
+>   
+> -		status = acpi_load_table(table);
+> +		status = acpi_load_table(table, NULL);
+>   		if (ACPI_FAILURE(status)) {
+>   			if (status == AE_ALREADY_EXISTS) {
+>   				acpi_os_printf
+> diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c index 86f1693f6d29a..d08cd8ffcbdb6 100644
+> --- a/drivers/acpi/acpica/tbxfload.c
+> +++ b/drivers/acpi/acpica/tbxfload.c
+> @@ -268,7 +268,8 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
+>    *
+>    * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
+>    *                                    table to be loaded.
+> - *
+> + *              table_idx           - Pointer to a u32 for storing the table
+> + *                                    index, might be NULL
+>    * RETURN:      Status
+>    *
+>    * DESCRIPTION: Dynamically load an ACPI table from the caller's buffer. Must @@ -278,7 +279,7 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
+>    *              to ensure that the table is not deleted or unmapped.
+>    *
+>    ******************************************************************************/
+> -acpi_status acpi_load_table(struct acpi_table_header *table)
+> +acpi_status acpi_load_table(struct acpi_table_header *table, u32
+> +*table_idx)
+>   {
+>   	acpi_status status;
+>   	u32 table_index;
+> @@ -297,6 +298,9 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
+>   	status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
+>   						ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
+>   						FALSE, &table_index);
+> +	if (table_idx)
+> +		*table_idx = table_index;
+> +
+>   	if (ACPI_SUCCESS(status)) {
+>   
+>   		/* Complete the initialization/resolution of new objects */ diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c index ad3b1f4866b35..9773e4212baef 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -308,7 +308,7 @@ static __init int efivar_ssdt_load(void)
+>   			goto free_data;
+>   		}
+>   
+> -		ret = acpi_load_table(data);
+> +		ret = acpi_load_table(data, NULL);
+>   		if (ret) {
+>   			pr_err("failed to load table: %d\n", ret);
+>   			goto free_data;
+> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h index 3845c8fcc94e5..c90bbdc4146a6 100644
+> --- a/include/acpi/acpixf.h
+> +++ b/include/acpi/acpixf.h
+> @@ -452,7 +452,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>   					       u8 physical))
+>   
+>   ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+> -			    acpi_load_table(struct acpi_table_header *table))
+> +			    acpi_load_table(struct acpi_table_header *table,
+> +					    u32 *table_idx))
+>   
+>   ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>   			    acpi_unload_parent_table(acpi_handle object))
+> --
+> 2.17.1
+> 
+> 
 
