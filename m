@@ -2,112 +2,127 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3977CC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A83C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C45020684
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FEA2081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyqcPE4/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nw349E/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732872AbfILOwX (ORCPT
+        id S1732880AbfILOyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:52:23 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37580 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732777AbfILOwW (ORCPT
+        Thu, 12 Sep 2019 10:54:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44352 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732592AbfILOx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:52:22 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u184so21855464qkd.4;
-        Thu, 12 Sep 2019 07:52:22 -0700 (PDT)
+        Thu, 12 Sep 2019 10:53:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so13604213pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4TYD+cMewnYL5z3ieEOxCFAZpD0FvyxKAgBZKpsQKLA=;
-        b=GyqcPE4/EQBaVHpCqx2y3ZULViVFVL8tffo3OyPRfyuexXAahJ07HdkYnsrFM4+Cb4
-         mvyCnZyx37tY7lxrXcZ+G6iXswOE12khIZ6PgJNpmrNcFd0mqeZhatW3hbubKYuDuNED
-         9AqqRDHLKy/PvNSE7RvUFkEIwurppFR70hMCcanG1PbPfs2M5LNRgSH1MTTT3765f7Zt
-         kQALaE1WvCoZkRSESWnB5HYlEIBDHqJ7OZ2b67QTo1HsxzckrBnS+GmwO4p1xkumgexT
-         2DnZYC6XURzprpCttbU2uKTQ+joNI0HKRU0JimpA7mRFi9DksFfFtNgQb4fRNTXGRUsz
-         XRtg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=IoVQbDWNnJatefEpHqNwx0WsYWf336HdB6z2aMcmRsw=;
+        b=nw349E/CNvfCA91fOtroRLu+ZJo+CKztPvu3Kd+BEV3y/QPUx0cqnfwUrpGXx9uoD/
+         qYiY151cKeJ0lhdAL5e7KOAs0ZXVT/aiFrDqZ0wiFE8k43zZtb4Zdczi4e0pPGGId63c
+         aXJTcJPQEeGUS7+/cEHLhUGUCQD93FstTWCFv8RCuR7WqavU9q6uwNZ+qBQVtpoFGXJR
+         AH/2Lg/fellVghCHMFAz9y3vwKSzXhnhi8ldUgXrkVYLgrVQVe8lrtM9nz3VbN70E6D2
+         8ANSwz3VHRbXdizNqgRwUqHapo7PLk+rUKBQxIaQimpvO9bikMLi89M50aKKNMLdUZRV
+         3EfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4TYD+cMewnYL5z3ieEOxCFAZpD0FvyxKAgBZKpsQKLA=;
-        b=f+ZtiHI5X8lgUYYQzXfj9kWJKYEMu6cEv/o6WTBudwWotEQOmvMk1J3heltKUr6HnS
-         JmhlBTUjxxhXnY43PMPGN11Pb8dFaAbGwRj64cAAWdVSMeN5kCWfLcAz+dKyHcaOOczC
-         /2++bq/CqZGcfpD7tzDzWXH+EKuyPYB418yJtMgBsw/U2Nyzb3f0mow7wFqdbMB2JA4F
-         mO4pMkZX60KTFiXgbQyrud2mtYXcUl3YKmEvR6jMjWD4FuP5EmKO2iCgXIYGGO6Af1xi
-         YSp48O4xm7wudfISzwIByilT8koHdSb+ayMdwjUIfph9ICfRICjqLMbSfHZxMK3T+vIw
-         yYQQ==
-X-Gm-Message-State: APjAAAXZmiHHwf4wr+HXQAerSQT6c7MbO9lwd/6nzSH0vyuAfKD4UjwF
-        bSCCS7cHHAzt/bIa0/EGLqM=
-X-Google-Smtp-Source: APXvYqxQjjKFbfTR+SpYcWqcPiDQhipECrd3HCTLf8/FABccUvYHLTIU8NhZGCKAE4FLtRF7Vcvv1Q==
-X-Received: by 2002:a37:6681:: with SMTP id a123mr39180452qkc.499.1568299941468;
-        Thu, 12 Sep 2019 07:52:21 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f016:e600:cd79:21fe:b069:7c04])
-        by smtp.gmail.com with ESMTPSA id m19sm12221716qke.22.2019.09.12.07.52.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=IoVQbDWNnJatefEpHqNwx0WsYWf336HdB6z2aMcmRsw=;
+        b=BpyUMlm0wD3WOFTsvQ1pbtvBhhYC2rqx09DLqFxnBcVh3nX4MFcY2HFtwMoxlbBaqx
+         xRSFf0XCVR4yf5Ik24UKdW2Z2DLuUDahp0iiObpUICISnwLPPQDn+nnYWzKx0u0w2aO5
+         EP4u1CBlB6wqhGfjX3ZXu/XUySqK3PJ6CGu/R2vfAyCiEeGU7Gzmc4qfNNMINDj/9/TG
+         KH/h9u/qvbOtvERcgJeSRrtN/aWBJAu9+NeAKwqAVVfDaHMQO98JxmW2mqv23FAmf8UG
+         Kfg8/+NSjtfN2zRZ3IPWVcAbuNZgR45RQDFlfpXp/ElGP+LIFToNPMV5BUuxbQcpKGxT
+         s7dQ==
+X-Gm-Message-State: APjAAAVE9iR40o6y/Z3mJ+zWZJpsRUc5OCrvGXcxjlOrYT6w7YUf92fy
+        1DOlFqsN93ly+/luRVXW5RDrzsJG
+X-Google-Smtp-Source: APXvYqw1F2M79KnIG0E626caFbEoEpZa3O4KYrHAsA4ii2llTtOrrjSee5SYWTpqc46st16qwPZJLQ==
+X-Received: by 2002:a62:d4:: with SMTP id 203mr49117982pfa.210.1568300039107;
+        Thu, 12 Sep 2019 07:53:59 -0700 (PDT)
+Received: from SD.eic.com ([106.222.12.153])
+        by smtp.gmail.com with ESMTPSA id x20sm12871036pfa.153.2019.09.12.07.53.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 07:52:20 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 5B906C0DAD; Thu, 12 Sep 2019 11:52:18 -0300 (-03)
-Date:   Thu, 12 Sep 2019 11:52:18 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH v2 net 3/3] sctp: destroy bucket if failed to bind addr
-Message-ID: <20190912145218.GT3431@localhost.localdomain>
-References: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
- <20190912040219.67517-1-maowenan@huawei.com>
- <20190912040219.67517-4-maowenan@huawei.com>
+        Thu, 12 Sep 2019 07:53:58 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 20:23:46 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: remove unneeded conversion to bool
+Message-ID: <20190912145346.GA9013@SD.eic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912040219.67517-4-maowenan@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:02:19PM +0800, Mao Wenan wrote:
-> There is one memory leak bug report:
-> BUG: memory leak
-> unreferenced object 0xffff8881dc4c5ec0 (size 40):
->   comm "syz-executor.0", pid 5673, jiffies 4298198457 (age 27.578s)
->   hex dump (first 32 bytes):
->     02 00 00 00 81 88 ff ff 00 00 00 00 00 00 00 00  ................
->     f8 63 3d c1 81 88 ff ff 00 00 00 00 00 00 00 00  .c=.............
->   backtrace:
->     [<0000000072006339>] sctp_get_port_local+0x2a1/0xa00 [sctp]
->     [<00000000c7b379ec>] sctp_do_bind+0x176/0x2c0 [sctp]
->     [<000000005be274a2>] sctp_bind+0x5a/0x80 [sctp]
->     [<00000000b66b4044>] inet6_bind+0x59/0xd0 [ipv6]
->     [<00000000c68c7f42>] __sys_bind+0x120/0x1f0 net/socket.c:1647
->     [<000000004513635b>] __do_sys_bind net/socket.c:1658 [inline]
->     [<000000004513635b>] __se_sys_bind net/socket.c:1656 [inline]
->     [<000000004513635b>] __x64_sys_bind+0x3e/0x50 net/socket.c:1656
->     [<0000000061f2501e>] do_syscall_64+0x72/0x2e0 arch/x86/entry/common.c:296
->     [<0000000003d1e05e>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> This is because in sctp_do_bind, if sctp_get_port_local is to
-> create hash bucket successfully, and sctp_add_bind_addr failed
-> to bind address, e.g return -ENOMEM, so memory leak found, it
-> needs to destroy allocated bucket.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Relational and logical operators evaluate to bool,
+explicit conversion is overly verbose and unneeded.
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+This issue found using - Coccinelle (http://coccinelle.lip6.fr)
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index 2128886c9924..3bca37e70f5f 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -2922,7 +2922,8 @@ int issue_probereq_ex(struct adapter *padapter, struct ndis_802_11_ssid *pssid,
+ 	int i = 0;
+ 
+ 	do {
+-		ret = _issue_probereq(padapter, pssid, da, ch, append_wps, wait_ms > 0?true:false);
++		ret = _issue_probereq(padapter, pssid, da, ch, append_wps,
++				      wait_ms > 0);
+ 
+ 		i++;
+ 
+@@ -3513,7 +3514,7 @@ int issue_nulldata(struct adapter *padapter, unsigned char *da, unsigned int pow
+ 	}
+ 
+ 	do {
+-		ret = _issue_nulldata(padapter, da, power_mode, wait_ms > 0?true:false);
++		ret = _issue_nulldata(padapter, da, power_mode, wait_ms > 0);
+ 
+ 		i++;
+ 
+@@ -3661,7 +3662,7 @@ int issue_qos_nulldata(struct adapter *padapter, unsigned char *da, u16 tid, int
+ 		da = get_my_bssid(&(pmlmeinfo->network));
+ 
+ 	do {
+-		ret = _issue_qos_nulldata(padapter, da, tid, wait_ms > 0?true:false);
++		ret = _issue_qos_nulldata(padapter, da, tid, wait_ms > 0);
+ 
+ 		i++;
+ 
+@@ -3769,7 +3770,7 @@ int issue_deauth_ex(struct adapter *padapter, u8 *da, unsigned short reason, int
+ 	int i = 0;
+ 
+ 	do {
+-		ret = _issue_deauth(padapter, da, reason, wait_ms > 0?true:false);
++		ret = _issue_deauth(padapter, da, reason, wait_ms > 0);
+ 
+ 		i++;
+ 
+-- 
+2.20.1
+
