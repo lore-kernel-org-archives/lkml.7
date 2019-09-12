@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FE7C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81ABC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B94214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA870214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387485AbfILR0h (ORCPT
+        id S2387563AbfILR07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 13:26:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53830 "EHLO mx1.suse.de"
+        Thu, 12 Sep 2019 13:26:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53948 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387432AbfILR0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387467AbfILR0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 13:26:36 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73A42B7DA;
+        by mx1.suse.de (Postfix) with ESMTP id 89C0CB817;
         Thu, 12 Sep 2019 17:26:33 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
@@ -51,9 +51,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v8 1/7] powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
-Date:   Thu, 12 Sep 2019 19:26:03 +0200
-Message-Id: <2e5c00c054f5a1c8ea4b5944685940af0665bfc1.1568306311.git.msuchanek@suse.de>
+Subject: [PATCH v8 4/7] powerpc/perf: consolidate valid_user_sp
+Date:   Thu, 12 Sep 2019 19:26:06 +0200
+Message-Id: <6429623dfb3f92e45c9d403194e16943eb51da79.1568306311.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568306311.git.msuchanek@suse.de>
 References: <cover.1568306311.git.msuchanek@suse.de>
@@ -64,50 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This partially reverts commit caf6f9c8a326 ("asm-generic: Remove
-unneeded __ARCH_WANT_SYS_LLSEEK macro")
+Merge the 32bit and 64bit version.
 
-When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
+Halve the check constants on 32bit.
 
-There is resistance to both removing the llseek syscall from the 64bit
-syscall tables and building the llseek interface unconditionally.
+Use STACK_TOP since it is defined.
 
-Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
-Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
+This removes a page from the valid 32bit area on 64bit:
+ #define TASK_SIZE_USER32 (0x0000000100000000UL - (1 * PAGE_SIZE))
+ #define STACK_TOP_USER32 TASK_SIZE_USER32
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/powerpc/include/asm/unistd.h | 1 +
- fs/read_write.c                   | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+v8: new patch
+---
+ arch/powerpc/perf/callchain.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
-index b0720c7c3fcf..700fcdac2e3c 100644
---- a/arch/powerpc/include/asm/unistd.h
-+++ b/arch/powerpc/include/asm/unistd.h
-@@ -31,6 +31,7 @@
- #define __ARCH_WANT_SYS_SOCKETCALL
- #define __ARCH_WANT_SYS_FADVISE64
- #define __ARCH_WANT_SYS_GETPGRP
-+#define __ARCH_WANT_SYS_LLSEEK
- #define __ARCH_WANT_SYS_NICE
- #define __ARCH_WANT_SYS_OLD_GETRLIMIT
- #define __ARCH_WANT_SYS_OLD_UNAME
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 5bbf587f5bc1..89aa2701dbeb 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -331,7 +331,8 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index d86bdbffda9e..7863ee0a0e69 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -102,6 +102,20 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+ 	}
  }
- #endif
  
--#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
-+#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT) || \
-+	defined(__ARCH_WANT_SYS_LLSEEK)
- SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
- 		unsigned long, offset_low, loff_t __user *, result,
- 		unsigned int, whence)
++static inline int valid_user_sp(unsigned long sp, int is_64)
++{
++	unsigned long stack_top;
++
++	if (IS_ENABLED(CONFIG_PPC32))
++		stack_top = STACK_TOP;
++	else    /* STACK_TOP uses is_32bit_task() but we want is_64 */
++		stack_top = is_64 ? STACK_TOP_USER64 : STACK_TOP_USER32;
++
++	if (!sp || (sp & (is_64 ? 7 : 3)) || sp > stack_top - (is_64 ? 32 : 16))
++		return 0;
++	return 1;
++}
++
+ #ifdef CONFIG_PPC64
+ /*
+  * On 64-bit we don't want to invoke hash_page on user addresses from
+@@ -165,13 +179,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+ 	return read_user_stack_slow(ptr, ret, 8);
+ }
+ 
+-static inline int valid_user_sp(unsigned long sp, int is_64)
+-{
+-	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+-		return 0;
+-	return 1;
+-}
+-
+ /*
+  * 64-bit user processes use the same stack frame for RT and non-RT signals.
+  */
+@@ -294,13 +301,6 @@ static inline int current_is_64bit(void)
+ 	return 0;
+ }
+ 
+-static inline int valid_user_sp(unsigned long sp, int is_64)
+-{
+-	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
+-		return 0;
+-	return 1;
+-}
+-
+ #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
+ #define sigcontext32		sigcontext
+ #define mcontext32		mcontext
 -- 
 2.23.0
 
