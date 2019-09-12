@@ -2,187 +2,111 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98499C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089CEC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DA420830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88B820830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/mpAH4w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCadSE/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfILSdC (ORCPT
+        id S1727352AbfILSej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:33:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35636 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfILSdC (ORCPT
+        Thu, 12 Sep 2019 14:34:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43469 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfILSei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:33:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n10so61325wmj.0;
-        Thu, 12 Sep 2019 11:32:59 -0700 (PDT)
+        Thu, 12 Sep 2019 14:34:38 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so12138907pld.10;
+        Thu, 12 Sep 2019 11:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EafGGJpNEDvecTjcGD7gXYMS7mxeSW45vM7UZylYEVM=;
-        b=d/mpAH4w0fgYhoMz5GQ+hJ+bcZU+oniTYQBmDTYBM5aUgj/rNya649DR7wmonPnsWD
-         upWjoPqbpmeG4b6IKjkRkHQeb4L892+PoZNTqT6+/0X/c4Qci72EE2Wcof4EG8YUZJO0
-         x02Nb5M/FrJd9KcrhNPx/AswSv1mKZQnzLy6Il+Exof9ynh04VEljriql1KiT1Vy4RO4
-         rL+RNOG1ww8POWmvkHWhKjggMCiqMeheP1wkn6gLmjTU4g/rJPodp2Gp5+tF9tw8XxJo
-         LH6Srf/L6up8sk0daenCmGLLwTkGwhdnNemn5ggIMRfBVLHIU7kBatTs9twTz2pptatv
-         ohzw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0NsNEAUZ0Crnd+Dr07/EE6yGUJNjNyQsJ9LixZ3AYBk=;
+        b=QCadSE/h+WLe3KRnzUxywPKimE34rq2JsyZQmRVzAk5IwhygxT3DXRIsQ2u8QaaL9s
+         m1PhsBQBJ4rfHYyDdNlbzIuS/zklzrU4FXcAAc4um9qH3blhL4f1v/T6cV6mJdm7eGvb
+         YuD+kKkM/GwZxfWJdx0ZFo2K19LDzV3Dn4a2qMSCa/UZch/K16B8s9KZQc/z7YEI7FU1
+         AsY6dEVLGXjjnxM5ty3LO9i/U4FitSHSojnHPxiW/pfECOTkp8reOYpQyQD2ngC4RQ0p
+         3dvUYdzyIZN+xsVxhZdglprL9OH95BgW4/WUPQilBoJQ2BB4uXbyIJmEbiHJbZ0OPfPf
+         cwEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EafGGJpNEDvecTjcGD7gXYMS7mxeSW45vM7UZylYEVM=;
-        b=ZnVgbC9s90n1owDyy+Jk+iEH00efKJrrwzK0Bb7PZIv+qIKL5NTd7KUpDNLO1PfT5k
-         0ZCTPC4u33kvgVZGYq9nPPTYs7g0ADrj9Lx2KsDIxaXAXMwNUMRcRixueR0hCOCWzvcI
-         c/kkiGfcM6j6ZTEJeds/TDuCsDtDvTLacDflA05QVwt4E1LTt1GkmAeafeuYR0cQYzkK
-         r1d/mBx2gsINFS0tvRD2nHWbhc1w788MYAw33dmSY+kVB/PkYA6nyxKagP+Oo3t0CJLX
-         ZAjy//D4ttWE2gkqCALA2PbJHir1Lm7yydGjVpo7yIiGLlStMmAJGpMkwCAiWTvEGLto
-         s3SA==
-X-Gm-Message-State: APjAAAW0IANo6s/1yKUn7ToU+phUR9uRnY2XxXFPoKT31O1AWa9OQQB1
-        l2pSMqBfmdHRGS4c7p2yRl5D7AYo
-X-Google-Smtp-Source: APXvYqwcErQm0/q3AkdcZjcumens/c7+Dc7XwktXW2JmQvHDdgvzUhSmxPW2AWATgBObiRwzZRVGsA==
-X-Received: by 2002:a1c:dd0a:: with SMTP id u10mr29968wmg.100.1568313178504;
-        Thu, 12 Sep 2019 11:32:58 -0700 (PDT)
-Received: from [192.168.1.19] (bds144.neoplus.adsl.tpnet.pl. [83.28.4.144])
-        by smtp.gmail.com with ESMTPSA id x6sm3437wmf.38.2019.09.12.11.32.56
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0NsNEAUZ0Crnd+Dr07/EE6yGUJNjNyQsJ9LixZ3AYBk=;
+        b=cCdtT1dJ6NWysgXuP9TwZ5H3hFe9h6dvh1UUxlw0Ov/y8/QZCqdvU7q4c1KrZP1IJw
+         0y9B/TgQi0uwCRkH/U/B7NoMbx2NdQcjU7saCqriJTQwoVBirEv4kqnRNnyqzwndZ7Db
+         3fe5GpqFE7fW27rmLyiOWkyEhqVmrpFSfdpDrUfGpBOSXkf6JtS+sEqoVPaAq/cw7SzB
+         KW6fo1p+5Xk5hGMe5TecS57RPTIlRWngiO96KZP0XK2EkozFrTiK5zP/MTWuW2s8fiVO
+         bNX1HuNeoC935lSd+pi00mzKIFL5pJ58d5iNetwfrE4xAlvIZ3KQMJGIIMDDvW9A+khf
+         kcEg==
+X-Gm-Message-State: APjAAAX4608UtgALGz0gV8j/jdTPs8ROAh2FG+Uh5tr3kTIGE/zbSEGH
+        ZkZKIBy71NcevFv24RpuN94=
+X-Google-Smtp-Source: APXvYqzxRpsshcfcA0i0pqzMLG6IutkR305eKHGsQ2JWDSwpEi7peKrNpJOhCCJq+23ayYPtZeK14w==
+X-Received: by 2002:a17:902:9b86:: with SMTP id y6mr44838169plp.217.1568313276613;
+        Thu, 12 Sep 2019 11:34:36 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b5sm45646907pfp.38.2019.09.12.11.34.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 11:32:57 -0700 (PDT)
-Subject: Re: [PATCH v2] leds: lm3532: Fix optional led-max-microamp prop error
- handling
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190911182730.22409-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fe7c340b-65b9-f3eb-eb7a-f359f258ccca@gmail.com>
-Date:   Thu, 12 Sep 2019 20:32:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 11:34:35 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 11:34:35 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
+Cc:     bjorn.andersson@linaro.org, wim@linux-watchdog.org,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] watchdog: qcom: support pre-timeout when the bark
+ irq is available
+Message-ID: <20190912183435.GB5065@roeck-us.net>
+References: <20190906205411.31666-1-jorge.ramirez-ortiz@linaro.org>
+ <20190906205411.31666-2-jorge.ramirez-ortiz@linaro.org>
+ <20190910180655.GA25286@roeck-us.net>
+ <20190912072454.GA11651@igloo>
 MIME-Version: 1.0
-In-Reply-To: <20190911182730.22409-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912072454.GA11651@igloo>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-
-Thank you for the update.
-
-On 9/11/19 8:27 PM, Dan Murphy wrote:
-> Fix the error handling for the led-max-microamp property.
-> Need to check if the property is present and then if it is
-> retrieve the setting and its max boundary
+On Thu, Sep 12, 2019 at 09:24:54AM +0200, Jorge Ramirez-Ortiz, Linaro wrote:
+> On 10/09/19 11:06:55, Guenter Roeck wrote:
+> > On Fri, Sep 06, 2019 at 10:54:10PM +0200, Jorge Ramirez-Ortiz wrote:
+> > > Use the bark interrupt as the pre-timeout notifier whenever this
+> > > interrupt is available.
+> > > 
+> > > By default, the pretimeout notification shall occur one second earlier
+> > > than the timeout.
+> > > 
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > 
+> > Nitpick below, otherwise:
+> > 
+> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > 
+> > > +		wdt->wdd.pretimeout = 0;
+> > 
+> > It is not necessary to set pretimeout to 0; the data structure was
+> > allocated with devm_kzalloc(). The compiler won't know that and
+> > generate unnecessary code otherwise.
 > 
-> Reported-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Changed full scale current check to use min function
-> 
->  drivers/leds/leds-lm3532.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> index 62ace6698d25..a1742dc1f6fa 100644
-> --- a/drivers/leds/leds-lm3532.c
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
->  			goto child_out;
->  		}
->  
-> -		ret = fwnode_property_read_u32(child, "led-max-microamp",
-> -					       &led->full_scale_current);
-> -
-> -		if (led->full_scale_current > LM3532_FS_CURR_MAX)
-> -			led->full_scale_current = LM3532_FS_CURR_MAX;
-> +		if (fwnode_property_present(child, "led-max-microamp")) {
-> +			if (fwnode_property_read_u32(child, "led-max-microamp",
-> +						     &led->full_scale_current))
-> +				dev_err(&priv->client->dev,
-> +					"Failed getting led-max-microamp\n");
-> +			else
-> +				min(led->full_scale_current,
-> +				    LM3532_FS_CURR_MAX);
-> +		}
->  
->  		if (led->mode == LM3532_BL_MODE_ALS) {
->  			led->mode = LM3532_ALS_CTRL;
+> will you need me to send another version or could you pick it up as is?
 > 
 
-Applied.
+I applied the patch to my watchdog-next branch, with the line removed.
+Let's assume that Wim will pick it up from there. If not, and
+the line stays in, no real damage.
 
--- 
-Best regards,
-Jacek Anaszewski
+In short, no need to resubmit.
+
+Guenter
