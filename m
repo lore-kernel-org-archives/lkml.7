@@ -5,168 +5,126 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76383C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD43C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FE920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4129420830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zs/x+6ih"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0WfDTx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfILS0c (ORCPT
+        id S1727248AbfILSav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:26:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39549 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfILS0c (ORCPT
+        Thu, 12 Sep 2019 14:30:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46498 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfILSau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:26:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so13894703pgi.6;
-        Thu, 12 Sep 2019 11:26:31 -0700 (PDT)
+        Thu, 12 Sep 2019 14:30:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id d17so35222651ios.13;
+        Thu, 12 Sep 2019 11:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=16RAWRckcie+V9oI/6PZrjOMSfXV1PuRqJWQkGoociA=;
-        b=Zs/x+6ihUxdRh3Di/Xv7kRptkUwioSJUSmFuHUeFZIyjBnwGf0Ib5R09DisS9N7Zsd
-         zAGTvEBCRbDJCFz2XX1hrCKloqXaTrCRFdkBmhr7jDE8mJEIODyct2x8h4dxxYa9IGFk
-         AMGKx28vk9JNXLqwuwG04jX7AHpPH1cOsOinvDMPYjYXeyEcukmgf507rWGh7UBjIJVR
-         xd2q+PDHIHS9Fbr/S0Xj5Q4y1w/cuwa+CG2gioYwvhBAHNyCLdkuGy/cb8sWIV6W7mV5
-         MYd0ETzbXkl+py7rQw6I0lDaB2opkPUzuGol5DVG7os4mSFDsibN6u2TCrSbEO9bi44H
-         bjeA==
+        h=from:to:cc:subject:date:message-id;
+        bh=mZC7pXGu1qT+F+Mq64PPbUxImuBhl3ZWzMgjPcWRv1I=;
+        b=e0WfDTx16CLEoSBy/3fiIR03RqbzvAiglsH52t970LcLPbhe8lqs8+vV7FVCfytT4O
+         y1vDYSDLdY0FfCG3msZYM6Qv8q8BVFA6NHtZ8C3RlqMejRiFseSGqpZUxGrMCMTZwjkK
+         Y0/sFzpel7WDQlKkQNvOQBw4phT2s10M8mabkO8ieGRVuUfOpYduXhgtlY9j3qipFDuF
+         Qk5Q1WBmN23cRHV8pVg/aqmdAvtT5O/GzJKLdG/lJSWTREHZq5sG8KO5DRWhadqWspH3
+         iA73OVBHgf63bX8Z9TsIPa0poZlENqHwCOn2j8p4eRnyV1sDq6bxF4d/kwY/8CgfihxO
+         dckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=16RAWRckcie+V9oI/6PZrjOMSfXV1PuRqJWQkGoociA=;
-        b=DzJGGLNJRBYi8IKpMFV26eyVEawlbQJ5AsSZjalg8o13mQp9FYNQmFlX2XpNWmITsx
-         trTN433qQEJWvHSDlQ+ZtNDp98KRLbxYZ6+9y5FgHgyy+XwMkfaXcg5q6XtgysRr007E
-         gQDVJLOanhhOg5vVRlqd/J8RnFT1w2f3u3bHbigd2PpmAUB0D73KEf5lfRAG9g0Zn0bk
-         G76t+XEhnZhE3lyH25AOH4PuR7HwTSnvwt2RF/aiLR4wUCIvDHuAPDVlOcsbcpAyEt63
-         7LB8IGQ57nbS/57q5fYtgP7qTEzdBW5kARk27vFakzlBGYTXL9jwtYr9P6AZeLEq99ox
-         sT1Q==
-X-Gm-Message-State: APjAAAUzpVwFjnJUJNqE0aUUqV3cGWWwK8lpIQuYlna/wKvq2NtYtSni
-        DGZzmO6BrTdWu0vdyKZmz9Y=
-X-Google-Smtp-Source: APXvYqy5c50GltAl+kKInt13PhiVj7hdgfYsMKoWVysjItsDA5w7rBOLXYV1yajOhJMzqnZplbjCzQ==
-X-Received: by 2002:a63:5754:: with SMTP id h20mr38137589pgm.195.1568312791454;
-        Thu, 12 Sep 2019 11:26:31 -0700 (PDT)
-Received: from localhost.localdomain (61-231-52-128.dynamic-ip.hinet.net. [61.231.52.128])
-        by smtp.gmail.com with ESMTPSA id r1sm20747382pgv.70.2019.09.12.11.26.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mZC7pXGu1qT+F+Mq64PPbUxImuBhl3ZWzMgjPcWRv1I=;
+        b=jISrwselFVo81SUwqVfiN5NifMd9wfJFDWdBSTb1r6tjgCwoNFc6cMHGHVVkJquSgE
+         QZ/R+AGHXv2SlHZE10OjWvswmzm5WNrV79Wo6BXQuC8GfPkzoS4urP9ysZJUKEkueyDj
+         cPb3FJ0LQd0xL8/Ioj2HeKcos2ArSxoP9RObyS5FYogcYz6b0k+B6/pn8vwQc4r3WTjH
+         XyHjQ07Dto5ZGSGf19dN0ahNeIChlj7uy/w2D7wolq8AcRInEl2Re3hVGIVEQPv6HZ5m
+         vd3UC3Rvr2/3sR0RmYWhlDdzrGxJrxDJrW40uGxUogztF0lLzGfuyCN+YUqrA1jvG35q
+         6mYg==
+X-Gm-Message-State: APjAAAXVUpbBSnV6QgyEWd7MraJdaJU9VzRQJ5y2scDx90I9TXcF7y0q
+        RKhvqTTmZRmOKRuwCOFlq1o/AYZoyq0=
+X-Google-Smtp-Source: APXvYqx7lsIdpsP6HV/3/J6qGakWdISq6NhXFQCIREvQL0MvxIArSJRD6Hiy/g14GLaINB5IhSjntQ==
+X-Received: by 2002:a5e:c644:: with SMTP id s4mr3382341ioo.36.1568313049479;
+        Thu, 12 Sep 2019 11:30:49 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id c4sm20003578ioa.76.2019.09.12.11.30.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 11:26:31 -0700 (PDT)
-From:   lecopzer@gmail.com
-X-Google-Original-From: lecopzer.chen@mediatek.com
-To:     lecopzer@gmail.com, sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yj.chiang@mediatek.com, lecopzer.chen@mediatek.com
-Subject: [PATCH v2 2/2] test_power: Add CURRENT properties
-Date:   Fri, 13 Sep 2019 02:26:00 +0800
-Message-Id: <20190912182600.24211-3-lecopzer.chen@mediatek.com>
+        Thu, 12 Sep 2019 11:30:48 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     hns@goldelico.com, tony@atomide.com, neolynx@gmail.com,
+        letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org,
+        andreas@kemnade.info, nm@ti.com, adam.ford@logicpd.com,
+        Adam Ford <aford173@gmail.com>
+Subject: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+Date:   Thu, 12 Sep 2019 13:30:37 -0500
+Message-Id: <20190912183037.18449-1-aford173@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190912182600.24211-1-lecopzer.chen@mediatek.com>
-References: <20190912182600.24211-1-lecopzer.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CURRENT is really general in other battery drivers,
-Android also has an interface to monitor CURRENT, so let's
-add it into test framework.
+The thermal sensor in the omap3 family isn't accurate, but it's
+better than nothing.  The various OPP's enabled for the omap3630
+support up to OPP1G, however the datasheet for the DM3730 states
+that OPP130 and OPP1G are not available above TJ of 90C.
 
-The default value (1.6A) is just a random but reasonable value.
+This patch configures the thermal throttling to limit the
+operating points of the omap3630 to Only OPP50 and OPP100 if
+the thermal sensor reads a value above 90C.
 
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
----
- drivers/power/supply/test_power.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
-index 70db8d20e138..65c23ef6408d 100644
---- a/drivers/power/supply/test_power.c
-+++ b/drivers/power/supply/test_power.c
-@@ -34,6 +34,7 @@ static int battery_technology		= POWER_SUPPLY_TECHNOLOGY_LION;
- static int battery_capacity		= 50;
- static int battery_voltage		= 3300;
- static int battery_charge_counter	= -1000;
-+static int battery_current		= 1600;
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index 4bb4f534afe2..58b9d347019f 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -25,6 +25,7 @@
  
- static bool module_initialized;
+ 			vbb-supply = <&abb_mpu_iva>;
+ 			clock-latency = <300000>; /* From omap-cpufreq driver */
++			#cooling-cells = <2>;
+ 		};
+ 	};
  
-@@ -118,6 +119,10 @@ static int test_power_get_battery_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
- 		val->intval = battery_voltage;
- 		break;
-+	case POWER_SUPPLY_PROP_CURRENT_AVG:
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		val->intval = battery_current;
-+		break;
- 	default:
- 		pr_info("%s: some properties deliberately report errors.\n",
- 			__func__);
-@@ -149,6 +154,8 @@ static enum power_supply_property test_power_battery_props[] = {
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_AVG,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
+@@ -195,6 +196,31 @@
+ 	};
  };
  
- static char *test_power_ac_supplied_to[] = {
-@@ -467,6 +474,21 @@ static int param_set_battery_charge_counter(const char *key,
- 
- #define param_get_battery_charge_counter param_get_int
- 
-+static int param_set_battery_current(const char *key,
-+					const struct kernel_param *kp)
-+{
-+	int tmp;
++&cpu_thermal {
++	cpu_trips: trips {
++		/* OPP130 and OPP1G are not available above TJ of 90C. */
++		cpu_alert0: cpu_alert {
++			temperature = <90000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
 +
-+	if (1 != sscanf(key, "%d", &tmp))
-+		return -EINVAL;
++		cpu_crit: cpu_crit {
++			temperature = <125000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
 +
-+	battery_current = tmp;
-+	signal_power_supply_changed(test_power_supplies[TEST_BATTERY]);
-+	return 0;
-+}
-+
-+#define param_get_battery_current param_get_int
-+
- static const struct kernel_param_ops param_ops_ac_online = {
- 	.set = param_set_ac_online,
- 	.get = param_get_ac_online,
-@@ -512,6 +534,11 @@ static const struct kernel_param_ops param_ops_battery_charge_counter = {
- 	.get = param_get_battery_charge_counter,
- };
- 
-+static const struct kernel_param_ops param_ops_battery_current = {
-+	.set = param_set_battery_current,
-+	.get = param_get_battery_current,
++	cpu_cooling_maps: cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			/* Only allow OPP50 and OPP100 */
++			cooling-device = <&cpu 0 1>;
++		};
++	};
 +};
 +
- #define param_check_ac_online(name, p) __param_check(name, p, void);
- #define param_check_usb_online(name, p) __param_check(name, p, void);
- #define param_check_battery_status(name, p) __param_check(name, p, void);
-@@ -521,6 +548,7 @@ static const struct kernel_param_ops param_ops_battery_charge_counter = {
- #define param_check_battery_capacity(name, p) __param_check(name, p, void);
- #define param_check_battery_voltage(name, p) __param_check(name, p, void);
- #define param_check_battery_charge_counter(name, p) __param_check(name, p, void);
-+#define param_check_battery_current(name, p) __param_check(name, p, void);
- 
- 
- module_param(ac_online, ac_online, 0644);
-@@ -555,6 +583,9 @@ module_param(battery_charge_counter, battery_charge_counter, 0644);
- MODULE_PARM_DESC(battery_charge_counter,
- 	"battery charge counter (microampere-hours)");
- 
-+module_param(battery_current, battery_current, 0644);
-+MODULE_PARM_DESC(battery_current, "battery current (milliampere)");
-+
- MODULE_DESCRIPTION("Power supply driver for testing");
- MODULE_AUTHOR("Anton Vorontsov <cbouatmailru@gmail.com>");
- MODULE_LICENSE("GPL");
+ /* OMAP3630 needs dss_96m_fck for VENC */
+ &venc {
+ 	clocks = <&dss_tv_fck>, <&dss_96m_fck>;
 -- 
 2.17.1
 
