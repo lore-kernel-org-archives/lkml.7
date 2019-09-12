@@ -2,117 +2,131 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65711C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5332C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4378120692
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25DA206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731044AbfILKfE (ORCPT
+        id S1731081AbfILKfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:35:04 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47479 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730470AbfILKfE (ORCPT
+        Thu, 12 Sep 2019 06:35:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47410 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726952AbfILKfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:35:04 -0400
-X-UUID: db49a7ec7fa84b9c9ce2069bd83947ed-20190912
-X-UUID: db49a7ec7fa84b9c9ce2069bd83947ed-20190912
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 469677759; Thu, 12 Sep 2019 18:34:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Sep 2019 18:34:51 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Sep 2019 18:34:52 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH] psi: put NULL char correctly in psi_write()
-Date:   Thu, 12 Sep 2019 18:34:52 +0800
-Message-ID: <20190912103452.13281-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 12 Sep 2019 06:35:47 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAWq26087452
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:35:46 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uyh47qddq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:35:45 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 12 Sep 2019 11:35:43 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 11:35:41 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CAZeV220709736
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 10:35:40 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E083AE058;
+        Thu, 12 Sep 2019 10:35:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 572CAAE051;
+        Thu, 12 Sep 2019 10:35:39 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.206.179])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 12 Sep 2019 10:35:39 +0000 (GMT)
+Date:   Thu, 12 Sep 2019 11:35:36 +0100
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Cao jin <caoj.fnst@cn.fujitsu.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/memblock: fix typo in memblock doc
+References: <20190911030856.18010-1-caoj.fnst@cn.fujitsu.com>
+ <20190911144230.GB6429@linux.ibm.com>
+ <59f571f6-785c-7f6e-fd03-5cfc76da27be@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59f571f6-785c-7f6e-fd03-5cfc76da27be@cn.fujitsu.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19091210-4275-0000-0000-00000364D55E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091210-4276-0000-0000-000038772FC3
+Message-Id: <20190912103535.GB9062@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=996 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When passing a equal or more then 32 bytes long string to psi_write(),
-psi_write() copies 31 bytes to its buf and overwrites buf[30]
-with '\0'. Which makes the input string 1 byte shorter than
-it should be.
+On Thu, Sep 12, 2019 at 10:54:09AM +0800, Cao jin wrote:
+> On 9/11/19 10:42 PM, Mike Rapoport wrote:
+> > On Wed, Sep 11, 2019 at 11:08:56AM +0800, Cao jin wrote:
+> >> elaboarte -> elaborate
+> >> architecure -> architecture
+> >> compltes -> completes
+> >>
+> >> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+> >> ---
+> >>  mm/memblock.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/mm/memblock.c b/mm/memblock.c
+> >> index 7d4f61ae666a..0d0f92003d18 100644
+> >> --- a/mm/memblock.c
+> >> +++ b/mm/memblock.c
+> >> @@ -83,16 +83,16 @@
+> >>   * Note, that both API variants use implict assumptions about allowed
+> >>   * memory ranges and the fallback methods. Consult the documentation
+> >>   * of :c:func:`memblock_alloc_internal` and
+> >> - * :c:func:`memblock_alloc_range_nid` functions for more elaboarte
+> >> + * :c:func:`memblock_alloc_range_nid` functions for more elaborate
+> > 
+> > While on it, could you please replace the
+> > :c:func:`memblock_alloc_range_nid` construct with
+> > memblock_alloc_range_nid()?
+> > 
+> > And that would be really great to see all the :c:func:`foo` changed to
+> > foo().
+> > 
+> 
+> Sure. BTW, do you want convert all the markups too?
+> 
+>     :c:type:`foo` -> struct foo
+>     %FOO -> FOO
+>     ``foo`` -> foo
+>     **foo** -> foo
 
-Fix it by copying sizeof(buf) bytes when nbytes >= sizeof(buf).
-
-This does not cause problems in normal use case like:
-"some 500000 10000000" or "full 500000 10000000" because they
-are less than 32 bytes in length.
-
-	/* assuming nbytes == 35 */
-	char buf[32];
-
-	buf_size = min(nbytes, (sizeof(buf) - 1)); /* buf_size = 31 */
-	if (copy_from_user(buf, user_buf, buf_size))
-		return -EFAULT;
-
-	buf[buf_size - 1] = '\0'; /* buf[30] = '\0' */
-
-Before:
-%cd /proc/pressure/
-%echo "123456789|123456789|123456789|1234" > memory
-[   22.473497] nbytes=35,buf_size=31
-[   22.473775] 123456789|123456789|123456789| (print 30 chars)
-%sh: write error: Invalid argument
-
-%echo "123456789|123456789|123456789|1" > memory
-[   64.916162] nbytes=32,buf_size=31
-[   64.916331] 123456789|123456789|123456789| (print 30 chars)
-%sh: write error: Invalid argument
-
-After:
-%cd /proc/pressure/
-%echo "123456789|123456789|123456789|1234" > memory
-[  254.837863] nbytes=35,buf_size=32
-[  254.838541] 123456789|123456789|123456789|1 (print 31 chars)
-%sh: write error: Invalid argument
-
-%echo "123456789|123456789|123456789|1" > memory
-[ 9965.714935] nbytes=32,buf_size=32
-[ 9965.715096] 123456789|123456789|123456789|1 (print 31 chars)
-%sh: write error: Invalid argument
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- kernel/sched/psi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 6e52b67b420e..517e3719027e 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1198,7 +1198,7 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
- 	if (static_branch_likely(&psi_disabled))
- 		return -EOPNOTSUPP;
+The documentation toolchain can recognize now foo() as a function and does
+not require the :c:func: prefix for that. AFAIK it only works for
+functions, so please don't change the rest of the markup.
  
--	buf_size = min(nbytes, (sizeof(buf) - 1));
-+	buf_size = min(nbytes, sizeof(buf));
- 	if (copy_from_user(buf, user_buf, buf_size))
- 		return -EFAULT;
- 
+> -- 
+> Sincerely,
+> Cao jin
+> 
+> 
+
 -- 
-2.18.0
+Sincerely yours,
+Mike.
 
