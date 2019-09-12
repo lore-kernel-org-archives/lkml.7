@@ -2,503 +2,208 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB783C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CD0C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAA0206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB31208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dXwiRlP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbfILJvv (ORCPT
+        id S1730989AbfILJvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:51:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730680AbfILJvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:51:51 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 756EF10A1B
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:51:50 +0000 (UTC)
-Received: by mail-qk1-f199.google.com with SMTP id q62so28358506qkd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:51:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bz0vgQ+BkVyu6heHi03tITHLE5ryNGKRf56ZJJ9wdRo=;
-        b=IiTzRme5vKGjIQgdBvgwDpkTI+i7UwfGrHzN0oh4SYmvWpjD4IvanxceSs5IycoWPv
-         m9KytNCIxh0swn6s3bsGR6+l17y/00OFBIPAczK1uyk32HpziWiXmyMytdPSWdPS3y1w
-         fBX+uTveHwZ41THOgmd2oTsgoM0xtc8iNYoLveUy5uLRkUuJBIMcIucW8mrMw/1+qelH
-         P5xhmbsAVWgvgZWaieuUiiWfFFnGP1QypGD1zlv7+27njqYg82PqEjTlpZM011Wo3zwO
-         MKXmvd/7bL0xR+8ESHCppYaIcQWIWx2ONFgIdC4ZVDAF/zTP5hQLjIjTGtuqGwXuqlXW
-         LpQw==
-X-Gm-Message-State: APjAAAWBs8boC0M+RcBKYu4ieojlX+Vw68Etdsq2AsQhzRw4+EAgm60D
-        ZjvPt2vAgjZViU3XLadFYHvmWIiIBy5i6SAw63dFZ9x6T3KME3AJnELRGiSjpyTyE/BtYo57FMT
-        wDzD8W1zx43YNUWx140vIAfmA
-X-Received: by 2002:ac8:3647:: with SMTP id n7mr41093117qtb.159.1568281909475;
-        Thu, 12 Sep 2019 02:51:49 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyDlD0ePR3jiHiLRFOr8sxOGetAxQ16lUQKr9+iVwYghI0rOFUzoUIK5pKVt3qjaGD6ZBmPzA==
-X-Received: by 2002:ac8:3647:: with SMTP id n7mr41093075qtb.159.1568281909192;
-        Thu, 12 Sep 2019 02:51:49 -0700 (PDT)
-Received: from redhat.com ([80.74.107.118])
-        by smtp.gmail.com with ESMTPSA id a22sm4923888qkl.117.2019.09.12.02.51.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 02:51:48 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 05:51:36 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, cohuck@redhat.com,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com
-Subject: Re: [RFC PATCH 2/2] mdev: introduce device specific ops
-Message-ID: <20190912055037-mutt-send-email-mst@kernel.org>
-References: <20190912094012.29653-1-jasowang@redhat.com>
- <20190912094012.29653-3-jasowang@redhat.com>
+        Thu, 12 Sep 2019 05:51:54 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53652 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730706AbfILJvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:51:54 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D52C633A;
+        Thu, 12 Sep 2019 11:51:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568281911;
+        bh=0vaA9MXuOyAixI7XcsbPoskxiQ0wNfVGgt11YMkmqQc=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dXwiRlP/+nR/tZRSj59YAZY8RgvwOkNHEODTy8M+DykX9eyaDVnS1FVcu9loZaMky
+         SM81FppS6CIRAjJNjGR4ILxRiv6pUxvu650LL2JViHlob+xfWHI7uB02xoJzNnd28Z
+         2/LkVycdG+wGpllxuqpbulRgczfdt8i/+qeE+edo=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 8/9] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <abe2f713-48ab-b39a-c0e6-8c1e557a48c4@ideasonboard.com>
+Date:   Thu, 12 Sep 2019 10:51:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912094012.29653-3-jasowang@redhat.com>
+In-Reply-To: <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 05:40:12PM +0800, Jason Wang wrote:
-> Currently, except for the crate and remove. The rest fields of
+Hi Jacopo,
 
-
-better:
-
-Currently, except for create and remove, the rest of the field in ...
-
-
-> mdev_parent_ops is just designed for vfio-mdev driver and may not help
-> for kernel mdev driver. So follow the device id support by previous
-> patch, this patch introduces device specific ops which points to
-> device specific ops (e.g vfio ops). This allows the future drivers
-> like virtio-mdev to implement its own device specific ops.
+On 06/09/2019 14:54, Jacopo Mondi wrote:
+> Update CMM settings at in the atomic commit tail helper method.
+> The CMM is updated with new gamma values provided to the driver
+> in the GAMMA_LUT blob property.
 > 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> When resuming from system suspend, the DU driver is responsible for
+> reprogramming and enabling the CMM unit if it was in use at the time the
+> system entered the suspend state.  Force the color_mgmt_changed flag to
+> true if the DRM gamma lut color transformation property was set in the
+> CRTC state duplicated at suspend time, as the CMM gets reprogrammed only
+> if said flag is active in the rcar_du_atomic_commit_update_cmm() method.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Also throwing in an LGTM here.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+
+
 > ---
->  drivers/gpu/drm/i915/gvt/kvmgt.c  | 14 +++---
->  drivers/s390/cio/vfio_ccw_ops.c   | 14 +++---
->  drivers/s390/crypto/vfio_ap_ops.c | 10 +++--
->  drivers/vfio/mdev/vfio_mdev.c     | 30 +++++++------
->  include/linux/mdev.h              | 72 ++++++++++++++++++-------------
->  samples/vfio-mdev/mbochs.c        | 16 ++++---
->  samples/vfio-mdev/mdpy.c          | 16 ++++---
->  samples/vfio-mdev/mtty.c          | 14 +++---
->  8 files changed, 113 insertions(+), 73 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 19d51a35f019..64823998fd58 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -1600,20 +1600,22 @@ static const struct attribute_group *intel_vgpu_groups[] = {
->  	NULL,
->  };
->  
-> -static struct mdev_parent_ops intel_vgpu_ops = {
-> -	.mdev_attr_groups       = intel_vgpu_groups,
-> -	.create			= intel_vgpu_create,
-> -	.remove			= intel_vgpu_remove,
-> -
-> +static struct vfio_mdev_parent_ops intel_vfio_vgpu_ops = {
->  	.open			= intel_vgpu_open,
->  	.release		= intel_vgpu_release,
-> -
->  	.read			= intel_vgpu_read,
->  	.write			= intel_vgpu_write,
->  	.mmap			= intel_vgpu_mmap,
->  	.ioctl			= intel_vgpu_ioctl,
->  };
->  
-> +static struct mdev_parent_ops intel_vgpu_ops = {
-> +	.mdev_attr_groups       = intel_vgpu_groups,
-> +	.create			= intel_vgpu_create,
-> +	.remove			= intel_vgpu_remove,
-> +	.device_ops	        = &intel_vfio_vgpu_ops,
-> +};
-> +
->  static int kvmgt_host_init(struct device *dev, void *gvt, const void *ops)
+> Daniel could you have a look if resume bits are worth being moved to the
+> DRM core? The color_mgmt_changed flag is set to false when the state is
+> duplicated if I read the code correctly, but when this happens in a
+> suspend/resume sequence its value should probably be restored to true if
+> any color management property was set in the crtc state when system entered
+> suspend.
+> 
+> ---
+> 
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 20 ++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 38 +++++++++++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> index 018480a8f35c..d1003d31cfaf 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/wait.h>
+> 
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_fb_cma_helper.h>
+>  #include <drm/drm_fb_helper.h>
+> @@ -482,6 +483,25 @@ static int rcar_du_pm_suspend(struct device *dev)
+>  static int rcar_du_pm_resume(struct device *dev)
 >  {
->  	struct attribute **kvm_type_attrs;
-> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-> index f87d9409e290..96e9f18100ae 100644
-> --- a/drivers/s390/cio/vfio_ccw_ops.c
-> +++ b/drivers/s390/cio/vfio_ccw_ops.c
-> @@ -564,11 +564,7 @@ static ssize_t vfio_ccw_mdev_ioctl(struct mdev_device *mdev,
+>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+> +	struct drm_atomic_state *state = rcdu->ddev->mode_config.suspend_state;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < rcdu->num_crtcs; ++i) {
+> +		struct drm_crtc *crtc = &rcdu->crtcs[i].crtc;
+> +		struct drm_crtc_state *crtc_state;
+> +
+> +		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
+> +		if (!crtc_state)
+> +			continue;
+> +
+> +		/*
+> +		 * Force re-enablement of CMM after system resume if any
+> +		 * of the DRM color transformation properties was set in
+> +		 * the state saved at system suspend time.
+> +		 */
+> +		if (crtc_state->gamma_lut)
+> +			crtc_state->color_mgmt_changed = true;
+> +	}
+> 
+>  	return drm_mode_config_helper_resume(rcdu->ddev);
+>  }
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index 294630e56992..fc30fff0eb8d 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/wait.h>
+> 
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -368,6 +369,40 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+>   * Atomic Check and Update
+>   */
+> 
+> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> +					     struct drm_crtc_state *old_state)
+> +{
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct rcar_cmm_config cmm_config = {};
+> +	struct device *dev = rcrtc->dev->dev;
+> +	struct drm_property_blob *lut_blob;
+> +
+> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> +		return;
+> +
+> +	if (!crtc->state->gamma_lut) {
+> +		cmm_config.lut.enable = false;
+> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +		return;
+> +	}
+> +
+> +	lut_blob = crtc->state->gamma_lut;
+> +	if (lut_blob->length != (CM2_LUT_SIZE * sizeof(struct drm_color_lut))) {
+> +		/*
+> +		 * We only accept fully populated LUT tables;
+> +		 * be loud here, otherwise the CMM gets silently ignored.
+> +		 */
+> +		dev_err(dev, "invalid gamma lut size of %lu bytes\n",
+> +			lut_blob->length);
+> +		return;
+> +	}
+> +
+> +	cmm_config.lut.enable = true;
+> +	cmm_config.lut.table = (struct drm_color_lut *)lut_blob->data;
+> +
+> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +}
+> +
+>  static int rcar_du_atomic_check(struct drm_device *dev,
+>  				struct drm_atomic_state *state)
+>  {
+> @@ -410,6 +445,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  			rcdu->dpad1_source = rcrtc->index;
 >  	}
->  }
->  
-> -static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
-> -	.owner			= THIS_MODULE,
-> -	.supported_type_groups  = mdev_type_groups,
-> -	.create			= vfio_ccw_mdev_create,
-> -	.remove			= vfio_ccw_mdev_remove,
-> +static const struct vfio_mdev_parent_ops vfio_mdev_ops = {
->  	.open			= vfio_ccw_mdev_open,
->  	.release		= vfio_ccw_mdev_release,
->  	.read			= vfio_ccw_mdev_read,
-> @@ -576,6 +572,14 @@ static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
->  	.ioctl			= vfio_ccw_mdev_ioctl,
->  };
->  
-> +static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
-> +	.owner			= THIS_MODULE,
-> +	.supported_type_groups  = mdev_type_groups,
-> +	.create			= vfio_ccw_mdev_create,
-> +	.remove			= vfio_ccw_mdev_remove,
-> +	.device_ops		= &vfio_mdev_ops,
-> +};
+> 
+> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
 > +
->  int vfio_ccw_mdev_reg(struct subchannel *sch)
->  {
->  	return mdev_register_vfio_device(&sch->dev, &vfio_ccw_mdev_ops);
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index eacbde3c7a97..a48282bff066 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1280,15 +1280,19 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_device *mdev,
->  	return ret;
->  }
->  
-> +static const struct vfio_mdev_parent_ops vfio_mdev_ops = {
-> +	.open			= vfio_ap_mdev_open,
-> +	.release		= vfio_ap_mdev_release,
-> +	.ioctl			= vfio_ap_mdev_ioctl,
-> +};
-> +
->  static const struct mdev_parent_ops vfio_ap_matrix_ops = {
->  	.owner			= THIS_MODULE,
->  	.supported_type_groups	= vfio_ap_mdev_type_groups,
->  	.mdev_attr_groups	= vfio_ap_mdev_attr_groups,
->  	.create			= vfio_ap_mdev_create,
->  	.remove			= vfio_ap_mdev_remove,
-> -	.open			= vfio_ap_mdev_open,
-> -	.release		= vfio_ap_mdev_release,
-> -	.ioctl			= vfio_ap_mdev_ioctl,
-> +	.device_ops		= &vfio_mdev_ops,
->  };
->  
->  int vfio_ap_mdev_register(void)
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> index 887c57f10880..1196fbb6c3d2 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -25,15 +25,16 @@ static int vfio_mdev_open(void *device_data)
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  	int ret;
->  
-> -	if (unlikely(!parent->ops->open))
-> +	if (unlikely(!ops->open))
->  		return -EINVAL;
->  
->  	if (!try_module_get(THIS_MODULE))
->  		return -ENODEV;
->  
-> -	ret = parent->ops->open(mdev);
-> +	ret = ops->open(mdev);
->  	if (ret)
->  		module_put(THIS_MODULE);
->  
-> @@ -44,9 +45,10 @@ static void vfio_mdev_release(void *device_data)
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  
-> -	if (likely(parent->ops->release))
-> -		parent->ops->release(mdev);
-> +	if (likely(ops->release))
-> +		ops->release(mdev);
->  
->  	module_put(THIS_MODULE);
->  }
-> @@ -56,11 +58,12 @@ static long vfio_mdev_unlocked_ioctl(void *device_data,
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  
-> -	if (unlikely(!parent->ops->ioctl))
-> +	if (unlikely(!ops->ioctl))
->  		return -EINVAL;
->  
-> -	return parent->ops->ioctl(mdev, cmd, arg);
-> +	return ops->ioctl(mdev, cmd, arg);
->  }
->  
->  static ssize_t vfio_mdev_read(void *device_data, char __user *buf,
-> @@ -68,11 +71,12 @@ static ssize_t vfio_mdev_read(void *device_data, char __user *buf,
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  
-> -	if (unlikely(!parent->ops->read))
-> +	if (unlikely(!ops->read))
->  		return -EINVAL;
->  
-> -	return parent->ops->read(mdev, buf, count, ppos);
-> +	return ops->read(mdev, buf, count, ppos);
->  }
->  
->  static ssize_t vfio_mdev_write(void *device_data, const char __user *buf,
-> @@ -80,22 +84,24 @@ static ssize_t vfio_mdev_write(void *device_data, const char __user *buf,
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  
-> -	if (unlikely(!parent->ops->write))
-> +	if (unlikely(!ops->write))
->  		return -EINVAL;
->  
-> -	return parent->ops->write(mdev, buf, count, ppos);
-> +	return ops->write(mdev, buf, count, ppos);
->  }
->  
->  static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
->  {
->  	struct mdev_device *mdev = device_data;
->  	struct mdev_parent *parent = mdev->parent;
-> +	const struct vfio_mdev_parent_ops *ops = parent->ops->device_ops;
->  
-> -	if (unlikely(!parent->ops->mmap))
-> +	if (unlikely(!ops->mmap))
->  		return -EINVAL;
->  
-> -	return parent->ops->mmap(mdev, vma);
-> +	return ops->mmap(mdev, vma);
->  }
->  
->  static const struct vfio_device_ops vfio_mdev_dev_ops = {
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index f85045392120..3b8a76bc69cf 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -27,27 +27,9 @@ int mdev_set_iommu_device(struct device *dev, struct device *iommu_device);
->  struct device *mdev_get_iommu_device(struct device *dev);
->  
->  /**
-> - * struct mdev_parent_ops - Structure to be registered for each parent device to
-> - * register the device to mdev module.
-> + * struct vfio_mdev_parent_ops - Structure to be registered for each
-> + * parent device to register the device to vfio-mdev module.
->   *
-> - * @owner:		The module owner.
-> - * @dev_attr_groups:	Attributes of the parent device.
-> - * @mdev_attr_groups:	Attributes of the mediated device.
-> - * @supported_type_groups: Attributes to define supported types. It is mandatory
-> - *			to provide supported types.
-> - * @create:		Called to allocate basic resources in parent device's
-> - *			driver for a particular mediated device. It is
-> - *			mandatory to provide create ops.
-> - *			@kobj: kobject of type for which 'create' is called.
-> - *			@mdev: mdev_device structure on of mediated device
-> - *			      that is being created
-> - *			Returns integer: success (0) or error (< 0)
-> - * @remove:		Called to free resources in parent device's driver for a
-> - *			a mediated device. It is mandatory to provide 'remove'
-> - *			ops.
-> - *			@mdev: mdev_device device structure which is being
-> - *			       destroyed
-> - *			Returns integer: success (0) or error (< 0)
->   * @open:		Open mediated device.
->   *			@mdev: mediated device.
->   *			Returns integer: success (0) or error (< 0)
-> @@ -72,6 +54,43 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + */
-> +struct vfio_mdev_parent_ops {
-> +	int     (*open)(struct mdev_device *mdev);
-> +	void    (*release)(struct mdev_device *mdev);
-> +	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> +			size_t count, loff_t *ppos);
-> +	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> +			 size_t count, loff_t *ppos);
-> +	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> +			 unsigned long arg);
-> +	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +};
-> +
-> +/**
-> + * struct mdev_parent_ops - Structure to be registered for each parent device to
-> + * register the device to mdev module.
-> + *
-> + * @owner:		The module owner.
-> + * @dev_attr_groups:	Attributes of the parent device.
-> + * @mdev_attr_groups:	Attributes of the mediated device.
-> + * @supported_type_groups: Attributes to define supported types. It is mandatory
-> + *			to provide supported types.
-> + * @create:		Called to allocate basic resources in parent device's
-> + *			driver for a particular mediated device. It is
-> + *			mandatory to provide create ops.
-> + *			@kobj: kobject of type for which 'create' is called.
-> + *			@mdev: mdev_device structure on of mediated device
-> + *			      that is being created
-> + *			Returns integer: success (0) or error (< 0)
-> + * @remove:		Called to free resources in parent device's driver for a
-> + *			a mediated device. It is mandatory to provide 'remove'
-> + *			ops.
-> + *			@mdev: mdev_device device structure which is being
-> + *			       destroyed
-> + *			Returns integer: success (0) or error (< 0)
-> + * @device_ops:         Device specific emulation callback.
-> + *
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -83,15 +102,7 @@ struct mdev_parent_ops {
->  
->  	int     (*create)(struct kobject *kobj, struct mdev_device *mdev);
->  	int     (*remove)(struct mdev_device *mdev);
-> -	int     (*open)(struct mdev_device *mdev);
-> -	void    (*release)(struct mdev_device *mdev);
-> -	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> -			size_t count, loff_t *ppos);
-> -	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> -			 size_t count, loff_t *ppos);
-> -	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> -			 unsigned long arg);
-> -	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	const void *device_ops;
->  };
->  
->  /* interface for exporting mdev supported type attributes */
-> @@ -137,7 +148,8 @@ const guid_t *mdev_uuid(struct mdev_device *mdev);
->  
->  extern struct bus_type mdev_bus_type;
->  
-> -int mdev_register_vfio_device(struct device *dev, const struct mdev_parent_ops *ops);
-> +int mdev_register_vfio_device(struct device *dev,
-> +                              const struct mdev_parent_ops *ops);
->  void mdev_unregister_device(struct device *dev);
->  
->  int mdev_register_driver(struct mdev_driver *drv, struct module *owner);
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-> index 71a4469be85d..53ceb357f152 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -1418,12 +1418,7 @@ static struct attribute_group *mdev_type_groups[] = {
->  	NULL,
->  };
->  
-> -static const struct mdev_parent_ops mdev_fops = {
-> -	.owner			= THIS_MODULE,
-> -	.mdev_attr_groups	= mdev_dev_groups,
-> -	.supported_type_groups	= mdev_type_groups,
-> -	.create			= mbochs_create,
-> -	.remove			= mbochs_remove,
-> +static const struct vfio_mdev_parent_ops vfio_mdev_ops = {
->  	.open			= mbochs_open,
->  	.release		= mbochs_close,
->  	.read			= mbochs_read,
-> @@ -1432,6 +1427,15 @@ static const struct mdev_parent_ops mdev_fops = {
->  	.mmap			= mbochs_mmap,
->  };
->  
-> +static const struct mdev_parent_ops mdev_fops = {
-> +	.owner			= THIS_MODULE,
-> +	.mdev_attr_groups	= mdev_dev_groups,
-> +	.supported_type_groups	= mdev_type_groups,
-> +	.create			= mbochs_create,
-> +	.remove			= mbochs_remove,
-> +	.device_ops		= &vfio_mdev_ops,
-> +};
-> +
->  static const struct file_operations vd_fops = {
->  	.owner		= THIS_MODULE,
->  };
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-> index d3029dd27d91..4ba285a5768f 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -725,12 +725,7 @@ static struct attribute_group *mdev_type_groups[] = {
->  	NULL,
->  };
->  
-> -static const struct mdev_parent_ops mdev_fops = {
-> -	.owner			= THIS_MODULE,
-> -	.mdev_attr_groups	= mdev_dev_groups,
-> -	.supported_type_groups	= mdev_type_groups,
-> -	.create			= mdpy_create,
-> -	.remove			= mdpy_remove,
-> +static const struct vfio_mdev_parent_ops vfio_mdev_ops = {
->  	.open			= mdpy_open,
->  	.release		= mdpy_close,
->  	.read			= mdpy_read,
-> @@ -739,6 +734,15 @@ static const struct mdev_parent_ops mdev_fops = {
->  	.mmap			= mdpy_mmap,
->  };
->  
-> +static const struct mdev_parent_ops mdev_fops = {
-> +	.owner			= THIS_MODULE,
-> +	.mdev_attr_groups	= mdev_dev_groups,
-> +	.supported_type_groups	= mdev_type_groups,
-> +	.create			= mdpy_create,
-> +	.remove			= mdpy_remove,
-> +	.device_ops		= &vfio_mdev_ops,
-> +};
-> +
->  static const struct file_operations vd_fops = {
->  	.owner		= THIS_MODULE,
->  };
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> index 744c88a6b22c..a468904ec626 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -1410,6 +1410,14 @@ static struct attribute_group *mdev_type_groups[] = {
->  	NULL,
->  };
->  
-> +static const struct vfio_mdev_parent_ops vfio_mdev_ops = {
-> +	.open                   = mtty_open,
-> +	.release                = mtty_close,
-> +	.read                   = mtty_read,
-> +	.write                  = mtty_write,
-> +	.ioctl		        = mtty_ioctl,
-> +};
-> +
->  static const struct mdev_parent_ops mdev_fops = {
->  	.owner                  = THIS_MODULE,
->  	.dev_attr_groups        = mtty_dev_groups,
-> @@ -1417,11 +1425,7 @@ static const struct mdev_parent_ops mdev_fops = {
->  	.supported_type_groups  = mdev_type_groups,
->  	.create                 = mtty_create,
->  	.remove			= mtty_remove,
-> -	.open                   = mtty_open,
-> -	.release                = mtty_close,
-> -	.read                   = mtty_read,
-> -	.write                  = mtty_write,
-> -	.ioctl		        = mtty_ioctl,
-> +	.device_ops             = &vfio_mdev_ops,
->  };
->  
->  static void mtty_device_release(struct device *dev)
-> -- 
-> 2.19.1
+>  	/* Apply the atomic update. */
+>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+>  	drm_atomic_helper_commit_planes(dev, old_state,
+> --
+> 2.23.0
+> 
+
