@@ -2,129 +2,163 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD43C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308E7C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4129420830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF44D20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0WfDTx1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="FDTakulM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfILSav (ORCPT
+        id S1727273AbfILSb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:30:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46498 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfILSau (ORCPT
+        Thu, 12 Sep 2019 14:31:57 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:58326 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfILSb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:30:50 -0400
-Received: by mail-io1-f65.google.com with SMTP id d17so35222651ios.13;
-        Thu, 12 Sep 2019 11:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mZC7pXGu1qT+F+Mq64PPbUxImuBhl3ZWzMgjPcWRv1I=;
-        b=e0WfDTx16CLEoSBy/3fiIR03RqbzvAiglsH52t970LcLPbhe8lqs8+vV7FVCfytT4O
-         y1vDYSDLdY0FfCG3msZYM6Qv8q8BVFA6NHtZ8C3RlqMejRiFseSGqpZUxGrMCMTZwjkK
-         Y0/sFzpel7WDQlKkQNvOQBw4phT2s10M8mabkO8ieGRVuUfOpYduXhgtlY9j3qipFDuF
-         Qk5Q1WBmN23cRHV8pVg/aqmdAvtT5O/GzJKLdG/lJSWTREHZq5sG8KO5DRWhadqWspH3
-         iA73OVBHgf63bX8Z9TsIPa0poZlENqHwCOn2j8p4eRnyV1sDq6bxF4d/kwY/8CgfihxO
-         dckA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mZC7pXGu1qT+F+Mq64PPbUxImuBhl3ZWzMgjPcWRv1I=;
-        b=jISrwselFVo81SUwqVfiN5NifMd9wfJFDWdBSTb1r6tjgCwoNFc6cMHGHVVkJquSgE
-         QZ/R+AGHXv2SlHZE10OjWvswmzm5WNrV79Wo6BXQuC8GfPkzoS4urP9ysZJUKEkueyDj
-         cPb3FJ0LQd0xL8/Ioj2HeKcos2ArSxoP9RObyS5FYogcYz6b0k+B6/pn8vwQc4r3WTjH
-         XyHjQ07Dto5ZGSGf19dN0ahNeIChlj7uy/w2D7wolq8AcRInEl2Re3hVGIVEQPv6HZ5m
-         vd3UC3Rvr2/3sR0RmYWhlDdzrGxJrxDJrW40uGxUogztF0lLzGfuyCN+YUqrA1jvG35q
-         6mYg==
-X-Gm-Message-State: APjAAAXVUpbBSnV6QgyEWd7MraJdaJU9VzRQJ5y2scDx90I9TXcF7y0q
-        RKhvqTTmZRmOKRuwCOFlq1o/AYZoyq0=
-X-Google-Smtp-Source: APXvYqx7lsIdpsP6HV/3/J6qGakWdISq6NhXFQCIREvQL0MvxIArSJRD6Hiy/g14GLaINB5IhSjntQ==
-X-Received: by 2002:a5e:c644:: with SMTP id s4mr3382341ioo.36.1568313049479;
-        Thu, 12 Sep 2019 11:30:49 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id c4sm20003578ioa.76.2019.09.12.11.30.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 11:30:48 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     hns@goldelico.com, tony@atomide.com, neolynx@gmail.com,
-        letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org,
-        andreas@kemnade.info, nm@ti.com, adam.ford@logicpd.com,
-        Adam Ford <aford173@gmail.com>
-Subject: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-Date:   Thu, 12 Sep 2019 13:30:37 -0500
-Message-Id: <20190912183037.18449-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Sep 2019 14:31:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1568313116;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=QsmWD8PSnspupJVf6MZ4cYzKMM/9pg8rauF0BOWjV+Q=;
+  b=FDTakulMqzr90pbgYzhTrcqtPdaOb94uvHzfW6X5CNH95e1m98Lb2gNU
+   nriUYjDSUQunxxNaAm/XEH3Wy7fJo6njWrs3nC4eAVkY5pWGWpsfwONB2
+   YFgaVL0y4aLNxc2Hsm7b59mrSH8lEEfNGvYZS57YnUSswpIFyTT+psRvX
+   s=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  igor.druzhinin@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  igor.druzhinin@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="igor.druzhinin@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="igor.druzhinin@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: vyFn2YGzrF12PmyQmb3fO0TiOJTIiZV85vHIiOfuWOEobyx2em/gJnpGBZ212ZJWa+ilwnk5sA
+ gE1+NP0NfSlzda9Y82we2igs+/m6zaYqGEKGsHb1SeH8ZyP5Pu9lWhuQjKePkc4OaQ1qivua9D
+ 6HB2KGlM63h4LeBOkI7Ymb4z130ACkvZTcgvWUKMZp1M1Cjee7wnZ3LjYy0u7cPV8onpbSjnCK
+ SrCm7T/c+GXfeisyoG2CofO5wPNA5qtgxKX/2vAd24sSGZiPIHJ7ahZiZtc1fKxean4+Zj9kCp
+ LPg=
+X-SBRS: 2.7
+X-MesageID: 5500270
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,498,1559534400"; 
+   d="scan'208";a="5500270"
+From:   Igor Druzhinin <igor.druzhinin@citrix.com>
+To:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+CC:     <jgross@suse.com>, <boris.ostrovsky@oracle.com>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>
+Subject: [PATCH v2] xen/pci: reserve MCFG areas earlier
+Date:   Thu, 12 Sep 2019 19:31:51 +0100
+Message-ID: <1568313111-14726-1-git-send-email-igor.druzhinin@citrix.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The thermal sensor in the omap3 family isn't accurate, but it's
-better than nothing.  The various OPP's enabled for the omap3630
-support up to OPP1G, however the datasheet for the DM3730 states
-that OPP130 and OPP1G are not available above TJ of 90C.
+If MCFG area is not reserved in E820, Xen by default will defer its usage
+until Dom0 registers it explicitly after ACPI parser recognizes it as
+a reserved resource in DSDT. Having it reserved in E820 is not
+mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
+and firmware is free to keep a hole in E820 in that place. Xen doesn't know
+what exactly is inside this hole since it lacks full ACPI view of the
+platform therefore it's potentially harmful to access MCFG region
+without additional checks as some machines are known to provide
+inconsistent information on the size of the region.
 
-This patch configures the thermal throttling to limit the
-operating points of the omap3630 to Only OPP50 and OPP100 if
-the thermal sensor reads a value above 90C.
+Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
+PCI enumeration starts exactly there as well. Trying to register a device
+prior to MCFG reservation causes multiple problems with PCIe extended
+capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
+no convenient hooks for us to subscribe to so register MCFG areas earlier
+upon the first invocation of xen_add_device(). It should be safe to do once
+since all the boot time buses must have their MCFG areas in MCFG table
+already and we don't support PCI bus hot-plug.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+---
+ drivers/xen/pci.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 4bb4f534afe2..58b9d347019f 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -25,6 +25,7 @@
- 
- 			vbb-supply = <&abb_mpu_iva>;
- 			clock-latency = <300000>; /* From omap-cpufreq driver */
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-@@ -195,6 +196,31 @@
- 	};
- };
- 
-+&cpu_thermal {
-+	cpu_trips: trips {
-+		/* OPP130 and OPP1G are not available above TJ of 90C. */
-+		cpu_alert0: cpu_alert {
-+			temperature = <90000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
+diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+index 7494dbe..db58aaa 100644
+--- a/drivers/xen/pci.c
++++ b/drivers/xen/pci.c
+@@ -29,6 +29,8 @@
+ #include "../pci/pci.h"
+ #ifdef CONFIG_PCI_MMCONFIG
+ #include <asm/pci_x86.h>
 +
-+		cpu_crit: cpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+
-+	cpu_cooling_maps: cooling-maps {
-+		map0 {
-+			trip = <&cpu_alert0>;
-+			/* Only allow OPP50 and OPP100 */
-+			cooling-device = <&cpu 0 1>;
-+		};
-+	};
-+};
-+
- /* OMAP3630 needs dss_96m_fck for VENC */
- &venc {
- 	clocks = <&dss_tv_fck>, <&dss_96m_fck>;
++static int xen_mcfg_late(void);
+ #endif
+ 
+ static bool __read_mostly pci_seg_supported = true;
+@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
+ #ifdef CONFIG_PCI_IOV
+ 	struct pci_dev *physfn = pci_dev->physfn;
+ #endif
+-
++#ifdef CONFIG_PCI_MMCONFIG
++	static bool pci_mcfg_reserved = false;
++	/*
++	 * Reserve MCFG areas in Xen on first invocation due to this being
++	 * potentially called from inside of acpi_init immediately after
++	 * MCFG table has been finally parsed.
++	 */
++	if (!pci_mcfg_reserved) {
++		xen_mcfg_late();
++		pci_mcfg_reserved = true;
++	}
++#endif
+ 	if (pci_seg_supported) {
+ 		struct {
+ 			struct physdev_pci_device_add add;
+@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
+ arch_initcall(register_xen_pci_notifier);
+ 
+ #ifdef CONFIG_PCI_MMCONFIG
+-static int __init xen_mcfg_late(void)
++static int xen_mcfg_late(void)
+ {
+ 	struct pci_mmcfg_region *cfg;
+ 	int rc;
+@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
+ 	}
+ 	return 0;
+ }
+-/*
+- * Needs to be done after acpi_init which are subsys_initcall.
+- */
+-subsys_initcall_sync(xen_mcfg_late);
+ #endif
 -- 
-2.17.1
+2.7.4
 
