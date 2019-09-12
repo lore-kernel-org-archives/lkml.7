@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284C3C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6DCECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B2E20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E88421479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfILKSS (ORCPT
+        id S1731200AbfILKSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:18:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59534 "EHLO huawei.com"
+        Thu, 12 Sep 2019 06:18:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59348 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731176AbfILKSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:18:07 -0400
+        id S1731138AbfILKSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:18:04 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 66E23A1E9E63440E65DF;
+        by Forcepoint Email with ESMTP id 28016B5415292F76FC6D;
         Thu, 12 Sep 2019 18:18:02 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 12 Sep 2019 18:17:57 +0800
+ 14.3.439.0; Thu, 12 Sep 2019 18:17:56 +0800
 From:   Yunsheng Lin <linyunsheng@huawei.com>
 To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
         <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
@@ -49,9 +49,9 @@ CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
         <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
         <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
         <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 6/8] sparc64: numa: make node_to_cpumask_map() NUMA_NO_NODE aware for sparc64
-Date:   Thu, 12 Sep 2019 18:15:32 +0800
-Message-ID: <1568283334-178380-7-git-send-email-linyunsheng@huawei.com>
+Subject: [PATCH v3 4/8] powerpc: numa: make node_to_cpumask_map() NUMA_NO_NODE aware for powerpc
+Date:   Thu, 12 Sep 2019 18:15:30 +0800
+Message-ID: <1568283334-178380-5-git-send-email-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
 References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
@@ -93,22 +93,22 @@ V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
     for NUMA_NO_NODE case, and change the commit log to better justify
     the change.
 ---
- arch/sparc/include/asm/topology_64.h | 4 ++--
+ arch/powerpc/include/asm/topology.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
-index 34c628a..34f9240 100644
---- a/arch/sparc/include/asm/topology_64.h
-+++ b/arch/sparc/include/asm/topology_64.h
-@@ -11,8 +11,8 @@ static inline int cpu_to_node(int cpu)
- 	return numa_cpu_lookup_table[cpu];
- }
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 2f7e1ea..107f5cd 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -17,8 +17,8 @@ struct device_node;
+ 
+ #include <asm/mmzone.h>
  
 -#define cpumask_of_node(node) ((node) == -1 ?				\
 -			       cpu_all_mask :				\
 +#define cpumask_of_node(node) ((node) == NUMA_NO_NODE ?			\
 +			       cpu_online_mask :			\
- 			       &numa_cpumask_lookup_table[node])
+ 			       node_to_cpumask_map[node])
  
  struct pci_bus;
 -- 
