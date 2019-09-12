@@ -2,122 +2,147 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB797C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9BAC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E8C2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DlWQWB/3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h7ePW9OE"
+	by mail.kernel.org (Postfix) with ESMTP id 9C54120830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfILRqF (ORCPT
+        id S1726379AbfILRrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 13:46:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48834 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbfILRp6 (ORCPT
+        Thu, 12 Sep 2019 13:47:42 -0400
+Received: from gateway36.websitewelcome.com ([192.185.184.18]:30433 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbfILRrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 13:45:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B126960790; Thu, 12 Sep 2019 17:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568310357;
-        bh=NomiIUWIpO7zNfhNi0Mb4r3uO+M77AU+yjjx24sAiq8=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=DlWQWB/360decLVvnZky0qgtHvQeXw/VnQ86Gyv/WeHioD1+n+8zteHAkmfgeUcqZ
-         bMhMgWLdmfWbpK0sdyJFaERqtzYNuzBeJQh5GUWWeba35LpNonenBKtztSrMXdEHhH
-         rJ6kXZakHnFESy2gccxnjGq3Wy4Di9nGIp+A9QBk=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FC906055A;
-        Thu, 12 Sep 2019 17:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568310356;
-        bh=NomiIUWIpO7zNfhNi0Mb4r3uO+M77AU+yjjx24sAiq8=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=h7ePW9OEn0yiyJi3BH2aeADPm8dq8yIXP3/UbtX/+zlWu9VDU7O+Pt/pxUpEJwYBg
-         HEmrU9TjMrpNKGCis3GVaPh38QNrsyUU88NUz17sHoEOSjfofNM2qy+1HhmkBML3T0
-         AWIq3GMMFlBowi0ZFGF7je/0J+Hmv20isubG9up0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7FC906055A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] wlegacy: Remove unneeded variable and make function to be void
-References: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com>
-        <1568306492-42998-3-git-send-email-zhongjiang@huawei.com>
-Date:   Thu, 12 Sep 2019 20:45:52 +0300
-In-Reply-To: <1568306492-42998-3-git-send-email-zhongjiang@huawei.com> (zhong
-        jiang's message of "Fri, 13 Sep 2019 00:41:31 +0800")
-Message-ID: <87h85hh0hb.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 12 Sep 2019 13:47:42 -0400
+X-Greylist: delayed 1283 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Sep 2019 13:47:41 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 1967A4010C7B7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 11:53:04 -0500 (CDT)
+Received: from gator3278.hostgator.com ([198.57.247.242])
+        by cmsmtp with SMTP
+        id 8SrJi6sus4FKp8SrJi88aF; Thu, 12 Sep 2019 12:26:17 -0500
+X-Authority-Reason: nr=8
+Received: from 89-69-237-178.dynamic.chello.pl ([89.69.237.178]:60840 helo=comp.lan)
+        by gator3278.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <arkadiusz@drabczyk.org>)
+        id 1i8SrI-002o5v-LP; Thu, 12 Sep 2019 12:26:17 -0500
+From:   Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: csiostor: Fix spelling typos
+Date:   Thu, 12 Sep 2019 19:25:46 +0200
+Message-Id: <20190912172546.16489-1-arkadiusz@drabczyk.org>
+X-Mailer: git-send-email 2.9.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator3278.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - drabczyk.org
+X-BWhitelist: no
+X-Source-IP: 89.69.237.178
+X-Source-L: No
+X-Exim-ID: 1i8SrI-002o5v-LP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 89-69-237-178.dynamic.chello.pl (comp.lan) [89.69.237.178]:60840
+X-Source-Auth: arkadiusz@drabczyk.org
+X-Email-Count: 2
+X-Source-Cap: cmt1bXZicmg7cmt1bXZicmg7Z2F0b3IzMjc4Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhong jiang <zhongjiang@huawei.com> writes:
+Fix several spelling typos in comments in csio_hw.c.
 
-> il4965_set_tkip_dynamic_key_info  do not need return value to
-> cope with different ases. And change functon return type to void.
->
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> index ffb705b..a7bbfe2 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> @@ -3326,12 +3326,11 @@ struct il_mod_params il4965_mod_params = {
->  	return il_send_add_sta(il, &sta_cmd, CMD_SYNC);
->  }
->  
-> -static int
-> +static void
->  il4965_set_tkip_dynamic_key_info(struct il_priv *il,
->  				 struct ieee80211_key_conf *keyconf, u8 sta_id)
->  {
->  	unsigned long flags;
-> -	int ret = 0;
->  	__le16 key_flags = 0;
->  
->  	key_flags |= (STA_KEY_FLG_TKIP | STA_KEY_FLG_MAP_KEY_MSK);
-> @@ -3367,8 +3366,6 @@ struct il_mod_params il4965_mod_params = {
->  	memcpy(il->stations[sta_id].sta.key.key, keyconf->key, 16);
->  
->  	spin_unlock_irqrestore(&il->sta_lock, flags);
-> -
-> -	return ret;
->  }
->  
->  void
-> @@ -3483,8 +3480,7 @@ struct il_mod_params il4965_mod_params = {
->  		    il4965_set_ccmp_dynamic_key_info(il, keyconf, sta_id);
->  		break;
->  	case WLAN_CIPHER_SUITE_TKIP:
-> -		ret =
-> -		    il4965_set_tkip_dynamic_key_info(il, keyconf, sta_id);
-> +		il4965_set_tkip_dynamic_key_info(il, keyconf, sta_id);
->  		break;
->  	case WLAN_CIPHER_SUITE_WEP40:
->  	case WLAN_CIPHER_SUITE_WEP104:
+Signed-off-by: Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
+---
+ drivers/scsi/csiostor/csio_hw.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-To me this looks inconsistent with the rest of the cases in the switch
-statement. And won't we then return the ret variable uninitalised?
-
+diff --git a/drivers/scsi/csiostor/csio_hw.c b/drivers/scsi/csiostor/csio_hw.c
+index e519238..950f9cd 100644
+--- a/drivers/scsi/csiostor/csio_hw.c
++++ b/drivers/scsi/csiostor/csio_hw.c
+@@ -793,10 +793,10 @@ csio_hw_get_flash_params(struct csio_hw *hw)
+ 			goto found;
+ 		}
+ 
+-	/* Decode Flash part size.  The code below looks repetative with
++	/* Decode Flash part size.  The code below looks repetitive with
+ 	 * common encodings, but that's not guaranteed in the JEDEC
+-	 * specification for the Read JADEC ID command.  The only thing that
+-	 * we're guaranteed by the JADEC specification is where the
++	 * specification for the Read JEDEC ID command.  The only thing that
++	 * we're guaranteed by the JEDEC specification is where the
+ 	 * Manufacturer ID is in the returned result.  After that each
+ 	 * Manufacturer ~could~ encode things completely differently.
+ 	 * Note, all Flash parts must have 64KB sectors.
+@@ -983,8 +983,8 @@ csio_do_hello(struct csio_hw *hw, enum csio_dev_state *state)
+ 			waiting -= 50;
+ 
+ 			/*
+-			 * If neither Error nor Initialialized are indicated
+-			 * by the firmware keep waiting till we exaust our
++			 * If neither Error nor Initialized are indicated
++			 * by the firmware keep waiting till we exhaust our
+ 			 * timeout ... and then retry if we haven't exhausted
+ 			 * our retries ...
+ 			 */
+@@ -1738,7 +1738,7 @@ static void csio_link_l1cfg(struct link_config *lc, uint16_t fw_caps,
+ 	 * Convert Common Code Forward Error Control settings into the
+ 	 * Firmware's API.  If the current Requested FEC has "Automatic"
+ 	 * (IEEE 802.3) specified, then we use whatever the Firmware
+-	 * sent us as part of it's IEEE 802.3-based interpratation of
++	 * sent us as part of it's IEEE 802.3-based interpretation of
+ 	 * the Transceiver Module EPROM FEC parameters.  Otherwise we
+ 	 * use whatever is in the current Requested FEC settings.
+ 	 */
+@@ -2834,7 +2834,7 @@ csio_hws_configuring(struct csio_hw *hw, enum csio_hw_ev evt)
+ }
+ 
+ /*
+- * csio_hws_initializing - Initialiazing state
++ * csio_hws_initializing - Initializing state
+  * @hw - HW module
+  * @evt - Event
+  *
+@@ -3049,7 +3049,7 @@ csio_hws_removing(struct csio_hw *hw, enum csio_hw_ev evt)
+ 		if (!csio_is_hw_master(hw))
+ 			break;
+ 		/*
+-		 * The BYE should have alerady been issued, so we cant
++		 * The BYE should have already been issued, so we can't
+ 		 * use the mailbox interface. Hence we use the PL_RST
+ 		 * register directly.
+ 		 */
+@@ -3104,7 +3104,7 @@ csio_hws_pcierr(struct csio_hw *hw, enum csio_hw_ev evt)
+  *
+  *	A table driven interrupt handler that applies a set of masks to an
+  *	interrupt status word and performs the corresponding actions if the
+- *	interrupts described by the mask have occured.  The actions include
++ *	interrupts described by the mask have occurred.  The actions include
+  *	optionally emitting a warning or alert message. The table is terminated
+  *	by an entry specifying mask 0.  Returns the number of fatal interrupt
+  *	conditions.
+@@ -4219,7 +4219,7 @@ csio_mgmtm_exit(struct csio_mgmtm *mgmtm)
+  * @hw:		Pointer to HW module.
+  *
+  * It is assumed that the initialization is a synchronous operation.
+- * So when we return afer posting the event, the HW SM should be in
++ * So when we return after posting the event, the HW SM should be in
+  * the ready state, if there were no errors during init.
+  */
+ int
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.9.0
+
