@@ -2,106 +2,125 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DAAC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2A8C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A42206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50636206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mwj32CQa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K76FKy6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732754AbfILOlj (ORCPT
+        id S1732765AbfILOmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:41:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38877 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732598AbfILOli (ORCPT
+        Thu, 12 Sep 2019 10:42:17 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42239 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732598AbfILOmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:41:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d10so13611732pgo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:41:37 -0700 (PDT)
+        Thu, 12 Sep 2019 10:42:17 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c195so4695798lfg.9;
+        Thu, 12 Sep 2019 07:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r10XxYo64h7WhrgLMhjzdHqV1PkZ/x1I9tqJZeKTMc4=;
-        b=Mwj32CQaEx1C6jSYjkvSBFB9XLBwRzlQNF4YPTVHp/4BLY45eXByAwlwqQeUVzEl4e
-         xIDDW/JwGQvwGUONObe9X1YPZlxxNi3e5MGidT4kWtbuxGYF+F1vKflxYaeJ2fSUGI+d
-         S6Ak3qU4hF1Ah3k9lQAC1JwQgyXRUFLPGmUU/GoLmUZfGAovKhRELGPQkDxuVuvJMRtl
-         D7rU4n1yjuXXaJxUCL0fkKrPF+aV6IanCL+h76GlY7BcK5RiPHJMrEb6YCPPF9U/eFqZ
-         X6ww+U0H0hn85vYUOmwR9Mqh/k3GiFdBkgDe/lCGvnSmn/1WKifFLr66NEy0Vm4An0+w
-         hrhw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5YVmroOmWsfbPZww9PGat/bavCeNmvQGcimrBhWBuy4=;
+        b=K76FKy6ESnqOvkBCMCo6qwFBykl2HdgaTHRY3YvD94OEdMgn9uYrY/t3Kmifp0e0uD
+         LKnNGAwBNrnpdLtTq9Y4/2qsIRatfXp4eGFn0qSiJZTHqhBN8a91HDkxHp/U7w44lQq9
+         v1ggR0KcIzhSI+0MbaLJSfH2FWbpjSsGKPCyd2dAWcg9hKLHNSh5LIzcI74Gjc+/Ldyq
+         saKzYeh0F20mLAZa06YrBLvngFBnrnuKNU7eq7UERSVLSk9yPQ6sz5lNpPe55yuHx61l
+         ffgqplJqtREYfZa6YR5FZdkdKY3CFo9akYzMw+XUp0ASe2YSHqJL0Hitx9EuJrKhvtlr
+         reVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r10XxYo64h7WhrgLMhjzdHqV1PkZ/x1I9tqJZeKTMc4=;
-        b=aL04q35Po3HKTr7Sqr3CFsdm1p0p7hVCdVfzkuTySraGkDkX0BUojcv+fdD+Wk7u4r
-         XT0VVIz8tSEzPozk1gsbcsS8/TmBrJA1mCLUapqVyqhmjcou6MFeUfFbY1KdOdWpG0MI
-         +QDEZrVKJ3D5TcsIO3plxHyrCVrxCeWsr04PenwqBu9sbfIJ+CunLlCetJnM9cPNwu4y
-         zEx9RY3Yb4QDSkccfxz9ZguuHmAXdXojl3Dncmmk6jFZyYcuNMj35/zfRKDVqplmMcTv
-         PDaooImkPqCSWBZjlyKKE5ROsmCNVSRbuxDm0Q2nvUDMNkuo53NgYRA28+T9ySotxCVX
-         1JlA==
-X-Gm-Message-State: APjAAAWyNfp1LpEL3CLTyNNapSPBEMMr9UtNIdbwKbX8PnEHdgQhQaRH
-        UflrI8bR86J8IP9DQ5lk48sbng==
-X-Google-Smtp-Source: APXvYqwequlIpbX+PrCQEr/G2Xun6w8GjZ/REjd2nI410kBksQEDDgQ9WIHogZAWQxThN3ALcVXt7Q==
-X-Received: by 2002:a17:90a:b63:: with SMTP id 90mr440396pjq.96.1568299297139;
-        Thu, 12 Sep 2019 07:41:37 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w26sm27201591pfi.140.2019.09.12.07.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 07:41:36 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 07:41:34 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     andy.gross@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: socinfo: add sdm845 and sda845 soc ids
-Message-ID: <20190912144134.GA7468@tuxbook-pro>
-References: <20190912091056.5385-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5YVmroOmWsfbPZww9PGat/bavCeNmvQGcimrBhWBuy4=;
+        b=ajCnJFG6BI41+o0Sah45WeOUdfdE+OCf/md55NYgVWKtp84bUH+tD9891+tpyOG5UF
+         Pk/Qr+8vkNnvCvk8YJQuSPJ7levB1HQmidBHjccYJRJxNfzDDomM1ino8QCcp7bTjGNv
+         DRdWts4kMER55TOOY57iNHpMagXdmtslOI1ky9k87rZZuLn7ICFyN4gNUIU8zhV9zEgB
+         Wu0i9eqNtPc4bddK0cTpVdp7/beum5eq0u8fp7b9Si04tjQfBGmrr+3vwQjNDx4517rW
+         PvC/SS+d7HKtbGwpE6/B9k/dLyqQjgLfhJ2zv6lr89QfPk6/K2M3KuWlpnvuFReyJi6D
+         J3OA==
+X-Gm-Message-State: APjAAAV5iivRuCmn3mtJtQKvjiL92cDLb1gYSWqVhU1r0YlOXDmgnLcr
+        IB230W1hum9hkBtFAKzHrC6YGIt0N3LxeRB+RRFqZa9J
+X-Google-Smtp-Source: APXvYqy5v3NkZEjEMM7AwjSVopo8j9FGoJxzUq1NdqYhh5e1x0kmCJH4LPdki4NmHpjeLat+4zGNy30KUDyElmgw5l0=
+X-Received: by 2002:ac2:4351:: with SMTP id o17mr2286425lfl.131.1568299334764;
+ Thu, 12 Sep 2019 07:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912091056.5385-1-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
+ <CANiq72k2so3ZcqA3iRziGY=Shd_B1=qGoXXROeAF7Y3+pDmqyA@mail.gmail.com> <e9cb9bc8bd7fe38a5bb6ff7b7222b512acc7b018.camel@perches.com>
+In-Reply-To: <e9cb9bc8bd7fe38a5bb6ff7b7222b512acc7b018.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 12 Sep 2019 16:42:03 +0200
+Message-ID: <CANiq72ntjDRyMBdVXLMV9h=3_jU47UA06LaGvR2Jw9aMZM3V3w@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Joe Perches <joe@perches.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Sep 02:10 PDT 2019, Srinivas Kandagatla wrote:
+On Thu, Sep 12, 2019 at 12:18 PM Joe Perches <joe@perches.com> wrote:
+>
+> I don't think that's close to true yet for clang-format.
 
-> This patch adds missing soc ids for sdm845 and sda845
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/soc/qcom/socinfo.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-> index 855353bed19e..8dc86a74559b 100644
-> --- a/drivers/soc/qcom/socinfo.c
-> +++ b/drivers/soc/qcom/socinfo.c
-> @@ -198,6 +198,8 @@ static const struct soc_id soc_id[] = {
->  	{ 310, "MSM8996AU" },
->  	{ 311, "APQ8096AU" },
->  	{ 312, "APQ8096SG" },
-> +	{ 321, "SDM845"},
-> +	{ 341, "SDA845"},
->  };
+I don't expect clang-format to match perfectly our current code style.
 
-Added a space before the '}' and picked this up.
+However, if core maintainers agree that it is "close enough now"
+(specially with newer LLVMs, like 9), then there is a great benefit on
+moving to automatically-styled code. The "con" is having to change a
+bit our style wherever clang-format does not support exactly our
+current style.
 
-Thanks,
-Bjorn
+> For instance: clang-format does not do anything with
+> missing braces, or coalescing multi-part strings,
+> or any number of other nominal coding style defects
+> like all the for_each macros, aligning or not aligning
+> columnar contents appropriately, etc...
 
->  
->  static const char *socinfo_machine(struct device *dev, unsigned int id)
-> -- 
-> 2.21.0
-> 
+Some of these may or may not be fixable tweaking the options. Note
+that there are conflicting styles within the kernel at the moment,
+e.g. how to indent arguments to function calls. Therefore, some of the
+differences do not apply as soon as we decide on a given style.
+
+Furthermore, with automatic formatting we have also the chance to
+review some options that we couldn't easily change before.
+
+> clang-format as yet has no taste.
+>
+> I believe it'll take a lot of work to improve it to a point
+> where its formatting is acceptable and appropriate.
+>
+> An AI rather than a table based system like clang-format is
+> more likely to be a real solution, but training that AI
+> isn't a thing that I want to do.
+
+I don't think we need taste (or AI-like solutions), because
+consistency has a lot of value too. Not just for our brains, but for
+patches as well.
+
+Note that clang-format is a tool used by major projects successfully,
+it is not like we are experimenting too much here :-)
+
+Cheers,
+Miguel
