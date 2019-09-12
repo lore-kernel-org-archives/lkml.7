@@ -2,146 +2,99 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353CFC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C18C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0755420872
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FE420872
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izFFHNSK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPNprPly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfILB3k (ORCPT
+        id S1729082AbfILBbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 21:29:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42599 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfILB3k (ORCPT
+        Wed, 11 Sep 2019 21:31:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41753 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfILBbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 21:29:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z12so923079pgp.9;
-        Wed, 11 Sep 2019 18:29:39 -0700 (PDT)
+        Wed, 11 Sep 2019 21:31:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id r26so50510675ioh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 18:31:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/VJy9i5pIbM5WNGgof53pW2sqA3Pbpe145dB7ml+l1o=;
-        b=izFFHNSKXEvD/z+1VtUk2pWkt+Nw7qu9AdqbgJ/ORutcw2oAkpkVLrqCk1PaNJYE1n
-         toszDkDjwvt8dyvkaaWbAeNqLIAiJZzpEW770dmzObOPydQ1bbvVqvGpr1m/oA9eKV2g
-         kbx7Vh2tIWH4Ng6Z1V3Tdpa0YQBmY1SdSJ2HmfpnmXK1oNhGNnyhhqvzx2kl03YgLYhg
-         derYNSF354CR7GtdMA2gz7auNwg0mYfOJRqkAlaAPc1u8NStZ9X0yOMXEJE1xUArnasM
-         khw73pM8rCKGP1ZyU99GjrWggz6JOMqO/Nb6taN67FP1045UuCNdwZCCNc0+bT8C8nV0
-         fEkw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VAjn6U6N/arzAqTNNO05V4de66eq/g4N7k2+dh2Hohs=;
+        b=pPNprPlyDZe9kCLCoAsHCrJIOoTusOUs87tHwEqMZVeeRErd6vEZCRNMVFhQfazg95
+         DI/4xQ6A2/OcjcLW+MxKWYjFM9fyUBo0Xo+dgO/rdO0HI5iZShwsW+Q/h/CVUCg+R+Ew
+         BZQO1wrCYZWmY1/DF5aysIhXAHoktZNTUFEnOz8scqbHHyOYSRKLFQf7fIS7/kagzwJc
+         0MieTFBo4fmIOF8SLnGAmMfqW2mzSWN6UZDO/KYnfpzEXp1x90PW/OPgT798oZLzni+q
+         gGkSRi3e4SYCbYU70EBzWSiGrlBNRFwGaX0pK7bOF7785Mq7eW3wz1N7e0LVlPO9Q9nq
+         1hoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/VJy9i5pIbM5WNGgof53pW2sqA3Pbpe145dB7ml+l1o=;
-        b=ZEuz0q5+ThqCS0AHsGX9F5DU9KSbocpK6Zw+Ue5j13YEaOWoUpIPeDXt+S14VMdERH
-         +fZqMFFyQo6VqhHSDYuCZzJ+W4j6bBUBu1BVPpMfLPRKXxDlyMWCe4s4zrdF2i7RvLqn
-         WVK49mMzXmoC5NismvHmTDYSJvGkpqyQEOFmCNJEXe+o4puQ+CaeIx50nXBs/IsPNwLs
-         3WMFLUD3fGhpip7x5Sp3v8SbAq1MugyeP+exA3iM5DEvOCeH/kXy97103OB6yenjskAN
-         jCszk0fh8G9o+loJ4lQyiWn7OkBgzww7huqDHascCIwc52cH+hRj9LBZypql1dESXzRn
-         9lPg==
-X-Gm-Message-State: APjAAAUjJJwI6zQT8DkKBFRqInNM2SGEhydILFgkOq8hT2yOziBRV7OS
-        ddRMLxqmwkC0moJtM0KSvQU=
-X-Google-Smtp-Source: APXvYqxwfFsxJG8YLlAlSab0VGffBXj7Rxlfopl95n5LXHm+9R9euoL2j4wSwehIq3yrVVpDugO5ag==
-X-Received: by 2002:a63:2a87:: with SMTP id q129mr36582485pgq.101.1568251779423;
-        Wed, 11 Sep 2019 18:29:39 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id u4sm20781699pfh.55.2019.09.11.18.29.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VAjn6U6N/arzAqTNNO05V4de66eq/g4N7k2+dh2Hohs=;
+        b=OdzIPk4g0qT57xYG1L5MYB9AnoumjR7l/cFeeokYl98DwTika6HUzi4kOTxA+RGQ2j
+         jVtQHJZLKjaQri/OSOwsN0eIWRLGdyV68ZDKsXA1QOX1FN/eaj/LASOMtAhMkrsLC7eD
+         0duOGsSrgvh4zDN3fmtujwr3PSsWsHemrwCR5zTPbE9xj4wtx320AhMCnvCzedKV6BaJ
+         GQ+fJ8Cwmfefy4KXyqIGk/6rh7EYNe1RIht8bH6pulpJivkj+FiWArdaMQiE2dUzEjzk
+         i7bKt4A1sLsMhTHn3NIsYhxlDwhUyFQINyfqSyZ6HYLWOeHauNUjez/DRRbWMEdpCYSc
+         33LA==
+X-Gm-Message-State: APjAAAVrpNzGxK3Rjh9iHh0nnj+b5GaOjzVNyDfg4bk+MJMVVg8klIzC
+        eCYN4POHts8YQoClZ9G2TUZ/sg==
+X-Google-Smtp-Source: APXvYqwiHKqhV5A2wXd8IRIqXKzw4cMZ9I6IeH3N094Evn8SYf82x91sqv1m3AKXh2WtLyPWThKsZw==
+X-Received: by 2002:a6b:3705:: with SMTP id e5mr1172039ioa.213.1568251865760;
+        Wed, 11 Sep 2019 18:31:05 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
+        by smtp.gmail.com with ESMTPSA id q74sm36424390iod.72.2019.09.11.18.31.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 18:29:38 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/12] thermal: qoriq: Add local struct device pointer
-Date:   Wed, 11 Sep 2019 18:29:09 -0700
-Message-Id: <20190912012920.29601-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190912012920.29601-1-andrew.smirnov@gmail.com>
-References: <20190912012920.29601-1-andrew.smirnov@gmail.com>
+        Wed, 11 Sep 2019 18:31:04 -0700 (PDT)
+Date:   Wed, 11 Sep 2019 19:31:00 -0600
+From:   Yu Zhao <yuzhao@google.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: avoid slub allocation while holding list_lock
+Message-ID: <20190912013100.GA114178@google.com>
+References: <20190911071331.770ecddff6a085330bf2b5f2@linux-foundation.org>
+ <20190912002929.78873-1-yuzhao@google.com>
+ <20190912002929.78873-2-yuzhao@google.com>
+ <20190912004401.jdemtajrspetk3fh@box>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912004401.jdemtajrspetk3fh@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a local "struct device *dev" for brevity. No functional change
-intended.
+On Thu, Sep 12, 2019 at 03:44:01AM +0300, Kirill A. Shutemov wrote:
+> On Wed, Sep 11, 2019 at 06:29:28PM -0600, Yu Zhao wrote:
+> > If we are already under list_lock, don't call kmalloc(). Otherwise we
+> > will run into deadlock because kmalloc() also tries to grab the same
+> > lock.
+> > 
+> > Instead, statically allocate bitmap in struct kmem_cache_node. Given
+> > currently page->objects has 15 bits, we bloat the per-node struct by
+> > 4K. So we waste some memory but only do so when slub debug is on.
+> 
+> Why not have single page total protected by a lock?
+> 
+> Listing object from two pages at the same time doesn't make sense anyway.
+> Cuncurent validating is not something sane to do.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Tested-by: Lucas Stach <l.stach@pengutronix.de>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: linux-imx@nxp.com
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/thermal/qoriq_thermal.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 39542c670301..5df6267a5da0 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -194,8 +194,9 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 	int ret;
- 	struct qoriq_tmu_data *data;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
- 
--	data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
-+	data = devm_kzalloc(dev, sizeof(struct qoriq_tmu_data),
- 			    GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
-@@ -206,17 +207,17 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 
- 	data->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->regs)) {
--		dev_err(&pdev->dev, "Failed to get memory region\n");
-+		dev_err(dev, "Failed to get memory region\n");
- 		return PTR_ERR(data->regs);
- 	}
- 
--	data->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	data->clk = devm_clk_get_optional(dev, NULL);
- 	if (IS_ERR(data->clk))
- 		return PTR_ERR(data->clk);
- 
- 	ret = clk_prepare_enable(data->clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "Failed to enable clock\n");
-+		dev_err(dev, "Failed to enable clock\n");
- 		return ret;
- 	}
- 
-@@ -228,7 +229,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 
- 	ret = qoriq_tmu_register_tmu_zone(pdev);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to register sensors\n");
-+		dev_err(dev, "Failed to register sensors\n");
- 		ret = -ENODEV;
- 		goto err;
- 	}
--- 
-2.21.0
-
+Okay, cutting down to static global bitmap.
