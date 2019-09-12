@@ -2,221 +2,143 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9653C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB8AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E7A2081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF922081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I4gUetCi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dlAyYQmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733158AbfILQPy (ORCPT
+        id S1732656AbfILQTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:15:54 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52671 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729361AbfILQPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:15:54 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190912161552euoutp0269dbfad2df5bb9e46801def5b33ba981~DvQtutPlX0393403934euoutp02U
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:15:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190912161552euoutp0269dbfad2df5bb9e46801def5b33ba981~DvQtutPlX0393403934euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568304952;
-        bh=5S4jHwjySXMeViPrPMP4YNn6x+hNkId00H3i+t4121Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I4gUetCiketbGypAEnn8x+J+8hyO8LPlR2nETTJH0Ax5z0iEUiULZYH33JneNd3M1
-         P8IJhItsztEqueAT6kxFuHzM11kpg19T6bPPufCaHXiXXbMK9tP36q3qBH9rtbM9mt
-         6jIhbYf+Hza+iyqp9/uRoSVxNgW/TocNEAs4Tv5U=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190912161551eucas1p162d3b75081c28ba0055f29ba9c108738~DvQs_ULft1983319833eucas1p15;
-        Thu, 12 Sep 2019 16:15:51 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A1.E8.04309.63F6A7D5; Thu, 12
-        Sep 2019 17:15:50 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a~DvQsP4wtY2511725117eucas1p2g;
-        Thu, 12 Sep 2019 16:15:50 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190912161550eusmtrp24ea158bfa6ff6484de3615a219097eff~DvQsBuYOO1661816618eusmtrp2F;
-        Thu, 12 Sep 2019 16:15:50 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-6f-5d7a6f3624a6
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 0A.22.04166.53F6A7D5; Thu, 12
-        Sep 2019 17:15:49 +0100 (BST)
-Received: from AMDC2459.DIGITAL.local (unknown [106.120.51.95]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190912161549eusmtip27f78cece0ec8888a08c554da80ef8f57~DvQrP0X3A1586615866eusmtip2E;
-        Thu, 12 Sep 2019 16:15:49 +0000 (GMT)
-From:   Maciej Falkowski <m.falkowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com,
-        m.szyprowski@samsung.com, m.falkowski@samsung.com
-Subject: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to
- dt-schema
-Date:   Thu, 12 Sep 2019 18:15:38 +0200
-Message-Id: <20190912161538.4321-1-m.falkowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190912093315.5744-1-m.falkowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djP87pm+VWxBq+n2VjcWneO1aL33Ekm
-        i//bJjJbzD8C5F75+p7N4vz5DewWl3fNYbOYcX4fk8WD5nVsFmuP3GW3WHr9IpNF694j7A48
-        HmvmrWH02PttAYvHplWdbB7bvz1g9bjffZzJo2/LKkaPz5vkAtijuGxSUnMyy1KL9O0SuDKu
-        fO9kKVgoXdGz+wJbA2ObWBcjJ4eEgIlEx4pmti5GLg4hgRWMEpNunmeEcL4wSmxtW8sO4Xxm
-        lJh//gU7TMuqls9QieWMEs97X7LAtWxavYINpIpNwECi/81esISIQBNQ+6rjYIOZBdYwSvya
-        2coEUiUsECRxv+0yUAcHB4uAqsSnj2AreAWsJZ6d2ssGsU5eYvWGA8wgNqeAjcS8eXNYQeZI
-        CCxil7j/+CQLRJGLxNF5jawQtrDEq+NboG6Vkfi/cz4TyHwJgWqJa99kIXpbGCWuT3sLtcBa
-        4s+qiWA3MAtoSqzfpQ8RdpR4+aKVHaKVT+LGW0GQMDOQOWnbdGaIMK9ER5sQhKkq8WZCLESj
-        tETrmv2MEGEPif5bZpDQ6WeUWLNrJ9sERvlZCKsWMDKuYhRPLS3OTU8tNspLLdcrTswtLs1L
-        10vOz93ECEw0p/8d/7KDcdefpEOMAhyMSjy8FjpVsUKsiWXFlbmHGCU4mJVEeH3eVMYK8aYk
-        VlalFuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYAz+caVscvMV07bD
-        h2Miz7PM/hzqvHlK4L05Gnf/b07SZNYtt+izc5o0R/Lt8jlsdu9flllJlp7dcOql2mRRpdfR
-        4rKeQdV97vPyo5bXHd+ipFld/I1ZrulGn/jx0B2rdmz7tnHlfo3/DSqz/Ywep/kYiPBP3vox
-        XyRO4Km/tcSMU/ni07re/1NiKc5INNRiLipOBAADlkh5MAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPLMWRmVeSWpSXmKPExsVy+t/xe7qm+VWxBldvWlvcWneO1aL33Ekm
-        i//bJjJbzD8C5F75+p7N4vz5DewWl3fNYbOYcX4fk8WD5nVsFmuP3GW3WHr9IpNF694j7A48
-        HmvmrWH02PttAYvHplWdbB7bvz1g9bjffZzJo2/LKkaPz5vkAtij9GyK8ktLUhUy8otLbJWi
-        DS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DKufO9kKVgoXdGz+wJbA2ObWBcj
-        J4eEgInEqpbP7F2MXBxCAksZJRr/nWCDSEhL7L/2kR3CFpb4c62LDaLoE6PEvhVtYAk2AQOJ
-        /jd7WUASIgJtjBJPTx1hAnGYBbYxSuxeex+ohYNDWCBA4vudehCTRUBV4hPEUF4Ba4lnp/ZC
-        LZOXWL3hADOIzSlgIzFv3hxWkHIhoJqGNqYJjHwLGBlWMYqklhbnpucWG+oVJ+YWl+al6yXn
-        525iBAb+tmM/N+9gvLQx+BCjAAejEg+vhU5VrBBrYllxZe4hRgkOZiURXp83lbFCvCmJlVWp
-        RfnxRaU5qcWHGE2BTprILCWanA+MyrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2amp
-        BalFMH1MHJxSDYxVBjo8LOc2O92YFcS1zbW2auVnRz2deXNWpe+84P9Pr69wrUPog2btrh0C
-        Z45lKq96EdW0d+a2H3mLb68OUAj9NGWJfaWRb5RxofzLRdJ+DBWv9gj+lJGv9dJmvJnOVOEx
-        xUznqPoBrkCfK4s3Rk9kazzy9kJw/K6N98Qm1LHwT6/m9Jms6KjEUpyRaKjFXFScCAChZdWy
-        kgIAAA==
-X-CMS-MailID: 20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a
-References: <20190912093315.5744-1-m.falkowski@samsung.com>
-        <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
+        Thu, 12 Sep 2019 12:19:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50069 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbfILQTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:19:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46TkVs6hnCz9s4Y;
+        Fri, 13 Sep 2019 02:19:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568305178;
+        bh=/2FPKAkeV/GqFBXmtJHyD6OTSwjC5DdIye1DxxJG+bU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dlAyYQmu6QIeoRsXsY2UiWSCjojsWozTt+7JZk9Qz5peGumGPklYw5WM8Ecujlegj
+         GHkdCoaNsKHR6bbWJlh/cN4OIR0wVNkfr+aMCkd8nlZlwASLViCy8Ub+NlmvgddqpG
+         JUs1qETiufPI9b30kMF/bbDy0z7dQBCHp14glZG6BsczknnOjOUkjYlRszMQRivjKC
+         5WvKv6Zi0Sr4yxB6I8MhYZTo+QfmvPMMFnR3c/sUyXX/WbANWfULBArjWvcW7q9aMC
+         DAUaW7WxcMe20QjjeOkHkVy/NRBqN+RRo0IM/JKxmvNv3J7Ffl7T2OCIyWBymNa4u6
+         P2qg5sM0mI4oA==
+Date:   Fri, 13 Sep 2019 02:19:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alex Lu <alex_lu@realsil.com.cn>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190913021934.42fc0fea@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/DHejPnzil1gYOiEe_UgS/SN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung Image Rotator to newer dt-schema format.
+--Sig_/DHejPnzil1gYOiEe_UgS/SN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v2:
-- add required properties
-- add proper commit recipients
----
- .../bindings/gpu/samsung-rotator.txt          | 28 ----------
- .../bindings/gpu/samsung-rotator.yaml         | 52 +++++++++++++++++++
- 2 files changed, 52 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-deleted file mode 100644
-index 3aca2578da0b..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Samsung Image Rotator
--
--Required properties:
--  - compatible : value should be one of the following:
--	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
--	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
--	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
--	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : Interrupt specifier for rotator interrupt, according to format
--		 specific to interrupt parent.
--
--  - clocks : Clock specifier for rotator clock, according to generic clock
--	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
--
--  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
--
--Example:
--	rotator@12810000 {
--		compatible = "samsung,exynos4210-rotator";
--		reg = <0x12810000 0x1000>;
--		interrupts = <0 83 0>;
--		clocks = <&clock 278>;
--		clock-names = "rotator";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-new file mode 100644
-index 000000000000..96afafe98388
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Image Rotator
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - "samsung,s5pv210-rotator"    # for Rotator IP in S5PV210
-+      - "samsung,exynos4210-rotator" # for Rotator IP in Exynos4210
-+      - "samsung,exynos4212-rotator" # for Rotator IP in Exynos4212/4412
-+      - "samsung,exynos5250-rotator" # for Rotator IP in Exynos5250
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description: |
-+      Clock specifier for rotator clock according to generic clock
-+      bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+    - const: rotator
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    rotator@12810000 {
-+        compatible = "samsung,exynos4210-rotator";
-+        reg = <0x12810000 0x1000>;
-+        interrupts = <0 83 0>;
-+        clocks = <&clock 278>;
-+        clock-names = "rotator";
-+    };
-+
--- 
-2.17.1
+Today's linux-next merge of the net-next tree got a conflict in:
 
+  drivers/bluetooth/btusb.c
+
+between commit:
+
+  1ffdb51f28e8 ("Revert "Bluetooth: btusb: driver to enable the usb-wakeup =
+feature"")
+
+from the net tree and commit:
+
+  9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/bluetooth/btusb.c
+index ba4149054304,ed455de598ea..000000000000
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@@ -1173,7 -1201,18 +1204,14 @@@ static int btusb_open(struct hci_dev *h
+  	}
+ =20
+  	data->intf->needs_remote_wakeup =3D 1;
+ -	/* device specific wakeup source enabled and required for USB
+ -	 * remote wakeup while host is suspended
+ -	 */
+ -	device_wakeup_enable(&data->udev->dev);
+ =20
++ 	/* Disable device remote wakeup when host is suspended
++ 	 * For Realtek chips, global suspend without
++ 	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
++ 	 */
++ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
++ 		device_wakeup_disable(&data->udev->dev);
++=20
+  	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+  		goto done;
+ =20
+@@@ -1237,6 -1276,12 +1275,11 @@@ static int btusb_close(struct hci_dev *
+  		goto failed;
+ =20
+  	data->intf->needs_remote_wakeup =3D 0;
++=20
++ 	/* Enable remote wake up for auto-suspend */
++ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
++ 		data->intf->needs_remote_wakeup =3D 1;
++=20
+ -	device_wakeup_disable(&data->udev->dev);
+  	usb_autopm_put_interface(data->intf);
+ =20
+  failed:
+
+--Sig_/DHejPnzil1gYOiEe_UgS/SN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16cBYACgkQAVBC80lX
+0Gwr6Qf/bnj3thivjfhtUCKcq2fFSjVC8yiV3r3cvRvfQdp78EXm2gDvhuDFjZn8
+0bdmo4QfuAmiITwGeV8TFGqADbKoyc3hzBJO5VKx71pUKENtpXss6LbBO3KzsnG3
+Xac2cninNVptOlR1HQ3VmRRITnQOKOejWw0omCaLJtqX8juJLw4+RzKRwWz+/1Kl
+vIHHxNZiHDGd7mK/UVP7j7JoekOqyV0hTkyeY6YgQP4Q8llnRxEHPTcTNMbvKgsf
+zUop+uROxGQJzu5zzBCvywIzcMIyCqyH6r5TE4jc3NGmK/dcbiTqHf6ms51Qmy4s
+NE1yNNnAAt9gdYIzbezZJzeQOTm0ug==
+=tcmK
+-----END PGP SIGNATURE-----
+
+--Sig_/DHejPnzil1gYOiEe_UgS/SN--
