@@ -2,83 +2,97 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9935FC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D6C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6718920830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7769C20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C9bupnEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbfILPBu (ORCPT
+        id S1732956AbfILPCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:01:50 -0400
-Received: from smtprelay0224.hostedemail.com ([216.40.44.224]:58292 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732728AbfILPBu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:01:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B13BC18224D69;
-        Thu, 12 Sep 2019 15:01:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pump00_49bc2d71dfd50
-X-Filterd-Recvd-Size: 1798
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Sep 2019 15:01:46 +0000 (UTC)
-Message-ID: <33c0f43ef2334de5885e5fcf041483a2afb13787.camel@perches.com>
-Subject: Re: [PATCH 01/13] nvdimm: Use more typical whitespace
-From:   Joe Perches <joe@perches.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-nvdimm@lists.01.org
-Date:   Thu, 12 Sep 2019 08:01:45 -0700
-In-Reply-To: <20190912121707.GA16029@infradead.org>
-References: <cover.1568256705.git.joe@perches.com>
-         <7a5598bda6a3d18d75c3e76ab89d9d95e8952500.1568256705.git.joe@perches.com>
-         <20190912121707.GA16029@infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 12 Sep 2019 11:02:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:36551 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732799AbfILPCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:02:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Thnl468Bz9s00;
+        Fri, 13 Sep 2019 01:02:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1568300541;
+        bh=/arlBTrZbdzBVv5dDbs+QHk9ObiYhI8AbX3DE2M2I6I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C9bupnEUI4mmKgYtTpMH+/R75FUZecsju4ZQGW4GBWoPeIh3XsjgU3OJ3pZVwg87b
+         LcBM0X+yxOtP4lmwjEXhsW7kfuMtliJZSC0i6GNcLsU38mvul7XY+uC+a/nqqAlEtZ
+         iCQ2+fk3lMLnseO980TyFspDiPD+faJUC5lKs92UcxV6gwO4AOGV2l31cF1vYW9mz4
+         N948OZG/NQLEEdhkrCzsN25ZFh5ouDcv9CY33nnEiY8L1GUnvcXzpQaDFjWqAmTRhx
+         bebjPB8LZCwN4Z7zJOARWQwhTNJKk/a8FsgBWByhjQrZgkLtsxKKra8JWIbkjo0rii
+         i1htc3OCNhIRw==
+Date:   Fri, 13 Sep 2019 01:02:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-bys missing for commits in the pinctrl tree
+Message-ID: <20190913010220.087c906d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/gG7ZpRDily7d32EAqtRRbs2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-12 at 05:17 -0700, Christoph Hellwig wrote:
-> Instead of arguing what is better just stick to what the surrounding
-> code does.
+--Sig_/gG7ZpRDily7d32EAqtRRbs2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's not always feasible nor readable.
+Hi all,
 
-Especially for the logic inversion blocks where
-the existing code does unreadable and error prone
-things like hiding semicolons immediately after
-comments.
+Commits
 
-	if (foo)
-		/* longish comment */;
-	else {
-		<code>;
-	}
+  5a85bd8e3af3 ("pinctrl: meson-gxbb: Fix wrong pinning definition for uart=
+_c")
+  235e8677e92b ("pinctrl: mediatek: Add support for pin configuration dump =
+via debugfs.")
+  dbe733ac908e ("pinctrl: mediatek: Backward compatible to previous Mediate=
+k's bias-pull usage")
+  7ed13ac1a968 ("pinctrl: mediatek: Refine mtk_pinconf_get() and mtk_pincon=
+f_set()")
+  56d1a061f882 ("pinctrl: mediatek: Supporting driving setting without mapp=
+ing current to register value")
+  319b83e60069 ("pinctrl: mediatek: Check gpio pin number and use binary se=
+arch in mtk_hw_pin_field_lookup()")
 
-> Or in other words:  Feel free to be a codingstyle nazi for your code
-> (I am for some of mine), but leave others peoples code alone with
-> "cleanup" patches.
+are missing a Signed-off-by from their authors.
 
-My point was to avoid documenting per-subsystem
-coding style rules.
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/gG7ZpRDily7d32EAqtRRbs2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16XfwACgkQAVBC80lX
+0Gw2BAf+M6gzirzfkAUtXYH31g+722B41r2JCTvsHtFEPfspmFy4FYRBYjPC1rK/
+PII+st3/9pNaQU3WR5OP28cFiGnyssqeeHGw4kF3ooQFdMOJ7dUNG2f6+UHgdx0x
+/Nl+Ltny/1EuKRMrQ3WV9zFmZUSn78edoxs2YftZ6psHnT8iCxPMJI0boKF5usJW
+dUa1qek/wje+sEbp7tELrascNpU7dVjxshBc2wdeyOyRXwLPGGrUz9OCEdkqmuye
+JGC158rPYA2uzOaISlfVQ/QDx6Itqw2XhQUdhnFX0vuiGJJ2wgv/3yEmbvBOlJXw
+HPeefvsNKQQ+8zFwdWPgelLfz2GiyA==
+=BHI5
+-----END PGP SIGNATURE-----
+
+--Sig_/gG7ZpRDily7d32EAqtRRbs2--
