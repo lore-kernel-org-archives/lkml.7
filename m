@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0633C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393F6C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B2B2085B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1276F2085B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfILCz1 (ORCPT
+        id S1729673AbfILCze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 22:55:27 -0400
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:51632 "EHLO
+        Wed, 11 Sep 2019 22:55:34 -0400
+Received: from smtprelay0112.hostedemail.com ([216.40.44.112]:49346 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729489AbfILCz0 (ORCPT
+        by vger.kernel.org with ESMTP id S1729606AbfILCz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 22:55:26 -0400
+        Wed, 11 Sep 2019 22:55:29 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E907C100E86C4;
-        Thu, 12 Sep 2019 02:55:24 +0000 (UTC)
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2630D8024DF6;
+        Thu, 12 Sep 2019 02:55:29 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: girls87_86643b0d66e00
-X-Filterd-Recvd-Size: 2319
+X-HE-Tag: crown88_87045049b360a
+X-Filterd-Recvd-Size: 1614
 Received: from joe-laptop.perches.com (unknown [47.151.152.152])
         (Authenticated sender: joe@perches.com)
         by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Sep 2019 02:55:23 +0000 (UTC)
+        Thu, 12 Sep 2019 02:55:27 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
@@ -39,9 +39,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/13] nvdimm: namespace_devs: Move assignment operators
-Date:   Wed, 11 Sep 2019 19:54:40 -0700
-Message-Id: <95bbd3ef7a6b06384d1ec6f5bfd691a728b31831.1568256708.git.joe@perches.com>
+Subject: [PATCH 12/13] nvdimm: namespace_devs: Change progess typo to progress
+Date:   Wed, 11 Sep 2019 19:54:42 -0700
+Message-Id: <1ae8fe1a3644c23afd01db23a373dd5de897c99f.1568256708.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <cover.1568256705.git.joe@perches.com>
 References: <cover.1568256705.git.joe@perches.com>
@@ -50,42 +50,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel code uses assignment operators where the statement is split
-on multiple lines on the first line.
-
-Move 2 unusual uses.
+Typing is hard.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/nvdimm/namespace_devs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/nvdimm/namespace_devs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 70e1d752c12c..8c75ef84bad7 100644
+index 7a16340f9853..253f07d97b73 100644
 --- a/drivers/nvdimm/namespace_devs.c
 +++ b/drivers/nvdimm/namespace_devs.c
-@@ -2023,8 +2023,8 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
- 		nspm->lbasize = __le64_to_cpu(label0->lbasize);
- 		ndd = to_ndd(nd_mapping);
- 		if (namespace_label_has(ndd, abstraction_guid))
--			nspm->nsio.common.claim_class
--				= to_nvdimm_cclass(&label0->abstraction_guid);
-+			nspm->nsio.common.claim_class =
-+				to_nvdimm_cclass(&label0->abstraction_guid);
- 	}
+@@ -1718,7 +1718,7 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+ 			return ERR_PTR(-ENODEV);
  
- 	if (!nspm->alt_name || !nspm->uuid) {
-@@ -2267,8 +2267,8 @@ static struct device *create_namespace_blk(struct nd_region *nd_region,
- 	nsblk->uuid = kmemdup(nd_label->uuid, NSLABEL_UUID_LEN,
- 			      GFP_KERNEL);
- 	if (namespace_label_has(ndd, abstraction_guid))
--		nsblk->common.claim_class
--			= to_nvdimm_cclass(&nd_label->abstraction_guid);
-+		nsblk->common.claim_class =
-+			to_nvdimm_cclass(&nd_label->abstraction_guid);
- 	if (!nsblk->uuid)
- 		goto blk_err;
- 	memcpy(name, nd_label->name, NSLABEL_NAME_LEN);
+ 		/*
+-		 * Flush any in-progess probes / removals in the driver
++		 * Flush any in-progress probes / removals in the driver
+ 		 * for the raw personality of this namespace.
+ 		 */
+ 		nd_device_lock(&ndns->dev);
 -- 
 2.15.0
 
