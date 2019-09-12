@@ -2,174 +2,114 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A135AC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70753C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E36D206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435A9206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxMjtdoK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwudzUW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfILVTq (ORCPT
+        id S1728536AbfILVUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 17:19:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35388 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbfILVTq (ORCPT
+        Thu, 12 Sep 2019 17:20:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35556 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbfILVUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 17:19:46 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so57589575ion.2;
-        Thu, 12 Sep 2019 14:19:45 -0700 (PDT)
+        Thu, 12 Sep 2019 17:20:22 -0400
+Received: by mail-io1-f68.google.com with SMTP id f4so57593244ion.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 14:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KDWzvEyLbt9ZRVjv6CRHED1zaomyVFgELFus5HhFxZ4=;
-        b=NxMjtdoKwc2ETZ8LOSWH4eaN8RgdzDbjUUNhTG0lzrwK3fhb5ydT85icFiqTW+FlqR
-         wZBY5AvVlDnpnsYYee3ZebIh6NYh+ywWt8T3gjVXwJOriGoIkFJvUqkWqqlAId6JbjKd
-         MXC4HimyysqUw12MUNkKWfz9CFlyXYvAO7boMAO0D9uUXJESJEYtQrjwI03CEbmSxSMm
-         v1xnpKnFG9ygIKc2Vf0ziEVGM6SJthc7SygjEjXCPdpdTxwlNULtWwZ2p1KT+EkEnATV
-         QaS0P5NcDksXZ/vwHOalJdlhtoOhwRxgL2FB4aOQ5MrEe5qRpSp1XeV48jcTPRJieZK/
-         LIUg==
+         :cc;
+        bh=gN6NbTbdBD+LpPm2/OIojga+N97BltFjeiskUToQd2k=;
+        b=uwudzUW+QhHWEBiuzAIQHoFP9Q69nPzDa6YfPHDIQwbLPH4yOueCxKLHSe10rBJGk/
+         KhMtM3sJArrKR7vuHq9nkIr2X+tNYnC7SsyfPUc8rTLoktXUYE+BXhGSdYy2FvVSDgOQ
+         yKNYiKfgP1dIJeZSY5aAox8IvqunDL6EsO+02vs0RyvDv4sJ7r5Dd/0RqA51abO/h0vM
+         TCAQ2atBaRXIorzCzX0TzVQ/DQaJZZRQIuFIBjS6v+n/Z7h+n5wXwcUqzBUU0Q/AgtPG
+         Upc37wSeXinGGYRHaEyBVQFkRHDAnyZe22+DLDbAwn8sjLRfhktzooI2nSXj1XC5rISB
+         vpUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KDWzvEyLbt9ZRVjv6CRHED1zaomyVFgELFus5HhFxZ4=;
-        b=YTevQUqUstOUHh9NjDviD89SVHD8vVYNZKirlI9ZH0Hub1TArJvlF/g1gqbqWqRRHD
-         LGZHhmbfmXZpZBLLoxfHmtz3ka83WTAb6q10bEdfRexKFXSTQxJj3dluKGescpX66jIL
-         BA7kpWEO7WJF2GRORfoxipmhQPk2Wg+/OZtPsq/XmmoZoMiHy5bqU9Oey183c5CPNiGF
-         eAO0KhK5UtH8+FhGrrn3YgbghmdT+bR7qsl92gVG+VzQPUZpZLxxCIaEvSUlymwDxXRT
-         X3hgHJLNI8XmOUD4XjpOQx0Q50oz6to02Yja1jAeWl7rww0xFlIuG6Bv7zuLfrAnV7Xj
-         V7lg==
-X-Gm-Message-State: APjAAAX+ueu7ncALZc+DnZKGZ09GUkNQ+g7SOUnpI+WhKChFICeJ5FtE
-        ltJw65xhNltxqZQHugKLlpKmAJaFBN0k5yqSwR4=
-X-Google-Smtp-Source: APXvYqwid3aXWXb3en8UiljRTQelavVsuQOhtfOZqlYOagjIlNk64X1MraslJZwHfAH9tCKWeT04bleAb+nL2MNFISs=
-X-Received: by 2002:a5e:dc47:: with SMTP id s7mr5335220iop.228.1568323184899;
- Thu, 12 Sep 2019 14:19:44 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=gN6NbTbdBD+LpPm2/OIojga+N97BltFjeiskUToQd2k=;
+        b=Z+rZtAScmZyqV9GcRy0M6mPbj1/+3QCRoIMWdENua22nTz7OhQAQrprb/TL8Z5kWVL
+         MVE51DWD2KSA44f4GkylLyMcMiqAWEaGmWPWhgBEvKSEQnz/JGFFnGVyK+ktmOKqGWs0
+         XH5Z9Jw8GII7rCC2zBMocoGNqnPzJ8oJgGp7PYTs05OtjxJqfCVx+eHXzf5ouadE3utF
+         lDEsJ0PvNc7yIC/57gyjMIR7cueuKGmMaj6qtTkvN9q+E+tfAwO4W1WUGNUgqPYESmmS
+         FY44xvx7D3EpSyMs3h0ed/OetW5lA5oAjtc3ue53t1u9AVoPLH78UU4lP38kXSu3QJEK
+         TH9Q==
+X-Gm-Message-State: APjAAAXX0niuHeG5xxJsU26SNl2dAqglvJ2/QarfHr1PENahwKVRvTp6
+        P9icnijGTMiGzDfcLtlXWSSyg+Wr1x/p+9Rqg0pLAg==
+X-Google-Smtp-Source: APXvYqwxoYarrCqiyOJMszrAlELGJkKpICOdAogSDotKra7i4hK6Vfwg5TYlNK0oSP4qThk1xhrf5PPbSUlOsmz3LX0=
+X-Received: by 2002:a6b:1606:: with SMTP id 6mr2231217iow.108.1568323220804;
+ Thu, 12 Sep 2019 14:20:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190912183037.18449-1-aford173@gmail.com> <51bb8890-bfd7-c241-1ce5-151df3a90513@linaro.org>
-In-Reply-To: <51bb8890-bfd7-c241-1ce5-151df3a90513@linaro.org>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 12 Sep 2019 16:19:33 -0500
-Message-ID: <CAHCN7xKjwkJHysSkNymF=sw6KuS=FqbapuRFZODuj6E_hmRG1A@mail.gmail.com>
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>
+References: <20190912041817.23984-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190912041817.23984-1-huangfq.daxian@gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 12 Sep 2019 14:20:09 -0700
+Message-ID: <CALMp9eSL_rDdWmgeWNwuqP_J_yu7x5Gs8DUBpJFdie18NEz=ow@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 4:12 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Wed, Sep 11, 2019 at 9:18 PM Fuqian Huang <huangfq.daxian@gmail.com> wrote:
 >
-> On 12/09/2019 20:30, Adam Ford wrote:
-> > The thermal sensor in the omap3 family isn't accurate, but it's
-> > better than nothing.  The various OPP's enabled for the omap3630
-> > support up to OPP1G, however the datasheet for the DM3730 states
-> > that OPP130 and OPP1G are not available above TJ of 90C.
-> >
-> > This patch configures the thermal throttling to limit the
-> > operating points of the omap3630 to Only OPP50 and OPP100 if
-> > the thermal sensor reads a value above 90C.
+> Emulation of VMPTRST can incorrectly inject a page fault
+> when passed an operand that points to an MMIO address.
+> The page fault will use uninitialized kernel stack memory
+> as the CR2 and error code.
 >
-> Out of curiosity, what are the OPP50 and OPP100 mentioned above? and
-> what does mean "OPP130 and OPP1G are not available above TJ of 90C"?
+> The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+> exit to userspace; however, it is not an easy fix, so for now just ensure
+> that the error code and CR2 are zero.
 >
-OPP130 is the 800 MHz and OPP1G is 1GHz operating point.
-The 90C is the max junction temperature.  When the temperature exceeds
-90C, the processor is not designed to operate at 800+ MHz.  The
-statement itself is a direct quote from the public datasheet for the
-dm3730, Table 4-19.
-
-The datasheet is: http://www.ti.com/lit/ds/symlink/dm3730.pdf
-
-The operating points were updated in [1], but they haven't yet been
-fully applied yet, but during the discussion, the question came about
-regarding how to limit the speed at high temp, so that's why this
-patch was done.
-
-[1] - https://patchwork.kernel.org/patch/11141643/
-
-
-adam
-
-> I don't see the connection between these OPP names and the definition in
-> the DT.
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+>  arch/x86/kvm/x86.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> >
-> > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36=
-xx.dtsi
-> > index 4bb4f534afe2..58b9d347019f 100644
-> > --- a/arch/arm/boot/dts/omap36xx.dtsi
-> > +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> > @@ -25,6 +25,7 @@
-> >
-> >                       vbb-supply =3D <&abb_mpu_iva>;
-> >                       clock-latency =3D <300000>; /* From omap-cpufreq =
-driver */
-> > +                     #cooling-cells =3D <2>;
-> >               };
-> >       };
-> >
-> > @@ -195,6 +196,31 @@
-> >       };
-> >  };
-> >
-> > +&cpu_thermal {
-> > +     cpu_trips: trips {
-> > +             /* OPP130 and OPP1G are not available above TJ of 90C. */
-> > +             cpu_alert0: cpu_alert {
-> > +                     temperature =3D <90000>; /* millicelsius */
-> > +                     hysteresis =3D <2000>; /* millicelsius */
-> > +                     type =3D "passive";
-> > +             };
-> > +
-> > +             cpu_crit: cpu_crit {
-> > +                     temperature =3D <125000>; /* millicelsius */
-> > +                     hysteresis =3D <2000>; /* millicelsius */
-> > +                     type =3D "critical";
-> > +             };
-> > +     };
-> > +
-> > +     cpu_cooling_maps: cooling-maps {
-> > +             map0 {
-> > +                     trip =3D <&cpu_alert0>;
-> > +                     /* Only allow OPP50 and OPP100 */
-> > +                     cooling-device =3D <&cpu 0 1>;
-> > +             };
-> > +     };
-> > +};
-> > +
-> >  /* OMAP3630 needs dss_96m_fck for VENC */
-> >  &venc {
-> >       clocks =3D <&dss_tv_fck>, <&dss_96m_fck>;
-> >
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 290c3c3efb87..7f442d710858 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5312,6 +5312,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+>         /* kvm_write_guest_virt_system can pull in tons of pages. */
+>         vcpu->arch.l1tf_flush_l1d = true;
 >
->
+> +       memset(exception, 0, sizeof(*exception));
+>         return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+>                                            PFERR_WRITE_MASK, exception);
+>  }
 > --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
+> 2.11.0
 >
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+Perhaps you could also add a comment like the one Paolo added when he
+made the same change in kvm_read_guest_virt?
+See commit 353c0956a618 ("KVM: x86: work around leak of uninitialized
+stack contents (CVE-2019-7222)").
