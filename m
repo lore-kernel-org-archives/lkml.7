@@ -2,171 +2,326 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6165C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C6C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A2520856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="BMPyCoWg"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDCC20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbfILJoP (ORCPT
+        id S1730958AbfILJoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:44:15 -0400
-Received: from mail-eopbgr70097.outbound.protection.outlook.com ([40.107.7.97]:50646
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730337AbfILJoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:44:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SMJGzONiLJVVPa4j42Mk24F81FUsi6E2wVpxBBaPJat2UxA/BZdRd6Tf4gt5p3uTbPawnpSNjhQW7TQV2UwE5E8hPJKfsN4Smuj16/+vsa4ndHgq0aZzT8LNmK87ed2aEzzmItZI2KzoTtVgcm6/69ySOAK4XZZfQDtPNovZXDrMVvTcWMkQ2KatabRAz+vI/b2OAQm9agoxa38NysbfCYo2QgITZp5b2IKKkVtwHKTac4k3D6qjSeY7QYpcoPpp7GtOeu1MgO3nyH6qTpf3QfrWxGyTTx6daowlmhwRyDQ81uKQ+frAMZ5V1GID9hRmMMmUMcc03N+s7jvIbnmL4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cvbLBdOgNc8GMuVGYUoRzlna0XbW4372XgJXA2IX4YI=;
- b=R472CLklf5pkcv6ynV52xZeiXW+2bWejrynWVy8JqOsPJ0CKSDnxMdBwz3hzs3qXVhbRNQH9d60ZWAiUfMwS50WBrB1f6ZcAsEwQUaEdW2w2GQ2NzgUoqcBAxZmI71ZiphfONYgWiJblCJvI1j2IoHNgQNT9W+ckBCfkSnWlFAPZ3/+rDku7Es3HRy2MARBbJO2KbkSCQprop2d/EFFA8YTJj+EOUp99+mucNr5MUFHccSleGRtYepZMOMaaWYoEvyXOamFMnQm5MoGPz9ENgiT4yPoPQEnHY5u/QUE2d+0jq3WEGBmUsgBXXcm3RvqkKzJvG0XuAiq8hPwh5sfU6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cvbLBdOgNc8GMuVGYUoRzlna0XbW4372XgJXA2IX4YI=;
- b=BMPyCoWgWREzbjGkKRnjmBQeV0BZafosl5QnWk6bd5qjcVYlLfSAkPhegnzkcb/hflK7rcp+6mGLFXMfLyxdTYHLnT9wGThMtMLSqTzV4D0FtIlclabN/xE8q19ImKwDr/QGMrdW6khiZVVMe1gmn1+gCZhPxgsMdlMTlGOa1vw=
-Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com (52.133.24.149) by
- AM6PR0702MB3654.eurprd07.prod.outlook.com (52.133.21.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.7; Thu, 12 Sep 2019 09:44:09 +0000
-Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com
- ([fe80::892c:2b90:e54f:ab56]) by AM6PR0702MB3527.eurprd07.prod.outlook.com
- ([fe80::892c:2b90:e54f:ab56%3]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 09:44:09 +0000
-From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>
-CC:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
-        Mark Brown <broonie@opensource.wolfsonmicro.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "Glavinic-Pecotic, Matija (EXT - DE/Ulm)" 
-        <matija.glavinic-pecotic.ext@nokia.com>,
-        "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH 2/3] genirq/irqdomain: Re-check mapping after associate in
- irq_create_mapping()
-Thread-Topic: [PATCH 2/3] genirq/irqdomain: Re-check mapping after associate
- in irq_create_mapping()
-Thread-Index: AQHVaU6gP0yvNptpJkyGgiCIhPQf3Q==
-Date:   Thu, 12 Sep 2019 09:44:09 +0000
-Message-ID: <20190912094343.5480-3-alexander.sverdlin@nokia.com>
-References: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
-In-Reply-To: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [131.228.2.21]
-x-mailer: git-send-email 2.23.0
-x-clientproxiedby: HE1PR05CA0342.eurprd05.prod.outlook.com
- (2603:10a6:7:92::37) To AM6PR0702MB3527.eurprd07.prod.outlook.com
- (2603:10a6:209:11::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=alexander.sverdlin@nokia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 19c49bd0-81fa-4b10-c36b-08d73765c263
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0702MB3654;
-x-ms-traffictypediagnostic: AM6PR0702MB3654:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0702MB36548532F349C31ADF9F2F7188B00@AM6PR0702MB3654.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(199004)(189003)(64756008)(2501003)(6116002)(110136005)(5660300002)(53936002)(486006)(66066001)(386003)(6506007)(86362001)(6512007)(102836004)(186003)(26005)(316002)(76176011)(446003)(8676002)(11346002)(476003)(81156014)(2616005)(81166006)(6436002)(50226002)(3846002)(256004)(6486002)(54906003)(1076003)(71190400001)(25786009)(66946007)(8936002)(2906002)(66556008)(66446008)(99286004)(4326008)(14454004)(36756003)(52116002)(71200400001)(305945005)(66476007)(478600001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3654;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5UyjhXl39IYXK2gLNWvKDhH6k3XRoEJL9K/215PruU3oDmtyJIvKJvWq6iANly+HPkwMGzKaUAIhBNlbnxYqQLPH7fVCKQ6TkRPcAkZfBekAmST3U5NlPL8/puUvVhkBvGMYpIfs2/sczEBPLna8E0R+7x/4GaJA0gvhE+m3tw2nUSH23ElEe+IwTFY3rwM9xZeEVPEUH1uE2UoRhGzN5rfNHVNcr5lO6BahWBNC/gnF8l3aDjPTbMgKio0B0Tiru8ZOUnLJkurp78J6Iugwg6oHFXzDfdp9I+xpV2aK2nPnp4hXU09oj7y3CZQ1XD+UbGjuTgn6w1p5jWVyyWUpfQcd0MdHWxAJTSr3vWQqx4ztWxC/iuViEHaQlTXGx7LmhJweUBCV4tb1YEg3ZADYK3t9k+6ahVXizsru5ZiW0po=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19c49bd0-81fa-4b10-c36b-08d73765c263
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 09:44:09.0915
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j73d0bVVTV4gu/Z8XI7+uQKO7quo8lLqEl3WTnLdAws5jd8welKjO0LamBRbOcf+XpgxrZZTIOdaNNoZ0z2Jti/3+o70AMCpDnG8Y415gGk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3654
+        Thu, 12 Sep 2019 05:44:37 -0400
+Received: from 4.mo1.mail-out.ovh.net ([46.105.76.26]:60434 "EHLO
+        4.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730835AbfILJoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:44:37 -0400
+Received: from player718.ha.ovh.net (unknown [10.108.42.83])
+        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 65D9018F432
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 11:44:32 +0200 (CEST)
+Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
+        (Authenticated sender: qperret@qperret.net)
+        by player718.ha.ovh.net (Postfix) with ESMTPSA id 961E59A7B108;
+        Thu, 12 Sep 2019 09:44:19 +0000 (UTC)
+From:   Quentin Perret <qperret@qperret.net>
+To:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org
+Cc:     dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
+        morten.rasmussen@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, tkjos@google.com,
+        linux-kernel@vger.kernel.org, qperret@qperret.net
+Subject: [PATCH] sched/fair: Speed-up energy-aware wake-ups
+Date:   Thu, 12 Sep 2019 11:44:04 +0200
+Message-Id: <20190912094404.13802-1-qperret@qperret.net>
+X-Mailer: git-send-email 2.17.1
+X-Ovh-Tracer-Id: 1405123085517740942
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdehgddukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Quentin Perret <quentin.perret@arm.com>
 
-If two irq_create_mapping() calls perform a mapping of the same hwirq on
-two CPU cores in parallel they both will get 0 from irq_find_mapping(),
-both will allocate unique virq using irq_domain_alloc_descs() and both
-will finally irq_domain_associate() it. Giving different virq numbers
-to their callers.
+EAS computes the energy impact of migrating a waking task when deciding
+on which CPU it should run. However, the current approach is known to
+have a high algorithmic complexity, which can result in prohibitively
+high wake-up latencies on systems with complex energy models, such as
+systems with per-CPU DVFS. On such systems, the algorithm complexity is
+in O(n^2) (ignoring the cost of searching for performance states in the
+EM) with 'n' the number of CPUs.
 
-In practice the first caller is usually an interrupt controller driver and
-the seconds is some device requesting the interrupt providede by the above
-interrupt controller.
+To address this, re-factor the EAS wake-up path to compute the energy
+'delta' (with and without the task) on a per-performance domain basis,
+rather than system-wide, which brings the complexity down to O(n).
 
-In this case either the interrupt controller driver configures virq which
-is not the one being "associated" with hwirq, or the "slave" device
-requests the virq which is never being triggered.
+No functional changes intended.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Quentin Perret <quentin.perret@arm.com>
 ---
- kernel/irq/irqdomain.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 7bc07b6..176f2cc 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -675,13 +675,6 @@ unsigned int irq_create_mapping(struct irq_domain *dom=
-ain,
-=20
- 	of_node =3D irq_domain_get_of_node(domain);
-=20
--	/* Check if mapping already exists */
--	virq =3D irq_find_mapping(domain, hwirq);
--	if (virq) {
--		pr_debug("-> existing mapping on virq %d\n", virq);
--		return virq;
--	}
+Test results
+~~~~~~~~~~~~
+
+* Setup: Tested on a Google Pixel 3, with a Snapdragon 845 (4+4 CPUs,
+  A55/A75). Base kernel is 5.3-rc5 + Pixel3 specific patches. Android
+  userspace, no graphics.
+
+* Test case:  Run a periodic rt-app task, with 16ms period, ramping down
+  from 70% to 10%, in 5% steps of 500 ms each (json avail. at [1]).
+  Frequencies of all CPUs are pinned to max (using scaling_min_freq
+  CPUFreq sysfs entries) to reduce variability. The time to run
+  select_task_rq_fair() is measured using the function profiler
+  (/sys/kernel/debug/tracing/trace_stat/function*). See the test script
+  for more details [2].
+
+Test 1:
+I hacked the DT to 'fake' per-CPU DVFS. That is, we end up with one
+CPUFreq policy per CPU (8 policies in total). Since all frequencies are
+pinned to max for the test, this should have no impact on the actual
+frequency selection, but it does in the EAS calculation.
+
+      +---------------------------+----------------------------------+
+      | Without patch             | With patch                       |
++-----+-----+----------+----------+-----+-----------------+----------+
+| CPU | Hit | Avg (us) | s^2 (us) | Hit | Avg (us)        | s^2 (us) |
+|-----+-----+----------+----------+-----+-----------------+----------+
+|  0  | 274 | 38.303   | 1750.239 | 401 | 14.126 (-63.1%) | 146.625  |
+|  1  | 197 | 49.529   | 1695.852 | 314 | 16.135 (-67.4%) | 167.525  |
+|  2  | 142 | 34.296   | 1758.665 | 302 | 14.133 (-58.8%) | 130.071  |
+|  3  | 172 | 31.734   | 1490.975 | 641 | 14.637 (-53.9%) | 139.189  |
+|  4  | 316 | 7.834    | 178.217  | 425 | 5.413  (-30.9%) | 20.803   |
+|  5  | 447 | 8.424    | 144.638  | 556 | 5.929  (-29.6%) | 27.301   |
+|  6  | 581 | 14.886   | 346.793  | 456 | 5.711  (-61.6%) | 23.124   |
+|  7  | 456 | 10.005   | 211.187  | 997 | 4.708  (-52.9%) | 21.144   |
++-----+-----+----------+----------+-----+-----------------+----------+
+             * Hit, Avg and s^2 are as reported by the function profiler
+
+Test 2:
+I also ran the same test with a normal DT, with 2 CPUFreq policies, to
+see if this causes regressions in the most common case.
+
+      +---------------------------+----------------------------------+
+      | Without patch             | With patch                       |
++-----+-----+----------+----------+-----+-----------------+----------+
+| CPU | Hit | Avg (us) | s^2 (us) | Hit | Avg (us)        | s^2 (us) |
+|-----+-----+----------+----------+-----+-----------------+----------+
+|  0  | 345 | 22.184   | 215.321  | 580 | 18.635 (-16.0%) | 146.892  |
+|  1  | 358 | 18.597   | 200.596  | 438 | 12.934 (-30.5%) | 104.604  |
+|  2  | 359 | 25.566   | 200.217  | 397 | 10.826 (-57.7%) | 74.021   |
+|  3  | 362 | 16.881   | 200.291  | 718 | 11.455 (-32.1%) | 102.280  |
+|  4  | 457 | 3.822    | 9.895    | 757 | 4.616  (+20.8%) | 13.369   |
+|  5  | 344 | 4.301    | 7.121    | 594 | 5.320  (+23.7%) | 18.798   |
+|  6  | 472 | 4.326    | 7.849    | 464 | 5.648  (+30.6%) | 22.022   |
+|  7  | 331 | 4.630    | 13.937   | 408 | 5.299  (+14.4%) | 18.273   |
++-----+-----+----------+----------+-----+-----------------+----------+
+             * Hit, Avg and s^2 are as reported by the function profiler
+
+In addition to these two tests, I also ran 50 iterations of the Lisa
+EAS functional test suite [3] with this patch applied on Arm Juno r0,
+Arm Juno r2, Arm TC2 and Hikey960, and could not see any regressions
+(all EAS functional tests are passing).
+
+[1] https://paste.debian.net/1100055/
+[2] https://paste.debian.net/1100057/
+[3] https://github.com/ARM-software/lisa/blob/master/lisa/tests/scheduler/eas_behaviour.py
+---
+ kernel/sched/fair.c | 110 ++++++++++++++++++++------------------------
+ 1 file changed, 50 insertions(+), 60 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index bc9cfeaac8bd..8a521087e11d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6277,69 +6277,55 @@ static unsigned long cpu_util_next(int cpu, struct task_struct *p, int dst_cpu)
+ }
+ 
+ /*
+- * compute_energy(): Estimates the energy that would be consumed if @p was
++ * compute_energy(): Estimates the energy that @pd would consume if @p was
+  * migrated to @dst_cpu. compute_energy() predicts what will be the utilization
+- * landscape of the * CPUs after the task migration, and uses the Energy Model
++ * landscape of @pd's CPUs after the task migration, and uses the Energy Model
+  * to compute what would be the energy if we decided to actually migrate that
+  * task.
+  */
+ static long
+ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+ {
+-	unsigned int max_util, util_cfs, cpu_util, cpu_cap;
+-	unsigned long sum_util, energy = 0;
+-	struct task_struct *tsk;
++	struct cpumask *pd_mask = perf_domain_span(pd);
++	unsigned long cpu_cap = arch_scale_cpu_capacity(cpumask_first(pd_mask));
++	unsigned long max_util = 0, sum_util = 0;
+ 	int cpu;
+ 
+-	for (; pd; pd = pd->next) {
+-		struct cpumask *pd_mask = perf_domain_span(pd);
++	/*
++	 * The capacity state of CPUs of the current rd can be driven by CPUs
++	 * of another rd if they belong to the same pd. So, account for the
++	 * utilization of these CPUs too by masking pd with cpu_online_mask
++	 * instead of the rd span.
++	 *
++	 * If an entire pd is outside of the current rd, it will not appear in
++	 * its pd list and will not be accounted by compute_energy().
++	 */
++	for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
++		unsigned long cpu_util, util_cfs = cpu_util_next(cpu, p, dst_cpu);
++		struct task_struct *tsk = cpu == dst_cpu ? p : NULL;
+ 
+ 		/*
+-		 * The energy model mandates all the CPUs of a performance
+-		 * domain have the same capacity.
++		 * Busy time computation: utilization clamping is not
++		 * required since the ratio (sum_util / cpu_capacity)
++		 * is already enough to scale the EM reported power
++		 * consumption at the (eventually clamped) cpu_capacity.
+ 		 */
+-		cpu_cap = arch_scale_cpu_capacity(cpumask_first(pd_mask));
+-		max_util = sum_util = 0;
++		sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
++					       ENERGY_UTIL, NULL);
+ 
+ 		/*
+-		 * The capacity state of CPUs of the current rd can be driven by
+-		 * CPUs of another rd if they belong to the same performance
+-		 * domain. So, account for the utilization of these CPUs too
+-		 * by masking pd with cpu_online_mask instead of the rd span.
+-		 *
+-		 * If an entire performance domain is outside of the current rd,
+-		 * it will not appear in its pd list and will not be accounted
+-		 * by compute_energy().
++		 * Performance domain frequency: utilization clamping
++		 * must be considered since it affects the selection
++		 * of the performance domain frequency.
++		 * NOTE: in case RT tasks are running, by default the
++		 * FREQUENCY_UTIL's utilization can be max OPP.
+ 		 */
+-		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
+-			util_cfs = cpu_util_next(cpu, p, dst_cpu);
 -
- 	/* Allocate a virtual interrupt number */
- 	virq =3D irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node), NU=
-LL);
- 	if (virq <=3D 0) {
-@@ -691,7 +684,11 @@ unsigned int irq_create_mapping(struct irq_domain *dom=
-ain,
-=20
- 	if (irq_domain_associate(domain, virq, hwirq)) {
- 		irq_free_desc(virq);
--		return 0;
-+
-+		virq =3D irq_find_mapping(domain, hwirq);
-+		if (virq)
-+			pr_debug("-> existing mapping on virq %d\n", virq);
-+		return virq;
+-			/*
+-			 * Busy time computation: utilization clamping is not
+-			 * required since the ratio (sum_util / cpu_capacity)
+-			 * is already enough to scale the EM reported power
+-			 * consumption at the (eventually clamped) cpu_capacity.
+-			 */
+-			sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
+-						       ENERGY_UTIL, NULL);
+-
+-			/*
+-			 * Performance domain frequency: utilization clamping
+-			 * must be considered since it affects the selection
+-			 * of the performance domain frequency.
+-			 * NOTE: in case RT tasks are running, by default the
+-			 * FREQUENCY_UTIL's utilization can be max OPP.
+-			 */
+-			tsk = cpu == dst_cpu ? p : NULL;
+-			cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
+-						      FREQUENCY_UTIL, tsk);
+-			max_util = max(max_util, cpu_util);
+-		}
+-
+-		energy += em_pd_energy(pd->em_pd, max_util, sum_util);
++		cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
++					      FREQUENCY_UTIL, tsk);
++		max_util = max(max_util, cpu_util);
  	}
-=20
- 	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
---=20
-2.4.6
+ 
+-	return energy;
++	return em_pd_energy(pd->em_pd, max_util, sum_util);
+ }
+ 
+ /*
+@@ -6381,21 +6367,19 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+  * other use-cases too. So, until someone finds a better way to solve this,
+  * let's keep things simple by re-using the existing slow path.
+  */
+-
+ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ {
+-	unsigned long prev_energy = ULONG_MAX, best_energy = ULONG_MAX;
++	unsigned long prev_delta = ULONG_MAX, best_delta = ULONG_MAX;
+ 	struct root_domain *rd = cpu_rq(smp_processor_id())->rd;
++	unsigned long cpu_cap, util, base_energy = 0;
+ 	int cpu, best_energy_cpu = prev_cpu;
+-	struct perf_domain *head, *pd;
+-	unsigned long cpu_cap, util;
+ 	struct sched_domain *sd;
++	struct perf_domain *pd;
+ 
+ 	rcu_read_lock();
+ 	pd = rcu_dereference(rd->pd);
+ 	if (!pd || READ_ONCE(rd->overutilized))
+ 		goto fail;
+-	head = pd;
+ 
+ 	/*
+ 	 * Energy-aware wake-up happens on the lowest sched_domain starting
+@@ -6412,9 +6396,14 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 		goto unlock;
+ 
+ 	for (; pd; pd = pd->next) {
+-		unsigned long cur_energy, spare_cap, max_spare_cap = 0;
++		unsigned long cur_delta, spare_cap, max_spare_cap = 0;
++		unsigned long base_energy_pd;
+ 		int max_spare_cap_cpu = -1;
+ 
++		/* Compute the 'base' energy of the pd, without @p */
++		base_energy_pd = compute_energy(p, -1, pd);
++		base_energy += base_energy_pd;
++
+ 		for_each_cpu_and(cpu, perf_domain_span(pd), sched_domain_span(sd)) {
+ 			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+ 				continue;
+@@ -6427,9 +6416,9 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 
+ 			/* Always use prev_cpu as a candidate. */
+ 			if (cpu == prev_cpu) {
+-				prev_energy = compute_energy(p, prev_cpu, head);
+-				best_energy = min(best_energy, prev_energy);
+-				continue;
++				prev_delta = compute_energy(p, prev_cpu, pd);
++				prev_delta -= base_energy_pd;
++				best_delta = min(best_delta, prev_delta);
+ 			}
+ 
+ 			/*
+@@ -6445,9 +6434,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 
+ 		/* Evaluate the energy impact of using this CPU. */
+ 		if (max_spare_cap_cpu >= 0) {
+-			cur_energy = compute_energy(p, max_spare_cap_cpu, head);
+-			if (cur_energy < best_energy) {
+-				best_energy = cur_energy;
++			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
++			cur_delta -= base_energy_pd;
++			if (cur_delta < best_delta) {
++				best_delta = cur_delta;
+ 				best_energy_cpu = max_spare_cap_cpu;
+ 			}
+ 		}
+@@ -6459,10 +6449,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 	 * Pick the best CPU if prev_cpu cannot be used, or if it saves at
+ 	 * least 6% of the energy used by prev_cpu.
+ 	 */
+-	if (prev_energy == ULONG_MAX)
++	if (prev_delta == ULONG_MAX)
+ 		return best_energy_cpu;
+ 
+-	if ((prev_energy - best_energy) > (prev_energy >> 4))
++	if ((prev_delta - best_delta) > ((prev_delta + base_energy) >> 4))
+ 		return best_energy_cpu;
+ 
+ 	return prev_cpu;
+-- 
+2.22.1
 
