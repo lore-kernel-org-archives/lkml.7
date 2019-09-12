@@ -2,349 +2,569 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B2BC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3B4ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D46B208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568281743;
-	bh=X5jXWLtVsdfG1vUFHH2X1RHkVTc87ejxTYgNrcV2+Eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pDlVkwo7XqrqGcgjdeS3EE+NxdVjvnIqjqQHpoIKWtcSdZlE7ThXVG9CPgaMTq4gQ
-	 zKu3Ni5pM2B9XLXzCLJgSNlAfrFqviG6NpdHq48yZAzC8lZu4RpWKBXr01hIbXgtOp
-	 bcRv1ymT0RACTGbUFvKm+2E8ajY9SBUJs1WnBBLg=
+	by mail.kernel.org (Postfix) with ESMTP id 28E2120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kvQT9N/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfILJtC (ORCPT
+        id S1730940AbfILJtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730618AbfILJtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:49:02 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E0820856;
-        Thu, 12 Sep 2019 09:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568281741;
-        bh=X5jXWLtVsdfG1vUFHH2X1RHkVTc87ejxTYgNrcV2+Eg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qdIAqn7qX1yXr1iSW8mZrZJaQ1BiwUAu/1S2BRXMwX1SzwX6JIIyP3cEOme5pz+aQ
-         blW3u0jiRMFHO6ZivaMtALg2TYInY8Obcyfp0o5QJVPhVGi+HTQ9nYUHKSUcv7oiER
-         DipgQ4OKVreCNyWkHIjk481MfE5Kzs+GHGp/xrcA=
-Date:   Thu, 12 Sep 2019 10:48:57 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        tee-dev@lists.linaro.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Vikas Gupta <vikas.gupta@broadcom.com>
-Subject: Re: [PATCH] firmware: broadcom: add OP-TEE based BNXT f/w manager
-Message-ID: <20190912094857.GA54192@kroah.com>
-References: <1568128624-2902-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <20190910171601.GA12665@kroah.com>
- <CAFD6DHjOV9ChRXsuoanXh0JN6DW-AUxTFdcu8PKTwGa5wW7e8A@mail.gmail.com>
- <ce00990d-b2ad-ee66-cb0f-13ff2580bfaf@broadcom.com>
+        Thu, 12 Sep 2019 05:49:47 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53612 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730618AbfILJtq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:49:46 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 774C533A;
+        Thu, 12 Sep 2019 11:49:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568281783;
+        bh=6Pbbn3/gffTKlTOgKCw3MuZrLUFCBKButs3GZALrlwU=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kvQT9N/WieUqoBYqaQ1URV68Oy+AgH8G/e7rv2/MnPKWOJeEhtTNkF9fZ6piM6pbh
+         Poryrneolwf/hZoMhVyeCzyWYHZJZgUrWUFxs+kSY/53THpJxUc+JmtDRo1DLyj80f
+         Dc74HwOMPKhbG/Jpqd25DDlC181mvbtILT4bJxlo=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v4 3/9] drm: rcar-du: Add support for CMM
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-4-jacopo+renesas@jmondi.org>
+ <d46b0e1b-d0a8-3e6b-41e5-029bf07c2cae@ideasonboard.com>
+ <20190912075921.bslnfwmco7rhmowz@uno.localdomain>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <85405e76-f8f3-bae9-0ff5-8ab9810b0c4d@ideasonboard.com>
+Date:   Thu, 12 Sep 2019 10:49:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce00990d-b2ad-ee66-cb0f-13ff2580bfaf@broadcom.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190912075921.bslnfwmco7rhmowz@uno.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 10:56:31AM -0700, Ray Jui wrote:
-> 
-> 
-> On 9/11/19 10:53 AM, Sheetal Tigadoli wrote:
-> > Thanks for the review and  comments.
-> > 
-> > On Tue, Sep 10, 2019 at 10:46 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > On Tue, Sep 10, 2019 at 08:47:04PM +0530, Sheetal Tigadoli wrote:
-> > > > From: Vikas Gupta <vikas.gupta@broadcom.com>
-> > > > 
-> > > > This driver registers on TEE bus to interact with OP-TEE based
-> > > > BNXT firmware management modules
-> > > > 
-> > > > Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> > > > Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-> > > > ---
-> > > >   drivers/firmware/broadcom/Kconfig             |   8 +
-> > > >   drivers/firmware/broadcom/Makefile            |   1 +
-> > > >   drivers/firmware/broadcom/tee_bnxt_fw.c       | 447 ++++++++++++++++++++++++++
-> > > >   include/linux/firmware/broadcom/tee_bnxt_fw.h |  17 +
-> > > >   4 files changed, 473 insertions(+)
-> > > >   create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
-> > > >   create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
-> > > > 
-> > > > diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
-> > > > index 6468082..a846a21 100644
-> > > > --- a/drivers/firmware/broadcom/Kconfig
-> > > > +++ b/drivers/firmware/broadcom/Kconfig
-> > > > @@ -22,3 +22,11 @@ config BCM47XX_SPROM
-> > > >          In case of SoC devices SPROM content is stored on a flash used by
-> > > >          bootloader firmware CFE. This driver provides method to ssb and bcma
-> > > >          drivers to read SPROM on SoC.
-> > > > +
-> > > > +config TEE_BNXT_FW
-> > > > +     bool "Broadcom BNXT firmware manager"
-> > > > +     depends on ARCH_BCM_IPROC && OPTEE
-> > > 
-> > > No ability to build with compile testing?
-> > Will add "|| COMPILE_TEST"
-> > > 
-> > > > +     default ARCH_BCM_IPROC
-> > > > +     help
-> > > > +       This module help to manage firmware on Broadcom BNXT device. The module
-> > > > +       registers on tee bus and invoke calls to manage firmware on BNXT device.
-> > > > diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
-> > > > index 72c7fdc..17c5061 100644
-> > > > --- a/drivers/firmware/broadcom/Makefile
-> > > > +++ b/drivers/firmware/broadcom/Makefile
-> > > > @@ -1,3 +1,4 @@
-> > > >   # SPDX-License-Identifier: GPL-2.0-only
-> > > >   obj-$(CONFIG_BCM47XX_NVRAM)          += bcm47xx_nvram.o
-> > > >   obj-$(CONFIG_BCM47XX_SPROM)          += bcm47xx_sprom.o
-> > > > +obj-$(CONFIG_TEE_BNXT_FW)            += tee_bnxt_fw.o
-> > > > diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> > > > new file mode 100644
-> > > > index 00000000..89a48fd
-> > > > --- /dev/null
-> > > > +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> > > > @@ -0,0 +1,447 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright 2019 Broadcom.
-> > > > + */
-> > > > +
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/tee_drv.h>
-> > > > +#include <linux/uuid.h>
-> > > > +
-> > > > +#include <linux/firmware/broadcom/tee_bnxt_fw.h>
-> > > > +
-> > > > +#define DRIVER_NAME  "tee-bnxt-fw"
-> > > 
-> > > KBUILD_MODNAME?
-> > Will remove DRIVER_NAME macro and use KBUILD_MODNAME instead.
-> > > 
-> > > > +#define MAX_SHM_MEM_SZ       SZ_4M
-> > > 
-> > > Why?
-> > Limiting max data buffer size per request to optee to 4MB.
-> > > 
-> > > > +
-> > > > +#define MAX_TEE_PARAM_ARRY_MEMB              4
-> > > > +
-> > > > +enum ta_cmd {
-> > > > +/*
-> > > > + * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
-> > > > + *
-> > > > + * param[0] unused
-> > > > + * param[1] unused
-> > > > + * param[2] unused
-> > > > + * param[3] unused
-> > > > + *
-> > > > + * Result:
-> > > > + * TEE_SUCCESS - Invoke command success
-> > > > + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
-> > > > + */
-> > > > +     TA_CMD_BNXT_FASTBOOT = 0,
-> > > > +
-> > > 
-> > > Please indent the comments too.  As-is this is hard to read.
-> > Will do
-> > > 
-> > > 
-> > > > +/*
-> > > > + * TA_CMD_BNXT_HEALTH_STATUS - to check health of bnxt device
-> > > > + *
-> > > > + * param[0] (out value) - value.a: health status
-> > > > + * param[1] unused
-> > > > + * param[2] unused
-> > > > + * param[3] unused
-> > > > + *
-> > > > + * Result:
-> > > > + * TEE_SUCCESS - Invoke command success
-> > > > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> > > > + */
-> > > > +     TA_CMD_BNXT_HEALTH_STATUS,
-> > > 
-> > > Should all of these have explicit values?
-> > Will initialize each cmd (TA_CMD_BNXT_*) explicitly
-> > > 
-> > > > +
-> > > > +/*
-> > > > + * TA_CMD_BNXT_HANDSHAKE - to check bnxt device is booted
-> > > > + *
-> > > > + * param[0] (in value)  - value.a: max timeout value
-> > > > + * param[0] (out value) - value.a: boot status
-> > > > + * param[1] unused
-> > > > + * param[2] unused
-> > > > + * param[3] unused
-> > > > + *
-> > > > + * Result:
-> > > > + * TEE_SUCCESS - Invoke command success
-> > > > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> > > > + */
-> > > > +     TA_CMD_BNXT_HANDSHAKE,
-> > > > +
-> > > > +/*
-> > > > + * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
-> > > > + *
-> > > > + * param[0] (in value) - value.a: offset at which data to be copied from
-> > > > + *                    value.b: size of the data
-> > > > + * param[1] unused
-> > > > + * param[2] unused
-> > > > + * param[3] unused
-> > > > + *
-> > > > + * Result:
-> > > > + * TEE_SUCCESS - Invoke command success
-> > > > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> > > > + * TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
-> > > > + */
-> > > > +     TA_CMD_BNXT_COPY_COREDUMP,
-> > > > +
-> > > > +/*
-> > > > + * TA_CMD_BNXT_FW_UPGRADE - upgrade the bnxt firmware
-> > > > + *
-> > > > + * param[0] (in value) - value.a: size of the f/w image
-> > > > + * param[1] unused
-> > > > + * param[2] unused
-> > > > + * param[3] unused
-> > > > + *
-> > > > + * Result:
-> > > > + * TEE_SUCCESS - Invoke command success
-> > > > + * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> > > > + */
-> > > > +     TA_CMD_BNXT_FW_UPGRADE,
-> > > > +};
-> > > > +
-> > > > +/**
-> > > > + * struct tee_bnxt_fw_private - OP-TEE bnxt private data
-> > > > + * @dev:             OP-TEE based bnxt device.
-> > > > + * @ctx:             OP-TEE context handler.
-> > > > + * @session_id:              TA session identifier.
-> > > > + */
-> > > > +struct tee_bnxt_fw_private {
-> > > > +     struct device *dev;
-> > > 
-> > > Why is the pointer back needed?
-> > the dev pointer is used in "dev_err()"
-> > > 
-> > > > +     struct tee_context *ctx;
-> > > > +     u32 session_id;
-> > > > +     struct tee_shm *fw_shm_pool;
-> > > > +};
-> > > > +
-> > > > +static struct tee_bnxt_fw_private pvt_data;
-> > > > +
-> > > > +static inline void prepare_args(int cmd,
-> > > > +                             struct tee_ioctl_invoke_arg *inv_arg,
-> > > > +                             struct tee_param *param)
-> > > > +{
-> > > > +     memset(inv_arg, 0, sizeof(*inv_arg));
-> > > > +     memset(param, 0, (MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param)));
-> > > > +
-> > > > +     inv_arg->func = cmd;
-> > > > +     inv_arg->session = pvt_data.session_id;
-> > > > +     inv_arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
-> > > > +
-> > > > +     /* Fill invoke cmd params */
-> > > > +     switch (cmd) {
-> > > > +     case TA_CMD_BNXT_HEALTH_STATUS:
-> > > > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
-> > > > +             break;
-> > > > +     case TA_CMD_BNXT_HANDSHAKE:
-> > > > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT;
-> > > > +             break;
-> > > > +     case TA_CMD_BNXT_COPY_COREDUMP:
-> > > > +     case TA_CMD_BNXT_FW_UPGRADE:
-> > > > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
-> > > > +             param[0].u.memref.shm = pvt_data.fw_shm_pool;
-> > > > +             param[0].u.memref.size = MAX_SHM_MEM_SZ;
-> > > > +             param[0].u.memref.shm_offs = 0;
-> > > > +             param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-> > > > +             break;
-> > > > +     case TA_CMD_BNXT_FASTBOOT:
-> > > > +     default:
-> > > > +             /* Nothing to do */
-> > > > +             break;
-> > > > +     }
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * tee_bnxt_fw_load() - Load the bnxt firmware
-> > > > + *               Uses an OP-TEE call to start a secure
-> > > > + *               boot process.
-> > > > + * Returns 0 on success, negative errno otherwise.
-> > > > + */
-> > > > +int tee_bnxt_fw_load(void)
-> > > > +{
-> > > > +     int ret = 0;
-> > > > +     struct tee_ioctl_invoke_arg inv_arg;
-> > > > +     struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-> > > > +
-> > > > +     if (!pvt_data.ctx)
-> > > > +             return -ENODEV;
-> > > > +
-> > > > +     prepare_args(TA_CMD_BNXT_FASTBOOT, &inv_arg, param);
-> > > > +
-> > > > +     ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-> > > > +     if ((ret < 0) || (inv_arg.ret != 0)) {
-> > > > +             dev_err(pvt_data.dev, "TA_CMD_BNXT_LOAD invoke err: %x\n",
-> > > > +                     (ret < 0) ? ret : inv_arg.ret);
-> > > > +             return -EINVAL;
-> > > > +     }
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL(tee_bnxt_fw_load);
-> > > 
-> > > Why are you exporting symbols for a single file?  What uses these?
-> > These apis will be used by bnxt driver, still working on open sourcing changes
-> > 
-> 
-> Hi Greg,
-> 
-> The above API is used by the bnxt_en Ethernet driver to load firmware that
-> is stored in the secure region of DDR that can only be accessed through
-> secure calls via TEE.
-> 
-> EXPORT_SYMBOL is needed given that bnxt_en driver (the client that uses this
-> API) is usually loaded as a module.
-> 
-> > > This feels really wrong, are you sure this all is correct?
-> 
-> Is there anything specific that looks wrong? Please help to point out and
-> we'll fix it.
+Hi Jacopo,
 
-We can not export symbols when there is no in-kernel user of the code.
-Please resend this as a patch series when you have the other "side" of
-these symbols ready for submission.
+On 12/09/2019 08:59, Jacopo Mondi wrote:
+> Hi Kiernan,
+>    thanks for review
+> 
+> On Wed, Sep 11, 2019 at 04:54:58PM +0100, Kieran Bingham wrote:
+>> Hi Jacopo,
+>>
+>> <This time replying to the mail with ML's included Doh!>
+>>
+>> On 06/09/2019 14:43, Jacopo Mondi wrote:
+>>> Add a driver for the R-Car Display Unit Color Correction Module.
+>>>
+>>> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+>>> to perform image enhancement and color correction.
+>>>
+>>> Add support for CMM through a driver that supports configuration of
+>>> the 1-dimensional LUT table. More advanced CMM feature will be
+>>
+>> s/feature/features/
+>>
+>>> implemented on top of this basic one.
+>>
+>> s/basic/initial/
+>>
+>>>
+>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>> ---
+>>>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
+>>>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
+>>>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 251 +++++++++++++++++++++++++++++
+>>>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  61 +++++++
+>>>  4 files changed, 320 insertions(+)
+>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+>>>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+>>>
+>>> diff --git a/drivers/gpu/drm/rcar-du/Kconfig
+>> b/drivers/gpu/drm/rcar-du/Kconfig
+>>> index 1529849e217e..539d232790d1 100644
+>>> --- a/drivers/gpu/drm/rcar-du/Kconfig
+>>> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+>>> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
+>>>  	  Choose this option if you have an R-Car chipset.
+>>>  	  If M is selected the module will be called rcar-du-drm.
+>>>
+>>> +config DRM_RCAR_CMM
+>>> +	bool "R-Car DU Color Management Module (CMM) Support"
+>>> +	depends on DRM && OF
+>>> +	depends on DRM_RCAR_DU
+>>> +	help
+>>> +	  Enable support for R-Car Color Management Module (CMM).
+>>> +
+>>>  config DRM_RCAR_DW_HDMI
+>>>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>>>  	depends on DRM && OF
+>>> diff --git a/drivers/gpu/drm/rcar-du/Makefile
+>> b/drivers/gpu/drm/rcar-du/Makefile
+>>> index 6c2ed9c46467..4d1187ccc3e5 100644
+>>> --- a/drivers/gpu/drm/rcar-du/Makefile
+>>> +++ b/drivers/gpu/drm/rcar-du/Makefile
+>>> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
+>>>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
+>>>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+>>>
+>>> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
+>>>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+>>>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+>>>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c
+>> b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+>>> new file mode 100644
+>>> index 000000000000..3cacdc4474c7
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+>>> @@ -0,0 +1,251 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
+>>> + *
+>>> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>> + */
+>>> +
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/pm_runtime.h>
+>>> +
+>>> +#include <drm/drm_color_mgmt.h>
+>>> +
+>>> +#include "rcar_cmm.h"
+>>> +
+>>> +#define CM2_LUT_CTRL		0x0000
+>>> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
+>>
+>> I'd have a new line here
+>>
+>>> +#define CM2_LUT_TBL_BASE	0x0600
+>>> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
+>>> +
+>>> +struct rcar_cmm {
+>>> +	void __iomem *base;
+>>> +	bool enabled;
+>>> +
+>>> +	/*
+>>> +	 * @lut:		1D-LUT status
+>>> +	 * @lut.enabled:	1D-LUT enabled flag
+>>> +	 * @lut.table:		Table of 1D-LUT entries scaled to hardware
+>>> +	 *			precision (8-bits per color component)
+>>> +	 */
+>>> +	struct {
+>>> +		bool enabled;
+>>> +		u32 table[CM2_LUT_SIZE];
+>>> +	} lut;
+>>> +};
+>>> +
+>>> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+>>> +{
+>>> +	return ioread32(rcmm->base + reg);
+>>> +}
+>>> +
+>>> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32
+>> data)
+>>> +{
+>>> +	iowrite32(data, rcmm->base + reg);
+>>> +}
+>>> +
+>>> +/*
+>>> + * rcar_cmm_lut_extract() - Scale down to hardware precision the DRM
+>> LUT table
+>>> + *			    entries and store them.
+>>> + * @rcmm: Pointer to the CMM device
+>>> + * @drm_lut: Pointer to the DRM LUT table
+>>> + */
+>>> +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm,
+>>> +				 const struct drm_color_lut *drm_lut)
+>>> +{
+>>> +	unsigned int i;
+>>
+>> I think you're missing the following here:
+>>
+>> 	if (!drm_lut)
+>> 		return;
+>>
+>> You mention below that drm_lut could be passed in as NULL, which would
+>> cause a segfault here otherwise.
+>>
+> 
+> Thanks for spotting, but I should have removed that comment, as I have
+> killed that case in rcar_du_atomic_commit_update_cmm() in patch 8/9,
+> as from my testing it seems it is not possible to provide from
+> userspace a non populated LUT table to just re-enable the CMM.
+> 
+> So we're fine here.
 
-thanks,
+Great, in that case then with the comment removed, and the other
+trivials in this handled however you see fit,
 
-greg k-h
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+
+
+> 
+>>
+>>> +
+>>> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
+>>> +		const struct drm_color_lut *lut = &drm_lut[i];
+>>> +
+>>> +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
+>>> +				   | drm_color_lut_extract(lut->green, 8) << 8
+>>> +				   | drm_color_lut_extract(lut->blue, 8);
+>>> +	}
+>>> +}
+>>> +
+>>> +/*
+>>> + * rcar_cmm_lut_write() - Write to hardware the LUT table entries
+>> from the
+>>> + *			  local table.
+>>> + * @rcmm: Pointer to the CMM device
+>>> + */
+>>> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm)
+>>> +{
+>>> +	unsigned int i;
+>>> +
+>>> +	for (i = 0; i < CM2_LUT_SIZE; ++i)
+>>> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), rcmm->lut.table[i]);
+>>> +}
+>>> +
+>>> +/*
+>>> + * rcar_cmm_setup() - Configure the CMM unit.
+>>> + * @pdev: The platform device associated with the CMM instance
+>>> + * @config: The CRTC-provided configuration.
+>>
+>> I don't think CRTC-provided should be hyphenated like that.
+>> Perhaps just:
+>> 	"The colour management configuration".
+>>
+>> As I don't think who provides the configuration is relevant to the
+>> actual call.
+>>
+> 
+> I have no idea. I've been bought into this by the comment
+> 
+> "CRTC-provided" is a compound adjective, qualifying the noun
+> "configuration". It thus needs a hyphen.
+> 
+> I'm happy to remove it for a simpler version.
+
+CRTC-provided just looks weird to me :-D however you wish to leave it is
+up to you though :D
+
+
+> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -2320,6 +2320,33 @@
+ 			resets = <&cpg 611>;
+ 		};
+
++		cmm0: cmm@fea40000 {
++			compatible = "renesas,r8a77965-cmm",
++				     "renesas,rcar-gen3-cmm";
++			reg = <0 0xfea40000 0 0x1000>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			clocks = <&cpg CPG_MOD 711>;
++			resets = <&cpg 711>;
++		};
++
++		cmm1: cmm@fea50000 {
++			compatible = "renesas,r8a77965-cmm",
++				     "renesas,rcar-gen3-cmm";
++			reg = <0 0xfea50000 0 0x1000>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			clocks = <&cpg CPG_MOD 710>;
++			resets = <&cpg 710>;
++		};
++
++		cmm3: cmm@fea70000 {
++			compatible = "renesas,r8a77965-cmm",
++				     "renesas,rcar-gen3-cmm";
++			reg = <0 0xfea70000 0 0x1000>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			clocks = <&cpg CPG_MOD 708>;
++			resets = <&cpg 708>;
++		};
++
+ 		csi20: csi2@fea80000 {
+ 			compatible = "renesas,r8a77965-csi2";
+ 			reg = <0 0xfea80000 0 0x10000>;
+@@ -2470,6 +2497,7 @@
+ 			status = "disabled";
+
+ 			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
++			renesas,cmms = <&cmm0 &cmm1 &cmm3>;
+> Thanks
+>    j
+> 
+>>> + * Configure the CMM unit with the CRTC-provided configuration.
+>>
+>> s/CRTC-provided/given/
+>>
+>>> + * Currently enabling, disabling and programming of the 1-D LUT unit is
+>>> + * supported.
+>>> + */
+>>> +int rcar_cmm_setup(struct platform_device *pdev,
+>>> +		   const struct rcar_cmm_config *config)
+>>> +{
+>>> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+>>> +
+>>> +	/*
+>>> +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it might
+>>> +	 * be called when the CMM is disabled. As we can't program the hardware
+>>> +	 * in that case, store the configuration internally and apply it when
+>>> +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
+>>> +	 */
+>>> +	if (!rcmm->enabled) {
+>>> +		if (!config->lut.enable)
+>>> +			return 0;
+>>> +
+>>> +		rcar_cmm_lut_extract(rcmm, config->lut.table);
+>>> +		rcmm->lut.enabled = true;
+>>> +
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	/* Stop LUT operations if requested. */
+>>> +	if (!config->lut.enable) {
+>>> +		if (rcmm->lut.enabled) {
+>>> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+>>> +			rcmm->lut.enabled = false;
+>>> +		}
+>>> +
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	/*
+>>> +	 * Enable LUT and program the new gamma table values.
+>>> +	 *
+>>> +	 * FIXME: In order to have stable operations it is required to first
+>>> +	 * enable the 1D-LUT and then program its table entries. This seems to
+>>> +	 * contradict what the chip manual reports, and will have to be
+>>> +	 * reconsidered when implementing support for double buffering.
+>>> +	 */
+>>> +	if (!rcmm->lut.enabled) {
+>>> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+>>> +		rcmm->lut.enabled = true;
+>>> +	}
+>>> +
+>>> +	rcar_cmm_lut_extract(rcmm, config->lut.table);
+>>> +	rcar_cmm_lut_write(rcmm);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
+>>> +
+>>> +/*
+>>> + * rcar_cmm_enable() - Enable the CMM unit.
+>>> + * @pdev: The platform device associated with the CMM instance
+>>> + *
+>>> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
+>>> + * components, such as 1-D LUT, if requested.
+>>> + */
+>>> +int rcar_cmm_enable(struct platform_device *pdev)
+>>> +{
+>>> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+>>> +	int ret;
+>>> +
+>>> +	ret = pm_runtime_get_sync(&pdev->dev);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
+>>> +	if (rcmm->lut.enabled) {
+>>> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+>>> +		rcar_cmm_lut_write(rcmm);
+>>> +	}
+>>> +
+>>> +	rcmm->enabled = true;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
+>>> +
+>>> +/*
+>>> + * rcar_cmm_disable() - Disable the CMM unit.
+>>> + * @pdev: The platform device associated with the CMM instance
+>>> + *
+>>> + * Disable the CMM unit by stopping the parent clock.
+>>> + */
+>>> +void rcar_cmm_disable(struct platform_device *pdev)
+>>> +{
+>>> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+>>> +
+>>> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+>>> +
+>>> +	pm_runtime_put(&pdev->dev);
+>>> +
+>>> +	rcmm->lut.enabled = false;
+>>> +	rcmm->enabled = false;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
+>>> +
+>>> +/*
+>>> + * rcar_cmm_init() - Make sure the CMM has probed.
+>>> + * @pdev: The platform device associated with the CMM instance
+>>> + *
+>>> + * Return: 0 if the CMM has probed, -EPROBE_DEFER otherwise
+>>> + */
+>>> +int rcar_cmm_init(struct platform_device *pdev)
+>>> +{
+>>> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+>>> +
+>>> +	if (!rcmm)
+>>> +		return -EPROBE_DEFER;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
+>>> +
+>>> +static int rcar_cmm_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct rcar_cmm *rcmm;
+>>> +
+>>> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
+>>> +	if (!rcmm)
+>>> +		return -ENOMEM;
+>>> +	platform_set_drvdata(pdev, rcmm);
+>>> +
+>>> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
+>>> +	if (IS_ERR(rcmm->base))
+>>> +		return PTR_ERR(rcmm->base);
+>>> +
+>>> +	pm_runtime_enable(&pdev->dev);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int rcar_cmm_remove(struct platform_device *pdev)
+>>> +{
+>>> +	pm_runtime_disable(&pdev->dev);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct of_device_id rcar_cmm_of_table[] = {
+>>> +	{ .compatible = "renesas,rcar-gen3-cmm", },
+>>> +	{ .compatible = "renesas,rcar-gen2-cmm", },
+>>> +	{ },
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
+>>> +
+>>> +static struct platform_driver rcar_cmm_platform_driver = {
+>>> +	.probe		= rcar_cmm_probe,
+>>> +	.remove		= rcar_cmm_remove,
+>>> +	.driver		= {
+>>> +		.name	= "rcar-cmm",
+>>> +		.of_match_table = rcar_cmm_of_table,
+>>> +	},
+>>> +};
+>>> +
+>>> +module_platform_driver(rcar_cmm_platform_driver);
+>>> +
+>>> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+>>> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h
+>> b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+>>> new file mode 100644
+>>> index 000000000000..15a2c874b6a6
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+>>> @@ -0,0 +1,61 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>>> +/*
+>>> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
+>>> + *
+>>> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>> + */
+>>> +
+>>> +#ifndef __RCAR_CMM_H__
+>>> +#define __RCAR_CMM_H__
+>>> +
+>>> +#define CM2_LUT_SIZE		256
+>>> +
+>>> +struct drm_color_lut;
+>>> +struct platform_device;
+>>> +
+>>> +/**
+>>> + * struct rcar_cmm_config - CMM configuration
+>>> + *
+>>> + * @lut:	1D-LUT configuration
+>>> + * @lut.enable:	1D-LUT enable flag
+>>> + * @lut.table:	1D-LUT table entries. Might be set to NULL when the
+>> CMM has to
+>>> + *		be re-enabled but not re=programmed.
+>>
+>> So lut.table can be NULL ... See comment at rcar_cmm_lut_extract()
+
+Ok - so this comment will be removed.
+
+
+
+>>
+>>> + */
+>>> +struct rcar_cmm_config {
+>>> +	struct {
+>>> +		bool enable;
+>>> +		struct drm_color_lut *table;
+>>> +	} lut;
+>>> +};
+>>> +
+>>> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
+>>> +int rcar_cmm_init(struct platform_device *pdev);
+>>> +
+>>> +int rcar_cmm_enable(struct platform_device *pdev);
+>>> +void rcar_cmm_disable(struct platform_device *pdev);
+>>> +
+>>> +int rcar_cmm_setup(struct platform_device *pdev,
+>>> +		   const struct rcar_cmm_config *config);
+>>> +#else
+>>> +static inline int rcar_cmm_init(struct platform_device *pdev)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static inline int rcar_cmm_enable(struct platform_device *pdev)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static inline void rcar_cmm_disable(struct platform_device *pdev)
+>>> +{
+>>> +}
+>>> +
+>>> +static int rcar_cmm_setup(struct platform_device *pdev,
+>>> +			  const struct rcar_cmm_config *config)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
+>>> +
+>>> +#endif /* __RCAR_CMM_H__ */
+>>>
+>>
+
