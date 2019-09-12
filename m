@@ -2,137 +2,123 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B11C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F0C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAAC9206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024EF20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbfILMcL (ORCPT
+        id S1731630AbfILMgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:32:11 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:62304 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731283AbfILMcK (ORCPT
+        Thu, 12 Sep 2019 08:36:36 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:53382 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731283AbfILMgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:32:10 -0400
-X-IronPort-AV: E=Sophos;i="5.64,495,1559491200"; 
-   d="scan'208";a="75376858"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 12 Sep 2019 20:32:07 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 5C6DB4CE030A;
-        Thu, 12 Sep 2019 20:31:55 +0800 (CST)
-Received: from TSAO.g08.fujitsu.local (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 12 Sep 2019 20:32:13 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     <rppt@linux.ibm.com>
-Subject: [PATCH] mm/memblock: cleanup doc
-Date:   Thu, 12 Sep 2019 20:31:27 +0800
-Message-ID: <20190912123127.8694-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 12 Sep 2019 08:36:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Tc9p5so_1568291732;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0Tc9p5so_1568291732)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 12 Sep 2019 20:35:34 +0800
+Date:   Thu, 12 Sep 2019 20:35:32 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190912123532.GB16200@aaronlu>
+References: <20190725143003.GA992@aaronlu>
+ <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+ <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+ <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+ <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: 5C6DB4CE030A.A8C2F
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix typos for:
-    elaboarte -> elaborate
-    architecure -> architecture
-    compltes -> completes
+On Wed, Sep 11, 2019 at 12:47:34PM -0400, Vineeth Remanan Pillai wrote:
+> > > So both of you are working on top of my 2 patches that deal with the
+> > > fairness issue, but I had the feeling Tim's alternative patches[1] are
+> > > simpler than mine and achieves the same result(after the force idle tag
+> >
+> > I think Julien's result show that my patches did not do as well as
+> > your patches for fairness. Aubrey did some other testing with the same
+> > conclusion.  So I think keeping the forced idle time balanced is not
+> > enough for maintaining fairness.
+> >
+> There are two main issues - vruntime comparison issue and the
+> forced idle issue.  coresched_idle thread patch is addressing
+> the forced idle issue as scheduler is no longer overloading idle
+> thread for forcing idle. If I understand correctly, Tim's patch
+> also tries to fix the forced idle issue. On top of fixing forced
 
-And, convert the markup :c:func:`foo` to foo() as kernel documentation
-toolchain can recognize foo() as a function.
+Er...I don't think so. Tim's patch is meant to solve fairness issue as
+mine, it doesn't attempt to address the forced idle issue.
 
-Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
- mm/memblock.c | 44 ++++++++++++++++++++------------------------
- 1 file changed, 20 insertions(+), 24 deletions(-)
+> idle issue, we also need to fix that vruntime comparison issue
+> and I think thats where Aaron's patch helps.
+> 
+> I think comparing parent's runtime also will have issues once
+> the task group has a lot more threads with different running
+> patterns. One example is a task group with lot of active threads
+> and a thread with fairly less activity. So when this less active
+> thread is competing with a thread in another group, there is a
+> chance that it loses continuously for a while until the other
+> group catches up on its vruntime.
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 7d4f61ae666a..c23b370cc49e 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -57,42 +57,38 @@
-  * at build time. The region arrays for the "memory" and "reserved"
-  * types are initially sized to %INIT_MEMBLOCK_REGIONS and for the
-  * "physmap" type to %INIT_PHYSMEM_REGIONS.
-- * The :c:func:`memblock_allow_resize` enables automatic resizing of
-- * the region arrays during addition of new regions. This feature
-- * should be used with care so that memory allocated for the region
-- * array will not overlap with areas that should be reserved, for
-- * example initrd.
-+ * The memblock_allow_resize() enables automatic resizing of the region
-+ * arrays during addition of new regions. This feature should be used
-+ * with care so that memory allocated for the region array will not
-+ * overlap with areas that should be reserved, for example initrd.
-  *
-  * The early architecture setup should tell memblock what the physical
-- * memory layout is by using :c:func:`memblock_add` or
-- * :c:func:`memblock_add_node` functions. The first function does not
-- * assign the region to a NUMA node and it is appropriate for UMA
-- * systems. Yet, it is possible to use it on NUMA systems as well and
-- * assign the region to a NUMA node later in the setup process using
-- * :c:func:`memblock_set_node`. The :c:func:`memblock_add_node`
-- * performs such an assignment directly.
-+ * memory layout is by using memblock_add() or memblock_add_node()
-+ * functions. The first function does not assign the region to a NUMA
-+ * node and it is appropriate for UMA systems. Yet, it is possible to
-+ * use it on NUMA systems as well and assign the region to a NUMA node
-+ * later in the setup process using memblock_set_node(). The
-+ * memblock_add_node() performs such an assignment directly.
-  *
-  * Once memblock is setup the memory can be allocated using one of the
-  * API variants:
-  *
-- * * :c:func:`memblock_phys_alloc*` - these functions return the
-- *   **physical** address of the allocated memory
-- * * :c:func:`memblock_alloc*` - these functions return the **virtual**
-- *   address of the allocated memory.
-+ * * memblock_phys_alloc*() - these functions return the **physical**
-+ *   address of the allocated memory
-+ * * memblock_alloc*() - these functions return the **virtual** address
-+ *   of the allocated memory.
-  *
-  * Note, that both API variants use implict assumptions about allowed
-  * memory ranges and the fallback methods. Consult the documentation
-- * of :c:func:`memblock_alloc_internal` and
-- * :c:func:`memblock_alloc_range_nid` functions for more elaboarte
-- * description.
-+ * of memblock_alloc_internal() and memblock_alloc_range_nid()
-+ * functions for more elaborate description.
-  *
-- * As the system boot progresses, the architecture specific
-- * :c:func:`mem_init` function frees all the memory to the buddy page
-- * allocator.
-+ * As the system boot progresses, the architecture specific mem_init()
-+ * function frees all the memory to the buddy page allocator.
-  *
-- * Unless an architecure enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-+ * Unless an architecture enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-  * memblock data structures will be discarded after the system
-- * initialization compltes.
-+ * initialization completes.
-  */
- 
- #ifndef CONFIG_NEED_MULTIPLE_NODES
--- 
-2.21.0
+I actually think this is expected behaviour.
 
+Without core scheduling, when deciding which task to run, we will first
+decide which "se" to run from the CPU's root level cfs runqueue and then
+go downwards. Let's call the chosen se on the root level cfs runqueue
+the winner se. Then with core scheduling, we will also need compare the
+two winner "se"s of each hyperthread and choose the core wide winner "se".
 
+> 
+> As discussed during LPC, probably start thinking along the lines
+> of global vruntime or core wide vruntime to fix the vruntime
+> comparison issue?
 
+core wide vruntime makes sense when there are multiple tasks of
+different cgroups queued on the same core. e.g. when there are two
+tasks of cgroupA and one task of cgroupB are queued on the same core,
+assume cgroupA's one task is on one hyperthread and its other task is on
+the other hyperthread with cgroupB's task. With my current
+implementation or Tim's, cgroupA will get more time than cgroupB. If we
+maintain core wide vruntime for cgroupA and cgroupB, we should be able
+to maintain fairness between cgroups on this core. Tim propose to solve
+this problem by doing some kind of load balancing if I'm not mistaken, I
+haven't taken a look at this yet.
