@@ -2,123 +2,91 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947B2C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC3AC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7118520830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2327520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731601AbfILMET (ORCPT
+        id S1731606AbfILMFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:04:19 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39751 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730454AbfILMET (ORCPT
+        Thu, 12 Sep 2019 08:05:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45619 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731490AbfILMFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:04:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Tc9SThJ_1568289840;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0Tc9SThJ_1568289840)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 12 Sep 2019 20:04:06 +0800
-Date:   Thu, 12 Sep 2019 20:04:00 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190912120400.GA16200@aaronlu>
-References: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+        Thu, 12 Sep 2019 08:05:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 41so22003146oti.12;
+        Thu, 12 Sep 2019 05:05:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hN1AvbGPXaWbn8gk23eshDsOWcHJnwOgLbpQ5ihMGXs=;
+        b=gWj9E+Lf4C2ZHQ7ks1N491l5s9V3cZtFmpKgNDB7QMX5DJ7xA/sFdu04DIywdTx3bA
+         1rJT5U76r8e0tcKA46WJZUqrya5lY2cdZK6ZfPK8ybj7OMUR+9S/QFUKDe6EHHBheN05
+         2WfgLtwfjcDAvJ+MhpTWrGwF4rvwbjyPLcbREu95RaKTHAyYExPSMILImKlH+K5dx7JF
+         Dl+VGuf1ZlD8cDkPKKvbXpYT/D9CV7PbTzCYf6h5OYh4m60yLKvJ6syf3dKGrXvmQoGH
+         DTRBWt9FzIV97TtmASzXAYJVN7+FXkZOeWI0oS2iYnuYFZVzdnrfUa+7o57MmMwQR1vl
+         czVg==
+X-Gm-Message-State: APjAAAUYiIMZUh7VoGKJQ8K8FaVrsxTHXnegschyCtKHZHCyDYWCTqZF
+        O1DLpyrUDZ6QxhdyXjRG+4dtbpHFOK0+Sup52xg=
+X-Google-Smtp-Source: APXvYqzub8+qs+xgzCbQJpYWFnKI2oSAA0kckOHsYIO6Erlwm5BT8b7v37rtZmItWvQxpcnjguhILA4+/s8K0/A5o6Y=
+X-Received: by 2002:a9d:6c12:: with SMTP id f18mr12361otq.297.1568289904224;
+ Thu, 12 Sep 2019 05:05:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190912103734.1879-1-kieran.bingham+renesas@ideasonboard.com>
+ <CAMuHMdWb9qBDZqOs072u_pCRTaGGArAdUBLWbA5kGoU=KM4Y3A@mail.gmail.com> <4ecb7e77-45e7-cf91-c8e3-0670d7ae25a7@ideasonboard.com>
+In-Reply-To: <4ecb7e77-45e7-cf91-c8e3-0670d7ae25a7@ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Sep 2019 14:04:53 +0200
+Message-ID: <CAMuHMdVqyEHuYKPXb2S5KRp+qHQP-qb+QKDZj_PdnC6__FDJ_Q@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: renesas: r8a77980: Remove r8a77970 DU compatible
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 09:19:02AM -0700, Tim Chen wrote:
-> On 9/11/19 7:02 AM, Aaron Lu wrote:
-> > Hi Tim & Julien,
-> > 
-> > On Fri, Sep 06, 2019 at 11:30:20AM -0700, Tim Chen wrote:
-> >> On 8/7/19 10:10 AM, Tim Chen wrote:
-> >>
-> >>> 3) Load balancing between CPU cores
-> >>> -----------------------------------
-> >>> Say if one CPU core's sibling threads get forced idled
-> >>> a lot as it has mostly incompatible tasks between the siblings,
-> >>> moving the incompatible load to other cores and pulling
-> >>> compatible load to the core could help CPU utilization.
-> >>>
-> >>> So just considering the load of a task is not enough during
-> >>> load balancing, task compatibility also needs to be considered.
-> >>> Peter has put in mechanisms to balance compatible tasks between
-> >>> CPU thread siblings, but not across cores.
-> >>>
-> >>> Status:
-> >>> I have not seen patches on this issue.  This issue could lead to
-> >>> large variance in workload performance based on your luck
-> >>> in placing the workload among the cores.
-> >>>
-> >>
-> >> I've made an attempt in the following two patches to address
-> >> the load balancing of mismatched load between the siblings.
-> >>
-> >> It is applied on top of Aaron's patches:
-> >> - sched: Fix incorrect rq tagged as forced idle
-> >> - wrapper for cfs_rq->min_vruntime
-> >>   https://lore.kernel.org/lkml/20190725143127.GB992@aaronlu/
-> >> - core vruntime comparison
-> >>   https://lore.kernel.org/lkml/20190725143248.GC992@aaronlu/
-> > 
-> > So both of you are working on top of my 2 patches that deal with the
-> > fairness issue, but I had the feeling Tim's alternative patches[1] are
-> > simpler than mine and achieves the same result(after the force idle tag
-> 
-> I think Julien's result show that my patches did not do as well as
-> your patches for fairness. Aubrey did some other testing with the same
-> conclusion.  So I think keeping the forced idle time balanced is not
-> enough for maintaining fairness.
+Hi Kieran,
 
-Well, I have done following tests:
-1 Julien's test script: https://paste.debian.net/plainh/834cf45c
-2 start two tagged will-it-scale/page_fault1, see how each performs;
-3 Aubrey's mysql test: https://github.com/aubreyli/coresched_bench.git
+On Thu, Sep 12, 2019 at 2:03 PM Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
+> On 12/09/2019 12:56, Geert Uytterhoeven wrote:
+> > On Thu, Sep 12, 2019 at 12:38 PM Kieran Bingham
+> > <kieran.bingham+renesas@ideasonboard.com> wrote:
+> >> The r8a77970 was added with an compatible string for a differnet device
+> >
+> > different
+>
+> Also s/an/a/ ... Perhaps I should just step away from the keyboard
+> today, I can't seem to type ! hehe
 
-They all show your patchset performs equally well...And consider what
-the patch does, I think they are really doing the same thing in
-different ways.
+Doh, finding a first typo increased my adrenaline level, masking the ability
+to see a second ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
