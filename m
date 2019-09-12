@@ -2,118 +2,302 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0365C4CECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB77BC47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE24F20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568288106;
-	bh=ysIBs7xyasl4sNXtJn0FnTX+Y4HNAIYUBNHh5rd0is4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=saZTrdK2Xt//XKR4b3pn1/5xOQ0dI1d7aKCLPy4Zh/d+cnVFHBjaBXz6reoFqs0pS
-	 wRN6ZDwyAo3esgr1Ccfc9riKzvo5S2sDQUsFOga9SimlOtYSjsDam27myWO4Tii3qf
-	 JOPIHX6P8opoEgQSaGLF+YK7SoBzWmOVpH+5NJIM=
+	by mail.kernel.org (Postfix) with ESMTP id 7EEB020684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ezWVyqYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbfILLfF (ORCPT
+        id S1731417AbfILLjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:35:05 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:44061 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbfILLfF (ORCPT
+        Thu, 12 Sep 2019 07:39:48 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:23991 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731375AbfILLjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:35:05 -0400
-Received: by mail-lj1-f175.google.com with SMTP id u14so23224258ljj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 04:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EJEjXo6Uv0jyp2+Brgg1JL8WxFYC+E50/NKS1o8RgP4=;
-        b=SoqpQsGN0urBE3TZhDDbfGxMqQFL1cSw3SqSCRD7jsTJhbHzZSr7ZZSQZhcXfxdkDc
-         rNbyzfu3s7rI7jD4hkuWmJhs7sZYsjUnj7IUIPx0yWxF6qwKRfkFXQOSdwttIBTxaccA
-         Gqqy35oMPqJwLuP5+0ltXVj/AffUCCXYemJFA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EJEjXo6Uv0jyp2+Brgg1JL8WxFYC+E50/NKS1o8RgP4=;
-        b=ZCrZL8l90F8HvQnZ1rxf7vl3FY42otBoTGA2PfAUDFqlffaFCnC7JY67uc0DtL/8ie
-         8jELRPR/VmkBIMWBIp5S+nAQ9Ly913MhLctupitQkIOgNjVnFTH0PCDReObYrlYCHCdN
-         aFLfLyB+DbuWTGNizuzwAkA0RiBUKbittavyj4fZ2zwmegEno+jWnxJXfG1L0+B8DOmR
-         CtX/or+FnfwYxH/ca6l/PmLoRJjQ1LOpP5OE7ST0gwor4hx3VpPjX33zmo+Tgi5wSer9
-         FaHOPU34SvzP/c6w7mXQDIrmxzbf1zGJvKPiZkPvo7I5dCJ6CKixShIshuCVFsnrzZHt
-         fT0w==
-X-Gm-Message-State: APjAAAXj15Eu/kNbfTvPjmzCRMfsN8Ed+rKs/qDZrAB5d5IxhyhmKwf8
-        h0nu7q/bZMHYMrejmH98zCdQu7cLeJhAlA==
-X-Google-Smtp-Source: APXvYqyi924KAgltOBVLcOgWrJ88XipxWRqF03SP8t4YF5VLUEK1Gto/8Qfg40MRX8JRof0aAJUdEw==
-X-Received: by 2002:a2e:7801:: with SMTP id t1mr12027189ljc.140.1568288102952;
-        Thu, 12 Sep 2019 04:35:02 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id c16sm6139859lfj.8.2019.09.12.04.35.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Sep 2019 04:35:01 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id a4so23232684ljk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 04:35:01 -0700 (PDT)
-X-Received: by 2002:a2e:814d:: with SMTP id t13mr26938394ljg.72.1568288101290;
- Thu, 12 Sep 2019 04:35:01 -0700 (PDT)
+        Thu, 12 Sep 2019 07:39:48 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190912113944epoutp0273f0b0d713539d554a5f2c5b8fba8784~DrfoSQwRo3247632476epoutp020
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 11:39:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190912113944epoutp0273f0b0d713539d554a5f2c5b8fba8784~DrfoSQwRo3247632476epoutp020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568288384;
+        bh=FJ3B29g8an95tHNAjyirvuvQH9GQMebjFMmP0dg5AKY=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=ezWVyqYLRvHnTJSHI9mw9GwZZyXhPX0VSQfwuKGYEGcNNki4d7C742W0bGzYmoRtf
+         grp6sA/JhsXQjQVy64c4X/9Yl4jmYt5/XTJe7aou4z6kreY97dY6On4tCvFy+JMNuK
+         9PTRFViZjyD+/OWVPUTDnsDQlEGJQZE0TToUzco4=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20190912113944epcas5p20555df6250f82b84b4e9c10f3b94909d~Drfn6qxjW2668226682epcas5p2o;
+        Thu, 12 Sep 2019 11:39:44 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DF.C2.04150.08E2A7D5; Thu, 12 Sep 2019 20:39:44 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190912113943epcas5p240c35bbce125c4d67919e7b957b94b5b~DrfnSm5kb1928919289epcas5p2-;
+        Thu, 12 Sep 2019 11:39:43 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190912113943epsmtrp269460ba4cc81da1310d315d90eef4334~DrfnR4oy82493524935epsmtrp2d;
+        Thu, 12 Sep 2019 11:39:43 +0000 (GMT)
+X-AuditID: b6c32a49-a43ff70000001036-f7-5d7a2e80ad83
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A6.DD.03638.F7E2A7D5; Thu, 12 Sep 2019 20:39:43 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190912113942epsmtip2bfd6d21c0e07ee6a5ea2d2504b05141b~DrfmFjsS82087020870epsmtip20;
+        Thu, 12 Sep 2019 11:39:42 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Jingoo Han'" <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+In-Reply-To: <20190911092310.GN9720@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
+Date:   Thu, 12 Sep 2019 17:09:41 +0530
+Message-ID: <23a601d5695e$c54f2b80$4fed8280$@samsung.com>
 MIME-Version: 1.0
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc> <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
- <20190910173243.GA3992@darwi-home-pc> <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
-In-Reply-To: <20190912082530.GA27365@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 12 Sep 2019 12:34:45 +0100
-X-Gmail-Original-Message-ID: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
-Message-ID: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHkrftp/qePsooAO7EnIOhukMFsOwG9FaICAdZSMiACQwDdlwNi02KNpr+Wp/A=
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7bCmpm6DXlWswY87QhbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uLxrDpvF2XnH2Sze/H7B7sDhsWbeGkaPnbPusnss2FTq0bdlFaPH
+        lv2fGT0+b5ILYIvisklJzcksSy3St0vgylj25QxTwVnzirfnl7I3ML7R7GLk5JAQMJE4vu8h
+        axcjF4eQwG5GiRX9fxghnE+MEt+/7GQBqRIS+MYosfaKbBcjB1jH1elCEDV7GSUOzH/MBuG8
+        ZpTYdOgeG0gDm4C+xLkf81hBbBEBXYmvq56DxZkF/jFKzDtqCDKIU8BJ4vAPGZCwsIC3xKme
+        iewgNouAqsTUnkvMIDavgKVE05ZTLBC2oMTJmU9YIMbIS2x/O4cZ4gMFiZ9Pl0Gt8pN4dW49
+        I0SNuMTLo0fYQW6TEPjNJvF04l92iAYXib6PXawQtrDEq+NboOJSEp/f7WWDsPMlfiyexAzR
+        3MIoMfn4XKgGe4kDV+awgDzALKApsX6XPsQyPone30+YIAHEK9HRJgRRrSbx/fkZqDtlJB42
+        L2WCsD0k7u+ayjyBUXEWktdmIXltFpIXZiEsW8DIsopRMrWgODc9tdi0wDAvtVyvODG3uDQv
+        XS85P3cTIzgpaXnuYJx1zucQowAHoxIPr4VOVawQa2JZcWXuIUYJDmYlEV6fN5WxQrwpiZVV
+        qUX58UWlOanFhxilOViUxHknsV6NERJITyxJzU5NLUgtgskycXBKNTAy9n4/0B0ifWHevh8a
+        p+xFbvf4KpX4rbJzdVUqeyBxX357yX+z+79n5xr4iy+XMP8SO+FZnfW9P5LFB29Vr918ZENp
+        reW9t4I+j9QeqZvpq1XvPeqrx3jo/qW7XZXNWnNOLD9nz/WO91+duPmT0ycKV86zbbt8QuSF
+        zg7lia4bklX2L+efHXNCiaU4I9FQi7moOBEAsIaDCEYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSvG69XlWswa0+LYvm/9tZLc7uWshq
+        saQpw2LX3Q52ixVfZrJbXN41h83i7LzjbBZvfr9gd+DwWDNvDaPHzll32T0WbCr16NuyitFj
+        y/7PjB6fN8kFsEVx2aSk5mSWpRbp2yVwZSz7coap4Kx5xdvzS9kbGN9odjFycEgImEhcnS7U
+        xcjFISSwm1Fiz437LF2MnEBxGYnJq1ewQtjCEiv/PWeHKHrJKLFr91ZmkASbgL7EuR/zwIpE
+        BHQlvq56zgZSxCzQwiTRvO8PE0hCSOA0k0Rjvx3INk4BJ4nDP2RAwsIC3hKneiayg9gsAqoS
+        U3sugc3kFbCUaNpyigXCFpQ4OfMJC0grs4CeRNtGRpAws4C8xPa3c5ghblOQ+Pl0GdQJfhKv
+        zq2HqhGXeHn0CPsERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L
+        10vOz93ECI4sLa0djCdOxB9iFOBgVOLhfaBZFSvEmlhWXJl7iFGCg1lJhNfnTWWsEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6pBsbk25nc3H/XRkqeqjh3
+        foUD72ahpM2qs1O5tlQ0L/rD5/nZ/+HBAHaPKdzSS+UfnGJvzMzMeejRa/H40d+sMNb2+utF
+        d7sEV69bvvptivGpq3ExXi3mj3zl2abMVd05wYE1/PCKcqmp6/m66pNKnonrGra+/HKAV6i/
+        z//XzoIW7a/9Ai+KDZVYijMSDbWYi4oTAdxulaioAgAA
+X-CMS-MailID: 20190912113943epcas5p240c35bbce125c4d67919e7b957b94b5b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f
+References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
+        <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+        <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
+        <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
+        <20190911092310.GN9720@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 9:25 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> Hmm, one thought might be GRND_FAILSAFE, which will wait up to two
-> minutes before returning "best efforts" randomness and issuing a huge
-> massive warning if it is triggered?
 
-Yeah, based on (by now) _years_ of experience with people mis-using
-"get me random numbers", I think the sense of a new flag needs to be
-"yeah, I'm willing to wait for it".
 
-Because most people just don't want to wait for it, and most people
-don't think about it, and we need to make the default be for that
-"don't think about it" crowd, with the people who ask for randomness
-sources for a secure key having to very clearly and very explicitly
-say "Yes, I understand that this can take minutes and can only be done
-long after boot".
+> From: Andrew Murray <andrew.murray@arm.com>
+> 
+> On Tue, Sep 10, 2019 at 09:46:28PM +0530, Pankaj Dubey wrote:
+> > On Tue, 10 Sep 2019 at 19:56, Andrew Murray <andrew.murray@arm.com>
+> wrote:
+> > >
+> > > On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
+> > > > From: Anvesh Salveru <anvesh.s@samsung.com>
+> > > >
+> > > > In some platforms, PCIe PHY may have issues which will prevent
+> > > > linkup to happen in GEN3 or high speed. In case equalization
+> > > > fails, link will fallback to GEN1.
+> > >
+> > > When you refer to "high speed", do you mean "higher speeds" as in
+> > > GEN3, GEN4, etc?
+> > >
+> >
+> > Yes. Will reword the commit message as "higher speeds"
+> >
+> > > >
+> > > > Designware controller has support for disabling GEN3 equalization
+> > > > if required. This patch enables the designware driver to disable
+> > > > the PCIe
+> > > > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
+> > >
+> > > Thus limiting to GEN2 speeds max, right?
+> > >
+> > > Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and
+> > > above even though we advertise GEN3 and above speeds? I.e. the IP
+> > > advertises
+> > > GEN3 but the phy can't handle it, we can't change what the IP
+> > > advertises and so we disable equalization to limit to GEN2?
+> > >
+> > > I notice many of the other dwc drivers (dra7xx, keystone, tegra194,
+> > > imx6) seem to use the device tree to specify a max-link-speed and
+> > > then impose that limit by changing the value in PCI_EXP_LNKCAP. Is
+> > > your PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the
+> > > PCI_EXP_LNKCAP approach, or does your approach add something else?
+> > >
+> >
+> > No, max speed will be still as per advertised by link or it will be
+> > equal to the limited speed as per DT property if any.
+> > This register will prohibit to perform all phases of equalization and
+> > thus allowing link to happen in maximum supported/advertised speed.
+> >
+> > This is not to limit max link speed, this register helps link to
+> > happen in higher speeds (GEN3/4) without going through equalization
+> > phases. It is intended to use only if at all link fails to latch up in
+> > GEN3/4 due to failure in equalization phases.
+> 
+> I thought that for GEN3 and beyond equalization was *required* - with only
+> phases 2 and 3 being optional. Therefore I'm suprised to see that if
+equalization
+> does fail we continue to train the link anyway. Have I understood this
+correctly?
+> 
 
-Even then people will screw that up because they copy code, or some
-less than gifted rodent writes a library and decides "my library is so
-important that I need that waiting sooper-sekrit-secure random
-number", and then people use that broken library by mistake without
-realizing that it's not going to be reliable at boot time.
+AFAIK, equalization is not mandatory for GEN3 and higher speed. I mean in
+case there is some H/W issue we can still go ahead and disable complete
+equalization.
 
-An alternative might be to make getrandom() just return an error
-instead of waiting. Sure, fill the buffer with "as random as we can"
-stuff, but then return -EINVAL because you called us too early.
+> Also are there any plans to provide patches to use this quirk on any
+drivers?
+> 
 
-                  Linus
+Yes, we have plans and soon the user driver of this feature will land for
+review. But I believe this should not be blocker to consider this patch, as
+it is a feature provided in Designware H/W and so we can add S/W support for
+the same.
+
+> >
+> > > >
+> > > > Platform drivers can disable equalization by setting the
+> > > > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+> > > >
+> > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+> > > > drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
+> > > >  2 files changed, 14 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > index 7d25102..bf82091 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > > >               break;
+> > > >       }
+> > > >       dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> > > > +
+> > > > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > > > +
+> > > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> > > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > > > +
+> > > > +     dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > >
+> > > The problem here is that even when DWC_EQUALIZATION_DISABLE is not
+> > > set the driver will read and write PCIE_PORT_GEN3_RELATED when it is
+> > > not needed. How about something like:
+> > >
+> > > > +
+> > > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
+> > > > +             val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > > > +             dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > > > +     }
+> > >
+> >
+> > Yes, before posting we taught about it, but then next patchset is
+> > adding one more quirk and in that case we need to repeat read and
+> > write under each if condition. I hope that repetition should be fine.
+> 
+> I understand. I think the repetition is prefered over needlessly reading
+and
+> writing registers.
+> 
+
+OK, will handle this in v2.
+
+> Given these quirks are so similar, I wouldn't have a problem with them
+being in
+> the same patch.
+> 
+
+I still prefer to keep these in two separate patches, unless until it is
+something mandatory.
+
+> Thanks,
+> 
+> Andrew Murray
+> 
+> >
+> > > >  }
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > index ffed084..a1453c5 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > @@ -29,6 +29,9 @@
+> > > >  #define LINK_WAIT_MAX_IATU_RETRIES   5
+> > > >  #define LINK_WAIT_IATU                       9
+> > > >
+> > > > +/* Parameters for PCIe Quirks */
+> > > > +#define DWC_EQUALIZATION_DISABLE     0x1
+> > >
+> > > How about using BIT(1) instead? Thus implying that you can combine
+> > > quirks.
+> > >
+> >
+> > Agreed.
+> >
+> > > Thanks,
+> > >
+> > > Andrew Murray
+> > >
+> > > > +
+> > > >  /* Synopsys-specific PCIe configuration registers */
+> > > >  #define PCIE_PORT_LINK_CONTROL               0x710
+> > > >  #define PORT_LINK_MODE_MASK          GENMASK(21, 16)
+> > > > @@ -60,6 +63,9 @@
+> > > >  #define PCIE_MSI_INTR0_MASK          0x82C
+> > > >  #define PCIE_MSI_INTR0_STATUS                0x830
+> > > >
+> > > > +#define PCIE_PORT_GEN3_RELATED               0x890
+> > > > +#define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > > > +
+> > > >  #define PCIE_ATU_VIEWPORT            0x900
+> > > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> > > >  #define PCIE_ATU_REGION_OUTBOUND     0
+> > > > @@ -244,6 +250,7 @@ struct dw_pcie {
+> > > >       struct dw_pcie_ep       ep;
+> > > >       const struct dw_pcie_ops *ops;
+> > > >       unsigned int            version;
+> > > > +     unsigned int            dwc_pci_quirk;
+> > > >  };
+> > > >
+> > > >  #define to_dw_pcie_from_pp(port) container_of((port), struct
+> > > > dw_pcie, pp)
+> > > > --
+> > > > 2.7.4
+> > > >
+
