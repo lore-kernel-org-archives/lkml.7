@@ -2,87 +2,96 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51216C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E87C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7E92084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568303937;
-	bh=XmG5HhrRe25+w9qGzOcPfWBOm8I3sxDAkYcZ+NossLU=;
-	h=Date:In-Reply-To:References:Subject:To:CC:From:List-ID:From;
-	b=gyPfseqtHAD+x+9RT+JIW++el8b/DvGsCjFSM3jORlFIPyTLRlwDjKbe4eDKRgvz1
-	 FiUc9FvdiUJZ4WtL0rInhG5onCQ39i8IJYaZ5XUekJnUjsujjhE8DE9MgO4fq07Wsh
-	 ryzOw9bUWUqEAn34okYf0w26jA2McU3wHAze9gBE=
+	by mail.kernel.org (Postfix) with ESMTP id B882020684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:00:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n9ZAP1uk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733127AbfILP64 (ORCPT
+        id S1733145AbfILQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfILP64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:58:56 -0400
-Received: from [10.227.109.174] (unknown [188.64.207.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB5520693;
-        Thu, 12 Sep 2019 15:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568303935;
-        bh=XmG5HhrRe25+w9qGzOcPfWBOm8I3sxDAkYcZ+NossLU=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=lwJbIi+pOe1lg6lIPBOtRo9Ti4f0ui7OLWFViW2vSVw7QGLOag1AcF0nFSRTRA9GC
-         VnV5k3C0d3o2rDn6Qj1o8nMsHQm0hcAGCMTP7OqI56B+zOHIp6WZ2GqBRVT6iXqZfv
-         4uTNhdAVcVtLQKAteuw5lrXDL0j7qC0kn5n1b04Q=
-Date:   Thu, 12 Sep 2019 16:58:45 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190912140912.GA13137@alpha.franken.de>
-References: <20190905133251.GA3650@rapoport-lnx> <20190905154831.88b7853b47ba7db7bd7626bd@suse.de> <20190905154747.GB3650@rapoport-lnx> <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de> <20190906130223.GA17704@rapoport-lnx> <20190909182242.c1ef9717d14b20212ef75954@suse.de> <20190910113243.GA19207@rapoport-lnx> <20190911160939.19f776535770d12ff51a2af7@suse.de> <20190912105831.GA10677@rapoport-lnx> <20190912155539.6151b0811e858455be4c8d86@suse.de> <20190912140912.GA13137@alpha.franken.de>
+        Thu, 12 Sep 2019 12:00:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42962 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732566AbfILQAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:00:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w22so16281679pfi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fZDNqEnv4EmFhQfK0XZBrV/jYzvQOHibAKE2NrjIUg0=;
+        b=n9ZAP1ukn//d7pJMbvivuEhJH9dW8ljZ3TQSume+cAb44Ay5une9clipJXr+osOEVJ
+         UmnNf68fglbomW2DPCZpTYraLXqQifTF+Ka9DIkPOtu2DnS8xS/cbfpahKe80ek4KW/F
+         D1gSaIhFJjokLkMezGrZ1q7xVooMDYgUZZ6yc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fZDNqEnv4EmFhQfK0XZBrV/jYzvQOHibAKE2NrjIUg0=;
+        b=ddTReZm9SFuJwJM/9qq11eBVZ7Bi8IvNy0G2CBsw4KbiphSrILaCtMrI8w02+cj8DJ
+         xXTziO3NxkEUyDmUodEG6C7RlYpiC3ffGJQCnmOXD3ZYoBqTU+rgmoXfY+4KyMZKj/+B
+         M0jD384LLduu0PS4MDvVsM8AOCrUEpWI3DLgfhvcBmVJAn0lfuviI+QJd4OiBG+Wgml0
+         NEGz/WHHsIgEWPNZMpm6eiXXJfSKeyxLNj5gXTogW47l73lDWgi/b8B1ZMCFfLFxRAsX
+         NlYKS8HPUreGUORVKsxIiq+Yj6WNSl4lY5kYIgb4xcibSMSiuvFnkSwZoVvrZorVu+3A
+         dNFg==
+X-Gm-Message-State: APjAAAVEHaYFVqrn2/QCpn2ZAqoX82NRhvOSChgH6bFMafy+XFA/drTe
+        v0bwf+NYMEi3TTvxHrlRUkbOJg==
+X-Google-Smtp-Source: APXvYqw/ay5iAGudFoue/juWTHwzUaTUPAvaaep73lKG3ftykR072bfY4K+CVgDD8Hjs5ekI18e+zA==
+X-Received: by 2002:a62:5583:: with SMTP id j125mr5989380pfb.257.1568304052145;
+        Thu, 12 Sep 2019 09:00:52 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:e9ae:bd45:1bd9:e60d])
+        by smtp.gmail.com with ESMTPSA id v18sm20573654pgl.87.2019.09.12.09.00.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2019 09:00:51 -0700 (PDT)
+From:   David Riley <davidriley@chromium.org>
+To:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        David Riley <davidriley@chromium.org>
+Subject: [PATCH] drm/virtio: Fix warning in virtio_gpu_queue_fenced_ctrl_buffer.
+Date:   Thu, 12 Sep 2019 09:00:48 -0700
+Message-Id: <20190912160048.212495-1-davidriley@chromium.org>
+X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-From:   Mike Rapoport <rppt@kernel.org>
-Message-ID: <D0D37105-8A90-410F-B912-BA473A958C73@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On September 12, 2019 3:09:12 PM GMT+01:00, Thomas Bogendoerfer <tsbogend@a=
-lpha=2Efranken=2Ede> wrote:
->On Thu, Sep 12, 2019 at 03:55:39PM +0200, Thomas Bogendoerfer wrote:
->> - reserved[0xd]	[0x000000035bff8000-0x000000035bffffff],
->0x0000000000008000 bytes flags: 0x0
->>=20
->> I have no idea which reservation this is, but it's not from one of
->the
->> node data=2E
->
->that's sparsemem's mem_section=2E And=20
->
-> free_bootmem_with_active_regions(node, end_pfn);
->
->on the last node will free this reserved memory, when memory
->is added node by node=2E This explains it=2E
->
->So when resending the patch add my
->
->Tested-by: Thomas Bogendoerfer <tbogendoerfer@suse=2Ede>
+Fix warning introduced with commit e1218b8c0cc1
+("drm/virtio: Use vmalloc for command buffer allocations.")
+from drm-misc-next.
 
-I was thinking about co-developed, can add both :)
+Signed-off-by: David Riley <davidriley@chromium.org>
+---
+ drivers/gpu/drm/virtio/virtgpu_vq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->Thomas=2E
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 9f9b782dd332..80176f379ad5 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -358,7 +358,7 @@ static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+ 			sgt = vmalloc_to_sgt(vbuf->data_buf, vbuf->data_size,
+ 					     &outcnt);
+ 			if (!sgt)
+-				return -ENOMEM;
++				return;
+ 			vout = sgt->sgl;
+ 		} else {
+ 			sg_init_one(&sg, vbuf->data_buf, vbuf->data_size);
+-- 
+2.23.0.162.g0b9fbb3734-goog
 
-
---=20
-Sincerely yours,
-Mike
