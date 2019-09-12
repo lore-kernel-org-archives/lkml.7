@@ -2,287 +2,205 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1FFC4CECD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A10C4CECC
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6014C2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="V5jvA56Y";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="E3Lqhr4V"
+	by mail.kernel.org (Postfix) with ESMTP id 9EC262081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568287662;
+	bh=+WjIA0B5VLrmeCGXjnh14OjHg2kLIEsdlbIQO8NJQiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tj2rILkD6n/2zxK9i2EbmtKKWKIBvS+7JN6dxkivN5XF96ewBZfxYGHqpjZSSW0Z4
+	 sNI4t/vtjdDujrnzPjt/jZDvdGT7Hj+xkab8B2ELj1ca0rLB7+Fu0p1KQpFstRkvDP
+	 N4NNLJXpN8QT48xbmKv5R3OAkzR9AO+kDl8UaeAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731346AbfILLYP (ORCPT
+        id S1731369AbfILL1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:24:15 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49260 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731139AbfILLYP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:24:15 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BB48AC1DBF;
-        Thu, 12 Sep 2019 11:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568287453; bh=qmE+PSGt3DTgcRqhZ/8UmzmCeE9CVyoIijZi+QF8HW8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=V5jvA56Yh9HKHQFufzlU7MOyI+FPrUvvibT1ki4dZPWb1+iOQLNmetRvZ9viPLjvF
-         YYPzuNP9dvGlPlv9pmw5Qgd84nUEyZSFLJhZLg8yFk+4+3keZOTw/JAUP5zuL5paoB
-         LmuGwxduCfNRz0EJo+gWkiTrAB/R1QoKkTU2T3/jysV6v/8XuEYJgMzk54A2XbZ5S4
-         G5oRV4OpS6zv4XK5Mf5OX+iwPzF6JKwXoG2/JBp4eB6chM6UmjZeaHMmTnjmBE80Dw
-         MV2UQAAvSfvAHew29bylftm0MKURCSTOkc704Oz0Sy2ILiWYlpxXMT0CRkeA+2wopy
-         m2cm2DxuDsEUg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C915AA0083;
-        Thu, 12 Sep 2019 11:24:05 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 12 Sep 2019 04:24:05 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 12 Sep 2019 04:24:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N7IZPgUmBumpGh85QtZvrnhUgOnMJQx4LFlbO8lCxqrc8W0W2eQGB2UkFU/EYTVIjadx6VwAeVawF7OXB8nOoY3laEm/sSQGvxR3XaKAJv1Tm+bwmYjbfcVVFVQCFBeE27dBUjl9wahSrRoHnvCVThy9JLlMiqvSeNB+y23bulkaKo6n8OXFTw359Cq3MSJ2D9K6RlkEfg3Ii9ESU5qWHkbUeqVW8LLNr0IhbwaCXtSn3Ojy1pV0oWayOONe07GaZ5X0ye4LCwrB0BdvPLxccdGYjKJwA0zmqly1PIJtXpo1r1Pa1rQHQVXAnM/guoB72vZUrDiTwXvx0XkN9KmgtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmE+PSGt3DTgcRqhZ/8UmzmCeE9CVyoIijZi+QF8HW8=;
- b=N8iZYYpeQHiAvy6aiwP2CGZ7Tp+GNVgfYXMdEc1e99Q3FiPMkW0cPlrugyK/8Bbc10XylXRsuz/QJxVGEkfLHWcUlHFR/9Z4TMRpSKv46Jlfss3g+Z8C44llJjjx9o9p8U/vCuQpkeqvRGzavoIDRy01LrEBimgx9KoNwjAw0hEDWnUlvlPaOqPzYtG6J29jqjqRm4fPTXzu+P1HUhnH/1N9J2HNIgAWXLhJLGx+mBXMfpAJ8woe6Au3bLtvTWWJcV1Pc1Yf9Vdh6PqG2+xhnSzeCLOM2Xg2N5ZGiFb3EHpI0gFpmQxaL6kbmsXxbkK5zPn+Mrzen02v+gFpU6XnOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmE+PSGt3DTgcRqhZ/8UmzmCeE9CVyoIijZi+QF8HW8=;
- b=E3Lqhr4VapLL4xNZtFOfvgHDDF8c2QBZdG5hYLqI0stdRGiCAq2LNxRpm0P5LLt/YJfMxaMoVYzgfixNtvdZTfXbwraaOHMS29Bcyrnj42m0z9/R46xlf/CgDV455I/UR6r5plVGwKJnhklOyWfau92C7kQpPq0VRt65ad5OtJc=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB3770.namprd12.prod.outlook.com (10.255.172.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Thu, 12 Sep 2019 11:24:04 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684%5]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 11:24:04 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "minghuan.Lian@nxp.com" <minghuan.Lian@nxp.com>,
-        "mingkai.hu@nxp.com" <mingkai.hu@nxp.com>,
-        "roy.zang@nxp.com" <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thu, 12 Sep 2019 07:27:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42436 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731278AbfILL1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 07:27:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 41BCAACFE;
+        Thu, 12 Sep 2019 11:27:38 +0000 (UTC)
+Date:   Thu, 12 Sep 2019 13:27:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Nitin Gupta <nigupta@nvidia.com>
+Cc:     "willy@infradead.org" <willy@infradead.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhiqiang.hou@nxp.com" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH v3 08/11] PCI: layerscape: Modify the MSIX to the doorbell
- mode
-Thread-Topic: [PATCH v3 08/11] PCI: layerscape: Modify the MSIX to the
- doorbell mode
-Thread-Index: AQHVYT543jPAb7yXCk62zpUsNvGAlacYSeeAgA+pUvA=
-Date:   Thu, 12 Sep 2019 11:24:03 +0000
-Message-ID: <DM6PR12MB40100CC1C0E64040652C3BFBDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-9-xiaowei.bao@nxp.com>
- <20190902120147.GH9720@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190902120147.GH9720@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV1F3T1RNNU1UWXhMV1ExTkdZdE1URmxPUzA1T0RobUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhrTURrek9URTJNaTFrTlRSbUxURXha?=
- =?utf-8?B?VGt0T1RnNFppMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?STBOVGNpSUhROUlqRXpNakV5TnpZeE1EUXdPVGcxTVRZd01DSWdhRDBpVFRs?=
- =?utf-8?B?WFRTdGlZMkV6V0dwMmVHcENNWE5NTDAxeVRrbHVUVUpOUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZFVVVkdlExUllSMjVXUVdaeVYyZGxVRmxoYW1GTEsz?=
- =?utf-8?B?UmhRalE1YUhGT2IyOVBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVFdlNHOXphVkZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9cb69658-5065-4a41-51ad-08d73773b7d7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB3770;
-x-ms-traffictypediagnostic: DM6PR12MB3770:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB377099ABA908F9DE7EC79A91DAB00@DM6PR12MB3770.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39850400004)(346002)(376002)(189003)(199004)(64756008)(110136005)(7736002)(54906003)(71190400001)(33656002)(5660300002)(478600001)(14454004)(256004)(53546011)(14444005)(4326008)(6506007)(229853002)(71200400001)(25786009)(81156014)(8676002)(81166006)(486006)(53936002)(74316002)(305945005)(26005)(86362001)(55016002)(66476007)(11346002)(476003)(3846002)(9686003)(66946007)(66446008)(7696005)(186003)(76176011)(2906002)(76116006)(6116002)(66066001)(8936002)(66556008)(6246003)(316002)(52536014)(6436002)(446003)(102836004)(7416002)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3770;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0BuIHlVe3qaDfEDRIzSkaEEzGni7ptwuARVi/Xdpkpf7inBDLr3w/YuGHXQQ3UTdddUz/oVmYEoVD5iDjGIDEjU9yGZD6Jy88nH1XZcc2ia4wCdKTNwpDduC9RC6EbLA6O7B8SwNmgvmDdolnO/Dm1+yffe+mL6QZd1hOmT6cJOLwj1h713gfq+n4c9/Anv/08eH8XGTs4yB8Ci9HM+rzMagyK8r8fQZLdZt8nd1emT5s2Oop/hjGJHAOfGu7u4B/VQg/1wyX+7GYyCG79abJbfSWNhlldxUmMU1qz7khYcoEUrsnlOXteCMr2miOVE+rtOLKAgxB7f5EQLnUebYm8cl50Jeqlua7f2C3a3JIlE9vkwjeRfvjum0GNxdbjzdUmKDbzq+5zd1LWfYJz6RpnJfpzXJ2/afaOj+aWLopg4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cai@lca.pw" <cai@lca.pw>,
+        "arunks@codeaurora.org" <arunks@codeaurora.org>,
+        "yuzhao@google.com" <yuzhao@google.com>,
+        "richard.weiyang@gmail.com" <richard.weiyang@gmail.com>,
+        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
+        "khalid.aziz@oracle.com" <khalid.aziz@oracle.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: Re: [PATCH] mm: Add callback for defining compaction completion
+Message-ID: <20190912112736.GR4023@dhcp22.suse.cz>
+References: <20190910200756.7143-1-nigupta@nvidia.com>
+ <20190910201905.GG4023@dhcp22.suse.cz>
+ <MN2PR12MB30229414332206E25B9F3B8BD8B60@MN2PR12MB3022.namprd12.prod.outlook.com>
+ <20190911064520.GI4023@dhcp22.suse.cz>
+ <4ba8a6810cb481204deae4a7171dded1d8b5e736.camel@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9cb69658-5065-4a41-51ad-08d73773b7d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 11:24:03.9084
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2g0LMgFgeiwdT+mDzUGRMvwruXyvKdguD04t2GdPAK9hayJ/2X3naYkH294WwWS51nsn5Hztec0PhuyvkDXbLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3770
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ba8a6810cb481204deae4a7171dded1d8b5e736.camel@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNClNvcnJ5IGZvciB0aGUgZGVsYXkgSSB3YXMgaW4gcGFyZW50YWwgbGVhdmUgYW5kIEkn
-bSBzdGlsbCB0cnlpbmcgbm90IHRvIA0KZHJvd24gaW4gdGhlIG1haWxpbmcgbGlzdCBlbWFpbHMu
-Li4g8J+Yig0KDQpPbiBNb24sIFNlcCAyLCAyMDE5IGF0IDEzOjE6NDcsIEFuZHJldyBNdXJyYXkg
-PGFuZHJldy5tdXJyYXlAYXJtLmNvbT4gDQp3cm90ZToNCg0KPiBPbiBNb24sIFNlcCAwMiwgMjAx
-OSBhdCAxMToxNzoxM0FNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBkd19wY2llX2Vw
-X3JhaXNlX21zaXhfaXJxIHdhcyBuZXZlciBjYWxsZWQgaW4gdGhlIGV4aXNpdG5nIGRyaXZlcg0K
-PiA+IGJlZm9yZSwgYmVjYXVzZSB0aGUgbHMxMDQ2YSBwbGF0Zm9ybSBkb24ndCBzdXBwb3J0IHRo
-ZSBNU0lYIGZlYXR1cmUNCj4gPiBhbmQgbXNpeF9jYXBhYmxlIHdhcyBhbHdheXMgc2V0IHRvIGZh
-bHNlLg0KPiA+IE5vdyB0aGF0IGFkZCB0aGUgbHMxMDg4YSBwbGF0Zm9ybSB3aXRoIE1TSVggc3Vw
-cG9ydCwgYnV0IHRoZSBleGlzdGluZw0KPiA+IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgZG9l
-c24ndCB3b3JrLCBzbyB1c2UgdGhlIGRvb3JiZWxsIG1ldGhvZCB0bw0KPiA+IHN1cHBvcnQgdGhl
-IE1TSVggZmVhdHVyZS4NCg0KSHVtLi4uIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBtc2l4IGltcGxl
-bWVudGF0aW9uIGRpZCB3b3JrIG9uIG15IHVzZSBjYXNlLCANCmhvd2V2ZXIsIGF0IHRoZSB0aW1l
-IHRoZSBzZXR1cCB1c2VkIGZvciBkZXZlbG9waW5nIGFuZCB0ZXN0aW5nIHRoZSANCmltcGxlbWVu
-dGF0aW9uIG9ubHkgaGFkIG9uZSBQRiAoYnkgZGVmYXVsdCAwKS4gUGVyaGFwcyB0aGlzIGNvdWxk
-IHdhcyBpcyANCmNhdXNpbmcgdGhlIGRpZmZlcmVudCBiZWhhdmlvciBiZXR3ZWVuIG91ciBzZXR1
-cHMuDQoNCllvdSBoYXZlIG1vcmUgdGhhbiBvbmUgUEYsIHJpZ2h0Pw0KDQpJZiBJIHJlbWVtYmVy
-IGNvcnJlY3RseSwgbXNpeCBmZWF0dXJlIHN1cHBvcnQgZW50ZXJlZCBvbiBrZXJuZWwgNC4xOSAN
-CnZlcnNpb24gYW5kIGl0IHdvcmtlZCBxdWl0ZSB3ZWxsIGF0IHRoZSB0aW1lLCBidXQgSSBkaWRu
-J3QgdGVzdCBzaW5jZSANCnRoZXJlIChJJ3ZlIHRvIG1hbmFnZSB0aW1lIHRvIGJlIGFibGUgdG8g
-cmV0ZXN0IGl0IGFnYWluKSwgSSdtIGRpZG4ndCANCnNlZW4gYW55IHBhdGNoIHRoYXQgY291bGQg
-aW50ZXJmZXJlIHdpdGggdGhpcy4NCg0KUmVnYXJkcywNCkd1c3Rhdm8NCg0KDQo+ID4gDQo+ID4g
-U2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IA0KPiBS
-ZXZpZXdlZC1ieTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiANCj4g
-PiAtLS0NCj4gPiB2MjogDQo+ID4gIC0gTm8gY2hhbmdlDQo+ID4gdjM6DQo+ID4gIC0gTW9kaWZ5
-IHRoZSBjb21taXQgbWVzc2FnZSBtYWtlIGl0IGNsZWFybHkuDQo+ID4gDQo+ID4gIGRyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAzICsrLQ0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMg
-Yi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gaW5k
-ZXggMWUwNzI4Ny4uNWYwY2I5OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IEBAIC03OSw3ICs3OSw4IEBAIHN0YXRp
-YyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OCBmdW5j
-X25vLA0KPiA+ICAJY2FzZSBQQ0lfRVBDX0lSUV9NU0k6DQo+ID4gIAkJcmV0dXJuIGR3X3BjaWVf
-ZXBfcmFpc2VfbXNpX2lycShlcCwgZnVuY19ubywgaW50ZXJydXB0X251bSk7DQo+ID4gIAljYXNl
-IFBDSV9FUENfSVJRX01TSVg6DQo+ID4gLQkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9p
-cnEoZXAsIGZ1bmNfbm8sIGludGVycnVwdF9udW0pOw0KPiA+ICsJCXJldHVybiBkd19wY2llX2Vw
-X3JhaXNlX21zaXhfaXJxX2Rvb3JiZWxsKGVwLCBmdW5jX25vLA0KPiA+ICsJCQkJCQkJICBpbnRl
-cnJ1cHRfbnVtKTsNCj4gPiAgCWRlZmF1bHQ6DQo+ID4gIAkJZGV2X2VycihwY2ktPmRldiwgIlVO
-S05PV04gSVJRIHR5cGVcbiIpOw0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+IC0tIA0KPiA+
-IDIuOS41DQo+ID4gDQoNCg0K
+On Wed 11-09-19 22:33:39, Nitin Gupta wrote:
+> On Wed, 2019-09-11 at 08:45 +0200, Michal Hocko wrote:
+> > On Tue 10-09-19 22:27:53, Nitin Gupta wrote:
+> > [...]
+> > > > On Tue 10-09-19 13:07:32, Nitin Gupta wrote:
+> > > > > For some applications we need to allocate almost all memory as
+> > > > > hugepages.
+> > > > > However, on a running system, higher order allocations can fail if the
+> > > > > memory is fragmented. Linux kernel currently does on-demand
+> > > > > compaction
+> > > > > as we request more hugepages but this style of compaction incurs very
+> > > > > high latency. Experiments with one-time full memory compaction
+> > > > > (followed by hugepage allocations) shows that kernel is able to
+> > > > > restore a highly fragmented memory state to a fairly compacted memory
+> > > > > state within <1 sec for a 32G system. Such data suggests that a more
+> > > > > proactive compaction can help us allocate a large fraction of memory
+> > > > > as hugepages keeping allocation latencies low.
+> > > > > 
+> > > > > In general, compaction can introduce unexpected latencies for
+> > > > > applications that don't even have strong requirements for contiguous
+> > > > > allocations.
+> > 
+> > Could you expand on this a bit please? Gfp flags allow to express how
+> > much the allocator try and compact for a high order allocations. Hugetlb
+> > allocations tend to require retrying and heavy compaction to succeed and
+> > the success rate tends to be pretty high from my experience.  Why that
+> > is not case in your case?
+> > 
+> 
+> Yes, I have the same observation: with `GFP_TRANSHUGE |
+> __GFP_RETRY_MAYFAIL` I get very good success rate (~90% of free RAM
+> allocated as hugepages). However, what I'm trying to point out is that this
+> high success rate comes with high allocation latencies (90th percentile
+> latency of 2206us). On the same system, the same high-order allocations
+> which hit the fast path have latency <5us.
+
+Sure, that is no free cake. Unless the direct compaction can do
+something fundamentally different than the background one this is the
+amount of the work that has to be done for those situation no matter
+what. Lower latency is certainly attractive but the other part of the
+equation is _who_ is going to pay for that.
+
+> > > > > It is also hard to efficiently determine if the current
+> > > > > system state can be easily compacted due to mixing of unmovable
+> > > > > memory. Due to these reasons, automatic background compaction by the
+> > > > > kernel itself is hard to get right in a way which does not hurt
+> > > > > unsuspecting
+> > > > applications or waste CPU cycles.
+> > > > 
+> > > > We do trigger background compaction on a high order pressure from the
+> > > > page allocator by waking up kcompactd. Why is that not sufficient?
+> > > > 
+> > > 
+> > > Whenever kcompactd is woken up, it does just enough work to create
+> > > one free page of the given order (compaction_control.order) or higher.
+> > 
+> > This is an implementation detail IMHO. I am pretty sure we can do a
+> > better auto tuning when there is an indication of a constant flow of
+> > high order requests. This is no different from the memory reclaim in
+> > principle. Just because the kswapd autotuning not fitting with your
+> > particular workload you wouldn't want to export direct reclaim
+> > functionality and call it from a random module. That is just doomed to
+> > fail because different subsystems in control just leads to decisions
+> > going against each other.
+> > 
+> 
+> I don't want to go the route of adding any auto-tuning/perdiction code to
+> control compaction in the kernel. I'm more inclined towards extending
+> existing interfaces to allow compaction behavior to be controlled either
+> from userspace or a kernel driver. Letting a random module control
+> compaction or a root process pumping new tunables from sysfs is the same in
+> principle.
+
+Then I would start by listing shortcomings of the existing interfaces
+and examples how it could be extended for specific usecases.
+
+> This patch is in the spirit of simple extension to existing
+> compaction_zone_order() which allows either a kernel driver or userspace
+> (through sysfs) to control compaction.
+> 
+> Also, we should avoid driving hard parallels between reclaim and
+> compaction: the former is often necessary for forward progress while the
+> latter is often an optimization. Since contiguous allocations are mostly
+> optimizations it's good to expose hooks from the kernel that let user
+> (through a driver or userspace) control it using its own heuristics.
+
+This really depends on the allocation failure fallback strategy. If your
+specific case can gracefully fallback to smaller allocations then all
+fine, this is just an optimization. But if you are an order-3 GFP_KERNEL
+request then not making a forward progress is a matter of an OOM killer.
+So no, we are not only talking about optimization.
+ 
+> I thought hard about whats lacking in current userspace interface (sysfs):
+>  - /proc/sys/vm/compact_memory: full system compaction is not an option as
+>    a viable pro-active compaction strategy.
+
+Because...
+
+>  - possibly expose [low, high] threshold values for each node and let
+>    kcompactd act on them. This was my approach for my original patch I
+>    linked earlier. Problem here is that it introduces too many tunables.
+
+I was playing with a similar idea as well in the past as well. But this
+is quite tricky. Watermark api makes sense if you can somehow enforce
+them. What if the low watermark cannot be achieved due to excessive
+fragmentation that cannot be handled? Should the background daemon try
+endlessly consuming an unbound amount of cpu cycles? The reclaim can act
+by triggering OOM killer and free up some memory. There is nothing
+actionable like that for the compaction.
+
+> Considering the above, I came up with this callback approach which make it
+> trivial to introduce user specific policies for compaction. It puts the
+> onus of system stability, responsive in the hands of user without burdening
+> admins with more tunables or adding crystal balls to kernel.
+
+It might seem trivial to use but I am not really sure that consequences
+of using is are trivial to argue about.
+
+[...]
+> > Do that from the userspace then. If there is an insufficient interface
+> > to do that then let's talk about what is missing.
+> > 
+> 
+> Currently we only have a proc interface to do full system compaction.
+> Here's what missing from this interface: ability to set per-node, per-zone,
+> per-order, [low, high] extfrag thresholds.
+
+I would agree about per-node interface because we already do allow
+per-node policies and that's why high order demand might differ. But I
+would be really against any per-zone interfaces because zones are an
+internal implementation detail of the page allocator. We've made
+mistakes to expose that into the userspace in the past and we shouldn't
+repeat them. Per-order is quite questionable without seeing explicit
+usecases and data. E.g. are there usecases to save (how much) cycles to
+only compact up to order-3 comparing to full flagged compaction?
+-- 
+Michal Hocko
+SUSE Labs
