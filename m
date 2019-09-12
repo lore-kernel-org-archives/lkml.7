@@ -2,113 +2,62 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FF0C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C1EC49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0276E20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568280761;
-	bh=NCCGHqcUsoAmYmJAE8U3jvNgVr+TTfXH7LprAZ8aZlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L/XmY4Wr+nU50/gvCo0U4VBXrBBotr2fWSVkyJrH7NjjSvYpAe3JJjgJdMjEjkS11
-	 MXAkjxWC+etA+/TlB+Kyy1FZuVK19gdzBLzyndSSagX8oyxjVQ7l3MXKHzBTKfDFAD
-	 dHygBkHXMVYORhaZzL8ABhTPcAY9KflxH7jM/ZnU=
+	by mail.kernel.org (Postfix) with ESMTP id 740F220CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbfILJck (ORCPT
+        id S1730778AbfILJcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:32:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59570 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730218AbfILJcj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:32:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3mFlkL6LvJaHhmldjRcA8fde/UOpm7KObuOHbWtlrTc=; b=bwBZKqN5kk1WMU5x6Av29Vme7
-        4JM6sEhhrGVE5L/2MjiW4Q2LSCxBNhNzfX03LsqYWAuukw9LfptenmjZxSk1lrfy2txvcOtldCall
-        OXN22cYVw3wKOPzL+sjnK6oQ5FBrI+av85lScnLBbjnnByrmC0nRfD6dsYbNHbpU7DWBo=;
-Received: from 195-23-252-136.net.novis.pt ([195.23.252.136] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i8LSp-0006Qq-L8; Thu, 12 Sep 2019 09:32:31 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id EF65DD00AB0; Thu, 12 Sep 2019 10:32:30 +0100 (BST)
-Date:   Thu, 12 Sep 2019 10:32:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        arm@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 4/4] arm64: Kconfig: Fix EXYNOS driver dependencies
-Message-ID: <20190912093230.GG2036@sirena.org.uk>
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
- <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
+        Thu, 12 Sep 2019 05:32:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34122 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730218AbfILJcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:32:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 82A3EAD4B;
+        Thu, 12 Sep 2019 09:32:51 +0000 (UTC)
+Subject: Re: [PATCH v3 4/4] mm, slab_common: Make the loop for initializing
+ KMALLOC_DMA start from 1
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>
+References: <20190910012652.3723-1-lpf.vector@gmail.com>
+ <20190910012652.3723-5-lpf.vector@gmail.com>
+ <23cb75f5-4a05-5901-2085-8aeabc78c100@suse.cz>
+ <CAD7_sbHZuy4VZJ1KrF6TXmihfxi91Fo0OJMjuET4dpk-F7g6jA@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <1f1923e7-20a5-71b1-910c-5357a9143317@suse.cz>
+Date:   Thu, 12 Sep 2019 11:32:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aPOcx+xoD6gZZHnz"
-Content-Disposition: inline
-In-Reply-To: <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAD7_sbHZuy4VZJ1KrF6TXmihfxi91Fo0OJMjuET4dpk-F7g6jA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/11/19 4:33 PM, Pengfei Li wrote:
+> In the past two days, I am working on what you suggested.
 
---aPOcx+xoD6gZZHnz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Great!
 
-On Thu, Sep 12, 2019 at 03:48:48AM +0530, Amit Kucheria wrote:
+> So far, I have completed the coding work, but I need some time to make
+> sure there are no bugs and verify the impact on performance.
 
-> Push various EXYNOS drivers behind ARCH_EXYNOS dependency so that it
-> doesn't get enabled by default on other platforms.
-
->  config REGULATOR_S2MPS11
->  	tristate "Samsung S2MPS11/13/14/15/S2MPU02 voltage regulator"
-> +	depends on ARCH_EXYNOS
->  	depends on MFD_SEC_CORE
->  	help
->  	 This driver supports a Samsung S2MPS11/13/14/15/S2MPU02 voltage
-
-This doesn't match the changelog at all.  This driver is not
-enabled by default since it's just a normal tristate, they are
-disabled by default.  As far as I can see all this change will
-do is reduce our build test coverage by adding an artificial
-dependency without an || COMPILE_TEST.
-
---aPOcx+xoD6gZZHnz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl16EK4ACgkQJNaLcl1U
-h9Dn7gf/YZh55qkA7bTLAJHRocCdo/3Gm4Me5DO+Rnt0FyEcbwX3+E2akxCedkaX
-vqvhDX4nSIwMVmq6qzNR+c4H2lZcev0KD0Glwi6Hi5olMJAiHYmVl9Da2MNPiYAe
-mnlnY/bgrpmJ41nqm63s2PvtEWp+PL2QbnIikDS4Rb5vGLjTQGSmhGlU3o6dB3Om
-WxlDHZkCMO/9csX/UHjJUro2TPkgc9FfLnqx9N3Rs5/pL6zdXtZL5TK+6PGpkC/B
-NRx26W9Az9yIWMAu0MO7QPlcpT1b1O8dCYg3mM6fMjSiv9y3u8NLnp+zwhrHfIx+
-3xM5RHEbBYANmiIr66vXfKMKbQvvEw==
-=hxyF
------END PGP SIGNATURE-----
-
---aPOcx+xoD6gZZHnz--
+It would probably be hard to measure with sufficient confidence in terms 
+of runtime performance, but you could use e.g. ./scripts/bloat-o-meter 
+to look for unexpected code increase due to compile-time optimizations 
+becoming runtime.
