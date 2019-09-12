@@ -2,89 +2,156 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AA8C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEAAC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6495520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs63Eq7i"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5E020830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfILS0E (ORCPT
+        id S1727134AbfILS0J convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:26:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37355 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfILS0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:26:04 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c17so6146393pgg.4;
-        Thu, 12 Sep 2019 11:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HxPTM8WSNi70eKHqEf64bKvnoEPXsCHjn1C3hKc2uLw=;
-        b=gs63Eq7izGghyEJAd6zWVzgvRopaQU+FsjuSr1wef5IBOgsYROCYKcRaNxEjYPCJYj
-         vyBD9qyvNG2MAl1qi5u3HuPNhoJvqTWLaLxLVtAAAYefB23RG8YoG+0GXJ5UvYHvfz/M
-         p0fjgREeiUqnINo5Lv487HOSCJP0fiwfFcMiAMxRrSp0jsNO6DGC2t2xgIBtljEkk+kw
-         Rjz/pwieK5vE/ZnN4AELnYCt15NrdleuH8XhWg+MxHWMieKX/eyeyLaHr4C87oO3hquV
-         Ht4jR3LbKu0326UmTkXGWmAIrRn51LiGEVMeOZYePlXp4NWXaqPCJkBrYimEqKj1A6+j
-         fwNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HxPTM8WSNi70eKHqEf64bKvnoEPXsCHjn1C3hKc2uLw=;
-        b=V7KN9oVs1sekrr4e2kKN1s7vvbWUeRWK6yX4NvvsALPwMQKSbuvGKVqTtZ0KIv1Kag
-         wMLC4Z1sA05JgyK2H6hAhysihXx+azUqtCiG53fPRVtVQnk3xq93Q7zTxaZkGa2oWnhR
-         IkWcUzS7/zauJhuXKOc9plo74n6I6TmDA+nivYK9sdUjDa8ikLiFQCQa+/S+4lqFOTTX
-         mNsDLQgeZly1n2XELui5Nbhc8VDHZFdHh4w+fWHd4pfOZ2iUQWXpZcy/7p9mER6d7f3w
-         yBPj5jZQvE3ZKqyUqNBa/R48SOdvnQkq6S0cLysomPqifMP6SL3UY4LfO43W3NeRxU49
-         4XlA==
-X-Gm-Message-State: APjAAAXbQpMKg5UjE6wfBUT2+JZqJb8zpFjs9lJbjJlmNZAiK4AH3Xqe
-        wGFeUcZ2z0Q5D6nxgUgXRkU=
-X-Google-Smtp-Source: APXvYqwWjKI9A2HCgA7Wc9rY6FmY+zPVFcKqsXhvF02coC9orcmI3lK1EqYd3UVpp1KleQ1WXYYJSg==
-X-Received: by 2002:a62:ce8a:: with SMTP id y132mr11856400pfg.9.1568312763607;
-        Thu, 12 Sep 2019 11:26:03 -0700 (PDT)
-Received: from localhost.localdomain (61-231-52-128.dynamic-ip.hinet.net. [61.231.52.128])
-        by smtp.gmail.com with ESMTPSA id r1sm20747382pgv.70.2019.09.12.11.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 11:26:02 -0700 (PDT)
-From:   lecopzer@gmail.com
-X-Google-Original-From: lecopzer.chen@mediatek.com
-To:     lecopzer@gmail.com, sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yj.chiang@mediatek.com, lecopzer.chen@mediatek.com
-Subject: [PATCH v2 0/2] test_power: Add CHARGE_COUNTER and CURRENT properties   
-Date:   Fri, 13 Sep 2019 02:25:58 +0800
-Message-Id: <20190912182600.24211-1-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Sep 2019 14:26:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53778 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727041AbfILS0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 14:26:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 39C8DAEE0;
+        Thu, 12 Sep 2019 18:26:06 +0000 (UTC)
+Date:   Thu, 12 Sep 2019 20:26:04 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v8 5/7] powerpc/64: make buildable without CONFIG_COMPAT
+Message-ID: <20190912202604.14a73423@kitsune.suse.cz>
+In-Reply-To: <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
+References: <cover.1568306311.git.msuchanek@suse.de>
+        <039ed7ac686927fe169241ac72225a258d95ccfc.1568306311.git.msuchanek@suse.de>
+        <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds two common properties to test_power driver.
-Most power supply drivers has these two properties, so add them to
-test framework.
+On Thu, 12 Sep 2019 20:02:16 +0200
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
+> Le 12/09/2019 à 19:26, Michal Suchanek a écrit :
+> > There are numerous references to 32bit functions in generic and 64bit
+> > code so ifdef them out.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > v2:
+> > - fix 32bit ifdef condition in signal.c
+> > - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> > - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> > v3:
+> > - use IS_ENABLED and maybe_unused where possible
+> > - do not ifdef declarations
+> > - clean up Makefile
+> > v4:
+> > - further makefile cleanup
+> > - simplify is_32bit_task conditions
+> > - avoid ifdef in condition by using return
+> > v5:
+> > - avoid unreachable code on 32bit
+> > - make is_current_64bit constant on !COMPAT
+> > - add stub perf_callchain_user_32 to avoid some ifdefs
+> > v6:
+> > - consolidate current_is_64bit
+> > v7:
+> > - remove leftover perf_callchain_user_32 stub from previous series version
+> > v8:
+> > - fix build again - too trigger-happy with stub removal
+> > - remove a vdso.c hunk that causes warning according to kbuild test robot
+> > ---
+> >   arch/powerpc/include/asm/thread_info.h |  4 +--
+> >   arch/powerpc/kernel/Makefile           |  7 ++---
+> >   arch/powerpc/kernel/entry_64.S         |  2 ++
+> >   arch/powerpc/kernel/signal.c           |  3 +-
+> >   arch/powerpc/kernel/syscall_64.c       |  6 ++--
+> >   arch/powerpc/kernel/vdso.c             |  3 +-
+> >   arch/powerpc/perf/callchain.c          | 39 ++++++++++++++------------
+> >   7 files changed, 33 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
+> > index 8e1d0195ac36..c128d8a48ea3 100644
+> > --- a/arch/powerpc/include/asm/thread_info.h
+> > +++ b/arch/powerpc/include/asm/thread_info.h
+> > @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
+> >   	return (ti->local_flags & flags) != 0;
+> >   }
+> >   
+> > -#ifdef CONFIG_PPC64
+> > +#ifdef CONFIG_COMPAT
+> >   #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
+> >   #else
+> > -#define is_32bit_task()	(1)
+> > +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
+> >   #endif
+> >   
+> >   #if defined(CONFIG_PPC64)  
+> 
+> [...]
+> 
+> > +static inline int current_is_64bit(void)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_COMPAT))
+> > +		return IS_ENABLED(CONFIG_PPC64);
+> > +	/*
+> > +	 * We can't use test_thread_flag() here because we may be on an
+> > +	 * interrupt stack, and the thread flags don't get copied over
+> > +	 * from the thread_info on the main stack to the interrupt stack.
+> > +	 */
+> > +	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
+> > +}  
+> 
+> 
+> Since at least commit ed1cd6deb013 ("powerpc: Activate 
+> CONFIG_THREAD_INFO_IN_TASK") 
+> [https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed1cd6d] 
+> the above comment is wrong and current_is_64bit() is equivalent to 
+> !is_32bit_task()
+> 
+> See https://github.com/linuxppc/issues/issues/275
+> 
+> Christophe
 
-Changes in v2:
-	- Seperate CHARGE_COUNTER and CURRENT into 2 patches.
-	- Correct CHARGE_COUNTER whicch can be negative.
+I aim at changing the code as little as possible here. A separate patch
+on top removing this function would be ok?
 
+Thanks
 
-lecopzer (2):
-  test_power: Add CHARGE_COUNTER properties
-  test_power: Add CURRENT properties
-
- drivers/power/supply/test_power.c | 61 +++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
--- 
-2.17.1
-
+Michal
