@@ -2,113 +2,113 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F7C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6F1C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6512F20692
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBC320856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBJCBWPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733237AbfILQ3r (ORCPT
+        id S1733241AbfILQdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:29:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13461 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733217AbfILQ3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:29:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 09:29:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="asc'?scan'208";a="386093417"
-Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.96])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Sep 2019 09:29:46 -0700
-Message-ID: <869eb0382ed7c639332a5db5e29eec143c37a809.camel@intel.com>
-Subject: Re: linux-next: manual merge of the net-next tree with the net tree
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Reply-To: jeffrey.t.kirsher@intel.com
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ilya Maximets <i.maximets@samsung.com>
-Date:   Thu, 12 Sep 2019 09:29:46 -0700
-In-Reply-To: <20190913022535.65ac3420@canb.auug.org.au>
-References: <20190913022535.65ac3420@canb.auug.org.au>
-Organization: Intel
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+R+RqxlQSR8iroAeA21A"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 12 Sep 2019 12:33:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43101 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730723AbfILQdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:33:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id c19so24475048edy.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=msUdi5YBel2OVDrDo1+uyLwwUusTvM/xvzLZubYz7OA=;
+        b=GBJCBWPgl2dc8+HNuQf1RTfy6jPLqbTh7mDxwpHH1oyPHvV3zzKhsqGVQ3FrC+IVIg
+         3i5IOdDOe/aB8PktDA3fGkFDAavYUp5fM99tchMLrXKSpBs9HTJgC37+nGripDuJoXqi
+         IJnQ2CIiUJPqgf4kIqQq2OlnURdj0mHSz5wYNccZ0O2kOy2oBC5kEheb90BvkailMY0j
+         AuV63Y41t4Mwh4bnFZLN9Iot9xz0UGLhyb9sDwWsuCOjZdjEmABHXwLfm2Lsl5gicOYP
+         ToveXkW0adFoiSyrL3Tmv4jJvj1lKiiTS0txnouBBy3qchwB+2zEnvsAucyePTpRagZS
+         MgKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=msUdi5YBel2OVDrDo1+uyLwwUusTvM/xvzLZubYz7OA=;
+        b=XdcTkSxzPiBZVXu4jPeoBj+IS2BZZMCRXlMR7JSkyt6i2QWaP2e9wIJ8ms4Xqv+AvN
+         h/Qs6ra6UePIccMG5ZffRy7obyo4tx3j1TFrVaColhSEkF3q4cP0mEv4bYj5qzgfjoPf
+         z4SRR3BKPXHDw22vcej2jVLUqWMAvxTfGx/JDkBFD+NSstzavnrhmX5Blk82I58oqxB8
+         fxkseSSsKgERTwbpfhuVIh75MWsO4j9VY3jQG43hnCKpFcl7I9mCeMHPWrMDSQbRF3Yp
+         Gk30o2C5Fxs2MsgQSjhQsk/5TnkO21fdLfIdwg8hXl22Jg9b07P5dUq3VaMoiTnUaaEL
+         teaw==
+X-Gm-Message-State: APjAAAUFRDGZtYhyfWV7UhZd8x8+sXiuehNa1wNEnSdLEZlfsiRJgws2
+        x4TDBRoJpXk+dcoF9uIox+LpTY4/opmEwwqbHeLDVt9J
+X-Google-Smtp-Source: APXvYqx9ZSP+/BXU64qwVN0heopbP6R5011EOG98+cGZ7+O7vLQ5X/xwHHg3SvqQLy021lp3JGhdK5gSYLWEuS+5Z1U=
+X-Received: by 2002:a17:907:20f1:: with SMTP id rh17mr4026893ejb.71.1568306018629;
+ Thu, 12 Sep 2019 09:33:38 -0700 (PDT)
 MIME-Version: 1.0
+References: <b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org>
+In-Reply-To: <b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org>
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+Date:   Thu, 12 Sep 2019 09:33:27 -0700
+Message-ID: <CAOCOHw4ri6ikRpkJWtAdaPQiMhdKMrdNciqQ8YNaXR+ApSnAew@mail.gmail.com>
+Subject: Re: [PATCH] interconnect: Disallow interconnect core to be built as a module
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 1:07 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> Building individual drivers as modules is fine but allowing a core
+> framework to be built as a module makes it really complex and should be
+> avoided.
+>
+> Whatever uses the interconnect core APIs must also be built as a module
+> if interconnect core is built as module, else we will see compilation
+> failures.
+>
+> If another core framework (like cpufreq, clk, etc), that can't be built
+> as module, needs to use interconnect APIs then we will start seeing
+> compilation failures with allmodconfig configurations as the symbols
+> (like of_icc_get()) used in other frameworks will not be available in
+> the built-in image.
+>
+> Disallow the interconnect core to be built as a module to avoid all
+> these issues.
+>
 
---=-+R+RqxlQSR8iroAeA21A
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-On Fri, 2019-09-13 at 02:25 +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the net-next tree got a conflict in:
->=20
->   drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
->=20
-> between commit:
->=20
->   5c129241e2de ("ixgbe: add support for AF_XDP need_wakeup feature")
->=20
-> from the net tree and commit:
->=20
->   bf280c0387eb ("ixgbe: fix double clean of Tx descriptors with xdp")
->=20
-> from the net-next tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your
-> tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any
-> particularly
-> complex conflicts.
->=20
-
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-
-On how you fixed up the conflict.
-
---=-+R+RqxlQSR8iroAeA21A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl16cnoACgkQ5W/vlVpL
-7c5x4A//XxfN9S4i0lwmc/GIFAWfPZ6SzCyKX5sf5/XIPMt2eBlIljiN6fKCf1m4
-T9dX+7NNUZT1OPIYFrGnB1Ahs1ARQlvVDSDybCk0oYGdIsglGGiDA2YhXfR/LRIT
-LJhdyo38VccRSeGjxixrzrKw5ut2RJ5NcRL5FGzuZ+i2BNVRIxjh2gW+cmGqT1gM
-nu3ph7Skn85072PW4vsgKs/SDPbZ9ouHvafRkq6TnDrmBMLKpMplSw2ov/HlYGvo
-OgtSg7pEcWeVjS2VXX18fDkoVopzS18fF6sR7i13MBi4A8o68y2d5yBTGuo9rgAd
-FEaZyN7So/Y39KmjMs1U3XAUDEIJ4of0BdpdxzC842SmUDV0jnA97TC8woZPltkd
-4hYOUTIbFz9/PEezna3aGCP8M5ZEdEtEtNGCILdR45A9jAONdQQDjPgRoXJz/UpU
-+sz5Hz45rMU4oN8qG2CHhu+CU+q1Y9gO7YQoEICaJs1IX4XUBJZs3gtMVXyS0IeY
-ybG/33YUVrYyJbvUMmPe9y3oqs2WGhwaWrJQrqe9tpy59GfMq0eKhQQN7LGVEJKb
-h1JLrcXn2Euxtd1hwqLlwxIYEf18dITaRU+MgJ6zz4Voc60XbZivEzS4HA1Ekjqy
-gApl3VivUUSckF45skrChKJNgiCeD+2j9Q77VAu1+UtsHecJGE0=
-=Z0mz
------END PGP SIGNATURE-----
-
---=-+R+RqxlQSR8iroAeA21A--
-
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/interconnect/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+> index bfa4ca3ab7a9..b6ea8f0a6122 100644
+> --- a/drivers/interconnect/Kconfig
+> +++ b/drivers/interconnect/Kconfig
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menuconfig INTERCONNECT
+> -       tristate "On-Chip Interconnect management support"
+> +       bool "On-Chip Interconnect management support"
+>         help
+>           Support for management of the on-chip interconnects.
+>
+> --
+> 2.21.0.rc0.269.g1a574e7a288b
+>
