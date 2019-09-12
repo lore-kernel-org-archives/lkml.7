@@ -2,109 +2,185 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BCAC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8753C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC56D20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RE3m/EJv"
+	by mail.kernel.org (Postfix) with ESMTP id A9E512075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbfILNB4 (ORCPT
+        id S1731999AbfILNCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:01:56 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:28313 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfILNBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:01:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568293315; x=1599829315;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=jct20q5lVCpJ9JMjhtyUVKj8GV6yFUouYDE9nzby1vo=;
-  b=RE3m/EJvQTzrG6937LGLAqE+skCRJxW/f8RgfYGAWL3XBK3Zx37mgmhQ
-   3PPbTaCtCM/66/zr9RLNX2CphvVhwAILlpo1JlzXOPEZCQfmhp0V0JZe3
-   Bmmhc9nSAyPUSNSjmJzoGyo9W2TVt3gUdqw67xHflJBfRwPvmQVg8LE5a
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
-   d="scan'208";a="420818798"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 12 Sep 2019 13:01:54 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id F035BA2240;
-        Thu, 12 Sep 2019 13:01:50 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:50 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.82) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:44 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v6 3/7] PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
-Date:   Thu, 12 Sep 2019 16:00:41 +0300
-Message-ID: <20190912130042.14597-4-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
+        Thu, 12 Sep 2019 09:02:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:33888 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731937AbfILNCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:02:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA45928;
+        Thu, 12 Sep 2019 06:02:01 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09BF13F71F;
+        Thu, 12 Sep 2019 06:02:01 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 14:01:59 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+ ls1088a
+Message-ID: <20190912130159.GF9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-11-xiaowei.bao@nxp.com>
+ <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329926C6F424C4BE1CE9B787F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.82]
-X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB329926C6F424C4BE1CE9B787F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
-but there is no actual support for it.
+On Tue, Sep 03, 2019 at 02:01:32AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年9月2日 21:06
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>
+> > Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+> > ls1088a
+> > 
+> > On Mon, Sep 02, 2019 at 11:17:15AM +0800, Xiaowei Bao wrote:
+> > > Add PCIe EP node for ls1088a to support EP mode.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - Remove the pf-offset proparty.
+> > > v3:
+> > >  - No change.
+> > >
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31
+> > ++++++++++++++++++++++++++
+> > >  1 file changed, 31 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > index c676d07..da246ab 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > @@ -483,6 +483,17 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3400000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > 
+> > Here you specify a fallback "fsl,ls-pcie-ep" that is removed by this series.
+> > 
+> > Besides that, this looks OK.
+> 
+> As explained, the "fsl,ls-pcie-ep" is needed, due to the u-boot will fixup the status
+> property base on this compatible, I think we reserve this compatible is helpfully,
+> if delate this compatible, I have to modify the code of bootloader.
 
-Trying to access the VPD (for example, as part of lspci -vv or when
-reading the vpd sysfs file), results in the following warning print:
+I assume you mean that u-boot fixes up "fsl,ls-pcie-ep" *only* for ls1046a
+devices?
 
-  pcieport 0001:00:00.0: VPD access failed.  This is likely a firmware bug on this device.  Contact the card vendor for a firmware update
+Thanks,
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/vpd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Andrew Murray
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 4963c2e2bd4c..7915d10f9aa1 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -571,6 +571,12 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005f, quirk_blacklist_vpd);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID,
- 		quirk_blacklist_vpd);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
-+/*
-+ * The Amazon Annapurna Labs 0x0031 device id is reused for other non Root Port
-+ * device types, so the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-+ */
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-+			      PCI_CLASS_BRIDGE_PCI, 8, quirk_blacklist_vpd);
- 
- /*
-  * For Broadcom 5706, 5708, 5709 rev. A nics, any read beyond the
--- 
-2.17.1
-
+> 
+> Thanks 
+> XIaowei
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +			reg = <0x00 0x03400000 0x0 0x00100000
+> > > +			       0x20 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <24>;
+> > > +			num-ob-windows = <128>;
+> > > +			max-functions = /bits/ 8 <2>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		pcie@3500000 {
+> > >  			compatible = "fsl,ls1088a-pcie";
+> > >  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller
+> > registers */
+> > > @@ -508,6 +519,16 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3500000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > > +			reg = <0x00 0x03500000 0x0 0x00100000
+> > > +			       0x28 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <6>;
+> > > +			num-ob-windows = <8>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		pcie@3600000 {
+> > >  			compatible = "fsl,ls1088a-pcie";
+> > >  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller
+> > registers */
+> > > @@ -533,6 +554,16 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3600000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > > +			reg = <0x00 0x03600000 0x0 0x00100000
+> > > +			       0x30 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <6>;
+> > > +			num-ob-windows = <8>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		smmu: iommu@5000000 {
+> > >  			compatible = "arm,mmu-500";
+> > >  			reg = <0 0x5000000 0 0x800000>;
+> > > --
+> > > 2.9.5
+> > >
