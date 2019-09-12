@@ -2,137 +2,175 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C5CC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C9CC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18522208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17A32084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpKGvClt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D3DKMYG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbfILI4N (ORCPT
+        id S1730480AbfILI47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:56:13 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38692 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfILI4M (ORCPT
+        Thu, 12 Sep 2019 04:56:59 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39596 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730444AbfILI46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:56:12 -0400
-Received: by mail-yw1-f66.google.com with SMTP id f187so8865255ywa.5;
-        Thu, 12 Sep 2019 01:56:12 -0700 (PDT)
+        Thu, 12 Sep 2019 04:56:58 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u26so956177lfg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ba0Mg0PjzFl5tyazyjtWzd4MBHG4kyyWf35Son0d6lA=;
-        b=QpKGvCltuwLS1EvJHQvNjmcaYy/JUMTCT0iVaXYh9wkBOauFKMUiP0kYkUwR5+bDgH
-         0qakOzwgCtqVB/ZqH2NihcyADJAd5R4MhpwmexILx739pxC+qBikD41/PA4sMmQ9YbcF
-         K13487GS0MfqO3xVQt7IFbn4Un4c+FbnpWas7ti/I2vlFozGjrYYAJQFYkiyC8Yn2Pco
-         VyWW0ZmtMlVUw470exQCGI/hxRpM+5T4RiLhx2gunLQCiWjLh+yGV8+Qoj9b1sy0X26U
-         eaO9NwDi+FNx3VwvMRpzp7JrHQwjWvM1jlizyw5h9IeqU3TkN41OpzugLKv5hasQPYyS
-         +fwQ==
+         :cc;
+        bh=O4rNsBBKosmEKuM20N1o+kTVCcH97Bng0NbBw9yNr8E=;
+        b=D3DKMYG24yUN1RDiYO9JGi5OzLJnsDAX1mduveT541WYCPUsRVLNeQV1gqCXQgLQnA
+         hSiysE5eP/ctTfnppUzrQP2sahmP2yiTiw5cgHoArQeUEzOcvqySc7NEkB3mq2JOPbqb
+         juhTRCK1xJvKgjLJjOaw9fyowdFgeNSXBHqzOVPQ3FI71LSnFKfrkfliHRc1JpIqWAv3
+         Iwkq20k06kaGR2jt1/Jec+6iT2dpYsmvt5MP2pWkVLAmxhvqyE+X931w6bdf2z831BDg
+         sDW1oCFvbn/+Q3/cq/Gj6AoYXkHffK4vgwEIVqhmEtZhQTeG31pOB+Je8xQdKsVuPJ7W
+         TUoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ba0Mg0PjzFl5tyazyjtWzd4MBHG4kyyWf35Son0d6lA=;
-        b=QFvHi1oh8UqebrcZ55BbMgOCnesA9cxDlwLty13VkmukDbRsoDLzw4eVZY1r7YRcCp
-         TcIeis+Js3SeFWslLrd2x0ojUCIxhs6VpU9Usyd83QsBRlxNb4fkiTo8+uWPCq7sfnYx
-         vY5WgDHzHK1peiDrJST/IIfGbwaBQTR5sneobPMb6GZywArQI7zunRzmJwYEB//tqMcE
-         Q6scmGMcfa5xnAB+tStxZW74timxL1vM5Cus3kscDzD95z4OSOFliNN30A0e7x8SxXf4
-         6s1k2sLCptN6M7NfSyHj5N4GmSeyj576UizutI8RgaPjy02kS8dH5Im2dUcLnzlNgHrc
-         ENEA==
-X-Gm-Message-State: APjAAAVf0hk7rrTY6+65ztjSXrmOaDi/XLvOHeud8h51qNzUKThJNClo
-        11LNZr46SdXSknesBxmn4F5bXPJJqWRT+qlu9dM=
-X-Google-Smtp-Source: APXvYqxo4SZfAeLiIv90NX3eRPxzJ4KtqyBZq8+C62dbsPbxsixwbH1Gt2YyD5fq4Xgxd8rfuSeUHty7pKSI0eZMX5c=
-X-Received: by 2002:a81:9404:: with SMTP id l4mr27056745ywg.352.1568278571868;
- Thu, 12 Sep 2019 01:56:11 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=O4rNsBBKosmEKuM20N1o+kTVCcH97Bng0NbBw9yNr8E=;
+        b=tgNwkdzy3X14oefgznUTkhF3SOCJOlAHK9CLfblgLtSj/SVr8s3zXdfcxav5dKXiQz
+         3npHqqo/Guzi5pr1LxaGcLhiUMZ6qe3OcNW2pIzJMQx190kNAE7MyKwheZl/xFkPQwFn
+         iC5LWVhcQihamwJASG0eDcQwKlJxqoNpXRpR1dclgNa8HDXutMRwxV0ulb51ajplDg/e
+         44yt6N0HfgqLmvy85CDUcwTCOvcerUkCHNvfd2dDqmNHKbJ8GGDPV5z7YdJyiJMAfJBx
+         mfb6LnEL4wVvr5dqd1hP0lRF97Z13uiBIXBjd2+npbhpCgSPI/gUqo7PkwSThvHT6xtn
+         LOHA==
+X-Gm-Message-State: APjAAAXvt5VeKfji83pdYTzznpt3zmbR42nGD8NIDQCziXyMPzLlHIde
+        HVDH4ul82/A8XD566VrQA9WLQjGf+u3g6nv6zwShMA==
+X-Google-Smtp-Source: APXvYqxylrMcLmkUlXrbh6djdas3oUwzeZqQnSvt9y91CIt5cYSOJplKhnz1LXiShn8fiV4G7ad4/5yw3Umgt3fgxhU=
+X-Received: by 2002:a19:48c3:: with SMTP id v186mr27114921lfa.141.1568278614888;
+ Thu, 12 Sep 2019 01:56:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190912041817.23984-1-huangfq.daxian@gmail.com> <87tv9hew2k.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87tv9hew2k.fsf@vitty.brq.redhat.com>
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Date:   Thu, 12 Sep 2019 16:56:00 +0800
-Message-ID: <CABXRUiTD=yRRQFfSdS=2e9QaO-PEgvZ=LBar927rL04G59nHxQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+In-Reply-To: <20190705160536.12047-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 09:56:43 +0100
+Message-ID: <CACRpkdZstL3PMtLN3VCDmHq7vSNdO0Q8Wf1sYb5VnwCMs=0uJQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Geert Uytterhoeven <geert+renesas@glider.be>, adelva@google.com
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=8812=
-=E6=97=A5=E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=884:51=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Fuqian Huang <huangfq.daxian@gmail.com> writes:
->
-> > Emulation of VMPTRST can incorrectly inject a page fault
-> > when passed an operand that points to an MMIO address.
-> > The page fault will use uninitialized kernel stack memory
-> > as the CR2 and error code.
-> >
-> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ER=
-ROR
-> > exit to userspace;
->
-> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
-> is not a proper reaction to a userspace-induced condition (or ever).
->
-> I also looked at VMPTRST's description in Intel's manual and I can't
-> find and explicit limitation like "this must be normal memory". We're
-> just supposed to inject #PF "If a page fault occurs in accessing the
-> memory destination operand."
->
-> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
-> think that nobody should be doing that I'd rather prefer injecting #GP.
->
-> Please tell me what I'm missing :-)
+On Fri, Jul 5, 2019 at 5:05 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-I found it during the code review, and it looks like the problem the
-commit 353c0956a618 ("KVM: x86: work around leak of uninitialized
-stack contents (CVE-2019-7222)")
-mentions. So I fixed it in a similar way.
+> GPIO controllers are exported to userspace using /dev/gpiochip*
+> character devices.  Access control to these devices is provided by
+> standard UNIX file system permissions, on an all-or-nothing basis:
+> either a GPIO controller is accessible for a user, or it is not.
+> Currently no mechanism exists to control access to individual GPIOs.
+>
+> Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
+> and expose them as a new gpiochip.  This is useful for implementing
+> access control, and assigning a set of GPIOs to a specific user.
+> Furthermore, it would simplify and harden exporting GPIOs to a virtual
+> machine, as the VM can just grab the full virtual GPIO controller, and
+> no longer needs to care about which GPIOs to grab and which not,
+> reducing the attack surface.
+>
+> Virtual GPIO controllers are instantiated by writing to the "new_device"
+> attribute file in sysfs:
+>
+>     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+>            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+>             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+>
+> Likewise, virtual GPIO controllers can be destroyed after use:
+>
+>     $ echo gpio-virt-agg.<N> \
+>             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Aggregating GPIOs and exposing them as a new gpiochip was suggested in
+> response to my proof-of-concept for GPIO virtualization with QEMU[1][2].
+>
+> Sample session on r8a7791/koelsch:
+>
+>   - Disable the leds node in arch/arm/boot/dts/r8a7791-koelsch.dts
+>
+>   - Create virtual aggregators:
+>
+>     $ echo "e6052000.gpio 19 20" \
+>             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+>
+>     gpio-virt-agg gpio-virt-agg.0: GPIO 0 => e6052000.gpio/19
+>     gpio-virt-agg gpio-virt-agg.0: GPIO 1 => e6052000.gpio/20
+>     gpiochip_find_base: found new base at 778
+>     gpio gpiochip8: (gpio-virt-agg.0): added GPIO chardev (254:8)
+>     gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-virt-agg.0)
+>
+>     $ echo "e6052000.gpio 21, e6050000.gpio 20 21 22" \
+>             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+>
+>     gpio-virt-agg gpio-virt-agg.1: GPIO 0 => e6052000.gpio/21
+>     gpio-virt-agg gpio-virt-agg.1: GPIO 1 => e6050000.gpio/20
+>     gpio-virt-agg gpio-virt-agg.1: GPIO 2 => e6050000.gpio/21
+>     gpio-virt-agg gpio-virt-agg.1: GPIO 3 => e6050000.gpio/22
+>     gpiochip_find_base: found new base at 774
+>     gpio gpiochip9: (gpio-virt-agg.1): added GPIO chardev (254:9)
+>     gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-virt-agg.1)
+>
+>   - Adjust permissions on /dev/gpiochip[89] (optional)
+>
+>   - Control LEDs:
+>
+>     $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
+>     $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
+>     $ gpioset gpiochip9 0=0     # LED8 OFF
+>     $ gpioset gpiochip9 0=1     # LED8 ON
+>
+>   - Destroy virtual aggregators:
+>
+>     $ echo gpio-virt-agg.0 \
+>             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+>     $ echo gpio-virt-agg.1 \
+>             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+>
+> Thanks for your comments!
+>
+> References:
+>   - [1] "[PATCH QEMU POC] Add a GPIO backend"
+>         (https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1-geert+renesas@glider.be/)
+>   - [2] "Getting To Blinky: Virt Edition / Making device pass-through
+>          work on embedded ARM"
+>         (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
 
->
-> >  however, it is not an easy fix, so for now just ensure
-> > that the error code and CR2 are zero.
-> >
-> > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 290c3c3efb87..7f442d710858 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -5312,6 +5312,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *=
-vcpu, gva_t addr, void *val,
-> >       /* kvm_write_guest_virt_system can pull in tons of pages. */
-> >       vcpu->arch.l1tf_flush_l1d =3D true;
-> >
-> > +     memset(exception, 0, sizeof(*exception));
-> >       return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
-> >                                          PFERR_WRITE_MASK, exception);
-> >  }
->
-> --
-> Vitaly
+I'm looping in my friends at Google for this discussion.
+
+They need a virtualized gpio_chip for their Android emulator,
+and their current approach for other devices has been around
+using virtio in most cases and an emulated AC97 for the
+audio case as far as I remember.
+
+It would be great to have their input on this so we can create a
+virtualization/aggregate that works for all.
+
+Please include adelva@google.com on future postings of this!
+
+Yours,
+Linus Walleij
