@@ -7,120 +7,126 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ED7C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A88DC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B498320830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5750620830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfILUIw (ORCPT
+        id S1727925AbfILUJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:08:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35549 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbfILUHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:07:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 13:07:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="336688212"
-Received: from chang-linux-3.sc.intel.com ([172.25.66.185])
-  by orsmga004.jf.intel.com with ESMTP; 12 Sep 2019 13:07:52 -0700
-From:   "Chang S. Bae" <chang.seok.bae@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v8 02/17] selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base write
-Date:   Thu, 12 Sep 2019 13:06:43 -0700
-Message-Id: <1568318818-4091-3-git-send-email-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
-References: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
+        Thu, 12 Sep 2019 16:09:28 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:22175 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfILUJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:09:28 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: GNDS3s3JLom+rZWyh4asQBjdgjybdJ0dcQ2hqdbq+vyBSvzIzNWxxxEAF4k8wOmiy69Y1T4wFM
+ Icg+maMwEfwBJz4AmKAGEODNWM6ady0L8oH4dTjP2Nb1P+V4K80SRBwe9vbq9LToyj4obuNTHT
+ Vknd8HlloevCm0da1nN5v5a9X1FVo6fzd0DnPBz5CLTd22lctO6VBFgbauUSdrFyyo/69HRP6F
+ sZvmlxkNMMmMZqLmDomdzkTO+VojPt96Hz1RDLwLMTvvFRfTCnGeaNHOMu56urR3aMusoO+A9M
+ rXw=
+X-IronPort-AV: E=Sophos;i="5.64,498,1559545200"; 
+   d="scan'208";a="47283694"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Sep 2019 13:09:27 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 12 Sep 2019 13:09:25 -0700
+Received: from sekiro.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 12 Sep 2019 13:09:24 -0700
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
+        <ludovic.desroches@microchip.com>, <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <claudiu.beznea@microchip.com>
+Subject: [PATCH 1/3] dt-bindings: sdhci-of-at91: new compatible string and update properties
+Date:   Thu, 12 Sep 2019 22:09:06 +0200
+Message-ID: <20190912200908.31318-1-ludovic.desroches@microchip.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test validates that the selector is not changed when a ptracer writes
-the ptracee's GS base.
+There is a new compatible string for the SAM9X60 sdhci device. It involves
+an update of the properties about the clocks stuff.
 
-Originally-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 ---
+ .../devicetree/bindings/mmc/sdhci-atmel.txt   | 25 ++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-Changes from v7:
-* Trimmed down the changes as most codes from v7 were already merged
-* Included Andy's additional comments and messages when testing old
-  kernels
-* Used 'GS base' consistently, instead of 'GSBASE'
----
- tools/testing/selftests/x86/fsgsbase.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 15a329d..950a48b 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
- 	wait(&status);
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+index 1b662d7171a0..364ceea330b6 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+@@ -5,12 +5,19 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties used by the
+ sdhci-of-at91 driver.
  
- 	if (WSTOPSIG(status) == SIGTRAP) {
--		unsigned long gs, base;
-+		unsigned long gs;
- 		unsigned long gs_offset = USER_REGS_OFFSET(gs);
- 		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
+ Required properties:
+-- compatible:		Must be "atmel,sama5d2-sdhci".
++- compatible:		Must be "atmel,sama5d2-sdhci" or "microchip,sam9x60-sdhci".
+ - clocks:		Phandlers to the clocks.
+-- clock-names:		Must be "hclock", "multclk", "baseclk";
++- clock-names:		Must be "hclock", "multclk", "baseclk" for
++			"atmel,sama5d2-sdhci".
++			Must be "hclock", "multclk" for "microchip,sam9x60-sdhci".
  
-@@ -481,7 +481,6 @@ static void test_ptrace_write_gsbase(void)
- 			err(1, "PTRACE_POKEUSER");
++Optional properties:
++- assigned-clocks:	The same with "multclk".
++- assigned-clock-rates	The rate of "multclk" in order to not rely on the
++			gck configuration set by previous components.
  
- 		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
--		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
- 
- 		/*
- 		 * In a non-FSGSBASE system, the nonzero selector will load
-@@ -489,11 +488,21 @@ static void test_ptrace_write_gsbase(void)
- 		 * selector value is changed or not by the GSBASE write in
- 		 * a ptracer.
- 		 */
--		if (gs == 0 && base == 0xFF) {
--			printf("[OK]\tGS was reset as expected\n");
--		} else {
-+		if (gs != *shared_scratch) {
- 			nerrs++;
--			printf("[FAIL]\tGS=0x%lx, GSBASE=0x%lx (should be 0, 0xFF)\n", gs, base);
-+			printf("[FAIL]\tGS changed to %lx\n", gs);
+-Example:
 +
-+			/*
-+			 * On older kernels, poking a nonzero value into the
-+			 * base would zero the selector.  On newer kernels,
-+			 * this behavior has changed -- poking the base
-+			 * changes only the base and, if FSGSBASE is not
-+			 * available, this may not effect.
-+			 */
-+			if (gs == 0)
-+				printf("\tNote: this is expected behavior on older kernels.\n");
-+		} else {
-+			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
- 		}
- 	}
++Examples:
  
+ sdmmc0: sdio-host@a0000000 {
+ 	compatible = "atmel,sama5d2-sdhci";
+@@ -18,4 +25,16 @@ sdmmc0: sdio-host@a0000000 {
+ 	interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
+ 	clocks = <&sdmmc0_hclk>, <&sdmmc0_gclk>, <&main>;
+ 	clock-names = "hclock", "multclk", "baseclk";
++	assigned-clocks = <&sdmmc0_gclk>;
++	assigned-clock-rates = <480000000>;
++};
++
++sdmmc0: sdio-host@80000000 {
++	compatible = "microchip,sam9x60-sdhci";
++	reg = <0x80000000 0x300>;
++	interrupts = <12 IRQ_TYPE_LEVEL_HIGH 0>;
++	clocks = <&pmc PMC_TYPE_PERIPHERAL 12>, <&pmc PMC_TYPE_GCK 12>;
++	clock-names = "hclock", "multclk";
++	assigned-clocks = <&pmc PMC_TYPE_GCK 12>;
++	assigned-clock-rates = <100000000>;
+ };
 -- 
-2.7.4
+2.23.0
 
