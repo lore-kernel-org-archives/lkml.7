@@ -3,122 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F0C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE831C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024EF20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C49820830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbfILMgg (ORCPT
+        id S1731659AbfILMht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:36:36 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:53382 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731283AbfILMgf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:36:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Tc9p5so_1568291732;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0Tc9p5so_1568291732)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 12 Sep 2019 20:35:34 +0800
-Date:   Thu, 12 Sep 2019 20:35:32 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190912123532.GB16200@aaronlu>
-References: <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
- <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
+        Thu, 12 Sep 2019 08:37:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49940 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731283AbfILMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:37:48 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 435B111A1F
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 12:37:48 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id u10so2363977wrn.21
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:37:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pTZv96VgCJM8wv+X/QLpv4XlW1A0G4Xstp3NDxBDKyo=;
+        b=iRonZATuTE5kLETYiqAXCZeLd16VrvOo8gzTjO3IltVtj7QIt8qDnz46WhNoArmiVi
+         M38ZOFOD59QwyFsBjs1CkAjkSE8YNkAMJTtYKfcYLdk24CSpqgGFVlM0p32mC3acg7Wm
+         9+NrWo/l0lJ7SJmFB2tDd5KAyARvGMrjs+/wHjfBTFL17E/5M8SRzpNbJT71UVmKAilp
+         yVvJH8Ydyg2U0sWCXqiXn+s6GWsfiKwHGjC5gsfc4CFDUwl18Borz9Q7jbCXtHO+aykr
+         asWirSGQl8BrSocJKwnHVT1EoAOp4laX6NPuUYA0v5diCT4mHn2gumgUn8n4ji7/fFal
+         riGg==
+X-Gm-Message-State: APjAAAWlYtatEQ5rWQqeQdGfZsCFcJsJ0iwNYIU9ZjrODCCAFiG37Eh+
+        Ffwy7u0CCbcWeYeXtS1XKbhlpKR2p3Fd2mrXO0fq5SDdz5tWZsi9TCw6IXpvr6GXJlLVAnadcJY
+        B9WQ147DfdgpuOLAK8ASF+epX
+X-Received: by 2002:adf:d4c5:: with SMTP id w5mr34308605wrk.280.1568291866878;
+        Thu, 12 Sep 2019 05:37:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw1mhu4LnobJt1OA0eB+e58fTNMsmy0X4vUrwR5SrILpKjnRo959U2YZY9ItQtIR8LbFYrB3Q==
+X-Received: by 2002:adf:d4c5:: with SMTP id w5mr34308589wrk.280.1568291866654;
+        Thu, 12 Sep 2019 05:37:46 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id m18sm33245834wrg.97.2019.09.12.05.37.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2019 05:37:46 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+To:     Wanpeng Li <wanpeng.li@hotmail.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
+ <a1c6c974-a6f2-aa71-aa2e-4c987447f419@redhat.com>
+ <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
+Date:   Thu, 12 Sep 2019 14:37:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:47:34PM -0400, Vineeth Remanan Pillai wrote:
-> > > So both of you are working on top of my 2 patches that deal with the
-> > > fairness issue, but I had the feeling Tim's alternative patches[1] are
-> > > simpler than mine and achieves the same result(after the force idle tag
-> >
-> > I think Julien's result show that my patches did not do as well as
-> > your patches for fairness. Aubrey did some other testing with the same
-> > conclusion.  So I think keeping the forced idle time balanced is not
-> > enough for maintaining fairness.
-> >
-> There are two main issues - vruntime comparison issue and the
-> forced idle issue.  coresched_idle thread patch is addressing
-> the forced idle issue as scheduler is no longer overloading idle
-> thread for forcing idle. If I understand correctly, Tim's patch
-> also tries to fix the forced idle issue. On top of fixing forced
+On 12/09/19 02:34, Wanpeng Li wrote:
+>>> -        timer_advance_ns -= min((u32)ns,
+>>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+>>> +        timer_advance_ns -= ns;
 
-Er...I don't think so. Tim's patch is meant to solve fairness issue as
-mine, it doesn't attempt to address the forced idle issue.
+Looking more closely, this assignment...
 
-> idle issue, we also need to fix that vruntime comparison issue
-> and I think thats where Aaron's patch helps.
-> 
-> I think comparing parent's runtime also will have issues once
-> the task group has a lot more threads with different running
-> patterns. One example is a task group with lot of active threads
-> and a thread with fairly less activity. So when this less active
-> thread is competing with a thread in another group, there is a
-> chance that it loses continuously for a while until the other
-> group catches up on its vruntime.
+>>>    } else {
+>>>    /* too late */
+>>>        ns = advance_expire_delta * 1000000ULL;
+>>>        do_div(ns, vcpu->arch.virtual_tsc_khz);
+>>> -        timer_advance_ns += min((u32)ns,
+>>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+>>> +        timer_advance_ns += ns;
 
-I actually think this is expected behaviour.
+... and this one are dead code now.  However...
 
-Without core scheduling, when deciding which task to run, we will first
-decide which "se" to run from the CPU's root level cfs runqueue and then
-go downwards. Let's call the chosen se on the root level cfs runqueue
-the winner se. Then with core scheduling, we will also need compare the
-two winner "se"s of each hyperthread and choose the core wide winner "se".
+>>>    }
+>>>
+>>> +    timer_advance_ns = (apic->lapic_timer.timer_advance_ns *
+>>> +        (LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) + advance_expire_delta) /
+>>> +        LAPIC_TIMER_ADVANCE_ADJUST_STEP;
 
-> 
-> As discussed during LPC, probably start thinking along the lines
-> of global vruntime or core wide vruntime to fix the vruntime
-> comparison issue?
+... you should instead remove this new assignment and just make the
+assignments above just
 
-core wide vruntime makes sense when there are multiple tasks of
-different cgroups queued on the same core. e.g. when there are two
-tasks of cgroupA and one task of cgroupB are queued on the same core,
-assume cgroupA's one task is on one hyperthread and its other task is on
-the other hyperthread with cgroupB's task. With my current
-implementation or Tim's, cgroupA will get more time than cgroupB. If we
-maintain core wide vruntime for cgroupA and cgroupB, we should be able
-to maintain fairness between cgroups on this core. Tim propose to solve
-this problem by doing some kind of load balancing if I'm not mistaken, I
-haven't taken a look at this yet.
+	timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+
+and
+
+	timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+
+In fact this whole last assignment is buggy, since advance_expire_delta
+is in TSC units rather than nanoseconds.
+
+>>>    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+>>>        apic->lapic_timer.timer_advance_adjust_done = true;
+>>>    if (unlikely(timer_advance_ns > 5000)) {
+>> This looks great.  But instead of patch 2, why not remove
+>> timer_advance_adjust_done altogether?
+> It can fluctuate w/o stop.
+
+Possibly because of the wrong calculation of timer_advance_ns?
+
+Paolo
