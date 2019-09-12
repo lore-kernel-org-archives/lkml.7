@@ -2,102 +2,176 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CE8C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A4C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3045920830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DZxZImvW"
+	by mail.kernel.org (Postfix) with ESMTP id B2F53208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731296AbfILKTS (ORCPT
+        id S1731202AbfILKTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:19:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43329 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730909AbfILKTS (ORCPT
+        Thu, 12 Sep 2019 06:19:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730268AbfILKTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:19:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id c19so23399997edy.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 03:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rCJRuZodeCpPu+MIWRS27Ed/gzyJWJ/AkAs4o6Nd360=;
-        b=DZxZImvWh3/RaN4AE3pN9IM+EaDq95bEB9WKbkEUjtsK68dv6CAittKvOAjmVXq1uS
-         0OZ3gtdUzDlb0Yr4tN+3XTchD0LNxJmcHw+aFBqDAl5XwtAybbIeSXgK8m78mU1PBxTw
-         RQ1W9kHzXirW6bxcfLufD4asM8wXrxRbXacABxnXNZx2YRPCi1bzPC+/2YDgiCPB33Mj
-         IZo2CGwdJ5+jAhn6EiNPcahRC07NDk9cZdKOt+rQ+p/x/flkFP3Udw6kaQzWShttlEDy
-         6na3vsWlZYukZ/+8JnNgpnI6xpUypqml0rexPDn4IuxD9l2mNZffU6ImTZw6LRIDHOBF
-         2+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rCJRuZodeCpPu+MIWRS27Ed/gzyJWJ/AkAs4o6Nd360=;
-        b=L0uYRLxytt9+u9DHrxeLsMNNVXYiT0W5T/GQN76CFoauo3LvMit5SOTgjOam5kFe9E
-         6kZXSxadSlzxHKlglFkGoRSkNoH2KgayC5se6ut3aQ83w85UAlfLZYmaNO2vBdVowshZ
-         8uvH/y8MRfnG9aX7uppK+1rK0PS+xzHgkO78hULJTXb7fwK1Oh9n0QNcCIy8kBrUEpcC
-         ZvsZlrd/8JnHRB///xONYcKIq4HmS9JnOhY0Mh30W+ujq/wKYyDBsarSgdV2SA6ms5IK
-         SUSLyCWC9rxcaVbyh0ZhO1JFiE4yu0O3wWvd0Npk+Dto5aB3ERn3xEvH1KK2nKFiJ54U
-         eF6g==
-X-Gm-Message-State: APjAAAWZrMD/zIpxdUQi+eKaJhv6hBkx+orBK7+26UCbsb1bJx7ViO7h
-        w6zuN1RfyYmBLlisX7Y01aqwig==
-X-Google-Smtp-Source: APXvYqzRa5N5LhGfMTJuJ4oaj2D7z4BUkhWF/2X+DJwj0jTVnO/miJEr2SF9TZOAj1Aw+J5vr4kYmg==
-X-Received: by 2002:a17:906:434f:: with SMTP id z15mr9615390ejm.214.1568283556600;
-        Thu, 12 Sep 2019 03:19:16 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q33sm4710068eda.60.2019.09.12.03.19.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 03:19:15 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 1BD73100B4A; Thu, 12 Sep 2019 13:19:17 +0300 (+03)
-Date:   Thu, 12 Sep 2019 13:19:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Steve Wahl <steve.wahl@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: Re: [PATCH] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-Message-ID: <20190912101917.mbobjvkxhfttxddd@box>
-References: <20190906212950.GA7792@swahl-linux>
- <20190909081414.5e3q47fzzruesscx@box>
- <20190910142810.GA7834@swahl-linux>
- <20190911002856.mx44pmswcjfpfjsb@box.shutemov.name>
- <20190911200835.GD7834@swahl-linux>
+        Thu, 12 Sep 2019 06:19:37 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAHUh2008595
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:19:36 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyjnwuhq8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:19:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Thu, 12 Sep 2019 11:19:25 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 11:19:22 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CAJLHG46072090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 10:19:21 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 943334C040;
+        Thu, 12 Sep 2019 10:19:21 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A677C4C058;
+        Thu, 12 Sep 2019 10:19:20 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.124.35.231])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 10:19:20 +0000 (GMT)
+Subject: Re: [PATCH] cpupower : Handle set and info subcommands for powerpc
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        shuah@kernel.org, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+References: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
+ <12087195.kFesu4gPPu@skinner.arch.suse.de>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Thu, 12 Sep 2019 15:49:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911200835.GD7834@swahl-linux>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <12087195.kFesu4gPPu@skinner.arch.suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19091210-0020-0000-0000-0000036B5F98
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091210-0021-0000-0000-000021C0F0BB
+Message-Id: <754e96b7-19da-1a59-25bc-390afc9da00f@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 03:08:35PM -0500, Steve Wahl wrote:
-> Thank you for your time looking into this with me!
+Hi Thomas,
 
-With all this explanation the original patch looks sane to me.
+Thanks for the review.
 
-But I would like to see more information from this thread in the commit
-message and some comments in the code on why it's crucial not to map more
-than needed.
 
-I think we also need to make it clear that this is workaround for a broken
-hardware: speculative execution must not trigger a halt.
+On 09/12/2019 03:24 PM, Thomas Renninger wrote:
+> Hi Abishek,
+>
+> On Wednesday, September 11, 2019 11:54:24 AM CEST Abhishek Goel wrote:
+>> Cpupower tool has set and info options which are not being used by
+>> POWER machines. For powerpc, we will return directly for these two
+>> subcommands. This removes the ambiguous error message while using set
+>> option in case of power systems.
+>>
+>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+>> ---
+>>   tools/power/cpupower/utils/cpupower-info.c | 5 +++++
+>>   tools/power/cpupower/utils/cpupower-set.c  | 5 +++++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/tools/power/cpupower/utils/cpupower-info.c
+>> b/tools/power/cpupower/utils/cpupower-info.c index
+>> 4c9d342b70ff..674b707a76af 100644
+>> --- a/tools/power/cpupower/utils/cpupower-info.c
+>> +++ b/tools/power/cpupower/utils/cpupower-info.c
+>> @@ -39,6 +39,11 @@ int cmd_info(int argc, char **argv)
+>>   	} params = {};
+>>   	int ret = 0;
+>>
+>> +	#ifdef __powerpc__
+>> +	printf(_("Cannot read info as system does not support performance bias
+>> setting\n")); +	return 0;
+>> +	#endif
+>> +
+> Please do no do this.
+>
+> cpupower info
+> is designed to show general information related to powersaving features of your CPU.
+>
+> For examle there has been (see changelog):
+> cpupower: Remove mc and smt power aware scheduler info/settings
+> These kernel interfaces got removed by:
+>
+> Unfortunately only -b (perf bias on Intel only) is left right now.
+>
+> So if you cut this out for Power you do not see anything and the cmd is useless.
+> Which is a pity, but for now makes sense.
+> Ideally you provide some tag/option which makes sense on power (e.g. whether run
+> in OPAL mode and if provide some figures otherwise tell running in VM mode).
+> But if this is cut out something like this should do the same and is more flexible:
+> - Still allows additional cpupower info features for other CPUs later easily
+> - Should also cover AMD or other non-perf bias supporting CPUs to exclude perf_bias
+>    setting/info
 
--- 
- Kirill A. Shutemov
+As I have suggested in here : https://lkml.org/lkml/2019/9/12/159
+We should cut out these two options as of now for other architecture
+except x86, since the current implementation of both these subcommands
+are very intel specific.
+As you have already suggested, we can later on maybe change the
+documentation of info to be architecture specific and use info based on
+arch requirement.
+
+>
+> If this one works for you, can you please re-submit with also handling the set cmd
+> similar. If it works or you only slightly adjust, feel free to already add:
+> Acked-by: Thomas Renninger <trenn@suse.de>
+
+Yeah. Sure.
+
+> Thanks!
+>
+>         Thomas
+>
+> --- tools/power/cpupower/utils/cpupower-info.c.orig	2019-09-12 11:45:02.578568335 +0200
+> +++ tools/power/cpupower/utils/cpupower-info.c	2019-09-12 11:46:09.618571947 +0200
+> @@ -55,8 +55,11 @@
+>   		}
+>   	};
+>
+> -	if (!params.params)
+> +	if (!params.params) {
+>   		params.params = 0x7;
+> +		if !(cpupower_cpu_info.caps & CPUPOWER_CAP_PERF_BIAS)
+> +			params.perf_bias = 0;
+> +	}
+>
+>   	/* Default is: show output of CPU 0 only */
+>   	if (bitmask_isallclear(cpus_chosen))
+>
+>
+>
+
+-- Abhishek
+
