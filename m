@@ -2,61 +2,123 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54335C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A2C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320D920692
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3612620692
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfILKVo (ORCPT
+        id S1731004AbfILKXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:21:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55488 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730470AbfILKVn (ORCPT
+        Thu, 12 Sep 2019 06:23:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730454AbfILKXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:21:43 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 48418120477BA;
-        Thu, 12 Sep 2019 03:21:42 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 12:21:40 +0200 (CEST)
-Message-Id: <20190912.122140.1024775651317943407.davem@davemloft.net>
-To:     christophe.jaillet@wanadoo.fr
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ipv6: Fix the link time qualifier of
- 'ping_v6_proc_exit_net()'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190910112959.9222-1-christophe.jaillet@wanadoo.fr>
-References: <20190910112959.9222-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Thu, 12 Sep 2019 06:23:50 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAMvvr054786
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:23:49 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyjwru42x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:23:48 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Thu, 12 Sep 2019 11:23:46 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 11:23:44 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CANhoC47120638
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 10:23:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6C634C04A;
+        Thu, 12 Sep 2019 10:23:43 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD6014C044;
+        Thu, 12 Sep 2019 10:23:42 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.124.35.231])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 10:23:42 +0000 (GMT)
+Subject: Re: [PATCH] cpupower : Handle set and info subcommands for powerpc
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+References: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
+ <3326dc53-f8a1-dd7b-5ae8-b86ef5ef8b24@kernel.org>
+ <f43715dd-219b-d3ae-58a9-f343fe745d7d@linux.vnet.ibm.com>
+ <4161437.KdBApSEpf3@skinner.arch.suse.de>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Thu, 12 Sep 2019 15:53:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <4161437.KdBApSEpf3@skinner.arch.suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Sep 2019 03:21:43 -0700 (PDT)
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19091210-4275-0000-0000-00000364D45F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091210-4276-0000-0000-000038772EBD
+Message-Id: <17ce06dd-9baf-e0d1-df64-4b81787b2000@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Tue, 10 Sep 2019 13:29:59 +0200
+Hi,
 
-> The '.exit' functions from 'pernet_operations' structure should be marked
-> as __net_exit, not __net_init.
-> 
-> Fixes: d862e5461423 ("net: ipv6: Implement /proc/net/icmp6.")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Untested, but using __net_exit looks consistent with other
-> pernet_operations.exit use case.
 
-Looks good, applied.
+On 09/12/2019 03:46 PM, Thomas Renninger wrote:
+> On Thursday, September 12, 2019 11:43:40 AM CEST Abhishek wrote:
+>> Hi Shuah,
+>>
+>> Thanks for the review. Few comments below.
+> ...
+>
+>> Since these two options are not being used by any other architecture
+>> except x86, I suggest these options should not even be shown for
+>> other architecture. So we can do something like this in cpupower.c :
+>>
+>> static struct cmd_struct commands[] = {
+>>            .............
+>> +#if defined (__x86_64__) || defined (__i386__)
+>>           { "set",        cmd_set,        1    },
+>>           { "info",        cmd_info,        0    },
+>> +#endif
+>>           ..............
+>>
+>> Is this Okay?
+> No, I expected you to add something meaningful for Power case...
+
+Haha. Will add something meaningful later...
+(One of the suggestion has already been given by you)
+>
+> Just kidding. If this works without any side-effects in not x86 case, this
+> approach seem to be the best solution for now.
+>
+> Thanks.
+>
+>    Thomas
+>
+>
+
+-- Abhishek
+
