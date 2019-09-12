@@ -2,97 +2,132 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D6C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5674CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7769C20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCA221479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C9bupnEU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kofTgmSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbfILPCZ (ORCPT
+        id S1732965AbfILPDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:02:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:36551 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732799AbfILPCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:02:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Thnl468Bz9s00;
-        Fri, 13 Sep 2019 01:02:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568300541;
-        bh=/arlBTrZbdzBVv5dDbs+QHk9ObiYhI8AbX3DE2M2I6I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C9bupnEUI4mmKgYtTpMH+/R75FUZecsju4ZQGW4GBWoPeIh3XsjgU3OJ3pZVwg87b
-         LcBM0X+yxOtP4lmwjEXhsW7kfuMtliJZSC0i6GNcLsU38mvul7XY+uC+a/nqqAlEtZ
-         iCQ2+fk3lMLnseO980TyFspDiPD+faJUC5lKs92UcxV6gwO4AOGV2l31cF1vYW9mz4
-         N948OZG/NQLEEdhkrCzsN25ZFh5ouDcv9CY33nnEiY8L1GUnvcXzpQaDFjWqAmTRhx
-         bebjPB8LZCwN4Z7zJOARWQwhTNJKk/a8FsgBWByhjQrZgkLtsxKKra8JWIbkjo0rii
-         i1htc3OCNhIRw==
-Date:   Fri, 13 Sep 2019 01:02:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-bys missing for commits in the pinctrl tree
-Message-ID: <20190913010220.087c906d@canb.auug.org.au>
+        Thu, 12 Sep 2019 11:03:37 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49990 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732817AbfILPDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:03:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8CF3Aah046587;
+        Thu, 12 Sep 2019 10:03:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568300590;
+        bh=eju7yvlhMevpk8GMIglQpXBV9N/M17eV4ISPBCjwU3g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kofTgmSdQLex18tsgcah0ZbTuO/uSmNQEQaKu1CsVKhJD9woALdPBt0Zuwfuqe3ea
+         /UdLDlUEJScXMRjUencauLX5F5YcouKRhw3dsEmRd4V/729PJKFPxHcCd7h3piz31p
+         igneibNxmUgJPpXVu1e2WzW5E9sGWzFqRP+0P/kA=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8CF3A4B029511
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Sep 2019 10:03:10 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
+ Sep 2019 10:03:10 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 12 Sep 2019 10:03:09 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8CF39dk069556;
+        Thu, 12 Sep 2019 10:03:09 -0500
+Subject: Re: [PATCH v3 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
+To:     Andreas Kemnade <andreas@kemnade.info>
+CC:     <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
+        <jingoohan1@gmail.com>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+References: <20190911172106.12843-1-andreas@kemnade.info>
+ <20190911172106.12843-2-andreas@kemnade.info>
+ <ff410d6c-e1e8-7c96-e8f7-0a0deb816f6a@ti.com>
+ <20190912165808.3c38b7a2@kemnade.info>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <5c8d25ab-e780-4e60-9723-cd65553f4db3@ti.com>
+Date:   Thu, 12 Sep 2019 10:03:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gG7ZpRDily7d32EAqtRRbs2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190912165808.3c38b7a2@kemnade.info>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gG7ZpRDily7d32EAqtRRbs2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Andreas
 
-Hi all,
+On 9/12/19 9:58 AM, Andreas Kemnade wrote:
+> On Thu, 12 Sep 2019 06:39:50 -0500
+> Dan Murphy <dmurphy@ti.com> wrote:
+>
+>> Andreas
+>>
+>> On 9/11/19 12:21 PM, Andreas Kemnade wrote:
+>>> add enable-gpios to describe HWEN pin
+>>>
+>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>>> ---
+>>> changes in v2: added example
+>>> changes in v3: added Acked-by
+>>>    .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+>>>    1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+>>> index dc129d9a329e..1fa83feffe16 100644
+>>> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+>>> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+>>> @@ -29,6 +29,10 @@ properties:
+>>>      '#size-cells':
+>>>        const: 0
+>>>    
+>>> +  enable-gpios:
+>>> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
+>>> +    maxItems: 1
+>>> +
+>>>    required:
+>>>      - compatible
+>>>      - reg
+>>> @@ -92,6 +96,7 @@ examples:
+>>>        i2c {
+>>>            #address-cells = <1>;
+>>>            #size-cells = <0>;
+>>> +        enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+>>>    
+>>>            led-controller@38 {
+>>>                    compatible = "ti,lm3630a";
+>> Looks good to me
+>>
+> well, the enable-gpios is still at the same place as in v2. This was sent
+> before your comments to v2 have been arrived.
 
-Commits
+Ah I overlooked that.  Yeah that still needs to move I assumed you moved it.
 
-  5a85bd8e3af3 ("pinctrl: meson-gxbb: Fix wrong pinning definition for uart=
-_c")
-  235e8677e92b ("pinctrl: mediatek: Add support for pin configuration dump =
-via debugfs.")
-  dbe733ac908e ("pinctrl: mediatek: Backward compatible to previous Mediate=
-k's bias-pull usage")
-  7ed13ac1a968 ("pinctrl: mediatek: Refine mtk_pinconf_get() and mtk_pincon=
-f_set()")
-  56d1a061f882 ("pinctrl: mediatek: Supporting driving setting without mapp=
-ing current to register value")
-  319b83e60069 ("pinctrl: mediatek: Check gpio pin number and use binary se=
-arch in mtk_hw_pin_field_lookup()")
+Dan
 
-are missing a Signed-off-by from their authors.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/gG7ZpRDily7d32EAqtRRbs2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16XfwACgkQAVBC80lX
-0Gw2BAf+M6gzirzfkAUtXYH31g+722B41r2JCTvsHtFEPfspmFy4FYRBYjPC1rK/
-PII+st3/9pNaQU3WR5OP28cFiGnyssqeeHGw4kF3ooQFdMOJ7dUNG2f6+UHgdx0x
-/Nl+Ltny/1EuKRMrQ3WV9zFmZUSn78edoxs2YftZ6psHnT8iCxPMJI0boKF5usJW
-dUa1qek/wje+sEbp7tELrascNpU7dVjxshBc2wdeyOyRXwLPGGrUz9OCEdkqmuye
-JGC158rPYA2uzOaISlfVQ/QDx6Itqw2XhQUdhnFX0vuiGJJ2wgv/3yEmbvBOlJXw
-HPeefvsNKQQ+8zFwdWPgelLfz2GiyA==
-=BHI5
------END PGP SIGNATURE-----
-
---Sig_/gG7ZpRDily7d32EAqtRRbs2--
+> Regards,
+> Andreas
