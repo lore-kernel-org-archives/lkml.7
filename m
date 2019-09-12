@@ -2,95 +2,108 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D54C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFABC49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 04:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8CC2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D83321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 04:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKPvBwH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfILDxV (ORCPT
+        id S1726501AbfILESf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 23:53:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13411 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbfILDxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 23:53:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Sep 2019 20:53:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="268958277"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga001.jf.intel.com with ESMTP; 11 Sep 2019 20:53:20 -0700
-Received: from fmsmsx117.amr.corp.intel.com (10.18.116.17) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 11 Sep 2019 20:52:50 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.68]) by
- fmsmsx117.amr.corp.intel.com ([169.254.3.133]) with mapi id 14.03.0439.000;
- Wed, 11 Sep 2019 20:52:50 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "joe@perches.com" <joe@perches.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH 11/13] nvdimm: Use more common logic testing styles and
- bare ; positions
-Thread-Topic: [PATCH 11/13] nvdimm: Use more common logic testing styles and
- bare ; positions
-Thread-Index: AQHVaRWKbif/DxojQEGXHgNOmHirzacn3kSA
-Date:   Thu, 12 Sep 2019 03:52:49 +0000
-Message-ID: <706f6af6a6571a3bb2d35ec332fa572a990cbc48.camel@intel.com>
-References: <cover.1568256705.git.joe@perches.com>
-         <d6aa5b66936f2e0f132e893e10494aae6b74e886.1568256708.git.joe@perches.com>
-In-Reply-To: <d6aa5b66936f2e0f132e893e10494aae6b74e886.1568256708.git.joe@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.254.21.217]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9B343DDA310A65479EFFA2A81A767489@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 12 Sep 2019 00:18:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46384 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfILESf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 00:18:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so15061736pfg.13;
+        Wed, 11 Sep 2019 21:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=E78vnhmo9W2A2pNvQXFwnY+byAZLb8i8u9HyT6B3+sg=;
+        b=EKPvBwH1+59k/jwqQdsSvQbO8k61IoR8he06AzVrsrO2S4NsaDCQj+9qXT4ifH95cA
+         lStBOgUpKwZfOPXfuGwErlIXnIf/aTghhPz2KtzOPfGKEYQdagLqeEl2SZblxyZyEi/y
+         RJmZb3iNgY5moYjUmvTiBw3ZeH3iD7braVQTDPznhRRcb9erM3N58YcaRlFwdlouj1A2
+         nJpUVWNaCxbcbyJWc6HBs9Jeixb6LN2WjIFQpokWLIC8jXxd94OX+rP07KyEyZnZzUTU
+         P0isEghZmhMU+1GBOygU1Ty4hoKqkfrs8qNbn2bEAlyYpWY7+Ir7lKSzpd48ghOnlA/d
+         IbgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E78vnhmo9W2A2pNvQXFwnY+byAZLb8i8u9HyT6B3+sg=;
+        b=LKJC7ut/fOCK9o2wG2ZuE0up0ZA/W8MZX9TkzdvrM6F6WVnBfapnQtinooxfjDvS/E
+         V//8Xw/Ulwh1mBTNckhy/Zp2vXyDLqYlzz7skOuTOk9vkXLHi+gBvQsKjTFnA5SOHX6L
+         4n0zBEYm7H24ojvjyj2q/joyj7XBlIQRf61myF/0NR8VfbcyfHOIS5lhzomtGhR/ExI6
+         4A9xbgHFryY7ngwZFHl4GmjI4CGRM9NMWauMOusBebNFfmNVJfJtst0mBHVennKcqNgz
+         DWbZ9JQh+K6qsOj2u5TmGDaIKsJltmfohMYGfeKXzpOUObxNbMZ+7MLpmq+q2CZdO2qg
+         cOQg==
+X-Gm-Message-State: APjAAAXJ1tbxikzCrgfG8zFY6y0aS2r7+2VVLm/DzyZblKU5PLr38DBE
+        /eBE9yrc9HtPoieK/A88ebs=
+X-Google-Smtp-Source: APXvYqyk0x3J7D47e/P7P1oHEyTuMa/9I5ZW1O1HwuHLoVPHoU1p0ru3RMmYDsIaqnjqk5a/E1hmow==
+X-Received: by 2002:a63:fa11:: with SMTP id y17mr36421144pgh.267.1568261913071;
+        Wed, 11 Sep 2019 21:18:33 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id s4sm24278875pfh.15.2019.09.11.21.18.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Sep 2019 21:18:32 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] KVM: x86: work around leak of uninitialized stack contents
+Date:   Thu, 12 Sep 2019 12:18:17 +0800
+Message-Id: <20190912041817.23984-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA5LTExIGF0IDE5OjU0IC0wNzAwLCBKb2UgUGVyY2hlcyB3cm90ZToNCj4g
-QXZvaWQgdXNpbmcgdW5jb21tb24gbG9naWMgdGVzdGluZyBzdHlsZXMgdG8gbWFrZSB0aGUgY29k
-ZSBhDQo+IGJpdCBtb3JlIGxpa2Ugb3RoZXIga2VybmVsIGNvZGUuDQo+IA0KPiBlLmcuOg0KPiAJ
-aWYgKGZvbykgew0KPiAJCTsNCj4gCX0gZWxzZSB7DQo+IAkJPGNvZGU+DQo+IAl9DQo+IA0KPiBp
-cyB0eXBpY2FsbHkgd3JpdHRlbg0KPiANCj4gCWlmICghZm9vKSB7DQo+IAkJPGNvZGU+DQo+IAl9
-DQo+IA0KDQpBIGxvdCBvZiB0aW1lcyB0aGUgZXhjZXNzaXZlIGludmVyc2lvbnMgc2VlbSB0byBy
-ZXN1bHQgaW4gYSBuZXQgbG9zcyBvZg0KcmVhZGFiaWxpdHkgLSBlLmcuOg0KDQo8c25pcD4NCg0K
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRpbW0vcmVnaW9uX2RldnMuYw0KPiBiL2RyaXZlcnMv
-bnZkaW1tL3JlZ2lvbl9kZXZzLmMNCj4gaW5kZXggNjVkZjA3NDgxOTA5Li42ODYxZTA5OTdkMjEg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbnZkaW1tL3JlZ2lvbl9kZXZzLmMNCj4gKysrIGIvZHJp
-dmVycy9udmRpbW0vcmVnaW9uX2RldnMuYw0KPiBAQCAtMzIwLDkgKzMyMCw3IEBAIHN0YXRpYyBz
-c2l6ZV90IHNldF9jb29raWVfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICAJc3RydWN0IG5k
-X2ludGVybGVhdmVfc2V0ICpuZF9zZXQgPSBuZF9yZWdpb24tPm5kX3NldDsNCj4gIAlzc2l6ZV90
-IHJjID0gMDsNCj4gIA0KPiAtCWlmIChpc19tZW1vcnkoZGV2KSAmJiBuZF9zZXQpDQo+IC0JCS8q
-IHBhc3MsIHNob3VsZCBiZSBwcmVjbHVkZWQgYnkgcmVnaW9uX3Zpc2libGUgKi87DQoNCkZvciBv
-bmUsIHRoZSBjb21tZW50IGlzIGxvc3QNCg0KPiAtCWVsc2UNCj4gKwlpZiAoIShpc19tZW1vcnko
-ZGV2KSAmJiBuZF9zZXQpKQ0KDQpBbmQgaXQgdGFrZXMgYSBtb21lbnQgdG8gcmVzb2x2ZSBiZXR3
-ZWVuIHRoaW5ncyBzdWNoIGFzOg0KDQoJaWYgKCEoQSAmJiBCKSkNCgkgIHZzLg0KCWlmICghKEEp
-ICYmIEIpDQoNCkFuZCB0aGlzIGlzIGVzcGVjaWFsbHkgdHJ1ZSBpZiAnQScgYW5kICdCJyBhcmUg
-bG9uZ2VyIGZ1bmN0aW9uIGNhbGxzLA0Kc3BsaXQgb3ZlciBtdWx0aXBsZSBsaW5lcywgb3IgYXJl
-IHRoZW1zZWx2ZXMgY29tcG91bmQgJ3NlY3Rpb25zJy4NCg0KSSdtIG5vdCBvcHBvc2VkIHRvIC9h
-bGwvIHN1Y2ggdHJhbnNmb3JtYXRpb25zIC0tIGZvciBleGFtcGxlLCB0aGUgb25lcw0Kd2hlcmUg
-dGhlIGxvZ2ljYWwgaW52ZXJzaW9uIGNhbiBiZSAnY29uc3VtZWQnIGJ5IHRvZ2dsaW5nIGEgY29t
-cGFyaXNpb24NCm9wZXJhdG9yLCBhcyB5b3UgaGF2ZSBhIGZldyB0aW1lcyBpbiB0aGlzIHBhdGNo
-LCBkb24ndCBzYWNyaWZpY2UgYW55DQpyZWFkaWJpbGl0eSwgYW5kIHBlcmhhcHMgZXZlbiBpbXBy
-b3ZlIGl0LiANCg0KPiAgCQlyZXR1cm4gLUVOWElPOw0KPiAgDQo+ICAJLyoNCg==
+Emulation of VMPTRST can incorrectly inject a page fault
+when passed an operand that points to an MMIO address.
+The page fault will use uninitialized kernel stack memory
+as the CR2 and error code.
+
+The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+exit to userspace; however, it is not an easy fix, so for now just ensure
+that the error code and CR2 are zero.
+
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ arch/x86/kvm/x86.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 290c3c3efb87..7f442d710858 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5312,6 +5312,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+ 	/* kvm_write_guest_virt_system can pull in tons of pages. */
+ 	vcpu->arch.l1tf_flush_l1d = true;
+ 
++	memset(exception, 0, sizeof(*exception));
+ 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+ 					   PFERR_WRITE_MASK, exception);
+ }
+-- 
+2.11.0
+
