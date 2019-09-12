@@ -2,142 +2,210 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB70C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9716C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5DF20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9A620678
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:43:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ncacx61M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbfILPmM (ORCPT
+        id S1732976AbfILPnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:42:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:14349 "EHLO mga02.intel.com"
+        Thu, 12 Sep 2019 11:43:09 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:41770 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732723AbfILPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:42:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 08:42:09 -0700
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197265089"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 08:42:08 -0700
-Message-ID: <b84a3916202a67bcf36da0b6f0e833eb3408339a.camel@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
-Date:   Thu, 12 Sep 2019 08:42:08 -0700
-In-Reply-To: <20190912091925.GM4023@dhcp22.suse.cz>
-References: <20190907172225.10910.34302.stgit@localhost.localdomain>
-         <20190910124209.GY2063@dhcp22.suse.cz>
-         <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
-         <20190910144713.GF2063@dhcp22.suse.cz>
-         <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
-         <20190910175213.GD4023@dhcp22.suse.cz>
-         <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
-         <20190911113619.GP4023@dhcp22.suse.cz>
-         <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
-         <20190912091925.GM4023@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1732723AbfILPnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:43:08 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Tjhm75TvzB09bB;
+        Thu, 12 Sep 2019 17:43:04 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ncacx61M; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id EHJt8SoSX6rY; Thu, 12 Sep 2019 17:43:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Tjhm5y7RzB09b0;
+        Thu, 12 Sep 2019 17:43:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568302984; bh=jwkiVsyu4qTpGbjgj9zvg2L17cG+LcedXjD4KVOR3aw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ncacx61MTw9l0fH/aIN33QEKzpSS37GIo1Lm+DGhNEzBVZV+7lFzpZzU+VCDpQl/A
+         WOqGmEfhk+9ei5DYC46N5dLAhENVhnQ3UIcz+0p1JwxO3/OPWizlfaNThFFGeAlizK
+         0uFIyrZiBjrpSM2th7RKnmV5luDabUtVWeKDSZC8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 701D58B941;
+        Thu, 12 Sep 2019 17:43:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Cg95q0QX3o1e; Thu, 12 Sep 2019 17:43:06 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 730808B933;
+        Thu, 12 Sep 2019 17:43:05 +0200 (CEST)
+Subject: Re: [PATCH v1 3/4] powerpc: Add support for GENERIC_EARLY_IOREMAP
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        hch@infradead.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1568295907.git.christophe.leroy@c-s.fr>
+ <412c7eaa6a373d8f82a3c3ee01e6a65a1a6589de.1568295907.git.christophe.leroy@c-s.fr>
+ <87ftl1seyr.fsf@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <cab82255-7353-1435-08cb-6732d429b17d@c-s.fr>
+Date:   Thu, 12 Sep 2019 17:43:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87ftl1seyr.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-12 at 11:19 +0200, Michal Hocko wrote:
-> On Wed 11-09-19 08:12:03, Alexander Duyck wrote:
-> > On Wed, Sep 11, 2019 at 4:36 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
-> > > [...]
-> > > > We don't put any limitations on the allocator other then that it needs to
-> > > > clean up the metadata on allocation, and that it cannot allocate a page
-> > > > that is in the process of being reported since we pulled it from the
-> > > > free_list. If the page is a "Reported" page then it decrements the
-> > > > reported_pages count for the free_area and makes sure the page doesn't
-> > > > exist in the "Boundary" array pointer value, if it does it moves the
-> > > > "Boundary" since it is pulling the page.
-> > > 
-> > > This is still a non-trivial limitation on the page allocation from an
-> > > external code IMHO. I cannot give any explicit reason why an ordering on
-> > > the free list might matter (well except for page shuffling which uses it
-> > > to make physical memory pattern allocation more random) but the
-> > > architecture seems hacky and dubious to be honest. It shoulds like the
-> > > whole interface has been developed around a very particular and single
-> > > purpose optimization.
-> > 
-> > How is this any different then the code that moves a page that will
-> > likely be merged to the tail though?
-> 
-> I guess you are referring to the page shuffling. If that is the case
-> then this is an integral part of the allocator for a reason and it is
-> very well obvious in the code including the consequences. I do not
-> really like an idea of hiding similar constrains behind a generic
-> looking feature which is completely detached from the allocator and so
-> any future change of the allocator might subtly break it.
-> 
-> > In our case the "Reported" page is likely going to be much more
-> > expensive to allocate and use then a standard page because it will be
-> > faulted back in. In such a case wouldn't it make sense for us to want
-> > to keep the pages that don't require faults ahead of those pages in
-> > the free_list so that they are more likely to be allocated?
-> 
-> OK, I was suspecting this would pop out. And this is exactly why I
-> didn't like an idea of an external code imposing a non obvious constrains
-> to the allocator. You simply cannot count with any ordering with the
-> page allocator. We used to distinguish cache hot/cold pages in the past
-> and pushed pages to the specific end of the free list but that has been
-> removed. There are other potential changes like that possible. Shuffling
-> is a good recent example.
-> 
-> Anyway I am not a maintainer of this code. I would really like to hear
-> opinions from Mel and Vlastimil here (now CCed - the thread starts
-> http://lkml.kernel.org/r/20190907172225.10910.34302.stgit@localhost.localdomain.
 
-One alternative I could do if we are wanting to make things more obvious
-would be to add yet another add_to_free_list_XXX function that would be
-used specifically for reported pages. The only real requirement I have is
-that we have to insert reported pages such that we generate a continuous
-block without interleaving non-reported pages in between. So as long as
-reported pages are always inserted at the boundary/iterator when we are
-actively reporting on a section then I can guarantee the list won't have
-gaps formed.
 
-Also as far as the concerns about this being an external user, one thing I
-can do is break up the headers a bit and define an internal header in mm/
-that defines all the items used by the page allocator, and another in
-include/linux/ that defines what is used by devices when receiving the
-notifications. It would then help to reduce the likelihood of an outside
-entity messing with the page allocator too much.
+Le 12/09/2019 à 17:37, Aneesh Kumar K.V a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> 
+>> Add support for GENERIC_EARLY_IOREMAP.
+>>
+>> Let's define 16 slots of 256Kbytes each for early ioremap.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>   arch/powerpc/Kconfig              |  1 +
+>>   arch/powerpc/include/asm/Kbuild   |  1 +
+>>   arch/powerpc/include/asm/fixmap.h | 12 ++++++++++++
+>>   arch/powerpc/kernel/setup_32.c    |  3 +++
+>>   arch/powerpc/kernel/setup_64.c    |  3 +++
+>>   5 files changed, 20 insertions(+)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 6a7c797fa9d2..8fe252962518 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -161,6 +161,7 @@ config PPC
+>>   	select GENERIC_CMOS_UPDATE
+>>   	select GENERIC_CPU_AUTOPROBE
+>>   	select GENERIC_CPU_VULNERABILITIES	if PPC_BARRIER_NOSPEC
+>> +	select GENERIC_EARLY_IOREMAP
+>>   	select GENERIC_IRQ_SHOW
+>>   	select GENERIC_IRQ_SHOW_LEVEL
+>>   	select GENERIC_PCI_IOMAP		if PCI
+>> diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
+>> index 9a1d2fc6ceb7..30829120659c 100644
+>> --- a/arch/powerpc/include/asm/Kbuild
+>> +++ b/arch/powerpc/include/asm/Kbuild
+>> @@ -12,3 +12,4 @@ generic-y += preempt.h
+>>   generic-y += vtime.h
+>>   generic-y += msi.h
+>>   generic-y += simd.h
+>> +generic-y += early_ioremap.h
+>> diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+>> index 722289a1d000..d5c4d357bd33 100644
+>> --- a/arch/powerpc/include/asm/fixmap.h
+>> +++ b/arch/powerpc/include/asm/fixmap.h
+>> @@ -15,6 +15,7 @@
+>>   #define _ASM_FIXMAP_H
+>>   
+>>   #ifndef __ASSEMBLY__
+>> +#include <linux/sizes.h>
+>>   #include <asm/page.h>
+>>   #include <asm/pgtable.h>
+>>   #ifdef CONFIG_HIGHMEM
+>> @@ -64,6 +65,14 @@ enum fixed_addresses {
+>>   		       FIX_IMMR_SIZE,
+>>   #endif
+>>   	/* FIX_PCIE_MCFG, */
+>> +	__end_of_permanent_fixed_addresses,
+>> +
+>> +#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
+>> +#define FIX_BTMAPS_SLOTS	16
+>> +#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
+>> +
+>> +	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
+>> +	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
+>>   	__end_of_fixed_addresses
+>>   };
+>>   
+>> @@ -71,6 +80,7 @@ enum fixed_addresses {
+>>   #define FIXADDR_START		(FIXADDR_TOP - __FIXADDR_SIZE)
+>>   
+>>   #define FIXMAP_PAGE_NOCACHE PAGE_KERNEL_NCG
+>> +#define FIXMAP_PAGE_IO	PAGE_KERNEL_NCG
+>>   
+>>   #include <asm-generic/fixmap.h>
+>>   
+>> @@ -85,5 +95,7 @@ static inline void __set_fixmap(enum fixed_addresses idx,
+>>   	map_kernel_page(__fix_to_virt(idx), phys, flags);
+>>   }
+>>   
+>> +#define __early_set_fixmap	__set_fixmap
+>> +
+>>   #endif /* !__ASSEMBLY__ */
+>>   #endif
+>> diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
+>> index a7541edf0cdb..dcffe927f5b9 100644
+>> --- a/arch/powerpc/kernel/setup_32.c
+>> +++ b/arch/powerpc/kernel/setup_32.c
+>> @@ -44,6 +44,7 @@
+>>   #include <asm/asm-prototypes.h>
+>>   #include <asm/kdump.h>
+>>   #include <asm/feature-fixups.h>
+>> +#include <asm/early_ioremap.h>
+>>   
+>>   #include "setup.h"
+>>   
+>> @@ -80,6 +81,8 @@ notrace void __init machine_init(u64 dt_ptr)
+>>   	/* Configure static keys first, now that we're relocated. */
+>>   	setup_feature_keys();
+>>   
+>> +	early_ioremap_setup();
+>> +
+>>   	/* Enable early debugging if any specified (see udbg.h) */
+>>   	udbg_early_init();
+>>   
+>> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+>> index 44b4c432a273..b85f6a1cc3a1 100644
+>> --- a/arch/powerpc/kernel/setup_64.c
+>> +++ b/arch/powerpc/kernel/setup_64.c
+>> @@ -65,6 +65,7 @@
+>>   #include <asm/hw_irq.h>
+>>   #include <asm/feature-fixups.h>
+>>   #include <asm/kup.h>
+>> +#include <asm/early_ioremap.h>
+>>   
+>>   #include "setup.h"
+>>   
+>> @@ -338,6 +339,8 @@ void __init early_setup(unsigned long dt_ptr)
+>>   	apply_feature_fixups();
+>>   	setup_feature_keys();
+>>   
+>> +	early_ioremap_setup();
+>> +
+>>   	/* Initialize the hash table or TLB handling */
+>>   	early_init_mmu();
+>>   
+> 
+> Can we remove early_ioremap_range() after this?
+> 
 
+Yes, once all early callers of ioremap functions are converted to using 
+early_ioremap()
+
+Christophe
