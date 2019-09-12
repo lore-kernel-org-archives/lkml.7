@@ -2,171 +2,128 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97B0C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A5C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEF22081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5025C20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vFOuHT8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbfILR3S (ORCPT
+        id S2387705AbfILRbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 13:29:18 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12229 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387676AbfILR3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 13:29:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 10:29:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
-   d="scan'208";a="200786710"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Sep 2019 10:29:14 -0700
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
- <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
- <20190912123532.GB16200@aaronlu>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <8373e386-cb99-8f79-a78e-5e79dc962b81@linux.intel.com>
-Date:   Thu, 12 Sep 2019 10:29:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 12 Sep 2019 13:31:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43494 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfILRbK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 13:31:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u72so13822210pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 10:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mOVlpD6BMnbKiv36TkrT6fFnE/GEkfURpkH4h7Nmx9A=;
+        b=vFOuHT8q/eBPKZYTjetLEjaJe6yOUcZW5JGUf5OEuaCTw+ePR0nBx/f3HHUQTCUqQI
+         uYEVVwDfqUnPrcGgKSPtyIog0m/i9gn62BCdJUEileXrg/ZTSjiDx2Dw/hL8T16b9Y2z
+         0FN6cEQuRsDycs54vUgScb4QhncrgBaEBNq3q+p5H2XxkiGNy4DOPQeBGLB7P0MzTa74
+         Ia81d7XZcCkQvsxt8p/jjS9gaBsnZxNDgj7JCztPVUzFz7K6h/sg7WeHsuBmxqLtDjwp
+         gc5AdHdJRbIwx35Qv6FNrYeqD3KkACcMSRHgTN4HhTCWOg+6oEN4MQ9CT6EAuxZIXeCd
+         eD8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mOVlpD6BMnbKiv36TkrT6fFnE/GEkfURpkH4h7Nmx9A=;
+        b=uSLrkH9yf0huIuP8MCkDDHpsM6LIV3omQDYm8AQBSOyEA8ovcY9ResULg2eJOXWkGy
+         YcLMHXMlHA8z8OxKIiGaQG9rAsID7OSKUiaWOyFNIQFCGf/2ljZGz4vrV3Yv9jozyT2m
+         8y7Jbl4fsm0yQ1SIOO8a2FfZ9IxCLJIdnAEPVf9vCB5y9stsNnKHRNZTnLYAwdWJFkSC
+         WPFjN4wk3TmSsEF9KriVt7dK7wVrvpe1H0EncBcxP2z4wILh/Y6me5F/2CeLlsVmfba3
+         SCEgtsXiUc/NWVDNC8Fmpkt8rQIId1jZ5Coty4sBQuBQEIi5XEKc7ElGTJw1B4/Gzi1+
+         LxpQ==
+X-Gm-Message-State: APjAAAWJBjjrLzUsGaQaAgYL1eRIREci4w2gnrBOYcixhF6zFmEWxcZ5
+        5/KaKQwDf/3VsWs0jwsiXnYCuXyRtD4OQCNsrqxM8Q==
+X-Google-Smtp-Source: APXvYqyVEf0vry59fDuLYLixqQV/JiE2ffpPjCKBKhiAyDloxfQvSH0ffpD+0xZh3bmlSGzo28Pk/FqEMIBOISodWS0=
+X-Received: by 2002:a63:7153:: with SMTP id b19mr3009136pgn.10.1568309468835;
+ Thu, 12 Sep 2019 10:31:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190912123532.GB16200@aaronlu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190911182049.77853-1-natechancellor@gmail.com>
+ <20190911182049.77853-4-natechancellor@gmail.com> <CAKwvOdnh+YoACaX4Oxk7ZiEQAQ2VgA6W=Dtbk7gzK5yJduFvGQ@mail.gmail.com>
+ <20190912054304.GA103826@archlinux-threadripper>
+In-Reply-To: <20190912054304.GA103826@archlinux-threadripper>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 12 Sep 2019 10:30:57 -0700
+Message-ID: <CAKwvOdmc-1BrXG01d0PzjqhJsVbgwUMm6mxR4BcTqZ9WKtS6HA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
+ reference to bcmp
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/12/19 5:35 AM, Aaron Lu wrote:
-> On Wed, Sep 11, 2019 at 12:47:34PM -0400, Vineeth Remanan Pillai wrote:
+On Wed, Sep 11, 2019 at 10:43 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Wed, Sep 11, 2019 at 02:01:59PM -0700, Nick Desaulniers wrote:
+> > On Wed, Sep 11, 2019 at 11:21 AM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > >
+> > > r370454 gives LLVM the ability to convert certain loops into a reference
+> > > to bcmp as an optimization; this breaks prom_init_check.sh:
+> > >
+> > >   CALL    arch/powerpc/kernel/prom_init_check.sh
+> > > Error: External symbol 'bcmp' referenced from prom_init.c
+> > > make[2]: *** [arch/powerpc/kernel/Makefile:196: prom_init_check] Error 1
+> > >
+> > > bcmp is defined in lib/string.c as a wrapper for memcmp so this could be
+> > > added to the whitelist. However, commit 450e7dd4001f ("powerpc/prom_init:
+> > > don't use string functions from lib/") copied memcmp as prom_memcmp to
+> > > avoid KASAN instrumentation so having bcmp be resolved to regular memcmp
+> > > would break that assumption. Furthermore, because the compiler is the
+> > > one that inserted bcmp, we cannot provide something like prom_bcmp.
+> > >
+> > > To prevent LLVM from being clever with optimizations like this, use
+> > > -ffreestanding to tell LLVM we are not hosted so it is not free to make
+> > > transformations like this.
+> > >
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/647
+> > > Link: https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+> >
+> > The above link doesn't work for me (HTTP 404).  PEBKAC?
+> > https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e002
+>
+> Not really sure how an extra 2 got added on the end of that... Must have
+> screwed up in vim somehow.
+>
+> Link: https://github.com/llvm/llvm-project/commit/5c9f3cfec78f9e9ae013de9a0d092a68e3e79e00
 
-> 
-> core wide vruntime makes sense when there are multiple tasks of
-> different cgroups queued on the same core. e.g. when there are two
-> tasks of cgroupA and one task of cgroupB are queued on the same core,
-> assume cgroupA's one task is on one hyperthread and its other task is on
-> the other hyperthread with cgroupB's task. With my current
-> implementation or Tim's, cgroupA will get more time than cgroupB. 
+That looks better.  Assuming Michael doesn't mind amending the link
+when applying:
+Reviewed-by: Nick Desaulneris <ndesaulniers@google.com>
 
-I think that's expected because cgroup A has two tasks and cgroup B
-has one task, so cgroup A should get twice the cpu time than cgroup B
-to maintain fairness.
+>
+> I can resend unless the maintainer is able to fix that up when it gets
+> applied.
+>
+> Cheers,
+> Nathan
 
-> If we
-> maintain core wide vruntime for cgroupA and cgroupB, we should be able
-> to maintain fairness between cgroups on this core. 
 
-I don't think the right thing to do is to give cgroupA and cgroupB equal
-time on a core.  The time they get should still depend on their 
-load weight. The better thing to do is to move one task from cgroupA
-to another core, that has only one cgroupA task so it can be paired up
-with that lonely cgroupA task.  This will eliminate the forced idle time
-for cgropuA both on current core and also the migrated core.
 
-> Tim propose to solve
-> this problem by doing some kind of load balancing if I'm not mistaken, I
-> haven't taken a look at this yet.
-> 
-
-My new patchset is trying to solve a different problem.  It is
-not trying to maintain fairness between cgroup on a core, but tries to
-even out the load of a cgroup between threads, and even out general
-load between cores. This will minimize the forced idle time.
-
-The fairness between cgroup relies still on
-proper vruntime accounting and proper comparison of vruntime between
-threads.  So for now, I am still using Aaron's patchset for this purpose
-as it has better fairness property than my other proposed patchsets
-for fairness purpose.
-
-With just Aaron's current patchset we may have a lot of forced idle time
-due to the uneven distribution of tasks of different cgroup among the
-threads and cores, even though scheduling fairness is maintained.
-My new patches try to remove those forced idle time by moving the
-tasks around, to minimize cgroup unevenness between sibling threads
-and general load unevenness between the CPUs.
-
-Tim
-
+-- 
+Thanks,
+~Nick Desaulniers
