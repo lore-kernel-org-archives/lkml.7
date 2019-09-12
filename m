@@ -2,90 +2,111 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA86C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD48C49ED6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C942085B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E77020684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfILBjg (ORCPT
+        id S1728415AbfILBzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 21:39:36 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:58206 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbfILBjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 21:39:36 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8C1dI5o006280
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 12 Sep 2019 10:39:18 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8C1dI3S015606;
-        Thu, 12 Sep 2019 10:39:18 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8C1dH8A007804;
-        Thu, 12 Sep 2019 10:39:18 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.149] [10.38.151.149]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-8391413; Thu, 12 Sep 2019 10:38:01 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC21GP.gisp.nec.co.jp ([10.38.151.149]) with mapi id 14.03.0439.000; Thu,
- 12 Sep 2019 10:38:00 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     Oscar Salvador <osalvador@suse.de>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-Thread-Topic: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-Thread-Index: AQHVZ8LT5A97dnADeEaaRGKxuElT0aclsJgAgAD+bYA=
-Date:   Thu, 12 Sep 2019 01:37:59 +0000
-Message-ID: <20190912013759.GA4614@hori.linux.bs1.fc.nec.co.jp>
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190910103016.14290-3-osalvador@suse.de>
- <a2ec3629-3671-cdb4-70e8-2c7e327444e9@redhat.com>
-In-Reply-To: <a2ec3629-3671-cdb4-70e8-2c7e327444e9@redhat.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EA10468B73AF4A4EAAC8FF61D7BCB047@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Wed, 11 Sep 2019 21:55:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2215 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726793AbfILBzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 21:55:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6FDF11646A7ADD38EC00;
+        Thu, 12 Sep 2019 09:55:50 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.157) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Sep 2019
+ 09:55:47 +0800
+To:     <mingo@redhat.com>, <peterz@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>
+From:   shikemeng <shikemeng@huawei.com>
+Subject: [PATCH] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
+Message-ID: <4a492fe8-09b7-d8ee-8a16-602e592b00b6@huawei.com>
+Date:   Thu, 12 Sep 2019 09:55:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.52.157]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCBTZXAgMTEsIDIwMTkgYXQgMTI6Mjc6MjJQTSArMDIwMCwgRGF2aWQgSGlsZGVuYnJh
-bmQgd3JvdGU6DQo+IE9uIDEwLjA5LjE5IDEyOjMwLCBPc2NhciBTYWx2YWRvciB3cm90ZToNCj4g
-PiBGcm9tOiBOYW95YSBIb3JpZ3VjaGkgPG4taG9yaWd1Y2hpQGFoLmpwLm5lYy5jb20+DQo+ID4g
-DQo+ID4gQ3VycmVudGx5IG1hZHZpc2VfaW5qZWN0X2Vycm9yKCkgcGlucyB0aGUgdGFyZ2V0IHZp
-YSBnZXRfdXNlcl9wYWdlc19mYXN0Lg0KPiA+IFRoZSBjYWxsIHRvIGdldF91c2VyX3BhZ2VzX2Zh
-c3QgaXMgb25seSB0byBnZXQgdGhlIHJlc3BlY3RpdmUgcGFnZQ0KPiA+IG9mIGEgZ2l2ZW4gYWRk
-cmVzcywgYnV0IGl0IGlzIHRoZSBqb2Igb2YgdGhlIG1lbW9yeS1wb2lzb25pbmcgaGFuZGxlcg0K
-PiA+IHRvIGRlYWwgd2l0aCByYWNlcywgc28gZHJvcCB0aGUgcmVmY291bnQgZ3JhYmJlZCBieSBn
-ZXRfdXNlcl9wYWdlc19mYXN0Lg0KPiA+IA0KPiANCj4gT2gsIGFuZCBhbm90aGVyIHF1ZXN0aW9u
-ICJpdCBpcyB0aGUgam9iIG9mIHRoZSBtZW1vcnktcG9pc29uaW5nIGhhbmRsZXIiDQo+IC0gaXMg
-dGhhdCBhbHJlYWR5IHByb3Blcmx5IGltcGxlbWVudGVkPyAobmV3YmVlIHF1ZXN0aW9uIMKvXF8o
-44OEKV8vwq8pDQoNClRoZSBhYm92ZSBkZXNjcmlwdGlvbiBtaWdodCBiZSBjb25mdXNpbmcsIHNv
-cnJ5LiBJdCdzIGludGVuZGVkIGxpa2VzDQoNCiAgVGhlIGNhbGwgdG8gZ2V0X3VzZXJfcGFnZXNf
-ZmFzdCBpcyBvbmx5IHRvIGdldCB0aGUgcG9pbnRlciB0byBzdHJ1Y3QNCiAgcGFnZSBvZiBhIGdp
-dmVuIGFkZHJlc3MsIHBpbm5pbmcgaXQgaXMgbWVtb3J5LXBvaXNvbmluZyBoYW5kbGVyJ3Mgam9i
-LA0KICBzbyBkcm9wIHRoZSByZWZjb3VudCBncmFiYmVkIGJ5IGdldF91c2VyX3BhZ2VzX2Zhc3Qu
-DQoNCkFuZCBwaW5uaW5nIGlzIGRvbmUgaW4gZ2V0X2h3cG9pc29uX3BhZ2UoKSBmb3IgaGFyZC1v
-ZmZsaW5lIGFuZA0KZ2V0X2FueV9wYWdlKCkgZm9yIHNvZnQtb2ZmbGluZS4gIEZvciBzb2Z0LW9m
-ZmxpbmUgY2FzZSwgdGhlIHNlbWFudGljcyBvZg0KcmVmY291bnQgb2YgcG9pc29uZWQgcGFnZXMg
-aXMgd2hhdCB0aGlzIHBhdGNoc2V0IHRyaWVzIHRvIGNoYW5nZS9pbXByb3ZlLg0KDQpUaGFua3Ms
-DQpOYW95YSBIb3JpZ3VjaGk=
+From 089dbf0216628ac6ae98742ab90725ca9c2bf201 Mon Sep 17 00:00:00 2001
+From:  <shikemeng@huawei.com>
+Date: Tue, 10 Sep 2019 09:44:58 -0400
+Subject: [PATCH] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
+
+reason: migration to invalid cpu in __set_cpus_allowed_ptr
+archive path: patches/euleros/sched
+
+Oops occur when running qemu on arm64:
+ Unable to handle kernel paging request at virtual address ffff000008effe40
+ Internal error: Oops: 96000007 [#1] SMP
+ Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
+ pstate: 20000085 (nzCv daIf -PAN -UAO)
+ pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+ lr : move_queued_task.isra.21+0x124/0x298
+ ...
+ Call trace:
+  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+  __migrate_task+0xc8/0xe0
+  migration_cpu_stop+0x170/0x180
+  cpu_stopper_thread+0xec/0x178
+  smpboot_thread_fn+0x1ac/0x1e8
+  kthread+0x134/0x138
+  ret_from_fork+0x10/0x18
+
+__set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask to migrage the process if process is not
+currently running on any one of the CPUs specified in affinity mask.__set_cpus_allowed_ptr will choose an invalid
+dest_cpu(>= nr_cpu_ids, 1024 in my virtual machine) if CPUS in affinity mask are deactived by cpu_down after
+cpumask_intersects check.Cpumask_test_cpu of dest_cpu afterwards is overflow and may passes if corresponding bit
+is coincidentally set.As a consequence, kernel will access a invalid rq address associate with the invalid cpu in
+migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs. Process as follows may trigger the Oops:
+1) A process repeatedly bind itself to cpu0 and cpu1 in turn by calling sched_setaffinity
+2) A shell script repeatedly "echo 0 > /sys/devices/system/cpu/cpu1/online" and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn
+3) Oops appears if the invalid cpu is set in memory after tested cpumask.
+
+
+Change-Id: I9c2f95aecd3da568991b7408397215f26c990e40
+---
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4b63fef..5181ea9 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1112,7 +1112,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+    if (cpumask_equal(&p->cpus_allowed, new_mask))
+        goto out;
+
+-   if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
++   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
++   if (dest_cpu >= nr_cpu_ids) {
+        ret = -EINVAL;
+        goto out;
+    }
+@@ -1133,7 +1134,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+    if (cpumask_test_cpu(task_cpu(p), new_mask))
+        goto out;
+
+-   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+    if (task_running(rq, p) || p->state == TASK_WAKING) {
+        struct migration_arg arg = { p, dest_cpu };
+        /* Need help from migration thread: drop lock and wait. */
+--
+1.8.5.6
 
