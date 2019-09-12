@@ -2,96 +2,157 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB35C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0688BC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C9520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1520214DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g6S0hKWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732023AbfILNCq (ORCPT
+        id S1731858AbfILNDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:02:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55893 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731864AbfILNCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:02:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 06:02:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
-   d="scan'208";a="215037563"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Sep 2019 06:02:43 -0700
-Received: from vjyoung-mobl.amr.corp.intel.com (unknown [10.251.12.73])
-        by linux.intel.com (Postfix) with ESMTP id 3F784580862;
-        Thu, 12 Sep 2019 06:02:42 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add
- dmic format constraint
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org
-References: <20190912022740.161798-1-yuhsuan@chromium.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
-Date:   Thu, 12 Sep 2019 08:02:23 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 12 Sep 2019 09:03:02 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:42982 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731626AbfILNDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:03:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1568293380; x=1599829380;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=mtcExX1DvgKeY32dgd0YJY2ICHMN8S9nv5NWZ+RR3o4=;
+  b=g6S0hKWU7tePF40Twz7NEo0CrhjfR13c+EMwFIYi8LLJTSQ0IsP0mN6e
+   xO9uPmGTac8lFezHLOkOPfvhs78hv10wtMKaRAGgUzqQX5UpEcJB+vbQA
+   6cvSN3KF+M4Vny3yzNTiGXLlBDVaIh/8w3vW2Gm2ZQw5btZdx8ZK+ksnf
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
+   d="scan'208";a="784613477"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Sep 2019 13:02:58 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 049C924A8F2;
+        Thu, 12 Sep 2019 13:02:57 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Sep 2019 13:02:57 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.161.99) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Sep 2019 13:02:51 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
+        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
+        <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v6 5/7] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+Date:   Thu, 12 Sep 2019 16:02:36 +0300
+Message-ID: <20190912130238.15682-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
+References: <20190912130042.14597-1-jonnyc@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190912022740.161798-1-yuhsuan@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.99]
+X-ClientProxiedBy: EX13D07UWB003.ant.amazon.com (10.43.161.66) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/19 9:27 PM, Yu-Hsuan Hsu wrote:
-> 24 bits recording from DMIC is not supported for KBL platform because
-> the TDM slot between PCH and codec is 16 bits only. We should add a
-> constraint to remove that unsupported format.
+Document Amazon's Annapurna Labs PCIe host bridge.
 
-Humm, when you use DMICs they are directly connected to the PCH with a 
-standard 1-bit PDM. There is no notion of TDM or slot.
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pci/pcie-al.txt       | 46 +++++++++++++++++++
+ MAINTAINERS                                   |  3 +-
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-It could very well be that the firmware/topology only support 16 bit (I 
-vaguely recall another case where 24 bits was added), but the 
-description in the commit message would need to be modified to make the 
-reason for this change clearer.
-
-> 
-> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> ---
->   sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> index 74dda8784f1a01..67b276a65a8d2d 100644
-> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
->   	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
->   			dmic_constraints);
->   
-> +	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> +	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
-> +
->   	return snd_pcm_hw_constraint_list(substream->runtime, 0,
->   			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
->   }
-> 
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+new file mode 100644
+index 000000000000..557a5089229d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+@@ -0,0 +1,46 @@
++* Amazon Annapurna Labs PCIe host bridge
++
++Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
++PCI core. It inherits common properties defined in
++Documentation/devicetree/bindings/pci/designware-pcie.txt.
++
++Properties of the host controller node that differ from it are:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain
++			- "amazon,al-alpine-v2-pcie" for alpine_v2
++			- "amazon,al-alpine-v3-pcie" for alpine_v3
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register ranges as listed in the reg-names property
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Must include the following entries
++			- "config"	PCIe ECAM space
++			- "controller"	AL proprietary registers
++			- "dbi"		Designware PCIe registers
++
++Example:
++
++	pcie-external0: pcie@fb600000 {
++		compatible = "amazon,al-alpine-v3-pcie";
++		reg = <0x0 0xfb600000 0x0 0x00100000
++		       0x0 0xfd800000 0x0 0x00010000
++		       0x0 0xfd810000 0x0 0x00001000>;
++		reg-names = "config", "controller", "dbi";
++		bus-range = <0 255>;
++		device_type = "pci";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0x00 0 0 7>;
++		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
++		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e3c4b4..d200b16fa95c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12448,10 +12448,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+ S:	Supported
+ F:	drivers/pci/controller/
+ 
+-PCIE DRIVER FOR ANNAPURNA LABS
++PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+ F:	drivers/pci/controller/dwc/pcie-al.c
+ 
+ PCIE DRIVER FOR AMLOGIC MESON
+-- 
+2.17.1
 
