@@ -2,148 +2,96 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6292BC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9B8C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3684020856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ecsVnCqf"
+	by mail.kernel.org (Postfix) with ESMTP id 2050020856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfILJi2 (ORCPT
+        id S1730815AbfILJkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:38:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40687 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfILJi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:38:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m3so2906398wmc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FyZv+2jpXHUeLj3zo5hEMKDZeE0gwZkeevJP1UY0f7g=;
-        b=ecsVnCqf7jy234ajtjhPg9bUFq6eqgeSiFQ3B9VshYDzlqTvwe6qHgo3Rme+YYjBYq
-         57zpk4CVJaSffFdPd270c0VN8xlStEbZJZ+Sqs9lpMMOoBBIxWcWmnuTRQRez1qiHG0d
-         1lF/Ub0lLFF61mcsJSmPRk+pkj9XHPLqMlmxv7g+hUhnOhPZJw3sqdIw0H0sRO6Szluy
-         uubJNNNO3gpZ0uIIEthnKcGjYVCyroZ5Acc8NukHDVwgHn57hKBRTPjMeKVcjOYEpRX9
-         joNJftMwDDaAtTVKc4vY8Ukzbw1p4oew/FyaHhwm6kEX+/WIUZzjHq3A1AVFc9G0i9jV
-         +qUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FyZv+2jpXHUeLj3zo5hEMKDZeE0gwZkeevJP1UY0f7g=;
-        b=NmqXODaEAmT3AJkogSn9n2Esfv9iBWhArSwrFpDIvagaN96OiK40pJYM2KirRjih8C
-         zdCDwS/fGDN3Maajjpe9Nu8bxRBHI8eavI/Z9qqE1vVIMcBIUMtUqEVe40yMOAcZyFvB
-         EDt8mmiU3VrsyVJiKWPpPbCwnaW0kV+ZfX0ZonCOMAzZfJrtruNcndmgv6Kq0q+VM8Oe
-         oNCAVHYyiiB3X29JDUuRqQbo31kSzZie9KhmLvymLsVWoT24wIhfkGd1PzCWkiA7btZA
-         G3zALPlQSc8rJRVboffGob31HDOZzm10Kl6fLMyZCZbH5jTpWcaRhI3FRP7kasTy0h15
-         TVmA==
-X-Gm-Message-State: APjAAAVcAfuB4ExBBFw1EPNW31Yn0EVy6auQYeQgIs6KLvmZAwkGiBAM
-        iohA1ZVoSx9dehiKk5EkAAoRrA==
-X-Google-Smtp-Source: APXvYqwjmAOKkNKKUOfQJdiedHbylzFrCwIEHmlMF2gTZyinn/Hgz7ItTmOAoVNQxy2zFP2RBUqnOg==
-X-Received: by 2002:a05:600c:2386:: with SMTP id m6mr1662719wma.164.1568281106577;
-        Thu, 12 Sep 2019 02:38:26 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s26sm43063574wrs.63.2019.09.12.02.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 02:38:25 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 10:38:23 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 2/2] backlight: lm3630a: add an enable gpio for the
- HWEN pin
-Message-ID: <20190912093823.h5ahzutlp4evwg6l@holly.lan>
-References: <20190911172106.12843-1-andreas@kemnade.info>
- <20190911172106.12843-3-andreas@kemnade.info>
+        Thu, 12 Sep 2019 05:40:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45576 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730454AbfILJkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:40:32 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9D954308FBFC;
+        Thu, 12 Sep 2019 09:40:31 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-89.pek2.redhat.com [10.72.12.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 376B860852;
+        Thu, 12 Sep 2019 09:40:14 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com
+Cc:     mst@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        cohuck@redhat.com, farman@linux.ibm.com, pasic@linux.ibm.com,
+        sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [RFC PATCH 0/2] Mdev: support mutiple kinds of devices
+Date:   Thu, 12 Sep 2019 17:40:10 +0800
+Message-Id: <20190912094012.29653-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911172106.12843-3-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 12 Sep 2019 09:40:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 07:21:06PM +0200, Andreas Kemnade wrote:
-> For now just enable it in the probe function to allow i2c
-> access. Disabling also means resetting the register values
-> to default and according to the datasheet does not give
-> power savings.
-> 
-> Tested on Kobo Clara HD.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Hi all:
 
-Make sure Dan is happy w.r.t. his review comments but if this driver is
-unchanged when you spin v4 (for the DT changes) then feel free to add:
+During the development of virtio-mdev[1]. I find that mdev needs to be
+extended to support devices other than vfio mdev device. So this
+series tries to extend the mdev to be able to differ from different
+devices by:
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+- device id and matching for mdev bus
+- device speicfic callbacks and move vfio callbacks there
 
+Sent for early reivew, compile test only!
 
-Daniel.
+Thanks
 
-> ---
-> changes in v2:
-> - simplification
-> - correct gpio direction initialisation
-> 
-> changes in v3:
-> - removed legacy include
-> 
->  drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index 8f84f3684f04..d9e67b9b2571 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -12,6 +12,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/interrupt.h>
->  #include <linux/regmap.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/pwm.h>
->  #include <linux/platform_data/lm3630a_bl.h>
->  
-> @@ -48,6 +49,7 @@ struct lm3630a_chip {
->  	struct lm3630a_platform_data *pdata;
->  	struct backlight_device *bleda;
->  	struct backlight_device *bledb;
-> +	struct gpio_desc *enable_gpio;
->  	struct regmap *regmap;
->  	struct pwm_device *pwmd;
->  };
-> @@ -535,6 +537,13 @@ static int lm3630a_probe(struct i2c_client *client,
->  	}
->  	pchip->pdata = pdata;
->  
-> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> +						GPIOD_OUT_HIGH);
-> +	if (IS_ERR(pchip->enable_gpio)) {
-> +		rval = PTR_ERR(pchip->enable_gpio);
-> +		return rval;
-> +	}
-> +
->  	/* chip initialize */
->  	rval = lm3630a_chip_init(pchip);
->  	if (rval < 0) {
-> -- 
-> 2.20.1
-> 
+[1] https://lkml.org/lkml/2019/9/10/135
+
+Jason Wang (2):
+  mdev: device id support
+  mdev: introduce device specific ops
+
+ drivers/gpu/drm/i915/gvt/kvmgt.c  | 16 ++++---
+ drivers/s390/cio/vfio_ccw_ops.c   | 16 ++++---
+ drivers/s390/crypto/vfio_ap_ops.c | 13 ++++--
+ drivers/vfio/mdev/mdev_core.c     | 14 +++++-
+ drivers/vfio/mdev/mdev_driver.c   | 14 ++++++
+ drivers/vfio/mdev/mdev_private.h  |  1 +
+ drivers/vfio/mdev/vfio_mdev.c     | 36 ++++++++++-----
+ include/linux/mdev.h              | 76 +++++++++++++++++++------------
+ include/linux/mod_devicetable.h   |  6 +++
+ samples/vfio-mdev/mbochs.c        | 18 +++++---
+ samples/vfio-mdev/mdpy.c          | 18 +++++---
+ samples/vfio-mdev/mtty.c          | 16 ++++---
+ 12 files changed, 163 insertions(+), 81 deletions(-)
+
+-- 
+2.19.1
+
