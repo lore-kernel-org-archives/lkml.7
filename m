@@ -2,111 +2,76 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089CEC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54018C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88B820830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCadSE/h"
+	by mail.kernel.org (Postfix) with ESMTP id 2743E214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfILSej (ORCPT
+        id S1727404AbfILStA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:34:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43469 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfILSei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:34:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so12138907pld.10;
-        Thu, 12 Sep 2019 11:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NsNEAUZ0Crnd+Dr07/EE6yGUJNjNyQsJ9LixZ3AYBk=;
-        b=QCadSE/h+WLe3KRnzUxywPKimE34rq2JsyZQmRVzAk5IwhygxT3DXRIsQ2u8QaaL9s
-         m1PhsBQBJ4rfHYyDdNlbzIuS/zklzrU4FXcAAc4um9qH3blhL4f1v/T6cV6mJdm7eGvb
-         YuD+kKkM/GwZxfWJdx0ZFo2K19LDzV3Dn4a2qMSCa/UZch/K16B8s9KZQc/z7YEI7FU1
-         AsY6dEVLGXjjnxM5ty3LO9i/U4FitSHSojnHPxiW/pfECOTkp8reOYpQyQD2ngC4RQ0p
-         3dvUYdzyIZN+xsVxhZdglprL9OH95BgW4/WUPQilBoJQ2BB4uXbyIJmEbiHJbZ0OPfPf
-         cwEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NsNEAUZ0Crnd+Dr07/EE6yGUJNjNyQsJ9LixZ3AYBk=;
-        b=cCdtT1dJ6NWysgXuP9TwZ5H3hFe9h6dvh1UUxlw0Ov/y8/QZCqdvU7q4c1KrZP1IJw
-         0y9B/TgQi0uwCRkH/U/B7NoMbx2NdQcjU7saCqriJTQwoVBirEv4kqnRNnyqzwndZ7Db
-         3fe5GpqFE7fW27rmLyiOWkyEhqVmrpFSfdpDrUfGpBOSXkf6JtS+sEqoVPaAq/cw7SzB
-         KW6fo1p+5Xk5hGMe5TecS57RPTIlRWngiO96KZP0XK2EkozFrTiK5zP/MTWuW2s8fiVO
-         bNX1HuNeoC935lSd+pi00mzKIFL5pJ58d5iNetwfrE4xAlvIZ3KQMJGIIMDDvW9A+khf
-         kcEg==
-X-Gm-Message-State: APjAAAX4608UtgALGz0gV8j/jdTPs8ROAh2FG+Uh5tr3kTIGE/zbSEGH
-        ZkZKIBy71NcevFv24RpuN94=
-X-Google-Smtp-Source: APXvYqzxRpsshcfcA0i0pqzMLG6IutkR305eKHGsQ2JWDSwpEi7peKrNpJOhCCJq+23ayYPtZeK14w==
-X-Received: by 2002:a17:902:9b86:: with SMTP id y6mr44838169plp.217.1568313276613;
-        Thu, 12 Sep 2019 11:34:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b5sm45646907pfp.38.2019.09.12.11.34.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 11:34:35 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 11:34:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
-Cc:     bjorn.andersson@linaro.org, wim@linux-watchdog.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] watchdog: qcom: support pre-timeout when the bark
- irq is available
-Message-ID: <20190912183435.GB5065@roeck-us.net>
-References: <20190906205411.31666-1-jorge.ramirez-ortiz@linaro.org>
- <20190906205411.31666-2-jorge.ramirez-ortiz@linaro.org>
- <20190910180655.GA25286@roeck-us.net>
- <20190912072454.GA11651@igloo>
+        Thu, 12 Sep 2019 14:49:00 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46388 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbfILStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 14:49:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 11:48:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,498,1559545200"; 
+   d="scan'208";a="184886027"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Sep 2019 11:48:58 -0700
+Date:   Thu, 12 Sep 2019 11:48:58 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v2 4/4] x86/mce: Add Zhaoxin LMCE support
+Message-ID: <20190912184858.GA26892@agluck-desk2.amr.corp.intel.com>
+References: <5f4f8dee1fb24d38aa0ee136c5e98c72@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912072454.GA11651@igloo>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <5f4f8dee1fb24d38aa0ee136c5e98c72@zhaoxin.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 09:24:54AM +0200, Jorge Ramirez-Ortiz, Linaro wrote:
-> On 10/09/19 11:06:55, Guenter Roeck wrote:
-> > On Fri, Sep 06, 2019 at 10:54:10PM +0200, Jorge Ramirez-Ortiz wrote:
-> > > Use the bark interrupt as the pre-timeout notifier whenever this
-> > > interrupt is available.
-> > > 
-> > > By default, the pretimeout notification shall occur one second earlier
-> > > than the timeout.
-> > > 
-> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > 
-> > Nitpick below, otherwise:
-> > 
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > 
-> > > +		wdt->wdd.pretimeout = 0;
-> > 
-> > It is not necessary to set pretimeout to 0; the data structure was
-> > allocated with devm_kzalloc(). The compiler won't know that and
-> > generate unnecessary code otherwise.
-> 
-> will you need me to send another version or could you pick it up as is?
-> 
+On Tue, Sep 10, 2019 at 08:20:07AM +0000, Tony W Wang-oc wrote:
+> Zhaoxin newer CPUs support LMCE that compatible with Intel's
+> "Machine-Check Architecture", so add support for Zhaoxin LMCE
+> in mce/core.c.
 
-I applied the patch to my watchdog-next branch, with the line removed.
-Let's assume that Wim will pick it up from there. If not, and
-the line stays in, no real damage.
+Your mailer included a header:
 
-In short, no need to resubmit.
+	Content-Language: zh-CN
 
-Guenter
+which seems to have made my e-mail client (mutt) very
+confused when saving some parts of this series.
+
+Unsure whether that is a problem for you to fix, or an issue
+at my end. Posting here to see if it rings any bells for
+someone else.
+
+-Tony
