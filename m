@@ -2,80 +2,132 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F970C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AF0C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F1520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939D72075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfILNfK (ORCPT
+        id S1732188AbfILNhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:35:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57126 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731283AbfILNfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:35:10 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 32D2E806A42;
-        Thu, 12 Sep 2019 13:35:10 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 389E85D9E5;
-        Thu, 12 Sep 2019 13:35:09 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     bfields@fieldses.org, tibbs@math.uh.edu, linux@stwm.de,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        km@cm4all.com, chuck.lever@oracle.com
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Thu, 12 Sep 2019 09:35:08 -0400
-Message-ID: <E3D5BD21-8D9D-4EBE-A607-5D4BC9692C63@redhat.com>
-In-Reply-To: <db42c87ba2c5b0852ad42ba51792ee67ab036a37.camel@hammerspace.com>
-References: <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
- <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
- <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
- <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
- <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
- <EC2B51FB-8C22-4513-B59F-0F0741F694EB@redhat.com>
- <c8bc4f95e7a097b01e5fff9ce5324e32ee9d8821.camel@hammerspace.com>
- <57185A91-0AC8-4805-B6CE-67D629F814C2@redhat.com>
- <20190912131359.GB31879@fieldses.org>
- <db42c87ba2c5b0852ad42ba51792ee67ab036a37.camel@hammerspace.com>
+        Thu, 12 Sep 2019 09:37:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32976 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731283AbfILNhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:37:38 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CDXIuL020722;
+        Thu, 12 Sep 2019 09:37:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp6qt5vb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 09:37:19 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CDZHn7027303;
+        Thu, 12 Sep 2019 09:37:19 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp6qt5u7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 09:37:19 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CDYS2x024731;
+        Thu, 12 Sep 2019 13:37:17 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2uv468xvaw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 13:37:17 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CDbGY562128512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 13:37:16 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 856C2136059;
+        Thu, 12 Sep 2019 13:37:16 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B4A8136051;
+        Thu, 12 Sep 2019 13:37:14 +0000 (GMT)
+Received: from [9.199.32.243] (unknown [9.199.32.243])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 13:37:13 +0000 (GMT)
+Subject: Re: [PATCH 1/3] powerpc/mm: Initialize the HPTE encoding values
+To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830120712.22971-1-ldufour@linux.ibm.com>
+ <20190830120712.22971-2-ldufour@linux.ibm.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <527b1a15-e37f-0d76-b999-e22cf04f9f7e@linux.ibm.com>
+Date:   Thu, 12 Sep 2019 19:07:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 12 Sep 2019 13:35:10 +0000 (UTC)
+In-Reply-To: <20190830120712.22971-2-ldufour@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12 Sep 2019, at 9:25, Trond Myklebust wrote:
+On 8/30/19 5:37 PM, Laurent Dufour wrote:
+> Before reading the HPTE encoding values we initialize all of them to -1 (an
+> invalid value) to later being able to detect the initialized ones.
+> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> ---
+>   arch/powerpc/mm/book3s64/hash_utils.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+> index c3bfef08dcf8..2039bc315459 100644
+> --- a/arch/powerpc/mm/book3s64/hash_utils.c
+> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+> @@ -408,7 +408,7 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
+>   {
+>   	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+>   	const __be32 *prop;
+> -	int size = 0;
+> +	int size = 0, idx, base_idx;
+>   
+>   	/* We are scanning "cpu" nodes only */
+>   	if (type == NULL || strcmp(type, "cpu") != 0)
+> @@ -418,6 +418,11 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
+>   	if (!prop)
+>   		return 0;
+>   
+> +	/* Set all the penc values to invalid */
+> +	for (base_idx = 0; base_idx < MMU_PAGE_COUNT; base_idx++)
+> +		for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
+> +			mmu_psize_defs[base_idx].penc[idx] = -1;
+> +
+>   	pr_info("Page sizes from device-tree:\n");
+>   	size /= 4;
+>   	cur_cpu_spec->mmu_features &= ~(MMU_FTR_16M_PAGE);
+> @@ -426,7 +431,6 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
+>   		unsigned int slbenc = be32_to_cpu(prop[1]);
+>   		unsigned int lpnum = be32_to_cpu(prop[2]);
+>   		struct mmu_psize_def *def;
+> -		int idx, base_idx;
+>   
+>   		size -= 3; prop += 3;
+>   		base_idx = get_idx_from_shift(base_shift);
+> 
 
-> On Thu, 2019-09-12 at 09:13 -0400, J. Bruce Fields wrote:
->> (Unless I'm missing something.  I haven't looked at this code in a
->> while.  Though it was problem me that wrote it originally--apologies
->> for
->> that....)
->>
->
-> The function itself is fine. It was just the name I'm objecting to,
-> since we're actually moving the last 'n' bytes in the message in order
-> to be able to read them.
+We already do this in mmu_psize_set_default_penc() ?
 
-Ok, that's helpful guidance since it saves me from doing a stable fix and
-then an attempt to rename/optimize/breakitagain.
-
-I'll just rename it at the same time as the fix.. but now I wonder if that
-can potentially mess up other fixes that might retroactively get sent to
-stable.  Maybe I'm over thinking it.  I guess I'll send the fix and then the
-rename separately, and maintainers can squash at will.
-
-Ben
+-aneesh
