@@ -2,168 +2,109 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A2CC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1337C20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FF42084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568319662;
+	bh=l2NAdBIQ4Z3zUHMO8cl9sMZVQOpKcb4IKh5SGYzqnUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RmS9IEL8tDug988gsUWQNU5WndTea+1EQx/G9qTAu4R8kd4JrVhhZEgQRnFnfKBLM
+	 h1qmyDhIJq1Wj4RJMqDBPYlP8SR1zCfd3ta7Sc9Jn8D2XU4wOrz6kMhcinzknVCC1W
+	 4sLlguepfoGXsPh4lISxuvig8NeAa7lmzid9CDs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfILUTv convert rfc822-to-8bit (ORCPT
+        id S1726894AbfILUVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:19:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60688 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbfILUTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:19:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 31F95AD08;
-        Thu, 12 Sep 2019 20:19:48 +0000 (UTC)
-Date:   Thu, 12 Sep 2019 22:19:46 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 5/7] powerpc/64: make buildable without CONFIG_COMPAT
-Message-ID: <20190912221946.41a161e4@kitsune.suse.cz>
-In-Reply-To: <758324b9-203b-ec4b-affc-a30aefc9ea23@c-s.fr>
-References: <cover.1568306311.git.msuchanek@suse.de>
-        <039ed7ac686927fe169241ac72225a258d95ccfc.1568306311.git.msuchanek@suse.de>
-        <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
-        <20190912202604.14a73423@kitsune.suse.cz>
-        <758324b9-203b-ec4b-affc-a30aefc9ea23@c-s.fr>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 12 Sep 2019 16:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfILUVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:21:01 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ABB020663;
+        Thu, 12 Sep 2019 20:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568319660;
+        bh=l2NAdBIQ4Z3zUHMO8cl9sMZVQOpKcb4IKh5SGYzqnUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HcMHJ8/VTSujngw2sG/YUpTBVedAbF59mgqRGLNz0nTXyUIefs1UMjNnekxklREHQ
+         QA1rU81q07pCFdAG+K4VEOizOODHaBZVOAllODrbuMZj3/Ib7MqnkHlecVMmg5JGLL
+         zW2g8lnfLHq4jW7EyZtp5EeEz/U5f5+bZRCLlYFQ=
+Date:   Thu, 12 Sep 2019 22:20:57 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 3/6] ARM: dts: sunxi: h3/h5: Add MBUS controller node
+Message-ID: <20190912202057.czb6nzgssg442isi@localhost.localdomain>
+References: <20190912175132.411-1-jernej.skrabec@siol.net>
+ <20190912175132.411-4-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190912175132.411-4-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 21:36:11 +0200
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+Hi,
 
-> Le 12/09/2019 à 20:26, Michal Suchánek a écrit :
-> > On Thu, 12 Sep 2019 20:02:16 +0200
-> > Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> >   
-> >> Le 12/09/2019 à 19:26, Michal Suchanek a écrit :  
-> >>> There are numerous references to 32bit functions in generic and 64bit
-> >>> code so ifdef them out.
-> >>>
-> >>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> >>> ---
-> >>> v2:
-> >>> - fix 32bit ifdef condition in signal.c
-> >>> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> >>> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> >>> v3:
-> >>> - use IS_ENABLED and maybe_unused where possible
-> >>> - do not ifdef declarations
-> >>> - clean up Makefile
-> >>> v4:
-> >>> - further makefile cleanup
-> >>> - simplify is_32bit_task conditions
-> >>> - avoid ifdef in condition by using return
-> >>> v5:
-> >>> - avoid unreachable code on 32bit
-> >>> - make is_current_64bit constant on !COMPAT
-> >>> - add stub perf_callchain_user_32 to avoid some ifdefs
-> >>> v6:
-> >>> - consolidate current_is_64bit
-> >>> v7:
-> >>> - remove leftover perf_callchain_user_32 stub from previous series version
-> >>> v8:
-> >>> - fix build again - too trigger-happy with stub removal
-> >>> - remove a vdso.c hunk that causes warning according to kbuild test robot
-> >>> ---
-> >>>    arch/powerpc/include/asm/thread_info.h |  4 +--
-> >>>    arch/powerpc/kernel/Makefile           |  7 ++---
-> >>>    arch/powerpc/kernel/entry_64.S         |  2 ++
-> >>>    arch/powerpc/kernel/signal.c           |  3 +-
-> >>>    arch/powerpc/kernel/syscall_64.c       |  6 ++--
-> >>>    arch/powerpc/kernel/vdso.c             |  3 +-
-> >>>    arch/powerpc/perf/callchain.c          | 39 ++++++++++++++------------
-> >>>    7 files changed, 33 insertions(+), 31 deletions(-)
-> >>>
-> >>> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-> >>> index 8e1d0195ac36..c128d8a48ea3 100644
-> >>> --- a/arch/powerpc/include/asm/thread_info.h
-> >>> +++ b/arch/powerpc/include/asm/thread_info.h
-> >>> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
-> >>>    	return (ti->local_flags & flags) != 0;
-> >>>    }
-> >>>    
-> >>> -#ifdef CONFIG_PPC64
-> >>> +#ifdef CONFIG_COMPAT
-> >>>    #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
-> >>>    #else
-> >>> -#define is_32bit_task()	(1)
-> >>> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
-> >>>    #endif
-> >>>    
-> >>>    #if defined(CONFIG_PPC64)  
-> >>
-> >> [...]
-> >>  
-> >>> +static inline int current_is_64bit(void)
-> >>> +{
-> >>> +	if (!IS_ENABLED(CONFIG_COMPAT))
-> >>> +		return IS_ENABLED(CONFIG_PPC64);
-> >>> +	/*
-> >>> +	 * We can't use test_thread_flag() here because we may be on an
-> >>> +	 * interrupt stack, and the thread flags don't get copied over
-> >>> +	 * from the thread_info on the main stack to the interrupt stack.
-> >>> +	 */
-> >>> +	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
-> >>> +}  
-> >>
-> >>
-> >> Since at least commit ed1cd6deb013 ("powerpc: Activate
-> >> CONFIG_THREAD_INFO_IN_TASK")
-> >> [https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed1cd6d]
-> >> the above comment is wrong and current_is_64bit() is equivalent to
-> >> !is_32bit_task()
-> >>
-> >> See https://github.com/linuxppc/issues/issues/275
-> >>
-> >> Christophe  
-> > 
-> > I aim at changing the code as little as possible here. A separate patch
-> > on top removing this function would be ok?  
-> 
-> Yes I agree. By making prior to this patch a separate patch which drops 
-> current_is_64bit() would be good. And it would reduce the size of this 
-> patch by approximately one third.
+On Thu, Sep 12, 2019 at 07:51:29PM +0200, Jernej Skrabec wrote:
+> Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
+> access system memory.
+>=20
+> MBUS controller is responsible for arbitration between channels based
+> on set priority and can do some other things as well, like report
+> bandwidth used. It also maps RAM region to different address than CPU.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi=
+-h3-h5.dtsi
+> index eba190b3f9de..ef1d03812636 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -109,6 +109,7 @@
+>  		compatible =3D "simple-bus";
+>  		#address-cells =3D <1>;
+>  		#size-cells =3D <1>;
+> +		dma-ranges;
+>  		ranges;
+> =20
+>  		display_clocks: clock@1000000 {
+> @@ -538,6 +539,14 @@
+>  			};
+>  		};
+> =20
+> +		mbus: dram-controller@1c62000 {
+> +			compatible =3D "allwinner,sun8i-h3-mbus";
+> +			reg =3D <0x01c62000 0x1000>;
+> +			clocks =3D <&ccu 113>;
+> +			dma-ranges =3D <0x00000000 0x40000000 0xc0000000>;
+> +			#interconnect-cells =3D <1>;
+> +		};
+> +
 
-Indeed, removing it before makes this patch much cleaner.
+If that's easy enough to access, can you also add the references in
+the devices that are already there? (CSI and DE comes to my mind, but
+there might be others).
 
-Thanks
-
-Michal
+Thanks!
+Maxime
