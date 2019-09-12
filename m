@@ -2,280 +2,254 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BFDC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBD8ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8312084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p6WRaHvp"
+	by mail.kernel.org (Postfix) with ESMTP id 49D38208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbfILJ2C (ORCPT
+        id S1730745AbfILJ2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:28:02 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53486 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730218AbfILJ2B (ORCPT
+        Thu, 12 Sep 2019 05:28:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730268AbfILJ2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:28:01 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7B47C33A;
-        Thu, 12 Sep 2019 11:27:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568280478;
-        bh=FgX5shnvhvvsoMnj0Tz1lstVsVd+UPt97RfcttdFqtY=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=p6WRaHvpSsjpXIhZlIoRBGSPkosld2cPqGztYfu2fELLFxrwckNYbscqpv80weVS+
-         qiA3DVAMgHz3CEFRH3tb7HuFChutStKWCsSo0av+uigAM8h7O/eGWKUPMrOVpRHa9K
-         NaorDvf/+TAz39TX71OPrKtEPz2Mjggvjgju9tJQ=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v4 5/9] drm: rcar-du: kms: Initialize CMM instances
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com,
-        muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thu, 12 Sep 2019 05:28:14 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8C9HXN9032123
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:28:12 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uyh47n4br-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:28:12 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 12 Sep 2019 10:28:10 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 10:28:07 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8C9S6Kn24510618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 09:28:06 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 869CCAE064;
+        Thu, 12 Sep 2019 09:28:06 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17400AE056;
+        Thu, 12 Sep 2019 09:28:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.92.148])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 09:28:06 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
+ KVM_S390_INTERRUPT ioctl
+To:     Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        kvm@vger.kernel.org
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-6-jacopo+renesas@jmondi.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <331b5f7c-49fe-1578-8698-0e69c456e995@ideasonboard.com>
-Date:   Thu, 12 Sep 2019 10:27:54 +0100
+References: <20190912090050.20295-1-thuth@redhat.com>
+ <6905df78-95f0-3d6d-aaae-910cd2d7a232@redhat.com>
+ <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 12 Sep 2019 11:28:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190906135436.10622-6-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="RPvOYPwnVuIf8SY9NmEhIEE0AZLwMgBpN"
+X-TM-AS-GCONF: 00
+x-cbid: 19091209-0020-0000-0000-0000036B5BEE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091209-0021-0000-0000-000021C0ECBC
+Message-Id: <1c8e5098-06fa-02b2-6af7-a356927ac5c4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--RPvOYPwnVuIf8SY9NmEhIEE0AZLwMgBpN
+Content-Type: multipart/mixed; boundary="cjG9B14QKHqLUU5MFwg4X6fAHDdTuBMQk";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>, David Hildenbrand <david@redhat.com>,
+ Christian Borntraeger <borntraeger@de.ibm.com>, kvm@vger.kernel.org
+Cc: Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <1c8e5098-06fa-02b2-6af7-a356927ac5c4@linux.ibm.com>
+Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
+ KVM_S390_INTERRUPT ioctl
+References: <20190912090050.20295-1-thuth@redhat.com>
+ <6905df78-95f0-3d6d-aaae-910cd2d7a232@redhat.com>
+ <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
+In-Reply-To: <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
 
-On 06/09/2019 14:54, Jacopo Mondi wrote:
-> Implement device tree parsing to collect the available CMM instances
-> described by the 'renesas,cmms' property. Associate CMMs with CRTCs and
-> store a mask of active CMMs in the DU group for later enablement.
-> 
-> Enforce the probe and suspend/resume ordering of DU and CMM by creating
-> a stateless device link between the two.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |  6 +++
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.h  |  2 +
->  drivers/gpu/drm/rcar-du/rcar_du_drv.h   |  2 +
->  drivers/gpu/drm/rcar-du/rcar_du_group.h |  2 +
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 68 +++++++++++++++++++++++++
->  5 files changed, 80 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index 2da46e3dc4ae..23f1d6cc1719 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -1194,6 +1194,12 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* CMM might be disabled for this CRTC. */
-> +	if (rcdu->cmms[swindex]) {
-> +		rcrtc->cmm = rcdu->cmms[swindex];
-> +		rgrp->cmms_mask |= BIT(hwindex % 2);
-> +	}
-> +
+--cjG9B14QKHqLUU5MFwg4X6fAHDdTuBMQk
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Good - this checks out :-D
+On 9/12/19 11:20 AM, Thomas Huth wrote:
+> On 12/09/2019 11.14, David Hildenbrand wrote:
+>> On 12.09.19 11:00, Thomas Huth wrote:
+>>> When the userspace program runs the KVM_S390_INTERRUPT ioctl to injec=
+t
+>>> an interrupt, we convert them from the legacy struct kvm_s390_interru=
+pt
+>>> to the new struct kvm_s390_irq via the s390int_to_s390irq() function.=
 
+>>> However, this function does not take care of all types of interrupts
+>>> that we can inject into the guest later (see do_inject_vcpu()). Since=
+ we
+>>> do not clear out the s390irq values before calling s390int_to_s390irq=
+(),
+>>> there is a chance that we copy unwanted data from the kernel stack
+>>> into the guest memory later if the interrupt data has not been proper=
+ly
+>>> initialized by s390int_to_s390irq().
+>>>
+>>> Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
+>>> interrupt: s390int_to_s390irq() does not handle it, but the function
+>>> __deliver_pfault_init() will later copy the uninitialized stack data
+>>> from the ext.ext_params2 into the guest memory.
+>>>
+>>> Fix it by handling that interrupt type in s390int_to_s390irq(), too.
+>>> And while we're at it, make sure that s390int_to_s390irq() now
+>>> directly returns -EINVAL for unknown interrupt types, so that we
+>>> do not run into this problem again in case we add more interrupt
+>>> types to do_inject_vcpu() sometime in the future.
+>>>
+>>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>>> ---
+>>>  arch/s390/kvm/interrupt.c | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+>>> index 3e7efdd9228a..165dea4c7f19 100644
+>>> --- a/arch/s390/kvm/interrupt.c
+>>> +++ b/arch/s390/kvm/interrupt.c
+>>> @@ -1960,6 +1960,16 @@ int s390int_to_s390irq(struct kvm_s390_interru=
+pt *s390int,
+>>>  	case KVM_S390_MCHK:
+>>>  		irq->u.mchk.mcic =3D s390int->parm64;
+>>>  		break;
+>>> +	case KVM_S390_INT_PFAULT_INIT:
+>>> +		irq->u.ext.ext_params =3D s390int->parm;
+>>> +		irq->u.ext.ext_params2 =3D s390int->parm64;
+>>> +		break;
+>>> +	case KVM_S390_RESTART:
+>>> +	case KVM_S390_INT_CLOCK_COMP:
+>>> +	case KVM_S390_INT_CPU_TIMER:
+>>> +		break;
+>>> +	default:
+>>> +		return -EINVAL;
+>>>  	}
+>>>  	return 0;
+>>>  }
+>>>
+>>
+>> Wouldn't a safe fix be to initialize the struct to zero in the caller?=
 
->  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
->  
->  	/* Start with vertical blanking interrupt reporting disabled. */
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> index 3b7fc668996f..5f2940c42225 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> @@ -39,6 +39,7 @@ struct rcar_du_vsp;
->   * @vblank_wait: wait queue used to signal vertical blanking
->   * @vblank_count: number of vertical blanking interrupts to wait for
->   * @group: CRTC group this CRTC belongs to
-> + * @cmm: CMM associated with this CRTC
->   * @vsp: VSP feeding video to this CRTC
->   * @vsp_pipe: index of the VSP pipeline feeding video to this CRTC
->   * @writeback: the writeback connector
-> @@ -64,6 +65,7 @@ struct rcar_du_crtc {
->  	unsigned int vblank_count;
->  
->  	struct rcar_du_group *group;
-> +	struct platform_device *cmm;
->  	struct rcar_du_vsp *vsp;
->  	unsigned int vsp_pipe;
->  
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> index a00dccc447aa..6316a1c5236c 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> @@ -13,6 +13,7 @@
->  #include <linux/kernel.h>
->  #include <linux/wait.h>
->  
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_group.h"
->  #include "rcar_du_vsp.h"
-> @@ -86,6 +87,7 @@ struct rcar_du_device {
->  	struct rcar_du_encoder *encoders[RCAR_DU_OUTPUT_MAX];
->  
->  	struct rcar_du_group groups[RCAR_DU_MAX_GROUPS];
-> +	struct platform_device *cmms[RCAR_DU_MAX_CRTCS];
->  	struct rcar_du_vsp vsps[RCAR_DU_MAX_VSPS];
->  
->  	struct {
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> index 87950c1f6a52..e9906609c635 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> @@ -22,6 +22,7 @@ struct rcar_du_device;
->   * @mmio_offset: registers offset in the device memory map
->   * @index: group index
->   * @channels_mask: bitmask of populated DU channels in this group
-> + * @cmms_mask: bitmask of available CMMs in this group
->   * @num_crtcs: number of CRTCs in this group (1 or 2)
->   * @use_count: number of users of the group (rcar_du_group_(get|put))
->   * @used_crtcs: number of CRTCs currently in use
-> @@ -37,6 +38,7 @@ struct rcar_du_group {
->  	unsigned int index;
->  
->  	unsigned int channels_mask;
-> +	unsigned int cmms_mask;
->  	unsigned int num_crtcs;
->  	unsigned int use_count;
->  	unsigned int used_crtcs;
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index 2dc9caee8767..294630e56992 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -17,7 +17,9 @@
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_vblank.h>
->  
-> +#include <linux/device.h>
->  #include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
->  #include <linux/wait.h>
->  
->  #include "rcar_du_crtc.h"
-> @@ -614,6 +616,67 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
->  	return ret;
->  }
->  
-> +static int rcar_du_cmm_init(struct rcar_du_device *rcdu)
-> +{
-> +	const struct device_node *np = rcdu->dev->of_node;
-> +	unsigned int i;
-> +	int cells;
-> +
-> +	cells = of_property_count_u32_elems(np, "renesas,cmms");
-> +	if (cells == -EINVAL)
-> +		return 0;
-> +
-> +	if (cells > rcdu->num_crtcs) {
-> +		dev_err(rcdu->dev,
-> +			"Invalid number of entries in 'renesas,cmms'\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < cells; ++i) {
-> +		struct platform_device *pdev;
-> +		struct device_link *link;
-> +		struct device_node *cmm;
-> +		int ret;
-> +
-> +		cmm = of_parse_phandle(np, "renesas,cmms", i);
-> +		if (IS_ERR(cmm)) {
-> +			dev_err(rcdu->dev,
-> +				"Failed to parse 'renesas,cmms' property\n");
-> +			return PTR_ERR(cmm);
+>=20
+> That's of course possible, too. But that means that we always have to
+> zero out the whole structure, so that's a little bit more of overhead
+> (well, it likely doesn't matter for such a legacy ioctl).
 
-Should we have a -ENOENT exception here somewhere?
+Or memset it in s390int_to_s390irq so the caller doesn't need to know.
+That should be fast enough for such a small struct.
 
-Otherwise I think platforms without a CMM will fail, and new kernels
-with old DTBs would also fail ?
+>=20
+> But the more important question: Do we then still care of fixing the
+> PFAULT_INIT interrupt here? Since it requires a parameter, the "case
+> KVM_S390_INT_PFAULT_INIT:" part would be required here anyway.
 
-(based on my interpretation in __of_parse_phandle_with_args() that not
-finding a requested phandle returns -ENOENT).
+Let's wait for Christian's opinion on that.
 
 
-Scratch that - I've just seen above with the
-  cells = of_property_count_u32_elems(np, "renesas,cmms");
+--cjG9B14QKHqLUU5MFwg4X6fAHDdTuBMQk--
 
-which will return 0 if this device doesn't have a CMM.
+--RPvOYPwnVuIf8SY9NmEhIEE0AZLwMgBpN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-So - this all looks good to me.
+-----BEGIN PGP SIGNATURE-----
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl16D6UACgkQ41TmuOI4
+ufgeoBAApRNlMJkqvyukjvF8OKQUGVO8jXQeceq+WZwGKV6LX5cmJUlmBroHkHi8
+Yjak7EbSLBK1PhZng0SHQXoFCBEteqLc3UjY+siwKk5DSPZMcdACFEZPbqDgI8NH
+JFXJ9lnGa5bRDASY4vu//ujYWj5hppTrHSpDJoCbJJVDZAVIan1N/BF7/yR5qJdn
++pNM5PyQo4o3nl7MxarKhDy2l0jcvCnNDUWRbqaBu3CoWID1eh9xvqbmQBrYuFZ+
+9Ds2wOhbN4yX06yPEw4JbNK8WfWuhSW3gPL09l4CAYU24rI0UWzNMPYfgps0Y1Sk
+5VbAjOyUV39I8X8K2b0s2vcSV6TP1rDRg8d3wb9f4AjCJZ4wDRMFMpr44Lr5hBT+
+sY9+3UdbBqmx1Ou4QMJJe1NvqpJomGVjR597Nohn2m6r3UcOqqApRAI+AHZnZzCu
+5yEvw9fosFvnKgYD344OJ3CUYvxVZ/kMs+/0VnLxYWxdf+GpDNwjLZX9RhKwmFOx
+rM/rt66dF0wJbmX2HQjRbdN8rwImo0oHxOwotGw1NKkCjE9Fn3hnJ0WhjK34VXJ0
+nbBT3ojZbv2PH1nO0VrVVQkE3kRziq4JiiD0nDycTKPZGDTT8drgcoYbijVMNQoR
+oCJ2bxwQu6lUjWg2Qt8QMsy1hZ07cIKjQBt1pm6igZxQXkFzYYg=
+=JmeN
+-----END PGP SIGNATURE-----
 
-
-
-
-> +		}
-> +
-> +		if (!of_device_is_available(cmm)) {
-> +			/* It's fine to have a phandle to a non-enabled CMM. */
-> +			of_node_put(cmm);
-> +			continue;
-> +		}
-> +
-> +		pdev = of_find_device_by_node(cmm);
-> +		if (IS_ERR(pdev)) {
-> +			dev_err(rcdu->dev, "No device found for CMM%u\n", i);
-> +			of_node_put(cmm);
-> +			return PTR_ERR(pdev);
-> +		}
-> +
-> +		of_node_put(cmm);
-> +
-> +		ret = rcar_cmm_init(pdev);
-> +		if (ret)
-> +			return ret;
-> +
-> +		link = device_link_add(rcdu->dev, &pdev->dev, DL_FLAG_STATELESS);
-> +		if (!link) {
-> +			dev_err(rcdu->dev,
-> +				"Failed to create device link to CMM%u\n", i);
-> +			return -EINVAL;
-> +		}
-> +
-> +		rcdu->cmms[i] = pdev;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  {
->  	static const unsigned int mmio_offsets[] = {
-> @@ -704,6 +767,11 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  			return ret;
->  	}
->  
-> +	/* Initialize the Color Management Modules. */
-> +	ret = rcar_du_cmm_init(rcdu);
-> +	if (ret)
-> +		return ret;> +
->  	/* Create the CRTCs. */
->  	for (swindex = 0, hwindex = 0; swindex < rcdu->num_crtcs; ++hwindex) {
->  		struct rcar_du_group *rgrp;
-> 
+--RPvOYPwnVuIf8SY9NmEhIEE0AZLwMgBpN--
 
