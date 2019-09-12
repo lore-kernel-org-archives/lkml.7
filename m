@@ -2,131 +2,99 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA78BC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E64C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE1B20692
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PbGH0BY0"
+	by mail.kernel.org (Postfix) with ESMTP id 6672C20692
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbfILQZl (ORCPT
+        id S1733023AbfILQ1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:25:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:40705 "EHLO ozlabs.org"
+        Thu, 12 Sep 2019 12:27:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:22249 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbfILQZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:25:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728558AbfILQ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:27:00 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Tkdp19g3z9s4Y;
-        Fri, 13 Sep 2019 02:25:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568305537;
-        bh=x7EVpTBrd+PPAAF9JFRVmnGBnTTrRhrlDywgHHXaI34=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PbGH0BY0NAMFxGPupNcDEm5tbm3pMVYFzYC1/hEP5mBqkaN0qt6v/P1hR5g4w1ZpO
-         BN/xP5R8h9YpnoGNwumuMSwE9EUS2FzQfJCS+CDefvcUnIZDsoC6pAHOHgfpOJb6gP
-         QKwmXuS5BDs4MksGudG8ns/z3/z45KlkI/m5fStSUjLrjOEM7SIkoeE08EWYnVt3HM
-         9GWL1A0fiwhwNLVCIiUaStzBx238jNinmmNwZEa4ZcMqkUwk0dipP9RdiZuatY3AtT
-         Mr9LqZLFmsD2dZwW/x+LPP/Pm68yyzDtObIeY13HnqqLAtRDY+P09uLQXGYax24+Gc
-         ycDPgM7UgVQqg==
-Date:   Fri, 13 Sep 2019 02:25:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ilya Maximets <i.maximets@samsung.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190913022535.65ac3420@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id C57F811A07
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:26:59 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id x1so12220904wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:26:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=qziAxNyAubhHTYBSD4yRsXHN9OiFD1ZQQkCUflFkono=;
+        b=pIrsjjlj9xaHHWV8kpB+s7tvoJ9AqmehKjEe56m6mspkNydn8oZ9IY0IpAwpt+pNLN
+         bWaCfBEqPe1r4VO9S+rPKM3UQFpiMyRiZ99VYN2X0+8591BFZAxjQ1sNWYZH298FfYPO
+         gqtLe2UOwo7ORX4v7N022tUSbdw4XvrkS+50taUKy4jEFvDiAgpykhGeqP30zzCrae5e
+         wRdcc1ZWcBvu0KqIErv6DPlLVtyXshCvy2Vb7vwp2lsBAJmA9PCg4DO0amsu+oYsPhMA
+         mL8fX20V2KiEHxER/X20lK/sKTV3UFE5jQw+sXcfiEwgN+tws3zaZY98hoWOO0V0MWIS
+         hVOQ==
+X-Gm-Message-State: APjAAAVJADIwBKRaaIKix8YHJmYAcS+M3XG5GvEFUNdQ5hLdxZ5AgKJ7
+        0GieZQ4BfUfsg7biZnExHQ1bTlB3IsJBZ8pD/YlecDC6wJgzoSKfjZ9/Aw/lOgJwbueIKCn8WSt
+        s6RBaXEMLipOoTIIm4z/cu69v
+X-Received: by 2002:a5d:4ac5:: with SMTP id y5mr30494549wrs.179.1568305618362;
+        Thu, 12 Sep 2019 09:26:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqztK9Z/gMX7ORCbNgZ1dSvJGdv9fZucXr5OOgjDSMAriajITOz+b+G+khvqtWA6VKF/ll3rqg==
+X-Received: by 2002:a5d:4ac5:: with SMTP id y5mr30494531wrs.179.1568305618131;
+        Thu, 12 Sep 2019 09:26:58 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n1sm30678076wrg.67.2019.09.12.09.26.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 09:26:57 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH 2/3] hv_utils: Support host-initiated hibernation request
+In-Reply-To: <1568245130-70712-3-git-send-email-decui@microsoft.com>
+References: <1568245130-70712-1-git-send-email-decui@microsoft.com> <1568245130-70712-3-git-send-email-decui@microsoft.com>
+Date:   Thu, 12 Sep 2019 18:26:56 +0200
+Message-ID: <87a7b9cwfj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sbg=Xp7+qeyvMgODT6LsEMi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sbg=Xp7+qeyvMgODT6LsEMi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Dexuan Cui <decui@microsoft.com> writes:
 
-Hi all,
+> +static void perform_hibernation(struct work_struct *dummy)
+> +{
+> +	/*
+> +	 * The user is expected to create the program, which can be a simple
+> +	 * script containing two lines:
+> +	 * #!/bin/bash
+> +	 * echo disk > /sys/power/state
 
-Today's linux-next merge of the net-next tree got a conflict in:
+'systemctl hibernate' is what people do nowadays :-)
 
-  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> +	 */
+> +	static char hibernate_cmd[PATH_MAX] = "/sbin/hyperv-hibernate";
+> +
 
-between commit:
+Let's not do that (I remember when we were triggering network restart
+from netvsc and it was a lot of pain).
 
-  5c129241e2de ("ixgbe: add support for AF_XDP need_wakeup feature")
+Receiving hybernation request from the host is similar to pushing power
+button on your desktop: an ACPI event is going to be generated and your
+userspace will somehow react to it. I see two options:
+1) We try to hook up some existing userspace (udev?)
+2) We write a new hyperv-daemon handling the request (with a config file
+instead of hardcoding please).
 
-from the net tree and commit:
-
-  bf280c0387eb ("ixgbe: fix double clean of Tx descriptors with xdp")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-index a3b6d8c89127,ad802a8909e0..000000000000
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-@@@ -682,10 -697,19 +691,17 @@@ bool ixgbe_clean_xdp_tx_irq(struct ixgb
-  	if (xsk_frames)
-  		xsk_umem_complete_tx(umem, xsk_frames);
- =20
-+ 	if (xsk_umem_uses_need_wakeup(tx_ring->xsk_umem)) {
-+ 		if (tx_ring->next_to_clean =3D=3D tx_ring->next_to_use)
-+ 			xsk_set_tx_need_wakeup(tx_ring->xsk_umem);
-+ 		else
-+ 			xsk_clear_tx_need_wakeup(tx_ring->xsk_umem);
-+ 	}
-+=20
- -	xmit_done =3D ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
- -
- -	return budget > 0 && xmit_done;
- +	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
-  }
- =20
-- int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
-+ int ixgbe_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
-  {
-  	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
-  	struct ixgbe_ring *ring;
-
---Sig_/sbg=Xp7+qeyvMgODT6LsEMi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16cX8ACgkQAVBC80lX
-0GwBhAf/evG/FHTCIzFZ1rTeK+jbbNeZsXpl5HZ0fj8MyXTbSzkoeA+EI7PjLNcC
-PskWO637GNeb4wCldExYvZRcFBLpaVRoYSkusSh3J54Yzy101/fGMYTDFW6t5WnC
-ywGLlwAaIwHt3qkEYm4nN0vNY0dBdc7EHFTUEKM02g2OfL3jeIClDojMato8zYxK
-OPm3BtA1IFd6WiTVA53mjjV9bmvo9ClZ6m+nOZRdRIkkSTiro1x1AZ/aL5tPOSBp
-zqPc6fHTAHhLknQmxSvlY4btadDH2QGcqOLKVqWsLkQV4k56DWqkgjsQsfo3Q6DX
-3oCNWcOo/gtBvqIkHG91Fw/h5D3QAQ==
-=krD2
------END PGP SIGNATURE-----
-
---Sig_/sbg=Xp7+qeyvMgODT6LsEMi--
+-- 
+Vitaly
