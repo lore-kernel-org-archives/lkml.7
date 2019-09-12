@@ -2,118 +2,103 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B959C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023F8C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB3C21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C184220678
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568285532;
-	bh=KwCFUpMIc51ZQrrZ5Pst1c2DVUJ0KQNPr8Z6qMKPklU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1/W87X8z22VBXkjxo9NOlbmsP2tH0aGXJYo/P7Nh/7kc6fORZGAVLauxzFeraOH6w
-	 BVwmj0Cl+74U5dnvjo8usyJRewkivXxc6r9fCXDA58VE7XgpFDzE7iEexk7rJ2oI+1
-	 Z/gK972UaQZsVV3X3kjhrCTeY/iO7ZW11v3yoI8g=
+	s=default; t=1568285559;
+	bh=xMG78h2MkJ/pc8o5N/RXI+X5+xvw0DLgNMMeZDSBI5k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h15uvSbHW3mGTMC6QH4CQ4XDwdMAeZfVh/Eq7S03cVB2Y0Zudpwmak2hXGUlIQthm
+	 TZfHN7+ZoFB3NYmZlspY5WMP8Erzqkiwzf5MVj3EJ7crZHIvq09pk7GuMgt9MbhrzN
+	 +Utbqcn9uNgNWX9GVIFkomF9iHWjTDRlLIT8zt1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfILKwL (ORCPT
+        id S1731258AbfILKwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:52:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53796 "EHLO mail.kernel.org"
+        Thu, 12 Sep 2019 06:52:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37498 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731218AbfILKwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:52:10 -0400
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730023AbfILKwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:52:38 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFF120678;
-        Thu, 12 Sep 2019 10:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568285530;
-        bh=KwCFUpMIc51ZQrrZ5Pst1c2DVUJ0KQNPr8Z6qMKPklU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rrXMs1RPO5chWrIQHFdlo0bkhKko9dN1mWrYY0X7IgyV6kCNjjrygyFhEJoqYT1NX
-         zoiYMCJbjwU0Mno2RD3gY3jWUwsc+1JAMNOqdLO/JNBoXMxqY7gvgV1lNGaLF/9ccm
-         VY7s3QxxKMlrj7jlVlNZBlsGB72iV3KnshqPJ39Y=
-Received: by mail-lj1-f174.google.com with SMTP id a4so23113962ljk.8;
-        Thu, 12 Sep 2019 03:52:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWF0BmoecmEW61i0PZt77MO2MLxvDCnX75C7vStQaWKOe6+HFcL
-        da7JWpNhmKswX2T2MEbT5J/8CsRVuD4hR2e8FFw=
-X-Google-Smtp-Source: APXvYqyG6/tcsqsyfqRFRqXPK0ImcChBAEVnerDWxcFFeR78703ENdInutO0ecRhHphfVeVW+Ne3WyEnFhUHga+b1O4=
-X-Received: by 2002:a2e:b167:: with SMTP id a7mr26718879ljm.236.1568285527962;
- Thu, 12 Sep 2019 03:52:07 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A58E36955;
+        Thu, 12 Sep 2019 10:52:38 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 243DF194B9;
+        Thu, 12 Sep 2019 10:52:35 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf tools: Fix segfault in cpu_cache_level__read
+Date:   Thu, 12 Sep 2019 12:52:35 +0200
+Message-Id: <20190912105235.10689-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20190823123737.7774-1-ribalda@kernel.org> <20190823123737.7774-3-ribalda@kernel.org>
- <20190826074059.bby3k6vr25axfbqc@uno.localdomain>
-In-Reply-To: <20190826074059.bby3k6vr25axfbqc@uno.localdomain>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Thu, 12 Sep 2019 12:51:51 +0200
-X-Gmail-Original-Message-ID: <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
-Message-ID: <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 12 Sep 2019 10:52:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Jacopo
+We release wrong pointer on error path in
+cpu_cache_level__read function, leading to
+segfault:
 
-(Sorry for the late reply, I have been in holidays plus with plenty of
-family matters)
+  (gdb) r record ls
+  Starting program: /root/perf/tools/perf/perf record ls
+  ...
+  [ perf record: Woken up 1 times to write data ]
+  double free or corruption (out)
 
-On Mon, Aug 26, 2019 at 9:39 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Hi Ricardo,
->
-> On Fri, Aug 23, 2019 at 02:37:33PM +0200, Ricardo Ribalda Delgado wrote:
-> > A struct v4l2_area containing the width and the height of a rectangular
-> > area.
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > ---
-> >  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> > index a3d56ffbf4cc..c09d06ef2b08 100644
-> > --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> > +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> > @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
-> >        - n/a
-> >        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
-> >       quantization matrices for stateless video decoders.
-> > +    * - ``V4L2_CTRL_TYPE_AREA``
-> > +      - n/a
->
-> Can an area be negative ?
-> I would set these fields to ">= 0" ">= 1" and ">= 0" respectively.
->
+  Thread 1 "perf" received signal SIGABRT, Aborted.
+  0x00007ffff7463798 in raise () from /lib64/power9/libc.so.6
+  (gdb) bt
+  #0  0x00007ffff7463798 in raise () from /lib64/power9/libc.so.6
+  #1  0x00007ffff7443bac in abort () from /lib64/power9/libc.so.6
+  #2  0x00007ffff74af8bc in __libc_message () from /lib64/power9/libc.so.6
+  #3  0x00007ffff74b92b8 in malloc_printerr () from /lib64/power9/libc.so.6
+  #4  0x00007ffff74bb874 in _int_free () from /lib64/power9/libc.so.6
+  #5  0x0000000010271260 in __zfree (ptr=0x7fffffffa0b0) at ../../lib/zalloc..
+  #6  0x0000000010139340 in cpu_cache_level__read (cache=0x7fffffffa090, cac..
+  #7  0x0000000010143c90 in build_caches (cntp=0x7fffffffa118, size=<optimiz..
+  ...
 
-Dont min, max and step only make sense for integer controls?
+Releasing the proper pointer.
 
-> Thanks
->    j
->
-> > +      - n/a
-> > +      - n/a
-> > +      - A struct :c:type:`v4l2_area`, containing the width and the height
-> > +        of a rectangular area.
-> >      * - ``V4L2_CTRL_TYPE_H264_SPS``
-> >        - n/a
-> >        - n/a
-> > --
-> > 2.23.0.rc1
-> >
+Link: http://lkml.kernel.org/n/tip-e7js6xoi4y18kydxqehh0ihx@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b0c34dda30a0..3527b9897b6f 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1081,7 +1081,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 
+ 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
+ 	if (sysfs__read_str(file, &cache->map, &len)) {
+-		zfree(&cache->map);
++		zfree(&cache->size);
+ 		zfree(&cache->type);
+ 		return -1;
+ 	}
+-- 
+2.21.0
+
