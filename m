@@ -2,167 +2,106 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3CDC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2411CC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2413220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqyvDTfx"
+	by mail.kernel.org (Postfix) with ESMTP id 05FB12084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfILN6e (ORCPT
+        id S1732388AbfILOAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:58:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45642 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731474AbfILN6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:58:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id f12so54697257iog.12;
-        Thu, 12 Sep 2019 06:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MSov5kGKMIEmTwQpS5GQWa90dxLw0ST2kW1S/SIzAFA=;
-        b=VqyvDTfxs2rls7YeN503vkfXJNJ+nWdymQV0gpdlV/6qRF7DOtIPf9UNSIBjXzegif
-         kryy4P8to7pcFfK/1yKew36AziB/Vc2/ejx3TCwjlr3bT6ZzJ8qSRiMcGrv5PQ43C3Q2
-         dxL/nKPiSAv5khW0QPpnT7ZltgCizq5GBVDG/D6tj1ewZY25j8PfVyYpUx2RuEgsAbaL
-         o4G74SFHJOxYmtuj85Lsw0zTFOn0zblzEuy+S9ycA0wMgwIGkKhJ4slpjuNZnnMLRP8o
-         x/LAfOE0PLCTadUjKKAUCeAy9V4bFqAQd8fup5ZUskNNCELKoVMqfKXOBQuWXXjRzD0M
-         I/3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MSov5kGKMIEmTwQpS5GQWa90dxLw0ST2kW1S/SIzAFA=;
-        b=pUf2ukFILOh+ScpmjwzMz9bCCppV3AQWLGEM1UDy8THD0rk4CDG+tiofaozsFQEfwp
-         A2iL9mTR+1m6RQ7O6aBtIky67rEWTd5lvbxWKbumeopTcrfsKdqG21dXxs5R2scrW7gH
-         OAsJbRdiXoygC1tRXp7qYWsG9MX2vB1fAJ5v86Kn8Hkell6qvvpYMdL0RZEfwaWIkFUp
-         3gW7PeP/wAwRWSum1itf/CEgOoz3UKmZdilEz/whse6HYQOL714Udhdfxufh3aUa83yx
-         GkYCcuMeblbNZYvYUakwmur9YRXOIaKtpKrYesrh4mRzVojgUSPQlTrKWsgN5nHoIOJY
-         eDwQ==
-X-Gm-Message-State: APjAAAUEktHEOnLpojOPoNGKDZCNLpNNsWJX+eG7gJfojbHKtRjEwVvG
-        vt0I7karfyhxCmzKdNz1r88soIba/MMDCP9+LN0N8NRZOds=
-X-Google-Smtp-Source: APXvYqyzykHr5ZVkzBbD46czA2ANBk2AC/ToQMEvz0zShWqFBhhGvHiR4WAjdzKtv+X4iXoDidQowR0dhqB0jCfC+7k=
-X-Received: by 2002:a6b:8e92:: with SMTP id q140mr4781996iod.205.1568296712476;
- Thu, 12 Sep 2019 06:58:32 -0700 (PDT)
+        Thu, 12 Sep 2019 10:00:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53250 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731455AbfILOAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:00:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C1363082D9E;
+        Thu, 12 Sep 2019 14:00:12 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9365760872;
+        Thu, 12 Sep 2019 14:00:11 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 00/13] nvdimm: Use more common kernel coding style
+References: <cover.1568256705.git.joe@perches.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 12 Sep 2019 10:00:10 -0400
+In-Reply-To: <cover.1568256705.git.joe@perches.com> (Joe Perches's message of
+        "Wed, 11 Sep 2019 19:54:30 -0700")
+Message-ID: <x498sqtvclx.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <C04F49BA-1229-4E96-9FCF-4FC662D1DB11@goldelico.com>
- <CAHCN7x+Ye6sB_YqO0sAX1OJDw64B-qGS3pL545v3Xk5z914cwQ@mail.gmail.com>
- <0C1EF64E-B33C-4BFA-A7D3-471DD1B9EE86@goldelico.com> <515048DE-138D-4400-8168-F2B7D61F1005@goldelico.com>
- <CAHCN7xLPCX9rZ0+7KVBiA_bgZ6tg6VeCXqD-UXu+6iwpFMPVrA@mail.gmail.com>
- <7B3D1D77-3E8C-444F-90B9-6DF2641178B8@goldelico.com> <CAHCN7xLW58ggx3CpVL=HdCVHWo6D-MCTB91A_9rtSRoZQ+xJuQ@mail.gmail.com>
- <FA2920FE-B76A-4D44-A264-862A1CCBF7FC@goldelico.com> <CAHCN7xJsPa0i+Z+qpCkWcdAh9+udmGT0RPNchdDsfB=8ptd3Nw@mail.gmail.com>
- <87420DBD-770F-4C32-9499-A3AEA5876E8A@goldelico.com> <20190909163236.GP52127@atomide.com>
- <E001F74D-724E-4C50-9265-CBD33C4F2918@goldelico.com> <F8F08882-8011-441C-9581-ECCE9772EC21@goldelico.com>
- <CAHCN7x+fgtMHMNYU2W7BRQwd-d2g_Tb8-L5QNcnZjCF=VzRXJg@mail.gmail.com>
- <3663B13C-1AAB-4BE3-8CAD-F821B70393FA@goldelico.com> <CAHCN7x+mLCNq4evwGZfk6Ka=3o6EzhL=s38aNdukyLwKB1xO7A@mail.gmail.com>
- <56482888-DBD3-4658-8DB9-FB57653B5AA8@goldelico.com> <CAHCN7xLPZisrNk==eF-+V8hD+sceQq25qw+sK7vVZAYdd8=Q2Q@mail.gmail.com>
- <CAHCN7xL59cXgbe1YTbNvTjptO9bMnuxprCP7ok5kRuc8UO9Fcw@mail.gmail.com>
- <D7B54A39-D8A3-4EDF-8B47-66D59319B3F4@goldelico.com> <F65E947E-784A-4540-B926-BF3ECB0C01EC@goldelico.com>
- <285FED38-2B2B-4813-9FD2-396C53E9B1B2@goldelico.com> <CAHCN7xKyTnNojwRqsXcE1AsDKtJikBpXoUo8ED=89ZR9-ko9hA@mail.gmail.com>
- <65A23326-70B4-46E3-992D-74256B056900@goldelico.com> <CAHCN7xLGx0S3xyd0q-N8pgY8VdBbUUaJdgoxkKxakR59sH+zXQ@mail.gmail.com>
- <BF829797-492C-4120-AC69-F8B83572FD38@goldelico.com> <D3E8B5DC-AB53-4F46-8ABB-F839A11EB31C@goldelico.com>
- <CAHCN7xKq1CszKxax+7sG4O_V+iBYLSDVtDC480gvGV+KVb2-sw@mail.gmail.com>
-In-Reply-To: <CAHCN7xKq1CszKxax+7sG4O_V+iBYLSDVtDC480gvGV+KVb2-sw@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 12 Sep 2019 08:58:20 -0500
-Message-ID: <CAHCN7xJgOhCpsiSvxOHeRz+621+t53pyt4_iE1PNCigznb1GLw@mail.gmail.com>
-Subject: Re: [Letux-kernel] [RFC PATCH 0/3] Enable 1GHz support on omap36xx
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 12 Sep 2019 14:00:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:49 PM Adam Ford <aford173@gmail.com> wrote:
->
-> On Wed, Sep 11, 2019 at 12:43 PM H. Nikolaus Schaller <hns@goldelico.com>=
- wrote:
-> >
-> > Hi Adam,
-> >
-> > > Am 11.09.2019 um 18:01 schrieb H. Nikolaus Schaller <hns@goldelico.co=
-m>:
-> > >
-> > >>
-> > >> Am 11.09.2019 um 17:56 schrieb Adam Ford <aford173@gmail.com>:
-> > >>
-> > >>> There are some subtleties for testing.
-> > >>>
-> > >>> * I have added turbo-mode; to OPP6 / OPP1G
-> > >>> * which means they are available but not used by the ondemand goven=
-or
-> > >>> * to enable them one has to echo 1 >/sys/devices/system/cpu/cpufreq=
-/boost
-> > >>
-> > >> Will that be documented somewhere? If not, can we put a comment in t=
-he
-> > >> device tree so people know how to enable it?
-> > >
-> > > It seems to be pretty standard on i86 systems if you google for "turb=
-o mode".
-> > > I have added it to the commit message which adds the vbb regulator.
-> >
-> > And, I am not sure if DT maintainers will accept comments about the
-> > Linux /sys implementation in device tree files or bindings. Those
-> > should be independent of Linux.
->
-> OK.
-> >
-> > Basically the turbo-mode property is a hint to the OPP system (which
-> > may or may not use of it).
-> >
-> > So I think it is indeed better to have it in the commit message and
-> > not the code.
->
-> That makes sense.
->
-> >
-> > One more thought: as long as we do not have junction temperature monito=
-ring
-> > we should keep it off by default... We may even remove the turbo-mode
-> > designator if we have the 90=C2=B0C limit and smart reflex working.
+Joe Perches <joe@perches.com> writes:
 
-I found some info on the thermal framework [1].  It seems to show that
-we can put placeholders in the device tree to help facilitate this.
+> Rather than have a local coding style, use the typical kernel style.
 
-An excerpt from [1]  shows:
-     Cooling devices provide control on power dissipation.
-     There are essentially two ways to provide control on power dissipation=
-.
-     First is by means of regulating device performance, which is
-known as passive cooling (DVFS).
-     ... [snip stuff about cooling fans]
+The coding style isn't that different from the core kernel, and it's
+still quite readable.  I'd rather avoid the churn and the risk of
+introducing regressions.  This will also make backports to stable more
+of a pain, so it isn't without cost.  Dan, is this really something you
+want to do?
 
-It also shows there are ways to link the cpu node to the cooling info.
-Since it shows DVFS can be used to regulate temperature, it seems like
-the hooks might already be in place
+-Jeff
 
-[1] - https://blog.linuxplumbersconf.org/2015/ocw//system/presentations/261=
-3/original/thermal-framework-status-no-transitioning.pdf
-
-The downside is that the OMAP thermal sensor is unreliable.
 >
-> We're almost there!
+> Joe Perches (13):
+>   nvdimm: Use more typical whitespace
+>   nvdimm: Move logical continuations to previous line
+>   nvdimm: Use octal permissions
+>   nvdimm: Use a more common kernel spacing style
+>   nvdimm: Use "unsigned int" in preference to "unsigned"
+>   nvdimm: Add and remove blank lines
+>   nvdimm: Use typical kernel brace styles
+>   nvdimm: Use typical kernel style indentation
+>   nvdimm: btt.h: Neaten #defines to improve readability
+>   nvdimm: namespace_devs: Move assignment operators
+>   nvdimm: Use more common logic testing styles and bare ; positions
+>   nvdimm: namespace_devs: Change progess typo to progress
+>   nvdimm: Miscellaneous neatening
 >
-> adam
-> >
-> > BR,
-> > Nikolaus
-> >
+>  drivers/nvdimm/badrange.c       |  22 +-
+>  drivers/nvdimm/blk.c            |  39 ++--
+>  drivers/nvdimm/btt.c            | 249 +++++++++++----------
+>  drivers/nvdimm/btt.h            |  56 ++---
+>  drivers/nvdimm/btt_devs.c       |  68 +++---
+>  drivers/nvdimm/bus.c            | 138 ++++++------
+>  drivers/nvdimm/claim.c          |  50 ++---
+>  drivers/nvdimm/core.c           |  42 ++--
+>  drivers/nvdimm/dax_devs.c       |   3 +-
+>  drivers/nvdimm/dimm.c           |   3 +-
+>  drivers/nvdimm/dimm_devs.c      | 107 ++++-----
+>  drivers/nvdimm/e820.c           |   2 +-
+>  drivers/nvdimm/label.c          | 213 +++++++++---------
+>  drivers/nvdimm/label.h          |   6 +-
+>  drivers/nvdimm/namespace_devs.c | 472 +++++++++++++++++++++-------------------
+>  drivers/nvdimm/nd-core.h        |  31 +--
+>  drivers/nvdimm/nd.h             |  94 ++++----
+>  drivers/nvdimm/nd_virtio.c      |  20 +-
+>  drivers/nvdimm/of_pmem.c        |   6 +-
+>  drivers/nvdimm/pfn_devs.c       | 136 ++++++------
+>  drivers/nvdimm/pmem.c           |  57 ++---
+>  drivers/nvdimm/pmem.h           |   2 +-
+>  drivers/nvdimm/region.c         |  20 +-
+>  drivers/nvdimm/region_devs.c    | 160 +++++++-------
+>  drivers/nvdimm/security.c       | 138 ++++++------
+>  drivers/nvdimm/virtio_pmem.c    |  10 +-
+>  26 files changed, 1115 insertions(+), 1029 deletions(-)
