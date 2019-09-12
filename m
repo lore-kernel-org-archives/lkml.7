@@ -2,336 +2,333 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3B7C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC7520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="X9BwuCAM"
+	by mail.kernel.org (Postfix) with ESMTP id A759F20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfILMC4 (ORCPT
+        id S1731582AbfILMC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:02:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46841 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfILMCz (ORCPT
+        Thu, 12 Sep 2019 08:02:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22944 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731440AbfILMC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:02:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 201so24127375qkd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=NJ+V9WdH/Mr55CbE+4tCVIXroMyvqDzfmVNb8fYQdC4=;
-        b=X9BwuCAMyL0HkIMHQZTrYkcKYoxesQQBc03dGTAerff++yYqnueCFUG+9R5d+jXfsD
-         ILAnkSwukAjd9PMBWa9h1go0l+VstSm5Hci3nDYtrAlFN5FC8VzMhHh/wM1ypkfVi7I5
-         xC2NQpOkaZGRGDDblnEmqtsCDwJjKPhPf1gxSpyhFJAfAnHkZToO0QVL3o7qmb6yq3kl
-         /fPKJ36uZKtumx4PMe051elYi1fZr6YsGFpQtmalR3a03is+1tETesXYb8nLmi7YOgWT
-         YbiZACAjO9JVtxcJOF8Fl8Vh+s/Y/AMgZMpVqQHjcJCPht1J5olzVhZ4edarhiUmbZFX
-         4ajw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NJ+V9WdH/Mr55CbE+4tCVIXroMyvqDzfmVNb8fYQdC4=;
-        b=qT78JywTaj+1n9b9tUAzR/N31CuDakQvsJHChj8nBqQCVafTb3HDH4ep3GZfiLHWMn
-         7ayiKuHMblBe2DN7Qg4yCM8YsjCpGD58ixb4BVRbxuImN4bgS3PGOA4SkrQOiyAGLGFN
-         njCNvLH+9wE6s6SoBy3v4zZTuSLh7bYCKMMcO12wyt57dzNy86u/j3MdSIV3Yioisg8j
-         MO+GVMmjkTmUzOLllRBU0aNsqeTWQX2zw8BmkiXxbpuBCwr/AIApWuqlFPREZvW7iVBn
-         icpdLuvJPFwya86fps6MsCDM9jDUNBD+n3h0TPYWfJD12v3064hUz6s4nzA8rCWhxih1
-         UDiQ==
-X-Gm-Message-State: APjAAAViD56xryRePJ/ckcNCdv44NnwizdiATYyKoe7/dlD1ZT21fiw8
-        /sdyU6xKhS/s2E2s9SzEx4HPEg==
-X-Google-Smtp-Source: APXvYqxW3gfyTl86Ie7fIUSZxIf33R/kZjhqzOjknmiTByk8wlOSZatDorFjLent8xT63ngd7QqDdQ==
-X-Received: by 2002:a05:620a:7c8:: with SMTP id 8mr1592111qkb.299.1568289774048;
-        Thu, 12 Sep 2019 05:02:54 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id a72sm12098951qkg.77.2019.09.12.05.02.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 05:02:53 -0700 (PDT)
-Message-ID: <1568289769.5576.138.camel@lca.pw>
-Subject: Re: [PATCH] zswap: Add CONFIG_ZSWAP_IO_SWITCH
-From:   Qian Cai <cai@lca.pw>
-To:     Hui Zhu <teawaterz@linux.alibaba.com>, sjenning@redhat.com,
-        ddstreet@ieee.org, akpm@linux-foundation.org, mhocko@suse.com,
-        willy@infradead.org, chris@chris-wilson.co.uk, hannes@cmpxchg.org,
-        ziqian.lzq@antfin.com, osandov@fb.com, ying.huang@intel.com,
-        aryabinin@virtuozzo.com, vovoy@chromium.org,
-        richard.weiyang@gmail.com, jgg@ziepe.ca, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, jglisse@redhat.com, b.zolnierkie@samsung.com,
-        axboe@kernel.dk, dennis@kernel.org, josef@toxicpanda.com,
-        tj@kernel.org, oleg@redhat.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Date:   Thu, 12 Sep 2019 08:02:49 -0400
-In-Reply-To: <1568258490-25359-1-git-send-email-teawaterz@linux.alibaba.com>
-References: <1568258490-25359-1-git-send-email-teawaterz@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 12 Sep 2019 08:02:57 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CBwuvc136168
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 08:02:55 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyjw16cym-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 08:02:54 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 12 Sep 2019 13:02:40 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 13:02:34 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CC2XSN38469942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 12:02:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8AB4AE9DF;
+        Thu, 12 Sep 2019 11:36:50 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C3C7AE9D8;
+        Thu, 12 Sep 2019 11:36:49 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.92.148])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 11:36:49 +0000 (GMT)
+Subject: Re: [PATCH 05/13] KVM: Refactor error handling for setting memory
+ region
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+ <20190911185038.24341-6-sean.j.christopherson@intel.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 12 Sep 2019 13:36:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190911185038.24341-6-sean.j.christopherson@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Bm0JecVlrjrc0FKCyusctXhutbwL6ZTpe"
+X-TM-AS-GCONF: 00
+x-cbid: 19091212-0016-0000-0000-000002AA674A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091212-0017-0000-0000-0000330AF860
+Message-Id: <9773a72d-2a58-fbb1-ed2b-82af0bb5f49a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=942 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-12 at 11:21 +0800, Hui Zhu wrote:
-> I use zswap to handle the swap IO issue in a VM that uses a swap file.
-> This VM has 4G memory and 2 CPUs.  And I set up 4G swap in /swapfile.
-> This is test script:
-> cat 1.sh
-> ./usemem --sleep 3600 -M -a -n 1 $((3 * 1024 * 1024 * 1024)) &
-> sleep 10
-> echo 1 > /proc/sys/vm/drop_caches
-> ./usemem -S -f /test2 $((2 * 1024 * 1024 * 1024)) &
-> while [ True ]; do ./usemem -a -n 1 $((1 * 1024 * 1024 * 1024)); done
-> 
-> Without ZSWAP:
-> echo 100 > /proc/sys/vm/swappiness
-> swapon /swapfile
-> sh 1.sh
-> ...
-> ...
-> 1207959552 bytes / 2076479 usecs = 568100 KB/s
-> 61088 usecs to free memory
-> 1207959552 bytes / 2035439 usecs = 579554 KB/s
-> 55073 usecs to free memory
-> 2415919104 bytes / 24054408 usecs = 98081 KB/s
-> 3741 usecs to free memory
-> 1207959552 bytes / 1954371 usecs = 603594 KB/s
-> 53161 usecs to free memory
-> ...
-> ...
-> 
-> With ZSWAP:
-> echo 100 > /proc/sys/vm/swappiness
-> swapon /swapfile
-> echo lz4 > /sys/module/zswap/parameters/compressor
-> echo zsmalloc > /sys/module/zswap/parameters/zpool
-> echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
-> echo 20 > /sys/module/zswap/parameters/max_pool_percent
-> echo 1 > /sys/module/zswap/parameters/enabled
-> sh 1.sh
-> 1207959552 bytes / 3619283 usecs = 325934 KB/s
-> 194825 usecs to free memory
-> 1207959552 bytes / 3439563 usecs = 342964 KB/s
-> 218419 usecs to free memory
-> 2415919104 bytes / 19508762 usecs = 120935 KB/s
-> 5632 usecs to free memory
-> 1207959552 bytes / 3329369 usecs = 354315 KB/s
-> 179764 usecs to free memory
-> 
-> The normal io speed is increased from 98081 KB/s to 120935 KB/s.
-> But I found 2 issues of zswap in this machine:
-> 1. Because the disk of VM has the file cache in the host layer,
->    so normal swap speed is higher than with zswap.
-> 2. Because zswap need allocates memory to store the compressed pages,
->    it will make memory capacity worse.
-> For example:
-> Command "./usemem -a -n 1 $((7 * 1024 * 1024 * 1024))" request 7G memory
-> from this machine.
-> It will work OK without zswap but got OOM when zswap is opened.
-> 
-> This commit adds CONFIG_ZSWAP_IO_SWITCH that try to handle the issues
-> and let zswap keep save IO.
-> It add two parameters read_in_flight_limit and write_in_flight_limit to
-> zswap.
-> In zswap_frontswap_store, pages will be stored to zswap only when
-> the IO in flight number of swap device is bigger than
-> zswap_read_in_flight_limit or zswap_write_in_flight_limit
-> when zswap is enabled.
-> Then the zswap just work when the IO in flight number of swap device
-> is low.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Bm0JecVlrjrc0FKCyusctXhutbwL6ZTpe
+Content-Type: multipart/mixed; boundary="6J8eeynfSebyZsyGavbEUWKxUSMvfibQv";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Sean Christopherson <sean.j.christopherson@intel.com>,
+ James Hogan <jhogan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+ Christian Borntraeger <borntraeger@de.ibm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?=
+ <rkrcmar@redhat.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
+ Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+ James Morse <james.morse@arm.com>, Julien Thierry <julien.thierry@arm.com>,
+ Suzuki K Pouloze <suzuki.poulose@arm.com>, linux-mips@vger.kernel.org,
+ kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+ linux-kernel@vger.kernel.org
+Message-ID: <9773a72d-2a58-fbb1-ed2b-82af0bb5f49a@linux.ibm.com>
+Subject: Re: [PATCH 05/13] KVM: Refactor error handling for setting memory
+ region
+References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+ <20190911185038.24341-6-sean.j.christopherson@intel.com>
+In-Reply-To: <20190911185038.24341-6-sean.j.christopherson@intel.com>
 
-There isn't sufficient information for users to decide when they should enable
-this kconfig. Also, It describes your specific workload, but not clear to me how
-this benefit other people's workloads in general.
+--6J8eeynfSebyZsyGavbEUWKxUSMvfibQv
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> This is the test result:
-> echo 100 > /proc/sys/vm/swappiness
-> swapon /swapfile
-> echo lz4 > /sys/module/zswap/parameters/compressor
-> echo zsmalloc > /sys/module/zswap/parameters/zpool
-> echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
-> echo 20 > /sys/module/zswap/parameters/max_pool_percent
-> echo 1 > /sys/module/zswap/parameters/enabled
-> echo 3 > /sys/module/zswap/parameters/read_in_flight_limit
-> echo 50 > /sys/module/zswap/parameters/write_in_flight_limit
-> sh 1.sh
-> ...
-> 1207959552 bytes / 2320861 usecs = 508280 KB/s
-> 106164 usecs to free memory
-> 1207959552 bytes / 2343916 usecs = 503280 KB/s
-> 79386 usecs to free memory
-> 2415919104 bytes / 20136015 usecs = 117167 KB/s
-> 4411 usecs to free memory
-> 1207959552 bytes / 1833403 usecs = 643419 KB/s
-> 70452 usecs to free memory
-> ...
-> killall usemem
-> ./usemem -a -n 1 $((7 * 1024 * 1024 * 1024))
-> 8455716864 bytes / 14457505 usecs = 571159 KB/s
-> 365961 usecs to free memory
-> 
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+On 9/11/19 8:50 PM, Sean Christopherson wrote:
+> Replace a big pile o' gotos with returns to make it more obvious what
+> error code is being returned, and to prepare for refactoring the
+> functional, i.e. post-checks, portion of __kvm_set_memory_region().
+>=20
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+Definitely necessary
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+
 > ---
->  include/linux/swap.h |  3 +++
->  mm/Kconfig           | 11 +++++++++++
->  mm/page_io.c         | 16 +++++++++++++++
->  mm/zswap.c           | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 85 insertions(+)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index de2c67a..82b621f 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -389,6 +389,9 @@ extern void end_swap_bio_write(struct bio *bio);
->  extern int __swap_writepage(struct page *page, struct writeback_control *wbc,
->  	bio_end_io_t end_write_func);
->  extern int swap_set_page_dirty(struct page *page);
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +extern void swap_io_in_flight(struct page *page, unsigned int inflight[2]);
-> +#endif
->  
->  int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
->  		unsigned long nr_pages, sector_t start_block);
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 56cec63..d077e51 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -546,6 +546,17 @@ config ZSWAP
->  	  they have not be fully explored on the large set of potential
->  	  configurations and workloads that exist.
->  
-> +config ZSWAP_IO_SWITCH
-> +	bool "Compressed cache for swap pages according to the IO status"
-> +	depends on ZSWAP
-> +	def_bool n
-> +	help
-> +	  Add two parameters read_in_flight_limit and write_in_flight_limit to
-> +	  ZSWAP.  When ZSWAP is enabled, pages will be stored to zswap only
-> +	  when the IO in flight number of swap device is bigger than
-> +	  zswap_read_in_flight_limit or zswap_write_in_flight_limit.
-> +	  If unsure, say "n".
-> +
->  config ZPOOL
->  	tristate "Common API for compressed memory storage"
->  	help
-> diff --git a/mm/page_io.c b/mm/page_io.c
-> index 24ee600..e66b050 100644
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -434,3 +434,19 @@ int swap_set_page_dirty(struct page *page)
->  		return __set_page_dirty_no_writeback(page);
+>  virt/kvm/kvm_main.c | 40 ++++++++++++++++++----------------------
+>  1 file changed, 18 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index ea8f2f37096f..8306ce3345a6 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -929,34 +929,33 @@ int __kvm_set_memory_region(struct kvm *kvm,
+> =20
+>  	r =3D check_memory_region_flags(mem);
+>  	if (r)
+> -		goto out;
+> +		return r;
+> =20
+> -	r =3D -EINVAL;
+>  	as_id =3D mem->slot >> 16;
+>  	id =3D (u16)mem->slot;
+> =20
+>  	/* General sanity checks */
+>  	if (mem->memory_size & (PAGE_SIZE - 1))
+> -		goto out;
+> +		return -EINVAL;
+>  	if (mem->guest_phys_addr & (PAGE_SIZE - 1))
+> -		goto out;
+> +		return -EINVAL;
+>  	/* We can read the guest memory with __xxx_user() later on. */
+>  	if ((id < KVM_USER_MEM_SLOTS) &&
+>  	    ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
+>  	     !access_ok((void __user *)(unsigned long)mem->userspace_addr,
+>  			mem->memory_size)))
+> -		goto out;
+> +		return -EINVAL;
+>  	if (as_id >=3D KVM_ADDRESS_SPACE_NUM || id >=3D KVM_MEM_SLOTS_NUM)
+> -		goto out;
+> +		return -EINVAL;
+>  	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
+> -		goto out;
+> +		return -EINVAL;
+> =20
+>  	slot =3D id_to_memslot(__kvm_memslots(kvm, as_id), id);
+>  	base_gfn =3D mem->guest_phys_addr >> PAGE_SHIFT;
+>  	npages =3D mem->memory_size >> PAGE_SHIFT;
+> =20
+>  	if (npages > KVM_MEM_MAX_NR_PAGES)
+> -		goto out;
+> +		return -EINVAL;
+> =20
+>  	new =3D old =3D *slot;
+> =20
+> @@ -973,20 +972,18 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>  			if ((new.userspace_addr !=3D old.userspace_addr) ||
+>  			    (npages !=3D old.npages) ||
+>  			    ((new.flags ^ old.flags) & KVM_MEM_READONLY))
+> -				goto out;
+> +				return -EINVAL;
+> =20
+>  			if (base_gfn !=3D old.base_gfn)
+>  				change =3D KVM_MR_MOVE;
+>  			else if (new.flags !=3D old.flags)
+>  				change =3D KVM_MR_FLAGS_ONLY;
+> -			else { /* Nothing to change. */
+> -				r =3D 0;
+> -				goto out;
+> -			}
+> +			else /* Nothing to change. */
+> +				return 0;
+>  		}
+>  	} else {
+>  		if (!old.npages)
+> -			goto out;
+> +			return -EINVAL;
+> =20
+>  		change =3D KVM_MR_DELETE;
+>  		new.base_gfn =3D 0;
+> @@ -995,29 +992,29 @@ int __kvm_set_memory_region(struct kvm *kvm,
+> =20
+>  	if ((change =3D=3D KVM_MR_CREATE) || (change =3D=3D KVM_MR_MOVE)) {
+>  		/* Check for overlaps */
+> -		r =3D -EEXIST;
+>  		kvm_for_each_memslot(slot, __kvm_memslots(kvm, as_id)) {
+>  			if (slot->id =3D=3D id)
+>  				continue;
+>  			if (!((base_gfn + npages <=3D slot->base_gfn) ||
+>  			      (base_gfn >=3D slot->base_gfn + slot->npages)))
+> -				goto out;
+> +				return -EEXIST;
+>  		}
 >  	}
+> =20
+> -	r =3D -ENOMEM;
+> -
+>  	/* Allocate/free page dirty bitmap as needed */
+>  	if (!(new.flags & KVM_MEM_LOG_DIRTY_PAGES))
+>  		new.dirty_bitmap =3D NULL;
+>  	else if (!new.dirty_bitmap) {
+> -		if (kvm_create_dirty_bitmap(&new) < 0)
+> -			goto out;
+> +		r =3D kvm_create_dirty_bitmap(&new);
+> +		if (r)
+> +			return r;
+>  	}
+> =20
+>  	slots =3D kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
+> -	if (!slots)
+> +	if (!slots) {
+> +		r =3D -ENOMEM;
+>  		goto out_bitmap;
+> +	}
+>  	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots)=
+);
+> =20
+>  	if ((change =3D=3D KVM_MR_DELETE) || (change =3D=3D KVM_MR_MOVE)) {
+> @@ -1068,7 +1065,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>  out_bitmap:
+>  	if (new.dirty_bitmap && !old.dirty_bitmap)
+>  		kvm_destroy_dirty_bitmap(&new);
+> -out:
+>  	return r;
 >  }
-> +
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +void swap_io_in_flight(struct page *page, unsigned int inflight[2])
-> +{
-> +	struct swap_info_struct *sis = page_swap_info(page);
-> +
-> +	if (!sis->bdev) {
-> +		inflight[0] = 0;
-> +		inflight[1] = 0;
-> +		return;
-> +	}
-> +
-> +	part_in_flight_rw(bdev_get_queue(sis->bdev), sis->bdev->bd_part,
-> +					  inflight);
-> +}
-> +#endif
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 0e22744..1255645 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -62,6 +62,13 @@ static u64 zswap_reject_compress_poor;
->  static u64 zswap_reject_alloc_fail;
->  /* Store failed because the entry metadata could not be allocated (rare) */
->  static u64 zswap_reject_kmemcache_fail;
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +/* Store failed because zswap_read_in_flight_limit or
-> + * zswap_write_in_flight_limit is bigger than IO in flight number of
-> + * swap device
-> + */
-> +static u64 zswap_reject_io;
-> +#endif
->  /* Duplicate store was encountered (rare) */
->  static u64 zswap_duplicate_entry;
->  
-> @@ -114,6 +121,22 @@ static bool zswap_same_filled_pages_enabled = true;
->  module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
->  		   bool, 0644);
->  
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +/* zswap will not try to store the page if zswap_read_in_flight_limit is
-> + * bigger than IO read in flight number of swap device
-> + */
-> +static unsigned int zswap_read_in_flight_limit;
-> +module_param_named(read_in_flight_limit, zswap_read_in_flight_limit,
-> +		   uint, 0644);
-> +
-> +/* zswap will not try to store the page if zswap_write_in_flight_limit is
-> + * bigger than IO write in flight number of swap device
-> + */
-> +static unsigned int zswap_write_in_flight_limit;
-> +module_param_named(write_in_flight_limit, zswap_write_in_flight_limit,
-> +		   uint, 0644);
-> +#endif
-> +
->  /*********************************
->  * data structures
->  **********************************/
-> @@ -1009,6 +1032,34 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->  		goto reject;
->  	}
->  
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +	if (zswap_read_in_flight_limit || zswap_write_in_flight_limit) {
-> +		unsigned int inflight[2];
-> +		bool should_swap = false;
-> +
-> +		swap_io_in_flight(page, inflight);
-> +
-> +		if (zswap_write_in_flight_limit &&
-> +			inflight[1] < zswap_write_in_flight_limit)
-> +			should_swap = true;
-> +
-> +		if (zswap_read_in_flight_limit &&
-> +			(should_swap ||
-> +			 (!should_swap && !zswap_write_in_flight_limit))) {
-> +			if (inflight[0] < zswap_read_in_flight_limit)
-> +				should_swap = true;
-> +			else
-> +				should_swap = false;
-> +		}
-> +
-> +		if (should_swap) {
-> +			zswap_reject_io++;
-> +			ret = -EIO;
-> +			goto reject;
-> +		}
-> +	}
-> +#endif
-> +
->  	/* reclaim space if needed */
->  	if (zswap_is_full()) {
->  		zswap_pool_limit_hit++;
-> @@ -1264,6 +1315,10 @@ static int __init zswap_debugfs_init(void)
->  			   zswap_debugfs_root, &zswap_reject_kmemcache_fail);
->  	debugfs_create_u64("reject_compress_poor", 0444,
->  			   zswap_debugfs_root, &zswap_reject_compress_poor);
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +	debugfs_create_u64("reject_io", 0444,
-> +			   zswap_debugfs_root, &zswap_reject_io);
-> +#endif
->  	debugfs_create_u64("written_back_pages", 0444,
->  			   zswap_debugfs_root, &zswap_written_back_pages);
->  	debugfs_create_u64("duplicate_entry", 0444,
+>  EXPORT_SYMBOL_GPL(__kvm_set_memory_region);
+>=20
+
+
+
+--6J8eeynfSebyZsyGavbEUWKxUSMvfibQv--
+
+--Bm0JecVlrjrc0FKCyusctXhutbwL6ZTpe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl16LdAACgkQ41TmuOI4
+ufiqdRAAk7Fq5LoAJLqJFxnCihIQRlcl8vo542WY/o9SIjSW82ULb9ja3jx/IZOo
+zXJt4+l9ZwKB3cwu3Z9pkvcu+D7PgbVSHyCAraimR8rk/TznU4esmSGNZX//BmaX
+AfSdajjNFNRXP+HsOlR0OVsvX6JBWQqfikSvqUv+GGzhOOB5TT7QIlNGTUFJhTuj
+DWsP4KnnRlxI8a6Tz0mXfcJLDABMu2Ypl8IjtEkAS57byfjVuy1fP3/WtiWW8QST
+2BeoiY5FQH/syqW0oXYO6Ov2rlS2gKMPwaL5nQwuHrOxd+A1qZv9rX7NU1P3+eZq
++Xutlm/mQHajvO6FfiuUf2pG/YuwfCyhX/ENMcmohw5TO1sdZDcY/BSHop0UYv+F
+8RkUxxstxRot67kTQvjZ1p60Tz/SYmxszldFM2noNPjzitbwUoiHrLl9Ti1MeMJ3
+QXb1ZCuTA8/F138tNGVL52JIOrsbIqvdLoc1/4qxJPLYbHzF/HMSqJ0nHl8tFa5Y
+D9N8xdr1pdQoHKNVLDVI8b5Jt5yMaeN4WrBqOFxTVme6XCxGu2eNRxyNWZbA2+Z3
+nDkoU2HaEDH3QbH2LuZy9wDTHlPb1dnO3XatbDqCf32/gsChlKjuEcKOcNnBVntM
+Izb7sxZStgMuHCrkgWweUjFkyR93+8JboW1iJKcFYtR1FWfffyU=
+=pPrb
+-----END PGP SIGNATURE-----
+
+--Bm0JecVlrjrc0FKCyusctXhutbwL6ZTpe--
+
