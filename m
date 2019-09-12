@@ -2,113 +2,104 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E796ECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F656C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355D82075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="E3+CoHLx"
+	by mail.kernel.org (Postfix) with ESMTP id 473B62075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbfILIGu (ORCPT
+        id S1730020AbfILIKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:06:50 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:29172 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfILIGt (ORCPT
+        Thu, 12 Sep 2019 04:10:02 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:50019 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729903AbfILIKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:06:49 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x8C86d4X005667;
-        Thu, 12 Sep 2019 17:06:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x8C86d4X005667
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568275599;
-        bh=L0lVJKpqf3gyQ723Mt44hD215srvPhfht58F28Ehvpk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E3+CoHLx+6xqd8oCOY15MDdMteGBS6hr8jd1bMjA/CPNnluIdM5J5UNJvpYKsqgQG
-         a7hQrkkg88NTdsuJQaTkZ9FpWegCJZHllfZckSbUz3RLNDVdScrN2MYgGJ6RbzZX93
-         AJpRBQM5Vdfi+NcdZgiAYhvumrDzZ19dtMQB5Pi7Qa9x+nv/qxfhcAahaXkvPxhhLz
-         pc/Pa/sFeheZ9czWUkOKKWSaCIBXRSg33EbcV6OiIYIOuu6FdTyZ/LKCMK+j+Yn32M
-         Yen5xPa6nQq/VBfz4cPS3oE8A39qhAkXHK1AQRRLofw+uM7KJ97W/Co+E0pjcFdlgw
-         RXIYTgyEplUfA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kbuild: change need-modorder implementation slightly
-Date:   Thu, 12 Sep 2019 17:06:26 +0900
-Message-Id: <20190912080626.13773-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Sep 2019 04:10:01 -0400
+X-Originating-IP: 213.58.148.146
+Received: from localhost (unknown [213.58.148.146])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1F9C4E0003;
+        Thu, 12 Sep 2019 08:09:59 +0000 (UTC)
+Date:   Thu, 12 Sep 2019 10:09:53 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Duncan Laurie <dlaurie@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH] rtc: wilco-ec: Sanitize values received from RTC
+Message-ID: <20190912080953.GO21254@piout.net>
+References: <20190910151929.780-1-ncrews@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910151929.780-1-ncrews@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align with the need-builtin implementation.
+Hi Nick,
 
-I also added need-modorder=1 to scripts/link-vmlinux.sh for future-proof;
-Currently, we have no module in the init/ directory, but if we had a one,
-scripts/Makefile.build would show the false positive warning.
+On 10/09/2019 16:19:29+0100, Nick Crews wrote:
+> Check that the time received from the RTC HW is valid,
+> otherwise the computation of rtc_year_days() in the next
+> line could, and sometimes does, crash the kernel.
+> 
+> While we're at it, fix the license to plain "GPL".
+> 
+> Signed-off-by: Nick Crews <ncrews@chromium.org>
+> ---
+>  drivers/rtc/rtc-wilco-ec.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+> index 8ad4c4e6d557..0ccbf2dce832 100644
+> --- a/drivers/rtc/rtc-wilco-ec.c
+> +++ b/drivers/rtc/rtc-wilco-ec.c
+> @@ -110,8 +110,16 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+>  	tm->tm_mday	= rtc.day;
+>  	tm->tm_mon	= rtc.month - 1;
+>  	tm->tm_year	= rtc.year + (rtc.century * 100) - 1900;
+> -	tm->tm_yday	= rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+If your driver doesn't care about yday, userspace doesn't either. You
+can simply not set it.
 
-Changes in v2:
-  - Add need-modorder=1 to link-vmlinux.sh
+>  
+> +	if (rtc_valid_tm(tm)) {
+> +		dev_warn(dev,
+> +			 "Time computed from EC RTC is invalid: sec=%d, min=%d, hour=%d, mday=%d, mon=%d, year=%d",
+> +			 tm->tm_sec, tm->tm_min, tm->tm_hour, tm->mday,
+> +			 tm->mon, tm->year);
+> +		return -EIO;
+> +	}
+> +
+> +	tm->tm_yday = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+>  	/* Don't compute day of week, we don't need it. */
+>  	tm->tm_wday = -1;
+>  
+> @@ -188,5 +196,5 @@ module_platform_driver(wilco_ec_rtc_driver);
+>  
+>  MODULE_ALIAS("platform:rtc-wilco-ec");
+>  MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
+> -MODULE_LICENSE("GPL v2");
+> +MODULE_LICENSE("GPL");
 
- scripts/Makefile.build  | 2 +-
- scripts/Makefile.lib    | 2 ++
- scripts/link-vmlinux.sh | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
+This should be in a separate patch.
 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index d30b04707fec..91617b9d7a34 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -528,7 +528,7 @@ $(subdir-ym):
- 	$(Q)$(MAKE) $(build)=$@ \
- 	$(if $(filter $@/, $(KBUILD_SINGLE_TARGETS)),single-build=) \
- 	need-builtin=$(if $(filter $@/built-in.a, $(subdir-obj-y)),1) \
--	need-modorder=$(if $(need-modorder),$(if $(filter $@/modules.order, $(modorder)),1))
-+	need-modorder=$(if $(filter $@/modules.order, $(modorder)),1)
- 
- # Add FORCE to the prequisites of a target to force it to be always rebuilt.
- # ---------------------------------------------------------------------------
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 07095d3789a1..034e92ea72c6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -23,7 +23,9 @@ lib-y := $(filter-out $(obj-y), $(sort $(lib-y) $(lib-m)))
- # Determine modorder.
- # Unfortunately, we don't have information about ordering between -y
- # and -m subdirs.  Just put -y's first.
-+ifdef need-modorder
- modorder	:= $(patsubst %/,%/modules.order, $(filter %/, $(obj-y)) $(obj-m:.o=.ko))
-+endif
- 
- # Handle objects in subdirs
- # ---------------------------------------------------------------------------
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 8961d999b86b..d9edfba54d84 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -216,7 +216,7 @@ else
- fi;
- 
- # final build of init/
--${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init need-builtin=1
-+${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init need-builtin=1 need-modorder=1
- 
- #link vmlinux.o
- info LD vmlinux.o
+>  MODULE_DESCRIPTION("Wilco EC RTC driver");
+> -- 
+> 2.11.0
+> 
+
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
