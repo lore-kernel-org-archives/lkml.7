@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C933BC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7619C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F32420830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE9220830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbfILQoo (ORCPT
+        id S1733269AbfILQos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:44:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52384 "EHLO huawei.com"
+        Thu, 12 Sep 2019 12:44:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53340 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725972AbfILQoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:44:44 -0400
+        id S1725972AbfILQor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:44:47 -0400
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 43CC7E7633E1EFF97E39;
-        Fri, 13 Sep 2019 00:44:40 +0800 (CST)
+        by Forcepoint Email with ESMTP id 542F2CD0AB34221E6235;
+        Fri, 13 Sep 2019 00:44:45 +0800 (CST)
 Received: from linux-ibm.site (10.175.102.37) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 13 Sep 2019 00:44:34 +0800
+ 14.3.439.0; Fri, 13 Sep 2019 00:44:35 +0800
 From:   zhong jiang <zhongjiang@huawei.com>
 To:     <kvalo@codeaurora.org>
 CC:     <davem@davemloft.net>, <zhongjiang@huawei.com>,
         <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] brcmsmac: Remove unneeded variable and make function to be void
-Date:   Fri, 13 Sep 2019 00:41:30 +0800
-Message-ID: <1568306492-42998-2-git-send-email-zhongjiang@huawei.com>
+Subject: [PATCH 3/3] libertas: Remove unneeded variable and make function to be void
+Date:   Fri, 13 Sep 2019 00:41:32 +0800
+Message-ID: <1568306492-42998-4-git-send-email-zhongjiang@huawei.com>
 X-Mailer: git-send-email 1.7.12.4
 In-Reply-To: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com>
 References: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com>
@@ -46,37 +46,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-brcms_c_set_mac  do not need return value to cope with different
+lbs_process_event  do not need return value to cope with different
 cases. And change functon return type to void.
 
 Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/wireless/marvell/libertas/cmd.h     | 2 +-
+ drivers/net/wireless/marvell/libertas/cmdresp.c | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-index 080e829..ddc4d47 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
-@@ -3776,17 +3776,14 @@ static void brcms_c_set_ps_ctrl(struct brcms_c_info *wlc)
-  * Write this BSS config's MAC address to core.
-  * Updates RXE match engine.
-  */
--static int brcms_c_set_mac(struct brcms_bss_cfg *bsscfg)
-+static void brcms_c_set_mac(struct brcms_bss_cfg *bsscfg)
- {
--	int err = 0;
- 	struct brcms_c_info *wlc = bsscfg->wlc;
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.h b/drivers/net/wireless/marvell/libertas/cmd.h
+index 8087856..3c19307 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.h
++++ b/drivers/net/wireless/marvell/libertas/cmd.h
+@@ -76,7 +76,7 @@ void lbs_mac_event_disconnected(struct lbs_private *priv,
  
- 	/* enter the MAC addr into the RXE match registers */
- 	brcms_c_set_addrmatch(wlc, RCM_MAC_OFFSET, wlc->pub->cur_etheraddr);
+ /* Events */
  
- 	brcms_c_ampdu_macaddr_upd(wlc);
--
--	return err;
+-int lbs_process_event(struct lbs_private *priv, u32 event);
++void lbs_process_event(struct lbs_private *priv, u32 event);
+ 
+ 
+ /* Actual commands */
+diff --git a/drivers/net/wireless/marvell/libertas/cmdresp.c b/drivers/net/wireless/marvell/libertas/cmdresp.c
+index b73d083..cb515c5 100644
+--- a/drivers/net/wireless/marvell/libertas/cmdresp.c
++++ b/drivers/net/wireless/marvell/libertas/cmdresp.c
+@@ -220,9 +220,8 @@ int lbs_process_command_response(struct lbs_private *priv, u8 *data, u32 len)
+ 	return ret;
  }
  
- /* Write the BSS config's BSSID address to core (set_bssid in d11procs.tcl).
+-int lbs_process_event(struct lbs_private *priv, u32 event)
++void lbs_process_event(struct lbs_private *priv, u32 event)
+ {
+-	int ret = 0;
+ 	struct cmd_header cmd;
+ 
+ 	switch (event) {
+@@ -351,6 +350,4 @@ int lbs_process_event(struct lbs_private *priv, u32 event)
+ 		netdev_alert(priv->dev, "EVENT: unknown event id %d\n", event);
+ 		break;
+ 	}
+-
+-	return ret;
+ }
 -- 
 1.7.12.4
 
