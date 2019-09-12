@@ -2,126 +2,257 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE66C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA26C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B7520830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA1020830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbfILMkS (ORCPT
+        id S1731689AbfILMmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:40:18 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59123 "EHLO mga14.intel.com"
+        Thu, 12 Sep 2019 08:42:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:33640 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731490AbfILMkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:40:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 05:40:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197217283"
-Received: from irsmsx105.ger.corp.intel.com ([163.33.3.28])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 05:40:13 -0700
-Received: from irsmsx112.ger.corp.intel.com ([169.254.1.33]) by
- irsmsx105.ger.corp.intel.com ([169.254.7.164]) with mapi id 14.03.0439.000;
- Thu, 12 Sep 2019 13:40:12 +0100
-From:   "Bradford, Robert" <robert.bradford@intel.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "riel@surriel.com" <riel@surriel.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jian-hong@endlessm.com" <jian-hong@endlessm.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] x86/reboot: Avoid EFI reboot when not running on EFI
-Thread-Topic: [PATCH] x86/reboot: Avoid EFI reboot when not running on EFI
-Thread-Index: AQHVXlIk9mI2ksshWUO3RxmbfzmajacR+keAgAAmIgCAFeCegA==
-Date:   Thu, 12 Sep 2019 12:40:11 +0000
-Message-ID: <14e9cec8478d00d6aef413508d93b1066fb79b9c.camel@intel.com>
-References: <20190829101119.7345-1-robert.bradford@intel.com>
-         <alpine.DEB.2.21.1908291416560.1938@nanos.tec.linutronix.de>
-         <caa320fa61d619a85d6237076f5ec8ed134d11b7.camel@intel.com>
-In-Reply-To: <caa320fa61d619a85d6237076f5ec8ed134d11b7.camel@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.252.7.176]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BFFA80AE3E6C6646829859DA65A7F897@intel.com>
-Content-Transfer-Encoding: base64
+        id S1730454AbfILMmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:42:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FFDB28;
+        Thu, 12 Sep 2019 05:42:13 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78D9F3F71F;
+        Thu, 12 Sep 2019 05:42:12 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 13:42:10 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Jingoo Han' <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Anvesh Salveru' <anvesh.s@samsung.com>
+Subject: Re: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
+Message-ID: <20190912124210.GC9720@e119886-lin.cambridge.arm.com>
+References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
+ <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
+ <20190910135813.GK9720@e119886-lin.cambridge.arm.com>
+ <CAGcde9F6dTGga6Rxo62PPk3AMb3tK8oqo9K6Zi=0TbnFktmQQw@mail.gmail.com>
+ <20190911092310.GN9720@e119886-lin.cambridge.arm.com>
+ <23a601d5695e$c54f2b80$4fed8280$@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23a601d5695e$c54f2b80$4fed8280$@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTI5IGF0IDE1OjM0ICswMTAwLCBCcmFkZm9yZCwgUm9iZXJ0IHdyb3Rl
-Og0KPiBPbiBUaHUsIDIwMTktMDgtMjkgYXQgMTQ6MTggKzAyMDAsIFRob21hcyBHbGVpeG5lciB3
-cm90ZToNCj4gPiBPbiBUaHUsIDI5IEF1ZyAyMDE5LCBSb2IgQnJhZGZvcmQgd3JvdGU6DQo+ID4g
-DQo+ID4gQ0MrIEFyZA0KPiA+IA0KPiA+ID4gUmVwbGFjZSB0aGUgY2hlY2sgdXNpbmcgZWZpX3J1
-bnRpbWVfZGlzYWJsZWQoKSB3aGljaCBvbmx5IGNoZWNrcw0KPiA+ID4gaWYNCj4gPiA+IEVGSQ0K
-PiA+ID4gcnVudGltZSB3YXMgZGlzYWJsZWQgb24gdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgd2l0
-aCBhIGNhbGwgdG8NCj4gPiA+IGVmaV9lbmFibGVkKEVGSV9SVU5USU1FX1NFUlZJQ0VTKSB0byBj
-aGVjayBpZiBFRkkgcnVudGltZQ0KPiA+ID4gc2VydmljZXMNCj4gPiA+IGFyZQ0KPiA+ID4gYXZh
-aWxhYmxlLg0KPiA+ID4gDQo+ID4gPiBJbiB0aGUgc2l0dWF0aW9uIHdoZXJlIHRoZSBrZXJuZWwg
-d2FzIGJvb3RlZCB3aXRob3V0IGFuIEVGSQ0KPiA+ID4gZW52aXJvbm1lbnQNCj4gPiA+IHRoZW4g
-b25seSBlZmlfZW5hYmxlZChFRklfUlVOVElNRV9TRVJWSUNFUykgY29ycmVjdGx5IHJlcHJlc2Vu
-dHMNCj4gPiA+IHRoYXQgbm8NCj4gPiA+IEVGSSBpcyBhdmFpbGFibGUuIFNldHRpbmcgIm5vZWZp
-IiBvciAiZWZpPW5vcnVudGltZSIgb24gdGhlDQo+ID4gPiBjb21tYW5kbGluZQ0KPiA+ID4gY29u
-dGludWUgdG8gaGF2ZSB0aGUgc2FtZSBlZmZlY3QgYXMNCj4gPiA+IGVmaV9lbmFibGVkKEVGSV9S
-VU5USU1FX1NFUlZJQ0VTKQ0KPiA+ID4gd2lsbCByZXR1cm4gZmFsc2UuDQo+ID4gPiANCj4gPiA+
-IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogUm9iIEJyYWRmb3JkIDxyb2JlcnQuYnJhZGZvcmRAaW50
-ZWwuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgYXJjaC94ODYva2VybmVsL3JlYm9vdC5jIHwgMiAr
-LQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0K
-PiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3JlYm9vdC5jIGIvYXJj
-aC94ODYva2VybmVsL3JlYm9vdC5jDQo+ID4gPiBpbmRleCAwOWQ2YmRlZDNjMWUuLjBiMGE3ZmNj
-ZGIwMCAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9yZWJvb3QuYw0KPiA+ID4g
-KysrIGIvYXJjaC94ODYva2VybmVsL3JlYm9vdC5jDQo+ID4gPiBAQCAtNTAwLDcgKzUwMCw3IEBA
-IHN0YXRpYyBpbnQgX19pbml0IHJlYm9vdF9pbml0KHZvaWQpDQo+ID4gPiAgCSAqLw0KPiA+ID4g
-IAlydiA9IGRtaV9jaGVja19zeXN0ZW0ocmVib290X2RtaV90YWJsZSk7DQo+ID4gPiAgDQo+ID4g
-PiAtCWlmICghcnYgJiYgZWZpX3JlYm9vdF9yZXF1aXJlZCgpICYmICFlZmlfcnVudGltZV9kaXNh
-YmxlZCgpKQ0KPiA+ID4gKwlpZiAoIXJ2ICYmIGVmaV9yZWJvb3RfcmVxdWlyZWQoKSAmJg0KPiA+
-ID4gZWZpX2VuYWJsZWQoRUZJX1JVTlRJTUVfU0VSVklDRVMpKQ0KPiA+IA0KPiA+IFdoeSBpcyBl
-ZmlfcmVib290X3JlcXVpcmVkKCkgc2V0IGF0IGFsbCBpbiB0aGF0IHNpdHVhdGlvbj8NCj4gPiAN
-Cj4gSGkgVGhvbWFzLA0KPiANCj4gVGhpcyBwbGF0Zm9ybSB1c2VzIEhXIFJlZHVjZWQgQUNQSSAo
-DQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9pbnRlbC9jbG91ZC1oeXBlcnZpc29yKSBidXQgYWxzbyBz
-dXBwb3J0cyBkaXJlY3QNCj4ga2VybmVsIGJvb3Qgd2l0aG91dCBFRkkuDQo+IA0KPiAvKg0KPiAg
-KiBGb3IgbW9zdCBtb2Rlcm4gcGxhdGZvcm1zIHRoZSBwcmVmZXJyZWQgbWV0aG9kIG9mIHBvd2Vy
-aW5nIG9mZiBpcw0KPiB2aWENCj4gICogQUNQSS4gSG93ZXZlciwgdGhlcmUgYXJlIHNvbWUgdGhh
-dCBhcmUga25vd24gdG8gcmVxdWlyZSB0aGUgdXNlIG9mDQo+ICAqIEVGSSBydW50aW1lIHNlcnZp
-Y2VzIGFuZCBmb3Igd2hpY2ggQUNQSSBkb2VzIG5vdCB3b3JrIGF0IGFsbC4NCj4gICoNCj4gICog
-VXNpbmcgRUZJIGlzIGEgbGFzdCByZXNvcnQsIHRvIGJlIHVzZWQgb25seSBpZiBubyBvdGhlciBv
-cHRpb24NCj4gICogZXhpc3RzLg0KPiAgKi8NCj4gYm9vbCBlZmlfcmVib290X3JlcXVpcmVkKHZv
-aWQpDQo+IHsNCj4gCWlmICghYWNwaV9nYmxfcmVkdWNlZF9oYXJkd2FyZSkNCj4gCQlyZXR1cm4g
-ZmFsc2U7DQo+IA0KPiAJZWZpX3JlYm9vdF9xdWlya19tb2RlID0gRUZJX1JFU0VUX1dBUk07DQo+
-IAlyZXR1cm4gdHJ1ZTsNCj4gfQ0KPiANCj4gVGhpcyBpcyBhIGhhcmR3YXJlIHdvcmthcm91bmQg
-dGhhdCBhc3N1bWVzIHRoYXQgYWxsIEFDUEkgSFcgcmVkdWNlZA0KPiBwbGF0Zm9ybXMgZG8gbm90
-IHN1cHBvcnQgQUNQSSByZXNldDoNCj4gDQo+IGNvbW1pdCA0NGJlMjhlOWRkOTg4MGRjYTNlMmNi
-ZjdhODQ0ZjIxMTRlNjdmMmNiDQo+IEF1dGhvcjogTWF0dCBGbGVtaW5nIDxtYXR0LmZsZW1pbmdA
-aW50ZWwuY29tPg0KPiBEYXRlOiAgIEZyaSBKdW4gMTMgMTI6Mzk6NTUgMjAxNCArMDEwMA0KPiAN
-Cj4gICAgIHg4Ni9yZWJvb3Q6IEFkZCBFRkkgcmVib290IHF1aXJrIGZvciBBQ1BJIEhhcmR3YXJl
-IFJlZHVjZWQgZmxhZw0KPiAgICAgDQo+ICAgICBJdCBhcHBlYXJzIHRoYXQgdGhlIEJheVRyYWls
-LVQgY2xhc3Mgb2YgaGFyZHdhcmUgcmVxdWlyZXMgRUZJIGluDQo+IG9yZGVyDQo+ICAgICB0byBw
-b3dlcmRvd24gYW5kIHJlYm9vdCBhbmQgbm8gb3RoZXIgcmVsaWFibGUgbWV0aG9kIGV4aXN0cy4N
-Cj4gICAgIA0KPiAgICAgVGhpcyBxdWlyayBpcyBnZW5lcmFsbHkgYXBwbGljYWJsZSB0byBhbGwg
-aGFyZHdhcmUgdGhhdCBoYXMgdGhlDQo+IEFDUEkNCj4gICAgIEhhcmR3YXJlIFJlZHVjZWQgYml0
-IHNldCwgc2luY2UgdXN1YWxseSBBQ1BJIHdvdWxkIGJlIHRoZQ0KPiBwcmVmZXJyZWQNCj4gICAg
-IG1ldGhvZC4NCj4gICAgIA0KPiAgICAgQ2M6IExlbiBCcm93biA8bGVuLmJyb3duQGludGVsLmNv
-bT4NCj4gICAgIENjOiBNYXJrIFNhbHRlciA8bXNhbHRlckByZWRoYXQuY29tPg0KPiAgICAgQ2M6
-ICJSYWZhZWwgSi4gV3lzb2NraSIgPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiAgICAg
-U2lnbmVkLW9mZi1ieTogTWF0dCBGbGVtaW5nIDxtYXR0LmZsZW1pbmdAaW50ZWwuY29tPg0KPiAN
-Cj4gSSdtIHJlbHVjdGFudCB0byBjaGFuZ2UgdGhlIGJlaGF2aW91ciBvZiBlZmlfcmVib290X3Jl
-cXVpcmVkKCkgYXMgaXQNCj4gbWlnaHQgYnJlYWsgb2xkZXIgaGFyZHdhcmUgd2hlcmVhcyBjaGVj
-a2luZyBpZiB3ZSBoYXZlIGFuIEVGSSBydW50aW1lDQo+IGlzIHNhZmVyLg0KPiANCg0KSGkgVGhv
-bWFzLA0KDQpBbnkgdXBkYXRlIG9uIHlvdXIgdGhvdWdodHMgb24gdGhpcyBwYXRjaD8NCg0KUm9i
-DQo=
+On Thu, Sep 12, 2019 at 05:09:41PM +0530, Pankaj Dubey wrote:
+> 
+> 
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > 
+> > On Tue, Sep 10, 2019 at 09:46:28PM +0530, Pankaj Dubey wrote:
+> > > On Tue, 10 Sep 2019 at 19:56, Andrew Murray <andrew.murray@arm.com>
+> > wrote:
+> > > >
+> > > > On Tue, Sep 10, 2019 at 05:55:01PM +0530, Pankaj Dubey wrote:
+> > > > > From: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > >
+> > > > > In some platforms, PCIe PHY may have issues which will prevent
+> > > > > linkup to happen in GEN3 or high speed. In case equalization
+> > > > > fails, link will fallback to GEN1.
+> > > >
+> > > > When you refer to "high speed", do you mean "higher speeds" as in
+> > > > GEN3, GEN4, etc?
+> > > >
+> > >
+> > > Yes. Will reword the commit message as "higher speeds"
+> > >
+> > > > >
+> > > > > Designware controller has support for disabling GEN3 equalization
+> > > > > if required. This patch enables the designware driver to disable
+> > > > > the PCIe
+> > > > > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
+> > > >
+> > > > Thus limiting to GEN2 speeds max, right?
+> > > >
+> > > > Is the purpose of PORT_LOGIC_GEN3_EQ_DISABLE to disable GEN3 and
+> > > > above even though we advertise GEN3 and above speeds? I.e. the IP
+> > > > advertises
+> > > > GEN3 but the phy can't handle it, we can't change what the IP
+> > > > advertises and so we disable equalization to limit to GEN2?
+> > > >
+> > > > I notice many of the other dwc drivers (dra7xx, keystone, tegra194,
+> > > > imx6) seem to use the device tree to specify a max-link-speed and
+> > > > then impose that limit by changing the value in PCI_EXP_LNKCAP. Is
+> > > > your PORT_LOGIC_GEN3_EQ_DISABLE approach and alternative to the
+> > > > PCI_EXP_LNKCAP approach, or does your approach add something else?
+> > > >
+> > >
+> > > No, max speed will be still as per advertised by link or it will be
+> > > equal to the limited speed as per DT property if any.
+> > > This register will prohibit to perform all phases of equalization and
+> > > thus allowing link to happen in maximum supported/advertised speed.
+> > >
+> > > This is not to limit max link speed, this register helps link to
+> > > happen in higher speeds (GEN3/4) without going through equalization
+> > > phases. It is intended to use only if at all link fails to latch up in
+> > > GEN3/4 due to failure in equalization phases.
+> > 
+> > I thought that for GEN3 and beyond equalization was *required* - with only
+> > phases 2 and 3 being optional. Therefore I'm suprised to see that if
+> equalization
+> > does fail we continue to train the link anyway. Have I understood this
+> correctly?
+> > 
+> 
+> AFAIK, equalization is not mandatory for GEN3 and higher speed. I mean in
+> case there is some H/W issue we can still go ahead and disable complete
+> equalization.
+
+Regardless, the hardware supports it and I guess you have a need for it.
+
+> 
+> > Also are there any plans to provide patches to use this quirk on any
+> drivers?
+> > 
+> 
+> Yes, we have plans and soon the user driver of this feature will land for
+> review. But I believe this should not be blocker to consider this patch, as
+> it is a feature provided in Designware H/W and so we can add S/W support for
+> the same.
+
+OK will look forward to seeing that.
+
+Perhaps Gustavo will give his comment on this when he catches up with his
+mail.
+
+> 
+> > >
+> > > > >
+> > > > > Platform drivers can disable equalization by setting the
+> > > > > dwc_pci_quirk flag DWC_EQUALIZATION_DISABLE.
+> > > > >
+> > > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+> > > > > drivers/pci/controller/dwc/pcie-designware.h | 7 +++++++
+> > > > >  2 files changed, 14 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > index 7d25102..bf82091 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > @@ -466,4 +466,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > > > >               break;
+> > > > >       }
+> > > > >       dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> > > > > +
+> > > > > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > > > > +
+> > > > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
+> > > > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > > > > +
+> > > > > +     dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > > >
+> > > > The problem here is that even when DWC_EQUALIZATION_DISABLE is not
+> > > > set the driver will read and write PCIE_PORT_GEN3_RELATED when it is
+> > > > not needed. How about something like:
+> > > >
+> > > > > +
+> > > > > +     if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE) {
+> > > > > +             val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > > > > +             val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> > > > > +             dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > > > > +     }
+> > > >
+> > >
+> > > Yes, before posting we taught about it, but then next patchset is
+> > > adding one more quirk and in that case we need to repeat read and
+> > > write under each if condition. I hope that repetition should be fine.
+> > 
+> > I understand. I think the repetition is prefered over needlessly reading
+> and
+> > writing registers.
+> > 
+> 
+> OK, will handle this in v2.
+> 
+> > Given these quirks are so similar, I wouldn't have a problem with them
+> being in
+> > the same patch.
+> > 
+> 
+> I still prefer to keep these in two separate patches, unless until it is
+> something mandatory.
+
+OK, it was just a suggestion.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >
+> > > > >  }
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > index ffed084..a1453c5 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > @@ -29,6 +29,9 @@
+> > > > >  #define LINK_WAIT_MAX_IATU_RETRIES   5
+> > > > >  #define LINK_WAIT_IATU                       9
+> > > > >
+> > > > > +/* Parameters for PCIe Quirks */
+> > > > > +#define DWC_EQUALIZATION_DISABLE     0x1
+> > > >
+> > > > How about using BIT(1) instead? Thus implying that you can combine
+> > > > quirks.
+> > > >
+> > >
+> > > Agreed.
+> > >
+> > > > Thanks,
+> > > >
+> > > > Andrew Murray
+> > > >
+> > > > > +
+> > > > >  /* Synopsys-specific PCIe configuration registers */
+> > > > >  #define PCIE_PORT_LINK_CONTROL               0x710
+> > > > >  #define PORT_LINK_MODE_MASK          GENMASK(21, 16)
+> > > > > @@ -60,6 +63,9 @@
+> > > > >  #define PCIE_MSI_INTR0_MASK          0x82C
+> > > > >  #define PCIE_MSI_INTR0_STATUS                0x830
+> > > > >
+> > > > > +#define PCIE_PORT_GEN3_RELATED               0x890
+> > > > > +#define PORT_LOGIC_GEN3_EQ_DISABLE   BIT(16)
+> > > > > +
+> > > > >  #define PCIE_ATU_VIEWPORT            0x900
+> > > > >  #define PCIE_ATU_REGION_INBOUND              BIT(31)
+> > > > >  #define PCIE_ATU_REGION_OUTBOUND     0
+> > > > > @@ -244,6 +250,7 @@ struct dw_pcie {
+> > > > >       struct dw_pcie_ep       ep;
+> > > > >       const struct dw_pcie_ops *ops;
+> > > > >       unsigned int            version;
+> > > > > +     unsigned int            dwc_pci_quirk;
+> > > > >  };
+> > > > >
+> > > > >  #define to_dw_pcie_from_pp(port) container_of((port), struct
+> > > > > dw_pcie, pp)
+> > > > > --
+> > > > > 2.7.4
+> > > > >
+> 
