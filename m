@@ -6,81 +6,155 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17070C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7638CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A2720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CFF020CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbfILNof (ORCPT
+        id S1732278AbfILNom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:44:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3887 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732179AbfILNoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:44:34 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 06:44:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197232089"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 06:44:31 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i8POf-0005dL-WB; Thu, 12 Sep 2019 16:44:29 +0300
-Date:   Thu, 12 Sep 2019 16:44:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190912134429.GZ2680@smile.fi.intel.com>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911095149.GA108334@dtor-ws>
- <CACRpkdbTErKxFBr__tj391FHwUTxC7ZF_m94tC8-VHzaynBsnw@mail.gmail.com>
+        Thu, 12 Sep 2019 09:44:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732179AbfILNol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:44:41 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CDgOHM044345;
+        Thu, 12 Sep 2019 09:44:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uynr63kkr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 09:44:22 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CDgjqP045448;
+        Thu, 12 Sep 2019 09:44:22 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uynr63kjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 09:44:21 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CDhYDB006998;
+        Thu, 12 Sep 2019 13:44:20 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 2uv468xxmb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 13:44:20 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CDiJb821954972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 13:44:19 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44532136051;
+        Thu, 12 Sep 2019 13:44:19 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B159513605D;
+        Thu, 12 Sep 2019 13:44:16 +0000 (GMT)
+Received: from [9.199.32.243] (unknown [9.199.32.243])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 13:44:16 +0000 (GMT)
+Subject: Re: [PATCH 0/3] powerpc/mm: Conditionally call H_BLOCK_REMOVE
+To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830120712.22971-1-ldufour@linux.ibm.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
+Date:   Thu, 12 Sep 2019 19:14:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbTErKxFBr__tj391FHwUTxC7ZF_m94tC8-VHzaynBsnw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190830120712.22971-1-ldufour@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 10:41:43AM +0100, Linus Walleij wrote:
-> On Wed, Sep 11, 2019 at 10:51 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
+On 8/30/19 5:37 PM, Laurent Dufour wrote:
+> Since the commit ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE"),
+> the call to H_BLOCK_REMOVE is always done if the feature is exhibited.
 > 
-> > If we are willing to sacrifice the custom label for the GPIO that
-> > fwnode_gpiod_get_index() allows us to set, then there are several
-> > drivers that could actually use gpiod_get() API.
+> On some system, the hypervisor may not support all the combination of
+> segment base page size and page size. When this happens the hcall is
+> returning H_PARAM, which is triggering a BUG_ON check leading to a panic.
 > 
-> We have:
-> gpiod_set_consumer_name(gpiod, "name");
-> to deal with that so no sacrifice is needed.
+> The PAPR document is specifying a TLB Block Invalidate Characteristics item
+> detailing which couple base page size, page size the hypervisor is
+> supporting through H_BLOCK_REMOVE. Furthermore, the characteristics are
+> also providing the size of the block the hcall could process.
+> 
+> Supporting various block size seems not needed as all systems I was able to
+> play with was support an 8 addresses block size, which is the maximum
+> through the hcall. Supporting various size may complexify the algorithm in
+> call_block_remove() so unless this is required, this is not done.
+> 
+> In the case of block size different from 8, a warning message is displayed
+> at boot time and that block size will be ignored checking for the
+> H_BLOCK_REMOVE support.
+> 
+> Due to the minimal amount of hardware showing a limited set of
+> H_BLOCK_REMOVE supported page size, I don't think there is a need to push
+> this series to the stable mailing list.
+> 
+> The first patch is initializing the penc values for each page size to an
+> invalid value to be able to detect those which have been initialized as 0
+> is a valid value.
+> 
+> The second patch is reading the characteristic through the hcall
+> ibm,get-system-parameter and record the supported block size for each page
+> size.
+> 
+> The third patch is changing the check used to detect the H_BLOCK_REMOVE
+> availability to take care of the base page size and page size couple.
+> 
 
-Thank for this hint!
+So ibm,segment-page-sizes indicates wether we support a combination of 
+base page size and actual page size. You are suggesting that the value 
+reported by that is not correct? Can you also share the early part of 
+dmesg as below.
 
--- 
-With Best Regards,
-Andy Shevchenko
+[    0.000000] hash-mmu: Page sizes from device-tree:
+[    0.000000] hash-mmu: base_shift=12: shift=12, sllp=0x0000, 
+avpnm=0x00000000, tlbiel=1, penc=0
+[    0.000000] hash-mmu: base_shift=12: shift=16, sllp=0x0000, 
+avpnm=0x00000000, tlbiel=1, penc=7
+[    0.000000] hash-mmu: base_shift=12: shift=24, sllp=0x0000, 
+avpnm=0x00000000, tlbiel=1, penc=56
+[    0.000000] hash-mmu: base_shift=16: shift=16, sllp=0x0110, 
+avpnm=0x00000000, tlbiel=1, penc=1
+[    0.000000] hash-mmu: base_shift=16: shift=24, sllp=0x0110, 
+avpnm=0x00000000, tlbiel=1, penc=8
+[    0.000000] hash-mmu: base_shift=24: shift=24, sllp=0x0100, 
+avpnm=0x00000001, tlbiel=0, penc=0
+[    0.000000] hash-mmu: base_shift=34: shift=34, sllp=0x0120, 
+avpnm=0x000007ff, tlbiel=0, penc=3
+
+That shows different base page size and actual page size combination.
 
 
+> Laurent Dufour (3):
+>    powerpc/mm: Initialize the HPTE encoding values
+>    powperc/mm: read TLB Block Invalidate Characteristics
+>    powerpc/mm: call H_BLOCK_REMOVE when supported
+> 
+>   arch/powerpc/include/asm/book3s/64/mmu.h |   3 +
+>   arch/powerpc/mm/book3s64/hash_utils.c    |   8 +-
+>   arch/powerpc/platforms/pseries/lpar.c    | 118 ++++++++++++++++++++++-
+>   3 files changed, 125 insertions(+), 4 deletions(-)
+> 
+
+
+-aneesh
