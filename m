@@ -2,118 +2,81 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E56DC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C933BC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EBD20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F32420830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfILQo0 (ORCPT
+        id S1731903AbfILQoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:44:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52882 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbfILQoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:44:25 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8D3881DFF
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:44:24 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id 15so142878wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:44:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=zoH4QTE6JeRQ9cejfuBwTdDAfAuJXRi5JfhYPwN1PqU=;
-        b=GZxmVzgAqPzrv6k+tGolWPqJQChBsiaoFBGQNWV5oT9t2k9hVBt3x2qtEIPkGDx/6H
-         znluDo7iGIUhgH/pUaIC9KKf/7eIs4xYtXjBNBKsb49CLkIAzlw6I87KoWZe0Ned0eFS
-         VREWXsZ7r8+dbm95ICPFRGWm3vGj3ieToWNDkIolHbBJYqDXqC+KeC1M8AavSYHjWiTm
-         Y1zCTD6I5tt7LpDJ87PyCiNSzpyjc4vpIp/PC8u4hdeo3c7pkdEqYS619/YFwuWa1sEw
-         Rlz2zk1UYA8hXf1BFmDJpLVryE2487SL8HUqPnH+sOJzCJ4/2wZV7CgqWz2mIM1NFziv
-         nVZw==
-X-Gm-Message-State: APjAAAWRHxuecKK70vf2zpnsszJITVRlc1rezBAUsXMlS2ghqHmVNUqn
-        LVOPbRp8oj5C8Y1Ls7Dd1LzBI7diuCeqjycCNZht6gXXIlyGDW5mqvVEgtYx1De5AAsESMGQ4Su
-        3NAj8iQIWLwsicYiEZ78VvPsm
-X-Received: by 2002:adf:e94f:: with SMTP id m15mr2619465wrn.225.1568306663101;
-        Thu, 12 Sep 2019 09:44:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxeN2yn1DCTnoJ6sS2TFwy9L2253CghjHXehfinXZ3U/iqRDXW/hi8D0Ic4JQ8+OxbYzc5QZQ==
-X-Received: by 2002:adf:e94f:: with SMTP id m15mr2619441wrn.225.1568306662883;
-        Thu, 12 Sep 2019 09:44:22 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a190sm743531wme.8.2019.09.12.09.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 09:44:22 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
-In-Reply-To: <CALMp9eRu=C+MQmRpKh5WtyqBKq=ja8Wj7fD5NTFhZi9EZd+84w@mail.gmail.com>
-References: <20190912041817.23984-1-huangfq.daxian@gmail.com> <87tv9hew2k.fsf@vitty.brq.redhat.com> <CALMp9eRu=C+MQmRpKh5WtyqBKq=ja8Wj7fD5NTFhZi9EZd+84w@mail.gmail.com>
-Date:   Thu, 12 Sep 2019 18:44:21 +0200
-Message-ID: <874l1hcvmi.fsf@vitty.brq.redhat.com>
+        Thu, 12 Sep 2019 12:44:44 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52384 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725972AbfILQoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:44:44 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 43CC7E7633E1EFF97E39;
+        Fri, 13 Sep 2019 00:44:40 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 13 Sep 2019 00:44:34 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <kvalo@codeaurora.org>
+CC:     <davem@davemloft.net>, <zhongjiang@huawei.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3] brcmsmac: Remove unneeded variable and make function to be void
+Date:   Fri, 13 Sep 2019 00:41:30 +0800
+Message-ID: <1568306492-42998-2-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com>
+References: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jim Mattson <jmattson@google.com> writes:
+brcms_c_set_mac  do not need return value to cope with different
+cases. And change functon return type to void.
 
-> On Thu, Sep 12, 2019 at 1:51 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> Fuqian Huang <huangfq.daxian@gmail.com> writes:
->>
->> > Emulation of VMPTRST can incorrectly inject a page fault
->> > when passed an operand that points to an MMIO address.
->> > The page fault will use uninitialized kernel stack memory
->> > as the CR2 and error code.
->> >
->> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
->> > exit to userspace;
->>
->> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
->> is not a proper reaction to a userspace-induced condition (or ever).
->
-> This *is* an error in KVM. KVM should properly emulate the quadword
-> store to the emulated device. Doing anything else is just wrong.
->
-> KVM_INTERNAL_ERROR is basically a cop-out for things that are hard.
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Yes, I way arguing with "the right behavior would be" in relation to
-KVM_INTERNAL_ERROR.
-
->
->> I also looked at VMPTRST's description in Intel's manual and I can't
->> find and explicit limitation like "this must be normal memory". We're
->> just supposed to inject #PF "If a page fault occurs in accessing the
->> memory destination operand."
->>
->> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
->> think that nobody should be doing that I'd rather prefer injecting #GP.
->
-> That is not the architected behavior at all. Now you're just making
-> things up!
-
-True and I'm not against KVM_INTERNAL_ERROR as an iterim solution if it
-comes with a comment explaining why we're 'admitting defeat' here.
-
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
+index 080e829..ddc4d47 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
+@@ -3776,17 +3776,14 @@ static void brcms_c_set_ps_ctrl(struct brcms_c_info *wlc)
+  * Write this BSS config's MAC address to core.
+  * Updates RXE match engine.
+  */
+-static int brcms_c_set_mac(struct brcms_bss_cfg *bsscfg)
++static void brcms_c_set_mac(struct brcms_bss_cfg *bsscfg)
+ {
+-	int err = 0;
+ 	struct brcms_c_info *wlc = bsscfg->wlc;
+ 
+ 	/* enter the MAC addr into the RXE match registers */
+ 	brcms_c_set_addrmatch(wlc, RCM_MAC_OFFSET, wlc->pub->cur_etheraddr);
+ 
+ 	brcms_c_ampdu_macaddr_upd(wlc);
+-
+-	return err;
+ }
+ 
+ /* Write the BSS config's BSSID address to core (set_bssid in d11procs.tcl).
 -- 
-Vitaly
+1.7.12.4
+
