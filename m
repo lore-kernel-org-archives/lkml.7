@@ -2,262 +2,126 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB75C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BD5C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FA020830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5AA20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KEE3nZG/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVclnYpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfILXSp (ORCPT
+        id S1727709AbfILXWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 19:18:45 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:21986 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfILXSo (ORCPT
+        Thu, 12 Sep 2019 19:22:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33400 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfILXV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 19:18:44 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8CNIdAq027007
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:18:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=eJAkWK9ab3KEK9eiIEM2hNTnrj5bd98d2PXl3/7B5kA=;
- b=KEE3nZG/JOQDnNQzUYlH+IEZLdLgjHRmdAJPx87Fqvg3zAPIbhFkY0U06zvqcGBJlfoF
- dIdw22fCV29IeqB4y5BW9T4sn0gK0QOrl1DKttB/zx9vNdOOomaj3MSWTvHjsgXNK2dU
- zEpjdARG7yxKkIHUxb8kh5Grh47kTxdNKEs= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uytcssjcx-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:18:43 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 12 Sep 2019 16:18:31 -0700
-Received: by devbig059.prn3.facebook.com (Postfix, from userid 4924)
-        id 1E37017419B8; Thu, 12 Sep 2019 16:18:31 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Lucian Adrian Grijincu <lucian@fb.com>
-Smtp-Origin-Hostname: devbig059.prn3.facebook.com
-To:     Lucian Adrian Grijincu <lucian@fb.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn3c05
-Subject: [PATCH] mm: memory: fix /proc/meminfo reporting for MLOCK_ONFAULT
-Date:   Thu, 12 Sep 2019 16:18:20 -0700
-Message-ID: <20190912231820.590276-1-lucian@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 12 Sep 2019 19:21:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so14275999pgn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YmpY77tOjMlIBM+QNhtMQBjrqYVfrKFcyr6SgoPVdxU=;
+        b=mVclnYpUotNVMVlsDFEnMjm9huupDI5osneDwNjpz3DEn7odTq1c2j3DWotgaHFfiP
+         RrjHJyXSDm+jOs+8PAS76MemG0ZSxEVKxiDuzMSVkqgGaPZ+rBRIRjAdsDKGdsqmDTtV
+         8Mt5Z3cBPNwe+5kJ6n1RslkClAwV6Wvjtx61BNTXpB7H7V+dtKgX9hc5up8a01GcBRgR
+         1aygXyMNnQwQU56EcGzPJFVX4neoPPoyr92ld2d0Hs2kf0jf9Y5L3RTNqCXiFkcC2qFv
+         z/cuxBvO5uT+Jm8RnPJQe231C5TPgiAibBCNfbVu/wM4UTIERhf0rLgrHxYfKtOwmB2t
+         61+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YmpY77tOjMlIBM+QNhtMQBjrqYVfrKFcyr6SgoPVdxU=;
+        b=lwhpNUvDo2vMi2KmQm7ugQUdGx96nYLWikm34LWu2WuiGsA8i9CtmRjUb28Tn1bqah
+         E9cXbMywYwlsDtMjLkBeLAJzkzEb+1pRUIiFvfs7yNQxwfbq8lhaDYzo9bed4qc7d0WJ
+         t4sb9qkLFGz0aYikZbGarae9tnSySovd0GVw2HmwfUMzJCvLKPnCm5SXvIrDfYEjAoPn
+         baP6CcqpsbJRDnJyZAI6JgtStj94s40iCgUFnqnogSHSa1EcE69iPWIz8CQARibfvwq+
+         hulOIzqxvJyyqz0mTsymoQX9H85A2QY8JonespGb/g17fTegP4dF321Bmsm1zD6iis2b
+         LTiQ==
+X-Gm-Message-State: APjAAAWQiVFuuSSDIP2J76aveVMoiTdDOe0TBp6H8yLmYyV3hfxEqG+M
+        7UMwLDPLptwcYlK9RvI1w8o=
+X-Google-Smtp-Source: APXvYqzjkWQvAVi05TsLPjjsDKWOcCu5aiWUyBmF1hRLmeD9T7T6K9HbN6XFLr4Amm9oqjG/SQ3UEQ==
+X-Received: by 2002:a17:90a:e98e:: with SMTP id v14mr1337906pjy.101.1568330519125;
+        Thu, 12 Sep 2019 16:21:59 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id q204sm33758013pfc.11.2019.09.12.16.21.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Sep 2019 16:21:58 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 16:21:37 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH 1/3] ASoC: fsl_asrc: Use in(out)put_format
+ instead of in(out)put_word_width
+Message-ID: <20190912232136.GC24937@Asurada-Nvidia.nvidia.com>
+References: <cover.1568025083.git.shengjiu.wang@nxp.com>
+ <65e96ca15afd4a282b122f3ea8b13642cf4614c7.1568025083.git.shengjiu.wang@nxp.com>
+ <20190909200156.GB10344@Asurada-Nvidia.nvidia.com>
+ <VE1PR04MB6479D271F4271ECF404473E7E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-12_12:2019-09-11,2019-09-12 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 phishscore=0 clxscore=1011
- adultscore=0 malwarescore=0 mlxlogscore=639 suspectscore=2
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909120238
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479D271F4271ECF404473E7E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As pages are faulted in MLOCK_ONFAULT correctly updates
-/proc/self/smaps, but doesn't update /proc/meminfo's Mlocked field.
+On Tue, Sep 10, 2019 at 02:22:06AM +0000, S.j. Wang wrote:
+> Hi
+> 
+> > 
+> > On Mon, Sep 09, 2019 at 06:33:19PM -0400, Shengjiu Wang wrote:
+> > > snd_pcm_format_t is more formal than enum asrc_word_width, which
+> > has
+> > > two property, width and physical width, which is more accurate than
+> > > enum asrc_word_width. So it is better to use in(out)put_format instead
+> > > of in(out)put_word_width.
+> > 
+> > Hmm...I don't really see the benefit of using snd_pcm_format_t here...I
+> > mean, I know it's a generic one, and would understand if we use it as a
+> > param for a common API. But this patch merely packs the "width" by
+> > intentionally using this snd_pcm_format_t and then adds another
+> > translation to unpack it.. I feel it's a bit overcomplicated. Or am I missing
+> > something?
+> > 
+> > And I feel it's not necessary to use ALSA common format in our own "struct
+> > asrc_config" since it is more IP/register specific.
+> > 
+> > Thanks
+> > Nicolin
+> > 
+> 
+> As you know, we have another M2M function internally, when user want to
+> Set the format through M2M API, it is better to use snd_pcm_format_t instead the
+> Width, for snd_pcm_format_t include two property, data with and physical width
+> In driver some place need data width, some place need physical width.
+> For example how to distinguish S24_LE and S24_3LE in driver,  DMA setting needs
+> The physical width,  but ASRC need data width. 
+> 
+> Another purpose is that we have another new designed ASRC, which support more
+> Formats, I would like it can share same API with this ASRC, using snd_pcm_format_t
+> That we can use the common API, like snd_pcm_format_linear,
+> snd_pcm_format_big_endian to get the property of the format, which is needed by
+> driver.
 
-- Before this /proc/meminfo fields didn't change as pages were faulted in:
-
-```
-= Start =
-/proc/meminfo
-Unevictable:       10128 kB
-Mlocked:           10132 kB
-= Creating testfile =
-
-= after mlock2(MLOCK_ONFAULT) =
-/proc/meminfo
-Unevictable:       10128 kB
-Mlocked:           10132 kB
-/proc/self/smaps
-7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-Locked:                0 kB
-
-= after reading half of the file =
-/proc/meminfo
-Unevictable:       10128 kB
-Mlocked:           10132 kB
-/proc/self/smaps
-7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-Locked:           524288 kB
-
-= after reading the entire the file =
-/proc/meminfo
-Unevictable:       10128 kB
-Mlocked:           10132 kB
-/proc/self/smaps
-7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-Locked:          1048576 kB
-
-= after munmap =
-/proc/meminfo
-Unevictable:       10128 kB
-Mlocked:           10132 kB
-/proc/self/smaps
-```
-
-- After: /proc/meminfo fields are properly updated as pages are touched:
-
-```
-= Start =
-/proc/meminfo
-Unevictable:          60 kB
-Mlocked:              60 kB
-= Creating testfile =
-
-= after mlock2(MLOCK_ONFAULT) =
-/proc/meminfo
-Unevictable:          60 kB
-Mlocked:              60 kB
-/proc/self/smaps
-7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-Locked:                0 kB
-
-= after reading half of the file =
-/proc/meminfo
-Unevictable:      524220 kB
-Mlocked:          524220 kB
-/proc/self/smaps
-7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-Locked:           524288 kB
-
-= after reading the entire the file =
-/proc/meminfo
-Unevictable:     1048496 kB
-Mlocked:         1048508 kB
-/proc/self/smaps
-7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-Locked:          1048576 kB
-
-= after munmap =
-/proc/meminfo
-Unevictable:         176 kB
-Mlocked:              60 kB
-/proc/self/smaps
-```
-
-Repro code.
----
-
-int mlock2wrap(const void* addr, size_t len, int flags) {
-  return syscall(SYS_mlock2, addr, len, flags);
-}
-
-void smaps() {
-  char smapscmd[1000];
-  snprintf(
-      smapscmd,
-      sizeof(smapscmd) - 1,
-      "grep testfile -A 20 /proc/%d/smaps | grep -E '(testfile|Locked)'",
-      getpid());
-  printf("/proc/self/smaps\n");
-  fflush(stdout);
-  system(smapscmd);
-}
-
-void meminfo() {
-  const char* meminfocmd = "grep -E '(Mlocked|Unevictable)' /proc/meminfo";
-  printf("/proc/meminfo\n");
-  fflush(stdout);
-  system(meminfocmd);
-}
-
-  {                                                 \
-    int rc = (call);                                \
-    if (rc != 0) {                                  \
-      printf("error %d %s\n", rc, strerror(errno)); \
-      exit(1);                                      \
-    }                                               \
-  }
-int main(int argc, char* argv[]) {
-  printf("= Start =\n");
-  meminfo();
-
-  printf("= Creating testfile =\n");
-  size_t size = 1 << 30; // 1 GiB
-  int fd = open("testfile", O_CREAT | O_RDWR, 0666);
-  {
-    void* buf = malloc(size);
-    write(fd, buf, size);
-    free(buf);
-  }
-  int ret = 0;
-  void* addr = NULL;
-  addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-
-  if (argc > 1) {
-    PCHECK(mlock2wrap(addr, size, MLOCK_ONFAULT));
-    printf("= after mlock2(MLOCK_ONFAULT) =\n");
-    meminfo();
-    smaps();
-
-    for (size_t i = 0; i < size / 2; i += 4096) {
-      ret += ((char*)addr)[i];
-    }
-    printf("= after reading half of the file =\n");
-    meminfo();
-    smaps();
-
-    for (size_t i = 0; i < size; i += 4096) {
-      ret += ((char*)addr)[i];
-    }
-    printf("= after reading the entire the file =\n");
-    meminfo();
-    smaps();
-
-  } else {
-    PCHECK(mlock(addr, size));
-    printf("= after mlock =\n");
-    meminfo();
-    smaps();
-  }
-
-  PCHECK(munmap(addr, size));
-  printf("= after munmap =\n");
-  meminfo();
-  smaps();
-
-  return ret;
-}
-
----
-
-Signed-off-by: Lucian Adrian Grijincu <lucian@fb.com>
----
- mm/memory.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e0c232fe81d9..7e8dc3ed4e89 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3311,6 +3311,9 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
- 	} else {
- 		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
- 		page_add_file_rmap(page, false);
-+		if ((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED &&
-+				!PageTransCompound(page))
-+			mlock_vma_page(page);
- 	}
- 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
- 
--- 
-2.17.1
-
+I see. Just acked the patch.
