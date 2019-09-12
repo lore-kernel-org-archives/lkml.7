@@ -2,117 +2,151 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FEC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E6C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1AC21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEA620830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ejfgE2Hf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jr/O3OdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfILNeD (ORCPT
+        id S1732236AbfILNeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:34:03 -0400
-Received: from mail-eopbgr60051.outbound.protection.outlook.com ([40.107.6.51]:26094
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731283AbfILNeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:34:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZpNxVRzbX1daP5Gu6kRGhdgznvzcxIPu+IvMnnuzTo2tBmy7L30Fgy62zqlASx8yBXR423ZWVh0tnT5lbM4FPlg4ApCaFx5AapW4A4BAyx276QmjXc46p+8Q7ab71HsBwRNCfD00maWBmJx6mUs8T03gjZobTD9EdeqNf5+Lp2nbxfYOa7eDBbPsygd59edy4Dujs/jHQvs3LLQUD6xJNZpnwSngr5NSNgkzwTB4D2PW+GZKEkTSny3X3r0ghNrkFJQYFeJ8KiOfMBySw03gzwrS1NwEpujWFS9DxHtCoPaxQSFfKiO4YS+sNAKJJANLgmcBJqHquv28Fa28HK9AiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WwhcLkSHz5EqoKR5CKMYsi9927G2ByeLcmBIIjZm3aw=;
- b=obdCcCzm7PJGXfGQ4xFVXSZM2hOk25eu4jPub5bFUeDUF3MrBHBBhc+hS29Wy886ojIxsIVYRMREHil6b/32XX+ddmpFXq4uukBc7NsNgZvim7bbglJWvohc5bHAL68R8YOvg5wcEf5OBajluXDbpb+Iob/vXklpuO0KHxvbP5I7N/h2gEjXL5AkoRzoASL2HFZzD01bk4rKs8fN8dkqu5g+bF63WuBb2OibLxqQjPk9GQyOuG/SO6nndve050blIu6osIIFB6LYpKdBtW66EPH+4wP47sLItgFB5O26ZWR9anl2rkMz6DEBouGal/ZBYCtMliPv71Owo/kN/p1pAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WwhcLkSHz5EqoKR5CKMYsi9927G2ByeLcmBIIjZm3aw=;
- b=ejfgE2HfM+hDo06czcerKUr1LJEBP4fLRVOMp/fvtRLo80EBJ0pHktYPPwC7SZZyNCvTq6MugeE01v3Hx88xBGfoFqyhIOBUTeAL/+oQBQn+Ap7B+a4n1ei2G/cP3m/dbszUSSUm0keCjz6eoSL6FUt8Ztr/8Nqg5XHBoYX28AQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5678.eurprd05.prod.outlook.com (20.178.121.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Thu, 12 Sep 2019 13:33:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2241.022; Thu, 12 Sep 2019
- 13:33:58 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-CC:     "oulijun@huawei.com" <oulijun@huawei.com>,
-        "xavier.huwei@huawei.com" <xavier.huwei@huawei.com>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] RDMA/hns: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Topic: [PATCH -next] RDMA/hns: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Index: AQHVaW667lKcy6TDPE+jh2Hg5etsyQ==
-Date:   Thu, 12 Sep 2019 13:33:58 +0000
-Message-ID: <20190912133342.GA25365@mellanox.com>
-References: <20190906141727.26552-1-yuehaibing@huawei.com>
-In-Reply-To: <20190906141727.26552-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DM5PR06CA0106.namprd06.prod.outlook.com
- (2603:10b6:4:3a::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [199.167.24.153]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5c2336d-de66-4f92-1e14-08d73785dd66
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5678;
-x-ms-traffictypediagnostic: VI1PR05MB5678:
-x-microsoft-antispam-prvs: <VI1PR05MB5678F7732E9902A9CB48963DCFB00@VI1PR05MB5678.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(199004)(189003)(25786009)(6116002)(256004)(71190400001)(6916009)(4326008)(71200400001)(3846002)(1076003)(33656002)(36756003)(4744005)(6246003)(26005)(2906002)(7736002)(11346002)(102836004)(81166006)(476003)(186003)(86362001)(5660300002)(6506007)(386003)(81156014)(486006)(446003)(8676002)(478600001)(53936002)(8936002)(6436002)(6512007)(14454004)(54906003)(76176011)(2616005)(229853002)(305945005)(99286004)(6486002)(66476007)(66446008)(316002)(66066001)(52116002)(64756008)(66946007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5678;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BQgR1yjR4OflZSwkowXyaODBA7FFBzF2dk4odBbVZ6qEOF0742n7K74dLFBsmoCoWQT0WywNUYa0ah3B03M9YyIiCKbljhaIDZpoNVNygqpXFIFfPgADmT2s+wEyCnApVpjGn7HtIxmwGI0jIllj7MI/3MXxymJ/YzNeStL8024VHn3tH1hCm0zFI39QLAhzGUsIPtC04j2iscoQ+XAhKw/fHkma/wM1RLbIMme46NdEOftO1TK2sjYWaPUz8mR4XgqqnjITdirC9Pr5AQoBlzsuhlppU4MMclw5wcF9DD9epr2BniGPpg6hFzvDnlqFIPPRk2EW4nhrxpxZPXZH/JftVpLI6tq5UdIpWSAOYEQJybNHw4oMoK/SMn8/ntP/e6SLwkfjFl7u+Wwvi0H7g6YRXwSlOQhWZA9BPRRJKsw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B6C28169A4C8254FA4A97DB6D91F566D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Sep 2019 09:34:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41009 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731283AbfILNeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:34:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so16011988pfo.8;
+        Thu, 12 Sep 2019 06:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AOatXHCitiKL87ERXc3HpgwYrhBGRNlx7jOwScjCRWU=;
+        b=Jr/O3OdJj5XEnZw9E5KhFE2e/P79Jxv45DzbCTVOnksxsCZLrCsglgTpjMhP/CUqpQ
+         FxV/i9DjBWTuL0AgSOo3VZL/AswHSKtAfuKmG4suDcX+Bo9I+QEPA60qEFxwB3BmO52s
+         BA0mppgozs5ioUi9yc4VLIP/po1IZ22wKz7jLXvHsDXeM1TT6SAeDUGK5eUCaPCkcguW
+         z6HpeNcKUAb0mcD54P7MFHNhRj1FZ+eVpuKeWjhRJNXf1F1/7VxXdF/VtDt5Li9xk5gL
+         grIdetkJXTrCF7R8ZDbrTKoFtpBzoQtB0NDBB0beq5pgYNv+ziQznxWPIbs1omNQcZ08
+         EyIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AOatXHCitiKL87ERXc3HpgwYrhBGRNlx7jOwScjCRWU=;
+        b=J2v7+TuYy1c7WCnzWSDsMhk29wPYOchEgEkUk0qJKuBdNTeYRee662LXpWt1Z2nbLD
+         iCWlxRyICcFj+P4C/yDerreXWiqXP7AHKhsIT8m7ILGscqvjRqRKt1c9VV4OiUsihMeD
+         sJ//DYUJ+8i3PBMb0zQqSh9nrsIsH1h9K7ZhYqZnB892EywIgBM6VwZ39LWSOKIqCABI
+         vxSqiXPB97/BUaTyVrszkHP/FlcAzeb62OpcO0cvullufJYOO+4T1Cg/LjozwoxcfoOA
+         EygiOKOzHc5J/HJ5jAWtKcHWckFd19XBNKEzD27mMMPaLIqNtZyqzKKSFx0iTjD5RP2C
+         +A3w==
+X-Gm-Message-State: APjAAAX2hqhz7ZG/SB5iT6Ib9p9MAANx3Orb8fj9KNdNAahxCAue5LKa
+        z7Fye9XYDHgH8n4UyufmYw==
+X-Google-Smtp-Source: APXvYqx+o3gwfnUvsIkknmFCS2MYpF0zqj4FQzZXkli86+QlMwz3klWltYz4z1f6onv6AZ6GOeAMzg==
+X-Received: by 2002:a62:7c47:: with SMTP id x68mr49463684pfc.178.1568295248717;
+        Thu, 12 Sep 2019 06:34:08 -0700 (PDT)
+Received: from DESKTOP (softbank126011092035.bbtec.net. [126.11.92.35])
+        by smtp.gmail.com with ESMTPSA id u17sm15239pjn.7.2019.09.12.06.34.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Sep 2019 06:34:07 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 22:34:02 +0900
+From:   Takeshi Misawa <jeliantsurux@gmail.com>
+To:     syzbot <syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com>
+Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, kafai@fb.com, linux-kernel@vger.kernel.org,
+        linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
+        paulus@samba.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: memory leak in ppp_write
+Message-ID: <CAKK_rchVQCYmjPSxk9MszV9BtF8y04-j2dpjV0Jg3c+nrRNEWQ@mail.gmail.com>
+References: <000000000000edc1d5058f5dfa5f@google.com>
+ <000000000000594c700591433550@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5c2336d-de66-4f92-1e14-08d73785dd66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 13:33:58.4637
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w6mrDxFZdUmmb1kZVbw3NkHzNmbRXK056epvEws9h9wvgUGKXuxx+xpNuriExG1Muvi3NOPygkb5m63FRcWYEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5678
+Content-Type: multipart/mixed; boundary="6WlEvdN9Dv0WHSBl"
+Content-Disposition: inline
+In-Reply-To: <000000000000594c700591433550@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 10:17:27PM +0800, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->=20
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
 
-Applied to for-next, thanks
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Jason
+#syz test: https://github.com/google/kasan.git 6525771f
+
+
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-ppp-Fix-memory-leak-in-ppp_write.patch"
+
+From e4ff0d04a4b8dd6da3dfb9135235ae5360ce86e6 Mon Sep 17 00:00:00 2001
+From: Takeshi Misawa <jeliantsurux@gmail.com>
+Date: Wed, 11 Sep 2019 22:18:43 +0900
+Subject: [PATCH] ppp: Fix memory leak in ppp_write
+
+When ppp is closing, __ppp_xmit_process() failed to enqueue skb
+and skb allocated in ppp_write() is leaked.
+
+syzbot reported :
+BUG: memory leak
+unreferenced object 0xffff88812a17bc00 (size 224):
+  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
+    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
+    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
+    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
+    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
+    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
+    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fix this by freeing skb, if ppp is closing.
+
+Reported-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
+---
+ drivers/net/ppp/ppp_generic.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index a30e41a56085..9a1b006904a7 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -1415,6 +1415,8 @@ static void __ppp_xmit_process(struct ppp *ppp, struct sk_buff *skb)
+ 			netif_wake_queue(ppp->dev);
+ 		else
+ 			netif_stop_queue(ppp->dev);
++	} else {
++		kfree_skb(skb);
+ 	}
+ 	ppp_xmit_unlock(ppp);
+ }
+-- 
+2.17.1
+
+
+--6WlEvdN9Dv0WHSBl--
