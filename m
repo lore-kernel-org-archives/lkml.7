@@ -2,109 +2,118 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F26C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B959C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB6820CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB3C21479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568285532;
+	bh=KwCFUpMIc51ZQrrZ5Pst1c2DVUJ0KQNPr8Z6qMKPklU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1/W87X8z22VBXkjxo9NOlbmsP2tH0aGXJYo/P7Nh/7kc6fORZGAVLauxzFeraOH6w
+	 BVwmj0Cl+74U5dnvjo8usyJRewkivXxc6r9fCXDA58VE7XgpFDzE7iEexk7rJ2oI+1
+	 Z/gK972UaQZsVV3X3kjhrCTeY/iO7ZW11v3yoI8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfILKwE convert rfc822-to-8bit (ORCPT
+        id S1731234AbfILKwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:52:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58058 "EHLO mx1.redhat.com"
+        Thu, 12 Sep 2019 06:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730680AbfILKwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:52:04 -0400
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+        id S1731218AbfILKwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:52:10 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D9524B62C
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 10:52:03 +0000 (UTC)
-Received: by mail-ed1-f72.google.com with SMTP id c23so14524619edb.14
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 03:52:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=6flBUBjs8VPAbAefuygCBR5yf5XU4QbU0qOIz+By8ZI=;
-        b=AqMFnf66Jm5ktTqEVxQuyowRg1+niMFkPbgNJlaRhWLEAVHizkU7kre/pJTP5FPs71
-         /X2PpKnDdxKis5TchjQ3Fp+uc3qi3C8o+mTH7SrahmmmrvJ37LzQJ5CAR6af8O+tzoIQ
-         4OtVSnOTnSLkWqg3tbAnn6th6wMTlNaZwgS4ZHBuhlUi377aOTlSUXqb78dYHdkFhzPZ
-         TO66CAVs7lwqqPlPdCld02hXOZG6GGkmAfKUvdhjmo2DlBxLda0SFLrML4QNldD8OhNJ
-         WhPZ2yjXpLnK6Qz4+DIJNjLePN4xOZCqTjGX+LBDTk/MXg17x/v7XMfeSjT4yQ8gqt6n
-         d27w==
-X-Gm-Message-State: APjAAAXeN2QxclqC2aRfCkx//M/aeUio3PeZuuMgxldZyLRLfitHS7SP
-        7pp8s1fLVDPsz4hsT8TH1B9ZrQhE2WTJVHWySqWvemPGGNisl9DYGqBtSkIgMvymPl3I3KEpPFJ
-        9fnm47c8Zi2nasvXrsH8ArBsQ
-X-Received: by 2002:a17:907:2065:: with SMTP id qp5mr33221229ejb.151.1568285522642;
-        Thu, 12 Sep 2019 03:52:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx0B4fTUSLQ4Z3x7ogXVND6zxk194V/rQL1i/woELQNZgzJsKoUTobHl7LJ5qZW+w80pa/Csg==
-X-Received: by 2002:a17:907:2065:: with SMTP id qp5mr33221211ejb.151.1568285522444;
-        Thu, 12 Sep 2019 03:52:02 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id u27sm4714326edb.48.2019.09.12.03.52.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 03:52:01 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 8960C180613; Thu, 12 Sep 2019 11:46:39 +0100 (WEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf\@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Subject: Re: [PATCH] bpf: validate bpf_func when BPF_JIT is enabled
-In-Reply-To: <CABCJKufCwjXQ6a4oLjywDmxY2apUZ1yop-5+qty82bfwV-QTAA@mail.gmail.com>
-References: <20190909223236.157099-1-samitolvanen@google.com> <4f4136f5-db54-f541-2843-ccb35be25ab4@fb.com> <20190910172253.GA164966@google.com> <c7c7668e-6336-0367-42b3-2f6026c466dd@fb.com> <fd8b6f04-3902-12e9-eab1-fa85b7e44dd5@intel.com> <87impzt4pu.fsf@toke.dk> <CABCJKufCwjXQ6a4oLjywDmxY2apUZ1yop-5+qty82bfwV-QTAA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Thu, 12 Sep 2019 11:46:39 +0100
-Message-ID: <87sgp1ssfk.fsf@toke.dk>
+        by mail.kernel.org (Postfix) with ESMTPSA id BFFF120678;
+        Thu, 12 Sep 2019 10:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568285530;
+        bh=KwCFUpMIc51ZQrrZ5Pst1c2DVUJ0KQNPr8Z6qMKPklU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rrXMs1RPO5chWrIQHFdlo0bkhKko9dN1mWrYY0X7IgyV6kCNjjrygyFhEJoqYT1NX
+         zoiYMCJbjwU0Mno2RD3gY3jWUwsc+1JAMNOqdLO/JNBoXMxqY7gvgV1lNGaLF/9ccm
+         VY7s3QxxKMlrj7jlVlNZBlsGB72iV3KnshqPJ39Y=
+Received: by mail-lj1-f174.google.com with SMTP id a4so23113962ljk.8;
+        Thu, 12 Sep 2019 03:52:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWF0BmoecmEW61i0PZt77MO2MLxvDCnX75C7vStQaWKOe6+HFcL
+        da7JWpNhmKswX2T2MEbT5J/8CsRVuD4hR2e8FFw=
+X-Google-Smtp-Source: APXvYqyG6/tcsqsyfqRFRqXPK0ImcChBAEVnerDWxcFFeR78703ENdInutO0ecRhHphfVeVW+Ne3WyEnFhUHga+b1O4=
+X-Received: by 2002:a2e:b167:: with SMTP id a7mr26718879ljm.236.1568285527962;
+ Thu, 12 Sep 2019 03:52:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <20190823123737.7774-1-ribalda@kernel.org> <20190823123737.7774-3-ribalda@kernel.org>
+ <20190826074059.bby3k6vr25axfbqc@uno.localdomain>
+In-Reply-To: <20190826074059.bby3k6vr25axfbqc@uno.localdomain>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Thu, 12 Sep 2019 12:51:51 +0200
+X-Gmail-Original-Message-ID: <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
+Message-ID: <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sami Tolvanen <samitolvanen@google.com> writes:
+HI Jacopo
 
-> On Wed, Sep 11, 2019 at 5:09 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
->>
->> Björn Töpel <bjorn.topel@intel.com> writes:
->> > I ran the "xdp_rxq_info" sample with and without Sami's patch:
->>
->> Thanks for doing this!
+(Sorry for the late reply, I have been in holidays plus with plenty of
+family matters)
+
+On Mon, Aug 26, 2019 at 9:39 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
 >
-> Yes, thanks for testing this Björn!
+> Hi Ricardo,
 >
->> Or (1/22998700 - 1/23923874) * 10**9 == 1.7 nanoseconds of overhead.
->>
->> I guess that is not *too* bad; but it's still chipping away at
->> performance; anything we could do to lower the overhead?
+> On Fri, Aug 23, 2019 at 02:37:33PM +0200, Ricardo Ribalda Delgado wrote:
+> > A struct v4l2_area containing the width and the height of a rectangular
+> > area.
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> > ---
+> >  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > index a3d56ffbf4cc..c09d06ef2b08 100644
+> > --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
+> >        - n/a
+> >        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
+> >       quantization matrices for stateless video decoders.
+> > +    * - ``V4L2_CTRL_TYPE_AREA``
+> > +      - n/a
 >
-> The check is already rather minimal, but I could move this to a static
-> inline function to help ensure the compiler doesn't generate an
-> additional function call for this. I'm also fine with gating this
-> behind a separate config option, but I'm not sure if that's worth it.
-> Any thoughts?
+> Can an area be negative ?
+> I would set these fields to ">= 0" ">= 1" and ">= 0" respectively.
+>
 
-I think it would be good if you do both. I'm a bit worried that XDP
-performance will end up in a "death by a thousand paper cuts" situation,
-so I'd rather push back on even relatively small overheads like this; so
-being able to turn it off in the config would be good.
+Dont min, max and step only make sense for integer controls?
 
-Can you share more details about what the "future CFI checking" is
-likely to look like?
-
--Toke
+> Thanks
+>    j
+>
+> > +      - n/a
+> > +      - n/a
+> > +      - A struct :c:type:`v4l2_area`, containing the width and the height
+> > +        of a rectangular area.
+> >      * - ``V4L2_CTRL_TYPE_H264_SPS``
+> >        - n/a
+> >        - n/a
+> > --
+> > 2.23.0.rc1
+> >
