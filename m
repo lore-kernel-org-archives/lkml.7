@@ -2,103 +2,78 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124F0C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9CC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA8A2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fn7zM6YU"
+	by mail.kernel.org (Postfix) with ESMTP id D50942084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732310AbfILNwR (ORCPT
+        id S1732362AbfILNwr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:52:17 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:47844 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731683AbfILNwR (ORCPT
+        Thu, 12 Sep 2019 09:52:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34967 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731420AbfILNwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:52:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P5GNO5qeCugl9ICVScLbazWUS0djlBZooprxENuDtI0=; b=fn7zM6YU7Y8gezw7Rh/SGNIH9
-        H+/W8zRfXHLmDano96MAjUcvGLZydTZYqG8u1lkhPXFCMWyrgtuOtsmqRaYxQNSHeCZqE9BH5k4QK
-        zhiMBHOOYazuL63goViZtkVzqZmf+Iz7D0AA1nNLeuLA5UUnJcMKGgk9ZnN6I/uYqw9676F5a6vSQ
-        GJfD9xVjlmH3ZVnrRfVt6JYdjd7Pidy0toN+WtR31by/eFWDJ+3y13V+nOppV0/xXhOST7FDXOiKv
-        l/Yq0PxIfHRaQyO1owqPlRc7iUR8sP7Xw8JheMWomTAuMAhsB5Tz1RJTATdwnyMshBJcMdanDkA3X
-        49PM6qpig==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42778)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i8PW7-0004oy-EQ; Thu, 12 Sep 2019 14:52:11 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i8PW4-0004vZ-E6; Thu, 12 Sep 2019 14:52:08 +0100
-Date:   Thu, 12 Sep 2019 14:52:08 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH 04/11] net: phylink: switch to using
- fwnode_gpiod_get_index()
-Message-ID: <20190912135208.GY13294@shell.armlinux.org.uk>
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
- <20190911075215.78047-5-dmitry.torokhov@gmail.com>
- <20190911092514.GM2680@smile.fi.intel.com>
- <20190911093914.GT13294@shell.armlinux.org.uk>
- <20190911094619.GN2680@smile.fi.intel.com>
- <20190911095149.GA108334@dtor-ws>
- <CACRpkdbTErKxFBr__tj391FHwUTxC7ZF_m94tC8-VHzaynBsnw@mail.gmail.com>
- <20190912134429.GZ2680@smile.fi.intel.com>
+        Thu, 12 Sep 2019 09:52:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so16068169pfw.2;
+        Thu, 12 Sep 2019 06:52:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=duGfZG76GW6+KyqgUK68DFMJqe+srMBKgYfskbaLMSk=;
+        b=fobVWF+UbL2GV/QE82amdWR8pOwyR+FJK68xCmbtoWDpMnFHELnJvbdrl/lU6nmpRZ
+         GAzqYt89OIf2YyYcscJEmudDWyZciQsoDx+Ifrm6U6I7CZwKS8Y/MRByo6XzUzCknSbP
+         13jLexNAyB5lCz9cZHt6OI2j11KKhW03B1FeYiT6tIJhTgJhwkNBWFE/tSgr9CBtc1Vc
+         Wxkl/bb46Z54F/+H1Npp2kcGKFqhloB/WT6NUshSXETvYXbzTINee6e1/W9qGr/axDMU
+         MjFkODf0PEWHKOUkzUVqKAb7QaYQuyOqOMvhbz9hPyRNZOt/6oU78p7lIcgHeediaMPz
+         gTyg==
+X-Gm-Message-State: APjAAAVbAsrqTstkEbOHIVwwvO0mDN30FNjBWsEKKmI4RjNzpnZTgLBO
+        33V1rkVAG/05/OqlZjT7DhE=
+X-Google-Smtp-Source: APXvYqyAz4iXmc0KvDconOaNZ7WMjyTC5xLYEg1OEpkzle43whrmCH+wQWrs4BtIYVb900zUpFCY2A==
+X-Received: by 2002:a65:67d4:: with SMTP id b20mr5059056pgs.445.1568296365846;
+        Thu, 12 Sep 2019 06:52:45 -0700 (PDT)
+Received: from [172.19.249.100] ([38.98.37.138])
+        by smtp.gmail.com with ESMTPSA id x20sm49077346pfp.120.2019.09.12.06.52.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2019 06:52:45 -0700 (PDT)
+Subject: Re: [PATCH 2/3] scsi: core: remove trailing whitespaces
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, kernel@collabora.com, krisman@collabora.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+References: <20190911203735.1332398-1-andrealmeid@collabora.com>
+ <20190911203735.1332398-2-andrealmeid@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <dd7e8b15-97fc-26bb-7121-bf39e410d8a3@acm.org>
+Date:   Thu, 12 Sep 2019 14:52:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912134429.GZ2680@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190911203735.1332398-2-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 04:44:29PM +0300, Andy Shevchenko wrote:
-> On Thu, Sep 12, 2019 at 10:41:43AM +0100, Linus Walleij wrote:
-> > On Wed, Sep 11, 2019 at 10:51 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > 
-> > > If we are willing to sacrifice the custom label for the GPIO that
-> > > fwnode_gpiod_get_index() allows us to set, then there are several
-> > > drivers that could actually use gpiod_get() API.
-> > 
-> > We have:
-> > gpiod_set_consumer_name(gpiod, "name");
-> > to deal with that so no sacrifice is needed.
-> 
-> Thank for this hint!
+On 9/11/19 9:37 PM, André Almeida wrote:
+> Remove all trailing whitespaces from scsi_lib.c
 
-Would it be possible to improve your email etiquette, and move this
-discussion to a more appropriate subject line, so I don't have to keep
-checking these emails, in case you _do_ talk about something relevent
-to the original patch that the subject line refers to?
+I don't like patches that only change whitespace if no significant
+functional changes are included in the same patch series. Such patches
+namely pollute the change history, make the output of git log -p and git
+blame harder to follow and also cause big trouble for anyone who wants
+to rebase his or her own tree with outstanding patches.
 
-Thanks.
+Bart.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
