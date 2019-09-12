@@ -2,82 +2,134 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D87C4CECD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C8DC4CECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BE6208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F25208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbfILLGb (ORCPT
+        id S1731306AbfILLIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:06:31 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:43925 "EHLO mail.thorsis.com"
+        Thu, 12 Sep 2019 07:08:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37110 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731203AbfILLGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:06:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 7BD944858;
-        Thu, 12 Sep 2019 13:08:05 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aqkhD7EjSDJZ; Thu, 12 Sep 2019 13:08:05 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id 655798D6B; Thu, 12 Sep 2019 13:08:02 +0200 (CEST)
-From:   Alexander Dahl <ada@thorsis.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Eugen.Hristev@microchip.com, mturquette@baylibre.com,
-        sboyd@kernel.org, alexandre.belloni@bootlin.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: at91: allow 24 Mhz clock as input for PLL
-Date:   Thu, 12 Sep 2019 13:06:20 +0200
-Message-ID: <30755021.BkS3ObC0RA@ada>
-In-Reply-To: <1568183622-7858-1-git-send-email-eugen.hristev@microchip.com>
-References: <1568183622-7858-1-git-send-email-eugen.hristev@microchip.com>
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1726952AbfILLIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 07:08:40 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A4C53A37195;
+        Thu, 12 Sep 2019 11:08:39 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-204-41.brq.redhat.com [10.40.204.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97FA41001948;
+        Thu, 12 Sep 2019 11:08:34 +0000 (UTC)
+Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
+ KVM_S390_INTERRUPT ioctl
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190912090050.20295-1-thuth@redhat.com>
+ <4ed0c815-c598-bb0f-9841-d579fc62877f@de.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <b5b920af-49c0-6392-3ebf-74148310fb72@redhat.com>
+Date:   Thu, 12 Sep 2019 13:08:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <4ed0c815-c598-bb0f-9841-d579fc62877f@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Thu, 12 Sep 2019 11:08:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, 
-
-out of curiosity: The SAMA5D27-SOM1-EK board has a 24 MHz crystal, that is 
-also what /sys/kernel/debug/clk/clk_summary says and the board runs without 
-obvious problems. What is this change improving in real practice then?
-
-Greets
-Alex
-
-Am Mittwoch, 11. September 2019, 06:39:20 CEST schrieb 
-Eugen.Hristev@microchip.com:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+On 12/09/2019 12.47, Christian Borntraeger wrote:
 > 
-> The PLL input range needs to be able to allow 24 Mhz crystal as input
-> Update the range accordingly in plla characteristics struct
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  drivers/clk/at91/sama5d2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 12.09.19 11:00, Thomas Huth wrote:
+>> When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
+>> an interrupt, we convert them from the legacy struct kvm_s390_interrupt
+>> to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
+>> However, this function does not take care of all types of interrupts
+>> that we can inject into the guest later (see do_inject_vcpu()). Since we
+>> do not clear out the s390irq values before calling s390int_to_s390irq(),
+>> there is a chance that we copy unwanted data from the kernel stack
+>> into the guest memory later if the interrupt data has not been properly
+>> initialized by s390int_to_s390irq().
 > 
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index 6509d09..0de1108 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -21,7 +21,7 @@ static const struct clk_range plla_outputs[] = {
->  };
-> 
->  static const struct clk_pll_characteristics plla_characteristics = {
-> -	.input = { .min = 12000000, .max = 12000000 },
-> +	.input = { .min = 12000000, .max = 24000000 },
->  	.num_output = ARRAY_SIZE(plla_outputs),
->  	.output = plla_outputs,
->  	.icpll = plla_icpll,
+> You mean by using the migration callbacks to get all interrupts back to 
+> userspace?
 
+Oh, I was not thinking about GET_IRQ_STATE yet, I was thinking about
+__deliver_pfault_init() which would deliver the value into the guest
+memory (from where the userspace program could extract it again).
 
+>> Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
+>> interrupt: s390int_to_s390irq() does not handle it, but the function
+>> __deliver_pfault_init() will later copy the uninitialized stack data
+>> from the ext.ext_params2 into the guest memory.
+> 
+> Shouldnt we add some more detailed description how this can happen?
+> Something like
+> "By using the KVM_S390_INTERRUPT ioctl with a KVM_S390_INT_PFAULT_INIT
+> interrupt followed by the KVM_S390_GET_IRQ_STATE ioctl the user can
+> extract a value from the kernel stack."
+
+GET_IRQ_STATE certainly deserves to be mentioned here, I'll add it to
+the patch description and will send a v2.
+
+ Thomas
