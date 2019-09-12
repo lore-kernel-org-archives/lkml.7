@@ -2,103 +2,139 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C5C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB38AC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29B421479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C347B20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfILUhd (ORCPT
+        id S1727785AbfILUnd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:37:33 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36380 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfILUhc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:37:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f2so18785653edw.3;
-        Thu, 12 Sep 2019 13:37:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pbP4i7DzdLdyPu+ieiqhNKpjgH4J8e/evjCuf6/AIwk=;
-        b=mo/2XukZxATvTrfvCSUwzZeVQ8hxBESzGn8ekcLi0NaAw9GCryX3wt270WEWRWNhPx
-         bpy30uYM2yOrfK176RbbMVKTwTWRemgN9kl24ttvObCVgt2XYjnUs74wsAr/6mUxstTP
-         rr7LCm7LDp6fwmmFc7jGsoK2m8gxge4/eZDwGS00KW56R4tAVAeZHrt4u8t6eRDQIQ+w
-         okHDbwZyOONEFOpzwsk97ZgQXUNtlRXXsKY8R4mu4lCsoQYkcwVB5vib9+akNNV/Pdxb
-         ybwWL81E88U8MmUCC9fDeTT5r16EJf9mOfoYyj7TQRJ7GPpEgKbiW2y5TrMqSQxrr2ai
-         5tgw==
-X-Gm-Message-State: APjAAAUjz7MbkD+1i+TjZsAnLmcLYS0FyTxodUwESgceTxoCDbyy1hFA
-        nTxngz3TzR8It0+T4p81yuzHgomZM5Q=
-X-Google-Smtp-Source: APXvYqzb3g+N0wE6Q3z5iPkdPtUq5pAoaIrjZ1ltbL2kXLRNHt2KdJy7pNq/nbc2ArwI1SUfCywKRQ==
-X-Received: by 2002:a17:906:80cd:: with SMTP id a13mr36904639ejx.155.1568320650545;
-        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id r23sm4975774edx.1.2019.09.12.13.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id a11so20081428wrx.1;
-        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
-X-Received: by 2002:adf:c613:: with SMTP id n19mr37053716wrg.109.1568320649865;
- Thu, 12 Sep 2019 13:37:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-4-clabbe.montjoie@gmail.com> <20190907040116.lib532o2eqt4qnvv@flea>
- <20190911183158.GA8264@Red> <20190912093737.s6iu63sdncij2qib@localhost.localdomain>
- <CAGb2v678WGQm5PNy8GhOTpz+fYeLP3k0dnR0F00yyZpSRcA4yA@mail.gmail.com> <20190912203301.is4ubixhk64dl5t7@localhost.localdomain>
-In-Reply-To: <20190912203301.is4ubixhk64dl5t7@localhost.localdomain>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 12 Sep 2019 21:37:17 +0100
-X-Gmail-Original-Message-ID: <CAGb2v646YkM93BAo=hrpL+tgDU-JJ49-uMCMGECUbouoJrpg=w@mail.gmail.com>
-Message-ID: <CAGb2v646YkM93BAo=hrpL+tgDU-JJ49-uMCMGECUbouoJrpg=w@mail.gmail.com>
-Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings documentation
- for sun8i-ce Crypto Engine
+        Thu, 12 Sep 2019 16:43:33 -0400
+Received: from mailoutvs8.siol.net ([185.57.226.199]:38372 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727702AbfILUnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:43:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 0CD5A522593;
+        Thu, 12 Sep 2019 22:43:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 5udkIJLPJE85; Thu, 12 Sep 2019 22:43:29 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 93F7C5225DB;
+        Thu, 12 Sep 2019 22:43:29 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 20CB2522593;
+        Thu, 12 Sep 2019 22:43:29 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
 To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-crypto@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
+Date:   Thu, 12 Sep 2019 22:43:28 +0200
+Message-ID: <4613446.95M5L3lKvs@jernej-laptop>
+In-Reply-To: <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 9:33 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Thu, Sep 12, 2019 at 09:26:27PM +0100, Chen-Yu Tsai wrote:
-> > > >
-> > > >   clock-names:
-> > > >     items:
-> > > >       - const: ahb
-> > > >       - const: mod
-> > > >       - const: mbus
-> > >
-> > > And here as well
-> > >
-> > > Something I missed earlier though was that we've tried to unify as
-> > > much as possible the ahb / apb / axi clocks around the bus name, it
-> > > would be great if you could do it.
-> >
-> > I think we also want to standardize "mbus" as "dram"?
->
-> Do we? The only user so far seems to be sun9i-de, while mbus has more
-> users. I don't really care though, both mbus and dram are pretty
-> generic to me. What makes you prefer dram over mbus?
+Dne četrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napisal(a):
+> Hi,
+> 
+> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
+> > +	dev->regmap = devm_regmap_init_mmio(dev->dev, dev->base,
+> > +					    
+&deinterlace_regmap_config);
+> > +	if (IS_ERR(dev->regmap)) {
+> > +		dev_err(dev->dev, "Couldn't create deinterlace 
+regmap\n");
+> > +
+> > +		return PTR_ERR(dev->regmap);
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(dev->bus_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
+> > +
+> > +		return ret;
+> > +	}
+> 
+> Do you need to keep the bus clock enabled all the time? Usually, for
+> the SoCs that have a reset line, you only need it to read / write to
+> the registers, not to have the controller actually running.
+> 
+> If you don't, then regmap_init_mmio_clk will take care of that for
+> you.
 
-Argh... it's actually "ram" we use the most. Both "dram" and "mbus"
-have only one instance each.
+I'll test that.
 
-ChenYu
+> 
+> > +	clk_set_rate(dev->mod_clk, 300000000);
+> > +
+> > +	ret = clk_prepare_enable(dev->mod_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
+> > +
+> > +		goto err_bus_clk;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(dev->ram_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
+> > +
+> > +		goto err_mod_clk;
+> > +	}
+> > +
+> > +	ret = reset_control_reset(dev->rstc);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to apply reset\n");
+> > +
+> > +		goto err_ram_clk;
+> > +	}
+> 
+> This could be moved to a runtime_pm hook, with get_sync called in the
+> open. That way you won't leave the device powered on if it's unused.
+
+Ok.
+
+> 
+> > +struct deinterlace_dev {
+> > +	struct v4l2_device	v4l2_dev;
+> > +	struct video_device	vfd;
+> > +	struct device		*dev;
+> > +	struct v4l2_m2m_dev	*m2m_dev;
+> > +
+> > +	/* Device file mutex */
+> > +	struct mutex		dev_mutex;
+> > +
+> > +	void __iomem		*base;
+> > +	struct regmap		*regmap;
+> 
+> Do you need to store the base address in that structure if you're
+> using the regmap?
+
+Probably not. I'll remove it in v2.
+
+Best regards,
+Jernej
+
+> 
+> Maxime
+
+
+
+
