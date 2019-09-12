@@ -2,311 +2,147 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AC5C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F99EC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7432084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568306869;
-	bh=Z7Klsx0EQczgLubsgIk5uElx4M0dhwRgXxx6ASoZUEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1gGBEunOrwthgLziOUbu22VZH4pUtZRQ78kZFum9hPEgn5Er33edq0RIdBso3QyWD
-	 xssqJGup4pj9LNzo46vbOpxgXi+29GSttbUigwxUPv75xMnxpG5YorLJ38S09OQSoU
-	 uRR5jj/C9kIVGhI9jSIsjZ0PTKHCjCnXQYhqfHdI=
+	by mail.kernel.org (Postfix) with ESMTP id 0EB8B2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfILQrs (ORCPT
+        id S1730786AbfILQta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
+        Thu, 12 Sep 2019 12:49:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56002 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbfILQrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:47:48 -0400
-Received: from localhost (unknown [117.99.85.83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730254AbfILQt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:49:29 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522ED20830;
-        Thu, 12 Sep 2019 16:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568306866;
-        bh=Z7Klsx0EQczgLubsgIk5uElx4M0dhwRgXxx6ASoZUEM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ayIcBPmAbnC7L3gNfW1IcX/cpM3lbEo/wtyftE897vJQn7yJSYI0N1JVJXFJlVwQ8
-         beEkdFPhPb6AF3D9hpxXhyiC8ugc149ONF0A6JuGmSIbzybA7t9rneHrl75ObttLTQ
-         jjjN1y5B/c1XJXTVR7yhix2mOuiH/MARRqFsMEA0=
-Date:   Thu, 12 Sep 2019 22:16:38 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, sumit.garg@linaro.org,
-        jens.wiklander@linaro.org, tglx@linutronix.de, joel@jms.id.au,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v3 2/2] hwrng: npcm: add NPCM RNG driver
-Message-ID: <20190912164638.GB4392@vkoul-mobl>
-References: <20190912090149.7521-1-tmaimon77@gmail.com>
- <20190912090149.7521-3-tmaimon77@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 28335811BF
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:49:29 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id s5so12203515wrv.23
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:49:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p6UoFWsgsPkuQtSEESX9kkhleKRjVbh91vbkMxi8FIw=;
+        b=pNnEHQ/kB+OW9ViObB08HFZXvdZoRBdP2kGzhvc5OXcLxbUB3nROEMqiIxwtthq9I3
+         O7PCebrTEeEzV3HwUVwAP7xi+ZffyRg4QLi0Pux51CUbXFIe7yVrIaGyNhhGPZG0z6Yi
+         /ldRJw/5K3PIcHjscuGKAFzhFzL9UXGzsFh/s6aaMOiyxu3bl2meuCWoJlW9iLhcXd6B
+         7nyatV9/oWIXQnMZb0SUDPHzxrNd6orU4pRQmJo3NLxofJiQnT4Wbrw+/6aZyv2jGPUa
+         8hZo34adLJm2OE/B7KvZBXL8nZOqIS3ASBgLvQbJ3Qr3V1pNeCuvGmSkf28rG5Wf0juz
+         qT/A==
+X-Gm-Message-State: APjAAAVelXIp4OXXhvywTMTzKW5V7vJ61TpiHZgRPdYM98YSRHijlPy1
+        gRgjNvJ/j3YLVQVKFmQdU0F1utu606fWV07GI8/0tt7LNoF3cAmw8ZChNxG/sbUV10DmBgqRt5p
+        4kY1RTejSKXo2Yi2L1FK8f7U7
+X-Received: by 2002:a5d:6811:: with SMTP id w17mr31804387wru.181.1568306967676;
+        Thu, 12 Sep 2019 09:49:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxrL3VP6sAEDt0Bo0M7LVEBolaalUXmcE8h3jDG603x7fhGBgsss6KO8uKCmP0qnEKPpoX5oQ==
+X-Received: by 2002:a5d:6811:: with SMTP id w17mr31804366wru.181.1568306967374;
+        Thu, 12 Sep 2019 09:49:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3166:d768:e1a7:aab8? ([2001:b07:6468:f312:3166:d768:e1a7:aab8])
+        by smtp.gmail.com with ESMTPSA id h17sm807220wme.6.2019.09.12.09.49.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2019 09:49:26 -0700 (PDT)
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com,
+        joro@8bytes.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com,
+        rkrcmar@redhat.com, robh+dt@kernel.org,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com,
+        x86@kernel.org,
+        syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+Date:   Thu, 12 Sep 2019 18:49:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912090149.7521-3-tmaimon77@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <87lfutei1j.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-09-19, 12:01, Tomer Maimon wrote:
-> Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
+[tl;dr: there could be a /dev/usb bug only affecting KASAN
+configurations, jump to the end to skip the analysis and get to the bug
+details]
 
-Is this a true RNG or a psedo RNG, in case of latter it should be added
-in drivers/crypto/. See crypto_register_rng()
-
+On 12/09/19 15:54, Vitaly Kuznetsov wrote:
+> Hm, the bisection seems bogus but the stack points us to the following
+> piece of code:
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  drivers/char/hw_random/Kconfig    |  13 +++
->  drivers/char/hw_random/Makefile   |   1 +
->  drivers/char/hw_random/npcm-rng.c | 186 ++++++++++++++++++++++++++++++
->  3 files changed, 200 insertions(+)
->  create mode 100644 drivers/char/hw_random/npcm-rng.c
+>  4776)              if (kvm_vcpu_map(vcpu, gpa_to_gfn(vmptr), &map)) {
+> <skip>
+>  4783)                      return nested_vmx_failValid(vcpu,
+>  4784)                              VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
+>  4785)              }
+>  4786) 
+>  4787)              new_vmcs12 = map.hva;
+>  4788) 
+> *4789)              if (new_vmcs12->hdr.revision_id != VMCS12_REVISION ||
+>  4790)                  (new_vmcs12->hdr.shadow_vmcs &&
+>  4791)                   !nested_cpu_has_vmx_shadow_vmcs(vcpu))) {
 > 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 59f25286befe..87a1c30e7958 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
->  
->  	  If unsure, say Y.
->  
-> +config HW_RANDOM_NPCM
-> +	tristate "NPCM Random Number Generator support"
-> +	depends on ARCH_NPCM || COMPILE_TEST
-> +	default HW_RANDOM
-> +	help
-> + 	  This driver provides support for the Random Number
-> +	  Generator hardware available in Nuvoton NPCM SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called npcm-rng.
-> +
-> + 	  If unsure, say Y.
-> +
->  endif # HW_RANDOM
->  
->  config UML_RANDOM
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index 7c9ef4a7667f..17b6d4e6d591 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
->  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
->  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
->  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-> +obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-> diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
-> new file mode 100644
-> index 000000000000..b7c8c7e13a49
-> --- /dev/null
-> +++ b/drivers/char/hw_random/npcm-rng.c
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/init.h>
-> +#include <linux/random.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/delay.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#define NPCM_RNGCS_REG		0x00	/* Control and status register */
-> +#define NPCM_RNGD_REG		0x04	/* Data register */
-> +#define NPCM_RNGMODE_REG	0x08	/* Mode register */
-> +
-> +#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
-> +#define NPCM_RNG_DATA_VALID	BIT(1)
-> +#define NPCM_RNG_ENABLE		BIT(0)
-> +#define NPCM_RNG_M1ROSEL	BIT(1)
-> +
-> +#define NPCM_RNG_TIMEOUT_USEC	20000
-> +#define NPCM_RNG_POLL_USEC	1000
-> +
-> +#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
-> +
-> +struct npcm_rng {
-> +	void __iomem *base;
-> +	struct hwrng rng;
-> +};
-> +
-> +static int npcm_rng_init(struct hwrng *rng)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +
-> +	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
-> +	       priv->base + NPCM_RNGCS_REG);
-> +
-> +	return 0;
-> +}
-> +
-> +static void npcm_rng_cleanup(struct hwrng *rng)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +
-> +	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
-> +}
-> +
-> +static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +	int retval = 0;
-> +	int ready;
-> +
-> +	pm_runtime_get_sync((struct device *)priv->rng.priv);
-> +
-> +	while (max >= sizeof(u32)) {
-> +		if (wait) {
-> +			if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
-> +					       ready,
-> +					       ready & NPCM_RNG_DATA_VALID,
-> +					       NPCM_RNG_POLL_USEC,
-> +					       NPCM_RNG_TIMEOUT_USEC))
-> +				break;
-> +		} else {
-> +			if ((readl(priv->base + NPCM_RNGCS_REG) &
-> +			    NPCM_RNG_DATA_VALID) == 0)
-> +				break;
-> +		}
-> +
-> +		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
-> +		retval += sizeof(u32);
-> +		buf += sizeof(u32);
-> +		max -= sizeof(u32);
-> +	}
-> +
-> +	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
-> +	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
-> +
-> +	return retval || !wait ? retval : -EIO;
-> +}
-> +
-> +static int npcm_rng_probe(struct platform_device *pdev)
-> +{
-> +	struct npcm_rng *priv;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	dev_set_drvdata(&pdev->dev, priv);
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-> +	pm_runtime_use_autosuspend(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +#ifndef CONFIG_PM
-> +	priv->rng.init = npcm_rng_init;
-> +	priv->rng.cleanup = npcm_rng_cleanup;
-> +#endif
-> +	priv->rng.name = pdev->name;
-> +	priv->rng.read = npcm_rng_read;
-> +	priv->rng.priv = (unsigned long)&pdev->dev;
-> +	priv->rng.quality = 1000;
-> +
-> +	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
-> +
-> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
-> +			ret);
-> +		pm_runtime_disable(&pdev->dev);
-> +		pm_runtime_set_suspended(&pdev->dev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_rng_remove(struct platform_device *pdev)
-> +{
-> +	struct npcm_rng *priv = platform_get_drvdata(pdev);
-> +
-> +	devm_hwrng_unregister(&pdev->dev, &priv->rng);
-> +	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int npcm_rng_runtime_suspend(struct device *dev)
-> +{
-> +	struct npcm_rng *priv = dev_get_drvdata(dev);
-> +
-> +	npcm_rng_cleanup(&priv->rng);
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_rng_runtime_resume(struct device *dev)
-> +{
-> +	struct npcm_rng *priv = dev_get_drvdata(dev);
-> +
-> +	return npcm_rng_init(&priv->rng);
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops npcm_rng_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
-> +			   npcm_rng_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +};
-> +
-> +static const struct of_device_id rng_dt_id[] = {
-> +	{ .compatible = "nuvoton,npcm750-rng",  },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rng_dt_id);
-> +
-> +static struct platform_driver npcm_rng_driver = {
-> +	.driver = {
-> +		.name		= "npcm-rng",
-> +		.pm		= &npcm_rng_pm_ops,
-> +		.of_match_table = of_match_ptr(rng_dt_id),
-> +	},
-> +	.probe		= npcm_rng_probe,
-> +	.remove		= npcm_rng_remove,
-> +};
-> +
-> +module_platform_driver(npcm_rng_driver);
-> +
-> +MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
-> +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.18.0
+> the reported problem seems to be on VMCS12 region access but it's part
+> of guest memory and we successfuly managed to map it. We're definitely
+> within 1-page range. Maybe KASAN is just wrong here?
 
--- 
-~Vinod
+Here is the relevant part of the syzkaller repro:
+
+syz_kvm_setup_cpu$x86(r1, 0xffffffffffffffff,
+&(0x7f0000000000/0x18000)=nil, 0x0, 0x133, 0x0, 0x0, 0xff7d)
+r3 = syz_open_dev$usb(&(0x7f0000000080)='/dev/bus/usb/00#/00#\x00',
+0x40000fffffd, 0x200800000000042)
+mmap$IORING_OFF_SQES(&(0x7f0000007000/0x2000)=nil, 0x2000, 0x4, 0x13,
+r3, 0x10000000)
+syz_kvm_setup_cpu$x86(0xffffffffffffffff, r2,
+&(0x7f0000000000/0x18000)=nil, 0x0, 0xfefd, 0x40, 0x0, 0xfffffffffffffdd4)
+ioctl$KVM_RUN(r2, 0xae80, 0x0)
+
+The mmap$IORING_OFF_SQES is just a normal mmap from a device, which
+replaces the previous mapping for guest memory and in particular
+0x7f0000007000 which is the VMCS (from the C reproducer: "#define
+ADDR_VAR_VMCS 0x7000").
+
+The previous mapping is freed with do_munmap and then repopulated in
+usbdev_mmap with remap_pfn_range.  In KVM this means that kvm_vcpu_map
+goes through hva_to_pfn_remapped, which correctly calls get_page via
+kvm_get_pfn.  (Note that although drivers/usb/core/devio.c's usbdev_mmap
+sets VM_IO *after* calling remap_pfn_range, remap_pfn_range itself
+helpfully sets it before calling remap_p4d_range.  And anyway KVM is
+looking at vma->vm_flags under mmap_sem, which is held during mmap).
+
+So, KVM should be doing the right thing.  Now, the error is:
+
+> Read of size 4 at addr ffff888091e10000 by task syz-executor758/10006
+> The buggy address belongs to the object at ffff888091e109c0 
+> The buggy address is located 2496 bytes to the left of
+>  8192-byte region [ffff888091e109c0, ffff888091e129c0) 
+
+And given the use of remap_pfn_range in devusb_mmap, the simplest
+explanation could be that USB expects kmalloc-8k to return 8k-aligned
+values, but this is not true anymore with KASAN.  CCing Dmitry, Greg and
+linux-usb.
+
+Paolo
