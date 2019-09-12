@@ -2,132 +2,84 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AF0C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA0C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939D72075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D312075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732188AbfILNhi (ORCPT
+        id S1732162AbfILNnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:37:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731283AbfILNhi (ORCPT
+        Thu, 12 Sep 2019 09:43:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45145 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731896AbfILNnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:37:38 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CDXIuL020722;
-        Thu, 12 Sep 2019 09:37:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp6qt5vb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 09:37:19 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CDZHn7027303;
-        Thu, 12 Sep 2019 09:37:19 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp6qt5u7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 09:37:19 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CDYS2x024731;
-        Thu, 12 Sep 2019 13:37:17 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2uv468xvaw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 13:37:17 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CDbGY562128512
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 13:37:16 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 856C2136059;
-        Thu, 12 Sep 2019 13:37:16 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B4A8136051;
-        Thu, 12 Sep 2019 13:37:14 +0000 (GMT)
-Received: from [9.199.32.243] (unknown [9.199.32.243])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 13:37:13 +0000 (GMT)
-Subject: Re: [PATCH 1/3] powerpc/mm: Initialize the HPTE encoding values
-To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190830120712.22971-1-ldufour@linux.ibm.com>
- <20190830120712.22971-2-ldufour@linux.ibm.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <527b1a15-e37f-0d76-b999-e22cf04f9f7e@linux.ibm.com>
-Date:   Thu, 12 Sep 2019 19:07:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 09:43:02 -0400
+Received: from [46.189.28.128] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i8PND-0005QC-3X; Thu, 12 Sep 2019 13:43:00 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clone3 exit signal fix
+Date:   Thu, 12 Sep 2019 15:40:19 +0200
+Message-Id: <20190912134019.2393-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190830120712.22971-2-ldufour@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120143
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 5:37 PM, Laurent Dufour wrote:
-> Before reading the HPTE encoding values we initialize all of them to -1 (an
-> invalid value) to later being able to detect the initialized ones.
-> 
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
->   arch/powerpc/mm/book3s64/hash_utils.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-> index c3bfef08dcf8..2039bc315459 100644
-> --- a/arch/powerpc/mm/book3s64/hash_utils.c
-> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
-> @@ -408,7 +408,7 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
->   {
->   	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
->   	const __be32 *prop;
-> -	int size = 0;
-> +	int size = 0, idx, base_idx;
->   
->   	/* We are scanning "cpu" nodes only */
->   	if (type == NULL || strcmp(type, "cpu") != 0)
-> @@ -418,6 +418,11 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
->   	if (!prop)
->   		return 0;
->   
-> +	/* Set all the penc values to invalid */
-> +	for (base_idx = 0; base_idx < MMU_PAGE_COUNT; base_idx++)
-> +		for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
-> +			mmu_psize_defs[base_idx].penc[idx] = -1;
-> +
->   	pr_info("Page sizes from device-tree:\n");
->   	size /= 4;
->   	cur_cpu_spec->mmu_features &= ~(MMU_FTR_16M_PAGE);
-> @@ -426,7 +431,6 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
->   		unsigned int slbenc = be32_to_cpu(prop[1]);
->   		unsigned int lpnum = be32_to_cpu(prop[2]);
->   		struct mmu_psize_def *def;
-> -		int idx, base_idx;
->   
->   		size -= 3; prop += 3;
->   		base_idx = get_idx_from_shift(base_shift);
-> 
+Hi Linus,
 
-We already do this in mmu_psize_set_default_penc() ?
+This is a rather urgent last-minute bugfix for clone3() that should go in
+before we release 5.3 with clone3().
 
--aneesh
+clone3() did not verify that the exit_signal argument was set to a valid
+signal. This can be used to cause a crash by specifying a signal greater
+than NSIG. e.g. -1.
+
+The commit from Eugene adds a check to copy_clone_args_from_user() to
+verify that the exit signal is limited by CSIGNAL as with legacy clone()
+and that the signal is valid. With this we don't get the legacy clone
+behavior were an invalid signal could be handed down and would only be
+detected and then ignored in do_notify_parent(). Users of clone3() will now
+get a proper error right when they pass an invalid exit signal. Note, that
+this is not a change in user-visible behavior since no kernel with clone3()
+has been released yet.
+
+The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
+
+  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190912
+
+for you to fetch changes up to a0eb9abd8af92d1aa34bc1e24dfbd1ba0bd6a56c:
+
+  fork: block invalid exit signals with clone3() (2019-09-12 14:56:33 +0200)
+
+Please consider pulling these changes from the signed for-linus-20190912 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-20190912
+
+----------------------------------------------------------------
+Eugene Syromiatnikov (1):
+      fork: block invalid exit signals with clone3()
+
+ kernel/fork.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
