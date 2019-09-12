@@ -2,95 +2,118 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BBAC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF1FC49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272792084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bobU2/X+"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8C82084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbfILIYQ (ORCPT
+        id S1730272AbfILIYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:24:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38208 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730179AbfILIYP (ORCPT
+        Thu, 12 Sep 2019 04:24:18 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:20320 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfILIYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 04:24:15 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so22383737ljn.5;
-        Thu, 12 Sep 2019 01:24:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ECkS2puFAK1gVjPinpMaI687BSxI+r7g336/1esz1k0=;
-        b=bobU2/X+jXrG7Z7VhdAPWfrQEBrRDHgblPscgg39+wUJnCf7d4fx3qf6vcFFVvxSkN
-         3U4gbkvDhjbCnuW8meMQgC2Ft3e3FFwa0KHF1D5u7qW7MBU1GnNfd/QMkK8wWUaaRqCB
-         3JpC+A70eitPZT6pl0sNnHh2A+r/Bjvb6UnMxMWGl1ObfMLIR+F5cnwsHKrEwhjq8yyf
-         MAFpuPAHwSYnNDLUlhili68ZfGdf+ruL/K0+YDRvDT04U78lShW4wiNWlvwbwU67SIo/
-         T3D0trHu4hTkAJJSD3d30zL/Ox1rPT250C9erYGII76G3/3XIUEY41WiGKx5RXmDT1UJ
-         x+xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ECkS2puFAK1gVjPinpMaI687BSxI+r7g336/1esz1k0=;
-        b=LRerhYz0dapsDal6WCveyZMFx6etC+hACuljn9qOP2PqzEDl5sbz0bzqv4G/rduYCU
-         1siAsCRX00wZ4sIbyqC/ZU1+agBDd/gNp6GupK8marOQgciS8RfiPbKkqa5NGQe6nLm0
-         8xZPybx2LdIs/c9yhRAwYDx9f++RMmeS3hGEom4K4ZD981a1KdqX8SApvnpb5S1WyMlA
-         Gm2/fTzhW0GpEPg2ExLEr5AftXOfKDNo1nOB2TgzLX/0C1Pyy85eT251NWmMipXtXQ+z
-         0vnopwRNX+oqxvMCRVL53i3lMDcNvutXYvNZUAlysaM59XY3cO8f4R0lMe05syXo/Jm2
-         xDCQ==
-X-Gm-Message-State: APjAAAXT+zcodJ6gyXxIxECUsgigFun1DQD+aKMKn84oJn6IFwoZOvWj
-        W6l/JFKHgyPOkFV2eMIeKS8XL7+MLSoJUnuOELc=
-X-Google-Smtp-Source: APXvYqwJdAIg0MN468eMceiqvbqhEFZIaSKfHpA6hbEW7p8IU8l3e2/DQsQGc8lPdxLHrAXG/fVObo9RcVpmFUoxXg8=
-X-Received: by 2002:a2e:9555:: with SMTP id t21mr9396134ljh.93.1568276653052;
- Thu, 12 Sep 2019 01:24:13 -0700 (PDT)
+Received: from [10.18.29.226] (10.18.29.226) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 12 Sep
+ 2019 16:25:07 +0800
+Subject: Re: [PATCH v3 4/4] arm64: dts: add support for A1 based Amlogic AD401
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+References: <1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568216290-84219-5-git-send-email-jianxin.pan@amlogic.com>
+ <e0054a53-7516-0527-3df7-c85e168003ba@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <eefe907c-d1f3-1c56-51d4-01af342a9697@amlogic.com>
+Date:   Thu, 12 Sep 2019 16:25:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
- <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
-In-Reply-To: <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 12 Sep 2019 10:24:01 +0200
-Message-ID: <CANiq72k2so3ZcqA3iRziGY=Shd_B1=qGoXXROeAF7Y3+pDmqyA@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e0054a53-7516-0527-3df7-c85e168003ba@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.226]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 9:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
+Hi Neil,
+
+
+On 2019/9/11 23:54, Neil Armstrong wrote:
+> On 11/09/2019 17:38, Jianxin Pan wrote:
+>> Add basic support for the Amlogic A1 based Amlogic AD401 board:
+>> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+>> Timer, UART. It's capable of booting up into the serial console.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/Makefile           |   1 +
+>>  arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
+>>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 131 +++++++++++++++++++++++++
+>>  3 files changed, 162 insertions(+)
+[...]
+>> +
+>> +	sm: secure-monitor {
+>> +		compatible = "amlogic,meson-gxbb-sm";
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +
+>> +		apb: bus@0xfe000000 {
+> 
+> Should be bus@fe000000
 >
-> Now I come to find that CodingStyle has settled on clang-format (in
-> the last 15 months) as the new standard which is a much better answer
-> to me than a manually specified style open to interpretation. I'll
-> take a look at getting libnvdimm converted over.
+Thanks for your review.
+I resent a new version and fixed it.
+>> +			compatible = "simple-bus";
+>> +			reg = <0x0 0xfe000000 0x0 0x1000000>;
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+[...]
+>> +	xtal: xtal-clk {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <24000000>;
+>> +		clock-output-names = "xtal";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +};
+>>
+> 
+> With that fixed:
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> Neil
+> 
+> .
+> 
 
-Note that clang-format cannot do everything as we want within the
-kernel just yet, but it is a close enough approximation -- it is near
-the point where we could simply agree to use it and stop worrying
-about styling issues. However, that would mean everyone needs to have
-a recent clang-format available, which I think is the biggest obstacle
-at the moment.
-
-Cheers,
-Miguel
