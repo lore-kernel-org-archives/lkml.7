@@ -2,135 +2,109 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3251C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 05:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80373ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 05:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A768920830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 05:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A5520830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 05:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PYvX2Jjy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXAw4ZfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfILFrk (ORCPT
+        id S1728577AbfILFsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 01:47:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42179 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfILFrk (ORCPT
+        Thu, 12 Sep 2019 01:48:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35645 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728265AbfILFsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 01:47:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w22so15225521pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 22:47:40 -0700 (PDT)
+        Thu, 12 Sep 2019 01:48:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g7so27044087wrx.2;
+        Wed, 11 Sep 2019 22:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=FH3mQ5WAiHQBqx7gMhW2IlaC7Eov6CFwaWdgd/wFtP0=;
-        b=PYvX2Jjybf3jSculUvceSAy/P291IbUmtLltNSdFEVC5AYj8qeTuf0g8XKlMS2wcFI
-         JtcmmkEyaOZvDhY5hJ9Mw5GYsAJjxQl7ktGVSZTDMr9d4jmDAXazAxnXDXMarAsnfNfU
-         so7YUkqKuZ0GXE6lw8rxrW+vkoVyLDMFian057P0TYQ7iw+OBfmkhofNnApRI98Yuz5T
-         HnVGGeArV8Z9PyZO4jnyFyG2xQmbHAa88kLYXZL/HD7WidVbCdAk4SCcmp+UKgcZo1Gs
-         oilRMXiMwKRfzwrpQmqKvuHqV+otT1JA37Dt2gNR6PLb4u1gK6m7hyOF1TlIVKp7v528
-         Wk1w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J+7yYlnuB8SfpTVafLWQ5fsDMfbAda9xsGBUVs8Fvp8=;
+        b=WXAw4ZfYV5rE2nV/pMMkOQLd84SYrazXZPVLCd3K+Nm/SSXM+4mrp2rwiAqVUsFwUh
+         r9Yha87/wwLrIFRTxPLaSobwXzeakc3dqoKr4eGm8i352Dihhdr8u0sGunzZnyx6uHV1
+         WxqJaan5k1ea2oY1oPTLAAoV7PGlkV/+/yH2NJjxwIaQl1tLphDl1XZzqq2Eztry7C6o
+         8gv+wDN6baCF6P/liN+rsL1AL/H7MPZ9QRcC3neKCCWNSC0KXnanP+mR2WTOZJAisjzQ
+         NoZwENX/hvrbuLv5CHeo25eG2MLJj4+j+FWUaEiUg+q14+h5WUCrw5wFHhncWz0SyY/h
+         Bjvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FH3mQ5WAiHQBqx7gMhW2IlaC7Eov6CFwaWdgd/wFtP0=;
-        b=gcsx9oYVzrn7TGogGUtR4w5OYPea4PbD6w2MeClCphv7DOCFejXmryBEj/WBYiLWkn
-         I103NPqCMb4DCtkVBLLsLf6Hl0ifdqhVvLhrmfPazZMj64s60y+MhsIa8RidhzfGOeke
-         EHadybMx7G4e5Oqy3H2rnxXgvSFN6AYzuWlSRyoflWBK00s9btkYKI01G4kdACBNj4jz
-         puACOVrJFchx+rrJjcwBR2rzMjMipwYaw5RmLe2BFITcQU2CMJLqbteR/dMwwGBFzCaY
-         08DiEh1cAWGHdrEcQZBdskxusdeAtNgccb6QrM6EAyFkzp2uJmBBM2nKrhpBo8cCh+Ue
-         2u4Q==
-X-Gm-Message-State: APjAAAWsgBi4iVEkJvQBpMamGfcPJ7nOoWUpjcTZW5taKceuVu2ORMk0
-        ktorB4n6daIylDT8tHJObN8B6A==
-X-Google-Smtp-Source: APXvYqzawCx7eqyzXmhV+Jo2ika+EmyDdJc35lAYkargw+zex++LvLDrzPw5U8tDy+o77DlgsHOQ0g==
-X-Received: by 2002:a65:60d2:: with SMTP id r18mr35715713pgv.71.1568267259688;
-        Wed, 11 Sep 2019 22:47:39 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t14sm13228602pgb.33.2019.09.11.22.47.35
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Sep 2019 22:47:38 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     vkoul@kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, eric.long@unisoc.com,
-        zhenfang.wang@unisoc.com, baolin.wang@linaro.org
-Subject: [PATCH] dmaengine: sprd: Fix the link-list pointer register configuration issue
-Date:   Thu, 12 Sep 2019 13:47:18 +0800
-Message-Id: <eadfe9295499efa003e1c344e67e2890f9d1d780.1568267061.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J+7yYlnuB8SfpTVafLWQ5fsDMfbAda9xsGBUVs8Fvp8=;
+        b=VhbmT/EbLMT3pJNqwfQbsljXrF7oqKLNbrTO0QHrssCjqtRFsjGmahrSq5QWYMmOj1
+         B1H72Zd1CilDCdnqTULiiYm0j7wCoLfDbX95FZlLMuGCXDqpdicoZ7pM54Jkpypp+yfx
+         SAsmUr3JLWh24hCzYnmHt8OW47oZ+6UHi9TYOedDE6fLGXPiYCRtA9Eeb1c/gvDtOMbR
+         ZszB02XcbhBTdBXX0eSyN5Gt8m4awCNAvaK29gQgMX/jjWjX4kWEHOIgBumopevz0lfe
+         URfmoNCgR8AIUhsd8YtHOXQRppOXHzE4inJ4hWGteZ5w/N/vcX0vIwIHKZHljerOs0kM
+         xchw==
+X-Gm-Message-State: APjAAAXBLmTd0q1U/RHf9VOA4g4DDXPytwDn3iYuDsKoYrDeu+3gO6sE
+        bRI3pijmyV5i6B5VKZHRyXJte9B96Z2ClrggClAlmQ==
+X-Google-Smtp-Source: APXvYqyiFcAWerCpqfDcaC0qwPj8N20mRn7E8xKm+Rmt7zy0lh+MRtJ2JTXCsp+wRS6givFhM6F9EsVts9tBy0ZmAbk=
+X-Received: by 2002:adf:d84f:: with SMTP id k15mr31421304wrl.70.1568267296241;
+ Wed, 11 Sep 2019 22:48:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190905103009.27166-1-zhang.lyra@gmail.com>
+In-Reply-To: <20190905103009.27166-1-zhang.lyra@gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Thu, 12 Sep 2019 13:47:39 +0800
+Message-ID: <CAAfSe-uG0oDHznmYXUfbC86pw6nZvGzLHfpnpu1oUX+uk1NASQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: sprd: add missing kfree
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenfang Wang <zhenfang.wang@unisoc.com>
+gentle ping
 
-We will set the link-list pointer register point to next link-list
-configuration's physical address, which can load DMA configuration
-from the link-list node automatically.
-
-But the link-list node's physical address can be larger than 32bits,
-and now Spreadtrum DMA driver only supports 32bits physical address,
-which may cause loading a incorrect DMA configuration when starting
-the link-list transfer mode. According to the DMA datasheet, we can
-use SRC_BLK_STEP register (bit28 - bit31) to save the high bits of the
-link-list node's physical address to fix this issue.
-
-Fixes: 4ac695464763 ("dmaengine: sprd: Support DMA link-list mode")
-Signed-off-by: Zhenfang Wang <zhenfang.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/dma/sprd-dma.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 525dc73..a4a91f2 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -134,6 +134,10 @@
- #define SPRD_DMA_SRC_TRSF_STEP_OFFSET	0
- #define SPRD_DMA_TRSF_STEP_MASK		GENMASK(15, 0)
- 
-+/* SPRD DMA_SRC_BLK_STEP register definition */
-+#define SPRD_DMA_LLIST_HIGH_MASK	GENMASK(31, 28)
-+#define SPRD_DMA_LLIST_HIGH_SHIFT	28
-+
- /* define DMA channel mode & trigger mode mask */
- #define SPRD_DMA_CHN_MODE_MASK		GENMASK(7, 0)
- #define SPRD_DMA_TRG_MODE_MASK		GENMASK(7, 0)
-@@ -717,6 +721,7 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 	u32 int_mode = flags & SPRD_DMA_INT_MASK;
- 	int src_datawidth, dst_datawidth, src_step, dst_step;
- 	u32 temp, fix_mode = 0, fix_en = 0;
-+	phys_addr_t llist_ptr;
- 
- 	if (dir == DMA_MEM_TO_DEV) {
- 		src_step = sprd_dma_get_step(slave_cfg->src_addr_width);
-@@ -814,13 +819,16 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 		 * Set the link-list pointer point to next link-list
- 		 * configuration's physical address.
- 		 */
--		hw->llist_ptr = schan->linklist.phy_addr + temp;
-+		llist_ptr = schan->linklist.phy_addr + temp;
-+		hw->llist_ptr = lower_32_bits(llist_ptr);
-+		hw->src_blk_step = (upper_32_bits(llist_ptr) << SPRD_DMA_LLIST_HIGH_SHIFT) &
-+			SPRD_DMA_LLIST_HIGH_MASK;
- 	} else {
- 		hw->llist_ptr = 0;
-+		hw->src_blk_step = 0;
- 	}
- 
- 	hw->frg_step = 0;
--	hw->src_blk_step = 0;
- 	hw->des_blk_step = 0;
- 	return 0;
- }
--- 
-1.7.9.5
-
+On Thu, 5 Sep 2019 at 18:30, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> The number of config registers for different pll clocks probably are not
+> same, so we have to use malloc, and should free the memory before return.
+>
+> Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+> ---
+>  drivers/clk/sprd/pll.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+> index 36b4402bf09e..640270f51aa5 100644
+> --- a/drivers/clk/sprd/pll.c
+> +++ b/drivers/clk/sprd/pll.c
+> @@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
+>                                          k2 + refin * nint * CLK_PLL_1M;
+>         }
+>
+> +       kfree(cfg);
+>         return rate;
+>  }
+>
+> @@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
+>         if (!ret)
+>                 udelay(pll->udelay);
+>
+> +       kfree(cfg);
+>         return ret;
+>  }
+>
+> --
+> 2.20.1
+>
