@@ -2,131 +2,123 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4CC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947B2C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6469D20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7118520830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbfILMDg (ORCPT
+        id S1731601AbfILMET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:03:36 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42385 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfILMDg (ORCPT
+        Thu, 12 Sep 2019 08:04:19 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39751 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730454AbfILMET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:03:36 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z6so11347108oix.9;
-        Thu, 12 Sep 2019 05:03:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dAter5ihnXBTYAaNi7sEgCFPygX/nf9VCuXJNZdSmN4=;
-        b=ZuJ6kv29fN48hSfUXzz4pxd1CLb+G+9d6MSdZCp8XbOerp21Iate6yv9wcDQ01bKhu
-         vsMiSt3+Qu3aeFUdYeGc6L8iRekooKrksMiR3EVHhpW+yI4j2AVgSZ+pRO3xXbNjMQH8
-         rSTdNBjftCRLr7h7AFu3qVA7t9q3BjDWn77lz0Ua7XQ1pzRE8hsD8Y17rOBb1L9w4QWg
-         TppwJJfR3WzKHKD9TMMCZ4aZfvNEGeqW4lp5veiFjZG3RcteAvsxMB1yY3rEljvHbeuq
-         lonUlJ8cMVLDKXt8idliozjseFaxpUPZjSBzUFPfOZKxq2csnJIlDz1GLTqzXcRC5lcV
-         /YOQ==
-X-Gm-Message-State: APjAAAVFYW/LU640E27obu0SP+ul8+BslSJkDiJv21kBgXdRL8Vk1R+t
-        eq+YnVNt3hZEDIFXvId4zIy7FcmazkQT4hi5Wws=
-X-Google-Smtp-Source: APXvYqw55cL6ePYgoRX18n3lZWVAOJ6JGFgMAqg89yEN1I4+ZAJCYO//k48A8xejhV1Hkp+i0JBiIeRvlGS3MrUySD0=
-X-Received: by 2002:a05:6808:8e3:: with SMTP id d3mr7841555oic.153.1568289810430;
- Thu, 12 Sep 2019 05:03:30 -0700 (PDT)
+        Thu, 12 Sep 2019 08:04:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Tc9SThJ_1568289840;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0Tc9SThJ_1568289840)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 12 Sep 2019 20:04:06 +0800
+Date:   Thu, 12 Sep 2019 20:04:00 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190912120400.GA16200@aaronlu>
+References: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu>
+ <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+ <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+ <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
 MIME-Version: 1.0
-References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
- <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com> <a9cc2193-0a18-0490-c273-c64bd70992f5@ideasonboard.com>
-In-Reply-To: <a9cc2193-0a18-0490-c273-c64bd70992f5@ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Sep 2019 14:03:19 +0200
-Message-ID: <CAMuHMdVYqx_znkMbwCVyA6WH8-0uOotL3wXCTkvyXG1=i9W-ng@mail.gmail.com>
-Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
-
-On Thu, Sep 12, 2019 at 12:26 PM Kieran Bingham
-<kieran.bingham+renesas@ideasonboard.com> wrote:
-> (pulling in +Geert for his opinion on compatible string usages)
->
-> On 12/09/2019 11:00, Sergei Shtylyov wrote:> Hello!
-> > On 11.09.2019 22:25, Kieran Bingham wrote:
-> >> Add direct support for the r8a77980 (V3H).
+On Wed, Sep 11, 2019 at 09:19:02AM -0700, Tim Chen wrote:
+> On 9/11/19 7:02 AM, Aaron Lu wrote:
+> > Hi Tim & Julien,
+> > 
+> > On Fri, Sep 06, 2019 at 11:30:20AM -0700, Tim Chen wrote:
+> >> On 8/7/19 10:10 AM, Tim Chen wrote:
 > >>
-> >> The V3H shares a common, compatible configuration with the r8a77970
-> >> (V3M) so that device info structure is reused.
-> >
-> >    Do we really need to add yet another compatible in this case?
-> > I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
-> > a patch like this one didn't get posted by me.
->
-> It's not just about the compatible string for me here,
->
-> There is no indication in the driver that it supports the r8a77980, and
-> no comment in the driver to explain that the r8a77980 is shared by the
-> r8a77970.
->
-> This patch makes that explicit at the driver.
->
-> Also - I am considering sending a patch (that I've already created
-> anyway) to remove the r8a77970 reference from the
->
->   arch/arm64/boot/dts/renesas/r8a77980.dtsi file.
->
-> This is the *only* non r8a77980 reference in this file, so it seems very
-> out of place.
+> >>> 3) Load balancing between CPU cores
+> >>> -----------------------------------
+> >>> Say if one CPU core's sibling threads get forced idled
+> >>> a lot as it has mostly incompatible tasks between the siblings,
+> >>> moving the incompatible load to other cores and pulling
+> >>> compatible load to the core could help CPU utilization.
+> >>>
+> >>> So just considering the load of a task is not enough during
+> >>> load balancing, task compatibility also needs to be considered.
+> >>> Peter has put in mechanisms to balance compatible tasks between
+> >>> CPU thread siblings, but not across cores.
+> >>>
+> >>> Status:
+> >>> I have not seen patches on this issue.  This issue could lead to
+> >>> large variance in workload performance based on your luck
+> >>> in placing the workload among the cores.
+> >>>
+> >>
+> >> I've made an attempt in the following two patches to address
+> >> the load balancing of mismatched load between the siblings.
+> >>
+> >> It is applied on top of Aaron's patches:
+> >> - sched: Fix incorrect rq tagged as forced idle
+> >> - wrapper for cfs_rq->min_vruntime
+> >>   https://lore.kernel.org/lkml/20190725143127.GB992@aaronlu/
+> >> - core vruntime comparison
+> >>   https://lore.kernel.org/lkml/20190725143248.GC992@aaronlu/
+> > 
+> > So both of you are working on top of my 2 patches that deal with the
+> > fairness issue, but I had the feeling Tim's alternative patches[1] are
+> > simpler than mine and achieves the same result(after the force idle tag
+> 
+> I think Julien's result show that my patches did not do as well as
+> your patches for fairness. Aubrey did some other testing with the same
+> conclusion.  So I think keeping the forced idle time balanced is not
+> enough for maintaining fairness.
 
-Agreed.
+Well, I have done following tests:
+1 Julien's test script: https://paste.debian.net/plainh/834cf45c
+2 start two tagged will-it-scale/page_fault1, see how each performs;
+3 Aubrey's mysql test: https://github.com/aubreyli/coresched_bench.git
 
-> In fact more so than that - except for a seemingly glaring typo, that
-> I'll investigate and send a patch for next, this is the *only* cross-soc
-> compatible reference:
->
-> #!/bin/sh
->
-> files=r8a77*.dtsi
->
-> for f in $files;
-> do
->         soc=`basename $f .dtsi | sed 's/-.*//'`
->         echo "F: $f soc: $soc";
->
->         # Find all references to all socs, then hide 'this' soc
->         grep r8a77 $f | grep -v $soc
-
-This hides the complete line.  So you better use e.g.
-
-    sed -e "s/$soc/soc/ig" $f | grep -i r8a
-
-instead.  No new offenders, though.
-
-> done;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+They all show your patchset performs equally well...And consider what
+the patch does, I think they are really doing the same thing in
+different ways.
