@@ -2,144 +2,112 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA875C49ED6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60853ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08352085B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B982087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDwdEnFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbfILBdj (ORCPT
+        id S1728217AbfILBez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 21:33:39 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46517 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726157AbfILBdi (ORCPT
+        Wed, 11 Sep 2019 21:34:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41303 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfILBez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 21:33:38 -0400
-X-UUID: 78297ba1371f445b84693c296f71f482-20190912
-X-UUID: 78297ba1371f445b84693c296f71f482-20190912
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1472135931; Thu, 12 Sep 2019 09:33:34 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Sep 2019 09:33:32 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Sep 2019 09:33:32 +0800
-Message-ID: <1568252013.4102.1.camel@mtksdccf07>
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh@kernel.org>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 12 Sep 2019 09:33:33 +0800
-In-Reply-To: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
-         <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
-         <20190827183924.GA24178@bogus>
-         <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Sep 2019 21:34:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so14826482pfo.8;
+        Wed, 11 Sep 2019 18:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XAw3ZgfIAbV+DLrxuqn76+3d6iL0+a1iD8Du/3M3fWo=;
+        b=QDwdEnFYOEjquzyvaZLLrev8sqjiI67CJmzTJoMStwWOKuXMenWkbHXyiUGr/MFY5+
+         HPsXalNV/KvGQiwuaE6CVmeyeGcxopkzi5IAcyl4pj8YWIe+6w95KjqimeD2c5jGRTIf
+         UzogCb4mDQb95Zcd3W7uhT+9PH/QJnhjQS4lgNm2aeiGnOlwjyKp5RqEyjkMiHaiM2L7
+         nXfUxnyRC24FeCGkaxGfV0WVfdWaMUrPMBU8+oM/cOOzvg/gbZZyvn/dC1Czoh9vOd7J
+         iBEgJoUqvdX+T7ReFCFMdPFH2NJruQHTIiXk09sKED3b/vHc+iE9IyHHaV8j7LRSCjX3
+         6Jmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XAw3ZgfIAbV+DLrxuqn76+3d6iL0+a1iD8Du/3M3fWo=;
+        b=uXyaYFr8qhNYx0IeYKax8PFJ/PWGu+WKzaZqAwikD60p2eQC5QHPpD9lNTnMb2ljO5
+         G13z7mj/8t2aHgvblNQ5FrNgqleyLk0NoL+wJMmVwZSsqbiDzZJZDHUjwJgpIKHTN80G
+         pb4cKCQxYgSHGVCAkILIe2iT+Bk7jpoBslGVBBiJlUVx6cGNbxVSkoxk07n+/r+Ks7DH
+         gWx5Brut8RvSgeMfFdZCVv1kE/D4eARWoMdEJ30g156DglgDv7I9fKVrf+I369ke3GKN
+         WcjZyGMWPlbaJVATMGjmg2ZAr2VbekLOj8B8Ejlc4Bs2cR/tmNVF50XZCAU4aA2/TZtY
+         K2CQ==
+X-Gm-Message-State: APjAAAUjdE3D19sbDJ5dxk6CbH+jMZGeoOJBCMZcOLWAHNa+sokyM9Ax
+        tTHb1L67WDl+IyGWQQe1RPE=
+X-Google-Smtp-Source: APXvYqx7w5SdqbtZit/UJOQvKzOUmxY1sHB8IATpV9+rVYda5jx/hshNibVFAh0Ea5E5Fo9o24xS8g==
+X-Received: by 2002:a17:90a:2464:: with SMTP id h91mr9248861pje.9.1568252094496;
+        Wed, 11 Sep 2019 18:34:54 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id b126sm35248236pfa.177.2019.09.11.18.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2019 18:34:53 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 07/12] thermal: qoriq: Drop unnecessary drvdata cleanup
+Date:   Wed, 11 Sep 2019 18:34:42 -0700
+Message-Id: <20190912013447.2977-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190912012920.29601-1-andrew.smirnov@gmail.com>
+References: <20190912012920.29601-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-02 at 18:04 +0200, Uwe Kleine-König wrote:
-> On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
-> > On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> > > From: Ryder Lee <ryder.lee@mediatek.com>
-> > 
-> > The subject should indicate this is for Mediatek.
-> > 
-> > > 
-> > > This adds a property "num-pwms" in example so that we could
-> > > specify the number of PWM channels via device tree.
-> > > 
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > > Changes since v5:
-> > > - Add an Acked-by tag
-> > > - This file is original v4 patch 5/10
-> > > (https://patchwork.kernel.org/patch/11102577/)
-> > > 
-> > > Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> > > ---
-> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > index 991728cb46cb..ea95b490a913 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > @@ -14,12 +14,12 @@ Required properties:
-> > >                  has no clocks
-> > >     - "top": the top clock generator
-> > >     - "main": clock used by the PWM core
-> > > -   - "pwm1-8": the eight per PWM clocks for mt2712
-> > > -   - "pwm1-6": the six per PWM clocks for mt7622
-> > > -   - "pwm1-5": the five per PWM clocks for mt7623
-> > > +   - "pwm1-N": the PWM clocks for each channel
-> > > +   where N starting from 1 to the maximum number of PWM channels
-> > 
-> > Once converted to schema, you are going to be back to listing them out.
-> > 
-> > >   - pinctrl-names: Must contain a "default" entry.
-> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> > > + - num-pwms: the number of PWM channels.
-> > 
-> > You can't add new required properties without breaking compatibility. 
-> > 
-> > You already have to imply the number of channels from the compatible (or 
-> > number of clocks) and you have to keep doing so to maintain 
-> > compatibility, so why not just keep doing that for new chips?
-> 
-> This was a suggestion by me. The driver still handles compatibility
-> (i.e. falls back to the number of PWMs that was implied by the
-> compatible before). Given that there are various drivers that all solve
-> the same problem (i.e. different variants with different number of PWMs)
-> I thought it would be a good idea to introduce a property in the device
-> tree that specifies this number.
-> 
-> Only for newly introduced compatibles the num-pwms property is really
-> required. Differentiating the ones that need it and the ones that don't
-> seems over-engineered to me.
-> 
-> (BTW, using the number of clks doesn't really work because there are
-> also some variants without clocks. It is still under discussion if in
-> this case dummy-clocks should be provided IIRC.)
-> 
-> Best regards
-> Uwe
-> 
+Driver data of underlying struct device will be set to NULL by Linux's
+driver infrastructure. Clearing it here is unnecessary.
 
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: linux-imx@nxp.com
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/thermal/qoriq_thermal.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Any conclusions ? 
-
-just a friendly reminder :)
-
-
-regards Sam
-
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index af596c3342d0..8a28a4433d44 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -253,8 +253,6 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 
+ 	clk_disable_unprepare(data->clk);
+ 
+-	platform_set_drvdata(pdev, NULL);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
