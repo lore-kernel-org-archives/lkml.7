@@ -2,111 +2,171 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CD4C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 06:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A114C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 06:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA802075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 06:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568269983;
-	bh=Oo2cjKAiV3rsOkBdBi7Hyx8RM4IQKUDaU+NoHYxtRkY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=irB3A3RNGn6fWKdE0/WsZe1vl1TXyE1XxOD/BTEzrjeK8xYdL4YNYG9TerE9lp1ZG
-	 T6s2R1PMCUzyKWuZLhdf0mfMjZZkmvuURUSviiGMS3FoMnW5d3VS6zy8GKYrzLM8kw
-	 aKiExo0eFrrWoXtosw/LATeOWvUliTWfCBQRfC+0=
+	by mail.kernel.org (Postfix) with ESMTP id 31A1320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 06:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anandra.org header.i=@anandra.org header.b="O3ail7do"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfILGdC (ORCPT
+        id S1729662AbfILGgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 02:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfILGdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 02:33:02 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B23D214AE;
-        Thu, 12 Sep 2019 06:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568269981;
-        bh=Oo2cjKAiV3rsOkBdBi7Hyx8RM4IQKUDaU+NoHYxtRkY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n3EhKwYt1YNWIMvXgdASxGW0kH4zqKM9HsPNNFPprhlezL2o3C+ijNZ3/0K9N4b+2
-         WMu4Il3SdMs9OOtpT7BfWiqnQFMJyXE+RF9a9mUWR6GwYDVvOJWkP55iXzNVs8T8z8
-         nwt0Su+QKPMM/BZT48EsD8A6JAuXyYl2lI84TVyE=
-Received: by mail-lf1-f41.google.com with SMTP id x80so18371219lff.3;
-        Wed, 11 Sep 2019 23:33:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAXiJWc5Yc/IlgZmHmP4H9mIwSr2m2iWWUF/TxC7Uhku+WZvpCkE
-        oUMZLDjNf7QWuPe4Ck9c5Eyk3uBRj4/WeGQi7Ck=
-X-Google-Smtp-Source: APXvYqznuXgFn7odIM98fPDcWkgctFSvzUYGAl/cTNXN/571YUmoELzvTRg1eO9Bthq5P/b24gmtV+lPmP0zKwmTFkg=
-X-Received: by 2002:ac2:43b8:: with SMTP id t24mr7676135lfl.24.1568269979189;
- Wed, 11 Sep 2019 23:32:59 -0700 (PDT)
+        Thu, 12 Sep 2019 02:36:03 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34045 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728818AbfILGgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 02:36:03 -0400
+Received: by mail-vs1-f66.google.com with SMTP id g14so9927782vsp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 23:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anandra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nmpGWYLtPSGrl1YWqJfUO5R7bgXryGBrcoRpFN/0a0g=;
+        b=O3ail7doj7o7Ovvdm3xbfylphlfCHkXhRP/yCEXns19SI/49dj1zJ4ofS+2ymWt+g/
+         y3q+7bsHhKZFTNIpho1NHXrbDOdNcKjML+gCzkCZ+eLyV+AqGgc9o4+wnx+HuUy+3hez
+         q0rJuJtUyNvi5UZacXPNLJQdCthFS0Q25TmxVvFnqiqA592RsAQBs99I3jOtyvmTdOvu
+         dFCpvzJT4TmCrUFXGkMWFmoe5L8WsPrO889Dvxz2XXHJ7oQ/RSdg2r4En1N7OJUqfYpr
+         mjhDbzRkmwSlM9gb5CdLpopbdfxbi9icDKEIkwf9cUNCAAjaRZrmxC1rVSj01sJbkeID
+         IuBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nmpGWYLtPSGrl1YWqJfUO5R7bgXryGBrcoRpFN/0a0g=;
+        b=RBu3GG1DZ8GlAjRUEddBU6ht8+T9HGYvI57GHUMsM5jUWXkB1C50yXQ2l6QN9O5DYg
+         hdpmZrFZNsF46Xn2JNwzqQDWDhOpRX+ETwf9gnv5cnWrhAzBJEFZnk9ENZW5nXingMII
+         pQQYnECaJMl9flYKqqQ4S1R/r7kfTofl+ehEOkc+frrt45vHrr/0lv06vn7YDcZZ2Tlw
+         QHHlJZ6LhQMy8TFP5kRsSQVTxiEBL1yseYT4ysBfCmOU/DHvK8T1cVg7+Dg3yxxeTwK/
+         PdArcSrDI+rPDV/gy0/Un2ikusdNXdYHtrCJqJhd5ZVS4b/bSTmBz64ToHYnwvL6u8nk
+         qCfg==
+X-Gm-Message-State: APjAAAUHJ8uD2wapSyB79UuHMy5SqrE6G1lppM1LxzxrrF6eyP36Z6Qm
+        2/LRgPiQsi7t+j/8p1fqoFKLiLeLv99f821liorwtg==
+X-Google-Smtp-Source: APXvYqzfE/Y4NxqCwMzVJjDMqfSUa87VwUqGZkEU9X98b47pKVZNAOOE5Iwr+L1cGROF1MU6wEDKkyLDzUkDX8srS94=
+X-Received: by 2002:a67:f504:: with SMTP id u4mr22402937vsn.146.1568270162133;
+ Wed, 11 Sep 2019 23:36:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911183632.4317-1-krzk@kernel.org> <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
-In-Reply-To: <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 12 Sep 2019 08:32:47 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
-Message-ID: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
+References: <20190911114650.20567-1-clabbe.montjoie@gmail.com> <20190911114650.20567-3-clabbe.montjoie@gmail.com>
+In-Reply-To: <20190911114650.20567-3-clabbe.montjoie@gmail.com>
+From:   Maxime Ripard <maxime.ripard@anandra.org>
+Date:   Thu, 12 Sep 2019 08:35:51 +0200
+Message-ID: <CAO4ZVTM99FksM71BAiraYj7eyREO1Qi=L1NFzEkNmMgBmphBww@mail.gmail.com>
+Subject: Re: [PATCH 2/2] crypto: sun4i-ss: enable pm_runtime
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > Unfortunately the patches were applied right after closing the linux-next.
->
-> Hi Krzysztof,
->
-> I took a look at these and am not convinced this is right:
->
-> > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
->
-> The current state is clearly broken and a fix is needed, but
-> I'm not sure this is the right fix. Why do you have 32-bit physical
-> addressing on a 64-bit chip? I looked at commit ef72171b3621
-> that introduced it, and it seems it would be better to just
-> revert back to 64-bit addresses.
+Hi,
 
-We discussed with Marek Szyprowski that either we can go back to
-64-bit addressing or stick to 32. There are not known boards with more
-than 4 GB of RAM so from this point of view the choice was irrelevant.
-At the end of discussion I mentioned to stick with other arm64 boards
-(although not all), so revert to have 64 bit address... but Marek
-chosen differently. Since you ask, let's go back with revert.
+Le mer. 11 sept. 2019 =C3=A0 13:46, Corentin Labbe
+<clabbe.montjoie@gmail.com> a =C3=A9crit :
+>
+> This patch enables power management on the Security System.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  drivers/crypto/sunxi-ss/sun4i-ss-cipher.c |  5 +++
+>  drivers/crypto/sunxi-ss/sun4i-ss-core.c   | 42 ++++++++++++++++++++++-
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/s=
+unxi-ss/sun4i-ss-cipher.c
+> index fa4b1b47822e..1fedec9e83b0 100644
+> --- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+> +++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+> @@ -10,6 +10,8 @@
+>   *
+>   * You could find the datasheet in Documentation/arm/sunxi.rst
+>   */
+> +
+> +#include <linux/pm_runtime.h>
+>  #include "sun4i-ss.h"
+>
+>  static int noinline_for_stack sun4i_ss_opti_poll(struct skcipher_request=
+ *areq)
+> @@ -497,13 +499,16 @@ int sun4i_ss_cipher_init(struct crypto_tfm *tfm)
+>                 return PTR_ERR(op->fallback_tfm);
+>         }
+>
+> +       pm_runtime_get_sync(op->ss->dev);
+>         return 0;
+>  }
+>
+>  void sun4i_ss_cipher_exit(struct crypto_tfm *tfm)
+>  {
+>         struct sun4i_tfm_ctx *op =3D crypto_tfm_ctx(tfm);
+> +
+>         crypto_free_sync_skcipher(op->fallback_tfm);
+> +       pm_runtime_put_sync(op->ss->dev);
+>  }
+>
+>  /* check and set the AES key, prepare the mode to be used */
+> diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-core.c b/drivers/crypto/sun=
+xi-ss/sun4i-ss-core.c
+> index 2c9ff01dddfc..5e6e1a308f60 100644
+> --- a/drivers/crypto/sunxi-ss/sun4i-ss-core.c
+> +++ b/drivers/crypto/sunxi-ss/sun4i-ss-core.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <crypto/scatterwalk.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/interrupt.h>
+> @@ -258,6 +259,37 @@ static int sun4i_ss_enable(struct sun4i_ss_ctx *ss)
+>         return err;
+>  }
+>
+> +#ifdef CONFIG_PM
+> +static int sun4i_ss_pm_suspend(struct device *dev)
+> +{
+> +       struct sun4i_ss_ctx *ss =3D dev_get_drvdata(dev);
+> +
+> +       sun4i_ss_disable(ss);
+> +       return 0;
+> +}
+> +
+> +static int sun4i_ss_pm_resume(struct device *dev)
+> +{
+> +       struct sun4i_ss_ctx *ss =3D dev_get_drvdata(dev);
+> +
+> +       return sun4i_ss_enable(ss);
+> +}
+> +#endif
+> +
+> +const struct dev_pm_ops sun4i_ss_pm_ops =3D {
+> +       SET_RUNTIME_PM_OPS(sun4i_ss_pm_suspend, sun4i_ss_pm_resume, NULL)
+> +};
+> +
+> +static void sun4i_ss_pm_init(struct sun4i_ss_ctx *ss)
+> +{
+> +       pm_runtime_use_autosuspend(ss->dev);
+> +       pm_runtime_set_autosuspend_delay(ss->dev, 1000);
+> +
+> +       pm_runtime_get_noresume(ss->dev);
+> +       pm_runtime_set_active(ss->dev);
+> +       pm_runtime_enable(ss->dev);
+> +}
 
->
-> > 2. Move GPU under /soc node,
->
-> No problem
->
-> > 3. Minor cleanup of #address-cells.
->
-> IIRC, an interrupt-controller is required to have a #address-cells
-> property, even if that is normally zero. I don't remember the
-> details, but the gic binding lists it as mandatory, and I think
-> the PCI interrupt-map relies on it. I would just drop this patch.
+It's not really clear to me what you're doing here? Can you explain?
 
-Indeed, binding requires both address and size cells. I'll drop it.
+The rest looks fine.
 
-Best regards,
-Krzysztof
+Maxime
