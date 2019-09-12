@@ -2,699 +2,671 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF94C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042EDC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1384821479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93582081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rV1HapTj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DT9Yh3Hn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I/jYTab1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732901AbfILPAn (ORCPT
+        id S1732929AbfILPBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:00:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:33681 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732710AbfILPAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:00:42 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Thln60wLz9typC;
-        Thu, 12 Sep 2019 17:00:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rV1HapTj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id JpcFicqlZ8B7; Thu, 12 Sep 2019 17:00:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Thln4hDmz9vKHS;
-        Thu, 12 Sep 2019 17:00:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568300437; bh=R2glDPwRgsMGK23Yl880bEw+kzwf2YClf4smByEEMhU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rV1HapTjbxiBWzCXYywq3KSdYam/K9FXBAbXWfJ78FPDK4G/XMpn5H+VJtlOQe01C
-         aJ8Q3uQZrXxKWEbzbQ5iQtLoejTuqhLH6gBU8KrWK6Livr0ytwprjPwFRpFQau5U/s
-         7mBXf/gWkvlpsXYyx59B04keQIVXNpZF8sjD5gW0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B9D38B941;
-        Thu, 12 Sep 2019 17:00:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VS7bm07k3Ksg; Thu, 12 Sep 2019 17:00:39 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 669028B933;
-        Thu, 12 Sep 2019 17:00:36 +0200 (CEST)
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4cf31ca9-39e4-87e4-7eef-a6f3f0ea7576@c-s.fr>
-Date:   Thu, 12 Sep 2019 15:00:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 12 Sep 2019 11:01:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35818 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732728AbfILPBk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:01:40 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 974E26083C; Thu, 12 Sep 2019 15:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568300497;
+        bh=i+ZCbip0u88IAWK7ce9GsXf9y525lDvt+/EphHvi6U8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DT9Yh3HnMhFAQWwIG08o4ZAmQeAjKvbfpUIiVy2C+EqpVLYzmnAH+ueE2Qh/fnOqu
+         vNrj+Li7olNpRB3Iwk/BrNvURKeMPe2wwhajd8qY1qbBcBTeiAqYhga8eWtaaGAlgj
+         TW/+iAMKIhwg/hKfLUyodHZBgZaoqrJ9jIxPZSUo=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 83F02602BC;
+        Thu, 12 Sep 2019 15:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568300494;
+        bh=i+ZCbip0u88IAWK7ce9GsXf9y525lDvt+/EphHvi6U8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I/jYTab1GI1sk6etJGbFCmTP9Tx3PnpHoMmwKdMQO7sN90+jLCAQ/hSrHQFr1BzEU
+         SUuKxCCVtb5noV0vOsu4nhmo5eyY0AxPzaNw6grBHOiRK1pRWDkzAtBOxLswdweOi5
+         aFDBrN2ACFrwL1ijlbkGoww7Wi6XLfvrHLzUDhtw=
 MIME-Version: 1.0
-In-Reply-To: <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 12 Sep 2019 20:31:34 +0530
+From:   ppvk@codeaurora.org
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     adrian.hunter@intel.com, georgi.djakov@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Andy Gross <agross@kernel.org>, linux-mmc-owner@vger.kernel.org
+Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
+In-Reply-To: <20190906210251.0A96C21670@mail.kernel.org>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+ <ae24703de33d4049c451dd4a331f7a5f@codeaurora.org>
+ <20190906210251.0A96C21670@mail.kernel.org>
+Message-ID: <6c633155857337a6d0d6a05b49b6bfaf@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/12/2019 06:02 AM, Anshuman Khandual wrote:
-> This adds a test module which will validate architecture page table helpers
-> and accessors regarding compliance with generic MM semantics expectations.
-> This will help various architectures in validating changes to the existing
-> page table helpers or addition of new ones.
+On 2019-09-07 02:32, Stephen Boyd wrote:
+> Quoting ppvk@codeaurora.org (2019-09-06 05:51:54)
+>> +Georgi Djakov
+>> 
+>> On 2019-09-06 18:17, Pradeep P V K wrote:
+>> > diff --git a/drivers/mmc/host/sdhci-msm.c
+>> > b/drivers/mmc/host/sdhci-msm.c
+>> > index b75c82d..71515ca 100644
+>> > --- a/drivers/mmc/host/sdhci-msm.c
+>> > +++ b/drivers/mmc/host/sdhci-msm.c
+>> >  #define msm_host_writel(msm_host, val, host, offset) \
+>> >       msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+>> >
+>> > +#define SDHC_DDR "sdhc-ddr"
+>> > +#define CPU_SDHC "cpu-sdhc"
 > 
-> Test page table and memory pages creating it's entries at various level are
-> all allocated from system memory with required alignments. If memory pages
-> with required size and alignment could not be allocated, then all depending
-> individual tests are skipped.
+> Do you really need these defines? They're not used more than once or
+> twice and just seem to make the code harder to read.
+> 
+Agree and will address this in my next patch set.
 
-Build failure on powerpc book3s/32. This is because asm/highmem.h is 
-missing. It can't be included from asm/book3s/32/pgtable.h because it 
-creates circular dependency. So it has to be included from 
-mm/arch_pgtable_test.c
+>> > +
+>> >  struct sdhci_msm_offset {
+>> >       u32 core_hc_mode;
+>> >       u32 core_mci_data_cnt;
+>> > @@ -228,6 +232,31 @@ struct sdhci_msm_variant_info {
+>> >       const struct sdhci_msm_offset *offset;
+>> >  };
+>> >
+>> > +struct msm_bus_vectors {
+>> > +     uint64_t ab;
+>> > +     uint64_t ib;
+>> > +};
+>> > +
+>> > +struct msm_bus_path {
+>> > +     unsigned int num_paths;
+>> > +     struct msm_bus_vectors *vec;
+>> > +};
+>> > +
+>> > +struct sdhci_msm_bus_vote_data {
+>> > +     const char *name;
+>> > +     unsigned int num_usecase;
+>> > +     struct msm_bus_path *usecase;
+>> > +
+>> > +     unsigned int *bw_vecs;
+>> > +     unsigned int bw_vecs_size;
+>> > +
+>> > +     struct icc_path *sdhc_ddr;
+>> > +     struct icc_path *cpu_sdhc;
+>> > +
+>> > +     uint32_t curr_vote;
+>> > +
+> 
+> Please use u32 instead of uint32_t. Same comment for u64.
 
-
-
-   CC      mm/arch_pgtable_test.o
-In file included from ./arch/powerpc/include/asm/book3s/pgtable.h:8:0,
-                  from ./arch/powerpc/include/asm/pgtable.h:18,
-                  from ./include/linux/mm.h:99,
-                  from ./arch/powerpc/include/asm/io.h:29,
-                  from ./include/linux/io.h:13,
-                  from ./include/linux/irq.h:20,
-                  from ./arch/powerpc/include/asm/hardirq.h:6,
-                  from ./include/linux/hardirq.h:9,
-                  from ./include/linux/interrupt.h:11,
-                  from ./include/linux/kernel_stat.h:9,
-                  from ./include/linux/cgroup.h:26,
-                  from ./include/linux/hugetlb.h:9,
-                  from mm/arch_pgtable_test.c:14:
-mm/arch_pgtable_test.c: In function 'arch_pgtable_tests_init':
-./arch/powerpc/include/asm/book3s/32/pgtable.h:365:13: error: implicit 
-declaration of function 'kmap_atomic' 
-[-Werror=implicit-function-declaration]
-   ((pte_t *)(kmap_atomic(pmd_page(*(dir))) + \
-              ^
-./include/linux/mm.h:2008:31: note: in expansion of macro 'pte_offset_map'
-   (pte_alloc(mm, pmd) ? NULL : pte_offset_map(pmd, address))
-                                ^
-mm/arch_pgtable_test.c:377:9: note: in expansion of macro 'pte_alloc_map'
-   ptep = pte_alloc_map(mm, pmdp, vaddr);
-          ^
-cc1: some warnings being treated as errors
-make[2]: *** [mm/arch_pgtable_test.o] Error 1
-
-
-Christophe
-
+Ok. I will address this in my next patch set.
 
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Steven Price <Steven.Price@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Sri Krishna chowdary <schowdary@nvidia.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
+>> > +};
+>> > +
+>> >  struct sdhci_msm_host {
+>> >       struct platform_device *pdev;
+>> >       void __iomem *core_mem; /* MSM SDCC mapped address */
+>> > @@ -1678,6 +1714,341 @@ static void
+>> > sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>> >       pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>> >  }
+>> >
+>> > +static int sdhci_msm_dt_get_array(struct device *dev, const char
+>> > *prop_name,
+>> > +                              u32 **bw_vecs, int *len, u32 size)
+>> > +{
+>> > +     int ret = 0;
+>> > +     struct device_node *np = dev->of_node;
+>> > +     size_t sz;
+>> > +     u32 *arr = NULL;
+>> > +
+>> > +     if (!of_get_property(np, prop_name, len)) {
+>> > +             ret = -EINVAL;
+>> > +             goto out;
+>> > +     }
+>> > +     sz = *len = *len / sizeof(*arr);
+>> > +     if (sz <= 0 || (size > 0 && (sz > size))) {
+>> > +             dev_err(dev, "%s invalid size\n", prop_name);
+>> > +             ret = -EINVAL;
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     arr = devm_kzalloc(dev, sz * sizeof(*arr), GFP_KERNEL);
+>> > +     if (!arr) {
+>> > +             ret = -ENOMEM;
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     ret = of_property_read_u32_array(np, prop_name, arr, sz);
+>> > +     if (ret < 0) {
+>> > +             dev_err(dev, "%s failed reading array %d\n", prop_name, ret);
+>> > +             goto out;
+>> > +     }
+>> > +     *bw_vecs = arr;
+>> > +out:
+>> > +     if (ret)
+>> > +             *len = 0;
+>> > +     return ret;
+>> > +}
+>> > +
+>> > +/* Returns required bandwidth in Bytes per Sec */
+>> > +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
+>> > +                                     struct mmc_ios *ios)
+>> > +{
+>> > +     unsigned long bw;
+>> > +     struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> > +     struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> > +
+>> > +     bw = msm_host->clk_rate;
+>> > +
+>> > +     if (ios->bus_width == MMC_BUS_WIDTH_4)
+>> > +             bw /= 2;
+>> > +     else if (ios->bus_width == MMC_BUS_WIDTH_1)
+>> > +             bw /= 8;
+>> > +
+>> > +     return bw;
+>> > +}
+>> > +
+>> > +static int sdhci_msm_bus_get_vote_for_bw(struct sdhci_msm_host *host,
+>> > +                                        unsigned int bw)
+>> > +{
+>> > +     struct sdhci_msm_bus_vote_data *bvd = host->bus_vote_data;
+>> > +
+>> > +     unsigned int *table = bvd->bw_vecs;
 > 
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/x86/include/asm/pgtable_64_types.h |   2 +
->   mm/Kconfig.debug                        |  14 +
->   mm/Makefile                             |   1 +
->   mm/arch_pgtable_test.c                  | 429 ++++++++++++++++++++++++
->   4 files changed, 446 insertions(+)
->   create mode 100644 mm/arch_pgtable_test.c
+> Should probably be a const bw_vecs pointer so that it can't be modified
+> after the fact.
+
+Agree and will address this in my next patch set.
+
 > 
-> diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-> index 52e5f5f2240d..b882792a3999 100644
-> --- a/arch/x86/include/asm/pgtable_64_types.h
-> +++ b/arch/x86/include/asm/pgtable_64_types.h
-> @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
->   #define pgtable_l5_enabled() 0
->   #endif /* CONFIG_X86_5LEVEL */
->   
-> +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
-> +
->   extern unsigned int pgdir_shift;
->   extern unsigned int ptrs_per_p4d;
->   
-> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-> index 327b3ebf23bf..ce9c397f7b07 100644
-> --- a/mm/Kconfig.debug
-> +++ b/mm/Kconfig.debug
-> @@ -117,3 +117,17 @@ config DEBUG_RODATA_TEST
->       depends on STRICT_KERNEL_RWX
->       ---help---
->         This option enables a testcase for the setting rodata read-only.
-> +
-> +config DEBUG_ARCH_PGTABLE_TEST
-> +	bool "Test arch page table helpers for semantics compliance"
-> +	depends on MMU
-> +	depends on DEBUG_KERNEL
-> +	help
-> +	  This options provides a kernel module which can be used to test
-> +	  architecture page table helper functions on various platform in
-> +	  verifying if they comply with expected generic MM semantics. This
-> +	  will help architectures code in making sure that any changes or
-> +	  new additions of these helpers will still conform to generic MM
-> +	  expected semantics.
-> +
-> +	  If unsure, say N.
-> diff --git a/mm/Makefile b/mm/Makefile
-> index d996846697ef..bb572c5aa8c5 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
->   obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
->   obj-$(CONFIG_DEBUG_KMEMLEAK_TEST) += kmemleak-test.o
->   obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
-> +obj-$(CONFIG_DEBUG_ARCH_PGTABLE_TEST) += arch_pgtable_test.o
->   obj-$(CONFIG_PAGE_OWNER) += page_owner.o
->   obj-$(CONFIG_CLEANCACHE) += cleancache.o
->   obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
-> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
-> new file mode 100644
-> index 000000000000..8b4a92756ad8
-> --- /dev/null
-> +++ b/mm/arch_pgtable_test.c
-> @@ -0,0 +1,429 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * This kernel module validates architecture page table helpers &
-> + * accessors and helps in verifying their continued compliance with
-> + * generic MM semantics.
-> + *
-> + * Copyright (C) 2019 ARM Ltd.
-> + *
-> + * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-> + */
-> +#define pr_fmt(fmt) "arch_pgtable_test: %s " fmt, __func__
-> +
-> +#include <linux/gfp.h>
-> +#include <linux/hugetlb.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/module.h>
-> +#include <linux/pfn_t.h>
-> +#include <linux/printk.h>
-> +#include <linux/random.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/swap.h>
-> +#include <linux/swapops.h>
-> +#include <linux/sched/mm.h>
-> +#include <asm/pgalloc.h>
-> +#include <asm/pgtable.h>
-> +
-> +/*
-> + * Basic operations
-> + *
-> + * mkold(entry)			= An old and not a young entry
-> + * mkyoung(entry)		= A young and not an old entry
-> + * mkdirty(entry)		= A dirty and not a clean entry
-> + * mkclean(entry)		= A clean and not a dirty entry
-> + * mkwrite(entry)		= A write and not a write protected entry
-> + * wrprotect(entry)		= A write protected and not a write entry
-> + * pxx_bad(entry)		= A mapped and non-table entry
-> + * pxx_same(entry1, entry2)	= Both entries hold the exact same value
-> + */
-> +#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
-> +
-> +/*
-> + * On s390 platform, the lower 12 bits are used to identify given page table
-> + * entry type and for other arch specific requirements. But these bits might
-> + * affect the ability to clear entries with pxx_clear(). So while loading up
-> + * the entries skip all lower 12 bits in order to accommodate s390 platform.
-> + * It does not have affect any other platform.
-> + */
-> +#define RANDOM_ORVALUE	(0xfffffffffffff000UL)
-> +#define RANDOM_NZVALUE	(0xff)
-> +
-> +static bool pud_aligned;
-> +static bool pmd_aligned;
-> +
-> +static void pte_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pte_t pte = mk_pte(page, prot);
-> +
-> +	WARN_ON(!pte_same(pte, pte));
-> +	WARN_ON(!pte_young(pte_mkyoung(pte)));
-> +	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
-> +	WARN_ON(!pte_write(pte_mkwrite(pte)));
-> +	WARN_ON(pte_young(pte_mkold(pte)));
-> +	WARN_ON(pte_dirty(pte_mkclean(pte)));
-> +	WARN_ON(pte_write(pte_wrprotect(pte)));
-> +}
-> +
-> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE
-> +static void pmd_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pmd_t pmd;
-> +
-> +	/*
-> +	 * Memory block here must be PMD_SIZE aligned. Abort this
-> +	 * test in case we could not allocate such a memory block.
-> +	 */
-> +	if (!pmd_aligned) {
-> +		pr_warn("Could not proceed with PMD tests\n");
-> +		return;
-> +	}
-> +
-> +	pmd = mk_pmd(page, prot);
-> +	WARN_ON(!pmd_same(pmd, pmd));
-> +	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
-> +	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
-> +	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
-> +	WARN_ON(pmd_young(pmd_mkold(pmd)));
-> +	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
-> +	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
-> +	/*
-> +	 * A huge page does not point to next level page table
-> +	 * entry. Hence this must qualify as pmd_bad().
-> +	 */
-> +	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
-> +}
-> +#else
-> +static void pmd_basic_tests(struct page *page, pgprot_t prot) { }
-> +#endif
-> +
-> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> +static void pud_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pud_t pud;
-> +
-> +	/*
-> +	 * Memory block here must be PUD_SIZE aligned. Abort this
-> +	 * test in case we could not allocate such a memory block.
-> +	 */
-> +	if (!pud_aligned) {
-> +		pr_warn("Could not proceed with PUD tests\n");
-> +		return;
-> +	}
-> +
-> +	pud = pfn_pud(page_to_pfn(page), prot);
-> +	WARN_ON(!pud_same(pud, pud));
-> +	WARN_ON(!pud_young(pud_mkyoung(pud)));
-> +	WARN_ON(!pud_write(pud_mkwrite(pud)));
-> +	WARN_ON(pud_write(pud_wrprotect(pud)));
-> +	WARN_ON(pud_young(pud_mkold(pud)));
-> +
-> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> +	/*
-> +	 * A huge page does not point to next level page table
-> +	 * entry. Hence this must qualify as pud_bad().
-> +	 */
-> +	WARN_ON(!pud_bad(pud_mkhuge(pud)));
-> +#endif
-> +}
-> +#else
-> +static void pud_basic_tests(struct page *page, pgprot_t prot) { }
-> +#endif
-> +
-> +static void p4d_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	p4d_t p4d;
-> +
-> +	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
-> +	WARN_ON(!p4d_same(p4d, p4d));
-> +}
-> +
-> +static void pgd_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pgd_t pgd;
-> +
-> +	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
-> +	WARN_ON(!pgd_same(pgd, pgd));
-> +}
-> +
-> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> +static void pud_clear_tests(pud_t *pudp)
-> +{
-> +	pud_t pud = READ_ONCE(*pudp);
-> +
-> +	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pudp, pud);
-> +	pud_clear(pudp);
-> +	pud = READ_ONCE(*pudp);
-> +	WARN_ON(!pud_none(pud));
-> +}
-> +
-> +static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-> +{
-> +	pud_t pud;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pud_bad().
-> +	 */
-> +	pmd_clear(pmdp);
-> +	pud_clear(pudp);
-> +	pud_populate(mm, pudp, pmdp);
-> +	pud = READ_ONCE(*pudp);
-> +	WARN_ON(pud_bad(pud));
-> +}
-> +#else
-> +static void pud_clear_tests(pud_t *pudp) { }
-> +static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-> +{
-> +}
-> +#endif
-> +
-> +#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
-> +static void p4d_clear_tests(p4d_t *p4dp)
-> +{
-> +	p4d_t p4d = READ_ONCE(*p4dp);
-> +
-> +	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*p4dp, p4d);
-> +	p4d_clear(p4dp);
-> +	p4d = READ_ONCE(*p4dp);
-> +	WARN_ON(!p4d_none(p4d));
-> +}
-> +
-> +static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-> +{
-> +	p4d_t p4d;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as p4d_bad().
-> +	 */
-> +	pud_clear(pudp);
-> +	p4d_clear(p4dp);
-> +	p4d_populate(mm, p4dp, pudp);
-> +	p4d = READ_ONCE(*p4dp);
-> +	WARN_ON(p4d_bad(p4d));
-> +}
-> +#else
-> +static void p4d_clear_tests(p4d_t *p4dp) { }
-> +static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-> +{
-> +}
-> +#endif
-> +
-> +#ifndef __ARCH_HAS_5LEVEL_HACK
-> +static void pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp)
-> +{
-> +	pgd_t pgd = READ_ONCE(*pgdp);
-> +
-> +	if (mm_p4d_folded(mm))
-> +		return;
-> +
-> +	pgd = __pgd(pgd_val(pgd) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pgdp, pgd);
-> +	pgd_clear(pgdp);
-> +	pgd = READ_ONCE(*pgdp);
-> +	WARN_ON(!pgd_none(pgd));
-> +}
-> +
-> +static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-> +{
-> +	pgd_t pgd;
-> +
-> +	if (mm_p4d_folded(mm))
-> +		return;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pgd_bad().
-> +	 */
-> +	p4d_clear(p4dp);
-> +	pgd_clear(pgdp);
-> +	pgd_populate(mm, pgdp, p4dp);
-> +	pgd = READ_ONCE(*pgdp);
-> +	WARN_ON(pgd_bad(pgd));
-> +}
-> +#else
-> +static void pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp) { }
-> +static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-> +{
-> +}
-> +#endif
-> +
-> +static void pte_clear_tests(struct mm_struct *mm, pte_t *ptep)
-> +{
-> +	pte_t pte = READ_ONCE(*ptep);
-> +
-> +	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*ptep, pte);
-> +	pte_clear(mm, 0, ptep);
-> +	pte = READ_ONCE(*ptep);
-> +	WARN_ON(!pte_none(pte));
-> +}
-> +
-> +static void pmd_clear_tests(pmd_t *pmdp)
-> +{
-> +	pmd_t pmd = READ_ONCE(*pmdp);
-> +
-> +	pmd = __pmd(pmd_val(pmd) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pmdp, pmd);
-> +	pmd_clear(pmdp);
-> +	pmd = READ_ONCE(*pmdp);
-> +	WARN_ON(!pmd_none(pmd));
-> +}
-> +
-> +static void pmd_populate_tests(struct mm_struct *mm, pmd_t *pmdp,
-> +			       pgtable_t pgtable)
-> +{
-> +	pmd_t pmd;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pmd_bad().
-> +	 */
-> +	pmd_clear(pmdp);
-> +	pmd_populate(mm, pmdp, pgtable);
-> +	pmd = READ_ONCE(*pmdp);
-> +	WARN_ON(pmd_bad(pmd));
-> +}
-> +
-> +static struct page *alloc_mapped_page(void)
-> +{
-> +	struct page *page;
-> +	gfp_t gfp_mask = GFP_KERNEL | __GFP_ZERO;
-> +
-> +	page = alloc_gigantic_page_order(get_order(PUD_SIZE), gfp_mask,
-> +				first_memory_node, &node_states[N_MEMORY]);
-> +	if (page) {
-> +		pud_aligned = true;
-> +		pmd_aligned = true;
-> +		return page;
-> +	}
-> +
-> +	page = alloc_pages(gfp_mask, get_order(PMD_SIZE));
-> +	if (page) {
-> +		pmd_aligned = true;
-> +		return page;
-> +	}
-> +	return alloc_page(gfp_mask);
-> +}
-> +
-> +static void free_mapped_page(struct page *page)
-> +{
-> +	if (pud_aligned) {
-> +		unsigned long pfn = page_to_pfn(page);
-> +
-> +		free_contig_range(pfn, 1ULL << get_order(PUD_SIZE));
-> +		return;
-> +	}
-> +
-> +	if (pmd_aligned) {
-> +		int order = get_order(PMD_SIZE);
-> +
-> +		free_pages((unsigned long)page_address(page), order);
-> +		return;
-> +	}
-> +	free_page((unsigned long)page_address(page));
-> +}
-> +
-> +static unsigned long get_random_vaddr(void)
-> +{
-> +	unsigned long random_vaddr, random_pages, total_user_pages;
-> +
-> +	total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
-> +
-> +	random_pages = get_random_long() % total_user_pages;
-> +	random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
-> +
-> +	WARN_ON(random_vaddr > TASK_SIZE);
-> +	WARN_ON(random_vaddr < FIRST_USER_ADDRESS);
-> +	return random_vaddr;
-> +}
-> +
-> +static int __init arch_pgtable_tests_init(void)
-> +{
-> +	struct mm_struct *mm;
-> +	struct page *page;
-> +	pgd_t *pgdp;
-> +	p4d_t *p4dp, *saved_p4dp;
-> +	pud_t *pudp, *saved_pudp;
-> +	pmd_t *pmdp, *saved_pmdp, pmd;
-> +	pte_t *ptep;
-> +	pgtable_t saved_ptep;
-> +	pgprot_t prot;
-> +	unsigned long vaddr;
-> +
-> +	prot = vm_get_page_prot(VMFLAGS);
-> +	vaddr = get_random_vaddr();
-> +	mm = mm_alloc();
-> +	if (!mm) {
-> +		pr_err("mm_struct allocation failed\n");
-> +		return 1;
-> +	}
-> +
-> +	page = alloc_mapped_page();
-> +	if (!page) {
-> +		pr_err("memory allocation failed\n");
-> +		return 1;
-> +	}
-> +
-> +	pgdp = pgd_offset(mm, vaddr);
-> +	p4dp = p4d_alloc(mm, pgdp, vaddr);
-> +	pudp = pud_alloc(mm, p4dp, vaddr);
-> +	pmdp = pmd_alloc(mm, pudp, vaddr);
-> +	ptep = pte_alloc_map(mm, pmdp, vaddr);
-> +
-> +	/*
-> +	 * Save all the page table page addresses as the page table
-> +	 * entries will be used for testing with random or garbage
-> +	 * values. These saved addresses will be used for freeing
-> +	 * page table pages.
-> +	 */
-> +	pmd = READ_ONCE(*pmdp);
-> +	saved_p4dp = p4d_offset(pgdp, 0UL);
-> +	saved_pudp = pud_offset(p4dp, 0UL);
-> +	saved_pmdp = pmd_offset(pudp, 0UL);
-> +	saved_ptep = pmd_pgtable(pmd);
-> +
-> +	pte_basic_tests(page, prot);
-> +	pmd_basic_tests(page, prot);
-> +	pud_basic_tests(page, prot);
-> +	p4d_basic_tests(page, prot);
-> +	pgd_basic_tests(page, prot);
-> +
-> +	pte_clear_tests(mm, ptep);
-> +	pmd_clear_tests(pmdp);
-> +	pud_clear_tests(pudp);
-> +	p4d_clear_tests(p4dp);
-> +	pgd_clear_tests(mm, pgdp);
-> +
-> +	pmd_populate_tests(mm, pmdp, saved_ptep);
-> +	pud_populate_tests(mm, pudp, saved_pmdp);
-> +	p4d_populate_tests(mm, p4dp, saved_pudp);
-> +	pgd_populate_tests(mm, pgdp, saved_p4dp);
-> +
-> +	p4d_free(mm, saved_p4dp);
-> +	pud_free(mm, saved_pudp);
-> +	pmd_free(mm, saved_pmdp);
-> +	pte_free(mm, saved_ptep);
-> +
-> +	mm_dec_nr_puds(mm);
-> +	mm_dec_nr_pmds(mm);
-> +	mm_dec_nr_ptes(mm);
-> +	__mmdrop(mm);
-> +
-> +	free_mapped_page(page);
-> +	return 0;
-> +}
-> +
-> +static void __exit arch_pgtable_tests_exit(void) { }
-> +
-> +module_init(arch_pgtable_tests_init);
-> +module_exit(arch_pgtable_tests_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Anshuman Khandual <anshuman.khandual@arm.com>");
-> +MODULE_DESCRIPTION("Test architecture page table helpers");
+>> > +     unsigned int size = bvd->bw_vecs_size;
+>> > +     int i;
+>> > +
+>> > +     for (i = 0; i < size; i++) {
+>> > +             if (bw <= table[i])
+>> > +                     break;
 > 
+> return i;
+
+Ok. I will address this in my next patch set.
+
+> 
+>> > +     }
+>> > +
+> 
+> return i - 1;
+
+Ok. I will address this in my next patch set.
+
+> 
+>> > +     if (i && (i == size))
+>> > +             i--;
+>> > +
+>> > +     return i;
+> 
+> And then this is useless.....
+
+Agree and will address this in my next patch set.
+
+> 
+>> > +}
+>> > +
+>> > +/*
+>> > + * This function must be called with host lock acquired.
+>> > + * Caller of this function should also ensure that msm bus client
+>> > + * handle is not null.
+> 
+> If it was NULL it would be pretty sad.
+
+Agree but this is handled in the caller of this fun.
+and will update in my next patch set.
+
+> 
+>> > + */
+>> > +static inline int sdhci_msm_bus_set_vote(struct sdhci_msm_host
+>> > *msm_host,
+>> > +                                          int vote,
+>> > +                                          unsigned long *flags)
+>> > +{
+>> > +     struct sdhci_host *host =  platform_get_drvdata(msm_host->pdev);
+>> > +     struct sdhci_msm_bus_vote_data *bvd = msm_host->bus_vote_data;
+>> > +     struct msm_bus_path *usecase = bvd->usecase;
+>> > +     struct msm_bus_vectors *vec = usecase[vote].vec;
+>> > +     int ddr_rc = 0, cpu_rc = 0;
+> 
+> Why initialize to 0?
+
+upon error with icc_set_bw(), ddr_rc and cpu_rc will update with 
+non-zero
+values, which will be further used for error checking.
+Hence i initialize to 0. (this check can even done, without 
+initialization to 0).
+
+> 
+>> > +
+>> > +     if (vote != bvd->curr_vote) {
+>> > +             spin_unlock_irqrestore(&host->lock, *flags);
+>> > +             pr_debug("%s: vote:%d sdhc_ddr ab:%llu ib:%llu cpu_sdhc ab:%llu
+>> > ib:%llu\n",
+>> > +                             mmc_hostname(host->mmc), vote, vec[0].ab,
+>> > +                             vec[0].ib, vec[1].ab, vec[1].ib);
+>> > +             ddr_rc = icc_set_bw(bvd->sdhc_ddr, vec[0].ab, vec[0].ib);
+>> > +             cpu_rc = icc_set_bw(bvd->cpu_sdhc, vec[1].ab, vec[1].ib);
+>> > +             spin_lock_irqsave(&host->lock, *flags);
+> 
+> This is some tricky spin-lockery.
+
+True. Removed the lock, not required here now.
+I will update this in my next patch set.
+
+> 
+>> > +             if (ddr_rc || cpu_rc) {
+>> > +                     pr_err("%s: icc_set() failed\n",
+>> > +                             mmc_hostname(host->mmc));
+>> > +                     goto out;
+>> > +             }
+>> > +             bvd->curr_vote = vote;
+>> > +     }
+>> > +out:
+>> > +     return cpu_rc;
+>> > +}
+>> > +
+>> > +/*
+>> > + * Internal work. Work to set 0 bandwidth for msm bus.
+>> > + */
+>> > +static void sdhci_msm_bus_work(struct work_struct *work)
+>> > +{
+>> > +     struct sdhci_msm_host *msm_host;
+>> > +     struct sdhci_host *host;
+>> > +     unsigned long flags;
+>> > +
+>> > +     msm_host = container_of(work, struct sdhci_msm_host,
+>> > +                             bus_vote_work.work);
+>> > +     host =  platform_get_drvdata(msm_host->pdev);
+>> > +
+>> > +     /* Check handle and return */
+> 
+> This comment is useless, please remove it.
+
+Ok. I will address this in my next patch.
+
+> 
+>> > +     if (!msm_host->bus_vote_data->sdhc_ddr ||
+>> > +                     !msm_host->bus_vote_data->cpu_sdhc)
+>> > +             return;
+>> > +     spin_lock_irqsave(&host->lock, flags);
+>> > +     /* don't vote for 0 bandwidth if any request is in progress */
+>> > +     if (!host->mmc->ongoing_mrq)
+>> > +             sdhci_msm_bus_set_vote(msm_host, 0, &flags);
+>> > +     else
+>> > +             pr_warn("Transfer in progress.Skipping bus voting to 0\n");
+> 
+> Missing space after the full stop. Also, useless warning so just remove
+> it?
+
+Ok. I will address this in my next patch. I will mark it as debug 
+instead of warn.
+> 
+>> > +     spin_unlock_irqrestore(&host->lock, flags);
+>> > +}
+>> > +
+>> > +/*
+>> > + * This function cancels any scheduled delayed work and sets the bus
+>> > + * vote based on bw (bandwidth) argument.
+>> > + */
+>> > +static void sdhci_msm_bus_cancel_work_and_set_vote(struct sdhci_host
+>> > *host,
+>> > +                                             unsigned int bw)
+>> > +{
+>> > +     int vote;
+>> > +     unsigned long flags;
+>> > +     struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> > +     struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> > +
+>> > +     cancel_delayed_work_sync(&msm_host->bus_vote_work);
+>> > +     spin_lock_irqsave(&host->lock, flags);
+> 
+> Why does the lock need to be held? Is the interconnect framework not
+> consistent with itself?
+
+Agree. It is not required here, i will address this in my next
+patch set.
+
+> 
+>> > +     vote = sdhci_msm_bus_get_vote_for_bw(msm_host, bw);
+>> > +     sdhci_msm_bus_set_vote(msm_host, vote, &flags);
+>> > +     spin_unlock_irqrestore(&host->lock, flags);
+>> > +}
+>> > +
+>> > +
+>> > +#define MSM_MMC_BUS_VOTING_DELAY     200 /* msecs */
+>> > +#define VOTE_ZERO  0
+>> > +
+>> > +/* This function queues a work which will set the bandwidth requiement
+>> > to 0 */
+> 
+> This comment style is wrong. Also s/requiement/requirement/
+
+Ok. I will address this in my next patch set.
+
+> 
+>> > +static void sdhci_msm_bus_queue_work(struct sdhci_host *host)
+>> > +{
+>> > +     unsigned long flags;
+>> > +     struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> > +     struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> > +
+>> > +     spin_lock_irqsave(&host->lock, flags);
+>> > +     if (msm_host->bus_vote_data->curr_vote != VOTE_ZERO)
+>> > +             queue_delayed_work(system_wq,
+>> > +                                &msm_host->bus_vote_work,
+>> > +                                msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
+>> > +     spin_unlock_irqrestore(&host->lock, flags);
+> 
+> Ok it seems that the sdhci code isn't consistent with itself?
+
+yes but it is not required to be held it now. I will address this in my
+next patch set.
+
+> 
+>> > +}
+>> > +
+>> > +static struct sdhci_msm_bus_vote_data
+>> > *sdhci_msm_get_bus_vote_data(struct device
+>> > +                                    *dev, struct sdhci_msm_host *host)
+>> > +
+>> > +{
+>> > +     struct platform_device *pdev = to_platform_device(dev);
+>> > +     struct device_node *of_node = dev->of_node;
+>> > +     struct sdhci_msm_bus_vote_data *bvd = NULL;
+>> > +     struct msm_bus_path *usecase = NULL;
+>> > +     int ret = 0, i = 0, j, k, num_paths, len;
+>> > +     const uint32_t *vec_arr = NULL;
+>> > +     bool mem_err = false;
+>> > +
+>> > +     if (!pdev) {
+>> > +             dev_err(dev, "Null platform device!\n");
+>> > +             return NULL;
+>> > +     }
+>> > +
+>> > +     bvd = devm_kzalloc(dev, sizeof(struct sdhci_msm_bus_vote_data),
+> 
+> sizeof(*bvd) is better and shorter!
+
+Agree and will address this in my next path set.
+
+> 
+>> > +                             GFP_KERNEL);
+>> > +     if (!bvd) {
+>> > +             ret = -ENOMEM;
+>> > +             dev_err(dev, "No sufficient memory!\n");
+> 
+> Don't print errors for allocation failures
+
+Ok. I will address this in my next patch set.
+
+> 
+>> > +             return bvd;
+>> > +     }
+>> > +     ret = sdhci_msm_dt_get_array(dev, "qcom,bus-bw-vectors-bps",
+>> > +                             &bvd->bw_vecs, &bvd->bw_vecs_size, 0);
+>> > +     if (ret) {
+>> > +             dev_info(dev, "No dt property of bus bw. voting defined!\n");
+>> > +             dev_info(dev, "Skipping Bus BW voting now!!\n");
+> 
+> Is this debug junk? Why does the user care?
+
+Yes, it is just a debug info. I will mark it as debug and
+will address this in my next patch set.
+
+> 
+>> > +             host->skip_bus_bw_voting = true;
+>> > +             if (ret != -EINVAL && ret != -ENOMEM)
+>> > +                     goto free;
+>> > +             goto err;
+>> > +     }
+>> > +
+>> > +     ret = of_property_read_string(of_node, "qcom,msm-bus,name",
+>> > &bvd->name);
+>> > +     if (ret) {
+>> > +             dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
+>> > +             goto err;
+>> > +     }
+>> > +
+>> > +     ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
+>> > +             &bvd->num_usecase);
+>> > +     if (ret) {
+>> > +             dev_err(dev, "Error: num-usecases not found\n");
+>> > +             goto err;
+>> > +     }
+>> > +
+>> > +     usecase = devm_kzalloc(dev, (sizeof(struct msm_bus_path) *
+>> > +                                bvd->num_usecase), GFP_KERNEL);
+>> > +     if (!usecase)
+>> > +             goto err;
+>> > +
+>> > +     ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
+>> > +                                &num_paths);
+>> > +     if (ret) {
+>> > +             dev_err(dev, "Error: num_paths not found\n");
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps",
+> 
+> Why are all the properties qcom specific?
+> 
+These are few qcom properties, required for bus bw voting.
+Like the num-paths(sdhc-ddr, cpu-sdhc),num-cases like
+clock operating frequencies (0,50MHz,200MHz),vectors-KBps to
+hold the average and peak bandwidth values.
+
+>> > &len);
+>> > +     if (vec_arr == NULL) {
+> 
+> A more consistent style is if (!vec_arr)
+
+Agree and will address this in my next patch set.
+
+> 
+>> > +             dev_err(dev, "Error: Vector array not found\n");
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     for (i = 0; i < bvd->num_usecase; i++) {
+>> > +             usecase[i].num_paths = num_paths;
+>> > +             usecase[i].vec = devm_kzalloc(dev, num_paths *
+> 
+> Use devm_kcalloc().
+
+Ok. I will address this in my next patch set.
+> 
+>> > +                                           sizeof(struct msm_bus_vectors),
+>> > +                                           GFP_KERNEL);
+>> > +             if (!usecase[i].vec) {
+>> > +                     mem_err = true;
+>> > +                     dev_err(dev, "Error: Failed to alloc mem for vectors\n");
+>> > +                     goto out;
+>> > +             }
+>> > +             for (j = 0; j < num_paths; j++) {
+>> > +                     int idx = ((i * num_paths) + j) * 2;
+>> > +
+>> > +                     usecase[i].vec[j].ab = (uint64_t)
+>> > +                             be32_to_cpu(vec_arr[idx]);
+>> > +                     usecase[i].vec[j].ib = (uint64_t)
+>> > +                             be32_to_cpu(vec_arr[idx + 1]);
+>> > +             }
+>> > +     }
+>> > +
+>> > +     bvd->usecase = usecase;
+>> > +     return bvd;
+>> > +out:
+>> > +     if (mem_err) {
+> 
+> Should be possible to not have this flag.
+
+Ok, i will check not to have this flag.
+and will address this in my next patch set.
+
+> 
+>> > +             for (k = i - 1; k >= 0; k--)
+>> > +                     devm_kfree(dev, usecase[k].vec);
+>> > +     }
+>> > +     devm_kfree(dev, usecase);
+>> > +free:
+>> > +     devm_kfree(dev, bvd->bw_vecs);
+>> > +err:
+>> > +     devm_kfree(dev, bvd);
+> 
+> You don't need to devm_kfree() anything, just let probe fail it.
+
+Agree. Also considering the probe on the existing targets, it should not 
+fail.
+due to this new bus bw voting.  I will handle accordingly ,to not use 
+devm_kfree()
+and will address this in my next patch set.
+> 
+>> > +     bvd = NULL;
+>> > +     return bvd;
+>> > +}
+>> > +
+>> > +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
+>> > +                             struct platform_device *pdev)
+>> > +{
+>> > +     struct sdhci_msm_bus_vote_data *bsd;
+>> > +     struct device *dev = &pdev->dev;
+>> > +
+>> > +     bsd = sdhci_msm_get_bus_vote_data(dev, host);
+>> > +     if (!bsd) {
+>> > +             dev_err(&pdev->dev, "Failed: getting bus_scale data\n");
+>> > +             return PTR_ERR(bsd);
+>> > +     }
+>> > +     host->bus_vote_data = bsd;
+>> > +
+>> > +     bsd->sdhc_ddr = of_icc_get(&pdev->dev, SDHC_DDR);
+>> > +     if (IS_ERR(bsd->sdhc_ddr)) {
+>> > +             dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
+> 
+> We don't need "Error: " prefix. That's what the kernel log level is 
+> for.
+
+Agree. I will address this in my next patch set.
+
+> 
+>> > +                     PTR_ERR(bsd->sdhc_ddr), SDHC_DDR);
+>> > +             return PTR_ERR(bsd->sdhc_ddr);
+>> > +     }
+>> > +
+>> > +     bsd->cpu_sdhc = of_icc_get(&pdev->dev, CPU_SDHC);
+>> > +     if (IS_ERR(bsd->cpu_sdhc)) {
+>> > +             dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
+>> > +                     PTR_ERR(bsd->cpu_sdhc), CPU_SDHC);
+>> > +             return PTR_ERR(bsd->cpu_sdhc);
+>> > +     }
+>> > +
+>> > +     INIT_DELAYED_WORK(&host->bus_vote_work, sdhci_msm_bus_work);
+> 
+> Why is it in a workqueue context? Is there any reason it can' be done 
+> in
+> whatever calling context it is?
+> 
+If is in delayed workqueue context (setting the vote to zero), we can 
+reduce the overhead
+of calling many involved functions, when there are back to back requests 
+for bus bw vote.
+This can also improve the device suspend trigger to actual suspend 
+latency.
+
+>> > +
+>> > +     return 0;
+>> > +}
+>> > +
+>> > +static void sdhci_msm_bus_unregister(struct device *dev,
+>> > +                             struct sdhci_msm_host *host)
+>> > +{
+>> > +     struct sdhci_msm_bus_vote_data *bsd = host->bus_vote_data;
+>> > +     int i;
+>> > +
+>> > +     icc_put(bsd->sdhc_ddr);
+>> > +     icc_put(bsd->cpu_sdhc);
+> 
+> Is there a devm_icc_get() API? If not, please add it and use it.
+
+Do you mean devm_clk_get() ? i didn't find any API with name 
+devm_icc_get().
+Can you please elaborate more on this ?
+
+> 
+>> > +
+>> > +     for (i = 0; i < bsd->num_usecase; i++)
+>> > +             devm_kfree(dev, bsd->usecase[i].vec);
+>> > +     devm_kfree(dev, bsd->usecase);
+>> > +     devm_kfree(dev, bsd->bw_vecs);
+>> > +     devm_kfree(dev, bsd);
+> 
+> Again, not sure we need any devm_kfree() stuff.
+
+Agree. I will address this in my next patch set.
+
+> 
+>> > +}
+>> > +
+>> > +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
+>> > +{
+>> > +     struct mmc_ios *ios = &host->mmc->ios;
+>> > +     unsigned int bw;
+>> > +
+>> > +     bw = sdhci_get_bw_required(host, ios);
+>> > +     if (enable)
+>> > +             sdhci_msm_bus_cancel_work_and_set_vote(host, bw);
+>> > +     else
+>> > +             sdhci_msm_bus_queue_work(host);
+>> > +}
+>> > +
+>> >  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>> >       .msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>> >       .msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>> > @@ -1839,6 +2210,13 @@ static int sdhci_msm_probe(struct
+>> > platform_device *pdev)
+>> >               dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
+>> >       }
+>> >
+>> > +     ret = sdhci_msm_bus_register(msm_host, pdev);
+>> > +     if (ret && !msm_host->skip_bus_bw_voting)
+> 
+> Can this be a check for a NULL icc handle instead of the bool?
+
+Considering the support of bus bandwidth on the existing devices,
+this bool check will help the device probe for its continuity or fail.
+Hence this check is used instead of NULL icc handle.
+Any how the NULL icc handle check is added in the bus bw vote setting.
