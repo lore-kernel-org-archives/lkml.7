@@ -2,176 +2,207 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A4C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF71C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F53208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2830B208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:20:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DfmbhEQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbfILKTi (ORCPT
+        id S1731098AbfILKU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:19:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730268AbfILKTh (ORCPT
+        Thu, 12 Sep 2019 06:20:26 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45398 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730470AbfILKUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:19:37 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAHUh2008595
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:19:36 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyjnwuhq8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:19:35 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Thu, 12 Sep 2019 11:19:25 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Sep 2019 11:19:22 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CAJLHG46072090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 10:19:21 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 943334C040;
-        Thu, 12 Sep 2019 10:19:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A677C4C058;
-        Thu, 12 Sep 2019 10:19:20 +0000 (GMT)
-Received: from oc0383214508.ibm.com (unknown [9.124.35.231])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 10:19:20 +0000 (GMT)
-Subject: Re: [PATCH] cpupower : Handle set and info subcommands for powerpc
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        shuah@kernel.org, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-References: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
- <12087195.kFesu4gPPu@skinner.arch.suse.de>
-From:   Abhishek <huntbag@linux.vnet.ibm.com>
-Date:   Thu, 12 Sep 2019 15:49:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <12087195.kFesu4gPPu@skinner.arch.suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19091210-0020-0000-0000-0000036B5F98
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091210-0021-0000-0000-000021C0F0BB
-Message-Id: <754e96b7-19da-1a59-25bc-390afc9da00f@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120109
+        Thu, 12 Sep 2019 06:20:25 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190912102023euoutp02de028ebac71392c246a36ac5391af7a1~DqaWGF6UQ0395203952euoutp02W
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 10:20:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190912102023euoutp02de028ebac71392c246a36ac5391af7a1~DqaWGF6UQ0395203952euoutp02W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568283623;
+        bh=PfHXFCgRDtux4RVtVpQOJGAlubNU3XitVaH9bw8AQ9Q=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=DfmbhEQ1C+uwCuO68FkaWIvCKZ/adZFChPuKLjwSHNcnJK1xDe4Rn+n0WfQZ4niwi
+         YJHnm/NJV/MN+hzS5SDkkID/VWc4DIXQ2FMCF4TLy2kF5GZWomstzXYC1Lwv/zz7PA
+         pOlY//DERQdprbkGG4d9qD1+3QlbF5cTqFFI/y2M=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190912102022eucas1p1e4e61b2e44891d9bb02018aed1192ac4~DqaUxR3wq0288402884eucas1p1n;
+        Thu, 12 Sep 2019 10:20:22 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 9D.D9.04309.5EB1A7D5; Thu, 12
+        Sep 2019 11:20:21 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98~DqaTzZ7pC1339313393eucas1p10;
+        Thu, 12 Sep 2019 10:20:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190912102020eusmtrp284707ba20b93c0e82ee5ad3e616cdbe3~DqaTlVkW_0582605826eusmtrp2m;
+        Thu, 12 Sep 2019 10:20:20 +0000 (GMT)
+X-AuditID: cbfec7f4-afbff700000010d5-0c-5d7a1be571a0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 33.2D.04117.4EB1A7D5; Thu, 12
+        Sep 2019 11:20:20 +0100 (BST)
+Received: from AMDC2459.DIGITAL.local (unknown [106.120.51.95]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190912102020eusmtip1409ac8703956cb4d202b88628e344b1e~DqaTIC3Ws0326303263eusmtip1x;
+        Thu, 12 Sep 2019 10:20:20 +0000 (GMT)
+From:   Maciej Falkowski <m.falkowski@samsung.com>
+To:     airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com,
+        m.szyprowski@samsung.com, a.hajda@samsung.com
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH] dt-bindings: gpu: Convert Samsung Image Rotator to
+ dt-schema
+Date:   Thu, 12 Sep 2019 12:20:08 +0200
+Message-Id: <20190912102008.14292-1-m.falkowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsWy7djP87pPpatiDf7dNLe4te4cq0XvuZNM
+        FvOPAFkL9ltbXN41h83iQfM6Nou1R+6yWyy9fpHJonXvEXYHTo8189Ywemxa1cnmsf3bA1aP
+        yTeWM3r0bVnF6PF5k1wAWxSXTUpqTmZZapG+XQJXxrsdBgUtUhXdiy8wNTBOFe1i5OSQEDCR
+        uLHyOXMXIxeHkMAKRomPcw6ygSSEBL4wSqz64waR+MwosePofnaYjoUPFrBBJJYzSsz8cZER
+        wgHqONb6jBGkik3AQKL/zV4WEFtEIF/i4PYbrCBFzAI9jBLr5/0DGyUs4C/xt/krM4jNIqAq
+        cf5JL5jNK2Ajcf51PzPEOnmJ1RsOQNmv2SQ+zlOCsF0kfp5aARUXlnh1fAvUeTIS/3fOZ+pi
+        5ACyqyWufZMF2Ssh0MIocX3aWzaIGmuJP6smsoHUMAtoSqzfpQ8RdpTYe7OFBaKVT+LGW0GQ
+        MDOQOWnbdGaIMK9ER5sQhKkq8WZCLESjtETrmv2MELaHxL6mHkZIGMZK/O9vY53AKDcLYdUC
+        RsZVjOKppcW56anFRnmp5XrFibnFpXnpesn5uZsYgQni9L/jX3Yw7vqTdIhRgINRiYdX4G5F
+        rBBrYllxZe4hRgkOZiURXp83lbFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeasZHkQLCaQnlqRm
+        p6YWpBbBZJk4OKUaGBMNvwXtvrftmOGeNQ2G7xiuVDAuP8LqyrLoXIBQ4sP8BVKnpbgT+q9k
+        7edqftX1UeXsJ649YfGu7H0Zitzn/tzkPr7Zkc22OiVmwVV2rYz7JTo6+2a2beXr6r6a9Tbt
+        RHKh9xa7yBPHX5ud3MXHlOzybR9PIHOuidRnnsUzThjPd1We9NxirxJLcUaioRZzUXEiAAxW
+        g34MAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsVy+t/xu7pPpKtiDWYdM7W4te4cq0XvuZNM
+        FvOPAFkL9ltbXN41h83iQfM6Nou1R+6yWyy9fpHJonXvEXYHTo8189Ywemxa1cnmsf3bA1aP
+        yTeWM3r0bVnF6PF5k1wAW5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6d
+        TUpqTmZZapG+XYJexrsdBgUtUhXdiy8wNTBOFe1i5OSQEDCRWPhgAVsXIxeHkMBSRomHt96z
+        QiSkJfZf+8gOYQtL/LnWBVX0iVGibXcLM0iCTcBAov/NXpYuRg4OEYFSicUvqkFqmAUmMEp8
+        bnrBAlIjLOArseTkHUYQm0VAVeL8k16wXl4BG4nzr/uZIRbIS6zecIB5AiPPAkaGVYwiqaXF
+        uem5xUZ6xYm5xaV56XrJ+bmbGIHhue3Yzy07GLveBR9iFOBgVOLhzbhfESvEmlhWXJl7iFGC
+        g1lJhNfnTWWsEG9KYmVValF+fFFpTmrxIUZToOUTmaVEk/OBsZNXEm9oamhuYWlobmxubGah
+        JM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoGxyLj5+kX3i3v/z7evUjlRp7MtnzedvVCm++Yp
+        920fpJhNJbhKuL/wfl2p+mgGn/bRuWEbHFmDJsinLLv/fRpfyxIrtdjJxnfTAy1mJNwzmnzR
+        uOPesvesx30FGyU0t13m6DX6Oa+dm+3jiYXnhUUNNRb/vL9jpspjt7Xid2t7XKcFH7jU1/xG
+        iaU4I9FQi7moOBEAq+i7S2UCAAA=
+X-CMS-MailID: 20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98
+References: <CGME20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Convert Samsung Image Rotator to newer dt-schema format.
 
-Thanks for the review.
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ .../bindings/gpu/samsung-rotator.txt          | 28 ------------
+ .../bindings/gpu/samsung-rotator.yaml         | 45 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
 
-
-On 09/12/2019 03:24 PM, Thomas Renninger wrote:
-> Hi Abishek,
->
-> On Wednesday, September 11, 2019 11:54:24 AM CEST Abhishek Goel wrote:
->> Cpupower tool has set and info options which are not being used by
->> POWER machines. For powerpc, we will return directly for these two
->> subcommands. This removes the ambiguous error message while using set
->> option in case of power systems.
->>
->> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
->> ---
->>   tools/power/cpupower/utils/cpupower-info.c | 5 +++++
->>   tools/power/cpupower/utils/cpupower-set.c  | 5 +++++
->>   2 files changed, 10 insertions(+)
->>
->> diff --git a/tools/power/cpupower/utils/cpupower-info.c
->> b/tools/power/cpupower/utils/cpupower-info.c index
->> 4c9d342b70ff..674b707a76af 100644
->> --- a/tools/power/cpupower/utils/cpupower-info.c
->> +++ b/tools/power/cpupower/utils/cpupower-info.c
->> @@ -39,6 +39,11 @@ int cmd_info(int argc, char **argv)
->>   	} params = {};
->>   	int ret = 0;
->>
->> +	#ifdef __powerpc__
->> +	printf(_("Cannot read info as system does not support performance bias
->> setting\n")); +	return 0;
->> +	#endif
->> +
-> Please do no do this.
->
-> cpupower info
-> is designed to show general information related to powersaving features of your CPU.
->
-> For examle there has been (see changelog):
-> cpupower: Remove mc and smt power aware scheduler info/settings
-> These kernel interfaces got removed by:
->
-> Unfortunately only -b (perf bias on Intel only) is left right now.
->
-> So if you cut this out for Power you do not see anything and the cmd is useless.
-> Which is a pity, but for now makes sense.
-> Ideally you provide some tag/option which makes sense on power (e.g. whether run
-> in OPAL mode and if provide some figures otherwise tell running in VM mode).
-> But if this is cut out something like this should do the same and is more flexible:
-> - Still allows additional cpupower info features for other CPUs later easily
-> - Should also cover AMD or other non-perf bias supporting CPUs to exclude perf_bias
->    setting/info
-
-As I have suggested in here : https://lkml.org/lkml/2019/9/12/159
-We should cut out these two options as of now for other architecture
-except x86, since the current implementation of both these subcommands
-are very intel specific.
-As you have already suggested, we can later on maybe change the
-documentation of info to be architecture specific and use info based on
-arch requirement.
-
->
-> If this one works for you, can you please re-submit with also handling the set cmd
-> similar. If it works or you only slightly adjust, feel free to already add:
-> Acked-by: Thomas Renninger <trenn@suse.de>
-
-Yeah. Sure.
-
-> Thanks!
->
->         Thomas
->
-> --- tools/power/cpupower/utils/cpupower-info.c.orig	2019-09-12 11:45:02.578568335 +0200
-> +++ tools/power/cpupower/utils/cpupower-info.c	2019-09-12 11:46:09.618571947 +0200
-> @@ -55,8 +55,11 @@
->   		}
->   	};
->
-> -	if (!params.params)
-> +	if (!params.params) {
->   		params.params = 0x7;
-> +		if !(cpupower_cpu_info.caps & CPUPOWER_CAP_PERF_BIAS)
-> +			params.perf_bias = 0;
-> +	}
->
->   	/* Default is: show output of CPU 0 only */
->   	if (bitmask_isallclear(cpus_chosen))
->
->
->
-
--- Abhishek
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+deleted file mode 100644
+index 3aca2578da0b..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Samsung Image Rotator
+-
+-Required properties:
+-  - compatible : value should be one of the following:
+-	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
+-	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
+-	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
+-	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for rotator interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for rotator clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
+-
+-Example:
+-	rotator@12810000 {
+-		compatible = "samsung,exynos4210-rotator";
+-		reg = <0x12810000 0x1000>;
+-		interrupts = <0 83 0>;
+-		clocks = <&clock 278>;
+-		clock-names = "rotator";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+new file mode 100644
+index 000000000000..6927cfc1aefc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Image Rotator
++
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
++
++properties:
++  compatible:
++    enum:
++      - "samsung,s5pv210-rotator"    # for Rotator IP in S5PV210
++      - "samsung,exynos4210-rotator" # for Rotator IP in Exynos4210
++      - "samsung,exynos4212-rotator" # for Rotator IP in Exynos4212/4412
++      - "samsung,exynos5250-rotator" # for Rotator IP in Exynos5250
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: |
++      Clock specifier for rotator clock according to generic clock
++      bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
++    maxItems: 1
++
++  clock-names:
++    items:
++    - const: rotator
++    maxItems: 1
++
++examples:
++  - |
++    rotator@12810000 {
++        compatible = "samsung,exynos4210-rotator";
++        reg = <0x12810000 0x1000>;
++        interrupts = <0 83 0>;
++        clocks = <&clock 278>;
++        clock-names = "rotator";
++    };
++
+-- 
+2.17.1
 
