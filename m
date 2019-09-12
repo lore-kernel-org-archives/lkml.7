@@ -2,159 +2,107 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7638CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4863BC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFF020CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C7520856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JSBEkRcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbfILNom (ORCPT
+        id S1731283AbfILNqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:44:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18744 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732179AbfILNol (ORCPT
+        Thu, 12 Sep 2019 09:46:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45015 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732123AbfILNqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:44:41 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CDgOHM044345;
-        Thu, 12 Sep 2019 09:44:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uynr63kkr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 09:44:22 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CDgjqP045448;
-        Thu, 12 Sep 2019 09:44:22 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uynr63kjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 09:44:21 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CDhYDB006998;
-        Thu, 12 Sep 2019 13:44:20 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 2uv468xxmb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 13:44:20 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CDiJb821954972
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 13:44:19 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44532136051;
-        Thu, 12 Sep 2019 13:44:19 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B159513605D;
-        Thu, 12 Sep 2019 13:44:16 +0000 (GMT)
-Received: from [9.199.32.243] (unknown [9.199.32.243])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 13:44:16 +0000 (GMT)
-Subject: Re: [PATCH 0/3] powerpc/mm: Conditionally call H_BLOCK_REMOVE
-To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190830120712.22971-1-ldufour@linux.ibm.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
-Date:   Thu, 12 Sep 2019 19:14:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 09:46:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q11so4467709lfc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 06:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IxAIHy7z7OjGzOcJLm7mV4i2e9Ufg5GWnfAL1EPdhuw=;
+        b=JSBEkRcKpYsmirXMw0E6Xl530d2wdWrDWdOAI/GZtFqrGL028ZnO8g40fXoK8DLbKa
+         iyJU/QeL+1kC957ltdQS8KLIjp3aKCBP+W4d6WmLXsUxZouOgMoapIgv2URetNzS/6nj
+         eFHPABwGjSut9Ntg4wjUCs7HFTqx0iWn6+9IAzUPHez7JBtR1uVAGRq55GpFKIMSOAyA
+         rr7djmdcaZuAQKkTX9Fc4+9pkM2bVBukkM28UGAzm6bEN7DqOf7Z3bDl2j4PQl7hBVAe
+         c2yvHF4tVxjSluiXZkAohO5iDBA3ovZ7oSzBiMa/9b0Fz+ccMdmfGVjtGpnDdn5JCaR1
+         l6pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IxAIHy7z7OjGzOcJLm7mV4i2e9Ufg5GWnfAL1EPdhuw=;
+        b=DETpfigcITpn4IXKR2OIrlsPVnAiY3IoLTDJox7hpNyV8iow7T60WjY4tXoEOdeXhe
+         Mirlfudl43kRy43PLku1yRtR8r9vLlvESsOJbwJ9fe4fBxC4S4lEtuAQJL5Nubmdby2F
+         D5wCnClyXxU6XwxV54mMxs6zXc+Pk3iurwMThvr14n2FDTB3ooskssEe7dyfQdhOjdNZ
+         WLGYXq+PswiO/0wf65ljkRdKDm8KekvQRvirVFTtHLCC2xeeLUVEE1r6QxS0QUAwuGzR
+         PRYi2pLmAt78Vq9pGa93f3z0MQbCUO1Sw+CjMpkFtsXZysf1z4EGcqoR+CkcFXcuDnR0
+         yGyw==
+X-Gm-Message-State: APjAAAXpaVYt7i/miILS/3kjqrjifxWgEA5MbabPXIyaht4iiQBrAZRj
+        Ra78uFdil+j09b+VPXyb+fA4M0/CrSNxpDvvt5mGFA==
+X-Google-Smtp-Source: APXvYqxBQEhNgGyrV+aGEpNgiBh8jz3FwkP2/RjoOFz3uVnJ32fi19wRByEekPgtqxUvCFvqs36MWCHffuJdV5KoIcM=
+X-Received: by 2002:ac2:530e:: with SMTP id c14mr1145645lfh.165.1568296005240;
+ Thu, 12 Sep 2019 06:46:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190830120712.22971-1-ldufour@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120144
+References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+ <CACRpkdbVC6DLHWftpL1wfkx_kWyfE=LpCQWZw=cv=RMVxDBm_g@mail.gmail.com> <20190911091101.GC21254@piout.net>
+In-Reply-To: <20190911091101.GC21254@piout.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 14:46:32 +0100
+Message-ID: <CACRpkdbziti1yBY_mZaGPg+jHVPR8vtRm8oNZBqt6e+m2wh67A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 5:37 PM, Laurent Dufour wrote:
-> Since the commit ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE"),
-> the call to H_BLOCK_REMOVE is always done if the feature is exhibited.
-> 
-> On some system, the hypervisor may not support all the combination of
-> segment base page size and page size. When this happens the hcall is
-> returning H_PARAM, which is triggering a BUG_ON check leading to a panic.
-> 
-> The PAPR document is specifying a TLB Block Invalidate Characteristics item
-> detailing which couple base page size, page size the hypervisor is
-> supporting through H_BLOCK_REMOVE. Furthermore, the characteristics are
-> also providing the size of the block the hcall could process.
-> 
-> Supporting various block size seems not needed as all systems I was able to
-> play with was support an 8 addresses block size, which is the maximum
-> through the hcall. Supporting various size may complexify the algorithm in
-> call_block_remove() so unless this is required, this is not done.
-> 
-> In the case of block size different from 8, a warning message is displayed
-> at boot time and that block size will be ignored checking for the
-> H_BLOCK_REMOVE support.
-> 
-> Due to the minimal amount of hardware showing a limited set of
-> H_BLOCK_REMOVE supported page size, I don't think there is a need to push
-> this series to the stable mailing list.
-> 
-> The first patch is initializing the penc values for each page size to an
-> invalid value to be able to detect those which have been initialized as 0
-> is a valid value.
-> 
-> The second patch is reading the characteristic through the hcall
-> ibm,get-system-parameter and record the supported block size for each page
-> size.
-> 
-> The third patch is changing the check used to detect the H_BLOCK_REMOVE
-> availability to take care of the base page size and page size couple.
-> 
+On Wed, Sep 11, 2019 at 10:11 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 11/09/2019 01:27:10+0100, Linus Walleij wrote:
 
-So ibm,segment-page-sizes indicates wether we support a combination of 
-base page size and actual page size. You are suggesting that the value 
-reported by that is not correct? Can you also share the early part of 
-dmesg as below.
+> > > +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
+> >
+> > Should it not be > rather than != ?
+>
+> Realistically, the only case that could happen would be
+> ATMEL_PIO_NPINS_PER_BANK == 32 and BITS_PER_LONG ==64. so I would go for
+> ATMEL_PIO_NPINS_PER_BANK < BITS_PER_LONG
 
-[    0.000000] hash-mmu: Page sizes from device-tree:
-[    0.000000] hash-mmu: base_shift=12: shift=12, sllp=0x0000, 
-avpnm=0x00000000, tlbiel=1, penc=0
-[    0.000000] hash-mmu: base_shift=12: shift=16, sllp=0x0000, 
-avpnm=0x00000000, tlbiel=1, penc=7
-[    0.000000] hash-mmu: base_shift=12: shift=24, sllp=0x0000, 
-avpnm=0x00000000, tlbiel=1, penc=56
-[    0.000000] hash-mmu: base_shift=16: shift=16, sllp=0x0110, 
-avpnm=0x00000000, tlbiel=1, penc=1
-[    0.000000] hash-mmu: base_shift=16: shift=24, sllp=0x0110, 
-avpnm=0x00000000, tlbiel=1, penc=8
-[    0.000000] hash-mmu: base_shift=24: shift=24, sllp=0x0100, 
-avpnm=0x00000001, tlbiel=0, penc=0
-[    0.000000] hash-mmu: base_shift=34: shift=34, sllp=0x0120, 
-avpnm=0x000007ff, tlbiel=0, penc=3
+OK I see.
 
-That shows different base page size and actual page size combination.
+> > > +               word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
+> > > +               offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
+> > > +#endif
+> >
+> > This doesn't look good for multiplatform kernels.
+>
+> I don't think we have multiplatform kernels that run both in 32 and 64
+> bits. I don't believe ATMEL_PIO_NPINS_PER_BANK will ever change, it has
+> been 32 on all the atmel SoCs since 2001.
 
+So there is a bit missing from the commit message: the info that
+the same driver is being used on 32 and 64 bit builds, and that is
+the reason we allow compile-time ifdef things.
 
-> Laurent Dufour (3):
->    powerpc/mm: Initialize the HPTE encoding values
->    powperc/mm: read TLB Block Invalidate Characteristics
->    powerpc/mm: call H_BLOCK_REMOVE when supported
-> 
->   arch/powerpc/include/asm/book3s/64/mmu.h |   3 +
->   arch/powerpc/mm/book3s64/hash_utils.c    |   8 +-
->   arch/powerpc/platforms/pseries/lpar.c    | 118 ++++++++++++++++++++++-
->   3 files changed, 125 insertions(+), 4 deletions(-)
-> 
+Can you add this to the commit message, or maybe
+inline in the code, or both?
 
+It confused me so it will confuse others.
 
--aneesh
+Yours,
+Linus Walleij
