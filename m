@@ -2,103 +2,130 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F52C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4F9C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61352075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59CD20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:11:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V3K7kyI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfILMJU (ORCPT
+        id S1731505AbfILMLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:09:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:33338 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731320AbfILMJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:09:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F07428;
-        Thu, 12 Sep 2019 05:09:18 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC7263F71F;
-        Thu, 12 Sep 2019 05:09:07 -0700 (PDT)
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
- <20190912110016.srrydg2krplscbgq@box>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <0116e7b7-cee5-c821-cc54-f4e397c774b2@arm.com>
-Date:   Thu, 12 Sep 2019 17:39:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 12 Sep 2019 08:11:43 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54608 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfILMLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:11:43 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DD4AC33A;
+        Thu, 12 Sep 2019 14:11:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568290301;
+        bh=NOv4MyRD/H4sN33iCT3cWaXxofQTNOSbcc5mu90xRJ4=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=V3K7kyI+B8VIXUeBNONAh5xlpsnF22g3XbXJ2RLNyU58NmUmY2KkyNiCIO4jHepad
+         ObfbkW0mrY7QBlxGkxM5zLpivD5h3NECfvONQQOb2Xu1UbW4NAMguOSWw3eVJLpg9p
+         3I4zFBb1Fgj9P5M7fOgO7BPFwOugJ9oOS9/LUom0=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
+ <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
+ <a9cc2193-0a18-0490-c273-c64bd70992f5@ideasonboard.com>
+ <CAMuHMdVYqx_znkMbwCVyA6WH8-0uOotL3wXCTkvyXG1=i9W-ng@mail.gmail.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <b0b689e6-2f99-049f-23a7-213678d6a7a6@ideasonboard.com>
+Date:   Thu, 12 Sep 2019 13:11:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190912110016.srrydg2krplscbgq@box>
+In-Reply-To: <CAMuHMdVYqx_znkMbwCVyA6WH8-0uOotL3wXCTkvyXG1=i9W-ng@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/12/2019 04:30 PM, Kirill A. Shutemov wrote:
-> On Thu, Sep 12, 2019 at 11:32:53AM +0530, Anshuman Khandual wrote:
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Anshuman Khandual <anshuman.khandual@arm.com>");
->> +MODULE_DESCRIPTION("Test architecture page table helpers");
+On 12/09/2019 13:03, Geert Uytterhoeven wrote:
+> Hi Kieran,
 > 
-> It's not module. Why?
+> On Thu, Sep 12, 2019 at 12:26 PM Kieran Bingham
+> <kieran.bingham+renesas@ideasonboard.com> wrote:
+>> (pulling in +Geert for his opinion on compatible string usages)
+>>
+>> On 12/09/2019 11:00, Sergei Shtylyov wrote:> Hello!
+>>> On 11.09.2019 22:25, Kieran Bingham wrote:
+>>>> Add direct support for the r8a77980 (V3H).
+>>>>
+>>>> The V3H shares a common, compatible configuration with the r8a77970
+>>>> (V3M) so that device info structure is reused.
+>>>
+>>>    Do we really need to add yet another compatible in this case?
+>>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
+>>> a patch like this one didn't get posted by me.
+>>
+>> It's not just about the compatible string for me here,
+>>
+>> There is no indication in the driver that it supports the r8a77980, and
+>> no comment in the driver to explain that the r8a77980 is shared by the
+>> r8a77970.
+>>
+>> This patch makes that explicit at the driver.
+>>
+>> Also - I am considering sending a patch (that I've already created
+>> anyway) to remove the r8a77970 reference from the
+>>
+>>   arch/arm64/boot/dts/renesas/r8a77980.dtsi file.
+>>
+>> This is the *only* non r8a77980 reference in this file, so it seems very
+>> out of place.
+> 
+> Agreed.
+> 
+>> In fact more so than that - except for a seemingly glaring typo, that
+>> I'll investigate and send a patch for next, this is the *only* cross-soc
+>> compatible reference:
+>>
+>> #!/bin/sh
+>>
+>> files=r8a77*.dtsi
+>>
+>> for f in $files;
+>> do
+>>         soc=`basename $f .dtsi | sed 's/-.*//'`
+>>         echo "F: $f soc: $soc";
+>>
+>>         # Find all references to all socs, then hide 'this' soc
+>>         grep r8a77 $f | grep -v $soc
+> 
+> This hides the complete line.  So you better use e.g.
+> 
+>     sed -e "s/$soc/soc/ig" $f | grep -i r8a
 
-Not any more. Nothing in particular. Just that module_init() code gets
-executed after page allocator init which is needed here. But I guess
-probably not a great way to get this test started.
+Aha yes, excellent point! (I'm glad I posted my working)
 
 > 
-> BTW, I think we should make all code here __init (or it's variants) so it
-> can be discarded on boot. It has not use after that.
+> instead.  No new offenders, though.
 
-Sounds good, will change. Will mark all these functions as __init and
-will trigger the test with late_initcall().
+Phew, I still got the right answer :-D
+
+--
+Kieran
