@@ -2,108 +2,228 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA53C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405FBC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32B920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNjTicGx"
+	by mail.kernel.org (Postfix) with ESMTP id 1D8E420CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbfILNaS (ORCPT
+        id S1732191AbfILNa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:30:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40847 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731687AbfILNaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:30:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y10so11786338pll.7;
-        Thu, 12 Sep 2019 06:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T7yOTc6AM6CK4gI48nKg1cFnDjTACpLQV/CXZUsKR78=;
-        b=tNjTicGxO56p1XVGcD8R3SxrHsRfwvYzbGKguNRV7sO40XGVOHV5rVXh16qYZhZgVt
-         DPoBqyuME4XSrI+umr8GzhBo+NKyF3MaYou3a0ojeUZYfLWPrIZ/EqIv6BNGMTLgxMDc
-         yk7ufN+8EYPqZFipnLczteXiDYrUABYvaZd7zitEDEG8aGbp+l9Tvop/dpQB2d8cqOfN
-         IbNtx6IYNzayMY+sSSQJJ6G4JPtsUccWz3mD3CAPEPrdiwnR4sHKg3aeh/YflHlEfLh/
-         Xrc1I2Wfqk5HA9/1CBmCiFlMGP4sFjnt1EuaFcNnhlBX6PUiYfwBnAjmvgzDABJ1+l5X
-         rjlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T7yOTc6AM6CK4gI48nKg1cFnDjTACpLQV/CXZUsKR78=;
-        b=ickVE1QgvkY8qLu2QT4dhxb8/MpMGVNdAG/KzPDTMvr209Kjm5l9SX84gA7mYa4lnD
-         vWSjQkbTnY8X1ICgqkTcbTkzpiilu5TM+VVDMDHqbo+K9e55t00aADwhq/wxaJ5NA1VX
-         6d67V8uWExy5QdJx/2fI+h56uTAWxzPOcs9OODGUZ15KBO7tMAMSgf18iJJIL2rRwYiu
-         uY+r3FbFat6UK3cfalNX20QZr8xA3TvUoLB5VSZhzGaTcu+RU3c3eJiu9IfUpHzGA/l9
-         dZCmcOiU13AxL5VpYPniQ4GSK7RMyP08teaaOsYeoSgGI7oV+z5WRJ+dOO591mEFBtZe
-         Smww==
-X-Gm-Message-State: APjAAAVOpSWBpB8JMsquC193GILEo0VI209L63WBGTpfU83bhWa5+WK1
-        HQdeWBxSDtjAt3SMwMMTZyUfPqJK3Du0vmDQFjw7f0HLREU=
-X-Google-Smtp-Source: APXvYqwojJdrFarStObqD+Wc9p1tMfp1r8LGvX3LBSNGJLOSHqNL50xJuCMKrck9hk4lYk9fbHFGsobbwWb1JIZXN20=
-X-Received: by 2002:a17:902:b208:: with SMTP id t8mr6801182plr.262.1568295017642;
- Thu, 12 Sep 2019 06:30:17 -0700 (PDT)
+        Thu, 12 Sep 2019 09:30:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55394 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731687AbfILNaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:30:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CDFA08980E1;
+        Thu, 12 Sep 2019 13:30:24 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-116-207.ams2.redhat.com [10.36.116.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4718D608AB;
+        Thu, 12 Sep 2019 13:30:23 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Matt Mackall <mpm@selenic.com>,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH] hw_random: move add_early_randomness() out of rng_mutex
+Date:   Thu, 12 Sep 2019 15:30:22 +0200
+Message-Id: <20190912133022.14870-1-lvivier@redhat.com>
 MIME-Version: 1.0
-References: <156824368856.28378.14511879419677114177@WARFSTATION> <20190912073358.n5bxqosowhky5uhb@pali>
-In-Reply-To: <20190912073358.n5bxqosowhky5uhb@pali>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Sep 2019 16:30:06 +0300
-Message-ID: <CAHp75VcRBqBBQ6S6KAGv2=KMLk1Jbq3aYOYkM6qLHvDoGP0XdQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
- Inspiron 10xx
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Cc:     Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 12 Sep 2019 13:30:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: Mario
+add_early_randomness() is called every time a new rng backend is added
+and every time it is set as the current rng provider.
 
-On Thu, Sep 12, 2019 at 10:34 AM Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
->
-> On Thursday 12 September 2019 01:14:48 Pacien TRAN-GIRARD wrote:
-> > This patch registers a quirk disabling keyboard backlight support
-> > for the Dell Inspiron 1012 and 1018.
-> >
-> > Those models wrongly report supporting the KBD_LED_OFF_TOKEN and
-> > KBD_LED_ON_TOKEN SMBIOS tokens, exposing keyboard brightness controls
-> > through sysfs which freeze the system when used.
-> >
-> > The associated SMBIOS calls never return and cause the system to
-> > hang, notably at boot when systemd-backlight tries to restore
-> > previous brightness settings.
->
-> Hi! This sounds like a firmware bug. Have you already reported it to Dell=
-?
->
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D107651
-> > Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+add_early_randomness() is called from functions locking rng_mutex,
+and if it hangs all the hw_random framework hangs: we can't read sysfs,
+add or remove a backend.
 
+This patch move add_early_randomness() out of the rng_mutex zone.
+It only needs the reading_mutex.
 
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+---
+ drivers/char/hw_random/core.c | 60 +++++++++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 16 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 9044d31ab1a1..745ace6fffd7 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -111,6 +111,14 @@ static void drop_current_rng(void)
+ }
+ 
+ /* Returns ERR_PTR(), NULL or refcounted hwrng */
++static struct hwrng *get_current_rng_nolock(void)
++{
++	if (current_rng)
++		kref_get(&current_rng->ref);
++
++	return current_rng;
++}
++
+ static struct hwrng *get_current_rng(void)
+ {
+ 	struct hwrng *rng;
+@@ -118,9 +126,7 @@ static struct hwrng *get_current_rng(void)
+ 	if (mutex_lock_interruptible(&rng_mutex))
+ 		return ERR_PTR(-ERESTARTSYS);
+ 
+-	rng = current_rng;
+-	if (rng)
+-		kref_get(&rng->ref);
++	rng = get_current_rng_nolock();
+ 
+ 	mutex_unlock(&rng_mutex);
+ 	return rng;
+@@ -155,8 +161,6 @@ static int hwrng_init(struct hwrng *rng)
+ 	reinit_completion(&rng->cleanup_done);
+ 
+ skip_init:
+-	add_early_randomness(rng);
+-
+ 	current_quality = rng->quality ? : default_quality;
+ 	if (current_quality > 1024)
+ 		current_quality = 1024;
+@@ -320,12 +324,13 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
+ 					const char *buf, size_t len)
+ {
+ 	int err = -ENODEV;
+-	struct hwrng *rng;
++	struct hwrng *rng, *old_rng, *new_rng;
+ 
+ 	err = mutex_lock_interruptible(&rng_mutex);
+ 	if (err)
+ 		return -ERESTARTSYS;
+ 
++	old_rng = current_rng;
+ 	if (sysfs_streq(buf, "")) {
+ 		err = enable_best_rng();
+ 	} else {
+@@ -337,9 +342,15 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
+ 			}
+ 		}
+ 	}
+-
++	new_rng = get_current_rng_nolock();
+ 	mutex_unlock(&rng_mutex);
+ 
++	if (new_rng) {
++		if (new_rng != old_rng)
++			add_early_randomness(new_rng);
++		put_rng(new_rng);
++	}
++
+ 	return err ? : len;
+ }
+ 
+@@ -457,13 +468,17 @@ static void start_khwrngd(void)
+ int hwrng_register(struct hwrng *rng)
+ {
+ 	int err = -EINVAL;
+-	struct hwrng *old_rng, *tmp;
++	struct hwrng *old_rng, *new_rng, *tmp;
+ 	struct list_head *rng_list_ptr;
+ 
+ 	if (!rng->name || (!rng->data_read && !rng->read))
+ 		goto out;
+ 
+ 	mutex_lock(&rng_mutex);
++
++	old_rng = current_rng;
++	new_rng = NULL;
++
+ 	/* Must not register two RNGs with the same name. */
+ 	err = -EEXIST;
+ 	list_for_each_entry(tmp, &rng_list, list) {
+@@ -482,7 +497,6 @@ int hwrng_register(struct hwrng *rng)
+ 	}
+ 	list_add_tail(&rng->list, rng_list_ptr);
+ 
+-	old_rng = current_rng;
+ 	err = 0;
+ 	if (!old_rng ||
+ 	    (!cur_rng_set_by_user && rng->quality > old_rng->quality)) {
+@@ -496,19 +510,24 @@ int hwrng_register(struct hwrng *rng)
+ 			goto out_unlock;
+ 	}
+ 
+-	if (old_rng && !rng->init) {
++	new_rng = rng;
++	kref_get(&new_rng->ref);
++out_unlock:
++	mutex_unlock(&rng_mutex);
++
++	if (new_rng) {
++		if (new_rng != old_rng || !rng->init) {
+ 		/*
+ 		 * Use a new device's input to add some randomness to
+ 		 * the system.  If this rng device isn't going to be
+ 		 * used right away, its init function hasn't been
+-		 * called yet; so only use the randomness from devices
+-		 * that don't need an init callback.
++		 * called yet by set_current_rng(); so only use the
++		 * randomness from devices that don't need an init callback
+ 		 */
+-		add_early_randomness(rng);
++			add_early_randomness(new_rng);
++		}
++		put_rng(new_rng);
+ 	}
+-
+-out_unlock:
+-	mutex_unlock(&rng_mutex);
+ out:
+ 	return err;
+ }
+@@ -516,10 +535,12 @@ EXPORT_SYMBOL_GPL(hwrng_register);
+ 
+ void hwrng_unregister(struct hwrng *rng)
+ {
++	struct hwrng *old_rng, *new_rng;
+ 	int err;
+ 
+ 	mutex_lock(&rng_mutex);
+ 
++	old_rng = current_rng;
+ 	list_del(&rng->list);
+ 	if (current_rng == rng) {
+ 		err = enable_best_rng();
+@@ -529,6 +550,7 @@ void hwrng_unregister(struct hwrng *rng)
+ 		}
+ 	}
+ 
++	new_rng = get_current_rng_nolock();
+ 	if (list_empty(&rng_list)) {
+ 		mutex_unlock(&rng_mutex);
+ 		if (hwrng_fill)
+@@ -536,6 +558,12 @@ void hwrng_unregister(struct hwrng *rng)
+ 	} else
+ 		mutex_unlock(&rng_mutex);
+ 
++	if (new_rng) {
++		if (old_rng != new_rng)
++			add_early_randomness(new_rng);
++		put_rng(new_rng);
++	}
++
+ 	wait_for_completion(&rng->cleanup_done);
+ }
+ EXPORT_SYMBOL_GPL(hwrng_unregister);
+-- 
+2.21.0
+
