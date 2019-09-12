@@ -2,122 +2,116 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D09ECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88356ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC73214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568272599;
-	bh=jg0ekBBd7viHiLq8tPm9TGNc7PY5WFJZ1o2CJLiCTew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HKWMmjhbX6DOTv1d1QV6vQCZ6Hx+acR2tWAnDb9CFUFC7GSOji05Ug7M1+f9LS083
-	 yHUbKSABovODgdLwE/PPrS7ImINt7dkgrGFaDkryhOyefnXrndJ2SDqQ9WtetVjifz
-	 4LyVGsiyxyrVyuZWGHPhvM4/ViiFnwmWZT2DoHAc=
+	by mail.kernel.org (Postfix) with ESMTP id 63F0721479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfILHQh (ORCPT
+        id S1729865AbfILHTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 03:16:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40482 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728927AbfILHQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 03:16:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA634AE35;
-        Thu, 12 Sep 2019 07:16:34 +0000 (UTC)
-Date:   Thu, 12 Sep 2019 09:16:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
-Message-ID: <20190912071633.GL4023@dhcp22.suse.cz>
-References: <20190911113619.GP4023@dhcp22.suse.cz>
- <20190911080804-mutt-send-email-mst@kernel.org>
- <20190911121941.GU4023@dhcp22.suse.cz>
- <20190911122526.GV4023@dhcp22.suse.cz>
- <4748a572-57b3-31da-0dde-30138e550c3a@redhat.com>
- <20190911125413.GY4023@dhcp22.suse.cz>
- <736594d6-b9ae-ddb9-2b96-85648728ef33@redhat.com>
- <20190911132002.GA4023@dhcp22.suse.cz>
- <20190911135100.GC4023@dhcp22.suse.cz>
- <abea20a0-463c-68c0-e810-2e341d971b30@redhat.com>
+        Thu, 12 Sep 2019 03:19:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51322 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725972AbfILHTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 03:19:16 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8C7HrC2126044
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 03:19:15 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uyeqfvvaq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 03:19:14 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Thu, 12 Sep 2019 08:19:13 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 08:19:10 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8C7J8cs47054952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 07:19:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5ECDC42042;
+        Thu, 12 Sep 2019 07:19:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C3C44203F;
+        Thu, 12 Sep 2019 07:19:08 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.152.224.222])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 07:19:08 +0000 (GMT)
+Subject: Re: [PATCH] s390/qeth: fix spelling mistake "alocpool" -> "allocpool"
+To:     Colin King <colin.king@canonical.com>, linux-s390@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+References: <20190911153500.30836-1-colin.king@canonical.com>
+From:   Ursula Braun <ubraun@linux.ibm.com>
+Openpgp: preference=signencrypt
+Date:   Thu, 12 Sep 2019 09:19:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abea20a0-463c-68c0-e810-2e341d971b30@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190911153500.30836-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091207-4275-0000-0000-00000364C5E7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091207-4276-0000-0000-000038771F8C
+Message-Id: <de37e3a5-faad-44ae-32b2-d7c6c5d3732d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-09-19 18:09:18, David Hildenbrand wrote:
-> On 11.09.19 15:51, Michal Hocko wrote:
-> > On Wed 11-09-19 15:20:02, Michal Hocko wrote:
-> > [...]
-> >>> 4. Continuously report, not the "one time report everything" approach.
-> >>
-> >> So you mean the allocator reporting this rather than an external code to
-> >> poll right? I do not know, how much this is nice to have than must have?
-> > 
-> > Another idea that I haven't really thought through so it might turned
-> > out to be completely bogus but let's try anyway. Your "report everything"
-> > just made me look and realize that free_pages_prepare already performs
-> > stuff that actually does something similar yet unrelated.
-> > 
-> > We do report to special page poisoning, zeroying or
-> > CONFIG_DEBUG_PAGEALLOC to unmap the address from the kernel address
-> > space. This sounds like something fitting your model no?
-> > 
+
+
+On 9/11/19 5:35 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> AFAIKS, the poisoning/unmapping is done whenever a page is freed. I
-> don't quite see yet how that would help to remember if a page was
-> already reported.
-
-Do you still have to differ that state when each page is reported?
-
-> After reporting the page we would have to switch some
-> state (Nitesh: bitmap bit, Alexander: page flag) to identify that.
-
-Yes, you can either store the state somewhere.
-
-> Of course, we could map the page and treat that as "the state" when we
-> reported it, but I am not sure that's such a good idea :)
+> There is a spelling mistake in QETH_CARD_TEXT text. Fix it.
 > 
-> As always, I might be very wrong ...
 
-I still do not fully understand the usecase so I might be equally wrong.
-My thinking is along these lines. Why should you scan free pages when
-you can effectively capture each freed page? If you go one step further
-then post_alloc_hook would be the counterpart to know that your page has
-been allocated.
--- 
-Michal Hocko
-SUSE Labs
+This spelling mistake is intended, because this qeth trace area is defined for
+8 byte length entries. We try to make the entries as speaking as possible - even
+at cost of spelling mistakes.
+
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/s390/net/qeth_core_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+> index a7868c8133ee..ab96b22db3fe 100644
+> --- a/drivers/s390/net/qeth_core_main.c
+> +++ b/drivers/s390/net/qeth_core_main.c
+> @@ -218,7 +218,7 @@ static int qeth_alloc_buffer_pool(struct qeth_card *card)
+>  	void *ptr;
+>  	int i, j;
+>  
+> -	QETH_CARD_TEXT(card, 5, "alocpool");
+> +	QETH_CARD_TEXT(card, 5, "allocpool");
+>  	for (i = 0; i < card->qdio.init_pool.buf_count; ++i) {
+>  		pool_entry = kzalloc(sizeof(*pool_entry), GFP_KERNEL);
+>  		if (!pool_entry) {
+> 
+
