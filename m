@@ -2,71 +2,259 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D7C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC3CC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A387820830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CA720830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbfILMr5 convert rfc822-to-8bit (ORCPT
+        id S1731739AbfILMtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:47:57 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:65204 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730454AbfILMr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:47:56 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 18464153-1500050 
-        for multiple; Thu, 12 Sep 2019 13:47:50 +0100
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Sep 2019 08:49:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:33712 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731685AbfILMtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:49:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED01A28;
+        Thu, 12 Sep 2019 05:49:48 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B34A3F71F;
+        Thu, 12 Sep 2019 05:49:48 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 13:49:46 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Message-ID: <20190912124943.GD9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-10-xiaowei.bao@nxp.com>
+ <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Wilck <Martin.Wilck@suse.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <CAHk-=wjKv_Zw2zGHduyrQH_VQzxXYzwKdwwzzpsdnsdx=EK30Q@mail.gmail.com>
-Cc:     Michal Koutny <MKoutny@suse.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "leho@kraav.com" <leho@kraav.com>, "tiwai@suse.de" <tiwai@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ad70d1985e8d0227dc55fedeec769de166e63ae0.camel@suse.com>
- <156535522344.29541.9312856809559678262@skylake-alporthouse-com>
- <20190910142047.GB3029@papaya>
- <3dcff41048621ff440687dd6691aae31a8647a1e.camel@suse.com>
- <CAHk-=wjKv_Zw2zGHduyrQH_VQzxXYzwKdwwzzpsdnsdx=EK30Q@mail.gmail.com>
-Message-ID: <156829246802.4926.7844021009098193103@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: 5.3-rc3: Frozen graphics with kcompactd migrating i915 pages
-Date:   Thu, 12 Sep 2019 13:47:48 +0100
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Linus Torvalds (2019-09-12 12:59:25)
-> On Thu, Sep 12, 2019 at 12:51 PM Martin Wilck <Martin.Wilck@suse.com> wrote:
-> >
-> > Is there an alternative to reverting aa56a292ce62 ("drm/i915/userptr:
-> > Acquire the page lock around set_page_dirty()")? And if we do, what
-> > would be the consequences? Would other patches need to be reverted,
-> > too?
+On Tue, Sep 03, 2019 at 01:47:36AM +0000, Xiaowei Bao wrote:
 > 
-> Looking at that commit, and the backtrace of the lockup, I think that
-> reverting it is the correct thing to do.
 > 
-> You can't take the page lock in invalidate_range(), since it's called
-> from try_to_unmap(), which is called with the page lock already held.
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年9月2日 20:46
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>
+> > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > On Mon, Sep 02, 2019 at 11:17:14AM +0800, Xiaowei Bao wrote:
+> > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > > difference between LS1 and LS2 platform, so refactor the code of the
+> > > EP driver.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - This is a new patch for supporting the ls1088a and ls2088a platform.
+> > > v3:
+> > >  - Adjust the some struct assignment order in probe function.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 72
+> > > +++++++++++++++++++-------
+> > >  1 file changed, 53 insertions(+), 19 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index 5f0cb99..723bbe5 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -20,27 +20,29 @@
+> > >
+> > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > >
+> > > -struct ls_pcie_ep {
+> > > -	struct dw_pcie		*pci;
+> > > -	struct pci_epc_features	*ls_epc;
+> > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > +
+> > > +struct ls_pcie_ep_drvdata {
+> > > +	u32				func_offset;
+> > > +	const struct dw_pcie_ep_ops	*ops;
+> > > +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > >  };
+> > >
+> > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > +struct ls_pcie_ep {
+> > > +	struct dw_pcie			*pci;
+> > > +	struct pci_epc_features		*ls_epc;
+> > > +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > >
+> > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > >  	return 0;
+> > >  }
+> > >
+> > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > >  	.start_link = ls_pcie_establish_link,  };
+> > >
+> > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > -	{ .compatible = "fsl,ls-pcie-ep",},
+> > > -	{ },
+> > > -};
+> > > -
+> > >  static const struct pci_epc_features*  ls_pcie_ep_get_features(struct
+> > > dw_pcie_ep *ep)  { @@ -87,10 +89,39 @@ static int
+> > > ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > >  	}
+> > >  }
+> > >
+> > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> > > +						u8 func_no)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > +
+> > > +	WARN_ON(func_no && !pcie->drvdata->func_offset);
+> > > +	return pcie->drvdata->func_offset * func_no; }
+> > > +
+> > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > >  	.ep_init = ls_pcie_ep_init,
+> > >  	.raise_irq = ls_pcie_ep_raise_irq,
+> > >  	.get_features = ls_pcie_ep_get_features,
+> > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > > +
+> > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > > +	.ops = &ls_pcie_ep_ops,
+> > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> > > +};
+> > > +
+> > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > > +	.func_offset = 0x20000,
+> > > +	.ops = &ls_pcie_ep_ops,
+> > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> > > +};
+> > > +
+> > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > +	{ },
+> > 
+> > This removes support for "fsl,ls-pcie-ep" - was that intentional? If you do plan
+> > to drop it please make sure you explain why in the commit message. See also
+> > my comments in your dt-binding patch.
 > 
-> So commit aa56a292ce62 is just fundamentally completely wrong and
-> should be reverted.
+> In fact, the u-boot will fixup the status property to 'status = enabled' in PCI node of 
+> the DTS base on "fsl,ls-pcie-ep" compatible, so "fsl,ls-pcie-ep" is used, I used this
+> compatible before, because the driver only support the LS1046a, but this time, I add
+> the LS1088a and LS2088a support, and these two boards have some difference form
+> LS1046a, so I changed the compatible. I am not sure whether need to add "fsl,ls-pcie-ep"
+> in there, could you give some advice, thanks a lot.
 
-There's still the dilemma that we get called without the page lock, but
-at this moment in time in order to hit 5.3, it needs a revert sent
-directly to Linus.
--Chris
+It sounds like "fsl,ls-pcie-ep" can be a fallback for "fsl,ls1046a-pcie-ep".
+
+I'm assuming that if someone used "fsl,ls1046a-pcie-ep" on ls1088a or ls2088a
+hardware it would still work, but without the multiple PF support.
+
+I.e. if "fsl,ls-pcie-ep" is given, treat it as ls1046a.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Thanks 
+> Xiaowei
+>  
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >  };
+> > >
+> > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@ -103,7
+> > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> > >  	int ret;
+> > >
+> > >  	ep = &pci->ep;
+> > > -	ep->ops = &pcie_ep_ops;
+> > > +	ep->ops = pcie->drvdata->ops;
+> > >
+> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > "addr_space");
+> > >  	if (!res)
+> > > @@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct
+> > platform_device *pdev)
+> > >  	if (!ls_epc)
+> > >  		return -ENOMEM;
+> > >
+> > > -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > "regs");
+> > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > -	if (IS_ERR(pci->dbi_base))
+> > > -		return PTR_ERR(pci->dbi_base);
+> > > +	pcie->drvdata = of_device_get_match_data(dev);
+> > >
+> > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > >  	pci->dev = dev;
+> > > -	pci->ops = &ls_pcie_ep_ops;
+> > > -	pcie->pci = pci;
+> > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > >
+> > >  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > >
+> > > +	pcie->pci = pci;
+> > >  	pcie->ls_epc = ls_epc;
+> > >
+> > > +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > "regs");
+> > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > +	if (IS_ERR(pci->dbi_base))
+> > > +		return PTR_ERR(pci->dbi_base);
+> > > +
+> > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > +
+> > >  	platform_set_drvdata(pdev, pcie);
+> > >
+> > >  	ret = ls_add_pcie_ep(pcie, pdev);
+> > > --
+> > > 2.9.5
+> > >
