@@ -2,116 +2,104 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DE3C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB866C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ACC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3147206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQWgVC5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfILJzU (ORCPT
+        id S1730954AbfILJ4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:55:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730428AbfILJzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:55:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7EDCB67E;
-        Thu, 12 Sep 2019 09:55:17 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        shuah@kernel.org, Thomas Renninger <trenn@suse.com>
-Subject: Re: [PATCH] cpupower : Handle set and info subcommands for powerpc
-Date:   Thu, 12 Sep 2019 11:54:08 +0200
-Message-ID: <12087195.kFesu4gPPu@skinner.arch.suse.de>
-In-Reply-To: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
-References: <20190911095424.49605-1-huntbag@linux.vnet.ibm.com>
+        Thu, 12 Sep 2019 05:56:03 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33805 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730878AbfILJ4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:56:00 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h2so16469456ljk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=329cG7VF2FWSqrxDIURXoF4mNurdRp+cB0ol/yD2IWM=;
+        b=zQWgVC5tdLMykaX4/vwY9NwQnl84kGz+E6G4gmnU7E7z3xPgxUBAJuq/KLQlPf1oam
+         RdLkgwT7ktokKveMir+dbsSJjHyajz6I6pmACAQ/vaCXqP1u+H53qJ9UGfH9Rqw4f+BS
+         F8tIL5183K5mqiZie+gUfjKim5aKDftgnnpqvro3Rlrly4++DaglYIiO64u3PqxKyEqS
+         vgu3cD+nTugMhX7gSo0wLYQx22Wjix5fu1vewOQSg/1dXyjPdDlBL2ZYcPZ7siq3qChf
+         T+vLBgVhPJk/tcy3slq1OFZi3PAwqOrLAaNYWiAa1505El6PWxe3yZ95a9+Hy+PVW/Ih
+         wamA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=329cG7VF2FWSqrxDIURXoF4mNurdRp+cB0ol/yD2IWM=;
+        b=lXuAzL+BW4DKPhyZxMzdhPBfhutAWhbR1nT8kQaPx7ufTA5f9q2fkM+zP8AvoCdIqF
+         96gMdXCPQ8Th431+tGXjG3m3BCtieDDqF4gCNA6ywvmQOfmrVhz7brnSmwWznfk8SZr5
+         5RB2XfCYU5+h/EDjkkxdHhtoG7nKK4MvBJUwhQn6IZMmx/7bNUY+Q635B+KuvjJTwAA/
+         y5rfti1EaeGYxb+Y28yipebssjPlAK16/qP0zHH2MEiP+a8JZ+eVYvaZNAW4M4QXEi2F
+         QdqpJtTADiz9BWS7Iu4qfskLw4jIA6qf0egVbC2ydrwalcAt7E/rkaw37RMefLIQmbIx
+         5RkQ==
+X-Gm-Message-State: APjAAAWL55/pKIgZNwVTK1BuxlTAMcEl+JGuFjjBSRTHaCLPGi3imYEy
+        ucsKUw5xbs2Frtwj1EEkLsUUz3K1gcaR0gROyQtd5w==
+X-Google-Smtp-Source: APXvYqxzzu1xektMPHWgtffW/ZJV0KpU2PYzjtvuUtd9AIHNy13c8WglMkiuJC9aHP7eR5XUK9IR4cvejz1fmBwj4RE=
+X-Received: by 2002:a2e:a408:: with SMTP id p8mr25771055ljn.54.1568282158508;
+ Thu, 12 Sep 2019 02:55:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 10:55:47 +0100
+Message-ID: <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
+Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abishek,
+On Wed, Sep 11, 2019 at 8:52 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-On Wednesday, September 11, 2019 11:54:24 AM CEST Abhishek Goel wrote:
-> Cpupower tool has set and info options which are not being used by
-> POWER machines. For powerpc, we will return directly for these two
-> subcommands. This removes the ambiguous error message while using set
-> option in case of power systems.
-> 
-> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-> ---
->  tools/power/cpupower/utils/cpupower-info.c | 5 +++++
->  tools/power/cpupower/utils/cpupower-set.c  | 5 +++++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/tools/power/cpupower/utils/cpupower-info.c
-> b/tools/power/cpupower/utils/cpupower-info.c index
-> 4c9d342b70ff..674b707a76af 100644
-> --- a/tools/power/cpupower/utils/cpupower-info.c
-> +++ b/tools/power/cpupower/utils/cpupower-info.c
-> @@ -39,6 +39,11 @@ int cmd_info(int argc, char **argv)
->  	} params = {};
->  	int ret = 0;
-> 
-> +	#ifdef __powerpc__
-> +	printf(_("Cannot read info as system does not support performance bias
-> setting\n")); +	return 0;
-> +	#endif
-> +
-Please do no do this.
+> If we agree in principle, I would like to have the very first 3 patches
+> in an immutable branch off maybe -rc8 so that it can be pulled into
+> individual subsystems so that patches switching various drivers to
+> fwnode_gpiod_get_index() could be applied.
 
-cpupower info
-is designed to show general information related to powersaving features of your CPU.
+I think it seems a bit enthusiastic to have non-GPIO subsystems
+pick up these changes this close to the merge window so my plan
+is to merge patches 1.2.3 (1 already merged) and then you could
+massage the other subsystems in v5.4-rc1.
 
-For examle there has been (see changelog):
-cpupower: Remove mc and smt power aware scheduler info/settings
-These kernel interfaces got removed by:
+But if other subsystems say "hey we want do fix this in like 3 days"
+then I'm game for an immutable branch as well.
 
-Unfortunately only -b (perf bias on Intel only) is left right now.
-
-So if you cut this out for Power you do not see anything and the cmd is useless.
-Which is a pity, but for now makes sense.
-Ideally you provide some tag/option which makes sense on power (e.g. whether run
-in OPAL mode and if provide some figures otherwise tell running in VM mode).
-
-But if this is cut out something like this should do the same and is more flexible:
-- Still allows additional cpupower info features for other CPUs later easily
-- Should also cover AMD or other non-perf bias supporting CPUs to exclude perf_bias
-  setting/info
-
-If this one works for you, can you please re-submit with also handling the set cmd
-similar. If it works or you only slightly adjust, feel free to already add:
-Acked-by: Thomas Renninger <trenn@suse.de>
-
-Thanks!
-
-       Thomas
-
---- tools/power/cpupower/utils/cpupower-info.c.orig	2019-09-12 11:45:02.578568335 +0200
-+++ tools/power/cpupower/utils/cpupower-info.c	2019-09-12 11:46:09.618571947 +0200
-@@ -55,8 +55,11 @@
- 		}
- 	};
- 
--	if (!params.params)
-+	if (!params.params) {
- 		params.params = 0x7;
-+		if !(cpupower_cpu_info.caps & CPUPOWER_CAP_PERF_BIAS)
-+			params.perf_bias = 0;
-+	}
- 
- 	/* Default is: show output of CPU 0 only */
- 	if (bitmask_isallclear(cpus_chosen))
-
-
-
+Yours,
+Linus Walleij
