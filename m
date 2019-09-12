@@ -2,89 +2,137 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB8C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B11C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9994E20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568291505;
-	bh=y+iwcDhS0CV/l/g9TCSnbAA71fAViqS5kUSTZKfsLFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G0le3HWHbLoK6WqaX5RmdTRMffbRPAdXJEHokB5xwF2zs0WbxNA2EGEZEd30V7UUf
-	 7HK/uNnhq+IRUTiunKi72ctONRpsdYUUyHbsZLT71nC2+PgqaQiV4AOrSA5fveHWb9
-	 /kB5RTQ7EkicqJNnBY8AxTMBOysv11eiaxPaTCVM=
+	by mail.kernel.org (Postfix) with ESMTP id CAAC9206CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfILMbp (ORCPT
+        id S1731656AbfILMcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731283AbfILMbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:31:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C298B206CD;
-        Thu, 12 Sep 2019 12:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568291503;
-        bh=y+iwcDhS0CV/l/g9TCSnbAA71fAViqS5kUSTZKfsLFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FvIfMI6UhO/LYxT2vvOYn3UqhZwke5zzUg5klDqZbih17jYY380GErxthie2GY4RW
-         17AJ4rBpUyDSgZ18lmts4vgZyiLdQReh87VW8qDxTy25zm8CM0ENxVT/0H7COapRMQ
-         mEwCL88usc1Ke8ov/i5oXbEsTjoYtll+L3tyLX4U=
-Date:   Thu, 12 Sep 2019 13:31:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: linux-next: manual merge of the arm64 tree with the dma-mapping
- tree
-Message-ID: <20190912123139.kuucii4sltycgy3p@willie-the-truck>
-References: <20190912215558.473206de@canb.auug.org.au>
+        Thu, 12 Sep 2019 08:32:11 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:62304 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731283AbfILMcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:32:10 -0400
+X-IronPort-AV: E=Sophos;i="5.64,495,1559491200"; 
+   d="scan'208";a="75376858"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 12 Sep 2019 20:32:07 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 5C6DB4CE030A;
+        Thu, 12 Sep 2019 20:31:55 +0800 (CST)
+Received: from TSAO.g08.fujitsu.local (10.167.226.60) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Thu, 12 Sep 2019 20:32:13 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+CC:     <rppt@linux.ibm.com>
+Subject: [PATCH] mm/memblock: cleanup doc
+Date:   Thu, 12 Sep 2019 20:31:27 +0800
+Message-ID: <20190912123127.8694-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912215558.473206de@canb.auug.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.167.226.60]
+X-yoursite-MailScanner-ID: 5C6DB4CE030A.A8C2F
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+fix typos for:
+    elaboarte -> elaborate
+    architecure -> architecture
+    compltes -> completes
 
-On Thu, Sep 12, 2019 at 09:55:58PM +1000, Stephen Rothwell wrote:
-> Today's linux-next merge of the arm64 tree got a conflict in:
-> 
->   arch/arm64/include/asm/dma-mapping.h
-> 
-> between commit:
-> 
->   5489c8e0cf03 ("arm64: use asm-generic/dma-mapping.h")
-> 
-> from the dma-mapping tree and commit:
-> 
->   b907b80d7ae7 ("arm64: remove pointless __KERNEL__ guards")
-> 
-> from the arm64 tree.
-> 
-> I fixed it up (I just removed the file) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+And, convert the markup :c:func:`foo` to foo() as kernel documentation
+toolchain can recognize foo() as a function.
 
-Thanks. Killing the file is the right thing to do.
+Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+ mm/memblock.c | 44 ++++++++++++++++++++------------------------
+ 1 file changed, 20 insertions(+), 24 deletions(-)
 
-Will
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7d4f61ae666a..c23b370cc49e 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -57,42 +57,38 @@
+  * at build time. The region arrays for the "memory" and "reserved"
+  * types are initially sized to %INIT_MEMBLOCK_REGIONS and for the
+  * "physmap" type to %INIT_PHYSMEM_REGIONS.
+- * The :c:func:`memblock_allow_resize` enables automatic resizing of
+- * the region arrays during addition of new regions. This feature
+- * should be used with care so that memory allocated for the region
+- * array will not overlap with areas that should be reserved, for
+- * example initrd.
++ * The memblock_allow_resize() enables automatic resizing of the region
++ * arrays during addition of new regions. This feature should be used
++ * with care so that memory allocated for the region array will not
++ * overlap with areas that should be reserved, for example initrd.
+  *
+  * The early architecture setup should tell memblock what the physical
+- * memory layout is by using :c:func:`memblock_add` or
+- * :c:func:`memblock_add_node` functions. The first function does not
+- * assign the region to a NUMA node and it is appropriate for UMA
+- * systems. Yet, it is possible to use it on NUMA systems as well and
+- * assign the region to a NUMA node later in the setup process using
+- * :c:func:`memblock_set_node`. The :c:func:`memblock_add_node`
+- * performs such an assignment directly.
++ * memory layout is by using memblock_add() or memblock_add_node()
++ * functions. The first function does not assign the region to a NUMA
++ * node and it is appropriate for UMA systems. Yet, it is possible to
++ * use it on NUMA systems as well and assign the region to a NUMA node
++ * later in the setup process using memblock_set_node(). The
++ * memblock_add_node() performs such an assignment directly.
+  *
+  * Once memblock is setup the memory can be allocated using one of the
+  * API variants:
+  *
+- * * :c:func:`memblock_phys_alloc*` - these functions return the
+- *   **physical** address of the allocated memory
+- * * :c:func:`memblock_alloc*` - these functions return the **virtual**
+- *   address of the allocated memory.
++ * * memblock_phys_alloc*() - these functions return the **physical**
++ *   address of the allocated memory
++ * * memblock_alloc*() - these functions return the **virtual** address
++ *   of the allocated memory.
+  *
+  * Note, that both API variants use implict assumptions about allowed
+  * memory ranges and the fallback methods. Consult the documentation
+- * of :c:func:`memblock_alloc_internal` and
+- * :c:func:`memblock_alloc_range_nid` functions for more elaboarte
+- * description.
++ * of memblock_alloc_internal() and memblock_alloc_range_nid()
++ * functions for more elaborate description.
+  *
+- * As the system boot progresses, the architecture specific
+- * :c:func:`mem_init` function frees all the memory to the buddy page
+- * allocator.
++ * As the system boot progresses, the architecture specific mem_init()
++ * function frees all the memory to the buddy page allocator.
+  *
+- * Unless an architecure enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
++ * Unless an architecture enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
+  * memblock data structures will be discarded after the system
+- * initialization compltes.
++ * initialization completes.
+  */
+ 
+ #ifndef CONFIG_NEED_MULTIPLE_NODES
+-- 
+2.21.0
+
+
 
