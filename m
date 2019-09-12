@@ -2,326 +2,153 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C6C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0B3C49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDCC20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037D420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="aXpDJ9aB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbfILJoh (ORCPT
+        id S1730835AbfILJqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:44:37 -0400
-Received: from 4.mo1.mail-out.ovh.net ([46.105.76.26]:60434 "EHLO
-        4.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbfILJoh (ORCPT
+        Thu, 12 Sep 2019 05:46:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44658 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbfILJqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:44:37 -0400
-Received: from player718.ha.ovh.net (unknown [10.108.42.83])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 65D9018F432
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 11:44:32 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player718.ha.ovh.net (Postfix) with ESMTPSA id 961E59A7B108;
-        Thu, 12 Sep 2019 09:44:19 +0000 (UTC)
-From:   Quentin Perret <qperret@qperret.net>
-To:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, juri.lelli@redhat.com, rjw@rjwysocki.net,
-        morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com, tkjos@google.com,
-        linux-kernel@vger.kernel.org, qperret@qperret.net
-Subject: [PATCH] sched/fair: Speed-up energy-aware wake-ups
-Date:   Thu, 12 Sep 2019 11:44:04 +0200
-Message-Id: <20190912094404.13802-1-qperret@qperret.net>
-X-Mailer: git-send-email 2.17.1
-X-Ovh-Tracer-Id: 1405123085517740942
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrtdehgddukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecu
+        Thu, 12 Sep 2019 05:46:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p2so22159087edx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+UyKiSlCaUkZGSuO0Sn5mI0OYBngHSXLKAH/562lIqI=;
+        b=aXpDJ9aB0wt3TGU0/ZL7E4RmOYJxeN5X/S5JG56aeGrcXRjwWCzWTem0AkaoNFe990
+         bbE9Omc+2tzXG9k75Ev0aAclSuz8BCC9xlRjcZY5SkuudR4RcJLpGcGK6TqZvqbiSrOn
+         W0OEkpagpUWEmj45mgjtp27+YzCfGbvHnPUtQXLjRci0ORz4NZco6SDSjS6kxxeuNqf8
+         dAMhtWIDh5TXG8Ti3lTRUNNrp3i/dODe9ejjJmlbJuL5Ie7yK+TxFSC20cIM2TwFaTV/
+         KPVnBfabA9Ld+Zvd1kdKeLfKUdaRigCO94b1SCtPgCv0zksO1KPMyWvI+eaXpEFpfNPB
+         gSjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+UyKiSlCaUkZGSuO0Sn5mI0OYBngHSXLKAH/562lIqI=;
+        b=NpUn1JXr31RCtNTIhbOXD8K3z18KEe36hEFl1tjmz3A7h/6Cmeu9QKJnBCYsuHervD
+         GHu0MFIqv5uQ+y/+qRgpIMlGBPDxfmmV4fE+nb7KOFhJ2HHfhDsmcW/sQVS3lDbqevUW
+         FrwLMq4V0xkx5QlP68RElwNsI35pqYxp1zv7N7FRnVnWjWPkJD5+bHhTAHrRfuNhZTor
+         9XPUW//bh5EO8rfVmXXA2PgTTTGoexkrz+EBP6peS50xUBKIzIX+YGFV3evPLIexd3mW
+         6wHp7cHqIVX7G3lIZzflH4ABztJNawAceKdhfEzAWEf53hiprW+Pj9rAL4UkzwJpl3/9
+         Tyew==
+X-Gm-Message-State: APjAAAW1EqK8V+Px4aDfXsWiCrydHJVC/KSChaumtuC3JPM23FozBLkx
+        EgKmJ+EgQmDrHvqhy/dFbN/V9g==
+X-Google-Smtp-Source: APXvYqzcJuQSNTfTiOqDf5b9PLpt0sipTAEEY55d+MmxRm6Hkg07fkj/J7ssBpH9EfThJXAmhT/EVw==
+X-Received: by 2002:aa7:d899:: with SMTP id u25mr39791190edq.289.1568281582725;
+        Thu, 12 Sep 2019 02:46:22 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t21sm2728489ejf.27.2019.09.12.02.46.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 02:46:22 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3884C100B4A; Thu, 12 Sep 2019 12:46:23 +0300 (+03)
+Date:   Thu, 12 Sep 2019 12:46:23 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] mm: clean up validate_slab()
+Message-ID: <20190912094623.fn6qdefrnnskdai5@box>
+References: <20190912004401.jdemtajrspetk3fh@box>
+ <20190912023111.219636-1-yuzhao@google.com>
+ <20190912023111.219636-2-yuzhao@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912023111.219636-2-yuzhao@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Perret <quentin.perret@arm.com>
+On Wed, Sep 11, 2019 at 08:31:09PM -0600, Yu Zhao wrote:
+> The function doesn't need to return any value, and the check can be
+> done in one pass.
+> 
+> There is a behavior change: before the patch, we stop at the first
+> invalid free object; after the patch, we stop at the first invalid
+> object, free or in use. This shouldn't matter because the original
+> behavior isn't intended anyway.
+> 
+> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> ---
+>  mm/slub.c | 21 ++++++++-------------
+>  1 file changed, 8 insertions(+), 13 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 62053ceb4464..7b7e1ee264ef 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4386,31 +4386,26 @@ static int count_total(struct page *page)
+>  #endif
+>  
+>  #ifdef CONFIG_SLUB_DEBUG
+> -static int validate_slab(struct kmem_cache *s, struct page *page,
+> +static void validate_slab(struct kmem_cache *s, struct page *page,
+>  						unsigned long *map)
+>  {
+>  	void *p;
+>  	void *addr = page_address(page);
+>  
+> -	if (!check_slab(s, page) ||
+> -			!on_freelist(s, page, NULL))
+> -		return 0;
+> +	if (!check_slab(s, page) || !on_freelist(s, page, NULL))
+> +		return;
+>  
+>  	/* Now we know that a valid freelist exists */
+>  	bitmap_zero(map, page->objects);
+>  
+>  	get_map(s, page, map);
+>  	for_each_object(p, s, addr, page->objects) {
+> -		if (test_bit(slab_index(p, s, addr), map))
+> -			if (!check_object(s, page, p, SLUB_RED_INACTIVE))
+> -				return 0;
+> -	}
+> +		u8 val = test_bit(slab_index(p, s, addr), map) ?
+> +			 SLUB_RED_INACTIVE : SLUB_RED_ACTIVE;
 
-EAS computes the energy impact of migrating a waking task when deciding
-on which CPU it should run. However, the current approach is known to
-have a high algorithmic complexity, which can result in prohibitively
-high wake-up latencies on systems with complex energy models, such as
-systems with per-CPU DVFS. On such systems, the algorithm complexity is
-in O(n^2) (ignoring the cost of searching for performance states in the
-EM) with 'n' the number of CPUs.
+Proper 'if' would be more readable.
 
-To address this, re-factor the EAS wake-up path to compute the energy
-'delta' (with and without the task) on a per-performance domain basis,
-rather than system-wide, which brings the complexity down to O(n).
+Other than that look fine to me.
 
-No functional changes intended.
+>  
+> -	for_each_object(p, s, addr, page->objects)
+> -		if (!test_bit(slab_index(p, s, addr), map))
+> -			if (!check_object(s, page, p, SLUB_RED_ACTIVE))
+> -				return 0;
+> -	return 1;
+> +		if (!check_object(s, page, p, val))
+> +			break;
+> +	}
+>  }
+>  
+>  static void validate_slab_slab(struct kmem_cache *s, struct page *page,
+> -- 
+> 2.23.0.162.g0b9fbb3734-goog
+> 
 
-Signed-off-by: Quentin Perret <quentin.perret@arm.com>
----
-
-Test results
-~~~~~~~~~~~~
-
-* Setup: Tested on a Google Pixel 3, with a Snapdragon 845 (4+4 CPUs,
-  A55/A75). Base kernel is 5.3-rc5 + Pixel3 specific patches. Android
-  userspace, no graphics.
-
-* Test case:  Run a periodic rt-app task, with 16ms period, ramping down
-  from 70% to 10%, in 5% steps of 500 ms each (json avail. at [1]).
-  Frequencies of all CPUs are pinned to max (using scaling_min_freq
-  CPUFreq sysfs entries) to reduce variability. The time to run
-  select_task_rq_fair() is measured using the function profiler
-  (/sys/kernel/debug/tracing/trace_stat/function*). See the test script
-  for more details [2].
-
-Test 1:
-I hacked the DT to 'fake' per-CPU DVFS. That is, we end up with one
-CPUFreq policy per CPU (8 policies in total). Since all frequencies are
-pinned to max for the test, this should have no impact on the actual
-frequency selection, but it does in the EAS calculation.
-
-      +---------------------------+----------------------------------+
-      | Without patch             | With patch                       |
-+-----+-----+----------+----------+-----+-----------------+----------+
-| CPU | Hit | Avg (us) | s^2 (us) | Hit | Avg (us)        | s^2 (us) |
-|-----+-----+----------+----------+-----+-----------------+----------+
-|  0  | 274 | 38.303   | 1750.239 | 401 | 14.126 (-63.1%) | 146.625  |
-|  1  | 197 | 49.529   | 1695.852 | 314 | 16.135 (-67.4%) | 167.525  |
-|  2  | 142 | 34.296   | 1758.665 | 302 | 14.133 (-58.8%) | 130.071  |
-|  3  | 172 | 31.734   | 1490.975 | 641 | 14.637 (-53.9%) | 139.189  |
-|  4  | 316 | 7.834    | 178.217  | 425 | 5.413  (-30.9%) | 20.803   |
-|  5  | 447 | 8.424    | 144.638  | 556 | 5.929  (-29.6%) | 27.301   |
-|  6  | 581 | 14.886   | 346.793  | 456 | 5.711  (-61.6%) | 23.124   |
-|  7  | 456 | 10.005   | 211.187  | 997 | 4.708  (-52.9%) | 21.144   |
-+-----+-----+----------+----------+-----+-----------------+----------+
-             * Hit, Avg and s^2 are as reported by the function profiler
-
-Test 2:
-I also ran the same test with a normal DT, with 2 CPUFreq policies, to
-see if this causes regressions in the most common case.
-
-      +---------------------------+----------------------------------+
-      | Without patch             | With patch                       |
-+-----+-----+----------+----------+-----+-----------------+----------+
-| CPU | Hit | Avg (us) | s^2 (us) | Hit | Avg (us)        | s^2 (us) |
-|-----+-----+----------+----------+-----+-----------------+----------+
-|  0  | 345 | 22.184   | 215.321  | 580 | 18.635 (-16.0%) | 146.892  |
-|  1  | 358 | 18.597   | 200.596  | 438 | 12.934 (-30.5%) | 104.604  |
-|  2  | 359 | 25.566   | 200.217  | 397 | 10.826 (-57.7%) | 74.021   |
-|  3  | 362 | 16.881   | 200.291  | 718 | 11.455 (-32.1%) | 102.280  |
-|  4  | 457 | 3.822    | 9.895    | 757 | 4.616  (+20.8%) | 13.369   |
-|  5  | 344 | 4.301    | 7.121    | 594 | 5.320  (+23.7%) | 18.798   |
-|  6  | 472 | 4.326    | 7.849    | 464 | 5.648  (+30.6%) | 22.022   |
-|  7  | 331 | 4.630    | 13.937   | 408 | 5.299  (+14.4%) | 18.273   |
-+-----+-----+----------+----------+-----+-----------------+----------+
-             * Hit, Avg and s^2 are as reported by the function profiler
-
-In addition to these two tests, I also ran 50 iterations of the Lisa
-EAS functional test suite [3] with this patch applied on Arm Juno r0,
-Arm Juno r2, Arm TC2 and Hikey960, and could not see any regressions
-(all EAS functional tests are passing).
-
-[1] https://paste.debian.net/1100055/
-[2] https://paste.debian.net/1100057/
-[3] https://github.com/ARM-software/lisa/blob/master/lisa/tests/scheduler/eas_behaviour.py
----
- kernel/sched/fair.c | 110 ++++++++++++++++++++------------------------
- 1 file changed, 50 insertions(+), 60 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bc9cfeaac8bd..8a521087e11d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6277,69 +6277,55 @@ static unsigned long cpu_util_next(int cpu, struct task_struct *p, int dst_cpu)
- }
- 
- /*
-- * compute_energy(): Estimates the energy that would be consumed if @p was
-+ * compute_energy(): Estimates the energy that @pd would consume if @p was
-  * migrated to @dst_cpu. compute_energy() predicts what will be the utilization
-- * landscape of the * CPUs after the task migration, and uses the Energy Model
-+ * landscape of @pd's CPUs after the task migration, and uses the Energy Model
-  * to compute what would be the energy if we decided to actually migrate that
-  * task.
-  */
- static long
- compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
- {
--	unsigned int max_util, util_cfs, cpu_util, cpu_cap;
--	unsigned long sum_util, energy = 0;
--	struct task_struct *tsk;
-+	struct cpumask *pd_mask = perf_domain_span(pd);
-+	unsigned long cpu_cap = arch_scale_cpu_capacity(cpumask_first(pd_mask));
-+	unsigned long max_util = 0, sum_util = 0;
- 	int cpu;
- 
--	for (; pd; pd = pd->next) {
--		struct cpumask *pd_mask = perf_domain_span(pd);
-+	/*
-+	 * The capacity state of CPUs of the current rd can be driven by CPUs
-+	 * of another rd if they belong to the same pd. So, account for the
-+	 * utilization of these CPUs too by masking pd with cpu_online_mask
-+	 * instead of the rd span.
-+	 *
-+	 * If an entire pd is outside of the current rd, it will not appear in
-+	 * its pd list and will not be accounted by compute_energy().
-+	 */
-+	for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
-+		unsigned long cpu_util, util_cfs = cpu_util_next(cpu, p, dst_cpu);
-+		struct task_struct *tsk = cpu == dst_cpu ? p : NULL;
- 
- 		/*
--		 * The energy model mandates all the CPUs of a performance
--		 * domain have the same capacity.
-+		 * Busy time computation: utilization clamping is not
-+		 * required since the ratio (sum_util / cpu_capacity)
-+		 * is already enough to scale the EM reported power
-+		 * consumption at the (eventually clamped) cpu_capacity.
- 		 */
--		cpu_cap = arch_scale_cpu_capacity(cpumask_first(pd_mask));
--		max_util = sum_util = 0;
-+		sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-+					       ENERGY_UTIL, NULL);
- 
- 		/*
--		 * The capacity state of CPUs of the current rd can be driven by
--		 * CPUs of another rd if they belong to the same performance
--		 * domain. So, account for the utilization of these CPUs too
--		 * by masking pd with cpu_online_mask instead of the rd span.
--		 *
--		 * If an entire performance domain is outside of the current rd,
--		 * it will not appear in its pd list and will not be accounted
--		 * by compute_energy().
-+		 * Performance domain frequency: utilization clamping
-+		 * must be considered since it affects the selection
-+		 * of the performance domain frequency.
-+		 * NOTE: in case RT tasks are running, by default the
-+		 * FREQUENCY_UTIL's utilization can be max OPP.
- 		 */
--		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
--			util_cfs = cpu_util_next(cpu, p, dst_cpu);
--
--			/*
--			 * Busy time computation: utilization clamping is not
--			 * required since the ratio (sum_util / cpu_capacity)
--			 * is already enough to scale the EM reported power
--			 * consumption at the (eventually clamped) cpu_capacity.
--			 */
--			sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
--						       ENERGY_UTIL, NULL);
--
--			/*
--			 * Performance domain frequency: utilization clamping
--			 * must be considered since it affects the selection
--			 * of the performance domain frequency.
--			 * NOTE: in case RT tasks are running, by default the
--			 * FREQUENCY_UTIL's utilization can be max OPP.
--			 */
--			tsk = cpu == dst_cpu ? p : NULL;
--			cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
--						      FREQUENCY_UTIL, tsk);
--			max_util = max(max_util, cpu_util);
--		}
--
--		energy += em_pd_energy(pd->em_pd, max_util, sum_util);
-+		cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-+					      FREQUENCY_UTIL, tsk);
-+		max_util = max(max_util, cpu_util);
- 	}
- 
--	return energy;
-+	return em_pd_energy(pd->em_pd, max_util, sum_util);
- }
- 
- /*
-@@ -6381,21 +6367,19 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
-  * other use-cases too. So, until someone finds a better way to solve this,
-  * let's keep things simple by re-using the existing slow path.
-  */
--
- static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- {
--	unsigned long prev_energy = ULONG_MAX, best_energy = ULONG_MAX;
-+	unsigned long prev_delta = ULONG_MAX, best_delta = ULONG_MAX;
- 	struct root_domain *rd = cpu_rq(smp_processor_id())->rd;
-+	unsigned long cpu_cap, util, base_energy = 0;
- 	int cpu, best_energy_cpu = prev_cpu;
--	struct perf_domain *head, *pd;
--	unsigned long cpu_cap, util;
- 	struct sched_domain *sd;
-+	struct perf_domain *pd;
- 
- 	rcu_read_lock();
- 	pd = rcu_dereference(rd->pd);
- 	if (!pd || READ_ONCE(rd->overutilized))
- 		goto fail;
--	head = pd;
- 
- 	/*
- 	 * Energy-aware wake-up happens on the lowest sched_domain starting
-@@ -6412,9 +6396,14 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 		goto unlock;
- 
- 	for (; pd; pd = pd->next) {
--		unsigned long cur_energy, spare_cap, max_spare_cap = 0;
-+		unsigned long cur_delta, spare_cap, max_spare_cap = 0;
-+		unsigned long base_energy_pd;
- 		int max_spare_cap_cpu = -1;
- 
-+		/* Compute the 'base' energy of the pd, without @p */
-+		base_energy_pd = compute_energy(p, -1, pd);
-+		base_energy += base_energy_pd;
-+
- 		for_each_cpu_and(cpu, perf_domain_span(pd), sched_domain_span(sd)) {
- 			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 				continue;
-@@ -6427,9 +6416,9 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 
- 			/* Always use prev_cpu as a candidate. */
- 			if (cpu == prev_cpu) {
--				prev_energy = compute_energy(p, prev_cpu, head);
--				best_energy = min(best_energy, prev_energy);
--				continue;
-+				prev_delta = compute_energy(p, prev_cpu, pd);
-+				prev_delta -= base_energy_pd;
-+				best_delta = min(best_delta, prev_delta);
- 			}
- 
- 			/*
-@@ -6445,9 +6434,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 
- 		/* Evaluate the energy impact of using this CPU. */
- 		if (max_spare_cap_cpu >= 0) {
--			cur_energy = compute_energy(p, max_spare_cap_cpu, head);
--			if (cur_energy < best_energy) {
--				best_energy = cur_energy;
-+			cur_delta = compute_energy(p, max_spare_cap_cpu, pd);
-+			cur_delta -= base_energy_pd;
-+			if (cur_delta < best_delta) {
-+				best_delta = cur_delta;
- 				best_energy_cpu = max_spare_cap_cpu;
- 			}
- 		}
-@@ -6459,10 +6449,10 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 	 * Pick the best CPU if prev_cpu cannot be used, or if it saves at
- 	 * least 6% of the energy used by prev_cpu.
- 	 */
--	if (prev_energy == ULONG_MAX)
-+	if (prev_delta == ULONG_MAX)
- 		return best_energy_cpu;
- 
--	if ((prev_energy - best_energy) > (prev_energy >> 4))
-+	if ((prev_delta - best_delta) > ((prev_delta + base_energy) >> 4))
- 		return best_energy_cpu;
- 
- 	return prev_cpu;
 -- 
-2.22.1
-
+ Kirill A. Shutemov
