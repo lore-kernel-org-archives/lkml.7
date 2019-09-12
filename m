@@ -2,230 +2,82 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E99ECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B90C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6E5208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9F8208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LUE8CLyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfILH7e (ORCPT
+        id S1729971AbfILIAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 03:59:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33645 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbfILH7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 03:59:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 00:59:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="385962552"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Sep 2019 00:59:27 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v1 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu, 12 Sep 2019 15:59:11 +0800
-Message-Id: <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+        Thu, 12 Sep 2019 04:00:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38797 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfILIAq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 04:00:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h17so21377575otn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5qmb78FYDeqJwCvfIUFA64DMXds2PW8DdSpXeskuPq4=;
+        b=LUE8CLyXWQcGt5ozi574sQ/J9n0AJBvhhr7mv+LYM7f/8vSmrjw+pFEvB6VjkLyi2t
+         VykulW20DQEli1D3Mh2AuNGF45hqYL+SxnAJSDp01zHAp7mNNNUbKM/cre3vGpdeRS6H
+         wy/2DOV2srDzpSUJ9zXH7YcwAPvdS4tOSNJEu2rY6jsa/6oo8fa3kREiLMB6QAxQBtaz
+         E7jQbOT+uvfQSV/Cwgx6NmLW/9DJGQ2Q4QibUNeUoSN8y2iId9qV2HceqdpD3NzVa0jg
+         RKOTKjKQdX+ORNbR4e7Wz/Z+71lOHkS+iVKdy00uIPl4ofTM9OQ2hBVdGTSodfBfBWV0
+         NRTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5qmb78FYDeqJwCvfIUFA64DMXds2PW8DdSpXeskuPq4=;
+        b=oeDe6eD0UcJ+btiCirpKrdpIsxtsFd6bOReDNHuf0EQsFhhvIhcPm8tBS2NIUQPlMc
+         AY+onT17WHfbKUwuxTcZBiZhnn0UQEb2GoMt9ma+TVcqYzevoJcuEOjLhDMmhn03ZvVx
+         uZGRNA2BjBkJEL42kC6TNGcSoL8uFbY8ohjFeLj3GGGWNGPdTesDJZCyFAuJL5OpfRYS
+         Lu4/T0MaDvqAZ2Xb6MpxiDrVlxLEUmgSkPNWav/v0gaJtdr4v0RFyEbMel13g2xvOXu9
+         WbOYWQ4N/j59+pnF2Dx8cXGTQic4K8JgQgr/hc9PD57DgYVbl+/ra14QYbw86MZlcn72
+         6B1g==
+X-Gm-Message-State: APjAAAUWYuj7sU/iC7zh7T29KSo+mNK4NMSckBK1/aclLUWTxye7gPKK
+        1s8vlR3eEP7rDd+y5D8vzOFemhkbw/S2HPAgSrXjGw==
+X-Google-Smtp-Source: APXvYqyNoKF90/9aOosnjKNEcyJn0PnaFlqebXAMnVcR447j+ePIeVT1xmancYwa1G/50/CDhUr+1E5BW/SAO4iY+u4=
+X-Received: by 2002:a9d:5ccc:: with SMTP id r12mr8105329oti.71.1568275245893;
+ Thu, 12 Sep 2019 01:00:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1568256705.git.joe@perches.com>
+In-Reply-To: <cover.1568256705.git.joe@perches.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 12 Sep 2019 01:00:35 -0700
+Message-ID: <CAPcyv4hzoSp-bFx19Yj71H7x3D66-TE4uCpcHm4S9sJsGtXugA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] nvdimm: Use more common kernel coding style
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt bindings document & include file for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+Hi Joe,
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 131 +++++++++++++++++++++
- include/dt-bindings/pinctrl/intel,equilibrium.h    |  23 ++++
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
- create mode 100644 include/dt-bindings/pinctrl/intel,equilibrium.h
+On Wed, Sep 11, 2019 at 7:55 PM Joe Perches <joe@perches.com> wrote:
+>
+> Rather than have a local coding style, use the typical kernel style.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..1aee42f0057e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,131 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  "^.*@[0-9a-fA-F]+$":
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below defined properties.
-+
-+    properties:
-+      intel,function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      intel,groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      intel,pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      intel,mux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              # Refer include/dt-bindings/pinctrl/intel,equilibrium.h
-+              - PINMUX_0 # 0 PINMUX_GPIO
-+              - PINMUX_1 # 1
-+              - PINMUX_2 # 2
-+              - PINMUX_3 # 3
-+              - PINMUX_4 # 4
-+
-+      intel,pullup:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-up configuration.
-+
-+      intel,pulldown:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies pull-down configuration.
-+
-+      intel,drive-current:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables driver-current.
-+
-+      intel,slew-rate:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Enables slew-rate.
-+
-+      intel,open-drain:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies open-drain configuration.
-+
-+      intel,output:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: Specifies if the pin is to be configured as output.
-+
-+
-+    required:
-+      - intel,function
-+      - intel,groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+    };
-+
-+  # Client device node
-+  - |
-+    asc0: serial@e0a00000 {
-+          compatible = "intel,lgm-asc";
-+          reg = <0xe0a00000 0x1000>;
-+          interrupt-parent = <&ioapic1>;
-+          interrupts = <128 1>;
-+          interrupt-names = "asc_irq";
-+          clocks = <&cgu0 31>, <&cgu0 98>;
-+          clock-names = "freq", "asc";
-+          pinctrl-names = "default";
-+          pinctrl-0 = <&uart0>;
-+    };
-+
-+   # Client device subnode
-+  - |
-+    uart0:uart0 {
-+          intel,pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+          intel,function = "CONSOLE_UART0";
-+          intel,mux = <1>,
-+                      <1>;
-+          intel,groups = "CONSOLE_UART0";
-+    };
-+
-+
-+...
-diff --git a/include/dt-bindings/pinctrl/intel,equilibrium.h b/include/dt-bindings/pinctrl/intel,equilibrium.h
-new file mode 100644
-index 000000000000..c37bfbea8ff1
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/intel,equilibrium.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-+#define __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-+
-+#define PINCTRL_DRCC_2_MA	0
-+#define PINCTRL_DRCC_4_MA	1
-+#define PINCTRL_DRCC_8_MA	2
-+#define PINCTRL_DRCC_12_MA	3
-+
-+#define PINMUX_0		0
-+#define PINMUX_1		1
-+#define PINMUX_2		2
-+#define PINMUX_3		3
-+#define PINMUX_4		4
-+#define PINMUX_GPIO		PINMUX_0
-+
-+#define PINCTRL_GROUP		"intel,groups"
-+#define PINCTRL_FUNCTION	"intel,function"
-+#define PINCTRL_PINS		"intel,pins"
-+#define PINCTRL_MUX		"intel,mux"
-+
-+#endif /* __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_ */
--- 
-2.11.0
-
+I'd rather automate this. I'm going to do once-over with clang-format
+and see what falls out.
