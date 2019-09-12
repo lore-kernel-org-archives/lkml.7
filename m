@@ -2,126 +2,190 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20645C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C94C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABC7208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568328652;
-	bh=owY8tPeH3sQTQ1Of9qzuZcG6Wih+amHz+jK7tLWasOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XiwMYaPD2VQWhOwhPG50x13qFY2yY5YmMtjCxOK99LJtZIy0b4XRLbHXa+vH53J/H
-	 v/WJrpUgXj9xYSrYtZMeNep0R3KEk6QsxJ2cIwO0vId7FQYUtyJqgc5/eThJ/LjoAX
-	 Rt4AIuDbW6csjFvjV2/hdQKHvlTLowoCI0N8Gly4=
+	by mail.kernel.org (Postfix) with ESMTP id 5294420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=timesys-com.20150623.gappssmtp.com header.i=@timesys-com.20150623.gappssmtp.com header.b="pzm0JwXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfILWuv (ORCPT
+        id S1727397AbfILW4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 18:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbfILWuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:50:51 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99850206CD;
-        Thu, 12 Sep 2019 22:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568328649;
-        bh=owY8tPeH3sQTQ1Of9qzuZcG6Wih+amHz+jK7tLWasOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h8wu/A+5V8cKq3un2s3rZj0jka7IbZijhnVYw3T6vO1MqXQT/DT2joHrd/L8gGBby
-         xojrTGXctns42qnURxBOc2fQN2i24Si8GDhDFl3MX0uBtR70O4Y42mb7TN8pDE5IGC
-         OqW7SaJdbaekzEY8lo32m0pv3IyFhjqq8WQPNH5o=
-Date:   Thu, 12 Sep 2019 18:50:43 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jani Nikula <jani.nikula@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH AUTOSEL 5.2 13/23] drm/i915/userptr: Acquire the page
- lock around set_page_dirty()
-Message-ID: <20190912225043.GE1546@sasha-vm>
-References: <20190903162424.6877-1-sashal@kernel.org>
- <20190903162424.6877-13-sashal@kernel.org>
- <36993214-6ce7-260f-68c7-6fbb0630143f@mageia.org>
+        Thu, 12 Sep 2019 18:56:10 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46865 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfILW4K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 18:56:10 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v11so31578579qto.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9NWnNVgY46MWHRXDeQuOe4RyI978hp0KMY9NEZkdyzc=;
+        b=pzm0JwXLGxqxafpFrf7m1pw8rul28NCOUrQAd+QOxQ2vc/BKmh5k1Ytg/FDsNZfwDx
+         TnzwGctnBHQp8O2vPYCVh/A0Ik4VE9RyekgrQP7CSz7hs9MCcslTZrJc9fqs4Qx3vYNg
+         Vl6HN3UEJZDNcbohHCm+Ah4dWBlCeEdJEedzA4ciyo9rJURKqgQCezU1U+zPB/p9HOLu
+         AqofDGISpIBe2cvDPeMqRYDvaWDJtwZq8HFyhRekqSBbL+qu2TJrvjnPIN4irx38FPoU
+         jErbGTae/n7nGMYfOQwXt67zr69o0WSfzdd5LLkjMUkm/yLHRtUGhT/XtkKxAnPlBRo0
+         vE0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9NWnNVgY46MWHRXDeQuOe4RyI978hp0KMY9NEZkdyzc=;
+        b=UtDRoR+SBYpN856JF/bc5GkEz6FHYBnUKkCc2EfkJFQPrwGb3niZA9i7sTOu1x2h25
+         6CQKHswt1WrjauyTteAJOP5VeT6RXKTcld+oDaGswV3MtZAKL3OQ/1nvSmyFNGkGJEdW
+         VBqXreiK9P007quo5bWzCicW0Dz8azQh9C6ibgnGEOPtuQv3aF1/q9WeKG0CDvGP71IT
+         retC5uhBUGmdyy+ozesXip2UqvJn6FrGZWuMbI472HLlNWfaA5eZW5SkzVkuYo0xJR3v
+         j3Vd+Oi0kEzlCnqQycD4IbUHDfMD9eo+Hj3TGlZlasfG5W1toGqirBeVpfNRKcd3DdbE
+         Tzig==
+X-Gm-Message-State: APjAAAXmY1kCX7q7bQBvfuM32a51uRuACdD5tyLSq1oIdgp1esmC3WtM
+        71mXSDdh7IW3IbCFHkBDe85dMFjqUylwFA==
+X-Google-Smtp-Source: APXvYqzSTywME30/SZ/nHNk3h9um0nT/5KnTol4NNiDZIsPAX0iZn5ISK3uMDo2zqZzqRkKwdZ6fbQ==
+X-Received: by 2002:a05:6214:370:: with SMTP id t16mr29194618qvu.245.1568328968134;
+        Thu, 12 Sep 2019 15:56:08 -0700 (PDT)
+Received: from [172.16.3.132] (96-94-100-129-static.hfc.comcastbusiness.net. [96.94.100.129])
+        by smtp.googlemail.com with ESMTPSA id a36sm14323555qtk.21.2019.09.12.15.56.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 15:56:07 -0700 (PDT)
+From:   Jaret Cantu <jaret.cantu@timesys.com>
+Subject: Re: [PATCH] watchdog: f71808e_wdt: Add F81803 support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190912175550.9340-1-jaret.cantu@timesys.com>
+ <20190912185037.GC5065@roeck-us.net>
+Message-ID: <66294009-27e1-cfd8-1e16-475cc51903b8@timesys.com>
+Date:   Thu, 12 Sep 2019 18:55:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <36993214-6ce7-260f-68c7-6fbb0630143f@mageia.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190912185037.GC5065@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 11:51:33PM +0300, Thomas Backlund wrote:
->Den 03-09-2019 kl. 19:24, skrev Sasha Levin:
->>From: Chris Wilson <chris@chris-wilson.co.uk>
+On 9/12/19 2:50 PM, Guenter Roeck wrote:
+> On Thu, Sep 12, 2019 at 01:55:50PM -0400, Jaret Cantu wrote:
+>> This adds watchdog support for the Fintek F81803 Super I/O chip.
 >>
->>[ Upstream commit aa56a292ce623734ddd30f52d73f527d1f3529b5 ]
+>> Testing was done on the Seneca XK-QUAD.
 >>
->>set_page_dirty says:
->>
->>	For pages with a mapping this should be done under the page lock
->>	for the benefit of asynchronous memory errors who prefer a
->>	consistent dirty state. This rule can be broken in some special
->>	cases, but should be better not to.
->>
->>Under those rules, it is only safe for us to use the plain set_page_dirty
->>calls for shmemfs/anonymous memory. Userptr may be used with real
->>mappings and so needs to use the locked version (set_page_dirty_lock).
->>
->>Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
->>Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
->>References: 6dcc693bc57f ("ext4: warn when page is dirtied without buffers")
->>Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
->>Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
->>Cc: stable@vger.kernel.org
->>Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
->>Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
->>(cherry picked from commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2)
->>Signed-off-by: Jani Nikula <jani.nikula@intel.com>
->>Signed-off-by: Sasha Levin <sashal@kernel.org>
->>---
->>  drivers/gpu/drm/i915/i915_gem_userptr.c | 10 +++++++++-
->>  1 file changed, 9 insertions(+), 1 deletion(-)
->>
->>diff --git a/drivers/gpu/drm/i915/i915_gem_userptr.c b/drivers/gpu/drm/i915/i915_gem_userptr.c
->>index 8079ea3af1039..b1fc15c7f5997 100644
->>--- a/drivers/gpu/drm/i915/i915_gem_userptr.c
->>+++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
->>@@ -678,7 +678,15 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
->>  	for_each_sgt_page(page, sgt_iter, pages) {
->>  		if (obj->mm.dirty)
->>-			set_page_dirty(page);
->>+			/*
->>+			 * As this may not be anonymous memory (e.g. shmem)
->>+			 * but exist on a real mapping, we have to lock
->>+			 * the page in order to dirty it -- holding
->>+			 * the page reference is not sufficient to
->>+			 * prevent the inode from being truncated.
->>+			 * Play safe and take the lock.
->>+			 */
->>+			set_page_dirty_lock(page);
->>  		mark_page_accessed(page);
->>  		put_page(page);
->>
->
->
->Please drop this one from all 5.2 and 4.19 stable queues
->
->It has now been reverted in Linus tree:
->https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=505a8ec7e11ae5236c4a154a1e24ef49a8349600
+>> Signed-off-by: Jaret Cantu <jaret.cantu@timesys.com>
+> 
+> Since there is no datasheet, we can only hope that this works
+> for other platforms using the same chip. Nothing we can do
+> about that, so
 
-Now dropped, thank you.
+I did get the register descriptions after hounding the vendor's support 
+team for a good long while, which is how I was able to get the watchdog 
+working in the first place.  Nothing publicly available, however.
 
---
-Thanks,
-Sasha
+The only real difference between this part and others in the family is 
+requiring a bank select before setting the WDTRST pin.  (And the 
+registers/bits which have to be twiddled to do so, of course.)
+
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+>> ---
+>>   drivers/watchdog/Kconfig       |  4 ++--
+>>   drivers/watchdog/f71808e_wdt.c | 17 ++++++++++++++++-
+>>   2 files changed, 18 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> index 8188963a405b..781ff835f2a4 100644
+>> --- a/drivers/watchdog/Kconfig
+>> +++ b/drivers/watchdog/Kconfig
+>> @@ -1046,8 +1046,8 @@ config F71808E_WDT
+>>   	depends on X86
+>>   	help
+>>   	  This is the driver for the hardware watchdog on the Fintek F71808E,
+>> -	  F71862FG, F71868, F71869, F71882FG, F71889FG, F81865 and F81866
+>> -	  Super I/O controllers.
+>> +	  F71862FG, F71868, F71869, F71882FG, F71889FG, F81803, F81865, and
+>> +	  F81866 Super I/O controllers.
+>>   
+>>   	  You can compile this driver directly into the kernel, or use
+>>   	  it as a module.  The module will be called f71808e_wdt.
+>> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+>> index ff5cf1b48a4d..e46104c2fd94 100644
+>> --- a/drivers/watchdog/f71808e_wdt.c
+>> +++ b/drivers/watchdog/f71808e_wdt.c
+>> @@ -31,8 +31,10 @@
+>>   #define SIO_REG_DEVID		0x20	/* Device ID (2 bytes) */
+>>   #define SIO_REG_DEVREV		0x22	/* Device revision */
+>>   #define SIO_REG_MANID		0x23	/* Fintek ID (2 bytes) */
+>> +#define SIO_REG_CLOCK_SEL	0x26	/* Clock select */
+>>   #define SIO_REG_ROM_ADDR_SEL	0x27	/* ROM address select */
+>>   #define SIO_F81866_REG_PORT_SEL	0x27	/* F81866 Multi-Function Register */
+>> +#define SIO_REG_TSI_LEVEL_SEL	0x28	/* TSI Level select */
+>>   #define SIO_REG_MFUNCT1		0x29	/* Multi function select 1 */
+>>   #define SIO_REG_MFUNCT2		0x2a	/* Multi function select 2 */
+>>   #define SIO_REG_MFUNCT3		0x2b	/* Multi function select 3 */
+>> @@ -49,6 +51,7 @@
+>>   #define SIO_F71869A_ID		0x1007	/* Chipset ID */
+>>   #define SIO_F71882_ID		0x0541	/* Chipset ID */
+>>   #define SIO_F71889_ID		0x0723	/* Chipset ID */
+>> +#define SIO_F81803_ID		0x1210	/* Chipset ID */
+>>   #define SIO_F81865_ID		0x0704	/* Chipset ID */
+>>   #define SIO_F81866_ID		0x1010	/* Chipset ID */
+>>   
+>> @@ -108,7 +111,7 @@ MODULE_PARM_DESC(start_withtimeout, "Start watchdog timer on module load with"
+>>   	" given initial timeout. Zero (default) disables this feature.");
+>>   
+>>   enum chips { f71808fg, f71858fg, f71862fg, f71868, f71869, f71882fg, f71889fg,
+>> -	     f81865, f81866};
+>> +	     f81803, f81865, f81866};
+>>   
+>>   static const char *f71808e_names[] = {
+>>   	"f71808fg",
+>> @@ -118,6 +121,7 @@ static const char *f71808e_names[] = {
+>>   	"f71869",
+>>   	"f71882fg",
+>>   	"f71889fg",
+>> +	"f81803",
+>>   	"f81865",
+>>   	"f81866",
+>>   };
+>> @@ -370,6 +374,14 @@ static int watchdog_start(void)
+>>   			superio_inb(watchdog.sioaddr, SIO_REG_MFUNCT3) & 0xcf);
+>>   		break;
+>>   
+>> +	case f81803:
+>> +		/* Enable TSI Level register bank */
+>> +		superio_clear_bit(watchdog.sioaddr, SIO_REG_CLOCK_SEL, 3);
+>> +		/* Set pin 27 to WDTRST# */
+>> +		superio_outb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
+>> +			superio_inb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL));
+>> +		break;
+>> +
+>>   	case f81865:
+>>   		/* Set pin 70 to WDTRST# */
+>>   		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 5);
+>> @@ -809,6 +821,9 @@ static int __init f71808e_find(int sioaddr)
+>>   		/* Confirmed (by datasheet) not to have a watchdog. */
+>>   		err = -ENODEV;
+>>   		goto exit;
+>> +	case SIO_F81803_ID:
+>> +		watchdog.type = f81803;
+>> +		break;
+>>   	case SIO_F81865_ID:
+>>   		watchdog.type = f81865;
+>>   		break;
+>> -- 
+>> 2.11.0
+>>
