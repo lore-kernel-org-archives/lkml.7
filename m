@@ -2,101 +2,107 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A34C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F843C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8982075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D56D20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbfILNEe (ORCPT
+        id S1731869AbfILNG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:04:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:33958 "EHLO foss.arm.com"
+        Thu, 12 Sep 2019 09:06:57 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24304 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731320AbfILNEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:04:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AAF628;
-        Thu, 12 Sep 2019 06:04:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9684F3F71F;
-        Thu, 12 Sep 2019 06:04:32 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 14:04:30 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: fix find_next_bit() usage
-Message-ID: <20190912130430.GG9720@e119886-lin.cambridge.arm.com>
-References: <20190904160339.2800-1-niklas.cassel@linaro.org>
+        id S1731732AbfILNG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:06:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 06:06:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="189988369"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 12 Sep 2019 06:06:56 -0700
+Received: from vjyoung-mobl.amr.corp.intel.com (unknown [10.251.12.73])
+        by linux.intel.com (Postfix) with ESMTP id E1E3C580862;
+        Thu, 12 Sep 2019 06:06:54 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH] ASoC: bdw-rt5677: channel constraint support
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yang.jie@linux.intel.com" <yang.jie@linux.intel.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+References: <1567733058-9561-1-git-send-email-brent.lu@intel.com>
+ <391e8f6c-7e35-deb4-4f4d-c39396b778ba@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C7402C9EA2@PGSMSX108.gar.corp.intel.com>
+ <29b9fd4e-3d78-b4a3-e61a-c066bf24995a@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C7402CB9AC@PGSMSX108.gar.corp.intel.com>
+ <99769525-779a-59aa-96da-da96f8f09a8a@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C7402DBB9B@PGSMSX108.gar.corp.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <34604b9a-f479-3f92-7917-84f295a82fd8@linux.intel.com>
+Date:   Thu, 12 Sep 2019 08:06:35 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904160339.2800-1-niklas.cassel@linaro.org>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <CF33C36214C39B4496568E5578BE70C7402DBB9B@PGSMSX108.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 06:03:38PM +0200, Niklas Cassel wrote:
-> find_next_bit() takes a parameter of size long, and performs arithmetic
-> that assumes that the argument is of size long.
+On 9/12/19 1:00 AM, Lu, Brent wrote:
+>>>
+>>> The story is Chrome has a tool called alsa_conformance_test which runs
+>>> capture or playback against a PCM port with all possible
+>>> configurations (channel, format, rate) then measure if the sample rate
+>>> is correct. Since the channel max number reported is 4, it tests the
+>>> 4-channel 48K capture and reports the actual sample rate is 24000
+>>> instead of 48000. That's the reason we want to add a constraint in
+>>> machine driver to avoid user space programs trying to do 4 channel
+>> recording since this machine does not support it in the beginning.
+>>
+>> ok, that helps get context, thanks for the details.
+>>
+>> I would have expected some error to be returned if there's a front-end
+>> opened with 4 channels and the back-end only supports two. Adding the
+>> constraint seems like a work-around to avoid dealing with the mismatch
+>> between FE and BE. I don't understand DPCM enough to suggest an
+>> alternative though. Ranjani, can you help on this one?
+>>
+>> And even if we agree with this solution, it'd be nice to apply it for the
+>> Broadwell machine driver for consistency.
 > 
-> Therefore we cannot pass a u32, since this will cause find_next_bit()
-> to read outside the stack buffer and will produce the following print:
-> BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
-> 
-> Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
+> It's not only the mismatch but also the design limitation. According to the
+> information from google, the board (samus) only uses two microphone so
+> 3 or 4 channel recording are not supported. That's the reason we leverage
+> the constraint from other machine driver (like kbl_da7219_max98357a.c)
+> to remove the 3 and 4 channel recording option.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+The design limitation is already handled by the fact that the SSP 
+operates in 2ch mode, so it's a different case from KBL where indeed the 
+DMIC-based back-end can support 4 channels.
 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d3156446ff27..45f21640c977 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
->  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->  {
->  	int i, pos, irq;
-> -	u32 val, num_ctrls;
-> +	unsigned long val;
-> +	u32 status, num_ctrls;
->  	irqreturn_t ret = IRQ_NONE;
->  
->  	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> @@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->  	for (i = 0; i < num_ctrls; i++) {
->  		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
->  					(i * MSI_REG_CTRL_BLOCK_SIZE),
-> -				    4, &val);
-> -		if (!val)
-> +				    4, &status);
-> +		if (!status)
->  			continue;
->  
->  		ret = IRQ_HANDLED;
-> +		val = status;
->  		pos = 0;
-> -		while ((pos = find_next_bit((unsigned long *) &val,
-> -					    MAX_MSI_IRQS_PER_CTRL,
-> +		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
->  					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
->  			irq = irq_find_mapping(pp->irq_domain,
->  					       (i * MAX_MSI_IRQS_PER_CTRL) +
-> -- 
-> 2.21.0
-> 
+> The difference after the constraint is implemented is that the
+> snd_pcm_hw_params_set_channels() function will return error (Invalid
+> argument) when channel number is 3 or 4 so the application knows the
+> configuration is not supported.
+
+I get the error, I am just wondering if the fix is at the right 
+location. I'll look into it, give me until tomorrow.
+
