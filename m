@@ -2,175 +2,148 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5672C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6292BC49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96520208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568281062;
-	bh=fD3WpoO3f2gpFrlgdn1Y9gFuBeXCWGXp86lvU0zRboY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RC7L7jW1k+qfa3w4Bf/OD5c3MewtIV4DQ2BvGeZOv+tlpF2lEWtOxkFSfYn7tXb4V
-	 MN/LPS05jZ2acKVEvIq9VM9qYtj13bqCMerMh6FrQiQbmIsKNj9a0QGiBXuLPyEnMI
-	 jNVArb/YfVAHXfVh3xg6x8XOrLWZLp7mOha+bz9E=
+	by mail.kernel.org (Postfix) with ESMTP id 3684020856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ecsVnCqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfILJhl (ORCPT
+        id S1730809AbfILJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730428AbfILJhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:37:41 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C6F20856;
-        Thu, 12 Sep 2019 09:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568281060;
-        bh=fD3WpoO3f2gpFrlgdn1Y9gFuBeXCWGXp86lvU0zRboY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QgoNqVGoelY7/KRxtPZ4wl+sSzMRe4QJCt4H63JAQebqweondhx6qL64s6Xsy6Tmu
-         +j4nFO0vVp14mcwLqWG+dOZDGU2Zp0ySO9zqdkGjGw2KcEs+EFIG3ow3AuJRqDKgsc
-         05C6Oxk+8Q0fhf7OQJZCvjgDKFDioUuhY8J+3aMg=
-Date:   Thu, 12 Sep 2019 11:37:37 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings documentation
- for sun8i-ce Crypto Engine
-Message-ID: <20190912093737.s6iu63sdncij2qib@localhost.localdomain>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-4-clabbe.montjoie@gmail.com>
- <20190907040116.lib532o2eqt4qnvv@flea>
- <20190911183158.GA8264@Red>
+        Thu, 12 Sep 2019 05:38:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40687 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbfILJi2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:38:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id m3so2906398wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FyZv+2jpXHUeLj3zo5hEMKDZeE0gwZkeevJP1UY0f7g=;
+        b=ecsVnCqf7jy234ajtjhPg9bUFq6eqgeSiFQ3B9VshYDzlqTvwe6qHgo3Rme+YYjBYq
+         57zpk4CVJaSffFdPd270c0VN8xlStEbZJZ+Sqs9lpMMOoBBIxWcWmnuTRQRez1qiHG0d
+         1lF/Ub0lLFF61mcsJSmPRk+pkj9XHPLqMlmxv7g+hUhnOhPZJw3sqdIw0H0sRO6Szluy
+         uubJNNNO3gpZ0uIIEthnKcGjYVCyroZ5Acc8NukHDVwgHn57hKBRTPjMeKVcjOYEpRX9
+         joNJftMwDDaAtTVKc4vY8Ukzbw1p4oew/FyaHhwm6kEX+/WIUZzjHq3A1AVFc9G0i9jV
+         +qUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FyZv+2jpXHUeLj3zo5hEMKDZeE0gwZkeevJP1UY0f7g=;
+        b=NmqXODaEAmT3AJkogSn9n2Esfv9iBWhArSwrFpDIvagaN96OiK40pJYM2KirRjih8C
+         zdCDwS/fGDN3Maajjpe9Nu8bxRBHI8eavI/Z9qqE1vVIMcBIUMtUqEVe40yMOAcZyFvB
+         EDt8mmiU3VrsyVJiKWPpPbCwnaW0kV+ZfX0ZonCOMAzZfJrtruNcndmgv6Kq0q+VM8Oe
+         oNCAVHYyiiB3X29JDUuRqQbo31kSzZie9KhmLvymLsVWoT24wIhfkGd1PzCWkiA7btZA
+         G3zALPlQSc8rJRVboffGob31HDOZzm10Kl6fLMyZCZbH5jTpWcaRhI3FRP7kasTy0h15
+         TVmA==
+X-Gm-Message-State: APjAAAVcAfuB4ExBBFw1EPNW31Yn0EVy6auQYeQgIs6KLvmZAwkGiBAM
+        iohA1ZVoSx9dehiKk5EkAAoRrA==
+X-Google-Smtp-Source: APXvYqwjmAOKkNKKUOfQJdiedHbylzFrCwIEHmlMF2gTZyinn/Hgz7ItTmOAoVNQxy2zFP2RBUqnOg==
+X-Received: by 2002:a05:600c:2386:: with SMTP id m6mr1662719wma.164.1568281106577;
+        Thu, 12 Sep 2019 02:38:26 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s26sm43063574wrs.63.2019.09.12.02.38.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 02:38:25 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 10:38:23 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 2/2] backlight: lm3630a: add an enable gpio for the
+ HWEN pin
+Message-ID: <20190912093823.h5ahzutlp4evwg6l@holly.lan>
+References: <20190911172106.12843-1-andreas@kemnade.info>
+ <20190911172106.12843-3-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7d2ddx4b3xu2lr3y"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911183158.GA8264@Red>
+In-Reply-To: <20190911172106.12843-3-andreas@kemnade.info>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 07:21:06PM +0200, Andreas Kemnade wrote:
+> For now just enable it in the probe function to allow i2c
+> access. Disabling also means resetting the register values
+> to default and according to the datasheet does not give
+> power savings.
+> 
+> Tested on Kobo Clara HD.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
---7d2ddx4b3xu2lr3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Make sure Dan is happy w.r.t. his review comments but if this driver is
+unchanged when you spin v4 (for the DT changes) then feel free to add:
 
-Hi Corentin,
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-On Wed, Sep 11, 2019 at 08:31:58PM +0200, Corentin Labbe wrote:
-> On Sat, Sep 07, 2019 at 07:01:16AM +0300, Maxime Ripard wrote:
-> > On Fri, Sep 06, 2019 at 08:45:45PM +0200, Corentin Labbe wrote:
-> > > This patch adds documentation for Device-Tree bindings for the
-> > > Crypto Engine cryptographic accelerator driver.
-> > >
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > ---
-> > >  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 84 +++++++++++++++++=
-++
-> > >  1 file changed, 84 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinne=
-r,sun8i-ce.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i=
--ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> [...]
-> > > +else:
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Bus clock
-> > > +      - description: Module clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: ahb
-> > > +      - const: mod
-> > > +
-> > > +  resets:
-> > > +    maxItems: 1
-> > > +
-> > > +  reset-names:
-> > > +    const: ahb
-> >=20
-> > This prevents the usage of the additionalProperties property, which
-> > you should really use.
-> >=20
-> > What you can do instead is moving the clocks and clock-names
-> > description under properties, with a minItems of 2 and a maxItems of
-> > 3. Then you can restrict the length of that property to either 2 or 3
-> > depending on the case here.
-> >=20
->=20
-> Hello
->=20
-> I fail to do this.
-> I do the following (keeped only clock stuff)
-> properties:
->=20
->   clocks:
->     items:
->       - description: Bus clock
->       - description: Module clock
->       - description: MBus clock
 
-Add minItems: 2  and maxItems: 3 at the same level than items
+Daniel.
 
->=20
->   clock-names:
->     items:
->       - const: ahb
->       - const: mod
->       - const: mbus
-
-And here as well
-
-Something I missed earlier though was that we've tried to unify as
-much as possible the ahb / apb / axi clocks around the bus name, it
-would be great if you could do it.
-
->=20
-> if:
->   properties:
->     compatible:
->       items:
->         const: allwinner,sun50i-h6-crypto
-> then:
->   properties:
->       clocks:
->         minItems: 3
->         maxItems: 3
->       clock-names:
->         minItems: 3
->         maxItems: 3
-
-You don't need to duplicate the min and maxItems here
-
-Maxime
-
---7d2ddx4b3xu2lr3y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXoR4QAKCRDj7w1vZxhR
-xd/rAQDRrO6PXFXddEGmbg33Hyw8TjZtRKONBAAN5nSryJdLjQD+O0kVALWGEe1h
-DMUgNDC+mm3ZrNDIOzQMdWgSgsA4aA0=
-=g4h8
------END PGP SIGNATURE-----
-
---7d2ddx4b3xu2lr3y--
+> ---
+> changes in v2:
+> - simplification
+> - correct gpio direction initialisation
+> 
+> changes in v3:
+> - removed legacy include
+> 
+>  drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index 8f84f3684f04..d9e67b9b2571 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/regmap.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/pwm.h>
+>  #include <linux/platform_data/lm3630a_bl.h>
+>  
+> @@ -48,6 +49,7 @@ struct lm3630a_chip {
+>  	struct lm3630a_platform_data *pdata;
+>  	struct backlight_device *bleda;
+>  	struct backlight_device *bledb;
+> +	struct gpio_desc *enable_gpio;
+>  	struct regmap *regmap;
+>  	struct pwm_device *pwmd;
+>  };
+> @@ -535,6 +537,13 @@ static int lm3630a_probe(struct i2c_client *client,
+>  	}
+>  	pchip->pdata = pdata;
+>  
+> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+> +						GPIOD_OUT_HIGH);
+> +	if (IS_ERR(pchip->enable_gpio)) {
+> +		rval = PTR_ERR(pchip->enable_gpio);
+> +		return rval;
+> +	}
+> +
+>  	/* chip initialize */
+>  	rval = lm3630a_chip_init(pchip);
+>  	if (rval < 0) {
+> -- 
+> 2.20.1
+> 
