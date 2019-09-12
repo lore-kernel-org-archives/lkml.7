@@ -2,281 +2,110 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFC5C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB65C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F20214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:44:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQD13WDN"
+	by mail.kernel.org (Postfix) with ESMTP id A57A9214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfILDoc (ORCPT
+        id S1729704AbfILDpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 23:44:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41636 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfILDoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 23:44:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so25758188wrw.8;
-        Wed, 11 Sep 2019 20:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lxEduo3QQvSGLEoFEsaFldsjgnTEowZk6PXnbKh1zXI=;
-        b=qQD13WDNkrvxUnvOrfIfH4gWDpfu3RiWAWXW8OSyANhMcVdYHRdAiwoL2bvQTrvzV2
-         MYY3EeCsjZl4ISCWLUk+KogXS8TwCiotJ1hBNdoCjSYlUkyVOtlaTkYE695aj0YrSOO9
-         /fIwM4avsbtSLxV2wevvTUC91m+FHj22/KcYWeDRjuFBjcWI4T7CC+DF2cLAgA3ILPPY
-         Ymgm5nC57BnzmvvPd7yAsXKoO1eVRNTKmDM9jHNMJidUnNuKNRzFFON1elDcpmmcDVqE
-         Qxyeg2qlZHq5bosDearJ4BOrAkuwHuU/doPPgmWxRV1LTsN9Omamyty0KGmDUsICQkkU
-         68HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lxEduo3QQvSGLEoFEsaFldsjgnTEowZk6PXnbKh1zXI=;
-        b=GxMpVyZ/Zvh8W0SgE3rrarAEfZD8Ss7b1oyCeKcKqRSP6ETbJFUOkWtQ0IJF/rRodf
-         LEpim5PQq6r/P5DfgAcrYmIw+//cgk0smxGhJL+dYFZ861RghqkXazNHiyZKbW9Nh3AT
-         wrlUXBH7lib3hhu+jdTE3/xlbbTgpMFkEP7XsuwiKvyTcw+RylrGe3RQ4INASSjXiijW
-         l8TOXZ+qNA/m/ccIDOV1Jf+ttg/RsRSXqWeZpfFIjgBkCagw+5Ueb6vEKKOPxo7YVoCG
-         z+1MXIF6VyYCKtFHWxwTDPgwZkVdLVI2L0t2NwCCeG+dAKMJTJe95aVE1EI7u+LDRF3x
-         Uukw==
-X-Gm-Message-State: APjAAAUCRARwN2OlGHpjz67Bx+1eZJi5vcNhv0me/ElPWtPDYBdEzuvS
-        g4utP98CePZP51MNsyDnj40=
-X-Google-Smtp-Source: APXvYqwR6oJongllr5UVCdlEIPZpLImYxiWMvoml6B/prU8jL9s9gYY56Fa954EsuaNkGh6X5NQHYw==
-X-Received: by 2002:a05:6000:12d1:: with SMTP id l17mr2277959wrx.91.1568259869077;
-        Wed, 11 Sep 2019 20:44:29 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D14CBD4495B592C99C920.dip0.t-ipconnect.de. [2003:d0:6f2d:14cb:d449:5b59:2c99:c920])
-        by smtp.gmail.com with ESMTPSA id a15sm3756697wmj.25.2019.09.11.20.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2019 20:44:28 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 05:44:21 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190912034421.GA2085@darwi-home-pc>
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc>
- <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
- <20190910173243.GA3992@darwi-home-pc>
- <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
+        Wed, 11 Sep 2019 23:45:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2217 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726157AbfILDpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 23:45:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 035C1B7E71A04F8CF1B3;
+        Thu, 12 Sep 2019 11:44:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 12 Sep 2019 11:44:52 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <vyasevich@gmail.com>, <nhorman@tuxdriver.com>,
+        <marcelo.leitner@gmail.com>, <davem@davemloft.net>
+CC:     <linux-sctp@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH v2 net 1/3] sctp: change return type of sctp_get_port_local
+Date:   Thu, 12 Sep 2019 12:02:17 +0800
+Message-ID: <20190912040219.67517-2-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190912040219.67517-1-maowenan@huawei.com>
+References: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
+ <20190912040219.67517-1-maowenan@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911173624.GI2740@mit.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+Currently sctp_get_port_local() returns a long
+which is either 0,1 or a pointer casted to long.
+It's neither of the callers use the return value since
+commit 62208f12451f ("net: sctp: simplify sctp_get_port").
+Now two callers are sctp_get_port and sctp_do_bind,
+they actually assumend a casted to an int was the same as
+a pointer casted to a long, and they don't save the return
+value just check whether it is zero or non-zero, so
+it would better change return type from long to int for
+sctp_get_port_local.
 
-On Wed, Sep 11, 2019 at 01:36:24PM -0400, Theodore Y. Ts'o wrote:
-> On Wed, Sep 11, 2019 at 06:00:19PM +0100, Linus Torvalds wrote:
-> >     [    0.231255] random: get_random_bytes called from
-> > start_kernel+0x323/0x4f5 with crng_init=0
-> >
-> > and that's this code:
-> >
-> >         add_latent_entropy();
-> >         add_device_randomness(command_line, strlen(command_line));
-> >         boot_init_stack_canary();
-> >
-> > in particular, it's the boot_init_stack_canary() thing that asks for a
-> > random number for the canary.
-> >
-> > I don't actually see the 'crng init done' until much much later:
-> >
-> >     [   21.741125] random: crng init done
->
-> Yes, that's super early in the boot sequence.  IIRC the stack canary
-> gets reinitialized later (or maybe it was only for the other CPU's in
-> SMP mode; I don't recall the details of the top of my head).
->
-> I think this one always fails, and perhaps we should have a way of
-> suppressing it --- but that's correct the in-kernel interface doesn't
-> block.
->
-> The /dev/urandom device doesn't block either, despite security
-> eggheads continually asking me to change it to block ala getrandom(2),
-> but I have always pushed because because I *know* changing
-> /dev/urandom to block would be asking for userspace regressions.
->
-> The compromise we came up with was that since getrandom(2) is a new
-> interface, we could make this have the behavior that the security
-> heads wanted, which is to make blocking unconditional, since the
-> theory was that *this* interface would be sane, and that userspace
-> applications which used it too early was buggy, and we could make it
-> *their* problem.
->
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/sctp/socket.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Hmmmm, IMHO it's almost impossible to define "too early" here... Does
-it mean applications in the critical boot path? Does gnome-session =>
-libICE => libbsd => getentropy() => getrandom() => generated MIT magic
-cookie count as being too early? It's very hazy...
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 9d1f83b10c0a..5e1934c48709 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -309,7 +309,7 @@ static int sctp_bind(struct sock *sk, struct sockaddr *addr, int addr_len)
+ 	return retval;
+ }
+ 
+-static long sctp_get_port_local(struct sock *, union sctp_addr *);
++static int sctp_get_port_local(struct sock *, union sctp_addr *);
+ 
+ /* Verify this is a valid sockaddr. */
+ static struct sctp_af *sctp_sockaddr_af(struct sctp_sock *opt,
+@@ -7998,7 +7998,7 @@ static void sctp_unhash(struct sock *sk)
+ static struct sctp_bind_bucket *sctp_bucket_create(
+ 	struct sctp_bind_hashbucket *head, struct net *, unsigned short snum);
+ 
+-static long sctp_get_port_local(struct sock *sk, union sctp_addr *addr)
++static int sctp_get_port_local(struct sock *sk, union sctp_addr *addr)
+ {
+ 	struct sctp_sock *sp = sctp_sk(sk);
+ 	bool reuse = (sk->sk_reuse || sp->reuse);
+@@ -8108,7 +8108,7 @@ static long sctp_get_port_local(struct sock *sk, union sctp_addr *addr)
+ 
+ 			if (sctp_bind_addr_conflict(&ep2->base.bind_addr,
+ 						    addr, sp2, sp)) {
+-				ret = (long)sk2;
++				ret = 1;
+ 				goto fail_unlock;
+ 			}
+ 		}
+@@ -8180,7 +8180,7 @@ static int sctp_get_port(struct sock *sk, unsigned short snum)
+ 	addr.v4.sin_port = htons(snum);
+ 
+ 	/* Note: sk->sk_num gets filled in if ephemeral port request. */
+-	return !!sctp_get_port_local(sk, &addr);
++	return sctp_get_port_local(sk, &addr);
+ }
+ 
+ /*
+-- 
+2.20.1
 
-getrandom(2) basically has no guaranteed upper bound for the waiting
-time. And in the report I submitted in the parent thread, the upper
-bound is really "infinitely locked"...
-
-Here is a trace_printk() log of all the getrandom() calls done from
-system boot:
-
-    systemd-random--179   2.510228: getrandom(512 bytes, flags = 1)
-    systemd-random--179   2.510239: getrandom(512 bytes, flags = 0)
-            polkitd-294   3.903699: getrandom(8 bytes, flags = 1)
-            polkitd-294   3.904191: getrandom(8 bytes, flags = 1)
-
-                          ... + 45 similar instances
-
-    gnome-session-b-327   4.400620: getrandom(16 bytes, flags = 0)
-
-                          ... boot blocks here, until
-                              pressing some keys
-
-    gnome-session-b-327   49.32140: getrandom(16 bytes, flags = 0)
-
-                          ... + 3 similar instances
-
-        gnome-shell-335   49.553594: getrandom(8 bytes, flags = 1)
-        gnome-shell-335   49.553600: getrandom(8 bytes, flags = 1)
-
-                          ... + 10 similar instances
-
-           Xwayland-345   50.129401: getrandom(8 bytes, flags = 1)
-           Xwayland-345   50.129491: getrandom(8 bytes, flags = 1)
-
-                          ... + 9 similar instances
-
-        gnome-shell-335   50.487543: getrandom(8 bytes, flags = 1)
-        gnome-shell-335   50.487550: getrandom(8 bytes, flags = 1)
-
-                          ... + 79 similar instances
-
-      gsd-xsettings-390   51.431638: getrandom(8 bytes, flags = 1)
-      gsd-clipboard-389   51.432693: getrandom(8 bytes, flags = 1)
-      gsd-xsettings-390   51.433899: getrandom(8 bytes, flags = 1)
-      gsd-smartcard-388   51.433924: getrandom(110 bytes, flags = 0)
-      gsd-smartcard-388   51.433936: getrandom(256 bytes, flags = 0)
-
-                          ... + 3 similar instances
-
-And it goes on, including processes like gsd-power-, gsd-xsettings-,
-gsd-clipboard-, gsd-print-notif, gsd-clipboard-, gsd-color,
-gst-keyboard-, etc.
-
-What's the boundary of "too early" here? It's kinda undefinable..
-
-> People have suggested adding a new getrandom flag, GRND_I_KNOW_THIS_IS_INSECURE,
-> or some such, which wouldn't block and would return "best efforts"
-> randomness.  I haven't been super enthusiastic about such a flag
-> because I *know* it would be insecure.   However, the next time a massive
-> security bug shows up on the front pages of the Wall Street Journal,
-> or on some web site such as https://factorable.net, it won't be the kernel's fault
-> since the flag will be GRND_INSECURE_BROKEN_APPLICATION, or some such.
-> It doesn't really solve the problem, though.
->
-
-At least for generating the MIT cookie, it would make some sort of
-sense... Really caring about truly random-numbers while using Xorg
-is almost like perfecting a hard-metal door for the paper house ;)
-
-(Jokes aside, I understand that this cannot be the solution)
-
-> > But this does show that
-> >
-> >  (a) we have the same issue in the kernel, and we don't block there
->
-> Ultimately, I think the only right answer is to make it the
-> bootloader's responsibility to get us some decent entropy at boot
-> time.
-
-Just 8 days ago, systemd v243 was released, with systemd-random-seed(8)
-now supporting *crediting* the entropy while loading the random seed:
-
-    https://systemd.io/RANDOM_SEEDS
-
-systemd-random-seed do something similar to what OpenBSD does, by
-preserving the seed across reboots at /var/lib/systemd/random-seed.
-
-This is not enabled by default though. Will distributions enable it by
-default in the future? I have no idea \_(.)_/
-
-> There are patches to allow ARM systems to pass in entropy via
-> the device tree.  And in theory (assuming you trust the UEFI BIOS ---
-> stop laughing in the back!) we can use that get entropy which will
-> solve the problem for UEFI boot systems.
-
-Hmmmm ...
-
-> I've been talking to Ron
-> Minnich about trying to get this support into the NERF bootloader, at
-> which point new servers from the Open Compute Project will have a
-> solution as well.  (We can probably also get solutions for Chrome OS
-> devices, since those have TPM-like which are trusted to have a
-> comptently engineered hardware RNG --- I'm not sure I would trust all
-> TPM devices in commodity hardware, but again, at least we can shift
-> blame off of the kernel.  :-P)
->
-> Still, these are all point solutions, and don't really solve the
-> problem on older systems, or non-x86 systems.
->
-
-For non-x86 _embedded_ systems at least, usually the BSP provider
-enables the necessary hwrng driver in question and credit its entropy;
-e.g. 62f95ae805fa (hwrng: omap - Set default quality).
-
-> >  (b) initializing the crng really can be a timing problem
-> >
-> > The interrupt thing is only going to get worse as disks turn into
-> > ssd's and some of them end up using polling rather than interrupts..
-> > So we're likely to see _fewer_ interrupts in the future, not more.
->
-> Yeah, agreed.  Maybe we should have an "insecure_randomness" boot
-> option which blindly forces the CRNG to be initialized at boot, so
-> that at least people can get to a command line, if insecurely?  I
-> don't have any good ideas about how to solve this problem in general.
-> :-( :-( :-(
->
-> 						- Ted
-
-Yeah, this is a hard engineering problem. You've earlier summarized it
-perfectly here:
-
-    https://lore.kernel.org/r/20180514003034.GI14763@thunk.org
-
-I guess, to summarize earlier e-mails, a nice path would be:
-
-    1. Cutting down the number of bits needed to initialize the CRNG
-       to 256 bits (CHACHA20 cipher)
-
-    2. Complaining loudly when getrandom() is used while the CRNG is
-       not yet initialized.
-
-    3. Hopefully #2 will force distributions to act: either trusting
-       RDRANDOM when it's sane, configuring systmed-random-seed(8) to
-       credit the entropy by default, etc.
-
-Thanks!
-
---
-darwi
-http://darwish.chasingpointers.com
