@@ -2,184 +2,143 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5051C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FAAC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB9520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F93320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbfILOTo convert rfc822-to-8bit (ORCPT
+        id S1732635AbfILOUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:19:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62735 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732123AbfILOTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:19:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 07:19:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="175978702"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 07:19:42 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 12 Sep 2019 07:19:42 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.57]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.63]) with mapi id 14.03.0439.000;
- Thu, 12 Sep 2019 07:19:41 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nv@vosn.de" <nv@vosn.de>
-Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
-Thread-Topic: [PATCH] ACPICA: make acpi_load_table() return table index
-Thread-Index: AQHVaUE6M44QnoJV0UqVXW85SrAmnKcoFnTQ
-Date:   Thu, 12 Sep 2019 14:19:40 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
-References: <20190906174605.GY2680@smile.fi.intel.com>
- <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
-In-Reply-To: <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZGQ1MTRmYTYtNzI3Ni00ZGY0LTk0OGItMDkyMDhjMWVmMTQzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiclFuS2NzYUFGTFBVTXNvZnFGSnVUOW9FMVpqRFwvNnljaEMrRlZTMXpBVUdTRU1EQWdWbnNlNkYzYklETUpKRUMifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 12 Sep 2019 10:20:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732455AbfILOUw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:20:52 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CE7djK042946;
+        Thu, 12 Sep 2019 10:20:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp3fc98r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 10:20:26 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CE7uG7043532;
+        Thu, 12 Sep 2019 10:20:25 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyp3fc97w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 10:20:25 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CEKDHg003456;
+        Thu, 12 Sep 2019 14:20:24 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 2uv467y990-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 14:20:24 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CEKIb855771578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 14:20:18 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D1C2136055;
+        Thu, 12 Sep 2019 14:20:18 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77FC9136063;
+        Thu, 12 Sep 2019 14:20:15 +0000 (GMT)
+Received: from [9.199.32.243] (unknown [9.199.32.243])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 14:20:15 +0000 (GMT)
+Subject: Re: [PATCH 3/3] powerpc/mm: call H_BLOCK_REMOVE when supported
+To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830120712.22971-1-ldufour@linux.ibm.com>
+ <20190830120712.22971-4-ldufour@linux.ibm.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <5bcd3da7-1bc2-f3f9-3ed2-e3aa0bb540bd@linux.ibm.com>
+Date:   Thu, 12 Sep 2019 19:50:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190830120712.22971-4-ldufour@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nikolaus,
-The ability to unload an ACPI table (especially AML tables such as SSDTs) is in the process of being deprecated in ACPICA -- since it is also deprecated in the current ACPI specification. This is being done because of the difficulty of deleting the namespace entries for the table.  FYI, Windows does not properly support this function either.
+On 8/30/19 5:37 PM, Laurent Dufour wrote:
+> Instead of calling H_BLOCK_REMOVE all the time when the feature is
+> exhibited, call this hcall only when the couple base page size, page size
+> is supported as reported by the TLB Invalidate Characteristics.
+> 
 
-Bob
+supported is not actually what we are checking here. We are checking 
+whether the base page size actual page size remove can be done in chunks 
+of 8 blocks. If we don't support 8 block you fallback to bulk 
+invalidate. May be update the commit message accordingly?
 
 
------Original Message-----
-From: Nikolaus Voss [mailto:nikolaus.voss@loewensteinmedical.de] 
-Sent: Thursday, September 12, 2019 1:08 AM
-To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>
-Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; nv@vosn.de; Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Subject: [PATCH] ACPICA: make acpi_load_table() return table index
+> For regular pages and hugetlb, the assumption is made that the page size is
+> equal to the base page size. For THP the page size is assumed to be 16M.
+> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> ---
+>   arch/powerpc/platforms/pseries/lpar.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+> index 375e19b3cf53..ef3dbf108a65 100644
+> --- a/arch/powerpc/platforms/pseries/lpar.c
+> +++ b/arch/powerpc/platforms/pseries/lpar.c
+> @@ -1143,7 +1143,11 @@ static inline void __pSeries_lpar_hugepage_invalidate(unsigned long *slot,
+>   	if (lock_tlbie)
+>   		spin_lock_irqsave(&pSeries_lpar_tlbie_lock, flags);
+>   
+> -	if (firmware_has_feature(FW_FEATURE_BLOCK_REMOVE))
+> +	/*
+> +	 * Assuming THP size is 16M, and we only support 8 bytes size buffer
+> +	 * for the momment.
+> +	 */
+> +	if (mmu_psize_defs[psize].hblk[MMU_PAGE_16M] == 8)
+>   		hugepage_block_invalidate(slot, vpn, count, psize, ssize);
+>   	else
+>   		hugepage_bulk_invalidate(slot, vpn, count, psize, ssize);
 
-For unloading an ACPI table, it is necessary to provide the index of the table. The method intended for dynamically loading or hotplug addition of tables, acpi_load_table(), should provide this information via an optional pointer to the loaded table index.
 
-This patch fixes the table unload function of acpi_configfs.
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
----
- drivers/acpi/acpi_configfs.c   | 2 +-
- drivers/acpi/acpica/dbfileio.c | 2 +-
- drivers/acpi/acpica/tbxfload.c | 8 ++++++--
- drivers/firmware/efi/efi.c     | 2 +-
- include/acpi/acpixf.h          | 3 ++-
- 5 files changed, 11 insertions(+), 6 deletions(-)
+So we don't use block invalidate if blocksize is != 8.
 
-diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c index 57d9d574d4dde..77f81242a28e6 100644
---- a/drivers/acpi/acpi_configfs.c
-+++ b/drivers/acpi/acpi_configfs.c
-@@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
- 	if (!table->header)
- 		return -ENOMEM;
- 
--	ret = acpi_load_table(table->header);
-+	ret = acpi_load_table(table->header, &table->index);
- 	if (ret) {
- 		kfree(table->header);
- 		table->header = NULL;
-diff --git a/drivers/acpi/acpica/dbfileio.c b/drivers/acpi/acpica/dbfileio.c index c6e25734dc5cd..e1b6e54a96ac1 100644
---- a/drivers/acpi/acpica/dbfileio.c
-+++ b/drivers/acpi/acpica/dbfileio.c
-@@ -93,7 +93,7 @@ acpi_status acpi_db_load_tables(struct acpi_new_table_desc *list_head)
- 	while (table_list_head) {
- 		table = table_list_head->table;
- 
--		status = acpi_load_table(table);
-+		status = acpi_load_table(table, NULL);
- 		if (ACPI_FAILURE(status)) {
- 			if (status == AE_ALREADY_EXISTS) {
- 				acpi_os_printf
-diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c index 86f1693f6d29a..d08cd8ffcbdb6 100644
---- a/drivers/acpi/acpica/tbxfload.c
-+++ b/drivers/acpi/acpica/tbxfload.c
-@@ -268,7 +268,8 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
-  *
-  * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
-  *                                    table to be loaded.
-- *
-+ *              table_idx           - Pointer to a u32 for storing the table
-+ *                                    index, might be NULL
-  * RETURN:      Status
-  *
-  * DESCRIPTION: Dynamically load an ACPI table from the caller's buffer. Must @@ -278,7 +279,7 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
-  *              to ensure that the table is not deleted or unmapped.
-  *
-  ******************************************************************************/
--acpi_status acpi_load_table(struct acpi_table_header *table)
-+acpi_status acpi_load_table(struct acpi_table_header *table, u32 
-+*table_idx)
- {
- 	acpi_status status;
- 	u32 table_index;
-@@ -297,6 +298,9 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
- 	status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
- 						ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
- 						FALSE, &table_index);
-+	if (table_idx)
-+		*table_idx = table_index;
-+
- 	if (ACPI_SUCCESS(status)) {
- 
- 		/* Complete the initialization/resolution of new objects */ diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c index ad3b1f4866b35..9773e4212baef 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -308,7 +308,7 @@ static __init int efivar_ssdt_load(void)
- 			goto free_data;
- 		}
- 
--		ret = acpi_load_table(data);
-+		ret = acpi_load_table(data, NULL);
- 		if (ret) {
- 			pr_err("failed to load table: %d\n", ret);
- 			goto free_data;
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h index 3845c8fcc94e5..c90bbdc4146a6 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -452,7 +452,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
- 					       u8 physical))
- 
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
--			    acpi_load_table(struct acpi_table_header *table))
-+			    acpi_load_table(struct acpi_table_header *table,
-+					    u32 *table_idx))
- 
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 			    acpi_unload_parent_table(acpi_handle object))
---
-2.17.1
 
+> @@ -1437,7 +1441,10 @@ static void pSeries_lpar_flush_hash_range(unsigned long number, int local)
+>   	if (lock_tlbie)
+>   		spin_lock_irqsave(&pSeries_lpar_tlbie_lock, flags);
+>   
+> -	if (firmware_has_feature(FW_FEATURE_BLOCK_REMOVE)) {
+> +	/*
+> +	 * Currently, we only support 8 bytes size buffer in do_block_remove().
+> +	 */
+> +	if (mmu_psize_defs[batch->psize].hblk[batch->psize] == 8) {
+>   		do_block_remove(number, batch, param);
+>   		goto out;
+>   	}
+> 
+
+-aneesh
