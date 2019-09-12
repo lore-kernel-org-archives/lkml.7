@@ -2,287 +2,72 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D1C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAAAC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6985820CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E90D208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfILJD0 (ORCPT
+        id S1730551AbfILJEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:03:26 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:42873 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730175AbfILJDV (ORCPT
+        Thu, 12 Sep 2019 05:04:15 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36194 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730218AbfILJEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:03:21 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x8C91qKd011597;
-        Thu, 12 Sep 2019 12:01:52 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id 4ADAB62CAA; Thu, 12 Sep 2019 12:01:52 +0300 (IDT)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, sumit.garg@linaro.org,
-        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
-        joel@jms.id.au
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v3 2/2] hwrng: npcm: add NPCM RNG driver
-Date:   Thu, 12 Sep 2019 12:01:49 +0300
-Message-Id: <20190912090149.7521-3-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190912090149.7521-1-tmaimon77@gmail.com>
-References: <20190912090149.7521-1-tmaimon77@gmail.com>
+        Thu, 12 Sep 2019 05:04:14 -0400
+X-UUID: 68894de430da47989fae04bea9139ecb-20190912
+X-UUID: 68894de430da47989fae04bea9139ecb-20190912
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2104157100; Thu, 12 Sep 2019 17:04:08 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Sep
+ 2019 17:04:06 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Thu, 12 Sep 2019 17:04:05 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH 0/3] add panel driver for innolux,p097pfg with ssd2825 bridge
+Date:   Thu, 12 Sep 2019 17:04:01 +0800
+Message-ID: <20190912090404.89822-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 7750BE36942D4B8614D9DC6650D110B6A4CA3516067561C7C1C9FF4D7C3336762000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
+Add driver to support panel innolux,p097pfg with bridge ssd2858.
+SSD2858 can spilt dsi 4 lanes to 8 lanes.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/char/hw_random/Kconfig    |  13 +++
- drivers/char/hw_random/Makefile   |   1 +
- drivers/char/hw_random/npcm-rng.c | 186 ++++++++++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/char/hw_random/npcm-rng.c
+Jitao Shi (3):
+  drm/panel: panel-innolux: Allow 2 reset pins for panel
+  dt-bindings: display: Add documentation for innolux,p097pfg_ssd2858
+    panel
+  drm/panel: panel-innolux: Add support for P097PFZ behind SSD2858
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 59f25286befe..87a1c30e7958 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_NPCM
-+	tristate "NPCM Random Number Generator support"
-+	depends on ARCH_NPCM || COMPILE_TEST
-+	default HW_RANDOM
-+	help
-+ 	  This driver provides support for the Random Number
-+	  Generator hardware available in Nuvoton NPCM SoCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called npcm-rng.
-+
-+ 	  If unsure, say Y.
-+
- endif # HW_RANDOM
- 
- config UML_RANDOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 7c9ef4a7667f..17b6d4e6d591 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
- obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
- obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
- obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-+obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
-new file mode 100644
-index 000000000000..b7c8c7e13a49
---- /dev/null
-+++ b/drivers/char/hw_random/npcm-rng.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Nuvoton Technology corporation.
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/init.h>
-+#include <linux/random.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/hw_random.h>
-+#include <linux/delay.h>
-+#include <linux/of_irq.h>
-+#include <linux/pm_runtime.h>
-+
-+#define NPCM_RNGCS_REG		0x00	/* Control and status register */
-+#define NPCM_RNGD_REG		0x04	/* Data register */
-+#define NPCM_RNGMODE_REG	0x08	/* Mode register */
-+
-+#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
-+#define NPCM_RNG_DATA_VALID	BIT(1)
-+#define NPCM_RNG_ENABLE		BIT(0)
-+#define NPCM_RNG_M1ROSEL	BIT(1)
-+
-+#define NPCM_RNG_TIMEOUT_USEC	20000
-+#define NPCM_RNG_POLL_USEC	1000
-+
-+#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
-+
-+struct npcm_rng {
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int npcm_rng_init(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+
-+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
-+	       priv->base + NPCM_RNGCS_REG);
-+
-+	return 0;
-+}
-+
-+static void npcm_rng_cleanup(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+
-+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
-+}
-+
-+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	int retval = 0;
-+	int ready;
-+
-+	pm_runtime_get_sync((struct device *)priv->rng.priv);
-+
-+	while (max >= sizeof(u32)) {
-+		if (wait) {
-+			if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
-+					       ready,
-+					       ready & NPCM_RNG_DATA_VALID,
-+					       NPCM_RNG_POLL_USEC,
-+					       NPCM_RNG_TIMEOUT_USEC))
-+				break;
-+		} else {
-+			if ((readl(priv->base + NPCM_RNGCS_REG) &
-+			    NPCM_RNG_DATA_VALID) == 0)
-+				break;
-+		}
-+
-+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
-+		retval += sizeof(u32);
-+		buf += sizeof(u32);
-+		max -= sizeof(u32);
-+	}
-+
-+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
-+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
-+
-+	return retval || !wait ? retval : -EIO;
-+}
-+
-+static int npcm_rng_probe(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv;
-+	struct resource *res;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	dev_set_drvdata(&pdev->dev, priv);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+#ifndef CONFIG_PM
-+	priv->rng.init = npcm_rng_init;
-+	priv->rng.cleanup = npcm_rng_cleanup;
-+#endif
-+	priv->rng.name = pdev->name;
-+	priv->rng.read = npcm_rng_read;
-+	priv->rng.priv = (unsigned long)&pdev->dev;
-+	priv->rng.quality = 1000;
-+
-+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
-+
-+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
-+			ret);
-+		pm_runtime_disable(&pdev->dev);
-+		pm_runtime_set_suspended(&pdev->dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_remove(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv = platform_get_drvdata(pdev);
-+
-+	devm_hwrng_unregister(&pdev->dev, &priv->rng);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int npcm_rng_runtime_suspend(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	npcm_rng_cleanup(&priv->rng);
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_runtime_resume(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	return npcm_rng_init(&priv->rng);
-+}
-+#endif
-+
-+static const struct dev_pm_ops npcm_rng_pm_ops = {
-+	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
-+			   npcm_rng_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+};
-+
-+static const struct of_device_id rng_dt_id[] = {
-+	{ .compatible = "nuvoton,npcm750-rng",  },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rng_dt_id);
-+
-+static struct platform_driver npcm_rng_driver = {
-+	.driver = {
-+		.name		= "npcm-rng",
-+		.pm		= &npcm_rng_pm_ops,
-+		.of_match_table = of_match_ptr(rng_dt_id),
-+	},
-+	.probe		= npcm_rng_probe,
-+	.remove		= npcm_rng_remove,
-+};
-+
-+module_platform_driver(npcm_rng_driver);
-+
-+MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
-+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-+MODULE_LICENSE("GPL v2");
+ .../display/panel/innolux,p097pfg_ssd2858.txt |  39 +++++
+ drivers/gpu/drm/panel/panel-innolux-p079zca.c | 140 ++++++++++++++++--
+ 2 files changed, 164 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p097pfg_ssd2858.txt
+
 -- 
-2.18.0
+2.21.0
 
