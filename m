@@ -2,146 +2,127 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B771C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E7C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7572081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hRoSE76z"
+	by mail.kernel.org (Postfix) with ESMTP id A28F3214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568300399;
+	bh=RK47i9JzV2o8zYa+doB7UiayI/FwXMaWv5Ml8LccsgY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uSiP7cDA6JfovO1y4CBI79sQMJZyXRNBbVakMda38TlHSQbSroU8uy0CotNCD8tKK
+	 D0cAkm9etLfMRkwkzs2RntfNRd3IPT8zisYIKvjmaKiL6p2sCgyxtqPVQBwdYSKHQn
+	 QaXLkndpMmbnfbmpeohCHQ/BxZ2JJfuTcpazmxa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732874AbfILO6a (ORCPT
+        id S1732877AbfILO76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:58:30 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:33632 "EHLO mail.andi.de1.cc"
+        Thu, 12 Sep 2019 10:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732799AbfILO6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:58:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=diUgc0I/ohhBLoo+DfzpNbJII4nieNRP6PUcXuYVoMU=; b=hRoSE76zUVKfkeRCwX+M76w5G
-        A7L271OHeTUZtSSmDD3PBAO03jMYGiqNFzxpzp2TuNks8KyeaelhToRr13Axa+wk172htXGHVov6M
-        4vw+oU2WUUmlVUgilSrqTXOHbJije70cX/0hQNIkcrbAsrgHVk/0Lq+o2wGv+q2P/1wSE=;
-Received: from [77.247.85.104] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i8QY5-0005Vh-M2; Thu, 12 Sep 2019 16:58:18 +0200
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i8QY3-0006dy-3x; Thu, 12 Sep 2019 16:58:15 +0200
-Date:   Thu, 12 Sep 2019 16:58:08 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
-        <jingoohan1@gmail.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: backlight: lm3630a: add
- enable_gpios
-Message-ID: <20190912165808.3c38b7a2@kemnade.info>
-In-Reply-To: <ff410d6c-e1e8-7c96-e8f7-0a0deb816f6a@ti.com>
-References: <20190911172106.12843-1-andreas@kemnade.info>
-        <20190911172106.12843-2-andreas@kemnade.info>
-        <ff410d6c-e1e8-7c96-e8f7-0a0deb816f6a@ti.com>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        id S1732444AbfILO76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:59:58 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E362F20856
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 14:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568300397;
+        bh=RK47i9JzV2o8zYa+doB7UiayI/FwXMaWv5Ml8LccsgY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mp8tMCnHBMtri7nKuvpjSoNW3SBhD9Q2PQQus+HoDhqqsO2hfh5+kB+09qrWUHo06
+         Xg50YZM1a8zDvFIJJv0CI/EvakHiQne0lhgmu9mtHuf7+l8qkR8L3fuEBxSzlzY4/S
+         /qPsvdajQdsWoOvQTd8Ut5MEZxBU2HYNYlaTeYNs=
+Received: by mail-wr1-f42.google.com with SMTP id k6so16676822wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:59:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAUN8G3NAXB6G2kaGAQv/QpbQmaJRrxp06n/+Od23v1/kaqikAgw
+        fqcxwD/3S3uVEYK6d68kHH9uSWEb7Wuax80YsaM=
+X-Google-Smtp-Source: APXvYqyWrVR+NI16eudQNtduL1OAxnO0WQ4SkOLjY2AVyz5N6syNQZ1qE/5QhN1PWc17kzrEkpHSXdkh4aFf0C6oOhM=
+X-Received: by 2002:a5d:6b49:: with SMTP id x9mr12703438wrw.80.1568300395358;
+ Thu, 12 Sep 2019 07:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/p=GURwKtHNf6YhQ_WKbnjoL"; protocol="application/pgp-signature"
+References: <20190321163623.20219-12-julien.grall@arm.com> <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
+ <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
+ <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com>
+ <20190619123939.GF7767@fuggles.cambridge.arm.com> <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
+ <20190624104006.lvm32nahemaqklxc@willie-the-truck> <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
+ <20190912140256.fwbutgmadpjbjnab@willie-the-truck>
+In-Reply-To: <20190912140256.fwbutgmadpjbjnab@willie-the-truck>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Thu, 12 Sep 2019 15:59:43 +0100
+X-Gmail-Original-Message-ID: <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
+Message-ID: <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+To:     Will Deacon <will@kernel.org>
+Cc:     Will Deacon <will.deacon@arm.com>, julien.thierry@arm.com,
+        aou@eecs.berkeley.edu, james.morse@arm.com,
+        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Anup Patel <anup.Patel@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>, gary@garyguo.net,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        christoffer.dall@arm.com, linux-riscv@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/p=GURwKtHNf6YhQ_WKbnjoL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Thx Will for reply.
 
-On Thu, 12 Sep 2019 06:39:50 -0500
-Dan Murphy <dmurphy@ti.com> wrote:
-
-> Andreas
->=20
-> On 9/11/19 12:21 PM, Andreas Kemnade wrote:
-> > add enable-gpios to describe HWEN pin
+On Thu, Sep 12, 2019 at 3:03 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Sun, Sep 08, 2019 at 07:52:55AM +0800, Guo Ren wrote:
+> > On Mon, Jun 24, 2019 at 6:40 PM Will Deacon <will@kernel.org> wrote:
+> > > > I'll keep my system use the same ASID for SMP + IOMMU :P
+> > >
+> > > You will want a separate allocator for that:
+> > >
+> > > https://lkml.kernel.org/r/20190610184714.6786-2-jean-philippe.brucker@arm.com
 > >
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > ---
-> > changes in v2: added example
-> > changes in v3: added Acked-by
-> >   .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-b=
-acklight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
-cklight.yaml
-> > index dc129d9a329e..1fa83feffe16 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
-t.yaml
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
-t.yaml
-> > @@ -29,6 +29,10 @@ properties:
-> >     '#size-cells':
-> >       const: 0
-> >  =20
-> > +  enable-gpios:
-> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
-).
-> > +    maxItems: 1
-> > +
-> >   required:
-> >     - compatible
-> >     - reg
-> > @@ -92,6 +96,7 @@ examples:
-> >       i2c {
-> >           #address-cells =3D <1>;
-> >           #size-cells =3D <0>;
-> > +        enable-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>;
-> >  =20
-> >           led-controller@38 {
-> >                   compatible =3D "ti,lm3630a"; =20
->=20
-> Looks good to me
->=20
-well, the enable-gpios is still at the same place as in v2. This was sent
-before your comments to v2 have been arrived.
+> > Yes, it is hard to maintain ASID between IOMMU and CPUMMU or different
+> > system, because it's difficult to synchronize the IO_ASID when the CPU
+> > ASID is rollover.
+> > But we could still use hardware broadcast TLB invalidation instruction
+> > to uniformly manage the ASID and IO_ASID, or OTHER_ASID in our IOMMU.
+>
+> That's probably a bad idea, because you'll likely stall execution on the
+> CPU until the IOTLB has completed invalidation. In the case of ATS, I think
+> an endpoint ATC is permitted to take over a minute to respond. In reality, I
+> suspect the worst you'll ever see would be in the msec range, but that's
+> still an unacceptable period of time to hold a CPU.
+Just as I've said in the session that IOTLB invalidate delay is
+another topic, My main proposal is to introduce stage1.pgd and
+stage2.pgd as address space identifiers between different TLB systems
+based on vmid, asid. My last part of sildes will show you how to
+translate stage1/2.pgd to as/vmid in PCI ATS system and the method
+could work with SMMU-v3 and intel Vt-d. (It's regret for me there is
+no time to show you the whole slides.)
 
-Regards,
-Andreas
+In our light IOMMU implementation, there's no IOTLB invalidate delay
+problem. Becasue IOMMU is very close to CPU MMU and interconnect's
+delay is the same with SMP CPUs MMU (no PCI, VM supported).
 
---Sig_/p=GURwKtHNf6YhQ_WKbnjoL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+To solve the problem, we could define a async mode in sfence.vma.b to
+slove the problem and finished with per_cpu_irq/exception.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Best Regards
+ Guo Ren
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl16XQAACgkQl4jFM1s/
-ye8SEw/+IjRu/Eq+1Wkt7PlbCz3K+lHCVv+BKCe5EZrbK5rIIs6Xy/HaIH+R4aEX
-JNyDe6TkjAreOLuSSFoZcE3CLA7lzhi5NGVGXfpdvNSFkJfvMGL0y8AJmhcbsQUf
-4tMGEJVpF7WiUiwNynxGWKxRU1Q/++kBzcFiC0eFnewx4/0kELVCVwx+uLJQkm84
-OInsI/5n+9huEmB/I2SUr5Wa0luaMDWH2XzKYvLSzM1x1L8yMFPbwrqSuU+c83mR
-hEad0DRscDJhca01BZTiRpyf5HSRnPPwS8Q7YuWXDTY5VIs6QJNbdB2NfooYFnFb
-bKLXfSkGBfB5mNfJq0nEP7F6RumBJ5W68gokNF0uQxy8kfR9Qz9INZjOzNIphI3z
-jWvIraehnGd/1Qsu7046bj+seQIj7OjXVgsqvl2GvgYH8g9sM69sDJWvWEkXAH+8
-Y8ltoMngNcW9BMf01FPpaY/LcprUPA1ylOISy6orWbFoEczKKySovOvrBOscNXTG
-wUaz7yPeRzgJwHMfUQpw6r0TjWo424U3gqDQN38SCfiKhoo3GoInfRBemdU/Vh9E
-vjHdTKyCx3xeWiy8a4o4lVa/YGNz3dvnZSdShMu+hxD5cpcL+iHl2kMEMVMHwDit
-hjS3YcYEbtQHEtlQ88Zwv0wJmgQJ9SOExUTd8dPtJra05qtfdL0=
-=1gCA
------END PGP SIGNATURE-----
-
---Sig_/p=GURwKtHNf6YhQ_WKbnjoL--
+ML: https://lore.kernel.org/linux-csky/
