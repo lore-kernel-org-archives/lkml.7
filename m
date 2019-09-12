@@ -7,62 +7,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F97C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367A4C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5536920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D28F20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 23:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQCZxf2w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tPvXqEzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfILW63 (ORCPT
+        id S1727215AbfILXBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 18:58:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44253 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfILW63 (ORCPT
+        Thu, 12 Sep 2019 19:01:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41757 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfILXBG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:58:29 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q21so16868811pfn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:58:28 -0700 (PDT)
+        Thu, 12 Sep 2019 19:01:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so14231277pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QtcuvnqG4r2YqI4zyIzKkMUs7uL0jyuefwghC3YKW8k=;
-        b=lQCZxf2wWj/TD7i+zM4x52/vcGK5ifsJjrjavtQIbd5PmjztGeExGDQxomnWHrphOB
-         D/b/4Xm2CTnyaPHy4dZUJ3v7HBtU4EwyETt2D2kuo5QIp0uH52f7JYTDWDsLOI/ra7wo
-         y2ug9CJE1vVyWHHyERvCW1WG/VwSFT0QTlVjDmHRrNl6zJ84sUCcXEkrKgWQpbt3/vtH
-         bap3kGRCKwkycQUg8DMdT2aCQwUuPvJc7KvoQGGxEbD1nusDY2UowCwEy8SjbrSV+l8Y
-         38Yy7ebxD1Kjv9rfsY98KICrdYKwehq1d+xx++tGhXaZog4YEDqokAuJ6C+q3tyKeHmw
-         V66w==
+        bh=D9dYUr5fMgUHKFTaUbiggMwqfm0d4ExFNXTKQwvsDKQ=;
+        b=tPvXqEzHwKpENKEwHi+Skg0ISMB7ZFeB0yn6fEGDuRS61LxsjWdYrvLH7BObaVO3QB
+         HsxMdXR+4aWWSfV+ANxcz0Bo0o3+m1Wv1IeRZJ5ymFd5GGiMrSTqBjgZv9EPPdkoVJoE
+         nsaxTy4G3QnB9ClFNIRybTH9QlrNg8MIH4HJi8Gn1ORBp28GWQy/T1ZOBztKGGQNSQSA
+         ZBmziZ1luIwLyXBh+aJj+Tq+k2YA2w1JufIQ425tRqxHmpOft3Fbk/nIN7Prdjv2GtT2
+         eUCpew0OAlYYRdqQ9LTbf1aHAnRjHKtThgj8M46igFVG7H7c4gheoHjP36DfQhsOIKgA
+         1F3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QtcuvnqG4r2YqI4zyIzKkMUs7uL0jyuefwghC3YKW8k=;
-        b=dducNfZq/vc3RQ0ePrTQzlzlH2GE7pYtV1eO+VfPOZhf884SWptcavs3+HGa6suRY1
-         rFNsJaYNn1BuIj/qJtQwVxk45kFaiTBRVxNZTG+1Z6R+LQIgZhzQhXOBZJpKlb9Xau5G
-         SvyCa0+lHJufPgDZGDR2XbUY1p7q8zzIFggP+3KqAvH2KZJLqOoSEqHgVdtflk7AvK6C
-         uTdsatkMzvzp3jQk8tuLeyZgtWQrvSllbYlxKgCUemtQ9gyks+fajMg0NxFzDq/h7SJb
-         9YhG5aSYaK9uTbbQOBBqGtEUUMPw2HmqS1anHXJudMZtczeF4wp8ZDVM0BnmTKB0z192
-         Yxcw==
-X-Gm-Message-State: APjAAAV4IPCDe9qjnLU9JD7u8o1Wat883c0WN/qgyDY8PNmABNCAF28l
-        cRBcZtZTeGWEM46+RASlT4sLEm4yDrvvdGPIkK2uLw==
-X-Google-Smtp-Source: APXvYqz6gVZGXvJhjhSW8JaLlu8jIhADm3zroXYMALeDqhcHJ4OAuXRJ56yt3mguafQUipBgMbVaMEZ3Jt2n9yKXuPE=
-X-Received: by 2002:a62:5fc1:: with SMTP id t184mr19502919pfb.84.1568329108004;
- Thu, 12 Sep 2019 15:58:28 -0700 (PDT)
+        bh=D9dYUr5fMgUHKFTaUbiggMwqfm0d4ExFNXTKQwvsDKQ=;
+        b=OSdMmNPODsQOCFC0C8rZAEcc2nno7gXX0fBfmZcfXgthdXRtOZU++IQNc996sX9kyL
+         y4jz8KupsIdon6m30BKqe6WU76XTxYnLHUzpZureHmrBebArs8mJEXTB0HOPkhKa8WBp
+         YiUL1jWjZ8dnFZrtRBoCY3v/qKDnLrw+BfQ6VpytsTwE76cSp7CozyMygQThXMFZhqqJ
+         7NAB9OCMKugvD8oV+rUmO5EV+1w/337qk9sFJzFI2dfgSXMeqWpC6pmwPBavAXViRHi/
+         7E8X2gRNbGNPrZREjys+StfYyQfEM29cFNDPZrbxLzCwTfF0WyY4hkzhx4hQGx31wjRc
+         0/rA==
+X-Gm-Message-State: APjAAAUXnaqI0qPfKz7DHexN6gKgvnfaiifB8hlsWo7UuAzszhQw0RLK
+        fX1xMqVo5OHpPckmFA4y22mvyGUkvkX3/fR/ExwHFw==
+X-Google-Smtp-Source: APXvYqxKPqcf3nesXiRdlItW9fzTGtoWDpjNQ9SjjFM/YxRP0tFmd4/ksEvcvMhaZFyTL+zMR5XBadhwoqkrNWZwEyE=
+X-Received: by 2002:a63:6193:: with SMTP id v141mr41159638pgb.263.1568329264856;
+ Thu, 12 Sep 2019 16:01:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1568256705.git.joe@perches.com> <x498sqtvclx.fsf@segfault.boston.devel.redhat.com>
  <CANiq72kTsf=0rEufDMo7BzMNv1dqc5=ws7fSd=H_e=cpHR24Kg@mail.gmail.com>
- <4df0a07ec8f1391acfa987ecef184a50e7831000.camel@perches.com> <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com>
-In-Reply-To: <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com>
+ <4df0a07ec8f1391acfa987ecef184a50e7831000.camel@perches.com>
+ <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com> <4f759f8c4f4d59fd60008e833334e29b0da0869c.camel@perches.com>
+In-Reply-To: <4f759f8c4f4d59fd60008e833334e29b0da0869c.camel@perches.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 12 Sep 2019 15:58:16 -0700
-Message-ID: <CAKwvOd=OrAzUb0+c0jkR1OLCcjXh+QnrCHhk39+p3Fv2unBxjQ@mail.gmail.com>
+Date:   Thu, 12 Sep 2019 16:00:53 -0700
+Message-ID: <CAKwvOd=S911qkQtN31JkusS==NXZMnEwrUOGN3Gp6B7GTzYe2A@mail.gmail.com>
 Subject: Re: [PATCH 00/13] nvdimm: Use more common kernel coding style
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, Jeff Moyer <jmoyer@redhat.com>,
+To:     Joe Perches <joe@perches.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-nvdimm <linux-nvdimm@lists.01.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
@@ -73,48 +75,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 2:58 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Thu, Sep 12, 2019 at 3:38 PM Joe Perches <joe@perches.com> wrote:
 >
-> On Thu, Sep 12, 2019 at 11:08 PM Joe Perches <joe@perches.com> wrote:
+> On Thu, 2019-09-12 at 23:58 +0200, Miguel Ojeda wrote:
+> > On Thu, Sep 12, 2019 at 11:08 PM Joe Perches <joe@perches.com> wrote:
+> > > Please name the major projects and then point to their
+> > > .clang-format equivalents.
+> > >
+> > > Also note the size/scope/complexity of the major projects.
 > >
-> > Please name the major projects and then point to their
-> > .clang-format equivalents.
-> >
-> > Also note the size/scope/complexity of the major projects.
+> > Mozilla, WebKit, LLVM and Microsoft. They have their style distributed
+> > with the official clang-format, not sure if they enforce it.
 >
-> Mozilla, WebKit, LLVM and Microsoft. They have their style distributed
-> with the official clang-format, not sure if they enforce it.
->
-> Same for Chromium/Chrome, but it looks like they indeed enforce it:
->
->   "A checkout should give you clang-format to automatically format C++
-> code. By policy, Clang's formatting of code should always be accepted
-> in code reviews."
->
-> I would bet other Google projects do so as well (since Chandler
-> Carruth has been giving talks about clang-format for 7+ years). Nick?
+> At least for LLVM, it appears not.
 
-So Google3 (the internal monorepo that Android, Chromium, ChromiumOS,
-Fuchsia are not a part of) is pretty sweet.  You cannot even post code
-unless the linter has been run on it (presubmit hook), which for our
-~350 millions LoC of C++ is clang-format.  If you bypass local
-presubmit hooks, our code review tool ("critique") won't let you
-submit code that fails lint presubmit checks.  I suspect the initial
-conversion was probably committed by bots.
+I acknowledge the irony you present, but that's because there's no
+enforcement on the LLVM side.  I frequently forget to run:
+$ git-clang-format HEAD~
 
->
-> I hope those are major enough. There is also precedent in other
-> languages (e.g. Java, C#, Rust).
+If you have automated systems that help encourage (ie. force) the use
+of the formatter, this helps.
 
-Yep! Other people coming to C/C++ from these languages find the
-discussion about tabs vs spaces to be highly entertaining!  When you
-have an automated code formatter and an agreed upon coding style (and
-hopefully enforcement), you save so much time from avoided bikesheds!
-Don't like the codebase's coding style?  Then write the code how you
-like and just run the formatter when you're done (might not help with
-conventions though, maybe that's where checkpatch.pl can shine).
-Done! No more wasted time on what color to paint the bikeshed!
+Consider the fact that not all kernel developers run checkpatch.pl.
+Is that a deficiency in checkpatch.pl, or the lack of enforcement in
+kernel developers' workflows?
 -- 
 Thanks,
 ~Nick Desaulniers
