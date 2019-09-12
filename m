@@ -2,98 +2,96 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC9DC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB35C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D9B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ovrm98+f"
+	by mail.kernel.org (Postfix) with ESMTP id E7C9520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbfILNCc (ORCPT
+        id S1732023AbfILNCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:02:32 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:54260 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731810AbfILNCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:02:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568293351; x=1599829351;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=cFgtLcVnGrPNy52atQN20rg2h5EbDP7J3d0LSQoZ0yw=;
-  b=ovrm98+fR31ikq0upSah1aoXIH7/SWVcn1o+UyBRlj5DZKjasDmVDsR0
-   cpNHSJWd5nnsfv9TucYVba05uxEz3fjW+xkMVV5lhUiZ+MsIuV6l+TCsV
-   jhJ3cp7/+/wYNy8PLgTZkeFX+Y21LBxRhvtzrrklWpK8YnEfZj/NIzTyl
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
-   d="scan'208";a="702155736"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Sep 2019 13:01:47 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id BAA18A0600;
-        Thu, 12 Sep 2019 13:01:39 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:39 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.82) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:33 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v6 1/7] PCI: Add Amazon's Annapurna Labs vendor ID
-Date:   Thu, 12 Sep 2019 16:00:39 +0300
-Message-ID: <20190912130042.14597-2-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
+        Thu, 12 Sep 2019 09:02:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55893 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731864AbfILNCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:02:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 06:02:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
+   d="scan'208";a="215037563"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Sep 2019 06:02:43 -0700
+Received: from vjyoung-mobl.amr.corp.intel.com (unknown [10.251.12.73])
+        by linux.intel.com (Postfix) with ESMTP id 3F784580862;
+        Thu, 12 Sep 2019 06:02:42 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add
+ dmic format constraint
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org
+References: <20190912022740.161798-1-yuhsuan@chromium.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
+Date:   Thu, 12 Sep 2019 08:02:23 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.82]
-X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+In-Reply-To: <20190912022740.161798-1-yuhsuan@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Amazon's Annapurna Labs vendor ID to pci_ids.h.
+On 9/11/19 9:27 PM, Yu-Hsuan Hsu wrote:
+> 24 bits recording from DMIC is not supported for KBL platform because
+> the TDM slot between PCH and codec is 16 bits only. We should add a
+> constraint to remove that unsupported format.
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+Humm, when you use DMICs they are directly connected to the PCH with a 
+standard 1-bit PDM. There is no notion of TDM or slot.
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index f59a6f98900c..f3130542c752 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2571,6 +2571,8 @@
- 
- #define PCI_VENDOR_ID_ASMEDIA		0x1b21
- 
-+#define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
-+
- #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
- #define PCI_SUBSYSTEM_ID_CIRCUITCO_MINNOWBOARD	0x0001
- 
--- 
-2.17.1
+It could very well be that the firmware/topology only support 16 bit (I 
+vaguely recall another case where 24 bits was added), but the 
+description in the commit message would need to be modified to make the 
+reason for this change clearer.
+
+> 
+> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> ---
+>   sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> index 74dda8784f1a01..67b276a65a8d2d 100644
+> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
+>   	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
+>   			dmic_constraints);
+>   
+> +	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
+> +	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
+> +
+>   	return snd_pcm_hw_constraint_list(substream->runtime, 0,
+>   			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
+>   }
+> 
 
