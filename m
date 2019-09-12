@@ -2,113 +2,157 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE833C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099FCC49ED9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF35520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16BE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wq0rUCRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfILJRd (ORCPT
+        id S1730629AbfILJSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:17:33 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38554 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbfILJRb (ORCPT
+        Thu, 12 Sep 2019 05:18:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41385 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfILJSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:17:31 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j31so1903930qta.5;
-        Thu, 12 Sep 2019 02:17:30 -0700 (PDT)
+        Thu, 12 Sep 2019 05:18:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h7so26585833wrw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nabyzt7ZNfI2GC8vuMbUvyEMGGfNet5Q3cJhBhtdhB4=;
+        b=Wq0rUCRG5tJLLgE6MWPhkRG8ybUxTrM0lLW+DTbMHhnduPs7tV/5JWHTc2x7XTGY21
+         ItmLWpSnDhcJDB6VVGUmiJhMPH/c4B9xbd7VOYSrHe+N2TorZ3VdTvo+SvMitkqqCJSD
+         9MO7We6vXQC74VJaFERbF4w/AkH55BatgfBlBZz6hs3zgBl6Lp9mtIFMC4ASVrZxVrV0
+         cAx8XCw9PFir8uyHo5eF8xAEBHDffovVSF35r40o8Q7T26veq+aaExdSiJDngIESpW3O
+         B2BMW70hlGwx4jxxO9tNVFhm21OTquM4bhXwGbqDvWmNCda5RR1OEUWQJJWB7n3qgMnU
+         0FtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3v9vNWScPyFQpJOj2uC5NrtlNxn+puyxlyM0L6NxVxI=;
-        b=DFv/JSkSm/ASw4AJkKifQYAoWJFeMXObeBn8sY9QUNG/hhjudK0jJKQ9qvoQEecqGc
-         KWYfQy+yvkbZPvcJfQlLeGSVP10sbMBL9plVaneFAjbJSHII98yV6ENsgvXwTzdNDZc/
-         z1Hbexj7eSxCZvQ53ZHhmSohkRAUms9BS9t1jQCqKTCpOGw2Ng0p0TmNiGqBhs3UoVVu
-         GWj/hTUfXaREysSdtwBWvw7MRPWob8HNuLRN75nMcny1oKoy5e/MC2WWgb9cmNNekQSI
-         YjPmtVR/sKL0IiC4CsiIn9QGH7M0zw5IM4hIGoBQ3WsK5wxZqF6zhHXJc2CeQgvwp0/n
-         siWg==
-X-Gm-Message-State: APjAAAVD+S4ClH2PeD0dqlUQbrb3c14rBsb54KvijjW73m0tNKunO4o/
-        A9IEHne/Ocnp7Tzlj6ZA+jn9ofD8/5wTv1tgtFp+CHOhr3o=
-X-Google-Smtp-Source: APXvYqy+bZ/IsdWGG/lweYHMToFo2NNHZpONP/kd5+jqUDDglfiDRhLYrs6Ayjqcx3vUQ5sGnAv8u0JP9HHxRjVMY+w=
-X-Received: by 2002:ac8:6b1a:: with SMTP id w26mr39336977qts.304.1568279850382;
- Thu, 12 Sep 2019 02:17:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nabyzt7ZNfI2GC8vuMbUvyEMGGfNet5Q3cJhBhtdhB4=;
+        b=BOB+UTJ5z+fBOgTHyUaF5Xdk5PWQt1HQ/c1izE8Fqg9rEfMkkPqExE5VJMzn+WYIYN
+         dYMPo+bVuq8c6DiIMOnbu+6M+B9YhUvKs2tVsKW7yA3lO3GLpgdUavr/AXYKrhrz8bst
+         D0Qw5BJHQoUc+Df4g7N7gCh/+BQHlThebCpHmEXRr+UXaxJajhcRpkXgsZZEjTdXCemw
+         Zg+kHaK06qlBc9MphyT2ulUpDG6CJGcgm3jnt+psv1NZ3gofRuXuUrNcvEGkYwj54jJT
+         z2gPkXTRQVzPpp6F6nd28aiqT34CgISwct09qVmAUEVuZPxPZ7B4jVUxSv/hT0C9mnUV
+         dYlA==
+X-Gm-Message-State: APjAAAU34OFYiVy7DfXT40q3GYYr3t2OURmK7YkFziztwx1qsa7CGkZp
+        gZXmgbD4wxbvcawo9iLIL20ogQ==
+X-Google-Smtp-Source: APXvYqxCGCU66UuCueEY0dHWk91IVAe9nVu64XZCj5O1ESR1clrbZ/EdxDXjvUOa4sFQtdLH0hqStQ==
+X-Received: by 2002:a05:6000:1632:: with SMTP id v18mr15980991wrb.233.1568279894345;
+        Thu, 12 Sep 2019 02:18:14 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id x17sm5359764wmj.19.2019.09.12.02.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 02:18:13 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 10:18:11 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>, lee.jones@linaro.org,
+        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
+ HWEN pin
+Message-ID: <20190912091811.evlmeeuoai6phy3l@holly.lan>
+References: <20190910212909.18095-1-andreas@kemnade.info>
+ <20190910212909.18095-3-andreas@kemnade.info>
+ <20190911102533.not4ta3xwgm6bhjo@holly.lan>
+ <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
 MIME-Version: 1.0
-References: <cover.1568239378.git.amit.kucheria@linaro.org> <8f539b28c25d22b8f515c131cd6b24c309f7ca90.1568239378.git.amit.kucheria@linaro.org>
-In-Reply-To: <8f539b28c25d22b8f515c131cd6b24c309f7ca90.1568239378.git.amit.kucheria@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 12 Sep 2019 11:17:14 +0200
-Message-ID: <CAK8P3a3u8KhgaqoK0=2CXBs0HMh0fuN-ANvvQtSrWQm0J6xnvw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arm64: Kconfig: Fix VEXPRESS driver dependencies
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        arm-soc <arm@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:19 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Push various VEXPRESS drivers behind ARCH_VEXPRESS dependency so that it
-> doesn't get enabled by default on other platforms.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/bus/Kconfig           | 2 +-
->  drivers/clk/versatile/Kconfig | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> index d80e8d70bf10..b2b1beee9953 100644
-> --- a/drivers/bus/Kconfig
-> +++ b/drivers/bus/Kconfig
-> @@ -166,7 +166,7 @@ config UNIPHIER_SYSTEM_BUS
->
->  config VEXPRESS_CONFIG
->         bool "Versatile Express configuration bus"
-> -       default y if ARCH_VEXPRESS
-> +       depends on ARCH_VEXPRESS
->         depends on ARM || ARM64
->         depends on OF
+On Wed, Sep 11, 2019 at 01:48:36PM -0500, Dan Murphy wrote:
+> 
+> On 9/11/19 5:25 AM, Daniel Thompson wrote:
+> > On Tue, Sep 10, 2019 at 11:29:09PM +0200, Andreas Kemnade wrote:
+> > > For now just enable it in the probe function to allow i2c
+> > > access. Disabling also means resetting the register values
+> > > to default and according to the datasheet does not give
+> > > power savings
+> > > 
+> > > Tested on Kobo Clara HD.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > > changes in v2:
+> > > - simplification
+> > > - correct gpio direction initialisation
+> > > 
+> > >   drivers/video/backlight/lm3630a_bl.c | 10 ++++++++++
+> > >   1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> > > index 8f84f3684f04..9d0639d4202d 100644
+> > > --- a/drivers/video/backlight/lm3630a_bl.c
+> > > +++ b/drivers/video/backlight/lm3630a_bl.c
+> > > @@ -12,6 +12,8 @@
+> > >   #include <linux/uaccess.h>
+> > >   #include <linux/interrupt.h>
+> > >   #include <linux/regmap.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/gpio.h>
+> > Nitpicking... but I don't think linux/gpio.h is used anymore.
+> > 
+> > 
+> > >   #include <linux/pwm.h>
+> > >   #include <linux/platform_data/lm3630a_bl.h>
+> > > @@ -48,6 +50,7 @@ struct lm3630a_chip {
+> > >   	struct lm3630a_platform_data *pdata;
+> > >   	struct backlight_device *bleda;
+> > >   	struct backlight_device *bledb;
+> > > +	struct gpio_desc *enable_gpio;
+> > >   	struct regmap *regmap;
+> > >   	struct pwm_device *pwmd;
+> > >   };
+> > > @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *client,
+> > >   	}
+> > >   	pchip->pdata = pdata;
+> > > +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+> > > +						GPIOD_OUT_HIGH);
+> > > +	if (IS_ERR(pchip->enable_gpio)) {
+> > > +		rval = PTR_ERR(pchip->enable_gpio);
+> > > +		return rval;
+> 
+> the enable gpio is optional so if it fails you log the error and move on
 
-Removing the 'default y' breaks existing defconfig files,
+Isn't the effect of this to cope gracefully if enable-gpios is absent
+but to fail with an error if enable-gpios exists and is broken. I
+thought this code pattern is fairly common.
 
-Adding the 'depends on ARCH_VEXPRESS' unnecessarily limits
-compile-testing. I'd rather extend it to other architectures than
-limit it to builds that have vexpress enabled.
 
-> diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
-> index ac766855ba16..826750292c1e 100644
-> --- a/drivers/clk/versatile/Kconfig
-> +++ b/drivers/clk/versatile/Kconfig
-> @@ -5,8 +5,8 @@ config ICST
->  config COMMON_CLK_VERSATILE
->         bool "Clock driver for ARM Reference designs"
->         depends on ARCH_INTEGRATOR || ARCH_REALVIEW || \
-> -               ARCH_VERSATILE || ARCH_VEXPRESS || ARM64 || \
-> -               COMPILE_TEST
-> +               ARCH_VERSATILE || ARCH_VEXPRESS || COMPILE_TEST
-> +       depends on ARM64
+> Also on driver removal did you want to set the GPIO to low to disable the
+> device to save power?
 
-It's definitely wrong to limit this to 64 bit.
+As it happens I offered to opposite feedback for v1:
+https://lists.freedesktop.org/archives/dri-devel/2019-September/234918.html
 
-      Arnd
+Basically if the power matters then we should take care of things in the
+PM code path (which for this driver means reacting properly to
+suspended flag when updating the brightness). If the power doesn't matter
+then, given unallocated GPIO pins are in an unknown state anyway, there
+is no point in tidying up because we don't know what value to restore.
+
+
+Daniel.
