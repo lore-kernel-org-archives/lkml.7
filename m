@@ -2,163 +2,187 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308E7C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98499C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF44D20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DA420830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="FDTakulM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/mpAH4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfILSb5 (ORCPT
+        id S1727311AbfILSdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:31:57 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:58326 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfILSb4 (ORCPT
+        Thu, 12 Sep 2019 14:33:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35636 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfILSdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:31:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1568313116;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=QsmWD8PSnspupJVf6MZ4cYzKMM/9pg8rauF0BOWjV+Q=;
-  b=FDTakulMqzr90pbgYzhTrcqtPdaOb94uvHzfW6X5CNH95e1m98Lb2gNU
-   nriUYjDSUQunxxNaAm/XEH3Wy7fJo6njWrs3nC4eAVkY5pWGWpsfwONB2
-   YFgaVL0y4aLNxc2Hsm7b59mrSH8lEEfNGvYZS57YnUSswpIFyTT+psRvX
-   s=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  igor.druzhinin@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  igor.druzhinin@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: vyFn2YGzrF12PmyQmb3fO0TiOJTIiZV85vHIiOfuWOEobyx2em/gJnpGBZ212ZJWa+ilwnk5sA
- gE1+NP0NfSlzda9Y82we2igs+/m6zaYqGEKGsHb1SeH8ZyP5Pu9lWhuQjKePkc4OaQ1qivua9D
- 6HB2KGlM63h4LeBOkI7Ymb4z130ACkvZTcgvWUKMZp1M1Cjee7wnZ3LjYy0u7cPV8onpbSjnCK
- SrCm7T/c+GXfeisyoG2CofO5wPNA5qtgxKX/2vAd24sSGZiPIHJ7ahZiZtc1fKxean4+Zj9kCp
- LPg=
-X-SBRS: 2.7
-X-MesageID: 5500270
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.64,498,1559534400"; 
-   d="scan'208";a="5500270"
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-To:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
-CC:     <jgross@suse.com>, <boris.ostrovsky@oracle.com>,
-        Igor Druzhinin <igor.druzhinin@citrix.com>
-Subject: [PATCH v2] xen/pci: reserve MCFG areas earlier
-Date:   Thu, 12 Sep 2019 19:31:51 +0100
-Message-ID: <1568313111-14726-1-git-send-email-igor.druzhinin@citrix.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 12 Sep 2019 14:33:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n10so61325wmj.0;
+        Thu, 12 Sep 2019 11:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EafGGJpNEDvecTjcGD7gXYMS7mxeSW45vM7UZylYEVM=;
+        b=d/mpAH4w0fgYhoMz5GQ+hJ+bcZU+oniTYQBmDTYBM5aUgj/rNya649DR7wmonPnsWD
+         upWjoPqbpmeG4b6IKjkRkHQeb4L892+PoZNTqT6+/0X/c4Qci72EE2Wcof4EG8YUZJO0
+         x02Nb5M/FrJd9KcrhNPx/AswSv1mKZQnzLy6Il+Exof9ynh04VEljriql1KiT1Vy4RO4
+         rL+RNOG1ww8POWmvkHWhKjggMCiqMeheP1wkn6gLmjTU4g/rJPodp2Gp5+tF9tw8XxJo
+         LH6Srf/L6up8sk0daenCmGLLwTkGwhdnNemn5ggIMRfBVLHIU7kBatTs9twTz2pptatv
+         ohzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EafGGJpNEDvecTjcGD7gXYMS7mxeSW45vM7UZylYEVM=;
+        b=ZnVgbC9s90n1owDyy+Jk+iEH00efKJrrwzK0Bb7PZIv+qIKL5NTd7KUpDNLO1PfT5k
+         0ZCTPC4u33kvgVZGYq9nPPTYs7g0ADrj9Lx2KsDIxaXAXMwNUMRcRixueR0hCOCWzvcI
+         c/kkiGfcM6j6ZTEJeds/TDuCsDtDvTLacDflA05QVwt4E1LTt1GkmAeafeuYR0cQYzkK
+         r1d/mBx2gsINFS0tvRD2nHWbhc1w788MYAw33dmSY+kVB/PkYA6nyxKagP+Oo3t0CJLX
+         ZAjy//D4ttWE2gkqCALA2PbJHir1Lm7yydGjVpo7yIiGLlStMmAJGpMkwCAiWTvEGLto
+         s3SA==
+X-Gm-Message-State: APjAAAW0IANo6s/1yKUn7ToU+phUR9uRnY2XxXFPoKT31O1AWa9OQQB1
+        l2pSMqBfmdHRGS4c7p2yRl5D7AYo
+X-Google-Smtp-Source: APXvYqwcErQm0/q3AkdcZjcumens/c7+Dc7XwktXW2JmQvHDdgvzUhSmxPW2AWATgBObiRwzZRVGsA==
+X-Received: by 2002:a1c:dd0a:: with SMTP id u10mr29968wmg.100.1568313178504;
+        Thu, 12 Sep 2019 11:32:58 -0700 (PDT)
+Received: from [192.168.1.19] (bds144.neoplus.adsl.tpnet.pl. [83.28.4.144])
+        by smtp.gmail.com with ESMTPSA id x6sm3437wmf.38.2019.09.12.11.32.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 11:32:57 -0700 (PDT)
+Subject: Re: [PATCH v2] leds: lm3532: Fix optional led-max-microamp prop error
+ handling
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190911182730.22409-1-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fe7c340b-65b9-f3eb-eb7a-f359f258ccca@gmail.com>
+Date:   Thu, 12 Sep 2019 20:32:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190911182730.22409-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If MCFG area is not reserved in E820, Xen by default will defer its usage
-until Dom0 registers it explicitly after ACPI parser recognizes it as
-a reserved resource in DSDT. Having it reserved in E820 is not
-mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
-and firmware is free to keep a hole in E820 in that place. Xen doesn't know
-what exactly is inside this hole since it lacks full ACPI view of the
-platform therefore it's potentially harmful to access MCFG region
-without additional checks as some machines are known to provide
-inconsistent information on the size of the region.
+Hi Dan,
 
-Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
-PCI enumeration starts exactly there as well. Trying to register a device
-prior to MCFG reservation causes multiple problems with PCIe extended
-capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
-no convenient hooks for us to subscribe to so register MCFG areas earlier
-upon the first invocation of xen_add_device(). It should be safe to do once
-since all the boot time buses must have their MCFG areas in MCFG table
-already and we don't support PCI bus hot-plug.
+Thank you for the update.
 
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
----
- drivers/xen/pci.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+On 9/11/19 8:27 PM, Dan Murphy wrote:
+> Fix the error handling for the led-max-microamp property.
+> Need to check if the property is present and then if it is
+> retrieve the setting and its max boundary
+> 
+> Reported-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - Changed full scale current check to use min function
+> 
+>  drivers/leds/leds-lm3532.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+> index 62ace6698d25..a1742dc1f6fa 100644
+> --- a/drivers/leds/leds-lm3532.c
+> +++ b/drivers/leds/leds-lm3532.c
+> @@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>  			goto child_out;
+>  		}
+>  
+> -		ret = fwnode_property_read_u32(child, "led-max-microamp",
+> -					       &led->full_scale_current);
+> -
+> -		if (led->full_scale_current > LM3532_FS_CURR_MAX)
+> -			led->full_scale_current = LM3532_FS_CURR_MAX;
+> +		if (fwnode_property_present(child, "led-max-microamp")) {
+> +			if (fwnode_property_read_u32(child, "led-max-microamp",
+> +						     &led->full_scale_current))
+> +				dev_err(&priv->client->dev,
+> +					"Failed getting led-max-microamp\n");
+> +			else
+> +				min(led->full_scale_current,
+> +				    LM3532_FS_CURR_MAX);
+> +		}
+>  
+>  		if (led->mode == LM3532_BL_MODE_ALS) {
+>  			led->mode = LM3532_ALS_CTRL;
+> 
 
-diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
-index 7494dbe..db58aaa 100644
---- a/drivers/xen/pci.c
-+++ b/drivers/xen/pci.c
-@@ -29,6 +29,8 @@
- #include "../pci/pci.h"
- #ifdef CONFIG_PCI_MMCONFIG
- #include <asm/pci_x86.h>
-+
-+static int xen_mcfg_late(void);
- #endif
- 
- static bool __read_mostly pci_seg_supported = true;
-@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
- #ifdef CONFIG_PCI_IOV
- 	struct pci_dev *physfn = pci_dev->physfn;
- #endif
--
-+#ifdef CONFIG_PCI_MMCONFIG
-+	static bool pci_mcfg_reserved = false;
-+	/*
-+	 * Reserve MCFG areas in Xen on first invocation due to this being
-+	 * potentially called from inside of acpi_init immediately after
-+	 * MCFG table has been finally parsed.
-+	 */
-+	if (!pci_mcfg_reserved) {
-+		xen_mcfg_late();
-+		pci_mcfg_reserved = true;
-+	}
-+#endif
- 	if (pci_seg_supported) {
- 		struct {
- 			struct physdev_pci_device_add add;
-@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
- arch_initcall(register_xen_pci_notifier);
- 
- #ifdef CONFIG_PCI_MMCONFIG
--static int __init xen_mcfg_late(void)
-+static int xen_mcfg_late(void)
- {
- 	struct pci_mmcfg_region *cfg;
- 	int rc;
-@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
- 	}
- 	return 0;
- }
--/*
-- * Needs to be done after acpi_init which are subsys_initcall.
-- */
--subsys_initcall_sync(xen_mcfg_late);
- #endif
+Applied.
+
 -- 
-2.7.4
-
+Best regards,
+Jacek Anaszewski
