@@ -2,263 +2,217 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52BCC4CECD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90608C4CECD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852422081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iTw+DPJx";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="eEoVriCd"
+	by mail.kernel.org (Postfix) with ESMTP id 670972081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfILLbI (ORCPT
+        id S1731407AbfILLbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:31:08 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49570 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731146AbfILLbI (ORCPT
+        Thu, 12 Sep 2019 07:31:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62416 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731333AbfILLby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:31:08 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1471DC5658;
-        Thu, 12 Sep 2019 11:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1568287867; bh=I8Xx9CRqU8YvddOwOhYEVcl5oSbTLUa598gaCoE4Xo0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=iTw+DPJxBu+ahsYfpJgbqV9B9BTgEFYkFFly+i71VrHV3Gw8KasWKzIaMJDnKg9fW
-         /k9e/IzXzWfK+XHmimt+mZp6pJOn6aV2G7lTG1vcHfcsYweRWMrq4JkiG+1GhOkAm2
-         sLb88SxsV0Nl+qu6hVwassObW7Eh9njDb7I39trMyXqk/hyM/BmjAtLEalwoXkGjz5
-         hsSE2phmHHArIrxJcYw8JXHIynMct/tcbOS1jiuL1Mog5jg2Q0qN0CqZS3g7R8X876
-         qbyeD3ziEfwraWrU8YJUsOSgPRkXvOskNqw8kpyOdtdMksqwCLukk3KR1v6H0o058P
-         VqPJlU1QtHlew==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 97434A0066;
-        Thu, 12 Sep 2019 11:31:06 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 12 Sep 2019 04:31:06 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 12 Sep 2019 04:31:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P56tQjVuBYE5dPxndMFBDPNxXkQui5PY08s15pvJ0QXojbSxHmHttB/DlrlRoQE/5YIiujvNJ3m56ixIdv4l95DC/00CnpO0SNjszC1u7Sdo8x32y2XFTIzqKkn+5bKwjjlq2EtxSlmDA6fhgK4cez5Pogwo1QGhD5uA8iUv4ukadHZz6utNoXn3rouf1X5sT3lVw0FVoJO6RixMyVrxmoo286FAlmUlF3qLDePchkZ9GjlrPcTTqwFCEbaFJ5uaJb3yD0LgfPorcDQCwlq1KLPlSu7pfRoFqRkICHPdfsdyW99G56RAmQObr5V8lvrh56yufDwgdFlhnqYRYi9NHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+eRgtaeh5IyE2/DMu0xADplFfEnktFI3MRzO3rzCR+w=;
- b=d0HEv519Wze9B5GqN/RO4zm3AsyMWTIF3XW3nnNkE3DYgkBLpDwzW4c4/OX7urucph9tkNwurM3fV6Q0y1cinYUbcM0Ultniz6WBywKjfuy9Yz0DZftoQ3WR/r5Ag3YyAv+2xI73RlRDj1AliovVYqf1oGzwLBzMFT80dbkAEwFRB1LcLsPlm5MxVVZ3Q6qekDCP8NKLSHLD4MuDok/bWU2jNMO7MLljoXs8Tuw1xOWSc7SejjfYx9DqOglpIB2FIml35gLEpzXoCUbhQInNWBtnCOP/vUjOQ1qnm9Wt4tw7buuiMhpGD1GYYP4Dw9wa4xpWTt1INyClZjDQFeV6JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+eRgtaeh5IyE2/DMu0xADplFfEnktFI3MRzO3rzCR+w=;
- b=eEoVriCdHXwFemtGkR1gq+uykIFzqYLJwulEV9C9EYCJyp73t5zg3EWfgqutud96mEorYXDO76+dLGX26GPh+cSIrzF6IXiI45Lh377cCLvBrCeS+0B01wgOMXIe3ZEIddGhYGCdk3ljGop+P2NcQwnsiGhTb70R4a/pCqQ0LfY=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB2683.namprd12.prod.outlook.com (20.176.116.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Thu, 12 Sep 2019 11:31:04 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::dd4:2e5:e564:8684%5]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 11:31:04 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: dwc: fix find_next_bit() usage
-Thread-Topic: [PATCH] PCI: dwc: fix find_next_bit() usage
-Thread-Index: AQHVYzr9o4q4N44vQkaJ+DLOPrHWPqcn9EzA
-Date:   Thu, 12 Sep 2019 11:31:03 +0000
-Message-ID: <DM6PR12MB4010586571FF5CE3BCEFA3DDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190904160339.2800-1-niklas.cassel@linaro.org>
-In-Reply-To: <20190904160339.2800-1-niklas.cassel@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWNiODdkOTRlLWQ1NTAtMTFlOS05ODhmLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxjYjg3ZDk1MC1kNTUwLTExZTktOTg4Zi1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjIxOTYiIHQ9IjEzMjEyNzYxNDYxMDQw?=
- =?us-ascii?Q?Nzk2MiIgaD0iV2dUS3p1cXgzU3lyQ3pUOGVsck1rV1Znd2lzPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
- =?us-ascii?Q?YWd0K05YV25WQWQrdGs1TVVsWk1hMzYyVGt4U1ZreG9PQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUEvSG9zaVFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64361937-5a0c-4465-3256-08d73774b22f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB2683;
-x-ms-traffictypediagnostic: DM6PR12MB2683:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB2683FC817B5616CC8027CC76DAB00@DM6PR12MB2683.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39850400004)(366004)(396003)(136003)(199004)(189003)(66946007)(81156014)(3846002)(6116002)(25786009)(74316002)(2906002)(7736002)(66066001)(305945005)(99286004)(256004)(86362001)(54906003)(110136005)(486006)(11346002)(5660300002)(316002)(7696005)(4326008)(446003)(14454004)(476003)(6506007)(66446008)(55016002)(76176011)(6436002)(6246003)(229853002)(53546011)(52536014)(53936002)(8676002)(102836004)(26005)(6636002)(81166006)(33656002)(71190400001)(71200400001)(8936002)(478600001)(186003)(9686003)(64756008)(76116006)(66476007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB2683;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TLowhLnFj0nqjZdlMCr4ANVeGgtw543HesoWF4aFvwFsGJkpcepWdXZwJCarA5enr4/RCCHFRwStRuDutmxjD7BXPXV3MbrKS3LigXpmyWacp+1cOZ2p6KBMJRgLm2VmTgi31mpI0trYUe2PRd2ek4lL04bVWIgkbkGkudKNUCxwIcBPmLh9jAaTajMfjLStCdUSGhFWE/mduhWaG7FIMhQ9yTz3d3svp6KiE4KUyv6phLAUlQ2QsSW6z+nMOyQ7GGbWp80tzn4VdnE/3/b3CH41LDSPf1Lwgyih8UAeDg3uchORAX3uyHL59J1UoyP02smNr4dXTZ7LwTNV10CI1PzmivLrGRE5By836w6mt96AAjs1SJy7Nn70HeS8Yi4Hw72xVaBDEMllPiy12HP6oAnJFwTGwpkJzDg8ux7lHcY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Sep 2019 07:31:54 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CBRVKK064669
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:31:52 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uykr7knvn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:31:52 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 12 Sep 2019 12:31:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Sep 2019 12:31:44 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CBVh2G61407464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Sep 2019 11:31:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CA18AE7E9;
+        Thu, 12 Sep 2019 11:31:43 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B734AE0A4;
+        Thu, 12 Sep 2019 11:31:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.92.148])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Sep 2019 11:31:42 +0000 (GMT)
+Subject: Re: [PATCH 04/13] KVM: Drop kvm_arch_create_memslot()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+ <20190911185038.24341-5-sean.j.christopherson@intel.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 12 Sep 2019 13:31:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64361937-5a0c-4465-3256-08d73774b22f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 11:31:04.0016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5Ou/fkExqu9E/TvTHUleeQzFIhQ3DGhyECtzFfMa05kTEB0PlHWKpA13hs3vBTftAD1FDpOXZeSJbMsvsELGcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2683
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20190911185038.24341-5-sean.j.christopherson@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="VFaGAeTCeRXorJeO4VEs9GCOZpf5lhFaI"
+X-TM-AS-GCONF: 00
+x-cbid: 19091211-0008-0000-0000-00000314C2BB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091211-0009-0000-0000-00004A3331EB
+Message-Id: <b669c7f0-34b8-49b8-2ff8-c062bb8b2f5f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=550 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 17:3:38, Niklas Cassel <niklas.cassel@linaro.org>=20
-wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--VFaGAeTCeRXorJeO4VEs9GCOZpf5lhFaI
+Content-Type: multipart/mixed; boundary="UU4cv3zIJan03aUPjGzvFvmBPuZejgoHK";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Sean Christopherson <sean.j.christopherson@intel.com>,
+ James Hogan <jhogan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+ Christian Borntraeger <borntraeger@de.ibm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?=
+ <rkrcmar@redhat.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
+ Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+ James Morse <james.morse@arm.com>, Julien Thierry <julien.thierry@arm.com>,
+ Suzuki K Pouloze <suzuki.poulose@arm.com>, linux-mips@vger.kernel.org,
+ kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+ linux-kernel@vger.kernel.org
+Message-ID: <b669c7f0-34b8-49b8-2ff8-c062bb8b2f5f@linux.ibm.com>
+Subject: Re: [PATCH 04/13] KVM: Drop kvm_arch_create_memslot()
+References: <20190911185038.24341-1-sean.j.christopherson@intel.com>
+ <20190911185038.24341-5-sean.j.christopherson@intel.com>
+In-Reply-To: <20190911185038.24341-5-sean.j.christopherson@intel.com>
 
-> find_next_bit() takes a parameter of size long, and performs arithmetic
-> that assumes that the argument is of size long.
+--UU4cv3zIJan03aUPjGzvFvmBPuZejgoHK
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 9/11/19 8:50 PM, Sean Christopherson wrote:
+> Remove kvm_arch_create_memslot() now that all arch implementations are
+> effectively nops.  Explicitly free an allocated-but-unused dirty bitmap=
+
+> instead of relying on kvm_free_memslot() now that setting a memslot can=
+
+> no longer fail after arch code has allocated memory.  In practice
+> this was already true, e.g. architectures that allocated memory via
+> kvm_arch_create_memslot() never failed kvm_arch_prepare_memory_region()=
+
+> and vice versa, but removing kvm_arch_create_memslot() eliminates the
+> potential for future code to stealthily change behavior.
 >=20
-> Therefore we cannot pass a u32, since this will cause find_next_bit()
-> to read outside the stack buffer and will produce the following print:
-> BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
+> Eliminating the error path's reliance on kvm_free_memslot() paves the
+> way for simplify kvm_free_memslot(), i.e. dropping its @dont param.
 >=20
-> Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_m=
-si_irq()")
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
-pci/controller/dwc/pcie-designware-host.c
-> index d3156446ff27..45f21640c977 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info =
-=3D {
->  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->  {
->  	int i, pos, irq;
-> -	u32 val, num_ctrls;
-> +	unsigned long val;
-> +	u32 status, num_ctrls;
->  	irqreturn_t ret =3D IRQ_NONE;
-> =20
->  	num_ctrls =3D pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> @@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
->  	for (i =3D 0; i < num_ctrls; i++) {
->  		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
->  					(i * MSI_REG_CTRL_BLOCK_SIZE),
-> -				    4, &val);
-> -		if (!val)
-> +				    4, &status);
-> +		if (!status)
->  			continue;
-> =20
->  		ret =3D IRQ_HANDLED;
-> +		val =3D status;
->  		pos =3D 0;
-> -		while ((pos =3D find_next_bit((unsigned long *) &val,
-> -					    MAX_MSI_IRQS_PER_CTRL,
-> +		while ((pos =3D find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
->  					    pos)) !=3D MAX_MSI_IRQS_PER_CTRL) {
->  			irq =3D irq_find_mapping(pp->irq_domain,
->  					       (i * MAX_MSI_IRQS_PER_CTRL) +
-> --=20
-> 2.21.0
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Hi Niklas!
+Please either split or adopt the patch title to include the freeing.
+I'd go for splitting.
 
-The patch looks nice! Thanks!
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+--UU4cv3zIJan03aUPjGzvFvmBPuZejgoHK--
 
+--VFaGAeTCeRXorJeO4VEs9GCOZpf5lhFaI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl16LJ0ACgkQ41TmuOI4
+ufjw+RAAo+nTA45D/UJQFOtUY4vNWKZfGI7LFIZsBH6EvGMFdMDJOuJzlnd8qPAY
+jEb7EEQ6a8ypWQ+inQtsEQ27SX2+gsIP/nsrU54fhu32Wx9uX0y3wHRWPXOv346i
+Aqo8/NpulFkq1SSmQ/v2ikX1Bzqn/28FQ47hI21vbGt/Do97PUk8Mv1VUnKheMjJ
+hqq7m7CyFHAdbLFxwrhuKuPKblVyZVASaTJ7Z7xQ2wdmHaS9kpsedJlTAxD3ot/d
+o05LlRmLUIRH/u+yLEk+innoWRJuQ6gwVytMwEKer2kO+Yu8jsm9lXv52CYO7fZ9
+B+pOzIfMaupMDGUBIsO93SZCvxZGELnzKoDjD9bZSOwFB/1wqrMpOvkTL28tRVrp
+Ia6ytDOW8shEzxv20xTK8bnFuPlPMwdm84GPpW/en/turzk/Ab7OQiKvVtpAHWLM
+CZsUdz4QEXeNeEjlZJesUcSnqsdviG/LCL7KqX8Ti6NDKI5g5rsu1bulD+7zQufB
+4RbQd5jRQ77MDN+RRz2+8nUXThL0Pp67iMmOfhlvViBShiDuwiKpJ7qnVf+Vze1F
+VPzyxUAFaq7VFQn39tiQW3wnFfDLZzGg9kl9XPJDLoUeaqEiVpo4GiPvSnqebgsR
+MbM+Vn7FjJU4VeUxFONIoTmoBmHyK8SkMZgnHmOvesUCuOnPk9k=
+=oNBi
+-----END PGP SIGNATURE-----
+
+--VFaGAeTCeRXorJeO4VEs9GCOZpf5lhFaI--
 
