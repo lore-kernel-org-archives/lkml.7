@@ -2,651 +2,161 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F307DC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A27EC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BAE214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F8120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S7oqflAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mA6vqJ8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfILROn (ORCPT
+        id S1731408AbfILRQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 13:14:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31739 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfILROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 13:14:42 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46TlkP5K77z9vKFt;
-        Thu, 12 Sep 2019 19:14:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S7oqflAc; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Lpd4fnGKBdyv; Thu, 12 Sep 2019 19:14:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46TlkP3wGPz9vKFs;
-        Thu, 12 Sep 2019 19:14:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568308477; bh=GUeOlerw3oAeR5EuFCrQ45+oRqlKk+Q4gF7pY14AtYE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S7oqflAcJXEjI9vRsVfYMaQ/tOPTODCVm1fbqmiu746HfwfWjm4H92ZUa+yVF5wzs
-         57MqKH7s4vI3dxQqelmRMFnX435fc/O0c8EpWzRQGhXTRBKC01Q6VN32LRMhFTnFrl
-         A2qw2FiE6kkDoe8Z7+JVAXJ8wLcGZT/WPHGz32rQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3EA8E8B94D;
-        Thu, 12 Sep 2019 19:14:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AK1QS2Pmszs6; Thu, 12 Sep 2019 19:14:39 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2EB898B949;
-        Thu, 12 Sep 2019 19:14:37 +0200 (CEST)
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
-Date:   Thu, 12 Sep 2019 19:14:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Sep 2019 13:16:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37435 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbfILRQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 13:16:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r195so922491wme.2;
+        Thu, 12 Sep 2019 10:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jeyXUEk5MW2f7VdPv1M1Ktn4qGM+TVYNsEqyjuyCxzk=;
+        b=mA6vqJ8l1omNhlKe1DT57HqJADrXOUJZXXTS5IIEHF2uyVCCtH/QRrVqfbDJc7iSHu
+         839fJPCVghIlsfL06snlF9z3Ued37xNHhoGe1GYnMXbnptdwiXypTfxXGnQjbv5+s4L5
+         PAK1Wh1bDCLcy7/A91x8Tr4k5QCi/cyWBBdaam9cY/aOXJBiyT6YlNfcHFApnQ3sE2V7
+         uKIXythmMhVuSbLG+UeJKceH5BT5Jzsgf0F+JLIeO/v45FbCvVl4n3hjmoC+c/wzNFsS
+         hmeMubYFbMC7Zd/6pO0XTBbykxEeMByU1dwEKRPNeFhXJYBbQ1uzRPTZYBP0NmwMq8Ve
+         +7xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jeyXUEk5MW2f7VdPv1M1Ktn4qGM+TVYNsEqyjuyCxzk=;
+        b=feBah2z91pEnkBoCKDGS0W5b/k6sWJIRcFmHG1XiCABH3Kl+GFo3J5lUwaTMGe/9uU
+         Sjm/s95EKFJlU1e1gu64uJeh8uUq/3fczwloFupig7C34Q5JMnDaB8X/yICYpR4HRvFN
+         Sdq/FC3pXzWZhLHhij6uEAC/8l+t2ORN+W0zKN2TmG7Lvg2fDADwHwnJYonatFAuDspV
+         UsFTQ57nTNZeNFxelT7y7sxiFF3BHVTj/1ZU7bEVz/n0s7BHNxnldXv54DZziulUdFOR
+         TfSGxWA6WXc8WtjDFDbab4PmNqB6/I/8XBBHA4Hwyxxi22kjFDm9WpeWcEdUXXA7ZFtU
+         cKlg==
+X-Gm-Message-State: APjAAAWT6OAB/7xDXzX/oqSrAsL3dOqWGevazTenLdqIKVWvNQ4ZwwwW
+        nYsE27ZmBpBhEsX3cR1/gm0=
+X-Google-Smtp-Source: APXvYqzTU/6I4UZVscWpiVPC4F4NOXUWlqgl7g/fPDvo2rIYz6m6hQGmTFwZ6Exev2AAww6YtGsLsA==
+X-Received: by 2002:a1c:6c11:: with SMTP id h17mr853897wmc.128.1568308557781;
+        Thu, 12 Sep 2019 10:15:57 -0700 (PDT)
+Received: from [192.168.1.19] (bds144.neoplus.adsl.tpnet.pl. [83.28.4.144])
+        by smtp.gmail.com with ESMTPSA id u68sm890205wmu.12.2019.09.12.10.15.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 10:15:57 -0700 (PDT)
+Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of
+ /sys/class/leds/<led>/trigger
+To:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+References: <1568299189-11074-1-git-send-email-akinobu.mita@gmail.com>
+ <1568299189-11074-2-git-send-email-akinobu.mita@gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <296db773-2185-9a5e-c9e6-df614092a969@gmail.com>
+Date:   Thu, 12 Sep 2019 19:15:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <1568299189-11074-2-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Akinobu,
 
+Please bump patch version each time you send an update
+of the patch with the same subject.
 
-Le 12/09/2019 à 08:02, Anshuman Khandual a écrit :
-> This adds a test module which will validate architecture page table helpers
-> and accessors regarding compliance with generic MM semantics expectations.
-> This will help various architectures in validating changes to the existing
-> page table helpers or addition of new ones.
+Best regards,
+Jacek Anaszewski
+
+On 9/12/19 4:39 PM, Akinobu Mita wrote:
+> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> However, the size of this file is limited to PAGE_SIZE because of the
+> limitation for sysfs attribute.
 > 
-> Test page table and memory pages creating it's entries at various level are
-> all allocated from system memory with required alignments. If memory pages
-> with required size and alignment could not be allocated, then all depending
-> individual tests are skipped.
+> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+> and which trigger is currently activated.
 > 
+> We work around it here by converting /sys/class/leds/<led>/trigger to
+> binary attribute, which is not limited by length. This is _not_ good
+> design, do not copy it.
 
-[...]
-
-> 
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/x86/include/asm/pgtable_64_types.h |   2 +
->   mm/Kconfig.debug                        |  14 +
->   mm/Makefile                             |   1 +
->   mm/arch_pgtable_test.c                  | 429 ++++++++++++++++++++++++
->   4 files changed, 446 insertions(+)
->   create mode 100644 mm/arch_pgtable_test.c
-> 
-> diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-> index 52e5f5f2240d..b882792a3999 100644
-> --- a/arch/x86/include/asm/pgtable_64_types.h
-> +++ b/arch/x86/include/asm/pgtable_64_types.h
-> @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
->   #define pgtable_l5_enabled() 0
->   #endif /* CONFIG_X86_5LEVEL */
->   
-> +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
-> +
-
-This is specific to x86, should go in a separate patch.
-
->   extern unsigned int pgdir_shift;
->   extern unsigned int ptrs_per_p4d;
->   
-> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-> index 327b3ebf23bf..ce9c397f7b07 100644
-> --- a/mm/Kconfig.debug
-> +++ b/mm/Kconfig.debug
-> @@ -117,3 +117,17 @@ config DEBUG_RODATA_TEST
->       depends on STRICT_KERNEL_RWX
->       ---help---
->         This option enables a testcase for the setting rodata read-only.
-> +
-> +config DEBUG_ARCH_PGTABLE_TEST
-> +	bool "Test arch page table helpers for semantics compliance"
-> +	depends on MMU
-> +	depends on DEBUG_KERNEL
-> +	help
-> +	  This options provides a kernel module which can be used to test
-> +	  architecture page table helper functions on various platform in
-> +	  verifying if they comply with expected generic MM semantics. This
-> +	  will help architectures code in making sure that any changes or
-> +	  new additions of these helpers will still conform to generic MM
-> +	  expected semantics.
-> +
-> +	  If unsure, say N.
-> diff --git a/mm/Makefile b/mm/Makefile
-> index d996846697ef..bb572c5aa8c5 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
->   obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
->   obj-$(CONFIG_DEBUG_KMEMLEAK_TEST) += kmemleak-test.o
->   obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
-> +obj-$(CONFIG_DEBUG_ARCH_PGTABLE_TEST) += arch_pgtable_test.o
->   obj-$(CONFIG_PAGE_OWNER) += page_owner.o
->   obj-$(CONFIG_CLEANCACHE) += cleancache.o
->   obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
-> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
-> new file mode 100644
-> index 000000000000..8b4a92756ad8
-> --- /dev/null
-> +++ b/mm/arch_pgtable_test.c
-> @@ -0,0 +1,429 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * This kernel module validates architecture page table helpers &
-> + * accessors and helps in verifying their continued compliance with
-> + * generic MM semantics.
-> + *
-> + * Copyright (C) 2019 ARM Ltd.
-> + *
-> + * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-> + */
-> +#define pr_fmt(fmt) "arch_pgtable_test: %s " fmt, __func__
-> +
-> +#include <linux/gfp.h>
-> +#include <linux/hugetlb.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/module.h>
-> +#include <linux/pfn_t.h>
-> +#include <linux/printk.h>
-> +#include <linux/random.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/swap.h>
-> +#include <linux/swapops.h>
-> +#include <linux/sched/mm.h>
-
-Add <linux/highmem.h> (see other mails, build failure on ppc book3s/32)
-
-> +#include <asm/pgalloc.h>
-> +#include <asm/pgtable.h>
-> +
-> +/*
-> + * Basic operations
-> + *
-> + * mkold(entry)			= An old and not a young entry
-> + * mkyoung(entry)		= A young and not an old entry
-> + * mkdirty(entry)		= A dirty and not a clean entry
-> + * mkclean(entry)		= A clean and not a dirty entry
-> + * mkwrite(entry)		= A write and not a write protected entry
-> + * wrprotect(entry)		= A write protected and not a write entry
-> + * pxx_bad(entry)		= A mapped and non-table entry
-> + * pxx_same(entry1, entry2)	= Both entries hold the exact same value
-> + */
-> +#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
-> +
-> +/*
-> + * On s390 platform, the lower 12 bits are used to identify given page table
-> + * entry type and for other arch specific requirements. But these bits might
-> + * affect the ability to clear entries with pxx_clear(). So while loading up
-> + * the entries skip all lower 12 bits in order to accommodate s390 platform.
-> + * It does not have affect any other platform.
-> + */
-> +#define RANDOM_ORVALUE	(0xfffffffffffff000UL)
-> +#define RANDOM_NZVALUE	(0xff)
-> +
-> +static bool pud_aligned;
-> +static bool pmd_aligned;
-> +
-> +static void pte_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pte_t pte = mk_pte(page, prot);
-> +
-> +	WARN_ON(!pte_same(pte, pte));
-> +	WARN_ON(!pte_young(pte_mkyoung(pte)));
-> +	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
-> +	WARN_ON(!pte_write(pte_mkwrite(pte)));
-> +	WARN_ON(pte_young(pte_mkold(pte)));
-> +	WARN_ON(pte_dirty(pte_mkclean(pte)));
-> +	WARN_ON(pte_write(pte_wrprotect(pte)));
-> +}
-> +
-> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE
-> +static void pmd_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pmd_t pmd;
-> +
-> +	/*
-> +	 * Memory block here must be PMD_SIZE aligned. Abort this
-> +	 * test in case we could not allocate such a memory block.
-> +	 */
-> +	if (!pmd_aligned) {
-> +		pr_warn("Could not proceed with PMD tests\n");
-> +		return;
-> +	}
-> +
-> +	pmd = mk_pmd(page, prot);
-> +	WARN_ON(!pmd_same(pmd, pmd));
-> +	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
-> +	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
-> +	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
-> +	WARN_ON(pmd_young(pmd_mkold(pmd)));
-> +	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
-> +	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
-> +	/*
-> +	 * A huge page does not point to next level page table
-> +	 * entry. Hence this must qualify as pmd_bad().
-> +	 */
-> +	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
-> +}
-> +#else
-> +static void pmd_basic_tests(struct page *page, pgprot_t prot) { }
-> +#endif
-> +
-> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> +static void pud_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pud_t pud;
-> +
-> +	/*
-> +	 * Memory block here must be PUD_SIZE aligned. Abort this
-> +	 * test in case we could not allocate such a memory block.
-> +	 */
-> +	if (!pud_aligned) {
-> +		pr_warn("Could not proceed with PUD tests\n");
-> +		return;
-> +	}
-> +
-> +	pud = pfn_pud(page_to_pfn(page), prot);
-> +	WARN_ON(!pud_same(pud, pud));
-> +	WARN_ON(!pud_young(pud_mkyoung(pud)));
-> +	WARN_ON(!pud_write(pud_mkwrite(pud)));
-> +	WARN_ON(pud_write(pud_wrprotect(pud)));
-> +	WARN_ON(pud_young(pud_mkold(pud)));
-> +
-> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> +	/*
-> +	 * A huge page does not point to next level page table
-> +	 * entry. Hence this must qualify as pud_bad().
-> +	 */
-> +	WARN_ON(!pud_bad(pud_mkhuge(pud)));
-> +#endif
-> +}
-> +#else
-> +static void pud_basic_tests(struct page *page, pgprot_t prot) { }
-> +#endif
-> +
-> +static void p4d_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	p4d_t p4d;
-> +
-> +	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
-> +	WARN_ON(!p4d_same(p4d, p4d));
-> +}
-> +
-> +static void pgd_basic_tests(struct page *page, pgprot_t prot)
-> +{
-> +	pgd_t pgd;
-> +
-> +	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
-> +	WARN_ON(!pgd_same(pgd, pgd));
-> +}
-> +
-> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-
-#ifdefs have to be avoided as much as possible, see below
-
-> +static void pud_clear_tests(pud_t *pudp)
-> +{
-> +	pud_t pud = READ_ONCE(*pudp);
-	if (mm_pmd_folded() || __is_defined(__ARCH_HAS_4LEVEL_HACK))
-		return;
-
-> +
-> +	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pudp, pud);
-> +	pud_clear(pudp);
-> +	pud = READ_ONCE(*pudp);
-> +	WARN_ON(!pud_none(pud));
-> +}
-> +
-> +static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-> +{
-> +	pud_t pud;
-> +
-	if (mm_pmd_folded() || __is_defined(__ARCH_HAS_4LEVEL_HACK))
-		return;
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pud_bad().
-> +	 */
-> +	pmd_clear(pmdp);
-> +	pud_clear(pudp);
-> +	pud_populate(mm, pudp, pmdp);
-> +	pud = READ_ONCE(*pudp);
-> +	WARN_ON(pud_bad(pud));
-> +}
-> +#else
-
-Then the else branch goes away.
-
-> +static void pud_clear_tests(pud_t *pudp) { }
-> +static void pud_populate_tests(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
-> +{
-> +}
-> +#endif
-> +
-> +#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
-
-The same can be done here.
-
-> +static void p4d_clear_tests(p4d_t *p4dp)
-> +{
-> +	p4d_t p4d = READ_ONCE(*p4dp);
-> +
-> +	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*p4dp, p4d);
-> +	p4d_clear(p4dp);
-> +	p4d = READ_ONCE(*p4dp);
-> +	WARN_ON(!p4d_none(p4d));
-> +}
-> +
-> +static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-> +{
-> +	p4d_t p4d;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as p4d_bad().
-> +	 */
-> +	pud_clear(pudp);
-> +	p4d_clear(p4dp);
-> +	p4d_populate(mm, p4dp, pudp);
-> +	p4d = READ_ONCE(*p4dp);
-> +	WARN_ON(p4d_bad(p4d));
-> +}
-> +#else
-> +static void p4d_clear_tests(p4d_t *p4dp) { }
-> +static void p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
-> +{
-> +}
-> +#endif
-> +
-> +#ifndef __ARCH_HAS_5LEVEL_HACK
-
-And the same here (you already did part of it with testing mm_p4d_folded(mm)
-
-> +static void pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp)
-> +{
-> +	pgd_t pgd = READ_ONCE(*pgdp);
-> +
-> +	if (mm_p4d_folded(mm))
-> +		return;
-> +
-> +	pgd = __pgd(pgd_val(pgd) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pgdp, pgd);
-> +	pgd_clear(pgdp);
-> +	pgd = READ_ONCE(*pgdp);
-> +	WARN_ON(!pgd_none(pgd));
-> +}
-> +
-> +static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-> +{
-> +	pgd_t pgd;
-> +
-> +	if (mm_p4d_folded(mm))
-> +		return;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pgd_bad().
-> +	 */
-> +	p4d_clear(p4dp);
-> +	pgd_clear(pgdp);
-> +	pgd_populate(mm, pgdp, p4dp);
-> +	pgd = READ_ONCE(*pgdp);
-> +	WARN_ON(pgd_bad(pgd));
-> +}
-> +#else
-> +static void pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp) { }
-> +static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-> +{
-> +}
-> +#endif
-> +
-> +static void pte_clear_tests(struct mm_struct *mm, pte_t *ptep)
-> +{
-> +	pte_t pte = READ_ONCE(*ptep);
-> +
-> +	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*ptep, pte);
-> +	pte_clear(mm, 0, ptep);
-> +	pte = READ_ONCE(*ptep);
-> +	WARN_ON(!pte_none(pte));
-> +}
-> +
-> +static void pmd_clear_tests(pmd_t *pmdp)
-> +{
-> +	pmd_t pmd = READ_ONCE(*pmdp);
-> +
-> +	pmd = __pmd(pmd_val(pmd) | RANDOM_ORVALUE);
-> +	WRITE_ONCE(*pmdp, pmd);
-> +	pmd_clear(pmdp);
-> +	pmd = READ_ONCE(*pmdp);
-> +	WARN_ON(!pmd_none(pmd));
-> +}
-> +
-> +static void pmd_populate_tests(struct mm_struct *mm, pmd_t *pmdp,
-> +			       pgtable_t pgtable)
-> +{
-> +	pmd_t pmd;
-> +
-> +	/*
-> +	 * This entry points to next level page table page.
-> +	 * Hence this must not qualify as pmd_bad().
-> +	 */
-> +	pmd_clear(pmdp);
-> +	pmd_populate(mm, pmdp, pgtable);
-> +	pmd = READ_ONCE(*pmdp);
-> +	WARN_ON(pmd_bad(pmd));
-> +}
-> +
-> +static struct page *alloc_mapped_page(void)
-> +{
-> +	struct page *page;
-> +	gfp_t gfp_mask = GFP_KERNEL | __GFP_ZERO;
-> +
-> +	page = alloc_gigantic_page_order(get_order(PUD_SIZE), gfp_mask,
-> +				first_memory_node, &node_states[N_MEMORY]);
-> +	if (page) {
-> +		pud_aligned = true;
-> +		pmd_aligned = true;
-> +		return page;
-> +	}
-> +
-> +	page = alloc_pages(gfp_mask, get_order(PMD_SIZE));
-> +	if (page) {
-> +		pmd_aligned = true;
-> +		return page;
-> +	}
-> +	return alloc_page(gfp_mask);
-> +}
-> +
-> +static void free_mapped_page(struct page *page)
-> +{
-> +	if (pud_aligned) {
-> +		unsigned long pfn = page_to_pfn(page);
-> +
-> +		free_contig_range(pfn, 1ULL << get_order(PUD_SIZE));
-> +		return;
-> +	}
-> +
-> +	if (pmd_aligned) {
-> +		int order = get_order(PMD_SIZE);
-> +
-> +		free_pages((unsigned long)page_address(page), order);
-> +		return;
-> +	}
-> +	free_page((unsigned long)page_address(page));
-> +}
-> +
-> +static unsigned long get_random_vaddr(void)
-> +{
-> +	unsigned long random_vaddr, random_pages, total_user_pages;
-> +
-> +	total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
-> +
-> +	random_pages = get_random_long() % total_user_pages;
-> +	random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
-> +
-> +	WARN_ON(random_vaddr > TASK_SIZE);
-> +	WARN_ON(random_vaddr < FIRST_USER_ADDRESS);
-> +	return random_vaddr;
-> +}
-> +
-> +static int __init arch_pgtable_tests_init(void)
-> +{
-> +	struct mm_struct *mm;
-> +	struct page *page;
-> +	pgd_t *pgdp;
-> +	p4d_t *p4dp, *saved_p4dp;
-> +	pud_t *pudp, *saved_pudp;
-> +	pmd_t *pmdp, *saved_pmdp, pmd;
-> +	pte_t *ptep;
-> +	pgtable_t saved_ptep;
-> +	pgprot_t prot;
-> +	unsigned long vaddr;
-> +
-> +	prot = vm_get_page_prot(VMFLAGS);
-> +	vaddr = get_random_vaddr();
-> +	mm = mm_alloc();
-> +	if (!mm) {
-> +		pr_err("mm_struct allocation failed\n");
-> +		return 1;
-> +	}
-> +
-> +	page = alloc_mapped_page();
-> +	if (!page) {
-> +		pr_err("memory allocation failed\n");
-> +		return 1;
-> +	}
-> +
-> +	pgdp = pgd_offset(mm, vaddr);
-> +	p4dp = p4d_alloc(mm, pgdp, vaddr);
-> +	pudp = pud_alloc(mm, p4dp, vaddr);
-> +	pmdp = pmd_alloc(mm, pudp, vaddr);
-> +	ptep = pte_alloc_map(mm, pmdp, vaddr);
-> +
-> +	/*
-> +	 * Save all the page table page addresses as the page table
-> +	 * entries will be used for testing with random or garbage
-> +	 * values. These saved addresses will be used for freeing
-> +	 * page table pages.
-> +	 */
-> +	pmd = READ_ONCE(*pmdp);
-> +	saved_p4dp = p4d_offset(pgdp, 0UL);
-> +	saved_pudp = pud_offset(p4dp, 0UL);
-> +	saved_pmdp = pmd_offset(pudp, 0UL);
-> +	saved_ptep = pmd_pgtable(pmd);
-> +
-> +	pte_basic_tests(page, prot);
-> +	pmd_basic_tests(page, prot);
-> +	pud_basic_tests(page, prot);
-> +	p4d_basic_tests(page, prot);
-> +	pgd_basic_tests(page, prot);
-> +
-> +	pte_clear_tests(mm, ptep);
-> +	pmd_clear_tests(pmdp);
-> +	pud_clear_tests(pudp);
-> +	p4d_clear_tests(p4dp);
-> +	pgd_clear_tests(mm, pgdp);
-> +
-> +	pmd_populate_tests(mm, pmdp, saved_ptep);
-> +	pud_populate_tests(mm, pudp, saved_pmdp);
-> +	p4d_populate_tests(mm, p4dp, saved_pudp);
-> +	pgd_populate_tests(mm, pgdp, saved_p4dp);
-> +
-> +	p4d_free(mm, saved_p4dp);
-> +	pud_free(mm, saved_pudp);
-> +	pmd_free(mm, saved_pmdp);
-> +	pte_free(mm, saved_ptep);
-> +
-> +	mm_dec_nr_puds(mm);
-> +	mm_dec_nr_pmds(mm);
-> +	mm_dec_nr_ptes(mm);
-> +	__mmdrop(mm);
-> +
-> +	free_mapped_page(page);
-> +	return 0;
-
-Is there any benefit in keeping the module loaded once the tests are 
-done ? Shouldn't the load fail instead ?
-
-> +}
-> +
-> +static void __exit arch_pgtable_tests_exit(void) { }
-
-Is this function really needed ?
-
-> +
-> +module_init(arch_pgtable_tests_init);
-> +module_exit(arch_pgtable_tests_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Anshuman Khandual <anshuman.khandual@arm.com>");
-> +MODULE_DESCRIPTION("Test architecture page table helpers");
-> 
-
-Christophe
