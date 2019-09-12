@@ -2,103 +2,108 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B6C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B137EC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA66F206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BC8206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkROMBCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732250AbfILOj5 (ORCPT
+        id S1732725AbfILOkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:39:57 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64597 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732592AbfILOj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:39:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 07:39:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
-   d="scan'208";a="186146677"
-Received: from avrahamr-mobl1.ger.corp.intel.com (HELO [10.252.3.203]) ([10.252.3.203])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Sep 2019 07:39:54 -0700
-Subject: Re: [Intel-gfx] [PATCH] Revert "drm/i915/userptr: Acquire the page
- lock around set_page_dirty()"
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        intel-gfx@lists.freedesktop.org, torvalds@linux-foundation.org
-Cc:     tiwai@suse.de, linux-kernel@vger.kernel.org, leho@kraav.com,
-        Jani Nikula <jani.nikula@intel.com>, MKoutny@suse.com,
-        stable@vger.kernel.org, Martin.Wilck@suse.com
-References: <CAHk-=wjKv_Zw2zGHduyrQH_VQzxXYzwKdwwzzpsdnsdx=EK30Q@mail.gmail.com>
- <20190912125634.29054-1-chris@chris-wilson.co.uk>
-From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Organization: Intel Corporation UK Plc
-Message-ID: <ae31587d-bd36-5f6a-6479-df23f3eda590@linux.intel.com>
-Date:   Thu, 12 Sep 2019 15:39:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190912125634.29054-1-chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 12 Sep 2019 10:40:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43003 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732592AbfILOkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:40:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w22so16143775pfi.9;
+        Thu, 12 Sep 2019 07:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=grnoPuXSB+fhOkpWySe4dZVDzqNaNF3BaUHoBD9OJYU=;
+        b=GkROMBCaNxYGwtCM2uoDgNeklEj2m/GyemrwKDP4Qb5VZGgV5QvVyPB5vbMznziFfl
+         30F5s2Ij35VfIMlosIQkYTV3O+jwR+XDwEhc8FkNU4JE7Y0s8ORsXvecaUt7IV/HRD5z
+         g+F96YD/VM5W9oiyBNMbBDj1mCrVDdoBVyX7c9RAjbmiVFJcmFmHIfPR1f4s5TK3DMLT
+         +ME8JR5HPdLTlLTx4krMO0Qd666jiWkAIYzy6OKDJRO48ormVDVAq/2Ajqajuf+odrWm
+         BZOYI9Czd9CIPpIRZ5lNFKy2347RF6fkmCwOr9fq4tOVnfls3dU8iEwKf3wVtRU9F4xh
+         cpWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=grnoPuXSB+fhOkpWySe4dZVDzqNaNF3BaUHoBD9OJYU=;
+        b=XrqrDJrEDKN5FN0+7OwEZ7KgdIPT+SiN9FdFW2y7DoQikXuzz6y2KF+StqVVMr6Ur4
+         yIcbNJihlDxrtS8uwpSSaSJS3U2Utxo7q8oqb3ra3bPltTXYNW0CCswGspW2C0YU3DkN
+         WIYcEx0d+FwIcru1Y1NOBJozU3Jg8gWoRVVIw9sr7v67ufjAuHV85CiIdVgOE8so4H17
+         KuBcC2YUXcoKfD5+XGni0PlW0aL7ZSUtL61SfsHpS7w1USJLJHK9SdPVDUmODxDT0tIF
+         zQjQUuKnJg1iQx/GC+bPCSOQG8b+7CqhvXhjCxXpJO3EvHvQrdp4/UroGYJ+OtMvpB3p
+         mVLA==
+X-Gm-Message-State: APjAAAU7EU1OanpCi6xEA6aCxfTplUF60XM2b1ubbeERKg4BrlRZYSg9
+        qkrogq236Zjh57g+XnZkNBehNtqQ
+X-Google-Smtp-Source: APXvYqzWeY6mqR3GiZaSi6dFzeQ0ioAIVSVZxJJq1b0fDmEQNBEgqJNdB4PNY+vZ4+ynl6x+HMIDkw==
+X-Received: by 2002:a05:6a00:8c:: with SMTP id c12mr48129695pfj.200.1568299215715;
+        Thu, 12 Sep 2019 07:40:15 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:a9d6:f377:69:9ad0])
+        by smtp.gmail.com with ESMTPSA id b3sm42125514pfp.65.2019.09.12.07.40.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 12 Sep 2019 07:40:14 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] leds: fix /sys/class/leds/<led>/trigger
+Date:   Thu, 12 Sep 2019 23:39:48 +0900
+Message-Id: <1568299189-11074-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+However, the size of this file is limited to PAGE_SIZE because of the
+limitation for sysfs attribute.
 
-On 12/09/2019 13:56, Chris Wilson wrote:
-> The userptr put_pages can be called from inside try_to_unmap, and so
-> enters with the page lock held on one of the object's backing pages. We
-> cannot take the page lock ourselves for fear of recursion.
-> 
-> Reported-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-> Reported-by: Martin Wilck <Martin.Wilck@suse.com>
-> Reported-by: Leo Kraav <leho@kraav.com>
-> Fixes: aa56a292ce62 ("drm/i915/userptr: Acquire the page lock around set_page_dirty()")
-> References: https://bugzilla.kernel.org/show_bug.cgi?id=203317
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> ---
->   drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 10 +---------
->   1 file changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> index 74da35611d7c..11b231c187c5 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-> @@ -672,15 +672,7 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
->   
->   	for_each_sgt_page(page, sgt_iter, pages) {
->   		if (obj->mm.dirty)
-> -			/*
-> -			 * As this may not be anonymous memory (e.g. shmem)
-> -			 * but exist on a real mapping, we have to lock
-> -			 * the page in order to dirty it -- holding
-> -			 * the page reference is not sufficient to
-> -			 * prevent the inode from being truncated.
-> -			 * Play safe and take the lock.
-> -			 */
-> -			set_page_dirty_lock(page);
-> +			set_page_dirty(page);
->   
->   		mark_page_accessed(page);
->   		put_page(page);
-> 
+Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+and which trigger is currently activated.
 
-Acked-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+This patch converts /sys/class/leds/<led>/trigger to bin attribute and
+removes the PAGE_SIZE limitation.
 
-Regards,
+The first version of this seris provided the new api that follows the
+"one value per file" rule of sysfs. This second version dropped it because
+there have been a number of problems and it turns out that the new api
+should be submitted separately.
 
-Tvrtko
+* v2
+- Update commit message
+- Drop patches for new api
+
+Akinobu Mita (1):
+  leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+
+ drivers/leds/led-class.c    |  8 ++--
+ drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
+ drivers/leds/leds.h         |  6 +++
+ include/linux/leds.h        |  5 ---
+ 4 files changed, 79 insertions(+), 30 deletions(-)
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+-- 
+2.7.4
+
