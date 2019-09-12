@@ -2,208 +2,143 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8353FC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFF3C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AACA20830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBDE20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="slhQrT9J"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="KiF7jdV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbfILNVa (ORCPT
+        id S1732069AbfILNW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:21:30 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46133 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731283AbfILNV3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:21:29 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190912132127euoutp01aa4f3e9ccf202715bb72969112ce3e5a~Ds4cR1dnf0257302573euoutp01K
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 13:21:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190912132127euoutp01aa4f3e9ccf202715bb72969112ce3e5a~Ds4cR1dnf0257302573euoutp01K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568294487;
-        bh=tlEvquuIuW9HkzSFCWtP6aVz/Llz1jttyGDq549d7xE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=slhQrT9JoQ5IpckP1TdazKArL5nidnqsqTegr/1bsitNGcXxl8wvZSfbIIUBsHkCp
-         w1kz+w0wQmnfCYuJLNRkLc1kMNErDPEOQnrKNW8erCRXPbql3HnG5y6w9T1nWAB3NO
-         OvIimBz5AXCS4pISGN0SYKH2tLoTnhATA/Ll1bps=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190912132126eucas1p19f372230cf5576d5286ddbaabc1bcb08~Ds4bVrYfa1903319033eucas1p1Y;
-        Thu, 12 Sep 2019 13:21:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 31.D6.04469.6564A7D5; Thu, 12
-        Sep 2019 14:21:26 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190912132126eucas1p1232a3be470d783e7676d22f462a252b4~Ds4aqa3mh1903319033eucas1p1X;
-        Thu, 12 Sep 2019 13:21:26 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190912132126eusmtrp1be40c8b867e017da7064c56436d3967f~Ds4apTRSl1907619076eusmtrp19;
-        Thu, 12 Sep 2019 13:21:26 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-8f-5d7a46561230
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7E.7F.04166.6564A7D5; Thu, 12
-        Sep 2019 14:21:26 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190912132125eusmtip21addbf3b29cb6ac44ac21c0141b81adf~Ds4Z92MFT0734107341eusmtip2Z;
-        Thu, 12 Sep 2019 13:21:25 +0000 (GMT)
-Subject: Re: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Matt Redfearn <matt.redfearn@thinci.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <16c9066b-091f-6d0e-23f1-2c1f83a7da1b@samsung.com>
-Date:   Thu, 12 Sep 2019 15:21:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut/vY1Zz9nBNPGoUjMSu16MEPCjGSukVQQUloYisvGumqTSsN
-        cqWGPSxrlbRVmila2HPOVxYysym9rUWFsWUPe2JoVtOydr1J/vd93/nOd86Bw1HKASaI26jN
-        EHRaTZqa9aZrb7sfRMQtyk6cUVEXTgrvt8vI16oyRJ7097DE8eMDRe4ORpD2zw6a7DtSLieP
-        G0+xpNFZKiO2Qwmk++xPilS5rYi8vHIPEXfjGZpYenJp0vWhkonBfM+zfDlvNjyi+QbTSzn/
-        +vRVDy04yfBtRR0yvvNpE8vXfXcxvPOAXcaXn3CwfHOhkebNxi6G77s2cYUi3nt+spC2cZug
-        i4pe5516w90k29IesKO5xsEaUJ7ffsRxgGdD9Vu8H3lzSlyF4JblDC2Rbwh6a4tlEulDUGMz
-        0yMdN9tiJL0SQYnF5DF5ecgXBGVfKRH74xj4VPeeEbEKT4Gz5Y7hIAr/osF6rhWJBRaHw2/L
-        c1bEChwNpqa7cnEAjUPBdpsW5QC8BnpdLYxk8YP2k2+GdS+8Egp/F8lFTOFJkGs1UxIOhBdv
-        SoZnAb7Iwa8nhn9Lx4KpZKnoAewPH+01cglPgDvGg7SEc8BZlUdJvQUIrFcaKKkwD1rsjxgx
-        h/LsfLkxSpIXwJ/KS3Ip3heeffGTVvCFo7XFlCQroGCvUnKHgPOe9V9gIFQ87GeLkNo06jDT
-        qGNMo44x/Z9biugLKFDI1KenCPqZWmF7pF6Trs/UpkRu2Jx+DXk+8s6Qvbce9XestyHMIbWP
-        gkzPTlQymm36rHQbAo5SqxTLPmclKhXJmqxsQbc5SZeZJuhtKJij1YGKnWNcCUqcoskQNgnC
-        FkE3UpVxXkEGlLQEvYqzupe5jK3Ls1tClo+lu8Pi57f2Fy9pG+taOC+g2hz/LqwtwJCvPKKa
-        tqp0bblPpm980gu479LuORxsG1/avTVnddb1VRlB4y6dV8fiTp/644tvptY6V1jmHns7J6Zi
-        luqYGu0ebO6crKpPHeoqWWsPH9NqHAg9FeUXGdKxS03rUzUzp1I6veYv1p68CY0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42I5/e/4Pd0wt6pYg2U7OCx6z51ksviwYhGj
-        xZWv79ksrn5/yWxx5reuxck3V1ksOicuYbe4vGsOm8Wu+wuYLA71RVs8X/iD2WLFz62MFnc3
-        nGW0+LlrHovF5vfNLBaPXi5ndRDweH+jld1jdsNFFo+ds+6yezyeuxHI7ZjJ6nFiwiUmjzvX
-        9rB5bP/2gNXjfvdxJo8l066yeRzoncziMXvyI1aPz5vkAnij9GyK8ktLUhUy8otLbJWiDS2M
-        9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DL2/tzDVHBStOLAlqtsDYwtgl2MHBwS
-        AiYS+044dDFycQgJLGWUOH95AXMXIydQXFxi9/y3ULawxJ9rXWwQRa8ZJW48WskCkhAWcJB4
-        vf0FK4gtIqAhsXDJVSaQImaBfywS01vmgHULCZxikdi+JwjEZhPQlPi7+SYbiM0rYCcxa88Z
-        dpArWARUJQ4dA5spKhAhcXjHLEaIEkGJkzOfgMU5BQIlev9OYAexmQXUJf7Mu8QMYctLNG+d
-        DWWLS9x6Mp9pAqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5mxiB
-        iWHbsZ+bdzBe2hh8iFGAg1GJh9dCpypWiDWxrLgy9xCjBAezkgivz5vKWCHelMTKqtSi/Pii
-        0pzU4kOMpkC/TWSWEk3OByatvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUw
-        fUwcnFINjIxm5lPdq68xPLdSrKq3PX7cuOOPbkPJiTNJs7VZQhzei2Xm6ti3HCk49JZTwWXR
-        di/edBEHBqkdG6b8mFv0dHGUpdfH4Mccb3li/JY2X4l2dJnTbv58zsalWQyJfk/89f1U3nyN
-        3f3mNbPhnU/Nt2OYFI5s33nx8K0Hq3rX9skf9cuf2eMjoMRSnJFoqMVcVJwIAC2247giAwAA
-X-CMS-MailID: 20190912132126eucas1p1232a3be470d783e7676d22f462a252b4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da
-References: <20190829060550.62095-1-john.stultz@linaro.org>
-        <CGME20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da@epcas3p1.samsung.com>
-        <CAF6AEGvborwLmjfC6_vgZ-ZbfvF3HEFFyb_NHSLRoYWF35bw+g@mail.gmail.com>
-        <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com>
-        <CAF6AEGtkvRpXSoddjmxer2U6LxnV_SAe+jwE2Ct8B8dDpFy2mA@mail.gmail.com>
-        <b925e340-4b6a-fbda-3d8d-5c27204d2814@samsung.com>
-        <CALAqxLU5Ov+__b5gxnuMxQP1RLjndXkB4jAiGgmb-OMdaKePug@mail.gmail.com>
-        <9d31af23-8a65-d8e8-b73d-b2eb815fcd6f@samsung.com>
-        <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
+        Thu, 12 Sep 2019 09:22:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46613 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731283AbfILNW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:22:58 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Tfb303vKz9txv7;
+        Thu, 12 Sep 2019 15:22:55 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=KiF7jdV2; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 3l9hidgtpDqN; Thu, 12 Sep 2019 15:22:54 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Tfb265vvz9txv6;
+        Thu, 12 Sep 2019 15:22:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568294574; bh=GWQvbjCjgyL+nAOZxJ2VN1zz+9BZT/jEtfKDn8v4Dp0=;
+        h=From:Subject:To:Cc:Date:From;
+        b=KiF7jdV2ipOuWwvY7Wt9aFx1d7OAGmhXmUORNCcxTXSnCXjYHJ/uSqb6famBvVFKg
+         SDWv/GSNcmQeHwX0Y25MBZ1Iu/XzI1eYJsLRMGRcGp4Ns1m0jvnsuMMLDZNlLhN1OK
+         Bo56jpmm70Dc4WZNp99O/GNhf7pxT2NDDtLu8bPI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 59C008B933;
+        Thu, 12 Sep 2019 15:22:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id zQArg0OTCtUj; Thu, 12 Sep 2019 15:22:56 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D99268B921;
+        Thu, 12 Sep 2019 15:22:55 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 4AFF06B736; Thu, 12 Sep 2019 13:22:55 +0000 (UTC)
+Message-Id: <c27168ef054f3a52edcf0ff91652700d53b3e32d.1568294563.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/8xx: add __init to cpm1 init functions
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 12 Sep 2019 13:22:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.09.2019 04:38, John Stultz wrote:
-> On Wed, Sep 4, 2019 at 3:26 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> On 03.09.2019 18:18, John Stultz wrote:
->>> On Mon, Sep 2, 2019 at 6:22 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>> On 30.08.2019 19:00, Rob Clark wrote:
->>>>> On Thu, Aug 29, 2019 at 11:52 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>> Of course it seems you have different opinion what is the right thing in
->>>>>> this case, so if you convince us that your approach is better one can
->>>>>> revert the patch.
->>>>> I guess my strongest / most immediate opinion is to not break other
->>>>> existing adv75xx bridge users.
->>>> It is pity that breakage happened, and next time we should be more
->>>> strict about testing other platforms, before patch acceptance.
->>>>
->>>> But reverting it now will break also platform which depend on it.
->>> I'm really of no opinion of which approach is better here, but I will
->>> say that when a patch breaks previously working boards, that's a
->>> regression and justifying that some other board is now enabled that
->>> would be broken by the revert (of a patch that is not yet upstream)
->>> isn't really a strong argument.
->>>
->>> I'm happy to work with folks to try to fixup the kirin driver if this
->>> patch really is the right approach, but we need someone to do the same
->>> for the db410c, and I don't think its fair to just dump that work onto
->>> folks under the threat of the board breaking.
->>
->> These drivers should be fixed anyway - assumption that
->> drm_bridge/drm_panel will be registered before the bus it is attached to
->> is just incorrect.
->>
->> So instead of reverting, fixing and then re-applying the patch I have
->> gently proposed shorter path. If you prefer long path we can try to go
->> this way.
->>
->> Matt, is the pure revert OK for you or is it possible to prepare some
->> workaround allowing cooperation with both approaches?
-> Rob/Andrzej: What's the call here?
->
-> Should I resubmit the kirin fix for the adv7511 regression here?
-> Or do we revert the adv7511 patch? I believe db410c still needs a fix.
->
-> I'd just like to keep the HiKey board from breaking, so let me know so
-> I can get the fix submitted if needed.
+Functions cpm1_clk_setup(), cpm1_set_pin(), cpm_pic_init() and
+mpc8xx_pic_init() are only called from __init functions, so mark
+them __init as well.
 
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/platforms/8xx/cpm1.c | 10 +++++-----
+ arch/powerpc/platforms/8xx/pic.c  |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Since there is no response from Matt, we can perform revert, since there
-are no other ideas. I will apply it tomorrow, if there are no objections.
-
-And for the future: I guess it is not possible to make adv work with old
-and new approach, but simple workaround for adv could be added later:
-
-if (source is msm or kirin)
-
-    do_the_old_way
-
-else
-
-    do_correctly.
-
-
-And remove it after fixing both dsi masters.
-
-
-Regards
-
-Andrzej
-
-
->
-> thanks
-> -john
->
->
+diff --git a/arch/powerpc/platforms/8xx/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
+index 8b8c30dad87f..5a47b3ead01a 100644
+--- a/arch/powerpc/platforms/8xx/cpm1.c
++++ b/arch/powerpc/platforms/8xx/cpm1.c
+@@ -130,7 +130,7 @@ static const struct irq_domain_ops cpm_pic_host_ops = {
+ 	.map = cpm_pic_host_map,
+ };
+ 
+-unsigned int cpm_pic_init(void)
++unsigned int __init cpm_pic_init(void)
+ {
+ 	struct device_node *np = NULL;
+ 	struct resource res;
+@@ -312,7 +312,7 @@ struct cpm_ioport32e {
+ 	__be32 dir, par, sor, odr, dat;
+ };
+ 
+-static void cpm1_set_pin32(int port, int pin, int flags)
++static void __init cpm1_set_pin32(int port, int pin, int flags)
+ {
+ 	struct cpm_ioport32e __iomem *iop;
+ 	pin = 1 << (31 - pin);
+@@ -354,7 +354,7 @@ static void cpm1_set_pin32(int port, int pin, int flags)
+ 	}
+ }
+ 
+-static void cpm1_set_pin16(int port, int pin, int flags)
++static void __init cpm1_set_pin16(int port, int pin, int flags)
+ {
+ 	struct cpm_ioport16 __iomem *iop =
+ 		(struct cpm_ioport16 __iomem *)&mpc8xx_immr->im_ioport;
+@@ -392,7 +392,7 @@ static void cpm1_set_pin16(int port, int pin, int flags)
+ 	}
+ }
+ 
+-void cpm1_set_pin(enum cpm_port port, int pin, int flags)
++void __init cpm1_set_pin(enum cpm_port port, int pin, int flags)
+ {
+ 	if (port == CPM_PORTB || port == CPM_PORTE)
+ 		cpm1_set_pin32(port, pin, flags);
+@@ -400,7 +400,7 @@ void cpm1_set_pin(enum cpm_port port, int pin, int flags)
+ 		cpm1_set_pin16(port, pin, flags);
+ }
+ 
+-int cpm1_clk_setup(enum cpm_clk_target target, int clock, int mode)
++int __init cpm1_clk_setup(enum cpm_clk_target target, int clock, int mode)
+ {
+ 	int shift;
+ 	int i, bits = 0;
+diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
+index e9617d35fd1f..f2ba837249d6 100644
+--- a/arch/powerpc/platforms/8xx/pic.c
++++ b/arch/powerpc/platforms/8xx/pic.c
+@@ -125,7 +125,7 @@ static const struct irq_domain_ops mpc8xx_pic_host_ops = {
+ 	.xlate = mpc8xx_pic_host_xlate,
+ };
+ 
+-int mpc8xx_pic_init(void)
++int __init mpc8xx_pic_init(void)
+ {
+ 	struct resource res;
+ 	struct device_node *np;
+-- 
+2.13.3
 
