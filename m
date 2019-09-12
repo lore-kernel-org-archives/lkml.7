@@ -6,69 +6,99 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2030C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C5C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C308A2081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29B421479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfILUey (ORCPT
+        id S1727702AbfILUhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:34:54 -0400
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:58531 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727250AbfILUex (ORCPT
+        Thu, 12 Sep 2019 16:37:33 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36380 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfILUhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:34:53 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B7E4E837F24A;
-        Thu, 12 Sep 2019 20:34:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wood38_47427da86d73d
-X-Filterd-Recvd-Size: 1803
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 12 Sep 2019 20:34:49 +0000 (UTC)
-Message-ID: <4299c79e33f22e237e42515ea436f187d8beb32e.camel@perches.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2 0/3] Maintainer Entry Profiles
-From:   Joe Perches <joe@perches.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        linux-nvdimm@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        "Tobin C. Harding" <me@tobin.cc>
-Date:   Thu, 12 Sep 2019 13:34:48 -0700
-In-Reply-To: <74984dc0-d5e4-f272-34b9-9a78619d5a83@acm.org>
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <yq1o8zqeqhb.fsf@oracle.com> <6fe45562-9493-25cf-afdb-6c0e702a49b4@acm.org>
-         <44c08faf43fa77fb271f8dbb579079fb09007716.camel@perches.com>
-         <74984dc0-d5e4-f272-34b9-9a78619d5a83@acm.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 12 Sep 2019 16:37:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f2so18785653edw.3;
+        Thu, 12 Sep 2019 13:37:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pbP4i7DzdLdyPu+ieiqhNKpjgH4J8e/evjCuf6/AIwk=;
+        b=mo/2XukZxATvTrfvCSUwzZeVQ8hxBESzGn8ekcLi0NaAw9GCryX3wt270WEWRWNhPx
+         bpy30uYM2yOrfK176RbbMVKTwTWRemgN9kl24ttvObCVgt2XYjnUs74wsAr/6mUxstTP
+         rr7LCm7LDp6fwmmFc7jGsoK2m8gxge4/eZDwGS00KW56R4tAVAeZHrt4u8t6eRDQIQ+w
+         okHDbwZyOONEFOpzwsk97ZgQXUNtlRXXsKY8R4mu4lCsoQYkcwVB5vib9+akNNV/Pdxb
+         ybwWL81E88U8MmUCC9fDeTT5r16EJf9mOfoYyj7TQRJ7GPpEgKbiW2y5TrMqSQxrr2ai
+         5tgw==
+X-Gm-Message-State: APjAAAUjz7MbkD+1i+TjZsAnLmcLYS0FyTxodUwESgceTxoCDbyy1hFA
+        nTxngz3TzR8It0+T4p81yuzHgomZM5Q=
+X-Google-Smtp-Source: APXvYqzb3g+N0wE6Q3z5iPkdPtUq5pAoaIrjZ1ltbL2kXLRNHt2KdJy7pNq/nbc2ArwI1SUfCywKRQ==
+X-Received: by 2002:a17:906:80cd:: with SMTP id a13mr36904639ejx.155.1568320650545;
+        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id r23sm4975774edx.1.2019.09.12.13.37.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id a11so20081428wrx.1;
+        Thu, 12 Sep 2019 13:37:30 -0700 (PDT)
+X-Received: by 2002:adf:c613:: with SMTP id n19mr37053716wrg.109.1568320649865;
+ Thu, 12 Sep 2019 13:37:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-4-clabbe.montjoie@gmail.com> <20190907040116.lib532o2eqt4qnvv@flea>
+ <20190911183158.GA8264@Red> <20190912093737.s6iu63sdncij2qib@localhost.localdomain>
+ <CAGb2v678WGQm5PNy8GhOTpz+fYeLP3k0dnR0F00yyZpSRcA4yA@mail.gmail.com> <20190912203301.is4ubixhk64dl5t7@localhost.localdomain>
+In-Reply-To: <20190912203301.is4ubixhk64dl5t7@localhost.localdomain>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 12 Sep 2019 21:37:17 +0100
+X-Gmail-Original-Message-ID: <CAGb2v646YkM93BAo=hrpL+tgDU-JJ49-uMCMGECUbouoJrpg=w@mail.gmail.com>
+Message-ID: <CAGb2v646YkM93BAo=hrpL+tgDU-JJ49-uMCMGECUbouoJrpg=w@mail.gmail.com>
+Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings documentation
+ for sun8i-ce Crypto Engine
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-crypto@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-12 at 13:01 -0700, Bart Van Assche wrote:
+On Thu, Sep 12, 2019 at 9:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Thu, Sep 12, 2019 at 09:26:27PM +0100, Chen-Yu Tsai wrote:
+> > > >
+> > > >   clock-names:
+> > > >     items:
+> > > >       - const: ahb
+> > > >       - const: mod
+> > > >       - const: mbus
+> > >
+> > > And here as well
+> > >
+> > > Something I missed earlier though was that we've tried to unify as
+> > > much as possible the ahb / apb / axi clocks around the bus name, it
+> > > would be great if you could do it.
+> >
+> > I think we also want to standardize "mbus" as "dram"?
+>
+> Do we? The only user so far seems to be sun9i-de, while mbus has more
+> users. I don't really care though, both mbus and dram are pretty
+> generic to me. What makes you prefer dram over mbus?
 
-> Another argument in favor of W=1 is that the formatting of kernel-doc
-> headers is checked only if W=1 is passed to make.
+Argh... it's actually "ram" we use the most. Both "dram" and "mbus"
+have only one instance each.
 
-Actually, but for the fact there are far too many
-to generally enable that warning right now,
-(an x86-64 defconfig has more than 1000)
-that sounds pretty reasonable to me.
-
-
-
+ChenYu
