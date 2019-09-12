@@ -2,134 +2,110 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8297BC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C93C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A57214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260172084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfILUrD convert rfc822-to-8bit (ORCPT
+        id S1728071AbfILUvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:47:03 -0400
-Received: from mailoutvs18.siol.net ([185.57.226.209]:47244 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727381AbfILUrD (ORCPT
+        Thu, 12 Sep 2019 16:51:37 -0400
+Received: from mx1.yrkesakademin.fi ([85.134.45.194]:50294 "EHLO
+        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfILUvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:47:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 91F0952276C;
-        Thu, 12 Sep 2019 22:46:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PiO-ecvngsQu; Thu, 12 Sep 2019 22:46:59 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 3045752278E;
-        Thu, 12 Sep 2019 22:46:59 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id C6B2352276C;
-        Thu, 12 Sep 2019 22:46:58 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/6] ARM: dts: sunxi: h3/h5: Add MBUS controller node
-Date:   Thu, 12 Sep 2019 22:46:58 +0200
-Message-ID: <5193854.KWMFve8tAi@jernej-laptop>
-In-Reply-To: <20190912203427.ajbmtm5djctpkz6p@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <1679881.yZ8pMUtPNZ@jernej-laptop> <20190912203427.ajbmtm5djctpkz6p@localhost.localdomain>
+        Thu, 12 Sep 2019 16:51:37 -0400
+Subject: Re: [PATCH AUTOSEL 5.2 13/23] drm/i915/userptr: Acquire the page lock
+ around set_page_dirty()
+To:     Sasha Levin <sashal@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+CC:     Jani Nikula <jani.nikula@intel.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>
+References: <20190903162424.6877-1-sashal@kernel.org>
+ <20190903162424.6877-13-sashal@kernel.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <36993214-6ce7-260f-68c7-6fbb0630143f@mageia.org>
+Date:   Thu, 12 Sep 2019 23:51:33 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903162424.6877-13-sashal@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WatchGuard-Spam-ID: str=0001.0A0C020F.5D7AAFD8.0051,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.194
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 12. september 2019 ob 22:34:27 CEST je Maxime Ripard napisal(a):
-> On Thu, Sep 12, 2019 at 10:28:37PM +0200, Jernej Škrabec wrote:
-> > Dne četrtek, 12. september 2019 ob 22:20:57 CEST je Maxime Ripard 
-napisal(a):
-> > > Hi,
-> > > 
-> > > On Thu, Sep 12, 2019 at 07:51:29PM +0200, Jernej Skrabec wrote:
-> > > > Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
-> > > > access system memory.
-> > > > 
-> > > > MBUS controller is responsible for arbitration between channels based
-> > > > on set priority and can do some other things as well, like report
-> > > > bandwidth used. It also maps RAM region to different address than CPU.
-> > > > 
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > > 
-> > > >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
-> > > >  1 file changed, 9 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > b/arch/arm/boot/dts/sunxi-h3-h5.dtsi index eba190b3f9de..ef1d03812636
-> > > > 100644
-> > > > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > @@ -109,6 +109,7 @@
-> > > > 
-> > > >  		compatible = "simple-bus";
-> > > >  		#address-cells = <1>;
-> > > >  		#size-cells = <1>;
-> > > > 
-> > > > +		dma-ranges;
-> > > > 
-> > > >  		ranges;
-> > > >  		
-> > > >  		display_clocks: clock@1000000 {
-> > > > 
-> > > > @@ -538,6 +539,14 @@
-> > > > 
-> > > >  			};
-> > > >  		
-> > > >  		};
-> > > > 
-> > > > +		mbus: dram-controller@1c62000 {
-> > > > +			compatible = "allwinner,sun8i-h3-mbus";
-> > > > +			reg = <0x01c62000 0x1000>;
-> > > > +			clocks = <&ccu 113>;
-> > > > +			dma-ranges = <0x00000000 0x40000000
-> > 
-> > 0xc0000000>;
-> > 
-> > > > +			#interconnect-cells = <1>;
-> > > > +		};
-> > > > +
-> > > 
-> > > If that's easy enough to access, can you also add the references in
-> > > the devices that are already there? (CSI and DE comes to my mind, but
-> > > there might be others).
-> > 
-> > Strangely, DE2 doesn't use this offset. That was tested on OrangePi
-> > Plus2E,
-> > which has 2 GiB of RAM and subtracting this offset causes corrupted image.
+Den 03-09-2019 kl. 19:24, skrev Sasha Levin:
+> From: Chris Wilson <chris@chris-wilson.co.uk>
 > 
-> Ok, weird. But if it was tested then fine by me :)
+> [ Upstream commit aa56a292ce623734ddd30f52d73f527d1f3529b5 ]
 > 
-> > But I can add this properties to CSI too. However, wouldn't that need CSI
-> > DT binding expansion with those properties? othetwise DT check will fail.
-> Oh right, we definitely need to update the binding indeed. The code
-> should be able to cope with both cases already.
+> set_page_dirty says:
+> 
+> 	For pages with a mapping this should be done under the page lock
+> 	for the benefit of asynchronous memory errors who prefer a
+> 	consistent dirty state. This rule can be broken in some special
+> 	cases, but should be better not to.
+> 
+> Under those rules, it is only safe for us to use the plain set_page_dirty
+> calls for shmemfs/anonymous memory. Userptr may be used with real
+> mappings and so needs to use the locked version (set_page_dirty_lock).
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+> Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+> References: 6dcc693bc57f ("ext4: warn when page is dirtied without buffers")
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
+> (cherry picked from commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2)
+> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   drivers/gpu/drm/i915/i915_gem_userptr.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_gem_userptr.c b/drivers/gpu/drm/i915/i915_gem_userptr.c
+> index 8079ea3af1039..b1fc15c7f5997 100644
+> --- a/drivers/gpu/drm/i915/i915_gem_userptr.c
+> +++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
+> @@ -678,7 +678,15 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
+>   
+>   	for_each_sgt_page(page, sgt_iter, pages) {
+>   		if (obj->mm.dirty)
+> -			set_page_dirty(page);
+> +			/*
+> +			 * As this may not be anonymous memory (e.g. shmem)
+> +			 * but exist on a real mapping, we have to lock
+> +			 * the page in order to dirty it -- holding
+> +			 * the page reference is not sufficient to
+> +			 * prevent the inode from being truncated.
+> +			 * Play safe and take the lock.
+> +			 */
+> +			set_page_dirty_lock(page);
+>   
+>   		mark_page_accessed(page);
+>   		put_page(page);
+> 
 
-I guess it's better to handle that with another patch series then? Changing 
-CSI bindings doesn't fit here.
 
-Best regards,
-Jernej
+Please drop this one from all 5.2 and 4.19 stable queues
 
+It has now been reverted in Linus tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=505a8ec7e11ae5236c4a154a1e24ef49a8349600
 
-
-
+--
+Thomas
