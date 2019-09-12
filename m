@@ -2,139 +2,144 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A86C49ED6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA875C49ED6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0BE2085B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08352085B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 01:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfILBbw convert rfc822-to-8bit (ORCPT
+        id S1728362AbfILBdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 21:31:52 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:56238 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfILBbw (ORCPT
+        Wed, 11 Sep 2019 21:33:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46517 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726157AbfILBdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 21:31:52 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8C1VWfY031379
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 12 Sep 2019 10:31:32 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8C1VWC7020932;
-        Thu, 12 Sep 2019 10:31:32 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8C1TB9E032226;
-        Thu, 12 Sep 2019 10:31:32 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-8390835; Thu, 12 Sep 2019 10:28:32 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Thu,
- 12 Sep 2019 10:28:32 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     Oscar Salvador <osalvador@suse.de>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-Thread-Topic: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-Thread-Index: AQHVZ8LT5A97dnADeEaaRGKxuElT0aclr30AgAD844A=
-Date:   Thu, 12 Sep 2019 01:28:31 +0000
-Message-ID: <20190912012831.GA15418@hori.linux.bs1.fc.nec.co.jp>
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190910103016.14290-3-osalvador@suse.de>
- <c17c8bac-c443-046f-e622-78ed713517c9@redhat.com>
-In-Reply-To: <c17c8bac-c443-046f-e622-78ed713517c9@redhat.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <2C3D6FF6B1233443AE3234BB1559EB0B@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Sep 2019 21:33:38 -0400
+X-UUID: 78297ba1371f445b84693c296f71f482-20190912
+X-UUID: 78297ba1371f445b84693c296f71f482-20190912
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1472135931; Thu, 12 Sep 2019 09:33:34 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Sep 2019 09:33:32 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Sep 2019 09:33:32 +0800
+Message-ID: <1568252013.4102.1.camel@mtksdccf07>
+Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh@kernel.org>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 12 Sep 2019 09:33:33 +0800
+In-Reply-To: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+         <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+         <20190827183924.GA24178@bogus>
+         <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-On Wed, Sep 11, 2019 at 12:23:24PM +0200, David Hildenbrand wrote:
-> On 10.09.19 12:30, Oscar Salvador wrote:
-> > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+On Mon, 2019-09-02 at 18:04 +0200, Uwe Kleine-König wrote:
+> On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
+> > On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
+> > > From: Ryder Lee <ryder.lee@mediatek.com>
 > > 
-> > Currently madvise_inject_error() pins the target via get_user_pages_fast.
-> > The call to get_user_pages_fast is only to get the respective page
-> > of a given address, but it is the job of the memory-poisoning handler
-> > to deal with races, so drop the refcount grabbed by get_user_pages_fast.
+> > The subject should indicate this is for Mediatek.
 > > 
-> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> > ---
-> >  mm/madvise.c | 25 +++++++++++--------------
-> >  1 file changed, 11 insertions(+), 14 deletions(-)
+> > > 
+> > > This adds a property "num-pwms" in example so that we could
+> > > specify the number of PWM channels via device tree.
+> > > 
+> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > Changes since v5:
+> > > - Add an Acked-by tag
+> > > - This file is original v4 patch 5/10
+> > > (https://patchwork.kernel.org/patch/11102577/)
+> > > 
+> > > Change-Id: I429048afeffa96f3f14533910efe242f88776043
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > index 991728cb46cb..ea95b490a913 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > @@ -14,12 +14,12 @@ Required properties:
+> > >                  has no clocks
+> > >     - "top": the top clock generator
+> > >     - "main": clock used by the PWM core
+> > > -   - "pwm1-8": the eight per PWM clocks for mt2712
+> > > -   - "pwm1-6": the six per PWM clocks for mt7622
+> > > -   - "pwm1-5": the five per PWM clocks for mt7623
+> > > +   - "pwm1-N": the PWM clocks for each channel
+> > > +   where N starting from 1 to the maximum number of PWM channels
 > > 
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 6e023414f5c1..fbe6d402232c 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -883,6 +883,16 @@ static int madvise_inject_error(int behavior,
-> >  		ret = get_user_pages_fast(start, 1, 0, &page);
-> >  		if (ret != 1)
-> >  			return ret;
-> > +		/*
-> > +		 * The get_user_pages_fast() is just to get the pfn of the
-> > +		 * given address, and the refcount has nothing to do with
-> > +		 * what we try to test, so it should be released immediately.
-> > +		 * This is racy but it's intended because the real hardware
-> > +		 * errors could happen at any moment and memory error handlers
-> > +		 * must properly handle the race.
-> > +		 */
-> > +		put_page(page);
-> > +
+> > Once converted to schema, you are going to be back to listing them out.
+> > 
+> > >   - pinctrl-names: Must contain a "default" entry.
+> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > > + - num-pwms: the number of PWM channels.
+> > 
+> > You can't add new required properties without breaking compatibility. 
+> > 
+> > You already have to imply the number of channels from the compatible (or 
+> > number of clocks) and you have to keep doing so to maintain 
+> > compatibility, so why not just keep doing that for new chips?
 > 
-> I wonder if it would be clearer to do that after the page has been fully
-> used  - e.g. after getting the pfn and the order (and then e.g.,
-> symbolically setting the page pointer to 0).
-
-Yes, this could be called just after page_to_pfn() below.
-
-> I guess the important part of this patch is to not have an elevated
-> refcount while calling soft_offline_page().
+> This was a suggestion by me. The driver still handles compatibility
+> (i.e. falls back to the number of PWMs that was implied by the
+> compatible before). Given that there are various drivers that all solve
+> the same problem (i.e. different variants with different number of PWMs)
+> I thought it would be a good idea to introduce a property in the device
+> tree that specifies this number.
 > 
-
-That's right.
-
-> >  		pfn = page_to_pfn(page);
-> >  
-> >  		/*
-> > @@ -892,16 +902,11 @@ static int madvise_inject_error(int behavior,
-> >  		 */
-> >  		order = compound_order(compound_head(page));
-> >  
-> > -		if (PageHWPoison(page)) {
-> > -			put_page(page);
-> > -			continue;
-> > -		}
+> Only for newly introduced compatibles the num-pwms property is really
+> required. Differentiating the ones that need it and the ones that don't
+> seems over-engineered to me.
 > 
-> This change is not reflected in the changelog. I would have expected
-> that only the put_page() would go. If this should go completely, I
-> suggest a separate patch.
+> (BTW, using the number of clks doesn't really work because there are
+> also some variants without clocks. It is still under discussion if in
+> this case dummy-clocks should be provided IIRC.)
+> 
+> Best regards
+> Uwe
 > 
 
-I forget why I tried to remove the if block, and now I think only the
-put_page() should go as you point out.
 
-Thanks for the comment.
+Any conclusions ? 
 
-- Naoya
+just a friendly reminder :)
+
+
+regards Sam
+
+
