@@ -2,173 +2,123 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCF7C49ED6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 00:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBF7C49ED6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 00:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEEF206CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 00:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5796B2085B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 00:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZj3INmZ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RzDfyOI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfILAv3 (ORCPT
+        id S1728832AbfILAxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 20:51:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38289 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbfILAv3 (ORCPT
+        Wed, 11 Sep 2019 20:53:02 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:55862 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfILAxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 20:51:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o184so5558054wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Sep 2019 17:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cRFJ6gtRLbuXMjuyy4o8BW+mb8TgXy7W+4Wcuwsn9+4=;
-        b=rZj3INmZZV1ewolpfxkvVktHi0GCm80Xn/XikEOHaDOTfbhBBznX4jZ5mvJ3Wu0QjA
-         PfgpjwXYZ0MsuB/v4x2Kv4fAoZWgBZ5chSHhsctZspxhsvDq4JmV3rS2Gt6xLi9HUtZi
-         4NZossOqBh1zGwCOckO65a6dOKhygBiTwtSDmuAC1o6clx5Qh/HCFa7hzvQJl00IYmq/
-         bcUi3re10LDhRsFMtX2z664wAio8oZkSeb4xGz69owZeu+LoBD7gYA135VSUyoQk8yX0
-         Fb4fR07uGH1D3v21Rp7w/YVH/vfQTIO9FaxiLqxsTQfcxb8rv7MRSYZ2Md32ImbXGdwS
-         etnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cRFJ6gtRLbuXMjuyy4o8BW+mb8TgXy7W+4Wcuwsn9+4=;
-        b=PeYjhArffC9v/YmFzzrPWw1URwof6WvIESBpOhk8I2LRoo+WNoSYwja4vc2qVbW5x9
-         UGnYOQI4g3W7RsrNe3pw2VekSa5IRBI9rodYzrhugKl1T3KJx8n+RGuLs/rMxkr3MrFk
-         6fowrAmCZVcBoP6lXVVXwqr1UEOsKHQuh+p1M96++WYomzgF++opPu9eqc9tiUuDeBG+
-         sWW4axFApGB+/55SxtHuus1wetchyFqwrYLe+elSg/EN9jkSwAeTsYdKiTcoqnMAOkft
-         6I7S0Pw722WGwR0GvHh6xTYpoeeuuzXXNptH/JKBFKO3CXrMg7tKi3CtgS5PHXxTV3j/
-         0swQ==
-X-Gm-Message-State: APjAAAVwUTYEaBugZHT6JNe7Hx2bIHj6gp5vw/APlSLVx1IOLSSbgCgu
-        WfT0cs+rN5bH0JnVSuxql/TAMyRPyJymgHSV/hk=
-X-Google-Smtp-Source: APXvYqz+Dp+qw5fbTyc/KzrL23GtMZmcDMd6UItNU65wHnS7dREzQOwzlUxDzrNDWpYwmjdT8FN2CPII2vVKnvOa7Wk=
-X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr6169916wmu.146.1568249486616;
- Wed, 11 Sep 2019 17:51:26 -0700 (PDT)
+        Wed, 11 Sep 2019 20:53:02 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x8C0qemV031825;
+        Thu, 12 Sep 2019 09:52:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x8C0qemV031825
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568249561;
+        bh=NKUMKkNtqrTDWVT1RfLccaVJ+xpM7V6DZTRRz/GPGuw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RzDfyOI55EA7WF2xdjs7tkxM22KbWfvxPD1sifXO1FtLjiIfV65YxTizktZcuyqj8
+         c2bfyOHKAFI9geummPzJ7TjFboyxopJcSgnprroGE/FobXeHsAqgCtHGvOE3W5gKqe
+         ouH3pFBjTf55YJHAdv5aO85BZMm99/Kh1bb7EpUMjqJFFNSTEhHvUCK9n1dINncUAs
+         N7ocOOdaurLi6hQk9iI51a3SxL8s1el/rqU3nFx6IB7+p+1eqnAqTzXiU+HUV4WrfF
+         s+//lApTUSIifRjGTJ9mfsQmB4qyV4qkwM21WzJKS6sX3dfh4pSIlabRpn2fC40jdT
+         473stFcb60nhA==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id m22so15039440vsl.9;
+        Wed, 11 Sep 2019 17:52:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWsDqiZ7lUOhv7IfQ3BKSp1ZgXVHWtyRvyHg8/vMDuDt4Y6qXo5
+        hO3m4R8bIJXclAVVJF7neScH3LyoKWfStb+E7Zs=
+X-Google-Smtp-Source: APXvYqzqoiDkP84GVdQRATv6NHL348lP9+WwfJKOqB3cvmaSODCnoCOjiv71A4zCzLOntY7ISObv/nmkVN1okIGiPpM=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr22692085vsa.54.1568249560218;
+ Wed, 11 Sep 2019 17:52:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAEJqkggcnW98Sk3BEBCCZf57Uwd9rdqD5Da0tmuTaNfkJN5kVg@mail.gmail.com>
-In-Reply-To: <CAEJqkggcnW98Sk3BEBCCZf57Uwd9rdqD5Da0tmuTaNfkJN5kVg@mail.gmail.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Thu, 12 Sep 2019 08:51:15 +0800
-Message-ID: <CACVXFVNiRX+K8toexRfykazVnpC1sNYj2UbUtnqNeqkqUfs8TA@mail.gmail.com>
-Subject: Re: nvme vs. hibernation ( again )
-To:     Gabriel C <nix.or.die@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-nvme <linux-nvme@lists.infradead.org>
+References: <20190911173453.958-1-cai@lca.pw> <CAO4ZVTMUMKMOqef5yV=5bwHLXLMsNtTegGGMkw0GbFaDHvrV6g@mail.gmail.com>
+ <08E1DEDD-D82F-41C1-966B-ECCE445C8FA1@lca.pw>
+In-Reply-To: <08E1DEDD-D82F-41C1-966B-ECCE445C8FA1@lca.pw>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 12 Sep 2019 09:52:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASuqYP6kCvkkWQSw1=_DqyYPjgGwxjg3yCtXqyB2KKqrg@mail.gmail.com>
+Message-ID: <CAK7LNASuqYP6kCvkkWQSw1=_DqyYPjgGwxjg3yCtXqyB2KKqrg@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpu: no need to compile drm/ if CONFIG_DRM=n
+To:     Qian Cai <cai@lca.pw>
+Cc:     Maxime Ripard <maxime.ripard@anandra.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        maarten.lankhorst@linux.intel.com,
+        Michal Marek <michal.lkml@markovi.net>, mripard@kernel.org,
+        Sean Paul <sean@poorly.run>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:27 AM Gabriel C <nix.or.die@gmail.com> wrote:
+On Thu, Sep 12, 2019 at 2:41 AM Qian Cai <cai@lca.pw> wrote:
 >
-> Hi Christoph,
 >
-> I see this was already discussed in 2 threads:
 >
->  https://lists.infradead.org/pipermail/linux-nvme/2019-April/023234.html
->  https://lkml.org/lkml/2019/5/24/668
+> > On Sep 11, 2019, at 1:37 PM, Maxime Ripard <maxime.ripard@anandra.org> =
+wrote:
+> >
+> > Hi,
+> >
+> > Le mer. 11 sept. 2019 =C3=A0 19:35, Qian Cai <cai@lca.pw> a =C3=A9crit =
+:
+> > The commit c0e09200dc08 ("drm: reorganise drm tree to be more future
+> > proof.") changed the behavior from only compiling drm/ if CONFIG_DRM=3D=
+y
+> > to always compiling drm/. This restores the behavior, so people don't
+> > need to waste time compiling stuff they don't need.
+> >
+> > Fixes: c0e09200dc08 ("drm: reorganise drm tree to be more future proof.=
+")
+> >
+> > You are missing your signed-off-by
 >
-> but in latest git the issue still exists.
+> That is intentional because this is a RFC patch to gather the feedback as=
+ I am no
+> expert in DRM and may miss something important.
 >
-> I hit that on each resume on my Acer Nitro 5 (AN515-43-R8BF) Laptop.
+> Once people are happy with it, I plan to send a formal patch with Signed-=
+off-by.
 >
-> .....
-> Sep 11 16:16:30 nitro5 kernel: Freezing remaining freezable tasks ...
-> (elapsed 0.000 seconds) done.
-> Sep 11 16:16:30 nitro5 kernel: printk: Suspending console(s) (use
-> no_console_suspend to debug)
-> Sep 11 16:16:30 nitro5 kernel: WARNING: CPU: 0 PID: 882 at
-> kernel/irq/chip.c:210 irq_startup+0xe6/0xf0
-> Sep 11 16:16:30 nitro5 kernel: Modules linked in: af_packet bnep
-> amdgpu ath10k_pci ath10k_core ath mac80211 joydev uvcvideo
-> videobuf2_vmalloc videobuf2_memops edac_mce_amd videobuf2_v4l2
-> amd_iommu_v2 kvm_amd gpu_sched btusb snd_hda_codec_realtek ttm btrtl
-> btbcm btintel hid_multitouch ccp snd_hda_codec_generic nls_utf8
-> bluetooth drm_kms_helper hid_generic videobuf2_common ledtrig_audio
-> snd_hda_codec_hdmi nls_cp437 cfg80211 drm kvm snd_hda_intel vfat
-> videodev fat agpgart efi_pstore r8169 snd_hda_codec ecdh_generic
-> i2c_algo_bit realtek irqbypass pcspkr mc rfkill fb_sys_fops efivars
-> syscopyarea snd_hda_core ecc k10temp wmi_bmof sysfillrect tpm_crb
-> crc16 libphy i2c_piix4 libarc4 snd_hwdep hwmon sysimgblt tpm_tis
-> tpm_tis_core evdev ac tpm battery mac_hid i2c_designware_platform
-> pinctrl_amd i2c_designware_core rng_core acer_wireless button
-> acpi_cpufreq ppdev sch_fq_codel fuse snd_pcm_oss snd_mixer_oss snd_pcm
-> snd_seq_dummy snd_seq_oss snd_seq_midi_event snd_seq snd_seq_device
-> snd_timer snd soundcore lp parport_pc
-> Sep 11 16:16:30 nitro5 kernel:  parport xfs libcrc32c crc32c_generic
-> crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ahci
-> libahci libata xhci_pci xhci_hcd aesni_intel usbcore scsi_mod
-> aes_x86_64 crypto_simd cryptd glue_helper serio_raw i2c_hid hid video
-> i2c_core wmi dm_mirror dm_region_hash dm_log dm_mod unix sha1_ssse3
-> sha1_generic hmac ipv6 nf_defrag_ipv6 autofs4
-> Sep 11 16:16:30 nitro5 kernel: CPU: 0 PID: 882 Comm: kworker/u32:9 Not
-> tainted 5.3.0-rc8-00007-g3120b9a6a3f7-dirty #2
-> Sep 11 16:16:30 nitro5 kernel: Hardware name: Acer Nitro
-> AN515-43/Octavia_PKS, BIOS V1.05 08/07/2019
-> Sep 11 16:16:30 nitro5 kernel: Workqueue: events_unbound async_run_entry_fn
-> Sep 11 16:16:30 nitro5 kernel: RIP: 0010:irq_startup+0xe6/0xf0
-> Sep 11 16:16:30 nitro5 kernel: Code: e8 7f 3c 00 00 85 c0 0f 85 e3 09
-> 00 00 4c 89 e7 31 d2 4c 89 ee e8 1a cf ff ff 48 89 ef e8 b2 fe ff ff
-> 41 89 c4 e9 51 ff ff ff <0f> 0b eb b2 66 0f 1f 44 00 00 0f 1f 44 00 00
-> 55 48 89 fd 53 48 8b
-> Sep 11 16:16:30 nitro5 kernel: RSP: 0018:ffffbe9b00793c38 EFLAGS: 00010002
-> Sep 11 16:16:30 nitro5 kernel: RAX: 0000000000000010 RBX:
-> 0000000000000001 RCX: 0000000000000040
-> Sep 11 16:16:30 nitro5 kernel: RDX: 0000000000000000 RSI:
-> ffffffff9d1b8800 RDI: ffff9c9d9e136598
-> Sep 11 16:16:30 nitro5 kernel: RBP: ffff9c9d981e5400 R08:
-> 0000000000000000 R09: ffff9c9d9e8003f0
-> Sep 11 16:16:30 nitro5 kernel: R10: 0000000000000000 R11:
-> ffffffff9d057688 R12: 0000000000000001
-> Sep 11 16:16:30 nitro5 kernel: R13: ffff9c9d9e136598 R14:
-> 0000000000000000 R15: ffff9c9d9e346000
-> Sep 11 16:16:30 nitro5 kernel: FS:  0000000000000000(0000)
-> GS:ffff9c9da0800000(0000) knlGS:0000000000000000
-> Sep 11 16:16:30 nitro5 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Sep 11 16:16:30 nitro5 kernel: CR2: 00005633ad8d0060 CR3:
-> 00000003db8d0000 CR4: 00000000003406f0
-> Sep 11 16:16:30 nitro5 kernel: Call Trace:
-> Sep 11 16:16:30 nitro5 kernel:  enable_irq+0x48/0x90
-> Sep 11 16:16:30 nitro5 kernel:  nvme_poll_irqdisable+0x20c/0x280
-> Sep 11 16:16:30 nitro5 kernel:  __nvme_disable_io_queues+0x19d/0x1d0
-> Sep 11 16:16:30 nitro5 kernel:  ? nvme_del_queue_end+0x20/0x20
-> Sep 11 16:16:30 nitro5 kernel:  nvme_dev_disable+0x15c/0x210
-> Sep 11 16:16:30 nitro5 kernel:  nvme_suspend+0x40/0x130
-> Sep 11 16:16:30 nitro5 kernel:  pci_pm_suspend+0x72/0x130
-> Sep 11 16:16:30 nitro5 kernel:  ? pci_pm_freeze+0xb0/0xb0
-> Sep 11 16:16:30 nitro5 kernel:  dpm_run_callback+0x29/0x120
-> Sep 11 16:16:30 nitro5 kernel:  __device_suspend+0x1b2/0x400
-> Sep 11 16:16:30 nitro5 kernel:  async_suspend+0x1b/0x90
-> Sep 11 16:16:30 nitro5 kernel:  async_run_entry_fn+0x37/0xe0
-> Sep 11 16:16:30 nitro5 kernel:  process_one_work+0x1d1/0x3a0
-> Sep 11 16:16:30 nitro5 kernel:  worker_thread+0x4a/0x3d0
-> Sep 11 16:16:30 nitro5 kernel:  kthread+0xf9/0x130
-> Sep 11 16:16:30 nitro5 kernel:  ? process_one_work+0x3a0/0x3a0
-> Sep 11 16:16:30 nitro5 kernel:  ? kthread_park+0x80/0x80
-> Sep 11 16:16:30 nitro5 kernel:  ret_from_fork+0x22/0x40
-> Sep 11 16:16:30 nitro5 kernel: ---[ end trace c598a86b44574730 ]---
->
-> ...
->
-> The patch from Dongli Zhang was rejected the time without any other fix
-> or work on this issue I could find.
->
-> Are there any plans to fix that or any code to test?
-
-I guess the following patchset may address it:
-
-https://lore.kernel.org/linux-block/20190812134312.16732-1-ming.lei@redhat.com/
 
 
-Thanks,
-Ming Lei
+CONFIG_DRM is tristate.
+
+Your patch requires everything under drivers/gpu/drm/
+modular when CONFIG_DRM=3Dm.
+
+At least, drivers/gpu/drm/drm_mipi_dsi.c
+is built-in only.
+
+I guess that is the reason why
+they use 'obj-y +=3D drm/'.
+
+
+In other words, if you are able to
+make all the drm code modular,
+your patch is applicable.
+
+
+--=20
+Best Regards
+Masahiro Yamada
