@@ -2,124 +2,119 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A60C4CECC
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDFAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9B120678
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="XU1ehr7B"
+	by mail.kernel.org (Postfix) with ESMTP id A9D7B21479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfILLAT (ORCPT
+        id S1731383AbfILLAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:00:19 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46072 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731357AbfILLAS (ORCPT
+        Thu, 12 Sep 2019 07:00:45 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:58251 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731267AbfILLAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:00:18 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f19so23500913eds.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 04:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i4n3cs5YIwHpBBnCvQbY3FnLMZHpwOIQycs63oVDiSc=;
-        b=XU1ehr7BQ2UPg1KBuVQ5nl6L4OIYSyENUTpJxtu0PcESlZD1JDIDF/kfEGLVTwGTPP
-         MxBuxnwufiCItM0eu2f6PGyyjzV27Q2cNWmrCI/fGkWv00JgM+mdZSN1lgpv2XIZF9yD
-         Ti1WM/t84cLxXEP8DSXzi5NQKs0TYyJ79hQa7AZv9JgQdH0hTuNKnH8BEAiZ+ewccLLa
-         vvU+d/v7/7I+eQ9LvIytn9jJr+WOd1sRRaRjF83QEr00IfWCJU2SCQ/EcoyWOdAh3E8X
-         tFKZsg92QCTLtpzpNowjR1vbUr8LIL24WrcjhMNVcplThOrveFyd6bS7Oehx93UQGF8r
-         wpAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i4n3cs5YIwHpBBnCvQbY3FnLMZHpwOIQycs63oVDiSc=;
-        b=Skpkg81mSKaeri7wnaPNyiIJip22+QYD80upVV7yC0zeH67mapNDzYxIlKe6TcUAV6
-         6dgbb2BdEVLjrkQdPzSoPCPrxAaDFaVFO8YwLRVeUPS50v1c9joPmtXimFTQdeOqTad7
-         8fpvMRwOQsflr6itFkRz5lJAQSQ9S4OKLsfM48lVFL2xE6Uqx3gi3ztoSbzYhWgdT028
-         TzzkumuBGxAT0rbKjRg2fuOKoHIrQQHvnxuh9j2WSN2R03wBdnCD5pzy2RjH65L24PBR
-         MC1CNr/UbzuT/mJ67JsyYt9Im8pbO/hVr9SCnnJ/r5fcB3AcoGa2LC2eM8HIb9y7c8Tt
-         CphA==
-X-Gm-Message-State: APjAAAXjTMLDhJvKitv6AyD8Ur8snKSquwCeA1U2wstcRISL9rrL+6Zb
-        LEdYw8PGCJJ/p/yeyPfBTzQobA==
-X-Google-Smtp-Source: APXvYqzn86bOsg/hOamx0ZM4X4jdcRXf0RIV/TYjmuJGR8c1qTMEHrx7GcnktNsAZCbZ5Sfr2/boLg==
-X-Received: by 2002:a50:d084:: with SMTP id v4mr42151595edd.48.1568286015703;
-        Thu, 12 Sep 2019 04:00:15 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 60sm4730030edg.10.2019.09.12.04.00.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 04:00:14 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 379ED100B4A; Thu, 12 Sep 2019 14:00:16 +0300 (+03)
-Date:   Thu, 12 Sep 2019 14:00:16 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating
- architecture page table helpers
-Message-ID: <20190912110016.srrydg2krplscbgq@box>
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+        Thu, 12 Sep 2019 07:00:45 -0400
+Received: from [IPv6:2001:420:44c1:2577:24cc:d8f2:53a9:84b0] ([IPv6:2001:420:44c1:2577:24cc:d8f2:53a9:84b0])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8Mq4iPAMsV17O8Mq8iyD5g; Thu, 12 Sep 2019 13:00:43 +0200
+Subject: Re: [PATCH v3 3/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190823123737.7774-1-ribalda@kernel.org>
+ <20190823123737.7774-3-ribalda@kernel.org>
+ <20190826074059.bby3k6vr25axfbqc@uno.localdomain>
+ <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <b3935cde-3462-a7e6-a798-92bdd4ffcc45@xs4all.nl>
+Date:   Thu, 12 Sep 2019 13:00:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAPybu_290wASRs+LLLNup-MYb3W35Zj7W3_qBZSKYJrZCKUJ+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPfwKjx4UD93SO0AmQcDSRpDqn25z+LAfiCPtU6lrI9mLrpvKynYotLckLYYMRXzoHMPNoWxURsuLQukMUM1LUech20mgvA0sUYvPHqO4lnifMYPT2ZZ
+ pqNCXo36tL4JWn9jV47HqUWMekpX5k+YKksDc9L6CHLtljPiYRv+ryZXCLL0I+EzRdwq8IH/7YhBYTL2a+wNQI6ZPsqS5QcTaDsJRCPAFlIoFxreZZANa8wA
+ dVwh+fydwxFC3w4he7J6Qfn7dR7qN5eP6wVtBaxxnWMBRYww25cRBx2GEyUJyMgVvPy/1cGYD5tRz7tZ1v/hWRernjXsjNm1yaNhKDIwwyiH4DP7qej+5hHR
+ MPnUX9aXYYE8uPf4EITa80Q3GB/Pz20jwUB8/aGTlPCJjXrZgQubt3u7Snooe8Wr83FWn/yQ2dpq7gVZ/d5ORLSsr+hZSag+3QzMfYPuHO/NaMoHViidK0jv
+ vnCYgFYW40daIKvV/WnO25XD6XPUpN49crIztA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 11:32:53AM +0530, Anshuman Khandual wrote:
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Anshuman Khandual <anshuman.khandual@arm.com>");
-> +MODULE_DESCRIPTION("Test architecture page table helpers");
+On 9/12/19 12:51 PM, Ricardo Ribalda Delgado wrote:
+> HI Jacopo
+> 
+> (Sorry for the late reply, I have been in holidays plus with plenty of
+> family matters)
+> 
+> On Mon, Aug 26, 2019 at 9:39 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>>
+>> Hi Ricardo,
+>>
+>> On Fri, Aug 23, 2019 at 02:37:33PM +0200, Ricardo Ribalda Delgado wrote:
+>>> A struct v4l2_area containing the width and the height of a rectangular
+>>> area.
+>>>
+>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>> Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>>> ---
+>>>  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>>> index a3d56ffbf4cc..c09d06ef2b08 100644
+>>> --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>>> +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>>> @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
+>>>        - n/a
+>>>        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
+>>>       quantization matrices for stateless video decoders.
+>>> +    * - ``V4L2_CTRL_TYPE_AREA``
+>>> +      - n/a
+>>
+>> Can an area be negative ?
+>> I would set these fields to ">= 0" ">= 1" and ">= 0" respectively.
+>>
+> 
+> Dont min, max and step only make sense for integer controls?
 
-It's not module. Why?
+It's up to us to define this :-)
 
-BTW, I think we should make all code here __init (or it's variants) so it
-can be discarded on boot. It has not use after that.
+I think it would make sense here as well where the range applies to both
+width and height values. Obviously, the range will be a superset of the
+range of each field separately, but it does help validation and prevent
+negative values.
 
--- 
- Kirill A. Shutemov
+Regards,
+
+	Hans
+
+> 
+>> Thanks
+>>    j
+>>
+>>> +      - n/a
+>>> +      - n/a
+>>> +      - A struct :c:type:`v4l2_area`, containing the width and the height
+>>> +        of a rectangular area.
+>>>      * - ``V4L2_CTRL_TYPE_H264_SPS``
+>>>        - n/a
+>>>        - n/a
+>>> --
+>>> 2.23.0.rc1
+>>>
+
