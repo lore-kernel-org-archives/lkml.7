@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A606CC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A182FC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7450A214DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6246D20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="rx2RsVVh"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="GRWPuOpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfILJoM (ORCPT
+        id S1730947AbfILJoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:44:12 -0400
-Received: from mail-eopbgr70097.outbound.protection.outlook.com ([40.107.7.97]:50646
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        Thu, 12 Sep 2019 05:44:16 -0400
+Received: from mail-eopbgr30094.outbound.protection.outlook.com ([40.107.3.94]:55461
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730593AbfILJoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:44:11 -0400
+        id S1730835AbfILJoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:44:14 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NLj6qeLGZIwQpv0KUZBxbRgX8a3+y0S4FAtxtgXpAz+fyxKQ0WmpNErpuaF9SYI4MEBy05zVwMkx/Hw+PqDgSHngidD9zt0oOeGEVN9cLMGgLde8CDgC8wfFrnt+NzXMU1rMbtC7JnXJ1FiBcUU6A8MpD+0pt+H8zN7I00+p7iWjWz/7lphBaFVJLDIebxE890rEPvvC9iDhgPE3yHGiwH5ZTqIZ2UG9qVq5ZyAUpgQA3JhcW2nvkzMu/M6hMlyATjTvbDFoUEoUYP/ziOIqXFvH8KlFgEAms4KC4OPevTUm9Lt9X0luhXOzBUv4n/CfuSYGhkdobQHDJWsy4IEhkg==
+ b=aA+OG/XIFSl08Ww+otKdIwdNuFia0oP2YR/0w/IwyAvfywmyeVqhR0HQXFoba43Q28lzdfOsoIeDKj00LgkcuoDiFRzADlfTppLBcEdCbPEgaHkjAT2rk5B74HncA4Q9N7onG9hHL5rtYavd+KD8Xt3pSJvp85uocGmcNsLQ76FhYvweiNIr24RqZP4nnhkU6AfqIRFvYGYrcXP7jVbALJRgzuS3e6Gb0NULTx43uqKStOO0+ZNlR4ChFwhWpbJ9Qheh9gu8H8pX+jvKhELkfDOULh4gmXXaxlmFLjXYcCG3gcdtJS+D35vO8R0ete7ZmZLIix0YHEyjRu4vY29yPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WxQs9qrkOQTGlFLkEqTfXTcRyCtzfF1dByH3D74lr+A=;
- b=dZ7pRCvy3dlFIUczyKbSvLekwY3X2mTm9i277kwV7SYWno3H1FCYINsYCSiWYKlx7KqBH/FqwN95WAnje1yOpgCXHmkA8DPvjhTfiMBZg79ZV628ehg7BEU4x+nqgqvTVKOkk0VqTBf3h3NiKD5QvvHE0ws2G7alm9hx7B7IoFzCsBtLfC0WFsTSONNGPbma3hp+H9hhNWZPKnZ6Fk6bC6hCqfn5TtdBvZgMv2d8aY+frH5m9ODYWCaUOU46MXk9+Cwnz6HlhlbrWq1Muj3TgC0HmBsllBqO2ptA4Z1cFLDa19HNbQV5vzr50mGtNiFnRje3JZMe9uuN9k1TAOnTsA==
+ bh=UE+HEtwhHIsezNX6gn/hDBiF4Y2+YR4kyHGqo5ONTkE=;
+ b=GLO8B1WXENoW4VtFOzGxd3kI0QyJ6fqSPrTU5d8x0uBTng9IrpmWsl8wy4/hw+idgRZkDA1oTi176khdEre4N0ANbEsFj79bWOW1a12RQzTLiucEbAO+g4nsFv1LGQFd/qCtOl8wpmmuG0HCd/vEP9JSgCVW1N3qNUCMWkBFDG3IICNmaNnlNAP582Hvcii0ipvdFo4MXfk0WReP5WfJ/h3wW2p1aUgEK1EK0v9RwVNQ3X8ptdhcuYGpzpWb50g4m/hoCVpP2GqCil5zuOcLcMX4polCLvMNquhw8+ARLbC1G2TF4KSWP0ZoVaHD/857P8xi/7ascSIGmU6UY8QHUg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
  dkim=pass header.d=nokia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
  s=selector1-nokia-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WxQs9qrkOQTGlFLkEqTfXTcRyCtzfF1dByH3D74lr+A=;
- b=rx2RsVVhjdbZ3M5xt8ld/+ICUjCTUqLFG5gOhBc5oSRqnFHoX0ixKO8uPl+8f0Oj5CYsze9MIZVaRnNsns2/GUU/zVSW9e4BIBLFi/BBA8UjZ5vk6qKjk+Ob60+pLCVDxzgWKyeyOG1opGFs9VXGiMdVoZ+0C8MT4d21A84q0/A=
+ bh=UE+HEtwhHIsezNX6gn/hDBiF4Y2+YR4kyHGqo5ONTkE=;
+ b=GRWPuOpPdWlrKV37hZzW+Qn5YIeCR2PwUBtB4JsE4Nm5NVXXKTe+xztxnu/A0AM2Nu7ONrdyHF1TcW5wEkEzUmK01BxKkJqXsMUBlls0C3aYuKsAkHg84ACGP1ciua/5YDHnuwazQZk+oyTpi2OUHg8oMYo0ya+OQTkiy++Hw3Y=
 Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com (52.133.24.149) by
- AM6PR0702MB3654.eurprd07.prod.outlook.com (52.133.21.15) with Microsoft SMTP
+ AM6PR0702MB3573.eurprd07.prod.outlook.com (52.133.19.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.7; Thu, 12 Sep 2019 09:44:07 +0000
+ 15.20.2263.10; Thu, 12 Sep 2019 09:44:10 +0000
 Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com
  ([fe80::892c:2b90:e54f:ab56]) by AM6PR0702MB3527.eurprd07.prod.outlook.com
  ([fe80::892c:2b90:e54f:ab56%3]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 09:44:07 +0000
+ 09:44:10 +0000
 From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
 To:     Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -59,13 +59,13 @@ CC:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
         "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
         <krzysztof.adamski@nokia.com>,
         "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH 1/3] genirq/irqdomain: Check for existing mapping in
- irq_domain_associate()
-Thread-Topic: [PATCH 1/3] genirq/irqdomain: Check for existing mapping in
- irq_domain_associate()
-Thread-Index: AQHVaU6fbsvmL4kmNUmeKw2Ifb7zFw==
-Date:   Thu, 12 Sep 2019 09:44:07 +0000
-Message-ID: <20190912094343.5480-2-alexander.sverdlin@nokia.com>
+Subject: [PATCH 3/3] genirq/irqdomain: Detect type race in
+ irq_create_fwspec_mapping()
+Thread-Topic: [PATCH 3/3] genirq/irqdomain: Detect type race in
+ irq_create_fwspec_mapping()
+Thread-Index: AQHVaU6gc4wd5DvxjEeG+LE441tLCA==
+Date:   Thu, 12 Sep 2019 09:44:10 +0000
+Message-ID: <20190912094343.5480-4-alexander.sverdlin@nokia.com>
 References: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
 In-Reply-To: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
 Accept-Language: en-US
@@ -81,31 +81,31 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=alexander.sverdlin@nokia.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: edaf5580-a0a9-4ac9-5e02-08d73765c179
+x-ms-office365-filtering-correlation-id: 9fc3c94c-aa8d-41e5-aac3-08d73765c351
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0702MB3654;
-x-ms-traffictypediagnostic: AM6PR0702MB3654:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0702MB3573;
+x-ms-traffictypediagnostic: AM6PR0702MB3573:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0702MB365414556B6E5CFE7FB4DC4D88B00@AM6PR0702MB3654.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <AM6PR0702MB3573DF4BC54ACCA2F252C76288B00@AM6PR0702MB3573.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:862;
 x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(199004)(189003)(64756008)(2501003)(6116002)(110136005)(5660300002)(53936002)(486006)(66066001)(386003)(6506007)(86362001)(6512007)(102836004)(186003)(26005)(316002)(76176011)(446003)(8676002)(11346002)(476003)(81156014)(2616005)(81166006)(6436002)(50226002)(3846002)(256004)(14444005)(6486002)(54906003)(1076003)(71190400001)(25786009)(66946007)(8936002)(2906002)(66556008)(66446008)(99286004)(4326008)(14454004)(36756003)(52116002)(71200400001)(305945005)(66476007)(478600001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3654;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(199004)(189003)(102836004)(2501003)(76176011)(71190400001)(66066001)(3846002)(50226002)(2616005)(6512007)(446003)(7736002)(66446008)(486006)(476003)(6486002)(6436002)(186003)(1076003)(305945005)(71200400001)(11346002)(14454004)(64756008)(86362001)(8676002)(66476007)(66946007)(99286004)(8936002)(6116002)(53936002)(52116002)(110136005)(36756003)(25786009)(386003)(54906003)(26005)(81156014)(66556008)(2906002)(14444005)(6506007)(256004)(478600001)(4326008)(81166006)(316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3573;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nokia.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zt+DAR0KpwV+6VWbHDjcHfx0ryjgvpUhydEMFWNVpDYMGcUKz69LgYukVlpzt4J0Uf2JrZIsccKW/GwdlynwRX5sD+lx++Gti7hwyszv0B0sd4UsV7OzyCa3Ml6DQ9mJ2brpOjd+71CJnJOBc2XD+70E4ZzUhe66MKfsFkHvVOGBW50+8xLk00iywEJ5FI0jDoIrpWhSlzz/aBc/wb/fwxWWvpM3c5YqGd5svXU6SMrmIKsQo0Cs+N60AE0RY5r1JEShEDMB7NKSTTCe/cx58kryGo0Sj5kLIZS5WI6zkVfvU7Au4Ks16WyfnzD7KDqpjKMxvjxmF4k+t8GaXk0vHGMSjb73mafnwG7Y3kIabAtfGjrThHUwv3EmS6cInZHfRMSmbD7zyKLkGBJ555UuHYpbgX1cBx0g6SMg+VsBGEA=
+x-microsoft-antispam-message-info: GzVQaQ9xnxDF9MXlJ6Tgif4JC+W4tdDSlTcdquXyv4ZIGF/AD60wLEL1Rsb7SoEGf9cqtvt6qI842nigWRl5KNzKGLLUiAj8l6/PjmgJ/VruPgyhWMQyrHcW4uX0i9vCPIARyCQo9W+gDh6UsbmbGu3xkIBmzOCY8sR2WYpDgFzy9LPHaIWH6d+CbQCeTclgs2PqqdIynPy706pXEsg5wqz7MHXlRdAhdQR4hsV80KcZKpNnyoPXZKQhQDJx+1EL5BzGwGk8VTuhYxfeRCNKWgGRFB0tfDPKV9XPIvPMXb28KI0CdOOFuJaLLNWN5iXo9O3GxUiXJ7cuZAAIYHAvRawy98iSPKFngtMJkcuqGrpfKY2nSI5oFgRm1HseV46tEqUh8U1N8vGQWHoJqghjMGevwLYJ3B/aUum1AP1tMtg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edaf5580-a0a9-4ac9-5e02-08d73765c179
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 09:44:07.5114
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fc3c94c-aa8d-41e5-aac3-08d73765c351
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 09:44:10.5987
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: svDLqBUDASaJxx9w0XI2HLum7ctvNZVYxlBmtc3Yw+Fs6pf7Us6MYL6YRyY/NSqf4gC/jr6EQHIl3zACh/ATtRkReGbUuqCIy9rMEOI9m6g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3654
+X-MS-Exchange-CrossTenant-userprincipalname: Z8zs8wMgHUORkafQt+GETME1BicfxLtjbWyI1gV/IgAkRwQzqbtlLVUcaQIlZsgFhxAC9Ja8XZ1qSsM+o3KChJWlsbm2XM1fEmrs1ZwnkIA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3573
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -113,52 +113,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-irq_domain_associate() is the only place where irq_find_mapping() can be
-used reliably (under irq_domain_mutex) to make a decision if the mapping
-shall be created or not. Other calls to irq_find_mapping() (not under
-any lock) cannot be used for this purpose and lead to race conditions in
-particular inside irq_create_mapping().
+irq_create_fwspec_mapping() can race with itself during IRQ trigger type
+configuration. Possible scenarios include:
 
-Give the callers of irq_domain_associate() an ability to detect existing
-domain reliably by examining the return value.
+- Mapping exists, two irq_create_fwspec_mapping() running in parallel do
+  not detect type mismatch, IRQ remains configured with one of the
+  different trigger types randomly
+- Second call to irq_create_fwspec_mapping() sees existing mapping just
+  created by first call, but earlier irqd_set_trigger_type() call races
+  with later irqd_set_trigger_type() =3D> totally undetected, IRQ type
+  is being set randomly to either one or another type
+
+Introduce helper function to detect parallel changes to IRQ type.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 ---
- kernel/irq/irqdomain.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ kernel/irq/irqdomain.c | 66 +++++++++++++++++++++++++++++-----------------=
+----
+ 1 file changed, 38 insertions(+), 28 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 3078d0e..7bc07b6 100644
+index 176f2cc..af4d30c 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -532,6 +532,7 @@ int irq_domain_associate(struct irq_domain *domain, uns=
-igned int virq,
- 			 irq_hw_number_t hwirq)
- {
- 	struct irq_data *irq_data =3D irq_get_irq_data(virq);
-+	unsigned int eirq;
- 	int ret;
+@@ -764,10 +764,45 @@ static void of_phandle_args_to_fwspec(struct device_n=
+ode *np, const u32 *args,
+ 		fwspec->param[i] =3D args[i];
+ }
 =20
- 	if (WARN(hwirq >=3D domain->hwirq_max,
-@@ -543,6 +544,16 @@ int irq_domain_associate(struct irq_domain *domain, un=
-signed int virq,
- 		return -EINVAL;
-=20
- 	mutex_lock(&irq_domain_mutex);
++/* Detect races during IRQ type setting */
++static int irq_set_trigger_type_locked(unsigned int virq, unsigned int typ=
+e,
++				       irq_hw_number_t hwirq,
++				       const struct irq_fwspec *fwspec)
++{
++	struct irq_data *irq_data;
++	int ret =3D 0;
 +
-+	/* Check if mapping already exists */
-+	eirq =3D irq_find_mapping(domain, hwirq);
-+	if (eirq) {
-+		mutex_unlock(&irq_domain_mutex);
-+		pr_debug("%s: conflicting mapping for hwirq 0x%x\n",
-+			 domain->name, (int)hwirq);
-+		return -EBUSY;
++	mutex_lock(&irq_domain_mutex);
++	/*
++	 * If the trigger type is not specified or matches the current trigger
++	 * type then we are done.
++	 */
++	if (type =3D=3D IRQ_TYPE_NONE || type =3D=3D irq_get_trigger_type(virq))
++		goto unlock;
++
++	/* If the trigger type has not been set yet, then set it now */
++	if (irq_get_trigger_type(virq) !=3D IRQ_TYPE_NONE) {
++		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
++			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
++		ret =3D -EINVAL;
++		goto unlock;
 +	}
 +
- 	irq_data->hwirq =3D hwirq;
- 	irq_data->domain =3D domain;
- 	if (domain->ops->map) {
++	irq_data =3D irq_get_irq_data(virq);
++	if (!irq_data) {
++		ret =3D -ENOENT;
++		goto unlock;
++	}
++	irqd_set_trigger_type(irq_data, type);
++
++unlock:
++	mutex_unlock(&irq_domain_mutex);
++	return ret;
++}
++
+ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ {
+ 	struct irq_domain *domain;
+-	struct irq_data *irq_data;
+ 	irq_hw_number_t hwirq;
+ 	unsigned int type =3D IRQ_TYPE_NONE;
+ 	int virq;
+@@ -802,29 +837,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwsp=
+ec *fwspec)
+ 	 */
+ 	virq =3D irq_find_mapping(domain, hwirq);
+ 	if (virq) {
+-		/*
+-		 * If the trigger type is not specified or matches the
+-		 * current trigger type then we are done so return the
+-		 * interrupt number.
+-		 */
+-		if (type =3D=3D IRQ_TYPE_NONE || type =3D=3D irq_get_trigger_type(virq))
+-			return virq;
+-
+-		/*
+-		 * If the trigger type has not been set yet, then set
+-		 * it now and return the interrupt number.
+-		 */
+-		if (irq_get_trigger_type(virq) =3D=3D IRQ_TYPE_NONE) {
+-			irq_data =3D irq_get_irq_data(virq);
+-			if (!irq_data)
+-				return 0;
+-
+-			irqd_set_trigger_type(irq_data, type);
++		if (!irq_set_trigger_type_locked(virq, type, hwirq, fwspec))
+ 			return virq;
+-		}
+-
+-		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
+-			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
+ 		return 0;
+ 	}
+=20
+@@ -839,8 +853,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspe=
+c *fwspec)
+ 			return virq;
+ 	}
+=20
+-	irq_data =3D irq_get_irq_data(virq);
+-	if (!irq_data) {
++	if (irq_set_trigger_type_locked(virq, type, hwirq, fwspec)) {
+ 		if (irq_domain_is_hierarchy(domain))
+ 			irq_domain_free_irqs(virq, 1);
+ 		else
+@@ -848,9 +861,6 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspe=
+c *fwspec)
+ 		return 0;
+ 	}
+=20
+-	/* Store trigger type */
+-	irqd_set_trigger_type(irq_data, type);
+-
+ 	return virq;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
 --=20
 2.4.6
 
