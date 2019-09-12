@@ -2,157 +2,59 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFD0C4CECC
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC17C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26916208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568285921;
-	bh=ri4DX0jWeAR1yy3PHEcU0ID7qnBiwLO0Rgp4NA8oeE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cSIm/iSy5hH0smsiK+vBjfS+7v51LAKktCQ9lSiw8p4RIqoGMCrivydnwyRSHqTRq
-	 213IVDz8TLFgdds0QpieRRqj5QO+Z8KBwRfxXVCospeb6hnr7ilHb6emsA8ZdqxHpL
-	 iKiK5OH9u7mUdPrx/us5E0GNvbZdjqxOaPbmw+CA=
+	by mail.kernel.org (Postfix) with ESMTP id 8D61C20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbfILK6k (ORCPT
+        id S1731336AbfILK7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730811AbfILK6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:58:39 -0400
-Received: from rapoport-lnx (unknown [88.157.232.34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8369821479;
-        Thu, 12 Sep 2019 10:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568285918;
-        bh=ri4DX0jWeAR1yy3PHEcU0ID7qnBiwLO0Rgp4NA8oeE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iq0N7apOzLju2Y2Uc5VIqIviB2zX9q93C1e+slLnCqhm8EWOSjQbWvMCASglAws6R
-         a8S0jRJ+D7dOOpzA6uQgXzRgyCnqKpTUaLmdpNXj+r06vpN8hH1PN+J2nWUDFuuTRC
-         LYk7LFBQIf0tPyQDNuuTZrRigJZZFA/mAnO5M3yA=
-Date:   Thu, 12 Sep 2019 11:58:33 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-ID: <20190912105831.GA10677@rapoport-lnx>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
- <20190905152150.f7ff6ef70726085de63df828@suse.de>
- <20190905133251.GA3650@rapoport-lnx>
- <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
- <20190905154747.GB3650@rapoport-lnx>
- <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
- <20190906130223.GA17704@rapoport-lnx>
- <20190909182242.c1ef9717d14b20212ef75954@suse.de>
- <20190910113243.GA19207@rapoport-lnx>
- <20190911160939.19f776535770d12ff51a2af7@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190911160939.19f776535770d12ff51a2af7@suse.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 12 Sep 2019 06:59:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55880 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731239AbfILK7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:59:16 -0400
+Received: from localhost (unknown [148.69.85.38])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BF8D1128F386B;
+        Thu, 12 Sep 2019 03:59:14 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 12:59:13 +0200 (CEST)
+Message-Id: <20190912.125913.284555259841442636.davem@davemloft.net>
+To:     navid.emamdoost@gmail.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: qrtr: fix memort leak in qrtr_tun_write_iter
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190911150907.18251-1-navid.emamdoost@gmail.com>
+References: <20190911.101320.682967997452798874.davem@davemloft.net>
+        <20190911150907.18251-1-navid.emamdoost@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Sep 2019 03:59:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 04:09:39PM +0200, Thomas Bogendoerfer wrote:
-> On Tue, 10 Sep 2019 12:32:44 +0100
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > [..]
-> 
-> Patch below works on the same Origin.
-> 
-> Does memblocks_present() deal better with the one reserved page per node
-> than sparse_memory_present_with_active_regions() ? Or is there a better
-> explanation ? My debug prints didn't make sense out of it...
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
+Date: Wed, 11 Sep 2019 10:09:02 -0500
 
-I think the problem is that when we call
-sparse_memory_present_with_active_regions() per node, the page for the node
-data of the next nodes is not yet reserved and since memory_present() does
-memblock allocations it may use that memory.
-
-We can try to verify that with "memblock=debug" in the command line.
-
-Another thing we could try to rule out the differences between
-memblocks_present() and sparse_memory_present_with_active_regions() is to
-replace memblocks_present() in your patch with
-sparse_memory_present_with_active_regions(MAX_NUMNODES).
-
- 
-> Thomas.
+> In qrtr_tun_write_iter the allocated kbuf should be release in case of
+> error or success return.
 > 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index d50fafd7bf3a..e4b02b5f3487 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -669,6 +669,7 @@ config SGI_IP22
->  config SGI_IP27
->  	bool "SGI IP27 (Origin200/2000)"
->  	select ARCH_HAS_PHYS_TO_DMA
-> +	select ARCH_SPARSEMEM_ENABLE
->  	select FW_ARC
->  	select FW_ARC64
->  	select BOOT_ELF64
-> @@ -2633,18 +2634,9 @@ config ARCH_FLATMEM_ENABLE
->  	def_bool y
->  	depends on !NUMA && !CPU_LOONGSON2
->  
-> -config ARCH_DISCONTIGMEM_ENABLE
-> -	bool
-> -	default y if SGI_IP27
-> -	help
-> -	  Say Y to support efficient handling of discontiguous physical memory,
-> -	  for architectures which are either NUMA (Non-Uniform Memory Access)
-> -	  or have huge holes in the physical address space for other reasons.
-> -	  See <file:Documentation/vm/numa.rst> for more.
-> -
->  config ARCH_SPARSEMEM_ENABLE
->  	bool
-> -	select SPARSEMEM_STATIC
-> +	select SPARSEMEM_STATIC if !SGI_IP27
->  
->  config NUMA
->  	bool "NUMA Support"
-> diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-> index fb077a947575..370f2ba14a89 100644
-> --- a/arch/mips/sgi-ip27/ip27-memory.c
-> +++ b/arch/mips/sgi-ip27/ip27-memory.c
-> @@ -410,8 +410,6 @@ static void __init node_mem_init(cnodeid_t node)
->  
->  	memblock_reserve(slot_firstpfn << PAGE_SHIFT,
->  			 ((slot_freepfn - slot_firstpfn) << PAGE_SHIFT));
-> -
-> -	sparse_memory_present_with_active_regions(node);
->  }
->  
->  /*
-> @@ -444,6 +442,7 @@ void __init prom_meminit(void)
->  		}
->  		__node_data[node] = &null_node;
->  	}
-> +	memblocks_present();
->  }
->  
->  void __init prom_free_prom_memory(void)
+> v2 Update: Thanks to David Miller for pointing out the release on success
+> path as well.
 > 
-> -- 
-> SUSE Software Solutions Germany GmbH
-> HRB 247165 (AG München)
-> Geschäftsführer: Felix Imendörffer
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 
--- 
-Sincerely yours,
-Mike.
+Applied, thanks.
