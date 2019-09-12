@@ -2,143 +2,134 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB8AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89150C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF922081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7B720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dlAyYQmu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mMbKQJiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbfILQTm (ORCPT
+        id S1732742AbfILQUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:19:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50069 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfILQTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:19:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46TkVs6hnCz9s4Y;
-        Fri, 13 Sep 2019 02:19:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1568305178;
-        bh=/2FPKAkeV/GqFBXmtJHyD6OTSwjC5DdIye1DxxJG+bU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dlAyYQmu6QIeoRsXsY2UiWSCjojsWozTt+7JZk9Qz5peGumGPklYw5WM8Ecujlegj
-         GHkdCoaNsKHR6bbWJlh/cN4OIR0wVNkfr+aMCkd8nlZlwASLViCy8Ub+NlmvgddqpG
-         JUs1qETiufPI9b30kMF/bbDy0z7dQBCHp14glZG6BsczknnOjOUkjYlRszMQRivjKC
-         5WvKv6Zi0Sr4yxB6I8MhYZTo+QfmvPMMFnR3c/sUyXX/WbANWfULBArjWvcW7q9aMC
-         DAUaW7WxcMe20QjjeOkHkVy/NRBqN+RRo0IM/JKxmvNv3J7Ffl7T2OCIyWBymNa4u6
-         P2qg5sM0mI4oA==
-Date:   Fri, 13 Sep 2019 02:19:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Alex Lu <alex_lu@realsil.com.cn>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190913021934.42fc0fea@canb.auug.org.au>
+        Thu, 12 Sep 2019 12:20:14 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39433 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfILQUO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:20:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id d25so56181968iob.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RhA03o75OD+ZBFEfqmjtglWrooCHou7fbqnvxWxZk30=;
+        b=mMbKQJiQ8dHwiBHDUMZjEOtXWB+eG6G3k5OhltVLFE3NeUONbujHOlTYC9H+xlzRmb
+         ZiuOllEOLE8EqHWvTbcAWitUK4ulO+qlQiZ0htati68Ioj90GRTmIL+402eQdfJbIlQQ
+         frp8KRMon+iiuSVOyvlX91bjMR2pJyJ5YX74FIY+dismzjklDKJZO4NctWV/JHsn0o8+
+         0FxAlxm+s0Cn6gEcfC3zTdxtK9+gRgQL+6Wm7ZW1vRuFzH5cSiejaflP7J5TZzuX/tmE
+         X5/t2LU4tLYCOxubUz68dAl/XyV1EYCekSLyyEPbkVBzYuXzU+dygA4xEm0URPuvILmq
+         mGAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RhA03o75OD+ZBFEfqmjtglWrooCHou7fbqnvxWxZk30=;
+        b=ktEXsD3+df5fOyj/2XaSTjgN7SMAK0n5PevJL/vkeZTRTxfY/dXlSr1kq8rxYWA5tE
+         I9NZf9u9Bi6DhHHPghRZD5IaRj/h7SupucDbIfeBVhYnNS1La8h61M+TDYxcPX1+UW3Z
+         L3V2eIsYCtCqHToMsoIFGD4UiKqu9rRDeyV103+ga1MGxqWg27ODSGzaoqESvAKmThwL
+         JcFvyiCDXRnF4AUt33MU+Q1JNqlZVTQ4kTPe0lEmwZT8uKwcrrM9Yn518I3Jlsn3umlE
+         rxQxVeYAFqLgDby3PGHY2rdcjRv/kclW1bo//bxLUFihoMEaCqZkbHEiKWKT7wsL2PsW
+         WhEw==
+X-Gm-Message-State: APjAAAVRekx/iApkqKdbAMEzfMRvNBllJz+0pRo8HSMCkAKO747tXmv3
+        lCRnyio17Rv+2EbfB1pJcQFqKKy+nDYqjjRqmEt4EA==
+X-Google-Smtp-Source: APXvYqxxD5WDm9AxJung/OlkcbytWmz48mDXQimqe+u4lr4WVjEYT/XlCPNA4ODUfJ9alZT0pOkqo0apT8rL/xelsS0=
+X-Received: by 2002:a6b:1606:: with SMTP id 6mr471368iow.108.1568305213072;
+ Thu, 12 Sep 2019 09:20:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DHejPnzil1gYOiEe_UgS/SN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190912041817.23984-1-huangfq.daxian@gmail.com> <87tv9hew2k.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87tv9hew2k.fsf@vitty.brq.redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 12 Sep 2019 09:20:01 -0700
+Message-ID: <CALMp9eRu=C+MQmRpKh5WtyqBKq=ja8Wj7fD5NTFhZi9EZd+84w@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DHejPnzil1gYOiEe_UgS/SN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Sep 12, 2019 at 1:51 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Fuqian Huang <huangfq.daxian@gmail.com> writes:
+>
+> > Emulation of VMPTRST can incorrectly inject a page fault
+> > when passed an operand that points to an MMIO address.
+> > The page fault will use uninitialized kernel stack memory
+> > as the CR2 and error code.
+> >
+> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+> > exit to userspace;
+>
+> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
+> is not a proper reaction to a userspace-induced condition (or ever).
 
-Hi all,
+This *is* an error in KVM. KVM should properly emulate the quadword
+store to the emulated device. Doing anything else is just wrong.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+KVM_INTERNAL_ERROR is basically a cop-out for things that are hard.
 
-  drivers/bluetooth/btusb.c
+> I also looked at VMPTRST's description in Intel's manual and I can't
+> find and explicit limitation like "this must be normal memory". We're
+> just supposed to inject #PF "If a page fault occurs in accessing the
+> memory destination operand."
+>
+> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
+> think that nobody should be doing that I'd rather prefer injecting #GP.
 
-between commit:
+That is not the architected behavior at all. Now you're just making things up!
 
-  1ffdb51f28e8 ("Revert "Bluetooth: btusb: driver to enable the usb-wakeup =
-feature"")
-
-from the net tree and commit:
-
-  9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/bluetooth/btusb.c
-index ba4149054304,ed455de598ea..000000000000
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@@ -1173,7 -1201,18 +1204,14 @@@ static int btusb_open(struct hci_dev *h
-  	}
- =20
-  	data->intf->needs_remote_wakeup =3D 1;
- -	/* device specific wakeup source enabled and required for USB
- -	 * remote wakeup while host is suspended
- -	 */
- -	device_wakeup_enable(&data->udev->dev);
- =20
-+ 	/* Disable device remote wakeup when host is suspended
-+ 	 * For Realtek chips, global suspend without
-+ 	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
-+ 	 */
-+ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
-+ 		device_wakeup_disable(&data->udev->dev);
-+=20
-  	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
-  		goto done;
- =20
-@@@ -1237,6 -1276,12 +1275,11 @@@ static int btusb_close(struct hci_dev *
-  		goto failed;
- =20
-  	data->intf->needs_remote_wakeup =3D 0;
-+=20
-+ 	/* Enable remote wake up for auto-suspend */
-+ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
-+ 		data->intf->needs_remote_wakeup =3D 1;
-+=20
- -	device_wakeup_disable(&data->udev->dev);
-  	usb_autopm_put_interface(data->intf);
- =20
-  failed:
-
---Sig_/DHejPnzil1gYOiEe_UgS/SN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl16cBYACgkQAVBC80lX
-0Gwr6Qf/bnj3thivjfhtUCKcq2fFSjVC8yiV3r3cvRvfQdp78EXm2gDvhuDFjZn8
-0bdmo4QfuAmiITwGeV8TFGqADbKoyc3hzBJO5VKx71pUKENtpXss6LbBO3KzsnG3
-Xac2cninNVptOlR1HQ3VmRRITnQOKOejWw0omCaLJtqX8juJLw4+RzKRwWz+/1Kl
-vIHHxNZiHDGd7mK/UVP7j7JoekOqyV0hTkyeY6YgQP4Q8llnRxEHPTcTNMbvKgsf
-zUop+uROxGQJzu5zzBCvywIzcMIyCqyH6r5TE4jc3NGmK/dcbiTqHf6ms51Qmy4s
-NE1yNNnAAt9gdYIzbezZJzeQOTm0ug==
-=tcmK
------END PGP SIGNATURE-----
-
---Sig_/DHejPnzil1gYOiEe_UgS/SN--
+> Please tell me what I'm missing :-)
+>
+> >  however, it is not an easy fix, so for now just ensure
+> > that the error code and CR2 are zero.
+> >
+> > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> > ---
+> >  arch/x86/kvm/x86.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 290c3c3efb87..7f442d710858 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -5312,6 +5312,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+> >       /* kvm_write_guest_virt_system can pull in tons of pages. */
+> >       vcpu->arch.l1tf_flush_l1d = true;
+> >
+> > +     memset(exception, 0, sizeof(*exception));
+> >       return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+> >                                          PFERR_WRITE_MASK, exception);
+> >  }
+>
+> --
+> Vitaly
