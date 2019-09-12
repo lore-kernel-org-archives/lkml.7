@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54341C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88486C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358B220830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695CC20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbfILKSF (ORCPT
+        id S1731123AbfILKSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:18:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58424 "EHLO huawei.com"
+        Thu, 12 Sep 2019 06:18:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33298 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730811AbfILKSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:18:04 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 010D1E8274BF11552BDD;
-        Thu, 12 Sep 2019 18:18:02 +0800 (CST)
+        id S1730454AbfILKSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:18:01 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 16F4FEDB530A876F1624;
+        Thu, 12 Sep 2019 18:17:57 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 12 Sep 2019 18:17:58 +0800
+ 14.3.439.0; Thu, 12 Sep 2019 18:17:55 +0800
 From:   Yunsheng Lin <linyunsheng@huawei.com>
 To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
         <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
@@ -49,9 +49,9 @@ CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
         <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
         <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
         <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 8/8] mips: numa: make node_to_cpumask_map() NUMA_NO_NODE aware for loongson64
-Date:   Thu, 12 Sep 2019 18:15:34 +0800
-Message-ID: <1568283334-178380-9-git-send-email-linyunsheng@huawei.com>
+Subject: [PATCH v3 1/8] arm64: numa: make node_to_cpumask_map() NUMA_NO_NODE aware for arm64
+Date:   Thu, 12 Sep 2019 18:15:27 +0800
+Message-ID: <1568283334-178380-2-git-send-email-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
 References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
@@ -82,6 +82,12 @@ to the particular node's cpus which would have really non deterministic
 behavior depending on where the code is executed. So in fact we really
 want to return cpu_online_mask for NUMA_NO_NODE.
 
+Also there is a debuging version of node_to_cpumask_map(), which only
+is used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this patch changes
+it to handle NUMA_NO_NODE as the normal node_to_cpumask_map(). And "fix"
+a sign "bug" since it is for debugging and should catch all the error
+cases.
+
 [1] https://lore.kernel.org/patchwork/patch/1125789/
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Suggested-by: Michal Hocko <mhocko@kernel.org>
@@ -90,24 +96,40 @@ V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
     for NUMA_NO_NODE case, and change the commit log to better justify
     the change.
 ---
- arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/numa.h | 3 +++
+ arch/arm64/mm/numa.c          | 5 ++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 7ff819a..2207e2e 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -5,7 +5,9 @@
- #ifdef CONFIG_NUMA
+diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+index 626ad01..c8a4b31 100644
+--- a/arch/arm64/include/asm/numa.h
++++ b/arch/arm64/include/asm/numa.h
+@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4f241cc..bef4bdd 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -46,7 +46,10 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (WARN_ON(node >= nr_node_ids))
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
++	if (WARN_ON((unsigned int)node >= nr_node_ids))
+ 		return cpu_none_mask;
  
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
--#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-+#define cpumask_of_node(node)  ((node) == NUMA_NO_NODE ?	\
-+				cpu_online_mask :		\
-+				(&__node_data[(node)]->cpumask)
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
+ 	if (WARN_ON(node_to_cpumask_map[node] == NULL))
 -- 
 2.8.1
 
