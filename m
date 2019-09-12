@@ -2,113 +2,102 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7986C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA15C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncaEmNwJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4943E20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732681AbfILObH (ORCPT
+        id S1732694AbfILObp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:31:07 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38006 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732566AbfILObH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:31:07 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c12so19546814lfh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 07:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GGFnevdB6/W3Bn08vXZUmYabxaeEv2/WytcSluM4/qA=;
-        b=ncaEmNwJoGN+h9j/w2zBIKBQZsgZQT2H68ZJRafK8UQg1HqUSTqLYVkpITITzG6hYp
-         8kNSTxCfdTHB8SlHaOYh+ZtMRu8pMEDN3T6x22PO3AiC3vRwRw+JrMqlP/Jk74y6t3mX
-         ywWS24EkuibJ2tShu+SqULfWeNSIMKPpr5wJREZX7Tc1cL+bYwQCkSoznpU7aTReSWjF
-         jyH9hbh2kpExgjM79iT+iG6bEqijxuIXLbmtAyZikQrSeR0MiiA079g1SNBe9hFsvZwK
-         C1lQqzudFaoE/DZcKU/0HVRJdxc8hXy5dcBdFy2kIB3D3tvU/DZJjJo/WTKqNQBI+1qo
-         0Y+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GGFnevdB6/W3Bn08vXZUmYabxaeEv2/WytcSluM4/qA=;
-        b=acM21u1vS5FFEJlCPnVoEKMiikIOIgLt78xgqGRjqc2+glp9LQOBhYKFgy+KccIaqC
-         D6ac9cBSpC1O6i38U3pT5ZCAOG2kYdIDAnU17MkDTGi3IbfGT6+lduZC6JEi+5zHbGLp
-         I8sVQS4DL11j4cHwhGRHBzrkRQXHVt/Ua3B+xsEqgFuLyykFc0XF5c8+iZg3XEo4YXMq
-         bykTVwaFA93By76YplwTvWlHzeL/jxPQQm+AXWgfWE/+j9Lkp1CjbAnrIqOnKS2b5/gB
-         T1L7vWfuJrjw6hyqCJ/aBXvi+kxnSlrOaOfZ79+2tt9kV288hnhwXEap1757FE5akdfw
-         x2qA==
-X-Gm-Message-State: APjAAAWY5PiXh6HF8vchYiYbSXmjpL8xhxedhZtxe8yxo2nnOu2RZMDa
-        1DFttNs1/Ye4sncBPjMIkFKGQIGvq8sWxQbo2o0fQg==
-X-Google-Smtp-Source: APXvYqxO9Z8c7OrTKavPMGL2/MV6p57Y1bzJgt/HX0TZHAPCfiKQUMd+9yPlAdhhtCF+f1UbeWI7+mA8oZoL7ARgpjY=
-X-Received: by 2002:ac2:530e:: with SMTP id c14mr1286884lfh.165.1568298665420;
- Thu, 12 Sep 2019 07:31:05 -0700 (PDT)
+        Thu, 12 Sep 2019 10:31:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40906 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732579AbfILObo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:31:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F35A4AFFE;
+        Thu, 12 Sep 2019 14:31:42 +0000 (UTC)
+Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
+ <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
+ <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
+ <1568297308.19040.5.camel@mtksdccf07>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <613f9f23-c7f0-871f-fe13-930c35ef3105@suse.cz>
+Date:   Thu, 12 Sep 2019 16:31:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com> <20190912135806.GA2680@smile.fi.intel.com>
-In-Reply-To: <20190912135806.GA2680@smile.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 15:30:52 +0100
-Message-ID: <CACRpkdYcdaoA_D6YyKJuT5bfJ5QE4LWfXF8+R1y01xaWJaJZuQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
-To:     Andriy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1568297308.19040.5.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 2:58 PM Andriy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
-> On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
-> > Hi Rahul,
-> >
-> > thanks for your patches!
-> >
-> > On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
-> > <rahul.tanwar@linux.intel.com> wrote:
-> >
-> > > This series is to add pinctrl & GPIO controller driver for a new SoC.
-> > > Patch 1 adds pinmux & GPIO controller driver.
-> > > Patch 2 adds the dt bindings document & include file.
-> > >
-> > > Patches are against Linux 5.3-rc5 at below Git tree:
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> >
-> > OK nice, I think you need to include Mika Westerberg on this review
-> > as well, because I think he likes to stay on top of all things intel
-> > in pin control. (Also included two other Intel folks in Finland who usually
-> > take an interest in these things.)
->
-> Linus,
-> nevertheless I guess you may give your comments WRT device tree use
-> (bindings, helpers, etc) along with some basics, (like devm_*()
-> [ab]use I just noticed).
+On 9/12/19 4:08 PM, Walter Wu wrote:
+> 
+>>   extern void __reset_page_owner(struct page *page, unsigned int order);
+>> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+>> index 6c9682ce0254..dc560c7562e8 100644
+>> --- a/lib/Kconfig.kasan
+>> +++ b/lib/Kconfig.kasan
+>> @@ -41,6 +41,8 @@ config KASAN_GENERIC
+>>   	select SLUB_DEBUG if SLUB
+>>   	select CONSTRUCTORS
+>>   	select STACKDEPOT
+>> +	select PAGE_OWNER
+>> +	select PAGE_OWNER_FREE_STACK
+>>   	help
+>>   	  Enables generic KASAN mode.
+>>   	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
+>> @@ -63,6 +65,8 @@ config KASAN_SW_TAGS
+>>   	select SLUB_DEBUG if SLUB
+>>   	select CONSTRUCTORS
+>>   	select STACKDEPOT
+>> +	select PAGE_OWNER
+>> +	select PAGE_OWNER_FREE_STACK
+>>   	help
+> 
+> What is the difference between PAGE_OWNER+PAGE_OWNER_FREE_STACK and
+> DEBUG_PAGEALLOC?
 
-I plan to look at the patches per se but right now I don't have much
-time because soon there is merge window and kernel summit,
-the patches just need to age a little bit like a good wine ;)
+Same memory usage, but debug_pagealloc means also extra checks and 
+restricting memory access to freed pages to catch UAF.
 
-Yours,
-Linus Walleij
+> If you directly enable PAGE_OWNER+PAGE_OWNER_FREE_STACK
+> PAGE_OWNER_FREE_STACK,don't you think low-memory device to want to use
+> KASAN?
+
+OK, so it should be optional? But I think it's enough to distinguish no 
+PAGE_OWNER at all, and PAGE_OWNER+PAGE_OWNER_FREE_STACK together - I 
+don't see much point in PAGE_OWNER only for this kind of debugging.
+
+So how about this? KASAN wouldn't select PAGE_OWNER* but it would be 
+recommended in the help+docs. When PAGE_OWNER and KASAN are selected by 
+user, PAGE_OWNER_FREE_STACK gets also selected, and both will be also 
+runtime enabled without explicit page_owner=on.
+I mostly want to avoid another boot-time option for enabling 
+PAGE_OWNER_FREE_STACK.
+Would that be enough flexibility for low-memory devices vs full-fledged 
+debugging?
