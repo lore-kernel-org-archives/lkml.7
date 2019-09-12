@@ -2,128 +2,114 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B51C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86480C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE59208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568285630;
-	bh=lYW/6z+3b+RUaKXVSh07U4b2ptr3sXYySVGiJGaSSZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tNFU7UdO/1s6PtLZI0g2aJ6qruYOThCubdSI+uOmNkaiSAn7JGxOU2APxO4yQSE3o
-	 ibKpUluPY701RyR/UbWer2XDR4WCSD+oFl64P6d9FAZdDdmrm+p/w/1zBwKEIacRiX
-	 FB2Ij0DZGQObIwIh3PbBBwg0vM5YTE0gQvEMdi5s=
+	by mail.kernel.org (Postfix) with ESMTP id 63FBF20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbfILKxu (ORCPT
+        id S1731316AbfILKxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:53:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55008 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731204AbfILKxt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:53:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=D2D5xYaEKANX2x4ZJuWEVTNW1zYISnb/gu0LN4hJxKM=; b=WNqaA4u/faAGf9OS5qIbmq2Hs
-        mWYdtL6fbchxGuAx43E34yD8Iuej5YZd3OfeAtXScPg4snnUaiz4NneKJONB/gxrQ6u2M6Ed0Bstq
-        yQrjujqbf5juAAMGsRHZf6mDLO3xGHGkO1G0qO2n4xFS1KP75OW60V0gBrQZ2iCuWjvIM=;
-Received: from 195-23-252-136.net.novis.pt ([195.23.252.136] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i8MjM-0006Ya-Sb; Thu, 12 Sep 2019 10:53:40 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id DD9C0D0046D; Thu, 12 Sep 2019 11:53:39 +0100 (BST)
-Date:   Thu, 12 Sep 2019 11:53:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lists LAKML <linux-arm-kernel@lists.infradead.org>,
-        arm-soc <arm@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 0/4] Cleanup arm64 driver dependencies
-Message-ID: <20190912105339.GK2036@sirena.org.uk>
-References: <cover.1568239378.git.amit.kucheria@linaro.org>
- <20190912094651.GH2036@sirena.org.uk>
- <CAP245DXBwwtcbjRQV_bCdYK5SZH9C9oxZJ2rFraJpbd5L0sHvw@mail.gmail.com>
+        Thu, 12 Sep 2019 06:53:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54286 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731204AbfILKxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:53:55 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DE9E1C0568FA
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 10:53:54 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id 4so1019962wmj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 03:53:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=F2/22McNqXu2675zlE4drufzM0q9TuqFfPiUeK7sLs8=;
+        b=KMgIv8yNAmGFjEK1qzxaWSP/03X93kTY99HLKBuBK3OCAMp2308RECT+Pwaj6ZSddy
+         AjAKMWIfz/5mQa6JAGyH3pppHYnNHlnJ50jKFKf3dixkxWP3kLMbgnnNP8plP1xqy+ls
+         eAh4Us1XZWHCaAwGiSHvQ0twrLZaTivyIZoWhVNbL7WhwPJAHatl/yzMDVMTimC2p4sT
+         Mhpo4A9IyDqYsNc4pfO/qP2sT8m12NVFAYAjDOjGoXljvu2i6tRJSQL8hM0n8Cmj+Oz6
+         ffJUYZfC94skurhG+auPM1CnbG1A8V7sv6/yfTl8jKTqfn9HxC2oOQvqwYEKGQEuAN/k
+         QRnA==
+X-Gm-Message-State: APjAAAXYKFC6o6OPp9RRNwRy1uIz5Yh7UfagvM/8EOrMHNf2Uz/cIA1f
+        HmVuFnb0EVL7Tb797Ownxlve8h7dzvIhHVfy5cQtBrIq50T3V6s/qL447cO8bugugd6gJg6Yw5+
+        DRtw9+fk1CFRwLhkhDIXzwpnE
+X-Received: by 2002:adf:9c81:: with SMTP id d1mr18127712wre.123.1568285633424;
+        Thu, 12 Sep 2019 03:53:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxxKcoyAmyDMGRGzHyI3ySQclYgNKAb2uu8KJpoZguHmsq7+ZolY8KGFJv9C6/WKJVkStMPqw==
+X-Received: by 2002:adf:9c81:: with SMTP id d1mr18127684wre.123.1568285633189;
+        Thu, 12 Sep 2019 03:53:53 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c132sm6786713wme.27.2019.09.12.03.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 03:53:52 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
+In-Reply-To: <CABXRUiTD=yRRQFfSdS=2e9QaO-PEgvZ=LBar927rL04G59nHxQ@mail.gmail.com>
+References: <20190912041817.23984-1-huangfq.daxian@gmail.com> <87tv9hew2k.fsf@vitty.brq.redhat.com> <CABXRUiTD=yRRQFfSdS=2e9QaO-PEgvZ=LBar927rL04G59nHxQ@mail.gmail.com>
+Date:   Thu, 12 Sep 2019 12:53:51 +0200
+Message-ID: <87r24leqf4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H6o9R95t2FPeZmf3"
-Content-Disposition: inline
-In-Reply-To: <CAP245DXBwwtcbjRQV_bCdYK5SZH9C9oxZJ2rFraJpbd5L0sHvw@mail.gmail.com>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fuqian Huang <huangfq.daxian@gmail.com> writes:
 
---H6o9R95t2FPeZmf3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Vitaly Kuznetsov <vkuznets@redhat.com> 於 2019年9月12日週四 下午4:51寫道：
+>>
+>> Fuqian Huang <huangfq.daxian@gmail.com> writes:
+>>
+>> > Emulation of VMPTRST can incorrectly inject a page fault
+>> > when passed an operand that points to an MMIO address.
+>> > The page fault will use uninitialized kernel stack memory
+>> > as the CR2 and error code.
+>> >
+>> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+>> > exit to userspace;
+>>
+>> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
+>> is not a proper reaction to a userspace-induced condition (or ever).
+>>
+>> I also looked at VMPTRST's description in Intel's manual and I can't
+>> find and explicit limitation like "this must be normal memory". We're
+>> just supposed to inject #PF "If a page fault occurs in accessing the
+>> memory destination operand."
+>>
+>> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
+>> think that nobody should be doing that I'd rather prefer injecting #GP.
+>>
+>> Please tell me what I'm missing :-)
+>
+> I found it during the code review, and it looks like the problem the
+> commit 353c0956a618 ("KVM: x86: work around leak of uninitialized
+> stack contents (CVE-2019-7222)")
+> mentions. So I fixed it in a similar way.
+>
 
-On Thu, Sep 12, 2019 at 03:33:20PM +0530, Amit Kucheria wrote:
-> On Thu, Sep 12, 2019 at 3:17 PM Mark Brown <broonie@kernel.org> wrote:
+Oh, yes, I'm not against the fix at all, I was just wondering about why
+you think we need to kill the guest in this case.
 
-> > > I was using initcall_debugging on a QCOM platform and ran across a bunch of
-> > > driver initcalls that are enabled even if their SoC support is disabled.
-
-> > What exactly is the problem you're trying to fix here?  For the
-> > drivers I looked at these were bog standard register the driver
-> > with the subsystem type initcalls on optional drivers so not
-> > doing anything particularly disruptive or anything like that.
-
-> I was trying to prune the defconfig only to drivers that make sense on
-> the SoC. e.g. Why should I see a brcmstb_soc_device_early_init() call
-> on a QCOM system when I've disabled ARCH_BRCMSTB?
-
-So this is really just the standard make Kconfig easier to use by
-filtering out noise thing.  It'd be clearer if you said that in
-the changelog, and like the review comments have been saying you
-need to leave in an || COMPILE_TEST in there otherwise it's
-actively harmful.
-
-> I came across this while trying to figure out how to make thermal and
-> cpufreq frameworks initialise as early as possible.
-
-AFAICT you'd also have been happy if you just built these drivers
-modular?
-
---H6o9R95t2FPeZmf3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl16I7EACgkQJNaLcl1U
-h9A5Xwf/Rv/6OyuOPX5W2hdLghPKgkdYoB2KbGacwvDTAd1oxRtRjMbzWEVEvqYO
-j7Tj/JYrweUkTWM5SVxsDpiSAk7bx5eAGlLMxPDtK6NcM48bSaURXpoWhOQ4EWKo
-ygzxV2PFMVmDf3yOmTcSXDpu+sAvb5eIF+gbsLCS98uc3uPZT8dO8Q3ZOI8R8TLJ
-6AAdcecAKc+T156a8ted8iIlK9Ze2hTY1J1mfrIsXvpdAxcfmLaqB26ZfDSUN5AE
-EUZFeWQboDrYzuSWYGjgqKMyzFhgigoYgnKI1hnepKs1tqoieoT9DZZ0AT2dcCGL
-2STeoJiRo8YT6dVf8HnBzwNSizJdQg==
-=8wH4
------END PGP SIGNATURE-----
-
---H6o9R95t2FPeZmf3--
+-- 
+Vitaly
