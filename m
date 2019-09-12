@@ -3,182 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B48C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C0ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C8E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tT2eclH0"
+	by mail.kernel.org (Postfix) with ESMTP id 56873214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568279971;
+	bh=rf0WRInmJ5z8W2m0J3lIfwQT5dpCz3RmvzbaY+xFu2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fg0JT/25pWJ1aIxTprtwEU3VbAGNbxS7SqLsJxxmG1awnfU493P7epQsj7zJHDoOk
+	 L1Hs4iItVXGbM8xhR4Vn000tjpfEYhosw1OvFL1BZgthmpIqRc69lIP7CrmVgYr94z
+	 W4hOjAqNsD/QeG5UnO3QpXB4BPp7BB+BKisOcvDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfILJT2 (ORCPT
+        id S1730695AbfILJTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:19:28 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:40622 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730428AbfILJT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:19:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568279965; x=1599815965;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=LkwyiRDW5AuLTlrvucn0bIl3DDuBsIfG9ze/YovR0r4=;
-  b=tT2eclH0t1O1K5+I0lhST20dS4AOIzhblWfdbd7pZimUypZuPIRDqP4d
-   Hp2bNeF7WCESonSrUNV+eNh2tTCU+a2+Zftc1sJz8dgJKC8Q+Ic8Bg5zf
-   1OaxdqIzR8/Ne6Y4PCeAtF4hA6hoHwIaEJd6+Xm1GakeHtZKwNVXT7z1a
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,495,1559520000"; 
-   d="scan'208";a="784588455"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Sep 2019 09:19:22 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 042B5A1EB8;
-        Thu, 12 Sep 2019 09:19:21 +0000 (UTC)
-Received: from EX13D01EUB002.ant.amazon.com (10.43.166.113) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 09:19:20 +0000
-Received: from [10.125.238.52] (10.43.162.218) by EX13D01EUB002.ant.amazon.com
- (10.43.166.113) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 12 Sep
- 2019 09:19:14 +0000
-Subject: Re: [UNVERIFIED SENDER] Re: [UNVERIFIED SENDER] Re: [PATCH v2 2/3]
- soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <robh+dt@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
-        <mchehab+samsung@kernel.org>, <shawn.lin@rock-chips.com>,
-        <gregkh@linuxfoundation.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, James Morse <james.morse@arm.com>
-References: <1568142310-17622-1-git-send-email-talel@amazon.com>
- <1568142310-17622-3-git-send-email-talel@amazon.com>
- <86d0g6syva.wl-maz@kernel.org>
- <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
- <865zlxsxtd.wl-maz@kernel.org>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <36f19b3f-46d3-f6d0-3681-71e3a9bb52ce@amazon.com>
-Date:   Thu, 12 Sep 2019 12:19:09 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Thu, 12 Sep 2019 05:19:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730428AbfILJT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 05:19:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6E344B61F;
+        Thu, 12 Sep 2019 09:19:27 +0000 (UTC)
+Date:   Thu, 12 Sep 2019 11:19:25 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+Message-ID: <20190912091925.GM4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+ <20190910124209.GY2063@dhcp22.suse.cz>
+ <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+ <20190910144713.GF2063@dhcp22.suse.cz>
+ <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+ <20190910175213.GD4023@dhcp22.suse.cz>
+ <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
+ <20190911113619.GP4023@dhcp22.suse.cz>
+ <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <865zlxsxtd.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.43.162.218]
-X-ClientProxiedBy: EX13D19UWA004.ant.amazon.com (10.43.160.102) To
- EX13D01EUB002.ant.amazon.com (10.43.166.113)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 11-09-19 08:12:03, Alexander Duyck wrote:
+> On Wed, Sep 11, 2019 at 4:36 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
+> > [...]
+> > > We don't put any limitations on the allocator other then that it needs to
+> > > clean up the metadata on allocation, and that it cannot allocate a page
+> > > that is in the process of being reported since we pulled it from the
+> > > free_list. If the page is a "Reported" page then it decrements the
+> > > reported_pages count for the free_area and makes sure the page doesn't
+> > > exist in the "Boundary" array pointer value, if it does it moves the
+> > > "Boundary" since it is pulling the page.
+> >
+> > This is still a non-trivial limitation on the page allocation from an
+> > external code IMHO. I cannot give any explicit reason why an ordering on
+> > the free list might matter (well except for page shuffling which uses it
+> > to make physical memory pattern allocation more random) but the
+> > architecture seems hacky and dubious to be honest. It shoulds like the
+> > whole interface has been developed around a very particular and single
+> > purpose optimization.
+> 
+> How is this any different then the code that moves a page that will
+> likely be merged to the tail though?
 
-On 9/12/2019 11:50 AM, Marc Zyngier wrote:
-> On Thu, 12 Sep 2019 07:50:03 +0100,
-> "Shenhar, Talel" <talel@amazon.com> wrote:
->> Hi Marc,
->>
->>
->> On 9/11/2019 5:15 PM, Marc Zyngier wrote:
->>> [+James]
->>>
->>> Hi Talel,
->>>
->>> On Tue, 10 Sep 2019 20:05:09 +0100,
->>> Talel Shenhar <talel@amazon.com> wrote:
->>>
->>>> +	log1 = readl(pos->mmio_base + AL_POS_ERROR_LOG_1);
->>> Do you actually need the implied barriers? I'd expect that relaxed
->>> accesses should be enough.
->> You are correct. Barriers are not needed, In v1 this driver indeed
->> used _relaxed versions.
->>
->> Due to request coming from Arnd in v1 patch series I removed it. As
->> this is not data path I had no strong objection for removing it.
-> Independently from whether this has any material impact on performance
-> (this obviously isn't a hot path, unless it can be directly generated
-> by userspace or a guest), I believe it is important to use the right
-> type of accessor, if only because code gets copied around... Others
-> would probably argue that this is the very reason why we should always
-> use the "safe" option...
-Arnld, would love your inputs before publishing v3 to avoid ping-pong.
->
->>>> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
->>>> +		return IRQ_NONE;
->>>> +
->>>> +	log0 = readl(pos->mmio_base + AL_POS_ERROR_LOG_0);
->>>> +	writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
->>>> +
->>>> +	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
->>>> +	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
->>>> +	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
->>>> +	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
->>>> +
->>>> +	dev_err(&pdev->dev, "addr=0x%llx request_id=0x%x bresp=0x%x\n",
->>>> +		addr, request_id, bresp);
->>> What is this information? How do we make use of it? Given that this is
->>> asynchronous, how do we correlate it to the offending software?
->> Indeed this information arriving from the HW is asynchronous.
->>
->> There is no direct method to get the offending software.
->>
->> There are all kinds of hacks we do to find the offending software once
->> we find this error. most of the time its a new patch introduced but
->> some of the time is just digging.
-> OK, so that the moment, this is more of a debug tool than anything
-> else, right?
-Not sure what do you mean by debug tool. this is used to capture iliigle 
-access and allow panic() based on them or simple logging.
->
->>> The whole think looks to me like a poor man's EDAC handling, and I'd
->>> expect to be plugged in that subsystem instead. Any reason why this
->>> isn't the case? It would certainly make the handling uniform for the
->>> user.
->> This logic was not plugged into EDAC as there is no "Correctable"
->> error here. its just error event. Not all errors are EDAC in the sense
->> of Error Detection And *Correction*. There are no correctable errors
->> for this driver.
-> I'd argue the opposite! Because you obviously don't let a read-only
-> register being written to, the error has been corrected, and you
-> signal the correction status.
+I guess you are referring to the page shuffling. If that is the case
+then this is an integral part of the allocator for a reason and it is
+very well obvious in the code including the consequences. I do not
+really like an idea of hiding similar constrains behind a generic
+looking feature which is completely detached from the allocator and so
+any future change of the allocator might subtly break it.
 
-Not the meaning of corrected from my point of view - the system as a 
-whole (sw&hw) are not working state. a driver thinks it configured the 
-system to do A while the system doesn't really do that. and the critical 
-part is that the driver that did operation A doesn't even have a way to 
-know it.
+> In our case the "Reported" page is likely going to be much more
+> expensive to allocate and use then a standard page because it will be
+> faulted back in. In such a case wouldn't it make sense for us to want
+> to keep the pages that don't require faults ahead of those pages in
+> the free_list so that they are more likely to be allocated?
 
-So I would not call this corrected.
+OK, I was suspecting this would pop out. And this is exactly why I
+didn't like an idea of an external code imposing a non obvious constrains
+to the allocator. You simply cannot count with any ordering with the
+page allocator. We used to distinguish cache hot/cold pages in the past
+and pushed pages to the specific end of the free list but that has been
+removed. There are other potential changes like that possible. Shuffling
+is a good recent example.
 
->
->> So plugging it  under EDAC seems like abusing the EDAC system.
->>
->> Now that I've emphasize the reason for not putting this under EDAC,
->> what do you think? should this "only uncorrectable event" driver
->> should be part of EDAC?
-> My choice would be to plug it into the EDAC subsystem, and report all
-> interrupts as "Corrected" events. Optionally, and only if you are
-> debugging something that requires it, report the error as
-> "Uncorrectable", in which case the EDAC subsystem should trigger a
-> panic.
->
-> At least you'd get the infrastructure, logging and tooling that the
-> EDAC subsystem offers (parsing the kernel log doesn't really count).
-
-I see what you say. However, I don't see too much added value in 
-plugging this to EDAC and feel like it would abuse EDAC framework.
-
-James, will love your input from EDAC point of view, does it make sense 
-to plug un-correctable only event to EDAC?
-
->
-> Thanks,
->
-> 	M.
->
+Anyway I am not a maintainer of this code. I would really like to hear
+opinions from Mel and Vlastimil here (now CCed - the thread starts
+http://lkml.kernel.org/r/20190907172225.10910.34302.stgit@localhost.localdomain.
+-- 
+Michal Hocko
+SUSE Labs
