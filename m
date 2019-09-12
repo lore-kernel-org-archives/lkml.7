@@ -2,102 +2,117 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E28C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FEC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6829421479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568295153;
-	bh=9mM3BMLFghazKVa4ITPL27kP5L6MutGjThJyUAY6ORY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R0R2o3XUtL+nfPO4cUGOe8kS7gST7vlmd8awFOSNXn3kMkgPq66irdAMCgmR6Y3sg
-	 OCWVZZd/o/q1wEYzR+6DSpf4ZLCoxmVTieziI+P2nykZKGDDzbblijhgclZfeUIypX
-	 DDcpSoYzWd5BLshhDCRQvnbRtpsSIUCogcpWwmjs=
+	by mail.kernel.org (Postfix) with ESMTP id 2D1AC21479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ejfgE2Hf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbfILNcc (ORCPT
+        id S1732205AbfILNeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732126AbfILNcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 09:32:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE57F20830;
-        Thu, 12 Sep 2019 13:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568295151;
-        bh=9mM3BMLFghazKVa4ITPL27kP5L6MutGjThJyUAY6ORY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1W1/PCRaDcJ1pkRDt7vN5r0zzX07LEmhfgtlAK+JpEYqQ5sln8IwQyE4klxtz55AT
-         DrvzAmrcsv9SpDUpHoRhKeTbkoO8iFEJSx4+6WtPgVBJeqc3ZkvBB8xkInGTH+09X6
-         XU52e9zgwWoe5ACFM8ecD/bgFWbkXOPKzY5sFaSg=
-Date:   Thu, 12 Sep 2019 14:32:27 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3] doc:lock: remove reference to clever use of
- read-write lock
-Message-ID: <20190912133226.oeo3eecvzfr52yv3@willie-the-truck>
-References: <20190908062901.4218-1-federico.vaga@vaga.pv.it>
+        Thu, 12 Sep 2019 09:34:03 -0400
+Received: from mail-eopbgr60051.outbound.protection.outlook.com ([40.107.6.51]:26094
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731283AbfILNeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 09:34:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZpNxVRzbX1daP5Gu6kRGhdgznvzcxIPu+IvMnnuzTo2tBmy7L30Fgy62zqlASx8yBXR423ZWVh0tnT5lbM4FPlg4ApCaFx5AapW4A4BAyx276QmjXc46p+8Q7ab71HsBwRNCfD00maWBmJx6mUs8T03gjZobTD9EdeqNf5+Lp2nbxfYOa7eDBbPsygd59edy4Dujs/jHQvs3LLQUD6xJNZpnwSngr5NSNgkzwTB4D2PW+GZKEkTSny3X3r0ghNrkFJQYFeJ8KiOfMBySw03gzwrS1NwEpujWFS9DxHtCoPaxQSFfKiO4YS+sNAKJJANLgmcBJqHquv28Fa28HK9AiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WwhcLkSHz5EqoKR5CKMYsi9927G2ByeLcmBIIjZm3aw=;
+ b=obdCcCzm7PJGXfGQ4xFVXSZM2hOk25eu4jPub5bFUeDUF3MrBHBBhc+hS29Wy886ojIxsIVYRMREHil6b/32XX+ddmpFXq4uukBc7NsNgZvim7bbglJWvohc5bHAL68R8YOvg5wcEf5OBajluXDbpb+Iob/vXklpuO0KHxvbP5I7N/h2gEjXL5AkoRzoASL2HFZzD01bk4rKs8fN8dkqu5g+bF63WuBb2OibLxqQjPk9GQyOuG/SO6nndve050blIu6osIIFB6LYpKdBtW66EPH+4wP47sLItgFB5O26ZWR9anl2rkMz6DEBouGal/ZBYCtMliPv71Owo/kN/p1pAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WwhcLkSHz5EqoKR5CKMYsi9927G2ByeLcmBIIjZm3aw=;
+ b=ejfgE2HfM+hDo06czcerKUr1LJEBP4fLRVOMp/fvtRLo80EBJ0pHktYPPwC7SZZyNCvTq6MugeE01v3Hx88xBGfoFqyhIOBUTeAL/+oQBQn+Ap7B+a4n1ei2G/cP3m/dbszUSSUm0keCjz6eoSL6FUt8Ztr/8Nqg5XHBoYX28AQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5678.eurprd05.prod.outlook.com (20.178.121.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.14; Thu, 12 Sep 2019 13:33:58 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2241.022; Thu, 12 Sep 2019
+ 13:33:58 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     "oulijun@huawei.com" <oulijun@huawei.com>,
+        "xavier.huwei@huawei.com" <xavier.huwei@huawei.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] RDMA/hns: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Topic: [PATCH -next] RDMA/hns: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Index: AQHVaW667lKcy6TDPE+jh2Hg5etsyQ==
+Date:   Thu, 12 Sep 2019 13:33:58 +0000
+Message-ID: <20190912133342.GA25365@mellanox.com>
+References: <20190906141727.26552-1-yuehaibing@huawei.com>
+In-Reply-To: <20190906141727.26552-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DM5PR06CA0106.namprd06.prod.outlook.com
+ (2603:10b6:4:3a::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [199.167.24.153]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5c2336d-de66-4f92-1e14-08d73785dd66
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5678;
+x-ms-traffictypediagnostic: VI1PR05MB5678:
+x-microsoft-antispam-prvs: <VI1PR05MB5678F7732E9902A9CB48963DCFB00@VI1PR05MB5678.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 01583E185C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(199004)(189003)(25786009)(6116002)(256004)(71190400001)(6916009)(4326008)(71200400001)(3846002)(1076003)(33656002)(36756003)(4744005)(6246003)(26005)(2906002)(7736002)(11346002)(102836004)(81166006)(476003)(186003)(86362001)(5660300002)(6506007)(386003)(81156014)(486006)(446003)(8676002)(478600001)(53936002)(8936002)(6436002)(6512007)(14454004)(54906003)(76176011)(2616005)(229853002)(305945005)(99286004)(6486002)(66476007)(66446008)(316002)(66066001)(52116002)(64756008)(66946007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5678;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BQgR1yjR4OflZSwkowXyaODBA7FFBzF2dk4odBbVZ6qEOF0742n7K74dLFBsmoCoWQT0WywNUYa0ah3B03M9YyIiCKbljhaIDZpoNVNygqpXFIFfPgADmT2s+wEyCnApVpjGn7HtIxmwGI0jIllj7MI/3MXxymJ/YzNeStL8024VHn3tH1hCm0zFI39QLAhzGUsIPtC04j2iscoQ+XAhKw/fHkma/wM1RLbIMme46NdEOftO1TK2sjYWaPUz8mR4XgqqnjITdirC9Pr5AQoBlzsuhlppU4MMclw5wcF9DD9epr2BniGPpg6hFzvDnlqFIPPRk2EW4nhrxpxZPXZH/JftVpLI6tq5UdIpWSAOYEQJybNHw4oMoK/SMn8/ntP/e6SLwkfjFl7u+Wwvi0H7g6YRXwSlOQhWZA9BPRRJKsw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B6C28169A4C8254FA4A97DB6D91F566D@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908062901.4218-1-federico.vaga@vaga.pv.it>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5c2336d-de66-4f92-1e14-08d73785dd66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 13:33:58.4637
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w6mrDxFZdUmmb1kZVbw3NkHzNmbRXK056epvEws9h9wvgUGKXuxx+xpNuriExG1Muvi3NOPygkb5m63FRcWYEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 08:29:01AM +0200, Federico Vaga wrote:
-> Remove the clever example about read-write lock because this type of
-> lock is not reccomended anymore (according to the very same document).
-
-reccomended => recommended
-
-> So there is no reason to teach cleaver things that people should not do.
-
-cleaver => clever
-
-> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+On Fri, Sep 06, 2019 at 10:17:27PM +0800, YueHaibing wrote:
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
+>=20
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  Documentation/locking/spinlocks.rst | 12 ------------
->  1 file changed, 12 deletions(-)
-> 
-> diff --git a/Documentation/locking/spinlocks.rst b/Documentation/locking/spinlocks.rst
-> index e93ec6645238..66e3792f8a36 100644
-> --- a/Documentation/locking/spinlocks.rst
-> +++ b/Documentation/locking/spinlocks.rst
-> @@ -139,18 +139,6 @@ on other CPU's, because an interrupt on another CPU doesn't interrupt the
->  CPU that holds the lock, so the lock-holder can continue and eventually
->  releases the lock).
->  
-> -Note that you can be clever with read-write locks and interrupts. For
-> -example, if you know that the interrupt only ever gets a read-lock, then
-> -you can use a non-irq version of read locks everywhere - because they
-> -don't block on each other (and thus there is no dead-lock wrt interrupts.
-> -But when you do the write-lock, you have to use the irq-safe version.
-> -
-> -For an example of being clever with rw-locks, see the "waitqueue_lock"
-> -handling in kernel/sched/core.c - nothing ever _changes_ a wait-queue from
-> -within an interrupt, they only read the queue in order to know whom to
-> -wake up. So read-locks are safe (which is good: they are very common
-> -indeed), while write-locks need to protect themselves against interrupts.
-> -
+>  drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-With the typos fixed in the commit message:
+Applied to for-next, thanks
 
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+Jason
