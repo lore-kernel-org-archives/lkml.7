@@ -2,41 +2,43 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B97AECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF6C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C28D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E291F214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 03:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfILDpC (ORCPT
+        id S1729833AbfILDpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 23:45:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2216 "EHLO huawei.com"
+        Wed, 11 Sep 2019 23:45:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2267 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727873AbfILDpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 23:45:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D197F765668A76E5E634;
-        Thu, 12 Sep 2019 11:44:58 +0800 (CST)
+        id S1727873AbfILDpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 23:45:05 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D6A97EC9127A2D852B99;
+        Thu, 12 Sep 2019 11:45:03 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 12 Sep 2019 11:44:51 +0800
+ 14.3.439.0; Thu, 12 Sep 2019 11:44:53 +0800
 From:   Mao Wenan <maowenan@huawei.com>
 To:     <vyasevich@gmail.com>, <nhorman@tuxdriver.com>,
         <marcelo.leitner@gmail.com>, <davem@davemloft.net>
 CC:     <linux-sctp@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH v2 net 0/3] fix memory leak for sctp_do_bind
-Date:   Thu, 12 Sep 2019 12:02:16 +0800
-Message-ID: <20190912040219.67517-1-maowenan@huawei.com>
+        Mao Wenan <maowenan@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v2 net 3/3] sctp: destroy bucket if failed to bind addr
+Date:   Thu, 12 Sep 2019 12:02:19 +0800
+Message-ID: <20190912040219.67517-4-maowenan@huawei.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
+In-Reply-To: <20190912040219.67517-1-maowenan@huawei.com>
 References: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
+ <20190912040219.67517-1-maowenan@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,22 +49,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First two patches are to do cleanup, remove redundant assignment,
-and change return type of sctp_get_port_local.
-Third patch is to fix memory leak for sctp_do_bind if failed
-to bind address.
+There is one memory leak bug report:
+BUG: memory leak
+unreferenced object 0xffff8881dc4c5ec0 (size 40):
+  comm "syz-executor.0", pid 5673, jiffies 4298198457 (age 27.578s)
+  hex dump (first 32 bytes):
+    02 00 00 00 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+    f8 63 3d c1 81 88 ff ff 00 00 00 00 00 00 00 00  .c=.............
+  backtrace:
+    [<0000000072006339>] sctp_get_port_local+0x2a1/0xa00 [sctp]
+    [<00000000c7b379ec>] sctp_do_bind+0x176/0x2c0 [sctp]
+    [<000000005be274a2>] sctp_bind+0x5a/0x80 [sctp]
+    [<00000000b66b4044>] inet6_bind+0x59/0xd0 [ipv6]
+    [<00000000c68c7f42>] __sys_bind+0x120/0x1f0 net/socket.c:1647
+    [<000000004513635b>] __do_sys_bind net/socket.c:1658 [inline]
+    [<000000004513635b>] __se_sys_bind net/socket.c:1656 [inline]
+    [<000000004513635b>] __x64_sys_bind+0x3e/0x50 net/socket.c:1656
+    [<0000000061f2501e>] do_syscall_64+0x72/0x2e0 arch/x86/entry/common.c:296
+    [<0000000003d1e05e>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+This is because in sctp_do_bind, if sctp_get_port_local is to
+create hash bucket successfully, and sctp_add_bind_addr failed
+to bind address, e.g return -ENOMEM, so memory leak found, it
+needs to destroy allocated bucket.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 ---
- v2: add one patch to change return type of sctp_get_port_local.
----
-Mao Wenan (3):
-  sctp: change return type of sctp_get_port_local
-  sctp: remove redundant assignment when call sctp_get_port_local
-  sctp: destroy bucket if failed to bind addr
+ net/sctp/socket.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
- net/sctp/socket.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 2f810078c91d..69ec3b796197 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -412,11 +412,13 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
+ 	ret = sctp_add_bind_addr(bp, addr, af->sockaddr_len,
+ 				 SCTP_ADDR_SRC, GFP_ATOMIC);
+ 
+-	/* Copy back into socket for getsockname() use. */
+-	if (!ret) {
+-		inet_sk(sk)->inet_sport = htons(inet_sk(sk)->inet_num);
+-		sp->pf->to_sk_saddr(addr, sk);
++	if (ret) {
++		sctp_put_port(sk);
++		return ret;
+ 	}
++	/* Copy back into socket for getsockname() use. */
++	inet_sk(sk)->inet_sport = htons(inet_sk(sk)->inet_num);
++	sp->pf->to_sk_saddr(addr, sk);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
