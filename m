@@ -2,114 +2,92 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31047C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C075C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122C42081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E351B20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 11:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfILLyt (ORCPT
+        id S1731494AbfILL43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 07:54:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52622 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731466AbfILLyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 07:54:49 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C13EA30860D5;
-        Thu, 12 Sep 2019 11:54:48 +0000 (UTC)
-Received: from thuth.com (ovpn-204-41.brq.redhat.com [10.40.204.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 20AD75D713;
-        Thu, 12 Sep 2019 11:54:42 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH v2] KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
-Date:   Thu, 12 Sep 2019 13:54:38 +0200
-Message-Id: <20190912115438.25761-1-thuth@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 12 Sep 2019 11:54:48 +0000 (UTC)
+        Thu, 12 Sep 2019 07:56:29 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38492 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731377AbfILL43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 07:56:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 7so16863466oip.5;
+        Thu, 12 Sep 2019 04:56:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1u80ilTf7G0ZNN0O4iJG8ezHwT90ZnChBDdldmbdiM=;
+        b=lZxQp8c7OHDrwJ8cRDMu/FKdMSGVJzn0y0jkX4L04Fpa25lEfRaejsjz7ff96tWJAl
+         AM79z1jPzutZIbZ+tpMimpZj8NiJt/LmTsQvUEhHSJlQF4Gnl2M2SHX55dT56EmhhL7e
+         Kh2pRcHklazISI+/WIiC4vvuhivv/3OnYrcJBjH4l1YQGFu4q+SFuvanO6xGE+32J9F0
+         lur6QKwM2XACQKIXCVmtFhdAt9XXNYMqvhrE+jCKXLkCrWd5690DuqVHAVVDIm3yUyQT
+         Ec8og/TlzQTYbCoYikNHiOZ6yDGhOCHIeyjysnzagSBO9XGX0oFS2KZVTq2IoLYrYafW
+         PYLA==
+X-Gm-Message-State: APjAAAUPAIl4qXxVZXVefFYy20Y5TsZtUs1YaFtnZ2WaE5EUwRv5Kay/
+        Oxm/3MZypncq4gpAi7cmSVfssHq2f+pgeMWKcWs=
+X-Google-Smtp-Source: APXvYqymEmu8yP8kOCKU3SZPHOFLXhmadtL34z8YlpNUfAcz68fuN1P9jyLC9n1+IY2XaDbxa+IApNS+a0I+vR0Q8FQ=
+X-Received: by 2002:aca:dad4:: with SMTP id r203mr8545498oig.102.1568289387824;
+ Thu, 12 Sep 2019 04:56:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190912103734.1879-1-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20190912103734.1879-1-kieran.bingham+renesas@ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Sep 2019 13:56:16 +0200
+Message-ID: <CAMuHMdWb9qBDZqOs072u_pCRTaGGArAdUBLWbA5kGoU=KM4Y3A@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: renesas: r8a77980: Remove r8a77970 DU compatible
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
-an interrupt, we convert them from the legacy struct kvm_s390_interrupt
-to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
-However, this function does not take care of all types of interrupts
-that we can inject into the guest later (see do_inject_vcpu()). Since we
-do not clear out the s390irq values before calling s390int_to_s390irq(),
-there is a chance that we copy random data from the kernel stack which
-could be leaked to the userspace later.
+On Thu, Sep 12, 2019 at 12:38 PM Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
+> The r8a77970 was added with an compatible string for a differnet device
 
-Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
-interrupt: s390int_to_s390irq() does not handle it, and the function
-__inject_pfault_init() later copies irq->u.ext which contains the
-random kernel stack data. This data can then be leaked either to
-the guest memory in __deliver_pfault_init(), or the userspace might
-retrieve it directly with the KVM_S390_GET_IRQ_STATE ioctl.
+different
 
-Fix it by handling that interrupt type in s390int_to_s390irq(), too,
-and by making sure that the s390irq struct is properly pre-initialized.
-And while we're at it, make sure that s390int_to_s390irq() now
-directly returns -EINVAL for unknown interrupt types, so that we
-immediately get a proper error code in case we add more interrupt
-types to do_inject_vcpu() without updating s390int_to_s390irq()
-sometime in the future.
+> rather than adding the correct compatible to the driver.
+>
+> Remove the unnecessary compatible which is for a different platform.
+>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-Cc: stable@vger.kernel.org
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- arch/s390/kvm/interrupt.c | 10 ++++++++++
- arch/s390/kvm/kvm-s390.c  |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 3e7efdd9228a..165dea4c7f19 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -1960,6 +1960,16 @@ int s390int_to_s390irq(struct kvm_s390_interrupt *s390int,
- 	case KVM_S390_MCHK:
- 		irq->u.mchk.mcic = s390int->parm64;
- 		break;
-+	case KVM_S390_INT_PFAULT_INIT:
-+		irq->u.ext.ext_params = s390int->parm;
-+		irq->u.ext.ext_params2 = s390int->parm64;
-+		break;
-+	case KVM_S390_RESTART:
-+	case KVM_S390_INT_CLOCK_COMP:
-+	case KVM_S390_INT_CPU_TIMER:
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 	return 0;
- }
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index f329dcb3f44c..082eac2abc88 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4323,7 +4323,7 @@ long kvm_arch_vcpu_async_ioctl(struct file *filp,
- 	}
- 	case KVM_S390_INTERRUPT: {
- 		struct kvm_s390_interrupt s390int;
--		struct kvm_s390_irq s390irq;
-+		struct kvm_s390_irq s390irq = {};
- 
- 		if (copy_from_user(&s390int, argp, sizeof(s390int)))
- 			return -EFAULT;
+> Please note, this patch should not be integrated until the renesas,du-r8a77980
+> compatible string makes it into the DU [0].
+
+Hence postponed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.18.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
