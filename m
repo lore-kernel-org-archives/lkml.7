@@ -2,187 +2,155 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7208AC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B658C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C702084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BohMUVOw"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7AF2084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568278229;
+	bh=XCfuILquDaYAwWjsyBacc2YJXnwSbKHCz8MTJJkUcUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OFV3Au2H4wa3DG3L5t6muC7GFS+76LpMLSYQbKiiIrOEysNdmGv/Vgbn73SEbD2uX
+	 up1MpMLOObDMfoaQ/kaZirzvzqS9rZYLu5VCiwrK/MuBoU92evH8HsXLtZg8c+DSav
+	 xvR+iNwhteULdL2Ek1zgg5awKkYOBAnogT1oZ5hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfILItN (ORCPT
+        id S1730487AbfILIu2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:49:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34432 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfILItM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:49:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a11so17739910wrx.1;
-        Thu, 12 Sep 2019 01:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=e+Gp9bvg2doYl3vt8UvKYTIGNZ3niQ5XGKnO6ggp+VY=;
-        b=BohMUVOwccV7eixIyuzSffx1C1R/02VJ5TADZ2b16JPGKurlRaBsjNKAHOstU0x43Q
-         OULaaIo4e046DFHcBMKrwxOvZYFwrZ9hz8h5ti5bFb0Bum8I/M3ySKZymFORO9Osnfnp
-         mbrMEKqEHAfB5vi8DcBXUCXMWnELXFHJd3AT6BQiA2SVjXDBYXOXWnJqdne0EPRAtdyN
-         fFZcZd3TgWFwwvL7dhbDTHVixRDKKpCV2Z0RIt7/Jixclhlg/fTK5bwlNAmNMuggqOpl
-         kyudZlApLfcNaxL4sc90Wlehs0dBoKAjwk1J6YuKLLId/JFNXR3+DqKA5dbncj8JTFJA
-         Os2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=e+Gp9bvg2doYl3vt8UvKYTIGNZ3niQ5XGKnO6ggp+VY=;
-        b=HUMFYdztKbjESzHLKHwqcs0Oc9zioGuxyUl4kMtwIPs7yL7wloVQhoFwieFhhvc93w
-         opHWrLugZXIsIIBNSg27lGNrWbaHpvWtOe0H0wqOHfpAJxWUaWeHlL1XeHiHTnI3Cc7l
-         +TDV89goQzP1I1HHbPrb/qIVhUf0eFGpdvZwPK0vpqwCe2IZEb7ILts3k0M7wzLwWPh7
-         g1CpfhwvfYmQuEig0OUkckEQE9HZN5y5BFbCS2oQqjODYbFzo09gNcHQaTGxY0lyq5co
-         v1Ti5HJbqHo2Mm0qD5yaL56/LcwvOfr2wUJNfLOVNAjGi0/j1LgOzTGgd12QHdtyefCN
-         zg+g==
-X-Gm-Message-State: APjAAAUJ03nKI4vlgiPrbzeEO8mISx+4//+wJiQXzDXTfugvUhJ+blYd
-        gows6mvRBgPwajiNB9YmtLk=
-X-Google-Smtp-Source: APXvYqyEDkWR4oC31C2oMu6luZi3ueVnPKImB1BJM2Lmv+TtEx9dSjvWD6SJc20F3l41IM99V0/YYQ==
-X-Received: by 2002:adf:ffd1:: with SMTP id x17mr4758794wrs.139.1568278150339;
-        Thu, 12 Sep 2019 01:49:10 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id p85sm11790384wme.23.2019.09.12.01.49.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 01:49:09 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 10:49:07 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <maxime.ripard@anandra.org>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/2] crypto: sun4i-ss: enable pm_runtime
-Message-ID: <20190912084907.GA26551@Red>
-References: <20190911114650.20567-1-clabbe.montjoie@gmail.com>
- <20190911114650.20567-3-clabbe.montjoie@gmail.com>
- <CAO4ZVTM99FksM71BAiraYj7eyREO1Qi=L1NFzEkNmMgBmphBww@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAO4ZVTM99FksM71BAiraYj7eyREO1Qi=L1NFzEkNmMgBmphBww@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Sep 2019 04:50:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:59200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbfILIu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 04:50:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 266951000;
+        Thu, 12 Sep 2019 01:50:27 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04DE63F71F;
+        Thu, 12 Sep 2019 01:50:23 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 09:50:22 +0100
+Message-ID: <865zlxsxtd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     <robh+dt@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
+        <mchehab+samsung@kernel.org>, <shawn.lin@rock-chips.com>,
+        <gregkh@linuxfoundation.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, James Morse <james.morse@arm.com>
+Subject: Re: [UNVERIFIED SENDER] Re: [PATCH v2 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+In-Reply-To: <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
+References: <1568142310-17622-1-git-send-email-talel@amazon.com>
+        <1568142310-17622-3-git-send-email-talel@amazon.com>
+        <86d0g6syva.wl-maz@kernel.org>
+        <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 08:35:51AM +0200, Maxime Ripard wrote:
-> Hi,
+On Thu, 12 Sep 2019 07:50:03 +0100,
+"Shenhar, Talel" <talel@amazon.com> wrote:
 > 
-> Le mer. 11 sept. 2019 à 13:46, Corentin Labbe
-> <clabbe.montjoie@gmail.com> a écrit :
-> >
-> > This patch enables power management on the Security System.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  drivers/crypto/sunxi-ss/sun4i-ss-cipher.c |  5 +++
-> >  drivers/crypto/sunxi-ss/sun4i-ss-core.c   | 42 ++++++++++++++++++++++-
-> >  2 files changed, 46 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-> > index fa4b1b47822e..1fedec9e83b0 100644
-> > --- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-> > +++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-> > @@ -10,6 +10,8 @@
-> >   *
-> >   * You could find the datasheet in Documentation/arm/sunxi.rst
-> >   */
-> > +
-> > +#include <linux/pm_runtime.h>
-> >  #include "sun4i-ss.h"
-> >
-> >  static int noinline_for_stack sun4i_ss_opti_poll(struct skcipher_request *areq)
-> > @@ -497,13 +499,16 @@ int sun4i_ss_cipher_init(struct crypto_tfm *tfm)
-> >                 return PTR_ERR(op->fallback_tfm);
-> >         }
-> >
-> > +       pm_runtime_get_sync(op->ss->dev);
-> >         return 0;
-> >  }
-> >
-> >  void sun4i_ss_cipher_exit(struct crypto_tfm *tfm)
-> >  {
-> >         struct sun4i_tfm_ctx *op = crypto_tfm_ctx(tfm);
-> > +
-> >         crypto_free_sync_skcipher(op->fallback_tfm);
-> > +       pm_runtime_put_sync(op->ss->dev);
-> >  }
-> >
-> >  /* check and set the AES key, prepare the mode to be used */
-> > diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-core.c b/drivers/crypto/sunxi-ss/sun4i-ss-core.c
-> > index 2c9ff01dddfc..5e6e1a308f60 100644
-> > --- a/drivers/crypto/sunxi-ss/sun4i-ss-core.c
-> > +++ b/drivers/crypto/sunxi-ss/sun4i-ss-core.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> >  #include <crypto/scatterwalk.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/interrupt.h>
-> > @@ -258,6 +259,37 @@ static int sun4i_ss_enable(struct sun4i_ss_ctx *ss)
-> >         return err;
-> >  }
-> >
-> > +#ifdef CONFIG_PM
-> > +static int sun4i_ss_pm_suspend(struct device *dev)
-> > +{
-> > +       struct sun4i_ss_ctx *ss = dev_get_drvdata(dev);
-> > +
-> > +       sun4i_ss_disable(ss);
-> > +       return 0;
-> > +}
-> > +
-> > +static int sun4i_ss_pm_resume(struct device *dev)
-> > +{
-> > +       struct sun4i_ss_ctx *ss = dev_get_drvdata(dev);
-> > +
-> > +       return sun4i_ss_enable(ss);
-> > +}
-> > +#endif
-> > +
-> > +const struct dev_pm_ops sun4i_ss_pm_ops = {
-> > +       SET_RUNTIME_PM_OPS(sun4i_ss_pm_suspend, sun4i_ss_pm_resume, NULL)
-> > +};
-> > +
-> > +static void sun4i_ss_pm_init(struct sun4i_ss_ctx *ss)
-> > +{
-> > +       pm_runtime_use_autosuspend(ss->dev);
-> > +       pm_runtime_set_autosuspend_delay(ss->dev, 1000);
-> > +
-> > +       pm_runtime_get_noresume(ss->dev);
-> > +       pm_runtime_set_active(ss->dev);
-> > +       pm_runtime_enable(ss->dev);
-> > +}
+> Hi Marc,
 > 
-> It's not really clear to me what you're doing here? Can you explain?
 > 
+> On 9/11/2019 5:15 PM, Marc Zyngier wrote:
+> > [+James]
+> > 
+> > Hi Talel,
+> > 
+> > On Tue, 10 Sep 2019 20:05:09 +0100,
+> > Talel Shenhar <talel@amazon.com> wrote:
+> > 
+> >> +	log1 = readl(pos->mmio_base + AL_POS_ERROR_LOG_1);
+> > Do you actually need the implied barriers? I'd expect that relaxed
+> > accesses should be enough.
+> 
+> You are correct. Barriers are not needed, In v1 this driver indeed
+> used _relaxed versions.
+> 
+> Due to request coming from Arnd in v1 patch series I removed it. As
+> this is not data path I had no strong objection for removing it.
 
-I set the autosuspend state and delay.
+Independently from whether this has any material impact on performance
+(this obviously isn't a hot path, unless it can be directly generated
+by userspace or a guest), I believe it is important to use the right
+type of accessor, if only because code gets copied around... Others
+would probably argue that this is the very reason why we should always
+use the "safe" option...
 
-I say that the device is active and so I "get" it.
-Then I enable PM.
+> 
+> > 
+> >> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+> >> +		return IRQ_NONE;
+> >> +
+> >> +	log0 = readl(pos->mmio_base + AL_POS_ERROR_LOG_0);
+> >> +	writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+> >> +
+> >> +	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
+> >> +	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
+> >> +	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
+> >> +	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
+> >> +
+> >> +	dev_err(&pdev->dev, "addr=0x%llx request_id=0x%x bresp=0x%x\n",
+> >> +		addr, request_id, bresp);
+> > What is this information? How do we make use of it? Given that this is
+> > asynchronous, how do we correlate it to the offending software?
+> 
+> Indeed this information arriving from the HW is asynchronous.
+> 
+> There is no direct method to get the offending software.
+> 
+> There are all kinds of hacks we do to find the offending software once
+> we find this error. most of the time its a new patch introduced but
+> some of the time is just digging.
 
-I do like that since I use the device later in probe(), so I need to keep it up.
-At the end of probe() I put the device which go in suspend automaticaly after.
+OK, so that the moment, this is more of a debug tool than anything
+else, right?
 
-Regards
+> > The whole think looks to me like a poor man's EDAC handling, and I'd
+> > expect to be plugged in that subsystem instead. Any reason why this
+> > isn't the case? It would certainly make the handling uniform for the
+> > user.
+> 
+> This logic was not plugged into EDAC as there is no "Correctable"
+> error here. its just error event. Not all errors are EDAC in the sense
+> of Error Detection And *Correction*. There are no correctable errors
+> for this driver.
+
+I'd argue the opposite! Because you obviously don't let a read-only
+register being written to, the error has been corrected, and you
+signal the correction status.
+
+> So plugging itÂ  under EDAC seems like abusing the EDAC system.
+> 
+> Now that I've emphasize the reason for not putting this under EDAC,
+> what do you think? should this "only uncorrectable event" driver
+> should be part of EDAC?
+
+My choice would be to plug it into the EDAC subsystem, and report all
+interrupts as "Corrected" events. Optionally, and only if you are
+debugging something that requires it, report the error as
+"Uncorrectable", in which case the EDAC subsystem should trigger a
+panic.
+
+At least you'd get the infrastructure, logging and tooling that the
+EDAC subsystem offers (parsing the kernel log doesn't really count).
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
