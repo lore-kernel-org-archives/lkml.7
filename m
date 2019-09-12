@@ -4,85 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9E4C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3CFC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C600420693
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6242084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfILVVT (ORCPT
+        id S1728630AbfILVbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 17:21:19 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.40]:23142 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728538AbfILVVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 17:21:19 -0400
-X-Greylist: delayed 1492 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Sep 2019 17:21:19 EDT
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 4476B3CD06
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:56:27 -0500 (CDT)
-Received: from gator3278.hostgator.com ([198.57.247.242])
-        by cmsmtp with SMTP
-        id 8W8gia33t3Qi08W8hiCMys; Thu, 12 Sep 2019 15:56:27 -0500
-X-Authority-Reason: nr=8
-Received: from 89-69-237-178.dynamic.chello.pl ([89.69.237.178]:40740 helo=comp.lan)
-        by gator3278.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <arkadiusz@drabczyk.org>)
-        id 1i8W8g-000GNC-3z; Thu, 12 Sep 2019 15:56:26 -0500
-From:   Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
-To:     mcgrof@kernel.org, gregkh@linuxfoundation.org
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: Update pointer to documentation
-Date:   Thu, 12 Sep 2019 22:56:06 +0200
-Message-Id: <20190912205606.31095-1-arkadiusz@drabczyk.org>
-X-Mailer: git-send-email 2.9.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator3278.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - drabczyk.org
-X-BWhitelist: no
-X-Source-IP: 89.69.237.178
-X-Source-L: No
-X-Exim-ID: 1i8W8g-000GNC-3z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 89-69-237-178.dynamic.chello.pl (comp.lan) [89.69.237.178]:40740
-X-Source-Auth: arkadiusz@drabczyk.org
-X-Email-Count: 1
-X-Source-Cap: cmt1bXZicmg7cmt1bXZicmg7Z2F0b3IzMjc4Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Thu, 12 Sep 2019 17:31:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38897 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728577AbfILVbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 17:31:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 14:31:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="176092119"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 14:31:41 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH 1/3] fs/userfaultfd.c: remove a redundant check on end
+Date:   Fri, 13 Sep 2019 05:31:08 +0800
+Message-Id: <20190912213110.3691-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation was revamped in 113ccc but link in
-firmware_loader/main.c hasn't been updated.
+For the ending vma, there is a check to make sure the end is huge page
+aligned.
 
-Signed-off-by: Arkadiusz Drabczyk <arkadiusz@drabczyk.org>
+The *if* check makes sure vm_start < end <= vm_end. While the first half
+is not necessary, because the *for* clause makes sure vm_start < end.
+
+This patch just removes it.
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 ---
- drivers/base/firmware_loader/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/userfaultfd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index bf44c79..d5995d7 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (c) 2003 Manuel Estrada Sainz
-  *
-- * Please see Documentation/firmware_class/ for more information.
-+ * Please see Documentation/driver-api/firmware/ for more information.
-  *
-  */
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 653d8f7c453c..9ce09ac619a2 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1402,8 +1402,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 		 * If this vma contains ending address, and huge pages
+ 		 * check alignment.
+ 		 */
+-		if (is_vm_hugetlb_page(cur) && end <= cur->vm_end &&
+-		    end > cur->vm_start) {
++		if (is_vm_hugetlb_page(cur) && end <= cur->vm_end) {
+ 			unsigned long vma_hpagesize = vma_kernel_pagesize(cur);
  
+ 			ret = -EINVAL;
 -- 
-2.9.0
+2.17.1
 
