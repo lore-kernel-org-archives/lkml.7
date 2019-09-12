@@ -6,93 +6,138 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D0CC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB70C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F3E20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5DF20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 15:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733098AbfILPkC (ORCPT
+        id S1732878AbfILPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 11:40:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47324 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732566AbfILPkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 11:40:02 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CFXoMW109103;
-        Thu, 12 Sep 2019 11:39:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uyqfmv0k7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 11:39:49 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8CFYJmk111935;
-        Thu, 12 Sep 2019 11:39:48 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uyqfmv0ju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 11:39:48 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8CFZlMR026556;
-        Thu, 12 Sep 2019 15:39:48 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02dal.us.ibm.com with ESMTP id 2uv467yxgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 15:39:47 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CFdj4j52166930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 15:39:45 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D3F86A061;
-        Thu, 12 Sep 2019 15:39:45 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AA6D6A057;
-        Thu, 12 Sep 2019 15:39:45 +0000 (GMT)
-Received: from localhost (unknown [9.41.101.192])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 15:39:45 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of cede_offline
-In-Reply-To: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
-Date:   Thu, 12 Sep 2019 10:39:45 -0500
-Message-ID: <87impxr0am.fsf@linux.ibm.com>
+        Thu, 12 Sep 2019 11:42:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14349 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732723AbfILPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 11:42:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 08:42:09 -0700
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="197265089"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 08:42:08 -0700
+Message-ID: <b84a3916202a67bcf36da0b6f0e833eb3408339a.camel@linux.intel.com>
+Subject: Re: [PATCH v9 0/8] stg mail -e --version=v9 \
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, ying.huang@intel.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
+Date:   Thu, 12 Sep 2019 08:42:08 -0700
+In-Reply-To: <20190912091925.GM4023@dhcp22.suse.cz>
+References: <20190907172225.10910.34302.stgit@localhost.localdomain>
+         <20190910124209.GY2063@dhcp22.suse.cz>
+         <CAKgT0Udr6nYQFTRzxLbXk41SiJ-pcT_bmN1j1YR4deCwdTOaUQ@mail.gmail.com>
+         <20190910144713.GF2063@dhcp22.suse.cz>
+         <CAKgT0UdB4qp3vFGrYEs=FwSXKpBEQ7zo7DV55nJRO2C-KCEOrw@mail.gmail.com>
+         <20190910175213.GD4023@dhcp22.suse.cz>
+         <1d7de9f9f4074f67c567dbb4cc1497503d739e30.camel@linux.intel.com>
+         <20190911113619.GP4023@dhcp22.suse.cz>
+         <CAKgT0UfOp1c+ov=3pBD72EkSB9Vm7mG5G6zJj4=j=UH7zCgg2Q@mail.gmail.com>
+         <20190912091925.GM4023@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=642 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120160
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> The patchset also defines a new sysfs attribute
-> "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
-> to allow userspace programs to change the state into which the
-> offlined CPU need to be put to at runtime.
+On Thu, 2019-09-12 at 11:19 +0200, Michal Hocko wrote:
+> On Wed 11-09-19 08:12:03, Alexander Duyck wrote:
+> > On Wed, Sep 11, 2019 at 4:36 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > On Tue 10-09-19 14:23:40, Alexander Duyck wrote:
+> > > [...]
+> > > > We don't put any limitations on the allocator other then that it needs to
+> > > > clean up the metadata on allocation, and that it cannot allocate a page
+> > > > that is in the process of being reported since we pulled it from the
+> > > > free_list. If the page is a "Reported" page then it decrements the
+> > > > reported_pages count for the free_area and makes sure the page doesn't
+> > > > exist in the "Boundary" array pointer value, if it does it moves the
+> > > > "Boundary" since it is pulling the page.
+> > > 
+> > > This is still a non-trivial limitation on the page allocation from an
+> > > external code IMHO. I cannot give any explicit reason why an ordering on
+> > > the free list might matter (well except for page shuffling which uses it
+> > > to make physical memory pattern allocation more random) but the
+> > > architecture seems hacky and dubious to be honest. It shoulds like the
+> > > whole interface has been developed around a very particular and single
+> > > purpose optimization.
+> > 
+> > How is this any different then the code that moves a page that will
+> > likely be merged to the tail though?
+> 
+> I guess you are referring to the page shuffling. If that is the case
+> then this is an integral part of the allocator for a reason and it is
+> very well obvious in the code including the consequences. I do not
+> really like an idea of hiding similar constrains behind a generic
+> looking feature which is completely detached from the allocator and so
+> any future change of the allocator might subtly break it.
+> 
+> > In our case the "Reported" page is likely going to be much more
+> > expensive to allocate and use then a standard page because it will be
+> > faulted back in. In such a case wouldn't it make sense for us to want
+> > to keep the pages that don't require faults ahead of those pages in
+> > the free_list so that they are more likely to be allocated?
+> 
+> OK, I was suspecting this would pop out. And this is exactly why I
+> didn't like an idea of an external code imposing a non obvious constrains
+> to the allocator. You simply cannot count with any ordering with the
+> page allocator. We used to distinguish cache hot/cold pages in the past
+> and pushed pages to the specific end of the free list but that has been
+> removed. There are other potential changes like that possible. Shuffling
+> is a good recent example.
+> 
+> Anyway I am not a maintainer of this code. I would really like to hear
+> opinions from Mel and Vlastimil here (now CCed - the thread starts
+> http://lkml.kernel.org/r/20190907172225.10910.34302.stgit@localhost.localdomain.
 
-A boolean sysfs interface will become awkward if we need to add another
-mode in the future.
+One alternative I could do if we are wanting to make things more obvious
+would be to add yet another add_to_free_list_XXX function that would be
+used specifically for reported pages. The only real requirement I have is
+that we have to insert reported pages such that we generate a continuous
+block without interleaving non-reported pages in between. So as long as
+reported pages are always inserted at the boundary/iterator when we are
+actively reporting on a section then I can guarantee the list won't have
+gaps formed.
 
-What do you think about naming the attribute something like
-'offline_mode', with the possible values 'extended-cede' and
-'rtas-stopped'?
+Also as far as the concerns about this being an external user, one thing I
+can do is break up the headers a bit and define an internal header in mm/
+that defines all the items used by the page allocator, and another in
+include/linux/ that defines what is used by devices when receiving the
+notifications. It would then help to reduce the likelihood of an outside
+entity messing with the page allocator too much.
+
