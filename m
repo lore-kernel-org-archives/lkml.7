@@ -2,126 +2,108 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B76C49ED6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A19C49ED6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2540F2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF6D20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 02:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfILCFz (ORCPT
+        id S1729021AbfILCOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Sep 2019 22:05:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51442 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727329AbfILCFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Sep 2019 22:05:54 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4DE8C1757141C85581C3;
-        Thu, 12 Sep 2019 10:05:50 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Sep 2019
- 10:05:49 +0800
-Subject: Re: [PATCH net 1/2] sctp: remove redundant assignment when call
- sctp_get_port_local
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-CC:     <vyasevich@gmail.com>, <nhorman@tuxdriver.com>,
-        <davem@davemloft.net>, <linux-sctp@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20190910071343.18808-1-maowenan@huawei.com>
- <20190910071343.18808-2-maowenan@huawei.com> <20190910185710.GF15977@kadam>
- <20190910192207.GE20699@kadam>
- <53556c87-a351-4314-cbd9-49a39d0b41aa@huawei.com>
- <20190911083038.GF20699@kadam> <20190911143008.GD3499@localhost.localdomain>
- <20190911143923.GE3499@localhost.localdomain>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
-Date:   Thu, 12 Sep 2019 10:05:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 11 Sep 2019 22:14:33 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:54556 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbfILCOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Sep 2019 22:14:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 88483FB03;
+        Thu, 12 Sep 2019 04:14:29 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id A_58ePPtfpUh; Thu, 12 Sep 2019 04:14:28 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A7A4246CB1; Wed, 11 Sep 2019 19:14:25 -0700 (PDT)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dts: arm64: imx8mq: Enable gpu passive throttling
+Date:   Wed, 11 Sep 2019 19:14:25 -0700
+Message-Id: <cf1b114bcc6ef26e032c352b8c885aaf5f3594d0.1568254197.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190911143923.GE3499@localhost.localdomain>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Temperature and hysteresis were picked after the CPU.
 
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-On 2019/9/11 22:39, Marcelo Ricardo Leitner wrote:
-> On Wed, Sep 11, 2019 at 11:30:08AM -0300, Marcelo Ricardo Leitner wrote:
->> On Wed, Sep 11, 2019 at 11:30:38AM +0300, Dan Carpenter wrote:
->>> On Wed, Sep 11, 2019 at 09:30:47AM +0800, maowenan wrote:
->>>>
->>>>
->>>> On 2019/9/11 3:22, Dan Carpenter wrote:
->>>>> On Tue, Sep 10, 2019 at 09:57:10PM +0300, Dan Carpenter wrote:
->>>>>> On Tue, Sep 10, 2019 at 03:13:42PM +0800, Mao Wenan wrote:
->>>>>>> There are more parentheses in if clause when call sctp_get_port_local
->>>>>>> in sctp_do_bind, and redundant assignment to 'ret'. This patch is to
->>>>>>> do cleanup.
->>>>>>>
->>>>>>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->>>>>>> ---
->>>>>>>  net/sctp/socket.c | 3 +--
->>>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
->>>>>>> index 9d1f83b10c0a..766b68b55ebe 100644
->>>>>>> --- a/net/sctp/socket.c
->>>>>>> +++ b/net/sctp/socket.c
->>>>>>> @@ -399,9 +399,8 @@ static int sctp_do_bind(struct sock *sk, union sctp_addr *addr, int len)
->>>>>>>  	 * detection.
->>>>>>>  	 */
->>>>>>>  	addr->v4.sin_port = htons(snum);
->>>>>>> -	if ((ret = sctp_get_port_local(sk, addr))) {
->>>>>>> +	if (sctp_get_port_local(sk, addr))
->>>>>>>  		return -EADDRINUSE;
->>>>>>
->>>>>> sctp_get_port_local() returns a long which is either 0,1 or a pointer
->>>>>> casted to long.  It's not documented what it means and neither of the
->>>>>> callers use the return since commit 62208f12451f ("net: sctp: simplify
->>>>>> sctp_get_port").
->>>>>
->>>>> Actually it was commit 4e54064e0a13 ("sctp: Allow only 1 listening
->>>>> socket with SO_REUSEADDR") from 11 years ago.  That patch fixed a bug,
->>>>> because before the code assumed that a pointer casted to an int was the
->>>>> same as a pointer casted to a long.
->>>>
->>>> commit 4e54064e0a13 treated non-zero return value as unexpected, so the current
->>>> cleanup is ok?
->>>
->>> Yeah.  It's fine, I was just confused why we weren't preserving the
->>> error code and then I saw that we didn't return errors at all and got
->>> confused.
->>
->> But please lets seize the moment and do the change Dean suggested.
-> 
-> *Dan*, sorry.
-> 
->> This was the last place saving this return value somewhere. It makes
->> sense to cleanup sctp_get_port_local() now and remove that masked
->> pointer return.
->>
->> Then you may also cleanup:
->> socket.c:       return !!sctp_get_port_local(sk, &addr);
->> as it will be a direct map.
-
-Thanks Marcelo, shall I post a new individual patch for cleanup as your suggest?
->>
->>   Marcelo
->>
-> 
-> .
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 564045927485..fda636085bb3 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -235,12 +235,26 @@
+ 			thermal-sensors = <&tmu 1>;
+ 
+ 			trips {
++				gpu-alert {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
+ 				gpu-crit {
+ 					temperature = <90000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+ 				};
+ 			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert>;
++					cooling-device =
++						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
+ 		};
+ 
+ 		vpu-thermal {
+@@ -1006,6 +1020,7 @@
+ 			         <&clk IMX8MQ_CLK_GPU_AXI>,
+ 			         <&clk IMX8MQ_CLK_GPU_AHB>;
+ 			clock-names = "core", "shader", "bus", "reg";
++			#cooling-cells = <2>;
+ 			assigned-clocks = <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
+ 			                  <&clk IMX8MQ_CLK_GPU_SHADER_SRC>,
+ 			                  <&clk IMX8MQ_CLK_GPU_AXI>,
+-- 
+2.23.0.rc1
 
