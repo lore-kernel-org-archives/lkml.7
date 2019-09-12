@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F45C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7817C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D684620830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B46214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 17:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbfILR0k (ORCPT
+        id S2387516AbfILR0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 13:26:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54056 "EHLO mx1.suse.de"
+        Thu, 12 Sep 2019 13:26:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54138 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387469AbfILR0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387482AbfILR0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 13:26:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 88819B816;
-        Thu, 12 Sep 2019 17:26:33 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id E7EC2B635;
+        Thu, 12 Sep 2019 17:26:34 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -51,9 +51,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v8 3/7] powerpc/perf: consolidate read_user_stack_32
-Date:   Thu, 12 Sep 2019 19:26:05 +0200
-Message-Id: <488f195b714b57c80045a89c2625afed924d3b83.1568306311.git.msuchanek@suse.de>
+Subject: [PATCH v8 6/7] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
+Date:   Thu, 12 Sep 2019 19:26:08 +0200
+Message-Id: <d3e845d9b34c16b6306c365ef3c73de536c8e5f4.1568306311.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568306311.git.msuchanek@suse.de>
 References: <cover.1568306311.git.msuchanek@suse.de>
@@ -64,105 +64,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two almost identical copies for 32bit and 64bit.
-
-The function is used only in 32bit code which will be split out in next
-patch so consolidate to one function.
+On bigendian ppc64 it is common to have 32bit legacy binaries but much
+less so on littleendian.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-v6: new patch
-v8: move the consolidated function out of the ifdef block.
+v3: make configurable
 ---
- arch/powerpc/perf/callchain.c | 59 +++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 34 deletions(-)
+ arch/powerpc/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index c84bbd4298a0..d86bdbffda9e 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 5bab0bb6b833..b0339e892329 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -264,8 +264,9 @@ config PANIC_TIMEOUT
+ 	default 180
  
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
--{
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	pagefault_disable();
--	if (!__get_user_inatomic(*ret, ptr)) {
--		pagefault_enable();
--		return 0;
--	}
--	pagefault_enable();
--
--	return read_user_stack_slow(ptr, ret, 4);
--}
--
- static inline int valid_user_sp(unsigned long sp, int is_64)
- {
- 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-@@ -295,25 +279,9 @@ static inline int current_is_64bit(void)
- }
- 
- #else  /* CONFIG_PPC64 */
--/*
-- * On 32-bit we just access the address and let hash_page create a
-- * HPTE if necessary, so there is no need to fall back to reading
-- * the page tables.  Since this is called at interrupt level,
-- * do_page_fault() won't treat a DSI as a page fault.
-- */
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
- {
--	int rc;
--
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	pagefault_disable();
--	rc = __get_user_inatomic(*ret, ptr);
--	pagefault_enable();
--
--	return rc;
-+	return 0;
- }
- 
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-@@ -341,6 +309,29 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
- 
- #endif /* CONFIG_PPC64 */
- 
-+/*
-+ * On 32-bit we just access the address and let hash_page create a
-+ * HPTE if necessary, so there is no need to fall back to reading
-+ * the page tables.  Since this is called at interrupt level,
-+ * do_page_fault() won't treat a DSI as a page fault.
-+ */
-+static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+{
-+	int rc;
-+
-+	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-+	    ((unsigned long)ptr & 3))
-+		return -EFAULT;
-+
-+	pagefault_disable();
-+	rc = __get_user_inatomic(*ret, ptr);
-+	pagefault_enable();
-+
-+	if (IS_ENABLED(CONFIG_PPC64) && rc)
-+		return read_user_stack_slow(ptr, ret, 4);
-+	return rc;
-+}
-+
- /*
-  * Layout for non-RT signal frames
-  */
+ config COMPAT
+-	bool
+-	default y if PPC64
++	bool "Enable support for 32bit binaries"
++	depends on PPC64
++	default y if !CPU_LITTLE_ENDIAN
+ 	select COMPAT_BINFMT_ELF
+ 	select ARCH_WANT_OLD_COMPAT_IPC
+ 	select COMPAT_OLD_SIGACTION
 -- 
 2.23.0
 
