@@ -2,105 +2,96 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717A3C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63953C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9492084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ejjO79R3"
+	by mail.kernel.org (Postfix) with ESMTP id 44E852084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfILJ2x (ORCPT
+        id S1730792AbfILJ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:28:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39033 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbfILJ2w (ORCPT
+        Thu, 12 Sep 2019 05:29:19 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45398 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730434AbfILJ3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:28:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id d25so52941480iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySusEsEvIA1p7Ok5MeAC6hgYTUozA4I6kAXqI82zhqE=;
-        b=ejjO79R3dG15jay2GvSB7zkWjnzn7JGpb2WokQ8V16v5w8JmDpD1ugMmEJijAjND7j
-         Xymg+XPaHSscKaMChl399p9WZvVn+txz6OSLwbpTgQlls2BVfXXh6Swc1cAkR1QK1g/K
-         WJtGq95B0KvPHNpdCwhvk+SNR1BNJw80XxtaM=
+        Thu, 12 Sep 2019 05:29:19 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z67so23703484qkb.12;
+        Thu, 12 Sep 2019 02:29:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ySusEsEvIA1p7Ok5MeAC6hgYTUozA4I6kAXqI82zhqE=;
-        b=FWIph6AcsJn2p4QQuaHuecoHpIkt8GSJie+8r9ONOWsHLC5IFKF+Mmg+XaY5VkmLc8
-         ZGzo7LQiTC4YFJ/k4sHM3Y2QE+jRxFcYYkefC7xiYR0t4kV+jp/4SXxyXhYwq57dhd91
-         m6AP+uWX2vd087rHyWN8wI82rz0k/VEc5L0JgNPHCdBBVfb29u4BnOsEIYDdpnbN5C48
-         9F3b5qvDH0JTLak4rmg3hVDwG5QpbpRDwhAHC4QshFWJVGfOZsfScOQ4N/qsfwPbquGp
-         aVSncNbg01HFHrxephREnyKW9ktToe3QRjX7puvPjgt+CQjXJ+YZR8Xzwmt3BXv56vss
-         nwgQ==
-X-Gm-Message-State: APjAAAWBIHR4Wyqn8sLd+EtnBIQP6MR7rXD/9VQ66GqOelr7IocEOkEI
-        bJHKiSgT9f4UHg9tkzcOIlRoXOghbnmG08H913arlQ==
-X-Google-Smtp-Source: APXvYqwKtyjoNjSXdno7ZVe7FfQu1Nx0FJSMjH78DCZyjeB4BZrHt6OOPtbuFZl7IsH3X/FMzz9J645srsCQV3vf1JU=
-X-Received: by 2002:a6b:6602:: with SMTP id a2mr3022334ioc.63.1568280530746;
- Thu, 12 Sep 2019 02:28:50 -0700 (PDT)
+        bh=wtGU4iMWfZeQ/FsklpEfRM6iPwzDv+XphhtaUmBwgSA=;
+        b=conIQTsvjKBscv9fPglL4IoNMHeXhdGelKfEyP7V9Py/OHbTW5L9vi2l0Ni8MrtZUV
+         HtrIW3c0wamh53QqfI9RO3brCirVF1CL7PVohPSouQUKqIS60Q5bGPR1iB+4g+qgT+hN
+         HsIDARICv8BcBTWQUq4YJ1zXpz0kyHL7OdfsNLHWqIksyMyPmB19PvfO6FZ+2CYEslAW
+         XiSsLeJcZlU3Q0PjsPL5a4IWg1UXrWEHVi3tj4q95Ndp+pH6GpHBumlpNNQCH7i0BBYV
+         MBCO9pTo4xyckqNBvwmsazMqcJ6CLTphCvwfRzHTJhNbBBnObWsnYvFPiuWB4SPyvlUq
+         HC8w==
+X-Gm-Message-State: APjAAAXj4nAr6INGJ8T7rhe6Q5nFDSO/1yr9vTLs+exJUy9ekP/qF4uS
+        GiRpQglJ3eHUYmu1rhsaejh0YgNDREd9/T9CJAk=
+X-Google-Smtp-Source: APXvYqycQWX7fEy2jA5D+LxaO4u4opsppoZ4/cfOD3zMYVxe++YCYyGMd3QpWn3hGnNZZJlZplYFA331lIror8ITmVA=
+X-Received: by 2002:a05:620a:145a:: with SMTP id i26mr40226931qkl.352.1568280556796;
+ Thu, 12 Sep 2019 02:29:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1568265511-1622-1-git-send-email-dingxiang@cmss.chinamobile.com> <CAOQ4uxjNK9BQxmNqbx8Hix0yd5op-i17BiqvOmmEmr=3bHtm_A@mail.gmail.com>
-In-Reply-To: <CAOQ4uxjNK9BQxmNqbx8Hix0yd5op-i17BiqvOmmEmr=3bHtm_A@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 12 Sep 2019 11:28:39 +0200
-Message-ID: <CAJfpeguVGk7Fpusx83YDstBgNtFZbVwP61aDin6kvA1f5CKCcA@mail.gmail.com>
-Subject: Re: [PATCH V2] ovl: Fix dereferencing possible ERR_PTR()
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <cover.1568239378.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1568239378.git.amit.kucheria@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Sep 2019 11:29:00 +0200
+Message-ID: <CAK8P3a2zGJx7SCA4LUHPGTybN8GU16Ah3H0FbaOEwR3H7uGCnA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Cleanup arm64 driver dependencies
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        arm-soc <arm@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 8:02 AM Amir Goldstein <amir73il@gmail.com> wrote:
+On Thu, Sep 12, 2019 at 12:18 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
 >
-> On Thu, Sep 12, 2019 at 8:24 AM Ding Xiang
-> <dingxiang@cmss.chinamobile.com> wrote:
-> >
-> > if ovl_encode_real_fh() fails, no memory was allocated
-> > and the error in the error-valued pointer should be returned.
-> >
-> > V1->V2: fix SHA1 length problem
-> >
-> > Fixes: 9b6faee07470 ("ovl: check ERR_PTR() return value from ovl_encode_fh()")
-> > Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-> > ---
-> >  fs/overlayfs/export.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
-> > index cb8ec1f..50ade19 100644
-> > --- a/fs/overlayfs/export.c
-> > +++ b/fs/overlayfs/export.c
-> > @@ -229,7 +229,7 @@ static int ovl_d_to_fh(struct dentry *dentry, char *buf, int buflen)
-> >                                 ovl_dentry_upper(dentry), !enc_lower);
-> >         err = PTR_ERR(fh);
-> >         if (IS_ERR(fh))
-> > -               goto fail;
-> > +               return err;
-> >
+> I was using initcall_debugging on a QCOM platform and ran across a bunch of
+> driver initcalls that are enabled even if their SoC support is disabled.
 >
-> Please fix the code in warning message instead of skipping the warning.
+> Here are some fixups for a subset of them.
 
-Not sure that makes sense.   ovl_encode_real_fh() will either return
--EIO in case of an internal error with WARN_ON() or it will return
--ENOMEM on memory allocation failure, which doesn't warrant a debug
-message.
+The idea seems reasonable, disabling a platform may just turn off
+all the drivers that are not useful elsewhere, but there are mistakes
+in a lot of your changes, so I'm certainly not applying these for 5.4.
 
-Thanks,
-Miklos
+Generally speaking, the way that works best is
+
+config SUBSYS_DRIVER_FOO
+       tristate "SUBSYS support for FOO platform"
+       depends on ARCH_FOO || COMPILE_TEST
+       depends on SUBSYS
+       default "m" if ARCH_FOO
+
+This means it's enabled as a loadable module by default (use
+default "y" instead where necessary) as long as the platform
+is enabled, but an x86 allmodconfig build also includes it
+because of COMPILE_TEST, while any configuration without
+ARCH_FOO that is not compile-testing cannot enable it.
+
+       Arnd
