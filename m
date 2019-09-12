@@ -2,256 +2,145 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E15C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE881C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BA320CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C8A2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ia+4efYa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j0a8kymM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbfILMzx (ORCPT
+        id S1731838AbfILM4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:55:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45167 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731772AbfILMzx (ORCPT
+        Thu, 12 Sep 2019 08:56:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34711 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731773AbfILM4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:55:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 41so22145451oti.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:55:52 -0700 (PDT)
+        Thu, 12 Sep 2019 08:56:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a11so18580069wrx.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SA0xfHEl73cVGX1MjM/Dabo3xEg0AEW/0qWop8uz9YA=;
-        b=ia+4efYainSNrLpJUrjMkW2nhrtb1w38p7/2I8Z7ekhZ9xbj34LdSP2wbQGECbPMM5
-         D0AkTeRCyu7XhvDmCIH6QD7IJeTdLcXnatUH9H/V+kVJtYEHRKia2M+lfabN6httRtLR
-         85oh+qLSjBiLok65jR8Lz60s3fPNzX0/PFmbJe0MwKdHPvqdqPjbX4W58k7WQ/OrlrA+
-         kFdq3ZMfIwxaEvezTusWsefwBQDBMp+uspllUusUHOQS4n9dDz8S2mgTzCFSysZQmxne
-         JY/erJdWEeUxArIUyMDiss1WmHUOj0l7PXGo/scJW+nkcFRVGW3cwBXWHT+y9K05Sew6
-         DPSg==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LIiygEvzutjtW1si6WKIgeNvg7MT4ajN4iVo80ldc1Q=;
+        b=j0a8kymMb2fHobAfK33p+ACzNNo6EG5ulWX2OU1LGrrjG3bOvoCUXt2qN+Tpgj08Mx
+         GatBIOyy9GraevzMeayZkHEe4v8ct/NFDC2MumTzT4/AKvKVirQYiPw/LlicxdJ0o5V0
+         xBQ1a3KipMJTnZF0GFaetvGjamkaJru/BpcOij3qOmXIO9S7RpTMCJ2Z6F/glMfR+RRQ
+         KMNP8Oh4v2kmUVd4wgPw2i9nRZU3ffdPJbgYhosY8QjrJc6ptSrjJUSQxC5uOIfb1er6
+         NEB3V5OWb1JNBMf6eMUiBLGhKOEaAVxsEXk0gFZ/VOFk1wR09rfu0DOPZOesFa6p9Ioa
+         BBYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SA0xfHEl73cVGX1MjM/Dabo3xEg0AEW/0qWop8uz9YA=;
-        b=KGGTO5s2Am3hv9H8wWztjQki2NNJBz1UqMjEO1xeaCt930mVLkPbD5zGKPCTxvxFqi
-         /iFN348RrVgFS2L74bRYORwasSCDJoMXySm5ViacMSgR6GEwXQ5kuBWOiqzJFUv0mINs
-         t7TWynATr2fYYHQbd/Iam2qKvHOnau2PIu100fgA+jOLiaZL+WC6+ZJw+60MntTDSJp9
-         zC33bgSPGf7+B0cH3DvfZEw69nIW/pX2x+fmt8uE/VVSd/zsqHHZlf3/Q9g0bwhl+x9U
-         cAUw3d3TkelGmgQQlhUTvkqfKIYq1kSUH0ZroLH1S6V5osExB3EJVlvqRFV5mh4fOZnL
-         2tnQ==
-X-Gm-Message-State: APjAAAUAVi3NO3GhJgV3PAypFWyMhuOJAfWUoeRoVWw8niosJ11APdfq
-        rfGgJJ6PuTQ8L6e6GLm6bDOphn7fBUZNfTTw9tbhfA==
-X-Google-Smtp-Source: APXvYqw621UBw4+uvQuQwVPgXEvBYaeM/FknFgeEhHnSJsaXx1aWbvzcH5iQylhNeKeowodBUDo39MW5LWQIfUdGPJM=
-X-Received: by 2002:a9d:7e93:: with SMTP id m19mr8167394otp.283.1568292951564;
- Thu, 12 Sep 2019 05:55:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LIiygEvzutjtW1si6WKIgeNvg7MT4ajN4iVo80ldc1Q=;
+        b=Z2uqhEEGnTMWE53tesCauE9VS5NNofE6z2C/qOnJ7ZSEAs5p2n9bGp/IZgtaGkf6jl
+         +JSoZ4ga2ilotF0og+P+Dch6MPdl14s3ssnx0JH1rOdLnuhhzIBU/sjZP4EhhEfGT4M7
+         V/qzK0eKJS/0yzwFppnN39WF5/bTDUMz8PefhAsiwUGIalu1yrfadhZtH/D0ynE38Djs
+         lOXp2KdZgq7b2glvdYZQ0epytSiGQcwiVlerm0mk2U/iRcpf2zWxcox/+ZpWS963tcUv
+         Uhk7jILSt2lhp3SUMAlIZ1jFCGQ3lOXzB/Q7mAkbR3ByTmJSHw1mjOlkAlzn/w/JJnQg
+         r9ZA==
+X-Gm-Message-State: APjAAAVpKAdxY9o3RyzQ5eLduKNIorubMsTTnzB56qE1KkjYdpRrIjza
+        AJQBKTvQqtMrAP6o+UvlR0GiHg==
+X-Google-Smtp-Source: APXvYqziy1sdunIFpOFHmyt6HFWzb5kxEZ14YKp1WYNvq/GQE/xYTLGtNI7rvxqrSsx6692zmK8YJg==
+X-Received: by 2002:a5d:574c:: with SMTP id q12mr35229204wrw.69.1568292970350;
+        Thu, 12 Sep 2019 05:56:10 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id r16sm28738115wrc.81.2019.09.12.05.56.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 05:56:09 -0700 (PDT)
+Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
+To:     Pradeep P V K <ppvk@codeaurora.org>, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     asutoshd@codeaurora.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
+Date:   Thu, 12 Sep 2019 15:56:08 +0300
 MIME-Version: 1.0
-References: <20190912083649.4688-1-chunguo.feng@amlogic.com>
- <CAHUa44EEnBp5iaxWPzYyJyN0yuYFvmB44khtbz_Pi5F4P1_ufg@mail.gmail.com>
- <2019091218485411709620@amlogic.com> <CAHUa44GrtV6X5nct69cYD=Py2iOmhbTvzv-b2to18tPkpzKE+A@mail.gmail.com>
- <2019091219193038140730@amlogic.com>
-In-Reply-To: <2019091219193038140730@amlogic.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Thu, 12 Sep 2019 14:55:40 +0200
-Message-ID: <CAHUa44FQMW_pKduCwSWb9FrUh0qpvHna5j7R0RAbuAEZf95Mrw@mail.gmail.com>
-Subject: Re: Re: [PATCH] tee: fix kasan check slab-out-of-bounds error.
-To:     "chunguo.feng@amlogic.com" <chunguo.feng@amlogic.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gary,
+Hi Pradeep,
 
-On Thu, Sep 12, 2019 at 1:18 PM chunguo.feng@amlogic.com
-<chunguo.feng@amlogic.com> wrote:
->
-> Hi  Jens,
-> Thanks for your reminder
->
-> This issue can be reproduced easily. I have exectued tee_preload_fw, it was occured.  If not , it was not reporduced.
->
-> Other, the place of slab-out-of-bounds was unchangeably when offs was set 0.
+Thanks for the patch!
 
-I'm sorry, I can't make sense of your patch. If it fixes the problem
-for you it must be by pure chance. I'm pretty it will break a lot of
-other cases.
+On 9/6/19 15:47, Pradeep P V K wrote:
+> Vote for the MSM bus bandwidth required by SDHC driver
+> based on the clock frequency and bus width of the card.
+> Otherwise,the system clocks may run at minimum clock speed
+> and thus affecting the performance.
+> 
+> This change is based on Georgi Djakov [RFC]
+> (https://lkml.org/lkml/2018/10/11/499)
 
-Cheers,
-Jens
+I am just wondering whether do we really need to predefine the bandwidth values
+in DT? Can't we use the computations from the above patch or is there any
+problem with that approach?
 
->
-> Thanks,
->
-> BRs,
-> Gary
->
->
-> From: Jens Wiklander
-> Date: 2019-09-12 19:01
-> To: chunguo.feng@amlogic.com
-> CC: linux-kernel@vger.kernel.org
-> Subject: Re: Re: [PATCH] tee: fix kasan check slab-out-of-bounds error.
-> On Thu, Sep 12, 2019 at 12:48 PM chunguo.feng@amlogic.com
-> <chunguo.feng@amlogic.com> wrote:
-> >
-> > Hi Jens,
-> >
-> > Thanks for your comment.
-> >
-> > Refer to the current solution,   PC point was from optee_handle_rpc->tee_shm_get_pa.
-> >
-> > If offs was set 0,  pa was located other memory again, could you please kindly offer the better way?
->
-> The entire range one piece of shared memory should be usable, so if
-> kasan is upset then I guess that the shm has been corrupted in some
-> way. I'm a bit puzzled because I can't see any access using the
-> calculated physical address around this. Perhaps the problem occurred
-> earlier and was just noticed now?
->
-> >
-> > In my options, offs should be set other location, other was offs of value set other limitiation?
->
-> I'm sorry I don't understand. Offs is normally 0 to be able to access
-> the shared memory from the start of the range.
->
-> Cheers,
-> Jens
->
-> >
-> > Thanks,
-> >
-> > BRs,
-> > Gary.
-> >
-> >
-> > From: Jens Wiklander
-> > Date: 2019-09-12 18:04
-> > To: chunguo feng
-> > CC: Linux Kernel Mailing List
-> > Subject: Re: [PATCH] tee: fix kasan check slab-out-of-bounds error.
-> > Hi Chunguo,
-> >
-> > On Thu, Sep 12, 2019 at 10:36 AM chunguo feng <chunguo.feng@amlogic.com> wrote:
-> > >
-> > > From: fengchunguo <chunguo.feng@amlogic.com>
-> > >
-> > > Physical address should be set one shifting, but not cover shm struct data.
-> > > If offs was set 0, it cause KASAN error.
-> > >
-> > > Log:
-> > > [22.345259@0] BUG: KASAN: slab-out-of-bounds in optee_handle_rpc+0x644/0x858
-> > > [22.352221@0] Read of size 4 at addr ffffffc0445485dc by task tee_preload_fw/2505
-> > > [22.361280@0] CPU: 0 PID: 2505 Comm: tee_preload_fw Tainted: G    B   W  O
-> > >                 4.19.53-01721-g11b1db7-dirty #417
-> > > [22.376617@0] Call trace:
-> > > [22.379220@0]  dump_backtrace+0x0/0x1b4
-> > > [22.383003@0]  show_stack+0x20/0x28
-> > > [22.386459@0]  dump_stack+0x8c/0xb4
-> > > [22.389909@0]  print_address_description+0x10c/0x274
-> > > [22.394819@0]  kasan_report+0x224/0x370
-> > > [22.398616@0]  __asan_load4+0x6c/0x84
-> > > [22.402238@0]  optee_handle_rpc+0x644/0x858
-> > > [22.406375@0]  optee_do_call_with_arg+0x148/0x160
-> > > [22.411033@0]  optee_open_session+0x1b0/0x340
-> > > [22.415352@0]  tee_ioctl_open_session+0x28c/0x784
-> > > [22.420006@0]  tee_ioctl+0x210/0x800
-> > > [22.423546@0]  do_vfs_ioctl+0x104/0xe7c
-> > > [22.427337@0]  __arm64_sys_ioctl+0xac/0xc0
-> > > [22.431393@0]  invoke_syscall+0xd4/0xf4
-> > > [22.435187@0]  el0_svc_common+0x88/0x128
-> > > [22.439066@0]  el0_svc_handler+0x40/0x84
-> > > [22.442947@0]  el0_svc+0x8/0xc
-> > > [22.445962@0]
-> > > [22.447602@0] Allocated by task 2508:
-> > > [22.451231@0]  kasan_kmalloc.part.5+0x50/0x124
-> > > [22.455627@0]  kasan_kmalloc+0xc4/0xe4
-> > > [22.459334@0]  kmem_cache_alloc_trace+0x154/0x2bc
-> > > [22.463994@0]  tee_shm_alloc+0xa0/0x340
-> > > [22.467788@0]  tee_ioctl+0x39c/0x800
-> > > [22.471324@0]  do_vfs_ioctl+0x104/0xe7c
-> > > [22.475119@0]  __arm64_sys_ioctl+0xac/0xc0
-> > > [22.479172@0]  invoke_syscall+0xd4/0xf4
-> > > [22.482967@0]  el0_svc_common+0x88/0x128
-> > > [22.486849@0]  el0_svc_handler+0x40/0x84
-> > > [22.490728@0]  el0_svc+0x8/0xc
-> > > [22.493743@0]
-> > > [22.495384@0] Freed by task 0:
-> > > [22.498408@0]  __kasan_slab_free+0x11c/0x21c
-> > > [22.502631@0]  kasan_slab_free+0x10/0x18
-> > > [22.506511@0]  kfree+0x8c/0x284
-> > > [22.509625@0]  selinux_cred_free+0x48/0x64
-> > > [22.513672@0]  security_cred_free+0x48/0x64
-> > > [22.517817@0]  put_cred_rcu+0x3c/0x108
-> > > [22.521523@0]  rcu_process_callbacks+0x308/0x7ac
-> > > [22.526092@0]  __do_softirq+0x1c8/0x5c8
-> > > [22.529882@0]
-> > > [22.531527@0] The buggy address belongs to the object at ffffffc044548580
-> > > [22.531527@0]  which belongs to the cache kmalloc-128 of size 128
-> > > [22.544291@0] The buggy address is located 92 bytes inside of
-> > > [22.544291@0]  128-byte region [ffffffc044548580, ffffffc044548600)
-> > > [22.556190@0] The buggy address belongs to the page:
-> > > [22.561110@0] page:ffffffbf01115200 count:1 mapcount:0 mapping:ffffffc04540c400 index:0x0 compound_mapcount: 0
-> > > [22.571029@0] flags: 0x20094e4b00010200(slab|head)
-> > > [22.575780@0] raw: 20094e4b00010200 ffffffbf01113408 ffffffbf01119508 ffffffc04540c400
-> > > [22.583622@0] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
-> > > [22.591466@0] page dumped because: kasan: bad access detected
-> > > [22.597157@0]
-> > > [22.598797@0] Memory state around the buggy address:
-> > > [22.603719@0]  ffffffc044548480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > > [22.611048@0]  ffffffc044548500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > > [22.618379@0] >ffffffc044548580: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
-> > > [22.625707@0]                                                     ^
-> > > [22.631920@0]  ffffffc044548600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > > [22.639251@0]  ffffffc044548680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > > [22.646580@0] ==================================================================
-> > >
-> > > Test:
-> > > 1. Set offs range,then test tee_preload successfully.
-> > > / # tee_preload_fw
-> > > use default tee_preload_fw pathfw_path=/lib/firmware/video/video_ucode.bin
-> > > tee preload video fw ok
-> > > / # echo $?
-> > > 0
-> > >
-> > > Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
-> > > ---
-> > >  drivers/tee/tee_shm.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> > > index 0b9ab1d0dd45..585361cd8dd9 100644
-> > > --- a/drivers/tee/tee_shm.c
-> > > +++ b/drivers/tee/tee_shm.c
-> > > @@ -461,7 +461,7 @@ int tee_shm_get_pa(struct tee_shm *shm, size_t offs, phys_addr_t *pa)
-> > >         if (offs >= shm->size)
-> > >                 return -EINVAL;
-> > >         if (pa)
-> > > -               *pa = shm->paddr + offs;
-> > > +               *pa = shm->paddr + shm->size;
-> >
-> > This can't be right, "offs" is used to calculate the physical address
-> > from the start of a shared memory range.
-> > With this you're ignoring "offs" and always return past the end of the
-> > region. I don't see how that can help.
-> >
-> > Cheers,
-> > Jens
-> >
-> > >         return 0;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(tee_shm_get_pa);
-> > > --
-> > > 2.22.0
-> > >
-> >
->
+Thanks,
+Georgi
