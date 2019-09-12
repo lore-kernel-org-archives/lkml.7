@@ -2,93 +2,151 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6017C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49C3C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28A62081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3F720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:47:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j62+pDUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfILTqj (ORCPT
+        id S1726971AbfILTr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 15:46:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725972AbfILTqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 15:46:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73597AFB2;
-        Thu, 12 Sep 2019 19:46:36 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/perf: remove current_is_64bit()
-Date:   Thu, 12 Sep 2019 21:46:33 +0200
-Message-Id: <20190912194633.12045-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
-References: <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
+        Thu, 12 Sep 2019 15:47:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55356 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfILTr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 15:47:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8CJlOfX074523;
+        Thu, 12 Sep 2019 14:47:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568317644;
+        bh=VZv6M3mg7dY3vZcVeFZf11mw+86t0hc40BSEvN1ocIM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=j62+pDUoVzz742J9qmVwbyPhOu+yrXeBDW0Ewlbohg0rV+/brUQNCABJigxDG6/w0
+         0dyI9CO3JCahnKq8eIp+jfq3cUYs1oUegEVuasyw/vsW/KZNWPf+RyAgpuH1csR7Rd
+         pfvfVe78Ini/CpmbbpAZiFaXZYtECA0+jppDhZMo=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8CJlO05128908
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Sep 2019 14:47:24 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
+ Sep 2019 14:47:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 12 Sep 2019 14:47:23 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8CJlO7P087354;
+        Thu, 12 Sep 2019 14:47:24 -0500
+Subject: Re: [PATCH v2] leds: lm3532: Fix optional led-max-microamp prop error
+ handling
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190911182730.22409-1-dmurphy@ti.com>
+ <fe7c340b-65b9-f3eb-eb7a-f359f258ccca@gmail.com>
+ <412da003-353d-895a-fa45-8e640b814734@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6f17cfe4-299a-53d3-b6f4-ab5f3fe7b291@ti.com>
+Date:   Thu, 12 Sep 2019 14:47:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <412da003-353d-895a-fa45-8e640b814734@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
-current_is_64bit() is quivalent to !is_32bit_task().
-Remove the redundant function.
+Jacek
 
-Link: https://github.com/linuxppc/issues/issues/275
-Link: https://lkml.org/lkml/2019/9/12/540
+On 9/12/19 2:12 PM, Jacek Anaszewski wrote:
+> On 9/12/19 8:32 PM, Jacek Anaszewski wrote:> Hi Dan,
+>> Thank you for the update.
+>>
+>> On 9/11/19 8:27 PM, Dan Murphy wrote:
+>>> Fix the error handling for the led-max-microamp property.
+>>> Need to check if the property is present and then if it is
+>>> retrieve the setting and its max boundary
+>>>
+>>> Reported-by: Pavel Machek <pavel@ucw.cz>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>
+>>> v2 - Changed full scale current check to use min function
+>>>
+>>>   drivers/leds/leds-lm3532.c | 14 +++++++++-----
+>>>   1 file changed, 9 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+>>> index 62ace6698d25..a1742dc1f6fa 100644
+>>> --- a/drivers/leds/leds-lm3532.c
+>>> +++ b/drivers/leds/leds-lm3532.c
+>>> @@ -601,11 +601,15 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>>>   			goto child_out;
+>>>   		}
+>>>   
+>>> -		ret = fwnode_property_read_u32(child, "led-max-microamp",
+>>> -					       &led->full_scale_current);
+>>> -
+>>> -		if (led->full_scale_current > LM3532_FS_CURR_MAX)
+>>> -			led->full_scale_current = LM3532_FS_CURR_MAX;
+>>> +		if (fwnode_property_present(child, "led-max-microamp")) {
+>>> +			if (fwnode_property_read_u32(child, "led-max-microamp",
+>>> +						     &led->full_scale_current))
+>>> +				dev_err(&priv->client->dev,
+>>> +					"Failed getting led-max-microamp\n");
+>>> +			else
+>>> +				min(led->full_scale_current,
+>>> +				    LM3532_FS_CURR_MAX);
+> I didn't previously notice lack of assignment of min() return value.
+>
+> I've amended that and while at it improved a bit this construction to
+> avoid some indentations and line breaks:
+>
+> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+> index 62ace6698d25..0507c6575c08 100644
+> --- a/drivers/leds/leds-lm3532.c
+> +++ b/drivers/leds/leds-lm3532.c
+> @@ -601,11 +601,14 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+>                  goto child_out;
+>          }
+>
+> -       ret = fwnode_property_read_u32(child, "led-max-microamp",
+> -                                      &led->full_scale_current);
+> -
+> -       if (led->full_scale_current > LM3532_FS_CURR_MAX)
+> -               led->full_scale_current = LM3532_FS_CURR_MAX;
+> +       if (fwnode_property_present(child, "led-max-microamp") &&
+> +           fwnode_property_read_u32(child, "led-max-microamp",
+> +                                    &led->full_scale_current))
+> +               dev_err(&priv->client->dev,
+> +                       "Failed getting led-max-microamp\n");
+> +       else
+> +               led->full_scale_current = min(led->full_scale_current,
+> +                                             LM3532_FS_CURR_MAX);
+>
+>          if (led->mode == LM3532_BL_MODE_ALS) {
+>                  led->mode = LM3532_ALS_CTRL;
+>
+>
+> Please let me know in case of any doubts.
 
-Fixes: linuxppc#275
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- arch/powerpc/perf/callchain.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+This looks fine.  It always passed for me because I never set the FSC 
+above max
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index 8f30f1b47c78..dd5051015008 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -100,22 +100,10 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 	}
- }
- 
--static inline int current_is_64bit(void)
--{
--	if (!IS_ENABLED(CONFIG_COMPAT))
--		return IS_ENABLED(CONFIG_PPC64);
--	/*
--	 * We can't use test_thread_flag() here because we may be on an
--	 * interrupt stack, and the thread flags don't get copied over
--	 * from the thread_info on the main stack to the interrupt stack.
--	 */
--	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
--}
--
- void
- perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
--	if (current_is_64bit())
-+	if (!is_32bit_task())
- 		perf_callchain_user_64(entry, regs);
- 	else
- 		perf_callchain_user_32(entry, regs);
--- 
-2.23.0
+Dan
 
