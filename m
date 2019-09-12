@@ -2,87 +2,82 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29855C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E0C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E891620830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568322432;
-	bh=Lgis+9hFoiXbbOOLmZpgaKI9VUofhTFxMgS0J7r9uVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lE1jzg/Br07XsYZI5xgA++EgQolcV5wzrqqh+xibMx4hq2qgNTtwzyjlI5nz3ZAxj
-	 XgkFo4jCaLtiZ7jlepQ7hugM01brV9oqkzMbmAPRIo2eOleurcg4P0d72A3rIY+TDU
-	 ANNkorTN6EeC0wAiYbkys/qzPh8Jf35I5gICVZl0=
+	by mail.kernel.org (Postfix) with ESMTP id F1C6220830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfILVHL (ORCPT
+        id S1728245AbfILVIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 17:07:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41151 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbfILVHL (ORCPT
+        Thu, 12 Sep 2019 17:08:21 -0400
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:42087 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728210AbfILVIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 17:07:11 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j10so31309002qtp.8;
-        Thu, 12 Sep 2019 14:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f7nk601YqWAtG+BppI4tPpvttoWT+EaLudF5cFheh38=;
-        b=FFrASHQ44NekZUkiYiULB1yPlB5ZHs24EM0JoHbNeivI71UUrRKiW7ppZWKGBNPied
-         bzaKmz3jiSogA89RTsOOM9yLSPbJdX53Q1ggBRuLI8J4vtgOH27Qn8kLNr3Su6q0qaHa
-         /Gg/NSSaXimEYmKsUqxvPxqilpVF/IF22Fn7CHrzY1gv8Fl/H0yEciDTs6kAAQkOfoxb
-         jn8svAHdBHjlfYE2+CRHkdsk7YIhf3XxLBNXtbCw/o5aNFPbKFaAx5CClXf1bF1FbFKO
-         bbvAYhE2Yo9NQ73feXQDui0ZKhOtbOKAWhakkZem//Q2Qr2bmCKCtTp/uS7rOaBdYmUd
-         NPHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f7nk601YqWAtG+BppI4tPpvttoWT+EaLudF5cFheh38=;
-        b=f61hvR97lUsams3h1F6xCmopO6jCWgCaFHxlzN2qvpU4a6QM84mBE/NncxFgbzWgWi
-         WlbmLNhIrTJHwyz0dGvkNc3yPXgljgRMI+aKLnpQ+iPzswyZZ3iruv/rchX25ItEKiKf
-         kNAXrvEMv34jPGMrcA/spnvVBWEJbveo6ln0iu8VM+J23OdImtoxqc0LLRKw+8ehCWkx
-         hTdELUxyk6shNTuSvjeEXqu3niQc8AlB/ddfjqKzrLCMEkfnCxgY6Kxl163ZstuQA3gL
-         Wcz4nnKYwDpfVw6UJejRW2RbuBv7zjcTu6FeamuzQwp2igTi1OX0k/qM8srXgmMo60FC
-         /C8A==
-X-Gm-Message-State: APjAAAVyE2n5huPov1bJW9T0BTBSJg4srlJ37sso1oevIhYWNgqcaf1n
-        GDMHpxoQNosfDaIhXt87NiQ=
-X-Google-Smtp-Source: APXvYqzqDBM8p56umtip5kV+4PDLCzJ17NXK8g2F1/hqe2gU67FhacZkiwCPsMnhQXSzwgnqnNIyzg==
-X-Received: by 2002:ac8:700d:: with SMTP id x13mr20754210qtm.25.1568322429671;
-        Thu, 12 Sep 2019 14:07:09 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::12af])
-        by smtp.gmail.com with ESMTPSA id 194sm1352297qkm.62.2019.09.12.14.07.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Sep 2019 14:07:08 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 14:07:05 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Mark Crossen <mcrossen@fb.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] cgroup: freezer: fix frozen state inheritance
-Message-ID: <20190912210705.GA3084169@devbig004.ftw2.facebook.com>
-References: <20190912175645.2841713-1-guro@fb.com>
- <20190912175645.2841713-2-guro@fb.com>
+        Thu, 12 Sep 2019 17:08:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 0F77D182CED5B;
+        Thu, 12 Sep 2019 21:08:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: prose06_4875ac028f41a
+X-Filterd-Recvd-Size: 1878
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 12 Sep 2019 21:08:17 +0000 (UTC)
+Message-ID: <4df0a07ec8f1391acfa987ecef184a50e7831000.camel@perches.com>
+Subject: Re: [PATCH 00/13] nvdimm: Use more common kernel coding style
+From:   Joe Perches <joe@perches.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Thu, 12 Sep 2019 14:08:16 -0700
+In-Reply-To: <CANiq72kTsf=0rEufDMo7BzMNv1dqc5=ws7fSd=H_e=cpHR24Kg@mail.gmail.com>
+References: <cover.1568256705.git.joe@perches.com>
+         <x498sqtvclx.fsf@segfault.boston.devel.redhat.com>
+         <CANiq72kTsf=0rEufDMo7BzMNv1dqc5=ws7fSd=H_e=cpHR24Kg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912175645.2841713-2-guro@fb.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied 1-2 to cgroup/for-5.3-fixes.
+On Thu, 2019-09-12 at 16:21 +0200, Miguel Ojeda wrote:
 
-Thanks.
+> As soon as you get accustomed to have formatting done and enforced
+> automatically, it is great. Other major projects have done so for
+> quite a while now.
 
--- 
-tejun
+Please name the major projects and then point to their
+.clang-format equivalents.
+
+Also note the size/scope/complexity of the major projects.
+
+thanks.
+
+> If doesn't think it is good enough, please let us know and, if it is
+> close enough, we can look at going for a newer LLVM to match the style
+> a bit more.
+
+I used the latest one, and quite a bit of the conversion
+was unpleasant to read.
+
+>  Also note that one can disable formatting for some
+> sections of code if really needed.
+
+Marking sections _no_auto_format_ isn't really a
+good solution is it?
+.
+
+
