@@ -2,87 +2,113 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A576C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FF0C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFAF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:30:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbtWGxCq"
+	by mail.kernel.org (Postfix) with ESMTP id 0276E20830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568280761;
+	bh=NCCGHqcUsoAmYmJAE8U3jvNgVr+TTfXH7LprAZ8aZlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L/XmY4Wr+nU50/gvCo0U4VBXrBBotr2fWSVkyJrH7NjjSvYpAe3JJjgJdMjEjkS11
+	 MXAkjxWC+etA+/TlB+Kyy1FZuVK19gdzBLzyndSSagX8oyxjVQ7l3MXKHzBTKfDFAD
+	 dHygBkHXMVYORhaZzL8ABhTPcAY9KflxH7jM/ZnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfILJa2 (ORCPT
+        id S1730665AbfILJck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:30:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44927 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730509AbfILJa1 (ORCPT
+        Thu, 12 Sep 2019 05:32:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59570 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730218AbfILJcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:30:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q11so3820005lfc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wY56gDc8OIUpS5XMKHyPBmpKIt1MVxFJU2VGVM97FlQ=;
-        b=JbtWGxCqQ3ESw7df2bOtubw1S8fdOq7zYqwxRvBkho2cKxOyGTDF1igln1v6Ql6SVc
-         HO9Ms65nPMNbxPRMzflMFWoq6RoDrTJ11kO8Yv5fao41iM/O+rxdpuR+TxRE2cjyPJ5Q
-         eXTQpLfaqo+CoakN6SFBN2YOqtcr9MSMluBXkFJI1GVY++1ff2IKm5fcSUxhUTM/Ag6i
-         1psrMqwkE4cUM3oChkmoPFg+xAtg0LJBjJKblo3b0QSB5pYt6KjSFiU8SzntHy/T0U3n
-         DnuJ+bB/FXfIwfbyyBqSjFL7Ga23Q6Y+3L6b/Ec7/AB2d8oZ2iURfA+YUdj9aKU/wNIl
-         /h3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wY56gDc8OIUpS5XMKHyPBmpKIt1MVxFJU2VGVM97FlQ=;
-        b=mqbgK76Xv5nFAbRqB7SDP8xgtv3qhLa8uUeBsET+ou7AXQvP/82i9/00/a9t4ckcDo
-         7+4le6am3BDymKxU3ugwDwq8qgPbokU+mjlpRwbbtE1XBYctwe8x3TjWxCjThM6f8NyP
-         mYe03SjYAFAowm1/sgjhsq4OEl9t5wrkuTleOnVh6A5TwXPLqSuzNnYJEJSc47Ev/g+W
-         rcM93PQ5tC52EeyEI0IKK778fSDBTEo4Iyvpn2hK6RiMg/qB86qDVVKaloo7uG8LcfBu
-         ngkWWfWyq3ApGyMtI2VOIm5uLdkB3lDgBLKx6hYnOLdpVTo3Bx7aJmFcMKcXjJanoRLL
-         24EA==
-X-Gm-Message-State: APjAAAWy32/hTE4xwZBaZgpKkW88LhrquEZEegokrJTcod1NLSPwCnxh
-        +D5rG6ATLM+IbLCuKHPJ56owBdJ1BXo0B/dJHBhDjg==
-X-Google-Smtp-Source: APXvYqyiao+eMBZfrh68YYjWcqPQZOfUp4Hfl+/y/Izw4/P7jzu2nzrjN/b/XPDf/ZvPVJFDD003WZ/LrClL6iRUdRQ=
-X-Received: by 2002:a19:48c3:: with SMTP id v186mr27219187lfa.141.1568280624379;
- Thu, 12 Sep 2019 02:30:24 -0700 (PDT)
+        Thu, 12 Sep 2019 05:32:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3mFlkL6LvJaHhmldjRcA8fde/UOpm7KObuOHbWtlrTc=; b=bwBZKqN5kk1WMU5x6Av29Vme7
+        4JM6sEhhrGVE5L/2MjiW4Q2LSCxBNhNzfX03LsqYWAuukw9LfptenmjZxSk1lrfy2txvcOtldCall
+        OXN22cYVw3wKOPzL+sjnK6oQ5FBrI+av85lScnLBbjnnByrmC0nRfD6dsYbNHbpU7DWBo=;
+Received: from 195-23-252-136.net.novis.pt ([195.23.252.136] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1i8LSp-0006Qq-L8; Thu, 12 Sep 2019 09:32:31 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id EF65DD00AB0; Thu, 12 Sep 2019 10:32:30 +0100 (BST)
+Date:   Thu, 12 Sep 2019 10:32:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arm@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 4/4] arm64: Kconfig: Fix EXYNOS driver dependencies
+Message-ID: <20190912093230.GG2036@sirena.org.uk>
+References: <cover.1568239378.git.amit.kucheria@linaro.org>
+ <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <20190911075215.78047-1-dmitry.torokhov@gmail.com> <20190911075215.78047-2-dmitry.torokhov@gmail.com>
-In-Reply-To: <20190911075215.78047-2-dmitry.torokhov@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 10:30:12 +0100
-Message-ID: <CACRpkdbr=dBrr-m6uKhzKWbnz-OEB4uJE1nSsRd=ukztt-PFwQ@mail.gmail.com>
-Subject: Re: [PATCH 01/11] gpiolib: of: add a fallback for wlf,reset GPIO name
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aPOcx+xoD6gZZHnz"
+Content-Disposition: inline
+In-Reply-To: <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 8:52 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
 
-> The old Arizona binding did not use -gpio or -gpios suffix, so
-> devm_gpiod_get() does not work for it. As it is the one of a few users
-> of devm_gpiod_get_from_of_node() API that I want to remove, I'd rather
-> have a small quirk in the gpiolib OF handler, and switch Arizona
-> driver to devm_gpiod_get().
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+--aPOcx+xoD6gZZHnz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Patch applied, good to have this in and it is completely in line
-with my idea to handle all these quirks inside the gpiolib-of.
+On Thu, Sep 12, 2019 at 03:48:48AM +0530, Amit Kucheria wrote:
 
-Yours,
-Linus Walleij
+> Push various EXYNOS drivers behind ARCH_EXYNOS dependency so that it
+> doesn't get enabled by default on other platforms.
+
+>  config REGULATOR_S2MPS11
+>  	tristate "Samsung S2MPS11/13/14/15/S2MPU02 voltage regulator"
+> +	depends on ARCH_EXYNOS
+>  	depends on MFD_SEC_CORE
+>  	help
+>  	 This driver supports a Samsung S2MPS11/13/14/15/S2MPU02 voltage
+
+This doesn't match the changelog at all.  This driver is not
+enabled by default since it's just a normal tristate, they are
+disabled by default.  As far as I can see all this change will
+do is reduce our build test coverage by adding an artificial
+dependency without an || COMPILE_TEST.
+
+--aPOcx+xoD6gZZHnz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl16EK4ACgkQJNaLcl1U
+h9Dn7gf/YZh55qkA7bTLAJHRocCdo/3Gm4Me5DO+Rnt0FyEcbwX3+E2akxCedkaX
+vqvhDX4nSIwMVmq6qzNR+c4H2lZcev0KD0Glwi6Hi5olMJAiHYmVl9Da2MNPiYAe
+mnlnY/bgrpmJ41nqm63s2PvtEWp+PL2QbnIikDS4Rb5vGLjTQGSmhGlU3o6dB3Om
+WxlDHZkCMO/9csX/UHjJUro2TPkgc9FfLnqx9N3Rs5/pL6zdXtZL5TK+6PGpkC/B
+NRx26W9Az9yIWMAu0MO7QPlcpT1b1O8dCYg3mM6fMjSiv9y3u8NLnp+zwhrHfIx+
+3xM5RHEbBYANmiIr66vXfKMKbQvvEw==
+=hxyF
+-----END PGP SIGNATURE-----
+
+--aPOcx+xoD6gZZHnz--
