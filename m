@@ -2,156 +2,96 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2763FC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECB9C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F309F20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70B1214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfILIQb (ORCPT
+        id S1730003AbfILIU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:16:31 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:43256 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfILIQa (ORCPT
+        Thu, 12 Sep 2019 04:20:57 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:14718 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfILIU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:16:30 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: from pc-niv.weinmann.com (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 9A9774D53C;
-        Thu, 12 Sep 2019 10:07:52 +0200 (CEST)
-From:   Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org, nv@vosn.de,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Subject: [PATCH] ACPICA: make acpi_load_table() return table index
-Date:   Thu, 12 Sep 2019 10:07:42 +0200
-Message-Id: <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190906174605.GY2680@smile.fi.intel.com>
-References: <20190906174605.GY2680@smile.fi.intel.com>
+        Thu, 12 Sep 2019 04:20:56 -0400
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 12 Sep 2019
+ 16:21:48 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Subject: [PATCH v4 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+Date:   Thu, 12 Sep 2019 04:19:26 -0400
+Message-ID: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For unloading an ACPI table, it is necessary to provide the
-index of the table. The method intended for dynamically
-loading or hotplug addition of tables, acpi_load_table(),
-should provide this information via an optional pointer
-to the loaded table index.
+A1 is an application processor designed for smart audio and IoT applications,
+with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+there is no Cortex-M3 AO CPU in it.
 
-This patch fixes the table unload function of acpi_configfs.
+This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
+which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+Timer, UART. It's capable of booting up into the serial console.
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
----
- drivers/acpi/acpi_configfs.c   | 2 +-
- drivers/acpi/acpica/dbfileio.c | 2 +-
- drivers/acpi/acpica/tbxfload.c | 8 ++++++--
- drivers/firmware/efi/efi.c     | 2 +-
- include/acpi/acpixf.h          | 3 ++-
- 5 files changed, 11 insertions(+), 6 deletions(-)
+The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
+In this version, it rely on bootloader to enable the pclk gate
 
-diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-index 57d9d574d4dde..77f81242a28e6 100644
---- a/drivers/acpi/acpi_configfs.c
-+++ b/drivers/acpi/acpi_configfs.c
-@@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
- 	if (!table->header)
- 		return -ENOMEM;
- 
--	ret = acpi_load_table(table->header);
-+	ret = acpi_load_table(table->header, &table->index);
- 	if (ret) {
- 		kfree(table->header);
- 		table->header = NULL;
-diff --git a/drivers/acpi/acpica/dbfileio.c b/drivers/acpi/acpica/dbfileio.c
-index c6e25734dc5cd..e1b6e54a96ac1 100644
---- a/drivers/acpi/acpica/dbfileio.c
-+++ b/drivers/acpi/acpica/dbfileio.c
-@@ -93,7 +93,7 @@ acpi_status acpi_db_load_tables(struct acpi_new_table_desc *list_head)
- 	while (table_list_head) {
- 		table = table_list_head->table;
- 
--		status = acpi_load_table(table);
-+		status = acpi_load_table(table, NULL);
- 		if (ACPI_FAILURE(status)) {
- 			if (status == AE_ALREADY_EXISTS) {
- 				acpi_os_printf
-diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
-index 86f1693f6d29a..d08cd8ffcbdb6 100644
---- a/drivers/acpi/acpica/tbxfload.c
-+++ b/drivers/acpi/acpica/tbxfload.c
-@@ -268,7 +268,8 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
-  *
-  * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
-  *                                    table to be loaded.
-- *
-+ *              table_idx           - Pointer to a u32 for storing the table
-+ *                                    index, might be NULL
-  * RETURN:      Status
-  *
-  * DESCRIPTION: Dynamically load an ACPI table from the caller's buffer. Must
-@@ -278,7 +279,7 @@ ACPI_EXPORT_SYMBOL_INIT(acpi_install_table)
-  *              to ensure that the table is not deleted or unmapped.
-  *
-  ******************************************************************************/
--acpi_status acpi_load_table(struct acpi_table_header *table)
-+acpi_status acpi_load_table(struct acpi_table_header *table, u32 *table_idx)
- {
- 	acpi_status status;
- 	u32 table_index;
-@@ -297,6 +298,9 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
- 	status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
- 						ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
- 						FALSE, &table_index);
-+	if (table_idx)
-+		*table_idx = table_index;
-+
- 	if (ACPI_SUCCESS(status)) {
- 
- 		/* Complete the initialization/resolution of new objects */
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index ad3b1f4866b35..9773e4212baef 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -308,7 +308,7 @@ static __init int efivar_ssdt_load(void)
- 			goto free_data;
- 		}
- 
--		ret = acpi_load_table(data);
-+		ret = acpi_load_table(data, NULL);
- 		if (ret) {
- 			pr_err("failed to load table: %d\n", ret);
- 			goto free_data;
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-index 3845c8fcc94e5..c90bbdc4146a6 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -452,7 +452,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
- 					       u8 physical))
- 
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
--			    acpi_load_table(struct acpi_table_header *table))
-+			    acpi_load_table(struct acpi_table_header *table,
-+					    u32 *table_idx))
- 
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 			    acpi_unload_parent_table(acpi_handle object))
+Changes since v3 at [2]:
+ - remove 0x in bus
+
+Changes since v2 at [1]:
+ - add bus in dts according Martin's suggestion
+ - remove useless comment line
+
+Changes since v1 at [0]:
+ - fix coding style
+ - collect Reviewed-by
+
+[0] https://lore.kernel.org/linux-amlogic/1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com
+[1] https://lore.kernel.org/linux-amlogic/1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com
+[2] https://lore.kernel.org/linux-amlogic/1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com
+Jianxin Pan (4):
+  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+  dt-bindings: arm: amlogic: add A1 bindings
+  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+  arm64: dts: add support for A1 based Amlogic AD401
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  30 +++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 130 +++++++++++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
+ 5 files changed, 169 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+
 -- 
-2.17.1
+2.7.4
 
