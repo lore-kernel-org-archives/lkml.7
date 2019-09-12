@@ -2,602 +2,311 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA6C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AC5C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672C320830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hGUcb8uw"
+	by mail.kernel.org (Postfix) with ESMTP id 0F7432084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568306869;
+	bh=Z7Klsx0EQczgLubsgIk5uElx4M0dhwRgXxx6ASoZUEM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gGBEunOrwthgLziOUbu22VZH4pUtZRQ78kZFum9hPEgn5Er33edq0RIdBso3QyWD
+	 xssqJGup4pj9LNzo46vbOpxgXi+29GSttbUigwxUPv75xMnxpG5YorLJ38S09OQSoU
+	 uRR5jj/C9kIVGhI9jSIsjZ0PTKHCjCnXQYhqfHdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbfILQph (ORCPT
+        id S1730673AbfILQrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:45:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43011 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfILQph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:45:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d15so16332944pfo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lzHuMtsgq4ib7mYhTsVdQliYa76hPj5SgO5JUAD+5/s=;
-        b=hGUcb8uwCLbEbP48LCiAS7gD4P24Dm44r3cJx5ciD1tWm9xohmOL4EPiML1N2yucZL
-         PQ+4qs833Inh2Ygw8ANXEMOltzYQ8if28r9yqn4vp5ZbmP+KUPKhC8F//sllK5CZCBO0
-         5PmtdjUnORTiIyJePICk9U0c5kNoa923EgjG2GnsOqlYb4xyx3cPqEWFPiTTgYExrtf9
-         U4sTRTOqOifLsZYbyxQucSz05Xah43l2nneeVLbkKWjYwWc0Whohk+mi5uNLXXcpj4ph
-         L5+47nkWRHnsD61Ig9YHIKL2QOubV+1DbIdDUYAqzWbmQ35C8+MKEhskoQgcZppaLVYT
-         fDCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lzHuMtsgq4ib7mYhTsVdQliYa76hPj5SgO5JUAD+5/s=;
-        b=Vvv53vL6vT03YvPmmC8elgUYBi5OovFS5WuFOgDA23MDTFN4sYBkiATBU0c/RbfYvU
-         z/N5RUngZc0bNxHoKctqhzDGMlInwc5+2BDQP4Q4lIXdU8LpCby0Q0CI5odJHob3H87n
-         tUgJOElT1seEgORkZa06kenfVLtTlSeCr7Mv2N6vrXhQ6i5Y9JgcSOqndStOjjFSWfH8
-         UghoRk8MToY1IUzcO1XA6ZpARx1ggGvk3QKUPXLyOX6sh3ouTbU07pRy9hlfObNY8s7j
-         aeJW+aRT3Y4uvxbU8W5xPnMKpqz5VHCLc4k66F8b6gsaBkFArTKABmdrfLMB5yV1+UR9
-         iR+g==
-X-Gm-Message-State: APjAAAU3OJ04fmKOfDPtjGFDsxoi+nv+wzA3+8J0MnKhop044h6a2FCl
-        LDPYOwrQMTxXpJK2I56OEHqryw==
-X-Google-Smtp-Source: APXvYqx5hgm+utW7g0bBJWhJtmGVmjnhDR8zfEd41Du2vT+L/SckjwdzUALWJ5GR0WtjWvAas2+olQ==
-X-Received: by 2002:a17:90a:26e3:: with SMTP id m90mr1159144pje.57.1568306736101;
-        Thu, 12 Sep 2019 09:45:36 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p11sm27753496pff.136.2019.09.12.09.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 09:45:35 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 09:45:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        vbadigan@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-Message-ID: <20190912164532.GA8466@tuxbook-pro>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
- <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+        Thu, 12 Sep 2019 12:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730398AbfILQrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:47:48 -0400
+Received: from localhost (unknown [117.99.85.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522ED20830;
+        Thu, 12 Sep 2019 16:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568306866;
+        bh=Z7Klsx0EQczgLubsgIk5uElx4M0dhwRgXxx6ASoZUEM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ayIcBPmAbnC7L3gNfW1IcX/cpM3lbEo/wtyftE897vJQn7yJSYI0N1JVJXFJlVwQ8
+         beEkdFPhPb6AF3D9hpxXhyiC8ugc149ONF0A6JuGmSIbzybA7t9rneHrl75ObttLTQ
+         jjjN1y5B/c1XJXTVR7yhix2mOuiH/MARRqFsMEA0=
+Date:   Thu, 12 Sep 2019 22:16:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, tglx@linutronix.de, joel@jms.id.au,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v3 2/2] hwrng: npcm: add NPCM RNG driver
+Message-ID: <20190912164638.GB4392@vkoul-mobl>
+References: <20190912090149.7521-1-tmaimon77@gmail.com>
+ <20190912090149.7521-3-tmaimon77@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+In-Reply-To: <20190912090149.7521-3-tmaimon77@gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 06 Sep 05:47 PDT 2019, Pradeep P V K wrote:
+On 12-09-19, 12:01, Tomer Maimon wrote:
+> Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
 
-> Vote for the MSM bus bandwidth required by SDHC driver
-> based on the clock frequency and bus width of the card.
-> Otherwise,the system clocks may run at minimum clock speed
-> and thus affecting the performance.
+Is this a true RNG or a psedo RNG, in case of latter it should be added
+in drivers/crypto/. See crypto_register_rng()
+
 > 
-> This change is based on Georgi Djakov [RFC]
-> (https://lkml.org/lkml/2018/10/11/499)
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-
-This says that Sahitya wrote the patch, then Subhash handled it, then
-Veerabhadrarao handled it and finally you handled it; but you're at the
-same time listed as author (by From:).
-
-Please see section 12 on Co-Developed-by in submitting-patches.rst
-
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  drivers/mmc/host/sdhci-msm.c | 393 ++++++++++++++++++++++++++++++++++++++++++-
-
-This patch implements support for requesting bandwidth to the register
-space and for the controllers access to DDR. To me this seems like
-common requirements for any mmc controller, can this functionality be
-provided by the mmc/sdhci common code?
-
-Regards,
-Bjorn
-
->  1 file changed, 390 insertions(+), 3 deletions(-)
+>  drivers/char/hw_random/Kconfig    |  13 +++
+>  drivers/char/hw_random/Makefile   |   1 +
+>  drivers/char/hw_random/npcm-rng.c | 186 ++++++++++++++++++++++++++++++
+>  3 files changed, 200 insertions(+)
+>  create mode 100644 drivers/char/hw_random/npcm-rng.c
 > 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index b75c82d..71515ca 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -11,6 +11,7 @@
->  #include <linux/mmc/mmc.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> +#include <linux/interconnect.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 59f25286befe..87a1c30e7958 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
 >  
-> @@ -122,6 +123,9 @@
->  #define msm_host_writel(msm_host, val, host, offset) \
->  	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+>  	  If unsure, say Y.
 >  
-> +#define SDHC_DDR "sdhc-ddr"
-> +#define CPU_SDHC "cpu-sdhc"
+> +config HW_RANDOM_NPCM
+> +	tristate "NPCM Random Number Generator support"
+> +	depends on ARCH_NPCM || COMPILE_TEST
+> +	default HW_RANDOM
+> +	help
+> + 	  This driver provides support for the Random Number
+> +	  Generator hardware available in Nuvoton NPCM SoCs.
 > +
->  struct sdhci_msm_offset {
->  	u32 core_hc_mode;
->  	u32 core_mci_data_cnt;
-> @@ -228,6 +232,31 @@ struct sdhci_msm_variant_info {
->  	const struct sdhci_msm_offset *offset;
->  };
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called npcm-rng.
+> +
+> + 	  If unsure, say Y.
+> +
+>  endif # HW_RANDOM
 >  
-> +struct msm_bus_vectors {
-> +	uint64_t ab;
-> +	uint64_t ib;
+>  config UML_RANDOM
+> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+> index 7c9ef4a7667f..17b6d4e6d591 100644
+> --- a/drivers/char/hw_random/Makefile
+> +++ b/drivers/char/hw_random/Makefile
+> @@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
+>  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+>  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+>  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+> +obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
+> diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
+> new file mode 100644
+> index 000000000000..b7c8c7e13a49
+> --- /dev/null
+> +++ b/drivers/char/hw_random/npcm-rng.c
+> @@ -0,0 +1,186 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 Nuvoton Technology corporation.
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/init.h>
+> +#include <linux/random.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/delay.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#define NPCM_RNGCS_REG		0x00	/* Control and status register */
+> +#define NPCM_RNGD_REG		0x04	/* Data register */
+> +#define NPCM_RNGMODE_REG	0x08	/* Mode register */
+> +
+> +#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
+> +#define NPCM_RNG_DATA_VALID	BIT(1)
+> +#define NPCM_RNG_ENABLE		BIT(0)
+> +#define NPCM_RNG_M1ROSEL	BIT(1)
+> +
+> +#define NPCM_RNG_TIMEOUT_USEC	20000
+> +#define NPCM_RNG_POLL_USEC	1000
+> +
+> +#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
+> +
+> +struct npcm_rng {
+> +	void __iomem *base;
+> +	struct hwrng rng;
 > +};
 > +
-> +struct msm_bus_path {
-> +	unsigned int num_paths;
-> +	struct msm_bus_vectors *vec;
-> +};
-> +
-> +struct sdhci_msm_bus_vote_data {
-> +	const char *name;
-> +	unsigned int num_usecase;
-> +	struct msm_bus_path *usecase;
-> +
-> +	unsigned int *bw_vecs;
-> +	unsigned int bw_vecs_size;
-> +
-> +	struct icc_path *sdhc_ddr;
-> +	struct icc_path *cpu_sdhc;
-> +
-> +	uint32_t curr_vote;
-> +
-> +};
-> +
->  struct sdhci_msm_host {
->  	struct platform_device *pdev;
->  	void __iomem *core_mem;	/* MSM SDCC mapped address */
-> @@ -253,8 +282,13 @@ struct sdhci_msm_host {
->  	const struct sdhci_msm_offset *offset;
->  	bool use_cdr;
->  	u32 transfer_mode;
-> +	bool skip_bus_bw_voting;
-> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
-> +	struct delayed_work bus_vote_work;
->  };
->  
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable);
-> +
->  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -1557,6 +1591,8 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->  
->  	msm_set_clock_rate_for_bus_mode(host, clock);
->  out:
-> +	if (!msm_host->skip_bus_bw_voting)
-> +		sdhci_msm_bus_voting(host, !!clock);
->  	__sdhci_msm_set_clock(host, clock);
->  }
->  
-> @@ -1678,6 +1714,341 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  
-> +static int sdhci_msm_dt_get_array(struct device *dev, const char *prop_name,
-> +				 u32 **bw_vecs, int *len, u32 size)
+> +static int npcm_rng_init(struct hwrng *rng)
 > +{
-> +	int ret = 0;
-> +	struct device_node *np = dev->of_node;
-> +	size_t sz;
-> +	u32 *arr = NULL;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
 > +
-> +	if (!of_get_property(np, prop_name, len)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +	sz = *len = *len / sizeof(*arr);
-> +	if (sz <= 0 || (size > 0 && (sz > size))) {
-> +		dev_err(dev, "%s invalid size\n", prop_name);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	arr = devm_kzalloc(dev, sz * sizeof(*arr), GFP_KERNEL);
-> +	if (!arr) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret = of_property_read_u32_array(np, prop_name, arr, sz);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s failed reading array %d\n", prop_name, ret);
-> +		goto out;
-> +	}
-> +	*bw_vecs = arr;
-> +out:
-> +	if (ret)
-> +		*len = 0;
-> +	return ret;
-> +}
-> +
-> +/* Returns required bandwidth in Bytes per Sec */
-> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-> +					struct mmc_ios *ios)
-> +{
-> +	unsigned long bw;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	bw = msm_host->clk_rate;
-> +
-> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
-> +		bw /= 2;
-> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
-> +		bw /= 8;
-> +
-> +	return bw;
-> +}
-> +
-> +static int sdhci_msm_bus_get_vote_for_bw(struct sdhci_msm_host *host,
-> +					   unsigned int bw)
-> +{
-> +	struct sdhci_msm_bus_vote_data *bvd = host->bus_vote_data;
-> +
-> +	unsigned int *table = bvd->bw_vecs;
-> +	unsigned int size = bvd->bw_vecs_size;
-> +	int i;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		if (bw <= table[i])
-> +			break;
-> +	}
-> +
-> +	if (i && (i == size))
-> +		i--;
-> +
-> +	return i;
-> +}
-> +
-> +/*
-> + * This function must be called with host lock acquired.
-> + * Caller of this function should also ensure that msm bus client
-> + * handle is not null.
-> + */
-> +static inline int sdhci_msm_bus_set_vote(struct sdhci_msm_host *msm_host,
-> +					     int vote,
-> +					     unsigned long *flags)
-> +{
-> +	struct sdhci_host *host =  platform_get_drvdata(msm_host->pdev);
-> +	struct sdhci_msm_bus_vote_data *bvd = msm_host->bus_vote_data;
-> +	struct msm_bus_path *usecase = bvd->usecase;
-> +	struct msm_bus_vectors *vec = usecase[vote].vec;
-> +	int ddr_rc = 0, cpu_rc = 0;
-> +
-> +	if (vote != bvd->curr_vote) {
-> +		spin_unlock_irqrestore(&host->lock, *flags);
-> +		pr_debug("%s: vote:%d sdhc_ddr ab:%llu ib:%llu cpu_sdhc ab:%llu ib:%llu\n",
-> +				mmc_hostname(host->mmc), vote, vec[0].ab,
-> +				vec[0].ib, vec[1].ab, vec[1].ib);
-> +		ddr_rc = icc_set_bw(bvd->sdhc_ddr, vec[0].ab, vec[0].ib);
-> +		cpu_rc = icc_set_bw(bvd->cpu_sdhc, vec[1].ab, vec[1].ib);
-> +		spin_lock_irqsave(&host->lock, *flags);
-> +		if (ddr_rc || cpu_rc) {
-> +			pr_err("%s: icc_set() failed\n",
-> +				mmc_hostname(host->mmc));
-> +			goto out;
-> +		}
-> +		bvd->curr_vote = vote;
-> +	}
-> +out:
-> +	return cpu_rc;
-> +}
-> +
-> +/*
-> + * Internal work. Work to set 0 bandwidth for msm bus.
-> + */
-> +static void sdhci_msm_bus_work(struct work_struct *work)
-> +{
-> +	struct sdhci_msm_host *msm_host;
-> +	struct sdhci_host *host;
-> +	unsigned long flags;
-> +
-> +	msm_host = container_of(work, struct sdhci_msm_host,
-> +				bus_vote_work.work);
-> +	host =  platform_get_drvdata(msm_host->pdev);
-> +
-> +	/* Check handle and return */
-> +	if (!msm_host->bus_vote_data->sdhc_ddr ||
-> +			!msm_host->bus_vote_data->cpu_sdhc)
-> +		return;
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	/* don't vote for 0 bandwidth if any request is in progress */
-> +	if (!host->mmc->ongoing_mrq)
-> +		sdhci_msm_bus_set_vote(msm_host, 0, &flags);
-> +	else
-> +		pr_warn("Transfer in progress.Skipping bus voting to 0\n");
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +/*
-> + * This function cancels any scheduled delayed work and sets the bus
-> + * vote based on bw (bandwidth) argument.
-> + */
-> +static void sdhci_msm_bus_cancel_work_and_set_vote(struct sdhci_host *host,
-> +						unsigned int bw)
-> +{
-> +	int vote;
-> +	unsigned long flags;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	cancel_delayed_work_sync(&msm_host->bus_vote_work);
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	vote = sdhci_msm_bus_get_vote_for_bw(msm_host, bw);
-> +	sdhci_msm_bus_set_vote(msm_host, vote, &flags);
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +
-> +#define MSM_MMC_BUS_VOTING_DELAY	200 /* msecs */
-> +#define VOTE_ZERO  0
-> +
-> +/* This function queues a work which will set the bandwidth requiement to 0 */
-> +static void sdhci_msm_bus_queue_work(struct sdhci_host *host)
-> +{
-> +	unsigned long flags;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	spin_lock_irqsave(&host->lock, flags);
-> +	if (msm_host->bus_vote_data->curr_vote != VOTE_ZERO)
-> +		queue_delayed_work(system_wq,
-> +				   &msm_host->bus_vote_work,
-> +				   msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +}
-> +
-> +static struct sdhci_msm_bus_vote_data *sdhci_msm_get_bus_vote_data(struct device
-> +				       *dev, struct sdhci_msm_host *host)
-> +
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct device_node *of_node = dev->of_node;
-> +	struct sdhci_msm_bus_vote_data *bvd = NULL;
-> +	struct msm_bus_path *usecase = NULL;
-> +	int ret = 0, i = 0, j, k, num_paths, len;
-> +	const uint32_t *vec_arr = NULL;
-> +	bool mem_err = false;
-> +
-> +	if (!pdev) {
-> +		dev_err(dev, "Null platform device!\n");
-> +		return NULL;
-> +	}
-> +
-> +	bvd = devm_kzalloc(dev, sizeof(struct sdhci_msm_bus_vote_data),
-> +				GFP_KERNEL);
-> +	if (!bvd) {
-> +		ret = -ENOMEM;
-> +		dev_err(dev, "No sufficient memory!\n");
-> +		return bvd;
-> +	}
-> +	ret = sdhci_msm_dt_get_array(dev, "qcom,bus-bw-vectors-bps",
-> +				&bvd->bw_vecs, &bvd->bw_vecs_size, 0);
-> +	if (ret) {
-> +		dev_info(dev, "No dt property of bus bw. voting defined!\n");
-> +		dev_info(dev, "Skipping Bus BW voting now!!\n");
-> +		host->skip_bus_bw_voting = true;
-> +		if (ret != -EINVAL && ret != -ENOMEM)
-> +			goto free;
-> +		goto err;
-> +	}
-> +
-> +	ret = of_property_read_string(of_node, "qcom,msm-bus,name", &bvd->name);
-> +	if (ret) {
-> +		dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
-> +		&bvd->num_usecase);
-> +	if (ret) {
-> +		dev_err(dev, "Error: num-usecases not found\n");
-> +		goto err;
-> +	}
-> +
-> +	usecase = devm_kzalloc(dev, (sizeof(struct msm_bus_path) *
-> +				   bvd->num_usecase), GFP_KERNEL);
-> +	if (!usecase)
-> +		goto err;
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
-> +				   &num_paths);
-> +	if (ret) {
-> +		dev_err(dev, "Error: num_paths not found\n");
-> +		goto out;
-> +	}
-> +
-> +	vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps", &len);
-> +	if (vec_arr == NULL) {
-> +		dev_err(dev, "Error: Vector array not found\n");
-> +		goto out;
-> +	}
-> +
-> +	for (i = 0; i < bvd->num_usecase; i++) {
-> +		usecase[i].num_paths = num_paths;
-> +		usecase[i].vec = devm_kzalloc(dev, num_paths *
-> +					      sizeof(struct msm_bus_vectors),
-> +					      GFP_KERNEL);
-> +		if (!usecase[i].vec) {
-> +			mem_err = true;
-> +			dev_err(dev, "Error: Failed to alloc mem for vectors\n");
-> +			goto out;
-> +		}
-> +		for (j = 0; j < num_paths; j++) {
-> +			int idx = ((i * num_paths) + j) * 2;
-> +
-> +			usecase[i].vec[j].ab = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx]);
-> +			usecase[i].vec[j].ib = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx + 1]);
-> +		}
-> +	}
-> +
-> +	bvd->usecase = usecase;
-> +	return bvd;
-> +out:
-> +	if (mem_err) {
-> +		for (k = i - 1; k >= 0; k--)
-> +			devm_kfree(dev, usecase[k].vec);
-> +	}
-> +	devm_kfree(dev, usecase);
-> +free:
-> +	devm_kfree(dev, bvd->bw_vecs);
-> +err:
-> +	devm_kfree(dev, bvd);
-> +	bvd = NULL;
-> +	return bvd;
-> +}
-> +
-> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_msm_bus_vote_data *bsd;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	bsd = sdhci_msm_get_bus_vote_data(dev, host);
-> +	if (!bsd) {
-> +		dev_err(&pdev->dev, "Failed: getting bus_scale data\n");
-> +		return PTR_ERR(bsd);
-> +	}
-> +	host->bus_vote_data = bsd;
-> +
-> +	bsd->sdhc_ddr = of_icc_get(&pdev->dev, SDHC_DDR);
-> +	if (IS_ERR(bsd->sdhc_ddr)) {
-> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
-> +			PTR_ERR(bsd->sdhc_ddr), SDHC_DDR);
-> +		return PTR_ERR(bsd->sdhc_ddr);
-> +	}
-> +
-> +	bsd->cpu_sdhc = of_icc_get(&pdev->dev, CPU_SDHC);
-> +	if (IS_ERR(bsd->cpu_sdhc)) {
-> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
-> +			PTR_ERR(bsd->cpu_sdhc), CPU_SDHC);
-> +		return PTR_ERR(bsd->cpu_sdhc);
-> +	}
-> +
-> +	INIT_DELAYED_WORK(&host->bus_vote_work, sdhci_msm_bus_work);
+> +	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+> +	       priv->base + NPCM_RNGCS_REG);
 > +
 > +	return 0;
 > +}
 > +
-> +static void sdhci_msm_bus_unregister(struct device *dev,
-> +				struct sdhci_msm_host *host)
+> +static void npcm_rng_cleanup(struct hwrng *rng)
 > +{
-> +	struct sdhci_msm_bus_vote_data *bsd = host->bus_vote_data;
-> +	int i;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
 > +
-> +	icc_put(bsd->sdhc_ddr);
-> +	icc_put(bsd->cpu_sdhc);
-> +
-> +	for (i = 0; i < bsd->num_usecase; i++)
-> +		devm_kfree(dev, bsd->usecase[i].vec);
-> +	devm_kfree(dev, bsd->usecase);
-> +	devm_kfree(dev, bsd->bw_vecs);
-> +	devm_kfree(dev, bsd);
+> +	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
 > +}
 > +
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
+> +static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
 > +{
-> +	struct mmc_ios *ios = &host->mmc->ios;
-> +	unsigned int bw;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
+> +	int retval = 0;
+> +	int ready;
 > +
-> +	bw = sdhci_get_bw_required(host, ios);
-> +	if (enable)
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, bw);
-> +	else
-> +		sdhci_msm_bus_queue_work(host);
+> +	pm_runtime_get_sync((struct device *)priv->rng.priv);
+> +
+> +	while (max >= sizeof(u32)) {
+> +		if (wait) {
+> +			if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
+> +					       ready,
+> +					       ready & NPCM_RNG_DATA_VALID,
+> +					       NPCM_RNG_POLL_USEC,
+> +					       NPCM_RNG_TIMEOUT_USEC))
+> +				break;
+> +		} else {
+> +			if ((readl(priv->base + NPCM_RNGCS_REG) &
+> +			    NPCM_RNG_DATA_VALID) == 0)
+> +				break;
+> +		}
+> +
+> +		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
+> +		retval += sizeof(u32);
+> +		buf += sizeof(u32);
+> +		max -= sizeof(u32);
+> +	}
+> +
+> +	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
+> +	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
+> +
+> +	return retval || !wait ? retval : -EIO;
 > +}
 > +
->  static const struct sdhci_msm_variant_ops mci_var_ops = {
->  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> @@ -1839,6 +2210,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
->  	}
->  
-> +	ret = sdhci_msm_bus_register(msm_host, pdev);
-> +	if (ret && !msm_host->skip_bus_bw_voting)
-> +		goto clk_disable;
+> +static int npcm_rng_probe(struct platform_device *pdev)
+> +{
+> +	struct npcm_rng *priv;
+> +	struct resource *res;
+> +	int ret;
 > +
-> +	if (!msm_host->skip_bus_bw_voting)
-> +		sdhci_msm_bus_voting(host, 1);
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
 > +
->  	if (!msm_host->mci_removed) {
->  		core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->  		msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
-> @@ -1846,7 +2224,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  
->  		if (IS_ERR(msm_host->core_mem)) {
->  			ret = PTR_ERR(msm_host->core_mem);
-> -			goto clk_disable;
-> +			goto bus_unregister;
->  		}
->  	}
->  
-> @@ -1918,7 +2296,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->  	if (msm_host->pwr_irq < 0) {
->  		ret = msm_host->pwr_irq;
-> -		goto clk_disable;
-> +		goto bus_unregister;
->  	}
->  
->  	sdhci_msm_init_pwr_irq_wait(msm_host);
-> @@ -1931,7 +2309,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  					dev_name(&pdev->dev), host);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
-> -		goto clk_disable;
-> +		goto bus_unregister;
->  	}
->  
->  	pm_runtime_get_noresume(&pdev->dev);
-> @@ -1956,6 +2334,11 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	pm_runtime_disable(&pdev->dev);
->  	pm_runtime_set_suspended(&pdev->dev);
->  	pm_runtime_put_noidle(&pdev->dev);
-> +bus_unregister:
-> +	if (!msm_host->skip_bus_bw_voting) {
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
-> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	dev_set_drvdata(&pdev->dev, priv);
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
+> +	pm_runtime_use_autosuspend(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +#ifndef CONFIG_PM
+> +	priv->rng.init = npcm_rng_init;
+> +	priv->rng.cleanup = npcm_rng_cleanup;
+> +#endif
+> +	priv->rng.name = pdev->name;
+> +	priv->rng.read = npcm_rng_read;
+> +	priv->rng.priv = (unsigned long)&pdev->dev;
+> +	priv->rng.quality = 1000;
+> +
+> +	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
+> +
+> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
+> +			ret);
+> +		pm_runtime_disable(&pdev->dev);
+> +		pm_runtime_set_suspended(&pdev->dev);
+> +		return ret;
 > +	}
->  clk_disable:
->  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
->  				   msm_host->bulk_clks);
-> @@ -1985,6 +2368,10 @@ static int sdhci_msm_remove(struct platform_device *pdev)
->  				   msm_host->bulk_clks);
->  	if (!IS_ERR(msm_host->bus_clk))
->  		clk_disable_unprepare(msm_host->bus_clk);
-> +	if (!msm_host->skip_bus_bw_voting) {
-> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
-> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
-> +	}
->  	sdhci_pltfm_free(pdev);
->  	return 0;
->  }
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_rng_remove(struct platform_device *pdev)
+> +{
+> +	struct npcm_rng *priv = platform_get_drvdata(pdev);
+> +
+> +	devm_hwrng_unregister(&pdev->dev, &priv->rng);
+> +	pm_runtime_disable(&pdev->dev);
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int npcm_rng_runtime_suspend(struct device *dev)
+> +{
+> +	struct npcm_rng *priv = dev_get_drvdata(dev);
+> +
+> +	npcm_rng_cleanup(&priv->rng);
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_rng_runtime_resume(struct device *dev)
+> +{
+> +	struct npcm_rng *priv = dev_get_drvdata(dev);
+> +
+> +	return npcm_rng_init(&priv->rng);
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops npcm_rng_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
+> +			   npcm_rng_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +};
+> +
+> +static const struct of_device_id rng_dt_id[] = {
+> +	{ .compatible = "nuvoton,npcm750-rng",  },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, rng_dt_id);
+> +
+> +static struct platform_driver npcm_rng_driver = {
+> +	.driver = {
+> +		.name		= "npcm-rng",
+> +		.pm		= &npcm_rng_pm_ops,
+> +		.of_match_table = of_match_ptr(rng_dt_id),
+> +	},
+> +	.probe		= npcm_rng_probe,
+> +	.remove		= npcm_rng_remove,
+> +};
+> +
+> +module_platform_driver(npcm_rng_driver);
+> +
+> +MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
+> +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
+> +MODULE_LICENSE("GPL v2");
 > -- 
-> 1.9.1
-> 
+> 2.18.0
+
+-- 
+~Vinod
