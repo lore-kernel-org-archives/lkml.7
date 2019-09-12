@@ -2,213 +2,167 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD1C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18131C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D830206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="W/5NCKT5"
+	by mail.kernel.org (Postfix) with ESMTP id E9B47206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfILWJn (ORCPT
+        id S1729309AbfILWKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 18:09:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35169 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfILWJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:09:43 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so7450756plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e1NxeIc8kdbb1mtpMHLFI7ESi2lNJyG1ruAa5EmaZJI=;
-        b=W/5NCKT5I0KAKwvDWMakHiNM3E2P2jPhKQFcWA+DTfZmRgSQFOnwamoRDtGHE33Hic
-         K6PiVIEBtnBXT8+rpGTlyjxYYuQpJFgdLPwuJFKdz/1qr+b9f/G9m4D/Mmh8UAZhU5WW
-         qFfI81VKGdvvCdnf80fEBZGdfr2L/iTKni4CQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e1NxeIc8kdbb1mtpMHLFI7ESi2lNJyG1ruAa5EmaZJI=;
-        b=dRpxZhtT1CIDNUQ/et6grUR8z28mh2of9Le9BVKyv0CpwwPA/Xw6rL0tzRopTHsdua
-         vC1nARkc1gAnfXZ8ZC34/xkcwBWrGlKrjZ39MuXeniZFUyZSZ2QKrewrGMs/EkmxLY/5
-         cpbRb/1DB9DwNGje84txtUrnH+RhYF2DMFee5CX7uoiYEIAWTBZmhmhqZfaKYy6UMuh4
-         ppsgZPDAw3gEqTjxq4FZ+ILRbXbeEb6kINXI60jT0oJR+NBWESX6K6T0GC1tgQXt4OQh
-         jLdQrhynGY+UpsDPX+fwuJUiHD1b2I+xdjjhOAOURWYsy8krkSMQbEWYMDOZL2lCjp4p
-         APfw==
-X-Gm-Message-State: APjAAAWBkaquQvI8uwokfKKxC2YKcedEjIBbE88W0k3KeewqAlRyyJii
-        TG90Bxj8GY9VObnj9JrSGT/rUQ==
-X-Google-Smtp-Source: APXvYqymEWxw8JW732tbtAlQJU1m3Y+4Qy5o7vaXWkDd5px6WpRvlu/Jz3J7LJ2MAKYYTNR8raF03g==
-X-Received: by 2002:a17:902:fe91:: with SMTP id x17mr1255401plm.106.1568326182396;
-        Thu, 12 Sep 2019 15:09:42 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z13sm41501297pfq.121.2019.09.12.15.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 15:09:41 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 18:09:40 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
-Message-ID: <20190912220940.GB150506@google.com>
-References: <20190911165729.11178-1-swood@redhat.com>
- <20190911165729.11178-2-swood@redhat.com>
+        Thu, 12 Sep 2019 18:10:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:37656 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfILWJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 18:09:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0095728;
+        Thu, 12 Sep 2019 15:09:59 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45E213F71F;
+        Thu, 12 Sep 2019 15:09:58 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH] sched: fix migration to invalid cpu in
+ __set_cpus_allowed_ptr
+To:     shikemeng <shikemeng@huawei.com>, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <4a492fe8-09b7-d8ee-8a16-602e592b00b6@huawei.com>
+Message-ID: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
+Date:   Thu, 12 Sep 2019 23:09:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911165729.11178-2-swood@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4a492fe8-09b7-d8ee-8a16-602e592b00b6@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 05:57:25PM +0100, Scott Wood wrote:
-> A plain local_bh_disable() is documented as creating an RCU critical
-> section, and (at least) rcutorture expects this to be the case.  However,
-> in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
-> preempt_count() directly.  Even if RCU were changed to check
-> in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
+On 12/09/2019 02:55, shikemeng wrote:
+> From 089dbf0216628ac6ae98742ab90725ca9c2bf201 Mon Sep 17 00:00:00 2001
+> From:  <shikemeng@huawei.com>
+> Date: Tue, 10 Sep 2019 09:44:58 -0400
+> Subject: [PATCH] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
 > 
-> Fix this by calling rcu_read_lock() from local_bh_disable(), and update
-> rcu_read_lock_bh_held() accordingly.
+> reason: migration to invalid cpu in __set_cpus_allowed_ptr
+> archive path: patches/euleros/sched
 > 
-> Signed-off-by: Scott Wood <swood@redhat.com>
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+The above should probably be trimmed from the log.
 
-thanks,
+> Oops occur when running qemu on arm64:
+>  Unable to handle kernel paging request at virtual address ffff000008effe40
+>  Internal error: Oops: 96000007 [#1] SMP
+>  Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
+>  pstate: 20000085 (nzCv daIf -PAN -UAO)
+>  pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+>  lr : move_queued_task.isra.21+0x124/0x298
+>  ...
+>  Call trace:
+>   __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+>   __migrate_task+0xc8/0xe0
+>   migration_cpu_stop+0x170/0x180
+>   cpu_stopper_thread+0xec/0x178
+>   smpboot_thread_fn+0x1ac/0x1e8
+>   kthread+0x134/0x138
+>   ret_from_fork+0x10/0x18
+> 
+> __set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask to migrage the process if process is not
+> currently running on any one of the CPUs specified in affinity mask.__set_cpus_allowed_ptr will choose an invalid
+> dest_cpu(>= nr_cpu_ids, 1024 in my virtual machine) if CPUS in affinity mask are deactived by cpu_down after
+> cpumask_intersects check.
 
- - Joel
+Right, cpumask_any_and() returns >= nr_cpu_ids when there isn't any valid CPU
+bit set.
+
+> Cpumask_test_cpu of dest_cpu afterwards is overflow and may passes if corresponding bit
+> is coincidentally set.
+
+Ouch. I was going to say the cpu_active_mask check from is_cpu_allowed()
+should've stopped the whole thing there, but AFAICT there's no safeguard
+against > nr_cpu_ids bit accesses. I see CONFIG_DEBUG_PER_CPU_MAPS should
+fire a warning for such accesses, but we don't enable it by default.
+
+Would it make sense to do something like
+
+	return test_bit(...) && cpu < nr_cpu_ids;
+
+for cpumask_test_cpu()? We still get the warn with the right config, but we
+prevent sneaky mistakes like this one. And it seems it's not the only one
+according to:
+
+--
+virtual patch
+virtual report
+
+@nocheck@
+expression E;
+identifier any_func =~ "^cpumask_any";
+position pos;
+@@
+
+E@pos = any_func(...);
+... when != E >= nr_cpu_ids
+    when != E < nr_cpu_ids
+
+@script:python depends on nocheck && report@
+p << nocheck.pos;
+@@
+coccilib.report.print_report(p[0], "Missing cpumask_any_*() return value check!")
+---
+
+Some of those seem benign since they are on e.g. cpu_online_mask, some other
+are somewhat dubious (e.g. deadline.c::dl_task_can_attach()).
+
+As a consequence, kernel will access a invalid rq address associate with the invalid cpu in
+> migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs. Process as follows may trigger the Oops:
+> 1) A process repeatedly bind itself to cpu0 and cpu1 in turn by calling sched_setaffinity
+> 2) A shell script repeatedly "echo 0 > /sys/devices/system/cpu/cpu1/online" and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn
+> 3) Oops appears if the invalid cpu is set in memory after tested cpumask.
+> 
+> 
+> Change-Id: I9c2f95aecd3da568991b7408397215f26c990e40
+
+- This doesn't respect the 75 char per line limit
+- Change IDs don't belong here (we're not using Gerrit)
+- You're missing a Signed-off-by.
+
+You'll find all the guidelines you need for formatting patches in
+Documentation/process/submitting-patches.rst.
 
 > ---
-> v3: Remove change to rcu_read_lock_bh_held(), and move debug portions
-> of rcu_read_[un]lock_bh() to separate functions
-> ---
->  include/linux/rcupdate.h | 40 ++++++++++++++++++++++++++++++++--------
->  kernel/softirq.c         | 12 +++++++++---
->  2 files changed, 41 insertions(+), 11 deletions(-)
+>  kernel/sched/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 388ace315f32..9ce7c5006a5e 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -600,6 +600,36 @@ static inline void rcu_read_unlock(void)
->  	rcu_lock_release(&rcu_lock_map); /* Keep acq info for rls diags. */
->  }
->  
-> +#ifdef CONFIG_PREEMPT_RT_FULL
-> +/*
-> + * On RT, local_bh_disable() calls rcu_read_lock() -- no need to
-> + * track it twice.
-> + */
-> +static inline void rcu_bh_lock_acquire(void)
-> +{
-> +}
-> +
-> +static inline void rcu_bh_lock_release(void)
-> +{
-> +}
-> +#else
-> +static inline void rcu_bh_lock_acquire(void)
-> +{
-> +	__acquire(RCU_BH);
-> +	rcu_lock_acquire(&rcu_bh_lock_map);
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> +			 "rcu_read_lock_bh() used illegally while idle");
-> +}
-> +
-> +static inline void rcu_bh_lock_release(void)
-> +{
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> +			 "rcu_read_unlock_bh() used illegally while idle");
-> +	rcu_lock_release(&rcu_bh_lock_map);
-> +	__release(RCU_BH);
-> +}
-> +#endif
-> +
->  /**
->   * rcu_read_lock_bh() - mark the beginning of an RCU-bh critical section
->   *
-> @@ -615,10 +645,7 @@ static inline void rcu_read_unlock(void)
->  static inline void rcu_read_lock_bh(void)
->  {
->  	local_bh_disable();
-> -	__acquire(RCU_BH);
-> -	rcu_lock_acquire(&rcu_bh_lock_map);
-> -	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> -			 "rcu_read_lock_bh() used illegally while idle");
-> +	rcu_bh_lock_acquire();
->  }
->  
->  /*
-> @@ -628,10 +655,7 @@ static inline void rcu_read_lock_bh(void)
->   */
->  static inline void rcu_read_unlock_bh(void)
->  {
-> -	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> -			 "rcu_read_unlock_bh() used illegally while idle");
-> -	rcu_lock_release(&rcu_bh_lock_map);
-> -	__release(RCU_BH);
-> +	rcu_bh_lock_release();
->  	local_bh_enable();
->  }
->  
-> diff --git a/kernel/softirq.c b/kernel/softirq.c
-> index d16d080a74f7..6080c9328df1 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
-> @@ -115,8 +115,10 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
->  	long soft_cnt;
->  
->  	WARN_ON_ONCE(in_irq());
-> -	if (!in_atomic())
-> +	if (!in_atomic()) {
->  		local_lock(bh_lock);
-> +		rcu_read_lock();
-> +	}
->  	soft_cnt = this_cpu_inc_return(softirq_counter);
->  	WARN_ON_ONCE(soft_cnt == 0);
->  	current->softirq_count += SOFTIRQ_DISABLE_OFFSET;
-> @@ -151,8 +153,10 @@ void _local_bh_enable(void)
->  #endif
->  
->  	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
-> -	if (!in_atomic())
-> +	if (!in_atomic()) {
-> +		rcu_read_unlock();
->  		local_unlock(bh_lock);
-> +	}
->  }
->  
->  void _local_bh_enable_rt(void)
-> @@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
->  	WARN_ON_ONCE(count < 0);
->  	local_irq_enable();
->  
-> -	if (!in_atomic())
-> +	if (!in_atomic()) {
-> +		rcu_read_unlock();
->  		local_unlock(bh_lock);
-> +	}
->  
->  	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
->  	preempt_check_resched();
-> -- 
-> 1.8.3.1
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 4b63fef..5181ea9 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1112,7 +1112,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+>     if (cpumask_equal(&p->cpus_allowed, new_mask))
+>         goto out;
+> 
+> -   if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
+> +   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+> +   if (dest_cpu >= nr_cpu_ids) {
+>         ret = -EINVAL;
+>         goto out;
+>     }
+> @@ -1133,7 +1134,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+>     if (cpumask_test_cpu(task_cpu(p), new_mask))
+>         goto out;
+> 
+> -   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);>     if (task_running(rq, p) || p->state == TASK_WAKING) {
+>         struct migration_arg arg = { p, dest_cpu };
+>         /* Need help from migration thread: drop lock and wait. */
+> --
+> 1.8.5.6
 > 
