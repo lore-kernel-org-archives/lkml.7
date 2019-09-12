@@ -3,86 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01431C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3F3C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DDF2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710802053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbfILOIp (ORCPT
+        id S1732507AbfILOJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:08:45 -0400
-Received: from relay.sw.ru ([185.231.240.75]:42496 "EHLO relay.sw.ru"
+        Thu, 12 Sep 2019 10:09:21 -0400
+Received: from elvis.franken.de ([193.175.24.41]:41051 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732389AbfILOIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:08:44 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1i8Plm-0008P3-U4; Thu, 12 Sep 2019 17:08:23 +0300
-Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
-To:     Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
- <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
- <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <e4e23249-9f37-1d66-d411-7786b7aba36e@virtuozzo.com>
-Date:   Thu, 12 Sep 2019 17:08:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1732348AbfILOJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:09:21 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1i8Pmh-0003T2-00; Thu, 12 Sep 2019 16:09:19 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 1E80CC278A; Thu, 12 Sep 2019 16:09:12 +0200 (CEST)
+Date:   Thu, 12 Sep 2019 16:09:12 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+Message-ID: <20190912140912.GA13137@alpha.franken.de>
+References: <20190905133251.GA3650@rapoport-lnx>
+ <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
+ <20190905154747.GB3650@rapoport-lnx>
+ <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
+ <20190906130223.GA17704@rapoport-lnx>
+ <20190909182242.c1ef9717d14b20212ef75954@suse.de>
+ <20190910113243.GA19207@rapoport-lnx>
+ <20190911160939.19f776535770d12ff51a2af7@suse.de>
+ <20190912105831.GA10677@rapoport-lnx>
+ <20190912155539.6151b0811e858455be4c8d86@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912155539.6151b0811e858455be4c8d86@suse.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/12/19 4:53 PM, Vlastimil Babka wrote:
-> On 9/11/19 5:19 PM, Qian Cai wrote:
->>
->> The new config looks redundant and confusing. It looks to me more of a document update
->> in Documentation/dev-tools/kasan.txt to educate developers to select PAGE_OWNER and
->> DEBUG_PAGEALLOC if needed.
->  
-> Agreed. But if you want it fully automatic, how about something
-> like this (on top of mmotm/next)? If you agree I'll add changelog
-> and send properly.
+On Thu, Sep 12, 2019 at 03:55:39PM +0200, Thomas Bogendoerfer wrote:
+> - reserved[0xd]	[0x000000035bff8000-0x000000035bffffff], 0x0000000000008000 bytes flags: 0x0
 > 
-> ----8<----
-> 
-> From a528d14c71d7fdf5872ca8ab3bd1b5bad26670c9 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Thu, 12 Sep 2019 15:51:23 +0200
-> Subject: [PATCH] make KASAN enable page_owner with free stack capture
-> 
-> ---
->  include/linux/page_owner.h |  1 +
->  lib/Kconfig.kasan          |  4 ++++
->  mm/Kconfig.debug           |  5 +++++
->  mm/page_alloc.c            |  6 +++++-
->  mm/page_owner.c            | 37 ++++++++++++++++++++++++-------------
->  5 files changed, 39 insertions(+), 14 deletions(-)
-> 
+> I have no idea which reservation this is, but it's not from one of the
+> node data.
 
-Looks ok to me. This certainly better than full dependency on the DEBUG_PAGEALLOC which we don't need.
+that's sparsemem's mem_section. And 
 
- 
+ free_bootmem_with_active_regions(node, end_pfn);
+
+on the last node will free this reserved memory, when memory
+is added node by node. This explains it.
+
+So when resending the patch add my
+
+Tested-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
