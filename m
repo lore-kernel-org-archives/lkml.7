@@ -2,169 +2,89 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED29C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB8C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFF5208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9994E20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568291505;
+	bh=y+iwcDhS0CV/l/g9TCSnbAA71fAViqS5kUSTZKfsLFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G0le3HWHbLoK6WqaX5RmdTRMffbRPAdXJEHokB5xwF2zs0WbxNA2EGEZEd30V7UUf
+	 7HK/uNnhq+IRUTiunKi72ctONRpsdYUUyHbsZLT71nC2+PgqaQiV4AOrSA5fveHWb9
+	 /kB5RTQ7EkicqJNnBY8AxTMBOysv11eiaxPaTCVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731646AbfILM3u (ORCPT
+        id S1731648AbfILMbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:29:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38794 "EHLO mx1.redhat.com"
+        Thu, 12 Sep 2019 08:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731547AbfILM3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:29:50 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731283AbfILMbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 08:31:44 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 156B5A37182;
-        Thu, 12 Sep 2019 12:29:49 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 801EB600C4;
-        Thu, 12 Sep 2019 12:29:47 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jason L Tibbitts III" <tibbs@math.uh.edu>,
-        "Bruce Fields" <bfields@fieldses.org>,
-        "Wolfgang Walter" <linux@stwm.de>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        km@cm4all.com, linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-Date:   Thu, 12 Sep 2019 08:29:47 -0400
-Message-ID: <EC2B51FB-8C22-4513-B59F-0F0741F694EB@redhat.com>
-In-Reply-To: <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
- <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
- <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
- <ufad0ggrfrk.fsf@epithumia.math.uh.edu> <20190906144837.GD17204@fieldses.org>
- <ufapnkdw3s3.fsf@epithumia.math.uh.edu>
- <75F810C6-E99E-40C3-B5E1-34BA2CC42773@oracle.com>
- <DD6B77EE-3E25-4A65-9D0E-B06EEAD32B31@redhat.com>
- <0089DF80-3A1C-4F0B-A200-28FF7CFD0C65@oracle.com>
- <429B2B1F-FB55-46C5-8BC5-7644CE9A5894@redhat.com>
- <F1EC95D2-47A3-4390-8178-CAA8C045525B@oracle.com>
- <8D7EFCEB-4AE6-4963-B66F-4A8EEA5EA42A@redhat.com>
- <FAA4DD3D-C58A-4628-8FD5-A7E2E203B75A@redhat.com>
- <B8CDE765-7DCE-4257-91E1-CC85CB7F87F7@oracle.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id C298B206CD;
+        Thu, 12 Sep 2019 12:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568291503;
+        bh=y+iwcDhS0CV/l/g9TCSnbAA71fAViqS5kUSTZKfsLFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FvIfMI6UhO/LYxT2vvOYn3UqhZwke5zzUg5klDqZbih17jYY380GErxthie2GY4RW
+         17AJ4rBpUyDSgZ18lmts4vgZyiLdQReh87VW8qDxTy25zm8CM0ENxVT/0H7COapRMQ
+         mEwCL88usc1Ke8ov/i5oXbEsTjoYtll+L3tyLX4U=
+Date:   Thu, 12 Sep 2019 13:31:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: linux-next: manual merge of the arm64 tree with the dma-mapping
+ tree
+Message-ID: <20190912123139.kuucii4sltycgy3p@willie-the-truck>
+References: <20190912215558.473206de@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Thu, 12 Sep 2019 12:29:49 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912215558.473206de@canb.auug.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11 Sep 2019, at 13:54, Chuck Lever wrote:
+Hi Stephen,
 
->> On Sep 11, 2019, at 1:50 PM, Benjamin Coddington 
->> <bcodding@redhat.com> wrote:
->>
->> On 11 Sep 2019, at 13:40, Benjamin Coddington wrote:
->>
->>> On 11 Sep 2019, at 13:29, Chuck Lever wrote:
->>>
->>>>> On Sep 11, 2019, at 1:26 PM, Benjamin Coddington 
->>>>> <bcodding@redhat.com> wrote:
->>>>>
->>>>>
->>>>> On 11 Sep 2019, at 12:39, Chuck Lever wrote:
->>>>>
->>>>>>> On Sep 11, 2019, at 12:25 PM, Benjamin Coddington 
->>>>>>> <bcodding@redhat.com> wrote:
->>>>>>>
->>>>>
->>>>>>> Instead, I think we want to make sure the mic falls squarely 
->>>>>>> into the tail
->>>>>>> every time.
->>>>>>
->>>>>> I'm not clear how you could do that. The length of the page data 
->>>>>> is not
->>>>>> known to the client before it parses the reply. Are you 
->>>>>> suggesting that
->>>>>> gss_unwrap should do it somehow?
->>>>>
->>>>> Is it too niave to always put the mic at the end of the tail?
->>>>
->>>> The size of the page content is variable.
->>>>
->>>> The only way the MIC will fall into the tail is if the page content 
->>>> is
->>>> exactly the largest expected size. When the page content is smaller 
->>>> than
->>>> that, the receive logic will place part or all of the MIC in 
->>>> ->pages.
->>>
->>> Ok, right.  But what I meant is that xdr_buf_read_netobj() should be 
->>> renamed
->>> and repurposed to be "move the mic from wherever it is to the end of
->>> xdr_buf's tail".
->>>
->>> But now I see what you mean, and I also see that it is already 
->>> trying to do
->>> that.. and we don't want to overlap the copy..
->>>
->>> So, really, we need the tail to be larger than twice the mic.. less 
->>> 1.  That
->>> means the fix is probably just increasing rslack for krb5i.
->>
->> .. or we can keep the tighter tail space, and if we detect the mic 
->> straddles
->> the page and tail, we can move the mic into the tail with 2 copies, 
->> first
->> move the bit in the tail back, then move the bit in the pages.
->>
->> Which is preferred, less allocation, or in the rare case this occurs, 
->> doing
->> copy twice?
->
-> It sounds like the bug is that the current code does not deal 
-> correctly
-> when the MIC crosses the boundary between ->pages and ->tail? I'd like
-> to see that addressed rather than changing rslack.
+On Thu, Sep 12, 2019 at 09:55:58PM +1000, Stephen Rothwell wrote:
+> Today's linux-next merge of the arm64 tree got a conflict in:
+> 
+>   arch/arm64/include/asm/dma-mapping.h
+> 
+> between commit:
+> 
+>   5489c8e0cf03 ("arm64: use asm-generic/dma-mapping.h")
+> 
+> from the dma-mapping tree and commit:
+> 
+>   b907b80d7ae7 ("arm64: remove pointless __KERNEL__ guards")
+> 
+> from the arm64 tree.
+> 
+> I fixed it up (I just removed the file) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-Here's what I'm about to run through my testing:
+Thanks. Killing the file is the right thing to do.
 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 48c93b9e525e..d6ffc9011269 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1238,14 +1238,21 @@ EXPORT_SYMBOL_GPL(xdr_encode_word);
+Will
 
-  /* If the netobj starting offset bytes from the start of xdr_buf is 
-contained
-   * entirely in the head or the tail, set object to point to it; 
-otherwise
-- * try to find space for it at the end of the tail, copy it there, and
-- * set obj to point to it. */
-+ * try to find space for it at the end of the tail, and copy it there.  
-If
-+ * the netobj is partly within the page data and tail, shrink the pages 
-to
-+ * move the object into the tail */
-  int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, 
-unsigned int offset)
-  {
-         struct xdr_buf subbuf;
-+       unsigned int page_range;
-
-         if (xdr_decode_word(buf, offset, &obj->len))
-                 return -EFAULT;
-+
-+       page_range = buf->head->iov_len + buf->page_len - offset + 4;
-+       if (page_range > 0 && page_range < obj->len)
-+               xdr_shrink_pagelen(buf, page_range);
-+
-         if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
-                 return -EFAULT;
-
-
-Is the use of xdr_shrink_pagelen() at this point in the decoding a 
-problem for RDMA?
-
-Ben
