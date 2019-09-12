@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1F4C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD91C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20912075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154FA214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 13:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JVqg7BDR"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oUiN9hY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfILNCE (ORCPT
+        id S1731988AbfILNCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 09:02:04 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:32525 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731915AbfILNCC (ORCPT
+        Thu, 12 Sep 2019 09:02:03 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:41191 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfILNCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 09:02:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568293322; x=1599829322;
+  t=1568293321; x=1599829321;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=p10e5DCgVjw+kle1XJQu91IESvd80sBGwG6u5Jh5HO4=;
-  b=JVqg7BDRZevaft2BrS+Y81LQDw3O3ch5FYu+r9hDKcSKISAMBqs2ztqd
-   meNQX/wmesOWv0PHaZ8xiiBkIvhLhyfLG+Df+N8Ns+QT6b7sDzCFa5Uwr
-   0PwVxcShdh0iEW+0vE5SPK+knD1UhK/3iIozSiWC7VBMHbNiXux0nxjiV
-   0=;
+  bh=0wVQUJEX0IIEn7zwGQ77yG4BMVdun+xmbgM7B9MW4g0=;
+  b=oUiN9hY41h/QdQv47e8Z8oXQ20/Jml34uk7FEkPlu7/9E0lKXc1SX5zp
+   I/hvQS9rWpfFfUWqi1P19UGyq6l00fZvrP5Hljz3jwgui30hY7dfOX1Ej
+   I+rhSBC0hUyHh1q04bB7JvZKGcJDsv6dwm1A1zJ/rjdgcaDwZGV7sx5HW
+   k=;
 X-IronPort-AV: E=Sophos;i="5.64,497,1559520000"; 
-   d="scan'208";a="831007834"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Sep 2019 13:01:48 +0000
+   d="scan'208";a="750389519"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 12 Sep 2019 13:02:00 +0000
 Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 7B95CA2A24;
-        Thu, 12 Sep 2019 13:01:45 +0000 (UTC)
+        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id DE5C3A1CDE;
+        Thu, 12 Sep 2019 13:01:56 +0000 (UTC)
 Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
  EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:44 +0000
+ id 15.0.1367.3; Thu, 12 Sep 2019 13:01:56 +0000
 Received: from u9ff250417f405e.ant.amazon.com (10.43.161.82) by
  EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Sep 2019 13:01:38 +0000
+ id 15.0.1367.3; Thu, 12 Sep 2019 13:01:50 +0000
 From:   Jonathan Chocron <jonnyc@amazon.com>
 To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
@@ -56,9 +56,9 @@ CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
         <hanochu@amazon.com>, <hhhawa@amazon.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v6 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-Date:   Thu, 12 Sep 2019 16:00:40 +0300
-Message-ID: <20190912130042.14597-3-jonnyc@amazon.com>
+Subject: [PATCH v6 4/7] PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs Root Port
+Date:   Thu, 12 Sep 2019 16:00:42 +0300
+Message-ID: <20190912130042.14597-5-jonnyc@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
 References: <20190912130042.14597-1-jonnyc@amazon.com>
@@ -72,60 +72,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ali Saidi <alisaidi@amazon.com>
+The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
+platforms it is configured to not advertise the capability at all, while
+on others it (mistakenly) does. This causes a panic during
+initialization by the pcieport driver, since it tries to configure the
+MSI-X capability. Specifically, when trying to access the MSI-X table
+a "non-existing addr" exception occurs.
 
-The Amazon's Annapurna Labs root ports don't advertise an ACS
-capability, but they don't allow peer-to-peer transactions and do
-validate bus numbers through the SMMU. Additionally, it's not possible
-for one RP to pass traffic to another RP.
+Example stacktrace snippet:
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+  SError Interrupt on CPU2, code 0xbf000000 -- SError
+  CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+  Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+  pstate: 80000005 (Nzcv daif -PAN -UAO)
+  pc : __pci_enable_msix_range+0x4e4/0x608
+  lr : __pci_enable_msix_range+0x498/0x608
+  sp : ffffff80117db700
+  x29: ffffff80117db700 x28: 0000000000000001
+  x27: 0000000000000001 x26: 0000000000000000
+  x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+  x23: 0000000000000000 x22: 0000000000000000
+  x21: 0000000000000001 x20: 0000000000000000
+  x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+  x17: 0000000000000000 x16: 0000000000000000
+  x15: ffffff80116496c8 x14: ffffffd3e9844503
+  x13: ffffffd3e9844502 x12: 0000000000000038
+  x11: ffffffffffffff00 x10: 0000000000000040
+  x9 : ffffff801165e270 x8 : ffffff801165e268
+  x7 : 0000000000000002 x6 : 00000000000000b2
+  x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+  x3 : 0000000000000000 x2 : 0000000000000000
+  x1 : 0000000000000000 x0 : ffffffd3e9844680
+  Kernel panic - not syncing: Asynchronous SError Interrupt
+  CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+  Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+  Call trace:
+   dump_backtrace+0x0/0x140
+   show_stack+0x14/0x20
+   dump_stack+0xa8/0xcc
+   panic+0x140/0x334
+   nmi_panic+0x6c/0x70
+   arm64_serror_panic+0x74/0x88
+   __pte_error+0x0/0x28
+   el1_error+0x84/0xf8
+   __pci_enable_msix_range+0x4e4/0x608
+   pci_alloc_irq_vectors_affinity+0xdc/0x150
+   pcie_port_device_register+0x2b8/0x4e0
+   pcie_portdrv_probe+0x34/0xf0
+
+Notice that this quirk also disables MSI (which may work, but hasn't
+been tested nor has a current use case), since currently there is no
+standard way to disable only MSI-X.
+
 Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/quirks.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/pci/quirks.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ded60757a573..2e983f2a0ee9 100644
+index 2e983f2a0ee9..c1077e806291 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -4418,6 +4418,24 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
- 	return ret;
- }
- 
-+static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -2977,6 +2977,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+ 			quirk_msi_intx_disable_qca_bug);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+ 			quirk_msi_intx_disable_qca_bug);
++
++/*
++ * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
++ * should be disabled on platforms where the device (mistakenly) advertises it.
++ *
++ * Notice that this quirk also disables MSI (which may work, but hasn't been
++ * tested), since currently there is no standard way to disable only MSI-X.
++ *
++ * The 0031 device id is reused for other non Root Port device types,
++ * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
++ */
++static void quirk_al_msi_disable(struct pci_dev *dev)
 +{
-+	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return -ENOTTY;
-+
-+	/*
-+	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
-+	 * but do include ACS-like functionality. The hardware doesn't support
-+	 * peer-to-peer transactions via the root port and each has a unique
-+	 * segment number.
-+	 *
-+	 * Additionally, the root ports cannot send traffic to each other.
-+	 */
-+	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+
-+	return acs_flags ? 0 : 1;
++	dev->no_msi = 1;
++	pci_warn(dev, "Disabling MSI/MSI-X\n");
 +}
-+
- /*
-  * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
-  * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
-@@ -4611,6 +4629,8 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-+	/* Amazon Annapurna Labs */
-+	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
- 	{ 0 }
- };
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
++			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+ #endif /* CONFIG_PCI_MSI */
  
+ /*
 -- 
 2.17.1
 
