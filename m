@@ -2,103 +2,118 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2CBC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E56DC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3F620830
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jCafRrJi"
+	by mail.kernel.org (Postfix) with ESMTP id F0EBD20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 16:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfILQoX (ORCPT
+        id S1730128AbfILQo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 12:44:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60538 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfILQoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 12:44:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8CGhdQh088519;
-        Thu, 12 Sep 2019 16:43:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=EB/p5338NYK4pzHsk6TBuBlAMNpbEMjQOcbfPa1pTQQ=;
- b=jCafRrJiLWmf9PMwQwF3AQ5GwyOUrMFaTKoak7fyLTjhfpvBEwfryr6f+qpkTtAycMnC
- Ek8O93/PErFd/DhTtMsYJAHFpYqkZRMNVmZa+VqbYyc8455i4rkK6JpQUIMAUJIa1LHF
- DIRRwdujfsNWYrvn9nm0oLWu+LciByGLAyv3yyMki3b96p8VADNpao/k/LFCmxf8wQOE
- cQSXRqJz307e+aoHlIVVeY6AFM62+dwjstXLL9T8DNsn6NIAguH29YeTouKFvcbHQMnD
- ydn/mkbe6plveb4unWpgJOXqELB4KUg+ltQeThuC9RXEIH1NZ73dXIaJLz9IefNnT1e1 iw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2uw1jyhnvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 16:43:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8CGhe1s010201;
-        Thu, 12 Sep 2019 16:43:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2uyrdgkbaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 16:43:48 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8CGhSW9018583;
-        Thu, 12 Sep 2019 16:43:28 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Sep 2019 09:43:28 -0700
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-To:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <ae7edcb8-74e5-037c-17e7-01b3cf9320af@oracle.com>
- <b7d7d109-03cf-d750-3a56-a95837998372@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <87ac9e4f-9301-9eb7-e68b-a877e7cf0384@oracle.com>
-Date:   Thu, 12 Sep 2019 09:43:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 12 Sep 2019 12:44:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52882 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728983AbfILQoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 12:44:25 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A8D3881DFF
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 16:44:24 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id 15so142878wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 09:44:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=zoH4QTE6JeRQ9cejfuBwTdDAfAuJXRi5JfhYPwN1PqU=;
+        b=GZxmVzgAqPzrv6k+tGolWPqJQChBsiaoFBGQNWV5oT9t2k9hVBt3x2qtEIPkGDx/6H
+         znluDo7iGIUhgH/pUaIC9KKf/7eIs4xYtXjBNBKsb49CLkIAzlw6I87KoWZe0Ned0eFS
+         VREWXsZ7r8+dbm95ICPFRGWm3vGj3ieToWNDkIolHbBJYqDXqC+KeC1M8AavSYHjWiTm
+         Y1zCTD6I5tt7LpDJ87PyCiNSzpyjc4vpIp/PC8u4hdeo3c7pkdEqYS619/YFwuWa1sEw
+         Rlz2zk1UYA8hXf1BFmDJpLVryE2487SL8HUqPnH+sOJzCJ4/2wZV7CgqWz2mIM1NFziv
+         nVZw==
+X-Gm-Message-State: APjAAAWRHxuecKK70vf2zpnsszJITVRlc1rezBAUsXMlS2ghqHmVNUqn
+        LVOPbRp8oj5C8Y1Ls7Dd1LzBI7diuCeqjycCNZht6gXXIlyGDW5mqvVEgtYx1De5AAsESMGQ4Su
+        3NAj8iQIWLwsicYiEZ78VvPsm
+X-Received: by 2002:adf:e94f:: with SMTP id m15mr2619465wrn.225.1568306663101;
+        Thu, 12 Sep 2019 09:44:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxeN2yn1DCTnoJ6sS2TFwy9L2253CghjHXehfinXZ3U/iqRDXW/hi8D0Ic4JQ8+OxbYzc5QZQ==
+X-Received: by 2002:adf:e94f:: with SMTP id m15mr2619441wrn.225.1568306662883;
+        Thu, 12 Sep 2019 09:44:22 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a190sm743531wme.8.2019.09.12.09.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 09:44:22 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86: work around leak of uninitialized stack contents
+In-Reply-To: <CALMp9eRu=C+MQmRpKh5WtyqBKq=ja8Wj7fD5NTFhZi9EZd+84w@mail.gmail.com>
+References: <20190912041817.23984-1-huangfq.daxian@gmail.com> <87tv9hew2k.fsf@vitty.brq.redhat.com> <CALMp9eRu=C+MQmRpKh5WtyqBKq=ja8Wj7fD5NTFhZi9EZd+84w@mail.gmail.com>
+Date:   Thu, 12 Sep 2019 18:44:21 +0200
+Message-ID: <874l1hcvmi.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b7d7d109-03cf-d750-3a56-a95837998372@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=664
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909120174
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=710 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909120174
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/12/19 2:06 AM, Waiman Long wrote:
-> If we can take the rwsem in read mode, that should solve the problem
-> AFAICS. As I don't have a full understanding of the history of that
-> code, I didn't try to do that in my patch.
+Jim Mattson <jmattson@google.com> writes:
 
-Do you still have access to an environment that creates the long stalls?
-If so, can you try the simple change of taking the semaphore in read mode
-in huge_pmd_share.
+> On Thu, Sep 12, 2019 at 1:51 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> Fuqian Huang <huangfq.daxian@gmail.com> writes:
+>>
+>> > Emulation of VMPTRST can incorrectly inject a page fault
+>> > when passed an operand that points to an MMIO address.
+>> > The page fault will use uninitialized kernel stack memory
+>> > as the CR2 and error code.
+>> >
+>> > The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+>> > exit to userspace;
+>>
+>> Hm, why so? KVM_EXIT_INTERNAL_ERROR is basically an error in KVM, this
+>> is not a proper reaction to a userspace-induced condition (or ever).
+>
+> This *is* an error in KVM. KVM should properly emulate the quadword
+> store to the emulated device. Doing anything else is just wrong.
+>
+> KVM_INTERNAL_ERROR is basically a cop-out for things that are hard.
+
+Yes, I way arguing with "the right behavior would be" in relation to
+KVM_INTERNAL_ERROR.
+
+>
+>> I also looked at VMPTRST's description in Intel's manual and I can't
+>> find and explicit limitation like "this must be normal memory". We're
+>> just supposed to inject #PF "If a page fault occurs in accessing the
+>> memory destination operand."
+>>
+>> In case it seems to be too cumbersome to handle VMPTRST to MMIO and we
+>> think that nobody should be doing that I'd rather prefer injecting #GP.
+>
+> That is not the architected behavior at all. Now you're just making
+> things up!
+
+True and I'm not against KVM_INTERNAL_ERROR as an iterim solution if it
+comes with a comment explaining why we're 'admitting defeat' here.
 
 -- 
-Mike Kravetz
+Vitaly
