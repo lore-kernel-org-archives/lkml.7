@@ -2,127 +2,587 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D157C5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195D4C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732F62075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE102075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ajTDMmdf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcXyu8Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfILIKY (ORCPT
+        id S1730102AbfILIKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:10:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33904 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728983AbfILIKY (ORCPT
+        Thu, 12 Sep 2019 04:10:44 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36613 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfILIKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:10:24 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r22so7266354lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
+        Thu, 12 Sep 2019 04:10:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j191so2499798pgd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
-        b=ajTDMmdfwn5UX+d5ejQBWK28wtYqlhBqiZBhyyo1d7EH4QnVlSGSthpPF94JG1ts1u
-         4AKBxKZnZoc2yguzP8SwFqFnEf7kZThvviTT4yARFn6IW3KOoxTJIP+KBETzzcVCE20X
-         lRqOilUcIEi1rbYoyMDOmpFzRW94FQd9IBGOuE2r7jeIn+yHruPy/3UDpI9iXsDRT5qs
-         ojPUxfYujzU4BAdjvtfk6dXQttk6r7g8dzEDFEcUJ8bgDDBFL3v1/h1ZgFec1bp7iUvv
-         JJ1LKyVMbUFXNG5piF2UMuPPEStF1dKu6KzRRISxvaIIs3cTB/UixJgrtNgWpWbmvxBk
-         iFlg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oc+J6eNhxjsa/6VaspRsJsWRmZSO6iBNPRM0P3vRWgU=;
+        b=lcXyu8QcdtYlXAvo16EjoEE2lVkRF/ucXm7hOcjL9ydu2A+9cwGGqxeHsPMtbBIqmc
+         SE9ZFVGJHqULSPKFeDdFR8JyrRNB8XMAtSbhp34CJK9i694H4sn/ZHBj/sdFSa8uuSUh
+         tl5E5nMrZR1HW20D2zPqdkuuYPY8hw8YZ+QL8v4JdauMqGv6/wz3kYTLGGEEFA24Qo4K
+         IpdUt3Z+0Wn7D+eOhpe8ytOf3xghJUa5zK0W8GIteA5rnZKMpAIvhVG3UrgWORQ7S0pf
+         jQVt+0Z3pY7g6fBKRRffRLCKh0U3xo/u3UaS1xyAfeT7ZZVvu4B3XNEn0r65fYWIScCV
+         4m8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=P7NzzGg11L1WgkGhr271SvCX8f/Rsb9hDudwdwT0fCA=;
-        b=fBgqLPJDf+7CX4zxWogoNPDipcmemSyHNpoh+VjJCIZ6t4akq765523xXHWjdl0QIW
-         xAv4QPUKgysmi/7ZRPfLulXgYWciTS0wni7rdGEYDMUofHK0qtZuAxA8Y78W9HGEC/uW
-         Krzql7+pVqfLZ8iiRzCikMuQ1CVtItcrV4E3nOsCsPnY8z6vHbG2XE0p9pcHHkvbOGJ3
-         cdKHLyf3jUAJ5pm3r9bOHDLGfFCS9UrMOX4jWJaX5Jc0cOXqBX/kMOCTpCBWi2nCi81K
-         oAyXoR29iWiSTLsg4S8BrgR0cj6KaehdqESVESwvPRTulUgWB7EVlp73DGtGnZeEg7SX
-         7++w==
-X-Gm-Message-State: APjAAAWNAkAx5DTQtLvYbcg/QmNv5EvljPT30Ksr0ebvPhrwQ4oV1JdP
-        EPqAWm4UhrbwBPodrvgih4FQGvSWCnKIJzhg5n06tw==
-X-Google-Smtp-Source: APXvYqwyEw+nwxXxUdrq0Oo0KcwsWs9CUJUX5FHdQpSJ5n0/6fskRV5YuggZ49ndyydr6NdwgqdefbOCuuQr3ymB+WY=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27289496lfp.61.1568275822130;
- Thu, 12 Sep 2019 01:10:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 09:10:10 +0100
-Message-ID: <CACRpkdbZE2dwmaE2-NF_p6XQodBb=34tOxyDgfbAWjiirTgj+Q@mail.gmail.com>
-Subject: [GIT PULL] final GPIO fixes for v5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oc+J6eNhxjsa/6VaspRsJsWRmZSO6iBNPRM0P3vRWgU=;
+        b=U08A7DoIsVvD7SNZv6VokXO4qH+A0A4uVr4sdVaAFEyLpH1j5XxMEPHlWEjabhfAgL
+         RmZPaJdQklDE2JyIg0cE8WJe9cYKW14YQj1ZLAouZlZI/80Cr4W90r6Z1FOroM99n/DO
+         AwQ1QkEA4myFP4tG5fo0ydxKoRhB7NQ6Se6hAiTYkOAH12Z7wYWDnWphv4g703fOzSp7
+         FNSJFKuAhTGk0DVRhowTYk9U41rof2tMbaU3O+K4Bv7Vt+Q7lyUbbbTMtJ5NIelHOa6U
+         iXDZmdF/39axkvwhWItdx4Dw8kDXOTmltMkrB0IqxMK8HC8t7xSdEXi3pIQy9l5lcl8Y
+         TRgw==
+X-Gm-Message-State: APjAAAWKnQw+pxZ/HNWfp0q6/hHxVEcZU7h8yFuTf6ZGpaKLim3VwkBp
+        8Nzlo4mnajqxT9r6o4csphE=
+X-Google-Smtp-Source: APXvYqxj2Z0ybFCxoDzWvLTu0G4ZmzxE7v6gpTeXj427bB2Z/QsWjHENSJdi25PbQtWkSx44cbblhQ==
+X-Received: by 2002:a62:fc46:: with SMTP id e67mr47712131pfh.153.1568275842219;
+        Thu, 12 Sep 2019 01:10:42 -0700 (PDT)
+Received: from localhost.localdomain ([49.216.13.52])
+        by smtp.gmail.com with ESMTPSA id j26sm23435730pfe.181.2019.09.12.01.10.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 12 Sep 2019 01:10:41 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     matthias.bgg@gmail.com, gene_chen@richtek.com,
+        Wilma.Wu@mediatek.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@mediatek.corp-partner.google.com>
+Subject: [PATCH] mfd: mt6360: add pmic mt6360 driver
+Date:   Thu, 12 Sep 2019 16:10:37 +0800
+Message-Id: <1568275837-3560-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Gene Chen <gene_chen@mediatek.corp-partner.google.com>
 
-I don't really like to send so many fixes at the very last minute,
-but the bug-sport activity is unpredictable.
+---
+ drivers/mfd/Kconfig       |  12 ++
+ drivers/mfd/Makefile      |   1 +
+ drivers/mfd/mt6360-core.c | 463 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 476 insertions(+)
+ create mode 100644 drivers/mfd/mt6360-core.c
 
-Four out of three are -stable material that will go everywhere,
-one is for the current cycle.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index f129f96..a422c76 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -862,6 +862,18 @@ config MFD_MAX8998
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_MT6360
++	tristate "Mediatek MT6360 SubPMIC"
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	depends on I2C
++	help
++	  Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
++	  PMU part include charger, flashlight, rgb led
++	  PMIC part include 2-channel BUCKs and 2-channel LDOs
++	  LDO part include 4-channel LDOs
++
+ config MFD_MT6397
+ 	tristate "MediaTek MT6397 PMIC Support"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f026ada..77a8f0b 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -241,6 +241,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
++obj-$(CONFIG_MFD_MT6360)	+= mt6360-core.o
+ obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+ 
+ obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+new file mode 100644
+index 0000000..d3580618
+--- /dev/null
++++ b/drivers/mfd/mt6360-core.c
+@@ -0,0 +1,463 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/version.h>
++
++#include <linux/mfd/mt6360.h>
++#include <linux/mfd/mt6360-private.h>
++
++/* reg 0 -> 0 ~ 7 */
++#define MT6360_CHG_TREG_EVT		(4)
++#define MT6360_CHG_AICR_EVT		(5)
++#define MT6360_CHG_MIVR_EVT		(6)
++#define MT6360_PWR_RDY_EVT		(7)
++/* REG 1 -> 8 ~ 15 */
++#define MT6360_CHG_BATSYSUV_EVT		(9)
++#define MT6360_FLED_CHG_VINOVP_EVT	(11)
++#define MT6360_CHG_VSYSUV_EVT		(12)
++#define MT6360_CHG_VSYSOV_EVT		(13)
++#define MT6360_CHG_VBATOV_EVT		(14)
++#define MT6360_CHG_VBUSOV_EVT		(15)
++/* REG 2 -> 16 ~ 23 */
++/* REG 3 -> 24 ~ 31 */
++#define MT6360_WD_PMU_DET		(25)
++#define MT6360_WD_PMU_DONE		(26)
++#define MT6360_CHG_TMRI			(27)
++#define MT6360_CHG_ADPBADI		(29)
++#define MT6360_CHG_RVPI			(30)
++#define MT6360_OTPI			(31)
++/* REG 4 -> 32 ~ 39 */
++#define MT6360_CHG_AICCMEASL		(32)
++#define MT6360_CHGDET_DONEI		(34)
++#define MT6360_WDTMRI			(35)
++#define MT6360_SSFINISHI		(36)
++#define MT6360_CHG_RECHGI		(37)
++#define MT6360_CHG_TERMI		(38)
++#define MT6360_CHG_IEOCI		(39)
++/* REG 5 -> 40 ~ 47 */
++#define MT6360_PUMPX_DONEI		(40)
++#define MT6360_BAT_OVP_ADC_EVT		(41)
++#define MT6360_TYPEC_OTP_EVT		(42)
++#define MT6360_ADC_WAKEUP_EVT		(43)
++#define MT6360_ADC_DONEI		(44)
++#define MT6360_BST_BATUVI		(45)
++#define MT6360_BST_VBUSOVI		(46)
++#define MT6360_BST_OLPI			(47)
++/* REG 6 -> 48 ~ 55 */
++#define MT6360_ATTACH_I			(48)
++#define MT6360_DETACH_I			(49)
++#define MT6360_QC30_STPDONE		(51)
++#define MT6360_QC_VBUSDET_DONE		(52)
++#define MT6360_HVDCP_DET		(53)
++#define MT6360_CHGDETI			(54)
++#define MT6360_DCDTI			(55)
++/* REG 7 -> 56 ~ 63 */
++#define MT6360_FOD_DONE_EVT		(56)
++#define MT6360_FOD_OV_EVT		(57)
++#define MT6360_CHRDET_UVP_EVT		(58)
++#define MT6360_CHRDET_OVP_EVT		(59)
++#define MT6360_CHRDET_EXT_EVT		(60)
++#define MT6360_FOD_LR_EVT		(61)
++#define MT6360_FOD_HR_EVT		(62)
++#define MT6360_FOD_DISCHG_FAIL_EVT	(63)
++/* REG 8 -> 64 ~ 71 */
++#define MT6360_USBID_EVT		(64)
++#define MT6360_APWDTRST_EVT		(65)
++#define MT6360_EN_EVT			(66)
++#define MT6360_QONB_RST_EVT		(67)
++#define MT6360_MRSTB_EVT		(68)
++#define MT6360_OTP_EVT			(69)
++#define MT6360_VDDAOV_EVT		(70)
++#define MT6360_SYSUV_EVT		(71)
++/* REG 9 -> 72 ~ 79 */
++#define MT6360_FLED_STRBPIN_EVT		(72)
++#define MT6360_FLED_TORPIN_EVT		(73)
++#define MT6360_FLED_TX_EVT		(74)
++#define MT6360_FLED_LVF_EVT		(75)
++#define MT6360_FLED2_SHORT_EVT		(78)
++#define MT6360_FLED1_SHORT_EVT		(79)
++/* REG 10 -> 80 ~ 87 */
++#define MT6360_FLED2_STRB_EVT		(80)
++#define MT6360_FLED1_STRB_EVT		(81)
++#define MT6360_FLED2_STRB_TO_EVT	(82)
++#define MT6360_FLED1_STRB_TO_EVT	(83)
++#define MT6360_FLED2_TOR_EVT		(84)
++#define MT6360_FLED1_TOR_EVT		(85)
++/* REG 11 -> 88 ~ 95 */
++/* REG 12 -> 96 ~ 103 */
++#define MT6360_BUCK1_PGB_EVT		(96)
++#define MT6360_BUCK1_OC_EVT		(100)
++#define MT6360_BUCK1_OV_EVT		(101)
++#define MT6360_BUCK1_UV_EVT		(102)
++/* REG 13 -> 104 ~ 111 */
++#define MT6360_BUCK2_PGB_EVT		(104)
++#define MT6360_BUCK2_OC_EVT		(108)
++#define MT6360_BUCK2_OV_EVT		(109)
++#define MT6360_BUCK2_UV_EVT		(110)
++/* REG 14 -> 112 ~ 119 */
++#define MT6360_LDO1_OC_EVT		(113)
++#define MT6360_LDO2_OC_EVT		(114)
++#define MT6360_LDO3_OC_EVT		(115)
++#define MT6360_LDO5_OC_EVT		(117)
++#define MT6360_LDO6_OC_EVT		(118)
++#define MT6360_LDO7_OC_EVT		(119)
++/* REG 15 -> 120 ~ 127 */
++#define MT6360_LDO1_PGB_EVT		(121)
++#define MT6360_LDO2_PGB_EVT		(122)
++#define MT6360_LDO3_PGB_EVT		(123)
++#define MT6360_LDO5_PGB_EVT		(125)
++#define MT6360_LDO6_PGB_EVT		(126)
++#define MT6360_LDO7_PGB_EVT		(127)
++
++#define MT6360_REGMAP_IRQ_REG(_irq_evt)		\
++	REGMAP_IRQ_REG(_irq_evt, (_irq_evt) / 8, BIT((_irq_evt) % 8))
++
++#define MT6360_MFD_CELL(_name)					\
++	{							\
++		.name = #_name,					\
++		.of_compatible = "mediatek," #_name,		\
++		.num_resources = ARRAY_SIZE(_name##_resources),	\
++		.resources = _name##_resources,			\
++	}
++
++static const struct regmap_irq mt6360_pmu_irqs[] =  {
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TREG_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_AICR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_MIVR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_PWR_RDY_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_BATSYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_CHG_VINOVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VSYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VSYSOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VBATOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VBUSOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_WD_PMU_DET),
++	MT6360_REGMAP_IRQ_REG(MT6360_WD_PMU_DONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TMRI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_ADPBADI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_RVPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_OTPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_AICCMEASL),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHGDET_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_WDTMRI),
++	MT6360_REGMAP_IRQ_REG(MT6360_SSFINISHI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_RECHGI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TERMI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_IEOCI),
++	MT6360_REGMAP_IRQ_REG(MT6360_PUMPX_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TREG_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BAT_OVP_ADC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_TYPEC_OTP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_ADC_WAKEUP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_ADC_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_BATUVI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_VBUSOVI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_OLPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_ATTACH_I),
++	MT6360_REGMAP_IRQ_REG(MT6360_DETACH_I),
++	MT6360_REGMAP_IRQ_REG(MT6360_QC30_STPDONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_QC_VBUSDET_DONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_HVDCP_DET),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHGDETI),
++	MT6360_REGMAP_IRQ_REG(MT6360_DCDTI),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_DONE_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_UVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_OVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_EXT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_LR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_HR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_DISCHG_FAIL_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_USBID_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_APWDTRST_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_EN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_QONB_RST_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_MRSTB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_OTP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_VDDAOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_SYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_STRBPIN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_TORPIN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_TX_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_LVF_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_SHORT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_SHORT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_STRB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_STRB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_STRB_TO_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_STRB_TO_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_TOR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_TOR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_UV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_UV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO1_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO2_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO3_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO5_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO6_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO7_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO1_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO2_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO3_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO5_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO6_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO7_PGB_EVT),
++};
++
++static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
++{
++	struct mt6360_pmu_info *mpi = irq_drv_data;
++
++	return regmap_update_bits(mpi->regmap,
++		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
++}
++
++static const struct regmap_irq_chip mt6360_pmu_irq_chip = {
++	.irqs = mt6360_pmu_irqs,
++	.num_irqs = ARRAY_SIZE(mt6360_pmu_irqs),
++	.num_regs = MT6360_PMU_IRQ_REGNUM,
++	.mask_base = MT6360_PMU_CHG_MASK1,
++	.status_base = MT6360_PMU_CHG_IRQ1,
++	.ack_base = MT6360_PMU_CHG_IRQ1,
++	.init_ack_masked = true,
++	.use_ack = true,
++	.handle_post_irq = mt6360_pmu_handle_post_irq,
++};
++
++static const struct regmap_config mt6360_pmu_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = MT6360_PMU_MAXREG,
++};
++
++static const struct resource mt6360_adc_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_ADC_DONEI, "adc_donei"),
++};
++
++static const struct resource mt6360_chg_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TREG_EVT, "chg_treg_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PWR_RDY_EVT, "pwr_rdy_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_BATSYSUV_EVT, "chg_batsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSUV_EVT, "chg_vsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSOV_EVT, "chg_vsysov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBATOV_EVT, "chg_vbatov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBUSOV_EVT, "chg_vbusov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_AICCMEASL, "chg_aiccmeasl"),
++	DEFINE_RES_IRQ_NAMED(MT6360_WDTMRI, "wdtmri"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_RECHGI, "chg_rechgi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TERMI, "chg_termi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_IEOCI, "chg_ieoci"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PUMPX_DONEI, "pumpx_donei"),
++	DEFINE_RES_IRQ_NAMED(MT6360_ATTACH_I, "attach_i"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHRDET_EXT_EVT, "chrdet_ext_evt"),
++};
++
++static const struct resource mt6360_led_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_CHG_VINOVP_EVT, "fled_chg_vinovp_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_LVF_EVT, "fled_lvf_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_SHORT_EVT, "fled2_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_SHORT_EVT, "fled1_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_STRB_TO_EVT, "fled2_strb_to_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_STRB_TO_EVT, "fled1_strb_to_evt"),
++};
++
++static const struct resource mt6360_pmic_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_PGB_EVT, "buck1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OC_EVT, "buck1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OV_EVT, "buck1_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_UV_EVT, "buck1_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_PGB_EVT, "buck2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OC_EVT, "buck2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OV_EVT, "buck2_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_UV_EVT, "buck2_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_OC_EVT, "ldo6_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_OC_EVT, "ldo7_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_PGB_EVT, "ldo6_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_PGB_EVT, "ldo7_pgb_evt"),
++};
++
++static const struct resource mt6360_ldo_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_OC_EVT, "ldo1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_OC_EVT, "ldo2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_OC_EVT, "ldo3_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_OC_EVT, "ldo5_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_PGB_EVT, "ldo1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_PGB_EVT, "ldo2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_PGB_EVT, "ldo3_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_PGB_EVT, "ldo5_pgb_evt"),
++};
++
++static const struct mfd_cell mt6360_devs[] = {
++	MT6360_MFD_CELL(mt6360_adc),
++	MT6360_MFD_CELL(mt6360_chg),
++	MT6360_MFD_CELL(mt6360_led),
++	MT6360_MFD_CELL(mt6360_pmic),
++	MT6360_MFD_CELL(mt6360_ldo),
++	/* tcpc dev */
++	{
++		.name = "mt6360_tcpc",
++		.of_compatible = "mediatek,mt6360_tcpc",
++	},
++};
++
++static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
++	MT6360_PMU_SLAVEID,
++	MT6360_PMIC_SLAVEID,
++	MT6360_LDO_SLAVEID,
++	MT6360_TCPC_SLAVEID,
++};
++
++static int mt6360_pmu_probe(struct i2c_client *client,
++			    const struct i2c_device_id *id)
++{
++	struct mt6360_pmu_info *mpi;
++	unsigned int reg_data = 0;
++	int i, ret;
++
++	mpi = devm_kzalloc(&client->dev, sizeof(*mpi), GFP_KERNEL);
++	if (!mpi)
++		return -ENOMEM;
++	mpi->dev = &client->dev;
++	i2c_set_clientdata(client, mpi);
++
++	/* regmap regiser */
++	mpi->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
++	if (IS_ERR(mpi->regmap)) {
++		dev_err(&client->dev, "regmap register fail\n");
++		return PTR_ERR(mpi->regmap);
++	}
++	/* chip id check */
++	ret = regmap_read(mpi->regmap, MT6360_PMU_DEV_INFO, &reg_data);
++	if (ret < 0) {
++		dev_err(&client->dev, "device not found\n");
++		return ret;
++	}
++	if ((reg_data & CHIP_VEN_MASK) != CHIP_VEN_MT6360) {
++		dev_err(&client->dev, "not mt6360 chip\n");
++		return -ENODEV;
++	}
++	mpi->chip_rev = reg_data & CHIP_REV_MASK;
++	/* irq register */
++	memcpy(&mpi->irq_chip, &mt6360_pmu_irq_chip, sizeof(mpi->irq_chip));
++	mpi->irq_chip.name = dev_name(&client->dev);
++	mpi->irq_chip.irq_drv_data = mpi;
++	ret = devm_regmap_add_irq_chip(&client->dev, mpi->regmap, client->irq,
++				       IRQF_TRIGGER_FALLING, 0, &mpi->irq_chip,
++				       &mpi->irq_data);
++	if (ret < 0) {
++		dev_err(&client->dev, "regmap irq chip add fail\n");
++		return ret;
++	}
++	/* new i2c slave device */
++	for (i = 0; i < MT6360_SLAVE_MAX; i++) {
++		if (mt6360_slave_addr[i] == client->addr) {
++			mpi->i2c[i] = client;
++			continue;
++		}
++		mpi->i2c[i] = i2c_new_dummy(client->adapter,
++					    mt6360_slave_addr[i]);
++		if (!mpi->i2c[i]) {
++			dev_err(&client->dev, "new i2c dev [%d] fail\n", i);
++			ret = -ENODEV;
++			goto out;
++		}
++		i2c_set_clientdata(mpi->i2c[i], mpi);
++	}
++	/* mfd cell register */
++	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
++				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
++				   0, regmap_irq_get_domain(mpi->irq_data));
++	if (ret < 0) {
++		dev_err(&client->dev, "mfd add cells fail\n");
++		goto out;
++	}
++	dev_info(&client->dev, "Successfully probed\n");
++	return 0;
++out:
++	while (--i >= 0) {
++		if (mpi->i2c[i]->addr == client->addr)
++			continue;
++		i2c_unregister_device(mpi->i2c[i]);
++	}
++	return ret;
++}
++
++static int mt6360_pmu_remove(struct i2c_client *client)
++{
++	struct mt6360_pmu_info *mpi = i2c_get_clientdata(client);
++	int i;
++
++	for (i = 0; i < MT6360_SLAVE_MAX; i++) {
++		if (mpi->i2c[i]->addr == client->addr)
++			continue;
++		i2c_unregister_device(mpi->i2c[i]);
++	}
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
++{
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(i2c->irq);
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_resume(struct device *dev)
++{
++
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(i2c->irq);
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(mt6360_pmu_pm_ops,
++			 mt6360_pmu_suspend, mt6360_pmu_resume);
++
++static const struct of_device_id __maybe_unused mt6360_pmu_of_id[] = {
++	{ .compatible = "mediatek,mt6360_pmu", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
++
++static const struct i2c_device_id mt6360_pmu_id[] = {
++	{ "mt6360_pmu", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, mt6360_pmu_id);
++
++static struct i2c_driver mt6360_pmu_driver = {
++	.driver = {
++		.name = "mt6360_pmu",
++		.owner = THIS_MODULE,
++		.pm = &mt6360_pmu_pm_ops,
++		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
++	},
++	.probe = mt6360_pmu_probe,
++	.remove = mt6360_pmu_remove,
++	.id_table = mt6360_pmu_id,
++};
++module_i2c_driver(mt6360_pmu_driver);
++
++MODULE_AUTHOR("CY_Huang <cy_huang@richtek.com>");
++MODULE_DESCRIPTION("MT6360 PMU I2C Driver");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.0.0");
+-- 
+1.9.1
 
-Please pull them in!
-
-Yours,
-Linus Walleij
-
-The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
-
-  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.3-6
-
-for you to fetch changes up to 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4:
-
-  gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and
-blacklist (2019-09-11 10:46:54 +0100)
-
-----------------------------------------------------------------
-GPIO fixes for v5.3:
-- An ACPI DSDT error fixup of the type we always see and
-  Hans invariably gets to fix.
-- A OF quirk fix for the current release (v5.3)
-- Some consistency checks on the userspace ABI.
-- A memory leak.
-
-----------------------------------------------------------------
-Dmitry Torokhov (1):
-      gpiolib: of: fix fallback quirks handling
-
-Hans de Goede (1):
-      gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option
-and blacklist
-
-Kent Gibson (2):
-      gpio: fix line flag validation in linehandle_create
-      gpio: fix line flag validation in lineevent_create
-
-Linus Walleij (1):
-      Merge tag 'gpio-v5.4-fixes-for-linus' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Wei Yongjun (1):
-      gpio: mockup: add missing single_release()
-
- drivers/gpio/gpio-mockup.c  |  1 +
- drivers/gpio/gpiolib-acpi.c | 42 ++++++++++++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib-of.c   | 27 +++++++++------------------
- drivers/gpio/gpiolib.c      | 16 +++++++++++-----
- 4 files changed, 59 insertions(+), 27 deletions(-)
