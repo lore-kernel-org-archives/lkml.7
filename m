@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF29C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194AC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7F8208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6E4208C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfILUIF (ORCPT
+        id S1727597AbfILUIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:08:05 -0400
+        Thu, 12 Sep 2019 16:08:09 -0400
 Received: from mga01.intel.com ([192.55.52.88]:35554 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfILUH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:07:57 -0400
+        id S1727352AbfILUH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:07:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 13:07:57 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 13:07:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="336688246"
+   d="scan'208";a="336688254"
 Received: from chang-linux-3.sc.intel.com ([172.25.66.185])
-  by orsmga004.jf.intel.com with ESMTP; 12 Sep 2019 13:07:56 -0700
+  by orsmga004.jf.intel.com with ESMTP; 12 Sep 2019 13:07:57 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
@@ -38,11 +38,10 @@ Cc:     ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
         "H . Peter Anvin" <hpa@zytor.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>
-Subject: [PATCH v8 10/17] x86/entry/64: Introduce the FIND_PERCPU_BASE macro
-Date:   Thu, 12 Sep 2019 13:06:51 -0700
-Message-Id: <1568318818-4091-11-git-send-email-chang.seok.bae@intel.com>
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v8 12/17] x86/entry/64: Document GSBASE handling in the paranoid path
+Date:   Thu, 12 Sep 2019 13:06:53 -0700
+Message-Id: <1568318818-4091-13-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
 References: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
@@ -51,16 +50,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GS base is used to find per-CPU data in the kernel. But when GS base is
-unknown, the per-CPU base can be found from the per_cpu_offset table with a
-CPU NR.  The CPU NR is extracted from the limit field of the CPUNODE entry
-in GDT, or by the RDPID instruction. This is a prerequisite for using
-FSGSBASE in the low level entry code.
+On FSGSBASE systems, the way to handle GS base in the paranoid path is
+different from the existing SWAPGS-based entry/exit path handling. Document
+the reason and what has to be done for FSGSBASE enabled systems.
 
-Also, add the GAS-compatible RDPID macro as binutils 2.21 does not support
-it. Support is added in version 2.27.
-
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -70,96 +63,32 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>
 ---
 
 Changes from v7:
-* No code change
-* Massaged changelog by Thomas
+* Massaged doc and changelog by Thomas
 * Used 'GS base' consistently, instead of 'GSBASE'
 ---
- arch/x86/entry/calling.h    | 34 ++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/inst.h | 15 +++++++++++++++
- 2 files changed, 49 insertions(+)
+ Documentation/x86/entry_64.rst | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 515c0ce..c222302 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -6,6 +6,7 @@
- #include <asm/percpu.h>
- #include <asm/asm-offsets.h>
- #include <asm/processor-flags.h>
-+#include <asm/inst.h>
- 
- /*
- 
-@@ -347,6 +348,39 @@ For 32-bit we have the following conventions - kernel is built with
- #endif
- .endm
- 
-+#ifdef CONFIG_SMP
+diff --git a/Documentation/x86/entry_64.rst b/Documentation/x86/entry_64.rst
+index a48b3f6..0499a40 100644
+--- a/Documentation/x86/entry_64.rst
++++ b/Documentation/x86/entry_64.rst
+@@ -108,3 +108,12 @@ We try to only use IST entries and the paranoid entry code for vectors
+ that absolutely need the more expensive check for the GS base - and we
+ generate all 'normal' entry points with the regular (faster) paranoid=0
+ variant.
 +
-+/*
-+ * CPU/node NR is loaded from the limit (size) field of a special segment
-+ * descriptor entry in GDT.
-+ */
-+.macro LOAD_CPU_AND_NODE_SEG_LIMIT reg:req
-+	movq	$__CPUNODE_SEG, \reg
-+	lsl	\reg, \reg
-+.endm
-+
-+/*
-+ * Fetch the per-CPU GS base value for this processor and put it in @reg.
-+ * We normally use %gs for accessing per-CPU data, but we are setting up
-+ * %gs here and obviously can not use %gs itself to access per-CPU data.
-+ */
-+.macro GET_PERCPU_BASE reg:req
-+	ALTERNATIVE \
-+		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
-+		"RDPID	\reg", \
-+		X86_FEATURE_RDPID
-+	andq	$VDSO_CPUNODE_MASK, \reg
-+	movq	__per_cpu_offset(, \reg, 8), \reg
-+.endm
-+
-+#else
-+
-+.macro GET_PERCPU_BASE reg:req
-+	movq	pcpu_unit_offsets(%rip), \reg
-+.endm
-+
-+#endif /* CONFIG_SMP */
-+
- /*
-  * This does 'call enter_from_user_mode' unless we can avoid it based on
-  * kernel config or using the static jump infrastructure.
-diff --git a/arch/x86/include/asm/inst.h b/arch/x86/include/asm/inst.h
-index f5a796d..d063841 100644
---- a/arch/x86/include/asm/inst.h
-+++ b/arch/x86/include/asm/inst.h
-@@ -306,6 +306,21 @@
- 	.endif
- 	MODRM 0xc0 movq_r64_xmm_opd1 movq_r64_xmm_opd2
- 	.endm
-+
-+.macro RDPID opd
-+	REG_TYPE rdpid_opd_type \opd
-+	.if rdpid_opd_type == REG_TYPE_R64
-+	R64_NUM rdpid_opd \opd
-+	.else
-+	R32_NUM rdpid_opd \opd
-+	.endif
-+	.byte 0xf3
-+	.if rdpid_opd > 7
-+	PFX_REX rdpid_opd 0
-+	.endif
-+	.byte 0x0f, 0xc7
-+	MODRM 0xc0 rdpid_opd 0x7
-+.endm
- #endif
- 
- #endif
++On FSGSBASE systems, however, user space can set GS without kernel
++interaction. It means the value of GS base itself does not imply anything,
++whether a kernel value or a user space value. So, there is no longer a safe
++way to check whether the exception is entering from user mode or kernel
++mode in the paranoid entry code path. So the GS base value needs to be read
++out, saved and the kernel GS base value written. On exit, the saved GS base
++value needs to be restored unconditionally. The non-paranoid entry/exit
++code still uses SWAPGS unconditionally as the state is known.
 -- 
 2.7.4
 
