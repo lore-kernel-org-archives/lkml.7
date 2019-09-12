@@ -2,130 +2,253 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAE9C49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F46C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EBE21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28FA821479
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 07:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S70aVJoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfILHWQ (ORCPT
+        id S1729898AbfILHZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 03:22:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58115 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfILHWQ (ORCPT
+        Thu, 12 Sep 2019 03:25:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55313 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729029AbfILHZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 03:22:16 -0400
-Received: from [82.43.126.140] (helo=[192.168.0.11])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i8JQj-0000g6-OX; Thu, 12 Sep 2019 07:22:13 +0000
-Subject: Re: [PATCH] s390/qeth: fix spelling mistake "alocpool" -> "allocpool"
-To:     Ursula Braun <ubraun@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <20190911153500.30836-1-colin.king@canonical.com>
- <de37e3a5-faad-44ae-32b2-d7c6c5d3732d@linux.ibm.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e5b3aff1-9017-d169-1a8a-22a4d58efcb4@canonical.com>
-Date:   Thu, 12 Sep 2019 08:22:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 03:25:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g207so6174494wmg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 00:24:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pE4ey+kgf0K/yvQf3TkEv9R6at6V7MIRvEU3qtgfEeI=;
+        b=S70aVJojoJNzX00lW8gBfknxQBzbYOb3UHASmElA1vV1Aub/AyevwnQxDAFWbRYhig
+         biI4R3ZvnZLTkwtinX7FG20OOepqfH2TE2bIlzo2fVKZ46FNMwUt5EY8oRVQjCTQDQO1
+         X7OElxMKCBpnmv8ssJJB5nd7bYsq/Kd292VaMA4TN58TQoF2JkajvTjDXjRHFAFck7F/
+         NuIjsm9JmfFjd9ZiXtza38oVLzkGD3Bped9r7SkJmSLvWkxfdlsChKfp60H1Kg+Mb/vz
+         HLqWbsbgqrOYpxN6RoOnwTOViYGBNdz2cz3krS8ZvMUUEUCTFUFqBX2pbtUFL+fgo3Yl
+         r9YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pE4ey+kgf0K/yvQf3TkEv9R6at6V7MIRvEU3qtgfEeI=;
+        b=TEa62mnEh/+ckgFSfhrzlcchwckL8W/1HbpaVHbubEMvN84vsIPuFxDUaEFjwpkDQ6
+         R181aYSdMZJD4aU04zwrLaJZBGVuaTuvX4ZsjBpFqma/cnhHjU3YyIXTz6MdJXuvBeKc
+         fdrApTsYV4XMUjoniGnEbboqBB5RH6wyZR2kGugcq5aullfn73HS1k95f1ELuWP/74n4
+         pj1E/ZMQ0oiEp/9J4CDYn6a4tJsikU4IL0weLfJX2IG1XAWFVaQZMN+iZ8GTOCvRz6CZ
+         7fG3s2pQqhy0DSSP3imjPtnOQNlzXfoi4gaXGtKuITUiNNAGk666BAW4NBghDvBl4jJQ
+         rMBw==
+X-Gm-Message-State: APjAAAUu0YnGn5xa8lUBJQC7Sos2B0C+Orlx3IKNTtPlto48ukuOyB1A
+        yS6Q1ph0DmkY0OOO8ZzdjxjBgA==
+X-Google-Smtp-Source: APXvYqzS1MEA5VYDnug0r29ts6c7ea3SXPENbkQVkyYaFvJSZ6gqdTC0RzgFRatbvOfdsF8LES5NPA==
+X-Received: by 2002:a1c:60c1:: with SMTP id u184mr6721994wmb.32.1568273096578;
+        Thu, 12 Sep 2019 00:24:56 -0700 (PDT)
+Received: from igloo (69.red-83-35-113.dynamicip.rima-tde.net. [83.35.113.69])
+        by smtp.gmail.com with ESMTPSA id r9sm39125167wra.19.2019.09.12.00.24.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 00:24:55 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Linaro" <jorge.ramirez-ortiz@linaro.org>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Linaro" <JorgeRamirez-Ortiz>
+Date:   Thu, 12 Sep 2019 09:24:54 +0200
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        bjorn.andersson@linaro.org, wim@linux-watchdog.org,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] watchdog: qcom: support pre-timeout when the bark
+ irq is available
+Message-ID: <20190912072454.GA11651@igloo>
+References: <20190906205411.31666-1-jorge.ramirez-ortiz@linaro.org>
+ <20190906205411.31666-2-jorge.ramirez-ortiz@linaro.org>
+ <20190910180655.GA25286@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <de37e3a5-faad-44ae-32b2-d7c6c5d3732d@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910180655.GA25286@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09/2019 08:19, Ursula Braun wrote:
+On 10/09/19 11:06:55, Guenter Roeck wrote:
+> On Fri, Sep 06, 2019 at 10:54:10PM +0200, Jorge Ramirez-Ortiz wrote:
+> > Use the bark interrupt as the pre-timeout notifier whenever this
+> > interrupt is available.
+> > 
+> > By default, the pretimeout notification shall occur one second earlier
+> > than the timeout.
+> > 
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > 
+> Nitpick below, otherwise:
 > 
-> On 9/11/19 5:35 PM, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is a spelling mistake in QETH_CARD_TEXT text. Fix it.
->>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > 
-> This spelling mistake is intended, because this qeth trace area is defined for
-> 8 byte length entries. We try to make the entries as speaking as possible - even
-> at cost of spelling mistakes.
+> > ---
+> >  drivers/watchdog/qcom-wdt.c | 70 ++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 65 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> > index 7be7f87be28f..935c78a882a3 100644
+> > --- a/drivers/watchdog/qcom-wdt.c
+> > +++ b/drivers/watchdog/qcom-wdt.c
+> > @@ -1,8 +1,10 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> >   */
+> > +#include <linux/bits.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/delay.h>
+> > +#include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > @@ -19,6 +21,9 @@ enum wdt_reg {
+> >  	WDT_BITE_TIME,
+> >  };
+> >  
+> > +#define QCOM_WDT_ENABLE		BIT(0)
+> > +#define QCOM_WDT_ENABLE_IRQ	BIT(1)
+> > +
+> >  static const u32 reg_offset_data_apcs_tmr[] = {
+> >  	[WDT_RST] = 0x38,
+> >  	[WDT_EN] = 0x40,
+> > @@ -54,15 +59,35 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+> >  	return container_of(wdd, struct qcom_wdt, wdd);
+> >  }
+> >  
+> > +static inline int qcom_get_enable(struct watchdog_device *wdd)
+> > +{
+> > +	int enable = QCOM_WDT_ENABLE;
+> > +
+> > +	if (wdd->pretimeout)
+> > +		enable |= QCOM_WDT_ENABLE_IRQ;
+> > +
+> > +	return enable;
+> > +}
+> > +
+> > +static irqreturn_t qcom_wdt_isr(int irq, void *arg)
+> > +{
+> > +	struct watchdog_device *wdd = arg;
+> > +
+> > +	watchdog_notify_pretimeout(wdd);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> >  static int qcom_wdt_start(struct watchdog_device *wdd)
+> >  {
+> >  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> > +	unsigned int bark = wdd->timeout - wdd->pretimeout;
+> >  
+> >  	writel(0, wdt_addr(wdt, WDT_EN));
+> >  	writel(1, wdt_addr(wdt, WDT_RST));
+> > -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+> > +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+> >  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
+> > -	writel(1, wdt_addr(wdt, WDT_EN));
+> > +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+> >  	return 0;
+> >  }
+> >  
+> > @@ -89,6 +114,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+> >  	return qcom_wdt_start(wdd);
+> >  }
+> >  
+> > +static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+> > +				   unsigned int timeout)
+> > +{
+> > +	wdd->pretimeout = timeout;
+> > +	return qcom_wdt_start(wdd);
+> > +}
+> > +
+> >  static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+> >  			    void *data)
+> >  {
+> > @@ -105,7 +137,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+> >  	writel(1, wdt_addr(wdt, WDT_RST));
+> >  	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
+> >  	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
+> > -	writel(1, wdt_addr(wdt, WDT_EN));
+> > +	writel(QCOM_WDT_ENABLE, wdt_addr(wdt, WDT_EN));
+> >  
+> >  	/*
+> >  	 * Actually make sure the above sequence hits hardware before sleeping.
+> > @@ -121,6 +153,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
+> >  	.stop		= qcom_wdt_stop,
+> >  	.ping		= qcom_wdt_ping,
+> >  	.set_timeout	= qcom_wdt_set_timeout,
+> > +	.set_pretimeout	= qcom_wdt_set_pretimeout,
+> >  	.restart        = qcom_wdt_restart,
+> >  	.owner		= THIS_MODULE,
+> >  };
+> > @@ -133,6 +166,15 @@ static const struct watchdog_info qcom_wdt_info = {
+> >  	.identity	= KBUILD_MODNAME,
+> >  };
+> >  
+> > +static const struct watchdog_info qcom_wdt_pt_info = {
+> > +	.options	= WDIOF_KEEPALIVEPING
+> > +			| WDIOF_MAGICCLOSE
+> > +			| WDIOF_SETTIMEOUT
+> > +			| WDIOF_PRETIMEOUT
+> > +			| WDIOF_CARDRESET,
+> > +	.identity	= KBUILD_MODNAME,
+> > +};
+> > +
+> >  static void qcom_clk_disable_unprepare(void *data)
+> >  {
+> >  	clk_disable_unprepare(data);
+> > @@ -146,7 +188,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+> >  	struct device_node *np = dev->of_node;
+> >  	const u32 *regs;
+> >  	u32 percpu_offset;
+> > -	int ret;
+> > +	int irq, ret;
+> >  
+> >  	regs = of_device_get_match_data(dev);
+> >  	if (!regs) {
+> > @@ -204,7 +246,25 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	wdt->wdd.info = &qcom_wdt_info;
+> > +	/* check if there is pretimeout support */
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	if (irq > 0) {
+> > +		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+> > +				       IRQF_TRIGGER_RISING,
+> > +				       "wdt_bark", &wdt->wdd);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		wdt->wdd.info = &qcom_wdt_pt_info;
+> > +		wdt->wdd.pretimeout = 1;
+> > +	} else {
+> > +		if (irq == -EPROBE_DEFER)
+> > +			return -EPROBE_DEFER;
+> > +
+> > +		wdt->wdd.info = &qcom_wdt_info;
+> > +		wdt->wdd.pretimeout = 0;
+> 
+> It is not necessary to set pretimeout to 0; the data structure was
+> allocated with devm_kzalloc(). The compiler won't know that and
+> generate unnecessary code otherwise.
 
-Ah, OK.
+will you need me to send another version or could you pick it up as is?
 
 > 
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/s390/net/qeth_core_main.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
->> index a7868c8133ee..ab96b22db3fe 100644
->> --- a/drivers/s390/net/qeth_core_main.c
->> +++ b/drivers/s390/net/qeth_core_main.c
->> @@ -218,7 +218,7 @@ static int qeth_alloc_buffer_pool(struct qeth_card *card)
->>  	void *ptr;
->>  	int i, j;
->>  
->> -	QETH_CARD_TEXT(card, 5, "alocpool");
->> +	QETH_CARD_TEXT(card, 5, "allocpool");
->>  	for (i = 0; i < card->qdio.init_pool.buf_count; ++i) {
->>  		pool_entry = kzalloc(sizeof(*pool_entry), GFP_KERNEL);
->>  		if (!pool_entry) {
->>
-> 
-
+> > +	}
+> > +
+> >  	wdt->wdd.ops = &qcom_wdt_ops;
+> >  	wdt->wdd.min_timeout = 1;
+> >  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
