@@ -2,111 +2,135 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA83C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D8EC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B02220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012E72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 20:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfILUJe (ORCPT
+        id S1726444AbfILUPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 16:09:34 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:49202 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfILUJd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 16:09:33 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: k55UhUVvseHoxsxZLGCkDYEmleLTHCcJbs1dE81Px8bX3JjzxF6xYlGZLivaGo2mRDvt7kBbr/
- a3ihEToS4W7XYroGY5TDJFiexNqi71KTVtgF+o7k7gnG1PPmB9Y//OINJ/DpNkbf36euVED8y8
- h0ltWzOyPwVHm3MuVni3DeS1TNIu1GH8xkRLEY2pgmSJoWotekNwerdhKal5UqEn+d9NKiZGH4
- bVuxuMHJjeCUP1TZswcIWYfYRq+/dngYIcQ+GtnWxg9n8lf3gN/z9DtCa6QM4pX0VBMHmiM/GS
- vLI=
-X-IronPort-AV: E=Sophos;i="5.64,498,1559545200"; 
-   d="scan'208";a="48745929"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Sep 2019 13:09:32 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 12 Sep 2019 13:09:31 -0700
-Received: from sekiro.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 12 Sep 2019 13:09:29 -0700
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>, <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <claudiu.beznea@microchip.com>
-Subject: [PATCH 3/3] ARM: dts: at91: sama5d2: set the sdmmc gclk frequency
-Date:   Thu, 12 Sep 2019 22:09:08 +0200
-Message-ID: <20190912200908.31318-3-ludovic.desroches@microchip.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190912200908.31318-1-ludovic.desroches@microchip.com>
-References: <20190912200908.31318-1-ludovic.desroches@microchip.com>
+        Thu, 12 Sep 2019 16:15:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:37014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbfILUP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 16:15:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56D5128;
+        Thu, 12 Sep 2019 13:15:29 -0700 (PDT)
+Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC1A13F71F;
+        Thu, 12 Sep 2019 13:15:21 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 21:15:17 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
+        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
+        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
+Subject: Re: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
+Message-ID: <20190912201517.GB1068@C02TF0J2HF1T.local>
+References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+ <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the frequency of the generated clock used by sdmmc devices in order
-to not rely on the configuration done by previous components.
+Hi Anshuman,
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
- arch/arm/boot/dts/sama5d2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for the details on the need for removing the page tables and
+vmemmap backing. Some comments on the code below.
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 2e2c1a7b1d1d..8d79ff75e3cd 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -300,6 +300,8 @@
- 			interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 31>, <&pmc PMC_TYPE_GCK 31>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 31>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
-@@ -309,6 +311,8 @@
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 32>, <&pmc PMC_TYPE_GCK 32>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 32>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
+On Tue, Sep 03, 2019 at 03:15:58PM +0530, Anshuman Khandual wrote:
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -60,6 +60,14 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
+>  
+>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
+>  
+> +/*
+> + * This represents if vmalloc and vmemmap address range overlap with
+> + * each other on an intermediate level kernel page table entry which
+> + * in turn helps in deciding whether empty kernel page table pages
+> + * if any can be freed during memory hotplug operation.
+> + */
+> +static bool vmalloc_vmemmap_overlap;
+
+I'd say just move the static find_vmalloc_vmemmap_overlap() function
+here, the compiler should be sufficiently smart enough to figure out
+that it's just a build-time constant.
+
+> @@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>  void vmemmap_free(unsigned long start, unsigned long end,
+>  		struct vmem_altmap *altmap)
+>  {
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +	/*
+> +	 * FIXME: We should have called remove_pagetable(start, end, true).
+> +	 * vmemmap and vmalloc virtual range might share intermediate kernel
+> +	 * page table entries. Removing vmemmap range page table pages here
+> +	 * can potentially conflict with a concurrent vmalloc() allocation.
+> +	 *
+> +	 * This is primarily because vmalloc() does not take init_mm ptl for
+> +	 * the entire page table walk and it's modification. Instead it just
+> +	 * takes the lock while allocating and installing page table pages
+> +	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
+> +	 * entry via memory hot remove can cause vmalloc() kernel page table
+> +	 * walk pointers to be invalid on the fly which can cause corruption
+> +	 * or worst, a crash.
+> +	 *
+> +	 * So free_empty_tables() gets called where vmalloc and vmemmap range
+> +	 * do not overlap at any intermediate level kernel page table entry.
+> +	 */
+> +	unmap_hotplug_range(start, end, true);
+> +	if (!vmalloc_vmemmap_overlap)
+> +		free_empty_tables(start, end);
+> +#endif
+>  }
+
+So, I see the risk with overlapping and I guess for some kernel
+configurations (PAGE_SIZE == 64K) we may not be able to avoid it. If we
+can, that's great, otherwise could we rewrite the above functions to
+handle floor and ceiling similar to free_pgd_range()? (I wonder how this
+function works if you called it on init_mm and kernel address range). By
+having the vmemmap start/end information it avoids freeing partially
+filled page table pages.
+
+Another question: could we do the page table and the actual vmemmap
+pages freeing in a single pass (sorry if this has been discussed
+before)?
+
+> @@ -1048,10 +1322,18 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+> +{
+> +	unsigned long end = start + size;
+> +
+> +	WARN_ON(pgdir != init_mm.pgd);
+> +	remove_pagetable(start, end, false);
+> +}
+
+I think the point I've made previously still stands: you only call
+remove_pagetable() with sparse_vmap == false in this patch. Just remove
+the extra argument and call unmap_hotplug_range() with sparse_vmap ==
+false directly in remove_pagetable().
+
 -- 
-2.23.0
-
+Catalin
