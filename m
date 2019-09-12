@@ -2,174 +2,105 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD14FC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B463ECDE20
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3E120856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E525F20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+RtCQ+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfILIVO (ORCPT
+        id S1730176AbfILIYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:21:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730033AbfILIU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:20:59 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CADD68FD58E36A7835F6;
-        Thu, 12 Sep 2019 16:20:54 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Sep 2019
- 16:20:47 +0800
-Subject: Re: [PATCH V2 net-next 1/7] net: hns3: add ethtool_ops.set_channels
- support for HNS3 VF driver
-To:     Michal Kubecek <mkubecek@suse.cz>, <netdev@vger.kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>
-References: <1568169639-43658-1-git-send-email-tanhuazhong@huawei.com>
- <1568169639-43658-2-git-send-email-tanhuazhong@huawei.com>
- <20190912062301.GE24779@unicorn.suse.cz>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <8d51697c-703e-09f2-74e1-c83a31b5f52f@huawei.com>
-Date:   Thu, 12 Sep 2019 16:20:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 12 Sep 2019 04:24:10 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47025 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfILIYJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 04:24:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e17so22698049ljf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
+        b=r+RtCQ+QSzYgod49oCaqYCkPTh5kZ0t0Sd0c4Z0+s2eYFento9RBH+cJ6oV9udoLxV
+         UAOH78eysBB4GLzpWHG+n3DdyMpTG7bjHG3OJeNy+YTbh7rBITWWJ8UHrdYbqbOvjhKU
+         wBTdN/oCGKDqPSMGUinbCLXh34ir+lHen6smdbyfGfv6TgiY+CpSyJIftKzl59psWfws
+         otcFJcFnELrgNmLbcSAaY3WNMrDE3O2jMbPXOMUIuJikgcaKm6OPJYCvJZrtz4War3NN
+         ajFA0ei1LXIJFhOzIOd53cSYdpBzThBf/siT6WVcfCVmFGAVjjLSKvEWboTgzARw8sLQ
+         cIEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
+        b=N2Usz9QV0voN3oRQOpLjrAdDYTES75BmhdB/qI7uQA0hZ+/IYs1N2oDVYWZDzPYOWz
+         QDwh5UogTZRLJedY8fFtZKJ0wGk6Ujin9/J9K40sjHDVOHmRkt4S7eD9Fg0ldPeb2DTX
+         dm+z7VLz3/+VCanH4gBM/0ms8SUTZE8FwGd5MLefVYtt8bRzjbwz8JGOroJQetOjXKmA
+         s9GON5I7cTYsM9BPuloKERynhSWdcuE6sc8xAunFU2h0yCyIwt4x23Hs/JnycQE6QbAG
+         blPRAVbeim7wyxAXptdx2v7D8TL8R4lqP9hB7DzQoNLz9UNrnefsmwuTtFS3Qg+cIeo+
+         ixUQ==
+X-Gm-Message-State: APjAAAXX89a6CBRDridJ0fAm0moyKZpcEcWO1YqC7zc+h5hzPw1dFPOx
+        1GWFErffE21NyD4Bt4XNR4Dqmtkq/4Zqit9mTU8bDg==
+X-Google-Smtp-Source: APXvYqxJDL4FyhE3BXAv2E4B/4JEGQGPdbnrnZxx+n3oo9L0E7CyQ/g/GKuusfARHUSvwKnun6uC2HwM7AK4drFXwyc=
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr17993431ljo.180.1568276647071;
+ Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190912062301.GE24779@unicorn.suse.cz>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+References: <20190829071738.2523-1-andrew@aj.id.au>
+In-Reply-To: <20190829071738.2523-1-andrew@aj.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Sep 2019 09:23:55 +0100
+Message-ID: <CACRpkdYW_PX7npB+b1YJ4pfFQNLVOsMx2hpKtntBeHg=C1j-Cg@mail.gmail.com>
+Subject: Re: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures
+ on the AST2500
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Wang <wangzqbj@inspur.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Michal
+On Thu, Aug 29, 2019 at 8:17 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-On 2019/9/12 14:23, Michal Kubecek wrote:
-> On Wed, Sep 11, 2019 at 10:40:33AM +0800, Huazhong Tan wrote:
->> From: Guangbin Huang <huangguangbin2@huawei.com>
->>
->> This patch adds ethtool_ops.set_channels support for HNS3 VF driver,
->> and updates related TQP information and RSS information, to support
->> modification of VF TQP number, and uses current rss_size instead of
->> max_rss_size to initialize RSS.
->>
->> Also, fixes a format error in hclgevf_get_rss().
->>
->> Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
->> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
->> ---
->>   drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  1 +
->>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 83 ++++++++++++++++++++--
->>   2 files changed, 79 insertions(+), 5 deletions(-)
->>
-> ...
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
->> index 594cae8..e3090b3 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-> ...
->> +static void hclgevf_update_rss_size(struct hnae3_handle *handle,
->> +				    u32 new_tqps_num)
->> +{
->> +	struct hnae3_knic_private_info *kinfo = &handle->kinfo;
->> +	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
->> +	u16 max_rss_size;
->> +
->> +	kinfo->req_rss_size = new_tqps_num;
->> +
->> +	max_rss_size = min_t(u16, hdev->rss_size_max,
->> +			     hdev->num_tqps / kinfo->num_tc);
->> +
->> +	/* Use the user's configuration when it is not larger than
->> +	 * max_rss_size, otherwise, use the maximum specification value.
->> +	 */
->> +	if (kinfo->req_rss_size != kinfo->rss_size && kinfo->req_rss_size &&
->> +	    kinfo->req_rss_size <= max_rss_size)
->> +		kinfo->rss_size = kinfo->req_rss_size;
->> +	else if (kinfo->rss_size > max_rss_size ||
->> +		 (!kinfo->req_rss_size && kinfo->rss_size < max_rss_size))
->> +		kinfo->rss_size = max_rss_size;
-> 
-> I don't think requested channel count can be larger than max_rss_size
-> here. In ethtool_set_channels(), we check that requested channel counts
-> do not exceed maximum channel counts as reported by ->get_channels().
-> And hclgevf_get_max_channels() cannot return more than max_rss_size.
-> 
+> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> was determined to be a partial fix to the problem of acquiring the LPC
+> Host Controller and GFX regmaps: The AST2500 pin controller may need to
+> fetch syscon regmaps during expression evaluation as well as when
+> setting mux state. For example, this case is hit by attempting to export
+> pins exposing the LPC Host Controller as GPIOs.
+>
+> An optional eval() hook is added to the Aspeed pinmux operation struct
+> and called from aspeed_sig_expr_eval() if the pointer is set by the
+> SoC-specific driver. This enables the AST2500 to perform the custom
+> action of acquiring its regmap dependencies as required.
+>
+> John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
+> where the issue was found, and I've booted the fix on Witherspoon
+> (AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
+> under QEMU by forcing mux configurations via devmem before exporting
+> GPIOs to exercise the driver.
+>
+> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
+> Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> Reported-by: John Wang <wangzqbj@inspur.com>
+> Tested-by: John Wang <wangzqbj@inspur.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-When we can modify the TC number (which PF has already supported, VF may 
-implement in the future) using lldptool or tc cmd, 
-hclgevf_update_rss_size will be called to update the rss information, 
-which may also change max_rss_size,  so we will use max_rss_size instead 
-if the kinfo->rss_size configured using ethtool is bigger than max_rss_size.
+Applied for fixes already yesterday!
 
->> +
->> +	kinfo->num_tqps = kinfo->num_tc * kinfo->rss_size;
->> +}
->> +
->> +static int hclgevf_set_channels(struct hnae3_handle *handle, u32 new_tqps_num,
->> +				bool rxfh_configured)
->> +{
->> +	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
->> +	struct hnae3_knic_private_info *kinfo = &handle->kinfo;
->> +	u16 cur_rss_size = kinfo->rss_size;
->> +	u16 cur_tqps = kinfo->num_tqps;
->> +	u32 *rss_indir;
->> +	unsigned int i;
->> +	int ret;
->> +
->> +	hclgevf_update_rss_size(handle, new_tqps_num);
->> +
->> +	ret = hclgevf_set_rss_tc_mode(hdev, kinfo->rss_size);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* RSS indirection table has been configuared by user */
->> +	if (rxfh_configured)
->> +		goto out;
->> +
->> +	/* Reinitializes the rss indirect table according to the new RSS size */
->> +	rss_indir = kcalloc(HCLGEVF_RSS_IND_TBL_SIZE, sizeof(u32), GFP_KERNEL);
->> +	if (!rss_indir)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < HCLGEVF_RSS_IND_TBL_SIZE; i++)
->> +		rss_indir[i] = i % kinfo->rss_size;
->> +
->> +	ret = hclgevf_set_rss(handle, rss_indir, NULL, 0);
->> +	if (ret)
->> +		dev_err(&hdev->pdev->dev, "set rss indir table fail, ret=%d\n",
->> +			ret);
->> +
->> +	kfree(rss_indir);
->> +
->> +out:
->> +	if (!ret)
->> +		dev_info(&hdev->pdev->dev,
->> +			 "Channels changed, rss_size from %u to %u, tqps from %u to %u",
->> +			 cur_rss_size, kinfo->rss_size,
->> +			 cur_tqps, kinfo->rss_size * kinfo->num_tc);
->> +
->> +	return ret;
->> +}
-> 
-> IIRC David asked you not to issue this log message in v1 review.
-> 
-> Michal Kubecek
-> 
-
-Sorry for missing this log.
-
-Thanks.
-
-> .
-> 
-
+Yours,
+Linus Walleij
