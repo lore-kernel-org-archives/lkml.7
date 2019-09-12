@@ -2,182 +2,99 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BF3C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6272FC47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396652075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568293036;
-	bh=r5GVYW7sznRndo6LvdGdHPtWeZUYInADpSQT93bmaIM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zYGqS4PEBygY/oS2PHJTOkgli1WJpxzlPiqcuv35oNWkOLenVjXfRB4xnLLhtqc2+
-	 4I0S7DbJSTS7X6GZDxOVwx4cie7QgFau51X9oH9arToQ3+AOeB2AvYgja/Jkx0uQxX
-	 MXJeHsNn+Zqjk8HP9JCNknRXb1uOHH9/8oAT3ELI=
+	by mail.kernel.org (Postfix) with ESMTP id 346CC2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 12:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yaQBiuQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfILM5P (ORCPT
+        id S1731877AbfILM6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 08:57:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33815 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfILM5O (ORCPT
+        Thu, 12 Sep 2019 08:58:08 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38556 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731743AbfILM6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 08:57:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a11so18583769wrx.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 05:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=o5x4LczZh/4WpNcF/HWMsfZg/GCL//ccIzviDyHT0iU=;
-        b=e/n28xkzlQFDtsGCE+RqPLrYDP/BPF5hSAs21UloH+gTE1lO+u95IbbgQR1UjtxjBP
-         fRdG6SMutf8lFQdzvALS2/UGMkok4RB6GTpFOZlHKIPPcnpEHDAc+uzhf2t81OMM6B4z
-         jGw8g88LExeI17MvyLJKFcO5N3R4yADqJgcuRZugV4tvsrwridwm4WWqCTdUQepKAkSr
-         ++NYF7+95iE7CTvBsJXqYMxoVrdNLKIqP+SOwhrHq6e7fdevl2LSWr/sUazf76plrnvu
-         OiZbef55JGYHc6T8kv4Xj1nDe7cDxXqgej3g88P9sepfXhMhVKdsB+Wy+CodXIusUxQ9
-         5B1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=o5x4LczZh/4WpNcF/HWMsfZg/GCL//ccIzviDyHT0iU=;
-        b=nQfzxvyG5GBzTsOKdPrm1HRDYvPWieHHqxPTPbwweBxxCy7+IyDw0hDquHa81TWbUf
-         p95rSU1amp0nP1O64HnxpG63Wj29uPLCvuim85WhgAmevIEW3pwKEMpGPRP6SBqrGsmQ
-         InKp/fVgN5vrkzK0RSSoKUmqg4MjDaXscD0kTFZgZKaVqp4xD8qR6lbbs07ChbUa5wQa
-         eO701Kj27yhrOA7VB8CpEWo83bvGRJYnAfmOc+ZrKuOTGNvqQz39ySZ2d6Qr1oOR5FvB
-         cpSbSmnwDNa3LCoCfpqktIKgkSCMBMp6jnI9bQKAzWASzOUwbHpTyQXPLpBAt4r8IFLm
-         1jIg==
-X-Gm-Message-State: APjAAAXjUY0vgfAuZsatKixWvKMn1QYt+WuL9p7IdN2Ue3MkjhbWPtsI
-        CVpr1bNgWNUZcKk8tMELIPI=
-X-Google-Smtp-Source: APXvYqwYLqA2OtGGqmTkXwb+0El9qZfVH0UQen058sAMI37IHwMiylv+sIvqGZN5o73WEbtOQ4qx4A==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr34410528wrm.210.1568293032610;
-        Thu, 12 Sep 2019 05:57:12 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id v8sm38823927wra.79.2019.09.12.05.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 05:57:12 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 14:57:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86 fixes
-Message-ID: <20190912125710.GA21080@gmail.com>
+        Thu, 12 Sep 2019 08:58:08 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8CCw50v042538;
+        Thu, 12 Sep 2019 07:58:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568293085;
+        bh=Md8M6C/5fcIIHW4WyL1FaD2la3jOpxa5UdVyo/9GuZU=;
+        h=From:To:CC:Subject:Date;
+        b=yaQBiuQK+/wZ78f3u+ORC7XIhy2mQE1hfSgOSlNORO+hSrRwXRJ+xD0lgaclgA/SR
+         wsa8Q/9f0vGyxEivb/bSa+igY5KjTTl8ztoudKhP8JcqDhh8Cts0aFaF/tJclliXJ3
+         vVqjwW9qGnEhTLrVALwX/mCS/G4IXZGUQUmiKgC4=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8CCw58a105803
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Sep 2019 07:58:05 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
+ Sep 2019 07:58:04 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 12 Sep 2019 07:58:04 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8CCw4Ze095654;
+        Thu, 12 Sep 2019 07:58:04 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/6] media: i2c: ov2659: maintenance series
+Date:   Thu, 12 Sep 2019 08:00:01 -0500
+Message-ID: <20190912130007.4469-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+This patch series is a collection of patches we have been carrying for a
+while.
 
-Please pull the latest x86-urgent-for-linus git tree from:
+It includes a few sensor register fixes which would cause visual
+artifacts at lower resolution and also at 720p.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+Also on some board the 'powerdown' is not tied to always on so we add
+support for an optional powerdown gpio.
 
-   # HEAD: afa8b475c1aec185a8e106c48b3832e0b88bc2de x86/timer: Force PIT initialization when !X86_FEATURE_ARAT
+Since these camera are removable on some board we alos need the driver
+to actually fail when there is no hardware present so the driver is
+actually removed.
 
-A KVM guest fix, and a kdump kernel relocation errors fix.
+Finally, we update the licensing statement to use SPDX licensing.
 
- Thanks,
+Benoit Parrot (6):
+  media: i2c: ov2659: Fix for image wrap-around in lower resolution
+  media: i2c: ov2659: Fix sensor detection to actually fail when device
+    is not present
+  media: dt-bindings: ov2659: add powerdown-gpios optional property
+  media: i2c: ov2659: Add optional powerdown gpio handling
+  media: i2c: ov2659: Fix missing 720p register config
+  media: i2c: ov2659: Switch to SPDX Licensing
 
-	Ingo
+ .../devicetree/bindings/media/i2c/ov2659.txt  |  6 +++
+ drivers/media/i2c/Kconfig                     |  2 +-
+ drivers/media/i2c/ov2659.c                    | 40 +++++++++++--------
+ 3 files changed, 30 insertions(+), 18 deletions(-)
 
------------------->
-Jan Stancek (1):
-      x86/timer: Force PIT initialization when !X86_FEATURE_ARAT
+-- 
+2.17.1
 
-Steve Wahl (1):
-      x86/purgatory: Change compiler flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
-
-
- arch/x86/kernel/apic/apic.c |  4 ++++
- arch/x86/purgatory/Makefile | 35 +++++++++++++++++++----------------
- 2 files changed, 23 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index dba2828b779a..f91b3ff9dc03 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -834,6 +834,10 @@ bool __init apic_needs_pit(void)
- 	if (!boot_cpu_has(X86_FEATURE_APIC))
- 		return true;
- 
-+	/* Virt guests may lack ARAT, but still have DEADLINE */
-+	if (!boot_cpu_has(X86_FEATURE_ARAT))
-+		return true;
-+
- 	/* Deadline timer is based on TSC so no further PIT action required */
- 	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
- 		return false;
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 8901a1f89cf5..10fb42da0007 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -18,37 +18,40 @@ targets += purgatory.ro
- KASAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
-+# These are adjustments to the compiler flags used for objects that
-+# make up the standalone purgatory.ro
-+
-+PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-+PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
- # sure how to relocate those.
- ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
-+PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_FTRACE)
- endif
- 
- ifdef CONFIG_STACKPROTECTOR
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
--CFLAGS_REMOVE_string.o		+= -fstack-protector
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector
- endif
- 
- ifdef CONFIG_STACKPROTECTOR_STRONG
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
--CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector-strong
- endif
- 
- ifdef CONFIG_RETPOLINE
--CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
-+PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
- endif
- 
-+CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
-+
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
