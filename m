@@ -2,197 +2,152 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDD4C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33552C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530C3208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F42212081B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 19:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gv+WFv1U"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TSPhQkUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfILTgQ (ORCPT
+        id S1726496AbfILToM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 15:36:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62609 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbfILTgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 15:36:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Tpsn4QMNz9v0pL;
-        Thu, 12 Sep 2019 21:36:13 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=gv+WFv1U; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id J5bNDFEMqLjf; Thu, 12 Sep 2019 21:36:13 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Tpsn34m8z9v0pK;
-        Thu, 12 Sep 2019 21:36:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568316973; bh=3005fFALxPHkIgmwYjyZh5cupLYw+PaJ1yJpj72f8pE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gv+WFv1UUUdoduI6PNXpBDgMfVKDJz/EHrx+xBJWrm2UEIEu0irwlwNqyTDfMKq6o
-         QpERIiUVj0m2BOGxGBhV9r5+cYOiiBn8mZv0NjykHqUii2432l4gaRt6ts+zimUBx7
-         HnH9vIMbJcfV16Ac30eVTO0zmGFugNRO4OHeG5lI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E0C68B954;
-        Thu, 12 Sep 2019 21:36:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id danhXIFBhZhB; Thu, 12 Sep 2019 21:36:13 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4AA408B949;
-        Thu, 12 Sep 2019 21:36:12 +0200 (CEST)
-Subject: Re: [PATCH v8 5/7] powerpc/64: make buildable without CONFIG_COMPAT
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <cover.1568306311.git.msuchanek@suse.de>
- <039ed7ac686927fe169241ac72225a258d95ccfc.1568306311.git.msuchanek@suse.de>
- <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
- <20190912202604.14a73423@kitsune.suse.cz>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <758324b9-203b-ec4b-affc-a30aefc9ea23@c-s.fr>
-Date:   Thu, 12 Sep 2019 21:36:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Sep 2019 15:44:12 -0400
+Received: from mail-eopbgr1320138.outbound.protection.outlook.com ([40.107.132.138]:55200
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725972AbfILToL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 15:44:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VDp+E1WMxxfFupn9GeI7/id3Ni9O4WpQ1PAytsFpBVQFoyoFVIxp7oJ72el8LPj7yvHa+/snW5i4uoZq+PynZDHUGuicQHGDC/oYKRTZoD2UJ6E9tK25pAzPrWzgfddBsOJS7fTzJDIsZmq58/f5dq+/6cV/XajjxR0y/p7rWI+YWP4tEgFc02uKA/YoQ0T+R/SLoytuEZkg/fX3DOki7RaeULvyPjrOTGzGpaz+VUQk+jrQiHN7qlbnRdjVwq5XstKHUQ7Bd8hOBtXAYxhXH00Yyr/+RcV7QMApxopLCbW7X5cUEb2C6veDwm8kyiIkmK6uVf0TCasZMUZvDPgbsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BLTODrrocgUMdtaY1JPHruyG5UmypxmW9SUHyr33e6M=;
+ b=bYymOp1w9Lj3vYqxUpgcWpEnxKZFozQg4JrcGwhzgweotePNeb2wPHW2MTSPqXVaE+RgcZdgT6iIqcOeWrDE8FbO79YtL/YiM6BM61IeK4o01bG7Xa1qhEzMmfELze13n1V4m4c2SwXEvH3eagdvel1KqMeCttKL7yTIs6a0y2EeyGDdp7e/4z2apeU5sUebaAc5Nchh/F+6trthI3iX3FJXUaV9EQUiMB6R8YwGKWZr+94eQxpkScvGiuZL0SRDaSYXGmW7e5b+zTTaoXWf2J/KHDN3no6bauo4aSm1CscJtUcokjhTd7sDsZ74BgrOKKiuy6V/9C7aTn3Hm7E27g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BLTODrrocgUMdtaY1JPHruyG5UmypxmW9SUHyr33e6M=;
+ b=TSPhQkUGHkwT+VYK9bh4ljTJJxTvAzOUrrtSnDoh5/hxc/IDSCRSSZVNvUHIKPEdNzJDtAWdf/c1AVNHcaOTW+dIIQ5dLTKpIvvlVjx9XEgheJ0hk0lrjq/wgWr+nDsdybAd/q2U0rxeU3z6zZdvM+upz9UdQ6yMsIJFv1gkm0Q=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0122.APCP153.PROD.OUTLOOK.COM (10.170.188.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.12; Thu, 12 Sep 2019 19:44:03 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2284.007; Thu, 12 Sep 2019
+ 19:44:03 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH][PATCH net-next] hv_netvsc: Add the support of hibernation
+Thread-Topic: [PATCH][PATCH net-next] hv_netvsc: Add the support of
+ hibernation
+Thread-Index: AQHVaPnrTXkpPrlV+ESDlk6ioSqLf6coDp1ggABjRoA=
+Date:   Thu, 12 Sep 2019 19:44:03 +0000
+Message-ID: <PU1P153MB0169D1FB65D53380FEDF3132BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568245063-69693-1-git-send-email-decui@microsoft.com>
+ <DM6PR21MB1337EEC46A276CAD9FAA5EB4CAB00@DM6PR21MB1337.namprd21.prod.outlook.com>
+In-Reply-To: <DM6PR21MB1337EEC46A276CAD9FAA5EB4CAB00@DM6PR21MB1337.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-12T13:50:14.1664906Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cf330f8a-bf0f-452f-9456-da47fa75c1da;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:49e:db48:e427:c2a0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f6a1ed88-b1e2-4807-1847-08d737b9911b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0122;
+x-ms-traffictypediagnostic: PU1P153MB0122:|PU1P153MB0122:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0122BA2920E5A6C846B99EE8BFB00@PU1P153MB0122.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:1122;
+x-forefront-prvs: 01583E185C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(189003)(199004)(13464003)(446003)(25786009)(2201001)(1511001)(11346002)(102836004)(86362001)(6506007)(8936002)(8990500004)(305945005)(10090500001)(7736002)(110136005)(22452003)(52536014)(478600001)(6636002)(33656002)(256004)(74316002)(14454004)(14444005)(10290500003)(316002)(71190400001)(71200400001)(76176011)(46003)(66446008)(76116006)(99286004)(66556008)(66946007)(66476007)(7696005)(64756008)(8676002)(81166006)(81156014)(6436002)(6246003)(55016002)(9686003)(486006)(2501003)(5660300002)(2906002)(476003)(6116002)(229853002)(4744005)(186003)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0122;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pcgGC7mzYp8OYe0nWfIl7C2hH7danmcXbaey1tl8broNFYtLwUWtyQupF3EyDTHhCkSyIKQU9VPJ/OOprk8Lc8hX0i5KDXd6WLHbZIRqnYl6OaPUYxU0OwRChyMqUaS0UVYCNwFMoZsZK+MYyqXXvEIg/P7cfeiVzyuesuu0dFoqseihQUfWAvF9qNzglNR2hb8j8iRO+iU0A2xtpSoldFlUg8qvUvGgJ5+WsjOn5OwEra5AlUVzqRKojEEg+dbmb8GCeJFWLLJX3G/lzDSdPRY6S4vYlbH8Q6DRCuyC0zsxgj4BZaXvDoIeDtaXNB5v15cIdHI21o7qLx1WBs/CGkwDLDs1UGA8bXepr3G4fRkWsX8BE7Q0wuW5UKq7W3lrCYE+g5/IJOu60/zxR57nArqxrk3ltHmqRgbyG4Si4as=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190912202604.14a73423@kitsune.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6a1ed88-b1e2-4807-1847-08d737b9911b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 19:44:03.5466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TdjX02OnLQ29cidPU828o1UxtvSINGyk0BpPmcMIrRd+G5XdYgZpct82h00K0UjS/m0AG/QKou3ri5nW8hjicA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+> Sent: Thursday, September 12, 2019 6:50 AM
+> > -----Original Message-----
+> > From: Dexuan Cui <decui@microsoft.com>
+> > Sent: Wednesday, September 11, 2019 7:38 PM
 
+> > +static int netvsc_suspend(struct hv_device *dev)
+> > +{
+> > +	struct net_device_context *ndev_ctx;
+> > +	struct net_device *vf_netdev, *net;
+> > +	struct netvsc_device *nvdev;
+> > +	int ret;
+> > +
+> > +	net =3D hv_get_drvdata(dev);
+> > +
+> > +	ndev_ctx =3D netdev_priv(net);
+> > +	cancel_delayed_work_sync(&ndev_ctx->dwork);
+> > +
+> > +	rtnl_lock();
+> > +
+> > +	nvdev =3D rtnl_dereference(ndev_ctx->nvdev);
+> > +	if (nvdev =3D=3D NULL) {
+> > +		ret =3D -ENODEV;
+> > +		goto out;
+> > +	}
+> > +
+> > +	cancel_work_sync(&nvdev->subchan_work);
+>=20
+> This looks redundant because netvsc_detach() cancels subchan_work.
+> - Haiyang
 
-Le 12/09/2019 à 20:26, Michal Suchánek a écrit :
-> On Thu, 12 Sep 2019 20:02:16 +0200
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> 
->> Le 12/09/2019 à 19:26, Michal Suchanek a écrit :
->>> There are numerous references to 32bit functions in generic and 64bit
->>> code so ifdef them out.
->>>
->>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->>> ---
->>> v2:
->>> - fix 32bit ifdef condition in signal.c
->>> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
->>> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
->>> v3:
->>> - use IS_ENABLED and maybe_unused where possible
->>> - do not ifdef declarations
->>> - clean up Makefile
->>> v4:
->>> - further makefile cleanup
->>> - simplify is_32bit_task conditions
->>> - avoid ifdef in condition by using return
->>> v5:
->>> - avoid unreachable code on 32bit
->>> - make is_current_64bit constant on !COMPAT
->>> - add stub perf_callchain_user_32 to avoid some ifdefs
->>> v6:
->>> - consolidate current_is_64bit
->>> v7:
->>> - remove leftover perf_callchain_user_32 stub from previous series version
->>> v8:
->>> - fix build again - too trigger-happy with stub removal
->>> - remove a vdso.c hunk that causes warning according to kbuild test robot
->>> ---
->>>    arch/powerpc/include/asm/thread_info.h |  4 +--
->>>    arch/powerpc/kernel/Makefile           |  7 ++---
->>>    arch/powerpc/kernel/entry_64.S         |  2 ++
->>>    arch/powerpc/kernel/signal.c           |  3 +-
->>>    arch/powerpc/kernel/syscall_64.c       |  6 ++--
->>>    arch/powerpc/kernel/vdso.c             |  3 +-
->>>    arch/powerpc/perf/callchain.c          | 39 ++++++++++++++------------
->>>    7 files changed, 33 insertions(+), 31 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
->>> index 8e1d0195ac36..c128d8a48ea3 100644
->>> --- a/arch/powerpc/include/asm/thread_info.h
->>> +++ b/arch/powerpc/include/asm/thread_info.h
->>> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
->>>    	return (ti->local_flags & flags) != 0;
->>>    }
->>>    
->>> -#ifdef CONFIG_PPC64
->>> +#ifdef CONFIG_COMPAT
->>>    #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
->>>    #else
->>> -#define is_32bit_task()	(1)
->>> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
->>>    #endif
->>>    
->>>    #if defined(CONFIG_PPC64)
->>
->> [...]
->>
->>> +static inline int current_is_64bit(void)
->>> +{
->>> +	if (!IS_ENABLED(CONFIG_COMPAT))
->>> +		return IS_ENABLED(CONFIG_PPC64);
->>> +	/*
->>> +	 * We can't use test_thread_flag() here because we may be on an
->>> +	 * interrupt stack, and the thread flags don't get copied over
->>> +	 * from the thread_info on the main stack to the interrupt stack.
->>> +	 */
->>> +	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
->>> +}
->>
->>
->> Since at least commit ed1cd6deb013 ("powerpc: Activate
->> CONFIG_THREAD_INFO_IN_TASK")
->> [https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed1cd6d]
->> the above comment is wrong and current_is_64bit() is equivalent to
->> !is_32bit_task()
->>
->> See https://github.com/linuxppc/issues/issues/275
->>
->> Christophe
-> 
-> I aim at changing the code as little as possible here. A separate patch
-> on top removing this function would be ok?
+You are right. I'll remove the superflous line=20
+cancel_work_sync(&nvdev->subchan_work);
+in netvsc_suspend() in v2.
 
-Yes I agree. By making prior to this patch a separate patch which drops 
-current_is_64bit() would be good. And it would reduce the size of this 
-patch by approximately one third.
+I'll wait for a few days before posting v2, in case people may have
+other comments.
 
-Christophe
-
-> 
-> Thanks
-> 
-> Michal
-> 
+Thanks,
+-- Dexuan
