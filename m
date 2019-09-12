@@ -6,65 +6,64 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F5BC49ED9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9C3C5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7734206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FB72084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 10:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbfILKjl (ORCPT
+        id S1731105AbfILKok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 06:39:41 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55700 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730023AbfILKjl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:39:41 -0400
-Received: from localhost (unknown [148.69.85.38])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 91EC5126655B3;
-        Thu, 12 Sep 2019 03:39:39 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 12:39:38 +0200 (CEST)
-Message-Id: <20190912.123938.494358183342867915.davem@davemloft.net>
-To:     george.mccollister@gmail.com
-Cc:     netdev@vger.kernel.org, woojung.huh@microchip.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, Tristram.Ha@microchip.com, marex@denx.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/3] add ksz9567 with I2C support to
- ksz9477 driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190910131836.114058-1-george.mccollister@gmail.com>
-References: <20190910131836.114058-1-george.mccollister@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 12 Sep 2019 03:39:41 -0700 (PDT)
+        Thu, 12 Sep 2019 06:44:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60252 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730470AbfILKoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:44:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE546B0B6;
+        Thu, 12 Sep 2019 10:44:37 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: /dev/mem and secure boot
+Date:   Thu, 12 Sep 2019 12:44:01 +0200
+Message-ID: <2263894.GsazvrUjIX@skinner.arch.suse.de>
+In-Reply-To: <20190909150957.12abe684@endymion>
+References: <20190906130221.0b47a565@endymion> <20190906121510.GA17328@kroah.com> <20190909150957.12abe684@endymion>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George McCollister <george.mccollister@gmail.com>
-Date: Tue, 10 Sep 2019 08:18:33 -0500
+On Monday, September 9, 2019 3:09:57 PM CEST Jean Delvare wrote:
+> Hi Greg,
 
-> Resurrect KSZ9477 I2C driver support patch originally sent to the list
-> by Tristram Ha and resolve outstanding issues. It now works as similarly to
-> the ksz9477 SPI driver as possible, using the same regmap macros.
-> 
-> Add support for ksz9567 to the ksz9477 driver (tested on a board with
-> ksz9567 connected via I2C).
-> 
-> Remove NET_DSA_TAG_KSZ_COMMON since it's not needed.
-> 
-> Changes since v1:
-> Put ksz9477_i2c.c includes in alphabetical order.
-> Added Reviewed-Bys.
+...
 
-Series applied.
+> > Sure, feel free to not register it at all if the mode is enabled.
 
-Please follow up with Andrew about the macros.
+> Now I feel sorry that I asked my question upstream when there's nothing
+> to be done there. I'll go bother SUSE kernel folks instead, sorry for
+> the noise. And thanks for the advice.
 
-Thanks.
+I also/still think /dev/mem should vanish in secure boot mode, also upstream.
+There may have been strong reasons why it has been restricted to /dev/ioport
+which I do not know.
+
+Whatever the exact definition for kernel behaviour in secure boot mode in the
+UEFI books is (if there is any), it should close quite some possible doors
+for hijacking a machine or read sensible data and if anyhow possible secure
+boot mode should head for this feature (IMHO): Get rid of /dev/mem.
+
+Thanks for bringing this up,
+
+    Thomas
+
+
