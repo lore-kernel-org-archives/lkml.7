@@ -2,214 +2,103 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5677CC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B6C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159172081B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=thinciit.onmicrosoft.com header.i=@thinciit.onmicrosoft.com header.b="WWUbl/9K"
+	by mail.kernel.org (Postfix) with ESMTP id BA66F206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 14:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732714AbfILOfy (ORCPT
+        id S1732250AbfILOj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 10:35:54 -0400
-Received: from rfout2.hes.trendmicro.com ([54.67.111.2]:44890 "EHLO
-        rfout2.hes.trendmicro.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732444AbfILOfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 10:35:53 -0400
-X-Greylist: delayed 925 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Sep 2019 10:35:52 EDT
-Received: from 0.0.0.0_hes.trendmicro.com (unknown [10.64.14.197])
-        by rfout2.hes.trendmicro.com (Postfix) with ESMTPS id 6FB56110FD73
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 14:18:15 +0000 (UTC)
-Received: from 0.0.0.0_hes.trendmicro.com (unknown [10.64.0.243])
-        by rout1.hes.trendmicro.com (Postfix) with SMTP id EA7B8EFC04E;
-        Thu, 12 Sep 2019 14:18:14 +0000 (UTC)
-Received: from IND01-BO1-obe.outbound.protection.outlook.com (unknown [104.47.101.53])
-        by relay1.hes.trendmicro.com (TrendMicro Hosted Email Security) with ESMTPS id 09473AFA014;
-        Thu, 12 Sep 2019 14:18:12 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rs+//jhK0XhnV4QvFA4B+3IMSeWtGsnAL6VS81/XmNOSPIpj1le7jM2WDOA6Wh1VIEQFCDDlNAU3lrvCiIGrVjlnPhdUs1OJ3DMQQRkqYPQJzXZ0BY8h2aJ5J1xw4TU7zcHjlG5u6yHLrmdYsTJOu2qaehj6BX98FEe6csa6kOsOnRz6b+L7CGUiJOCwffBl0PliymrK1nlg2Y+WUg+Atp4C7DlXbddwRu/U+oCmaIBF6y0rb8DXPiBOsViaOtf5gjlxqKh7beVVLI5WBc1XMtWE/nHXPHrTiU6PWZ/aPZgOqf88LwI/ZdqKJd4bei24wYAFUcMnhtEv3zi0dG/MLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9vUKnmKl7DRujYB2ncYVvVr9QoFnSI5/g2wzVayuoT8=;
- b=VcRAx243YohBf/9VjGNngfrlAQqoQXFVp4PEdlrx83YKKk8D93swzr9kz/85AVKbrB/rxeFmlMWoavlrLAOtir/J+5REMycel2DYVpsRrpczVhko+ia/V5awrri9u10ToLPHRky89li5rTH0GHBKBxQL8lLemZ+HJ0bvX8bnmQ1vS0Me5aDC/uSbIQIJnyoIPFWnq5kmlpvI91M3B/BVrXSb08HW2L5ziF5RH1XyCSQF0f/DfcNDHmGuo8NQjDtKfKsbV7X+grFnVRYEX0rA+bbBqpJFlwVSJxICZUqqJacY7QA3hjxIjy4BuQgBsgahwyLxW9eMqP0vIidVzgv5yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=thinci.com; dmarc=pass action=none header.from=thinci.com;
- dkim=pass header.d=thinci.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=thinciit.onmicrosoft.com; s=selector2-thinciit-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9vUKnmKl7DRujYB2ncYVvVr9QoFnSI5/g2wzVayuoT8=;
- b=WWUbl/9K5YdPdPwu+acTbKBDUiwp55WNvf66UDTLjYS9ZDrtsN751G3qg42A1BQ8vfHt13TgCdKevXOJvAhDKWwI2IgYmqObYfHLnKNzuy6kzvoPik7isbFDQH+uO6WhU15XNGqAFlyq2GpERJSLbxJk0QiduHggMWqcz5aY8LU=
-Received: from MA1PR01MB3033.INDPRD01.PROD.OUTLOOK.COM (52.134.150.139) by
- MA1PR01MB2732.INDPRD01.PROD.OUTLOOK.COM (52.134.150.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.15; Thu, 12 Sep 2019 14:18:03 +0000
-Received: from MA1PR01MB3033.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::ac1f:2d05:990:b583]) by MA1PR01MB3033.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::ac1f:2d05:990:b583%5]) with mapi id 15.20.2263.016; Thu, 12 Sep 2019
- 14:18:03 +0000
-From:   Matt Redfearn <matt.redfearn@thinci.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        John Stultz <john.stultz@linaro.org>
-CC:     Rob Clark <robdclark@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
-Thread-Topic: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
-Thread-Index: AQHVXi/ZYjUHyRzEOUKUcNBcrpSsvKcSZPyAgADdeICAAKoKAIAEee8AgAHDkACAAS/zgIAMEBsAgACziACAAA/JAA==
-Date:   Thu, 12 Sep 2019 14:18:03 +0000
-Message-ID: <00e4f553-a02c-6d98-a0e8-28c0183a3c8c@thinci.com>
-References: <20190829060550.62095-1-john.stultz@linaro.org>
- <CGME20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da@epcas3p1.samsung.com>
- <CAF6AEGvborwLmjfC6_vgZ-ZbfvF3HEFFyb_NHSLRoYWF35bw+g@mail.gmail.com>
- <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com>
- <CAF6AEGtkvRpXSoddjmxer2U6LxnV_SAe+jwE2Ct8B8dDpFy2mA@mail.gmail.com>
- <b925e340-4b6a-fbda-3d8d-5c27204d2814@samsung.com>
- <CALAqxLU5Ov+__b5gxnuMxQP1RLjndXkB4jAiGgmb-OMdaKePug@mail.gmail.com>
- <9d31af23-8a65-d8e8-b73d-b2eb815fcd6f@samsung.com>
- <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
- <16c9066b-091f-6d0e-23f1-2c1f83a7da1b@samsung.com>
-In-Reply-To: <16c9066b-091f-6d0e-23f1-2c1f83a7da1b@samsung.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0445.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:e::25) To MA1PR01MB3033.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:46::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=matthew.redfearn@thinci.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.106.91.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e0fbb9d-045c-4021-6da3-08d7378c05d7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MA1PR01MB2732;
-x-ms-traffictypediagnostic: MA1PR01MB2732:
-x-microsoft-antispam-prvs: <MA1PR01MB2732E4D36F58AE8009F91247F1B00@MA1PR01MB2732.INDPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01583E185C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39840400004)(396003)(376002)(346002)(52314003)(189003)(199004)(102836004)(5660300002)(6246003)(386003)(6512007)(6436002)(53936002)(81166006)(81156014)(53546011)(478600001)(76176011)(7736002)(6506007)(305945005)(71200400001)(71190400001)(6486002)(4326008)(54906003)(229853002)(8676002)(110136005)(31696002)(7416002)(52116002)(6116002)(3846002)(446003)(99286004)(36756003)(11346002)(2616005)(66066001)(25786009)(66446008)(64756008)(476003)(66556008)(66476007)(66946007)(486006)(256004)(5024004)(186003)(14454004)(8936002)(26005)(2906002)(316002)(31686004);DIR:OUT;SFP:1102;SCL:1;SRVR:MA1PR01MB2732;H:MA1PR01MB3033.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: thinci.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4iuRccU/5ZoOX+dq0Pj9OceErr2ejxZSIWj+IE0KU5Ku2A0gzqD9pPXfAwbkL0bPWoctKqwsKHOI8Pqt7VWlaJGS/1IN0A1nvaqtSO8SbK8JwjwB3XhFoiLEQhpZcvRwep20x2fQDECUmaPkZ+KE3nGSmAKCTkBjW3YXmy7Hcb/p4V601t/wdFrP74SwOdRAapDDmI5MmmOmlnWjgW/IwiRSbmDYDG4HtOwpXlaghrwTrMce8OtFHos3NLwVT3jCqlMl1Zcn1p86Ucsc427MJ98i36wsGPSAkUWQ03E34XRiSOnwehgHLK6kNDbnU6Qxc/Im+tiKe20KWhogFpZ3BMpVxFPBwNFHkpIS9jGsbyGJl8nqwuEaWNyK4J/HTs+/whDaMZuZf/rf6bkYahQD9MI8c21sEaVWlRwP58kmUWw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C2806052E8B64D468F9ED075782BDC63@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Thu, 12 Sep 2019 10:39:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64597 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732592AbfILOj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 10:39:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 07:39:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,497,1559545200"; 
+   d="scan'208";a="186146677"
+Received: from avrahamr-mobl1.ger.corp.intel.com (HELO [10.252.3.203]) ([10.252.3.203])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Sep 2019 07:39:54 -0700
+Subject: Re: [Intel-gfx] [PATCH] Revert "drm/i915/userptr: Acquire the page
+ lock around set_page_dirty()"
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, torvalds@linux-foundation.org
+Cc:     tiwai@suse.de, linux-kernel@vger.kernel.org, leho@kraav.com,
+        Jani Nikula <jani.nikula@intel.com>, MKoutny@suse.com,
+        stable@vger.kernel.org, Martin.Wilck@suse.com
+References: <CAHk-=wjKv_Zw2zGHduyrQH_VQzxXYzwKdwwzzpsdnsdx=EK30Q@mail.gmail.com>
+ <20190912125634.29054-1-chris@chris-wilson.co.uk>
+From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Organization: Intel Corporation UK Plc
+Message-ID: <ae31587d-bd36-5f6a-6479-df23f3eda590@linux.intel.com>
+Date:   Thu, 12 Sep 2019 15:39:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: thinci.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0fbb9d-045c-4021-6da3-08d7378c05d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2019 14:18:03.2236
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SZts4ItkBnwN+KdgDLdbmM6/LujqcUMs+r209r17AnJ/lt8fuFlAM/k3tdKFvpC59nNmDU8CLMv9zo8LGh3ieyr4BjvAGZGW5wyvA7A0spE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA1PR01MB2732
-X-TMASE-Version: StarCloud-1.3-8.5.1020-24906.007
-X-TMASE-Result: 10--17.718100-4.000000
-X-TMASE-MatchedRID: 0lhM5bBmjEPmLzc6AOD8DfHkpkyUphL9SeIjeghh/zNyRzv8VthUeO78
-        JM8/PJKtilFjvLZ/j0+CfAAkLV8ZpAZozxJuL+QzSyH6bNPVSdsA+JHhu0IR5r0rWM4nIpJrQ06
-        GWWsHgeWclFMYx7d3xp13WEx+M1LaMYXCjAv0ws/0hv/rD7WVZAZyESFXAljfSgypjNmDEOv/ol
-        ENOfDLuqv4jSzK/3BDzOzX3Ugwdp8vTkJbUZogmvNctuQlbOgkprzcyrz2L10cNByoSo036bBZs
-        zSz1qei8ze0IlupaK3sfSmuEHK7OCzoUFXYNBYHqJSK+HSPY+9rLj3DxYBIN1S+oHmj8upzcM9I
-        zjFc6Cbh53PZBRbu8/5G22dO0g90ig6yfQGtC660YzRwENQzjWgU1o1xV13fLrb+wM+3z+IEv3J
-        Y2DTPMTWhjLSUqUa9z0Nn6V8FDgK0Nx5/0yISyS/PpqUXWtWDBtG6netTkaVLxCuBTCXaKmlys1
-        PDhWLo7Sr91NIPRy13j1jxhRfPxsGY0l4ehoxDvOAv94sAIMScX+8paBX5l8eQfu6iwSfsn3P5M
-        anUWB0gXhVckvDO0ZX00MHwP9R6LDvpFRH1bkKwWQIt565829s4MOUU/wa2BjMxa/QV+tThBjWE
-        tFRXBgh3s4yCdKS3fILl67YGAqY5HWa1kxc3MRRbernba4ig64sVlliWKx/QOCWBwgRKBYesoyU
-        FcYI/wWulRtvvYxTUHQeTVDUrItRnEQCUU+jz9xS3mVzWUuA152LecOHHIz8mKvV1biOgrLtkjl
-        ioaNM4Gm2JhqDjKmuT1Mq3TdwU3Az5D7wfy24=
-X-TM-Deliver-Signature: C9FE929865C6A0FEC2E7C22290EC42E1
+In-Reply-To: <20190912125634.29054-1-chris@chris-wilson.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEyLzA5LzIwMTkgMTQ6MjEsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6DQo+IE9uIDEyLjA5
-LjIwMTkgMDQ6MzgsIEpvaG4gU3R1bHR6IHdyb3RlOg0KPj4gT24gV2VkLCBTZXAgNCwgMjAxOSBh
-dCAzOjI2IEFNIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3RlOg0KPj4+
-IE9uIDAzLjA5LjIwMTkgMTg6MTgsIEpvaG4gU3R1bHR6IHdyb3RlOg0KPj4+PiBPbiBNb24sIFNl
-cCAyLCAyMDE5IGF0IDY6MjIgQU0gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4g
-d3JvdGU6DQo+Pj4+PiBPbiAzMC4wOC4yMDE5IDE5OjAwLCBSb2IgQ2xhcmsgd3JvdGU6DQo+Pj4+
-Pj4gT24gVGh1LCBBdWcgMjksIDIwMTkgYXQgMTE6NTIgUE0gQW5kcnplaiBIYWpkYSA8YS5oYWpk
-YUBzYW1zdW5nLmNvbT4gd3JvdGU6DQo+Pj4+Pj4+IE9mIGNvdXJzZSBpdCBzZWVtcyB5b3UgaGF2
-ZSBkaWZmZXJlbnQgb3BpbmlvbiB3aGF0IGlzIHRoZSByaWdodCB0aGluZyBpbg0KPj4+Pj4+PiB0
-aGlzIGNhc2UsIHNvIGlmIHlvdSBjb252aW5jZSB1cyB0aGF0IHlvdXIgYXBwcm9hY2ggaXMgYmV0
-dGVyIG9uZSBjYW4NCj4+Pj4+Pj4gcmV2ZXJ0IHRoZSBwYXRjaC4NCj4+Pj4+PiBJIGd1ZXNzIG15
-IHN0cm9uZ2VzdCAvIG1vc3QgaW1tZWRpYXRlIG9waW5pb24gaXMgdG8gbm90IGJyZWFrIG90aGVy
-DQo+Pj4+Pj4gZXhpc3RpbmcgYWR2NzV4eCBicmlkZ2UgdXNlcnMuDQo+Pj4+PiBJdCBpcyBwaXR5
-IHRoYXQgYnJlYWthZ2UgaGFwcGVuZWQsIGFuZCBuZXh0IHRpbWUgd2Ugc2hvdWxkIGJlIG1vcmUN
-Cj4+Pj4+IHN0cmljdCBhYm91dCB0ZXN0aW5nIG90aGVyIHBsYXRmb3JtcywgYmVmb3JlIHBhdGNo
-IGFjY2VwdGFuY2UuDQo+Pj4+Pg0KPj4+Pj4gQnV0IHJldmVydGluZyBpdCBub3cgd2lsbCBicmVh
-ayBhbHNvIHBsYXRmb3JtIHdoaWNoIGRlcGVuZCBvbiBpdC4NCj4+Pj4gSSdtIHJlYWxseSBvZiBu
-byBvcGluaW9uIG9mIHdoaWNoIGFwcHJvYWNoIGlzIGJldHRlciBoZXJlLCBidXQgSSB3aWxsDQo+
-Pj4+IHNheSB0aGF0IHdoZW4gYSBwYXRjaCBicmVha3MgcHJldmlvdXNseSB3b3JraW5nIGJvYXJk
-cywgdGhhdCdzIGENCj4+Pj4gcmVncmVzc2lvbiBhbmQganVzdGlmeWluZyB0aGF0IHNvbWUgb3Ro
-ZXIgYm9hcmQgaXMgbm93IGVuYWJsZWQgdGhhdA0KPj4+PiB3b3VsZCBiZSBicm9rZW4gYnkgdGhl
-IHJldmVydCAob2YgYSBwYXRjaCB0aGF0IGlzIG5vdCB5ZXQgdXBzdHJlYW0pDQo+Pj4+IGlzbid0
-IHJlYWxseSBhIHN0cm9uZyBhcmd1bWVudC4NCj4+Pj4NCj4+Pj4gSSdtIGhhcHB5IHRvIHdvcmsg
-d2l0aCBmb2xrcyB0byB0cnkgdG8gZml4dXAgdGhlIGtpcmluIGRyaXZlciBpZiB0aGlzDQo+Pj4+
-IHBhdGNoIHJlYWxseSBpcyB0aGUgcmlnaHQgYXBwcm9hY2gsIGJ1dCB3ZSBuZWVkIHNvbWVvbmUg
-dG8gZG8gdGhlIHNhbWUNCj4+Pj4gZm9yIHRoZSBkYjQxMGMsIGFuZCBJIGRvbid0IHRoaW5rIGl0
-cyBmYWlyIHRvIGp1c3QgZHVtcCB0aGF0IHdvcmsgb250bw0KPj4+PiBmb2xrcyB1bmRlciB0aGUg
-dGhyZWF0IG9mIHRoZSBib2FyZCBicmVha2luZy4NCj4+Pg0KPj4+IFRoZXNlIGRyaXZlcnMgc2hv
-dWxkIGJlIGZpeGVkIGFueXdheSAtIGFzc3VtcHRpb24gdGhhdA0KPj4+IGRybV9icmlkZ2UvZHJt
-X3BhbmVsIHdpbGwgYmUgcmVnaXN0ZXJlZCBiZWZvcmUgdGhlIGJ1cyBpdCBpcyBhdHRhY2hlZCB0
-bw0KPj4+IGlzIGp1c3QgaW5jb3JyZWN0Lg0KPj4+DQo+Pj4gU28gaW5zdGVhZCBvZiByZXZlcnRp
-bmcsIGZpeGluZyBhbmQgdGhlbiByZS1hcHBseWluZyB0aGUgcGF0Y2ggSSBoYXZlDQo+Pj4gZ2Vu
-dGx5IHByb3Bvc2VkIHNob3J0ZXIgcGF0aC4gSWYgeW91IHByZWZlciBsb25nIHBhdGggd2UgY2Fu
-IHRyeSB0byBnbw0KPj4+IHRoaXMgd2F5Lg0KPj4+DQo+Pj4gTWF0dCwgaXMgdGhlIHB1cmUgcmV2
-ZXJ0IE9LIGZvciB5b3Ugb3IgaXMgaXQgcG9zc2libGUgdG8gcHJlcGFyZSBzb21lDQo+Pj4gd29y
-a2Fyb3VuZCBhbGxvd2luZyBjb29wZXJhdGlvbiB3aXRoIGJvdGggYXBwcm9hY2hlcz8NCj4+IFJv
-Yi9BbmRyemVqOiBXaGF0J3MgdGhlIGNhbGwgaGVyZT8NCj4+DQo+PiBTaG91bGQgSSByZXN1Ym1p
-dCB0aGUga2lyaW4gZml4IGZvciB0aGUgYWR2NzUxMSByZWdyZXNzaW9uIGhlcmU/DQo+PiBPciBk
-byB3ZSByZXZlcnQgdGhlIGFkdjc1MTEgcGF0Y2g/IEkgYmVsaWV2ZSBkYjQxMGMgc3RpbGwgbmVl
-ZHMgYSBmaXguDQo+Pg0KPj4gSSdkIGp1c3QgbGlrZSB0byBrZWVwIHRoZSBIaUtleSBib2FyZCBm
-cm9tIGJyZWFraW5nLCBzbyBsZXQgbWUga25vdyBzbw0KPj4gSSBjYW4gZ2V0IHRoZSBmaXggc3Vi
-bWl0dGVkIGlmIG5lZWRlZC4NCj4gDQo+IA0KPiBTaW5jZSB0aGVyZSBpcyBubyByZXNwb25zZSBm
-cm9tIE1hdHQsIHdlIGNhbiBwZXJmb3JtIHJldmVydCwgc2luY2UgdGhlcmUNCj4gYXJlIG5vIG90
-aGVyIGlkZWFzLiBJIHdpbGwgYXBwbHkgaXQgdG9tb3Jyb3csIGlmIHRoZXJlIGFyZSBubyBvYmpl
-Y3Rpb25zLg0KDQpIaSwNCg0KU29ycnkgLSB5ZWFoIEkgdGhpbmsgcmV2ZXJ0aW5nIGlzIHByb2Jh
-Ymx5IGJlc3QgYXQgdGhpcyBwb2ludCB0byBhdm9pZCANCmJyZWFraW5nIGluLXRyZWUgcGxhdGZv
-cm1zLg0KSXQncyBhIHNoYW1lIHRob3VnaCB0aGF0IHRoZXJlIGlzIGEgYnVpbHQtaW4gaW5jb21w
-YXRpYmlsaXR5IHdpdGhpbiB0aGUgDQp0cmVlIGJldHdlZW4gZHJpdmVycy4gVGhlIHdheSB0aGF0
-IHRoZSBnZW5lcmljIFN5bm9wc3lzIERTSSBob3N0IGRyaXZlciANCnByb2JlcyBpcyBjdXJyZW50
-bHkgaW5jb21wYXRpYmxlIHdpdGggdGhlIEFEVjc1MzMgKGhlbmNlIHRoZSBwYXRjaCksIA0Kb3Ro
-ZXIgRFNJIGhvc3QgZHJpdmVycyBhcmUgbm93IGNvbXBhdGlibGUgd2l0aCB0aGUgQURWNzUzMyBi
-dXQgYnJlYWsgDQp3aGVuIHdlIGNoYW5nZSBpdCB0byBwcm9iZSBpbiBhIHNpbWlsYXIgd2F5IHRv
-IHBhbmVsIGRyaXZlcnMuDQoNCj4gDQo+IEFuZCBmb3IgdGhlIGZ1dHVyZTogSSBndWVzcyBpdCBp
-cyBub3QgcG9zc2libGUgdG8gbWFrZSBhZHYgd29yayB3aXRoIG9sZA0KPiBhbmQgbmV3IGFwcHJv
-YWNoLCBidXQgc2ltcGxlIHdvcmthcm91bmQgZm9yIGFkdiBjb3VsZCBiZSBhZGRlZCBsYXRlcjoN
-Cj4gDQo+IGlmIChzb3VyY2UgaXMgbXNtIG9yIGtpcmluKQ0KPiANCj4gIMKgwqDCoCBkb190aGVf
-b2xkX3dheQ0KPiANCj4gZWxzZQ0KPiANCj4gIMKgwqDCoCBkb19jb3JyZWN0bHkuDQoNCk1heWJl
-IHRoaXMgd291bGQgd29yaywgYnV0IGhvdyBkbyB3ZSBrbm93IHRoYXQgdGhlIGxpc3QgIm1zbSBv
-ciBraXJpbiIgDQppcyBleGhhdXN0aXZlIHRvIGNvcGUgd2l0aCBhbGwgcGxhdGZvcm1zPyBJdCBz
-ZWVtcyB0byBtZSB0aGUgYnVpbHQgaW4gDQppbmNvbXBhdGliaWxpdHkgYmV0d2VlbiBEU0kgaG9z
-dHMgbmVlZHMgdG8gYmUgcmVzb2x2ZWQgcmVhbGx5IHJhdGhlciANCnRoYW4gdHJ5aW5nIHRvIHdv
-cmsgYXJvdW5kIGl0IGluIHRoZSBBRFY3NTMzIGRyaXZlciAoYW5kIGFueSBvdGhlciBEU0kgDQpi
-dXMgZGV2aWNlIHRoYXQgZmFsbHMgaW50byB0aGlzIHRyYXApLg0KDQpBbnl3YXksIG15IHBsYXRm
-b3JtIGlzIG91dCBvZiB0cmVlIHNvIGJldHRlciB0byByZXZlcnQgbXkgcGF0Y2ggYW5kIGtlZXAg
-DQp0aGUgaW4tdHJlZSBwbGF0Zm9ybXMgd29ya2luZy4NCg0KVGhhbmtzIGV2ZXJ5b25lLg0KTWF0
-dA0KDQo+IA0KPiANCj4gQW5kIHJlbW92ZSBpdCBhZnRlciBmaXhpbmcgYm90aCBkc2kgbWFzdGVy
-cy4NCj4gDQo+IA0KPiBSZWdhcmRzDQo+IA0KPiBBbmRyemVqDQo+IA0KPiANCj4+DQo+PiB0aGFu
-a3MNCj4+IC1qb2huDQo+Pg0KPj4NCj4gDQo=
+
+On 12/09/2019 13:56, Chris Wilson wrote:
+> The userptr put_pages can be called from inside try_to_unmap, and so
+> enters with the page lock held on one of the object's backing pages. We
+> cannot take the page lock ourselves for fear of recursion.
+> 
+> Reported-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+> Reported-by: Martin Wilck <Martin.Wilck@suse.com>
+> Reported-by: Leo Kraav <leho@kraav.com>
+> Fixes: aa56a292ce62 ("drm/i915/userptr: Acquire the page lock around set_page_dirty()")
+> References: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+>   drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 10 +---------
+>   1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> index 74da35611d7c..11b231c187c5 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+> @@ -672,15 +672,7 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
+>   
+>   	for_each_sgt_page(page, sgt_iter, pages) {
+>   		if (obj->mm.dirty)
+> -			/*
+> -			 * As this may not be anonymous memory (e.g. shmem)
+> -			 * but exist on a real mapping, we have to lock
+> -			 * the page in order to dirty it -- holding
+> -			 * the page reference is not sufficient to
+> -			 * prevent the inode from being truncated.
+> -			 * Play safe and take the lock.
+> -			 */
+> -			set_page_dirty_lock(page);
+> +			set_page_dirty(page);
+>   
+>   		mark_page_accessed(page);
+>   		put_page(page);
+> 
+
+Acked-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+
+Regards,
+
+Tvrtko
