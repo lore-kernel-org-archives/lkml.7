@@ -2,178 +2,127 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D5CC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E0EC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC04320856
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F442084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 18:23:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="G9zsPVjG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZ3qHTaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfILSCj (ORCPT
+        id S1727039AbfILSXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 14:02:39 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:60862 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfILSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 14:02:38 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Tmnm4x1wz9vKGl;
-        Thu, 12 Sep 2019 20:02:36 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=G9zsPVjG; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Z4yIP08vdkdA; Thu, 12 Sep 2019 20:02:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Tmnm3kSRz9vKGk;
-        Thu, 12 Sep 2019 20:02:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568311356; bh=NFdlx0RD60sqIRtqy0ISiwk5jmIOLD1S2ylFqmlItwg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=G9zsPVjGyTbwj/0TtOyp+K4d2xAyJlKA0MFGs8bZ4BUHyIQx8rjdAozN0fctwIv7T
-         uruc/ujdTUA9gKbXHZfPKS2J7ppJhuugRCGpbafyeTrSar7Ob3oqlYeJq7glpWLC99
-         syNZb/KFkcTn4bu0KMcDqRSvSUvsPJhOPU7DutGI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9F8C8B958;
-        Thu, 12 Sep 2019 20:02:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TdWyQOorlr1s; Thu, 12 Sep 2019 20:02:33 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E2D978B95E;
-        Thu, 12 Sep 2019 20:02:16 +0200 (CEST)
-Subject: Re: [PATCH v8 5/7] powerpc/64: make buildable without CONFIG_COMPAT
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Breno Leitao <leitao@debian.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Stanley <joel@jms.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Hildenbrand <david@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1568306311.git.msuchanek@suse.de>
- <039ed7ac686927fe169241ac72225a258d95ccfc.1568306311.git.msuchanek@suse.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <9973bf6b-f1b9-c778-bd88-ed41e45ca126@c-s.fr>
-Date:   Thu, 12 Sep 2019 20:02:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Sep 2019 14:23:47 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38294 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfILSXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 14:23:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so24211339ljn.5;
+        Thu, 12 Sep 2019 11:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IzpHMPyEAs7qHXeC8+PI+k8EjPmSxRwc5lCuYXRCv54=;
+        b=UZ3qHTaVrczrYkLqCzFJel3IMA/0c7kf0uAfHAAJOzbYtfQv5ist1ZHOa4QlmfW8Y8
+         1AccvRFP+4hzmqF/mVoOwGA4l8o5DpECcGgLYz2jE77VlFvAgE+zB30oFDvBEvN4+qN7
+         b2KB42vYdwZpch/CRMGMfR6lyFLUvffEYJGADc/Aaexis9rTRYC+WyV2vz2TYvVvKYIN
+         /Hj7Z7dhOQ9iBUcmPP31o62k891bi3/x4FEzaOJz5n6DkNAttTbJv+jeqdrBpWk4Jcvj
+         /DcBW3x7lGouxlUi484qAfkGHAmC3hpvwfD4UqKFSlkAZsAwUOfj9fqzmF3WTw8wZ4Om
+         a/Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IzpHMPyEAs7qHXeC8+PI+k8EjPmSxRwc5lCuYXRCv54=;
+        b=JRwC4ULFD3YzgYjRc3mRYRMNbFOqT7+3F540P6kPU5dpz8MMLd/7w/94jp9LDz+TxB
+         E9JrUmThS+A6ZMY9PVJMhouhT2K9kr3KBinkb8GHvdfAlRY9prpboY6WhCy//8eWd1l2
+         ypMdG9+bOfai4BLA2iPn6jVvgVgYRPMr33FssriSpL1cm7jTKvvySGwLcWV7gZKvsKr4
+         xZuO9VC5k6KdcsQtuGth0vKeSpC71xQ7sYKBffqTryNpWmYUATkTSW+SiOBfifHdM9MC
+         rKQOnOO5gaz+sJmRzJrbPmgnaU9jTzfo4hP3csfbTFz6+klFcuBBECS5xRJ0MLp0BX2E
+         63UA==
+X-Gm-Message-State: APjAAAU5dWgKpoYtku40273+jElO3UxLKqFD8HRgh5V24tn8K/45fIeb
+        kW1gXO53K+ljtC97gN9AtHu1Swx1/C1Vqs7x0PE=
+X-Google-Smtp-Source: APXvYqyg3z0rmVB8MqaYGii3kSi/ffw+EZze6khxHsFFAgdyRAoLKz5Agii/j7bEpQw09ybFOM96bJvWRrgLf56KWoY=
+X-Received: by 2002:a2e:3e0d:: with SMTP id l13mr27406384lja.10.1568312624761;
+ Thu, 12 Sep 2019 11:23:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <039ed7ac686927fe169241ac72225a258d95ccfc.1568306311.git.msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+In-Reply-To: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 12 Sep 2019 15:23:34 -0300
+Message-ID: <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Philipp,
 
+Thanks for submitting these fixes.
 
-Le 12/09/2019 à 19:26, Michal Suchanek a écrit :
-> There are numerous references to 32bit functions in generic and 64bit
-> code so ifdef them out.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> v2:
-> - fix 32bit ifdef condition in signal.c
-> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
-> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
-> v3:
-> - use IS_ENABLED and maybe_unused where possible
-> - do not ifdef declarations
-> - clean up Makefile
-> v4:
-> - further makefile cleanup
-> - simplify is_32bit_task conditions
-> - avoid ifdef in condition by using return
-> v5:
-> - avoid unreachable code on 32bit
-> - make is_current_64bit constant on !COMPAT
-> - add stub perf_callchain_user_32 to avoid some ifdefs
-> v6:
-> - consolidate current_is_64bit
-> v7:
-> - remove leftover perf_callchain_user_32 stub from previous series version
-> v8:
-> - fix build again - too trigger-happy with stub removal
-> - remove a vdso.c hunk that causes warning according to kbuild test robot
-> ---
->   arch/powerpc/include/asm/thread_info.h |  4 +--
->   arch/powerpc/kernel/Makefile           |  7 ++---
->   arch/powerpc/kernel/entry_64.S         |  2 ++
->   arch/powerpc/kernel/signal.c           |  3 +-
->   arch/powerpc/kernel/syscall_64.c       |  6 ++--
->   arch/powerpc/kernel/vdso.c             |  3 +-
->   arch/powerpc/perf/callchain.c          | 39 ++++++++++++++------------
->   7 files changed, 33 insertions(+), 31 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-> index 8e1d0195ac36..c128d8a48ea3 100644
-> --- a/arch/powerpc/include/asm/thread_info.h
-> +++ b/arch/powerpc/include/asm/thread_info.h
-> @@ -144,10 +144,10 @@ static inline bool test_thread_local_flags(unsigned int flags)
->   	return (ti->local_flags & flags) != 0;
->   }
->   
-> -#ifdef CONFIG_PPC64
-> +#ifdef CONFIG_COMPAT
->   #define is_32bit_task()	(test_thread_flag(TIF_32BIT))
->   #else
-> -#define is_32bit_task()	(1)
-> +#define is_32bit_task()	(IS_ENABLED(CONFIG_PPC32))
->   #endif
->   
->   #if defined(CONFIG_PPC64)
+On Wed, Sep 11, 2019 at 11:50 AM Philipp Puschmann
+<philipp.puschmann@emlix.com> wrote:
+>
+> For some years and since many kernel versions there are reports that
+> RX UART DMA channel stops working at one point. So far the usual workaround was
+> to disable RX DMA. This patches try to fix the underlying problem.
+>
+> When a running sdma script does not find any usable destination buffer to put
+> its data into it just leads to stopping the channel being scheduled again. As
+> solution we we manually retrigger the sdma script for this channel and by this
+> dissolve the freeze.
+>
+> While this seems to work fine so far a further patch in this series increases
+> the number of RX DMA periods for UART to reduce use cases running into such
+> a situation.
+>
+> This patch series was tested with the current kernel and backported to
+> kernel 4.15 with a special use case using a WL1837MOD via UART and provoking
+> the hanging of UART RX DMA within seconds after starting a test application.
+> It resulted in well known
+>   "Bluetooth: hci0: command 0x0408 tx timeout"
+> errors and complete stop of UART data reception. Our Bluetooth traffic consists
+> of many independent small packets, mostly only a few bytes, causing high usage
+> of periods.
+>
+>
+> Philipp Puschmann (4):
+>   dmaengine: imx-sdma: fix buffer ownership
+>   dmaengine: imx-sdma: fix dma freezes
+>   serial: imx: adapt rx buffer and dma periods
+>   dmaengine: imx-sdma: drop redundant variable
 
-[...]
+I have some suggestions:
 
-> +static inline int current_is_64bit(void)
-> +{
-> +	if (!IS_ENABLED(CONFIG_COMPAT))
-> +		return IS_ENABLED(CONFIG_PPC64);
-> +	/*
-> +	 * We can't use test_thread_flag() here because we may be on an
-> +	 * interrupt stack, and the thread flags don't get copied over
-> +	 * from the thread_info on the main stack to the interrupt stack.
-> +	 */
-> +	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
-> +}
+1. Please split this in two series: one for dmaengine and other one for serial
 
+2. Please add Fixes tag when appropriate, so that the fixes can be
+backported to stable kernels.
 
-Since at least commit ed1cd6deb013 ("powerpc: Activate 
-CONFIG_THREAD_INFO_IN_TASK") 
-[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed1cd6d] 
-the above comment is wrong and current_is_64bit() is equivalent to 
-!is_32bit_task()
+3. Please Cc Robin and Andy
 
-See https://github.com/linuxppc/issues/issues/275
-
-Christophe
+Thanks
