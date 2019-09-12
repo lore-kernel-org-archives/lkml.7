@@ -2,111 +2,109 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31840C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DB2C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04816208C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qWhIUGIb"
+	by mail.kernel.org (Postfix) with ESMTP id 2464520830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 21:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568322715;
+	bh=Mzvl54gZKPxPKYl6z6jTuBy+H41sd3oEeLobxLbTmz4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=arkYEeYj0Q8cw26EqGrnChyXH8yKQHpfe49Tdb2a2hzfv4u0+APkqIU/QyXqBEFP7
+	 xUYYpLCvqUAfCfcq4eYYIXKqN/FsrvUQpTzcuC4u477GNcJKag6ZxWTBm+gYcB5JfR
+	 lN9ImCVwuxgajFSMkOv7AnMUx/TtxymG+Dno2hF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfILVLV (ORCPT
+        id S1728352AbfILVLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 17:11:21 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43652 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfILVLU (ORCPT
+        Thu, 12 Sep 2019 17:11:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:47075 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfILVLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 17:11:20 -0400
-Received: by mail-io1-f68.google.com with SMTP id r8so33287701iol.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 14:11:20 -0700 (PDT)
+        Thu, 12 Sep 2019 17:11:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v11so31293851qto.13;
+        Thu, 12 Sep 2019 14:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=62srlE3SBeqwLg3Pd9NJw2uOwPxjT0FuUEa1NpcJ1xg=;
-        b=qWhIUGIbwLqnA77UZ14TIIf9D+cAZjHYn+mhylpeFjNYM7MeVdl9l3Q8gNgt9vowCE
-         usvkwZg92ge3+m2sG9Zovwsf5Jdji//d4DgCkyxOA37bKPnG0mwy5iOZ/CbIq1g5hKyp
-         tGIbkUstgAac+ynlhNq6+chmBgnlhYfCILlbgnV1xtiLpn7Ppkjsnq7KV9IL5/eh8KqU
-         7PfS91T8+D93qqW85sKaeA/+wfgNGB3MYnMzluyNMvQSIu1CwGVlBZxL0iUBGoglKpDQ
-         P4aqRniuu1HnlZqcTcF8VQed492BC1B5qlaCgP9krPjUwQRetrnZObRHpo+4DUPI4wy8
-         5BqA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Ft1lXaFWyeFaR5dQq95+R6LQSsO9+rjJoCxsIQDK09Q=;
+        b=ieuj2Q4AeufUufy5S/GjvLZqVEpSa2IqXOab6R7dw+TPfduNg/yvHq0tl5qtqN0aKu
+         S0Fx69ForISDBKoqDSgnU+Ex84zoIn6OicdJHOOhJfaN9DpJhK8OQ8WlNWst6zNANSkE
+         uz06s7IH1hnkNgtVos8xsUrtLpW1alGkANMSxzQwJikaxvOm328tMWkt5q/ckCJSeW2R
+         tE8OFY85hlXCYtYKqnIT9SUAM0Pcjd+igwUe9qIHEbjEGkiPA6Q/+niXtkBsb8oQYYKh
+         c97G6DGolDXJlzzSulLh/aVSPaV7e5fCXSMlHdZBsu+PHA6+WRDQMnP8v5BH1IUP6rEI
+         QvQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=62srlE3SBeqwLg3Pd9NJw2uOwPxjT0FuUEa1NpcJ1xg=;
-        b=DD2wXnfmT6cOFMalIYIe3u/AkWmXBXf2nL4X6Hi/ihQQDkAbfFdCBPisbBZM/jj/eP
-         sDNirO2+aFFau0057x2ItbYrmhE31KFtZJuqeu0s26wFTW1ByYawpLq/XBbKUJ1fcAt+
-         nYjGEzrFUfD+lakfFBc6tYL2Rz/TeXOk0jXzkVh/AMwyYjvGd6ecPDMbcF/Sw7TMgRrI
-         gEVYvBrphOQEHLElfbRQ23KDJahbNJgh/I8iaG5XwGxdFaAToQWHNBI03VZCeimzZkAG
-         FnEJTVqU3M6SCfRAuLEQ02kFAq5nz3+ZhdZqcKn+U+G6nqDiLjQqO22Q2IFkw4+Rrg5b
-         A9gg==
-X-Gm-Message-State: APjAAAWi6dOpefdw+EeaJuTIoYFeaBrVEiAnWh0XQyN69vkLY9GIXXyU
-        beTthUGRc1/14TfswPA1gZkpJg==
-X-Google-Smtp-Source: APXvYqxn+KCXBrBfZnrJIz4+Qc8lvkyqM8DtjXHGEMowE6lpWAOAuV9+fPmtupBmcM6xQSJ5JfKnhA==
-X-Received: by 2002:a6b:f717:: with SMTP id k23mr6875020iog.210.1568322679426;
-        Thu, 12 Sep 2019 14:11:19 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id c15sm22432089ioi.74.2019.09.12.14.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 14:11:18 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 15:11:14 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] mm: correct mask size for slub page->objects
-Message-ID: <20190912211114.GA146974@google.com>
-References: <20190912004401.jdemtajrspetk3fh@box>
- <20190912023111.219636-1-yuzhao@google.com>
- <20190912094035.vkqnj24bwh33yvia@box>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=Ft1lXaFWyeFaR5dQq95+R6LQSsO9+rjJoCxsIQDK09Q=;
+        b=MbqZU7o+AdKNES9AGtMiUMqHmmEObxGoCbp4MqlRqWCWeZF0cMHgKLt6r/3i9/MFWy
+         jXPegICu8wbi0B10p+louHNTW8bxXIA7Xoeu44a4z2uFBh+EoTFAVhx77qrecwmfxu3x
+         taQIm+0kDyC9gJkm08rDQoCE/ZsAMNfrjRbhdALR6K/ep4HzljYvGDTlTg4D3bdebKgb
+         tGkyP1CrXeXZxaSmfHsbMdUQfgBPo5zJ6KobStQhZaRPYwwR7khly0pZCdcIcIABx6n2
+         Btj88368+8fhOiD5KusG8gOsndJgY+C3VdSraA84gH0AXmdU1LK3zaU7slgNK/nIG1Xl
+         kfCg==
+X-Gm-Message-State: APjAAAUDo9K2/gtGT799Er6OuPv1+ENp7DO19ztgjrECuoXlhBJO61DY
+        8BKjd4otqyigT72tixgOaV4=
+X-Google-Smtp-Source: APXvYqyFV6GzAFsdhGFZvs4PQNzbuUrE2sTzZ2hjhIXeRQdicNaWlF0F1IcyXsbSfuPbVGxUKSKXtA==
+X-Received: by 2002:ac8:2b29:: with SMTP id 38mr44390498qtu.188.1568322712544;
+        Thu, 12 Sep 2019 14:11:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::12af])
+        by smtp.gmail.com with ESMTPSA id 8sm10128044qto.6.2019.09.12.14.11.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 14:11:52 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 14:11:50 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>
+Subject: [GIT PULL] cgroup fixes for v5.3-rc8
+Message-ID: <20190912211150.GB3084169@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912094035.vkqnj24bwh33yvia@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:40:35PM +0300, Kirill A. Shutemov wrote:
-> On Wed, Sep 11, 2019 at 08:31:08PM -0600, Yu Zhao wrote:
-> > Mask of slub objects per page shouldn't be larger than what
-> > page->objects can hold.
-> > 
-> > It requires more than 2^15 objects to hit the problem, and I don't
-> > think anybody would. It'd be nice to have the mask fixed, but not
-> > really worth cc'ing the stable.
-> > 
-> > Fixes: 50d5c41cd151 ("slub: Do not use frozen page flag but a bit in the page counters")
-> > Signed-off-by: Yu Zhao <yuzhao@google.com>
-> 
-> I don't think the patch fixes anything.
+Hello, Linus.
 
-Technically it does. It makes no sense for a mask to have more bits
-than the variable that holds the masked value. I had to look up the
-commit history to find out why and go through the code to make sure
-it doesn't actually cause any problem.
+Roman found and fixed a bug in the cgroup2 freezer which allows new
+child cgroup to escape frozen state.
 
-My hope is that nobody else would have to go through the same trouble.
+Thanks.
 
-> Yes, we have one spare bit between order and number of object that is not
-> used and always zero. So what?
-> 
-> I can imagine for some microarchitecures accessing higher 16 bits of int
-> is cheaper than shifting by 15.
+The following changes since commit 505a8ec7e11ae5236c4a154a1e24ef49a8349600:
 
-Well, I highly doubt the inconsistency is intended for such
-optimization, even it existed.
+  Revert "drm/i915/userptr: Acquire the page lock around set_page_dirty()" (2019-09-12 14:55:03 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.3-fixes
+
+for you to fetch changes up to 97a61369830ab085df5aed0ff9256f35b07d425a:
+
+  cgroup: freezer: fix frozen state inheritance (2019-09-12 14:04:45 -0700)
+
+----------------------------------------------------------------
+Roman Gushchin (2):
+      kselftests: cgroup: add freezer mkdir test
+      cgroup: freezer: fix frozen state inheritance
+
+ kernel/cgroup/cgroup.c                        | 10 ++++-
+ tools/testing/selftests/cgroup/test_freezer.c | 54 +++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 1 deletion(-)
+
+-- 
+tejun
