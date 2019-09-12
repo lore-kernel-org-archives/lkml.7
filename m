@@ -2,105 +2,95 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B463ECDE20
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BBAC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E525F20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272792084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 08:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+RtCQ+Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bobU2/X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfILIYK (ORCPT
+        id S1730259AbfILIYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 04:24:10 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47025 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfILIYJ (ORCPT
+        Thu, 12 Sep 2019 04:24:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38208 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730179AbfILIYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 04:24:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e17so22698049ljf.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
+        Thu, 12 Sep 2019 04:24:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so22383737ljn.5;
+        Thu, 12 Sep 2019 01:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
-        b=r+RtCQ+QSzYgod49oCaqYCkPTh5kZ0t0Sd0c4Z0+s2eYFento9RBH+cJ6oV9udoLxV
-         UAOH78eysBB4GLzpWHG+n3DdyMpTG7bjHG3OJeNy+YTbh7rBITWWJ8UHrdYbqbOvjhKU
-         wBTdN/oCGKDqPSMGUinbCLXh34ir+lHen6smdbyfGfv6TgiY+CpSyJIftKzl59psWfws
-         otcFJcFnELrgNmLbcSAaY3WNMrDE3O2jMbPXOMUIuJikgcaKm6OPJYCvJZrtz4War3NN
-         ajFA0ei1LXIJFhOzIOd53cSYdpBzThBf/siT6WVcfCVmFGAVjjLSKvEWboTgzARw8sLQ
-         cIEw==
+        bh=ECkS2puFAK1gVjPinpMaI687BSxI+r7g336/1esz1k0=;
+        b=bobU2/X+jXrG7Z7VhdAPWfrQEBrRDHgblPscgg39+wUJnCf7d4fx3qf6vcFFVvxSkN
+         3U4gbkvDhjbCnuW8meMQgC2Ft3e3FFwa0KHF1D5u7qW7MBU1GnNfd/QMkK8wWUaaRqCB
+         3JpC+A70eitPZT6pl0sNnHh2A+r/Bjvb6UnMxMWGl1ObfMLIR+F5cnwsHKrEwhjq8yyf
+         MAFpuPAHwSYnNDLUlhili68ZfGdf+ruL/K0+YDRvDT04U78lShW4wiNWlvwbwU67SIo/
+         T3D0trHu4hTkAJJSD3d30zL/Ox1rPT250C9erYGII76G3/3XIUEY41WiGKx5RXmDT1UJ
+         x+xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w49o6bLlxe70T8dk8RcKOKQ6ege87Mzu24iLNFJSi6U=;
-        b=N2Usz9QV0voN3oRQOpLjrAdDYTES75BmhdB/qI7uQA0hZ+/IYs1N2oDVYWZDzPYOWz
-         QDwh5UogTZRLJedY8fFtZKJ0wGk6Ujin9/J9K40sjHDVOHmRkt4S7eD9Fg0ldPeb2DTX
-         dm+z7VLz3/+VCanH4gBM/0ms8SUTZE8FwGd5MLefVYtt8bRzjbwz8JGOroJQetOjXKmA
-         s9GON5I7cTYsM9BPuloKERynhSWdcuE6sc8xAunFU2h0yCyIwt4x23Hs/JnycQE6QbAG
-         blPRAVbeim7wyxAXptdx2v7D8TL8R4lqP9hB7DzQoNLz9UNrnefsmwuTtFS3Qg+cIeo+
-         ixUQ==
-X-Gm-Message-State: APjAAAXX89a6CBRDridJ0fAm0moyKZpcEcWO1YqC7zc+h5hzPw1dFPOx
-        1GWFErffE21NyD4Bt4XNR4Dqmtkq/4Zqit9mTU8bDg==
-X-Google-Smtp-Source: APXvYqxJDL4FyhE3BXAv2E4B/4JEGQGPdbnrnZxx+n3oo9L0E7CyQ/g/GKuusfARHUSvwKnun6uC2HwM7AK4drFXwyc=
-X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr17993431ljo.180.1568276647071;
- Thu, 12 Sep 2019 01:24:07 -0700 (PDT)
+        bh=ECkS2puFAK1gVjPinpMaI687BSxI+r7g336/1esz1k0=;
+        b=LRerhYz0dapsDal6WCveyZMFx6etC+hACuljn9qOP2PqzEDl5sbz0bzqv4G/rduYCU
+         1siAsCRX00wZ4sIbyqC/ZU1+agBDd/gNp6GupK8marOQgciS8RfiPbKkqa5NGQe6nLm0
+         8xZPybx2LdIs/c9yhRAwYDx9f++RMmeS3hGEom4K4ZD981a1KdqX8SApvnpb5S1WyMlA
+         Gm2/fTzhW0GpEPg2ExLEr5AftXOfKDNo1nOB2TgzLX/0C1Pyy85eT251NWmMipXtXQ+z
+         0vnopwRNX+oqxvMCRVL53i3lMDcNvutXYvNZUAlysaM59XY3cO8f4R0lMe05syXo/Jm2
+         xDCQ==
+X-Gm-Message-State: APjAAAXT+zcodJ6gyXxIxECUsgigFun1DQD+aKMKn84oJn6IFwoZOvWj
+        W6l/JFKHgyPOkFV2eMIeKS8XL7+MLSoJUnuOELc=
+X-Google-Smtp-Source: APXvYqwJdAIg0MN468eMceiqvbqhEFZIaSKfHpA6hbEW7p8IU8l3e2/DQsQGc8lPdxLHrAXG/fVObo9RcVpmFUoxXg8=
+X-Received: by 2002:a2e:9555:: with SMTP id t21mr9396134ljh.93.1568276653052;
+ Thu, 12 Sep 2019 01:24:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829071738.2523-1-andrew@aj.id.au>
-In-Reply-To: <20190829071738.2523-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 09:23:55 +0100
-Message-ID: <CACRpkdYW_PX7npB+b1YJ4pfFQNLVOsMx2hpKtntBeHg=C1j-Cg@mail.gmail.com>
-Subject: Re: [PATCH pinctrl/fixes] pinctrl: aspeed: Fix spurious mux failures
- on the AST2500
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Wang <wangzqbj@inspur.com>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
+In-Reply-To: <CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 12 Sep 2019 10:24:01 +0200
+Message-ID: <CANiq72k2so3ZcqA3iRziGY=Shd_B1=qGoXXROeAF7Y3+pDmqyA@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:17 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-
-> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> was determined to be a partial fix to the problem of acquiring the LPC
-> Host Controller and GFX regmaps: The AST2500 pin controller may need to
-> fetch syscon regmaps during expression evaluation as well as when
-> setting mux state. For example, this case is hit by attempting to export
-> pins exposing the LPC Host Controller as GPIOs.
+On Thu, Sep 12, 2019 at 9:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> An optional eval() hook is added to the Aspeed pinmux operation struct
-> and called from aspeed_sig_expr_eval() if the pointer is set by the
-> SoC-specific driver. This enables the AST2500 to perform the custom
-> action of acquiring its regmap dependencies as required.
->
-> John Wang tested the fix on an Inspur FP5280G2 machine (AST2500-based)
-> where the issue was found, and I've booted the fix on Witherspoon
-> (AST2500) and Palmetto (AST2400) machines, and poked at relevant pins
-> under QEMU by forcing mux configurations via devmem before exporting
-> GPIOs to exercise the driver.
->
-> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
-> Fixes: 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> Reported-by: John Wang <wangzqbj@inspur.com>
-> Tested-by: John Wang <wangzqbj@inspur.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Now I come to find that CodingStyle has settled on clang-format (in
+> the last 15 months) as the new standard which is a much better answer
+> to me than a manually specified style open to interpretation. I'll
+> take a look at getting libnvdimm converted over.
 
-Applied for fixes already yesterday!
+Note that clang-format cannot do everything as we want within the
+kernel just yet, but it is a close enough approximation -- it is near
+the point where we could simply agree to use it and stop worrying
+about styling issues. However, that would mean everyone needs to have
+a recent clang-format available, which I think is the biggest obstacle
+at the moment.
 
-Yours,
-Linus Walleij
+Cheers,
+Miguel
