@@ -2,89 +2,273 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E53C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6957C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBE5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD23320830
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 22:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6uGhEvp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rv4reagk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfILWar (ORCPT
+        id S1727585AbfILWds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 18:30:47 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34444 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfILWar (ORCPT
+        Thu, 12 Sep 2019 18:33:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38984 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfILWds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:30:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h2so18658367ljk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:30:44 -0700 (PDT)
+        Thu, 12 Sep 2019 18:33:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so75021wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 15:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y3TT+GSOg/XNFmiQvt1MI0oGk1fCWtZYNpAqFjvX5Cc=;
-        b=l6uGhEvpfRHkzR9HMRJSD3LkVbzuamuxDiJHhEqHM1kEJ7xU2QEi3rrA9icJXwfRmC
-         j7lp3VG8v9szixRqj6JlJZ0bR3DtxSwwj1Td/xvH/0ZF58rbJy1yeHPu51uGLsouddm4
-         hky90C4poNeNrB6PYvdHIHwe0vt4rBkXBi2BLJekASJcKSkt8fzAOlCpvc5rD+kz4pz0
-         BefULFR91FBq7yGgFJD0UEciZ9cCLhs9/Q56d01yu0nsZVdYn/5wX/QeyuXbw/iSQmga
-         y4DATUobebEmJApbgUCoFRw4ViJELl2n4HSpHYiVjfGVui7dFqUnr/kwMaVdYd6+ZyQN
-         +IFQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZsqN86h5WbPq7Dpp9HUwKTFNGt5lllJGgSB3BnL4nwQ=;
+        b=rv4reagk4+PpKDXzvEI+hg8b/IFqQ5M+F6kxd+1pmm1gpAAsJq78Q304rP7hxaUjKS
+         Ztpw8iHcYAFtPC/sV07ZffnJP6hBD3QmLwk4OmZ4Sel1jLD547iidq/09knQD55PXh00
+         ZT5gS3y4tNoy84yCR8ind6CI2YnGizCQ+zSTDHC6KTP9OoOG2XWxKWAXxlQhKZtwppoa
+         7hvQBPq6O3M86s/I3/WAvzCw7FOijUaWH1iVbKO1PTFk3TfywmgPo2wnAqQmo8kokp8g
+         YPN1QazFUvMJ0MNhkbVhaWlbb2ChMoMetQTYVWH1ugnyO5oraSb4/gLdXpAfnSWITNDP
+         BSbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y3TT+GSOg/XNFmiQvt1MI0oGk1fCWtZYNpAqFjvX5Cc=;
-        b=lQlTd9kt1lDeG7GDfr8ETsF9ZJPHlqIaGowfhiJSU4K5NkLlmWJyOKEsH/gfSfk8qo
-         pJSfCq4a4eievvG/ipk6UBwi3fFuqb+T94BVGf6N8KkoJGqzvy2/Pd8LWt3lKVvZiZqd
-         zaK4tTrfHrQU1eqbI7FH52yzAmANUP1kVHJIpYYwoFzNQf9vEuyQDBPDyXggxRPM06pk
-         H+wSbI0TLUWF8B9EVih25+3wPFkrUw5A4Ht0uVFL8uZ5C8HaYYK15hObe38M/Jn0e4FX
-         yhORYNKqmDrwfRRxR0TIT7yOluKEWkzK9xevmDAzC3OwoXtmh59JfuhIZFGEjZBz1p4f
-         1+HA==
-X-Gm-Message-State: APjAAAUQi9F62/bbg1Qp2hMXLBWsDc1KcNLQJ4bBgWTz6cjWZMX0RNaL
-        q4dIw/8v1OEwthfuaqjNRjyxExOfXe3LsAhSah0=
-X-Google-Smtp-Source: APXvYqxH0EV5/zOEUgLqz13Rt/yVexbUed+hQwH72QuF+8OqI+nF2yzlwrbvtqgVYlAr8F5OmkePuvul+BlSJ0Qux3I=
-X-Received: by 2002:a2e:8e85:: with SMTP id z5mr25062540ljk.220.1568327443590;
- Thu, 12 Sep 2019 15:30:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZsqN86h5WbPq7Dpp9HUwKTFNGt5lllJGgSB3BnL4nwQ=;
+        b=d0+JKI9Wg2+u2GNry5r1EJ5WnCA1tKWIwYNQYOgbP8kV7uj14SAQDiDRCKfSdH3V/T
+         KsQz79g4ZplaDr6EXYyetUUopJraKqrunG2Y2a2cCr4R9VpsmVar2T7oMVhs8ZwGcIWk
+         Gu5us+jfJUS/k6oU7wfEmR2hL16g8faHyp0pgZmAB6MMlLsuo9ZdQoaO/401rFqJLlVe
+         gQRSe23ViSJ2XR2t4ldVhRwX2AYvlp9ueoGpA7ZoZnADcx82odcWDLJEe8NPkd5wlN9+
+         fZEFqMQBoK2rI5MGPHz0zuFBzcdQdxoX8DC+KnmZ5Rutj8ChuQ5PK1HbO4GTK5uGlYeA
+         vn5A==
+X-Gm-Message-State: APjAAAVyWazpfNO0yecLseu2RtaXlWD4pkjMABrIIQ2bWOVC6vAYPlMU
+        G9XTOS9AQuiY6tZajsYzn3fkrQ==
+X-Google-Smtp-Source: APXvYqzfZ/CBXMPc8nLV3JFm+7P/Y4k0aLGd7RA/20c6HKWoHSxRXFZyKW4JNXD47PG4GDqX66GEbA==
+X-Received: by 2002:a05:600c:20c2:: with SMTP id y2mr689380wmm.68.1568327623253;
+        Thu, 12 Sep 2019 15:33:43 -0700 (PDT)
+Received: from [192.168.3.203] ([148.69.85.38])
+        by smtp.googlemail.com with ESMTPSA id z13sm1796803wrq.51.2019.09.12.15.33.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 15:33:42 -0700 (PDT)
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+To:     Adam Ford <aford173@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Andr=c3=a9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>
+References: <20190912183037.18449-1-aford173@gmail.com>
+ <51bb8890-bfd7-c241-1ce5-151df3a90513@linaro.org>
+ <CAHCN7xKjwkJHysSkNymF=sw6KuS=FqbapuRFZODuj6E_hmRG1A@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2ef812a4-2f2d-b2e2-9fa4-080775e24bc8@linaro.org>
+Date:   Fri, 13 Sep 2019 00:33:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190912221927.18641-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20190912221927.18641-1-linux@rasmusvillemoes.dk>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 13 Sep 2019 00:30:32 +0200
-Message-ID: <CANiq72n_KxKGwrN4onWotocTuZjVSAqENF_5Pk9t1-pk7NDrgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] make use of gcc 9's "asm inline()"
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHCN7xKjwkJHysSkNymF=sw6KuS=FqbapuRFZODuj6E_hmRG1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 12:19 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> Patch 1 has already been picked up by Greg in staging-next, it's
-> included here for completeness. I don't know how to route the rest, or
-> if they should simply wait for 5.5 given how close we are to the merge
-> window for 5.4.
 
-If you want I can pick this up in compiler-attributes and submit it as
-a whole if we get Acks from rtl8723bs/x86/...maintainers.
+Hi Adam,
 
-Cheers,
-Miguel
+On 12/09/2019 23:19, Adam Ford wrote:
+> On Thu, Sep 12, 2019 at 4:12 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 12/09/2019 20:30, Adam Ford wrote:
+>>> The thermal sensor in the omap3 family isn't accurate, but it's
+>>> better than nothing.  The various OPP's enabled for the omap3630
+>>> support up to OPP1G, however the datasheet for the DM3730 states
+>>> that OPP130 and OPP1G are not available above TJ of 90C.
+>>>
+>>> This patch configures the thermal throttling to limit the
+>>> operating points of the omap3630 to Only OPP50 and OPP100 if
+>>> the thermal sensor reads a value above 90C.
+
+Oh, that's a very interesting use case.
+
+AFAICT the thermal framework is not designed to deal with this
+situation. I agree this setup may work (even if I'm not convinced about
+the stability of the whole).
+
+May be Viresh can help for the cpufreq side?
+
+>> Out of curiosity, what are the OPP50 and OPP100 mentioned above? and
+>> what does mean "OPP130 and OPP1G are not available above TJ of 90C"?
+>>
+> OPP130 is the 800 MHz and OPP1G is 1GHz operating point.
+> The 90C is the max junction temperature.  When the temperature exceeds
+> 90C, the processor is not designed to operate at 800+ MHz.  The
+> statement itself is a direct quote from the public datasheet for the
+> dm3730, Table 4-19.
+
+> The datasheet is: http://www.ti.com/lit/ds/symlink/dm3730.pdf
+
+It is ambiguous how it is stated:
+
+"OPP130 and OPP1G are not available above TJ of 90C"
+
+that can be interpreted the OPP is disabled by the hardware, no?
+
+> The operating points were updated in [1], but they haven't yet been
+> fully applied yet, but during the discussion, the question came about
+> regarding how to limit the speed at high temp, so that's why this
+> patch was done.
+> 
+> [1] - https://patchwork.kernel.org/patch/11141643/
+
+I see, you switched to opp-v2.
+
+Thanks for the detailed answer.
+
+
+
+>> I don't see the connection between these OPP names and the definition in
+>> the DT.
+>>
+>>> Signed-off-by: Adam Ford <aford173@gmail.com>
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+>>> index 4bb4f534afe2..58b9d347019f 100644
+>>> --- a/arch/arm/boot/dts/omap36xx.dtsi
+>>> +++ b/arch/arm/boot/dts/omap36xx.dtsi
+>>> @@ -25,6 +25,7 @@
+>>>
+>>>                       vbb-supply = <&abb_mpu_iva>;
+>>>                       clock-latency = <300000>; /* From omap-cpufreq driver */
+>>> +                     #cooling-cells = <2>;
+>>>               };
+>>>       };
+>>>
+>>> @@ -195,6 +196,31 @@
+>>>       };
+>>>  };
+>>>
+>>> +&cpu_thermal {
+>>> +     cpu_trips: trips {
+>>> +             /* OPP130 and OPP1G are not available above TJ of 90C. */
+>>> +             cpu_alert0: cpu_alert {
+>>> +                     temperature = <90000>; /* millicelsius */
+>>> +                     hysteresis = <2000>; /* millicelsius */
+>>> +                     type = "passive";
+>>> +             };
+>>> +
+>>> +             cpu_crit: cpu_crit {
+>>> +                     temperature = <125000>; /* millicelsius */
+>>> +                     hysteresis = <2000>; /* millicelsius */
+>>> +                     type = "critical";
+>>> +             };
+>>> +     };
+>>> +
+>>> +     cpu_cooling_maps: cooling-maps {
+>>> +             map0 {
+>>> +                     trip = <&cpu_alert0>;
+>>> +                     /* Only allow OPP50 and OPP100 */
+>>> +                     cooling-device = <&cpu 0 1>;
+>>> +             };
+>>> +     };
+>>> +};
+>>> +
+>>>  /* OMAP3630 needs dss_96m_fck for VENC */
+>>>  &venc {
+>>>       clocks = <&dss_tv_fck>, <&dss_96m_fck>;
+>>>
+>>
+>>
+>> --
+>>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
