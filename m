@@ -2,90 +2,105 @@ Return-Path: <SRS0=nCuq=XH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DDAC5ACAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB3CC5ACAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C4E20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ltewyL2W"
+	by mail.kernel.org (Postfix) with ESMTP id BCF3020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Sep 2019 09:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbfILJSt (ORCPT
+        id S1730654AbfILJT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 05:18:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43518 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730630AbfILJSt (ORCPT
+        Thu, 12 Sep 2019 05:19:26 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41648 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfILJTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 05:18:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u3so3610654lfl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 02:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h+78ps/YcRgQREC8bdm59/QXTeZLeIK2n4ix1Zc6YuE=;
-        b=ltewyL2WgM1Du8dsV1BulMpBXfyc5iBPw/OicmEDuWpykUKquvS58FZyFlFBoWGtYE
-         DKivTxiSwd/VoeS716Qu+MOJ/knvInl1KdWOq2lle4uy/NNshh9dxaOSW0ho5cGc/YIS
-         9H3XI58bOMEFypzNTyT3bsNgLV9SmSW9bSRXPPFNUteYYdEH4vptUz9AKEiBCLeiY/j8
-         odpcJif9v89xjj7AQ8suKy+VPNdET4YNK6pP7LrzIIvnY88gZGF+YyXjETcPUHcDjk7r
-         YEoIXw2SKp+KmhwxnbZtXq6Md2o8+wF3kOx6YoT9qF7GqajMiozNqKiwjeZyFLh5ko7z
-         V/Gw==
+        Thu, 12 Sep 2019 05:19:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j10so28697605qtp.8;
+        Thu, 12 Sep 2019 02:19:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=h+78ps/YcRgQREC8bdm59/QXTeZLeIK2n4ix1Zc6YuE=;
-        b=JRi2hG05D5B3mmkmardboowlsbKVjihdYziP7WuTY2/eZIwc9R0A1xJUVGYoMVRy8P
-         D4w63iPH5vPXS02gGwTGv+L0YPWdV1zdzphP8NuB7Fj8qSFtuwwXwuR4nePIYR5SLY9q
-         CEH2wIecL1brg1MXsvgXjMmtgxOtMMWcxICFkAeZvmA8qC9SILnrhM5ln/Kv1mT4MEEt
-         C3bUT81N2CXdBGNOFX/dcUJzR3WdRfpWEBxs7DMJZkPeKo5xCe+C67+lY8SpEDw13lHf
-         380+wa+DyhCHxxHlmegqONFP7XGlkkMg97y5DGxgtkFLbDZcGLrKfE52WeDxnotGO4Af
-         tOcw==
-X-Gm-Message-State: APjAAAXsoXKgqWjEoSmFRkJeEUtUo5FwIdv2zqaWzDfGPEN4FdE1wmBy
-        G2UyTGxrWazUv8vvjVCcOL2ai2hu2lOgxNhJdYYM4A==
-X-Google-Smtp-Source: APXvYqw99POSQQmybjyQTzX+pmWjYXGnqHl/f+z6QV0Owgv09UDDxoCLWxb8BQV1wLRbkNBmLMTRSaxBTJicMRvjXTw=
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr27498145lfp.61.1568279925827;
- Thu, 12 Sep 2019 02:18:45 -0700 (PDT)
+        bh=/EEX7046EyQX+dgnwukMDo53SMY+ASxsTkaNPVYvx58=;
+        b=d+O1VCDiZySCvjzB2T5Er4BP12Fj6frpssSpmypcO8piHS0Bu9JjqB45SjGI2L2QMo
+         vVTR102HV2tWJfn4fytIrjHgEYGpViMGgtql/OOOHNLBmt/9OxNgrPU5tEUAhG72QJLc
+         grWGv3Z3y/Qf85RTZA/CURJhXwst0z0NtcnG+kIBbaIHjRvZw6tnGbL8D8Yg4rCU5mvg
+         rTFUU3D2yvP3UZ43RKPi/Puwt+9AMaCVHer84mTXqdJ60TdLs/zcnz3lPOILtbCRhfJV
+         ZsIhlLDSeMz9aWCcGyB+ke481IRRT5gLAfdjmMmao4EFvWMiP61cwFJ4WE1TF7InB3Ao
+         Zj3A==
+X-Gm-Message-State: APjAAAWLBZ/Q3EG4HI9OjSQt9PnS79bcbjC3BIwiPARH/npX/MQ7F1J9
+        SWRmYdI0AsrnzlV+DYsqzDnQQtEPDTSVgeWjTUA=
+X-Google-Smtp-Source: APXvYqxc9h25eFxwD6FF26I9C2UvbFHea+FAz5jrXWYXKHKodElhIHAuiEDujG9bSdmHQyIXfwwVsVbgEgxQPoPvjYY=
+X-Received: by 2002:a0c:e0c4:: with SMTP id x4mr25828053qvk.176.1568279964901;
+ Thu, 12 Sep 2019 02:19:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
-In-Reply-To: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Sep 2019 10:18:34 +0100
-Message-ID: <CACRpkdYGCWc007s-9_jvX2aKuZv8fTfV2UX-qBBi7WtePABMVg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: syscon: Add support for a custom get operation
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+References: <cover.1568239378.git.amit.kucheria@linaro.org> <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
+In-Reply-To: <79755cb29b8c23709e346b5dd290481a36627648.1568239378.git.amit.kucheria@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Sep 2019 11:19:09 +0200
+Message-ID: <CAK8P3a1K-Cj53RBAvXiGoeqJsymLmH0A3i-b-cE9tZ9PhwO0XQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: Kconfig: Fix EXYNOS driver dependencies
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        arm-soc <arm@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 4:29 PM Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
+On Thu, Sep 12, 2019 at 12:19 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
 
-> Some drivers might need a custom get operation to match custom
-> behavior implemented in the set operation.
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 9b2790d3f18a..bdf164a7a7c5 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -194,6 +194,7 @@ config COMMON_CLK_ASPEED
 >
-> Add plumbing for supporting that.
+>  config COMMON_CLK_S2MPS11
+>         tristate "Clock driver for S2MPS1X/S5M8767 MFD"
+> +       depends on ARCH_EXYNOS
+>         depends on MFD_SEC_CORE || COMPILE_TEST
+>         ---help---
+>           This driver supports S2MPS11/S2MPS14/S5M8767 crystal oscillator
+
+This breaks compile-testing on non-ARM targets.
+
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index b57093d7c01f..a4c4f01343fd 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -797,6 +797,7 @@ config REGULATOR_S2MPA01
 >
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>  config REGULATOR_S2MPS11
+>         tristate "Samsung S2MPS11/13/14/15/S2MPU02 voltage regulator"
+> +       depends on ARCH_EXYNOS
+>         depends on MFD_SEC_CORE
+>         help
+>          This driver supports a Samsung S2MPS11/13/14/15/S2MPU02 voltage
 
-Looks OK but as noted in the other patch: we are accumulating stuff
-in this driver, possibly this syscon part should just be a library
-used by individual drivers that can be switched on/off with Kconfig.
+Same here. What you could do instead is add
 
-Yours,
-Linus Walleij
+        depends on ARCH_EXYNOS || COMPILE_TEST
+
+to MFD_SEC_CORE, this would then propagate to these
+two drivers as well.
+
+      Arnd
