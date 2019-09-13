@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AFAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A3C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B565820717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F749206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380881;
-	bh=d5JX1Z1I5KlPQKL8zHqDErDniC490Fgelm8oW3lBtTc=;
+	s=default; t=1568380884;
+	bh=upUGwm/msuem5sT6UoS7SFgRcUJ9ZfVcRt9ovRejGh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQALmsrsB8Kj36HmmL7NS75NtILRKcosSRBCL3xfVTqk787wEFEt2GlMvq8J2DTkQ
-	 yD++VMeFeOx+81fWAG6vdCsQir11d2TUtcJNG+LNh8IYghw6g4AWA48OR9wQ8GqzZf
-	 VnR6m3bP/LjhmXxk4SZRtyPiSNcSE9C3sIajFy5s=
+	b=oTumetbml5xQf1SkQ5rIklR9aeijjeEmC2zdJ6xiyS1G03ff9nEzAaDHTPAvvuOBR
+	 RXDQBBtHbrVK+oN9GZf6dUzgq1xwW1qNje96geA7lrp2p0pJrMh/svUhvi8W5sGEZB
+	 ly+3hk2LbWyCMyXZLQYFc8K3MZhwQrjOCP6W3JiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390509AbfIMNVV (ORCPT
+        id S2390809AbfIMNVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50794 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390780AbfIMNVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:17 -0400
+        id S2388155AbfIMNVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:19 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24701206BB;
-        Fri, 13 Sep 2019 13:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81886206A5;
+        Fri, 13 Sep 2019 13:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380876;
-        bh=d5JX1Z1I5KlPQKL8zHqDErDniC490Fgelm8oW3lBtTc=;
+        s=default; t=1568380879;
+        bh=upUGwm/msuem5sT6UoS7SFgRcUJ9ZfVcRt9ovRejGh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ltlx3kBDT0pKS7ZN63NMswqRtNnBmwwnQYlgazd95ylsRqDXbok8FytRWUuh2LqNt
-         jAw2ZvA6ep9LAfVkBqnovbGSuFYRYlObo40S9OfmfBxT/6cYxRBKyW7C7JNPFNk+Ce
-         o6cyV9UDZbfQyOYxxLePIqWjUtJQ9rknWyoXMRC4=
+        b=zepvc19JQyh51SB3EWTh82LZ07vs7x+TlGowziSgSiBYQwwpH1BSNU+44ZxLxhGyx
+         B/7gL07zTaCnoPevgbmULpxyn4NyLbyAf6U1Hnm/1Qba5pvr7ZfrlzCVqpbJyAUTek
+         CsH5xU9NnIHhf6VpQqOEsFiMfPT+2UjrSJ0HsTl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, kbuild test robot <lkp@intel.com>
-Subject: [PATCH 5.2 20/37] bcache: fix race in btree_flush_write()
-Date:   Fri, 13 Sep 2019 14:07:25 +0100
-Message-Id: <20190913130518.849251524@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 5.2 21/37] IB/rdmavt: Add new completion inline
+Date:   Fri, 13 Sep 2019 14:07:26 +0100
+Message-Id: <20190913130519.201854592@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -59,186 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race between mca_reap(), btree_node_free() and journal code
-btree_flush_write(), which results very rare and strange deadlock or
-panic and are very hard to reproduce.
+There is opencoded send completion logic all over all
+the drivers.
 
-Let me explain how the race happens. In btree_flush_write() one btree
-node with oldest journal pin is selected, then it is flushed to cache
-device, the select-and-flush is a two steps operation. Between these two
-steps, there are something may happen inside the race window,
-- The selected btree node was reaped by mca_reap() and allocated to
-  other requesters for other btree node.
-- The slected btree node was selected, flushed and released by mca
-  shrink callback bch_mca_scan().
-When btree_flush_write() tries to flush the selected btree node, firstly
-b->write_lock is held by mutex_lock(). If the race happens and the
-memory of selected btree node is allocated to other btree node, if that
-btree node's write_lock is held already, a deadlock very probably
-happens here. A worse case is the memory of the selected btree node is
-released, then all references to this btree node (e.g. b->write_lock)
-will trigger NULL pointer deference panic.
+We need to convert to this routine to enforce ordering
+issues for completions.  This routine fixes an ordering
+issue where the read of the SWQE fields necessary for creating
+the completion can race with a post send if the post send catches
+a send queue at the edge of being full.  Is is possible in that situation
+to read SWQE fields that are being written.
 
-This race was introduced in commit cafe56359144 ("bcache: A block layer
-cache"), and enlarged by commit c4dc2497d50d ("bcache: fix high CPU
-occupancy during journal"), which selected 128 btree nodes and flushed
-them one-by-one in a quite long time period.
+This new routine insures that SWQE fields are read prior to advancing
+the index that post send uses to determine queue fullness.
 
-Such race is not easy to reproduce before. On a Lenovo SR650 server with
-48 Xeon cores, and configure 1 NVMe SSD as cache device, a MD raid0
-device assembled by 3 NVMe SSDs as backing device, this race can be
-observed around every 10,000 times btree_flush_write() gets called. Both
-deadlock and kernel panic all happened as aftermath of the race.
-
-The idea of the fix is to add a btree flag BTREE_NODE_journal_flush. It
-is set when selecting btree nodes, and cleared after btree nodes
-flushed. Then when mca_reap() selects a btree node with this bit set,
-this btree node will be skipped. Since mca_reap() only reaps btree node
-without BTREE_NODE_journal_flush flag, such race is avoided.
-
-Once corner case should be noticed, that is btree_node_free(). It might
-be called in some error handling code path. For example the following
-code piece from btree_split(),
-        2149 err_free2:
-        2150         bkey_put(b->c, &n2->key);
-        2151         btree_node_free(n2);
-        2152         rw_unlock(true, n2);
-        2153 err_free1:
-        2154         bkey_put(b->c, &n1->key);
-        2155         btree_node_free(n1);
-        2156         rw_unlock(true, n1);
-At line 2151 and 2155, the btree node n2 and n1 are released without
-mac_reap(), so BTREE_NODE_journal_flush also needs to be checked here.
-If btree_node_free() is called directly in such error handling path,
-and the selected btree node has BTREE_NODE_journal_flush bit set, just
-delay for 1 us and retry again. In this case this btree node won't
-be skipped, just retry until the BTREE_NODE_journal_flush bit cleared,
-and free the btree node memory.
-
-Fixes: cafe56359144 ("bcache: A block layer cache")
-Signed-off-by: Coly Li <colyli@suse.de>
-Reported-and-tested-by: kbuild test robot <lkp@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 ---
- drivers/md/bcache/btree.c   | 28 +++++++++++++++++++++++++++-
- drivers/md/bcache/btree.h   |  2 ++
- drivers/md/bcache/journal.c |  7 +++++++
- 3 files changed, 36 insertions(+), 1 deletion(-)
+ include/rdma/rdmavt_qp.h | 72 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 9788b2ee6638f..5cf3247e8afb2 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -35,7 +35,7 @@
- #include <linux/rcupdate.h>
- #include <linux/sched/clock.h>
- #include <linux/rculist.h>
--
-+#include <linux/delay.h>
- #include <trace/events/bcache.h>
- 
- /*
-@@ -655,12 +655,25 @@ static int mca_reap(struct btree *b, unsigned int min_order, bool flush)
- 		up(&b->io_mutex);
- 	}
- 
-+retry:
- 	/*
- 	 * BTREE_NODE_dirty might be cleared in btree_flush_btree() by
- 	 * __bch_btree_node_write(). To avoid an extra flush, acquire
- 	 * b->write_lock before checking BTREE_NODE_dirty bit.
- 	 */
- 	mutex_lock(&b->write_lock);
-+	/*
-+	 * If this btree node is selected in btree_flush_write() by journal
-+	 * code, delay and retry until the node is flushed by journal code
-+	 * and BTREE_NODE_journal_flush bit cleared by btree_flush_write().
-+	 */
-+	if (btree_node_journal_flush(b)) {
-+		pr_debug("bnode %p is flushing by journal, retry", b);
-+		mutex_unlock(&b->write_lock);
-+		udelay(1);
-+		goto retry;
-+	}
-+
- 	if (btree_node_dirty(b))
- 		__bch_btree_node_write(b, &cl);
- 	mutex_unlock(&b->write_lock);
-@@ -1077,7 +1090,20 @@ static void btree_node_free(struct btree *b)
- 
- 	BUG_ON(b == b->c->root);
- 
-+retry:
- 	mutex_lock(&b->write_lock);
-+	/*
-+	 * If the btree node is selected and flushing in btree_flush_write(),
-+	 * delay and retry until the BTREE_NODE_journal_flush bit cleared,
-+	 * then it is safe to free the btree node here. Otherwise this btree
-+	 * node will be in race condition.
-+	 */
-+	if (btree_node_journal_flush(b)) {
-+		mutex_unlock(&b->write_lock);
-+		pr_debug("bnode %p journal_flush set, retry", b);
-+		udelay(1);
-+		goto retry;
-+	}
- 
- 	if (btree_node_dirty(b)) {
- 		btree_complete_write(b, btree_current_write(b));
-diff --git a/drivers/md/bcache/btree.h b/drivers/md/bcache/btree.h
-index d1c72ef64edf5..76cfd121a4861 100644
---- a/drivers/md/bcache/btree.h
-+++ b/drivers/md/bcache/btree.h
-@@ -158,11 +158,13 @@ enum btree_flags {
- 	BTREE_NODE_io_error,
- 	BTREE_NODE_dirty,
- 	BTREE_NODE_write_idx,
-+	BTREE_NODE_journal_flush,
- };
- 
- BTREE_FLAG(io_error);
- BTREE_FLAG(dirty);
- BTREE_FLAG(write_idx);
-+BTREE_FLAG(journal_flush);
- 
- static inline struct btree_write *btree_current_write(struct btree *b)
- {
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index cae2aff5e27ae..33556acdcf9cd 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -405,6 +405,7 @@ static void btree_flush_write(struct cache_set *c)
- retry:
- 	best = NULL;
- 
-+	mutex_lock(&c->bucket_lock);
- 	for_each_cached_btree(b, c, i)
- 		if (btree_current_write(b)->journal) {
- 			if (!best)
-@@ -417,9 +418,14 @@ retry:
- 		}
- 
- 	b = best;
-+	if (b)
-+		set_btree_node_journal_flush(b);
-+	mutex_unlock(&c->bucket_lock);
-+
- 	if (b) {
- 		mutex_lock(&b->write_lock);
- 		if (!btree_current_write(b)->journal) {
-+			clear_bit(BTREE_NODE_journal_flush, &b->flags);
- 			mutex_unlock(&b->write_lock);
- 			/* We raced */
- 			atomic_long_inc(&c->retry_flush_write);
-@@ -427,6 +433,7 @@ retry:
- 		}
- 
- 		__bch_btree_node_write(b, NULL);
-+		clear_bit(BTREE_NODE_journal_flush, &b->flags);
- 		mutex_unlock(&b->write_lock);
- 	}
+diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
+index 68e38c20afc04..6014f17669071 100644
+--- a/include/rdma/rdmavt_qp.h
++++ b/include/rdma/rdmavt_qp.h
+@@ -737,6 +737,78 @@ static inline void rvt_put_qp_swqe(struct rvt_qp *qp, struct rvt_swqe *wqe)
+ 		atomic_dec(&ibah_to_rvtah(wqe->ud_wr.ah)->refcount);
  }
+ 
++/**
++ * rvt_qp_sqwe_incr - increment ring index
++ * @qp: the qp
++ * @val: the starting value
++ *
++ * Return: the new value wrapping as appropriate
++ */
++static inline u32
++rvt_qp_swqe_incr(struct rvt_qp *qp, u32 val)
++{
++	if (++val >= qp->s_size)
++		val = 0;
++	return val;
++}
++
++/**
++ * rvt_qp_complete_swqe - insert send completion
++ * @qp - the qp
++ * @wqe - the send wqe
++ * @opcode - wc operation (driver dependent)
++ * @status - completion status
++ *
++ * Update the s_last information, and then insert a send
++ * completion into the completion
++ * queue if the qp indicates it should be done.
++ *
++ * See IBTA 10.7.3.1 for info on completion
++ * control.
++ *
++ * Return: new last
++ */
++static inline u32
++rvt_qp_complete_swqe(struct rvt_qp *qp,
++		     struct rvt_swqe *wqe,
++		     enum ib_wc_opcode opcode,
++		     enum ib_wc_status status)
++{
++	bool need_completion;
++	u64 wr_id;
++	u32 byte_len, last;
++	int flags = wqe->wr.send_flags;
++
++	rvt_put_qp_swqe(qp, wqe);
++
++	need_completion =
++		!(flags & RVT_SEND_RESERVE_USED) &&
++		(!(qp->s_flags & RVT_S_SIGNAL_REQ_WR) ||
++		(flags & IB_SEND_SIGNALED) ||
++		status != IB_WC_SUCCESS);
++	if (need_completion) {
++		wr_id = wqe->wr.wr_id;
++		byte_len = wqe->length;
++		/* above fields required before writing s_last */
++	}
++	last = rvt_qp_swqe_incr(qp, qp->s_last);
++	/* see rvt_qp_is_avail() */
++	smp_store_release(&qp->s_last, last);
++	if (need_completion) {
++		struct ib_wc w = {
++			.wr_id = wr_id,
++			.status = status,
++			.opcode = opcode,
++			.qp = &qp->ibqp,
++			.byte_len = byte_len,
++		};
++
++		rvt_cq_enter(ibcq_to_rvtcq(qp->ibqp.send_cq), &w,
++			     status != IB_WC_SUCCESS);
++	}
++	return last;
++}
++
+ extern const int  ib_rvt_state_ops[];
+ 
+ struct rvt_dev_info;
 -- 
 2.20.1
 
