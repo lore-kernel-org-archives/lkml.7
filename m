@@ -7,38 +7,40 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C37C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E52C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C724208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FFF206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfIMT2N (ORCPT
+        id S2388030AbfIMT2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:28:13 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:41854 "EHLO inva020.nxp.com"
+        Fri, 13 Sep 2019 15:28:15 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43364 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbfIMT2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:28:12 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D3CB1A0189;
+        id S1729652AbfIMT2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:28:13 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C655A200785;
         Fri, 13 Sep 2019 21:28:11 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 204D41A00D0;
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B9F6420076D;
         Fri, 13 Sep 2019 21:28:11 +0200 (CEST)
 Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 93EEE205DB;
-        Fri, 13 Sep 2019 21:28:10 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3037E205DB;
+        Fri, 13 Sep 2019 21:28:11 +0200 (CEST)
 From:   Daniel Baluta <daniel.baluta@nxp.com>
 To:     broonie@kernel.org
 Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
         tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Mihai Serban <mihai.serban@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
         Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 1/3] ASoC: fsl_sai: Fix noise when using EDMA
-Date:   Fri, 13 Sep 2019 22:28:05 +0300
-Message-Id: <20190913192807.8423-2-daniel.baluta@nxp.com>
+Subject: [PATCH v2 2/3] ASoC: fsl_sai: Fix xMR setting in synchronous mode
+Date:   Fri, 13 Sep 2019 22:28:06 +0300
+Message-Id: <20190913192807.8423-3-daniel.baluta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190913192807.8423-1-daniel.baluta@nxp.com>
 References: <20190913192807.8423-1-daniel.baluta@nxp.com>
@@ -48,93 +50,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mihai Serban <mihai.serban@nxp.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-EDMA requires the period size to be multiple of maxburst. Otherwise the
-remaining bytes are not transferred and thus noise is produced.
+When Tx is synchronous with receiver the RMR should not be changed.
+When Rx is synchronous with transmitter the TMR should not be changed.
 
-We can handle this issue by adding a constraint on
-SNDRV_PCM_HW_PARAM_PERIOD_SIZE to be multiple of tx/rx maxburst value.
-
-Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
 Changes since v1:
-* rename variable to use_edma as per Nicolin's suggestion.
+* new patch
 
- sound/soc/fsl/fsl_sai.c | 15 +++++++++++++++
- sound/soc/fsl/fsl_sai.h |  1 +
- 2 files changed, 16 insertions(+)
+ sound/soc/fsl/fsl_sai.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index ef0b74693093..b517e4bc1b87 100644
+index b517e4bc1b87..6598a1ae0a2d 100644
 --- a/sound/soc/fsl/fsl_sai.c
 +++ b/sound/soc/fsl/fsl_sai.c
-@@ -628,6 +628,16 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
- 			   FSL_SAI_CR3_TRCE_MASK,
- 			   FSL_SAI_CR3_TRCE);
+@@ -482,8 +482,6 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 			regmap_update_bits(sai->regmap, FSL_SAI_TCR5(ofs),
+ 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
+ 				FSL_SAI_CR5_FBT_MASK, val_cr5);
+-			regmap_write(sai->regmap, FSL_SAI_TMR,
+-				~0UL - ((1 << channels) - 1));
+ 		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
+ 			regmap_update_bits(sai->regmap, FSL_SAI_RCR4(ofs),
+ 				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
+@@ -491,8 +489,6 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 			regmap_update_bits(sai->regmap, FSL_SAI_RCR5(ofs),
+ 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
+ 				FSL_SAI_CR5_FBT_MASK, val_cr5);
+-			regmap_write(sai->regmap, FSL_SAI_RMR,
+-				~0UL - ((1 << channels) - 1));
+ 		}
+ 	}
  
-+	/*
-+	 * EDMA controller needs period size to be a multiple of
-+	 * tx/rx maxburst
-+	 */
-+	if (sai->soc_data->use_edma)
-+		snd_pcm_hw_constraint_step(substream->runtime, 0,
-+					   SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
-+					   tx ? sai->dma_params_tx.maxburst :
-+					   sai->dma_params_rx.maxburst);
-+
- 	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
- 			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
- 
-@@ -1026,30 +1036,35 @@ static int fsl_sai_remove(struct platform_device *pdev)
- 
- static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
- 	.use_imx_pcm = false,
-+	.use_edma = false,
- 	.fifo_depth = 32,
- 	.reg_offset = 0,
- };
- 
- static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
- 	.use_imx_pcm = true,
-+	.use_edma = false,
- 	.fifo_depth = 32,
- 	.reg_offset = 0,
- };
- 
- static const struct fsl_sai_soc_data fsl_sai_imx7ulp_data = {
- 	.use_imx_pcm = true,
-+	.use_edma = false,
- 	.fifo_depth = 16,
- 	.reg_offset = 8,
- };
- 
- static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
- 	.use_imx_pcm = true,
-+	.use_edma = false,
- 	.fifo_depth = 128,
- 	.reg_offset = 8,
- };
- 
- static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
- 	.use_imx_pcm = true,
-+	.use_edma = true,
- 	.fifo_depth = 64,
- 	.reg_offset = 0,
- };
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index b12cb578f6d0..76b15deea80c 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -157,6 +157,7 @@
- 
- struct fsl_sai_soc_data {
- 	bool use_imx_pcm;
-+	bool use_edma;
- 	unsigned int fifo_depth;
- 	unsigned int reg_offset;
- };
 -- 
 2.17.1
 
