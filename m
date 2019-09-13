@@ -2,85 +2,67 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D0AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F73C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A24206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="otIhPvmT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dFp1w25Q"
+	by mail.kernel.org (Postfix) with ESMTP id 29523206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389277AbfIMNi1 (ORCPT
+        id S2389409AbfIMNkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:38:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57298 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387584AbfIMNi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:38:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 187CC601C3; Fri, 13 Sep 2019 13:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568381906;
-        bh=8zCYlualNWwt8I4c0YzwmA3bS57xaqFYOUXdN0Z2JY8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=otIhPvmT/CkIKYRegdd5jQHFa6MtrIpYXst0vtL8caJ8tl2GNAfl6UGWrI5blJOqi
-         SMogT/zqPxH97TaYUD6HuRVi0Kld9ih52VqOCTex2abccfbjQggj/Nw00NAY/mhEgF
-         vIhaWud1ZvfUhceWonA9DA1JJ8vSaOSxbfkCRSRY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D3546013C;
-        Fri, 13 Sep 2019 13:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568381905;
-        bh=8zCYlualNWwt8I4c0YzwmA3bS57xaqFYOUXdN0Z2JY8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=dFp1w25QSplRRswg7lguMThAJPTGvpfoErkH/2cdLU83vXGNRW6/kd2aLzeBKwjSQ
-         FlC/Fz7GBQYn4RMC/70HGlds8kg5KrY8FKqw8oaFd52wGDiguiSLoNWjCK1m4+Vsp8
-         wPJQ85BX4TPmOtjTnPoxRFUNSktauNwAVZiuuyXE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D3546013C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 13 Sep 2019 09:40:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21563 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388387AbfIMNkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:40:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 06:40:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="386387608"
+Received: from ltudorx-wtg.ger.corp.intel.com (HELO localhost) ([10.252.37.39])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Sep 2019 06:40:01 -0700
+Date:   Fri, 13 Sep 2019 14:39:59 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Petr Vorel <petr.vorel@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selftests/tpm2: Add the missing TEST_FILES assignment
+Message-ID: <20190913133732.GG7412@linux.intel.com>
+References: <20190910222523.8116-1-jarkko.sakkinen@linux.intel.com>
+ <20190911092005.GA22492@dell5510>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/3] libertas: Remove unneeded variable and make function
- to be void
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1568306492-42998-4-git-send-email-zhongjiang@huawei.com>
-References: <1568306492-42998-4-git-send-email-zhongjiang@huawei.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <zhongjiang@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190913133826.187CC601C3@smtp.codeaurora.org>
-Date:   Fri, 13 Sep 2019 13:38:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911092005.GA22492@dell5510>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhong jiang <zhongjiang@huawei.com> wrote:
-
-> lbs_process_event  do not need return value to cope with different
-> cases. And change functon return type to void.
+On Wed, Sep 11, 2019 at 11:20:06AM +0200, Petr Vorel wrote:
+> Hi Jarkko,
 > 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> > The Python files required by the selftests are not packaged because of
+> > the missing assignment to TEST_FILES. Add the assignment.
+> 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 6ea3dfe1e073 ("selftests: add TPM 2.0 tests")
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-Same here, I just don't see the benefit.
+Thank you.
 
-Patch set to Rejected.
-
--- 
-https://patchwork.kernel.org/patch/11143397/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+/Jarkko
