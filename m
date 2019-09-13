@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3B9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92888C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448C1206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9E1206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380442;
-	bh=KmeSFAnkxuACv75RkUKZMaeouCltjKXcCuUZlpk6AKk=;
+	s=default; t=1568380446;
+	bh=sL72A4hxRpAYbspZ4kmMAqV4xMwTEav74LMlUp/8HeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FhCeIL43iJd9KyXOGlpW5Ni3Fw7QJ7rD1tkYZnUb5ezViwAarVRmjH8Vru9Y4iHwQ
-	 m7BtKs9gcc9NWsFqodOe2Y6G3hIwX1jtM7P3HAgc+0EVkf+dAbYF8Keg84QxybL7Da
-	 5aZV5pzJWBflBuEvwQqkbZICvcj3nei2WUeTwkik=
+	b=TgbeN9tkBZhuloB6LTdCwfjO3kWmvu+Q3btlPlSzYKKeedUXJXqa4/ZhLIrGBV6dc
+	 Ncp6HQFvIN3MEXSkntmCHUe9uf+YEAHDrHWeLFHqiXJ4trcFD0zf7IjtlsN4yKV7sn
+	 C4z4+TR7CqHoOPMmjYgkw1gyURb5dYGTkhaK+fhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388861AbfIMNOB (ORCPT
+        id S2389455AbfIMNOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388309AbfIMNN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:59 -0400
+        id S2388309AbfIMNOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:14:02 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9175120CC7;
-        Fri, 13 Sep 2019 13:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89CD9206BB;
+        Fri, 13 Sep 2019 13:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380438;
-        bh=KmeSFAnkxuACv75RkUKZMaeouCltjKXcCuUZlpk6AKk=;
+        s=default; t=1568380441;
+        bh=sL72A4hxRpAYbspZ4kmMAqV4xMwTEav74LMlUp/8HeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYfOaKA47GZtL6ZcE5h1h4uQtEODoThlOqdnAytjwqpsSU/IeCHsu6oKSDQ5UoQzb
-         Z6dhbidSKOQyWzzyK3KqtAfn0/JCST6zuVEYsLt78MRHsreYX8amfXzTdEmdyw7hG4
-         Xz6Y8FEmzvrOe8ooXenk4vsGfDgznYMcfeDmaMzI=
+        b=M1QpDz8uPlcBPkqya2T7TAaFORyxlZkYVKpPHYQCRRAxa9TsXT8uktLZe91Q0+mnM
+         68mDkCXcSavvCK/0cFsa9UIZ/iReq6JyWZUcj8UzejZ42O90M5Fuk0+KmA2gDpA0GO
+         B2I10gIxNS/UyNHu9P2n0zccZpFWv+ekkEwQ5aKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/190] KVM: PPC: Book3S HV: Fix race between kvm_unmap_hva_range and MMU mode switch
-Date:   Fri, 13 Sep 2019 14:05:19 +0100
-Message-Id: <20190913130604.871833303@linuxfoundation.org>
+Subject: [PATCH 4.19 065/190] Btrfs: clean up scrub is_dev_replace parameter
+Date:   Fri, 13 Sep 2019 14:05:20 +0100
+Message-Id: <20190913130604.929034148@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -59,98 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 234ff0b729ad882d20f7996591a964965647addf ]
+[ Upstream commit 32934280967d00dc2b5c4d3b63b21a9c8638326e ]
 
-Testing has revealed an occasional crash which appears to be caused
-by a race between kvmppc_switch_mmu_to_hpt and kvm_unmap_hva_range_hv.
-The symptom is a NULL pointer dereference in __find_linux_pte() called
-from kvm_unmap_radix() with kvm->arch.pgtable == NULL.
+struct scrub_ctx has an ->is_dev_replace member, so there's no point in
+passing around is_dev_replace where sctx is available.
 
-Looking at kvmppc_switch_mmu_to_hpt(), it does indeed clear
-kvm->arch.pgtable (via kvmppc_free_radix()) before setting
-kvm->arch.radix to NULL, and there is nothing to prevent
-kvm_unmap_hva_range_hv() or the other MMU callback functions from
-being called concurrently with kvmppc_switch_mmu_to_hpt() or
-kvmppc_switch_mmu_to_radix().
-
-This patch therefore adds calls to spin_lock/unlock on the kvm->mmu_lock
-around the assignments to kvm->arch.radix, and makes sure that the
-partition-scoped radix tree or HPT is only freed after changing
-kvm->arch.radix.
-
-This also takes the kvm->mmu_lock in kvmppc_rmap_reset() to make sure
-that the clearing of each rmap array (one per memslot) doesn't happen
-concurrently with use of the array in the kvm_unmap_hva_range_hv()
-or the other MMU callbacks.
-
-Fixes: 18c3640cefc7 ("KVM: PPC: Book3S HV: Add infrastructure for running HPT guests on radix host")
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_64_mmu_hv.c |  3 +++
- arch/powerpc/kvm/book3s_hv.c        | 15 +++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ fs/btrfs/scrub.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 68e14afecac85..a488c105b9234 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -744,12 +744,15 @@ void kvmppc_rmap_reset(struct kvm *kvm)
- 	srcu_idx = srcu_read_lock(&kvm->srcu);
- 	slots = kvm_memslots(kvm);
- 	kvm_for_each_memslot(memslot, slots) {
-+		/* Mutual exclusion with kvm_unmap_hva_range etc. */
-+		spin_lock(&kvm->mmu_lock);
- 		/*
- 		 * This assumes it is acceptable to lose reference and
- 		 * change bits across a reset.
- 		 */
- 		memset(memslot->arch.rmap, 0,
- 		       memslot->npages * sizeof(*memslot->arch.rmap));
-+		spin_unlock(&kvm->mmu_lock);
- 	}
- 	srcu_read_unlock(&kvm->srcu, srcu_idx);
- }
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 083dcedba11ce..9595db30e6b87 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3813,12 +3813,15 @@ static int kvmppc_hv_setup_htab_rma(struct kvm_vcpu *vcpu)
- /* Must be called with kvm->lock held and mmu_ready = 0 and no vcpus running */
- int kvmppc_switch_mmu_to_hpt(struct kvm *kvm)
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 3be1456b5116b..4bcc275f76128 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3022,8 +3022,7 @@ out:
+ static noinline_for_stack int scrub_stripe(struct scrub_ctx *sctx,
+ 					   struct map_lookup *map,
+ 					   struct btrfs_device *scrub_dev,
+-					   int num, u64 base, u64 length,
+-					   int is_dev_replace)
++					   int num, u64 base, u64 length)
  {
-+	kvmppc_rmap_reset(kvm);
-+	kvm->arch.process_table = 0;
-+	/* Mutual exclusion with kvm_unmap_hva_range etc. */
-+	spin_lock(&kvm->mmu_lock);
-+	kvm->arch.radix = 0;
-+	spin_unlock(&kvm->mmu_lock);
- 	kvmppc_free_radix(kvm);
- 	kvmppc_update_lpcr(kvm, LPCR_VPM1,
- 			   LPCR_VPM1 | LPCR_UPRT | LPCR_GTSE | LPCR_HR);
--	kvmppc_rmap_reset(kvm);
--	kvm->arch.radix = 0;
--	kvm->arch.process_table = 0;
- 	return 0;
- }
+ 	struct btrfs_path *path, *ppath;
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
+@@ -3299,7 +3298,7 @@ again:
+ 			extent_physical = extent_logical - logical + physical;
+ 			extent_dev = scrub_dev;
+ 			extent_mirror_num = mirror_num;
+-			if (is_dev_replace)
++			if (sctx->is_dev_replace)
+ 				scrub_remap_extent(fs_info, extent_logical,
+ 						   extent_len, &extent_physical,
+ 						   &extent_dev,
+@@ -3397,8 +3396,7 @@ static noinline_for_stack int scrub_chunk(struct scrub_ctx *sctx,
+ 					  struct btrfs_device *scrub_dev,
+ 					  u64 chunk_offset, u64 length,
+ 					  u64 dev_offset,
+-					  struct btrfs_block_group_cache *cache,
+-					  int is_dev_replace)
++					  struct btrfs_block_group_cache *cache)
+ {
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
+ 	struct btrfs_mapping_tree *map_tree = &fs_info->mapping_tree;
+@@ -3435,8 +3433,7 @@ static noinline_for_stack int scrub_chunk(struct scrub_ctx *sctx,
+ 		if (map->stripes[i].dev->bdev == scrub_dev->bdev &&
+ 		    map->stripes[i].physical == dev_offset) {
+ 			ret = scrub_stripe(sctx, map, scrub_dev, i,
+-					   chunk_offset, length,
+-					   is_dev_replace);
++					   chunk_offset, length);
+ 			if (ret)
+ 				goto out;
+ 		}
+@@ -3449,8 +3446,7 @@ out:
  
-@@ -3831,10 +3834,14 @@ int kvmppc_switch_mmu_to_radix(struct kvm *kvm)
- 	if (err)
- 		return err;
+ static noinline_for_stack
+ int scrub_enumerate_chunks(struct scrub_ctx *sctx,
+-			   struct btrfs_device *scrub_dev, u64 start, u64 end,
+-			   int is_dev_replace)
++			   struct btrfs_device *scrub_dev, u64 start, u64 end)
+ {
+ 	struct btrfs_dev_extent *dev_extent = NULL;
+ 	struct btrfs_path *path;
+@@ -3544,7 +3540,7 @@ int scrub_enumerate_chunks(struct scrub_ctx *sctx,
+ 		 */
+ 		scrub_pause_on(fs_info);
+ 		ret = btrfs_inc_block_group_ro(cache);
+-		if (!ret && is_dev_replace) {
++		if (!ret && sctx->is_dev_replace) {
+ 			/*
+ 			 * If we are doing a device replace wait for any tasks
+ 			 * that started dellaloc right before we set the block
+@@ -3609,7 +3605,7 @@ int scrub_enumerate_chunks(struct scrub_ctx *sctx,
+ 		dev_replace->item_needs_writeback = 1;
+ 		btrfs_dev_replace_write_unlock(&fs_info->dev_replace);
+ 		ret = scrub_chunk(sctx, scrub_dev, chunk_offset, length,
+-				  found_key.offset, cache, is_dev_replace);
++				  found_key.offset, cache);
  
-+	kvmppc_rmap_reset(kvm);
-+	/* Mutual exclusion with kvm_unmap_hva_range etc. */
-+	spin_lock(&kvm->mmu_lock);
-+	kvm->arch.radix = 1;
-+	spin_unlock(&kvm->mmu_lock);
- 	kvmppc_free_hpt(&kvm->arch.hpt);
- 	kvmppc_update_lpcr(kvm, LPCR_UPRT | LPCR_GTSE | LPCR_HR,
- 			   LPCR_VPM1 | LPCR_UPRT | LPCR_GTSE | LPCR_HR);
--	kvm->arch.radix = 1;
- 	return 0;
- }
+ 		/*
+ 		 * flush, submit all pending read and write bios, afterwards
+@@ -3670,7 +3666,7 @@ int scrub_enumerate_chunks(struct scrub_ctx *sctx,
+ 		btrfs_put_block_group(cache);
+ 		if (ret)
+ 			break;
+-		if (is_dev_replace &&
++		if (sctx->is_dev_replace &&
+ 		    atomic64_read(&dev_replace->num_write_errors) > 0) {
+ 			ret = -EIO;
+ 			break;
+@@ -3893,8 +3889,7 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 	}
  
+ 	if (!ret)
+-		ret = scrub_enumerate_chunks(sctx, dev, start, end,
+-					     is_dev_replace);
++		ret = scrub_enumerate_chunks(sctx, dev, start, end);
+ 
+ 	wait_event(sctx->list_wait, atomic_read(&sctx->bios_in_flight) == 0);
+ 	atomic_dec(&fs_info->scrubs_running);
 -- 
 2.20.1
 
