@@ -2,94 +2,170 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F7EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917E4C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272062089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E5A21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="cuhllGlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbfIMJM5 (ORCPT
+        id S2387961AbfIMJNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:12:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:40796 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387716AbfIMJM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:12:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F2FD28;
-        Fri, 13 Sep 2019 02:12:56 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 823273F59C;
-        Fri, 13 Sep 2019 02:12:55 -0700 (PDT)
-Subject: Re: [PATCH] drm/panfrost: Prevent race when handling page fault
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <20190905121141.42820-1-steven.price@arm.com>
- <CAL_JsqKyKUBOK7+fSpr+ShjUz72oXC91ySOKCST9WyWjd0nqww@mail.gmail.com>
- <d0fb9ba9-d8af-1523-192c-23376e467f12@arm.com>
- <CAKMK7uF1PYEPjQBvZwFOzAtjQ4YbY7AWj5mV106fvk_e=2ohsw@mail.gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3a82ea91-c178-0ada-d762-3f3802dfc7c5@arm.com>
-Date:   Fri, 13 Sep 2019 10:12:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 05:13:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35168 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387424AbfIMJNG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 05:13:06 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f24so8802212edv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GEliFawsGnvWaq/wjC8o7X+uw8pCAUzjjDt3si5wKpw=;
+        b=cuhllGlp2MOrdGub8Xg9DSnbN4UNbu5MAj+tu2g8/hUaiRvqMMOHfTNwMUyS5pk0Wh
+         Cr/5CrT44vV+Lu6MEqICuL5EsXflVt2aB1CYOvw49Ff95R0+EpyudeDA0c1SjKiSBgvJ
+         j392DdO8k5wtN6+t0Mq4Pin3skB6EB7fqWabfD22XoO9Zau3MU3BJhMVCPaEwzZDcctL
+         3Z1utSLzZkSKBXiuC7y0bwtRfMC6JHyQJ4KI6FWcJD3QstGxSDpCFQt7SWa9ffXb7iM8
+         Ka/YoQxle3ll0z8qQj2WsoJL1cViPtFo+jeRDT45DkakRyYbR2vwrsjhDwiP9OSANs1/
+         05gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GEliFawsGnvWaq/wjC8o7X+uw8pCAUzjjDt3si5wKpw=;
+        b=MKPOlmkOMaoDAE//GqL1B5GW4zJT1+NmPgmO6iXa38XKEAqASgWqVdUoFtH/MkKy7z
+         Av6OxMe1P+CwTfS1kVODE5hDlrwNgnQjNPHhkFEJW1dl8X8bUpe+yimfLE/k1EJIWE5e
+         UVGQbhJpfqXGWtRRI6ElRUCTvfZ6zZvo5saRQbTPpFvfyhSTFI0gp6FCy5y+j3IMGD0V
+         iVKGPPT0Cc88mJ5l+GIUuJLIMveFjkaC4i7v+Tfu7ANv1+ZrUkR8aV6GtHO/vSzeYEqY
+         mQhI3B792CO7a5S83VxExFu3bEx8Tckb7g4kORqliEupJGNbwS20ksVjtsqvu5Xtagh4
+         gRtw==
+X-Gm-Message-State: APjAAAXCgvcB67a00PNALe37a0gkwDNhwiqGhbxbX7tkP5IvAWzHGl/Y
+        OIFMfYn3xaeQS+UxkH8fhEtLtw==
+X-Google-Smtp-Source: APXvYqz9+Jjoiq6EpEOnNn2ue7LgRH298IcNtOZjCAdMkVz1fw1ulTQ0FfVWoOu1Q7FOQkoJoXJfvw==
+X-Received: by 2002:aa7:da59:: with SMTP id w25mr44834467eds.143.1568365983857;
+        Fri, 13 Sep 2019 02:13:03 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id oo23sm3092469ejb.64.2019.09.13.02.13.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Sep 2019 02:13:03 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3271B10160B; Fri, 13 Sep 2019 12:13:05 +0300 (+03)
+Date:   Fri, 13 Sep 2019 12:13:05 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating
+ architecture page table helpers
+Message-ID: <20190913091305.rkds4f3fqv3yjhjy@box>
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+ <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+ <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
+ <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uF1PYEPjQBvZwFOzAtjQ4YbY7AWj5mV106fvk_e=2ohsw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/09/2019 20:36, Daniel Vetter wrote:
-> On Fri, Sep 6, 2019 at 2:42 PM Steven Price <steven.price@arm.com> wrote:
->>
->> On 06/09/2019 12:10, Rob Herring wrote:
->>> On Thu, Sep 5, 2019 at 1:11 PM Steven Price <steven.price@arm.com> wrote:
->>>>
->>>> When handling a GPU page fault addr_to_drm_mm_node() is used to
->>>> translate the GPU address to a buffer object. However it is possible for
->>>> the buffer object to be freed after the function has returned resulting
->>>> in a use-after-free of the BO.
->>>>
->>>> Change addr_to_drm_mm_node to return the panfrost_gem_object with an
->>>> extra reference on it, preventing the BO from being freed until after
->>>> the page fault has been handled.
->>>>
->>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>> ---
->>>>
->>>> I've managed to trigger this, generating the following stack trace.
->>>
->>> Humm, the assumption was that a fault could only happen during a job
->>> and so a reference would already be held. Otherwise, couldn't the GPU
->>> also be accessing the BO after it is freed?
->>
->> Ah, I guess I missed that in the commit message. This is assuming that
->> user space doesn't include the BO in the job even though the GPU then
->> does try to access it. AIUI mesa wouldn't do this, but this is still
->> easily possible if user space wants to crash the kernel.
+On Fri, Sep 13, 2019 at 02:32:04PM +0530, Anshuman Khandual wrote:
 > 
-> Do we have some nice regression tests for uapi exploits and corner
-> cases like this? Maybe even in igt?
-> -Daniel
+> On 09/12/2019 10:44 PM, Christophe Leroy wrote:
+> > 
+> > 
+> > Le 12/09/2019 à 08:02, Anshuman Khandual a écrit :
+> >> This adds a test module which will validate architecture page table helpers
+> >> and accessors regarding compliance with generic MM semantics expectations.
+> >> This will help various architectures in validating changes to the existing
+> >> page table helpers or addition of new ones.
+> >>
+> >> Test page table and memory pages creating it's entries at various level are
+> >> all allocated from system memory with required alignments. If memory pages
+> >> with required size and alignment could not be allocated, then all depending
+> >> individual tests are skipped.
+> >>
+> > 
+> > [...]
+> > 
+> >>
+> >> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >>   arch/x86/include/asm/pgtable_64_types.h |   2 +
+> >>   mm/Kconfig.debug                        |  14 +
+> >>   mm/Makefile                             |   1 +
+> >>   mm/arch_pgtable_test.c                  | 429 ++++++++++++++++++++++++
+> >>   4 files changed, 446 insertions(+)
+> >>   create mode 100644 mm/arch_pgtable_test.c
+> >>
+> >> diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+> >> index 52e5f5f2240d..b882792a3999 100644
+> >> --- a/arch/x86/include/asm/pgtable_64_types.h
+> >> +++ b/arch/x86/include/asm/pgtable_64_types.h
+> >> @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
+> >>   #define pgtable_l5_enabled() 0
+> >>   #endif /* CONFIG_X86_5LEVEL */
+> >>   +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
+> >> +
+> > 
+> > This is specific to x86, should go in a separate patch.
+> 
+> Thought about it but its just a single line. Kirill suggested this in the
+> previous version. There is a generic fallback definition but s390 has it's
+> own. This change overrides the generic one for x86 probably as a fix or as
+> an improvement. Kirill should be able to help classify it in which case it
+> can be a separate patch.
 
-Not currently, I've been playing with the idea of getting the
-closed-source DDK blob running on Panfrost and this is what generates
-the "not-quite-mesa" usage.
+I don't think it worth a separate patch.
 
-It would definitely be good extend the test cases in IGT, I have a
-synthetic test which can trigger this - I just need to get approval to
-post it.
-
-Steve
+-- 
+ Kirill A. Shutemov
