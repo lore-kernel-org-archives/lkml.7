@@ -2,379 +2,194 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA9C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9272DC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D4D208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B18B208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6TTnKTC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rTIDpfzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfIMKj1 (ORCPT
+        id S2387523AbfIMKkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 06:39:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42048 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfIMKj0 (ORCPT
+        Fri, 13 Sep 2019 06:40:21 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:62246 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfIMKkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:39:26 -0400
-Received: by mail-ed1-f66.google.com with SMTP id y91so26598618ede.9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 03:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cITQPKiw6v0sXdOJ1ClbHKodyXYuvix6zxKH9FnzCzc=;
-        b=M6TTnKTCBg11ygnd6V5l3Kqjgi8VYtcNf0p5ZrhopESsLXGI3byxDJgZnJJvwDPDGC
-         tX6ztmCp5w/vCC98xTNeL2qoTsTPunKaPYPS5n+tPF39neOz5+2uehH/aM5DSryoukxh
-         JI3x6u4uyFu/XoUvdTORsiNVliJD8AZ+UB0XiwmkDs//e61JtjCp7cfCzbZdKw3yTDTu
-         njp230o9Ofx4c+JRYXrqPNYvc2HZLHUrqRAJK0dJVtg3IMzYka1Phw/c35kCOtkXcleg
-         a4RsLPTVRpXHTuZXM93SmLuSuQYHCfHLMQj2cYbf7NZh97ypVhhjKXvw8YjD6i550Q+H
-         lZ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cITQPKiw6v0sXdOJ1ClbHKodyXYuvix6zxKH9FnzCzc=;
-        b=EagdSU2j4QOmRsrlcucPDqK/Xj2hSmIIb1B+KlEQY3QmOvlM2/A2M9MfjN321sPiub
-         mCnOszTVczMXzXQ2iIuXboSFpU4Yx+lLWeya64eO0+gn/sCSC70umMm54FTW1yD3hP7L
-         NqYx8uk9eBnD7152wK9fAy97pX7SXjhMdO2U9LbRY16WgMo4cinpEeXovUEGoqO097Vs
-         /ZYbGDHaa656XKazw2c4f7/sCBnEakKx8Nr4haJ8FonRWNzrEYeZA1tslR4Rgbh5Chu9
-         MnsNPLaGByqtJzpNtagzuzg7fVzRObSV9UqfEy2jbhaDQDeL+M3OYGVVl5OqzhcHQiMu
-         shdA==
-X-Gm-Message-State: APjAAAWija7hctxBUYp1vDQ9GI4FsIVJMJxlD+Ej8RX88WBRn80PbXIW
-        P0cMU/bYoM0THY1x4JrX9+jg2fKBCZE=
-X-Google-Smtp-Source: APXvYqxWSWTH1ZbhtVgJ2Xtq1vGh29SFdcAraLPqHv0GzNBq2+K4kkHRdK8CsuJNFt9Ymhn4LmHoJw==
-X-Received: by 2002:a17:906:4547:: with SMTP id s7mr6279869ejq.55.1568371163784;
-        Fri, 13 Sep 2019 03:39:23 -0700 (PDT)
-Received: from ziggy.stardust ([37.223.145.235])
-        by smtp.gmail.com with ESMTPSA id a50sm4370216eda.25.2019.09.13.03.39.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2019 03:39:23 -0700 (PDT)
-Subject: Re: [PATCH v5 0/4] Raspberry Pi 4 DMA addressing support
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>, catalin.marinas@arm.com,
-        marc.zyngier@arm.com, robh+dt@kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, hch@lst.de,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     robin.murphy@arm.com, f.fainelli@gmail.com, will@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.org,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org
-References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
- <5a8af6e9-6b90-ce26-ebd7-9ee626c9fa0e@gmx.net>
- <3f9af46e-2e1a-771f-57f2-86a53caaf94a@suse.com>
- <09f82f88-a13a-b441-b723-7bb061a2f1e3@gmail.com>
- <2c3e1ef3-0dba-9f79-52e2-314b6b500e14@gmx.net>
- <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
- <48a6b72d-d554-b563-5ed6-9a79db5fb4ab@gmx.net>
- <2fcc5ad6-fa90-6565-e75c-d20b46965733@suse.com>
- <3163f80b-72e5-5da8-0909-a8950d3669f7@gmx.net>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
- fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
- OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
- gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
- 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
- EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
- fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
- ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
- HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
- 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtClNYXR0aGlhcyBC
- cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPokCUgQTAQIAPAIbAwYLCQgHAwIGFQgC
- CQoLBBYCAwECHgECF4AWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCWt3scQIZAQAKCRDZFAuy
- VhMC8WzRD/4onkC+gCxG+dvui5SXCJ7bGLCu0xVtiGC673Kz5Aq3heITsERHBV0BqqctOEBy
- ZozQQe2Hindu9lasOmwfH8+vfTK+2teCgWesoE3g3XKbrOCB4RSrQmXGC3JYx6rcvMlLV/Ch
- YMRR3qv04BOchnjkGtvm9aZWH52/6XfChyh7XYndTe5F2bqeTjt+kF/ql+xMc4E6pniqIfkv
- c0wsH4CkBHqoZl9w5e/b9MspTqsU9NszTEOFhy7p2CYw6JEa/vmzR6YDzGs8AihieIXDOfpT
- DUr0YUlDrwDSrlm/2MjNIPTmSGHH94ScOqu/XmGW/0q1iar/Yr0leomUOeeEzCqQtunqShtE
- 4Mn2uEixFL+9jiVtMjujr6mphznwpEqObPCZ3IcWqOFEz77rSL+oqFiEA03A2WBDlMm++Sve
- 9jpkJBLosJRhAYmQ6ey6MFO6Krylw1LXcq5z1XQQavtFRgZoruHZ3XlhT5wcfLJtAqrtfCe0
- aQ0kJW+4zj9/So0uxJDAtGuOpDYnmK26dgFN0tAhVuNInEVhtErtLJHeJzFKJzNyQ4GlCaLw
- jKcwWcqDJcrx9R7LsCu4l2XpKiyxY6fO4O8DnSleVll9NPfAZFZvf8AIy3EQ8BokUsiuUYHz
- wUo6pclk55PZRaAsHDX/fNr24uC6Eh5oNQ+v4Pax/gtyybkCDQRT9c4FARAAqdGWpdzcSM8q
- 6I2oTPS5J4KXXIJS8O2jbUcxoNuaSBnUkhwp2eML/i30oLbEC+akmagcOLD0kOY46yRFeSEC
- SPM9SWLxKvKUTQYGLX2sphPVZ3hEdFYKen3+cbvo6GyYTnm8ropHM9uqmXPZFFfLJDL76Nau
- kFsRfPMQUuwMe3hFVLmF7ntvdX3Z3jKImoMWrgA/SnsT6K40n/GCl1HNz2T8PSnqAUQjvSoI
- FAenxb23NtW6kg50xIxlb7DKbncnQGGTwoYn8u9Lgxkh8gJ03IMiSDHZ9o+wl21U8B3OXr1K
- L08vXmdR70d6MJSmt6pKs7yTjxraF0ZS6gz+F2BTy080jxceZwEWIIbK7zU3tm1hnr7QIbj/
- H6W2Pv9p5CXzQCIw17FXFXjpGPa9knzd4WMzJv2Rgx/m8/ZG91aKq+4Cbz9TLQ7OyRdXqhPJ
- CopfKgZ2l/Fc5+AGhogJLxOopBoELIdHgB50Durx4YJLmQ1z/oimD0O/mUb5fJu0FUQ5Boc1
- kHHJ8J8bZTuFrGAomfvnsek+dyenegqBpZCDniCSfdgeAx9oWNoXG4cgo8OVG7J/1YIWBHRa
- Wnk+WyXGBfbY/8247Gy8oaXtQs1OnehbMKBHRIY0tgoyUlag3wXuUzeK+0PKtWC7ZYelKNC0
- Fn+zL9XpnK3HLE5ckhBLgK8AEQEAAYkCHwQYAQIACQUCU/XOBQIbDAAKCRDZFAuyVhMC8Yyu
- D/9g6+JZZ+oEy7HoGZ0Bawnlxu/xQrzaK/ltQhA2vtiMaxCN46gOvEF/x+IvFscAucm3q4Dy
- bJJkW2qY30ISK9MDELnudPmHRqCxTj8koabvcI1cP8Z0Fw1reMNZVgWgVZJkwHuPYnkhY15u
- 3vHDzcWnfnvmguKgYoJxkqqdp/acb0x/qpQgufrWGeYv2yb1YNidXBHTJSuelFcGp/oBXeJz
- rQ2IP1JBbQmQfPSePZzWdSLlrR+3jcBJEP/A/73lSObOQpiYJomXPcla6dH+iyV0IiiZdYgU
- Htwru4Stv/cFVFsUJk1fIOP1qjSa+L6Y0dWX6JMniqUXHhaXo6OPf7ArpVbBygMuzvy99LtS
- FSkMcYXn359sXOYsRy4V+Yr7Bs0lzdnHnKdpVqHiDvNgrrLoPNrKTiYwTmzTVbb9u/BjUGhC
- YUS705vcjBgXhdXS44kgO22kaB5c6Obg7WP7cucFomITovtZs5Rm1iaZZc31lzobfFPUwDSc
- YXOj6ckS9bF9lDG26z3C/muyiifZeiQvvG1ygexrHtnKYTNxqisOGjjcXzDzpS8egIOtIEI/
- arzlqK5RprMLVOl6n/npxEWmInjBetsBsaX/9kJNZFM4Yais5scOnP+tuTnFTW2K9xKySyuD
- q/iLORJYRYMloJPaDAftiYfjFa8zuw1XnQyG17kCDQRT9gX3ARAAsL2UwyvSLQuMxOW2GRLv
- CiZuxtIEoUuhaBWdC/Yq3c6rWpTu692lhLd4bRpKJkE4nE3saaTVxIHFF3tt3IHSa3Qf831S
- lW39EkcFxr7DbO17kRThOyU1k7KDhUQqhRaUoT1NznrykvpTlNszhYNjA0CMYWH249MJXgck
- iKOezSHbQ2bZWtFG3uTloWSKloFsjsmRsb7Vn2FlyeP+00PVC6j7CRqczxpkyYoHuqIS0w1z
- Aq8HP5DDSH7+arijtPuJhVv9uaiD6YFLgSIQy4ZCZuMcdzKJz2j6KCw2kUXLehk4BU326O0G
- r9+AojZT8J3qvZYBpvCmIhGliKhZ7pYDKZWVseRw7rJS5UFnst5OBukBIjOaSVdp6JMpe99o
- caLjyow2By6DCEYgLCrquzuUxMQ8plEMfPD1yXBo00bLPatkuxIibM0G4IstKL5hSAKiaFCc
- 2f73ppp7eby3ZceyF4uCIxN3ABjW9ZCEAcEwC40S3rnh2wZhscBFZ+7sO7+Fgsd0w67zjpt+
- YHFNv/chRJiPnDGGRt0jPWryaasDnQtAAf59LY3qd4GVHu8RA1G0Rz4hVw27yssHGycc4+/Z
- ZX7sPpgNKlpsToMaB5NWgc389HdqOG80Ia+sGkNj9ylp74MPbd0t3fzQnKXzBSHOCNuS67sc
- lUAw7HB+wa3BqgsAEQEAAYkEPgQYAQIACQUCU/YF9wIbAgIpCRDZFAuyVhMC8cFdIAQZAQIA
- BgUCU/YF9wAKCRC0OWJbLPHTQ14xD/9crEKZOwhIWX32UXvB/nWbhEx6+PQG2uWsnah7oc5D
- 7V+aY7M1jy5af8yhlhVdaxL5xUoepfOP08lkCEuSdrYbS5wBcQj4NE1QUoeAjJKbq4JwxUkX
- Baq2Lu91UZpdKxEVFfSkEzmeMaVvClGjGOtNCUKl8lwLuthU7dGTW74mJaW5jjlXldgzfzFd
- BkS3fsXfcmeDhHh5TpA4e3MYVBIJrq6Repv151g/zxdA02gjJgGvJlXTb6OgEZGNFr8LGJDh
- LP7MSksBw6IxCAJSicMESu5kXsJfcODlm4zFaV8QDBevI/s/TgOQ9KQ/EJQsG+XBAuh0dqpu
- ImmCdhlHx+YaGmwKO1/yhfWvg1h1xbVn98izeotmq1+0J1jt9tgM17MGvgHjmvqlaY+oUXfj
- OkHkcCGOvao5uAsddQhZcSLmLhrSot8WJI0z3NIM30yiNx/r6OMu47lzTobdYCU8/8m7Rhsq
- fyW68D+XR098NIlU2oYy1zUetw59WJLf2j5u6D6a9p10doY5lYUEeTjy9Ejs/cL+tQbGwgWh
- WwKVal1lAtZVaru0GMbSQQ2BycZsZ+H+sbVwpDNEOxQaQPMmEzwgv2Sk2hvR3dTnhUoUaVoR
- hQE3/+fVRbWHEEroh/+vXV6n4Ps5bDd+75NCQ/lfPZNzGxgxqbd/rd2wStVZpQXkhofMD/4k
- Z8IivHZYaTA+udUk3iRm0l0qnuX2M5eUbyHW0sZVPnL7Oa4OKXoOir1EWwzzq0GNZjHCh6Cz
- vLOb1+pllnMkBky0G/+txtgvj5T/366ErUF+lQfgNtENKY6In8tw06hPJbu1sUTQIs50Jg9h
- RNkDSIQ544ack0fzOusSPM+vo6OkvIHt8tV0fTO1muclwCX/5jb7zQIDgGiUIgS8y0M4hIkP
- KvdmgurPywi74nEoQQrKF6LpPYYHsDteWR/k2m2BOj0ciZDIIxVR09Y9moQIjBLJKN0J21XJ
- eAgam4uLV2p1kRDdw/ST5uMCqD4Qi5zrZyWilCci6jF1TR2VEt906E2+AZ3BEheRyn8yb2KO
- +cJD3kB4RzOyBC/Cq/CGAujfDkRiy1ypFF3TkZdya0NnMgka9LXwBV29sAw9vvrxHxGa+tO+
- RpgKRywr4Al7QGiw7tRPbxkcatkxg67OcRyntfT0lbKlSTEQUxM06qvwFN7nobc9YiJJTeLu
- gfa4fCqhQCyquWVVoVP+MnLqkzu1F6lSB6dGIpiW0s3LwyE/WbCAVBraPoENlt69jI0WTXvH
- 4v71zEffYaGWqtrSize20x9xZf5c/Aukpx0UmsqheKeoSprKyRD/Wj/LgsuTE2Uod85U36Xk
- eFYetwQY1h3lok2Zb/3uFhWr0NqmT14EL7kCDQRT9gkSARAApxtQ4zUMC512kZ+gCiySFcIF
- /mAf7+l45689Tn7LI1xmPQrAYJDoqQVXcyh3utgtvBvDLmpQ+1BfEONDWc8KRP6Abo35YqBx
- 3udAkLZgr/RmEg3+Tiof+e1PJ2zRh5zmdei5MT8biE2zVd9DYSJHZ8ltEWIALC9lAsv9oa+2
- L6naC+KFF3i0m5mxklgFoSthswUnonqvclsjYaiVPoSldDrreCPzmRCUd8znf//Z4BxtlTw3
- SulF8weKLJ+Hlpw8lwb3sUl6yPS6pL6UV45gyWMe677bVUtxLYOu+kiv2B/+nrNRDs7B35y/
- J4t8dtK0S3M/7xtinPiYRmsnJdk+sdAe8TgGkEaooF57k1aczcJlUTBQvlYAEg2NJnqaKg3S
- CJ4fEuT8rLjzuZmLkoHNumhH/mEbyKca82HvANu5C9clyQusJdU+MNRQLRmOAd/wxGLJ0xmA
- ye7Ozja86AIzbEmuNhNH9xNjwbwSJNZefV2SoZUv0+V9EfEVxTzraBNUZifqv6hernMQXGxs
- +lBjnyl624U8nnQWnA8PwJ2hI3DeQou1HypLFPeY9DfWv4xYdkyeOtGpueeBlqhtMoZ0kDw2
- C3vzj77nWwBgpgn1Vpf4hG/sW/CRR6tuIQWWTvUM3ACa1pgEsBvIEBiVvPxyAtL+L+Lh1Sni
- 7w3HBk1EJvUAEQEAAYkCHwQYAQIACQUCU/YJEgIbDAAKCRDZFAuyVhMC8QndEACuN16mvivn
- WwLDdypvco5PF8w9yrfZDKW4ggf9TFVB9skzMNCuQc+tc+QM+ni2c4kKIdz2jmcg6QytgqVu
- m6V1OsNmpjADaQkVp5jL0tmg6/KA9Tvr07Kuv+Uo4tSrS/4djDjJnXHEp/tB+Fw7CArNtUtL
- lc8SuADCmMD+kBOVWktZyzkBkDfBXlTWl46T/8291lEspDWe5YW1ZAH/HdCR1rQNZWjNCpB2
- Cic58CYMD1rSonCnbfUeyZYNNhNHZosl4dl7f+am87Q2x3pK0DLSoJRxWb7vZB0uo9CzCSm3
- I++aYozF25xQoT+7zCx2cQi33jwvnJAK1o4VlNx36RfrxzBqc1uZGzJBCQu48UjmUSsTwWC3
- HpE/D9sM+xACs803lFUIZC5H62G059cCPAXKgsFpNMKmBAWweBkVJAisoQeX50OP+/11ArV0
- cv+fOTfJj0/KwFXJaaYh3LUQNILLBNxkSrhCLl8dUg53IbHx4NfIAgqxLWGfXM8DY1aFdU79
- pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
- AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
- jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <a5073e16-c017-216c-72b4-0e861102c4e8@gmail.com>
-Date:   Fri, 13 Sep 2019 12:39:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <3163f80b-72e5-5da8-0909-a8950d3669f7@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Sep 2019 06:40:21 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190913104018epoutp04f8e55d10b0f2510e102ee2caf349635b~D_VBlShkl0189001890epoutp043
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 10:40:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190913104018epoutp04f8e55d10b0f2510e102ee2caf349635b~D_VBlShkl0189001890epoutp043
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568371218;
+        bh=DaqFVHqqq+39Xb6OSxP8lkdEdNuIyb9xA6SxMHprNPo=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=rTIDpfzj3d9khTiSRU2MqIZb1xvaKt+PysqwwlRgYVGOE4wXnwrLFHt8jt01jGMD5
+         teUd4Sc9bsfVPyqJAdIJkLbr87ZKGXfGBmJ+gmiAjlx0IMWC5917hsZA/eBV4xP8l2
+         agcQXB6phdMLsE+xRtnSocJPwbEPRyDbTEzSraxU=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20190913104018epcas5p3cb1ed17c5fe032f2c4e3e26470135355~D_VBHN2LK0185201852epcas5p3J;
+        Fri, 13 Sep 2019 10:40:18 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.0A.04150.2127B7D5; Fri, 13 Sep 2019 19:40:18 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14~D_VAxS0uW2920129201epcas5p3s;
+        Fri, 13 Sep 2019 10:40:18 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190913104018epsmtrp216ee617e787345738d8f4eee2c2de12a~D_VAwgcCx1733817338epsmtrp2N;
+        Fri, 13 Sep 2019 10:40:18 +0000 (GMT)
+X-AuditID: b6c32a49-a43ff70000001036-32-5d7b7212820a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        65.69.03638.1127B7D5; Fri, 13 Sep 2019 19:40:18 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190913104016epsmtip2f4dc255c9c6faf1a335100156a558ccd~D_U-caFvs1704417044epsmtip2W;
+        Fri, 13 Sep 2019 10:40:16 +0000 (GMT)
+From:   Pankaj Dubey <pankaj.dubey@samsung.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        andrew.murray@arm.com, Anvesh Salveru <anvesh.s@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
+ quirks
+Date:   Fri, 13 Sep 2019 16:09:50 +0530
+Message-Id: <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOIsWRmVeSWpSXmKPExsWy7bCmuq5QUXWswaNFkhbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uLxrDpvF2XnH2Sze/H7BbrFo6xd2B06PNfPWMHrsnHWX3WPBplKP
+        vi2rGD227P/M6PF5k1wAWxSXTUpqTmZZapG+XQJXxp7nnWwFKyUrvnbcYmxgPCDaxcjJISFg
+        IrH53hXGLkYuDiGB3YwS3zt/QTmfGCXWvlzOBOF8Y5SYuvIvO0xLx68f7BCJvYwSq04fZQJJ
+        CAm0MEk8PmEMYrMJ6Eo8eT+XGcQWEbCWaHi1ihWkgVngCqPEouf3WUESwgLBEtsOr2IEsVkE
+        VCU2HZ/AAmLzCnhI7N/0mA1im5zEzXOdzCDNEgJz2CQuL37MCJFwkfh79gQrhC0s8er4Fqjz
+        pCQ+v9sL1Zwv8WPxJKjmFkaJycfnQjXYSxy4MgdoGwfQSZoS63fpg4SZBfgken8/YQIJSwjw
+        SnS0CUFUq0l8f36GGcKWkXjYvJQJwvaQmLLxISvE87ESj/qOsExglJmFMHQBI+MqRsnUguLc
+        9NRi0wLDvNRyveLE3OLSvHS95PzcTYzg6Nfy3ME465zPIUYBDkYlHl4LnapYIdbEsuLK3EOM
+        EhzMSiK8Pm8qY4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzTmK9GiMkkJ5YkpqdmlqQWgSTZeLg
+        lGpgtLoaXFdy3KGXSSyw3jKTe6fKkke6xfstaqwW33m01O+80/a7r3gO/T7eris+LdDz1sJV
+        v35NbMp6GLXErMhGXS328qZXgpwFhVIP7u5+/0Y62H/FutC3pwJYHBbG1Eaeqr9zeoPI0xXO
+        5vFa8o1lFp3i/lPefJyq9F+nM5z/B1/lucr0f09XK7EUZyQaajEXFScCAMHD8Er6AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsWy7bCSvK5QUXWswcVuRovm/9tZLc7uWshq
+        saQpw2LX3Q52ixVfZrJbXN41h83i7LzjbBZvfr9gt1i09Qu7A6fHmnlrGD12zrrL7rFgU6lH
+        35ZVjB5b9n9m9Pi8SS6ALYrLJiU1J7MstUjfLoErY8/zTraClZIVXztuMTYwHhDtYuTkkBAw
+        kej49YO9i5GLQ0hgN6PEw+lXWCASMhKTV69ghbCFJVb+ew5V1MQk8f/WL0aQBJuArsST93OZ
+        QWwRAVuJhr8dzCBFzAK3GCXez1gJ1i0sEChxa9EpNhCbRUBVYtPxCWAbeAU8JPZveswGsUFO
+        4ua5TuYJjDwLGBlWMUqmFhTnpucWGxYY5aWW6xUn5haX5qXrJefnbmIEh5iW1g7GEyfiDzEK
+        cDAq8fA+0KyKFWJNLCuuzD3EKMHBrCTC6/OmMlaINyWxsiq1KD++qDQntfgQozQHi5I4r3z+
+        sUghgfTEktTs1NSC1CKYLBMHp1QD47rj67gfL61s3mi2+PbM7IywubxTb9YcPC3/TCs24fDL
+        PgHzvVqOnN67p/Y38YnkKT5pWPyVQei/nlbpty0vl17UyZq6rOT8a9VXm+b/K9eZeP2z8vqD
+        B/4GTdgptrY6ZLp3p1jBftv1GSW9P9zmKB22SP16lV9zTfZshgs/jeo9lwptZrX9fEmJpTgj
+        0VCLuag4EQCn3ApILQIAAA==
+X-CMS-MailID: 20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14
+References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Anvesh Salveru <anvesh.s@samsung.com>
 
+In some platforms, PCIe PHY may have issues which will prevent linkup
+to happen in GEN3 or higher speed. In case equalization fails, link will
+fallback to GEN1.
 
-On 13/09/2019 12:08, Stefan Wahren wrote:
-> Am 13.09.19 um 11:25 schrieb Matthias Brugger:
->>
->> On 13/09/2019 10:50, Stefan Wahren wrote:
->>> Am 13.09.19 um 10:09 schrieb Matthias Brugger:
->>>> On 12/09/2019 21:32, Stefan Wahren wrote:
->>>>> Am 12.09.19 um 19:18 schrieb Matthias Brugger:
->>>>>> On 10/09/2019 11:27, Matthias Brugger wrote:
->>>>>>> On 09/09/2019 21:33, Stefan Wahren wrote:
->>>>>>>> Hi Nicolas,
->>>>>>>>
->>>>>>>> Am 09.09.19 um 11:58 schrieb Nicolas Saenz Julienne:
->>>>>>>>> Hi all,
->>>>>>>>> this series attempts to address some issues we found while bringing up
->>>>>>>>> the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
->>>>>>>>> up of these discussions:
->>>>>>>>> v4: https://lkml.org/lkml/2019/9/6/352
->>>>>>>>> v3: https://lkml.org/lkml/2019/9/2/589
->>>>>>>>> v2: https://lkml.org/lkml/2019/8/20/767
->>>>>>>>> v1: https://lkml.org/lkml/2019/7/31/922
->>>>>>>>> RFC: https://lkml.org/lkml/2019/7/17/476
->>>>>>>>>
->>>>>>>>> The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
->>>>>>>>> only address the first GB: their DMA address range is
->>>>>>>>> 0xc0000000-0xfc000000 which is aliased to the first GB of physical
->>>>>>>>> memory 0x00000000-0x3c000000. Note that only some peripherals have these
->>>>>>>>> limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
->>>>>>>>> view of the address space by virtue of being hooked up trough a second
->>>>>>>>> interconnect.
->>>>>>>>>
->>>>>>>>> Part of this is solved on arm32 by setting up the machine specific
->>>>>>>>> '.dma_zone_size = SZ_1G', which takes care of reserving the coherent
->>>>>>>>> memory area at the right spot. That said no buffer bouncing (needed for
->>>>>>>>> dma streaming) is available at the moment, but that's a story for
->>>>>>>>> another series.
->>>>>>>>>
->>>>>>>>> Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
->>>>>>>>> ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
->>>>>>>>> arch code as if all peripherals where be able to address the first 4GB
->>>>>>>>> of memory.
->>>>>>>>>
->>>>>>>>> In the light of this, the series implements the following changes:
->>>>>>>>>
->>>>>>>>> - Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
->>>>>>>>>   area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
->>>>>>>>>   the RPi4 is the only arm64 device with such DMA addressing limitations
->>>>>>>>>   so this hardcoded solution was deemed preferable.
->>>>>>>>>
->>>>>>>>> - Properly set ARCH_ZONE_DMA_BITS.
->>>>>>>>>
->>>>>>>>> - Reserve the CMA area in a place suitable for all peripherals.
->>>>>>>>>
->>>>>>>>> This series has been tested on multiple devices both by checking the
->>>>>>>>> zones setup matches the expectations and by double-checking physical
->>>>>>>>> addresses on pages allocated on the three relevant areas GFP_DMA,
->>>>>>>>> GFP_DMA32, GFP_KERNEL:
->>>>>>>>>
->>>>>>>>> - On an RPi4 with variations on the ram memory size. But also forcing
->>>>>>>>>   the situation where all three memory zones are nonempty by setting a 3G
->>>>>>>>>   ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
->>>>>>>>>
->>>>>>>> i like to test this series on Raspberry Pi 4 and i have some questions
->>>>>>>> to get arm64 running:
->>>>>>>>
->>>>>>>> Do you use U-Boot? Which tree?
->>>>>>> If you want to use U-Boot, try v2019.10-rc4, it should have everything you need
->>>>>>> to boot your kernel.
->>>>>>>
->>>>>> Ok, here is a thing. In the linux kernel we now use bcm2711 as SoC name, but the
->>>>>> RPi4 devicetree provided by the FW uses mostly bcm2838.
->>>>> Do you mean the DTB provided at runtime?
->>>>>
->>>>> You mean the merged U-Boot changes, doesn't work with my Raspberry Pi
->>>>> series?
->>>>>
->>>>>>  U-Boot in its default
->>>>>> config uses the devicetree provided by the FW, mostly because this way you don't
->>>>>> have to do anything to find out how many RAM you really have. Secondly because
->>>>>> this will allow us, in the near future, to have one U-boot binary for both RPi3
->>>>>> and RPi4 (and as a side effect one binary for RPi1 and RPi2).
->>>>>>
->>>>>> Anyway, I found at least, that the following compatibles need to be added:
->>>>>>
->>>>>> "brcm,bcm2838-cprman"
->>>>>> "brcm,bcm2838-gpio"
->>>>>>
->>>>>> Without at least the cprman driver update, you won't see anything.
->>>>>>
->>>>>> "brcm,bcm2838-rng200" is also a candidate.
->>>>>>
->>>>>> I also suppose we will need to add "brcm,bcm2838" to
->>>>>> arch/arm/mach-bcm/bcm2711.c, but I haven't verified this.
->>>>> How about changing this in the downstream kernel? Which is much easier.
->>>> I'm not sure I understand what you want to say. My goal is to use the upstream
->>>> kernel with the device tree blob provided by the FW.
->>> The device tree blob you are talking is defined in this repository:
->>>
->>> https://github.com/raspberrypi/linux
->>>
->>> So the word FW is misleading to me.
->>>
->> No, it's part of
->> https://github.com/raspberrypi/firmware.git
->> file boot/bcm2711-rpi-4-b.dtb
-> The compiled DT blobs incl. the kernel image are stored in this artifact
-> repository. But the sources for the kernel and the DT are in the Linux
-> repo. This is necessary to be compliant to the GPL.
+DesignWare controller gives flexibility to disable GEN3 equalization
+completely or only phase 2 and 3 of equalization.
 
-Got it, thanks for clarifying.
+This patch enables the DesignWare driver to disable the PCIe GEN3
+equalization by enabling one of the following quirks:
+ - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
+ - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
 
->>
->>>>  If you talk about the
->>>> downstream kernel, I suppose you mean we should change this in the FW DT blob
->>>> and in the downstream kernel. That would work for me.
->>>>
->>>> Did I understand you correctly?
->>> Yes
->>>
->>> So i suggest to add the upstream compatibles into the repo mentioned above.
->>>
->>> Sorry, but in case you decided as a U-Boot developer to be compatible
->>> with a unreviewed DT, we also need to make U-Boot compatible with
->>> upstream and downstream DT blobs.
->>>
->> Well RPi3 is working with the DT blob provided by the FW, as I mentioned earlier
->> if we can use this DTB we can work towards one binary that can boot both RPi3
->> and RPi4. On the other hand we can rely on the FW to detect the amount of memory
->> our RPi4 has.
->>
->> That said, I agree that we should make sure that U-Boot can boot with both DTBs,
->> the upstream one and the downstream. Now the question is how to get to this. I'm
->> a bit puzzled that by talking about "unreviewed DT" you insinuate that bcm2711
->> compatible is already reviewed and can't be changed. From what I can see none of
->> these compatibles got merged for now, so we are still at time to change them.
-> 
-> Stephen Boyd was okay with clk changes except of a small nit. So i fixed
-> this is as he suggested in a separate series. Unfortunately this hasn't
-> be applied yet [1].
-> 
-> The i2c, pinctrl and the sdhci changes has been applied yet.
-> 
-> In my opinion it isn't the job of the mainline kernel to adapt to a
-> vendor device tree. It's the vendor device tree which needs to be fixed.
-> 
+Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
+struct.
 
-I agree with that. But if we can make this easier by choosing a compatible which
-fits downstream without violating upstream and it makes sense with the naming
-scheme of the RPi, I think that's a good argument.
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+Patchset v1 can be found at:
+ - 1/2: https://lkml.org/lkml/2019/9/10/443
+ - 2/2: https://lkml.org/lkml/2019/9/10/444
 
-> Sorry, but this is my holiday. I will back after the weekend.
-> 
+Changes w.r.t v1:
+ - Squashed two patches from v1 into one as suggested by Gustavo
+ - Addressed review comments from Andrew
 
-Sure, enjoy. I'll be on travel for the next two weeks but will try to keep up
-with emails.
+ drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  9 +++++++++
+ 2 files changed, 21 insertions(+)
 
-Regards,
-Matthias
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 7d25102..97fb18d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 		break;
+ 	}
+ 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
++
++	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
++		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
++		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
++		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
++	}
++
++	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
++		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
++		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
++		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
++	}
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index ffed084..e428b62 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -29,6 +29,10 @@
+ #define LINK_WAIT_MAX_IATU_RETRIES	5
+ #define LINK_WAIT_IATU			9
+ 
++/* Parameters for GEN3 related quirks */
++#define DWC_EQUALIZATION_DISABLE	BIT(1)
++#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
++
+ /* Synopsys-specific PCIe configuration registers */
+ #define PCIE_PORT_LINK_CONTROL		0x710
+ #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+@@ -60,6 +64,10 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
+ 
++#define PCIE_PORT_GEN3_RELATED		0x890
++#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
++#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
++
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
+@@ -244,6 +252,7 @@ struct dw_pcie {
+ 	struct dw_pcie_ep	ep;
+ 	const struct dw_pcie_ops *ops;
+ 	unsigned int		version;
++	unsigned int		quirk;
+ };
+ 
+ #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+-- 
+2.7.4
 
-> Best regards
-> Stefan
-> 
-> [1] - https://www.spinics.net/lists/linux-clk/msg40534.html
-> 
->>
->> Apart from the point Florian made, to stay consistent with the RPi SoC naming,
->> it will save us work, both in the kernel and in U-Boot, as we would need to add
->> both compatibles to the code-base.
->>
->> Regards,
->> Matthias
->>
->>>>>> Regards,
->>>>>> Matthias
->>>>>>
->>>>>>> Regards,
->>>>>>> Matthias
->>>>>>>
->>>>>>>> Are there any config.txt tweaks necessary?
->>>>>>>>
->>>>>>>>
->>>>>>> _______________________________________________
->>>>>>> linux-arm-kernel mailing list
->>>>>>> linux-arm-kernel@lists.infradead.org
->>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>>>>>
->>>>>> _______________________________________________
->>>>>> linux-arm-kernel mailing list
->>>>>> linux-arm-kernel@lists.infradead.org
->>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
