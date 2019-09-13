@@ -7,18 +7,18 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1A6C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3B5C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5182084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A39C2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfIMCqW (ORCPT
+        id S1727926AbfIMCqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:46:22 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58611 "EHLO mga07.intel.com"
+        Thu, 12 Sep 2019 22:46:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58608 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727614AbfIMCqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727387AbfIMCqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 22:46:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +26,7 @@ Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 19:46:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="176159533"
+   d="scan'208";a="176159528"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 19:46:13 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +40,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         James Harvey <jamespharvey20@gmail.com>,
         Alex Willamson <alex.williamson@redhat.com>
-Subject: [PATCH 11/11] KVM: x86/mmu: Skip invalid pages during zapping iff root_count is zero
-Date:   Thu, 12 Sep 2019 19:46:12 -0700
-Message-Id: <20190913024612.28392-12-sean.j.christopherson@intel.com>
+Subject: [PATCH 09/11] KVM: x86/mmu: Revert "KVM: x86/mmu: Remove is_obsolete() call"
+Date:   Thu, 12 Sep 2019 19:46:10 -0700
+Message-Id: <20190913024612.28392-10-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
 References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
@@ -53,38 +53,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not skip invalid shadow pages when zapping obsolete pages if the
-pages' root_count has reached zero, in which case the page can be
-immediately zapped and freed.
+Now that the fast invalidate mechanism has been reintroduced, restore
+the performance tweaks for fast invalidation that existed prior to its
+removal.
 
-Update the comment accordingly.
+Paraphrasing the original changelog (commit 5ff0568374ed2 was itself a
+partial revert):
+
+  Don't force reloading the remote mmu when zapping an obsolete page, as
+  a MMU_RELOAD request has already been issued by kvm_mmu_zap_all_fast()
+  immediately after incrementing mmu_valid_gen, i.e. after marking pages
+  obsolete.
+
+This reverts commit 5ff0568374ed2e585376a3832857ade5daccd381.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index a7b14750cde9..5e41b1f77a6d 100644
+index 84d916674529..bce19918ca5a 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -5692,11 +5692,12 @@ static void kvm_zap_obsolete_pages(struct kvm *kvm)
- 			break;
+@@ -2752,7 +2752,12 @@ static bool __kvm_mmu_prepare_zap_page(struct kvm *kvm,
+ 	} else {
+ 		list_move(&sp->link, &kvm->arch.active_mmu_pages);
  
- 		/*
--		 * Since we are reversely walking the list and the invalid
--		 * list will be moved to the head, skip the invalid page
--		 * can help us to avoid the infinity list walking.
-+		 * Skip invalid pages with a non-zero root count, zapping pages
-+		 * with a non-zero root count will never succeed, i.e. the page
-+		 * will get thrown back on active_mmu_pages and we'll get stuck
-+		 * in an infinite loop.
- 		 */
--		if (sp->role.invalid)
-+		if (sp->role.invalid && sp->root_count)
- 			continue;
+-		if (!sp->role.invalid)
++		/*
++		 * Obsolete pages cannot be used on any vCPUs, see the comment
++		 * in kvm_mmu_zap_all_fast().  Note, is_obsolete_sp() also
++		 * treats invalid shadow pages as being obsolete.
++		 */
++		if (!is_obsolete_sp(kvm, sp))
+ 			kvm_reload_remote_mmus(kvm);
+ 	}
  
- 		/*
 -- 
 2.22.0
 
