@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98924C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE067C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E33920717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C478120CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380886;
-	bh=Dg3jlNIf/h+RkBDZwXD9XN8GZU8Y+STpvMeX0kaOBqk=;
+	s=default; t=1568380889;
+	bh=VD0f0+ab+C+4GW+EAuXTuKN+g/TJz9sfwB1E3e6vQIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L860uOYaDThfonMpUI97zMx0td9VKNOL/q9cAbGVd7sJ1BeZl3inlrZ6xFyv6hyUf
-	 vJso4VX6R205RQIItJ6C4axgllpdAAs/CYqUoXmXpHY9d+GcujoEN1PpA0eb0VUna8
-	 P6o0ZWQYz2s5FAGtr4tqV/7jECAJ6XHKvO0YxbQ4=
+	b=Kt4c3MmncCBQJWPS8fK/bdYzo/MC5xXGG4tr9QUj/7kfQBWKzJoWEMJaDH75v+JTj
+	 k5Y2BjFQNSNbG129wDavFlUfx+tSiz0HpVcx655dp+RDhG5jVIJpaHzlby0D4pGpEL
+	 3AlWJZXj9cPdcZfiVuU3tPy156LzGCAcPpAOtWn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390818AbfIMNVZ (ORCPT
+        id S2390829AbfIMNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390798AbfIMNVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:21 -0400
+        id S2389107AbfIMNV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:26 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50B9206A5;
-        Fri, 13 Sep 2019 13:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 499C0206A5;
+        Fri, 13 Sep 2019 13:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380881;
-        bh=Dg3jlNIf/h+RkBDZwXD9XN8GZU8Y+STpvMeX0kaOBqk=;
+        s=default; t=1568380885;
+        bh=VD0f0+ab+C+4GW+EAuXTuKN+g/TJz9sfwB1E3e6vQIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1RaaYjZITt2Vm5c+qW3aGR4oeN8GIRj+ieNQln8Fl7DBv05oLrNFnVIO+JRLpND7L
-         sBOzIFhuh4eEDs3y38pStzxcz7IudXg+4BpB04IzYIkByuWDUJH95+niSWNibfWxit
-         6I1tMm85vXEf56qHQ5Id1OCHU43GS0aE84/S+ZLI=
+        b=aHOY/RLCAI2ySYFA9EHhOELGDTnTn37caVnxMqAuWc1pgXFDZFu0MSNoG0IZxP9xw
+         fQYUxG8Os5l9NQ53jCLYig/Qf8IFnQo+TjxkEpob14KHoVT9BuavNoFaypX0zMnU0Y
+         /lfugZBaiSJPC4UJGZTZ2/dpUOG1hZDuxuAdq5p0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 07/37] ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
-Date:   Fri, 13 Sep 2019 14:07:12 +0100
-Message-Id: <20190913130512.344461813@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 5.2 09/37] drm/vmwgfx: Fix double free in vmw_recv_msg()
+Date:   Fri, 13 Sep 2019 14:07:14 +0100
+Message-Id: <20190913130513.448614886@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -59,48 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 2a36c16efab254dd6017efeb35ad88ecc96f2328 upstream.
+commit 08b0c891605acf727e43e3e03a25857d3e789b61 upstream.
 
-This ThinkCentre machine has a new realtek codec alc222, it is not
-in the support list, we add it in the realtek.c then this machine
-can apply FIXUPs for the realtek codec.
+We recently added a kfree() after the end of the loop:
 
-And this machine has two front mics which can't be handled
-by PA so far, it uses the pin 0x18 and 0x19 as the front mics, as
-a result the existing FIXUP ALC294_FIXUP_LENOVO_MIC_LOCATION doesn't
-work on this machine. Fortunately another FIXUP
-ALC283_FIXUP_HEADSET_MIC also can change the location for one of the
-two mics on this machine.
+	if (retries == RETRIES) {
+		kfree(reply);
+		return -EINVAL;
+	}
 
-Link: https://lore.kernel.org/r/20190904055327.9883-1-hui.wang@canonical.com
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
+There are two problems.  First the test is wrong and because retries
+equals RETRIES if we succeed on the last iteration through the loop.
+Second if we fail on the last iteration through the loop then the kfree
+is a double free.
+
+When you're reading this code, please note the break statement at the
+end of the while loop.  This patch changes the loop so that if it's not
+successful then "reply" is NULL and we can test for that afterward.
+
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 6b7c3b86f0b6 ("drm/vmwgfx: fix memory leak when too many retries have occurred")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7087,6 +7087,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
-+	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
- 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
-@@ -8961,6 +8962,7 @@ static int patch_alc680(struct hda_codec
- static const struct hda_device_id snd_hda_id_realtek[] = {
- 	HDA_CODEC_ENTRY(0x10ec0215, "ALC215", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0221, "ALC221", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0222, "ALC222", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0225, "ALC225", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0231, "ALC231", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0233, "ALC233", patch_alc269),
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+@@ -353,7 +353,7 @@ static int vmw_recv_msg(struct rpc_chann
+ 				     !!(HIGH_WORD(ecx) & MESSAGE_STATUS_HB));
+ 		if ((HIGH_WORD(ebx) & MESSAGE_STATUS_SUCCESS) == 0) {
+ 			kfree(reply);
+-
++			reply = NULL;
+ 			if ((HIGH_WORD(ebx) & MESSAGE_STATUS_CPT) != 0) {
+ 				/* A checkpoint occurred. Retry. */
+ 				continue;
+@@ -377,7 +377,7 @@ static int vmw_recv_msg(struct rpc_chann
+ 
+ 		if ((HIGH_WORD(ecx) & MESSAGE_STATUS_SUCCESS) == 0) {
+ 			kfree(reply);
+-
++			reply = NULL;
+ 			if ((HIGH_WORD(ecx) & MESSAGE_STATUS_CPT) != 0) {
+ 				/* A checkpoint occurred. Retry. */
+ 				continue;
+@@ -389,10 +389,8 @@ static int vmw_recv_msg(struct rpc_chann
+ 		break;
+ 	}
+ 
+-	if (retries == RETRIES) {
+-		kfree(reply);
++	if (!reply)
+ 		return -EINVAL;
+-	}
+ 
+ 	*msg_len = reply_len;
+ 	*msg     = reply;
 
 
