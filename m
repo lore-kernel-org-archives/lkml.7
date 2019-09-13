@@ -2,251 +2,85 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7554C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9A3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E9A2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:05:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uboNT2ol"
+	by mail.kernel.org (Postfix) with ESMTP id 01A5920717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbfIMJF5 (ORCPT
+        id S2387895AbfIMJHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:05:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39714 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387728AbfIMJF5 (ORCPT
+        Fri, 13 Sep 2019 05:07:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49831 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387765AbfIMJHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:05:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v17so1348880wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MdxQ/xcZCZL9Fn3RAjYodCBOv5q+4ekjCirRl7jEXJQ=;
-        b=uboNT2olkshSweJggmBOL9Lm+TACWo3qfNzVcNKIgwYpySD9qjVbNk5/7wivL2+4ow
-         q5VjphDpAtObtjtn/trYWCb0VdsHbOLqQtYvi6Vw6D/kaiJJLz2i3tYNOXg89jf4OUhV
-         sZxuDoLRmoCKUq+i2se0xvW65vj2QOHFGJjR34qYmGIxtUILJiE3AFz85VnmLvd8laMY
-         hQ7vEO+72bTY/xy22PzPop7vne1pTq83tJFnJ+4feSWD+gK+i3Uhq+sZncCsAyc7qYAY
-         ZUjXPNLoTCmFwiok5Bh93KDTM+5JD8SCuRifS59xT+V45K8EgkUKCvqizE89ewqGETLo
-         FFvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MdxQ/xcZCZL9Fn3RAjYodCBOv5q+4ekjCirRl7jEXJQ=;
-        b=ukU7FMGG9FFlLqtBmNiBol5jEZ4aj6KkklJiLWh11qVkQgfG63W9v68UDzA9g+y7TU
-         6EJd/XBAra9bmdKOqWbn4L5t7lG31pIiuIMA1oXhpXFUxVzszM7prs5s6ug4wTDg53bT
-         gyr1nzpPWfNOp8SIqq/Bnfbl2+JmuYwKfUeuxf72Xh64tAFt6D1Zy9smqkZI1yjdHGwZ
-         R9Gfu5O1B61B1n35ygMEt2+6kNaW1Rsk4d/bR8wuzWYxOdqDbK5kc+FAnownnD4Zw/hU
-         Jx0nNR+g/L+ALbGUv/dhggNiaUX29RA6xSwU5WWObED3w/O2Bv5q3y9Ws4Aa5nJEfqar
-         B1yA==
-X-Gm-Message-State: APjAAAXenqt+S8bV2MzO7NrMXHJSExrmKMALxOf1lcVp9vne3gYBjJ7h
-        PZtx2H/f5vUCFU/NJekYmqHuAfHz0KOkx1xhra2A1A==
-X-Google-Smtp-Source: APXvYqwmPY9zdnjW6V9M9HwMTGuKiHs0K8K+1HoZhaS5oP36n10nsQVmARDWufLg808Ks8Lf3AFDgVFlQhPVEq3p4no=
-X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr2348267wma.119.1568365552917;
- Fri, 13 Sep 2019 02:05:52 -0700 (PDT)
+        Fri, 13 Sep 2019 05:07:37 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i8hYE-000208-4E; Fri, 13 Sep 2019 09:07:34 +0000
+Date:   Fri, 13 Sep 2019 11:07:33 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v2] fork: check exit_signal passed in clone3() call
+Message-ID: <20190913090732.lzw4dpfj5j72ivy2@wittgenstein>
+References: <20190910175852.GA15572@asgard.redhat.com>
+ <20190911064852.9f236d4c201b50e14d717c14@linux-foundation.org>
+ <20190911135236.73l6icwxqff7fkw5@wittgenstein>
 MIME-Version: 1.0
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156712995374.1616117.8463747608355533922.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156712995374.1616117.8463747608355533922.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Sep 2019 10:05:30 +0100
-Message-ID: <CAKv+Gu_6zkq0cfp715sn-boGD=ZVDJ-Xk7venkQb1Gry_hxoeg@mail.gmail.com>
-Subject: Re: [PATCH v5 03/10] x86, efi: Push EFI_MEMMAP check into leaf routines
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190911135236.73l6icwxqff7fkw5@wittgenstein>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 at 03:06, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> In preparation for adding another EFI_MEMMAP dependent call that needs
-> to occur before e820__memblock_setup() fixup the existing efi calls to
-> check for EFI_MEMMAP internally. This ends up being cleaner than the
-> alternative of checking EFI_MEMMAP multiple times in setup_arch().
->
-> Cc: <x86@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Wed, Sep 11, 2019 at 03:52:36PM +0200, Christian Brauner wrote:
+> On Wed, Sep 11, 2019 at 06:48:52AM -0700, Andrew Morton wrote:
+> > On Tue, 10 Sep 2019 18:58:52 +0100 Eugene Syromiatnikov <esyr@redhat.com> wrote:
+> > 
+> > > Previously, higher 32 bits of exit_signal fields were lost when
+> > > copied to the kernel args structure (that uses int as a type for the
+> > > respective field).  Moreover, as Oleg has noted[1], exit_signal is used
+> > > unchecked, so it has to be checked for sanity before use; for the legacy
+> > > syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
+> > > however, there's no such thing is done in clone3() code path, and that can
+> > > break at least thread_group_leader.
+> > > 
+> > > Checking user-passed exit_signal against ~CSIGNAL mask solves both
+> > > of these problems.
+> > > 
+> > > [1] https://lkml.org/lkml/2019/9/10/467
+> > > 
+> > > * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
+> > > args.exit_signal has bits set outside CSIGNAL mask.
+> > > (_do_fork): Note that exit_signal is expected to be checked for the
+> > > sanity by the caller.
+> > > 
+> > > Fixes: 7f192e3cd316 ("fork: add clone3")
+> > 
+> > What are the user-visible runtime effects of this bug?
+> > 
+> > Relatedly, should this fix be backported into -stable kernels?  If so, why?
+> 
+> No, as I said in my other mail clone3() is not in any released kernel
+> yet. clone3() is going to be released in v5.3.
 
-I'd prefer it if the spurious whitespace changes could be dropped, but
-otherwise, this looks fine to me, so I am not going to obsess about
-it.
+Applied yesteday. This is now fixed and included in mainline.
 
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-
-
-> ---
->  arch/x86/include/asm/efi.h      |    9 ++++++++-
->  arch/x86/kernel/setup.c         |   19 +++++++++----------
->  arch/x86/platform/efi/efi.c     |    3 +++
->  arch/x86/platform/efi/quirks.c  |    3 +++
->  drivers/firmware/efi/esrt.c     |    3 +++
->  drivers/firmware/efi/fake_mem.c |    2 +-
->  include/linux/efi.h             |    2 --
->  7 files changed, 27 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-> index 43a82e59c59d..45f853bce869 100644
-> --- a/arch/x86/include/asm/efi.h
-> +++ b/arch/x86/include/asm/efi.h
-> @@ -140,7 +140,6 @@ extern void efi_delete_dummy_variable(void);
->  extern void efi_switch_mm(struct mm_struct *mm);
->  extern void efi_recover_from_page_fault(unsigned long phys_addr);
->  extern void efi_free_boot_services(void);
-> -extern void efi_reserve_boot_services(void);
->
->  struct efi_setup_data {
->         u64 fw_vendor;
-> @@ -244,6 +243,8 @@ static inline bool efi_is_64bit(void)
->  extern bool efi_reboot_required(void);
->  extern bool efi_is_table_address(unsigned long phys_addr);
->
-> +extern void efi_find_mirror(void);
-> +extern void efi_reserve_boot_services(void);
->  #else
->  static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
->  static inline bool efi_reboot_required(void)
-> @@ -254,6 +255,12 @@ static inline  bool efi_is_table_address(unsigned long phys_addr)
->  {
->         return false;
->  }
-> +static inline void efi_find_mirror(void)
-> +{
-> +}
-> +static inline void efi_reserve_boot_services(void)
-> +{
-> +}
->  #endif /* CONFIG_EFI */
->
->  #endif /* _ASM_X86_EFI_H */
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index bbe35bf879f5..9bfecb542440 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -1118,21 +1118,20 @@ void __init setup_arch(char **cmdline_p)
->         cleanup_highmap();
->
->         memblock_set_current_limit(ISA_END_ADDRESS);
-> +
->         e820__memblock_setup();
->
->         reserve_bios_regions();
->
-> -       if (efi_enabled(EFI_MEMMAP)) {
-> -               efi_fake_memmap();
-> -               efi_find_mirror();
-> -               efi_esrt_init();
-> +       efi_fake_memmap();
-> +       efi_find_mirror();
-> +       efi_esrt_init();
->
-> -               /*
-> -                * The EFI specification says that boot service code won't be
-> -                * called after ExitBootServices(). This is, in fact, a lie.
-> -                */
-> -               efi_reserve_boot_services();
-> -       }
-> +       /*
-> +        * The EFI specification says that boot service code won't be
-> +        * called after ExitBootServices(). This is, in fact, a lie.
-> +        */
-> +       efi_reserve_boot_services();
->
->         /* preallocate 4k for mptable mpc */
->         e820__memblock_alloc_reserved_mpc_new();
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index c202e1b07e29..0bb58eb33ca0 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -128,6 +128,9 @@ void __init efi_find_mirror(void)
->         efi_memory_desc_t *md;
->         u64 mirror_size = 0, total_size = 0;
->
-> +       if (!efi_enabled(EFI_MEMMAP))
-> +               return;
-> +
->         for_each_efi_memory_desc(md) {
->                 unsigned long long start = md->phys_addr;
->                 unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index 3b9fd679cea9..7675cf754d90 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -320,6 +320,9 @@ void __init efi_reserve_boot_services(void)
->  {
->         efi_memory_desc_t *md;
->
-> +       if (!efi_enabled(EFI_MEMMAP))
-> +               return;
-> +
->         for_each_efi_memory_desc(md) {
->                 u64 start = md->phys_addr;
->                 u64 size = md->num_pages << EFI_PAGE_SHIFT;
-> diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-> index d6dd5f503fa2..2762e0662bf4 100644
-> --- a/drivers/firmware/efi/esrt.c
-> +++ b/drivers/firmware/efi/esrt.c
-> @@ -246,6 +246,9 @@ void __init efi_esrt_init(void)
->         int rc;
->         phys_addr_t end;
->
-> +       if (!efi_enabled(EFI_MEMMAP))
-> +               return;
-> +
->         pr_debug("esrt-init: loading.\n");
->         if (!esrt_table_exists())
->                 return;
-> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> index 9501edc0fcfb..526b45331d96 100644
-> --- a/drivers/firmware/efi/fake_mem.c
-> +++ b/drivers/firmware/efi/fake_mem.c
-> @@ -44,7 +44,7 @@ void __init efi_fake_memmap(void)
->         void *new_memmap;
->         int i;
->
-> -       if (!nr_fake_mem)
-> +       if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
->                 return;
->
->         /* count up the number of EFI memory descriptor */
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index 5c1dd0221384..acc2b8982ed2 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1045,9 +1045,7 @@ extern void efi_enter_virtual_mode (void);        /* switch EFI to virtual mode, if pos
->  extern efi_status_t efi_query_variable_store(u32 attributes,
->                                              unsigned long size,
->                                              bool nonblocking);
-> -extern void efi_find_mirror(void);
->  #else
-> -
->  static inline efi_status_t efi_query_variable_store(u32 attributes,
->                                                     unsigned long size,
->                                                     bool nonblocking)
->
+Thanks!
+Christian
