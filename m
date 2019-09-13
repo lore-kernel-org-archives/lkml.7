@@ -2,139 +2,300 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598DFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8306820692
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk5cpSLU"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7CE20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404239AbfIMWzv (ORCPT
+        id S2404251AbfIMW6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:55:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38970 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404136AbfIMWzv (ORCPT
+        Fri, 13 Sep 2019 18:58:25 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:9308 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404136AbfIMW6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:55:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so16004384pgi.6;
-        Fri, 13 Sep 2019 15:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=YOCcCRxIOok9UtBu3w8ejvgK3qlwfhE9K+Ea2gPAAv0=;
-        b=mk5cpSLUe5Y0KZygPHuET8TK6k6kZKTY5KagXxP+yGlXUT/QZFWDJUHyZAxKQ8BZTN
-         sgF78zBrY6Xme4OBkdStHRSRwgCL/LqKtQhm0TMmMbsltjTATkzGVD2cXXcuILW6lLgt
-         JZ09rowccpokPp+CeosdwkCfPe9YiYZOlD6l+wH6joATYHx9B3RdyVGAXsl1/tZ5uAaA
-         9JrxAekyglJUz1aeFate6jRMKKfvHGEqVJ0/b5BPud0kPE9VUSHk4H3auC+NGcunqh3S
-         1e2KLEf9NXVZUKEGvsjABwwwvxv2c7i/w1pIWZ8IrBG7DfBUT08CPoMQAct/o/LEA6jt
-         naBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=YOCcCRxIOok9UtBu3w8ejvgK3qlwfhE9K+Ea2gPAAv0=;
-        b=gTdlcsDjapLrx3xS7FcjdtR2G0Q7Vp3CakYJUagGauClEFS4+CfRYNKdCXJ8mxmGS7
-         XbLuaIofXq8vl3ol5vjLX+xhJ+/ggiE/sSmK3PqLNcr1iPvqUey11CvsQYeqjBJVNkzr
-         qRq2YvgBScfv61FackkbSQh731IBa2Qr8u908q8FoSpE/8pmCmljFbdDdLFS2xh7mBs9
-         r6T1xdF3cX8hfKqbg8FoYJThadIEiWndN4lJs5nNTmFuTMA/GkB4fwNhwo3DOy36GVp4
-         KBkSPT2T/QtNhEKimLIhaXfh02E4dUDvWmJy6KZkJFGUPJ7tXSq+VBSeFB2Cu+XT68Oa
-         qjKA==
-X-Gm-Message-State: APjAAAXkwpA+CrviOXqzB1zSzSWAmtA0wSVGQqlwW2RDdYOKVmJ4PrlD
-        qL5zCaWm/4XaDYej+OFBjko=
-X-Google-Smtp-Source: APXvYqzgo4LlrwyTq3SfbfOBDlhDsuvtYDS9z7y+CB3dOdqhYYejNGEiXwmGU1SDChSFTKekLntO0w==
-X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr7477765pjr.127.1568415350048;
-        Fri, 13 Sep 2019 15:55:50 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 16sm633251pgp.23.2019.09.13.15.55.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 15:55:49 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 15:55:47 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: mdio: switch to using gpiod_get_optional()
-Message-ID: <20190913225547.GA106494@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Sep 2019 18:58:25 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Sep 2019 15:58:24 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 13 Sep 2019 15:58:23 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id D30BF4634; Fri, 13 Sep 2019 15:58:23 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>, kernel-team@android.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH 1/2] pwm: Add different PWM output types support
+Date:   Fri, 13 Sep 2019 15:57:43 -0700
+Message-Id: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MDIO device reset line is optional and now that gpiod_get_optional()
-returns proper value when GPIO support is compiled out, there is no
-reason to use fwnode_get_named_gpiod() that I plan to hide away.
+From: Fenglin Wu <fenglinw@codeaurora.org>
 
-Let's switch to using more standard gpiod_get_optional() and
-gpiod_set_consumer_name() to keep the nice "PHY reset" label.
+Normally, PWM channel has fixed output until software request to change
+its settings. There are some PWM devices which their outputs could be
+changed autonomously according to a predefined pattern programmed in
+hardware. Add pwm_output_type enum type to identify these two different
+PWM types and add relevant helper functions to set and get PWM output
+types and pattern.
 
-Also there is no reason to only try to fetch the reset GPIO when we have
-OF node, gpiolib can fetch GPIO data from firmwares as well.
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
+Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
+ drivers/pwm/core.c  | 26 ++++++++++++++++++++
+ drivers/pwm/sysfs.c | 50 ++++++++++++++++++++++++++++++++++++++
+ include/linux/pwm.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 146 insertions(+)
 
-Note this is an update to a patch titled "[PATCH 05/11] net: mdio:
-switch to using fwnode_gpiod_get_index()" that no longer uses the new
-proposed API and instead works with already existing ones.
-
- drivers/net/phy/mdio_bus.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index ce940871331e..2e29ab841b4d 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -42,21 +42,17 @@
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 8edfac1..960a451 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -282,6 +282,7 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
+ 		pwm->pwm = chip->base + i;
+ 		pwm->hwpwm = i;
+ 		pwm->state.polarity = polarity;
++		pwm->state.output_type = PWM_OUTPUT_FIXED;
  
- static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
- {
--	struct gpio_desc *gpiod = NULL;
-+	int error;
+ 		if (chip->ops->get_state)
+ 			chip->ops->get_state(chip, pwm, &pwm->state);
+@@ -498,6 +499,31 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
+ 			pwm->state.polarity = state->polarity;
+ 		}
  
- 	/* Deassert the optional reset signal */
--	if (mdiodev->dev.of_node)
--		gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
--					       "reset-gpios", 0, GPIOD_OUT_LOW,
--					       "PHY reset");
--	if (IS_ERR(gpiod)) {
--		if (PTR_ERR(gpiod) == -ENOENT || PTR_ERR(gpiod) == -ENOSYS)
--			gpiod = NULL;
--		else
--			return PTR_ERR(gpiod);
--	}
--
--	mdiodev->reset_gpio = gpiod;
-+	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
-+						 "reset", GPIOD_OUT_LOW);
-+	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
-+	if (error)
-+		return error;
++		if (state->output_type != pwm->state.output_type) {
++			if (!pwm->chip->ops->set_output_type)
++				return -ENOTSUPP;
 +
-+	if (mdiodev->reset_gpio)
-+		gpiod_set_consumer_name(mdiodev->reset_gpio, "PHY reset");
- 
- 	return 0;
++			err = pwm->chip->ops->set_output_type(pwm->chip, pwm,
++						state->output_type);
++			if (err)
++				return err;
++
++			pwm->state.output_type = state->output_type;
++		}
++
++		if (state->output_pattern != pwm->state.output_pattern &&
++				state->output_pattern != NULL) {
++			if (!pwm->chip->ops->set_output_pattern)
++				return -ENOTSUPP;
++
++			err = pwm->chip->ops->set_output_pattern(pwm->chip,
++					pwm, state->output_pattern);
++			if (err)
++				return err;
++
++			pwm->state.output_pattern = state->output_pattern;
++		}
++
+ 		if (state->period != pwm->state.period ||
+ 		    state->duty_cycle != pwm->state.duty_cycle) {
+ 			err = pwm->chip->ops->config(pwm->chip, pwm,
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 2389b86..ab703f2 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -215,11 +215,60 @@ static ssize_t capture_show(struct device *child,
+ 	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
  }
+ 
++static ssize_t output_type_show(struct device *child,
++			     struct device_attribute *attr,
++			     char *buf)
++{
++	const struct pwm_device *pwm = child_to_pwm_device(child);
++	const char *output_type = "unknown";
++	struct pwm_state state;
++
++	pwm_get_state(pwm, &state);
++	switch (state.output_type) {
++	case PWM_OUTPUT_FIXED:
++		output_type = "fixed";
++		break;
++	case PWM_OUTPUT_MODULATED:
++		output_type = "modulated";
++		break;
++	default:
++		break;
++	}
++
++	return snprintf(buf, PAGE_SIZE, "%s\n", output_type);
++}
++
++static ssize_t output_type_store(struct device *child,
++			      struct device_attribute *attr,
++			      const char *buf, size_t size)
++{
++	struct pwm_export *export = child_to_pwm_export(child);
++	struct pwm_device *pwm = export->pwm;
++	struct pwm_state state;
++	int ret = -EINVAL;
++
++	mutex_lock(&export->lock);
++	pwm_get_state(pwm, &state);
++	if (sysfs_streq(buf, "fixed"))
++		state.output_type = PWM_OUTPUT_FIXED;
++	else if (sysfs_streq(buf, "modulated"))
++		state.output_type = PWM_OUTPUT_MODULATED;
++	else
++		goto unlock;
++
++	ret = pwm_apply_state(pwm, &state);
++unlock:
++	mutex_unlock(&export->lock);
++
++	return ret ? : size;
++}
++
+ static DEVICE_ATTR_RW(period);
+ static DEVICE_ATTR_RW(duty_cycle);
+ static DEVICE_ATTR_RW(enable);
+ static DEVICE_ATTR_RW(polarity);
+ static DEVICE_ATTR_RO(capture);
++static DEVICE_ATTR_RW(output_type);
+ 
+ static struct attribute *pwm_attrs[] = {
+ 	&dev_attr_period.attr,
+@@ -227,6 +276,7 @@ static ssize_t capture_show(struct device *child,
+ 	&dev_attr_enable.attr,
+ 	&dev_attr_polarity.attr,
+ 	&dev_attr_capture.attr,
++	&dev_attr_output_type.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(pwm);
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 24632a7..416f08e 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -48,6 +48,29 @@ enum {
+ 	PWMF_EXPORTED = 1 << 1,
+ };
+ 
++/**
++ * enum pwm_output_type - output type of the PWM signal
++ * @PWM_OUTPUT_FIXED: PWM output is fixed until a change request
++ * @PWM_OUTPUT_MODULATED: PWM output is modulated in hardware
++ * autonomously with a predefined pattern
++ */
++enum pwm_output_type {
++	PWM_OUTPUT_FIXED = 1 << 0,
++	PWM_OUTPUT_MODULATED = 1 << 1,
++};
++
++/**
++ * struct pwm_output_pattern - PWM duty pattern for MODULATED duty type
++ * @duty_pattern: PWM duty cycles in the pattern for duty modulation
++ * @num_entries: number of entries in the pattern
++ * @cycles_per_duty: number of PWM period cycles an entry stays at
++ */
++struct pwm_output_pattern {
++	unsigned int *duty_pattern;
++	unsigned int num_entries;
++	unsigned int cycles_per_duty;
++};
++
+ /*
+  * struct pwm_state - state of a PWM channel
+  * @period: PWM period (in nanoseconds)
+@@ -59,6 +82,8 @@ struct pwm_state {
+ 	unsigned int period;
+ 	unsigned int duty_cycle;
+ 	enum pwm_polarity polarity;
++	enum pwm_output_type output_type;
++	struct pwm_output_pattern *output_pattern;
+ 	bool enabled;
+ };
+ 
+@@ -144,6 +169,26 @@ static inline enum pwm_polarity pwm_get_polarity(const struct pwm_device *pwm)
+ 	return state.polarity;
+ }
+ 
++static inline enum pwm_output_type pwm_get_output_type(
++		const struct pwm_device *pwm)
++{
++	struct pwm_state state;
++
++	pwm_get_state(pwm, &state);
++
++	return state.output_type;
++}
++
++static inline struct pwm_output_pattern *pwm_get_output_pattern(
++				struct pwm_device *pwm)
++{
++	struct pwm_state state;
++
++	pwm_get_state(pwm, &state);
++
++	return pwm->state.output_pattern ?: NULL;
++}
++
+ static inline void pwm_get_args(const struct pwm_device *pwm,
+ 				struct pwm_args *args)
+ {
+@@ -250,6 +295,9 @@ static inline void pwm_init_state(const struct pwm_device *pwm,
+  * @get_state: get the current PWM state. This function is only
+  *	       called once per PWM device when the PWM chip is
+  *	       registered.
++ * @get_output_type_supported: get the supported output type
++ * @set_output_type: set PWM output type
++ * @set_output_pattern: set the pattern for the modulated output
+  * @owner: helps prevent removal of modules exporting active PWMs
+  * @config: configure duty cycles and period length for this PWM
+  * @set_polarity: configure the polarity of this PWM
+@@ -265,6 +313,13 @@ struct pwm_ops {
+ 		     struct pwm_state *state);
+ 	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  struct pwm_state *state);
++	int (*get_output_type_supported)(struct pwm_chip *chip,
++			struct pwm_device *pwm);
++	int (*set_output_type)(struct pwm_chip *chip, struct pwm_device *pwm,
++			enum pwm_output_type output_type);
++	int (*set_output_pattern)(struct pwm_chip *chip,
++			struct pwm_device *pwm,
++			struct pwm_output_pattern *output_pattern);
+ 	struct module *owner;
+ 
+ 	/* Only used by legacy drivers */
+@@ -320,6 +375,21 @@ struct pwm_capture {
+ int pwm_adjust_config(struct pwm_device *pwm);
+ 
+ /**
++ * pwm_output_type_support()
++ * @pwm: PWM device
++ *
++ * Returns:  output types supported by the PWM device
++ */
++static inline int pwm_get_output_type_supported(struct pwm_device *pwm)
++{
++	if (pwm->chip->ops->get_output_type_supported != NULL)
++		return pwm->chip->ops->get_output_type_supported(pwm->chip,
++				pwm);
++	else
++		return PWM_OUTPUT_FIXED;
++}
++
++/**
+  * pwm_config() - change a PWM device configuration
+  * @pwm: PWM device
+  * @duty_ns: "on" time (in nanoseconds)
 -- 
-2.23.0.237.gc6a4ce50a0-goog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-
--- 
-Dmitry
