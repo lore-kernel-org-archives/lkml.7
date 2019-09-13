@@ -2,105 +2,150 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA158C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59654C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB0820717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318D0214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dJzYZ3B+"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Sqj8nI8N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbfIMJz5 (ORCPT
+        id S2388035AbfIMKBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:55:57 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38771 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387588AbfIMJz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:55:57 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h17so25053646otn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UMQYVHEWLYiHDyJ6nTZFM9bO2lcGE6JPb6li8qp7+Vk=;
-        b=dJzYZ3B+/+gdgBIxCnf0X6itRvlfNcX7If2XgYPo5Ssp7hdAepbogmTZly9CF/3YaU
-         lJE6KuYWAxZYeSG8Ti8SOEg0Bc0mrcXVMo7eNZuiUel54x/TFKXkg6Viw9w2U/J/BYCP
-         hYscKPhgytjFQTDbt1ZajAMSP+ZI4tGFtwGUM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UMQYVHEWLYiHDyJ6nTZFM9bO2lcGE6JPb6li8qp7+Vk=;
-        b=myZo4lSWb9BEQP8nmTpVT/ylcI57AaCNbiJp8mdUGbgzyCEtpk2yRp/Hxitjrf++a7
-         kvQDJSDU18NpE/Hh/EEQmcDB5ksDE4TMwXtF2ONbVuDNyJjVpsthC1Wcr0F3wEefUlQK
-         1b+pW9LRR+XFt4iG+Gw1MLsGQXx/DtNSmiN+GMbnGrVTSS/BFyYU82TDkOoaYnD+MilM
-         bYnIUeHW8qsPXwDJnlVX8Ialc+fZw6d2B/wIKy749mAWfT2ql6lYYv3eLKhvO2USry8W
-         /XH8y4XzlY9kijODLREpCba7sE+C/orPjP+u9LKW2eg0upTyRYoqKle6UoMg+os1wutp
-         4TLQ==
-X-Gm-Message-State: APjAAAXXwUZgU5xn7AH1CfrkPvsnXfPeitSMojdkJj6FPzuCg6aiaV1t
-        CGXRpMLizODwBdqs2k06cCMMygw6KqbT84y9Zs/4jA==
-X-Google-Smtp-Source: APXvYqw+1a84R4pBtZm3Y54xxn1FobvFYUznqgrUfd5/p6M55wi73uijrk14i87/KA7+sR2LmnCkMGF2HZR7ArTo1Co=
-X-Received: by 2002:a9d:37c7:: with SMTP id x65mr37287063otb.47.1568368556464;
- Fri, 13 Sep 2019 02:55:56 -0700 (PDT)
+        Fri, 13 Sep 2019 06:01:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60145 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387427AbfIMKBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 06:01:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46VB3f0pVyz9tyjW;
+        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Sqj8nI8N; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wR-kri8FtY2Q; Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46VB3d6fTQz9tyjG;
+        Fri, 13 Sep 2019 12:01:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568368861; bh=2ALza02n3A6CEg96aj5aMUr3JRGvxRxQLYEMFbFE/UU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Sqj8nI8NzbdvtlrbtrCYNcrM/TyIHT3s84kxgzLuc1bHrWIX3+Flnk1NoUeSpiScl
+         UtPpympvmV9LviqGRUz/Z7JinvogKFhxB4Hnk01VKvvK3cYgxdyYZdocRhBX7zGS2q
+         RYCcqoehg9GVxm+zOPGaVX3kpe6owDPMAy/ACXJk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F0DC88B982;
+        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id fVVtef9u6zrS; Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 95ADA8B958;
+        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+ <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+ <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
+ <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
+Date:   Fri, 13 Sep 2019 12:01:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190911092856.11146-1-colin.king@canonical.com> <20190912150957.GA9160@mellanox.com>
-In-Reply-To: <20190912150957.GA9160@mellanox.com>
-From:   Selvin Xavier <selvin.xavier@broadcom.com>
-Date:   Fri, 13 Sep 2019 15:25:45 +0530
-Message-ID: <CA+sbYW1MWTBa-yG+Z2Z5KwZGfwRTOdLpzL64fE35OEeGrPbgeQ@mail.gmail.com>
-Subject: Re: [PATCH] RDMA/bnxt_re: fix spelling mistake "missin_resp" -> "missing_resp"
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 8:40 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Wed, Sep 11, 2019 at 10:28:56AM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > There is a spelling mistake in a literal string, fix it.
-> >
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/infiniband/hw/bnxt_re/hw_counters.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/infiniband/hw/bnxt_re/hw_counters.c b/drivers/infiniband/hw/bnxt_re/hw_counters.c
-> > index 604b71875f5f..3421a0b15983 100644
-> > --- a/drivers/infiniband/hw/bnxt_re/hw_counters.c
-> > +++ b/drivers/infiniband/hw/bnxt_re/hw_counters.c
-> > @@ -74,7 +74,7 @@ static const char * const bnxt_re_stat_name[] = {
-> >       [BNXT_RE_SEQ_ERR_NAKS_RCVD]     = "seq_err_naks_rcvd",
-> >       [BNXT_RE_MAX_RETRY_EXCEEDED]    = "max_retry_exceeded",
-> >       [BNXT_RE_RNR_NAKS_RCVD]         = "rnr_naks_rcvd",
-> > -     [BNXT_RE_MISSING_RESP]          = "missin_resp",
-> > +     [BNXT_RE_MISSING_RESP]          = "missing_resp",
->
-> Broadcom folks, can you confirm if this is OK? Is the string ABI for
-> this driver?
->
 
- bnxt_re doesn't have a string ABI.
-This is a spelling mistake while posting the patch and it is okay to
-merge this patch.
 
-Thanks
-Acked-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Le 13/09/2019 à 11:02, Anshuman Khandual a écrit :
+> 
+>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
+>>
+>> #ifdefs have to be avoided as much as possible, see below
+> 
+> Yeah but it has been bit difficult to avoid all these $ifdef because of the
+> availability (or lack of it) for all these pgtable helpers in various config
+> combinations on all platforms.
+
+As far as I can see these pgtable helpers should exist everywhere at 
+least via asm-generic/ files.
+
+Can you spot a particular config which fails ?
+
+> 
+>>
+
+[...]
+
+>>> +#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
+>>
+>> The same can be done here.
+> 
+> IIRC not only the page table helpers but there are data types (pxx_t) which
+> were not present on various configs and these wrappers help prevent build
+> failures. Any ways will try and see if this can be improved further. But
+> meanwhile if you have some suggestions, please do let me know.
+
+pgt_t and pmd_t are everywhere I guess.
+then pud_t and p4d_t have fallbacks in asm-generic files.
+
+So it shouldn't be an issue. Maybe if a couple of arches miss them, the 
+best would be to fix the arches, since that's the purpose of your 
+testsuite isn't it ?
+
+
+Christophe
