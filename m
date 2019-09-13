@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3D3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03322C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8BF20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BF1206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380436;
-	bh=gefNbHmOak9H16F1TzmWs7MZQQw1Ok0+B6RFIQ4rio4=;
+	s=default; t=1568380438;
+	bh=VM9gZTOqYFhqgMLCQXm93qWHgPVp58xi3KhFJpgjjYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cnmwesSIrgdYCeKSQ0u9QLoNfAMTLfIDYNl88DcHrIxHVpW1WirrwB8kFrjo/Ii77
-	 QK2kurMQ02C+VxOIFK6PxmILyZVChU/jkpL9joV65r1LSFlcmL9uRQYawPQQT2pg21
-	 +pfwO4nodtE1Eq2WCUUpaFQ3LVs4Y6nD06I4HqnU=
+	b=yUB/NmXgZfjOX/ANaDY/6zcCHj4em+6PczCpTRFjFmoOGDObn3/TBv7pRUGO/qZMh
+	 f3i5CvuYKp1/9STPEsNJOGmfBH4bLGSgMBSU8JdY9X+8Hp88HTQSG3AgNtvpYdd+Lm
+	 E1lp2+7EibQWoC76NwlkMZk6hwHbTn1InyBR57to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389425AbfIMNNz (ORCPT
+        id S2389434AbfIMNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:13:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389400AbfIMNNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:52 -0400
+        id S2389423AbfIMNNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:55 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55BE9214AE;
-        Fri, 13 Sep 2019 13:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F974206BB;
+        Fri, 13 Sep 2019 13:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380431;
-        bh=gefNbHmOak9H16F1TzmWs7MZQQw1Ok0+B6RFIQ4rio4=;
+        s=default; t=1568380435;
+        bh=VM9gZTOqYFhqgMLCQXm93qWHgPVp58xi3KhFJpgjjYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oMwNjxkCGM2/Q92rNwEgdbzLZyjuZvyIE3ixwAoJE559vV+vK2yacEuGV7NmEz3I3
-         rlvv/3EKqHklovzdZym7/hkJSLm1ln4TRzef0fvLhxbdYsXN2IsFuq2ibjhj0eJgei
-         KYdeqOc+hovYBkqHAc669Gu+pNON0RakiAgmichQ=
+        b=nHOl4zUAYFHe7RbMFz0jA403nK5PNdGsGNQlESXQWGyj9MsQkR9LuV8uSk+PRJZsk
+         xoQV8vk2keos5Kf1cE9R39yqeGrwAVeKbus5YC7kMEPlhOoo+WfVPquqJl44ZcTs6Z
+         RNrb4yNHaWckVw0q85JpxJWkdmBC+CZCOfh2bM8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/190] drm/i915: Restore sane defaults for KMS on GEM error load
-Date:   Fri, 13 Sep 2019 14:05:17 +0100
-Message-Id: <20190913130604.720362445@linuxfoundation.org>
+Subject: [PATCH 4.19 063/190] drm/i915: Cleanup gt powerstate from gem
+Date:   Fri, 13 Sep 2019 14:05:18 +0100
+Message-Id: <20190913130604.799129279@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,53 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ed43df720c007d60bee6d81da07bcdc7e4a55ae ]
+[ Upstream commit 30b710840e4b9c9699d3d4b33fb19ad8880d4614 ]
 
-If we fail during GEM initialisation, we scrub the HW state by
-performing a device level GPU resuet. However, we want to leave the
-system in a usable state (with functioning KMS but no GEM) so after
-scrubbing the HW state, we need to restore some sane defaults and
-re-enable the low-level common parts of the GPU (such as the GMCH).
-
-v2: Restore GTT entries.
+Since the gt powerstate is allocated by i915_gem_init, clean it from
+i915_gem_fini for symmetry and to correct the imbalance on error.
 
 Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180726085033.4044-2-chris@chris-wilson.co.uk
-Reviewed-by: Michał Winiarski <michal.winiarski@intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180812223642.24865-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/i915_gem.c      | 3 +++
+ drivers/gpu/drm/i915/intel_display.c | 4 ----
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index 03cda197fb6b8..5019dfd8bcf16 100644
+index 5019dfd8bcf16..e81abd468a15d 100644
 --- a/drivers/gpu/drm/i915/i915_gem.c
 +++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -5595,6 +5595,8 @@ err_uc_misc:
- 		i915_gem_cleanup_userptr(dev_priv);
+@@ -5624,6 +5624,7 @@ err_uc_misc:
+ void i915_gem_fini(struct drm_i915_private *dev_priv)
+ {
+ 	i915_gem_suspend_late(dev_priv);
++	intel_disable_gt_powersave(dev_priv);
  
- 	if (ret == -EIO) {
-+		mutex_lock(&dev_priv->drm.struct_mutex);
-+
- 		/*
- 		 * Allow engine initialisation to fail by marking the GPU as
- 		 * wedged. But we only want to do this where the GPU is angry,
-@@ -5605,7 +5607,14 @@ err_uc_misc:
- 					"Failed to initialize GPU, declaring it wedged!\n");
- 			i915_gem_set_wedged(dev_priv);
- 		}
--		ret = 0;
-+
-+		/* Minimal basic recovery for KMS */
-+		ret = i915_ggtt_enable_hw(dev_priv);
-+		i915_gem_restore_gtt_mappings(dev_priv);
-+		i915_gem_restore_fences(dev_priv);
-+		intel_init_clock_gating(dev_priv);
-+
-+		mutex_unlock(&dev_priv->drm.struct_mutex);
- 	}
+ 	/* Flush any outstanding unpin_work. */
+ 	i915_gem_drain_workqueue(dev_priv);
+@@ -5635,6 +5636,8 @@ void i915_gem_fini(struct drm_i915_private *dev_priv)
+ 	i915_gem_contexts_fini(dev_priv);
+ 	mutex_unlock(&dev_priv->drm.struct_mutex);
  
- 	i915_gem_drain_freed_objects(dev_priv);
++	intel_cleanup_gt_powersave(dev_priv);
++
+ 	intel_uc_fini_misc(dev_priv);
+ 	i915_gem_cleanup_userptr(dev_priv);
+ 
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index 2622dfc7d2d9a..6902fd2da19ca 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -15972,8 +15972,6 @@ void intel_modeset_cleanup(struct drm_device *dev)
+ 	flush_work(&dev_priv->atomic_helper.free_work);
+ 	WARN_ON(!llist_empty(&dev_priv->atomic_helper.free_list));
+ 
+-	intel_disable_gt_powersave(dev_priv);
+-
+ 	/*
+ 	 * Interrupts and polling as the first thing to avoid creating havoc.
+ 	 * Too much stuff here (turning of connectors, ...) would
+@@ -16001,8 +15999,6 @@ void intel_modeset_cleanup(struct drm_device *dev)
+ 
+ 	intel_cleanup_overlay(dev_priv);
+ 
+-	intel_cleanup_gt_powersave(dev_priv);
+-
+ 	intel_teardown_gmbus(dev_priv);
+ 
+ 	destroy_workqueue(dev_priv->modeset_wq);
 -- 
 2.20.1
 
