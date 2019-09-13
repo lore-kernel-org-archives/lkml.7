@@ -2,160 +2,125 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF0FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F3C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18067208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380154;
-	bh=ydzIOBiXIBgdpbpgmY1JCyGV9IWLVPXAs6DNBpZ7IhM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Mm6MWLKx3yBGDzghaaezsi9TtqP4W8V/n6DGChkWnTurTSBz0A7aUN7QaO4GIhfee
-	 AYbTHJH2DvFDVlB/byJszR5j5ywX/qTf8DfyeB9iVVoXR7BswQZpQEa0zv5BBicUm9
-	 nynm9y35rt1Pflf7aW6ObiBwrcxydgI6tmimZVew=
+	s=default; t=1568380157;
+	bh=TgW3QEobgITHxpQo0bHKSbnp5YfPFBsgG5ek//Jxuc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2h8+ghxR4lQzbBrMcAsUdRBYDSDG/D7L1vWx1Lv/dd+TIrm1KR58mSLN13NelI+w5
+	 Vj1ufsRc6DWhEyvVooeR0eXh8jAvPHdtgLa5r5nK87V0pEuRbOcIh/Brl2Q2nREDaL
+	 wvGXX9qBrRvm0V2mk/KxhBJ/Xjgmgz9TQDLtfles=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfIMNJN (ORCPT
+        id S2388470AbfIMNJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33640 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388444AbfIMNJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:10 -0400
+        id S2388450AbfIMNJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:12 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBF142089F;
-        Fri, 13 Sep 2019 13:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4AAD214DA;
+        Fri, 13 Sep 2019 13:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380148;
-        bh=ydzIOBiXIBgdpbpgmY1JCyGV9IWLVPXAs6DNBpZ7IhM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rqfh+To34JjPq/87DRgpkabgsxlcx13sG3hb0avcaLtJnNWACqMNVqR0rCQLOuCKv
-         ncZdQhNgcJdL53Dw9RItnqidhyd02ou17m/+7edDfg2zY3q+yxBfu67IzNGzFVHRpf
-         aY3SZwiZK+DVgR6wl3nTODxIti1IKNmxHSVctEeE=
+        s=default; t=1568380151;
+        bh=TgW3QEobgITHxpQo0bHKSbnp5YfPFBsgG5ek//Jxuc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DXfoW8rR4dZaFkhLE4522h+qesvX1Ij2CbI21WK8Lh52s0eKIUORct/HfNs+2lMEz
+         WV5D1MTgtFR39F3ihJbpEsUA9PY9kFud8YOvkhntG6MUawOkmJCYE2Xsfj8PJ8lFPr
+         ZHRgfPVChH4cpVQLQ2Cq4Vrs6DBsEF2Ryd0ZUwv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/14] 4.9.193-stable review
-Date:   Fri, 13 Sep 2019 14:06:53 +0100
-Message-Id: <20190913130440.264749443@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 02/14] ALSA: hda/realtek - Fix overridden device-specific initialization
+Date:   Fri, 13 Sep 2019 14:06:55 +0100
+Message-Id: <20190913130442.986600903@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
+References: <20190913130440.264749443@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.193-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.193-rc1
-X-KernelTest-Deadline: 2019-09-15T13:04+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.193 release.
-There are 14 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Takashi Iwai <tiwai@suse.de>
 
-Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-Anything received after that time might be too late.
+commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.193-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+The recent change to shuffle the codec initialization procedure for
+Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
+later") caused the silent output on some machines.  This change was
+supposed to be safe, but it isn't actually; some devices have quirk
+setups to override the EAPD via COEF or BTL in the additional verb
+table, which is applied at the beginning of snd_hda_gen_init().  And
+this EAPD setup is again overridden in alc_auto_init_amp().
 
-thanks,
+For recovering from the regression, tell snd_hda_gen_init() not to
+apply the verbs there by a new flag, then apply the verbs in
+alc_init().
 
-greg k-h
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
+Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------------
-Pseudo-Shortlog of commits:
+---
+ sound/pci/hda/hda_generic.c   |    3 ++-
+ sound/pci/hda/hda_generic.h   |    1 +
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.193-rc1
-
-yongduan <yongduan@tencent.com>
-    vhost: make sure log_num < in_num
-
-Michael S. Tsirkin <mst@redhat.com>
-    vhost: block speculation of translated descriptors
-
-Nathan Chancellor <natechancellor@gmail.com>
-    clk: s2mps11: Add used attribute to s2mps11_dt_match
-
-Nicolas Boichat <drinkcat@chromium.org>
-    scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Only read OGM tvlv_len after buffer len check
-
-Eric Dumazet <edumazet@google.com>
-    batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-
-Tiwei Bie <tiwei.bie@intel.com>
-    vhost/test: fix build for vhost test
-
-Eric Dumazet <edumazet@google.com>
-    ip6: fix skb leak in ip6frag_expire_frag_queue()
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    xfrm: clean up xfrm protocol checks
-
-Gustavo Romero <gromero@linux.ibm.com>
-    powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    drm/vmwgfx: Fix double free in vmw_recv_msg()
-
-Liangyan <liangyan.peng@linux.alibaba.com>
-    sched/fair: Don't assign runtime for throttled cfs_rq
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda/realtek - Fix overridden device-specific initialization
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda - Fix potential endless loop at applying quirks
-
-
--------------
-
-Diffstat:
-
- Makefile                            |  4 ++--
- arch/powerpc/kernel/process.c       |  3 ++-
- drivers/clk/clk-s2mps11.c           |  2 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c |  8 +++-----
- drivers/vhost/test.c                | 13 +++++++++----
- drivers/vhost/vhost.c               | 10 ++++++----
- include/net/ipv6_frag.h             |  1 -
- include/net/xfrm.h                  | 17 +++++++++++++++++
- kernel/sched/fair.c                 |  5 +++++
- net/batman-adv/bat_iv_ogm.c         | 20 +++++++++++++-------
- net/batman-adv/netlink.c            |  2 +-
- net/key/af_key.c                    |  4 +++-
- net/xfrm/xfrm_state.c               |  2 +-
- net/xfrm/xfrm_user.c                | 14 +-------------
- scripts/decode_stacktrace.sh        |  2 +-
- sound/pci/hda/hda_auto_parser.c     |  4 ++--
- sound/pci/hda/hda_generic.c         |  3 ++-
- sound/pci/hda/hda_generic.h         |  1 +
- sound/pci/hda/patch_realtek.c       |  2 ++
- 19 files changed, 72 insertions(+), 45 deletions(-)
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -5807,7 +5807,8 @@ int snd_hda_gen_init(struct hda_codec *c
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
+ 
+-	snd_hda_apply_verbs(codec);
++	if (!spec->skip_verbs)
++		snd_hda_apply_verbs(codec);
+ 
+ 	init_multi_out(codec);
+ 	init_extra_out(codec);
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -236,6 +236,7 @@ struct hda_gen_spec {
+ 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
+ 	unsigned int have_aamix_ctl:1;
+ 	unsigned int hp_mic_jack_modes:1;
++	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
+ 
+ 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
+ 	u64 mute_bits;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -773,9 +773,11 @@ static int alc_init(struct hda_codec *co
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
+ 
++	spec->gen.skip_verbs = 1; /* applied in below */
+ 	snd_hda_gen_init(codec);
+ 	alc_fix_pll(codec);
+ 	alc_auto_init_amp(codec, spec->init_amp);
++	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
+ 
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
 
 
