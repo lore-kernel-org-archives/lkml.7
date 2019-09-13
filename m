@@ -2,124 +2,97 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CEEC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD13C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9359E20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j391YvrW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LPFidS2T"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA8F2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568385992;
+	bh=J5xCS6qDfWqX/oR/dT/1Krr6MkClnbbp6RqL+ShUXQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ujcdkwS6HQS3yXYuLRz9pEjqU/w9rrlpBM0XmFakCWrSq2unYhQvGMfESQShLIEPT
+	 4PXR7tJ3DjL45ygUOMiWOK++ANOthVGI3NO/vUe+WyYWEJeRswLa+kZSnggXh3lGb9
+	 224eiJqrC6TWFH+SvfhB6FhXG+fGiLAX+ZYuhXhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfIMOox (ORCPT
+        id S2388386AbfIMOqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:44:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59956 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729911AbfIMOow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:44:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2DE4A6133A; Fri, 13 Sep 2019 14:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568385891;
-        bh=6Sd2dpM9HRfzA5DVteOBc7URO2Jumcbqg21Ygsai7AI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j391YvrWswsDCumcZGnjL/lCSbKAolYn/m0WClXGjil62VBsEwPR1e7q9HhIv57CS
-         DorROLMtEn7hfajc/9E/BtANly54sJNKe90lM5jOqJUEf91IOaSEGyRX2h3TkYIP4V
-         GQT7I+eTCHgGPgbXKsB2niWVRT6FdWSuwlyk/zAc=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 13 Sep 2019 10:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388244AbfIMOqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:46:31 -0400
+Received: from localhost (195-23-252-136.net.novis.pt [195.23.252.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E506A614DC;
-        Fri, 13 Sep 2019 14:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568385887;
-        bh=6Sd2dpM9HRfzA5DVteOBc7URO2Jumcbqg21Ygsai7AI=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5411B20693;
+        Fri, 13 Sep 2019 14:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568385990;
+        bh=J5xCS6qDfWqX/oR/dT/1Krr6MkClnbbp6RqL+ShUXQ4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LPFidS2TnVseHQyypdlOaG9GMQBwBr5Z2BeRpxtAVnRdfdTBb6jhAH/egQaqNvRIZ
-         HecTdMjWjY0B7RL+zzEEtM2p3b5i5GTh+FQy10oKkahFLdhc4DMghMSfDb2AbwUwxA
-         AKJ1bWN2P/Fk0FCq9ECNgJaeVoX1/Ej9KdoBf2e8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E506A614DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 13 Sep 2019 08:44:45 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Dong Aisheng <aisheng.dong@nxp.com>
-Subject: Re: [PATCH] clk: Make clk_bulk_get_all() return a valid "id"
-Message-ID: <20190913144444.GA25762@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Dong Aisheng <aisheng.dong@nxp.com>
-References: <20190913024029.2640-1-bjorn.andersson@linaro.org>
+        b=qKf1IuthaIjCB+zSvask72TPeBzRFN8Ar5q/TDdAxFErkCDtaxsXaJ1TWNTPIq/im
+         oOQ6BFWJohGM+8q9q7obhn+kZwljstP3SdPxiX4E00PnKa2ykv330kpfrXMiGwldXu
+         nu1toTtSNJ/FacVeCW4muLpnHjq98kmPEf/MoRQI=
+Date:   Fri, 13 Sep 2019 10:46:27 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "# 3.9+" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
+ failures
+Message-ID: <20190913144627.GH1546@sasha-vm>
+References: <20190913130559.669563815@linuxfoundation.org>
+ <20190913130606.981926197@linuxfoundation.org>
+ <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190913024029.2640-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 07:40:29PM -0700, Bjorn Andersson wrote:
-> The adreno driver expects the "id" field of the returned clk_bulk_data
-> to be filled in with strings from the clock-names property.
-> 
-> But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
-> receives a list of bogus pointers instead.
-> 
-> Zero-initialize the "id" field and attempt to populate with strings from
-> the clock-names property to resolve both these issues.
+On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
+>Hi Greg,
+>
+>This feels like it's missing a From: line.
+>
+>commit b513a18cf1d705bd04efd91c417e79e4938be093
+>Author: Lyude Paul <lyude@redhat.com>
+>Date:   Mon Jan 28 16:03:50 2019 -0500
+>
+>    drm/nouveau: Don't WARN_ON VCPI allocation failures
+>
+>Is this an artifact of your notification-of-patches process and I
+>never noticed before, or was the patch ingested incorrectly?
 
-This looks great to me.  Thanks for fixing that so quickly.
+It was always like this for patches that came through me. Greg's script
+generates an explicit "From:" line in the patch, but I never saw the
+value in that since git does the right thing by looking at the "From:"
+line in the mail header.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+The right thing is being done in stable-rc and for the releases. For
+your example here, this is how it looks like in the stable-rc tree:
 
-> Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
-> Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
-> Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> Cc: Jordan Crouse <jcrouse@codeaurora.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/clk/clk-bulk.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
-> index 524bf9a53098..e9e16425c739 100644
-> --- a/drivers/clk/clk-bulk.c
-> +++ b/drivers/clk/clk-bulk.c
-> @@ -18,10 +18,13 @@ static int __must_check of_clk_bulk_get(struct device_node *np, int num_clks,
->  	int ret;
->  	int i;
->  
-> -	for (i = 0; i < num_clks; i++)
-> +	for (i = 0; i < num_clks; i++) {
-> +		clks[i].id = NULL;
->  		clks[i].clk = NULL;
-> +	}
->  
->  	for (i = 0; i < num_clks; i++) {
-> +		of_property_read_string_index(np, "clock-names", i, &clks[i].id);
->  		clks[i].clk = of_clk_get(np, i);
->  		if (IS_ERR(clks[i].clk)) {
->  			ret = PTR_ERR(clks[i].clk);
-> -- 
-> 2.18.0
-> 
+commit bdcc885be68289a37d0d063cd94390da81fd8178
+Author:     Lyude Paul <lyude@redhat.com>
+AuthorDate: Mon Jan 28 16:03:50 2019 -0500
+Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CommitDate: Fri Sep 13 14:05:29 2019 +0100
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+    drm/nouveau: Don't WARN_ON VCPI allocation failures
+
+--
+Thanks,
+Sasha
