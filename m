@@ -2,162 +2,69 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D55AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A5EC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0469C2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OXEeSKtT"
+	by mail.kernel.org (Postfix) with ESMTP id D3A1721479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390591AbfIMNuK (ORCPT
+        id S2391458AbfIMNuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:50:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42920 "EHLO pegase1.c-s.fr"
+        Fri, 13 Sep 2019 09:50:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7151 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389605AbfIMNuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:50:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46VH7y4BkPz9tyvW;
-        Fri, 13 Sep 2019 15:50:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OXEeSKtT; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id osjH1kJuymNT; Fri, 13 Sep 2019 15:50:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46VH7y346Xz9tyvV;
-        Fri, 13 Sep 2019 15:50:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568382606; bh=w5gDiJYbm6ym4Is5cBmgroys7GecIjnbIsMkXf8oP58=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OXEeSKtT1GRDzM0QUmViYezMQdrYwYIg6L4QGCgqCdbV/Cp53DrPMu2QBhPXZYKcv
-         uk7RzgAT1RlJIKzm/Ci1ihGGNPqryOYQyctzNpj6W04KO6AATrSZsATxt6f6tPc6ae
-         T2jjlGFmGBxNm8vaUdnSflyk74GysL6Rbmbsxvzk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E48F88BB07;
-        Fri, 13 Sep 2019 15:50:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GFEzWtWycXeb; Fri, 13 Sep 2019 15:50:07 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B8C8E8BA91;
-        Fri, 13 Sep 2019 15:50:07 +0200 (CEST)
-Subject: Re: [PATCH v2 4/8] powerpc/vdso32: inline __get_datapage()
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1566491310.git.christophe.leroy@c-s.fr>
- <194fb7bc973ef2ce43016c97dd32f2b2dcbae4e7.1566491310.git.christophe.leroy@c-s.fr>
- <87h864iiq9.fsf@santosiv.in.ibm.com>
- <a95c4a58-bc59-3e75-46db-414f6d0f1412@c-s.fr>
- <87blvonwzz.fsf@santosiv.in.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <559296a2-37f6-dc83-7f60-07567637a9a8@c-s.fr>
-Date:   Fri, 13 Sep 2019 15:50:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2388639AbfIMNuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:50:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 06:50:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="176286060"
+Received: from ltudorx-wtg.ger.corp.intel.com (HELO localhost) ([10.252.37.39])
+  by orsmga007.jf.intel.com with ESMTP; 13 Sep 2019 06:50:14 -0700
+Date:   Fri, 13 Sep 2019 14:50:11 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Call tpm_put_ops() when the validation for @digests
+ fails
+Message-ID: <20190913135011.GH7412@linux.intel.com>
+References: <20190910142437.20889-1-jarkko.sakkinen@linux.intel.com>
+ <20190910151121.3tgzwuhrroog5dvb@cantor>
 MIME-Version: 1.0
-In-Reply-To: <87blvonwzz.fsf@santosiv.in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910151121.3tgzwuhrroog5dvb@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 13/09/2019 à 15:31, Santosh Sivaraj a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+On Tue, Sep 10, 2019 at 08:11:21AM -0700, Jerry Snitselaar wrote:
+> On Tue Sep 10 19, Jarkko Sakkinen wrote:
+> > The chip is not released when the validation for @digests fails. Add
+> > tpm_put_ops() to the failure path.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > 
->> Hi Santosh,
->>
->> Le 26/08/2019 à 07:44, Santosh Sivaraj a écrit :
->>> Hi Christophe,
->>>
->>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>>
->>>> __get_datapage() is only a few instructions to retrieve the
->>>> address of the page where the kernel stores data to the VDSO.
->>>>
->>>> By inlining this function into its users, a bl/blr pair and
->>>> a mflr/mtlr pair is avoided, plus a few reg moves.
->>>>
->>>> The improvement is noticeable (about 55 nsec/call on an 8xx)
->>>>
->>>> vdsotest before the patch:
->>>> gettimeofday:    vdso: 731 nsec/call
->>>> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->>>> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>>>
->>>> vdsotest after the patch:
->>>> gettimeofday:    vdso: 677 nsec/call
->>>> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
->>>> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->>>>
->>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>> ---
->>>>    arch/powerpc/kernel/vdso32/cacheflush.S   | 10 +++++-----
->>>>    arch/powerpc/kernel/vdso32/datapage.S     | 29 ++++-------------------------
->>>>    arch/powerpc/kernel/vdso32/datapage.h     | 11 +++++++++++
->>>>    arch/powerpc/kernel/vdso32/gettimeofday.S | 13 ++++++-------
->>>>    4 files changed, 26 insertions(+), 37 deletions(-)
->>>>    create mode 100644 arch/powerpc/kernel/vdso32/datapage.h
->>>
->>> The datapage.h file should ideally be moved under include/asm, then we can use
->>> the same for powerpc64 too.
->>
->> I have a more ambitious project indeed.
->>
->> Most of the VDSO code is duplicated between vdso32 and vdso64. I'm
->> aiming at merging everything into a single source code.
->>
->> This means we would have to generate vdso32.so and vdso64.so out of the
->> same source files. Any idea on how to do that ? I'm not too good at
->> creating Makefiles. I guess we would have everything in
->> arch/powerpc/kernel/vdso/ and would have to build the objects twice,
->> once in arch/powerpc/kernel/vdso32/ and once in arch/powerpc/kernel/vdso64/
-> 
-> Should we need to build the objects twice? For 64 bit config it is going to be
-> a 64 bit build else a 32 bit build. It should suffice to get the single source
-> code compile for both, maybe with macros or (!)CONFIG_PPC64 conditional
-> compilation. Am I missing something when you say build twice?
-> 
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-IIUC, on PPC64 we build vdso64 for 64bits user apps and vdso32 for 
-32bits user apps.
+Roberto, can you just squash this fix with yours to a single patch and
+send a new patch version? You can add suggested-by tag from me to v4.
 
-In arch/powerpc/kernel/Makefile, you have:
-
-obj-$(CONFIG_VDSO32)		+= vdso32/
-obj-$(CONFIG_PPC64)		+= vdso64/
-
-And in arch/powerpc/platforms/Kconfig.cputype, you have:
-
-config VDSO32
-	def_bool y
-	depends on PPC32 || CPU_BIG_ENDIAN
-	help
-	  This symbol controls whether we build the 32-bit VDSO. We obviously
-	  want to do that if we're building a 32-bit kernel. If we're building
-	  a 64-bit kernel then we only want a 32-bit VDSO if we're building for
-	  big endian. That is because the only little endian configuration we
-	  support is ppc64le which is 64-bit only.
-
-
-
-
-Christophe
+/Jarkko
