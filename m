@@ -2,109 +2,133 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3FAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F368AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A48C2081B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:09:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="XynQCoTb"
+	by mail.kernel.org (Postfix) with ESMTP id D25792081B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfIMQJO (ORCPT
+        id S1730711AbfIMQOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 12:09:14 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:42738 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIMQJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 12:09:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 894CE3F4EE;
-        Fri, 13 Sep 2019 18:09:01 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=XynQCoTb;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id w66xOcqsUdTC; Fri, 13 Sep 2019 18:09:00 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id C1B533F4CE;
-        Fri, 13 Sep 2019 18:08:58 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id F2D88360142;
-        Fri, 13 Sep 2019 18:08:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568390938; bh=41MPZF1NeqOE0U6C6W9oOWADl0xCjXwYhj5nNmjRnd8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XynQCoTbU1vNaNOD1qJfXS4/bvLSiIvoX7kfiON1kgTFMwvHHRqAkyaF2qkA+Bi81
-         /UnRhY8//LOcCTpf1fBzpEW2/YiDJRAu5Hy1DlO6y36DGIy+BCamkUQNY2Suy7TwWz
-         c8zsZT3WgsPGSCU6llPnwjTx8zGiMdiTvmLTKC3Y=
-Subject: Re: [RFC PATCH 3/7] drm/ttm: TTM fault handler helpers
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20190913093213.27254-1-thomas_os@shipmail.org>
- <20190913093213.27254-4-thomas_os@shipmail.org>
- <20190913151803.GO29434@bombadil.infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <6d33a9fd-47bb-a041-cd18-d67605edae54@shipmail.org>
-Date:   Fri, 13 Sep 2019 18:08:57 +0200
+        Fri, 13 Sep 2019 12:14:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17854 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730622AbfIMQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 12:14:30 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5745E7FDE5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 16:14:30 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id v18so604252wro.16
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 09:14:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7nSN9wvhoKYdWon6QDIGqpWH+96lV7NFl/5Fkxot28g=;
+        b=mbqGOQd21peQ+ePAsVs3s8P3xZzTjqyqGV3xVP3I359NiFgmujjVOPICyC0bLvaJ0R
+         MMSX6eegq8k7HHSrrG+plCkmXXAy2o7rHhPdNCSpEVRs4uoeuH9qZSV5sU2ke2xi9Zsb
+         KaZSGegzEdxD2wly4vem+gt/tXKctVcSXDXbRtrOGHhZpKS205vTtaWAO7CxuDrq2ind
+         +5pK8I0cdwxrLi3GbwHkxdEEBPGX3lBemihJxf3q3WVaJVK6UF8H0Jc57SCleg2bwhd0
+         Jg5gSgLJG73rX57v+Of81F0/haUEL9gaNO0Xqu8nShqzanFgCV/FvvBId1SkEBEkblv1
+         Kglw==
+X-Gm-Message-State: APjAAAVZKZvHzWOs6/1wtWDJvTDUWn2XZUZMm0heE6vqOZ0WxnqI1093
+        rEm0qcX9k0NhvE1BEEAZF0bGClbC3PsnY3/Ccs1toR7kNfi1Eg8HcFjif+JkJrebEHC2MvO2H+T
+        x0BhWvrVZIIh52g5Hn1W07n5J
+X-Received: by 2002:adf:f607:: with SMTP id t7mr38318031wrp.60.1568391268768;
+        Fri, 13 Sep 2019 09:14:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxQUnRDc3RyOrEaNGz0pukUMwipBT5o437e/Usb18JWbopoR0i0Q27Or8p94AssM2/2oIzM8A==
+X-Received: by 2002:adf:f607:: with SMTP id t7mr38317997wrp.60.1568391268522;
+        Fri, 13 Sep 2019 09:14:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c5d2:4bb2:a923:3a9a? ([2001:b07:6468:f312:c5d2:4bb2:a923:3a9a])
+        by smtp.gmail.com with ESMTPSA id v6sm4816939wma.24.2019.09.13.09.14.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2019 09:14:28 -0700 (PDT)
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com,
+        joro@8bytes.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com,
+        rkrcmar@redhat.com, robh+dt@kernel.org,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com,
+        x86@kernel.org,
+        syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        USB list <linux-usb@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <1a8a6449-2740-b0a3-805a-47466e0d71c6@redhat.com>
+Date:   Fri, 13 Sep 2019 18:14:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190913151803.GO29434@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/13/19 5:18 PM, Matthew Wilcox wrote:
-> On Fri, Sep 13, 2019 at 11:32:09AM +0200, Thomas Hellström (VMware) wrote:
->> +vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
->> +				    pgprot_t prot,
->> +				    pgoff_t num_prefault)
->> +{
->> +	struct vm_area_struct *vma = vmf->vma;
->> +	struct vm_area_struct cvma = *vma;
->> +	struct ttm_buffer_object *bo = (struct ttm_buffer_object *)
->> +	    vma->vm_private_data;
-> It's a void *.  There's no need to cast it.
->
-> 	struct ttm_buffer_object *bo = vma->vm_private_data;
->
-> conveys exactly the same information to both the reader and the compiler,
-> except it's all on one line instead of split over two.
+On 13/09/19 17:36, Alan Stern wrote:
+> On Fri, 13 Sep 2019, Paolo Bonzini wrote:
+> 
+>> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+>>> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+>>> not need this type of thing.  If we got it wrong, please let us know and
+>>> then yes, a fix like this would be most appreciated :)
+>>
+>> I still see
+>>
+>> 	/* some USB hosts just use PIO */
+>> 	if (!hcd_uses_dma(hcd)) {
+>> 		*dma = ~(dma_addr_t) 0;
+>> 		return kmalloc(size, mem_flags);
+>> 	}
+>>
+>> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+>>  I also see the same
+>>
+>> 	if (remap_pfn_range(vma, vma->vm_start,
+>> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+>> 			size, vma->vm_page_prot) < 0) {
+>> 		...
+>> 	}
+>>
+>> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+>> branch, or just being dense.
+> 
+> Have you seen
+> 
+> 	https://marc.info/?l=linux-usb&m=156758511218419&w=2
+> 
+> ?  It certainly is relevant, although Greg hasn't replied to it.
 
-Indeed.
+It helps but it's not a full fix, since the address would fail
+is_vmalloc_addr.  On top of that, hcd_buffer_alloc and hcd_buffer_free
+need to switch from kmalloc to vmalloc.
 
-However since this is mostly a restructuring commit and there are a 
-couple of these present in the code I'd like to keep cleanups separate.
+> Also, just warning about a non-page-aligned allocation doesn't really 
+> help.  It would be better to fix the misbehaving allocator.
 
-Thanks,
-Thomas
+Of course.  The above patch does not fix the issue, it should just allow
+for an easier reproduction not involving KVM.  More long term, it points
+out where the contracts mismatch (i.e. between hcd_buffer_alloc and
+usb_alloc_coherent), and more selfishly whose bug it is when syzkaller
+complains. :)
 
-
+Paolo
