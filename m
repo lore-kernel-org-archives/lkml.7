@@ -2,347 +2,110 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8037BC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D850C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5082A2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E870B20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlJvvwTn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pX8GfKNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfIMCkg (ORCPT
+        id S1726509AbfIMCke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:40:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41407 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfIMCkg (ORCPT
+        Thu, 12 Sep 2019 22:40:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35871 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIMCke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:40:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so14462408pgg.8;
-        Thu, 12 Sep 2019 19:40:35 -0700 (PDT)
+        Thu, 12 Sep 2019 22:40:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y22so17175135pfr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 19:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UP1u+Dca8sbP4Ltz5lkNdGLJogvNgYuMygajS9RlyYE=;
-        b=BlJvvwTnzkIA0n+L8NqoxzOtG9oKdjMXjIljgTUnEY4TDEIVCL98hvGYxFGso5Govp
-         /mrbptuCcSCKFnR6cI8BAIPfcv/R+dhaGmRvaozpc/HHqRYObph8iyyb2msX+SgCzlWh
-         bTWmHGS1fWrioNoJNz/baL1KgqSdzA8Qe1WqxMI/uxTxVSKb85Hsp2P2i1ppD2WXPfBN
-         zPi6N79XOSTPwrAiMLTovC1l0BCR4JnPEsYp8WmmDPMBXJkoGksyN7xUTXU5BB+UtAX5
-         SUD+MA3wDB+IFoq2E3RHRZVw+tqlpGKMxL/cIp42f66sO3gH2y1ka+rk+XBXj+xsSiR4
-         atxw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=yK99CWDEV+GMLXWhJb+XNR1rZIzkOo1KcI+8O5gSgak=;
+        b=pX8GfKNlP3H7LubXCrt3O4BEUxhmJt5lfVF3cSVQwZNgT5bWdx5ZLLkyRecsMHl3RP
+         gsomj7G6Cp+CUjvJngWvlC/cu+iNAJU1hSO48bbEBwN7PTvJKOjBqf0xEJI3hnCjxA+v
+         QgY8zJ0VFKbmzYwY3tEZf8LczcsqMCX04A8OLXyTPaqCFiRw+L9TOK9lidjYLjpOyCT6
+         F/+NAI3zDnmEkFJlZEjm7jmzPwbiiwUB4wBm28tMwDEEfe/j4Nrh2/SB1PaPtD8pQgI1
+         m7G0FmmvO+iVSQh3qt+tJMcoChqooWEsaG8jfHh64uq4j/aJl1wvycdfCj3sMtgXRVQt
+         pCqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UP1u+Dca8sbP4Ltz5lkNdGLJogvNgYuMygajS9RlyYE=;
-        b=lXtM2Aqn9xXNC1GCb7M1F4IIpw2xka0rBz4B2Et8wUuA1KFDBLn8dXpj3LmCGsqCdV
-         RxuNLNP/kMH25EW775OwZWQURip9m5yj9Lzwzg6zq7JugvU/NdR5wsY+/FQc+rU9wyOI
-         /Yx56F1bGQv6XGYwdDzFoGy8NNlVP502UD3+CSeaAwtkT0k6vzlKWNlRnBYxb+pkhDPD
-         Hi1LAsn1LDVpgC9nrF3hzEyZBrDMflY0OFZGyzYBDfhGx6vi+v5UGSRJTFmooZ+pVt6p
-         4QCg6tT6yLsR1eKgRbv5ngquFhn3Nm3AquYLQs2ElEb/6xtMa2Sf2mQ5AbR+e+kIKT1u
-         GUBA==
-X-Gm-Message-State: APjAAAXS6fksGiY97ViRYcOPz0evDdltI7nelSU+UQLgwfTtskPXfON8
-        OoOwyRmixr0K0RANyC9Drzk=
-X-Google-Smtp-Source: APXvYqxXudnFv0wlNAyfrLVbGR5PsDT0j5xxkmQaSeJwOpX52h+MqyJpzvy9Cm7IZab0s11TaKzU5Q==
-X-Received: by 2002:a62:8c11:: with SMTP id m17mr22088610pfd.245.1568342434904;
-        Thu, 12 Sep 2019 19:40:34 -0700 (PDT)
-Received: from localhost (c-73-158-250-148.hsd1.ca.comcast.net. [73.158.250.148])
-        by smtp.gmail.com with ESMTPSA id z23sm387918pje.2.2019.09.12.19.40.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Sep 2019 19:40:34 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 21:22:39 +0100
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, aisheng.dong@nxp.com,
-        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org,
-        olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com,
-        bjorn.andersson@linaro.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, stefan@agner.ch,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch,
-        m.felsch@pengutronix.de, ping.bai@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/5] input: keyboard: imx_sc: Add i.MX system
- controller key support
-Message-ID: <20190912202239.GB636@penguin>
-References: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
- <1567546600-21566-2-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567546600-21566-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yK99CWDEV+GMLXWhJb+XNR1rZIzkOo1KcI+8O5gSgak=;
+        b=Mg8h3+vC0dX6gqO2vL/CA47owJQghiSsryeYuZytv8+Wf3pJSIQqNlyaEGoRPJm4Nl
+         Vc/nxJHpqlAMN+Pplf+bYOa8yanHe0NG1k6dHUPliaXcsdnq27dTxWITfkfz0qvvDR2J
+         abUSNAys4EZHzi5cTRgVDSFB2D+QfXzG/5AKdRR7ma9dhzZULME9NQZ/B0D1PgmH/GY1
+         ptCLs1GUvvSRaPbACB4E2bBDe18yzs7H4ni8tUdV6eA99jE4XBU9lbtMwf+K2pVGzdaw
+         ERlozDrbGGESYmysABEtFbhdP3LJI11VdPhCiJJ7mYCnqKbSOeo+9TKN9KjA6NTjHysy
+         Zgtg==
+X-Gm-Message-State: APjAAAXQdDvuEw4+6pk2Ts0wm4suAl7COAYAdUo7Wx4HU5ZUdTdcMGos
+        u2jWS1u00p64tsKMPTytd0fDuA==
+X-Google-Smtp-Source: APXvYqwtiQkm2M/xKlHGAxKnIsR+ZI2Lqsa2MEw3Q53WdznmG4Z/bpTDe/Tk3NIvdO/QXK8Zax/CBA==
+X-Received: by 2002:a63:9249:: with SMTP id s9mr39988094pgn.356.1568342433021;
+        Thu, 12 Sep 2019 19:40:33 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i74sm40222938pfe.28.2019.09.12.19.40.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Sep 2019 19:40:32 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Subject: [PATCH] clk: Make clk_bulk_get_all() return a valid "id"
+Date:   Thu, 12 Sep 2019 19:40:29 -0700
+Message-Id: <20190913024029.2640-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+The adreno driver expects the "id" field of the returned clk_bulk_data
+to be filled in with strings from the clock-names property.
 
-On Tue, Sep 03, 2019 at 05:36:37PM -0400, Anson Huang wrote:
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> inside, the system controller is in charge of controlling power,
-> clock and scu key etc..
-> 
-> Adds i.MX system controller key driver support, Linux kernel has
-> to communicate with system controller via MU (message unit) IPC
-> to get scu key's status.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- use private platform data instead of global data;
-> 	- use "key" instead of "pwrkey";
-> 	- fix some data format.
-> ---
->  drivers/input/keyboard/Kconfig      |   7 ++
->  drivers/input/keyboard/Makefile     |   1 +
->  drivers/input/keyboard/imx_sc_key.c | 178 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 186 insertions(+)
->  create mode 100644 drivers/input/keyboard/imx_sc_key.c
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 2e6d288..607acf2 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -469,6 +469,13 @@ config KEYBOARD_IMX
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called imx_keypad.
->  
-> +config KEYBOARD_IMX_SC_KEY
-> +	tristate "IMX SCU Key Driver"
-> +	depends on IMX_SCU
-> +	help
-> +	  This is the system controller key driver for NXP i.MX SoCs with
-> +	  system controller inside.
-> +
->  config KEYBOARD_NEWTON
->  	tristate "Newton keyboard"
->  	select SERIO
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 9510325..f5b1752 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
->  obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
->  obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
->  obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
-> +obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+= imx_sc_key.o
->  obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
->  obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
->  obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
-> diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
-> new file mode 100644
-> index 0000000..e69479b
-> --- /dev/null
-> +++ b/drivers/input/keyboard/imx_sc_key.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/firmware/imx/sci.h>
-> +#include <linux/init.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DEBOUNCE_TIME	100
-> +#define REPEAT_INTERVAL	60
-> +
-> +#define SC_IRQ_BUTTON		1
-> +#define SC_IRQ_GROUP_WAKE	3
-> +#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
-> +
-> +struct imx_key_drv_data {
-> +	int keycode;
-> +	bool keystate;  /* 1: pressed, 0: release */
-> +	bool delay_check;
-> +	struct delayed_work check_work;
-> +	struct input_dev *input;
-> +	struct imx_sc_ipc *key_ipc_handle;
-> +	struct notifier_block key_notifier;
-> +};
-> +
-> +struct imx_sc_msg_key {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u8 state;
-> +};
-> +
-> +static int imx_sc_key_notify(struct notifier_block *nb,
-> +			     unsigned long event, void *group)
-> +{
-> +	struct imx_key_drv_data *priv =
-> +				 container_of(nb,
-> +					      struct imx_key_drv_data,
-> +					      key_notifier);
-> +
-> +	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group == SC_IRQ_GROUP_WAKE)
-> +	    && !priv->delay_check) {
-> +		priv->delay_check = 1;
-> +		schedule_delayed_work(&priv->check_work,
-> +				      msecs_to_jiffies(REPEAT_INTERVAL));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void imx_sc_check_for_events(struct work_struct *work)
-> +{
-> +	struct imx_key_drv_data *priv =
-> +				 container_of(work,
-> +					      struct imx_key_drv_data,
-> +					      check_work.work);
-> +	struct input_dev *input = priv->input;
-> +	struct imx_sc_msg_key msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	bool state;
-> +	int ret;
-> +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
-> +	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
-> +	hdr->size = 1;
-> +
-> +	ret = imx_scu_call_rpc(priv->key_ipc_handle, &msg, true);
-> +	if (ret) {
-> +		dev_err(&input->dev, "read imx sc key failed, ret %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	state = (bool)msg.state;
-> +
-> +	if (!state && !priv->keystate)
-> +		state = true;
-> +
-> +	if (state ^ priv->keystate) {
-> +		pm_wakeup_event(input->dev.parent, 0);
-> +		priv->keystate = state;
-> +		input_event(input, EV_KEY, priv->keycode, state);
-> +		input_sync(input);
-> +		if (!state)
-> +			priv->delay_check = 0;
-> +		pm_relax(priv->input->dev.parent);
-> +	}
-> +
-> +	if (state)
-> +		schedule_delayed_work(&priv->check_work,
-> +				      msecs_to_jiffies(DEBOUNCE_TIME));
+But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
+receives a list of bogus pointers instead.
 
-Hmm, I am not quite sure follow the code. Judging by the name, you are
-trying to handle debounce, but if I understand this correctly you
-already sent out the press event for now.
+Zero-initialize the "id" field and attempt to populate with strings from
+the clock-names property to resolve both these issues.
 
-Could you please explain what you are trying to do here.
+Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
+Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
+Cc: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/clk/clk-bulk.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> +}
-> +
-> +static int imx_sc_key_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	static struct imx_key_drv_data *priv;
-> +	struct input_dev *input;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	ret = imx_scu_get_handle(&priv->key_ipc_handle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (of_property_read_u32(np, "linux,keycode", &priv->keycode)) {
-> +		dev_err(&pdev->dev, "missing KEY_POWER in DT\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	INIT_DELAYED_WORK(&priv->check_work, imx_sc_check_for_events);
-> +
-> +	input = devm_input_allocate_device(&pdev->dev);
-> +	if (!input) {
-> +		dev_err(&pdev->dev, "failed to allocate the input device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	input->name = pdev->name;
-> +	input->phys = "imx-sc-key/input0";
-> +	input->id.bustype = BUS_HOST;
-> +
-> +	input_set_capability(input, EV_KEY, priv->keycode);
-> +
-> +	ret = input_register_device(input);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register input device\n");
-> +		return ret;
-> +	}
-> +
-> +	priv->input = input;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
-> +	if (ret) {
-> +		dev_warn(&pdev->dev, "enable scu group irq failed\n");
-> +		return ret;
-> +	}
-> +
-> +	priv->key_notifier.notifier_call = imx_sc_key_notify;
-> +	ret = imx_scu_irq_register_notifier(&priv->key_notifier);
-> +	if (ret) {
-> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
-> +		dev_warn(&pdev->dev, "register scu notifier failed\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id imx_sc_key_ids[] = {
-> +	{ .compatible = "fsl,imx-sc-key" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_sc_key_ids);
-> +
-> +static struct platform_driver imx_sc_key_driver = {
-> +	.driver = {
-> +		.name = "imx-sc-key",
-> +		.of_match_table = imx_sc_key_ids,
-> +	},
-> +	.probe = imx_sc_key_probe,
-
-You need a remove() handler to disable the itq group, remove the
-notifier, cancel the delayed work, etc.
-
-> +};
-> +module_platform_driver(imx_sc_key_driver);
-> +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("i.MX System Controller Key Driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.7.4
-> 
-
-Thanks.
-
+diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
+index 524bf9a53098..e9e16425c739 100644
+--- a/drivers/clk/clk-bulk.c
++++ b/drivers/clk/clk-bulk.c
+@@ -18,10 +18,13 @@ static int __must_check of_clk_bulk_get(struct device_node *np, int num_clks,
+ 	int ret;
+ 	int i;
+ 
+-	for (i = 0; i < num_clks; i++)
++	for (i = 0; i < num_clks; i++) {
++		clks[i].id = NULL;
+ 		clks[i].clk = NULL;
++	}
+ 
+ 	for (i = 0; i < num_clks; i++) {
++		of_property_read_string_index(np, "clock-names", i, &clks[i].id);
+ 		clks[i].clk = of_clk_get(np, i);
+ 		if (IS_ERR(clks[i].clk)) {
+ 			ret = PTR_ERR(clks[i].clk);
 -- 
-Dmitry
+2.18.0
+
