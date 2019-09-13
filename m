@@ -2,191 +2,103 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F19C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912ACC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5D7207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CNjme5Ku"
+	by mail.kernel.org (Postfix) with ESMTP id 72EC920830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387546AbfIMIZM (ORCPT
+        id S2387513AbfIMIa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:25:12 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57813 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387424AbfIMIZM (ORCPT
+        Fri, 13 Sep 2019 04:30:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32905 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387431AbfIMIa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:25:12 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190913082510euoutp01c89da4f061cc94a52791f1ab9f7410bf~D8fBoDF7y0641206412euoutp01C
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 08:25:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190913082510euoutp01c89da4f061cc94a52791f1ab9f7410bf~D8fBoDF7y0641206412euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568363110;
-        bh=Y+70eoeOySg6zv/t1zkRpHQ8LjxlLH2L7D/4kmCRFa8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=CNjme5Ku5yGrjU2AyD0qJqPvMTspzrEg3CnMtlLkd6GVqfzQdtmYf23FG2miUo593
-         V8rLr2TCOJA81GetljTg+6VzUhSe2i/EMPbf6BjmXsH/+32Zw9JkkZJRbq0gA7kFHz
-         prKBBWYiFDPr25aoMvYQwLFbxf9ebkOTFapksspo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190913082509eucas1p25aefda01ff4af9b0fd4b9d23d2e98a0e~D8fAtmFO-2693226932eucas1p2r;
-        Fri, 13 Sep 2019 08:25:09 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 44.38.04469.4625B7D5; Fri, 13
-        Sep 2019 09:25:08 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190913082508eucas1p1fe8f4a4dd962539e0831da3950f6f017~D8e-77knv1656016560eucas1p1P;
-        Fri, 13 Sep 2019 08:25:08 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190913082508eusmtrp1bfa0be12c15e864cffef846e714258d9~D8e-6r_LY1187411874eusmtrp12;
-        Fri, 13 Sep 2019 08:25:08 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-6e-5d7b52641f5f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3F.91.04117.4625B7D5; Fri, 13
-        Sep 2019 09:25:08 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190913082507eusmtip1a5e208f4d2fdc951fa14515d85d2978e~D8e-Wv34X0164301643eusmtip1V;
-        Fri, 13 Sep 2019 08:25:07 +0000 (GMT)
-Subject: Re: [PATCH] Revert
- "drm/bridge: adv7511: Attach to DSI host at probe time"
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Fri, 13 Sep 2019 04:30:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e12so1526086oie.0;
+        Fri, 13 Sep 2019 01:30:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JZrVZS3TRiAi6B0nR+YVzqpc9AbnOshhzgNnESTo+HE=;
+        b=KCn3scocmz9NWtPLWo0Hm+HOmlxhAWwBEKXN21EDLT7VR/e99JpOWB+xLQmY4hdiMR
+         ZffKvqR19EJnY0eLdV8IGXfmNaTEYpAndcufnjKz1inI4JRbgyk1PIAmBMtpWO5aRiFj
+         N+WEP+fAmLdsSL8iFQn5rj+/L7QcabaKfKdhiOTYiCU45Y+tAmejfM8wyD/EcbpPEbX1
+         XFZTbyd8ZslBA4ViGoDIssBMP1tTR+p1mZaJrbdkjlAcH1D51k3rgZkwh1aHoJI1r6yW
+         G80HYhN5kkS50n+l+NggbKnnhj8TwjNS4ly15JsBVeU6jLXrTXkrt2nVNwSklEoRYGLN
+         H2Bw==
+X-Gm-Message-State: APjAAAUNIPErH1P5uGOtoXxKyxPvP3l/EFMmrnYKN7f7kZvKFP+qm0mA
+        XXKEHTQ+9zURzGyZSzdPHM4H2kgE1fUeX5vlSRI=
+X-Google-Smtp-Source: APXvYqyZc6bUus5bM4ajLOuNStwe1fxIICi5FZQbHrnZYT2316LpnT9EOtOUUKhjtBGtQMpYE9tImf+FrfJyqZHIJEY=
+X-Received: by 2002:a05:6808:98a:: with SMTP id a10mr2296403oic.54.1568363456676;
+ Fri, 13 Sep 2019 01:30:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
+ <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com> <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
+In-Reply-To: <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 13 Sep 2019 10:30:45 +0200
+Message-ID: <CAMuHMdU5SgQhnfoeTc1Ur+dhjrUXkEfpk+9VRQR2EKxLzEnmGg@mail.gmail.com>
+Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
         open list <linux-kernel@vger.kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <5b277456-2508-981c-7909-dde5f38f8ef6@samsung.com>
-Date:   Fri, 13 Sep 2019 10:25:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190829180836.14453-1-robdclark@gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe/bcO6/WtesyPGpUDnqz1DQ/XEskKeIGfYggkMRq5W1Kvu6q
-        ZUIuSJuaY2VZm/kSGVoEhe9OemFSU6yVpqaGTbK0LDN8q1lWzjvJb7/znOd/zv8Ph8KyMdKL
-        ik1I4VUJiji51IWoe2az+EUfyIjaOvg8mM23tErYv3WXMNs5NSZlu358xmzr1y6CzblU7sS+
-        Nt6QskZrmYQ1aSPZbtsgZodv/sRspa0WsdVVV/FOmhvryXLiitTtBPdwuozgGg39c6VGT3It
-        ug4J981iceLqpwdIzppnlnDlhV1S7kl+AcEVFbwnuYmq1fvpQy6h0XxcbBqvCgg76hLT80dH
-        Jk26nS5/PCJRo07XXORMARMMhX0XyFzkQsmYSgTDnz5hsZhEMPmsAInFBILSbKPTgkTX+8Uh
-        qUDwVqt3SEYR6FsHsP3XCuYgvKzRSezszuyGlo5f8wrMGDFc+V4itTekzCaYre6dY4qimTCY
-        nZnfQDDr4Lf2/fyclUwEjA80k3amGTdo1X8g7OzMhEBn9Z15xswaqB+9gUX2gL4PpRL7LmD0
-        FHRbrpOi7d0wNFjsiLACRsw1Dl4FbQUXCZEzwVp5HotiDYLaB41YbOyAZnM7aTeK50zfNwbY
-        EZhwuD6cLKIr9Iy6iRZc4XLdNSw+06DJlokzfMD6otYxzwNuv5qS6pDcsCiYYVEYw6Iwhv9r
-        yxBxF3nwqUK8khcCE/hT/oIiXkhNUPofT4yvQnNn2PbHPN6ApjqOmRBDIfkymt1yJkpGKtKE
-        9HgTAgrL3el9X9OjZHS0Iv0Mr0o8okqN4wUT8qYIuQedsWQgUsYoFSn8SZ5P4lULXQnl7KVG
-        ruoHkfqSj6acZG+z8oTzroZwQ1a257ZOQ9HnN5lThSGr1xbLD556pHmleipV52ws3fzOz0d7
-        c79hz/JN3yzVynsREVUKyluzwWdPPdedmZIS7h8UYw39e6sifCzI5t1/fL1n21Lt5hjf2JLS
-        phbhbOG5XA2/d+Lw2tiZoYqmvO02OSHEKAJ9sUpQ/ANF+ZDDggMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkleLIzCtJLcpLzFFi42I5/e/4Xd2UoOpYg793+Sx6z51ksvi/bSKz
-        xZWv79ksrn5/yWxx8s1VFovOiUvYLS7vmsNmsev+AiaLQ33RFtd+Pma2eL7wB7PFip9bGS02
-        b5rK7MDr8f5GK7vH7IaLLB57vy1g8dg56y6Q2zGT1ePEhEtMHu/OnWP32P7tAavH/e7jTB5L
-        pl1l8zjQO5nFY/bkR6wenzfJBfBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
-        mSrp29mkpOZklqUW6dsl6GXc+DeBteCLYMWS/a+YGhiv8HUxcnJICJhITLj5mhXEFhJYyiix
-        f2o2RFxcYvf8t8wQtrDEn2tdbF2MXEA1rxkl/nzfyNLFyMEhLBAqMaGXC6RGRMBF4sSl36wg
-        NcwCe5glHr24CdXQAzT06VKwSWwCmhJ/N4MkODh4Bewk/v5iBwmzCKhK/Ol7BFYiKhAhcXjH
-        LEYQm1dAUOLkzCcsIDangKXElc0rwWxmAXWJP/MuMUPY8hLb386BssUlbj2ZzzSBUWgWkvZZ
-        SFpmIWmZhaRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMDo33bs55YdjF3vgg8xCnAw
-        KvHwWuhUxQqxJpYVV+YeYpTgYFYS4fV5UxkrxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnA
-        xJRXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoGxpyd174655S9P
-        6XAtOClV2lnzadvCgwcyfbboKYUWfPA+uunc+kk9YSzHfoRs2jDvPb+9iQw/g4vE5cVWq9f4
-        Fk6tevO57PGh9tfzW+6di7YLMEjQCrKdbzAz6f/029lXD8jf3cLvWbXtju0E38DVLOHJJ8xi
-        2DyZt8byi2zMyOpWTawVn3BYiaU4I9FQi7moOBEAcSHrSxQDAAA=
-X-CMS-MailID: 20190913082508eucas1p1fe8f4a4dd962539e0831da3950f6f017
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190829181055epcas3p3ee33cfe662517555ff0c1ce456757e7c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190829181055epcas3p3ee33cfe662517555ff0c1ce456757e7c
-References: <CGME20190829181055epcas3p3ee33cfe662517555ff0c1ce456757e7c@epcas3p3.samsung.com>
-        <20190829180836.14453-1-robdclark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.08.2019 20:08, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Fri, Sep 13, 2019 at 10:21 AM Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
+> > On 11.09.2019 22:25, Kieran Bingham wrote:
+> > > Add direct support for the r8a77980 (V3H).
+> > > The V3H shares a common, compatible configuration with the r8a77970
+> > > (V3M) so that device info structure is reused.
+> >
+> >    Do we really need to add yet another compatible in this case?
+> > I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
+> > a patch like this one didn't get posted by me.
 >
-> This reverts commit 83f35bc3a852f1c3892c7474998c5cec707c7ba3.
+> The reason for having per-SoC compat strings is that the IP blocks
+> are not versioned and while we can observe that there are similarities
+> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
+> differences may not emerge at some point. By having per-SoC compat strings
+> we have the flexibility for the driver to address any such differences as
+> the need arises.
+
+Thanks, that is the generic reason, applicable to all IP blocks without
+version registers.
+
+For the Display Unit, there are documented differences (e.g. number and type
+of ports), so we definitely need it there.
+
+> My recollection is that this scheme has been adopted for non-versioned
+> Renesas IP blocks since June 2015 and uses of this scheme well before that.
 >
-> This commit the wrong direction, we should really be changing panel
-> framework to attach dsi host after probe, rather than introducing
-> the same probe-order problem that panels already have to bridges.
+> > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 >
-> The reason is, that in order to deal with devices where display is
-> enabled by bootloader and efifb/simplefb is used until the real
-> driver probes, we need to be careful to not touch the hardware
-> until we have all the pieces probed and ready to go, otherwise you
-> will kill the working display, leaving yourself (at least, in the
-> case of real consumer devices that do not have a debug UART) with
-> no good way to debug what went wrong.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
+Gr{oetje,eeting}s,
 
-Applied to drm-misc-next-fixes, with changed commit message - I hope it
-is OK for you.
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Regards
-
-Andrzej
-
-
-> ---
->  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> index 98bccace8c1c..f6d2681f6927 100644
-> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> @@ -874,6 +874,9 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
->  				 &adv7511_connector_helper_funcs);
->  	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
->  
-> +	if (adv->type == ADV7533)
-> +		ret = adv7533_attach_dsi(adv);
-> +
->  	if (adv->i2c_main->irq)
->  		regmap_write(adv->regmap, ADV7511_REG_INT_ENABLE(0),
->  			     ADV7511_INT0_HPD);
-> @@ -1219,17 +1222,8 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->  	drm_bridge_add(&adv7511->bridge);
->  
->  	adv7511_audio_init(dev, adv7511);
-> -
-> -	if (adv7511->type == ADV7533) {
-> -		ret = adv7533_attach_dsi(adv7511);
-> -		if (ret)
-> -			goto err_remove_bridge;
-> -	}
-> -
->  	return 0;
->  
-> -err_remove_bridge:
-> -	drm_bridge_remove(&adv7511->bridge);
->  err_unregister_cec:
->  	i2c_unregister_device(adv7511->i2c_cec);
->  	if (adv7511->cec_clk)
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
