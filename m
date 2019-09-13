@@ -2,129 +2,111 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87658C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30593C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6187A20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fhUf3ysL"
+	by mail.kernel.org (Postfix) with ESMTP id 141EE2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfIMCJQ (ORCPT
+        id S1727352AbfIMCM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:09:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50890 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfIMCJQ (ORCPT
+        Thu, 12 Sep 2019 22:12:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726262AbfIMCM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:09:16 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8D29AF2059679;
-        Thu, 12 Sep 2019 21:09:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568340550;
-        bh=3rFQ5YOQyJCcjWRaEXaDv0l6ekVp8tIORqYcBJwvCSw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fhUf3ysL0s9b7ekP7xEBsh8/9FWT7jKAt48LjdWbveQGDguhI297l+A+yY6LOzfV6
-         P5mbtVnjbxD0zkjLaV919bKrj10EBc4YogFL4wyLPwvcgqBqpJ7YO3VNpIKbgJAsTg
-         2bm3vOviig07JHQ5sVv9TnPvsMRwYcZF7zDY+w0o=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8D29AFd079295
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Sep 2019 21:09:10 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
- Sep 2019 21:09:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 12 Sep 2019 21:09:08 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8D298TQ051406;
-        Thu, 12 Sep 2019 21:09:08 -0500
-Subject: Re: [PATCH v5 2/9] documention: leds: Add multicolor class
- documentation
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-3-dmurphy@ti.com> <20190912205551.GA13514@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <61ccb700-88df-03c0-3fb0-7f955d2b6cb2@ti.com>
-Date:   Thu, 12 Sep 2019 21:09:22 -0500
+        Thu, 12 Sep 2019 22:12:58 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8D2CkAu136516;
+        Thu, 12 Sep 2019 22:12:50 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uywkvy5ta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Sep 2019 22:12:47 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8D2AB5O017443;
+        Fri, 13 Sep 2019 02:12:11 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01dal.us.ibm.com with ESMTP id 2uyw58jej7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 02:12:11 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8D2C97N57737610
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 02:12:09 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B79B0BE056;
+        Fri, 13 Sep 2019 02:12:09 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91C01BE051;
+        Fri, 13 Sep 2019 02:12:07 +0000 (GMT)
+Received: from [9.199.46.176] (unknown [9.199.46.176])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Sep 2019 02:12:07 +0000 (GMT)
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <c2c734d3-ca8d-8485-9b9e-fd64e12aa0f0@linux.ibm.com>
+Date:   Fri, 13 Sep 2019 07:41:55 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190912205551.GA13514@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190911184332.GL20699@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909130022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel
-
-Thanks for looking at this again
-
-On 9/12/19 3:55 PM, Pavel Machek wrote:
-> Hi!
->
->> +Directory Layout Example
->> +========================
->> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
->> +colors/:
->> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
->> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
->> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
->> +-rw-------    1 root     root          4096 Jun 28 20:21 color_mix
+On 9/12/19 12:13 AM, Dan Carpenter wrote:
+> On Wed, Sep 11, 2019 at 08:48:59AM -0700, Dan Williams wrote:
+>> +Coding Style Addendum
+>> +---------------------
+>> +libnvdimm expects multi-line statements to be double indented. I.e.
 >> +
->> +colors/blue:
->> +-rw-------    1 root     root          4096 Jun 28 20:21 intensity
->> +-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
->> +-r--------    1 root     root          4096 Jun 28 20:21 color_id
-> I don't really like the directories... A bit too much complexity, and
-> it will have a memory footprint, too.
+>> +        if (x...
+>> +                        && ...y) {
+> 
+> That looks horrible and it causes a checkpatch warning.  :(  Why not
+> do it the same way that everyone else does it.
+> 
+> 	if (blah_blah_x && <-- && has to be on the first line for checkpatch
+> 	    blah_blah_y) { <-- [tab][space][space][space][space]blah
+> 
+> Now all the conditions are aligned visually which makes it readable.
+> They aren't aligned with the indent block so it's easy to tell the
+> inside from the if condition.
 
-The directories should be fine to have I am not seeing the complexity. 
-Is memory footprint really an issue? Maybe in the IoT space but this is 
-small and memory footprint should be able to handle this for IoT and 
-larger systems.
 
-Having dedicated directories and files clears up issues for user space 
-to know about the parameters for each LED especially with the color_mix 
-file which I still am not a fan of, but conceded and implemented 
-anyway.  It also gives the user space flexibility to call the monochrome 
-LEDs specific intensity file.  The user space can either use the color 
-intensity file or the color_mix file it is a choice for them to make.
+I came across this while sending patches to libnvdimm subsystem. W.r.t 
+coding Style can we have consistent styles across the kernel? Otherwise, 
+one would have to change the editor settings as they work across 
+different subsystems in the kernel. In this specific case both 
+clang-format and emacs customization tip in the kernel documentation 
+directory suggest the later style.
 
-This code was modeled off the LP50xx device which has individual LED 
-intensity controls as well as a overall brightness control. Since we 
-have no feedback from user space folks I feel we have to give some 
-options not very many but some.
+-aneesh
 
->
-> I'd expect max_intensity to be same for all the leds in
-> rgb:grouped_leds... Could we simply rely on max_brightness file?
 
-I went under the assumption that not all grouped LEDs would have the 
-same max_intensity.
-
-I don't have specific use cases but wanted this as an option.
-
-Dan
-
-> [If not, would one "max_intensity" file in rgb:grouped_leds be
-> enough?]
->
-> Best regards,
-> 							Pavel
-> 							
