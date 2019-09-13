@@ -2,141 +2,94 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0290C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07ECC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869A4208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568361471;
-	bh=G+tpwlHhHN4Uq2Y+D3u2USOsp4VVgIF3lrlIxrgfRZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fPOn+zjuZj7XXbbTmZwLhulMhS0No4sDMKx/Ok/AwZUJzyPCfSUvGEfE5SYZ0wmBn
-	 iU7pu+P11f4BeB5OQIXSkM8K9G64PMkImSUSgJ6ElvWT1Qlx3+fS5F5psUpr1JNSMC
-	 IIb5mvPKp1ot6paQRjOcClpj1wyWcUNSvBkTvI8k=
+	by mail.kernel.org (Postfix) with ESMTP id C15E9207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfIMH5v (ORCPT
+        id S1729156AbfIMICy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbfIMH5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:57:50 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFDDD20830;
-        Fri, 13 Sep 2019 07:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568361469;
-        bh=G+tpwlHhHN4Uq2Y+D3u2USOsp4VVgIF3lrlIxrgfRZg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KUspfkv+jER4uH9H6OWriR6kaRD0ON4ZJQPyp1P/2vG6Tw1xyHskIbZVuaHXjHw1s
-         WutwVnqVYrcfL80RvJiV7VsoY+EoibYqqTJkObjpKKcSqTcOmXqPLQOSG4ItcslXms
-         zx1P9KzuFY4Lmec1/jJHxC59wveY2Sz05VYjoRTA=
-Date:   Fri, 13 Sep 2019 09:57:46 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/6] ARM: dts: sunxi: h3/h5: Add MBUS controller node
-Message-ID: <20190913075746.gws6u6hbextzleke@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net>
- <1679881.yZ8pMUtPNZ@jernej-laptop>
- <20190912203427.ajbmtm5djctpkz6p@localhost.localdomain>
- <5193854.KWMFve8tAi@jernej-laptop>
+        Fri, 13 Sep 2019 04:02:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47983 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727997AbfIMICx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:02:53 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i8gXY-0004uO-Ub; Fri, 13 Sep 2019 08:02:49 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: rename variable eanble -> enable
+Date:   Fri, 13 Sep 2019 09:02:48 +0100
+Message-Id: <20190913080248.28695-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5193854.KWMFve8tAi@jernej-laptop>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 10:46:58PM +0200, Jernej Škrabec wrote:
-> Dne četrtek, 12. september 2019 ob 22:34:27 CEST je Maxime Ripard napisal(a):
-> > On Thu, Sep 12, 2019 at 10:28:37PM +0200, Jernej Škrabec wrote:
-> > > Dne četrtek, 12. september 2019 ob 22:20:57 CEST je Maxime Ripard 
-> napisal(a):
-> > > > Hi,
-> > > > 
-> > > > On Thu, Sep 12, 2019 at 07:51:29PM +0200, Jernej Skrabec wrote:
-> > > > > Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
-> > > > > access system memory.
-> > > > > 
-> > > > > MBUS controller is responsible for arbitration between channels based
-> > > > > on set priority and can do some other things as well, like report
-> > > > > bandwidth used. It also maps RAM region to different address than CPU.
-> > > > > 
-> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > ---
-> > > > > 
-> > > > >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
-> > > > >  1 file changed, 9 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > > b/arch/arm/boot/dts/sunxi-h3-h5.dtsi index eba190b3f9de..ef1d03812636
-> > > > > 100644
-> > > > > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > > > > @@ -109,6 +109,7 @@
-> > > > > 
-> > > > >  		compatible = "simple-bus";
-> > > > >  		#address-cells = <1>;
-> > > > >  		#size-cells = <1>;
-> > > > > 
-> > > > > +		dma-ranges;
-> > > > > 
-> > > > >  		ranges;
-> > > > >  		
-> > > > >  		display_clocks: clock@1000000 {
-> > > > > 
-> > > > > @@ -538,6 +539,14 @@
-> > > > > 
-> > > > >  			};
-> > > > >  		
-> > > > >  		};
-> > > > > 
-> > > > > +		mbus: dram-controller@1c62000 {
-> > > > > +			compatible = "allwinner,sun8i-h3-mbus";
-> > > > > +			reg = <0x01c62000 0x1000>;
-> > > > > +			clocks = <&ccu 113>;
-> > > > > +			dma-ranges = <0x00000000 0x40000000
-> > > 
-> > > 0xc0000000>;
-> > > 
-> > > > > +			#interconnect-cells = <1>;
-> > > > > +		};
-> > > > > +
-> > > > 
-> > > > If that's easy enough to access, can you also add the references in
-> > > > the devices that are already there? (CSI and DE comes to my mind, but
-> > > > there might be others).
-> > > 
-> > > Strangely, DE2 doesn't use this offset. That was tested on OrangePi
-> > > Plus2E,
-> > > which has 2 GiB of RAM and subtracting this offset causes corrupted image.
-> > 
-> > Ok, weird. But if it was tested then fine by me :)
-> > 
-> > > But I can add this properties to CSI too. However, wouldn't that need CSI
-> > > DT binding expansion with those properties? othetwise DT check will fail.
-> > Oh right, we definitely need to update the binding indeed. The code
-> > should be able to cope with both cases already.
-> 
-> I guess it's better to handle that with another patch series then? Changing 
-> CSI bindings doesn't fit here.
+From: Colin Ian King <colin.king@canonical.com>
 
-Yeah, you can do it in a separate series if you prefer
+There is a spelling mistake in the variable name eanble,
+rename it to enable.
 
-Maxime
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
+index 1488ffddf4e3..5944524faab9 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
+@@ -606,11 +606,11 @@ static void dce_mi_allocate_dmif(
+ 	}
+ 
+ 	if (dce_mi->wa.single_head_rdreq_dmif_limit) {
+-		uint32_t eanble =  (total_stream_num > 1) ? 0 :
++		uint32_t enable =  (total_stream_num > 1) ? 0 :
+ 				dce_mi->wa.single_head_rdreq_dmif_limit;
+ 
+ 		REG_UPDATE(MC_HUB_RDREQ_DMIF_LIMIT,
+-				ENABLE, eanble);
++				ENABLE, enable);
+ 	}
+ }
+ 
+@@ -636,11 +636,11 @@ static void dce_mi_free_dmif(
+ 			10, 3500);
+ 
+ 	if (dce_mi->wa.single_head_rdreq_dmif_limit) {
+-		uint32_t eanble =  (total_stream_num > 1) ? 0 :
++		uint32_t enable =  (total_stream_num > 1) ? 0 :
+ 				dce_mi->wa.single_head_rdreq_dmif_limit;
+ 
+ 		REG_UPDATE(MC_HUB_RDREQ_DMIF_LIMIT,
+-				ENABLE, eanble);
++				ENABLE, enable);
+ 	}
+ }
+ 
+-- 
+2.20.1
+
