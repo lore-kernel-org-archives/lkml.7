@@ -2,135 +2,93 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DFFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C338C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667F220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm/zd6+l"
+	by mail.kernel.org (Postfix) with ESMTP id EBDC9206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568406745;
+	bh=PZCHvKayvAE4IMjxFpsyDab8Rk2tkIgRO++dEQcXXOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DLu240CeScN5PYqJZBFg0npLE7OxZKWHp0khSHHRHLgzU4iUxAecP45QZGiJ/gnTX
+	 l3kcWYNyI6CByQ1vElKg1rr76Zey88dzr5uVuv9YMvaTEVCCiLa7rwoz6XxMq/eRJ3
+	 5uz6PfcL2RUiZKzHsZNBgCBbx9d4i0NDsUtzNRM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389255AbfIMU3N (ORCPT
+        id S1728618AbfIMUcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:29:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54447 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387637AbfIMU3N (ORCPT
+        Fri, 13 Sep 2019 16:32:24 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45125 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfIMUcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:29:13 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so3999722wmp.4;
-        Fri, 13 Sep 2019 13:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BwnRj7PJq/SSAsVSbXgfwpYXCFA29Cu8FrdaeblUNaY=;
-        b=Tm/zd6+los5t4+AELALzP5pfwfBhKBcHKteH6R/c7Nu9nPt0meOqPrYNxlxwSnxldc
-         sj4rLEyShvwUzwCkJC8uiAvJYmhXxAFFH8heSHfKGyC1Z0WwGjmM0uw8C13rR4/IwESW
-         1S+3IqfjoUInrqRbKw2wBdZeI612npcV0eHqk4T5jvuO3Bhf6QZ93PoYwCNvBvQM0yiU
-         6vWJR7tzUAWPHSCn/BL4N2+qloDw8QwFzUMV61hEQv8L5b/bwxSz6kuHbXi51RLhc7Dg
-         wm3prHOgOPxDYLDOEed+r7O2bZvpnM4NayliF+z5N2VIgA3uRTAbTGBhGBPjZ7IuPGwb
-         dHog==
+        Fri, 13 Sep 2019 16:32:24 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o205so3710222oib.12;
+        Fri, 13 Sep 2019 13:32:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwnRj7PJq/SSAsVSbXgfwpYXCFA29Cu8FrdaeblUNaY=;
-        b=QLcLvVKRxSIfPvYPXVCQtFZ0gxl+MTPCqym8+FY/jBwyFf6NTE2jWJJQMfP2NG9euQ
-         rq2kkAFvqoFxJbqeTrKGYuXs6fzxwWkWmpHUU72i0zwQurO6c2dSomslfHrclWHwxRK9
-         dmsjaVbc1KDcyKS12a9ObHdxedX2gC6x5nIc1dMQ8f54y4R3JV9yIsm3vhB+qxQOzaPE
-         adsnIhf5kEwlvIXBr2fWiXPJzmyVumQ32AihNofA93F1VOR53w6Kxjpk7/Q4e2oBETJ0
-         +E48o2ZmBhtBi+hkc0aW0nZyC/8LZjpyIfCSHUr7BDyZV+10pJWmr7iNMOHQXsakifmj
-         Ra9A==
-X-Gm-Message-State: APjAAAVL5Yb7xKxNgv/jLKGM5YT4d+c918j/24MvcOj6novtCb0p/sCU
-        9r+RA1g8d6PfQiWlBFkEaD64W/ypR+gWake3QOIQGw==
-X-Google-Smtp-Source: APXvYqybKucIudJAu7egTjDbJuVeu1SDruW9ZLV4m+SqmtqqxTpYMT8KJGaBUCDH4rcNUxo1IB45fuUuDiTa66dDaY0=
-X-Received: by 2002:a1c:ca0f:: with SMTP id a15mr4832349wmg.102.1568406551112;
- Fri, 13 Sep 2019 13:29:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BGIWuDNYrQwWqig+AD/FBHIPnZv5C2i4xJ4AwfsT/OY=;
+        b=IvBydacSyFYsbGXTGUcsreU+sWqyWPVVXBDwhphgTUs382jDYSYD/L6M4ETwhD+X9L
+         GJ/e+taR9E1DKP3lyELDZcNeUGZ3f814HiSWc9E0+2OBTVEsnkqCr3LhgevJwBPF6Tgj
+         2FjXXb9S9B/NHrd2dxKmvCUbx+vmEA2IyCmt8/+nTKzQeSadaWFHXVtofH06hmaBGRAo
+         +NEkt0ObCGgOw5pnBJ0hTYJxA3/F8dCrttdontj25Cm4JaJNNygezuzACjIa1e36x89Y
+         MZIMRDR8D8XE6p/e+OXY0BjbtpSCOwa3AD9J/92oh6Juz/4kxArSFyvYWUfD4hgkZpUm
+         f7SQ==
+X-Gm-Message-State: APjAAAVaHGGdfZNaVb5tBixG4X/JE8HqimjlzkMrqzTQnmEBFVzZMmzo
+        +gYrYvgUJGAlm+DYEgXS7Q==
+X-Google-Smtp-Source: APXvYqzFbRU+snVUDd9MMC9DD08qEbNF3nw90SquEx0edL36n1/nyysG5QDi7pc411CpUKfeTsFBbg==
+X-Received: by 2002:a05:6808:4d1:: with SMTP id a17mr5063804oie.71.1568406743044;
+        Fri, 13 Sep 2019 13:32:23 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t30sm10013349otj.40.2019.09.13.13.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 13:32:22 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 15:32:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Poeschel <poeschel@lemonage.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v7 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Message-ID: <20190913203221.GA19194@bogus>
+References: <20190910093256.1920-1-poeschel@lemonage.de>
 MIME-Version: 1.0
-References: <20190913080248.28695-1-colin.king@canonical.com>
-In-Reply-To: <20190913080248.28695-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 13 Sep 2019 16:28:58 -0400
-Message-ID: <CADnq5_P+G9bRLvFAZht+LzjwmquO5guAHFAeWFO2DTi-mTasTw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: rename variable eanble -> enable
-To:     Colin King <colin.king@canonical.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910093256.1920-1-poeschel@lemonage.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 4:02 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in the variable name eanble,
-> rename it to enable.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-Applied.  thanks!
-
-Alex
-
+On Tue, Sep 10, 2019 at 11:32:53AM +0200, Lars Poeschel wrote:
+> Add a simple binding doc for the pn532.
+> 
+> Cc: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 > ---
->  drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-> index 1488ffddf4e3..5944524faab9 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_mem_input.c
-> @@ -606,11 +606,11 @@ static void dce_mi_allocate_dmif(
->         }
->
->         if (dce_mi->wa.single_head_rdreq_dmif_limit) {
-> -               uint32_t eanble =  (total_stream_num > 1) ? 0 :
-> +               uint32_t enable =  (total_stream_num > 1) ? 0 :
->                                 dce_mi->wa.single_head_rdreq_dmif_limit;
->
->                 REG_UPDATE(MC_HUB_RDREQ_DMIF_LIMIT,
-> -                               ENABLE, eanble);
-> +                               ENABLE, enable);
->         }
->  }
->
-> @@ -636,11 +636,11 @@ static void dce_mi_free_dmif(
->                         10, 3500);
->
->         if (dce_mi->wa.single_head_rdreq_dmif_limit) {
-> -               uint32_t eanble =  (total_stream_num > 1) ? 0 :
-> +               uint32_t enable =  (total_stream_num > 1) ? 0 :
->                                 dce_mi->wa.single_head_rdreq_dmif_limit;
->
->                 REG_UPDATE(MC_HUB_RDREQ_DMIF_LIMIT,
-> -                               ENABLE, eanble);
-> +                               ENABLE, enable);
->         }
->  }
->
-> --
-> 2.20.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Changes in v6:
+> - Rebased the patch series on v5.3-rc5
+> - Picked up Rob's Reviewed-By
+
+And dropped in v7?
+
+> 
+> Changes in v4:
+> - Add documentation about reg property in case of i2c
+> 
+> Changes in v3:
+> - seperate binding doc instead of entry in trivial-devices.txt
+> 
+>  .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
