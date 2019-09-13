@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A94C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8015C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA6B205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA93205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381586;
-	bh=t2tjSDO5vxOy3giNKDDJxJA/uKkPLx8LF1myWbw+N+s=;
+	s=default; t=1568381595;
+	bh=PAKaJQyWgyfTcBY6l1xp4O9eU92shj7WJb6AV3Ggkrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7vBKvRnRBl51+pviBDLnEPKtZec53EiqglZkCt6bsyVDQ+q/AKZU0B1i5FUwZqXf
-	 7/PACSVQFUOA6JIHnLRjeX0hWXb6sIfjPvlzPKAO5eGcOPGD1r7+mVg6SeXcZnnhw3
-	 i/gkYUmcAeJdYQPnODHsZ+1GyiMaP6YyCk+Z0+zE=
+	b=BXXg0/Vre276T6PcdVKSM4Unbakc72S2TQSPnYGFrE671kYUwroXuXiKddE/ygRJj
+	 D+RC+2aaxR2K9u7938SzvhwlSqlFnUVmIOrUP5Lt406Je0IR8hrUW4zlgWW4DY+vCl
+	 H+5nm5IznK8VKVKb5gDSI7a7pai8GBRghwqc5sts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbfIMNLa (ORCPT
+        id S2391364AbfIMNdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388955AbfIMNL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:27 -0400
+        id S2387788AbfIMNLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:17 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 813C6208C2;
-        Fri, 13 Sep 2019 13:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97413208C2;
+        Fri, 13 Sep 2019 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380286;
-        bh=t2tjSDO5vxOy3giNKDDJxJA/uKkPLx8LF1myWbw+N+s=;
+        s=default; t=1568380277;
+        bh=PAKaJQyWgyfTcBY6l1xp4O9eU92shj7WJb6AV3Ggkrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szYJrN8mWpqgbFl7A8IyxCvL78l3smgchDIDUo/Sl26W3ETz5PEaPuut6NvdG8zZr
-         055Mzz+pMIxQCcZ5nl2RaWvw06r6Jis+HidRcVT54bMKHJ2klZrp+1nd0PMOSm7cTL
-         BgZo9i5ayj/KkumAstJ2IbM/ubnzFEYPiCbXaQww=
+        b=pYVZ7PdTvHp+g+kAsK8+OpwvXIMBM5zSGQMQxApDLeI+lpnkW7KJmJ/e0vDvO/WR9
+         3ZNkZJd/xpvPeJqVZdhkNESABvksFl8o/oxSJK6ib3a4lvajXdpNu6krhP8BbMbsS8
+         tRffp5CuleArV8hPJc6fpWMcWiQr4YZ1fQs3KeE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manikanta Pubbisetty <mpubbise@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/190] {nl,mac}80211: fix interface combinations on crypto controlled devices
-Date:   Fri, 13 Sep 2019 14:04:31 +0100
-Message-Id: <20190913130600.869646954@linuxfoundation.org>
+Subject: [PATCH 4.19 013/190] hv_sock: Fix hang when a connection is closed
+Date:   Fri, 13 Sep 2019 14:04:28 +0100
+Message-Id: <20190913130600.658336649@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,175 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6f4051123fd33901e9655a675b22aefcdc5d277 ]
+[ Upstream commit 685703b497bacea8765bb409d6b73455b73c540e ]
 
-Commit 33d915d9e8ce ("{nl,mac}80211: allow 4addr AP operation on
-crypto controlled devices") has introduced a change which allows
-4addr operation on crypto controlled devices (ex: ath10k). This
-change has inadvertently impacted the interface combinations logic
-on such devices.
+There is a race condition for an established connection that is being closed
+by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
+'remove_sock' is false):
 
-General rule is that software interfaces like AP/VLAN should not be
-listed under supported interface combinations and should not be
-considered during validation of these combinations; because of the
-aforementioned change, AP/VLAN interfaces(if present) will be checked
-against interfaces supported by the device and blocks valid interface
-combinations.
+1 for the initial value;
+1 for the sk being in the bound list;
+1 for the sk being in the connected list;
+1 for the delayed close_work.
 
-Consider a case where an AP and AP/VLAN are up and running; when a
-second AP device is brought up on the same physical device, this AP
-will be checked against the AP/VLAN interface (which will not be
-part of supported interface combinations of the device) and blocks
-second AP to come up.
+After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
+decrease the refcnt to 3.
 
-Add a new API cfg80211_iftype_allowed() to fix the problem, this
-API works for all devices with/without SW crypto control.
+Concurrently, hvs_close_connection() runs in another thread:
+  calls vsock_remove_sock() to decrease the refcnt by 2;
+  call sock_put() to decrease the refcnt to 0, and free the sk;
+  next, the "release_sock(sk)" may hang due to use-after-free.
 
-Signed-off-by: Manikanta Pubbisetty <mpubbise@codeaurora.org>
-Fixes: 33d915d9e8ce ("{nl,mac}80211: allow 4addr AP operation on crypto controlled devices")
-Link: https://lore.kernel.org/r/1563779690-9716-1-git-send-email-mpubbise@codeaurora.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+In the above, after hvs_release() finishes, if hvs_close_connection() runs
+faster than "__vsock_release() -> sock_put(sk)", then there is not any issue,
+because at the beginning of hvs_close_connection(), the refcnt is still 4.
+
+The issue can be resolved if an extra reference is taken when the
+connection is established.
+
+Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/cfg80211.h | 15 +++++++++++++++
- net/mac80211/util.c    |  7 +++----
- net/wireless/core.c    |  6 ++----
- net/wireless/nl80211.c |  4 +---
- net/wireless/util.c    | 27 +++++++++++++++++++++++++--
- 5 files changed, 46 insertions(+), 13 deletions(-)
+ net/vmw_vsock/hyperv_transport.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index 67e0a990144a6..468deae5d603e 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -6562,6 +6562,21 @@ int cfg80211_external_auth_request(struct net_device *netdev,
- 				   struct cfg80211_external_auth_params *params,
- 				   gfp_t gfp);
- 
-+/**
-+ * cfg80211_iftype_allowed - check whether the interface can be allowed
-+ * @wiphy: the wiphy
-+ * @iftype: interface type
-+ * @is_4addr: use_4addr flag, must be '0' when check_swif is '1'
-+ * @check_swif: check iftype against software interfaces
-+ *
-+ * Check whether the interface is allowed to operate; additionally, this API
-+ * can be used to check iftype against the software interfaces when
-+ * check_swif is '1'.
-+ */
-+bool cfg80211_iftype_allowed(struct wiphy *wiphy, enum nl80211_iftype iftype,
-+			     bool is_4addr, u8 check_swif);
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 9c7da811d130f..98f193fd5315e 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -320,6 +320,11 @@ static void hvs_close_connection(struct vmbus_channel *chan)
+ 	lock_sock(sk);
+ 	hvs_do_close_lock_held(vsock_sk(sk), true);
+ 	release_sock(sk);
 +
-+
- /* Logging, debugging and troubleshooting/diagnostic helpers. */
++	/* Release the refcnt for the channel that's opened in
++	 * hvs_open_connection().
++	 */
++	sock_put(sk);
+ }
  
- /* wiphy_printk helpers, similar to dev_printk */
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index c59638574cf8b..f101a6460b44b 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -3527,9 +3527,7 @@ int ieee80211_check_combinations(struct ieee80211_sub_if_data *sdata,
+ static void hvs_open_connection(struct vmbus_channel *chan)
+@@ -388,6 +393,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
  	}
  
- 	/* Always allow software iftypes */
--	if (local->hw.wiphy->software_iftypes & BIT(iftype) ||
--	    (iftype == NL80211_IFTYPE_AP_VLAN &&
--	     local->hw.wiphy->flags & WIPHY_FLAG_4ADDR_AP)) {
-+	if (cfg80211_iftype_allowed(local->hw.wiphy, iftype, 0, 1)) {
- 		if (radar_detect)
- 			return -EINVAL;
- 		return 0;
-@@ -3564,7 +3562,8 @@ int ieee80211_check_combinations(struct ieee80211_sub_if_data *sdata,
- 
- 		if (sdata_iter == sdata ||
- 		    !ieee80211_sdata_running(sdata_iter) ||
--		    local->hw.wiphy->software_iftypes & BIT(wdev_iter->iftype))
-+		    cfg80211_iftype_allowed(local->hw.wiphy,
-+					    wdev_iter->iftype, 0, 1))
- 			continue;
- 
- 		params.iftype_num[wdev_iter->iftype]++;
-diff --git a/net/wireless/core.c b/net/wireless/core.c
-index 2a46ec3cb72c1..68660781aa51f 100644
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -1335,10 +1335,8 @@ static int cfg80211_netdev_notifier_call(struct notifier_block *nb,
- 		}
- 		break;
- 	case NETDEV_PRE_UP:
--		if (!(wdev->wiphy->interface_modes & BIT(wdev->iftype)) &&
--		    !(wdev->iftype == NL80211_IFTYPE_AP_VLAN &&
--		      rdev->wiphy.flags & WIPHY_FLAG_4ADDR_AP &&
--		      wdev->use_4addr))
-+		if (!cfg80211_iftype_allowed(wdev->wiphy, wdev->iftype,
-+					     wdev->use_4addr, 0))
- 			return notifier_from_errno(-EOPNOTSUPP);
- 
- 		if (rfkill_blocked(rdev->rfkill))
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 8e2f03ab4cc9f..2a85bff6a8f35 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -3210,9 +3210,7 @@ static int nl80211_new_interface(struct sk_buff *skb, struct genl_info *info)
- 			return err;
- 	}
- 
--	if (!(rdev->wiphy.interface_modes & (1 << type)) &&
--	    !(type == NL80211_IFTYPE_AP_VLAN && params.use_4addr &&
--	      rdev->wiphy.flags & WIPHY_FLAG_4ADDR_AP))
-+	if (!cfg80211_iftype_allowed(&rdev->wiphy, type, params.use_4addr, 0))
- 		return -EOPNOTSUPP;
- 
- 	err = nl80211_parse_mon_options(rdev, type, info, &params);
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index d57e2f679a3e4..c14e8f6e5e198 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -1670,7 +1670,7 @@ int cfg80211_iter_combinations(struct wiphy *wiphy,
- 	for (iftype = 0; iftype < NUM_NL80211_IFTYPES; iftype++) {
- 		num_interfaces += params->iftype_num[iftype];
- 		if (params->iftype_num[iftype] > 0 &&
--		    !(wiphy->software_iftypes & BIT(iftype)))
-+		    !cfg80211_iftype_allowed(wiphy, iftype, 0, 1))
- 			used_iftypes |= BIT(iftype);
- 	}
- 
-@@ -1692,7 +1692,7 @@ int cfg80211_iter_combinations(struct wiphy *wiphy,
- 			return -ENOMEM;
- 
- 		for (iftype = 0; iftype < NUM_NL80211_IFTYPES; iftype++) {
--			if (wiphy->software_iftypes & BIT(iftype))
-+			if (cfg80211_iftype_allowed(wiphy, iftype, 0, 1))
- 				continue;
- 			for (j = 0; j < c->n_limits; j++) {
- 				all_iftypes |= limits[j].types;
-@@ -1895,3 +1895,26 @@ EXPORT_SYMBOL(rfc1042_header);
- const unsigned char bridge_tunnel_header[] __aligned(2) =
- 	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
- EXPORT_SYMBOL(bridge_tunnel_header);
+ 	set_per_channel_state(chan, conn_from_host ? new : sk);
 +
-+bool cfg80211_iftype_allowed(struct wiphy *wiphy, enum nl80211_iftype iftype,
-+			     bool is_4addr, u8 check_swif)
-+
-+{
-+	bool is_vlan = iftype == NL80211_IFTYPE_AP_VLAN;
-+
-+	switch (check_swif) {
-+	case 0:
-+		if (is_vlan && is_4addr)
-+			return wiphy->flags & WIPHY_FLAG_4ADDR_AP;
-+		return wiphy->interface_modes & BIT(iftype);
-+	case 1:
-+		if (!(wiphy->software_iftypes & BIT(iftype)) && is_vlan)
-+			return wiphy->flags & WIPHY_FLAG_4ADDR_AP;
-+		return wiphy->software_iftypes & BIT(iftype);
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+EXPORT_SYMBOL(cfg80211_iftype_allowed);
++	/* This reference will be dropped by hvs_close_connection(). */
++	sock_hold(conn_from_host ? new : sk);
+ 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
+ 
+ 	/* Set the pending send size to max packet size to always get
 -- 
 2.20.1
 
