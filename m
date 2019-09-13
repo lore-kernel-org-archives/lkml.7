@@ -2,239 +2,557 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92ECC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17821C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F1520CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBB020644
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PypIEZhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfIMF57 (ORCPT
+        id S1727380AbfIMGC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:57:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:38984 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfIMF57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:57:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48CCF337;
-        Thu, 12 Sep 2019 22:57:58 -0700 (PDT)
-Received: from [10.162.41.125] (p8cg001049571a15.blr.arm.com [10.162.41.125])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C08F33F67D;
-        Thu, 12 Sep 2019 23:00:20 -0700 (PDT)
-Subject: Re: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
- <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
- <20190912201517.GB1068@C02TF0J2HF1T.local>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ce127798-3863-0f28-de04-84b177418310@arm.com>
-Date:   Fri, 13 Sep 2019 11:28:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190912201517.GB1068@C02TF0J2HF1T.local>
-Content-Type: text/plain; charset=utf-8
+        Fri, 13 Sep 2019 02:02:59 -0400
+Received: from mail-eopbgr710098.outbound.protection.outlook.com ([40.107.71.98]:39816
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfIMGC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:02:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nX04JJT3Px0RvO24eGcmJPLWVOuN2NdScn2/7PIi9ZBmr736yfrEPaHwnaxaYPCgeGn8/EH+LagKbx8XQWLs70NGJYfe6ZRqaGexrbikZiyXMviqnF3eTQSvmZyfR0yWUUQxGMLNge8dRoWRIzyVhjgujal8SJKpJvuH1m4bwFRuiLeZ3yZxqb32TILocXPMWJIMgrb0/qdNce2tm2XdfNaEBYIletSm4I7MHCAZ3H4E41uPs0KR474EriVJpILtHNixwTkkaLujqIezfiStWYgUhIBA2Wd9XTljm2UQMASraZAwVPV3FpcoLsKpYyy24b4Z2KZpwwPZyQjajrlc5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EFrlKwQoF4wsohqguEeEx/8oNrA7Otllo5s1o7GLeNQ=;
+ b=XxG83qZWi5DPaE/dVyD84wXDpqMl9rYFZAQRyucbAyFWGDjq9KBFo+0urcBXWrhr24huBuDf42SGcY9MOAS2rUkuUc01aEpzj6JFR1V7WJxILO1jJMhRwuKZq7WHQ+kpEsTg/xTYEh0cSpZ8tn3AtFcuowvT80XMgXPZu2SgO1hYa7M8QlDkgFxAzZR5qXrenmR+AGzHIIu/b4chti0QDSR55ynvQ78r6P1JhjWwkvZvU1rEcetH2EZgTLZwxYax2ydbOnRBOfOCK1K8Zn1qlJGx+3hXoLGlKksTX3AzU21/iFbOjEyqTiWBcKLTEztfQm2/wgOx9lwfTYMxbKTyqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EFrlKwQoF4wsohqguEeEx/8oNrA7Otllo5s1o7GLeNQ=;
+ b=PypIEZhh4+M5+K6SBcC5xlVKxlptZ+BK87RLMDsS9p+vq32E6+eylysAPoFwHQV2AYPZoLv76Sva9Cx6c5gHhfkQ5IH4mW84ocwy2JPtvWrIg29evgzFseBF1OPi1fvPWeYZbKWPWs1xaT5kK6chwPj1oxdM5V82jjpoj0l0Afs=
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com (10.255.109.88) by
+ DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.5; Fri, 13 Sep 2019 06:02:55 +0000
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759]) by DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759%5]) with mapi id 15.20.2284.008; Fri, 13 Sep 2019
+ 06:02:55 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V
+ frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVafjiL2AndauzGUaHnigxWapFww==
+Date:   Fri, 13 Sep 2019 06:02:55 +0000
+Message-ID: <20190913060209.3604-1-weh@microsoft.com>
+Reply-To: Wei Hu <weh@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR04CA0135.apcprd04.prod.outlook.com
+ (2603:1096:3:16::19) To DM6PR21MB1401.namprd21.prod.outlook.com
+ (2603:10b6:5:22d::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [167.220.255.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c408b3a9-a60d-46e5-84bc-08d738100506
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
+x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB1417019ABB06DB584EA12334BBB30@DM6PR21MB1417.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(6636002)(6116002)(66066001)(71200400001)(22452003)(99286004)(102836004)(36756003)(71190400001)(25786009)(2201001)(386003)(107886003)(186003)(6506007)(66946007)(7416002)(1250700005)(86362001)(110136005)(2616005)(476003)(26005)(2906002)(486006)(256004)(14454004)(66476007)(64756008)(66556008)(14444005)(66446008)(305945005)(3846002)(10090500001)(4326008)(8936002)(5660300002)(8676002)(53936002)(6512007)(478600001)(3450700001)(2501003)(30864003)(1511001)(10290500003)(316002)(1076003)(7736002)(81156014)(50226002)(43066004)(6486002)(6436002)(81166006)(52116002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1401.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8LtWCN79Imfdhhdc+7ePMp1aFp9ua0aSymsTmzwzalEduNPauJC5aelDq32NxOcSB7fhvrAWkOSjy3fWfU1YO1PsZJd+MiCa/pK5N+r9JtdYlPBgUtfD/JsIeIIMl44aKDuWLRDkHBHOIF32Ft7NiY7ZUpz8bb24gKMs2imwfBA760RP2/fdxGOJRDn2gTiPbivm8po/7Qsh7eUSX51TzbWUctaBRgYk3Qw8QJb1TRiPpOVwdAMpg4zuawg3Ib+D9zPGdDEw3O4qZX+fW2Ca4Hq37zNDxd6kMb38MCE1GAHDnG1i19pCBjoQDLsUdTaUw6TVTG7CTt7mqeFGZzMqSzxDdOcUPLYPB6YswL2S0l1qWb8bazwovJbUuo/Wo/JR6rlNPwOtGBX1lV5VTllvmjjflGOOitBCzUbsMuAGG6M=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c408b3a9-a60d-46e5-84bc-08d738100506
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 06:02:55.4142
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IpdQ8lbP+sReuU4BxYLPZi+Ayaf0i8FXJFTpU1lUc15Nm+6z+zFBWhoQ6UCVJkdaigGdU9qPvq/kezwie/doZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/13/2019 01:45 AM, Catalin Marinas wrote:
-> Hi Anshuman,
-> 
-> Thanks for the details on the need for removing the page tables and
-> vmemmap backing. Some comments on the code below.
-> 
-> On Tue, Sep 03, 2019 at 03:15:58PM +0530, Anshuman Khandual wrote:
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -60,6 +60,14 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
->>  
->>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
->>  
->> +/*
->> + * This represents if vmalloc and vmemmap address range overlap with
->> + * each other on an intermediate level kernel page table entry which
->> + * in turn helps in deciding whether empty kernel page table pages
->> + * if any can be freed during memory hotplug operation.
->> + */
->> +static bool vmalloc_vmemmap_overlap;
-> 
-> I'd say just move the static find_vmalloc_vmemmap_overlap() function
-> here, the compiler should be sufficiently smart enough to figure out
-> that it's just a build-time constant.
+Without deferred IO support, hyperv_fb driver informs the host to refresh
+the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
+is screen update or not. This patch supports deferred IO for screens in
+graphics mode and also enables the frame buffer on-demand refresh. The
+highest refresh rate is still set at 20Hz.
 
-Sure, will do.
+Currently Hyper-V only takes a physical address from guest as the starting
+address of frame buffer. This implies the guest must allocate contiguous
+physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+accept address from MMIO region as frame buffer address. Due to these
+limitations on Hyper-V host, we keep a shadow copy of frame buffer
+in the guest. This means one more copy of the dirty rectangle inside
+guest when doing the on-demand refresh. This can be optimized in the
+future with help from host. For now the host performance gain from deferred
+IO outweighs the shadow copy impact in the guest.
 
-> 
->> @@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>  void vmemmap_free(unsigned long start, unsigned long end,
->>  		struct vmem_altmap *altmap)
->>  {
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +	/*
->> +	 * FIXME: We should have called remove_pagetable(start, end, true).
->> +	 * vmemmap and vmalloc virtual range might share intermediate kernel
->> +	 * page table entries. Removing vmemmap range page table pages here
->> +	 * can potentially conflict with a concurrent vmalloc() allocation.
->> +	 *
->> +	 * This is primarily because vmalloc() does not take init_mm ptl for
->> +	 * the entire page table walk and it's modification. Instead it just
->> +	 * takes the lock while allocating and installing page table pages
->> +	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
->> +	 * entry via memory hot remove can cause vmalloc() kernel page table
->> +	 * walk pointers to be invalid on the fly which can cause corruption
->> +	 * or worst, a crash.
->> +	 *
->> +	 * So free_empty_tables() gets called where vmalloc and vmemmap range
->> +	 * do not overlap at any intermediate level kernel page table entry.
->> +	 */
->> +	unmap_hotplug_range(start, end, true);
->> +	if (!vmalloc_vmemmap_overlap)
->> +		free_empty_tables(start, end);
->> +#endif
->>  }
-> 
-> So, I see the risk with overlapping and I guess for some kernel
-> configurations (PAGE_SIZE == 64K) we may not be able to avoid it. If we
+Signed-off-by: Wei Hu <weh@microsoft.com>
+---
+    v2: Incorporated review comments from Michael Kelley
+    - Increased dirty rectangle by one row in deferred IO case when sending
+    to Hyper-V.
+    - Corrected the dirty rectangle size in the text mode.
+    - Added more comments.
+    - Other minor code cleanups.
 
-Did not see 64K config options to have overlap, do you suspect they might ?
-After the 52 bit KVA series has been merged, following configurations have
-the vmalloc-vmemmap range overlap problem.
+    v3: Incorporated more review comments
+    - Removed a few unnecessary variable tests
 
-- 4K  page size with 48 bit VA space
-- 16K page size with 48 bit VA space
+    v4: Incorporated test and review feedback from Dexuan Cui
+    - Not disable interrupt while acquiring docopy_lock in
+      hvfb_update_work(). This avoids significant bootup delay in
+      large vCPU count VMs.
 
-> can, that's great, otherwise could we rewrite the above functions to
-> handle floor and ceiling similar to free_pgd_range()? (I wonder how this
-> function works if you called it on init_mm and kernel address range). By
+    v5: Completely remove the unnecessary docopy_lock after discussing
+    with Dexuan Cui.
 
-Hmm, never tried that. Are you wondering if this can be used directly ?
-There are two distinct elements which make it very specific to user page
-tables, mmu_gather based TLB tracking and mm->pgtable_bytes accounting
-with mm_dec_nr_pxx().
+ drivers/video/fbdev/Kconfig     |   1 +
+ drivers/video/fbdev/hyperv_fb.c | 208 +++++++++++++++++++++++++++++---
+ 2 files changed, 189 insertions(+), 20 deletions(-)
 
-> having the vmemmap start/end information it avoids freeing partially
-> filled page table pages.
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index 1b2f5f31fb6f..e781f89a1824 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -2241,6 +2241,7 @@ config FB_HYPERV
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
++	select FB_DEFERRED_IO
+ 	help
+ 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+=20
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_f=
+b.c
+index fe319fc39bec..89a5ec3741b9 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -237,6 +237,7 @@ struct synthvid_msg {
+ #define RING_BUFSIZE (256 * 1024)
+ #define VSP_TIMEOUT (10 * HZ)
+ #define HVFB_UPDATE_DELAY (HZ / 20)
++#define HVFB_ONDEMAND_THROTTLE (HZ / 20)
+=20
+ struct hvfb_par {
+ 	struct fb_info *info;
+@@ -256,6 +257,16 @@ struct hvfb_par {
+ 	bool synchronous_fb;
+=20
+ 	struct notifier_block hvfb_panic_nb;
++
++	/* Memory for deferred IO and frame buffer itself */
++	unsigned char *dio_vp;
++	unsigned char *mmio_vp;
++	unsigned long mmio_pp;
++
++	/* Dirty rectangle, protected by delayed_refresh_lock */
++	int x1, y1, x2, y2;
++	bool delayed_refresh;
++	spinlock_t delayed_refresh_lock;
+ };
+=20
+ static uint screen_width =3D HVFB_WIDTH;
+@@ -264,6 +275,7 @@ static uint screen_width_max =3D HVFB_WIDTH;
+ static uint screen_height_max =3D HVFB_HEIGHT;
+ static uint screen_depth;
+ static uint screen_fb_size;
++static uint dio_fb_size; /* FB size for deferred IO */
+=20
+ /* Send message to Hyper-V host */
+ static inline int synthvid_send(struct hv_device *hdev,
+@@ -350,28 +362,88 @@ static int synthvid_send_ptr(struct hv_device *hdev)
+ }
+=20
+ /* Send updated screen area (dirty rectangle) location to host */
+-static int synthvid_update(struct fb_info *info)
++static int
++synthvid_update(struct fb_info *info, int x1, int y1, int x2, int y2)
+ {
+ 	struct hv_device *hdev =3D device_to_hv_device(info->device);
+ 	struct synthvid_msg msg;
+=20
+ 	memset(&msg, 0, sizeof(struct synthvid_msg));
++	if (x2 =3D=3D INT_MAX)
++		x2 =3D info->var.xres;
++	if (y2 =3D=3D INT_MAX)
++		y2 =3D info->var.yres;
+=20
+ 	msg.vid_hdr.type =3D SYNTHVID_DIRT;
+ 	msg.vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_dirt);
+ 	msg.dirt.video_output =3D 0;
+ 	msg.dirt.dirt_count =3D 1;
+-	msg.dirt.rect[0].x1 =3D 0;
+-	msg.dirt.rect[0].y1 =3D 0;
+-	msg.dirt.rect[0].x2 =3D info->var.xres;
+-	msg.dirt.rect[0].y2 =3D info->var.yres;
++	msg.dirt.rect[0].x1 =3D (x1 > x2) ? 0 : x1;
++	msg.dirt.rect[0].y1 =3D (y1 > y2) ? 0 : y1;
++	msg.dirt.rect[0].x2 =3D
++		(x2 < x1 || x2 > info->var.xres) ? info->var.xres : x2;
++	msg.dirt.rect[0].y2 =3D
++		(y2 < y1 || y2 > info->var.yres) ? info->var.yres : y2;
+=20
+ 	synthvid_send(hdev, &msg);
+=20
+ 	return 0;
+ }
+=20
++static void hvfb_docopy(struct hvfb_par *par,
++			unsigned long offset,
++			unsigned long size)
++{
++	if (!par || !par->mmio_vp || !par->dio_vp || !par->fb_ready ||
++	    size =3D=3D 0 || offset >=3D dio_fb_size)
++		return;
++
++	if (offset + size > dio_fb_size)
++		size =3D dio_fb_size - offset;
++
++	memcpy(par->mmio_vp + offset, par->dio_vp + offset, size);
++}
++
++/* Deferred IO callback */
++static void synthvid_deferred_io(struct fb_info *p,
++				 struct list_head *pagelist)
++{
++	struct hvfb_par *par =3D p->par;
++	struct page *page;
++	unsigned long start, end;
++	int y1, y2, miny, maxy;
++
++	miny =3D INT_MAX;
++	maxy =3D 0;
++
++	/*
++	 * Merge dirty pages. It is possible that last page cross
++	 * over the end of frame buffer row yres. This is taken care of
++	 * in synthvid_update function by clamping the y2
++	 * value to yres.
++	 */
++	list_for_each_entry(page, pagelist, lru) {
++		start =3D page->index << PAGE_SHIFT;
++		end =3D start + PAGE_SIZE - 1;
++		y1 =3D start / p->fix.line_length;
++		y2 =3D end / p->fix.line_length;
++		miny =3D min_t(int, miny, y1);
++		maxy =3D max_t(int, maxy, y2);
++
++		/* Copy from dio space to mmio address */
++		if (par->fb_ready)
++			hvfb_docopy(par, start, PAGE_SIZE);
++	}
++
++	if (par->fb_ready)
++		synthvid_update(p, 0, miny, p->var.xres, maxy + 1);
++}
++
++static struct fb_deferred_io synthvid_defio =3D {
++	.delay		=3D HZ / 20,
++	.deferred_io	=3D synthvid_deferred_io,
++};
+=20
+ /*
+  * Actions on received messages from host:
+@@ -618,7 +690,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 	msg->vid_hdr.type =3D SYNTHVID_VRAM_LOCATION;
+ 	msg->vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_vram_location);
+-	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D info->fix.smem_start;
++	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D par->mmio_pp;
+ 	msg->vram.is_vram_gpa_specified =3D 1;
+ 	synthvid_send(hdev, msg);
+=20
+@@ -628,7 +700,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 		ret =3D -ETIMEDOUT;
+ 		goto out;
+ 	}
+-	if (msg->vram_ack.user_ctx !=3D info->fix.smem_start) {
++	if (msg->vram_ack.user_ctx !=3D par->mmio_pp) {
+ 		pr_err("Unable to set VRAM location\n");
+ 		ret =3D -ENODEV;
+ 		goto out;
+@@ -645,19 +717,77 @@ static int synthvid_send_config(struct hv_device *hde=
+v)
+=20
+ /*
+  * Delayed work callback:
+- * It is called at HVFB_UPDATE_DELAY or longer time interval to process
+- * screen updates. It is re-scheduled if further update is necessary.
++ * It is scheduled to call whenever update request is received and it has
++ * not been called in last HVFB_ONDEMAND_THROTTLE time interval.
+  */
+ static void hvfb_update_work(struct work_struct *w)
+ {
+ 	struct hvfb_par *par =3D container_of(w, struct hvfb_par, dwork.work);
+ 	struct fb_info *info =3D par->info;
++	unsigned long flags;
++	int x1, x2, y1, y2;
++	int j;
+=20
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
++	/* Reset the request flag */
++	par->delayed_refresh =3D false;
++
++	/* Store the dirty rectangle to local variables */
++	x1 =3D par->x1;
++	x2 =3D par->x2;
++	y1 =3D par->y1;
++	y2 =3D par->y2;
++
++	/* Clear dirty rectangle */
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
++
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
++
++	if (x1 > info->var.xres || x2 > info->var.xres ||
++	    y1 > info->var.yres || y2 > info->var.yres || x2 <=3D x1)
++		return;
++
++	/* Copy the dirty rectangle to frame buffer memory */
++	for (j =3D y1; j < y2; j++) {
++		hvfb_docopy(par,
++			    j * info->fix.line_length +
++			    (x1 * screen_depth / 8),
++			    (x2 - x1) * screen_depth / 8);
++	}
++
++	/* Refresh */
+ 	if (par->fb_ready)
+-		synthvid_update(info);
++		synthvid_update(info, x1, y1, x2, y2);
++}
++
++/*
++ * Control the on-demand refresh frequency. It schedules a delayed
++ * screen update if it has not yet.
++ */
++static void hvfb_ondemand_refresh_throttle(struct hvfb_par *par,
++					   int x1, int y1, int w, int h)
++{
++	unsigned long flags;
++	int x2 =3D x1 + w;
++	int y2 =3D y1 + h;
++
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
++
++	/* Merge dirty rectangle */
++	par->x1 =3D min_t(int, par->x1, x1);
++	par->y1 =3D min_t(int, par->y1, y1);
++	par->x2 =3D max_t(int, par->x2, x2);
++	par->y2 =3D max_t(int, par->y2, y2);
++
++	/* Schedule a delayed screen update if not yet */
++	if (par->delayed_refresh =3D=3D false) {
++		schedule_delayed_work(&par->dwork,
++				      HVFB_ONDEMAND_THROTTLE);
++		par->delayed_refresh =3D true;
++	}
+=20
+-	if (par->update)
+-		schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
+ }
+=20
+ static int hvfb_on_panic(struct notifier_block *nb,
+@@ -669,7 +799,8 @@ static int hvfb_on_panic(struct notifier_block *nb,
+ 	par =3D container_of(nb, struct hvfb_par, hvfb_panic_nb);
+ 	par->synchronous_fb =3D true;
+ 	info =3D par->info;
+-	synthvid_update(info);
++	hvfb_docopy(par, 0, dio_fb_size);
++	synthvid_update(info, 0, 0, INT_MAX, INT_MAX);
+=20
+ 	return NOTIFY_DONE;
+ }
+@@ -730,7 +861,10 @@ static void hvfb_cfb_fillrect(struct fb_info *p,
+=20
+ 	cfb_fillrect(p, rect);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, rect->dx, rect->dy,
++					       rect->width, rect->height);
+ }
+=20
+ static void hvfb_cfb_copyarea(struct fb_info *p,
+@@ -740,7 +874,10 @@ static void hvfb_cfb_copyarea(struct fb_info *p,
+=20
+ 	cfb_copyarea(p, area);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, area->dx, area->dy,
++					       area->width, area->height);
+ }
+=20
+ static void hvfb_cfb_imageblit(struct fb_info *p,
+@@ -750,7 +887,10 @@ static void hvfb_cfb_imageblit(struct fb_info *p,
+=20
+ 	cfb_imageblit(p, image);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, image->dx, image->dy,
++					       image->width, image->height);
+ }
+=20
+ static struct fb_ops hvfb_ops =3D {
+@@ -809,6 +949,9 @@ static int hvfb_getmem(struct hv_device *hdev, struct f=
+b_info *info)
+ 	resource_size_t pot_start, pot_end;
+ 	int ret;
+=20
++	dio_fb_size =3D
++		screen_width * screen_height * screen_depth / 8;
++
+ 	if (gen2vm) {
+ 		pot_start =3D 0;
+ 		pot_end =3D -1;
+@@ -843,9 +986,14 @@ static int hvfb_getmem(struct hv_device *hdev, struct =
+fb_info *info)
+ 	if (!fb_virt)
+ 		goto err2;
+=20
++	/* Allocate memory for deferred IO */
++	par->dio_vp =3D vzalloc(round_up(dio_fb_size, PAGE_SIZE));
++	if (par->dio_vp =3D=3D NULL)
++		goto err3;
++
+ 	info->apertures =3D alloc_apertures(1);
+ 	if (!info->apertures)
+-		goto err3;
++		goto err4;
+=20
+ 	if (gen2vm) {
+ 		info->apertures->ranges[0].base =3D screen_info.lfb_base;
+@@ -857,16 +1005,23 @@ static int hvfb_getmem(struct hv_device *hdev, struc=
+t fb_info *info)
+ 		info->apertures->ranges[0].size =3D pci_resource_len(pdev, 0);
+ 	}
+=20
++	/* Physical address of FB device */
++	par->mmio_pp =3D par->mem->start;
++	/* Virtual address of FB device */
++	par->mmio_vp =3D (unsigned char *) fb_virt;
++
+ 	info->fix.smem_start =3D par->mem->start;
+-	info->fix.smem_len =3D screen_fb_size;
+-	info->screen_base =3D fb_virt;
+-	info->screen_size =3D screen_fb_size;
++	info->fix.smem_len =3D dio_fb_size;
++	info->screen_base =3D par->dio_vp;
++	info->screen_size =3D dio_fb_size;
+=20
+ 	if (!gen2vm)
+ 		pci_dev_put(pdev);
+=20
+ 	return 0;
+=20
++err4:
++	vfree(par->dio_vp);
+ err3:
+ 	iounmap(fb_virt);
+ err2:
+@@ -884,6 +1039,7 @@ static void hvfb_putmem(struct fb_info *info)
+ {
+ 	struct hvfb_par *par =3D info->par;
+=20
++	vfree(par->dio_vp);
+ 	iounmap(info->screen_base);
+ 	vmbus_free_mmio(par->mem->start, screen_fb_size);
+ 	par->mem =3D NULL;
+@@ -909,6 +1065,11 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	init_completion(&par->wait);
+ 	INIT_DELAYED_WORK(&par->dwork, hvfb_update_work);
+=20
++	par->delayed_refresh =3D false;
++	spin_lock_init(&par->delayed_refresh_lock);
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
++
+ 	/* Connect to VSP */
+ 	hv_set_drvdata(hdev, info);
+ 	ret =3D synthvid_connect_vsp(hdev);
+@@ -960,6 +1121,10 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	info->fbops =3D &hvfb_ops;
+ 	info->pseudo_palette =3D par->pseudo_palette;
+=20
++	/* Initialize deferred IO */
++	info->fbdefio =3D &synthvid_defio;
++	fb_deferred_io_init(info);
++
+ 	/* Send config to host */
+ 	ret =3D synthvid_send_config(hdev);
+ 	if (ret)
+@@ -981,6 +1146,7 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	return 0;
+=20
+ error:
++	fb_deferred_io_cleanup(info);
+ 	hvfb_putmem(info);
+ error2:
+ 	vmbus_close(hdev->channel);
+@@ -1003,6 +1169,8 @@ static int hvfb_remove(struct hv_device *hdev)
+ 	par->update =3D false;
+ 	par->fb_ready =3D false;
+=20
++	fb_deferred_io_cleanup(info);
++
+ 	unregister_framebuffer(info);
+ 	cancel_delayed_work_sync(&par->dwork);
+=20
+--=20
+2.20.1
 
-Did you mean page table pages which can partially overlap with vmalloc ?
-
-The problem (race) is not because of the inability to deal with partially
-filled table. We can handle that correctly as explained below [1]. The
-problem is with inadequate kernel page table locking during vmalloc()
-which might be accessing intermediate kernel page table pointers which is
-being freed with free_empty_tables() concurrently. Hence we cannot free
-any page table page which can ever have entries from vmalloc() range.
-
-Though not completely sure, whether I really understood the suggestion above
-with respect to the floor-ceiling mechanism as in free_pgd_range(). Are you
-suggesting that we should only attempt to free up those vmemmap range page
-table pages which *definitely* could never overlap with vmalloc by working
-on a modified (i.e cut down with floor-ceiling while avoiding vmalloc range
-at each level) vmemmap range instead ? This can be one restrictive version of
-the function free_empty_tables() called in case there is an overlap. So we
-will maintain two versions for free_empty_tables(). Please correct me if any
-the above assumptions or understanding is wrong.
-
-But yes, with this we should be able to free up some possible empty page
-table pages which were being left out in the current proposal when overlap
-happens.
-
-[1] Skipping partially filled page tables
-
-All free_pXX_table() functions take care in avoiding freeing partially filled
-page table pages whether they represent or ever represented linear or vmemmap
-or vmalloc mapping in init_mm. They go over each individual entry in a given
-page table making sure that each of them checks as pXX_none() before freeing
-the entire page table page.
-
-Though walking is restricted by the address range in question.
-
-free_empty_tables(start, end)
-	free_empty_pud_table(pgdp, addr, next);
-		free_empty_pmd_table(pudp, addr, next);
-			free_empty_pte_table(pmdp, addr, next);
-
-Page table pages being examined here on the way while freeing might contain
-entries which once represented address beyond vmemmap range in removal. But
-thats a good thing IMHO. It can accommodate vmemmap tear down from a previous
-hot remove for an adjacent range which might not have been freed last time.
-
-pudp = pud_offset(pgdp, 0UL);
-pmdp = pmd_offset(pudp, 0UL);
-ptep = pte_offset_kernel(pmdp, 0UL);
-
-pxx_none() makes sure that in such cases freeing of the page table page is
-skipped. But yes, even though it is more thorough, it might attempt to free
-page table pages which might contains entries not belonging to the range
-being removed.
-
-> 
-> Another question: could we do the page table and the actual vmemmap
-> pages freeing in a single pass (sorry if this has been discussed
-> before)?
-
-We could and some initial versions (till V5) of the series had that in fact.
-Initially Mark Rutland had suggested to do this in two passes. Some extracts
-from the previous discussion.
-
-https://lkml.org/lkml/2019/5/30/1159
-
------------------------
-Looking at this some more, I don't think this is quite right, and tI
-think that structure of the free_*() and remove_*() functions makes this
-unnecessarily hard to follow. We should aim for this to be obviously
-correct.
-
-The x86 code is the best template to follow here. As mentioned
-previously, I'm fairly certain it's not entirely correct (e.g. due to
-missing TLB maintenance), and we've already diverged a fair amount in
-fixing up obvious issues, so we shouldn't aim to mirror it.
-
-I think that the structure of unmap_region() is closer to what we want
-here -- do one pass to unmap leaf entries (and freeing the associated
-memory if unmapping the vmemmap), then do a second pass cleaning up any
-empty tables.
-----------------------
-
-Apart from the fact that two passes over the page table is cleaner and gives
-us more granular and modular infrastructure to use for later purposes, it is
-also a necessity in dealing with vmalloc-vmemmap overlap. free_empty_tables()
-which is the second pass, can be skipped cleanly when overlap is detected.
-
-> 
->> @@ -1048,10 +1322,18 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
->>  }
->>  
->>  #ifdef CONFIG_MEMORY_HOTPLUG
->> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
->> +{
->> +	unsigned long end = start + size;
->> +
->> +	WARN_ON(pgdir != init_mm.pgd);
->> +	remove_pagetable(start, end, false);
->> +}
-> 
-> I think the point I've made previously still stands: you only call
-> remove_pagetable() with sparse_vmap == false in this patch. Just remove
-> the extra argument and call unmap_hotplug_range() with sparse_vmap ==
-> false directly in remove_pagetable().
-
-Sure, will do. The original function signature was left unchanged in the hope
-that at a later point in time it can be called with "sparse_vmap == true" as
-mentioned by the comment in vmemmap_free(). Will change the comment as well.
