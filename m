@@ -2,93 +2,114 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C338C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017A1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDC9206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568406745;
-	bh=PZCHvKayvAE4IMjxFpsyDab8Rk2tkIgRO++dEQcXXOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DLu240CeScN5PYqJZBFg0npLE7OxZKWHp0khSHHRHLgzU4iUxAecP45QZGiJ/gnTX
-	 l3kcWYNyI6CByQ1vElKg1rr76Zey88dzr5uVuv9YMvaTEVCCiLa7rwoz6XxMq/eRJ3
-	 5uz6PfcL2RUiZKzHsZNBgCBbx9d4i0NDsUtzNRM0=
+	by mail.kernel.org (Postfix) with ESMTP id CE389206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfIMUcY (ORCPT
+        id S1730723AbfIMUdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:32:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45125 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfIMUcY (ORCPT
+        Fri, 13 Sep 2019 16:33:19 -0400
+Received: from smtprelay0229.hostedemail.com ([216.40.44.229]:46641 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725747AbfIMUdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:32:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o205so3710222oib.12;
-        Fri, 13 Sep 2019 13:32:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BGIWuDNYrQwWqig+AD/FBHIPnZv5C2i4xJ4AwfsT/OY=;
-        b=IvBydacSyFYsbGXTGUcsreU+sWqyWPVVXBDwhphgTUs382jDYSYD/L6M4ETwhD+X9L
-         GJ/e+taR9E1DKP3lyELDZcNeUGZ3f814HiSWc9E0+2OBTVEsnkqCr3LhgevJwBPF6Tgj
-         2FjXXb9S9B/NHrd2dxKmvCUbx+vmEA2IyCmt8/+nTKzQeSadaWFHXVtofH06hmaBGRAo
-         +NEkt0ObCGgOw5pnBJ0hTYJxA3/F8dCrttdontj25Cm4JaJNNygezuzACjIa1e36x89Y
-         MZIMRDR8D8XE6p/e+OXY0BjbtpSCOwa3AD9J/92oh6Juz/4kxArSFyvYWUfD4hgkZpUm
-         f7SQ==
-X-Gm-Message-State: APjAAAVaHGGdfZNaVb5tBixG4X/JE8HqimjlzkMrqzTQnmEBFVzZMmzo
-        +gYrYvgUJGAlm+DYEgXS7Q==
-X-Google-Smtp-Source: APXvYqzFbRU+snVUDd9MMC9DD08qEbNF3nw90SquEx0edL36n1/nyysG5QDi7pc411CpUKfeTsFBbg==
-X-Received: by 2002:a05:6808:4d1:: with SMTP id a17mr5063804oie.71.1568406743044;
-        Fri, 13 Sep 2019 13:32:23 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t30sm10013349otj.40.2019.09.13.13.32.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 13:32:22 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 15:32:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Poeschel <poeschel@lemonage.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v7 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
-Message-ID: <20190913203221.GA19194@bogus>
-References: <20190910093256.1920-1-poeschel@lemonage.de>
+        Fri, 13 Sep 2019 16:33:19 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id F12BD18224D86;
+        Fri, 13 Sep 2019 20:33:17 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tub87_73cd010985e19
+X-Filterd-Recvd-Size: 3342
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 13 Sep 2019 20:33:15 +0000 (UTC)
+Message-ID: <8be2df9936fb405ffaee75d6e24bbac0e938a653.camel@perches.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 0/3] Maintainer Entry Profiles
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Rob Herring <robherring2@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve French <stfrench@microsoft.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>
+Date:   Fri, 13 Sep 2019 13:33:14 -0700
+In-Reply-To: <20190913161731.6e3405a3@coco.lan>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <yq1o8zqeqhb.fsf@oracle.com> <6fe45562-9493-25cf-afdb-6c0e702a49b4@acm.org>
+         <44c08faf43fa77fb271f8dbb579079fb09007716.camel@perches.com>
+         <74984dc0-d5e4-f272-34b9-9a78619d5a83@acm.org>
+         <4299c79e33f22e237e42515ea436f187d8beb32e.camel@perches.com>
+         <CAL_JsqJju36BZPK6DJab28Ne-ORpEyPpxH0H4DuymxFMabpMRQ@mail.gmail.com>
+         <78f67ee934f167b433517da81c6a0d3f35c4b123.camel@perches.com>
+         <20190913161731.6e3405a3@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910093256.1920-1-poeschel@lemonage.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 11:32:53AM +0200, Lars Poeschel wrote:
-> Add a simple binding doc for the pn532.
+On Fri, 2019-09-13 at 16:17 -0300, Mauro Carvalho Chehab wrote:
+> Em Fri, 13 Sep 2019 11:42:38 -0700
+> Joe Perches <joe@perches.com> escreveu:
+[]
+> > Just fyi:  for an x86-64 defconfig with gcc 8.3
+> > 
+> > $ { make clean ; make defconfig ; make -j4 W=1 ; } > make.log 2>&1
+> > 
+> > There are ~300 W=1 for non kernel-doc -W<foo> warnings.
+> > 
+> > $ grep -i -P -oh '\[\-W[\w\-]+\]' make.log |sort | uniq -c | sort -rn
+> >     163 [-Wmissing-prototypes]
+> >      69 [-Wunused-but-set-variable]
+> >      16 [-Wempty-body]
+> >      10 [-Wtype-limits]
+> >       6 [-Woverride-init]
+> >       2 [-Wstringop-truncation]
+> >       2 [-Wcast-function-type]
+> >       1 [-Wunused-but-set-parameter]
 > 
-> Cc: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> ---
-> Changes in v6:
-> - Rebased the patch series on v5.3-rc5
-> - Picked up Rob's Reviewed-By
+> On my eyes, it doesn't sound too much.
 
-And dropped in v7?
+In general, I agree and most of these are pretty
+trivial to remove.  It'd just take some time to
+remove most of the missing-prototypes and
+unused-but-set warnings before being able to
+enable the warnings at the default W=0.
 
-> 
-> Changes in v4:
-> - Add documentation about reg property in case of i2c
-> 
-> Changes in v3:
-> - seperate binding doc instead of entry in trivial-devices.txt
-> 
->  .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
+> I suspect that, 
+> with gcc-9, it should produce more warnings, though.
+
+It doesn't though.
+At least not so far as I can tell.
+gcc-9.1 produces the same output.
+
+$ { make clean ; make defconfig ; make CC=/usr/bin/gcc-9 -j4 W=1 V=1 ; } > make_gcc9.log 2>&1
+$  grep -i -P -oh '\[\-W[\w\-]+\]' make_gcc9.log | sort | uniq -c | sort -rn
+    163 [-Wmissing-prototypes]
+     69 [-Wunused-but-set-variable]
+     16 [-Wempty-body]
+     10 [-Wtype-limits]
+      6 [-Woverride-init]
+      2 [-Wstringop-truncation]
+      2 [-Wcast-function-type]
+      1 [-Wunused-but-set-parameter]
+
+
