@@ -2,151 +2,182 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A04C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B91C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7130A20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B68121479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="n1zRxKLD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qlC0By+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfIMGEh (ORCPT
+        id S1727703AbfIMGJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 02:04:37 -0400
-Received: from mail-eopbgr740087.outbound.protection.outlook.com ([40.107.74.87]:26136
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfIMGEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 02:04:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IhA2rS6bO3AaeOCBAzoQYWuf1oXnxhJwm8cXN7KuB/ioVrymCNau5VxBv67EG3YkIQcNNAoHjtAh2kgN6/hTlYqH9P+ZoR5iFM7E2RLcbjyCrmDDgeIKOXIV0tFbKss5cZ72DLR9zFI2Glyf7zGsJ+cET/slJNB6euM2ZAnkcAxng5Gg0TMI86aMz+Pb53yghUCWGUhIarcTH/G+7SqwcDG++Wcg1d4RiAnA2luHDm0JZnrVl5AqFZwhRBjoSZ92NPLI3AkhSOR2wrCmw17yx5VmHyGcFY1knLol1QsjxztqN567xUpxvk3IbgxKyFfu+TLkeb7CdGvYCVlaGFjZug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MjM6+LD7uQOGfHffnz8qgTy+zHJearTCrIKSqOIHbq0=;
- b=fWdIhTImiSC5VHKvc+/aY/hRfMlUnhJaWDWhZElIJ0S7HCA60SfuQHrkjz+O6zrI1mlYjD6pZU7qmrCL7gKf3rdzsbPHQNXxf9chOeSoH6xO+FxBqxqRsH2go1azqAVGaaf8mMYhAH866rUmJiKKlwFm45JKqHtPX6fxxNy6dN+iymGgnhX9Lq/p9oprr22aPvXZH5j3di4XNVPpGHUhLBKOVSEaxdPJxGrPyO8X/m0R9OS6q80si4eJf22CjjVC4geFAPeidjOuN/+NmKocfDJbBDdKWf1m/D+i9A+4bC9CS0gNfR9r64gJ1H+TwfwBSuuVG1X2BIpqpOlTKqzyNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MjM6+LD7uQOGfHffnz8qgTy+zHJearTCrIKSqOIHbq0=;
- b=n1zRxKLDmmgRRK2YNgPDRPiRMqrCzL7RbUzdlCtsQJ2fUoLE4ZBCl9BA31HiyF8IgYqhFMKlE6aOapLeQrUOjKNw677hex1ErpvD+fezDya09vbYyrHNZrwsg5RH6erBRtOrTefwcbV8i7wSdnBYH+UVolMtxSA6cLk1jTjVnUo=
-Received: from MWHPR0201CA0049.namprd02.prod.outlook.com
- (2603:10b6:301:73::26) by SN6PR02MB5262.namprd02.prod.outlook.com
- (2603:10b6:805:70::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.20; Fri, 13 Sep
- 2019 06:03:54 +0000
-Received: from SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::208) by MWHPR0201CA0049.outlook.office365.com
- (2603:10b6:301:73::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.15 via Frontend
- Transport; Fri, 13 Sep 2019 06:03:54 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- SN1NAM02FT035.mail.protection.outlook.com (10.152.72.145) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
- via Frontend Transport; Fri, 13 Sep 2019 06:03:53 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:56459 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i8egT-0001nk-HS; Thu, 12 Sep 2019 23:03:53 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i8egO-0004He-Dq; Thu, 12 Sep 2019 23:03:48 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1i8egF-0004Gt-1N; Thu, 12 Sep 2019 23:03:39 -0700
-Subject: Re: Regression: commit c9712e333809 breaks xilinx_uartps
-To:     Paul Thomas <pthomas8589@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <CAD56B7euf1kQpwOYiq-he8HveKKzkGdf8_-izEVfwa=QH24a3g@mail.gmail.com>
- <33ec2a52-91aa-6c4a-d900-1725f2970975@xilinx.com>
- <CAD56B7dvKtqQV9hkKEKB7VgoE8hqQGqMxHZiCXxg0sejUpsNCg@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <a05ea4ae-05b0-402e-b8bf-763c49b30700@xilinx.com>
-Date:   Fri, 13 Sep 2019 08:03:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 02:09:02 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19179 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfIMGJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:09:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7b32810000>; Thu, 12 Sep 2019 23:09:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 12 Sep 2019 23:09:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 12 Sep 2019 23:09:00 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Sep
+ 2019 06:08:59 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 13 Sep 2019 06:09:00 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.65.118]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d7b32790000>; Thu, 12 Sep 2019 23:08:59 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V9 0/8] Tegra XUSB gadget driver support
+Date:   Fri, 13 Sep 2019 11:37:45 +0530
+Message-ID: <1568354873-24073-1-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CAD56B7dvKtqQV9hkKEKB7VgoE8hqQGqMxHZiCXxg0sejUpsNCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(376002)(199004)(189003)(58126008)(9786002)(6246003)(54906003)(36756003)(26005)(110136005)(316002)(229853002)(65806001)(65956001)(2906002)(356004)(106002)(70206006)(23676004)(47776003)(31686004)(70586007)(52146003)(2486003)(8676002)(478600001)(5660300002)(81166006)(476003)(44832011)(126002)(2616005)(36386004)(305945005)(426003)(486006)(446003)(230700001)(50466002)(4326008)(336012)(31696002)(81156014)(11346002)(76176011)(8936002)(186003)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5262;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8155d786-e8d3-4163-85fe-08d738102824
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:SN6PR02MB5262;
-X-MS-TrafficTypeDiagnostic: SN6PR02MB5262:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB5262A438D533D04B2A1A7EAEC6B30@SN6PR02MB5262.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0159AC2B97
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: yWw/TUeFRS88uP/oOihr3j1U4h9gyedDsuL271XUPW6P1IWH8yPIzKFoSRKW7nododLgmLEqMRKPES4OSV8H/pLqdH5UUfwerkcFrcK++GxaveKU8XWf7OoC/IiMftaTrV7f1BN8hK1zstTb8SA5Mmzlbwnx7Vq2YJbdoUxK0ZZ+1wSypWOx/NCaBNZhwoHA//3uuysj+W4sD2ClYqfwlDDUePdNdC3fLc0K0u1ZPguC5+/+y36bp0vYXfGUfzdzGEOnOL/GRksaIRLvt/5SkNPtK1/UsxBIXyCuEV8oOlZS/7/XC36XQhQqZMPNuDpHtjpdugtLt1FoAVl5g+o6Q6sdNbc4PdkdJ0VkX2oEBhUOW/YlyQ5J541KBJjQvUGFdsa2w2abrrvXNTAyHQXVDpYmB9fWwQYJfe9cgdtsYTw=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2019 06:03:53.9215
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8155d786-e8d3-4163-85fe-08d738102824
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5262
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568354945; bh=E/sYGMtuskuPf9y3/P6zGX1TxO4x06wrgvlJLjQuT0k=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=qlC0By+5aMKK2P/hDBOm+0o1pWu7QDY7WnznDH8+xKyaIlejgVI+IHEnQya2Yejli
+         2iDOJkbPVceX59NQ9xnIeh96IRBUFtmdUNlMjkBWMijmlOfimWfx8DlX9EboRlQDQ/
+         PnKHkup4N7TS16oX6c9/QpCaCLxn4JnxPFGu5IHE3yMc7ay3f7e5ZbAu1hOd4bmHRm
+         UWD0z15bSoVitKiEy2fc0KZmZQra+XLH1ddqssjL8LqwFQfUPmj/r28IM0YUCyW9hZ
+         ne6TUmE0wtuEt4CfwBb9ycCjPQbRX94nvDNapkToU7bzxT3PgkUrDRGPlJ9eRmRoh/
+         S5oNirb9E/n8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 09. 19 18:38, Paul Thomas wrote:
->>> ---
->>>  drivers/tty/serial/xilinx_uartps.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/tty/serial/xilinx_uartps.c
->>> b/drivers/tty/serial/xilinx_uartps.c
->>> index 9dcc4d855ddd..ece7f6caa994 100644
->>> --- a/drivers/tty/serial/xilinx_uartps.c
->>> +++ b/drivers/tty/serial/xilinx_uartps.c
->>> @@ -1565,6 +1565,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
->>>
->>>         cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "pclk");
->>>         if (PTR_ERR(cdns_uart_data->pclk) == -EPROBE_DEFER) {
->>> +               /* If we end up defering then set uartps_major back to 0 */
->>> +               uartps_major = 0;
->>>                 rc = PTR_ERR(cdns_uart_data->pclk);
->>>                 goto err_out_unregister_driver;
->>>         }
->>>
->>
->> I expect that this can be problematic for all failures in probe.
->> What about this?
-> Makes sense, this worked for me. Although, I think the patch is
-> malformed by the email line lengths.
+Patches 1-3 are phy driver changes to add support for device
+mode.
+Patches 4-7 are changes related to XUSB device mode
+controller driver.
+Patch 8 is to enable drivers for XUDC support in defconfig
 
-I just c&p. Let me send proper patch with description.
+Test Steps(USB 2.0):
+- Enable "USB Gadget precomposed configurations" in defconfig
+- Build, flash and boot Jetson TX1
+- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
+  cable
+- After boot on Jetson TX1 terminal usb0 network device should be
+  enumerated
+- Assign static ip to usb0 on Jetson TX1 and corresponding net
+  device on ubuntu
+- Run ping test and transfer test(used scp) to check data transfer
+  communication
 
-Thanks,
-Michal
+SS mode is verified by enabling Type A port as peripheral
+---
+v9:
+* Patches 1,2,3,4,5 - No changes.
+* Patch 6 has update on compatible string as per suggestion from Chunfeng.
+* Patch 7 has comment fixes as suggested by Chunfeng.
+* Patch 8 has CONFIG_USB_GPIO enabled as module additionally.
+---
+v8:
+* Patches 1,2,3,4,5,8 - No changes.
+* Patch 6 has update on compatible string as per change done in [1].
+* Patch 7 has issue fix, where device mode didnot got enabled after resume
+  from suspend.
+---
+v7:
+* Patches 1,2,3,4,5,6,8 - No changes.
+* Patch 7 - Comments from Balbi and Chunfun adrresed.
+  Added COMPILE_TEST in Kconfig and updated dependencies.
+---
+v6:
+* Patches 1,2,3,7,8 - No changes.
+* Patch 4,5,6 - Comments from Rob addressed, updated usb connector driver
+  compatibility string.
+---
+v5:
+* Patches 1-3 - Commit subject updated as per inputs from Thierry.
+* Patch 4 - Added reg-names used on Tegra210 in the bindings doc
+* Enabled xudc driver as module instead of part of kernel in patch 8.
+* Patched 5-8 - No changes.
+---
+v4:
+* patch 1 - no changes.
+* corrected companion device search based on inputs from Thierry in patch 2.
+* removed unneeded dev variable and corrected value read in
+  tegra210_utmi_port_reset function in patch 3.
+* dt binding doc and dtb files are corrected for alignments.
+  Replaced extcon-usb-gpio with usb role switch.
+* Added support for USB role switch instead of extcon-usb-gpio and other minor
+  comments as suggested by Chunfeng.
+* Enabled xudc driver as module instead of part of kernel in patch 8.
+---
+V3:
+* Rebased patch 1 to top of tree.
+* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
+  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
+  usb port data is updated based on soc flag need_fake_usb3_port.
+* Added extra lines whereever necessary to make code more readable in patch 3
+  and 7.
+* dt binding doc is corrected for typos and extcon references. Also added
+  details for clocks and removed xusb_ references to clock and power-domain
+  names and accordingly patch 5 is updated.
+* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
+* Patch 8 has no changes.
+---
+V2:
+* Patches 1-3 are new patches in this series, which splits unified features
+  patch to speprated features and removes need of port-fake entry in DT.
+* Patch 4 is re-arragend dt-bindings patch which incorporates previous
+  patch comments to sort DT entries alphabetically, addresses name changes
+  and PM domain details added.
+* Patch 5-6 are re-arranged DT patches with major changes - sort entries
+  alphabetically, and adds clock names.
+* Patch 7 is UDC driver tegra XUSB device mode controller with major
+  changes - remove un-used module params, lockinng for device_mode flag,
+  moving un-needed info logs to debug level, making changes feature flag
+  dependent rather than SOC based macros and other error handling in probe.
+* Patch 8 has no changes.
+
+Nagarjuna Kristam (8):
+  phy: tegra: xusb: Add XUSB dual mode support on Tegra210
+  phy: tegra: xusb: Add usb3 port fake support on Tegra210
+  phy: tegra: xusb: Add vbus override support on Tegra210
+  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+  arm64: tegra: Add xudc node for Tegra210
+  arm64: tegra: Enable xudc on Jetson TX1
+  usb: gadget: Add UDC driver for tegra XUSB device mode controller
+  arm64: defconfig: Enable tegra XUDC support
+
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  110 +
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   31 +-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
+ arch/arm64/configs/defconfig                       |    2 +
+ drivers/phy/tegra/xusb-tegra210.c                  |  133 +-
+ drivers/phy/tegra/xusb.c                           |   87 +
+ drivers/phy/tegra/xusb.h                           |    4 +
+ drivers/usb/gadget/udc/Kconfig                     |   12 +
+ drivers/usb/gadget/udc/Makefile                    |    1 +
+ drivers/usb/gadget/udc/tegra-xudc.c                | 3787 ++++++++++++++++++++
+ include/linux/phy/tegra/xusb.h                     |    4 +-
+ 11 files changed, 4186 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+ create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
+
+-- 
+2.7.4
 
