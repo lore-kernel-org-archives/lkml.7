@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111E2C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBF6214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C01214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380854;
-	bh=V5ryNmRt/DI8n+3VX9CWi5D7HhqLdK0qwkg50RMMFtw=;
+	s=default; t=1568380861;
+	bh=xg52qG7g97LSXManPfMAUbyJH1M8/Lu+e13unSKBHRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9wPfjhc6VtYQV9oiEdoPI+odISesd0CGlS4HO+cweXQrgNelf98x8aPuXpZSjcwU
-	 sKmQo/vfTBm5M3sw8rnpC9iqxq8H00ZhB/JlLvtxH0VqI/WMvQezyiQ5KdiQPVxk9j
-	 uuv2VNB4c412IL3joHyLePUCEwYRbEv+5fg/QH6o=
+	b=waUHkduZ8zL8ayWHoP70OoRtsYZmtdDChUSCpqlCsyZPBZd4iZbKbYmj7cQYbPIe6
+	 NY3nWX4tJR3kwt3hfj0r0EqlGN/umC6CePGcSee2CLMFjtjVp50ROnqF4vmFq/Bkf3
+	 jWTiNSShZD6aeHXeOdcC/wzWxSglR0SkgE7+D3q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390679AbfIMNUy (ORCPT
+        id S2390713AbfIMNVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389901AbfIMNUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:51 -0400
+        id S2390696AbfIMNU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:58 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876C5214AE;
-        Fri, 13 Sep 2019 13:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E5820CC7;
+        Fri, 13 Sep 2019 13:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380851;
-        bh=V5ryNmRt/DI8n+3VX9CWi5D7HhqLdK0qwkg50RMMFtw=;
+        s=default; t=1568380857;
+        bh=xg52qG7g97LSXManPfMAUbyJH1M8/Lu+e13unSKBHRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NH0PXGCcmp+ehA8t4Fap+g4ijjX0W460jl6C4qOWE4sqB8L7VY/31sSm2uBozci4Y
-         L2i1jsDjbUnAb/r8PXEfIhDwdvT77GIoebAcbDaURVYanRnTno2h7LwNo9M1WUZSnw
-         ms4S/iWoAMhu316ZSMJqJPiuCWsbNznMTp/ruaVQ=
+        b=QGAz9YbgSayxzzD6Kr0KaZvEmd6vHE4ypRcu+oMvY3UEtVXu5k3rv6ZW4NiBFjYRg
+         09FoCzkC9f1A8trF2+PaX/G1mr24eMq6OuIyfudTSc6nncoyHrhDAA7RvJpW/lDYpn
+         0K+GmcbqiP3/sg1P9skL56MWw8ABsGgrJw4NYHBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Jander <david@protonic.nl>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.2 01/37] gpio: pca953x: correct type of reg_direction
-Date:   Fri, 13 Sep 2019 14:07:06 +0100
-Message-Id: <20190913130510.940562189@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 04/37] ALSA: hda/realtek - Fix overridden device-specific initialization
+Date:   Fri, 13 Sep 2019 14:07:09 +0100
+Message-Id: <20190913130511.843613979@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,51 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Jander <david@protonic.nl>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit bc624a06f0c5190bc37fec7d22cd82b43a579698 upstream.
+commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
 
-The type of reg_direction needs to match the type of the regmap, which
-is u8.
+The recent change to shuffle the codec initialization procedure for
+Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
+later") caused the silent output on some machines.  This change was
+supposed to be safe, but it isn't actually; some devices have quirk
+setups to override the EAPD via COEF or BTL in the additional verb
+table, which is applied at the beginning of snd_hda_gen_init().  And
+this EAPD setup is again overridden in alc_auto_init_amp().
 
-Fixes: 0f25fda840a9 ("gpio: pca953x: Zap ad-hoc reg_direction cache")
-Cc: Cc: <stable@vger.kernel.org>
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+For recovering from the regression, tell snd_hda_gen_init() not to
+apply the verbs there by a new flag, then apply the verbs in
+alc_init().
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
+Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-pca953x.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_generic.c   |    3 ++-
+ sound/pci/hda/hda_generic.h   |    1 +
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(
- 	u8 new_irqs;
- 	int level, i;
- 	u8 invert_irq_mask[MAX_BANK];
--	int reg_direction[MAX_BANK];
-+	u8 reg_direction[MAX_BANK];
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -6009,7 +6009,8 @@ int snd_hda_gen_init(struct hda_codec *c
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
  
- 	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
- 			 NBANK(chip));
-@@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct p
- 	bool pending_seen = false;
- 	bool trigger_seen = false;
- 	u8 trigger[MAX_BANK];
--	int reg_direction[MAX_BANK];
-+	u8 reg_direction[MAX_BANK];
- 	int ret, i;
+-	snd_hda_apply_verbs(codec);
++	if (!spec->skip_verbs)
++		snd_hda_apply_verbs(codec);
  
- 	if (chip->driver_data & PCA_PCAL) {
-@@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca9
- {
- 	struct i2c_client *client = chip->client;
- 	struct irq_chip *irq_chip = &chip->irq_chip;
--	int reg_direction[MAX_BANK];
-+	u8 reg_direction[MAX_BANK];
- 	int ret, i;
+ 	init_multi_out(codec);
+ 	init_extra_out(codec);
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -243,6 +243,7 @@ struct hda_gen_spec {
+ 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
+ 	unsigned int have_aamix_ctl:1;
+ 	unsigned int hp_mic_jack_modes:1;
++	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
  
- 	if (!client->irq)
+ 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
+ 	u64 mute_bits;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -837,9 +837,11 @@ static int alc_init(struct hda_codec *co
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
+ 
++	spec->gen.skip_verbs = 1; /* applied in below */
+ 	snd_hda_gen_init(codec);
+ 	alc_fix_pll(codec);
+ 	alc_auto_init_amp(codec, spec->init_amp);
++	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
+ 
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
 
 
