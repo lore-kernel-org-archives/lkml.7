@@ -2,50 +2,50 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C165EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD69C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6122084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069CD2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="m0XJBlsa"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="cRQThq1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389436AbfIMTBj (ORCPT
+        id S2389579AbfIMTBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:01:39 -0400
+        Fri, 13 Sep 2019 15:01:41 -0400
 Received: from mail-eopbgr760058.outbound.protection.outlook.com ([40.107.76.58]:54616
         "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729758AbfIMTBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:01:38 -0400
+        id S2389363AbfIMTBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:01:39 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h9f2nqxDnPPBnBDGBOXEZ2WTLVtZSBC2LqIclH/CZe6Bn+X6hoIM/3q71P758L9rT3aFquMUUroCNQGPGtdi68lVOexknixx2DVOec+N4S1+Yxlv+QkbHoaQU8TkAX3iOTxJrKogRsWOlO55mJNv28yzXVXP3SDMSLyTtTePWRALbpsBq10pRPPVFeUW/k/xSTLnzlL+P/vwd5aG+29RdiBe8fFQwiwMdmhKmqKcKaZNqem2ug1ND11D7og4/UE/1CxAAsWc7NsReNRzZe/KxhQwr6c7iWZ667y3H9TPP7rovKHHlUsDPmuQ1VhldVN4+mtIqcT4ycWPXQjnF6zy2w==
+ b=WCF4HIg3ZkEeOW77IlWGYZjvqMXRJ5kdGZK/7PW5PeOaZxTdd4HTAyXP6nnqd9dgLx8OCghdZXJXWxfxvXJVueSeCKYBXue8zcBFpMYkR79vSDxMAdQTP0cLo1uu6o4zg+Krm/MK4D6bvkMrKub+GocBhLIuqCgbo17WvIgGJk5Sn+tW8Vyc7KlSb+gCaAW1xrx6q0Pc1UbIYjFm6CYFJ1j6AxuBqRYWA+JYPpwSr0m8ARYrDeJlC3Z0OrW60VhUJwiaqBpj0L/V9o5yUGnVILdL/8sCQkikfEClmAqOfwgK8TWssSThCiLnRoK0N2U7dO+1lw0jVnMl+PRdp+EZvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UWlYKLNygsfU3qv31NL8wFRSzi1NW9Jqf/HR7JUefwI=;
- b=WjjhzrrkTHgTwjGzkKxxO9E0mgyexpJ/F+1WEmy7EN3SkpePlcj9pEnE/x78kkk7Zf5H6Ehqr5jcqEv/WvA5xIX1cWkSpVI4IUEAEB5P09i7Pce9vvsXh/29an7lbMMTEKklG72FISwMIVKd1Sc7acGuJV66GeZL/LEDDmc4/TA3+zkS43qfZP0l2P85gHGJsUD04z7D8tA/FSpVOS/51QxCZTnS94ufaXU9I9urPCEnZ5sI/sVYU8xjyUUa9ql9qY0hKtKD41flJKsJjKDMKShquC09FKd28Pm0BubdvI5JSWr+Qg+z0DYcp6+bJqPzdSNnwpjRNUiKBGbV/qLKmw==
+ bh=Xb3KMPr6qWz+I9Ez/Ru2kbDDhxsu52HQ1ZRSbN8ca3k=;
+ b=gWorEh4PagJfPbGE9ozya9gkkngB5h0J4DA9ENX9GiapyDVj6kEexQEZAm7jCEq5njkPugMLuWsBk7knoGpbh/RLKj70PSz83s+Zr2+jNsDRSARul/7jlJQAhl6OYk3V+VMXfibiltCFnCArDsDxOn4pjdVrWAW4uFXTAtrMGxvKm1019DgF+MY0zeZVbGrOIjZoQBKecvE/20dw+I8ZnYVel94t2fhaGgs16eT75NXV4IH+ujIaej3DI8PChoM06CYM9g93rgZqQ4jyIOeKFmC1ZQSgzYJQXLGLXZETdWgSgJjvhgJe0i/JOZxBYD9HUYUxG09sQwBKTy7hsLuVPw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UWlYKLNygsfU3qv31NL8wFRSzi1NW9Jqf/HR7JUefwI=;
- b=m0XJBlsaolVjbk7WWbA25nZKT7fkYAHAxu2ovx4Zuo63c20cSiPAO47DNKx/4zia1kfSY04Bbaeyk5YRtQgKDkCedl5kxCpgI/st4bT2Uq75gvtg0FLuKkfyO+39USQJmLgfM1DDxxKWePUsPlbJk8sWEy+VcSn6uBDNyE1FWwk=
+ bh=Xb3KMPr6qWz+I9Ez/Ru2kbDDhxsu52HQ1ZRSbN8ca3k=;
+ b=cRQThq1HJB5DM4320Z65C02gk+1XDks6BNau1lnkvDKxIpa6eEa8lErSvDVcUZgsMIQ2cip4DSZRHxgbD2hw4zcagEZal/4PRyK28Q2FAxdlfcyY06VTKyaof8i9FucZRqT2TimoBS6ixR4OI3M+SmcCKdsnwOP8DNAaomECpZY=
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
  DM6PR12MB3804.namprd12.prod.outlook.com (10.255.173.29) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Fri, 13 Sep 2019 19:00:58 +0000
+ 15.20.2241.20; Fri, 13 Sep 2019 19:01:00 +0000
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::201f:ac0f:4576:e997]) by DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::201f:ac0f:4576:e997%3]) with mapi id 15.20.2241.022; Fri, 13 Sep 2019
- 19:00:58 +0000
+ 19:01:00 +0000
 From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
@@ -59,13 +59,13 @@ CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
         "rimasluk@amazon.com" <rimasluk@amazon.com>,
         "Grimm, Jon" <Jon.Grimm@amd.com>,
         "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH v3 07/16] svm: Add support for setup/destroy virutal APIC
- backing page for AVIC
-Thread-Topic: [PATCH v3 07/16] svm: Add support for setup/destroy virutal APIC
- backing page for AVIC
-Thread-Index: AQHVamWTTWKSr9AuCkyCwqbevC70zA==
-Date:   Fri, 13 Sep 2019 19:00:57 +0000
-Message-ID: <1568401242-260374-8-git-send-email-suravee.suthikulpanit@amd.com>
+Subject: [PATCH v3 09/16] kvm: x86: hyperv: Use APICv deactivate request
+ interface
+Thread-Topic: [PATCH v3 09/16] kvm: x86: hyperv: Use APICv deactivate request
+ interface
+Thread-Index: AQHVamWV0w32d528XUiZH8DFeQLFEw==
+Date:   Fri, 13 Sep 2019 19:01:00 +0000
+Message-ID: <1568401242-260374-10-git-send-email-suravee.suthikulpanit@amd.com>
 References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
 In-Reply-To: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
 Accept-Language: en-US
@@ -81,169 +81,70 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8dfdd22f-7063-4546-c0cf-08d7387cb607
+x-ms-office365-filtering-correlation-id: 0a1352b0-97ba-4633-fd19-08d7387cb786
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3804;
 x-ms-traffictypediagnostic: DM6PR12MB3804:
 x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3804D3C0BECCDCAE8EB9A4BEF3B30@DM6PR12MB3804.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-microsoft-antispam-prvs: <DM6PR12MB38041756DD299C9CAE62CD87F3B30@DM6PR12MB3804.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
 x-forefront-prvs: 0159AC2B97
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(189003)(199004)(6436002)(6512007)(478600001)(6486002)(7416002)(53936002)(2906002)(4326008)(6116002)(3846002)(25786009)(86362001)(99286004)(66946007)(446003)(64756008)(66446008)(36756003)(486006)(71190400001)(71200400001)(52116002)(66556008)(256004)(4720700003)(2616005)(476003)(11346002)(14444005)(102836004)(305945005)(14454004)(7736002)(316002)(50226002)(386003)(6506007)(26005)(2501003)(8936002)(66066001)(8676002)(186003)(81156014)(81166006)(110136005)(5660300002)(76176011)(54906003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3804;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BZHRrDfW5YYzXNw68OXxNUyRhicyjxGNQblO285EsVlM2KBSurrXjl67aXb9Pz9JEY+AMEgFEtsnm1NntWsz2TxtdlZx6cO/y5TENF1LmJVOefOG8UcbvASNt8Ql127Exy3Pav16eotLNrvL/zF5cQs1IUqZkaxJtEOryA3qWVuNp82L/WuJOj8Qmpp+X5oO7jvCPP9bSilYZ98gEPGHvE6Tcjlh9slLHFYPAovc9uD9vLLdxi3QY9cOtagspp5pmkcxxRF34BVNpzOhI52+vzGJeCOxJNotDwdLMiqxxXajDqEejs+ZF+UVbgHqSGPfx1AAf8Z5wZ2dBkniwM+nxJFrEyZnNNQYXOLToMId0vvXqDoAO0euYL2lIKE9ntuaIpqYwB0UA1X0CLNdtez0LlRYN2uunIXUEonwidCUF0g=
+x-microsoft-antispam-message-info: qiLzBCM0kkL5qNj3DovJOA1Vtb7yNNT6L9TxLncKorhkNysFOBmSTht5TCrcHDSR1Mj0ae4hX3wBBVtKOp7OJdyIr0msC3kZX1D9/zr4y+35ehcGP4ItghsV820hHJlnOvLFx2HdDkKxQ03yBHbu6lb58lSHA2RV6La+Ae/voqIkIUOEtE51B1rgh+YrtOkBVrdPHAqYMOOxoYV8giN1fAVdWFEkF1U/5PpRsOelM0Pgxju/XILZc38pz98v1pmtjI284zbcutenOyurfXWf3WGE1TTGHIk8+NMCWLxBW4OTfZZqQ75jjylCcfvLXofrpBIQ1aWtcw//kJldgwHH6ZPLXNazf7n6R8oEqFWmi2m80mrgKWspYZE5DHB4gaALmSdgCbMfr4jdHCfxmq4YNHNM4waOxDLisvaBSezyhug=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8dfdd22f-7063-4546-c0cf-08d7387cb607
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:00:57.9954
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a1352b0-97ba-4633-fd19-08d7387cb786
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:01:00.5210
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kCzuU2xKfI2aXENMD6QaqJr6K907Srsy0TuA31gOn98ZpLvXKBMP6DTwcwqPaljxEbqIkNyepZcmT4XNCFIx/A==
+X-MS-Exchange-CrossTenant-userprincipalname: ayKe11hJ+/SsD6ytpbsPbipBbR9iijWcwNuzO5TjGzIj7ut2uxy50GS7KrAF6LximRrPOsm+aYvUs8wptJr2KQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Activate/deactivate AVIC requires setting/unsetting the memory region used
-for virtual APIC backing page (APIC_ACCESS_PAGE_PRIVATE_MEMSLOT).
-So, re-factor avic_init_access_page() to avic_setup_access_page()
-and add srcu_read_lock/unlock, which are needed to allow this function
-to be called during run-time.
-
-Also, introduce avic_destroy_access_page() to unset the page when
-deactivate AVIC.
+Since disabling APICv has to be done for all vcpus on AMD-based system,
+adopt the newly introduced kvm_make_apicv_deactivate_request() interface.
 
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/x86/kvm/svm.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++---=
----
- 1 file changed, 47 insertions(+), 6 deletions(-)
+ arch/x86/kvm/hyperv.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 8673617..2e06ee2 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1476,7 +1476,9 @@ static u64 svm_write_l1_tsc_offset(struct kvm_vcpu *v=
-cpu, u64 offset)
- static void avic_init_vmcb(struct vcpu_svm *svm)
- {
- 	struct vmcb *vmcb =3D svm->vmcb;
--	struct kvm_svm *kvm_svm =3D to_kvm_svm(svm->vcpu.kvm);
-+	struct kvm *kvm =3D svm->vcpu.kvm;
-+	struct kvm_svm *kvm_svm =3D to_kvm_svm(kvm);
-+
- 	phys_addr_t bpa =3D __sme_set(page_to_phys(svm->avic_backing_page));
- 	phys_addr_t lpa =3D __sme_set(page_to_phys(kvm_svm->avic_logical_id_table=
-_page));
- 	phys_addr_t ppa =3D __sme_set(page_to_phys(kvm_svm->avic_physical_id_tabl=
-e_page));
-@@ -1485,7 +1487,13 @@ static void avic_init_vmcb(struct vcpu_svm *svm)
- 	vmcb->control.avic_logical_id =3D lpa & AVIC_HPA_MASK;
- 	vmcb->control.avic_physical_id =3D ppa & AVIC_HPA_MASK;
- 	vmcb->control.avic_physical_id |=3D AVIC_MAX_PHYSICAL_ID_COUNT;
--	vmcb->control.int_ctl |=3D AVIC_ENABLE_MASK;
-+
-+	mutex_lock(&kvm->arch.apicv_lock);
-+	if (kvm->arch.apicv_state =3D=3D APICV_ACTIVATED)
-+		vmcb->control.int_ctl |=3D AVIC_ENABLE_MASK;
-+	else
-+		vmcb->control.int_ctl &=3D ~AVIC_ENABLE_MASK;
-+	mutex_unlock(&kvm->arch.apicv_lock);
- }
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index c10a8b1..1d011b4 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -772,9 +772,17 @@ int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool =
+dont_zero_synic_pages)
 =20
- static void init_vmcb(struct vcpu_svm *svm)
-@@ -1668,19 +1676,24 @@ static u64 *avic_get_physical_id_entry(struct kvm_v=
-cpu *vcpu,
-  * field of the VMCB. Therefore, we set up the
-  * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT (4KB) here.
-  */
--static int avic_init_access_page(struct kvm_vcpu *vcpu)
-+static int avic_setup_access_page(struct kvm_vcpu *vcpu, bool init)
- {
- 	struct kvm *kvm =3D vcpu->kvm;
- 	int ret =3D 0;
-=20
- 	mutex_lock(&kvm->slots_lock);
-+
- 	if (kvm->arch.apic_access_page_done)
- 		goto out;
-=20
-+	if (!init)
-+		srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
- 	ret =3D __x86_set_memory_region(kvm,
- 				      APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
- 				      APIC_DEFAULT_PHYS_BASE,
- 				      PAGE_SIZE);
-+	if (!init)
-+		vcpu->srcu_idx =3D srcu_read_lock(&kvm->srcu);
- 	if (ret)
- 		goto out;
-=20
-@@ -1690,14 +1703,39 @@ static int avic_init_access_page(struct kvm_vcpu *v=
-cpu)
- 	return ret;
- }
-=20
-+static void avic_destroy_access_page(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm *kvm =3D vcpu->kvm;
-+
-+	mutex_lock(&kvm->slots_lock);
-+
-+	if (!kvm->arch.apic_access_page_done)
-+		goto out;
-+
-+	srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-+	__x86_set_memory_region(kvm,
-+				APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
-+				APIC_DEFAULT_PHYS_BASE,
-+				0);
-+	vcpu->srcu_idx =3D srcu_read_lock(&kvm->srcu);
-+	kvm->arch.apic_access_page_done =3D false;
-+out:
-+	mutex_unlock(&kvm->slots_lock);
-+}
-+
- static int avic_init_backing_page(struct kvm_vcpu *vcpu)
- {
--	int ret;
-+	int ret =3D 0;
- 	u64 *entry, new_entry;
- 	int id =3D vcpu->vcpu_id;
-+	struct kvm *kvm =3D vcpu->kvm;
- 	struct vcpu_svm *svm =3D to_svm(vcpu);
-=20
--	ret =3D avic_init_access_page(vcpu);
-+	mutex_lock(&kvm->arch.apicv_lock);
-+	if (kvm->arch.apicv_state =3D=3D APICV_ACTIVATED)
-+		ret =3D avic_setup_access_page(vcpu, true);
-+	mutex_unlock(&kvm->arch.apicv_lock);
-+
- 	if (ret)
- 		return ret;
-=20
-@@ -2187,7 +2225,10 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *=
-kvm, unsigned int id)
- 	/* We initialize this flag to true to make sure that the is_running
- 	 * bit would be set the first time the vcpu is loaded.
+ 	/*
+ 	 * Hyper-V SynIC auto EOI SINT's are
+-	 * not compatible with APICV, so deactivate APICV
++	 * not compatible with APICV, so request
++	 * to deactivate APICV permanently.
++	 *
++	 * Since this requires updating
++	 * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
++	 * also take srcu lock.
  	 */
--	svm->avic_is_running =3D true;
-+	mutex_lock(&kvm->arch.apicv_lock);
-+	if (irqchip_in_kernel(kvm) && kvm->arch.apicv_state =3D=3D APICV_ACTIVATE=
-D)
-+		svm->avic_is_running =3D true;
-+	mutex_unlock(&kvm->arch.apicv_lock);
-=20
- 	svm->nested.hsave =3D page_address(hsave_page);
-=20
+-	kvm_vcpu_deactivate_apicv(vcpu);
++	vcpu->srcu_idx =3D srcu_read_lock(&vcpu->kvm->srcu);
++	kvm_make_apicv_deactivate_request(vcpu, true);
++	srcu_read_unlock(&vcpu->kvm->srcu, vcpu->srcu_idx);
++
+ 	synic->active =3D true;
+ 	synic->dont_zero_synic_pages =3D dont_zero_synic_pages;
+ 	return 0;
 --=20
 1.8.3.1
 
