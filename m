@@ -2,107 +2,79 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92724C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5014CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE1A20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JePFpv4j"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1AE20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388865AbfIMUgd (ORCPT
+        id S2389401AbfIMUk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:36:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34418 "EHLO
+        Fri, 13 Sep 2019 16:40:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41748 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388167AbfIMUgc (ORCPT
+        with ESMTP id S2387461AbfIMUk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:36:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r12so18838235pfh.1;
-        Fri, 13 Sep 2019 13:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Z0dOj7erolHZiw1ueP8ahOWvD/RxOwlZu4iI2DGsYgY=;
-        b=JePFpv4jtqm3k75bUAhPaPeBOwPkjKb3EuMgifyS9dp25EFyVs80DCTRNwV71LN8JG
-         q0HGjOttvImzdDcFSWsc3m3WRBF1Zuzsh3rf6fvIc9JA3STlrLCw/SbYb7GlNlsD0uAG
-         pmtv2LqXsvijDvTfM7RnMcO/dcBPqAQEADVflXWerp9hLIPenzIMUMdiyoVlt8bazfMI
-         pAH5O49V9Qqp/scpI+Ie50M4p3TCVeMtdph0WSJfYtrfvkwXlwM1YBkpOuNTUDrGWR67
-         VJRFRWj/oPnnCdHoGQboYS4BfBd8KpMD9prEqCpFBJTtGSLFswCb8ayr//NRy7i1GfmS
-         RAkg==
+        Fri, 13 Sep 2019 16:40:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so18782738pfo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 13:40:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Z0dOj7erolHZiw1ueP8ahOWvD/RxOwlZu4iI2DGsYgY=;
-        b=KttOUdmuVv74NZSH6HW4qPr6TWP1w/Ad+4FFCFszMZjCUnu8kbhujzhMoNDqo5+K7P
-         r6fLy0LuNmS8GBw0rBqf5cNOkA0NmJLGQKasa5YKcd00B8mI7gIrX4WboHQWbTKK9mj3
-         SSjTI8BstCKm/mux+/wSGocmbQUs05vtiKtkpfkgYZoW6mQ/xipoggXdwxUZf6NbyXmi
-         QOjo7HyFHDP2Y0/qCfSRp+8Ejhsr5o+P+flqDHE4xsewoF712e9CPHyVbHg1IN7x5Hu/
-         1/l1cdMFYD2bY68ymGKr5rgQBfQmbK7ar3EORoOcQVC0BA4UO1wSWJb7duFIwTDb0dh2
-         itSQ==
-X-Gm-Message-State: APjAAAWhq0AJGHSo91Hh3ueo9/bN5uZTzVZA47FhQuAS7s2OgtvGOeKb
-        4HjldWJiFHP+m6tT8MHqrVM=
-X-Google-Smtp-Source: APXvYqzbYlUr99W7oZuQgWRIU0dwuUdr89WZOpA54Xc4iE0OSywy0WJV9EA3/sI4FKC424tlR62nRw==
-X-Received: by 2002:aa7:8dcf:: with SMTP id j15mr48595781pfr.5.1568406992288;
-        Fri, 13 Sep 2019 13:36:32 -0700 (PDT)
-Received: from SARKAR ([1.186.12.73])
-        by smtp.gmail.com with ESMTPSA id u9sm30215333pfn.29.2019.09.13.13.36.30
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=qU9A6qb+veDWW9PC+1djL9KV1hH5r1qd0AwYGNHfhBY=;
+        b=lDGJzFGX7YqEj91tVEq2hdPAqXtPOluSYkEn1GCOR/9Fo3fbLQs+G1Um+N4Vhd8QJE
+         qOmAV+Abg9Ecv+SSACDi9pas3+rU22DM7hv/B2PrSgHvY/P+ZISnl9L+shO5l33+mdJy
+         J6EIrkyPHFKY45wW1uT1IvnuVah3lZDUqIJZiC1/aQ0d5NJ1Uqe+Mer9GrV/H9fl/ZQf
+         HQmYmHkqAKCljbagZsdKeY3lHEdLgCGgiqtmDxuMTAy/RIxwTOMifCfbfiFCX/fw3snz
+         IoD4t400oiXxzOtISwaO/0JZ9Vo3ytyZzEi6+ODAw+mr6tZrOe6s2Sf966/1kORRFzmN
+         WQ8A==
+X-Gm-Message-State: APjAAAVu5x3DkGTFdHyR8CHO0Aj/nanzHEmDETn3vubGviY0Wo3MDsap
+        LtUH/sYuYQpcAPndFmtHOlc8JQ==
+X-Google-Smtp-Source: APXvYqwRwn0c+PmiWsgzZC28IXBATIqtHCXXHGwwyRxHek1xZzURFPAkB8G4vkaL2qShC9KYKXBgYA==
+X-Received: by 2002:a63:f357:: with SMTP id t23mr45980721pgj.421.1568407227922;
+        Fri, 13 Sep 2019 13:40:27 -0700 (PDT)
+Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
+        by smtp.gmail.com with ESMTPSA id u65sm33355649pfu.104.2019.09.13.13.40.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 13:36:31 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 02:06:27 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        gregkh@linuxfoundation.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Rodrigo Carvalho <rodrigorsdc@gmail.com>,
-        rohitsarkar5398@gmail.com
-Subject: [PATCH] staging: iio: ADIS16240: Remove unused include
-Message-ID: <20190913203627.GA1320@SARKAR>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 13 Sep 2019 13:40:27 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 13:40:27 -0700 (PDT)
+X-Google-Original-Date: Fri, 13 Sep 2019 13:39:43 PDT (-0700)
+Subject:     Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
+In-Reply-To: <20190910143630.GA6794@lst.de>
+CC:     schwab@suse.de, Greg KH <gregkh@linuxfoundation.org>,
+        jslaby@suse.com, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     schwab@suse.de, Christoph Hellwig <hch@lst.de>
+Message-ID: <mhng-218f6b9f-bfd8-4adb-8147-298989494bcf@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bcc: 
-Subject: [PATCH] staging: iio: adis16240: remove unused include
-Reply-To: 
+On Tue, 10 Sep 2019 07:36:30 PDT (-0700), Christoph Hellwig wrote:
+> On Tue, Sep 10, 2019 at 10:18:15AM +0200, Andreas Schwab wrote:
+>> > How so?  Wіth OF and a stdout path you just set earlycon on the
+>> > command line without any arguments and it will be found.
+>> 
+>> Doesn't work for me.
+>> 
+>> [    0.000000] Malformed early option 'earlycon'
+>
+> That functionality is implemented by param_setup_earlycon and
+> early_init_dt_scan_chosen_stdout.  Check why those aren't built into
+> your kernel.
 
-'#include<linux/gpio.h>' isn't being used anywhere. Remove it.
-
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
----
- drivers/staging/iio/accel/adis16240.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-index 82099db4bf0c..a480409090c0 100644
---- a/drivers/staging/iio/accel/adis16240.c
-+++ b/drivers/staging/iio/accel/adis16240.c
-@@ -7,7 +7,6 @@
- 
- #include <linux/interrupt.h>
- #include <linux/irq.h>
--#include <linux/gpio.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
--- 
-2.17.1
-
+OpenEmbedded passes "earlycon=sbi", which I can find in the doumentation.  I 
+can't find anything about just "earlycon".  I've sent a patch adding sbi to the 
+list of earlycon arguments.
