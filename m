@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3409C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D2CC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC38B2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696E62089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380186;
-	bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
+	s=default; t=1568380190;
+	bh=1pmlV45ktfC1VY7yBHoN5Af05k7xkCDG8Mfc3NnN3DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIAiMvBuxGkBrrLXMjPHCf0wZ6naEl6T5nlvn00ExPvgjh2FC8ny+jtvR6+v0KRdp
-	 Owpn//hmkT7JtjxNI5zNiFw1RcotI4dVOJv1p+hbGZ+Lo8wqLzwPiA4tISKYN5DaEN
-	 VhWbz/cQEKT65oYNqNWt8oMm7L5gsjjZ9W2JGyuY=
+	b=LraxGA81d2fQ4rHrh1nvaTdXRRgKxBkbkiAGz4ft5ylyK44UsnRl4wU8T3N40s+O7
+	 c64Hm/GCIpT7GdaPtr03SOy5Z4xsg+QYLcXSgVqx23pFEc67fJ00vtBhc+YIQF+lEZ
+	 63annFuEQuf+PU/9PW3hwBPbeGbgYC7uYEGu57vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbfIMNJp (ORCPT
+        id S2388599AbfIMNJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388571AbfIMNJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:41 -0400
+        id S2388579AbfIMNJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:45 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D611F206BB;
-        Fri, 13 Sep 2019 13:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F61206BB;
+        Fri, 13 Sep 2019 13:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380181;
-        bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
+        s=default; t=1568380184;
+        bh=1pmlV45ktfC1VY7yBHoN5Af05k7xkCDG8Mfc3NnN3DY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ek4Voz31ieF6pI3PW2p9NPczwIDUBaaPehp1dwKS2zyGC4Utd8fhiL9z9UAnKLESK
-         hD3cVhKJMYlMKDKcIdKDNsyDIO3WXS4YvBnfoQY+E9ubBaGZzrIlI3peGUcW2aFKSV
-         FsWdt9wtJ+qx7MPq8FYj4qfm39HqiS2Lf5+8hkik=
+        b=iRuGfo0yK5LFDSwi1UTQcyLAz+TePU/C34tfghm+3SepX522LKfQRBnIZF4EewSex
+         09rroNnVxaU05OwDhQ9vUySgroiQU6rLWhj0yfCUjp8VWthd2Gg2KHEgohoNHuHdI8
+         D9BT/7S5v4j1a8tk7aN2fYAKRdirEnlHVYa32mqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiwei Bie <tiwei.bie@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 4.9 08/14] vhost/test: fix build for vhost test
-Date:   Fri, 13 Sep 2019 14:07:01 +0100
-Message-Id: <20190913130445.124834201@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 09/14] batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
+Date:   Fri, 13 Sep 2019 14:07:02 +0100
+Message-Id: <20190913130445.428043103@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
 References: <20190913130440.264749443@linuxfoundation.org>
@@ -60,62 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiwei Bie <tiwei.bie@intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 264b563b8675771834419057cbe076c1a41fb666 upstream.
+commit 3ee1bb7aae97324ec9078da1f00cb2176919563f upstream.
 
-Since vhost_exceeds_weight() was introduced, callers need to specify
-the packet weight and byte weight in vhost_dev_init(). Note that, the
-packet weight isn't counted in this patch to keep the original behavior
-unchanged.
+batadv_netlink_get_ifindex() needs to make sure user passed
+a correct u32 attribute.
 
-Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+syzbot reported :
+BUG: KMSAN: uninit-value in batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+CPU: 1 PID: 11705 Comm: syz-executor888 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+ __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+ batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+ genl_lock_dumpit+0xc6/0x130 net/netlink/genetlink.c:482
+ netlink_dump+0xa84/0x1ab0 net/netlink/af_netlink.c:2253
+ __netlink_dump_start+0xa3a/0xb30 net/netlink/af_netlink.c:2361
+ genl_family_rcv_msg net/netlink/genetlink.c:550 [inline]
+ genl_rcv_msg+0xfc1/0x1a40 net/netlink/genetlink.c:627
+ netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2486
+ genl_rcv+0x63/0x80 net/netlink/genetlink.c:638
+ netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+ netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1337
+ netlink_sendmsg+0x127e/0x12f0 net/netlink/af_netlink.c:1926
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:661 [inline]
+ ___sys_sendmsg+0xcc6/0x1200 net/socket.c:2260
+ __sys_sendmsg net/socket.c:2298 [inline]
+ __do_sys_sendmsg net/socket.c:2307 [inline]
+ __se_sys_sendmsg+0x305/0x460 net/socket.c:2305
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2305
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x440209
+
+Fixes: b60620cf567b ("batman-adv: netlink: hardif query")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/test.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/batman-adv/netlink.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -23,6 +23,12 @@
-  * Using this limit prevents one virtqueue from starving others. */
- #define VHOST_TEST_WEIGHT 0x80000
+--- a/net/batman-adv/netlink.c
++++ b/net/batman-adv/netlink.c
+@@ -114,7 +114,7 @@ batadv_netlink_get_ifindex(const struct
+ {
+ 	struct nlattr *attr = nlmsg_find_attr(nlh, GENL_HDRLEN, attrtype);
  
-+/* Max number of packets transferred before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others with
-+ * pkts.
-+ */
-+#define VHOST_TEST_PKT_WEIGHT 256
-+
- enum {
- 	VHOST_TEST_VQ = 0,
- 	VHOST_TEST_VQ_MAX = 1,
-@@ -81,10 +87,8 @@ static void handle_vq(struct vhost_test
- 		}
- 		vhost_add_used_and_signal(&n->dev, vq, head, 0);
- 		total_len += len;
--		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
--			vhost_poll_queue(&vq->poll);
-+		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
- 			break;
--		}
- 	}
+-	return attr ? nla_get_u32(attr) : 0;
++	return (attr && nla_len(attr) == sizeof(u32)) ? nla_get_u32(attr) : 0;
+ }
  
- 	mutex_unlock(&vq->mutex);
-@@ -116,7 +120,8 @@ static int vhost_test_open(struct inode
- 	dev = &n->dev;
- 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
- 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX);
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX,
-+		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
- 
- 	f->private_data = n;
- 
+ /**
 
 
