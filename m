@@ -2,53 +2,53 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384B1C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E43DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9FD2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551BD208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380144;
-	bh=xxcNvHAUzHqpe4b/uPFLBWmvx6l6ZoYVFfAIjThIUSk=;
+	s=default; t=1568380148;
+	bh=hdZ1chB3WzXr0Y4hQLXkjIe8ePHY8MGeUnpJmhc0/3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7irUYvgOn2Goy5mon8NdMZmFjoZd7MgutkiAPPC/VHEMKI3dfEn1S+vz1aFbKQOR
-	 Mk4iBG2ib/BD1TqT6iL4aDB1edjrhk7wgwkk3kzspFULcOqXh6+9LUZiv9m3d/oSVf
-	 rVlfSOT7g+wN8xRYfZ47LvEVWgOVm6ht6wd/cmHU=
+	b=L28eYF0j/aVl3plrTMh9+2SgLvioERmMxjzdDTfxK3gLdKEeb6deCK+93zBXUg+D/
+	 PaVgCzVxdS3Y1EwhsR9lffPVoHB3OOIkt54x7B3Afhvuy3wnI0aFPtcRxga6TDLiRI
+	 gn4oYnFCzjZF92UjN2y3Lx+tH7lbmZvwWVGYjqy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbfIMNJC (ORCPT
+        id S2388433AbfIMNJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfIMNI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:08:59 -0400
+        id S2388393AbfIMNJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:03 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D6E20CC7;
-        Fri, 13 Sep 2019 13:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A1A214D8;
+        Fri, 13 Sep 2019 13:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380139;
-        bh=xxcNvHAUzHqpe4b/uPFLBWmvx6l6ZoYVFfAIjThIUSk=;
+        s=default; t=1568380142;
+        bh=hdZ1chB3WzXr0Y4hQLXkjIe8ePHY8MGeUnpJmhc0/3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LtoGSUkn9jr+SMUTRjFJg3tu2sBUCnjwzDdas20DtDWQyLvMEVIiKXCx0XVe+vY78
-         eDrOamobVi3jvNAIgTANsHOIT/CnLiZGQnUuRl/xI9zTOW8/P/LvC3vQ15iW5Nng0z
-         rWQb3cVBrrWvfq/oXLse37dSKq8npwviAcs7WqXI=
+        b=aB4DUq8TGJllvpmWDx9kddnjsas89Yyt8cZLoTsABAkX/+aOk14bmcbpVRhxlXoat
+         evrNrs/w4g8CXsHXXK/3l8GC66+K18jYJgsk2I90EYXL4eLAlg8IN49PNcS81Xpd/T
+         V5LDUKfmyXsMXDZjVXOZR3OZgm41W2kl6Ldd75fQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jones <davej@codemonkey.org.uk>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 8/9] af_packet: tone down the Tx-ring unsupported spew.
-Date:   Fri, 13 Sep 2019 14:06:58 +0100
-Message-Id: <20190913130431.515555493@linuxfoundation.org>
+        stable@vger.kernel.org, Lidong Chen <lidongchen@tencent.com>,
+        ruippan <ruippan@tencent.com>, yongduan <yongduan@tencent.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: [PATCH 4.4 9/9] vhost: make sure log_num < in_num
+Date:   Fri, 13 Sep 2019 14:06:59 +0100
+Message-Id: <20190913130432.563420115@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
 References: <20190913130424.160808669@linuxfoundation.org>
@@ -61,36 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ae81ced378820c4c6434b1dedba14a7122df310 ]
+From: yongduan <yongduan@tencent.com>
 
-Trinity and other fuzzers can hit this WARN on far too easily,
-resulting in a tainted kernel that hinders automated fuzzing.
+commit 060423bfdee3f8bc6e2c1bac97de24d5415e2bc4 upstream.
 
-Replace it with a rate-limited printk.
+The code assumes log_num < in_num everywhere, and that is true as long as
+in_num is incremented by descriptor iov count, and log_num by 1. However
+this breaks if there's a zero sized descriptor.
 
-Signed-off-by: Dave Jones <davej@codemonkey.org.uk>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As a result, if a malicious guest creates a vring desc with desc.len = 0,
+it may cause the host kernel to crash by overflowing the log array. This
+bug can be triggered during the VM migration.
+
+There's no need to log when desc.len = 0, so just don't increment log_num
+in this case.
+
+Fixes: 3a4d5c94e959 ("vhost_net: a kernel-level virtio server")
+Cc: stable@vger.kernel.org
+Reviewed-by: Lidong Chen <lidongchen@tencent.com>
+Signed-off-by: ruippan <ruippan@tencent.com>
+Signed-off-by: yongduan <yongduan@tencent.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/packet/af_packet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/vhost.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 5d8988185c591..0dd9fc3f57e87 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4176,7 +4176,7 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
- 
- 	/* Opening a Tx-ring is NOT supported in TPACKET_V3 */
- 	if (!closing && tx_ring && (po->tp_version > TPACKET_V2)) {
--		WARN(1, "Tx-ring is not supported.\n");
-+		net_warn_ratelimited("Tx-ring is not supported.\n");
- 		goto out;
- 	}
- 
--- 
-2.20.1
-
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1324,7 +1324,7 @@ static int get_indirect(struct vhost_vir
+ 		/* If this is an input descriptor, increment that count. */
+ 		if (desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_WRITE)) {
+ 			*in_num += ret;
+-			if (unlikely(log)) {
++			if (unlikely(log && ret)) {
+ 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+ 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+ 				++*log_num;
+@@ -1453,7 +1453,7 @@ int vhost_get_vq_desc(struct vhost_virtq
+ 			/* If this is an input descriptor,
+ 			 * increment that count. */
+ 			*in_num += ret;
+-			if (unlikely(log)) {
++			if (unlikely(log && ret)) {
+ 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+ 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+ 				++*log_num;
 
 
