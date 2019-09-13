@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814F6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DEEC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59562206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31907206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380565;
-	bh=xfLMvEAb89BJvZFgrnyHbHexMVIDN8oo/7auQHJhcME=;
+	s=default; t=1568380569;
+	bh=5nIOL2h4r6TvSPKoD6zGtjoBy+pqnN+ilAla3xlGQ7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+RalY+0jaf/HnttkxPUp7hqjKgzZ1+5who2OZGhNVceOTEFc/hEWK3ucawd88NZb
-	 R+pqsUtQewZwMZMW1EBYZnmWAD+nmj79iSU85BfBjb0odtxtGws3JIcxzuKcXYMA3P
-	 n3lEKQTDS0YdkcguDaqPNttZw6oDPHijMZNIvTNo=
+	b=HDoPdN48h0sXYNwr/EKfPvxxXh2SDLujYv5oeZ0SZrpt229bBwKxvFoowYNVs4MfY
+	 sy8ZOzyWw0rj0TnF92ZWRU9TfH/6w1SSs8LK1zMgY+G20iG4ksYNVi4aEcGL9le/yK
+	 9JUZVzKAI2dEWVvCV4v08sFPLoSbsi7L5weG9mp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389793AbfIMNQE (ORCPT
+        id S2389800AbfIMNQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389198AbfIMNQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:01 -0400
+        id S2389787AbfIMNQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:04 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10746208C0;
-        Fri, 13 Sep 2019 13:15:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E37206A5;
+        Fri, 13 Sep 2019 13:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380560;
-        bh=xfLMvEAb89BJvZFgrnyHbHexMVIDN8oo/7auQHJhcME=;
+        s=default; t=1568380563;
+        bh=5nIOL2h4r6TvSPKoD6zGtjoBy+pqnN+ilAla3xlGQ7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICpxHzXJyvaCuE4tVNMD5vP5t0OOsK+zsA0VGcINDgp5CX/S1B4PA8o2tioCWxd8f
-         RVgeTc0aHuM2jWjQQ3eZVNdftvZQqbpYKin/wLYQAcZL63mC+iZlUDO/lXRjqj0PjX
-         h3G1tbnSOUseDil1crN/qGV3vbZgn3BOKNXNCYFc=
+        b=B61+NQ4fWnj6VaWF4yB427yuTcE1NYcBt5ltLyi1GR81JP47FO8W9wijrmJUJcJ7U
+         xKHu5HiyR/x0SmI+yK0W9qoi08HxByv+PU89bh9QKOGsmPUgbINyhhoMNIYOPCYo53
+         wjtQL2q7SigtizJl6ghyk+tI3Vunl4Cok4QzX9Vg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/190] PCI: qcom: Dont deassert reset GPIO during probe
-Date:   Fri, 13 Sep 2019 14:05:59 +0100
-Message-Id: <20190913130607.956163583@linuxfoundation.org>
+Subject: [PATCH 4.19 105/190] drm: add __user attribute to ptr_to_compat()
+Date:   Fri, 13 Sep 2019 14:06:00 +0100
+Message-Id: <20190913130608.048188994@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,45 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 02b485e31d98265189b91f3e69c43df2ed50610c ]
+[ Upstream commit e552f0851070fe4975d610a99910be4e9bf5d7bd ]
 
-Acquiring the reset GPIO low means that reset is being deasserted, this
-is followed almost immediately with qcom_pcie_host_init() asserting it,
-initializing it and then finally deasserting it again, for the link to
-come up.
+The ptr_to_compat() call takes a "void __user *", so cast
+the compat drm calls that use it to avoid the following
+warnings from sparse:
 
-Some PCIe devices requires a minimum time between the initial deassert
-and subsequent reset cycles. In a platform that boots with the reset
-GPIO asserted this requirement is being violated by this deassert/assert
-pulse.
+drivers/gpu/drm/drm_ioc32.c:188:39: warning: incorrect type in argument 1 (different address spaces)
+drivers/gpu/drm/drm_ioc32.c:188:39:    expected void [noderef] <asn:1>*uptr
+drivers/gpu/drm/drm_ioc32.c:188:39:    got void *[addressable] [assigned] handle
+drivers/gpu/drm/drm_ioc32.c:529:41: warning: incorrect type in argument 1 (different address spaces)
+drivers/gpu/drm/drm_ioc32.c:529:41:    expected void [noderef] <asn:1>*uptr
+drivers/gpu/drm/drm_ioc32.c:529:41:    got void *[addressable] [assigned] handle
 
-Acquire the reset GPIO high to prevent this situation by matching the
-state to the subsequent asserted state.
-
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190301120046.26961-1-ben.dooks@codethink.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_ioc32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 79f06c76ae071..e292801fff7fd 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1230,7 +1230,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
+index 138680b37c709..f8672238d444b 100644
+--- a/drivers/gpu/drm/drm_ioc32.c
++++ b/drivers/gpu/drm/drm_ioc32.c
+@@ -185,7 +185,7 @@ static int compat_drm_getmap(struct file *file, unsigned int cmd,
+ 	m32.size = map.size;
+ 	m32.type = map.type;
+ 	m32.flags = map.flags;
+-	m32.handle = ptr_to_compat(map.handle);
++	m32.handle = ptr_to_compat((void __user *)map.handle);
+ 	m32.mtrr = map.mtrr;
+ 	if (copy_to_user(argp, &m32, sizeof(m32)))
+ 		return -EFAULT;
+@@ -216,7 +216,7 @@ static int compat_drm_addmap(struct file *file, unsigned int cmd,
  
- 	pcie->ops = of_device_get_match_data(dev);
+ 	m32.offset = map.offset;
+ 	m32.mtrr = map.mtrr;
+-	m32.handle = ptr_to_compat(map.handle);
++	m32.handle = ptr_to_compat((void __user *)map.handle);
+ 	if (map.handle != compat_ptr(m32.handle))
+ 		pr_err_ratelimited("compat_drm_addmap truncated handle %p for type %d offset %x\n",
+ 				   map.handle, m32.type, m32.offset);
+@@ -529,7 +529,7 @@ static int compat_drm_getsareactx(struct file *file, unsigned int cmd,
+ 	if (err)
+ 		return err;
  
--	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_LOW);
-+	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
- 	if (IS_ERR(pcie->reset)) {
- 		ret = PTR_ERR(pcie->reset);
- 		goto err_pm_runtime_put;
+-	req32.handle = ptr_to_compat(req.handle);
++	req32.handle = ptr_to_compat((void __user *)req.handle);
+ 	if (copy_to_user(argp, &req32, sizeof(req32)))
+ 		return -EFAULT;
+ 
 -- 
 2.20.1
 
