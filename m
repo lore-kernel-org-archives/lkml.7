@@ -2,32 +2,30 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02282C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26805C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BF02084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046B42089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388008AbfIMMDG (ORCPT
+        id S2388067AbfIMMDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:03:06 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:15352 "EHLO
+        Fri, 13 Sep 2019 08:03:08 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25811 "EHLO
         alexa-out-blr.qualcomm.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726771AbfIMMDE (ORCPT
+        by vger.kernel.org with ESMTP id S2387896AbfIMMDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:03:04 -0400
-X-Greylist: delayed 369 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Sep 2019 08:02:48 EDT
+        Fri, 13 Sep 2019 08:03:06 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 Sep 2019 17:26:39 +0530
 Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
   by ironmsg01-blr.qualcomm.com with ESMTP; 13 Sep 2019 17:26:13 +0530
 Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id D4269372C; Fri, 13 Sep 2019 17:26:11 +0530 (IST)
+        id B23C9372A; Fri, 13 Sep 2019 17:26:11 +0530 (IST)
 From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
         bjorn.andersson@linaro.org, david.brown@linaro.org,
@@ -37,112 +35,52 @@ To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
         mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
         robh+dt@kernel.org, sricharan@codeaurora.org,
         nprakash@codeaurora.org
-Subject: [PATCH V2 03/12] remoteproc: qcom: Add support for split q6 + m3 wlan firmware
-Date:   Fri, 13 Sep 2019 17:26:02 +0530
-Message-Id: <1568375771-22933-4-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH V2 00/12] remoteproc: qcom: q6v5-wcss: Add support for secure pil
+Date:   Fri, 13 Sep 2019 17:25:59 +0530
+Message-Id: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPQ8074 supports split firmware for q6 and m3 as well.
-So add support for loading the m3 firmware before q6.
-Now the drivers works fine for both split and unified
-firmwares.
+IPQ8074 needs support for secure pil as well.
+Also, currently only unified firmware is supported.
+IPQ8074 supports split firmware for q6 and m3, so
+adding support for that.
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ Also, this series is based on Govind’s,
+ “[v4] Add non PAS wcss Q6 support for QCS404”
+ https://www.spinics.net/lists/linux-remoteproc/msg03612.html
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 8418f57..5957114 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -138,12 +138,14 @@ struct q6v5_wcss {
- 	u8 version;
- 	bool requires_force_stop;
- 	bool need_mem_protection;
-+	const char *m3_firmware_name;
- };
- 
- struct wcss_data {
- 	int (*init_clock)(struct q6v5_wcss *wcss);
- 	int (*init_regulator)(struct q6v5_wcss *wcss);
--	const char *firmware_name;
-+	const char *q6_firmware_name;
-+	const char *m3_firmware_name;
- 	int crash_reason_smem;
- 	u8 version;
- 	bool aon_reset_required;
-@@ -759,7 +761,26 @@ static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
- static int q6v5_wcss_load(struct rproc *rproc, const struct firmware *fw)
- {
- 	struct q6v5_wcss *wcss = rproc->priv;
-+	const struct firmware *m3_fw;
-+	int ret;
-+
-+	if (wcss->m3_firmware_name) {
-+		ret = request_firmware(&m3_fw, wcss->m3_firmware_name,
-+				       wcss->dev);
-+		if (ret)
-+			goto skip_m3;
-+
-+		ret = qcom_mdt_load_no_init(wcss->dev, m3_fw,
-+					    wcss->m3_firmware_name, 0,
-+					    wcss->mem_region, wcss->mem_phys,
-+					    wcss->mem_size, &wcss->mem_reloc);
-+		if (ret) {
-+			dev_err(wcss->dev, "can't load m3_fw.bXX\n");
-+			return ret;
-+		}
-+	}
- 
-+skip_m3:
- 	if (wcss->need_mem_protection)
- 		return qcom_mdt_load(wcss->dev, fw, rproc->firmware,
- 				     WCNSS_PAS_ID, wcss->mem_region,
-@@ -1055,7 +1076,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 		return -EPROBE_DEFER;
- 
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
--			    desc->firmware_name, sizeof(*wcss));
-+			    desc->q6_firmware_name, sizeof(*wcss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
-@@ -1068,6 +1089,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	wcss->version = desc->version;
- 	wcss->requires_force_stop = desc->requires_force_stop;
- 	wcss->need_mem_protection = desc->need_mem_protection;
-+	wcss->m3_firmware_name = desc->m3_firmware_name;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -1130,7 +1152,8 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 
- static const struct wcss_data wcss_ipq8074_res_init = {
- 	.init_clock = ipq8074_init_clock,
--	.firmware_name = "IPQ8074/q6_fw.mdt",
-+	.q6_firmware_name = "IPQ8074/q6_fw.mdt",
-+	.m3_firmware_name = "IPQ8074/m3_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
- 	.ops = &q6v5_wcss_ipq8074_ops,
-@@ -1142,7 +1165,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.init_clock = qcs404_init_clock,
- 	.init_regulator = qcs404_init_regulator,
- 	.crash_reason_smem = 421,
--	.firmware_name = "wcnss.mdt",
-+	.q6_firmware_name = "wcnss.mdt",
- 	.version = WCSS_QCS404,
- 	.aon_reset_required = false,
- 	.ssr_name = "mpss",
+[V2] Fixed all comments
+
+Gokul Sriram Palanisamy (12):
+  remoteproc: qcom: Add PRNG proxy clock
+  remoteproc: qcom: Add secure PIL support
+  remoteproc: qcom: Add support for split q6 + m3 wlan firmware
+  remoteproc: qcom: Add ssr subdevice identifier
+  remoteproc: qcom: Update regmap offsets for halt register
+  dt-bindings: clock: qcom: Add reset for WCSSAON
+  clk: qcom: Add WCSSAON reset
+  dt-bindings: mailbox: qom: Add ipq8074 APPS compatible
+  mailbox: qcom: Add support for IPQ8074 APCS
+  dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
+  arm64: dts: Add support for scm on IPQ8074 SoCs
+  arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |   1 +
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 132 +++++++++++++++++
+ drivers/clk/qcom/gcc-ipq8074.c                     |   1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |   1 +
+ drivers/remoteproc/qcom_q6v5_wcss.c                | 158 +++++++++++++++++----
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   1 +
+ 7 files changed, 265 insertions(+), 30 deletions(-)
+
 -- 
 1.9.1
 
