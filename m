@@ -2,73 +2,64 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D778DC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3860C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A985C2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAF721479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfIMTXh (ORCPT
+        id S1730568AbfIMT2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:23:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59418 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfIMTXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:23:36 -0400
-Received: from [IPv6:2804:431:c7f4:5bfc:5711:794d:1c68:5ed3] (unknown [IPv6:2804:431:c7f4:5bfc:5711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D41128BD60;
-        Fri, 13 Sep 2019 20:23:32 +0100 (BST)
-Subject: Re: [PATCH 0/4] null_blk: fixes around nr_devices and log
- improvements
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, kernel@collabora.com,
-        krisman@collabora.com
-References: <20190913185746.337429-1-andrealmeid@collabora.com>
- <FFDFD18F-C242-46D2-B64B-5515987AD82D@kernel.dk>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <467709ad-e174-4d4a-6906-aba5bf7a8111@collabora.com>
-Date:   Fri, 13 Sep 2019 16:22:26 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-In-Reply-To: <FFDFD18F-C242-46D2-B64B-5515987AD82D@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Sep 2019 15:28:12 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41826 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729340AbfIMT2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:28:12 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 90E1A1A016E;
+        Fri, 13 Sep 2019 21:28:10 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 843F71A00D0;
+        Fri, 13 Sep 2019 21:28:10 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 02806205DB;
+        Fri, 13 Sep 2019 21:28:09 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     broonie@kernel.org
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/3] Several SAI fixes
+Date:   Fri, 13 Sep 2019 22:28:04 +0300
+Message-Id: <20190913192807.8423-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/13/19 4:03 PM, Jens Axboe wrote:
-> On Sep 13, 2019, at 11:58 AM, André Almeida <andrealmeid@collabora.com> wrote:
->>
->> ﻿Hello,
->>
->> This patch series address feedback for a previous patch series sent by
->> me "docs: block: null_blk: enhance document style"[1].
->>
->> First patch removes a restriction that prevents null_blk to load with
->> (nr_devices == 0). This restriction breaks applications, so it's a bug. I
->> have tested it running the kernel with `null_blk.nr_devices=0`.
->>
->> In the previous series I have changed the type of var nr_devices, but I
->> forgot to change the type at module_param(). The second patch fix that.
->>
->> The third patch uses a cleaver approach to make log messages consistent
->> using pr_fmt and the last one add a note on how to do that at the
->> coding style documentation.
-> 
-> Please add Fixes tags to your patches. 
-> 
+This series contains several fixes for SAI. They are unrelated
+but grouped them in a patch series to be easier applied.
 
-I've added to [PATCH 1/4], should I add to all 4 patches?
+Daniel Baluta (1):
+  ASoC: fsl_sai: Fix TCSR.TE/RCSR.RE in synchronous mode
+
+Mihai Serban (1):
+  ASoC: fsl_sai: Fix noise when using EDMA
+
+Shengjiu Wang (1):
+  ASoC: fsl_sai: Fix xMR setting in synchronous mode
+
+ sound/soc/fsl/fsl_sai.c | 31 ++++++++++++++++++++++---------
+ sound/soc/fsl/fsl_sai.h |  1 +
+ 2 files changed, 23 insertions(+), 9 deletions(-)
+
+-- 
+2.17.1
+
