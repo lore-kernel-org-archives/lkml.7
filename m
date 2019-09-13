@@ -2,269 +2,257 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98919C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93944206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D4920830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="ZQ0oQi7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfIMUzp (ORCPT
+        id S2388871AbfIMU6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:55:45 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49266 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727735AbfIMUzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:55:45 -0400
-Received: from localhost (93-63-141-166.ip28.fastwebnet.it [93.63.141.166])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 81DEE1539DB2A;
-        Fri, 13 Sep 2019 13:55:43 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 21:55:40 +0100 (WEST)
-Message-Id: <20190913.215540.530478705339568215.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 13 Sep 2019 13:55:44 -0700 (PDT)
+        Fri, 13 Sep 2019 16:58:36 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:60524 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388076AbfIMU6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 16:58:36 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id 8seAiDyQhFXoi8seBiUxnH; Fri, 13 Sep 2019 14:58:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1568408312; bh=JFZiZ8GywZn4EntghOB1nQTSaxuHLighS4niCi6IdzU=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=ZQ0oQi7O9SVl3Y0pXISANC3alP2PMgqdD2BxYaWcBNnGppUQ5boXbhQ3D9elT+VZT
+         C/+LGFJW9znC/uhcRM4bBK//pI6mFEBL6UrkOGFEKRt8o1ZybKk5JmEUd1rID/m2ND
+         NZkVZ2oYT1w4GJ/krpOkRJooh/ANJDDI8eMrY4QgX2o6MvLCHme8Th5EIU/WMd8LDI
+         gnc7skW8Fw3KcEgWxQfmz4M2zLr1t/w4JcZPlbASn/nJD4OnP1QUqo+OlCuWGMqBZm
+         aNcwT07Bdp5oOQ4UFmvKfI/q0uI+R6UlWrpbpACV+FT1n1iKOVCbs6DU7bhn/T9okZ
+         Y7zbe41LIAzbw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=HoEI5HbS c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=gu6fZOg2AAAA:8 a=FGbulvE0AAAA:8 a=kMzJ0VUsHSJ4pOcj8RsA:9
+ a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=tA1zSrZllMrc5sIv:21 a=4Q3CTht2G7KouQuB:21
+ a=CjuIK1q_8ugA:10 a=wC6wFTFn8J8A:10 a=-MXCNWVgZdEA:10 a=-FEs8UIgK8oA:10
+ a=NWVoK91CQyQA:10 a=2RSlZUUhi9gRBrsHwhhZ:22 a=svzTaB3SJmTkU8mK-ULk:22
+ a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+Cc:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mgorman@techsingularity.net>,
+        <matt@codeblueprint.co.uk>, <viresh.kumar@linaro.org>,
+        <juri.lelli@redhat.com>, <pjt@google.com>,
+        <vincent.guittot@linaro.org>, <qperret@qperret.net>,
+        <dietmar.eggemann@arm.com>, <srinivas.pandruvada@linux.intel.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <bp@suse.de>, <lenb@kernel.org>, <rjw@rjwysocki.net>
+References: <20190909024216.5942-1-ggherdovich@suse.cz> <20190909024216.5942-2-ggherdovich@suse.cz> <000e01d568b5$87de9be0$979bd3a0$@net>
+In-Reply-To: <000e01d568b5$87de9be0$979bd3a0$@net>
+Subject: RE: [PATCH 1/2] x86,sched: Add support for frequency invariance
+Date:   Fri, 13 Sep 2019 13:58:25 -0700
+Message-ID: <000301d56a76$0022e630$0068b290$@net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVmt5+Zhvy5aOFESi2j+LaB1JUY0wArmRMwAMJIfyA=
+X-CMAE-Envelope: MS4wfFcQ3m5YsQFKxTfs2VdGW7p5LBTbIe3iaIda3JlqseEHsaiZ98yR4mo9wbhnq1CTtjVlxfWV/R/r32mmZUHMv4OpfBSvfmdKEybZtZKUDSItmN7ruMiH
+ /hen019PMxi51aI4CnrUKCW0catcWUlW7QRatWhmYXbrRiV+qCt7suM1ZAERDm28Ch+iC05RMHaywhjMFYvrhtXRa/3qe6ZvYsCdFG8zZtVi1EKpXhjRwofp
+ 4U6Sll/hytA1+WHahT3eqPN7b5Zau5029eiWih59ZqQNEf8JZCTkIr26KsBx/kvuYtU66hY7+yLZKEVA7nsgNGpLBRnhXkHWfdi6MAjW+6pMmpFHzlGCwxUB
+ U9LRTYab+xSF8i3G0R6B14tfiEiaqtKCFOEudNiXGUtjV610GUgjEvoNJlH7ZTtfNpZtAZpfI12KMe0C+gRc9YilT10e69E2oUwEF1h4N8du3HP6hcwBTsGf
+ pIGWBxLgre8x3TwWgdYrea3OCAC604n1Ohahk7tatpkyeGWH5pj3XcBVK6aMHwXJKgsVlm3oD8HTVyFnGdWzz5ZaresPkYsH45jzqQSPWM2RxymlElU8+neX
+ Xxn+1hLVJMi7LSiLueA9g5xgk6SCAtYMUxMmhQxt62dXlLLrhS/G16VynfNYSci7zZy23BWNA7aHYLAjSsz0UV/SiqyVV1rVZo+cUCZGfsVszOdJ2oT4AXIC
+ r1VIVJVLQI7A5iD8tUiNgTQCun/3djIS/ocAaAQjkaZV5sk2kCfFTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoxKSBEb24ndCBjb3JydXB0IHhmcm1faW50ZXJmYWNlIHBhcm1zIGJlZm9yZSB2YWxpZGF0aW9u
-LCBmcm9tIE5pY29sYXMNCiAgIERpY2h0ZWwuDQoNCjIpIFJldmVydCB1c2Ugb2YgdXNiLXdha2V1
-cCBpbiBidHVzYiwgZnJvbSBNYXJpbyBMaW1vbmNpZWxsby4NCg0KMykgQmxvY2sgaXB2NiBwYWNr
-ZXRzIGluIGJyaWRnZSBuZXRmaWx0ZXIgaWYgaXB2NiBpcyBkaXNhYmxlZCwNCiAgIGZyb20gTGVv
-bmFyZG8gQnJhcy4NCg0KNCkgSVBTX09GRkxPQUQgbm90IGhvbm9yZWQgaW4gY3RuZXRsaW5rLCBm
-cm9tIFBhYmxvIE5laXJhIEF5dXNvLg0KDQo1KSBNaXNzaW5nIFVMUCBjaGVjayBpbiBzb2NrX21h
-cCwgZnJvbSBKb2huIEZhc3RhYmVuZC4NCg0KNikgRml4IHJlY2VpdmUgc3RhdGlzdGljIGhhbmRs
-aW5nIGluIGZvcmNlZGV0aCwgZnJvbSBaaHUgWWFuanVuLg0KDQo3KSBGaXggbGVuZ3RoIG9mIFNL
-QiBhbGxvY2F0ZWQgaW4gNnBhY2sgZHJpdmVyLCBmcm9tIENocmlzdG9waGUNCiAgIEpBSUxMRVQu
-DQoNCjgpIGlwNl9yb3V0ZV9pbmZvX2NyZWF0ZSgpIHJldHVybnMgYW4gZXJyb3IgcG9pbnRlciwg
-bm90IE5VTEwuDQogICBGcm9tIE1hY2llaiDFu2VuY3p5a293c2tpLg0KDQo5KSBPbmx5IGFkZCBS
-RFMgc29jayB0byB0aGUgaGFzaGVzIGFmdGVyIHJzX3RyYW5zcG9ydCBpcyBzZXQsIGZyb20NCiAg
-IEthLUNoZW9uZyBQb29uLg0KDQoxMCkgRG9uJ3QgZG91YmxlIGNsZWFuIFRYIGRlc2NyaXB0b3Jz
-IGluIGl4Z2JlLCBmcm9tIElseWEgTWF4aW1ldHMuDQoNCjExKSBQcmVzZW5jZSBvZiB0cmFuc21p
-dCBJUFNFQyBvZmZsb2FkIGluIGFuIFNLQiBpcyBub3QgdGVzdGVkIGZvcg0KICAgIGNvcnJlY3Rs
-eSBpbiBpeGdiZSBhbmQgaXhnYmV2Zi4gIEZyb20gU3RlZmZlbiBLbGFzc2VydCBhbmQNCiAgICBK
-ZWZmIEtpcnNoZXIuDQoNCjEyKSBOZWVkIHJjdV9iYXJyaWVyKCkgd2hlbiByZWdpc3Rlcl9uZXRk
-ZXZpY2UoKSB0YWtlcyBvbmUgb2YgdGhlDQogICAgbm90aWZpZXIgYmFzZWQgZmFpbHVyZSBwYXRo
-cywgZnJvbSBTdWJhc2ggQWJoaW5vdiBLYXNpdmlzd2FuYXRoYW4uDQoNCjEzKSBGaXggbGVhayBp
-biBzY3RwX2RvX2JpbmQoKSwgZnJvbSBNYW8gV2VuYW4uDQoNClBsZWFzZSBwdWxsLCB0aGFua3Mg
-YSBsb3QhDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMDg5Y2Y3ZjZlY2Iy
-NjZiNmE0MTY0OTE5YTJlNjliZDJmOTM4Mzc0YToNCg0KICBMaW51eCA1LjMtcmM3ICgyMDE5LTA5
-LTAyIDA5OjU3OjQwIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9y
-eSBhdDoNCg0KICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
-bmV0ZGV2L25ldC5naXQgDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byA0ZDdmZmNm
-M2JmMWJlOThkODc2YzU3MGNhYjhmYzMxZDlmYTkyNzI1Og0KDQogIGNkY19ldGhlcjogZml4IHJu
-ZGlzIHN1cHBvcnQgZm9yIE1lZGlhdGVrIGJhc2VkIHNtYXJ0cGhvbmVzICgyMDE5LTA5LTEzIDIy
-OjA4OjEzICswMjAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpBbGV4YW5kZXIgRHV5Y2sgKDEpOg0KICAgICAgaXhn
-YmU6IFByZXZlbnQgdTggd3JhcHBpbmcgb2YgSVRSIHZhbHVlIHRvIHNvbWV0aGluZyBsZXNzIHRo
-YW4gMTB1cw0KDQpBbGV4ZWkgU3Rhcm92b2l0b3YgKDEpOg0KICAgICAgYnBmOiBmaXggcHJlY2lz
-aW9uIHRyYWNraW5nIG9mIHN0YWNrIHNsb3RzDQoNCkJqw7hybiBNb3JrICgxKToNCiAgICAgIGNk
-Y19ldGhlcjogZml4IHJuZGlzIHN1cHBvcnQgZm9yIE1lZGlhdGVrIGJhc2VkIHNtYXJ0cGhvbmVz
-DQoNCkNocmlzdG9waGUgSkFJTExFVCAoMyk6DQogICAgICBuZXQvaGFtcmFkaW8vNnBhY2s6IEZp
-eCB0aGUgc2l6ZSBvZiBhIHNrX2J1ZmYgdXNlZCBpbiAnc3BfYnVtcCgpJw0KICAgICAgaXB2Njog
-Rml4IHRoZSBsaW5rIHRpbWUgcXVhbGlmaWVyIG9mICdwaW5nX3Y2X3Byb2NfZXhpdF9uZXQoKScN
-CiAgICAgIHNjdHA6IEZpeCB0aGUgbGluayB0aW1lIHF1YWxpZmllciBvZiAnc2N0cF9jdHJsc29j
-a19leGl0KCknDQoNCkNvbGluIElhbiBLaW5nICg0KToNCiAgICAgIE5GQzogc3Q5NWhmOiBmaXgg
-c3BlbGxpbmcgbWlzdGFrZSAicmVjZWlldmUiIC0+ICJyZWNlaXZlIg0KICAgICAgbmV0OiBsbWM6
-IGZpeCBzcGVsbGluZyBtaXN0YWtlICJydW5uaW4iIC0+ICJydW5uaW5nIg0KICAgICAgbmV0OiBo
-bnMzOiBmaXggc3BlbGxpbmcgbWlzdGFrZSAidW5kZWZsb3ciIC0+ICJ1bmRlcmZsb3ciDQogICAg
-ICBtbHg0OiBmaXggc3BlbGxpbmcgbWlzdGFrZSAidmVpZnkiIC0+ICJ2ZXJpZnkiDQoNCkNvbmcg
-V2FuZyAoMik6DQogICAgICBuZXRfc2NoZWQ6IGNoZWNrIGNvcHMtPnRjZl9ibG9jayBpbiB0Y19i
-aW5kX3RjbGFzcygpDQogICAgICBzY2hfaGhmOiBlbnN1cmUgcXVhbnR1bSBhbmQgaGhmX25vbl9o
-aF93ZWlnaHQgYXJlIG5vbi16ZXJvDQoNCkRhdmlkIEFoZXJuICgyKToNCiAgICAgIGlwdjY6IEZp
-eCBSVEFfTVVMVElQQVRIIHdpdGggbmV4dGhvcCBvYmplY3RzDQogICAgICBzZWxmdGVzdDogQSBm
-ZXcgY2xlYW51cHMgZm9yIGZpYl9uZXh0aG9wcy5zaA0KDQpEYXZpZCBIb3dlbGxzICgxKToNCiAg
-ICAgIHJ4cnBjOiBGaXggbWlzcGxhY2VkIHRyYWNlbGluZQ0KDQpEYXZpZCBTLiBNaWxsZXIgKDgp
-Og0KICAgICAgTWVyZ2UgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvLi4uL3BhYmxvL25mDQogICAgICBN
-ZXJnZSBicmFuY2ggJ2Zvci11cHN0cmVhbScgb2YgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvLi4uL2Js
-dWV0b290aC9ibHVldG9vdGgNCiAgICAgIE1lcmdlIGJyYW5jaCAnbmV4dGhvcHMtRml4LW11bHRp
-cGF0aC1ub3RpZmljYXRpb25zLWZvci1JUHY2LWFuZC1zZWxmdGVzdHMnDQogICAgICBNZXJnZSBi
-cmFuY2ggJ21hc3Rlcicgb2YgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvLi4uL2tsYXNzZXJ0L2lwc2Vj
-DQogICAgICBNZXJnZSB0YWcgJ3dpcmVsZXNzLWRyaXZlcnMtZm9yLWRhdmVtLTIwMTktMDktMDUn
-IG9mIGdpdDovL2dpdC5rZXJuZWwub3JnLy4uLi9rdmFsby93aXJlbGVzcy1kcml2ZXJzDQogICAg
-ICBNZXJnZSBnaXQ6Ly9naXQua2VybmVsLm9yZy8uLi4vYnBmL2JwZg0KICAgICAgTWVyZ2UgYnJh
-bmNoICcxMEdiRScgb2YgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvLi4uL2praXJzaGVyL25ldC1xdWV1
-ZQ0KICAgICAgTWVyZ2UgYnJhbmNoICdzY3RwX2RvX2JpbmQtbGVhaycNCg0KRG9uYWxkIFNoYXJw
-ICgxKToNCiAgICAgIG5ldDogUHJvcGVybHkgdXBkYXRlIHY0IHJvdXRlcyB3aXRoIHY2IG5leHRo
-b3ANCg0KRXJpYyBCaWdnZXJzICgxKToNCiAgICAgIGlzZG4vY2FwaTogY2hlY2sgbWVzc2FnZSBs
-ZW5ndGggaW4gY2FwaV93cml0ZSgpDQoNCkVyaWMgRHVtYXpldCAoMSk6DQogICAgICBuZXQ6IHNj
-aGVkOiBmaXggcmVvcmRlcmluZyBpc3N1ZXMNCg0KRmVybmFuZG8gRmVybmFuZGV6IE1hbmNlcmEg
-KDEpOg0KICAgICAgbmV0ZmlsdGVyOiBuZnRfc29ja2V0OiBmaXggZXJyb25lb3VzIHNvY2tldCBh
-c3NpZ25tZW50DQoNCkZsb3JpYW4gV2VzdHBoYWwgKDEpOg0KICAgICAgeGZybTogcG9saWN5OiBh
-dm9pZCB3YXJuaW5nIHNwbGF0IHdoZW4gbWVyZ2luZyBub2Rlcw0KDQpGcmVkIExvdHRlciAoMSk6
-DQogICAgICBuZnA6IGZsb3dlcjogY21zZyBydG5sIGxvY2tzIGNhbiB0aW1lb3V0IHJlaWZ5IG1l
-c3NhZ2VzDQoNCkhhcmlzaCBCYW5kaSAoMSk6DQogICAgICBCbHVldG9vdGg6IGhjaV9xY2E6IGRp
-c2FibGUgaXJxcyB3aGVuIHNwaW5sb2NrIGlzIGFjcXVpcmVkDQoNCkh1aSBQZW5nICgxKToNCiAg
-ICAgIHJzaTogZml4IGEgZG91YmxlIGZyZWUgYnVnIGluIHJzaV85MXhfZGVpbml0KCkNCg0KSWx5
-YSBNYXhpbWV0cyAoMSk6DQogICAgICBpeGdiZTogZml4IGRvdWJsZSBjbGVhbiBvZiBUeCBkZXNj
-cmlwdG9ycyB3aXRoIHhkcA0KDQpKZWZmIEtpcnNoZXIgKDEpOg0KICAgICAgaXhnYmV2ZjogRml4
-IHNlY3BhdGggdXNhZ2UgZm9yIElQc2VjIFR4IG9mZmxvYWQNCg0KSmlhbi1Ib25nIFBhbiAoMSk6
-DQogICAgICBCbHVldG9vdGg6IGJ0cnRsOiBBZGRpdGlvbmFsIFJlYWx0ZWsgODgyMkNFIEJsdWV0
-b290aCBkZXZpY2VzDQoNCkpvaG4gRmFzdGFiZW5kICgxKToNCiAgICAgIG5ldDogc29ja19tYXAs
-IGZpeCBtaXNzaW5nIHVscCBjaGVjayBpbiBzb2NrIGhhc2ggY2FzZQ0KDQpKb3VuaSBNYWxpbmVu
-ICgxKToNCiAgICAgIG1hYzgwMjExOiBEbyBub3Qgc2VuZCBMYXllciAyIFVwZGF0ZSBmcmFtZSBi
-ZWZvcmUgYXV0aG9yaXphdGlvbg0KDQpKdWxpZXQgS2ltICgxKToNCiAgICAgIG5ldC9pYm12bmlj
-OiBmcmVlIHJlc2V0IHdvcmsgb2YgcmVtb3ZlZCBkZXZpY2UgZnJvbSBxdWV1ZQ0KDQpLYS1DaGVv
-bmcgUG9vbiAoMSk6DQogICAgICBuZXQvcmRzOiBBbiByZHNfc29jayBpcyBhZGRlZCB0b28gZWFy
-bHkgdG8gdGhlIGhhc2ggdGFibGUNCg0KTGVvbmFyZG8gQnJhcyAoMik6DQogICAgICBuZXRmaWx0
-ZXI6IGJyaWRnZTogRHJvcHMgSVB2NiBwYWNrZXRzIGlmIElQdjYgbW9kdWxlIGlzIG5vdCBsb2Fk
-ZWQNCiAgICAgIG5ldGZpbHRlcjogbmZ0X2ZpYl9uZXRkZXY6IFRlcm1pbmF0ZSBydWxlIGV2YWwg
-aWYgcHJvdG9jb2w9SVB2NiBhbmQgaXB2NiBtb2R1bGUgaXMgZGlzYWJsZWQNCg0KTHVjYSBDb2Vs
-aG8gKDEpOg0KICAgICAgaXdsd2lmaTogYXNzaWduIGRpcmVjdGx5IHRvIGl3bF90cmFucy0+Y2Zn
-IGluIFF1WiBkZXRlY3Rpb24NCg0KTWFjaWVqIMW7ZW5jenlrb3dza2kgKDIpOg0KICAgICAgbmV0
-LWlwdjY6IGZpeCBleGNlc3NpdmUgUlRGX0FERFJDT05GIGZsYWcgb24gOjoxLzEyOCBsb2NhbCBy
-b3V0ZSAoYW5kIG90aGVycykNCiAgICAgIGlwdjY6IGFkZHJjb25mX2Y2aV9hbGxvYyAtIGZpeCBu
-b24tbnVsbCBwb2ludGVyIGNoZWNrIHRvICFJU19FUlIoKQ0KDQpNYW8gV2VuYW4gKDUpOg0KICAg
-ICAgbmV0OiBzb25pYzogcmV0dXJuIE5FVERFVl9UWF9PSyBpZiBmYWlsZWQgdG8gbWFwIGJ1ZmZl
-cg0KICAgICAgbmV0OiBzb25pYzogcmVwbGFjZSBkZXZfa2ZyZWVfc2tiIGluIHNvbmljX3NlbmRf
-cGFja2V0DQogICAgICBzY3RwOiBjaGFuZ2UgcmV0dXJuIHR5cGUgb2Ygc2N0cF9nZXRfcG9ydF9s
-b2NhbA0KICAgICAgc2N0cDogcmVtb3ZlIHJlZHVuZGFudCBhc3NpZ25tZW50IHdoZW4gY2FsbCBz
-Y3RwX2dldF9wb3J0X2xvY2FsDQogICAgICBzY3RwOiBkZXN0cm95IGJ1Y2tldCBpZiBmYWlsZWQg
-dG8gYmluZCBhZGRyDQoNCk1hcmNlbCBIb2x0bWFubiAoMSk6DQogICAgICBSZXZlcnQgIkJsdWV0
-b290aDogdmFsaWRhdGUgQkxFIGNvbm5lY3Rpb24gaW50ZXJ2YWwgdXBkYXRlcyINCg0KTWFyaW8g
-TGltb25jaWVsbG8gKDEpOg0KICAgICAgUmV2ZXJ0ICJCbHVldG9vdGg6IGJ0dXNiOiBkcml2ZXIg
-dG8gZW5hYmxlIHRoZSB1c2Itd2FrZXVwIGZlYXR1cmUiDQoNCk1pY2hhbCBTdWNoYW5layAoMSk6
-DQogICAgICBuZXQvaWJtdm5pYzogRml4IG1pc3NpbmcgeyBpbiBfX2libXZuaWNfcmVzZXQNCg0K
-TW9yaXR6IEZpc2NoZXIgKDEpOg0KICAgICAgbmV0OiBmaXhlZF9waHk6IEFkZCBmb3J3YXJkIGRl
-Y2xhcmF0aW9uIGZvciBzdHJ1Y3QgZ3Bpb19kZXNjOw0KDQpOYXZpZCBFbWFtZG9vc3QgKDMpOg0K
-ICAgICAgQmx1ZXRvb3RoOiBicGExMHg6IGNoYW5nZSByZXR1cm4gdmFsdWUNCiAgICAgIHdpbWF4
-OiBpMjQwMDogZml4IG1lbW9yeSBsZWFrDQogICAgICBuZXQ6IHFydHI6IGZpeCBtZW1vcnQgbGVh
-ayBpbiBxcnRyX3R1bl93cml0ZV9pdGVyDQoNCk5lYWwgQ2FyZHdlbGwgKDEpOg0KICAgICAgdGNw
-OiBmaXggdGNwX2Vjbl93aXRoZHJhd19jd3IoKSB0byBjbGVhciBUQ1BfRUNOX1FVRVVFX0NXUg0K
-DQpOaWNvbGFzIERpY2h0ZWwgKDUpOg0KICAgICAgeGZybSBpbnRlcmZhY2U6IGF2b2lkIGNvcnJ1
-cHRpb24gb24gY2hhbmdlbGluaw0KICAgICAgeGZybSBpbnRlcmZhY2U6IGlmbmFtZSBtYXkgYmUg
-d3JvbmcgaW4gbG9ncw0KICAgICAgeGZybSBpbnRlcmZhY2U6IGZpeCBsaXN0IGNvcnJ1cHRpb24g
-Zm9yIHgtbmV0bnMNCiAgICAgIHhmcm0gaW50ZXJmYWNlOiBmaXggbWFuYWdlbWVudCBvZiBwaHlk
-ZXYNCiAgICAgIGJyaWRnZS9tZGI6IHJlbW92ZSB3cm9uZyB1c2Ugb2YgTkxNX0ZfTVVMVEkNCg0K
-UGFibG8gTmVpcmEgQXl1c28gKDIpOg0KICAgICAgbmV0ZmlsdGVyOiBjdG5ldGxpbms6IGhvbm9y
-IElQU19PRkZMT0FEIGZsYWcNCiAgICAgIG5ldGZpbHRlcjogbmZfZmxvd190YWJsZTogc2V0IGRl
-ZmF1bHQgdGltZW91dCBhZnRlciBzdWNjZXNzZnVsIGluc2VydGlvbg0KDQpSYWRoZXkgU2h5YW0g
-UGFuZGV5ICgxKToNCiAgICAgIE1BSU5UQUlORVJTOiBhZGQgbXlzZWxmIGFzIG1haW50YWluZXIg
-Zm9yIHhpbGlueCBheGlldGhlcm5ldCBkcml2ZXINCg0KUmFuZHkgRHVubGFwICgxKToNCiAgICAg
-IGxpYi9LY29uZmlnOiBmaXggT0JKQUdHIGluIGxpYi8gbWVudSBzdHJ1Y3R1cmUNCg0KU2htdWxp
-ayBMYWRrYW5pICgxKToNCiAgICAgIG5ldDogZ3NvOiBGaXggc2tiX3NlZ21lbnQgc3BsYXQgd2hl
-biBzcGxpdHRpbmcgZ3NvX3NpemUgbWFuZ2xlZCBza2IgaGF2aW5nIGxpbmVhci1oZWFkZWQgZnJh
-Z19saXN0DQoNClN0YW5pc2xhdyBHcnVzemthICg0KToNCiAgICAgIG10NzY6IG10NzZ4MGU6IGRv
-bid0IHVzZSBodyBlbmNyeXB0aW9uIGZvciBNVDc2MzBFDQogICAgICBtdDc2OiBtdDc2eDBlOiBk
-aXNhYmxlIDVHSHogYmFuZCBmb3IgTVQ3NjMwRQ0KICAgICAgcnQyeDAwOiBjbGVhciB1cCBJVidz
-IG9uIGtleSByZW1vdmFsDQogICAgICBSZXZlcnQgInJ0MjgwMDogZW5hYmxlIFRYX1BJTl9DRkdf
-TE5BX1BFXyBiaXRzIHBlciBiYW5kIg0KDQpTdGVmYW4gQ2h1bHNraSAoMSk6DQogICAgICBuZXQ6
-IHBoeWxpbms6IEZpeCBmbG93IGNvbnRyb2wgcmVzb2x1dGlvbg0KDQpTdGVmZmVuIEtsYXNzZXJ0
-ICgxKToNCiAgICAgIGl4Z2JlOiBGaXggc2VjcGF0aCB1c2FnZSBmb3IgSVBzZWMgVFggb2ZmbG9h
-ZC4NCg0KU3ViYXNoIEFiaGlub3YgS2FzaXZpc3dhbmF0aGFuICgxKToNCiAgICAgIG5ldDogRml4
-IG51bGwgZGUtcmVmZXJlbmNlIG9mIGRldmljZSByZWZjb3VudA0KDQpXZW4gSHVhbmcgKDEpOg0K
-ICAgICAgbXdpZmlleDogRml4IHRocmVlIGhlYXAgb3ZlcmZsb3cgYXQgcGFyc2luZyBlbGVtZW50
-IGluIGNmZzgwMjExX2FwX3NldHRpbmdzDQoNClhpbiBMb25nICgzKToNCiAgICAgIHNjdHA6IHVz
-ZSB0cmFuc3BvcnQgcGZfcmV0cmFucyBpbiBzY3RwX2RvXzhfMl90cmFuc3BvcnRfc3RyaWtlDQog
-ICAgICB0aXBjOiBhZGQgTlVMTCBwb2ludGVyIGNoZWNrIGJlZm9yZSBjYWxsaW5nIGtmcmVlX3Jj
-dQ0KICAgICAgc2N0cDogZml4IHRoZSBtaXNzaW5nIHB1dF91c2VyIHdoZW4gZHVtcGluZyB0cmFu
-c3BvcnQgdGhyZXNob2xkcw0KDQpZYW5nIFlpbmdsaWFuZyAoMSk6DQogICAgICB0dW46IGZpeCB1
-c2UtYWZ0ZXItZnJlZSB3aGVuIHJlZ2lzdGVyIG5ldGRldiBmYWlsZWQNCg0KWWl6aHVvICgxKToN
-CiAgICAgIG5ldDogc3RtbWFjOiBkd21hYy1zdW44aTogVmFyaWFibGUgInZhbCIgaW4gZnVuY3Rp
-b24gc3VuOGlfZHdtYWNfc2V0X3N5c2NvbigpIGNvdWxkIGJlIHVuaW5pdGlhbGl6ZWQNCg0KWmh1
-IFlhbmp1biAoMSk6DQogICAgICBmb3JjZWRldGg6IHVzZSBwZXIgY3B1IHRvIGNvbGxlY3QgeG1p
-dC9yZWN2IHN0YXRpc3RpY3MNCg0KIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMyArLS0NCiBkcml2ZXJzL2JsdWV0b290aC9icGExMHgu
-YyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCiBkcml2ZXJzL2JsdWV0b290
-aC9idHVzYi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKysrLS0tLQ0KIGRy
-aXZlcnMvYmx1ZXRvb3RoL2hjaV9xY2EuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
-MCArKysrLS0tLQ0KIGRyaXZlcnMvaXNkbi9jYXBpL2NhcGkuYyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAxMCArKysrKysrLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNv
-bi9obnMzL2huczNwZi9oY2xnZV9lcnIuYyB8ICAgMiArLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0
-L2libS9pYm12bmljLmMgICAgICAgICAgICAgICAgICAgICB8ICAgOSArKysrLS0tDQogZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhnYmUvaXhnYmVfbWFpbi5jICAgICAgICAgIHwgICA3ICsr
-KystLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2l4Z2JlL2l4Z2JlX3hzay5jICAgICAg
-ICAgICB8ICAyOSArKysrKysrKystLS0tLS0tLS0tLS0tLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0
-L2ludGVsL2l4Z2JldmYvaXhnYmV2Zl9tYWluLmMgICAgICB8ICAgMyArKy0NCiBkcml2ZXJzL25l
-dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg0L21haW4uYyAgICAgICAgICAgICAgfCAgIDIgKy0NCiBk
-cml2ZXJzL25ldC9ldGhlcm5ldC9uYXRzZW1pL3NvbmljLmMgICAgICAgICAgICAgICAgICAgfCAg
-IDYgKystLS0NCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9uZXRyb25vbWUvbmZwL2Zsb3dlci9jbXNn
-LmMgICAgICAgfCAgMTAgKysrKy0tLS0NCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9udmlkaWEvZm9y
-Y2VkZXRoLmMgICAgICAgICAgICAgICAgfCAxNDMgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWlj
-cm8vc3RtbWFjL2R3bWFjLXN1bjhpLmMgICAgICB8ICAgNyArKysrKy0NCiBkcml2ZXJzL25ldC9o
-YW1yYWRpby82cGFjay5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDQgKystLQ0KIGRy
-aXZlcnMvbmV0L3BoeS9waHlsaW5rLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-NiArKy0tLQ0KIGRyaXZlcnMvbmV0L3R1bi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAxNiArKysrKysrKystLS0tDQogZHJpdmVycy9uZXQvdXNiL2NkY19ldGhlci5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsrKysrKystDQogZHJpdmVycy9uZXQv
-d2FuL2xtYy9sbWNfbWFpbi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQogZHJp
-dmVycy9uZXQvd2ltYXgvaTI0MDBtL29wLXJma2lsbC5jICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsNCiBkcml2ZXJzL25ldC93aXJlbGVzcy9pbnRlbC9pd2x3aWZpL3BjaWUvZHJ2LmMgICAgICAg
-ICAgfCAgMjQgKysrKysrKysrLS0tLS0tLS0tLQ0KIGRyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZl
-bGwvbXdpZmlleC9pZS5jICAgICAgICAgICAgICB8ICAgMyArKysNCiBkcml2ZXJzL25ldC93aXJl
-bGVzcy9tYXJ2ZWxsL213aWZpZXgvdWFwX2NtZC5jICAgICAgICAgfCAgIDkgKysrKysrLQ0KIGRy
-aXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NngwL2VlcHJvbS5jICAgICB8ICAg
-NSArKysrDQogZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2eDAvcGNpLmMg
-ICAgICAgIHwgIDE1ICsrKysrKysrKysrLQ0KIGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JhbGluay9y
-dDJ4MDAvcnQyODAwbGliLmMgICAgICAgICB8ICAzNyArKysrKysrKysrKysrKy0tLS0tLS0tLS0t
-LS0tLQ0KIGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JzaS9yc2lfOTF4X3VzYi5jICAgICAgICAgICAg
-ICAgICB8ICAgMSAtDQogZHJpdmVycy9uZmMvc3Q5NWhmL2NvcmUuYyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgICAyICstDQogaW5jbHVkZS9saW51eC9waHlfZml4ZWQuaCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCiBpbmNsdWRlL25ldC9pcF9maWIuaCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDQgKystLQ0KIGluY2x1ZGUvbmV0L25l
-eHRob3AuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArKy0tDQogaW5j
-bHVkZS9uZXQveGZybS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAy
-IC0tDQogaW5jbHVkZS91YXBpL2xpbnV4L2lzZG4vY2FwaWNtZC5oICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAxICsNCiBrZXJuZWwvYnBmL3ZlcmlmaWVyLmMgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgMjMgKysrKysrKysrKystLS0tLS0tDQogbGliL0tjb25maWcgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsrLS0tDQogbmV0L2Js
-dWV0b290aC9oY2lfZXZlbnQuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1IC0t
-LS0NCiBuZXQvYmx1ZXRvb3RoL2wyY2FwX2NvcmUuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDkgKy0tLS0tLQ0KIG5ldC9icmlkZ2UvYnJfbWRiLmMgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMiArLQ0KIG5ldC9icmlkZ2UvYnJfbmV0ZmlsdGVyX2hvb2tz
-LmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArKysrDQogbmV0L2NvcmUvZGV2LmMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsrDQogbmV0L2NvcmUv
-c2tidWZmLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE5ICsrKysr
-KysrKysrKysrKw0KIG5ldC9jb3JlL3NvY2tfbWFwLmMgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgMyArKysNCiBuZXQvaXB2NC9maWJfc2VtYW50aWNzLmMgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKysrKysrLS0tLS0tDQogbmV0L2lwdjQvdGNwX2lu
-cHV0LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQogbmV0L2lw
-djYvcGluZy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICst
-DQogbmV0L2lwdjYvcm91dGUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDIxICsrKysrKysrKystLS0tLS0tDQogbmV0L21hYzgwMjExL2NmZy5jICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0ICsrKystLS0tLS0tDQogbmV0L21hYzgwMjEx
-L3N0YV9pbmZvLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICsrKysNCiBu
-ZXQvbmV0ZmlsdGVyL25mX2Nvbm50cmFja19uZXRsaW5rLmMgICAgICAgICAgICAgICAgICAgfCAg
-IDcgKysrKy0tDQogbmV0L25ldGZpbHRlci9uZl9mbG93X3RhYmxlX2NvcmUuYyAgICAgICAgICAg
-ICAgICAgICAgIHwgICAyICstDQogbmV0L25ldGZpbHRlci9uZnRfZmliX25ldGRldi5jICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAzICsrKw0KIG5ldC9uZXRmaWx0ZXIvbmZ0X3NvY2tldC5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArKy0tLQ0KIG5ldC9xcnRyL3R1bi5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArKystDQogbmV0
-L3Jkcy9iaW5kLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQw
-ICsrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tDQogbmV0L3J4cnBjL2lucHV0LmMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQogbmV0L3NjaGVkL3Nj
-aF9hcGkuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsrDQogbmV0
-L3NjaGVkL3NjaF9nZW5lcmljLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5
-ICsrKysrLS0NCiBuZXQvc2NoZWQvc2NoX2hoZi5jICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDIgKy0NCiBuZXQvc2N0cC9wcm90b2NvbC5jICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCiBuZXQvc2N0cC9zbV9zaWRlZWZmZWN0LmMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCiBuZXQvc2N0cC9zb2NrZXQuYyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjQgKysrKysrKysrKy0tLS0t
-LS0tLQ0KIG5ldC90aXBjL25hbWVfZGlzdHIuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMyArKy0NCiBuZXQveGZybS94ZnJtX2ludGVyZmFjZS5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgNTYgKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0NCiBuZXQveGZybS94ZnJtX3BvbGljeS5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDYgKysrLS0NCiB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvZmliX25l
-eHRob3BzLnNoICAgICAgICAgICAgfCAgMjQgKysrKysrKysrKy0tLS0tLS0tLQ0KIHRvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL25ldC94ZnJtX3BvbGljeS5zaCAgICAgICAgICAgICB8ICAgNyArKysr
-KysNCiA2NyBmaWxlcyBjaGFuZ2VkLCA0NDMgaW5zZXJ0aW9ucygrKSwgMjg5IGRlbGV0aW9ucygt
-KQ0K
+On 2019.09.11 08:28 Doug Smythies wrote:
+
+> Hi Giovanni,
+>
+> Thank you for the great detail and test results you provided.
+>
+> On 2019.09.08.07:42 Giovanni Gherdovich wrote:
+>
+> ... [snip]...
+>
+>> The test we call "gitsource" (running the git unit test suite, a long-running
+>> single-threaded shell script) appears rather spectacular in this table (gains
+>> of 30-50% depending on the machine). It is to be noted, however, that
+>> gitsource has no adjustable parameters (such as the number of jobs in
+>> kernbench, which we average over in order to get a single-number summary
+>> score) and is exactly the kind of low-parallelism workload that benefits the
+>> most from this patch. When looking at the detailed tables of kernbench or
+>> tbench4, at low process or client counts one can see similar numbers.
+>
+> I think the "gitsource" test, is the one I learned about here two years
+> ago, [1]. It is an extremely good (best I know of) example of single
+> threaded, high PID consumption (about 400 / second average, my computer
+> [3]), performance issues on a multi CPU computer. I.E., this:
+>
+> Dountil the list of tasks is finished:
+>    Start the next task in the list of stuff to do.
+> Enduntil
+>
+> The problem with the test is its run to run variability, which was from
+> all the disk I/O, as far as I could determine.
+
+I forgot, also some memory caching. I always toss out the first test,
+then do it 5 more times. If I do not do much stuff with my hard disk
+in between tests, it is repeatable enough.
+
+I did the "make test" method and, presenting the numbers your way,
+got that 4C took 0.69 times as long as the unpatched schedutil.
+Your numbers were same or better (copied below, lower is better):
+80x-BROADWELL-NUMA:	0.49
+8x-SKYLAKE-UMA:		0.55
+48x-HASWELL-NUMA:		0.69
+
+> At the time,
+> I studied this to death [2], and made a more repeatable test, without
+> any disk I/O.
+>
+> While the challenges with this work flow have tended to be focused
+> on the CPU frequency scaling driver, I have always considered
+> the root issue here to be a scheduling issue. Excerpt from my notes
+> [2]:
+>
+>> The issue is that performance is much much better if the system is
+>> forced to use only 1 CPU rather than relying on the defaults where
+>> the CPU scheduler decides what to do.
+>> The scheduler seems to not realize that the current CPU has just
+>> become free, and assigns the new task to a new CPU. Thus the load
+>> on any one CPU is so low that it doesn't ramp up the CPU frequency.
+>> It would be better if somehow the scheduler knew that the current
+>> active CPU was now able to take on the new task, overall resulting
+>> on one fully loaded CPU at the highest CPU frequency.
+>
+> I do not know if such is practical, and I didn't re-visit the issue.
+>
+> Anyway these are my results:
+>
+> Kernel: 5.3-rc8 and + these patches
+> Processor: i7-2600K
+>
+> This is important, at least for the performance governor numbers:
+>
+> cpu6: MSR_TURBO_RATIO_LIMIT: 0x23242526
+> 35 * 100.0 = 3500.0 MHz max turbo 4 active cores
+> 36 * 100.0 = 3600.0 MHz max turbo 3 active cores
+> 37 * 100.0 = 3700.0 MHz max turbo 2 active cores
+> 38 * 100.0 = 3800.0 MHz max turbo 1 active cores
+>
+> For reference against which all other results are compared
+> is the forced CPU affinity test run. i.e.:
+>
+> taskset -c 3 test_script.
+>
+> Mode		Governor		degradation	Power		Bzy_MHz
+> Reference	perf 1 CPU		1.00		reference	3798
+> -		performance 	1.2		6% worse	3618
+> passive	ondemand		2.3
+> active	powersave		2.6
+> passive	schedutil		2.7				1600
+> passive	schedutil-4C	1.68				2515
+>
+> Where degradation ratio is the time to execute / the reference time for
+> the same conditions. The test runs over a wide range of processes per
+> second, and the worst ratio has been selected for the above table.
+> I have yet to write up this experiment, but the graphs that will
+> eventually be used are at [4] and [5] (same data presented two
+> different ways).
+
+The experiment write up is at [6], however I wanted more data
+from the lower tasks per second region, and so I re-did it, [7].
+In the limit as sequential tasks per second goes to 0, the
+differences should diminish and I wanted to clearly observe this.
+
+Excerpt:
+> Conclusion: the schedutil governor improves from the worst 
+> governor to (mostly) second only to the performance governor
+> for unforced CPU affinity execution.
+
+> The energy for the performance cases is worth more detail, as it
+> is being wasted with CPUs waking up and going to sleep, and can be
+> observed in the IRQ column of turbostat output:
+>
+> $ sudo turbostat --quiet --Summary --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 60
+> Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+> 12.52   3798    81407   49      22.17   0.12 <<< Forced to CPU 3 only
+> 12.52   3798    81139   51      22.18   0.12
+> 12.52   3798    81036   51      22.20   0.12
+> 11.43   3704    267644  48      21.16   0.12 <<< Change over
+> 12.56   3618    490994  48      23.43   0.12 <<< Let the scheduler decide
+> 12.56   3620    491336  47      23.50   0.12
+> 12.56   3619    491607  47      23.50   0.12
+> 12.56   3619    491512  48      23.52   0.12
+> 12.56   3619    490806  47      23.51   0.12
+> 12.56   3618    491356  49      23.48   0.12
+> 12.56   3618    491035  48      23.51   0.12
+> 12.56   3618    491121  48      23.46   0.12
+> 
+> Note also the busy megahertz column, where other active cores
+> (constantly waking and sleeping as we rotate through which
+> CPUs are used) are limiting the highest frequency.
+
+I looked at the power and idle statistics for this forced verses
+unforced CPU affinity scenario in more detail, [8].
+(which isn't really part of this patch sets concern.)
+
+Just an additional note:
+
+>> +-------------------------------------------------------------------------+
+>> | 3. EFFECTS ON THE SCHEDUTIL FREQUENCY GOVERNOR
+>> +-------------------------------------------------------------------------+
+>> 
+>> Once an architecture implements a frequency scale-invariant utilization (the
+>> PELT signal util_avg), schedutil switches its frequency selection formula from
+>>
+>>    freq_next = 1.25 * freq_curr * util            [non-invariant util signal]
+>>
+>> to
+>>
+>>    freq_next = 1.25 * freq_max * util             [invariant util signal]
+>>
+>> where, in the second formula, freq_max is set to the 1C turbo frequency (max
+>> turbo). The advantage of the second formula, whose usage we unlock with this
+>> patch, is that freq_next doesn't depend on the current frequency in an
+>> iterative fashion, but can jump to any frequency in a single update. This
+>> absence of feedback in the formula makes it quicker to react to utilization
+>> changes and more robust against pathological instabilities.
+>>
+>> Compare it to the update formula of intel_pstate/powersave:
+>>
+>>    freq_next = 1.25 * freq_max * Busy%
+>>
+>> where again freq_max is 1C turbo and Busy% is the percentage of time not spent
+>> idling (calculated with delta_MPERF / delta_TSC);
+
+Note that the delta_MPERF / delta_TSC method includes idle state 0 and the old
+method of utilization does not (at least not last time I investigated, which was
+awhile ago (and I can not find my notes)).
+
+... Doug
+
+> [1] https://marc.info/?l=linux-kernel&m=149181369622980&w=2
+> [2] http://www.smythies.com/~doug/linux/single-threaded/index.html
+> [3] http://www.smythies.com/~doug/linux/single-threaded/pids_per_second2.png
+> [4] http://www.smythies.com/~doug/linux/single-threaded/gg-pidps.png
+> [5] http://www.smythies.com/~doug/linux/single-threaded/gg-loops.png
+
+[6] http://www.smythies.com/~doug/linux/single-threaded/k53rc8gg.html
+[7] http://www.smythies.com/~doug/linux/single-threaded/k53rc8gg2.html
+[8] http://www.smythies.com/~doug/linux/single-threaded/idle01/index.html
+
+
