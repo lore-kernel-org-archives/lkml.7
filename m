@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B7EC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D553C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D244520CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D676208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380461;
-	bh=/yCKiWZ4Jraybi1+/7SAM/NgnOajGDl0IFaunuwaOic=;
+	s=default; t=1568380466;
+	bh=cAYq0ympfUen8R6ZbBkISddyBUJRqe7aP/kqbJU1yyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebMneCO6BptxNmxxdXSmXNTwtvvectaAtNTLoeirOAFVCVg84jG+uBzoR4MUQPxth
-	 8ZUOfR3aMH5PJDG2w9xPwG1lPVLwOX0sJwsncAHEmVxsqPHjAQbXQruUKorg+tHGj4
-	 i0WTukPdhAJAMfUUkQBklLh12Z1MI1JdrAsotezY=
+	b=TSZ4BrwJ9+EgJscST0sHOuHIJ7Fq/tPTZVG7zi+teQ3Fk8zNZwZ+zVvFBXNaLbOpI
+	 cjNtToqqEHp416mhLjYTu46BHmZjuRMmbrq296sP/s8PFIou3ewj54OJWBknMehkqM
+	 5N4ImB9dAUGwT1W3tQUaR7dGuSAa6Ct05vh69xm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388906AbfIMNOU (ORCPT
+        id S2389519AbfIMNOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40116 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388885AbfIMNOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:14 -0400
+        id S2389499AbfIMNOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:14:22 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E46E206BB;
-        Fri, 13 Sep 2019 13:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E01208C0;
+        Fri, 13 Sep 2019 13:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380453;
-        bh=/yCKiWZ4Jraybi1+/7SAM/NgnOajGDl0IFaunuwaOic=;
+        s=default; t=1568380462;
+        bh=cAYq0ympfUen8R6ZbBkISddyBUJRqe7aP/kqbJU1yyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyaMgPeY0FSbGS05wwjZYkAgtZSbtv1LIreoKBRZdbQ/iQuG9ATI3NnmDz2PWUsQi
-         lm/sAfVp0YIa30UNJUEwIKLv2Nnqr9noC67+7XaPBjw7zjqAvIcyHSSmxhtNqhb2yO
-         iNeRnqvSpfDRxxfjNgDNZt+YD4WH/Wy3UYJnkAwU=
+        b=wLzgwH4tt5rsVJfV4Z+k6KTsBu8VvZzQnaY174JckJzBsCbgxGGfc4IC4uQO3Ojl5
+         s3goeG+hAvFsS+aAorb/FDoVwxn/W9el6+wLEj1x4ZvWWr57qJnUzPxJwRpBasZ6Gt
+         SJvlXWIPiwJaXIOsosur6PP8Mkvs0/WG8+C6FvvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/190] drm/i915: Rename PLANE_CTL_DECOMPRESSION_ENABLE
-Date:   Fri, 13 Sep 2019 14:05:01 +0100
-Message-Id: <20190913130603.454680731@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 049/190] Drivers: hv: kvp: Fix the indentation of some "break" statements
+Date:   Fri, 13 Sep 2019 14:05:04 +0100
+Message-Id: <20190913130603.689971261@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,69 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 53867b46fa8443713b3aee520d6ca558b222d829 ]
+[ Upstream commit d544c22d6951be3386ac59bb9a99c9bc566b3f09 ]
 
-Rename PLANE_CTL_DECOMPRESSION_ENABLE to resemble the bpsec name -
-PLANE_CTL_RENDER_DECOMPRESSION_ENABLE
+No functional change.
 
-Suggested-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180822015053.1420-2-dhinakaran.pandiyan@intel.com
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_reg.h      | 2 +-
- drivers/gpu/drm/i915/intel_display.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/hv/hv_kvp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
-index 16f5d2d938014..4e070afb2738b 100644
---- a/drivers/gpu/drm/i915/i915_reg.h
-+++ b/drivers/gpu/drm/i915/i915_reg.h
-@@ -6531,7 +6531,7 @@ enum {
- #define   PLANE_CTL_YUV422_UYVY			(1 << 16)
- #define   PLANE_CTL_YUV422_YVYU			(2 << 16)
- #define   PLANE_CTL_YUV422_VYUY			(3 << 16)
--#define   PLANE_CTL_DECOMPRESSION_ENABLE	(1 << 15)
-+#define   PLANE_CTL_RENDER_DECOMPRESSION_ENABLE	(1 << 15)
- #define   PLANE_CTL_TRICKLE_FEED_DISABLE	(1 << 14)
- #define   PLANE_CTL_PLANE_GAMMA_DISABLE		(1 << 13) /* Pre-GLK */
- #define   PLANE_CTL_TILED_MASK			(0x7 << 10)
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index 3bd44d042a1d9..f5367bdc04049 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -3561,11 +3561,11 @@ static u32 skl_plane_ctl_tiling(uint64_t fb_modifier)
- 	case I915_FORMAT_MOD_Y_TILED:
- 		return PLANE_CTL_TILED_Y;
- 	case I915_FORMAT_MOD_Y_TILED_CCS:
--		return PLANE_CTL_TILED_Y | PLANE_CTL_DECOMPRESSION_ENABLE;
-+		return PLANE_CTL_TILED_Y | PLANE_CTL_RENDER_DECOMPRESSION_ENABLE;
- 	case I915_FORMAT_MOD_Yf_TILED:
- 		return PLANE_CTL_TILED_YF;
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
--		return PLANE_CTL_TILED_YF | PLANE_CTL_DECOMPRESSION_ENABLE;
-+		return PLANE_CTL_TILED_YF | PLANE_CTL_RENDER_DECOMPRESSION_ENABLE;
- 	default:
- 		MISSING_CASE(fb_modifier);
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index 57715a0c81202..a7513a8a8e372 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -420,7 +420,7 @@ kvp_send_key(struct work_struct *dummy)
+ 				UTF16_LITTLE_ENDIAN,
+ 				message->body.kvp_set.data.value,
+ 				HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1) + 1;
+-				break;
++			break;
+ 
+ 		case REG_U32:
+ 			/*
+@@ -456,7 +456,7 @@ kvp_send_key(struct work_struct *dummy)
+ 			UTF16_LITTLE_ENDIAN,
+ 			message->body.kvp_set.data.key,
+ 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
+-			break;
++		break;
+ 
+ 	case KVP_OP_DELETE:
+ 		message->body.kvp_delete.key_size =
+@@ -466,12 +466,12 @@ kvp_send_key(struct work_struct *dummy)
+ 			UTF16_LITTLE_ENDIAN,
+ 			message->body.kvp_delete.key,
+ 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
+-			break;
++		break;
+ 
+ 	case KVP_OP_ENUMERATE:
+ 		message->body.kvp_enum_data.index =
+ 			in_msg->body.kvp_enum_data.index;
+-			break;
++		break;
  	}
-@@ -8812,13 +8812,13 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
- 		fb->modifier = I915_FORMAT_MOD_X_TILED;
- 		break;
- 	case PLANE_CTL_TILED_Y:
--		if (val & PLANE_CTL_DECOMPRESSION_ENABLE)
-+		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
- 			fb->modifier = I915_FORMAT_MOD_Y_TILED_CCS;
- 		else
- 			fb->modifier = I915_FORMAT_MOD_Y_TILED;
- 		break;
- 	case PLANE_CTL_TILED_YF:
--		if (val & PLANE_CTL_DECOMPRESSION_ENABLE)
-+		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
- 			fb->modifier = I915_FORMAT_MOD_Yf_TILED_CCS;
- 		else
- 			fb->modifier = I915_FORMAT_MOD_Yf_TILED;
+ 
+ 	kvp_transaction.state = HVUTIL_USERSPACE_REQ;
 -- 
 2.20.1
 
