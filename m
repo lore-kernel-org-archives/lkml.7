@@ -2,138 +2,242 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B13C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60945C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9839E20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381543;
-	bh=sGSm+WEEazJKMqmflV8kB6JhIDapV9tpfMGzwrd4KZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEbmTmlkJ6rRyGrYTrTfVWhHqopVLgMFqSEi7JCT7ehiCx62ILTOI5b+b6s3GqZjQ
-	 sTMXGFjOUIWbrwtXh2tIi7IYcDSmbgAjQbt7nXR/CSng3Z+xVwSHDpL5wpx9TtBslr
-	 GQIqoOU4KeeV62nKNCtdd2w/bzk5ytVpqCjRgXK8=
+	by mail.kernel.org (Postfix) with ESMTP id 2B33720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I3ADpNir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391737AbfIMNcW (ORCPT
+        id S2391747AbfIMNc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389286AbfIMNNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:13 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E25E0208C0;
-        Fri, 13 Sep 2019 13:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380392;
-        bh=sGSm+WEEazJKMqmflV8kB6JhIDapV9tpfMGzwrd4KZM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dfJ5xvM0oRp2Qt0qmjr6yJIiJUpIipcEIE8uFU/l1DxnpDUH8v9GnguxUNVsr9baV
-         h5Oii9Gy0W8c4HOKNhc+6wZ6dfoC8mJUOZYwtLM2c0eWrqYeJPMV3PK5kmMO7kBS5+
-         H98vuTdNl7nLcGT45ciUq2wz2UQUsi0yj2yz8CSs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/190] KVM: x86: hyperv: keep track of mismatched VP indexes
-Date:   Fri, 13 Sep 2019 14:04:57 +0100
-Message-Id: <20190913130603.107888371@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
-References: <20190913130559.669563815@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 13 Sep 2019 09:32:26 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56218 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729968AbfIMNcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:32:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDWNmD077135;
+        Fri, 13 Sep 2019 08:32:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568381543;
+        bh=fftuCa/VDn10BIV1mF1oWQ1fX435RLKNzqyAtdoWExw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=I3ADpNir0IM+GrMDnbpKIFRUgfpAQHqC6VR0tVZi6RrriNuyLC+6EYBQGhbu29eJm
+         hsgl5uaSTh+XB9OvmBWSy7vcc2xfZiYjRPTl5WnaLg5uRkPC7plrCwo2581hhIYuJg
+         YWjyf6F7ib5u1ZQgHTO0LdaKmSoHpbQc7746CbjA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDWN1v043620
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Sep 2019 08:32:23 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
+ Sep 2019 08:32:23 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 13 Sep 2019 08:32:23 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDWNKw015666;
+        Fri, 13 Sep 2019 08:32:23 -0500
+Date:   Fri, 13 Sep 2019 08:34:28 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 12/13] media: am437x-vpfe: Remove per bus width static
+ data
+Message-ID: <20190913133428.kavc3dewxhqhmwyj@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-13-bparrot@ti.com>
+ <add3cb62-1391-f8e3-15f3-f1345e18da47@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <add3cb62-1391-f8e3-15f3-f1345e18da47@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 87ee613d076351950b74383215437f841ebbeb75 ]
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:19:52 +0200]:
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > The bus related static data include in the vpfe_fmt
+> > static table can be derived dynamically instead.
+> > This simplify the table and it's use.
+> 
+> simplify -> simplifies
+> it's -> its
+> 
+> > 
+> > We instead replace the per bus data info with just
+> > the usual bit per pixel value for each supported
+> 
+> bit -> bits
 
-In most common cases VP index of a vcpu matches its vcpu index. Userspace
-is, however, free to set any mapping it wishes and we need to account for
-that when we need to find a vCPU with a particular VP index. To keep search
-algorithms optimal in both cases introduce 'num_mismatched_vp_indexes'
-counter showing how many vCPUs with mismatching VP index we have. In case
-the counter is zero we can assume vp_index == vcpu_idx.
+I'll fix all of those, thanks...
+It's a shame vi ":set spell" does not help trying to figure out what we
+meant to say :)
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/kvm_host.h |  3 +++
- arch/x86/kvm/hyperv.c           | 26 +++++++++++++++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3245b95ad2d97..b6417454a9d79 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -784,6 +784,9 @@ struct kvm_hv {
- 	u64 hv_reenlightenment_control;
- 	u64 hv_tsc_emulation_control;
- 	u64 hv_tsc_emulation_status;
-+
-+	/* How many vCPUs have VP index != vCPU index */
-+	atomic_t num_mismatched_vp_indexes;
- };
- 
- enum kvm_irqchip_mode {
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 3f2775aac5545..2bb554b90b3c2 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1045,11 +1045,31 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
- 	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
- 
- 	switch (msr) {
--	case HV_X64_MSR_VP_INDEX:
--		if (!host || (u32)data >= KVM_MAX_VCPUS)
-+	case HV_X64_MSR_VP_INDEX: {
-+		struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+		int vcpu_idx = kvm_vcpu_get_idx(vcpu);
-+		u32 new_vp_index = (u32)data;
-+
-+		if (!host || new_vp_index >= KVM_MAX_VCPUS)
- 			return 1;
--		hv_vcpu->vp_index = (u32)data;
-+
-+		if (new_vp_index == hv_vcpu->vp_index)
-+			return 0;
-+
-+		/*
-+		 * The VP index is initialized to vcpu_index by
-+		 * kvm_hv_vcpu_postcreate so they initially match.  Now the
-+		 * VP index is changing, adjust num_mismatched_vp_indexes if
-+		 * it now matches or no longer matches vcpu_idx.
-+		 */
-+		if (hv_vcpu->vp_index == vcpu_idx)
-+			atomic_inc(&hv->num_mismatched_vp_indexes);
-+		else if (new_vp_index == vcpu_idx)
-+			atomic_dec(&hv->num_mismatched_vp_indexes);
-+
-+		hv_vcpu->vp_index = new_vp_index;
- 		break;
-+	}
- 	case HV_X64_MSR_VP_ASSIST_PAGE: {
- 		u64 gfn;
- 		unsigned long addr;
--- 
-2.20.1
-
-
-
+> 
+> > pixel format.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 56 ++++++---------------
+> >  drivers/media/platform/am437x/am437x-vpfe.h | 16 +-----
+> >  2 files changed, 16 insertions(+), 56 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index 9759ed398943..9855d4cb1d13 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -73,73 +73,43 @@ static struct vpfe_fmt formats[] = {
+> >  	{
+> >  		.fourcc		= V4L2_PIX_FMT_YUYV,
+> >  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_UYVY,
+> >  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_YVYU,
+> >  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_VYUY,
+> >  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+> >  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 2,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 1,
+> > +		.bitsperpixel	= 8,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+> >  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 2,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 1,
+> > +		.bitsperpixel	= 8,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+> >  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 2,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 1,
+> > +		.bitsperpixel	= 8,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+> >  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 2,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 1,
+> > +		.bitsperpixel	= 8,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_RGB565,
+> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_RGB565X,
+> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+> > -		.l.width	= 10,
+> > -		.l.bpp		= 4,
+> > -		.s.width	= 8,
+> > -		.s.bpp		= 2,
+> > +		.bitsperpixel	= 16,
+> >  	},
+> >  };
+> >  
+> > @@ -184,9 +154,11 @@ static unsigned int __get_bytesperpixel(struct vpfe_device *vpfe,
+> >  {
+> >  	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
+> >  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+> > -	u32 bpp;
+> > +	u32 bpp, bus_width_bytes, clocksperpixel;
+> >  
+> > -	bpp = (bus_width == 10) ? fmt->l.bpp : fmt->s.bpp;
+> > +	bus_width_bytes = ALIGN(bus_width, 8) >> 3;
+> > +	clocksperpixel = DIV_ROUND_UP(fmt->bitsperpixel, bus_width);
+> > +	bpp = clocksperpixel * bus_width_bytes;
+> >  
+> >  	return bpp;
+> >  }
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+> > index 0d10d2b4d7a2..2c9e89395bea 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.h
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+> > @@ -215,28 +215,16 @@ struct vpfe_ccdc {
+> >  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
+> >  };
+> >  
+> > -/*
+> > - * struct bus_format - VPFE bus format information
+> > - * @width: Bits per pixel (when transferred over a bus)
+> > - * @bpp: Bytes per pixel (when stored in memory)
+> > - */
+> > -struct bus_format {
+> > -	unsigned int width;
+> > -	unsigned int bpp;
+> > -};
+> > -
+> >  /*
+> >   * struct vpfe_fmt - VPFE media bus format information
+> >   * @fourcc: V4L2 pixel format code
+> >   * @code: V4L2 media bus format code
+> > - * @l: 10 bit bus format info
+> > - * @s: 8 bit bus format info
+> > + * @bitsperpixel: Bits per pixel over the bus
+> >   */
+> >  struct vpfe_fmt {
+> >  	u32 fourcc;
+> >  	u32 code;
+> > -	struct bus_format l;
+> > -	struct bus_format s;
+> > +	u32 bitsperpixel;
+> >  };
+> >  
+> >  /*
+> > 
+> 
+> Regards,
+> 
+> 	Hans
