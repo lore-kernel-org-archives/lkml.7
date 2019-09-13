@@ -2,28 +2,28 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0
+X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52187C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE945C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31621206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B55206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbfIMM6P (ORCPT
+        id S2388150AbfIMM6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:58:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44762 "EHLO mx1.suse.de"
+        Fri, 13 Sep 2019 08:58:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44700 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387582AbfIMM6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:58:14 -0400
+        id S2387911AbfIMM6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:58:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 725A9AF0B;
-        Fri, 13 Sep 2019 12:58:12 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 7B449B0E2;
+        Fri, 13 Sep 2019 12:58:14 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -51,9 +51,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v9 5/8] powerpc/perf: remove current_is_64bit()
-Date:   Fri, 13 Sep 2019 14:57:59 +0200
-Message-Id: <61343717e7960595c3258cea6a9493d67adb56d8.1568319275.git.msuchanek@suse.de>
+Subject: [PATCH v9 7/8] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
+Date:   Fri, 13 Sep 2019 14:58:01 +0200
+Message-Id: <0017ff10ff75c3b5587406ad81f6827872e39f6e.1568319276.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568319275.git.msuchanek@suse.de>
 References: <cover.1568319275.git.msuchanek@suse.de>
@@ -64,62 +64,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
-current_is_64bit() is quivalent to !is_32bit_task().
-Remove the redundant function.
+On bigendian ppc64 it is common to have 32bit legacy binaries but much
+less so on littleendian.
 
-Link: https://github.com/linuxppc/issues/issues/275
-Link: https://lkml.org/lkml/2019/9/12/540
-
-Fixes: linuxppc#275
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/perf/callchain.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
+v3: make configurable
+---
+ arch/powerpc/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index 7863ee0a0e69..fbf76cb01026 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -275,16 +275,6 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 	}
- }
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 5bab0bb6b833..b0339e892329 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -264,8 +264,9 @@ config PANIC_TIMEOUT
+ 	default 180
  
--static inline int current_is_64bit(void)
--{
--	/*
--	 * We can't use test_thread_flag() here because we may be on an
--	 * interrupt stack, and the thread flags don't get copied over
--	 * from the thread_info on the main stack to the interrupt stack.
--	 */
--	return !test_ti_thread_flag(task_thread_info(current), TIF_32BIT);
--}
--
- #else  /* CONFIG_PPC64 */
- static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
- {
-@@ -296,11 +286,6 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
- {
- }
- 
--static inline int current_is_64bit(void)
--{
--	return 0;
--}
--
- #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
- #define sigcontext32		sigcontext
- #define mcontext32		mcontext
-@@ -477,7 +462,7 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- void
- perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
--	if (current_is_64bit())
-+	if (!is_32bit_task())
- 		perf_callchain_user_64(entry, regs);
- 	else
- 		perf_callchain_user_32(entry, regs);
+ config COMPAT
+-	bool
+-	default y if PPC64
++	bool "Enable support for 32bit binaries"
++	depends on PPC64
++	default y if !CPU_LITTLE_ENDIAN
+ 	select COMPAT_BINFMT_ELF
+ 	select ARCH_WANT_OLD_COMPAT_IPC
+ 	select COMPAT_OLD_SIGACTION
 -- 
 2.23.0
 
