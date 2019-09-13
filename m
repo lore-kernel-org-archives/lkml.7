@@ -2,176 +2,210 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD31AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD5DC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2E2206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i/ZEF9EC"
+	by mail.kernel.org (Postfix) with ESMTP id 42A6D206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568380951;
+	bh=WU84xUoe0tYLWwJG8iE934g2D098MEcnZqMAR9KL6IE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ecHhMTvWoa9/+4N+r1j0LNZ25SEcMGHzc7u2TYk4ZGyO+xL2lxWyQkDb1sZhwT6hZ
+	 QhG7NTlV52lSS/0I/kg+j10U/FkLx+vqtP9i3OjzylIzq4sk2mLUVoZk86OPDJMimk
+	 Q4Y9/x4aOniSDxVfrVJHskuu3uWb0jbfOHl2YNi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391025AbfIMNW2 (ORCPT
+        id S2391005AbfIMNWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:22:28 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47002 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390403AbfIMNWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:22:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDMJcm046056;
-        Fri, 13 Sep 2019 08:22:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568380939;
-        bh=rsDldiqxI+qAKB253v0WE/WupzEMG3LHNxO/kOjG69k=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=i/ZEF9ECC8GNViOjIGkN+nKyX6Q6q3KwxPMjrAHem/iK0MlDBSGvj8WjM658PpIgt
-         ag2qMJkbjicTR4cntq06Aq13/pFUQBWH4xZPjrvwv9ixohQ/bsofsSMbWtH4mPBlMY
-         zqcM4qP7wmutSYPkhHyzhkq/pLj9xk1isGzJpBYc=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDMJ8b115800
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Sep 2019 08:22:19 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
- Sep 2019 08:22:19 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 13 Sep 2019 08:22:19 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDMJLQ094986;
-        Fri, 13 Sep 2019 08:22:19 -0500
-Date:   Fri, 13 Sep 2019 08:24:24 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [Patch 01/13] media: am437x-vpfe: Fix suspend path to always
- handle pinctrl config
-Message-ID: <20190913132424.abjlxpu7f7rtx7rc@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-2-bparrot@ti.com>
- <9250638e-52a4-c7bc-e969-763d45528780@xs4all.nl>
+        Fri, 13 Sep 2019 09:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390989AbfIMNWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:22:16 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF368206BB;
+        Fri, 13 Sep 2019 13:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380935;
+        bh=WU84xUoe0tYLWwJG8iE934g2D098MEcnZqMAR9KL6IE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vdpXP74NwSlbtKulzTwUEmg52gowE5KLZSrZZNz6FithAlkPLwwEVD8shDFEpuRkB
+         32NKUSLR0I+Sp6S5nGzypR2nLALPh0WmGBmeiWkXqi8gO6R27kPn0BgTQqBCDSq99Q
+         m6/9bFySnWFoivSrP+xNZNSFFm2JrFjLqHiYl728=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, John Harrison <John.C.Harrison@Intel.com>,
+        "Robert M. Fosha" <robert.m.fosha@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 31/37] drm/i915: Support whitelist workarounds on all engines
+Date:   Fri, 13 Sep 2019 14:07:36 +0100
+Message-Id: <20190913130521.552482786@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
+References: <20190913130510.727515099@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9250638e-52a4-c7bc-e969-763d45528780@xs4all.nl>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the reviews.
+[ Upstream commit ebd2de47a19f1c17ae47f8331aae3cd436766663 ]
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 14:59:28 +0200]:
-> On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> > From: Dave Gerlach <d-gerlach@ti.com>
-> > 
-> > Currently if vpfe is not active then it returns immediately in the
-> > suspend and resume handlers. Change this so that it always performs the
-> > pinctrl config so that we can still get proper sleep state configuration
-> > on the pins even if we do not need to worry about fully saving and
-> > restoring context.
-> > 
-> > Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/am437x/am437x-vpfe.c | 44 ++++++++++-----------
-> >  1 file changed, 22 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> > index 2b42ba1f5949..ab959d61f9c9 100644
-> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> > @@ -2653,22 +2653,22 @@ static int vpfe_suspend(struct device *dev)
-> >  	struct vpfe_device *vpfe = dev_get_drvdata(dev);
-> >  	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
-> >  
-> > -	/* if streaming has not started we don't care */
-> > -	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
-> > -		return 0;
-> > +	/* only do full suspend if streaming has started */
-> > +	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
-> >  
-> 
-> It's a bit ugly to start a block with an empty line. Can you remove it?
+Newer hardware requires setting up whitelists on engines other than
+render. So, extend the whitelist code to support all engines.
 
-Yep no problem.
+Signed-off-by: John Harrison <John.C.Harrison@Intel.com>
+Signed-off-by: Robert M. Fosha <robert.m.fosha@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-3-John.C.Harrison@Intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/i915/intel_workarounds.c | 65 +++++++++++++++++-------
+ 1 file changed, 47 insertions(+), 18 deletions(-)
 
-> 
-> > -	pm_runtime_get_sync(dev);
-> > -	vpfe_config_enable(ccdc, 1);
-> > +		pm_runtime_get_sync(dev);
-> > +		vpfe_config_enable(ccdc, 1);
-> >  
-> > -	/* Save VPFE context */
-> > -	vpfe_save_context(ccdc);
-> > +		/* Save VPFE context */
-> > +		vpfe_save_context(ccdc);
-> >  
-> > -	/* Disable CCDC */
-> > -	vpfe_pcr_enable(ccdc, 0);
-> > -	vpfe_config_enable(ccdc, 0);
-> > +		/* Disable CCDC */
-> > +		vpfe_pcr_enable(ccdc, 0);
-> > +		vpfe_config_enable(ccdc, 0);
-> >  
-> > -	/* Disable both master and slave clock */
-> > -	pm_runtime_put_sync(dev);
-> > +		/* Disable both master and slave clock */
-> > +		pm_runtime_put_sync(dev);
-> > +	}
-> >  
-> >  	/* Select sleep pin state */
-> >  	pinctrl_pm_select_sleep_state(dev);
-> > @@ -2710,19 +2710,19 @@ static int vpfe_resume(struct device *dev)
-> >  	struct vpfe_device *vpfe = dev_get_drvdata(dev);
-> >  	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
-> >  
-> > -	/* if streaming has not started we don't care */
-> > -	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
-> > -		return 0;
-> > +	/* only do full resume if streaming has started */
-> > +	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
-> >  
-> 
-> Ditto.
+diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
+index 1db826b12774e..0b80fde927899 100644
+--- a/drivers/gpu/drm/i915/intel_workarounds.c
++++ b/drivers/gpu/drm/i915/intel_workarounds.c
+@@ -1012,48 +1012,79 @@ static void gen9_whitelist_build(struct i915_wa_list *w)
+ 	whitelist_reg(w, GEN8_HDC_CHICKEN1);
+ }
+ 
+-static void skl_whitelist_build(struct i915_wa_list *w)
++static void skl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WaDisableLSQCROPERFforOCL:skl */
+ 	whitelist_reg(w, GEN8_L3SQCREG4);
+ }
+ 
+-static void bxt_whitelist_build(struct i915_wa_list *w)
++static void bxt_whitelist_build(struct intel_engine_cs *engine)
+ {
+-	gen9_whitelist_build(w);
++	if (engine->class != RENDER_CLASS)
++		return;
++
++	gen9_whitelist_build(&engine->whitelist);
+ }
+ 
+-static void kbl_whitelist_build(struct i915_wa_list *w)
++static void kbl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WaDisableLSQCROPERFforOCL:kbl */
+ 	whitelist_reg(w, GEN8_L3SQCREG4);
+ }
+ 
+-static void glk_whitelist_build(struct i915_wa_list *w)
++static void glk_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	gen9_whitelist_build(w);
+ 
+ 	/* WA #0862: Userspace has to set "Barrier Mode" to avoid hangs. */
+ 	whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
+ }
+ 
+-static void cfl_whitelist_build(struct i915_wa_list *w)
++static void cfl_whitelist_build(struct intel_engine_cs *engine)
+ {
+-	gen9_whitelist_build(w);
++	if (engine->class != RENDER_CLASS)
++		return;
++
++	gen9_whitelist_build(&engine->whitelist);
+ }
+ 
+-static void cnl_whitelist_build(struct i915_wa_list *w)
++static void cnl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	/* WaEnablePreemptionGranularityControlByUMD:cnl */
+ 	whitelist_reg(w, GEN8_CS_CHICKEN1);
+ }
+ 
+-static void icl_whitelist_build(struct i915_wa_list *w)
++static void icl_whitelist_build(struct intel_engine_cs *engine)
+ {
++	struct i915_wa_list *w = &engine->whitelist;
++
++	if (engine->class != RENDER_CLASS)
++		return;
++
+ 	/* WaAllowUMDToModifyHalfSliceChicken7:icl */
+ 	whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
+ 
+@@ -1069,24 +1100,22 @@ void intel_engine_init_whitelist(struct intel_engine_cs *engine)
+ 	struct drm_i915_private *i915 = engine->i915;
+ 	struct i915_wa_list *w = &engine->whitelist;
+ 
+-	GEM_BUG_ON(engine->id != RCS0);
+-
+ 	wa_init_start(w, "whitelist");
+ 
+ 	if (IS_GEN(i915, 11))
+-		icl_whitelist_build(w);
++		icl_whitelist_build(engine);
+ 	else if (IS_CANNONLAKE(i915))
+-		cnl_whitelist_build(w);
++		cnl_whitelist_build(engine);
+ 	else if (IS_COFFEELAKE(i915))
+-		cfl_whitelist_build(w);
++		cfl_whitelist_build(engine);
+ 	else if (IS_GEMINILAKE(i915))
+-		glk_whitelist_build(w);
++		glk_whitelist_build(engine);
+ 	else if (IS_KABYLAKE(i915))
+-		kbl_whitelist_build(w);
++		kbl_whitelist_build(engine);
+ 	else if (IS_BROXTON(i915))
+-		bxt_whitelist_build(w);
++		bxt_whitelist_build(engine);
+ 	else if (IS_SKYLAKE(i915))
+-		skl_whitelist_build(w);
++		skl_whitelist_build(engine);
+ 	else if (INTEL_GEN(i915) <= 8)
+ 		return;
+ 	else
+-- 
+2.20.1
 
-Yep no problem.
 
-> 
-> > -	/* Enable both master and slave clock */
-> > -	pm_runtime_get_sync(dev);
-> > -	vpfe_config_enable(ccdc, 1);
-> > +		/* Enable both master and slave clock */
-> > +		pm_runtime_get_sync(dev);
-> > +		vpfe_config_enable(ccdc, 1);
-> >  
-> > -	/* Restore VPFE context */
-> > -	vpfe_restore_context(ccdc);
-> > +		/* Restore VPFE context */
-> > +		vpfe_restore_context(ccdc);
-> >  
-> > -	vpfe_config_enable(ccdc, 0);
-> > -	pm_runtime_put_sync(dev);
-> > +		vpfe_config_enable(ccdc, 0);
-> > +		pm_runtime_put_sync(dev);
-> > +	}
-> >  
-> >  	/* Select default pin state */
-> >  	pinctrl_pm_select_default_state(dev);
-> > 
-> 
-> Regards,
-> 
-> 	Hans
+
