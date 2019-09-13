@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7C8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9512CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2A6208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B9F20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWMQzCqG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nvjj2M1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbfIMX0u (ORCPT
+        id S2389760AbfIMX24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 19:26:50 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33710 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfIMX0u (ORCPT
+        Fri, 13 Sep 2019 19:28:56 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41579 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfIMX24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 19:26:50 -0400
-Received: by mail-vs1-f68.google.com with SMTP id p13so992653vso.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 16:26:50 -0700 (PDT)
+        Fri, 13 Sep 2019 19:28:56 -0400
+Received: by mail-vs1-f65.google.com with SMTP id g11so19373074vsr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 16:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BuqlVIgEPj4t6xwCAnrh40E0/Lhnf5UdZRgHKliR78E=;
-        b=TWMQzCqG86u/8Hd28PnVMaFkD8Vi7hNvYq3WNU0xwCh0yXl5lxLQoo+DbaE9pAKpyD
-         Y6a6IjJkdEum2GDoilsVr36YRga/bb3L+Zz/7OgXYkO7keuc2EvBDEtdKx73XGd6w/K2
-         CvuvXcHam4MVf5FUAZjumSeNv+s+tZp/bmlSRsx0QhFvtsUtnhyZiMJ9t7KYMXoJhz5b
-         ck9PvONmzY+mcSuHM59SD5UJ9VZEj0dXWTPjxKdA+dmo4lvHQSJSQ0VlemCppPM1+FCS
-         WjG2KsUWhbNKsVXAB5+X90532MBnhlc/JVVyLyQdpGl1bcWxkvtO7Svd/tlSojydmioQ
-         9XUA==
+        bh=ByWKtpvQqUKKvg1jiX3mJ0tx0yCgkYQnklhIV6UCr+Q=;
+        b=Nvjj2M1kY4o9x04H82VV1kfGtBWY77i5j95acGyNGiYlvKU9WiTHN+u1d1oqGmVOnV
+         gZQHFNNnioWNYDmpXf3lBtVIlKU3r4Gp5O6bece1yjI7h1PCOgpvy7WalBD8C4Hn9ReK
+         UWIy5/CVg5YkPswKr+jOQWIrB9tD341sq3DQScSpnmBx+r3Dr4fW8jriqFUAdWkNOLUs
+         UxSDaPJgqTSYfwh1zqNCFh8KCXyardbwCMg4szE3cnI0pl4jPueqqomtFq4Ez0BZ/cy2
+         XP/epAXZ9uY1dMGIII90dIhsioOxLOfZ2Ua9QXzyU9ypynei+UOpF63YHkrJAwCNA3Nx
+         BqeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BuqlVIgEPj4t6xwCAnrh40E0/Lhnf5UdZRgHKliR78E=;
-        b=P2ZXxLunWU1abUf1McRGdFqvtBcRt1Tb1fWfM3x4gc/wQQEDHnt5ko2sKiS0BwY4pc
-         dGUM+QNtwJdlNsg1sx19U60rWj55+92jzftcALsgtqSnWbltW1MD7ymqkzSaVUcIXWVG
-         coIpMB3X97BKkhb6DeIauuQmtIEHt/V6PvUk/wkt4cYp7TdNhZmVFJEaosQzBn+aDOJT
-         hBsau/2+ZpcFEyzQLv4G+fL7tcbk1Gt5rcw7AXxemadW4CKmjOQDvz2FaVo8Z8DC9GlQ
-         +rzKUbKDvStsE91selJdT4CmAKIHbEG58xb9fH8O+Y7jU4Lf+q7Uwo6lDcMIFegYyv2G
-         3esw==
-X-Gm-Message-State: APjAAAW7j+VsF1tykO91bwdBKSPVuKjTMrr98FWtYydo6K41uqW955Lr
-        a7N6Qto24iP1C/DitF8utWl1MUtuW9PTeixcfvAFvQ==
-X-Google-Smtp-Source: APXvYqwycvdDYlTOOriF3z+vtDCUG8wP3ergny5/K5LW+3foMmRsvA7tb66lrgScvQMLqp3kDEI+TebwYJLkSkhsPks=
-X-Received: by 2002:a67:2606:: with SMTP id m6mr6026464vsm.5.1568417208929;
- Fri, 13 Sep 2019 16:26:48 -0700 (PDT)
+        bh=ByWKtpvQqUKKvg1jiX3mJ0tx0yCgkYQnklhIV6UCr+Q=;
+        b=MNc3wQF6su4Y99C3rvQAT+O/JUTX7VIsY76P7xDQVlYrsYy5CVXWOwYClBhL7N6RVk
+         mm5USmu7H5GutE2LDDT3QBoxsaZOQbV9q8CBKX+QseJ1UTW6PLNukWUC0egchEQkgfel
+         N2afsOCGsVtvIRtTyGC95uGFDelCotrVQ1Pf7AtvRxwVepc0OXCa35GmUmBTwSZK1sL3
+         qUGmikCI83TdPT9CG4inwpFfczj+pxJnYjtfR1wqmkwPShk7PjGszCRT7ra9eVs3Unxz
+         kfMMI3D/c0+dAFWYMPp8YqyyAysMU9vZCmY/Oa01XOAffI1IQO5exPp0Z0Wju44mF/0q
+         KFjQ==
+X-Gm-Message-State: APjAAAWKCQkQNYVTRr9cv0BpsJGCKiPcRq5BYXMWTcHlszTj7nSMfgiI
+        C/rVfQ6B4QMIUl46cLVa/MXmoFYno4Rni7WyBdVzaw==
+X-Google-Smtp-Source: APXvYqxC7zFSr7TqheMiuOR5Uk6bhUaCanKa0PZgaXJue6LEfqPtqLgLxeg0TLq69SYWb4m4J08dAzStHWwKt3Xpp+I=
+X-Received: by 2002:a67:e219:: with SMTP id g25mr28195491vsa.112.1568417334723;
+ Fri, 13 Sep 2019 16:28:54 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190913210018.125266-1-samitolvanen@google.com>
- <20190913210018.125266-4-samitolvanen@google.com> <CALCETrWquNJJ6yXdHA_F3h71hVrFjnpwmdH2NmGZyFu-V6Lnfg@mail.gmail.com>
-In-Reply-To: <CALCETrWquNJJ6yXdHA_F3h71hVrFjnpwmdH2NmGZyFu-V6Lnfg@mail.gmail.com>
+ <20190913210018.125266-5-samitolvanen@google.com> <CALCETrXVVB4xP2Vv-BsvELsViamjgi-ZccPhOEP2sMxBZ4dyBg@mail.gmail.com>
+In-Reply-To: <CALCETrXVVB4xP2Vv-BsvELsViamjgi-ZccPhOEP2sMxBZ4dyBg@mail.gmail.com>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 13 Sep 2019 16:26:37 -0700
-Message-ID: <CABCJKud9ikdsfy9-bugbqKb-C7VXEEPJ_P1bO5KpGqv62Wuc7Q@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86: use the correct function type for sys_ni_syscall
+Date:   Fri, 13 Sep 2019 16:28:43 -0700
+Message-ID: <CABCJKudjb7FzsM1iXukOqgcXuC31YkH1inBmFME5msbZ=jh4+Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] x86: fix function types in COND_SYSCALL
 To:     Andy Lutomirski <luto@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -72,13 +72,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 3:45 PM Andy Lutomirski <luto@kernel.org> wrote:
-> Should this be SYSCALL_DEFINE0?
+On Fri, Sep 13, 2019 at 3:46 PM Andy Lutomirski <luto@kernel.org> wrote:
+> Didn't you just fix the type of sys_ni_syscall?  What am I missing here?
 
-It can be, and that would also fix the issue. However, it does result
-in unnecessary error injection to be hooked up here, which is why
-arm64 preferred to avoid the macro when I fixed it there. S390 uses
-SYSCALL_DEFINE0 for this though and since sys_ni_syscall always
-returns -ENOSYS, it shouldn't be a huge problem. Thoughts?
+The other patch fixes indirect call type mismatches when the function
+is called through the syscall table. However, cond_syscall creates an
+alias to the actual sys_ni_syscall function defined in
+kernel/sys_ni.c, which still has the wrong type.
 
 Sami
