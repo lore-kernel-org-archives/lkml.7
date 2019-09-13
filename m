@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE5420640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB07214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380671;
-	bh=Nh5kPSd3dyIsTNaacKWoqDfsF4hitShmVmt6iD81iiw=;
+	s=default; t=1568380675;
+	bh=X1WLh8m5qUM/4GsLtFFx8PoxJ0mo2dnLrxq/Zk8hGoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGtcNTqIq/crOO7BZ0gN2g23dxtJzRHvNZKLp/dPaTY4rRx01CjKhSCl+zz+HH4JR
-	 UWYok83e4WWsZPnvKTdd8F6K91Hm3dUijE+b/S9z4zoNeDS++NOUdeTBbrvR34oWa3
-	 RqAkv4ObQTPbPf5BjHd9xoxLxr3x6F1fZ2TofMVo=
+	b=K+749SVxUSbnl0zDjHV5lApGo0CuxjY8m851Q0TqnrNDz5Jf/EwK0LN/HVk80Aesl
+	 wnh0Cun35TaSaC3H3xjDmP/IwQKOqlQ663JjPpBwap0cHI5L3w277eJGHv+vjeZRMS
+	 D0FM3t00PL9SBKsMTioffuddDLpri5HyUZTiq4W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388565AbfIMNRv (ORCPT
+        id S2390128AbfIMNRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390087AbfIMNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:47 -0400
+        id S2390112AbfIMNRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:50 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B8D20640;
-        Fri, 13 Sep 2019 13:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C81C3206BB;
+        Fri, 13 Sep 2019 13:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380666;
-        bh=Nh5kPSd3dyIsTNaacKWoqDfsF4hitShmVmt6iD81iiw=;
+        s=default; t=1568380669;
+        bh=X1WLh8m5qUM/4GsLtFFx8PoxJ0mo2dnLrxq/Zk8hGoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kLzgQGUNsBxnfoeMNxDPdx7+a+T3w1i9KaV5voGzN3l2xZf/u8JG/8WcAP1/ucW5g
-         zgv4TQid1CQzonYq3XfkUV5kEtPueLHcv6seFO+w/ekKyQ3FRgwEfpomBpi1HynP6l
-         g1At0qZHTaz2HcI7nydpeaTPQYQDA8EfBBkqleRQ=
+        b=AaMfd7b3tdmSNNnM1adIj1+WlYiN41PWglED86nWuSePYcaMzMeWmqC3OztULMB0g
+         ZirGP6zxT9frxFwcWB7sy1FKAhek7zsEOau9dEmqwtl+nzkrv55zjo8P+vjC9sfQtz
+         J8rMx9zdJWMTFVUz/pEAOZHwmzA0JcigMQQ6r3/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/190] KVM: x86: Always use 32-bit SMRAM save state for 32-bit kernels
-Date:   Fri, 13 Sep 2019 14:06:10 +0100
-Message-Id: <20190913130608.987637164@linuxfoundation.org>
+Subject: [PATCH 4.19 116/190] cifs: Fix lease buffer length error
+Date:   Fri, 13 Sep 2019 14:06:11 +0100
+Message-Id: <20190913130609.066285882@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,156 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b68f3cc7d978943fcf85148165b00594c38db776 ]
+[ Upstream commit b57a55e2200ede754e4dc9cce4ba9402544b9365 ]
 
-Invoking the 64-bit variation on a 32-bit kenrel will crash the guest,
-trigger a WARN, and/or lead to a buffer overrun in the host, e.g.
-rsm_load_state_64() writes r8-r15 unconditionally, but enum kvm_reg and
-thus x86_emulate_ctxt._regs only define r8-r15 for CONFIG_X86_64.
+There is a KASAN slab-out-of-bounds:
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter_full+0x783/0xaa0
+Read of size 80 at addr ffff88810c35e180 by task mount.cifs/539
 
-KVM allows userspace to report long mode support via CPUID, even though
-the guest is all but guaranteed to crash if it actually tries to enable
-long mode.  But, a pure 32-bit guest that is ignorant of long mode will
-happily plod along.
+CPU: 1 PID: 539 Comm: mount.cifs Not tainted 4.19 #10
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+            rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ dump_stack+0xdd/0x12a
+ print_address_description+0xa7/0x540
+ kasan_report+0x1ff/0x550
+ check_memory_region+0x2f1/0x310
+ memcpy+0x2f/0x80
+ _copy_from_iter_full+0x783/0xaa0
+ tcp_sendmsg_locked+0x1840/0x4140
+ tcp_sendmsg+0x37/0x60
+ inet_sendmsg+0x18c/0x490
+ sock_sendmsg+0xae/0x130
+ smb_send_kvec+0x29c/0x520
+ __smb_send_rqst+0x3ef/0xc60
+ smb_send_rqst+0x25a/0x2e0
+ compound_send_recv+0x9e8/0x2af0
+ cifs_send_recv+0x24/0x30
+ SMB2_open+0x35e/0x1620
+ open_shroot+0x27b/0x490
+ smb2_open_op_close+0x4e1/0x590
+ smb2_query_path_info+0x2ac/0x650
+ cifs_get_inode_info+0x1058/0x28f0
+ cifs_root_iget+0x3bb/0xf80
+ cifs_smb3_do_mount+0xe00/0x14c0
+ cifs_do_mount+0x15/0x20
+ mount_fs+0x5e/0x290
+ vfs_kern_mount+0x88/0x460
+ do_mount+0x398/0x31e0
+ ksys_mount+0xc6/0x150
+ __x64_sys_mount+0xea/0x190
+ do_syscall_64+0x122/0x590
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-SMM complicates things as 64-bit CPUs use a different SMRAM save state
-area.  KVM handles this correctly for 64-bit kernels, e.g. uses the
-legacy save state map if userspace has hid long mode from the guest,
-but doesn't fare well when userspace reports long mode support on a
-32-bit host kernel (32-bit KVM doesn't support 64-bit guests).
+It can be reproduced by the following step:
+  1. samba configured with: server max protocol = SMB2_10
+  2. mount -o vers=default
 
-Since the alternative is to crash the guest, e.g. by not loading state
-or explicitly requesting shutdown, unconditionally use the legacy SMRAM
-save state map for 32-bit KVM.  If a guest has managed to get far enough
-to handle SMIs when running under a weird/buggy userspace hypervisor,
-then don't deliberately crash the guest since there are no downsides
-(from KVM's perspective) to allow it to continue running.
+When parse the mount version parameter, the 'ops' and 'vals'
+was setted to smb30,  if negotiate result is smb21, just
+update the 'ops' to smb21, but the 'vals' is still smb30.
+When add lease context, the iov_base is allocated with smb21
+ops, but the iov_len is initiallited with the smb30. Because
+the iov_len is longer than iov_base, when send the message,
+copy array out of bounds.
 
-Fixes: 660a5d517aaab ("KVM: x86: save/load state on SMM switch")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+we need to keep the 'ops' and 'vals' consistent.
+
+Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.1 and later)")
+Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
+
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/emulate.c | 10 ++++++++++
- arch/x86/kvm/x86.c     | 10 ++++++----
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ fs/cifs/smb2pdu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index 4a688ef9e4481..429728b35bca1 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -2331,12 +2331,16 @@ static int em_lseg(struct x86_emulate_ctxt *ctxt)
- 
- static int emulator_has_longmode(struct x86_emulate_ctxt *ctxt)
- {
-+#ifdef CONFIG_X86_64
- 	u32 eax, ebx, ecx, edx;
- 
- 	eax = 0x80000001;
- 	ecx = 0;
- 	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
- 	return edx & bit(X86_FEATURE_LM);
-+#else
-+	return false;
-+#endif
- }
- 
- #define GET_SMSTATE(type, smbase, offset)				  \
-@@ -2381,6 +2385,7 @@ static int rsm_load_seg_32(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
- 	return X86EMUL_CONTINUE;
- }
- 
-+#ifdef CONFIG_X86_64
- static int rsm_load_seg_64(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
- {
- 	struct desc_struct desc;
-@@ -2399,6 +2404,7 @@ static int rsm_load_seg_64(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
- 	ctxt->ops->set_segment(ctxt, selector, &desc, base3, n);
- 	return X86EMUL_CONTINUE;
- }
-+#endif
- 
- static int rsm_enter_protected_mode(struct x86_emulate_ctxt *ctxt,
- 				    u64 cr0, u64 cr3, u64 cr4)
-@@ -2499,6 +2505,7 @@ static int rsm_load_state_32(struct x86_emulate_ctxt *ctxt, u64 smbase)
- 	return rsm_enter_protected_mode(ctxt, cr0, cr3, cr4);
- }
- 
-+#ifdef CONFIG_X86_64
- static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt, u64 smbase)
- {
- 	struct desc_struct desc;
-@@ -2560,6 +2567,7 @@ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt, u64 smbase)
- 
- 	return X86EMUL_CONTINUE;
- }
-+#endif
- 
- static int em_rsm(struct x86_emulate_ctxt *ctxt)
- {
-@@ -2616,9 +2624,11 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
- 	if (ctxt->ops->pre_leave_smm(ctxt, smbase))
- 		return X86EMUL_UNHANDLEABLE;
- 
-+#ifdef CONFIG_X86_64
- 	if (emulator_has_longmode(ctxt))
- 		ret = rsm_load_state_64(ctxt, smbase + 0x8000);
- 	else
-+#endif
- 		ret = rsm_load_state_32(ctxt, smbase + 0x8000);
- 
- 	if (ret != X86EMUL_CONTINUE) {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a846ed13ba53c..cbc39751f36bc 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7227,9 +7227,9 @@ static void enter_smm_save_state_32(struct kvm_vcpu *vcpu, char *buf)
- 	put_smstate(u32, buf, 0x7ef8, vcpu->arch.smbase);
- }
- 
-+#ifdef CONFIG_X86_64
- static void enter_smm_save_state_64(struct kvm_vcpu *vcpu, char *buf)
- {
--#ifdef CONFIG_X86_64
- 	struct desc_ptr dt;
- 	struct kvm_segment seg;
- 	unsigned long val;
-@@ -7279,10 +7279,8 @@ static void enter_smm_save_state_64(struct kvm_vcpu *vcpu, char *buf)
- 
- 	for (i = 0; i < 6; i++)
- 		enter_smm_save_seg_64(vcpu, buf, i);
--#else
--	WARN_ON_ONCE(1);
--#endif
- }
-+#endif
- 
- static void enter_smm(struct kvm_vcpu *vcpu)
- {
-@@ -7293,9 +7291,11 @@ static void enter_smm(struct kvm_vcpu *vcpu)
- 
- 	trace_kvm_enter_smm(vcpu->vcpu_id, vcpu->arch.smbase, true);
- 	memset(buf, 0, 512);
-+#ifdef CONFIG_X86_64
- 	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
- 		enter_smm_save_state_64(vcpu, buf);
- 	else
-+#endif
- 		enter_smm_save_state_32(vcpu, buf);
- 
- 	/*
-@@ -7353,8 +7353,10 @@ static void enter_smm(struct kvm_vcpu *vcpu)
- 	kvm_set_segment(vcpu, &ds, VCPU_SREG_GS);
- 	kvm_set_segment(vcpu, &ds, VCPU_SREG_SS);
- 
-+#ifdef CONFIG_X86_64
- 	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
- 		kvm_x86_ops->set_efer(vcpu, 0);
-+#endif
- 
- 	kvm_update_cpuid(vcpu);
- 	kvm_mmu_reset_context(vcpu);
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 2bc47eb6215e2..cbe633f1840a2 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -712,6 +712,7 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
+ 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
+ 			/* ops set to 3.0 by default for default so update */
+ 			ses->server->ops = &smb21_operations;
++			ses->server->vals = &smb21_values;
+ 		}
+ 	} else if (le16_to_cpu(rsp->DialectRevision) !=
+ 				ses->server->vals->protocol_id) {
 -- 
 2.20.1
 
