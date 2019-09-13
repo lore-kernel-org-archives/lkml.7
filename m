@@ -2,185 +2,104 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C574FC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F88C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27984205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="LkHcxLGC"
+	by mail.kernel.org (Postfix) with ESMTP id B89A3205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568381583;
+	bh=cf4/Pn3VPpv71AShPSQTZtULPy31ou4jN9H2NFSvnO8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0JQb609GfLqP2MuArRztYEixC2IofjqChigJSBIfy6HIGfVM6B0Vkbz+kX4TqvJvA
+	 AcrNdbm5pht1C//54fcPs36Yzvf6q+kKIH25zG6WFkUvDPzrjB9hRV6WzVoxnBKtEK
+	 MWWGbXWEnCWsW9rngKqqiSU3zRB0yfHXaNfNGlAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391750AbfIMNcy (ORCPT
+        id S2391753AbfIMNdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:32:54 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:29894 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389053AbfIMNcx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:32:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568381569;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=A2hOKYZbqR8pujhx31mIs820r0FV7oonDRTmq1qM+Ag=;
-        b=LkHcxLGCxnV6eSl5CcVAARKzV88kfcEGrNziN6ASJPTW+lsL18u6uoRPf4zmjH+Znz
-        MahYNvjXFzl14ujICERKBOs5e6XgRMvgUu8X2Rp2LGlnRV9uhz/bHgEiGCdb0fB98NQb
-        DxvJGzLfVZwD9ZFBbJ6NfKiWD+GByZs5rYDv2QVKg44AGWPcQm4iJfZwSt5AHY/3Ut0U
-        s7YzJD6ywTpftgfDfP4zJA0FYbe8zc7fJMh2lzLRdBk3y8m/2Iw4xbLbzpaUAD6Ie74a
-        eMD6RdVDS4Bh4+r64QJZGVk1HvOj949TM+Q2KrGO+8D4YhDFlMQEIr9GLS2hvwLETM7A
-        EFLA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8DDWTITu
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 13 Sep 2019 15:32:29 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
-Date:   Fri, 13 Sep 2019 15:32:28 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com>
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 13 Sep 2019 09:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388969AbfIMNLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:32 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 727ED214AE;
+        Fri, 13 Sep 2019 13:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380292;
+        bh=cf4/Pn3VPpv71AShPSQTZtULPy31ou4jN9H2NFSvnO8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XgLkM3fECiasueB8zYMzM3hp0xHQeS3e/BAd7g6u9C+Jp7wckmHiIO0EOlEiIxv+W
+         y/l2/78kWFXwJoPFqZqHnkmCJO20zjFVVTkwZWBqWvt+kmP67I/c+0rBpUltR00W+w
+         TUJ9tN5dJPsUDxD4mOKBaM8c6pZdXcOqO4AFrKgQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 018/190] selftests: fib_rule_tests: use pre-defined DEV_ADDR
+Date:   Fri, 13 Sep 2019 14:04:33 +0100
+Message-Id: <20190913130601.015815111@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
+References: <20190913130559.669563815@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+[ Upstream commit 34632975cafdd07ce80e85c2eda4e9c16b5f2faa ]
 
-> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
+DEV_ADDR is defined but not used. Use it in address setting.
+Do the same with IPv6 for consistency.
 
->>> +     cpu_cooling_maps: cooling-maps {
->>> +             map0 {
->>> +                     trip =3D <&cpu_alert0>;
->>> +                     /* Only allow OPP50 and OPP100 */
->>> +                     cooling-device =3D <&cpu 0 1>;
->>=20
->> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
->> understand their meaning (and how it relates to the opp list).
->=20
-> I read through the documentation, but it wasn't completely clear to
-> me. AFAICT, the numbers after &cpu represent the min and max index in
-> the OPP table when the condition is hit.
+Reported-by: David Ahern <dsahern@gmail.com>
+Fixes: fc82d93e57e3 ("selftests: fib_rule_tests: fix local IPv4 address typo")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/net/fib_rule_tests.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Ok. It seems to use "cooling state" for those and the first is minimum
-and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
-no limits.
+diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
+index 1ba069967fa2b..ba2d9fab28d0f 100755
+--- a/tools/testing/selftests/net/fib_rule_tests.sh
++++ b/tools/testing/selftests/net/fib_rule_tests.sh
+@@ -15,6 +15,7 @@ GW_IP6=2001:db8:1::2
+ SRC_IP6=2001:db8:1::3
+ 
+ DEV_ADDR=192.51.100.1
++DEV_ADDR6=2001:db8:1::1
+ DEV=dummy0
+ 
+ log_test()
+@@ -55,8 +56,8 @@ setup()
+ 
+ 	$IP link add dummy0 type dummy
+ 	$IP link set dev dummy0 up
+-	$IP address add 192.51.100.1/24 dev dummy0
+-	$IP -6 address add 2001:db8:1::1/64 dev dummy0
++	$IP address add $DEV_ADDR/24 dev dummy0
++	$IP -6 address add $DEV_ADDR6/64 dev dummy0
+ 
+ 	set +e
+ }
+-- 
+2.20.1
 
-Since here we use the &cpu node it is likely that the "cooling state"
-is the same as the OPP index currently in use.
 
-I have looked through the .dts which use cpu_crit and the picture is
-not unique...
-
-omap4		seems to only define it
-am57xx		has two different grade dtsi files
-dra7		overwrites critical temperature value
-am57xx-beagle	defines a gpio to control a fan
-
-The fan is only a map0 for the board_alert0 starting to do something at =
-40=C2=B0C
-and above but there is nothing for the "critical" point.
-But throttling is working on omap5...
-
-Could there be some automatic handling by the govenors for the =
-"critical"
-trip points? So that we do not need to define any cooling-maps for =
-"critical"?
-
-Even for the exynos54xx where the crical trip point is only defined.
-
->>=20
->>> +             };
->>> +     };
->>=20
->> Seems to make sense when comparing to omap4-cpu-thermal.dtsi...
->>=20
->> Maybe we can add the trip points to omap3-cpu-thermal.dtsi
->> because they seem to be the same for all omap3 variants and
->> just have a SoC variant specific cooling map for omap36xx.dtsi.
->=20
-> The OPP's for OMAP3530 show that OPP5 and OPP6 are capable of
-> operating at 105C.  AM3517 is a little different also, so I didn't
-> want to make a generic omap3 throttling table.  Since my goal was to
-> try to remove the need for the turbo option from the newly supported
-> 1GHz omap3630/3730, I was hoping to get this pushed first.  From
-> there, we can tweak the 34xx.dtsi and 3517.dtsi for their respective
-> thermal information.
-
-My observation is that all omap3 have
-commercial range	0=C2=B0C .. 90=C2=B0C
-extended		-40=C2=B0C .. 105=C2=B0C
-
-So there is no difference in defining these as trip points and
-my proposal would be to have these in omap3.dtsi.
-
-Only disabling OPPs differs. Which would make only the mapping
-go to omap36xx.
-
->=20
->>=20
->>> +};
->>> +
->>> /* OMAP3630 needs dss_96m_fck for VENC */
->>> &venc {
->>>      clocks =3D <&dss_tv_fck>, <&dss_96m_fck>;
->>> --
->>> 2.17.1
->>>=20
->>=20
->> The question is how we can test that. Heating up the omap36xx to =
-90=C2=B0C
->> or even 105=C2=B0C isn't that easy like with omap5...
->>=20
->> Maybe we can modify the millicelsius values for testing purposes to
->> something in reachable range, e.g. 60=C2=B0C and 70=C2=B0C and watch =
-what happens?
->=20
-> I have access to a thermal chamber at work, but the guy who knows how
-> to use it is out for the rest of the week.  My plan was do as you
-> suggested and change the milicelsius values, but I wanted to get some
-> buy-in from TI people and/or Tony.  This also means enabling the omap3
-> thermal stuff which clearly throws a message that it's inaccurate.
-
-Basically we need two different types of test:
-1. is the DTS setup correct so that the bandgap sensor is read and
-   triggers correct actions
-2. is the bandgap sensor correct enough to that the data sheet limits
-   are really met
-
->  I don't know how much it's inaccurate, so we may have to make the 90C
-> value lower to compensate.
-
-Hm. If the bandgap sensor is inaccurate, we should make sure it reports =
-the
-maximum value, just to be on the safe side. So that the real temperature
-is guaranteed to be lower than what is reported.
-
-Then we can use the data sheet limits of 90=C2=B0C and 105=C2=B0C in the =
-trip point
-table (which should not be tweaked for sensor inaccuracy).
-
-BR,
-Nikolaus
 
