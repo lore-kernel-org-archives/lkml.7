@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EBEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D2420640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE5420640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380668;
-	bh=kOe/e8wj5K6DSrfsbugwq5GyIY6FAwrp96RMEEC7K1U=;
+	s=default; t=1568380671;
+	bh=Nh5kPSd3dyIsTNaacKWoqDfsF4hitShmVmt6iD81iiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKsPsaLMGW9NpvVDc90xEdnvSdPiEXbgy9OZI037om6bMw3TUSptfGln2fZri2BYG
-	 61MCyz8LzdLn05hHEO0+t2lZ5687Po4wJ+72HEwDpukmseO9shY4gMacgazx2pfFQ9
-	 CCPvzFXyuzbX3BXnKSDrkCRewpxvLpkPBkCNRaQU=
+	b=FGtcNTqIq/crOO7BZ0gN2g23dxtJzRHvNZKLp/dPaTY4rRx01CjKhSCl+zz+HH4JR
+	 UWYok83e4WWsZPnvKTdd8F6K91Hm3dUijE+b/S9z4zoNeDS++NOUdeTBbrvR34oWa3
+	 RqAkv4ObQTPbPf5BjHd9xoxLxr3x6F1fZ2TofMVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbfIMNRn (ORCPT
+        id S2388565AbfIMNRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44894 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390080AbfIMNRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:35 -0400
+        id S2390087AbfIMNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:47 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B309D20717;
-        Fri, 13 Sep 2019 13:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B8D20640;
+        Fri, 13 Sep 2019 13:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380655;
-        bh=kOe/e8wj5K6DSrfsbugwq5GyIY6FAwrp96RMEEC7K1U=;
+        s=default; t=1568380666;
+        bh=Nh5kPSd3dyIsTNaacKWoqDfsF4hitShmVmt6iD81iiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ey41CePeDEMmnrAXsI3quA5wCpqgOYNZu0SqseexKdklZsbN/UtbnVZr981zxkhq8
-         dKGkUtmoo9o0XWPKyegmdMNfmNqcIJ2XzPFIo0ueoafU7gHq3GX3pns1LcDIT4zK9N
-         HX0LfP8rkqnP/KnbVDbKlF7oKg6i9Cmb6UyQUEFk=
+        b=kLzgQGUNsBxnfoeMNxDPdx7+a+T3w1i9KaV5voGzN3l2xZf/u8JG/8WcAP1/ucW5g
+         zgv4TQid1CQzonYq3XfkUV5kEtPueLHcv6seFO+w/ekKyQ3FRgwEfpomBpi1HynP6l
+         g1At0qZHTaz2HcI7nydpeaTPQYQDA8EfBBkqleRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kent Russell <kent.russell@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        stable@vger.kernel.rg, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/190] drm/amdkfd: Add missing Polaris10 ID
-Date:   Fri, 13 Sep 2019 14:06:30 +0100
-Message-Id: <20190913130610.768254465@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 115/190] KVM: x86: Always use 32-bit SMRAM save state for 32-bit kernels
+Date:   Fri, 13 Sep 2019 14:06:10 +0100
+Message-Id: <20190913130608.987637164@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,31 +61,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0a5a9c276c335870a1cecc4f02b76d6d6f663c8b ]
+[ Upstream commit b68f3cc7d978943fcf85148165b00594c38db776 ]
 
-This was added to amdgpu but was missed in amdkfd
+Invoking the 64-bit variation on a 32-bit kenrel will crash the guest,
+trigger a WARN, and/or lead to a buffer overrun in the host, e.g.
+rsm_load_state_64() writes r8-r15 unconditionally, but enum kvm_reg and
+thus x86_emulate_ctxt._regs only define r8-r15 for CONFIG_X86_64.
 
-Signed-off-by: Kent Russell <kent.russell@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.rg
+KVM allows userspace to report long mode support via CPUID, even though
+the guest is all but guaranteed to crash if it actually tries to enable
+long mode.  But, a pure 32-bit guest that is ignorant of long mode will
+happily plod along.
+
+SMM complicates things as 64-bit CPUs use a different SMRAM save state
+area.  KVM handles this correctly for 64-bit kernels, e.g. uses the
+legacy save state map if userspace has hid long mode from the guest,
+but doesn't fare well when userspace reports long mode support on a
+32-bit host kernel (32-bit KVM doesn't support 64-bit guests).
+
+Since the alternative is to crash the guest, e.g. by not loading state
+or explicitly requesting shutdown, unconditionally use the legacy SMRAM
+save state map for 32-bit KVM.  If a guest has managed to get far enough
+to handle SMIs when running under a weird/buggy userspace hypervisor,
+then don't deliberately crash the guest since there are no downsides
+(from KVM's perspective) to allow it to continue running.
+
+Fixes: 660a5d517aaab ("KVM: x86: save/load state on SMM switch")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/emulate.c | 10 ++++++++++
+ arch/x86/kvm/x86.c     | 10 ++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 5aba50f63ac6f..938d0053a8208 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -310,6 +310,7 @@ static const struct kfd_deviceid supported_devices[] = {
- 	{ 0x67CF, &polaris10_device_info },	/* Polaris10 */
- 	{ 0x67D0, &polaris10_vf_device_info },	/* Polaris10 vf*/
- 	{ 0x67DF, &polaris10_device_info },	/* Polaris10 */
-+	{ 0x6FDF, &polaris10_device_info },	/* Polaris10 */
- 	{ 0x67E0, &polaris11_device_info },	/* Polaris11 */
- 	{ 0x67E1, &polaris11_device_info },	/* Polaris11 */
- 	{ 0x67E3, &polaris11_device_info },	/* Polaris11 */
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 4a688ef9e4481..429728b35bca1 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -2331,12 +2331,16 @@ static int em_lseg(struct x86_emulate_ctxt *ctxt)
+ 
+ static int emulator_has_longmode(struct x86_emulate_ctxt *ctxt)
+ {
++#ifdef CONFIG_X86_64
+ 	u32 eax, ebx, ecx, edx;
+ 
+ 	eax = 0x80000001;
+ 	ecx = 0;
+ 	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
+ 	return edx & bit(X86_FEATURE_LM);
++#else
++	return false;
++#endif
+ }
+ 
+ #define GET_SMSTATE(type, smbase, offset)				  \
+@@ -2381,6 +2385,7 @@ static int rsm_load_seg_32(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
+ 	return X86EMUL_CONTINUE;
+ }
+ 
++#ifdef CONFIG_X86_64
+ static int rsm_load_seg_64(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
+ {
+ 	struct desc_struct desc;
+@@ -2399,6 +2404,7 @@ static int rsm_load_seg_64(struct x86_emulate_ctxt *ctxt, u64 smbase, int n)
+ 	ctxt->ops->set_segment(ctxt, selector, &desc, base3, n);
+ 	return X86EMUL_CONTINUE;
+ }
++#endif
+ 
+ static int rsm_enter_protected_mode(struct x86_emulate_ctxt *ctxt,
+ 				    u64 cr0, u64 cr3, u64 cr4)
+@@ -2499,6 +2505,7 @@ static int rsm_load_state_32(struct x86_emulate_ctxt *ctxt, u64 smbase)
+ 	return rsm_enter_protected_mode(ctxt, cr0, cr3, cr4);
+ }
+ 
++#ifdef CONFIG_X86_64
+ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt, u64 smbase)
+ {
+ 	struct desc_struct desc;
+@@ -2560,6 +2567,7 @@ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt, u64 smbase)
+ 
+ 	return X86EMUL_CONTINUE;
+ }
++#endif
+ 
+ static int em_rsm(struct x86_emulate_ctxt *ctxt)
+ {
+@@ -2616,9 +2624,11 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
+ 	if (ctxt->ops->pre_leave_smm(ctxt, smbase))
+ 		return X86EMUL_UNHANDLEABLE;
+ 
++#ifdef CONFIG_X86_64
+ 	if (emulator_has_longmode(ctxt))
+ 		ret = rsm_load_state_64(ctxt, smbase + 0x8000);
+ 	else
++#endif
+ 		ret = rsm_load_state_32(ctxt, smbase + 0x8000);
+ 
+ 	if (ret != X86EMUL_CONTINUE) {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index a846ed13ba53c..cbc39751f36bc 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7227,9 +7227,9 @@ static void enter_smm_save_state_32(struct kvm_vcpu *vcpu, char *buf)
+ 	put_smstate(u32, buf, 0x7ef8, vcpu->arch.smbase);
+ }
+ 
++#ifdef CONFIG_X86_64
+ static void enter_smm_save_state_64(struct kvm_vcpu *vcpu, char *buf)
+ {
+-#ifdef CONFIG_X86_64
+ 	struct desc_ptr dt;
+ 	struct kvm_segment seg;
+ 	unsigned long val;
+@@ -7279,10 +7279,8 @@ static void enter_smm_save_state_64(struct kvm_vcpu *vcpu, char *buf)
+ 
+ 	for (i = 0; i < 6; i++)
+ 		enter_smm_save_seg_64(vcpu, buf, i);
+-#else
+-	WARN_ON_ONCE(1);
+-#endif
+ }
++#endif
+ 
+ static void enter_smm(struct kvm_vcpu *vcpu)
+ {
+@@ -7293,9 +7291,11 @@ static void enter_smm(struct kvm_vcpu *vcpu)
+ 
+ 	trace_kvm_enter_smm(vcpu->vcpu_id, vcpu->arch.smbase, true);
+ 	memset(buf, 0, 512);
++#ifdef CONFIG_X86_64
+ 	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
+ 		enter_smm_save_state_64(vcpu, buf);
+ 	else
++#endif
+ 		enter_smm_save_state_32(vcpu, buf);
+ 
+ 	/*
+@@ -7353,8 +7353,10 @@ static void enter_smm(struct kvm_vcpu *vcpu)
+ 	kvm_set_segment(vcpu, &ds, VCPU_SREG_GS);
+ 	kvm_set_segment(vcpu, &ds, VCPU_SREG_SS);
+ 
++#ifdef CONFIG_X86_64
+ 	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
+ 		kvm_x86_ops->set_efer(vcpu, 0);
++#endif
+ 
+ 	kvm_update_cpuid(vcpu);
+ 	kvm_mmu_reset_context(vcpu);
 -- 
 2.20.1
 
