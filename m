@@ -2,50 +2,50 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD6CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8F6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6685B2081B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C472081B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dImAT+oy"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vRKELnnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfIMTAz (ORCPT
+        id S2388483AbfIMTA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:00:55 -0400
+        Fri, 13 Sep 2019 15:00:57 -0400
 Received: from mail-eopbgr820057.outbound.protection.outlook.com ([40.107.82.57]:58712
         "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730118AbfIMTAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:00:54 -0400
+        id S2388289AbfIMTA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:00:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j+bqGlrTS7eVs6ewi/IOHz/O1sBoeY9ehwqwXySMSqGR3NH+tahhC9ClyEdFQAF1tEQuLdbB8PAhDW8eJht4FfH46LF9p8UKija1NBtFcmbiVzNWEjwDNJ8usGklUcdi2jiamjpDD67fNAlO208tOWGLVCdNaQ4a1toFQvSaLUXAc9T0CKAwYehZwkH9hJVqiRq8iLQ/WAFbTon7+n1biVYM99frkgqMCvSyNuJtprIqdJVs/B87lco2lamrQ8Xbt47BRyJr7ukFM5QFV+kp/2x9SiATcbLG4d9V/9fTllYYllgAslDcgcWXPbGHGztWmMGnawGK87nbfEtSzk+CAQ==
+ b=gPUVcIwstpeV71MaCWwFW3D01xly5RGERB0uZvCULirIaU7awc2/Sgp3eIGo72tEWZmkwoOVmuup7i9EHmd50O8FM4PVNkmUt9OdCmdP8Jid4yZPOTR+/tJyaOc18zEafJ54o4Wan6v/5b5DO02OQ44Oo1i4Zh1GdxPTMDSsrwBV+lIVb+HKhWa0barncyTKSt2WELuDtQgqOOihyBq0FN/eUeQIFn4JSatnDEyZtpX1WETi0lYEmOACiws9/8bz59CwgIl+/kgrY6vcgBZbWJPfrD08QaXWm75PYSqGHlo9Kp/fzIHz1qmOYmdwXTFl4wB30YmZP1HFKsoW+X5ilQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LJjg+xGFnIZYniI7cQgYICURDGNtboMJYL34yLv3hK8=;
- b=dijOuncCILBuIJdBMCaBf0HIVaUU4pdKtpuLP4SRibu48NQYeUSsil9cNJKjEd5RcmA1XTIT8F0cXJoa2hv0x++k3SX2K9ZBdIZd8EYZoAFGoI39YjiLFeC9+ffAOQk15s62XQq0JPU6InfuofNG+zFXcagjgdx8FvorvcHQ+WgnKRgU+zZP/JZARPHV6RTF3D1k+m+MqM8v9lEWZ3tTgdpvF6Nrz/yFlA+N4DjI8hgTr3pwrLlB9lYJkcrMMb8DQfWgoSpy3m+1TQ5XHrAeKA4MCxABUcDoTarZueuEk+PB+GM+vHok7m00MpPWGKA+8ac3OFHWCx+2nJxwPa7x8w==
+ bh=z4HI10uYli0ODSEV19j94XZ3zMM9EbiWkUm/W6xjNSU=;
+ b=dn4EKDZPiI2TCaz2fs/3Wy+Qk89LFnmCqbcMZ58OZZRyk7rbqf2lyqETB+cFMdaKmJEHR+NzylhWy5IHnCdjZXdu/ZR6eD17cf9t+smSMlgV0BXCHShU74AZi89S0/a/WBE6Bw5GMhw4Vv5pAs5ni1Z+ckDzR+hRp2h0glX97TlY6xswi6d8ghY9bbEgQLVE81mg7DRIwCMKVbg3wvmmH2uAAc7kFjFUnXRefXwT9BCow8VqfJmuNTuHA2KHkKgDbea9lHxmtZBPwMkvOdaCv22M2Emtv2vXKZanpMJExQTMEccR4rD7lbTzi8elQhxV/G096rSZIi0ci725a145Zg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LJjg+xGFnIZYniI7cQgYICURDGNtboMJYL34yLv3hK8=;
- b=dImAT+oySwlrcmfQSr9ZOK4Bmg5SKukutShRUtdXHsWPNkCEWajDY3Jc7KYwnQ1rVpB2GqnMflyfv4wcEkMfRlkvENxT3MoCX0EJpuERrQtlr35HYvTloTC/WxSKq6VRi4GvtWdNco3opn/QMFyW0H7J+uasM+gjV7RkRvL/umI=
+ bh=z4HI10uYli0ODSEV19j94XZ3zMM9EbiWkUm/W6xjNSU=;
+ b=vRKELnnRkw1gnJKtFXMokyuuapbRtaDb6zawSDaqpCzXFEqEifGBdSSicLK5PKJU6pI2Tqrt5nbWbAioBtU/XK5I+5I6QCU9XRvqp/1nUpuBPgT1SSO8XthAH4E7FgQUyu+Bw9f2hoEEiDBDknrJAEyZAnuXGb1pv6KoXcIYMug=
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
  DM6PR12MB3804.namprd12.prod.outlook.com (10.255.173.29) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Fri, 13 Sep 2019 19:00:48 +0000
+ 15.20.2241.20; Fri, 13 Sep 2019 19:00:51 +0000
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::201f:ac0f:4576:e997]) by DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::201f:ac0f:4576:e997%3]) with mapi id 15.20.2241.022; Fri, 13 Sep 2019
- 19:00:48 +0000
+ 19:00:51 +0000
 From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
@@ -59,13 +59,13 @@ CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
         "rimasluk@amazon.com" <rimasluk@amazon.com>,
         "Grimm, Jon" <Jon.Grimm@amd.com>,
         "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH v3 00/16] kvm: x86: Support AMD SVM AVIC w/ in-kernel irqchip
- mode
-Thread-Topic: [PATCH v3 00/16] kvm: x86: Support AMD SVM AVIC w/ in-kernel
- irqchip mode
-Thread-Index: AQHVamWNwMSOXdHv0kO89gBM6mvXdw==
-Date:   Fri, 13 Sep 2019 19:00:48 +0000
-Message-ID: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
+Subject: [PATCH v3 02/16] kvm: x86: Introduce KVM APICv state
+Thread-Topic: [PATCH v3 02/16] kvm: x86: Introduce KVM APICv state
+Thread-Index: AQHVamWP0oJFhAvw6kCPb+ErEOc/Vg==
+Date:   Fri, 13 Sep 2019 19:00:50 +0000
+Message-ID: <1568401242-260374-3-git-send-email-suravee.suthikulpanit@amd.com>
+References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
+In-Reply-To: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -79,117 +79,138 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d8199909-0bdf-4683-f638-08d7387cb050
+x-ms-office365-filtering-correlation-id: ca35b002-667e-4f34-e7ab-08d7387cb1df
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3804;
 x-ms-traffictypediagnostic: DM6PR12MB3804:
-x-ms-exchange-purlcount: 3
 x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB38048A0D64F0DD15139E4836F3B30@DM6PR12MB3804.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-microsoft-antispam-prvs: <DM6PR12MB38043DA45A80FEBD517973FDF3B30@DM6PR12MB3804.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
 x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(189003)(199004)(6436002)(6512007)(478600001)(6486002)(7416002)(53936002)(2906002)(4326008)(6116002)(3846002)(25786009)(86362001)(6306002)(99286004)(66946007)(64756008)(66446008)(36756003)(486006)(71190400001)(71200400001)(52116002)(66556008)(256004)(4720700003)(2616005)(476003)(14444005)(102836004)(305945005)(14454004)(7736002)(316002)(50226002)(386003)(6506007)(26005)(2501003)(8936002)(66066001)(8676002)(186003)(81156014)(81166006)(110136005)(5660300002)(54906003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3804;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(189003)(199004)(6436002)(6512007)(478600001)(6486002)(7416002)(53936002)(2906002)(4326008)(6116002)(3846002)(25786009)(86362001)(99286004)(66946007)(446003)(64756008)(66446008)(36756003)(486006)(71190400001)(71200400001)(52116002)(66556008)(256004)(4720700003)(2616005)(476003)(11346002)(14444005)(102836004)(305945005)(14454004)(7736002)(316002)(50226002)(386003)(6506007)(26005)(2501003)(8936002)(66066001)(8676002)(186003)(81156014)(81166006)(110136005)(5660300002)(76176011)(54906003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3804;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wMhkL0YQIemWGVFst6FvkDOkaPcl4ou3B4/iR3qdXRukgheEZBxUp3x4IPgg9OtjgbXNRZK73NxQvN+kRp2BUCWqA/3QRijV70yGgviK1WnoLW1e5aB4RdqDh98cixzniXy/fX0FIW09kH+wsiU4hw4wVO4caZ727qNyymFBbxnT6/G/+YztiNRITIfxiAUxaJ9hPzo8Uy6QPAqAFFaJ+8cvIjnLbI4KpqL4OW+mYcGcMqNgfAXXDrSDV4uwnJIak5U7X7qNHC7OdgbabxaITqQKFHoub4pzSZGoK1RK9mmGPpsns3s8XITBojNY1FVJWsexjt0ezUuJ8PL3NdQrXQVFi04CGXuva2SchEoI85gTJnVp7jT+6CK0OtxA+p6pk31WH2D2i5y1vYQU/3vDbsGLr4tJJ2si3m56p4BF+XQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <42AC8A303734644DB7BD6EE5EC84398D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: qpdhMQNsPKEho/E6tA9PmWjCl0oj1ip/trGdNbXonvUjHQCbpxp6pEzc/h+nxGAz+z+G6N9Sld9x0lPKcJ6LCc2vgab3Hd44OUiVBv2XWPQBgt2eprEp2ORopFjyq6A0xin+lCs3dcsKSt2F7YSYdatYmCviLgVVcKTmsSa5zfwYX6Bul2TCvKbTkXOuQwQ8qy6KTRYczG7bKXFRND8VNOpk3iCvh8w+DRCrIAJc6ogkJgTx6HxcPjxsPI3ZDoWoo7RCHE/1JaaVGnxHGrvc/aWdkvTKbzxwqd6sX/UcCgRE6u3DVDK2oO5daQpW+Wb552vuu3j+lLTdkydCq7L4zEF0P3qCKnX4xUJmWNt5X/URVKGgnowGFMOq6wyVR97sfwc5juahvH9AQuat6PlSteWsqrB1BBUQEJ+Rv0P1ewE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8199909-0bdf-4683-f638-08d7387cb050
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:00:48.5218
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca35b002-667e-4f34-e7ab-08d7387cb1df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:00:51.0194
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gRKjhRsym7LB/fJsqSv01WSIRenwql7VPTm4pPbxE5FYWyo1MlplZX+bfaw++jJaq2XHXN8+O0Ym8DQfUshNPA==
+X-MS-Exchange-CrossTenant-userprincipalname: 92yOKw1U1bda4M2RNCfMcZrpIMUF1wSJ1k/XLxwjah0tU8nZIRDmXNGKh0/YLZTtMPu/27wk6nzXV4fW4vlE2A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlICdjb21taXQgNjcwMzRiYjlkZDVlICgiS1ZNOiBTVk06IEFkZCBpcnFjaGlwX3NwbGl0KCkg
-Y2hlY2tzIGJlZm9yZQ0KZW5hYmxpbmcgQVZJQyIpJyB3YXMgaW50cm9kdWNlZCB0byBmaXggbWlz
-Y2VsbGFuZW91cyBib290LWhhbmcgaXNzdWVzDQp3aGVuIGVuYWJsZSBBVklDLiBUaGlzIGlzIG1h
-aW5seSBkdWUgdG8gQVZJQyBoYXJkd2FyZSBkb2VzdCBub3QgI3ZtZXhpdA0Kb24gd3JpdGUgdG8g
-TEFQSUMgRU9JIHJlZ2lzdGVyIHJlc3VsdGluZyBpbi1rZXJuZWwgUElDIGFuZCBJT0FQSUMgdG8N
-CndhaXQgYW5kIGRvIG5vdCBpbmplY3QgbmV3IGludGVycnVwdHMgKGUuZy4gUElULCBSVEMpLg0K
-DQpUaGlzIGxpbWl0cyBBVklDIHRvIG9ubHkgd29yayB3aXRoIGtlcm5lbF9pcnFjaGlwPXNwbGl0
-IG1vZGUsIHdoaWNoIGlzDQpub3QgY3VycmVudGx5IGVuYWJsZWQgYnkgZGVmYXVsdCwgYW5kIGFs
-c28gcmVxdWlyZWQgdXNlci1zcGFjZSB0bw0Kc3VwcG9ydCBzcGxpdCBpcnFjaGlwIG1vZGVsLCB3
-aGljaCBtaWdodCBub3QgYmUgdGhlIGNhc2UuDQoNClRoZSBnb2FsIG9mIHRoaXMgc2VyaWVzIGlz
-IHRvIGVuYWJsZSBBVklDIHRvIHdvcmsgaW4gYm90aCBpcnFjaGlwIG1vZGVzLA0KYnkgYWxsb3dp
-bmcgQVZJQyB0byBiZSBkZWFjdGl2YXRlZCB0ZW1wb3JhcmlseSBkdXJpbmcgcnVudGltZSwgYW5k
-IGZhbGxiYWNrDQp0byBsZWdhY3kgaW50ZXJydXB0IGluamVjdGlvbiBtb2RlICh3LyB2SU5UUiBh
-bmQgaW50ZXJydXB0IHdpbmRvd3MpDQp3aGVuIG5lZWRlZCwgYW5kIHRoZW4gcmUtZW5hYmxlZCBz
-dWJzZXF1ZW50bHkuDQoNClNpbWlsYXIgYXBwcm9hY2ggaXMgYWxzbyB1c2VkIHRvIGhhbmRsZSBI
-eXBlci1WIFN5bklDIGluIHRoZQ0KJ2NvbW1pdCA1YzkxOTQxMmZlNjEgKCJrdm0veDg2OiBIeXBl
-ci1WIHN5bnRoZXRpYyBpbnRlcnJ1cHQgY29udHJvbGxlciIpJywNCndoZXJlIEFQSUN2IGlzIHBl
-cm1hbmVudGx5IGRpc2FibGVkIGF0IHJ1bnRpbWUgKGN1cnJlbnRseSBicm9rZW4gZm9yDQpBVklD
-LCBhbmQgZml4ZWQgYnkgdGhpcyBzZXJpZXMpLiANCg0KVGhpcyBzZXJpZXMgY29udGFpbnMgdGhy
-ZWUgcGFydHM6DQogICogUGFydCAxOiBwYXRjaCAxLTINCiAgICBJbnRyb2R1Y2UgQVBJQ3Ygc3Rh
-dGUgZW51bSBhbmQgbG9naWMgZm9yIGtlZXBpbmcgdHJhY2sgb2YgdGhlIHN0YXRlDQogICAgZm9y
-IGVhY2ggdm0uDQogDQogICogUGFydCAyOiBwYXRjaCAzLTExDQogICAgQWRkIHN1cHBvcnQgZm9y
-IGFjdGl2YXRlL2RlYWN0aXZhdGUgQVBJQ3YgYXQgcnVudGltZQ0KDQogICogUGFydCAzOiBwYXRj
-aCAxMi0xNjoNCiAgICBQcm92aWRlIHdvcmthcm91bmQgZm9yIEFWSUMgRU9JIGFuZCBhbGxvdyBl
-bmFibGUgQVZJQyB3Lw0KICAgIGtlcm5lbF9pcnFjaGlwPW9uDQoNClByZS1yZXF1aXNpdGUgUGF0
-Y2g6DQogICogY29tbWl0IGI5YzZmZjk0ZTQzYSAoImlvbW11L2FtZDogUmUtZmFjdG9yIGd1ZXN0
-IHZpcnR1YWwgQVBJQw0KICAgIChkZS0pYWN0aXZhdGlvbiBjb2RlIikNCiAgICAoaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvam9yby9pb21tdS5naXQvY29t
-bWl0Lw0KICAgICA/aD1uZXh0JmlkPWI5YzZmZjk0ZTQzYTBlZTA1M2UwYzFkOTgzZmJhMWFjNDk1
-M2I3NjIpDQoNClRoaXMgc2VyaWVzIGhhcyBiZWVuIHRlc3RlZCBhZ2FpbnN0IHY1LjMtcmM1IGFz
-IGZvbGxvd2luZzoNCiAgKiBCb290aW5nIExpbnV4IGFuZCBXaW5kb3dzIFNlcnZlciAyMDE5IFZN
-cyB1cHRvIDI0MCB2Y3B1cw0KICAgIGFuZCBGcmVlQlNEIHVwdG8gMTI4IHZjcHVzIHcvIHFlbXUg
-b3B0aW9uICJrZXJuZWwtaXJxY2hpcD1vbiINCiAgICBhbmQgIi1uby1ocGV0Ii4NCiAgKiBQYXNz
-LXRocm91Z2ggSW50ZWwgMTBHYkUgTklDIGFuZCBydW4gbmV0cGVyZiBpbiB0aGUgVk0uDQoNCkNo
-YW5nZXMgZnJvbSBWMjogKGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzgvMTUvNjcyKQ0KICAq
-IFJlYmFzZSB0byB2NS4zLXJjNQ0KICAqIE1pc2MgY2hhbmdlcyByZWNvbW1lbmRlZCBieSBBbGV4
-IGFuZCBWaXRhbHkuDQogICogUmVuYW1lIEFQSUNWX0RFQUNUSVZBVEVEIHRvIEFQSUNWX1NVU1BF
-TkRFRA0KICAqIERpc2FibGUgQVZJQyB3aGVuIGd1ZXN0IGJvb3Rpbmcgdy8gU1ZNIHN1cHBvcnQg
-c2luY2UgQVZJQw0KICAgIGRvZXMgbm90IGN1cnJlbnRseSBzdXBwb3J0IGd1ZXN0IHcvIG5lc3Rl
-ZCB2aXJ0Lg0KICAqIEFkZCB0cmFjZXBvaW50IGZvciBBUElDViBhY3RpdmF0ZS9kZWFjdGl2YXRl
-IHJlcXVlc3QuIChwZXIgQWxleCkNCiAgKiBDb25zb2xpZGF0ZSBjaGFuZ2VzIGZvciBoYW5kbGlu
-ZyBFT0kgZm9yIGt2bSBQSVQgZW11bGF0aW9uIGFuZA0KICAgIElPQVBJQyBSVEMgaGFuZGxpbmcg
-aW4gVjIgaW50byBpb2FwaWNfbGF6eV91cGRhdGVfZW9pKCkgaW4NCiAgICBwYXRjaCAxNy8xOCBv
-ZiB2MyBzZXJpZS4NCiAgKiBSZW1vdmUgcGF0Y2hlcyBmb3IgcHJvdmlkaW5nIHBlci12bSBhcGlj
-dl9zdGF0ZSBkZWJ1ZyBpbmZvcm1hdGlvbi4NCg0KQ2hhbmdlcyBmcm9tIFYxOiAoaHR0cHM6Ly9s
-a21sLm9yZy9sa21sLzIwMTkvMy8yMi8xMDQyKQ0KICAqIEludHJvZHVjZSBBUElDdiBzdGF0ZSBl
-bnVtZXJhdGlvbg0KICAqIEludHJvZHVjZSBLVk0gZGVidWdmcyBmb3IgQVBJQ3Ygc3RhdGUNCiAg
-KiBBZGQgc3luY2hyb25pemF0aW9uIGxvZ2ljIGZvciBBUElDdiBzdGF0ZSB0byBwcmV2ZW50IHBv
-dGVudGlhbA0KICAgIHJhY2UgY29uZGl0aW9uIChwZXIgSmFuJ3Mgc3VnZ2VzdGlvbikNCiAgKiBB
-ZGQgc3VwcG9ydCBmb3IgYWN0aXZhdGUvZGVhY3RpdmF0ZSBwb3N0ZWQgaW50ZXJydXB0DQogICAg
-KHBlciBKYW4ncyBzdWdnZXN0aW9uKQ0KICAqIFJlbW92ZSBjYWxsYmFjayBmdW5jdGlvbnMgZm9y
-IGhhbmRsaW5nIEFQSUMgSUQsIERGUiBhbmQgTERSIHVwZGF0ZQ0KICAgIChwZXIgUGFvbG8ncyBz
-dWdnZXN0aW9uKQ0KICAqIEFkZCB3b3JrYXJvdW5kIGZvciBoYW5kbGluZyBFT0kgZm9yIGluLWtl
-cm5lbCBQSVQgYW5kIElPQVBJQy4NCg0KU3VyYXZlZSBTdXRoaWt1bHBhbml0ICgxNik6DQogIGt2
-bTogeDg2OiBNb2RpZnkga3ZtX3g4Nl9vcHMuZ2V0X2VuYWJsZV9hcGljdigpIHRvIHVzZSBzdHJ1
-Y3Qga3ZtDQogICAgcGFyYW1ldGVyDQogIGt2bTogeDg2OiBJbnRyb2R1Y2UgS1ZNIEFQSUN2IHN0
-YXRlDQogIGt2bTogbGFwaWM6IEludHJvZHVjZSBBUElDdiB1cGRhdGUgaGVscGVyIGZ1bmN0aW9u
-DQogIGt2bTogeDg2OiBBZGQgc3VwcG9ydCBmb3IgYWN0aXZhdGUvZGUtYWN0aXZhdGUgQVBJQ3Yg
-YXQgcnVudGltZQ0KICBrdm06IHg4NjogQWRkIEFQSUN2IGFjdGl2YXRlL2RlYWN0aXZhdGUgcmVx
-dWVzdCB0cmFjZSBwb2ludHMNCiAga3ZtOiB4ODY6IHN2bTogQWRkIHN1cHBvcnQgdG8gYWN0aXZh
-dGUvZGVhY3RpdmF0ZSBwb3N0ZWQgaW50ZXJydXB0cw0KICBzdm06IEFkZCBzdXBwb3J0IGZvciBz
-ZXR1cC9kZXN0cm95IHZpcnV0YWwgQVBJQyBiYWNraW5nIHBhZ2UgZm9yIEFWSUMNCiAgc3ZtOiBB
-ZGQgc3VwcG9ydCBmb3IgYWN0aXZhdGUvZGVhY3RpdmF0ZSBBVklDIGF0IHJ1bnRpbWUNCiAga3Zt
-OiB4ODY6IGh5cGVydjogVXNlIEFQSUN2IGRlYWN0aXZhdGUgcmVxdWVzdCBpbnRlcmZhY2UNCiAg
-c3ZtOiBEaXNhYmxlIEFWSUMgd2hlbiBsYXVuY2hpbmcgZ3Vlc3Qgd2l0aCBTVk0gc3VwcG9ydA0K
-ICBzdm06IFRlbXBvcmFyeSBkZWFjdGl2YXRlIEFWSUMgZHVyaW5nIEV4dElOVCBoYW5kbGluZw0K
-ICBrdm06IHg4NjogSW50cm9kdWNlIHN0cnVjdCBrdm1feDg2X29wcy5hcGljdl9lb2lfYWNjZWxl
-cmF0ZQ0KICBrdm06IGxhcGljOiBDbGVhbiB1cCBBUElDIHByZWRlZmluZWQgbWFjcm9zDQogIGt2
-bTogaW9hcGljOiBSZWZhY3RvciBrdm1faW9hcGljX3VwZGF0ZV9lb2koKQ0KICBrdm06IHg4Njog
-aW9hcGljOiBMYXp5IHVwZGF0ZSBJT0FQSUMgRU9JDQogIHN2bTogQWxsb3cgQVZJQyB3aXRoIGlu
-LWtlcm5lbCBpcnFjaGlwIG1vZGUNCg0KIGFyY2gveDg2L2luY2x1ZGUvYXNtL2t2bV9ob3N0Lmgg
-fCAgMjggKysrKystDQogYXJjaC94ODYva3ZtL2h5cGVydi5jICAgICAgICAgICB8ICAxMiArKy0N
-CiBhcmNoL3g4Ni9rdm0vaW9hcGljLmMgICAgICAgICAgIHwgMTQ5ICsrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLQ0KIGFyY2gveDg2L2t2bS9sYXBpYy5jICAgICAgICAgICAgfCAgMzUgKysr
-Ky0tLQ0KIGFyY2gveDg2L2t2bS9sYXBpYy5oICAgICAgICAgICAgfCAgIDIgKw0KIGFyY2gveDg2
-L2t2bS9zdm0uYyAgICAgICAgICAgICAgfCAxOTggKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKy0tLQ0KIGFyY2gveDg2L2t2bS90cmFjZS5oICAgICAgICAgICAgfCAgMzAgKysr
-KysrDQogYXJjaC94ODYva3ZtL3ZteC92bXguYyAgICAgICAgICB8ICAgMiArLQ0KIGFyY2gveDg2
-L2t2bS94ODYuYyAgICAgICAgICAgICAgfCAxMzYgKysrKysrKysrKysrKysrKysrKysrKysrKyst
-DQogOSBmaWxlcyBjaGFuZ2VkLCA1MDYgaW5zZXJ0aW9ucygrKSwgODYgZGVsZXRpb25zKC0pDQoN
-Ci0tIA0KMS44LjMuMQ0KDQo=
+Currently, after a VM boots with APICv enabled, it could go into
+the following states:
+
+  * activated =3D VM is running w/ APICv
+  * suspended =3D VM deactivate APICv temporarily
+  * disabled  =3D VM deactivate APICv permanently
+
+Introduce KVM APICv state enum to help keep track of the APICv states
+along with a new variable struct kvm_arch.apicv_state to store
+the current state of each VM, and kvm_arch.apicv_lock to synchronize
+access of apicv_state since it can be accessed by each vcpu.
+
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+ arch/x86/kvm/x86.c              | 14 +++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
+t.h
+index 277f06f..562bfbd 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -851,6 +851,15 @@ enum kvm_irqchip_mode {
+ 	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+ };
+=20
++/*
++ * KVM assumes all vcpus in a VM operate in the same mode.
++ */
++enum kvm_apicv_state {
++	APICV_DISABLED,		/* Disabled (such as for Hyper-V case) */
++	APICV_SUSPENDED,	/* Deactivated temporary */
++	APICV_ACTIVATED,	/* Default status when APICV is enabled */
++};
++
+ struct kvm_arch {
+ 	unsigned long n_used_mmu_pages;
+ 	unsigned long n_requested_mmu_pages;
+@@ -879,6 +888,8 @@ struct kvm_arch {
+ 	struct kvm_apic_map *apic_map;
+=20
+ 	bool apic_access_page_done;
++	struct mutex apicv_lock;
++	enum kvm_apicv_state apicv_state;
+=20
+ 	gpa_t wall_clock;
+=20
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 01f5a56..64d275e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4630,6 +4630,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.irqchip_mode =3D KVM_IRQCHIP_SPLIT;
+ 		kvm->arch.nr_reserved_ioapic_pins =3D cap->args[0];
+ 		r =3D 0;
++		if (kvm_x86_ops->get_enable_apicv(kvm))
++			kvm->arch.apicv_state =3D APICV_ACTIVATED;
+ split_irqchip_unlock:
+ 		mutex_unlock(&kvm->lock);
+ 		break;
+@@ -4749,6 +4751,8 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		/* Write kvm->irq_routing before enabling irqchip_in_kernel. */
+ 		smp_wmb();
+ 		kvm->arch.irqchip_mode =3D KVM_IRQCHIP_KERNEL;
++		if (kvm_x86_ops->get_enable_apicv(kvm))
++			kvm->arch.apicv_state =3D APICV_ACTIVATED;
+ 	create_irqchip_unlock:
+ 		mutex_unlock(&kvm->lock);
+ 		break;
+@@ -9209,13 +9213,18 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+ 		goto fail_free_pio_data;
+=20
+ 	if (irqchip_in_kernel(vcpu->kvm)) {
+-		vcpu->arch.apicv_active =3D kvm_x86_ops->get_enable_apicv(vcpu->kvm);
+ 		r =3D kvm_create_lapic(vcpu, lapic_timer_advance_ns);
+ 		if (r < 0)
+ 			goto fail_mmu_destroy;
+ 	} else
+ 		static_key_slow_inc(&kvm_no_apic_vcpu);
+=20
++	mutex_lock(&vcpu->kvm->arch.apicv_lock);
++	if (irqchip_in_kernel(vcpu->kvm) &&
++	    vcpu->kvm->arch.apicv_state =3D=3D APICV_ACTIVATED)
++		vcpu->arch.apicv_active =3D kvm_x86_ops->get_enable_apicv(vcpu->kvm);
++	mutex_unlock(&vcpu->kvm->arch.apicv_lock);
++
+ 	vcpu->arch.mce_banks =3D kzalloc(KVM_MAX_MCE_BANKS * sizeof(u64) * 4,
+ 				       GFP_KERNEL_ACCOUNT);
+ 	if (!vcpu->arch.mce_banks) {
+@@ -9314,6 +9323,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long t=
+ype)
+ 	kvm_page_track_init(kvm);
+ 	kvm_mmu_init_vm(kvm);
+=20
++	/* APICV initialization */
++	mutex_init(&kvm->arch.apicv_lock);
++
+ 	if (kvm_x86_ops->vm_init)
+ 		return kvm_x86_ops->vm_init(kvm);
+=20
+--=20
+1.8.3.1
+
