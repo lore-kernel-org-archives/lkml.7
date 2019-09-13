@@ -2,64 +2,62 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D487C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A62C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C1F20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E48020678
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568386249;
-	bh=3O2EFyMvl4FydsIhvt/igmGTAWUXY533WsMeM5QFj0w=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=x0ewfB1r4lH7W456cnjqj76rhZTHlNvAQPd0B92LVJEudetZluQjXxnyCERHzwM9D
-	 yB86jvV2GOTw3+OqmP4D7p33/PMVE5pDSL2iX8x+R/2XYUnR2J96954rCNMzkLv6Y9
-	 6si1+ppxL0cSbgfuaywmvK5zm8Q6BwKL2ZGb2x5M=
+	s=default; t=1568386253;
+	bh=/n1tuPq5+qiX4XGR3Ma55WzDCXnACRKI5h7vdQmfpgE=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=iu6Wo79GhmBPRAarCOEnvlop1W26msNrrvMAkgzJVM/KoqRbVA74Qb+f43PTtN4o1
+	 1xflFUDF3lYSuewooG5119wGtpGPzjotxJTSiLe6qV4WFxXZO+GCTW/YClTHNcMVhq
+	 D9kANJro9NvHpnatgoaOkaU4uqELyEq3q462F/9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389580AbfIMOum (ORCPT
+        id S2389488AbfIMOul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:50:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40792 "EHLO
+        Fri, 13 Sep 2019 10:50:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40784 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388997AbfIMOuh (ORCPT
+        with ESMTP id S2388953AbfIMOuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 10:50:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WHvF2CG3hSL6Apn9kwopSnBjSdtlbe1zgSHAEIpSxc8=; b=q6l1RWGrXGSXR5d/aXatJKo44b
-        goPcIt2gp4yQEBUgERRBuc6sNqqBSSFqK+aUbJpTTAGxleKKkj1n+OhDCTP7MVIgvdaBr1cbfBReo
-        hqqj4nxCaMeEkopchd0J3W17ukwLpNnVaq38VxEWryNhh/JWDQxDfE9/udqlUe3NRbGhx8iMwoc1d
-        ky9GVS6orXqkZMiTaVQp8y340QswvVepLcrJmhg2YUSGNXtTRVbehrY42n4fw6k2a22ng/fi/m0xZ
-        ed20VIe41AFaGWfsVryggFPlK3ZuIqHzQYTp8KlE5EjQuGwtyEuM65lkDhU1CILuyMM0d5xpnaapK
-        7N311Bhg==;
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=q3Ga10yfzeYwpxzznlPXk6UJIJ2TiV9coxLDW5IjRtQ=; b=C6+DA8OLlRAbM+V6wKgn6PB17
+        KQ72yJDKteynS6SYGdsx4L+4q0GSUma2xxWwnd2xkMmUs6eyGO8MxP5ynQowZRnVfHbKbQhvzowe5
+        +uHl3oFrIa/d3SJ+DBeJn7ZMEHiv8uSNem5hqiYAOYuBKn9Y11oF0cXStGRcWPNMQvMmJl05A5Yn5
+        QJVhzqoKz/PMQrziYhddGHQHIaE+6P/fAPbqhoF9M1dAS/AcgIPpnH26rDJJdjNU/xVHUI1NQ2QT/
+        ElMQUfEXk/pZOjaRK1f1YU2xNJLxNlBceej6u+MsdWy0WjnnLNJdCtIePIXQ4PQ3p2MxPQSfq01CR
+        yTwS2WLjA==;
 Received: from 177.96.232.144.dynamic.adsl.gvt.net.br ([177.96.232.144] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i8muC-0002Mt-5b; Fri, 13 Sep 2019 14:50:36 +0000
+        id 1i8muC-0002Mq-2T; Fri, 13 Sep 2019 14:50:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.2)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1i8mu9-000432-Gl; Fri, 13 Sep 2019 11:50:33 -0300
+        id 1i8mu9-00042n-Db; Fri, 13 Sep 2019 11:50:33 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Linux Edac Mailing List <linux-edac@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH 4/7] EDAC: i5400_edac: print type at debug message
-Date:   Fri, 13 Sep 2019 11:50:29 -0300
-Message-Id: <426c979d7ed44f23eeeda69bcdbc91609d2d3bb7.1568385816.git.mchehab+samsung@kernel.org>
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH 0/7] Address most issues when building with W=1
+Date:   Fri, 13 Sep 2019 11:50:25 -0300
+Message-Id: <cover.1568385816.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1568385816.git.mchehab+samsung@kernel.org>
-References: <cover.1568385816.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,42 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 3 types of non-recoverable errors that the MC reports:
+There is a recent discussion at KS ML with regards to use W=1 as default.
 
-	- Fatal;
-	- Non-fatal uncorrected
-	- Non-fatal correctable
+No idea if this will happen or not, but it doesn't hurt cleaning up W=1
+warnings from the EDAC subsystem, specially since it helps to cleanup
+a few things.
 
-While we don't add it to the log itself, it could be useful to
-have this at least for debug messages.
+This patch series addresses most of such warnings.  After this series,
+there will be just two W=1 warnings:
 
-This shuts up this warning:
+1) i5100 EDAC driver:
 
-	drivers/edac/i5400_edac.c: In function ‘i5400_proccess_non_recoverable_info’:
-	drivers/edac/i5400_edac.c:524:8: warning: variable ‘type’ set but not used [-Wunused-but-set-variable]
-	  524 |  char *type = NULL;
-	      |        ^~~~
+	drivers/edac/i5100_edac.c: In function ‘i5100_read_log’:
+	drivers/edac/i5100_edac.c:487:11: warning: variable ‘ecc_loc’ set but not used [-Wunused-but-set-variable]
+	  487 |  unsigned ecc_loc = 0;
+	      |           ^~~~~~~
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- drivers/edac/i5400_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/i5400_edac.c b/drivers/edac/i5400_edac.c
-index 6f8bcdb9256a..52783b9bd0df 100644
---- a/drivers/edac/i5400_edac.c
-+++ b/drivers/edac/i5400_edac.c
-@@ -548,8 +548,8 @@ static void i5400_proccess_non_recoverable_info(struct mem_ctl_info *mci,
- 	ras = nrec_ras(info);
- 	cas = nrec_cas(info);
- 
--	edac_dbg(0, "\t\tDIMM= %d  Channels= %d,%d  (Branch= %d DRAM Bank= %d Buffer ID = %d rdwr= %s ras= %d cas= %d)\n",
--		 rank, channel, channel + 1, branch >> 1, bank,
-+	edac_dbg(0, "\t\t%s DIMM= %d  Channels= %d,%d  (Branch= %d DRAM Bank= %d Buffer ID = %d rdwr= %s ras= %d cas= %d)\n",
-+		 type, rank, channel, channel + 1, branch >> 1, bank,
- 		 buf_id, rdwr_str(rdwr), ras, cas);
- 
- 	/* Only 1 bit will be on */
+   The ecc_loc contents is filled from MC data, but it is not used anywere.
+   The i5100 MC is very old: the affected code was added in 2008. It should
+   probably be safe to just drop the corresponding data, but, as it may
+   contain some relevant info, I was a little reticent of doing that.
+
+2) Xgene EDAC driver:
+
+	drivers/edac/xgene_edac.c: In function ‘xgene_edac_rb_report’:
+	drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but not used [-Wunused-but-set-variable]
+	 1486 |   u32 address;
+	      |       ^~~~~~~
+
+   I suspect that the content of the address field should actually be used on
+   at least some of the logs.
+
+I may eventually submit patches later to address the above cases, but let's
+solve first the other cases, as they all sound trivial enough.
+
+Mauro Carvalho Chehab (7):
+  EDAC: i5100_edac: get rid of an unused var
+  EDAC: i7300_edac: rename a kernel-doc var description
+  EDAC: i7300_edac: fix a kernel-doc syntax
+  EDAC: i5400_edac: print type at debug message
+  EDAC: i5400_edac: get rid of some unused vars
+  EDAC: sb_edac: get rid of unused vars
+  EDAC: skx_common: get rid of unused type var
+
+ drivers/edac/i5100_edac.c |  2 --
+ drivers/edac/i5400_edac.c | 15 +++------------
+ drivers/edac/i7300_edac.c |  4 ++--
+ drivers/edac/sb_edac.c    | 21 ++++++++-------------
+ drivers/edac/skx_common.c |  5 +----
+ 5 files changed, 14 insertions(+), 33 deletions(-)
+
 -- 
 2.21.0
 
