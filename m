@@ -2,86 +2,155 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C7BC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BADC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A034020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B034B20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfIMBux (ORCPT
+        id S1726905AbfIMByF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 21:50:53 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45439 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725775AbfIMBux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:50:53 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id B6C1643ECC3;
-        Fri, 13 Sep 2019 11:50:45 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1i8ajT-0000Fl-KL; Fri, 13 Sep 2019 11:50:43 +1000
-Date:   Fri, 13 Sep 2019 11:50:43 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH 0/5] hugetlbfs: Disable PMD sharing for large systems
-Message-ID: <20190913015043.GF27547@dread.disaster.area>
-References: <20190911150537.19527-1-longman@redhat.com>
+        Thu, 12 Sep 2019 21:54:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31929 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726262AbfIMByF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:54:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:54:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,499,1559545200"; 
+   d="scan'208";a="186304831"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Sep 2019 18:54:03 -0700
+Date:   Thu, 12 Sep 2019 18:54:03 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: Re: [PATCH] KVM: x86: Handle unexpected MMIO accesses using master
+ abort semantics
+Message-ID: <20190913015403.GB6588@linux.intel.com>
+References: <20190912235603.18954-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911150537.19527-1-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=n3o9mYiGlt67Pqr9hHAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190912235603.18954-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 04:05:32PM +0100, Waiman Long wrote:
-> A customer with large SMP systems (up to 16 sockets) with application
-> that uses large amount of static hugepages (~500-1500GB) are experiencing
-> random multisecond delays. These delays was caused by the long time it
-> took to scan the VMA interval tree with mmap_sem held.
+On Thu, Sep 12, 2019 at 04:56:03PM -0700, Sean Christopherson wrote:
+> Use master abort semantics, i.e. reads return all ones and writes are
+> dropped, to handle unexpected MMIO accesses when reading guest memory
+> instead of returning X86EMUL_IO_NEEDED, which in turn gets interpreted
+> as a guest page fault.
 > 
-> To fix this problem while perserving existing behavior as much as
-> possible, we need to allow timeout in down_write() and disabling PMD
-> sharing when it is taking too long to do so. Since a transaction can
-> involving touching multiple huge pages, timing out for each of the huge
-> page interactions does not completely solve the problem. So a threshold
-> is set to completely disable PMD sharing if too many timeouts happen.
+> Emulation of certain instructions, notably VMX instructions, involves
+> reading or writing guest memory without going through the emulator.
+> These emulation flows are not equipped to handle MMIO accesses as no
+> sane and properly functioning guest kernel will target MMIO with such
+> instructions, and so simply inject a page fault in response to
+> X86EMUL_IO_NEEDED.
 > 
-> The first 4 patches of this 5-patch series adds a new
-> down_write_timedlock() API which accepts a timeout argument and return
-> true is locking is successful or false otherwise. It works more or less
-> than a down_write_trylock() but the calling thread may sleep.
+> While not 100% correct, using master abort semantics is at least
+> sometimes correct, e.g. non-existent MMIO accesses do actually master
+> abort, whereas injecting a page fault is always wrong, i.e. the issue
+> lies in the physical address domain, not in the virtual to physical
+> translation.
+> 
+> Apply the logic to kvm_write_guest_virt_system() in addition to
+> replacing existing #PF logic in kvm_read_guest_virt(), as VMPTRST uses
+> the former, i.e. can also leak a host stack address.
+> 
+> Reported-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 40 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 31 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b4cfd786d0b6..d1d7e9fac17a 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5234,16 +5234,24 @@ int kvm_read_guest_virt(struct kvm_vcpu *vcpu,
+>  			       struct x86_exception *exception)
+>  {
+>  	u32 access = (kvm_x86_ops->get_cpl(vcpu) == 3) ? PFERR_USER_MASK : 0;
+> +	int r;
+> +
+> +	r = kvm_read_guest_virt_helper(addr, val, bytes, vcpu, access,
+> +				       exception);
+>  
+>  	/*
+> -	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
+> -	 * is returned, but our callers are not ready for that and they blindly
+> -	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
+> -	 * uninitialized kernel stack memory into cr2 and error code.
+> +	 * FIXME: this should technically call out to userspace to handle the
+> +	 * MMIO access, but our callers are not ready for that, so emulate
+> +	 * master abort behavior instead, i.e. writes are dropped.
 
-Just on general principle, this is a non-starter. If a lock is being
-held too long, then whatever the lock is protecting needs fixing.
-Adding timeouts to locks and sysctls to tune them is not a viable
-solution to address latencies caused by algorithm scalability
-issues.
+Dagnabbit, fixed this to make it 'reads return all ones' and forgot to
+commit..  v2 on its way.
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  	 */
+> -	memset(exception, 0, sizeof(*exception));
+> -	return kvm_read_guest_virt_helper(addr, val, bytes, vcpu, access,
+> -					  exception);
+> +	if (r == X86EMUL_IO_NEEDED) {
+> +		memset(val, 0xff, bytes);
+> +		return 0;
+> +	}
+> +	if (r == X86EMUL_PROPAGATE_FAULT)
+> +		return -EFAULT;
+> +	WARN_ON_ONCE(r);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_read_guest_virt);
+>  
+> @@ -5317,11 +5325,25 @@ static int emulator_write_std(struct x86_emulate_ctxt *ctxt, gva_t addr, void *v
+>  int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+>  				unsigned int bytes, struct x86_exception *exception)
+>  {
+> +	int r;
+> +
+>  	/* kvm_write_guest_virt_system can pull in tons of pages. */
+>  	vcpu->arch.l1tf_flush_l1d = true;
+>  
+> -	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+> -					   PFERR_WRITE_MASK, exception);
+> +	r = kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+> +					PFERR_WRITE_MASK, exception);
+> +
+> +	/*
+> +	 * FIXME: this should technically call out to userspace to handle the
+> +	 * MMIO access, but our callers are not ready for that, so emulate
+> +	 * master abort behavior instead, i.e. writes are dropped.
+> +	 */
+> +	if (r == X86EMUL_IO_NEEDED)
+> +		return 0;
+> +	if (r == X86EMUL_PROPAGATE_FAULT)
+> +		return -EFAULT;
+> +	WARN_ON_ONCE(r);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_write_guest_virt_system);
+>  
+> -- 
+> 2.22.0
+> 
