@@ -2,78 +2,115 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4A9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5761FC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA4020717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32218206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfIMUWW (ORCPT
+        id S2388854AbfIMU1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:22:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42834 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIMUWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:22:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so2665941pls.9;
-        Fri, 13 Sep 2019 13:22:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mAM07QavgvszW8h2pJrRMughxQBytjenaDIjAUeKITc=;
-        b=cM2rmnj9l7etkrs+nOU/5jjU5UPHKc7tdFBkvACZ+pzY7Tjf/k1ZIeRoM9m3ySCC4E
-         g518pvoQ0qbbQQLAborWW/5JUXfbjtNVMuuVSG6k+66FAKw2LYWGCTWMUWbg8Xt6j05/
-         mktJuZminqZdJ+g6B8puKdmiabxlbk40CY5i8+SMkpJopCxMgm5cBMlhPlPOzx/oaBkH
-         R0Og1yAM1YDBZzM4OloVJYrJyGw6aHWi5ny9k4wKs7j7/oDwzTE6jSMTglmkopwVI79F
-         wBN2FNqzR5+ShJ6U3fh5OdQf5hpO3YXbMR99na1RmNHPkL413o0chBIZbpPKncqEaAf1
-         Dsvw==
-X-Gm-Message-State: APjAAAUapDOkusIt91e9lGfbCwKQ+QdaBN3F3cJbmGczTFSkL07V2bYh
-        QYT7UHbxKa9SceyEzNPWrjc6hSZ5
-X-Google-Smtp-Source: APXvYqzzuuNXe0WJwCdas9lOtDuhsl5jhREKUP7vp4wmbE3OQB48lA16Z9M9SYL0hBiRsoBKXYXm2w==
-X-Received: by 2002:a17:902:9a8f:: with SMTP id w15mr51145465plp.221.1568406141133;
-        Fri, 13 Sep 2019 13:22:21 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id m13sm30066125pgn.57.2019.09.13.13.22.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2019 13:22:19 -0700 (PDT)
-Subject: Re: [PATCH 4/4] coding-style: add explanation about pr_fmt macro
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, axboe@kernel.dk, kernel@collabora.com,
-        krisman@collabora.com
-References: <20190913185746.337429-1-andrealmeid@collabora.com>
- <20190913185746.337429-5-andrealmeid@collabora.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <125475bd-ca6d-5d2a-712d-9cb37a4b8164@acm.org>
-Date:   Fri, 13 Sep 2019 13:22:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 16:27:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57316 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388300AbfIMU1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 16:27:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 13:27:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="269533920"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
+  by orsmga001.jf.intel.com with ESMTP; 13 Sep 2019 13:27:10 -0700
+Date:   Fri, 13 Sep 2019 13:27:10 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Megha Dey <megha.dey@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "megha.dey@intel.com" <megha.dey@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Message-ID: <20190913202710.GA999@otc-nc-03>
+References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+ <VI1PR05MB4141EAE19EE47DA20A75AE21CFB30@VI1PR05MB4141.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190913185746.337429-5-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR05MB4141EAE19EE47DA20A75AE21CFB30@VI1PR05MB4141.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/13/19 11:57 AM, André Almeida wrote:
-> The pr_fmt macro is useful to format log messages printed by pr_XXXX()
-> functions. Add text to explain the purpose of it, how to use and an
-> example.
+On Fri, Sep 13, 2019 at 07:50:50PM +0000, Jason Gunthorpe wrote:
+> On Thu, Sep 12, 2019 at 06:32:01PM -0700, Megha Dey wrote:
 > 
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> > This series is a basic patchset to get the ball rolling and receive some
+> > inital comments. As per my discussion with Marc Zyngier and Thomas Gleixner
+> > at the Linux Plumbers, I need to do the following:
+> > 1. Since a device can support MSI-X and IMS simultaneously, ensure proper
+> >    locking mechanism for the 'msi_list' in the device structure.
+> > 2. Introduce dynamic allocation of IMS vectors perhaps by using a group ID
+> > 3. IMS support of a device needs to be discoverable. A bit in the vendor
+> >    specific capability in the PCI config is to be added rather than getting
+> >    this information from each device driver.
+> 
+> Why #3? The point of this scheme is to delegate programming the
+> addr/data pairs to the driver so it can be done in some
+> device-specific way. There is no PCI standard behind this, and no
+> change in PCI semantics. 
+> 
+> I think it would be a tall ask to get a config space bit from PCI-SIG
+> for something that has little to do with PCI.
 
-Since Jonathan Corbet is documentation maintainer, shouldn't he be Cc'ed 
-explicitly for documentation patches? See also the MAINTAINERS file.
+This isn't a standard config capability. Its Designated Vendor Specific
+Capability (DVSEC). The device is responsible for managing the addr-data
+pair. This provides a hint to the OS framework that this device has
+device specific methods.
 
-Bart.
+Agreed its not required, but some OSV's like a generic way to discover
+these capabilities, hence its there so device vendors can have
+a common guideline.
+
+Check here for some of those details:
+
+https://software.intel.com/en-us/blogs/2018/06/25/introducing-intel-scalable-io-virtualization 
+
+> 
+> After seeing that we already have a platform device based version of
+> this same idea (drivers/base/platform-msi.c), I think the task here is
+> really just to extend and expand that approach to work generically for
+> platform and PCI devices. Along the way tidying the arch interface so
+> x86 and ARM's stuff to support that uses the same generic interfaces.
+> 
+> ie it is re-organizing code and ideas already in Linux, not defining
+> some new standard.
+> 
+> I also think refering to this existing idea by some new IMS name is
+> only confusing people what the goal is... Which is perhaps why #3 was
+> suggested??
+> 
+> Stated more clearly, I think all uses would be satisfied if
+> platform_msi_domain_alloc_irqs() could be called for struct
+> pci_device, could be called multiple times for the same struct
+> pci_device, and co-existed with MSI and MSI-X on the same pci_device.
+> 
+> Jason
