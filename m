@@ -2,188 +2,135 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C68C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9650FC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05CF220678
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7559E206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfIMHj2 (ORCPT
+        id S1728740AbfIMHmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:39:28 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:42140 "EHLO protonic.nl"
+        Fri, 13 Sep 2019 03:42:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41706 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728666AbfIMHj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:39:27 -0400
-Received: from webmail.promanet.nl (edge2.prtnl [192.168.1.170])
-        by sparta (Postfix) with ESMTP id DA51D44A00CB;
-        Fri, 13 Sep 2019 09:41:27 +0200 (CEST)
+        id S1725446AbfIMHmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 03:42:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 908DFAF57;
+        Fri, 13 Sep 2019 07:42:36 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 09:42:29 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC pile for 5.4
+Message-ID: <20190913074229.GA20745@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Sep 2019 09:39:26 +0200
-From:   robin <robin@protonic.nl>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        RobinGong <yibin.gong@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-In-Reply-To: <20190904065248.4i7q2vuxxt2xdnrr@pengutronix.de>
-References: <20190904062329.97520-1-robin@protonic.nl>
- <20190904065248.4i7q2vuxxt2xdnrr@pengutronix.de>
-Message-ID: <f12945994b66c5e605c0a121e7ad0526@protonic.nl>
-X-Sender: robin@protonic.nl
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-04 08:52, Marco Felsch wrote:
-> Hi Robin,
-> 
-> thanks for the patch it looks quite good, just two minor nitpicks.
-> 
-> On 19-09-04 06:23, Robin van der Gracht wrote:
->> The first generation i.MX6 processors does not send an interrupt when 
->> the
->> power key is pressed. It sends a power down request interrupt if the 
->> key is
->> released before a hard shutdown (5 second press). This should allow
->> software to bring down the SoC safely.
->> 
->> For this driver to work as a regular power key with the older SoCs, we 
->> need
->> to send a keypress AND release when we get the power down request irq.
->> 
->> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
->> ---
->> 
->> Changes v2 -> v3:
->>  - Drop alt compatible string for identifying first revision snvs 
->> hardware,
->>    read minor revision from register instead.
->>  - Drop imx6qdl.dtsi modification and device-tree binding 
->> documentation.
->>  - Add an additional input_sync() to create 2 seperate input reports 
->> for press
->>    and release.
->> 
->>  drivers/input/keyboard/Kconfig       |  2 +-
->>  drivers/input/keyboard/snvs_pwrkey.c | 28 
->> ++++++++++++++++++++++++++--
->>  2 files changed, 27 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/input/keyboard/Kconfig 
->> b/drivers/input/keyboard/Kconfig
->> index 7c4f19dab34f..937e58da5ce1 100644
->> --- a/drivers/input/keyboard/Kconfig
->> +++ b/drivers/input/keyboard/Kconfig
->> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
->>  	depends on OF
->>  	help
->>  	  This is the snvs powerkey driver for the Freescale i.MX 
->> application
->> -	  processors that are newer than i.MX6 SX.
->> +	  processors.
->> 
->>  	  To compile this driver as a module, choose M here; the
->>  	  module will be called snvs_pwrkey.
->> diff --git a/drivers/input/keyboard/snvs_pwrkey.c 
->> b/drivers/input/keyboard/snvs_pwrkey.c
->> index 5342d8d45f81..828580eee0d2 100644
->> --- a/drivers/input/keyboard/snvs_pwrkey.c
->> +++ b/drivers/input/keyboard/snvs_pwrkey.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/mfd/syscon.h>
->>  #include <linux/regmap.h>
->> 
->> +#define SNVS_HPVIDR1_REG 0xF8
->>  #define SNVS_LPSR_REG	0x4C	/* LP Status Register */
->>  #define SNVS_LPCR_REG	0x38	/* LP Control Register */
->>  #define SNVS_HPSR_REG	0x14
->> @@ -37,6 +38,7 @@ struct pwrkey_drv_data {
->>  	int wakeup;
->>  	struct timer_list check_timer;
->>  	struct input_dev *input;
->> +	u8 minor_rev;
->>  };
->> 
->>  static void imx_imx_snvs_check_for_events(struct timer_list *t)
->> @@ -45,6 +47,20 @@ static void imx_imx_snvs_check_for_events(struct 
->> timer_list *t)
->>  	struct input_dev *input = pdata->input;
->>  	u32 state;
->> 
->> +	if (pdata->minor_rev == 0) {
-> 
-> Should we use a define here and ..
-> 
->> +		/*
->> +		 * The first generation i.MX6 SoCs only sends an interrupt on
->> +		 * button release. To mimic power-key usage, we'll prepend a
->> +		 * press event.
->> +		 */
->> +		input_report_key(input, pdata->keycode, 1);
->> +		input_sync(input);
->> +		input_report_key(input, pdata->keycode, 0);
->> +		input_sync(input);
->> +		pm_relax(input->dev.parent);
->> +		return;
->> +	}
->> +
->>  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
->>  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->> 
->> @@ -67,13 +83,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int 
->> irq, void *dev_id)
->>  {
->>  	struct platform_device *pdev = dev_id;
->>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
->> +	unsigned long expire = jiffies;
->>  	u32 lp_status;
->> 
->>  	pm_wakeup_event(pdata->input->dev.parent, 0);
->> 
->>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
->> -	if (lp_status & SNVS_LPSR_SPO)
->> -		mod_timer(&pdata->check_timer, jiffies + 
->> msecs_to_jiffies(DEBOUNCE_TIME));
->> +	if (lp_status & SNVS_LPSR_SPO) {
->> +		if (pdata->minor_rev > 0)
-> 
-> here? Just a nitpick, feel free to add/drop it.
+Hi Linus,
 
-Like a Macro?
+here's an early pull request from EDAC-land for the upcoming merge
+window. The new thing this time around is that we have three maintainers
+now and a new, old repo. New because it is new for the EDAC tree which
+is hosted there from now on and old because it is Tony's and mine's old
+RAS repo which we still use occasionally when the stuff isn't in tip.
 
-#define FIRST_HW_REV(pdata)      (pdata->minor_rev == 0)
+Anyway, below are the gory details, please pull,
+thx.
 
-if (FIRST_HW_REV(pdata) {
-         ...
-}
+---
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-or just a define to identify the minor rev used for the first hw 
-revision
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_for_5.4
 
-#define FIRST_HW_MINOR_REV       0
+for you to fetch changes up to 3e443eb353eda6f4b4796e07f2599683fa752f1d:
 
-if (pdata->minor_rev == FIRST_HW_MINOR_REV) {
-         ...
-}
+  EDAC/amd64: Add PCI device IDs for family 17h, model 70h (2019-09-07 07:29:27 +0200)
 
-Regards,
-Robin van der Gracht
+----------------------------------------------------------------
+* EDAC tree has three maintainers and one new designated reviewer now,
+so that the work can scale better.
+
+* New driver for Mellanox' BlueField SoC DDR controller	(Shravan Kumar Ramani)
+
+* AMD Rome support in amd64_edac (Yazen Ghannam and Isaac Vaughn)
+
+* Misc fixes, cleanups and code improvements
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      EDAC/altera: Use the proper type for the IRQ status bits
+
+Isaac Vaughn (1):
+      EDAC/amd64: Add PCI device IDs for family 17h, model 70h
+
+Mauro Carvalho Chehab (1):
+      MAINTAINERS: update EDAC entry to reflect current tree and maintainers
+
+Robert Richter (6):
+      EDAC/mc: Fix grain_bits calculation
+      EDAC/mc: Cleanup _edac_mc_free() code
+      EDAC: Prefer 'unsigned int' to bare use of 'unsigned'
+      EDAC/mc_sysfs: Remove pointless gotos
+      EDAC/mc_sysfs: Make debug messages consistent
+      MAINTAINERS: Add Robert as a EDAC reviewer
+
+Shravan Kumar Ramani (1):
+      EDAC, mellanox: Add ECC support for BlueField DDR4
+
+Stephen Douthit (1):
+      EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
+
+Thor Thayer (1):
+      edac: altera: Move Stratix10 SDRAM ECC to peripheral
+
+Yazen Ghannam (7):
+      EDAC/amd64: Support more than two controllers for chip selects handling
+      EDAC/amd64: Recognize DRAM device type ECC capability
+      EDAC/amd64: Initialize DIMM info for systems with more than two channels
+      EDAC/amd64: Find Chip Select memory size using Address Mask
+      EDAC/amd64: Decode syndrome before translating address
+      EDAC/amd64: Cache secondary Chip Select registers
+      EDAC/amd64: Support asymmetric dual-rank DIMMs
+
+ MAINTAINERS                   |  10 +-
+ drivers/edac/Kconfig          |   7 +
+ drivers/edac/Makefile         |   1 +
+ drivers/edac/altera_edac.c    |  58 ++++++-
+ drivers/edac/altera_edac.h    |  25 ++-
+ drivers/edac/amd64_edac.c     | 371 ++++++++++++++++++++++++++++--------------
+ drivers/edac/amd64_edac.h     |  15 +-
+ drivers/edac/bluefield_edac.c | 356 ++++++++++++++++++++++++++++++++++++++++
+ drivers/edac/edac_mc.c        |  53 +++---
+ drivers/edac/edac_mc.h        |   6 +-
+ drivers/edac/edac_mc_sysfs.c  |  92 +++++------
+ drivers/edac/ghes_edac.c      |   2 +-
+ drivers/edac/i5100_edac.c     |  16 +-
+ drivers/edac/pnd2_edac.c      |   7 +-
+ include/linux/edac.h          |  10 +-
+ 15 files changed, 803 insertions(+), 226 deletions(-)
+ create mode 100644 drivers/edac/bluefield_edac.c
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 247165, AG München
