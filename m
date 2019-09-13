@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1993C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D3B206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DAF206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380838;
-	bh=VoqOr//yZFOicsBULwh4G3FSgIQORcRzufwM9JsAIrg=;
+	s=default; t=1568380845;
+	bh=kN2w/kcq9mBzaqs9yTiVeTulm8bkDRJ/dgotKQjrnuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFH2OHOECOZBbZG/weoZV1ituhGo3MDZEvJ5ZkqQd8w076XG+9sr8RwP20ILpNnk9
-	 MCcj3oJ2HHjp7Ia6Sa3ypZT/KZLVIetjil4rLg8+sVpm8bft1kqECKaKI1S8at7jwZ
-	 d/SceVwJDcOl10icaj8sw8SBDyCJI0YtShcGy4RY=
+	b=Qs6GadguMjzM9X6XZK0OCzTHHN2eHUYafMciY9FwSaREs03rLRwk8Y5IECWcgfSC5
+	 LqtMjdcXPeocwmuSSdJHUNOe29eC4JdGKF2pism2Jbvi58MQbEjysGJ4RuyOmHmQJI
+	 YuWQF2soXMNZfaWn1bM8cNC+NUH57X6l9iXauvoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390606AbfIMNUh (ORCPT
+        id S2390076AbfIMNUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389666AbfIMNUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:31 -0400
+        id S2390608AbfIMNUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:40 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0F3214D8;
-        Fri, 13 Sep 2019 13:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9253920717;
+        Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380830;
-        bh=VoqOr//yZFOicsBULwh4G3FSgIQORcRzufwM9JsAIrg=;
+        s=default; t=1568380839;
+        bh=kN2w/kcq9mBzaqs9yTiVeTulm8bkDRJ/dgotKQjrnuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OYIuSF2hziHE7vZWwEOZbl/pMIJ6Z8ync+jbiNVGix9VDGn4xtFwMJ7PiP7APsD5c
-         OAqV/BqUh21v8t0KI+C/v3FXQ1ntCf5IQpd94L9b0BVWAa0CQk7wOWz31ci0G3SIPO
-         D+Gxnta0KsQvnAqoZaGlb5AN4Y9OPNTdlzXDCNTE=
+        b=U6/A6XkRMvsyiF7wVOU5oL4Cfuudmz9RBU8GaNNUTxzFme++YRb4sODI7ty0NPQti
+         a69FTKu/Tzdj7ZKH7VO0e46Mmp6yttB/mknXYur14+tLS0/27ZgHKVjZMFrn/+a44A
+         MedaEP5cJx+up/IHI9seIZAnh3mGPiNozCVf1BKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 160/190] RDMA/srp: Accept again source addresses that do not have a port number
-Date:   Fri, 13 Sep 2019 14:06:55 +0100
-Message-Id: <20190913130612.699690892@linuxfoundation.org>
+Subject: [PATCH 4.19 187/190] powerpc/tm: Remove msr_tm_active()
+Date:   Fri, 13 Sep 2019 14:07:22 +0100
+Message-Id: <20190913130614.853366270@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,89 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bcef5b7215681250c4bf8961dfe15e9e4fef97d0 ]
+[ Upstream commit 5c784c8414fba11b62e12439f11e109fb5751f38 ]
 
-The function srp_parse_in() is used both for parsing source address
-specifications and for target address specifications. Target addresses
-must have a port number. Having to specify a port number for source
-addresses is inconvenient. Make sure that srp_parse_in() supports again
-parsing addresses with no port number.
+Currently msr_tm_active() is a wrapper around MSR_TM_ACTIVE() if
+CONFIG_PPC_TRANSACTIONAL_MEM is set, or it is just a function that
+returns false if CONFIG_PPC_TRANSACTIONAL_MEM is not set.
 
-Cc: <stable@vger.kernel.org>
-Fixes: c62adb7def71 ("IB/srp: Fix IPv6 address parsing")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This function is not necessary, since MSR_TM_ACTIVE() just do the same and
+could be used, removing the dualism and simplifying the code.
+
+This patchset remove every instance of msr_tm_active() and replaced it
+by MSR_TM_ACTIVE().
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/reg.h |  7 ++++++-
+ arch/powerpc/kernel/process.c  | 21 +++++++++------------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 9da30d88a615e..bc6a44a16445c 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -3404,13 +3404,14 @@ static const match_table_t srp_opt_tokens = {
-  * @net:	   [in]  Network namespace.
-  * @sa:		   [out] Address family, IP address and port number.
-  * @addr_port_str: [in]  IP address and port number.
-+ * @has_port:	   [out] Whether or not @addr_port_str includes a port number.
-  *
-  * Parse the following address formats:
-  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
-  * - IPv6: \[<ipv6_address>\]:<port>, e.g. [1::2:3%4]:5.
-  */
- static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
--			const char *addr_port_str)
-+			const char *addr_port_str, bool *has_port)
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index e5b314ed054e0..640a4d818772a 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -118,11 +118,16 @@
+ #define MSR_TS_S	__MASK(MSR_TS_S_LG)	/*  Transaction Suspended */
+ #define MSR_TS_T	__MASK(MSR_TS_T_LG)	/*  Transaction Transactional */
+ #define MSR_TS_MASK	(MSR_TS_T | MSR_TS_S)   /* Transaction State bits */
+-#define MSR_TM_ACTIVE(x) (((x) & MSR_TS_MASK) != 0) /* Transaction active? */
+ #define MSR_TM_RESV(x) (((x) & MSR_TS_MASK) == MSR_TS_MASK) /* Reserved */
+ #define MSR_TM_TRANSACTIONAL(x)	(((x) & MSR_TS_MASK) == MSR_TS_T)
+ #define MSR_TM_SUSPENDED(x)	(((x) & MSR_TS_MASK) == MSR_TS_S)
+ 
++#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
++#define MSR_TM_ACTIVE(x) (((x) & MSR_TS_MASK) != 0) /* Transaction active? */
++#else
++#define MSR_TM_ACTIVE(x) 0
++#endif
++
+ #if defined(CONFIG_PPC_BOOK3S_64)
+ #define MSR_64BIT	MSR_SF
+ 
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 967c044036718..49c6d474eb5ac 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -102,24 +102,18 @@ static void check_if_tm_restore_required(struct task_struct *tsk)
+ 	}
+ }
+ 
+-static inline bool msr_tm_active(unsigned long msr)
+-{
+-	return MSR_TM_ACTIVE(msr);
+-}
+-
+ static bool tm_active_with_fp(struct task_struct *tsk)
  {
- 	char *addr_end, *addr = kstrdup(addr_port_str, GFP_KERNEL);
- 	char *port_str;
-@@ -3419,9 +3420,12 @@ static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
- 	if (!addr)
- 		return -ENOMEM;
- 	port_str = strrchr(addr, ':');
--	if (!port_str)
--		return -EINVAL;
--	*port_str++ = '\0';
-+	if (port_str && strchr(port_str, ']'))
-+		port_str = NULL;
-+	if (port_str)
-+		*port_str++ = '\0';
-+	if (has_port)
-+		*has_port = port_str != NULL;
- 	ret = inet_pton_with_scope(net, AF_INET, addr, port_str, sa);
- 	if (ret && addr[0]) {
- 		addr_end = addr + strlen(addr) - 1;
-@@ -3443,6 +3447,7 @@ static int srp_parse_options(struct net *net, const char *buf,
- 	char *p;
- 	substring_t args[MAX_OPT_ARGS];
- 	unsigned long long ull;
-+	bool has_port;
- 	int opt_mask = 0;
- 	int token;
- 	int ret = -EINVAL;
-@@ -3541,7 +3546,8 @@ static int srp_parse_options(struct net *net, const char *buf,
- 				ret = -ENOMEM;
- 				goto out;
- 			}
--			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p);
-+			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p,
-+					   NULL);
- 			if (ret < 0) {
- 				pr_warn("bad source parameter '%s'\n", p);
- 				kfree(p);
-@@ -3557,7 +3563,10 @@ static int srp_parse_options(struct net *net, const char *buf,
- 				ret = -ENOMEM;
- 				goto out;
- 			}
--			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p);
-+			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p,
-+					   &has_port);
-+			if (!has_port)
-+				ret = -EINVAL;
- 			if (ret < 0) {
- 				pr_warn("bad dest parameter '%s'\n", p);
- 				kfree(p);
+-	return msr_tm_active(tsk->thread.regs->msr) &&
++	return MSR_TM_ACTIVE(tsk->thread.regs->msr) &&
+ 		(tsk->thread.ckpt_regs.msr & MSR_FP);
+ }
+ 
+ static bool tm_active_with_altivec(struct task_struct *tsk)
+ {
+-	return msr_tm_active(tsk->thread.regs->msr) &&
++	return MSR_TM_ACTIVE(tsk->thread.regs->msr) &&
+ 		(tsk->thread.ckpt_regs.msr & MSR_VEC);
+ }
+ #else
+-static inline bool msr_tm_active(unsigned long msr) { return false; }
+ static inline void check_if_tm_restore_required(struct task_struct *tsk) { }
+ static inline bool tm_active_with_fp(struct task_struct *tsk) { return false; }
+ static inline bool tm_active_with_altivec(struct task_struct *tsk) { return false; }
+@@ -247,7 +241,8 @@ void enable_kernel_fp(void)
+ 		 * giveup as this would save  to the 'live' structure not the
+ 		 * checkpointed structure.
+ 		 */
+-		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
++		if (!MSR_TM_ACTIVE(cpumsr) &&
++		     MSR_TM_ACTIVE(current->thread.regs->msr))
+ 			return;
+ 		__giveup_fpu(current);
+ 	}
+@@ -311,7 +306,8 @@ void enable_kernel_altivec(void)
+ 		 * giveup as this would save  to the 'live' structure not the
+ 		 * checkpointed structure.
+ 		 */
+-		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
++		if (!MSR_TM_ACTIVE(cpumsr) &&
++		     MSR_TM_ACTIVE(current->thread.regs->msr))
+ 			return;
+ 		__giveup_altivec(current);
+ 	}
+@@ -397,7 +393,8 @@ void enable_kernel_vsx(void)
+ 		 * giveup as this would save  to the 'live' structure not the
+ 		 * checkpointed structure.
+ 		 */
+-		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
++		if (!MSR_TM_ACTIVE(cpumsr) &&
++		     MSR_TM_ACTIVE(current->thread.regs->msr))
+ 			return;
+ 		__giveup_vsx(current);
+ 	}
+@@ -531,7 +528,7 @@ void restore_math(struct pt_regs *regs)
+ {
+ 	unsigned long msr;
+ 
+-	if (!msr_tm_active(regs->msr) &&
++	if (!MSR_TM_ACTIVE(regs->msr) &&
+ 		!current->thread.load_fp && !loadvec(current->thread))
+ 		return;
+ 
 -- 
 2.20.1
 
