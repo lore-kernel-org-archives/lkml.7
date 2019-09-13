@@ -2,40 +2,41 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF05C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24DA208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FAD20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="D2WPk703"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ZzpI4IqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbfIMI4G (ORCPT
+        id S2387785AbfIMI4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:56:06 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:11062 "EHLO
+        Fri, 13 Sep 2019 04:56:07 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:12902 "EHLO
         mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387615AbfIMI4E (ORCPT
+        by vger.kernel.org with ESMTP id S2387615AbfIMI4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:56:07 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8D8qtmL003288;
         Fri, 13 Sep 2019 04:56:04 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8D8rF0X004206;
-        Fri, 13 Sep 2019 04:56:00 -0400
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2055.outbound.protection.outlook.com [104.47.42.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2uytd1h9q8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 04:56:00 -0400
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2058.outbound.protection.outlook.com [104.47.49.58])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2uytcwh9kr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 04:56:04 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ENrAZRUGzaLj6r+kJMec8TyHBmWlOTfk21H878Kxjr+mSESRW+BuAkrnpjKFjKqSXANmN+p0VmFDV8c+5fGRhXUuVaGwQ0hUZvk4KFki2yIiSlwWtkHRvV7uQK6xGHPK4oUoVI1DQR4gSWFVxPpfdS5qDOfM7kuBqMvXRI4o5bPa4HDnBbibOmnGnrDeJ/WieW5B7ObQ3rqzULzJvYV8KFhknhxsy1hEMdj7vMZACFsMgxkNWLkTUpL6QYqZHh2Ks7fr2UkUnHeVb6C5jdDc8Qg2YQ9SNqV1UuQfj9BD5jzn0gv7OyYOcoW0zXT1TJMFJaZXJ84RfnFF9e2mwc0Ftw==
+ b=fX/MVgk7J6xWsH15MqMNkx+iCXhBnk2OvuH1k+mdoQL6k/D6njyAKROMYDc5jV+7MtKHAmU8RYBJRpilrlvx4/k9HBjE1/V5hluyYcfPRHKCEJI4BmcZkRmvw6FEFAQiWVHJFxBFtG7mAUfuOkNISswX1RcZpE9zTlm1RL07CLvYjR9rM8OHGlLnbE/6RLQnggp0pw4AJ/mrJ577XTJmnaPnSK4bnC7F+mNEod+QwQ0y6wIAherzEfJ9vRzwPKjmnnNvSyq16atnG+mO1zYBzevr53QK3Num+h2qcwexDvoLyBQDA+uu6VIx3wNnZTthtELzz8TXFMSEHh3AqhLvUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4GXGw4Jaaq3D79dD1RYpAnWd2NUfIitSayBe0mznlk=;
- b=OCGwjknjjKsB8rBZB07Mo84QYrBqUHHBy2dsJ88sji7Bzv+YNHv6R7RSTgomYrRvrfWNmPOr9qWG2kTExcWAPVjd7ZyeuigIqJXzAYoIP/SAQrAnBVj3PyfuOxvhy2+bt8ESjRaEDSqAqANg7FVSILfmURk0ENWChEo+R7DYw8kdYFzs8s/VMrrFWs6pN+TaXQ0/sgDNC8EOjPq4SIjJ39eRT/DcOv5cvBRkkVaJxEZllB+l/+p7VjLnheNUQwJgVOcpUHJibox96sBsMnXWLRRefAbn7N6WmayhMhZX79H8AIRWXzb0XhpdMIIewMntysrcg1ehulCccy8n+KJ6Xw==
+ bh=ESeHHXBfFrG988glXvaIvhiPmUc6BnNdkc+lsz3piTo=;
+ b=kD/PNz1e3SCceFtCA376oYHiV5yJjM+WH61znI/92YCYnd9Mujr8Wf3qAvpLpBb10NgSVUMxC/ZM7ToXbnfHUkeYl7xg+q19aaDOxuNTENFDmYlkFfEAp8rWijIMcRIMghbf8bzxNgQPNAaIUQuse7iRP68hHMoaTx9j3vvifqREEs5B7zMSe8iA3uMRGy0sJy9iOnfyE1uWKDdPwUaDoC4zXIKkgM79+nwIOtiKFzRWXo5rT/LsogrHNSAJqzedfjzf2HebxPI3nG6jAPp684CmKN/nUDS98Sn5aF6AxRMdrXQu2SfUNJsj1u6Y81tbVPRYR6nWYi1gWPYzj0Pzww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
  dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
@@ -43,110 +44,203 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4GXGw4Jaaq3D79dD1RYpAnWd2NUfIitSayBe0mznlk=;
- b=D2WPk703vl6pq0lZKKHRPAIgGrnYkDy3KL57yI7tiX7hTe2xSm0bcX7ryiv/PJyb3WkAfSTKpKW0cgPu4wf6T7KNQJsL8kwvk6xJ74z9y5jkqzTqLE94Qgu2r6y6bk/dxN0D4+CYAp/5H7/L4gXU4hbuLnedBqLFqO8zZnCNARA=
-Received: from CY1PR03CA0002.namprd03.prod.outlook.com (2603:10b6:600::12) by
- BY5PR03MB5235.namprd03.prod.outlook.com (2603:10b6:a03:21b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.15; Fri, 13 Sep 2019 08:55:58 +0000
-Received: from CY1NAM02FT003.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by CY1PR03CA0002.outlook.office365.com
- (2603:10b6:600::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.17 via Frontend
- Transport; Fri, 13 Sep 2019 08:55:58 +0000
+ bh=ESeHHXBfFrG988glXvaIvhiPmUc6BnNdkc+lsz3piTo=;
+ b=ZzpI4IqEnhd6cVBN2RDQlwz5vDC9rUzLqU37WUNI3sUyIzFg/Vp7EUMA4t+Uc5kLQm1ePCWlHsj1NDIpDucV1Rz+JLkZcgmXB9UCnZ75rRnJPlf1w9z4SXQaVJ+t6luuBp3JhTPg1yxMTASHrYu8uJ+0BV8XGNxBMUPF1arkojI=
+Received: from MWHPR03CA0060.namprd03.prod.outlook.com (2603:10b6:301:3b::49)
+ by BYAPR03MB4856.namprd03.prod.outlook.com (2603:10b6:a03:138::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.13; Fri, 13 Sep
+ 2019 08:56:01 +0000
+Received: from CY1NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::205) by MWHPR03CA0060.outlook.office365.com
+ (2603:10b6:301:3b::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2263.17 via Frontend
+ Transport; Fri, 13 Sep 2019 08:56:01 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.57 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
 Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT003.mail.protection.outlook.com (10.152.74.151) with Microsoft SMTP
+ CY1NAM02FT035.mail.protection.outlook.com (10.152.75.186) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
- via Frontend Transport; Fri, 13 Sep 2019 08:55:57 +0000
+ via Frontend Transport; Fri, 13 Sep 2019 08:56:01 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8D8tqkk000398
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8D8ttQG000407
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 13 Sep 2019 01:55:52 -0700
+        Fri, 13 Sep 2019 01:55:56 -0700
 Received: from saturn.ad.analog.com (10.48.65.123) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 13 Sep 2019 04:55:56 -0400
+ 14.3.408.0; Fri, 13 Sep 2019 04:56:00 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>, <broonie@kernel.org>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 0/4] spi: introduce `struct spi_delay` data-type 
-Date:   Fri, 13 Sep 2019 14:55:45 +0300
-Message-ID: <20190913115549.3823-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 2/4] spi: introduce spi_delay struct as "value + unit" &  spi_delay_exec()
+Date:   Fri, 13 Sep 2019 14:55:47 +0300
+Message-ID: <20190913115549.3823-3-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190913115549.3823-1-alexandru.ardelean@analog.com>
+References: <20190913115549.3823-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(376002)(39860400002)(199004)(189003)(54534003)(1076003)(316002)(478600001)(486006)(26005)(14444005)(70206006)(70586007)(107886003)(186003)(4743002)(47776003)(966005)(6306002)(305945005)(2616005)(126002)(54906003)(426003)(7636002)(106002)(246002)(336012)(50226002)(2870700001)(4326008)(44832011)(5660300002)(110136005)(51416003)(50466002)(2201001)(8676002)(86362001)(48376002)(36756003)(7696005)(6666004)(8936002)(476003)(2906002)(356004)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR03MB5235;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(189003)(199004)(8676002)(2906002)(50466002)(6666004)(356004)(14444005)(5660300002)(106002)(47776003)(50226002)(2870700001)(107886003)(2201001)(36756003)(8936002)(48376002)(86362001)(478600001)(486006)(316002)(186003)(126002)(26005)(44832011)(336012)(11346002)(476003)(76176011)(305945005)(70206006)(446003)(7636002)(70586007)(2616005)(426003)(7696005)(110136005)(54906003)(4326008)(246002)(51416003)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4856;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 64204954-c98e-4c0e-b6f6-08d7382831b8
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BY5PR03MB5235;
-X-MS-TrafficTypeDiagnostic: BY5PR03MB5235:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <BY5PR03MB52356F0AEF106FE19EEE1440F9B30@BY5PR03MB5235.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: 0b624ec9-e465-4e28-436f-08d7382833d3
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BYAPR03MB4856;
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4856:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB48562274EF901AC6959DA96FF9B30@BYAPR03MB4856.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-Forefront-PRVS: 0159AC2B97
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: SDp3Rfp8iwiDGI5i0EGQ7pcwj/6So+SFgExpTtwNu7HVcG328sIuaXq/7VZmv5g1y8+LHxqybLAARM7vZPJKqZ84ASj8HSAdHK02OCMlZc7mOJqgUT0R1IHFrgSq0ZmWrUa/RGhUPeGWF0PIgTW87ibnozz4b6S1Q2JX4fslEzLsmLxolZQ/p9zpgUVNHG6DjaBAsnOErYITPn76aBWicb8IBVRbbiTvv79UdNG4ryx2jbOKKWbpgsFieA2bGOq9c2TGuIjrvRRphHO42I/I1XFGm/W4puabjo2D5qV+IPB1DjaKOgZAxvRlqe2IQHISgAGV/Lz/BGS/HAyXzPTi0bMUcq46Tv9F2W12e9MG9T6QtlLaIlmacpmuEpBHUWhH+nziSOWH9qfKsDgeJYt2pkPbjhFHm/8czhbQUEYhnd0=
+X-Microsoft-Antispam-Message-Info: 5XZYe7t6MXOao0NzsCJbe+gqVKCrJL4JkXvG4yHZ09usUM12iZw7qLpoZf7eYzLpWncNHd5qVqBzaZe5pfgfUgGhHDNuVNzvrkUww4hKPc3kkjWIBev692SlfaMYU9D67EodLlyBF/unEFM2/+KETY2w8halNNjT7v7YCqTXpQGhla0K8Vr86yQkj38e8SrzYFrZ7Y/9gqGizNMVze3zhm3BpkuRkWu0I85lWpc9kRCIfy5AnyEEudXnr0czSA3sOzCywiFx4HS3K5xfb/01Q9IGaN8L5wLY46mD8e8OuicC0oA84XmunxpxbN25VmNupyBP3BHlDHJwUDq9UpX/KlI4VApSVkPH0fqmE0JHFQejjaZxYr1l/pF7IQXUJ9OTa9gmPpZQenMBdHvYjZoMDARUsUbJASkYzMyuCR19y5E=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2019 08:55:57.9019
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2019 08:56:01.4294
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64204954-c98e-4c0e-b6f6-08d7382831b8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b624ec9-e465-4e28-436f-08d7382833d3
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5235
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4856
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-13_05:2019-09-11,2019-09-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 phishscore=0 impostorscore=0 suspectscore=0 mlxlogscore=881
- clxscore=1015 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1908290000 definitions=main-1909130085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Discussion reference:
-  https://lore.kernel.org/lkml/20190913114550.956-1-alexandru.ardelean@analog.com/
+There are plenty of delays that have been introduced in SPI core. Most of
+them are in micro-seconds, some need to be in nano-seconds, and some in
+clock-cycles.
 
-This changeset introduces an `spi_delay` struct/data-type and makes the
-IIO ADIS driver library the first user of this.
+For some of these delays (related to transfers & CS timing) it may make
+sense to have a `spi_delay` struct that abstracts these a bit.
 
-The patchset base is Jonathan's `iio/togreg` branch, but it also applies on
-Mark's `spi/for-next` branch.
+The important element of these delays [for unification] seems to be the
+`unit` of the delay.
+It looks like micro-seconds is good enough for most people, but every-once
+in a while, some delays seem to require other units of measurement.
 
-The reasons for choosing `cs_change_delay`, is:
-1. this change introduces delay units
-2. it is not yet widely used, meaning it can still be changed 
+This change adds the `spi_delay` struct & a `spi_delay_exec()` function
+that processes a `spi_delay` object/struct to execute the delay.
+It's a copy of the `cs_change_delay` mechanism, but without the default
+for 10 uS.
 
-Some delays like `delay` from `spi_transfer` would require a longer
-update-time change & discussion.
+The clock-cycle delay unit is a bit special, as it needs to be bound to an
+`spi_transfer` object to execute.
 
-Alexandru Ardelean (4):
-  spi: move `cs_change_delay` backwards compat logic outside switch
-  spi: introduce spi_delay struct as "value + unit" &  spi_delay_exec()
-  spi: make `cs_change_delay` the first user of the `spi_delay` logic
-  iio: imu: adis: convert cs_change_delay to spi_delay struct
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/spi/spi.c       | 51 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/spi/spi.h | 18 ++++++++++++---
+ 2 files changed, 66 insertions(+), 3 deletions(-)
 
- drivers/iio/imu/adis.c  | 24 +++++++--------
- drivers/spi/spi.c       | 68 +++++++++++++++++++++++++++++++----------
- include/linux/spi/spi.h | 22 +++++++++----
- 3 files changed, 80 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index c90e02e6d62f..1883de8ffa82 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1106,6 +1106,57 @@ static void _spi_transfer_delay_ns(u32 ns)
+ 	}
+ }
+ 
++static int _spi_delay_to_ns(struct spi_delay *_delay, struct spi_transfer *xfer)
++{
++	u32 delay = _delay->value;
++	u32 unit = _delay->unit;
++	u32 hz;
++
++	if (!delay)
++		return 0;
++
++	switch (unit) {
++	case SPI_DELAY_UNIT_USECS:
++		delay *= 1000;
++		break;
++	case SPI_DELAY_UNIT_NSECS: /* nothing to do here */
++		break;
++	case SPI_DELAY_UNIT_SCK:
++		/* clock cycles need to be obtained from spi_transfer */
++		if (!xfer)
++			return -EINVAL;
++		/* if there is no effective speed know, then approximate
++		 * by underestimating with half the requested hz
++		 */
++		hz = xfer->effective_speed_hz ?: xfer->speed_hz / 2;
++		if (!hz)
++			return -EINVAL;
++		delay *= DIV_ROUND_UP(1000000000, hz);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return delay;
++}
++
++int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer)
++{
++	int delay;
++
++	if (!_delay)
++		return -EINVAL;
++
++	delay = _spi_delay_to_ns(_delay, xfer);
++	if (delay < 0)
++		return delay;
++
++	_spi_transfer_delay_ns(delay);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(spi_delay_exec);
++
+ static void _spi_transfer_cs_change_delay(struct spi_message *msg,
+ 					  struct spi_transfer *xfer)
+ {
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index af4f265d0f67..c18cfa7cda35 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -89,6 +89,21 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
+ #define SPI_STATISTICS_INCREMENT_FIELD(stats, field)	\
+ 	SPI_STATISTICS_ADD_TO_FIELD(stats, field, 1)
+ 
++/**
++ * struct spi_delay - SPI delay information
++ * @value: Value for the delay
++ * @unit: Unit for the delay
++ */
++struct spi_delay {
++#define SPI_DELAY_UNIT_USECS	0
++#define SPI_DELAY_UNIT_NSECS	1
++#define SPI_DELAY_UNIT_SCK	2
++	u16	value;
++	u8	unit;
++};
++
++extern int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer);
++
+ /**
+  * struct spi_device - Controller side proxy for an SPI slave device
+  * @dev: Driver model representation of the device.
+@@ -834,9 +849,6 @@ struct spi_transfer {
+ 	u16		delay_usecs;
+ 	u16		cs_change_delay;
+ 	u8		cs_change_delay_unit;
+-#define SPI_DELAY_UNIT_USECS	0
+-#define SPI_DELAY_UNIT_NSECS	1
+-#define SPI_DELAY_UNIT_SCK	2
+ 	u32		speed_hz;
+ 	u16		word_delay;
+ 
 -- 
-
-Changelog v1 -> v2:
-* split away from the RFC patchset, which aims to be a broader explanation
-  for this changeset; parts of v1 are not 100% defined yet, and may require
-  some discussion and refinement.
-
 2.20.1
 
