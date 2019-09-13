@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24458C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34ACD206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00F6206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381035;
-	bh=w9rMOSJJjyio0AAEDtCnA2QRY8NZqeOX69wnXBT1yE4=;
+	s=default; t=1568381040;
+	bh=Rf6qUyXdmzvg5p/hB2kjRxuWuQju+uozMGVXAP2Bo7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqONdhV+y16Njbo+9Sj8/j6UeT42uw3zdy0BGwRE71bvAHp/0FfGekYAJbO6x2w8o
-	 QmVzTW0X+ts4Xq/QXgDUnjSsbLCD2sPU+Wegvb3euQDc9BR05qOXvzm3fmXRyzOmdm
-	 PB0irtf/AT/Gi3uFXWhpko1tCHJlP/Y9/nfNrjCs=
+	b=1QsRGhVbYYth7nxNTUMt+jBGx/pYtWUK8AroJz52frTO0syDL12ieFV9B+Qw5ep47
+	 pgAQ4exAnaG0avN2/fn4YM990vkP2KgBJoB+83eS9t0Fq6O6FzHDVB3NgXNV4iaO8h
+	 4s7fQ0xRJd9kZ6XkWhmoBp12QI0pjwnyxQ+06KRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390619AbfIMNUl (ORCPT
+        id S2390603AbfIMNX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389469AbfIMNUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:38 -0400
+        id S2390039AbfIMNUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:33 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8421206BB;
-        Fri, 13 Sep 2019 13:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1BD7206A5;
+        Fri, 13 Sep 2019 13:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380836;
-        bh=w9rMOSJJjyio0AAEDtCnA2QRY8NZqeOX69wnXBT1yE4=;
+        s=default; t=1568380833;
+        bh=Rf6qUyXdmzvg5p/hB2kjRxuWuQju+uozMGVXAP2Bo7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhGUfW7g8FCAKQGhwWOBEG7oWeUYLfkNQnJqAXlwRa40YjsbASLsdVcKTZGv6lyV+
-         kIUddXs5jqc9nziA8v/oGBJSekUUWjMSMRN+MHu8yCrhMjRO9fABk9t9VtemrdXCjl
-         MYVD9n0vSeXewtyzzq2eANUVAG7KwhuzLay9HpTU=
+        b=AorLgTSiLXomoKrgIzVIrvfFBgRTOqWji5xwi6f71to0y5T2HRlwSPeuAeXcr87x1
+         vyg5Rd06ye+0LW+jxkpm2s2l9DO80HAUq6i2AlhQz9eHTtXsff/VZ2Jx3YsFCXnBNN
+         u39RYKJUNlYqfYL8aUc7cqNFBs3q2Lco1F5ncHG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Daniel Drake <drake@endlessm.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Karol Herbst <kherbst@redhat.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/190] PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
-Date:   Fri, 13 Sep 2019 14:07:21 +0100
-Message-Id: <20190913130614.757255328@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 185/190] ext4: unsigned int compared against zero
+Date:   Fri, 13 Sep 2019 14:07:20 +0100
+Message-Id: <20190913130614.664496925@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -68,50 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad54567ad5d8e938ee6cf02e4f3867f18835ae6e ]
+[ Upstream commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c ]
 
-quirk_reset_lenovo_thinkpad_50_nvgpu() resets NVIDIA GPUs to work around
-an apparent BIOS defect.  It previously used pci_reset_function(), and
-the available method was a bus reset, which was fine because there was
-only one function on the bus.  After b516ea586d71 ("PCI: Enable NVIDIA
-HDA controllers"), there are now two functions (the HDA controller and
-the GPU itself) on the bus, so the reset fails.
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-Use pci_reset_bus() explicitly instead of pci_reset_function() since it's
-OK to reset both devices.
-
-[bhelgaas: commit log, add e0547c81bfcf]
-Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-Fixes: e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary")
-Link: https://lore.kernel.org/r/20190801220117.14952-1-lyude@redhat.com
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Ben Skeggs <bskeggs@redhat.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Aaron Plattner <aplattner@nvidia.com>
-Cc: Peter Wu <peter@lekensteyn.nl>
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: Karol Herbst <kherbst@redhat.com>
-Cc: Maik Freudenberg <hhfeuer@gmx.de>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/block_validity.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 311f8a33e62ff..06be52912dcdb 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5162,7 +5162,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
- 	 */
- 	if (ioread32(map + 0x2240c) & 0x2) {
- 		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
--		ret = pci_reset_function(pdev);
-+		ret = pci_reset_bus(pdev);
- 		if (ret < 0)
- 			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
- 	}
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index cd7129b622f85..e8e27cdc2f677 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
+ 
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
 -- 
 2.20.1
 
