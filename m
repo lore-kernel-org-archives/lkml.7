@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE04C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB2C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBFA20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72CD20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381290;
-	bh=E+2GyDF2GpOdDe1jvJJqYR6qDgBAdOdvnLQWd2ZCtrs=;
+	s=default; t=1568381293;
+	bh=86BMGjweWwnZhIRJzScChpFhXYlUScemP/fGYB6du+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVhxEn5h28iK0cZ4cNDlovPClInxdVvK/+hBs1Hj0wXP9wr9Ee8+2UJilHsG8JCoD
-	 Y4ePYJ3SArqjxOHeQaZpUhv5LqzZny5f13NuKtDMHxps+MXFwzYTpHpwt73FN+Cgyn
-	 MreO1Fm16yGjZoNHGLGdYyOJDuyUP01V9eWto5VU=
+	b=J/Mkw6zQsRa2U8bpw6v8cicpmitqQgq1fTaFevVT/AKbD+2YeYYBBSnqMo6Gzpx2X
+	 uyrLVk9hjPGLG71taBG9Z6V/D8PNbXFvFC+QCC/a+mtQ1kIPOu+6gyrFa3afnwBqPp
+	 S9MfmqXrH+xMf8X4QrPTCe16h8hR8+3/q4kAXctQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391013AbfIMNZe (ORCPT
+        id S2391371AbfIMNZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:25:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55626 "EHLO mx1.redhat.com"
+        Fri, 13 Sep 2019 09:25:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45394 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391379AbfIMNZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:25:31 -0400
+        id S2391356AbfIMNZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:25:27 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5F41210DCC80;
-        Fri, 13 Sep 2019 13:25:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C1493308A9E2;
+        Fri, 13 Sep 2019 13:25:26 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10B495C1D4;
-        Fri, 13 Sep 2019 13:25:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BCD615C1D4;
+        Fri, 13 Sep 2019 13:25:24 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -43,127 +43,140 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 36/73] libperf: Add perf_evlist__alloc_pollfd function
-Date:   Fri, 13 Sep 2019 15:23:18 +0200
-Message-Id: <20190913132355.21634-37-jolsa@kernel.org>
+Subject: [PATCH 34/73] libperf: Add libperf_init call to tests
+Date:   Fri, 13 Sep 2019 15:23:16 +0200
+Message-Id: <20190913132355.21634-35-jolsa@kernel.org>
 In-Reply-To: <20190913132355.21634-1-jolsa@kernel.org>
 References: <20190913132355.21634-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 13 Sep 2019 13:25:31 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 13 Sep 2019 13:25:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move perf_evlist__alloc_pollfd function under libperf,
-it will be used in following patches.
+Adding libperf_init call to automated tests.
 
-Link: http://lkml.kernel.org/n/tip-ak1oqlj43qsbioo7q9m5fg9t@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-xxpguwr7u2jryhsn7wjybexz@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/evlist.c                  | 21 +++++++++++++++++++++
- tools/perf/lib/include/internal/evlist.h |  2 ++
- tools/perf/util/evlist.c                 | 23 +----------------------
- tools/perf/util/evlist.h                 |  1 -
- 4 files changed, 24 insertions(+), 23 deletions(-)
+ tools/perf/lib/tests/test-cpumap.c    |  8 ++++++++
+ tools/perf/lib/tests/test-evlist.c    | 10 ++++++++++
+ tools/perf/lib/tests/test-evsel.c     |  8 ++++++++
+ tools/perf/lib/tests/test-threadmap.c |  8 ++++++++
+ 4 files changed, 34 insertions(+)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 35467d99cea5..0f84f5dc519f 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -237,3 +237,24 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
- 	perf_evlist__id_add(evlist, evsel, cpu, thread, id);
- 	return 0;
- }
-+
-+int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
+diff --git a/tools/perf/lib/tests/test-cpumap.c b/tools/perf/lib/tests/test-cpumap.c
+index 76a43cfb83a1..4224d6f213f8 100644
+--- a/tools/perf/lib/tests/test-cpumap.c
++++ b/tools/perf/lib/tests/test-cpumap.c
+@@ -2,12 +2,20 @@
+ #include <perf/cpumap.h>
+ #include <internal/tests.h>
+ 
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
 +{
-+	int nr_cpus = perf_cpu_map__nr(evlist->cpus);
-+	int nr_threads = perf_thread_map__nr(evlist->threads);
-+	int nfds = 0;
-+	struct perf_evsel *evsel;
-+
-+	perf_evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->system_wide)
-+			nfds += nr_cpus;
-+		else
-+			nfds += nr_cpus * nr_threads;
-+	}
-+
-+	if (fdarray__available_entries(&evlist->pollfd) < nfds &&
-+	    fdarray__grow(&evlist->pollfd, nfds) < 0)
-+		return -ENOMEM;
-+
-+	return 0;
++	return vfprintf(stderr, fmt, ap);
 +}
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 7d64185cfabd..88c0dfaf0ddc 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -24,6 +24,8 @@ struct perf_evlist {
- 	struct hlist_head	 heads[PERF_EVLIST__HLIST_SIZE];
- };
- 
-+int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
 +
- /**
-  * __perf_evlist__for_each_entry - iterate thru all the evsels
-  * @list: list_head instance to iterate
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 433e9af6e063..664c8e87ec96 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -397,27 +397,6 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
- 		return perf_evlist__enable_event_thread(evlist, evsel, idx);
- }
- 
--int perf_evlist__alloc_pollfd(struct evlist *evlist)
--{
--	int nr_cpus = perf_cpu_map__nr(evlist->core.cpus);
--	int nr_threads = perf_thread_map__nr(evlist->core.threads);
--	int nfds = 0;
--	struct evsel *evsel;
--
--	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->core.system_wide)
--			nfds += nr_cpus;
--		else
--			nfds += nr_cpus * nr_threads;
--	}
--
--	if (fdarray__available_entries(&evlist->core.pollfd) < nfds &&
--	    fdarray__grow(&evlist->core.pollfd, nfds) < 0)
--		return -ENOMEM;
--
--	return 0;
--}
--
- static int __perf_evlist__add_pollfd(struct evlist *evlist, int fd,
- 				     struct mmap *map, short revent)
+ int main(int argc, char **argv)
  {
-@@ -943,7 +922,7 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 	if (!evlist->mmap)
- 		return -ENOMEM;
+ 	struct perf_cpu_map *cpus;
  
--	if (evlist->core.pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
-+	if (evlist->core.pollfd.entries == NULL && perf_evlist__alloc_pollfd(&evlist->core) < 0)
- 		return -ENOMEM;
+ 	__T_START;
  
- 	evlist->core.mmap_len = evlist__mmap_size(pages);
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 204315516c32..9c90df51ce08 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -114,7 +114,6 @@ perf_evlist__find_tracepoint_by_name(struct evlist *evlist,
- 				     const char *name);
++	libperf_init(libperf_print);
++
+ 	cpus = perf_cpu_map__dummy_new();
+ 	if (!cpus)
+ 		return -1;
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
+index 4e1407f20ffd..e6b2ab2e2bde 100644
+--- a/tools/perf/lib/tests/test-evlist.c
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -1,4 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdarg.h>
+ #include <linux/perf_event.h>
+ #include <perf/cpumap.h>
+ #include <perf/threadmap.h>
+@@ -6,6 +8,12 @@
+ #include <perf/evsel.h>
+ #include <internal/tests.h>
  
- int perf_evlist__add_pollfd(struct evlist *evlist, int fd);
--int perf_evlist__alloc_pollfd(struct evlist *evlist);
- int perf_evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask);
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ static int test_stat_cpu(void)
+ {
+ 	struct perf_cpu_map *cpus;
+@@ -177,6 +185,8 @@ int main(int argc, char **argv)
+ {
+ 	__T_START;
  
- int perf_evlist__poll(struct evlist *evlist, int timeout);
++	libperf_init(libperf_print);
++
+ 	test_stat_cpu();
+ 	test_stat_thread();
+ 	test_stat_thread_enable();
+diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
+index 2c648fe5617e..64d2257a93cb 100644
+--- a/tools/perf/lib/tests/test-evsel.c
++++ b/tools/perf/lib/tests/test-evsel.c
+@@ -5,6 +5,12 @@
+ #include <perf/evsel.h>
+ #include <internal/tests.h>
+ 
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ static int test_stat_cpu(void)
+ {
+ 	struct perf_cpu_map *cpus;
+@@ -116,6 +122,8 @@ int main(int argc, char **argv)
+ {
+ 	__T_START;
+ 
++	libperf_init(libperf_print);
++
+ 	test_stat_cpu();
+ 	test_stat_thread();
+ 	test_stat_thread_enable();
+diff --git a/tools/perf/lib/tests/test-threadmap.c b/tools/perf/lib/tests/test-threadmap.c
+index 10a4f4cbbdd5..9b72c43c8c59 100644
+--- a/tools/perf/lib/tests/test-threadmap.c
++++ b/tools/perf/lib/tests/test-threadmap.c
+@@ -2,12 +2,20 @@
+ #include <perf/threadmap.h>
+ #include <internal/tests.h>
+ 
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ int main(int argc, char **argv)
+ {
+ 	struct perf_thread_map *threads;
+ 
+ 	__T_START;
+ 
++	libperf_init(libperf_print);
++
+ 	threads = perf_thread_map__new_dummy();
+ 	if (!threads)
+ 		return -1;
 -- 
 2.21.0
 
