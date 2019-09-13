@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD38C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99986C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BDC214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7238F206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380474;
-	bh=PKfSZ84nsJ5I2rmMY3QuJCA9lr7zMYLUW9zcMh8N70g=;
+	s=default; t=1568380477;
+	bh=UDR+5hImiLzYx7LmLJEvKFLTLIW+pBVxrLeNRlnantY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rAdvOofWvtxghxJlxUBaHFpqnCtO0km5FPnqhF+iOizemXBkGwfaN97WLWryWOYWA
-	 qCUdU1J9VAnZhO7JvkShU2pjatDs/i+Dwn83YckoKXnGLQG5tS/2WfihnOp+PXVAgA
-	 5DLseO5x2FWbz8KZpfFRPP0gI1gwHl3AjDR71QJc=
+	b=FgyotWGeT/z25Ys+BvDHvwBU+aA2H7AkhN1XO/g362e+bMhxIdrD4vTIiMS2KV4CC
+	 DctPoKNvfx7MzxCONqTIW8Ut4iqPf9RveYeP6iU/8tVSLs4It0WYpB1asov6+667wZ
+	 GLEagDkvfb5v5sn7IM8cK2LBPw0o8lsASmVwJahM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389542AbfIMNOd (ORCPT
+        id S2389552AbfIMNOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40450 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388983AbfIMNOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:32 -0400
+        id S2388983AbfIMNOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:14:35 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC9E2208C0;
-        Fri, 13 Sep 2019 13:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B539E21734;
+        Fri, 13 Sep 2019 13:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380471;
-        bh=PKfSZ84nsJ5I2rmMY3QuJCA9lr7zMYLUW9zcMh8N70g=;
+        s=default; t=1568380474;
+        bh=UDR+5hImiLzYx7LmLJEvKFLTLIW+pBVxrLeNRlnantY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnyPhEJqSOSmjqQT4EJVnvpwbEH5/IZ6hTEwbw4BV4WI/WLAfEg0GEFf7Zlh12WCm
-         DR7qQRh8CFiES3YDfXFljDdixZ1X+AzSRJdn8I3N6MZ7VL7jhsdrLmRogoevkUpJwj
-         +GuMMSr+9nxJsemLMZtN4KjdE/gXXS6nh06DDAsw=
+        b=wp4pWSbGeQRQLNNTjuVral8rt1vd9Or8TuyiFIgtQB2XMNmxCQ9mjATu240zXZx/d
+         VqyvYKOv7LqJKBv2KHs6IfvFHsT43vfBRBuc4dk1t5m1xX3kR11OYiSusi900MIHyU
+         P7V/+E2+jnjRSOvvESLJV/0H0FRI8jXKLWRjI1xM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/190] btrfs: Fix error handling in btrfs_cleanup_ordered_extents
-Date:   Fri, 13 Sep 2019 14:05:23 +0100
-Message-Id: <20190913130605.118534456@linuxfoundation.org>
+Subject: [PATCH 4.19 077/190] ARC: mm: do_page_fault fixes #1: relinquish mmap_sem if signal arrives while handle_mm_fault
+Date:   Fri, 13 Sep 2019 14:05:32 +0100
+Message-Id: <20190913130605.678955806@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,129 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d1051d6ebf8ef3517a5a3cf82bba8436d190f1c2 ]
+[ Upstream commit 4d447455e73b47c43dd35fcc38ed823d3182a474 ]
 
-Running btrfs/124 in a loop hung up on me sporadically with the
-following call trace:
+do_page_fault() forgot to relinquish mmap_sem if a signal came while
+handling handle_mm_fault() - due to say a ctl+c or oom etc.
+This would later cause a deadlock by acquiring it twice.
 
-	btrfs           D    0  5760   5324 0x00000000
-	Call Trace:
-	 ? __schedule+0x243/0x800
-	 schedule+0x33/0x90
-	 btrfs_start_ordered_extent+0x10c/0x1b0 [btrfs]
-	 ? wait_woken+0xa0/0xa0
-	 btrfs_wait_ordered_range+0xbb/0x100 [btrfs]
-	 btrfs_relocate_block_group+0x1ff/0x230 [btrfs]
-	 btrfs_relocate_chunk+0x49/0x100 [btrfs]
-	 btrfs_balance+0xbeb/0x1740 [btrfs]
-	 btrfs_ioctl_balance+0x2ee/0x380 [btrfs]
-	 btrfs_ioctl+0x1691/0x3110 [btrfs]
-	 ? lockdep_hardirqs_on+0xed/0x180
-	 ? __handle_mm_fault+0x8e7/0xfb0
-	 ? _raw_spin_unlock+0x24/0x30
-	 ? __handle_mm_fault+0x8e7/0xfb0
-	 ? do_vfs_ioctl+0xa5/0x6e0
-	 ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
-	 do_vfs_ioctl+0xa5/0x6e0
-	 ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-	 ksys_ioctl+0x3a/0x70
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x60/0x1b0
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This came to light when running libc testsuite tst-tls3-malloc test but
+is likely also the cause for prior seen LTP failures. Using lockdep
+clearly showed what the issue was.
 
-This happens because during page writeback it's valid for
-writepage_delalloc to instantiate a delalloc range which doesn't belong
-to the page currently being written back.
+| # while true; do ./tst-tls3-malloc ; done
+| Didn't expect signal from child: got `Segmentation fault'
+| ^C
+| ============================================
+| WARNING: possible recursive locking detected
+| 4.17.0+ #25 Not tainted
+| --------------------------------------------
+| tst-tls3-malloc/510 is trying to acquire lock:
+| 606c7728 (&mm->mmap_sem){++++}, at: __might_fault+0x28/0x5c
+|
+|but task is already holding lock:
+|606c7728 (&mm->mmap_sem){++++}, at: do_page_fault+0x9c/0x2a0
+|
+| other info that might help us debug this:
+|  Possible unsafe locking scenario:
+|
+|       CPU0
+|       ----
+|  lock(&mm->mmap_sem);
+|  lock(&mm->mmap_sem);
+|
+| *** DEADLOCK ***
+|
 
-The reason this case is valid is due to find_lock_delalloc_range
-returning any available range after the passed delalloc_start and
-ignoring whether the page under writeback is within that range.
+------------------------------------------------------------
+What the change does is not obvious (note to myself)
 
-In turn ordered extents (OE) are always created for the returned range
-from find_lock_delalloc_range. If, however, a failure occurs while OE
-are being created then the clean up code in btrfs_cleanup_ordered_extents
-will be called.
+prior code was
 
-Unfortunately the code in btrfs_cleanup_ordered_extents doesn't consider
-the case of such 'foreign' range being processed and instead it always
-assumes that the range OE are created for belongs to the page. This
-leads to the first page of such foregin range to not be cleaned up since
-it's deliberately missed and skipped by the current cleaning up code.
+| do_page_fault
+|
+|   down_read()		<-- lock taken
+|   handle_mm_fault	<-- signal pending as this runs
+|   if fatal_signal_pending
+|       if VM_FAULT_ERROR
+|           up_read
+|       if user_mode
+|          return	<-- lock still held, this was the BUG
 
-Fix this by correctly checking whether the current page belongs to the
-range being instantiated and if so adjsut the range parameters passed
-for cleaning up. If it doesn't, then just clean the whole OE range
-directly.
+New code
 
-Fixes: 524272607e88 ("btrfs: Handle delalloc error correctly to avoid ordered extent hang")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+| do_page_fault
+|
+|   down_read()		<-- lock taken
+|   handle_mm_fault	<-- signal pending as this runs
+|   if fatal_signal_pending
+|       if VM_FAULT_RETRY
+|          return       <-- not same case as above, but still OK since
+|                           core mm already relinq lock for FAULT_RETRY
+|    ...
+|
+|   < Now falls through for bug case above >
+|
+|   up_read()		<-- lock relinquished
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ arch/arc/mm/fault.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index bfacce295ef1e..98c535ae038da 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -110,17 +110,17 @@ static void __endio_write_update_ordered(struct inode *inode,
-  * extent_clear_unlock_delalloc() to clear both the bits EXTENT_DO_ACCOUNTING
-  * and EXTENT_DELALLOC simultaneously, because that causes the reserved metadata
-  * to be released, which we want to happen only when finishing the ordered
-- * extent (btrfs_finish_ordered_io()). Also note that the caller of
-- * btrfs_run_delalloc_range already does proper cleanup for the first page of
-- * the range, that is, it invokes the callback writepage_end_io_hook() for the
-- * range of the first page.
-+ * extent (btrfs_finish_ordered_io()).
-  */
- static inline void btrfs_cleanup_ordered_extents(struct inode *inode,
--						 const u64 offset,
--						 const u64 bytes)
-+						 struct page *locked_page,
-+						 u64 offset, u64 bytes)
- {
- 	unsigned long index = offset >> PAGE_SHIFT;
- 	unsigned long end_index = (offset + bytes - 1) >> PAGE_SHIFT;
-+	u64 page_start = page_offset(locked_page);
-+	u64 page_end = page_start + PAGE_SIZE - 1;
-+
- 	struct page *page;
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index db6913094be3c..f28db0b112a30 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -143,12 +143,17 @@ good_area:
+ 	 */
+ 	fault = handle_mm_fault(vma, address, flags);
  
- 	while (index <= end_index) {
-@@ -131,8 +131,18 @@ static inline void btrfs_cleanup_ordered_extents(struct inode *inode,
- 		ClearPagePrivate2(page);
- 		put_page(page);
+-	/* If Pagefault was interrupted by SIGKILL, exit page fault "early" */
+ 	if (unlikely(fatal_signal_pending(current))) {
+-		if ((fault & VM_FAULT_ERROR) && !(fault & VM_FAULT_RETRY))
+-			up_read(&mm->mmap_sem);
+-		if (user_mode(regs))
++
++		/*
++		 * if fault retry, mmap_sem already relinquished by core mm
++		 * so OK to return to user mode (with signal handled first)
++		 */
++		if (fault & VM_FAULT_RETRY) {
++			if (!user_mode(regs))
++				goto no_context;
+ 			return;
++		}
  	}
--	return __endio_write_update_ordered(inode, offset + PAGE_SIZE,
--					    bytes - PAGE_SIZE, false);
-+
-+	/*
-+	 * In case this page belongs to the delalloc range being instantiated
-+	 * then skip it, since the first page of a range is going to be
-+	 * properly cleaned up by the caller of run_delalloc_range
-+	 */
-+	if (page_start >= offset && page_end <= (offset + bytes - 1)) {
-+		offset += PAGE_SIZE;
-+		bytes -= PAGE_SIZE;
-+	}
-+
-+	return __endio_write_update_ordered(inode, offset, bytes, false);
- }
  
- static int btrfs_dirty_inode(struct inode *inode);
-@@ -1629,7 +1639,8 @@ int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
- 					   write_flags);
- 	}
- 	if (ret)
--		btrfs_cleanup_ordered_extents(inode, start, end - start + 1);
-+		btrfs_cleanup_ordered_extents(inode, locked_page, start,
-+					      end - start + 1);
- 	return ret;
- }
- 
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 -- 
 2.20.1
 
