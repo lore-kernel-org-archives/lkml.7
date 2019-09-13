@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BC5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33D3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1472D208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B848B206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380542;
-	bh=ZsgX5z2lSOe2LRzc3NcDZczs7jYpydFb/XsB3NhNePk=;
+	s=default; t=1568380547;
+	bh=glaAkWpahE1sgKI34qcF2w15f41BDvcFRLMcHeDjOR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUUIubbK0t55m4lTPVQUpfuNA4svJyeHWKHdSX0mWhiD++20T06EgTmeClpCNjfFZ
-	 A4pnLX4eVZatbSHShG6fjGtnlZ98GqSm9Y1MSbi4RkIChPovZr7m8le3500n1nDkx0
-	 J8+fgSex6uflEAYiwpn9iF/ysBs3lTJDAiE39UJg=
+	b=QK4BhTd1B8WTZpp3wdo6gfH+UOw1tP1TL5hrikbmOC8RuPoDTCPovE/H5bkuWjFO+
+	 wEKymPwKONdfhJftzvb+FkEBj7rbs4RdIh7oG6jWJCNSoIzsl6Wzj9ReH8Ogmt2bVH
+	 2J8r1uINdNRutb1mOHfYFWybbnVWAQ3xG9mzhCZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbfIMNPk (ORCPT
+        id S2389734AbfIMNPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389717AbfIMNPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:35 -0400
+        id S2389726AbfIMNPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:38 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DF5F208C2;
-        Fri, 13 Sep 2019 13:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0524214AE;
+        Fri, 13 Sep 2019 13:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380534;
-        bh=ZsgX5z2lSOe2LRzc3NcDZczs7jYpydFb/XsB3NhNePk=;
+        s=default; t=1568380537;
+        bh=glaAkWpahE1sgKI34qcF2w15f41BDvcFRLMcHeDjOR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GS22UJ1NtSv97f8AVseWHZYas9mRLnViHftFlMw1qciEbHHrCBPHhrIuRBiJj/6HK
-         bEwa36dAIqxx5QGUJcE4Y453eYbZEAmCDFh1iv03Cre+j8jOiEr2n6nSKymD8w8jcp
-         eHv4xWYmEhoSHZUuObIsP9MMmJOAQL7XkMkMyhM0=
+        b=kUgCROXY4v5K0rVtIKawwwOB8IHvjCq9aLaibZKj86DcLowA3A5sPhcO0IIBlGP/T
+         XHyi3wCmIPO0Nexq8KWdwFPPvg3yklfVJoI7csMLGt304W77aHk+lDuQFAimaxc512
+         OWGRbaddec4ZaFYuQn/PJhezL6i8bSPVgWoooZ7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 067/190] btrfs: Remove extent_io_ops::fill_delalloc
-Date:   Fri, 13 Sep 2019 14:05:22 +0100
-Message-Id: <20190913130605.056342077@linuxfoundation.org>
+Subject: [PATCH 4.19 090/190] iio: adc: exynos-adc: Use proper number of channels for Exynos4x12
+Date:   Fri, 13 Sep 2019 14:05:45 +0100
+Message-Id: <20190913130606.807045201@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,146 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5eaad97af8aeff38debe7d3c69ec3a0d71f8350f ]
+[ Upstream commit 103cda6a3b8d2c10d5f8cd7abad118e9db8f4776 ]
 
-This callback is called only from writepage_delalloc which in turn is
-guaranteed to be called from the data page writeout path. In the end
-there is no reason to have the call to this function to be indrected via
-the extent_io_ops structure. This patch removes the callback definition,
-exports the function and calls it directly. No functional changes.
+Exynos4212 and Exynos4412 have only four ADC channels so using
+"samsung,exynos-adc-v1" compatible (for eight channels ADCv1) on them is
+wrong.  Add a new compatible for Exynos4x12.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ rename to btrfs_run_delalloc_range ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h     |  3 +++
- fs/btrfs/extent_io.c | 20 +++++++++-----------
- fs/btrfs/extent_io.h |  5 -----
- fs/btrfs/inode.c     | 15 +++++++--------
- 4 files changed, 19 insertions(+), 24 deletions(-)
+ .../bindings/iio/adc/samsung,exynos-adc.txt     |  4 +++-
+ drivers/iio/adc/exynos_adc.c                    | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 82682da5a40dd..4644f9b629a53 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3200,6 +3200,9 @@ int btrfs_prealloc_file_range_trans(struct inode *inode,
- 				    struct btrfs_trans_handle *trans, int mode,
- 				    u64 start, u64 num_bytes, u64 min_size,
- 				    loff_t actual_len, u64 *alloc_hint);
-+int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
-+		u64 start, u64 end, int *page_started, unsigned long *nr_written,
-+		struct writeback_control *wbc);
- extern const struct dentry_operations btrfs_dentry_operations;
- #ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
- void btrfs_test_inode_set_ops(struct inode *inode);
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 90b0a6eff5350..cb598eb4f3bd1 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3199,7 +3199,7 @@ static void update_nr_written(struct writeback_control *wbc,
- /*
-  * helper for __extent_writepage, doing all of the delayed allocation setup.
-  *
-- * This returns 1 if our fill_delalloc function did all the work required
-+ * This returns 1 if btrfs_run_delalloc_range function did all the work required
-  * to write the page (copy into inline extent).  In this case the IO has
-  * been started and the page is already unlocked.
-  *
-@@ -3220,7 +3220,7 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
- 	int ret;
- 	int page_started = 0;
+diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
+index a10c1f89037de..e1fe02f3e3e9c 100644
+--- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
+@@ -11,11 +11,13 @@ New driver handles the following
  
--	if (epd->extent_locked || !tree->ops || !tree->ops->fill_delalloc)
-+	if (epd->extent_locked)
- 		return 0;
+ Required properties:
+ - compatible:		Must be "samsung,exynos-adc-v1"
+-				for exynos4412/5250 controllers.
++				for Exynos5250 controllers.
+ 			Must be "samsung,exynos-adc-v2" for
+ 				future controllers.
+ 			Must be "samsung,exynos3250-adc" for
+ 				controllers compatible with ADC of Exynos3250.
++			Must be "samsung,exynos4212-adc" for
++				controllers compatible with ADC of Exynos4212 and Exynos4412.
+ 			Must be "samsung,exynos7-adc" for
+ 				the ADC in Exynos7 and compatibles
+ 			Must be "samsung,s3c2410-adc" for
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index 41da522fc6735..1ca2c4d39f878 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -115,6 +115,7 @@
+ #define MAX_ADC_V2_CHANNELS		10
+ #define MAX_ADC_V1_CHANNELS		8
+ #define MAX_EXYNOS3250_ADC_CHANNELS	2
++#define MAX_EXYNOS4212_ADC_CHANNELS	4
+ #define MAX_S5PV210_ADC_CHANNELS	10
  
- 	while (delalloc_end < page_end) {
-@@ -3233,18 +3233,16 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
- 			delalloc_start = delalloc_end + 1;
- 			continue;
- 		}
--		ret = tree->ops->fill_delalloc(inode, page,
--					       delalloc_start,
--					       delalloc_end,
--					       &page_started,
--					       nr_written, wbc);
-+		ret = btrfs_run_delalloc_range(inode, page, delalloc_start,
-+				delalloc_end, &page_started, nr_written, wbc);
- 		/* File system has been set read-only */
- 		if (ret) {
- 			SetPageError(page);
--			/* fill_delalloc should be return < 0 for error
--			 * but just in case, we use > 0 here meaning the
--			 * IO is started, so we don't want to return > 0
--			 * unless things are going well.
-+			/*
-+			 * btrfs_run_delalloc_range should return < 0 for error
-+			 * but just in case, we use > 0 here meaning the IO is
-+			 * started, so we don't want to return > 0 unless
-+			 * things are going well.
- 			 */
- 			ret = ret < 0 ? ret : -EIO;
- 			goto done;
-diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
-index b4d03e677e1d7..ed27becd963c5 100644
---- a/fs/btrfs/extent_io.h
-+++ b/fs/btrfs/extent_io.h
-@@ -106,11 +106,6 @@ struct extent_io_ops {
- 	/*
- 	 * Optional hooks, called if the pointer is not NULL
- 	 */
--	int (*fill_delalloc)(void *private_data, struct page *locked_page,
--			     u64 start, u64 end, int *page_started,
--			     unsigned long *nr_written,
--			     struct writeback_control *wbc);
--
- 	int (*writepage_start_hook)(struct page *page, u64 start, u64 end);
- 	void (*writepage_end_io_hook)(struct page *page, u64 start, u64 end,
- 				      struct extent_state *state, int uptodate);
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 355ff08e9d44e..bfacce295ef1e 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -110,8 +110,8 @@ static void __endio_write_update_ordered(struct inode *inode,
-  * extent_clear_unlock_delalloc() to clear both the bits EXTENT_DO_ACCOUNTING
-  * and EXTENT_DELALLOC simultaneously, because that causes the reserved metadata
-  * to be released, which we want to happen only when finishing the ordered
-- * extent (btrfs_finish_ordered_io()). Also note that the caller of the
-- * fill_delalloc() callback already does proper cleanup for the first page of
-+ * extent (btrfs_finish_ordered_io()). Also note that the caller of
-+ * btrfs_run_delalloc_range already does proper cleanup for the first page of
-  * the range, that is, it invokes the callback writepage_end_io_hook() for the
-  * range of the first page.
-  */
-@@ -1599,12 +1599,12 @@ static inline int need_force_cow(struct inode *inode, u64 start, u64 end)
+ /* Bit definitions common for ADC_V1 and ADC_V2 */
+@@ -271,6 +272,19 @@ static void exynos_adc_v1_start_conv(struct exynos_adc *info,
+ 	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
  }
  
- /*
-- * extent_io.c call back to do delayed allocation processing
-+ * Function to process delayed allocation (create CoW) for ranges which are
-+ * being touched for the first time.
-  */
--static int run_delalloc_range(void *private_data, struct page *locked_page,
--			      u64 start, u64 end, int *page_started,
--			      unsigned long *nr_written,
--			      struct writeback_control *wbc)
-+int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
-+		u64 start, u64 end, int *page_started, unsigned long *nr_written,
-+		struct writeback_control *wbc)
- {
- 	struct inode *inode = private_data;
- 	int ret;
-@@ -10598,7 +10598,6 @@ static const struct extent_io_ops btrfs_extent_io_ops = {
- 	.readpage_io_failed_hook = btrfs_readpage_io_failed_hook,
- 
- 	/* optional callbacks */
--	.fill_delalloc = run_delalloc_range,
- 	.writepage_end_io_hook = btrfs_writepage_end_io_hook,
- 	.writepage_start_hook = btrfs_writepage_start_hook,
- 	.set_bit_hook = btrfs_set_bit_hook,
++/* Exynos4212 and 4412 is like ADCv1 but with four channels only */
++static const struct exynos_adc_data exynos4212_adc_data = {
++	.num_channels	= MAX_EXYNOS4212_ADC_CHANNELS,
++	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
++	.needs_adc_phy	= true,
++	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
++
++	.init_hw	= exynos_adc_v1_init_hw,
++	.exit_hw	= exynos_adc_v1_exit_hw,
++	.clear_irq	= exynos_adc_v1_clear_irq,
++	.start_conv	= exynos_adc_v1_start_conv,
++};
++
+ static const struct exynos_adc_data exynos_adc_v1_data = {
+ 	.num_channels	= MAX_ADC_V1_CHANNELS,
+ 	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
+@@ -492,6 +506,9 @@ static const struct of_device_id exynos_adc_match[] = {
+ 	}, {
+ 		.compatible = "samsung,s5pv210-adc",
+ 		.data = &exynos_adc_s5pv210_data,
++	}, {
++		.compatible = "samsung,exynos4212-adc",
++		.data = &exynos4212_adc_data,
+ 	}, {
+ 		.compatible = "samsung,exynos-adc-v1",
+ 		.data = &exynos_adc_v1_data,
 -- 
 2.20.1
 
