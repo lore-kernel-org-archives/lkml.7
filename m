@@ -2,105 +2,157 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3622C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03EF20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R58ufm5U"
+	by mail.kernel.org (Postfix) with ESMTP id ED89020693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfIMRLr (ORCPT
+        id S1730735AbfIMRNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 13:11:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41715 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728811AbfIMRLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 13:11:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so18451980pfo.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 10:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=EAgfAE9/X+plL47tISm6pcn0A81GG2Ia3PbX4b/5cuw=;
-        b=R58ufm5U4j39FnWWNt2t2BDJP1afdAUnznyPuRzYGBe9rbkBEPj/WBcjoN5AWIFNTb
-         Ero5JDZkHrsl928NLVWY84uA6SWqrEhz30ENeyoN97gXpQ6t7U7kklNA+HIMlOTXJwOY
-         o5zZw26zCltS/BMJx1EV9YcUaNkqgMe7ocYsuqez+S6xBShpHpscfd6AzG+iuYZ2nguu
-         GF6NS9nXbwOxuruDkuLc/BpHxwqq8DQ4g/0knW1Olva8eKbU0AJip/EIhpxNGChi4mUi
-         Tht0Vi7yDK8OzLUR3dG8cJ03YN/6S4egCfSjUfe1vLDDAWyraKHITK+Kyv+TXXBA4kw9
-         10RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EAgfAE9/X+plL47tISm6pcn0A81GG2Ia3PbX4b/5cuw=;
-        b=E3VytdFt61h32+huKqQOPmDYXcGE2B0SBT8t8qkmI9s3e+MsEjA3BpFK+iRp82UVsI
-         //6qiMI7wnoLYdWoGX/Qbdtx5ds+vGss8fhffa/3N4zqL2wDT2WW3LX0i8aw1ZfFtWlY
-         wMTuAKM/tykG+7eMuHlhYvN01vIsHnFZHgplSjpKeydRWwhFLe/848yeHddDPdGLAN99
-         eUf8QzSpbQfr4hd50gMeoP5a56hA+oclqDLgEZ0Jxfvz5CQg1WK/2gO6CsWK+oQeEIbc
-         qU/J3sdL1lmMVqKLfRQR1wq3lWB+KC8lrlXwGHA/wlSFH4QmbOO7w8zTDHwqgyo4efEC
-         8AwA==
-X-Gm-Message-State: APjAAAXd9LbGvb0veYP5PyKMx13Rc2exlE8eKil7dNIX4IHyyiSTtkL+
-        UM/0hhEytFLXhuXf5dY37s4=
-X-Google-Smtp-Source: APXvYqw5IodN9ClNfpvOqzmKBkV2oBIaWriNHuufubVwgb6hsVebeq2Gf7c5HxBeW036AUt5vAgUSg==
-X-Received: by 2002:a17:90a:2243:: with SMTP id c61mr6359026pje.39.1568394706675;
-        Fri, 13 Sep 2019 10:11:46 -0700 (PDT)
-Received: from SD ([106.222.12.17])
-        by smtp.gmail.com with ESMTPSA id t9sm25684545pgj.89.2019.09.13.10.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 10:11:45 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 22:41:34 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     me@bobcopeland.com
-Cc:     linux-karma-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] omfs: make use of kmemdup
-Message-ID: <20190913171134.GA10301@SD>
+        Fri, 13 Sep 2019 13:13:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:55415 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfIMRNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 13:13:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 10:13:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
+   d="scan'208";a="201012580"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Sep 2019 10:13:22 -0700
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+ <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+ <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+ <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
+ <20190912123532.GB16200@aaronlu>
+ <8373e386-cb99-8f79-a78e-5e79dc962b81@linux.intel.com>
+ <20190913141540.GB81644@aaronlu>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <538c27c1-6756-598f-173f-5c382480690a@linux.intel.com>
+Date:   Fri, 13 Sep 2019 10:13:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190913141540.GB81644@aaronlu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace call to kmalloc followed by memcpy with a direct call
-to kmemdup to achieve same functionality.
+On 9/13/19 7:15 AM, Aaron Lu wrote:
+> On Thu, Sep 12, 2019 at 10:29:13AM -0700, Tim Chen wrote:
 
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- fs/omfs/inode.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+>> The better thing to do is to move one task from cgroupA to another core,
+>> that has only one cgroupA task so it can be paired up
+>> with that lonely cgroupA task.  This will eliminate the forced idle time
+>> for cgropuA both on current core and also the migrated core.
+> 
+> I'm not sure if this is always possible.
 
-diff --git a/fs/omfs/inode.c b/fs/omfs/inode.c
-index b76ec6b88ded..788b41096962 100644
---- a/fs/omfs/inode.c
-+++ b/fs/omfs/inode.c
-@@ -363,12 +363,13 @@ static int omfs_get_imap(struct super_block *sb)
- 		bh = sb_bread(sb, block++);
- 		if (!bh)
- 			goto nomem_free;
--		*ptr = kmalloc(sb->s_blocksize, GFP_KERNEL);
-+
-+		*ptr = kmemdup(bh->b_data, sb->s_blocksize, GFP_KERNEL);
- 		if (!*ptr) {
- 			brelse(bh);
- 			goto nomem_free;
- 		}
--		memcpy(*ptr, bh->b_data, sb->s_blocksize);
-+
- 		if (count < sb->s_blocksize)
- 			memset((void *)*ptr + count, 0xff,
- 				sb->s_blocksize - count);
--- 
-2.20.1
+During update_sg_lb_stats, we can scan for opportunities where pulling a task
+from a source cpu in the sched group to the target dest cpu can reduce the forced idle imbalance.
+And we also prevent task migrations that increase forced idle imbalance.
+
+With those policies in place, we may not achieve perfect balance, but at least
+we will load balance in the right direction to lower forced idle imbalance.
+
+> 
+> Say on a 16cores/32threads machine, there are 3 cgroups, each has 16 cpu
+> intensive tasks, will it be possible to make things perfectly balanced?
+> 
+> Don't get me wrong, I think this kind of load balancing is good and
+> needed, but I'm not sure if we can always make things perfectly
+> balanced. And if not, do we care those few cores where cgroup tasks are
+> not balanced and then, do we need to implement the core_wide cgoup
+> fairness functionality or we don't care since those cores are supposed
+> to be few and isn't a big deal?
+
+Yes, we still need core wide fairness for tasks.  Load balancing is to
+move tasks around so we will have less imbalance of cgroup tasks in a core
+that results in forced idle time.  Once they are in place, we still need
+to maintain fairness in a core.
+
+Tim
 
