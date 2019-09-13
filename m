@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B13C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F25CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0691206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033DC206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381406;
-	bh=lnJVnALC+xXmKEp6Di4Baj2+s1u4pjqDGx/Y+jtrYPc=;
+	s=default; t=1568381413;
+	bh=HkYZv90sZN7NQyNcuQLg+7POxv5e7uxidSp5VsrL/dI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ehiH2FlVpzE9HbthYZlAzJu6QWELbWIPaxrihYySf5aojwQI6EEKYs/pGJ8eHdte
-	 4Dw51m886K/Y83L6/Dk42A2+Hlc7f/djmX+MCtfaqYjG+RzaKab63XceZEsOgjvJ7x
-	 bpO5XToALueHG375nWBXyh8zeWW0xpEH4BYDcP30=
+	b=gnzP+boPExYyTXOcWNKC0vPZCzl04FzUYqNCE4H/wxYblxKpOySY9TfW0vW/lzspj
+	 b/N8qxhLRwELUb8+2fLXM1Y4Q1MVSg20BGhc4zpQGRa33DuUIg43ya70M3DqYnWl2L
+	 91wU1SMv+SzXZpk8ImLchiXp0fWPq8yZ1Xm5400A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391663AbfIMNaF (ORCPT
+        id S2391673AbfIMNaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:30:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:30:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389218AbfIMNR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:56 -0400
+        id S2390071AbfIMNRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:32 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB4CF214AE;
-        Fri, 13 Sep 2019 13:17:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E38D820717;
+        Fri, 13 Sep 2019 13:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380675;
-        bh=lnJVnALC+xXmKEp6Di4Baj2+s1u4pjqDGx/Y+jtrYPc=;
+        s=default; t=1568380652;
+        bh=HkYZv90sZN7NQyNcuQLg+7POxv5e7uxidSp5VsrL/dI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdWx7okdkVlhmVOSaW2tJtq3PH+jHu6hfhAsoSfiMdZFeecYd5vDYFR6Ui2iM40j5
-         n0T0IFoutS/rI0jqmBsK6EoS0U5nGAHbXKiGTxJ+VH0oAZkLbaTtvbLUtWRdNLv1pK
-         qR60GbBp6aHNYWTlvjI+LDNXgLKKTz1widk9fuWA=
+        b=FN9hfDnqxEpXt+kA1R6XGtErq/yiPZJNPrBpB8paSI9RvYSk6wJPBTa0P2TZzfUbH
+         Oi0kdGch+DnwCro/neyaHIq5nlrz5+vV55I5xVJMHRe/5we6HJc3gv1ovftZJHBw0u
+         OOpZiYpeaWObYp2f6UyPxRX62vcAKAl0OceRLazI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 118/190] ext4: protect journal inodes blocks using block_validity
-Date:   Fri, 13 Sep 2019 14:06:13 +0100
-Message-Id: <20190913130609.260876778@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 134/190] ARC: mm: SIGSEGV userspace trying to access kernel virtual memory
+Date:   Fri, 13 Sep 2019 14:06:29 +0100
+Message-Id: <20190913130610.668515923@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -59,103 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 345c0dbf3a30872d9b204db96b5857cd00808cae ]
+[ Upstream commit a8c715b4dd73c26a81a9cc8dc792aa715d8b4bb2 ]
 
-Add the blocks which belong to the journal inode to block_validity's
-system zone so attempts to deallocate or overwrite the journal due a
-corrupted file system where the journal blocks are also claimed by
-another inode.
+As of today if userspace process tries to access a kernel virtual addres
+(0x7000_0000 to 0x7ffff_ffff) such that a legit kernel mapping already
+exists, that process hangs instead of being killed with SIGSEGV
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fix that by ensuring that do_page_fault() handles kenrel vaddr only if
+in kernel mode.
+
+And given this, we can also simplify the code a bit. Now a vmalloc fault
+implies kernel mode so its failure (for some reason) can reuse the
+@no_context label and we can remove @bad_area_nosemaphore.
+
+Reproduce user test for original problem:
+
+------------------------>8-----------------
+ #include <stdlib.h>
+ #include <stdint.h>
+
+ int main(int argc, char *argv[])
+ {
+ 	volatile uint32_t temp;
+
+ 	temp = *(uint32_t *)(0x70000000);
+ }
+------------------------>8-----------------
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c | 48 ++++++++++++++++++++++++++++++++++++++++
- fs/ext4/inode.c          |  4 ++++
- 2 files changed, 52 insertions(+)
+ arch/arc/mm/fault.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 913061c0de1b3..9409b1e11a22e 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
- 	printk(KERN_CONT "\n");
- }
- 
-+static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
-+{
-+	struct inode *inode;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_map_blocks map;
-+	u32 i = 0, err = 0, num, n;
-+
-+	if ((ino < EXT4_ROOT_INO) ||
-+	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
-+		return -EINVAL;
-+	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
-+	while (i < num) {
-+		map.m_lblk = i;
-+		map.m_len = num - i;
-+		n = ext4_map_blocks(NULL, inode, &map, 0);
-+		if (n < 0) {
-+			err = n;
-+			break;
-+		}
-+		if (n == 0) {
-+			i++;
-+		} else {
-+			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
-+				ext4_error(sb, "blocks %llu-%llu from inode %u "
-+					   "overlap system zone", map.m_pblk,
-+					   map.m_pblk + map.m_len - 1, ino);
-+				err = -EFSCORRUPTED;
-+				break;
-+			}
-+			err = add_system_zone(sbi, map.m_pblk, n);
-+			if (err < 0)
-+				break;
-+			i += n;
-+		}
-+	}
-+	iput(inode);
-+	return err;
-+}
-+
- int ext4_setup_system_zone(struct super_block *sb)
- {
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
-@@ -171,6 +213,12 @@ int ext4_setup_system_zone(struct super_block *sb)
- 		if (ret)
- 			return ret;
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 535cf18e8bf2c..4e8143de32e70 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	struct vm_area_struct *vma = NULL;
+ 	struct task_struct *tsk = current;
+ 	struct mm_struct *mm = tsk->mm;
+-	int si_code = 0;
++	int si_code = SEGV_MAPERR;
+ 	int ret;
+ 	vm_fault_t fault;
+ 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+@@ -81,16 +81,14 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	 * only copy the information from the master page table,
+ 	 * nothing more.
+ 	 */
+-	if (address >= VMALLOC_START) {
++	if (address >= VMALLOC_START && !user_mode(regs)) {
+ 		ret = handle_kernel_vaddr_fault(address);
+ 		if (unlikely(ret))
+-			goto bad_area_nosemaphore;
++			goto no_context;
+ 		else
+ 			return;
  	}
-+	if (ext4_has_feature_journal(sb) && sbi->s_es->s_journal_inum) {
-+		ret = ext4_protect_reserved_inode(sb,
-+				le32_to_cpu(sbi->s_es->s_journal_inum));
-+		if (ret)
-+			return ret;
-+	}
  
- 	if (test_opt(sb, DEBUG))
- 		debug_print_tree(sbi);
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index e65559bf77281..cff6277f7a9ff 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -399,6 +399,10 @@ static int __check_block_validity(struct inode *inode, const char *func,
- 				unsigned int line,
- 				struct ext4_map_blocks *map)
- {
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
- 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
- 				   map->m_len)) {
- 		ext4_error_inode(inode, func, line, map->m_pblk,
+-	si_code = SEGV_MAPERR;
+-
+ 	/*
+ 	 * If we're in an interrupt or have no user
+ 	 * context, we must not take the fault..
+@@ -198,7 +196,6 @@ good_area:
+ bad_area:
+ 	up_read(&mm->mmap_sem);
+ 
+-bad_area_nosemaphore:
+ 	/* User mode accesses just cause a SIGSEGV */
+ 	if (user_mode(regs)) {
+ 		tsk->thread.fault_address = address;
 -- 
 2.20.1
 
