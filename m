@@ -2,236 +2,141 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B55C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758BDC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A05C20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7F220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568381614;
+	bh=a2w4CYDBcGWKAeQc/xMACf+a/RKVnsKjdeVupWJ8Ix8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0l4ZxiFD6eLeP0Llk+qDiRYD5rCJtRkz2i9UHe22Y0QI/Fja2QLVWR8fVnwka9LKG
+	 0rZeaFh/ze7vImLgASqOdZ+QBu0NWWXZT5lq2pGjPUzkF1WFONOufJ1siYYd9I5jtw
+	 g/G2p9gmUcm0n/Rb/u/e9VJO0S1RY1fjxooG4ZI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388691AbfIMNKK (ORCPT
+        id S2388677AbfIMNKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55880 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388654AbfIMNKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388665AbfIMNKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 09:10:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9C784AF77;
-        Fri, 13 Sep 2019 13:10:03 +0000 (UTC)
-Subject: Re: [PATCH 6/8] drm/vram: switch vram helper to
- &drm_gem_object_funcs.mmap()
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-7-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <dba5d37c-b1d8-4e25-778e-834eab56ac22@suse.de>
-Date:   Fri, 13 Sep 2019 15:10:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5282214D8;
+        Fri, 13 Sep 2019 13:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380205;
+        bh=a2w4CYDBcGWKAeQc/xMACf+a/RKVnsKjdeVupWJ8Ix8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VtA2iz2nU1EYIUjq5XD/G9OQEWAG7/0zf82lr/ScvBgvX3AGm5VNtgmL5+dfR30h7
+         y7AqP0JXbe/yPxGl/eA99L0KX4/aMVlwwpObgjCuk2zaiTfY34Y/YDoVEB+gpJ8Y5e
+         YR3GFhwsrG1lOLMs7OEjNqAB4U0BL9oTTJhOQ5uU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 13/21] batman-adv: Only read OGM tvlv_len after buffer len check
+Date:   Fri, 13 Sep 2019 14:07:06 +0100
+Message-Id: <20190913130506.836333693@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
+References: <20190913130501.285837292@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190913122908.784-7-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="RmsZZWSXavej7oVe5ush19wY9mOx8b3S7"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---RmsZZWSXavej7oVe5ush19wY9mOx8b3S7
-Content-Type: multipart/mixed; boundary="PJnqTNeeviakBB93394pK2IBJaf2SDsO7";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-Message-ID: <dba5d37c-b1d8-4e25-778e-834eab56ac22@suse.de>
-Subject: Re: [PATCH 6/8] drm/vram: switch vram helper to
- &drm_gem_object_funcs.mmap()
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-7-kraxel@redhat.com>
-In-Reply-To: <20190913122908.784-7-kraxel@redhat.com>
+From: Sven Eckelmann <sven@narfation.org>
 
---PJnqTNeeviakBB93394pK2IBJaf2SDsO7
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
 
-Hi
+Multiple batadv_ogm_packet can be stored in an skbuff. The functions
+batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
+batadv_iv_ogm_aggr_packet() to check if there is another additional
+batadv_ogm_packet in the skb or not before they continue processing the
+packet.
 
-Am 13.09.19 um 14:29 schrieb Gerd Hoffmann:
-> Wire up the new drm_gem_ttm_mmap() helper function,
-> use generic drm_gem_mmap for &fops.mmap and
-> delete dead drm_vram_mm_file_operations_mmap().
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+The length for such an OGM is BATADV_OGM_HLEN +
+batadv_ogm_packet->tvlv_len. The check must first check that at least
+BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> ---
->  include/drm/drm_gem_vram_helper.h     |  9 +------
->  drivers/gpu/drm/drm_gem_vram_helper.c | 34 +--------------------------=
+---
+ net/batman-adv/bat_iv_ogm.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
->  2 files changed, 2 insertions(+), 41 deletions(-)
->=20
-> diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vr=
-am_helper.h
-> index 9aaef4f8c327..9d5526650291 100644
-> --- a/include/drm/drm_gem_vram_helper.h
-> +++ b/include/drm/drm_gem_vram_helper.h
-> @@ -180,13 +180,6 @@ struct drm_vram_mm *drm_vram_helper_alloc_mm(
->  	struct drm_device *dev, uint64_t vram_base, size_t vram_size);
->  void drm_vram_helper_release_mm(struct drm_device *dev);
-> =20
-> -/*
-> - * Helpers for &struct file_operations
-> - */
-> -
-> -int drm_vram_mm_file_operations_mmap(
-> -	struct file *filp, struct vm_area_struct *vma);
-> -
->  /**
->   * define DRM_VRAM_MM_FILE_OPERATIONS - default callback functions for=
- \
->  	&struct file_operations
-> @@ -200,7 +193,7 @@ int drm_vram_mm_file_operations_mmap(
->  	.poll		=3D drm_poll, \
->  	.unlocked_ioctl =3D drm_ioctl, \
->  	.compat_ioctl	=3D drm_compat_ioctl, \
-> -	.mmap		=3D drm_vram_mm_file_operations_mmap, \
-> +	.mmap		=3D drm_gem_mmap, \
->  	.open		=3D drm_open, \
->  	.release	=3D drm_release \
-> =20
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
-m_gem_vram_helper.c
-> index 7bee80c6b6e8..e100b97ea6e3 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -681,6 +681,7 @@ static const struct drm_gem_object_funcs drm_gem_vr=
-am_object_funcs =3D {
->  	.unpin	=3D drm_gem_vram_object_unpin,
->  	.vmap	=3D drm_gem_vram_object_vmap,
->  	.vunmap	=3D drm_gem_vram_object_vunmap,
-> +	.mmap   =3D drm_gem_ttm_mmap,
->  	.print_info =3D drm_gem_ttm_print_info,
->  };
-> =20
-> @@ -915,12 +916,6 @@ static void drm_vram_mm_cleanup(struct drm_vram_mm=
- *vmm)
->  	ttm_bo_device_release(&vmm->bdev);
->  }
-> =20
-> -static int drm_vram_mm_mmap(struct file *filp, struct vm_area_struct *=
-vma,
-> -			    struct drm_vram_mm *vmm)
-> -{
-> -	return ttm_bo_mmap(filp, vma, &vmm->bdev);
-> -}
-> -
->  /*
->   * Helpers for integration with struct drm_device
->   */
-> @@ -976,30 +971,3 @@ void drm_vram_helper_release_mm(struct drm_device =
-*dev)
->  	dev->vram_mm =3D NULL;
->  }
->  EXPORT_SYMBOL(drm_vram_helper_release_mm);
-> -
-> -/*
-> - * Helpers for &struct file_operations
-> - */
-> -
-> -/**
-> - * drm_vram_mm_file_operations_mmap() - \
-> -	Implements &struct file_operations.mmap()
-> - * @filp:	the mapping's file structure
-> - * @vma:	the mapping's memory area
-> - *
-> - * Returns:
-> - * 0 on success, or
-> - * a negative error code otherwise.
-> - */
-> -int drm_vram_mm_file_operations_mmap(
-> -	struct file *filp, struct vm_area_struct *vma)
-> -{
-> -	struct drm_file *file_priv =3D filp->private_data;
-> -	struct drm_device *dev =3D file_priv->minor->dev;
-> -
-> -	if (WARN_ONCE(!dev->vram_mm, "VRAM MM not initialized"))
-> -		return -EINVAL;
-> -
-> -	return drm_vram_mm_mmap(filp, vma, dev->vram_mm);
-> -}
-> -EXPORT_SYMBOL(drm_vram_mm_file_operations_mmap);
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -450,17 +450,23 @@ static u8 batadv_hop_penalty(u8 tq, cons
+  * batadv_iv_ogm_aggr_packet - checks if there is another OGM attached
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm_packet: potential OGM in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+-				      __be16 tvlv_len)
++static bool
++batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
++			  const struct batadv_ogm_packet *ogm_packet)
+ {
+ 	int next_buff_pos = 0;
+ 
+-	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm_packet->tvlv_len);
+ 
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -488,7 +494,7 @@ static void batadv_iv_ogm_send_to_if(str
+ 
+ 	/* adjust all flags and log packets */
+ 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
+-					 batadv_ogm_packet->tvlv_len)) {
++					 batadv_ogm_packet)) {
+ 		/* we might have aggregated direct link packets with an
+ 		 * ordinary base packet
+ 		 */
+@@ -1838,7 +1844,7 @@ static int batadv_iv_ogm_receive(struct
+ 
+ 	/* unpack the aggregated packets and process them one by one */
+ 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					 ogm_packet->tvlv_len)) {
++					 ogm_packet)) {
+ 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM_HLEN;
 
 
---PJnqTNeeviakBB93394pK2IBJaf2SDsO7--
-
---RmsZZWSXavej7oVe5ush19wY9mOx8b3S7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl17lSoACgkQaA3BHVML
-eiMlnAgAuxM3198AW62WoPQh/tnCpRgXAfVVr139GaUue632fn62jXkyNkqemGss
-0k+tOeN7cUqQvZJAnG1nY6dlsRYznmhRBTVeJpKngf/faFDuX8Ndj73KmQ5/JBCU
-UT9lWo7d5XlVOkdsF7Pm7U/haEwYi7HHe6yFdFGDN8P2t4CoCosFGLNqw41mdTlv
-JBrGg+kJbfPYDx/0uKHSO8r5nnwyUKTgAp3sDa3LmwG/wC232x4WHFk7ccDWmCph
-E4qO6KVnXFAWqKZfccnhNGHx1el5aKPBzxEoms/Gr8R2VCF0cNTj2bu4ETwfuDV+
-zUbPrHqLGjwVT+Kf2u3oYUt8Pdvmmg==
-=hVky
------END PGP SIGNATURE-----
-
---RmsZZWSXavej7oVe5ush19wY9mOx8b3S7--
