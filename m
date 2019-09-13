@@ -2,172 +2,117 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB28C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B51AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22333208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n9JgACGr"
+	by mail.kernel.org (Postfix) with ESMTP id 6DEB2208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfIMG4Q (ORCPT
+        id S1728288AbfIMG6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 02:56:16 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:34849 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfIMG4Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 02:56:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568357773;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=C+ukX80c7uifUayDRWycHsjOFJ7Cgc66BbzfwWvYp5E=;
-        b=n9JgACGrreaaj0GSEtWLRwLiOgOFVxq4wzzBG0u7tVA2F9ARBnfhfIZZV8XUNoaoAC
-        nPyR8BVUlTNihF/8yc4QmXP+AOH6vJfPBNlSUALewgCQ7EVpR/xzZ27ctSLDtN7kn2FK
-        2juf/84HHOfzpuJZgByeJG2BI2/UzFs2R22A+ZJ9B/PCTK+qdCuQC7fFPaosD5tVUaj3
-        gS1e93rqXHGHM69t5TzTUQdXeglkdjgLlVFFgBoRttMlqrPAz7UbJ6txAohZFP1Ud7Ky
-        envcH6tHO7USZFJYM/yvMhKTTDEayWNEd8KTuQLe1IKvd3QDGbakjHbhSiYm/boE9VoF
-        qBlQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8D6tvFHh
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 13 Sep 2019 08:55:57 +0200 (CEST)
+        Fri, 13 Sep 2019 02:58:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:39372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfIMG6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:58:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A928337;
+        Thu, 12 Sep 2019 23:58:11 -0700 (PDT)
+Received: from [10.162.41.125] (p8cg001049571a15.blr.arm.com [10.162.41.125])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6675F3F67D;
+        Fri, 13 Sep 2019 00:00:27 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] mm/pgtable/debug: Fix test validating architecture page
+ table helpers
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        linux-arm-kernel@lists.infradead.org,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
+Message-ID: <527dd29d-45fa-4d83-1899-6cbf268dd749@arm.com>
+Date:   Fri, 13 Sep 2019 12:28:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190912183037.18449-1-aford173@gmail.com>
-Date:   Fri, 13 Sep 2019 08:55:57 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>, neolynx@gmail.com,
-        letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org,
-        andreas@kemnade.info, nm@ti.com, adam.ford@logicpd.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
-References: <20190912183037.18449-1-aford173@gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On 09/13/2019 11:53 AM, Christophe Leroy wrote:
+> Fix build failure on powerpc.
+> 
+> Fix preemption imbalance.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  mm/arch_pgtable_test.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
+> index 8b4a92756ad8..f2b3c9ec35fa 100644
+> --- a/mm/arch_pgtable_test.c
+> +++ b/mm/arch_pgtable_test.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/swap.h>
+>  #include <linux/swapops.h>
+>  #include <linux/sched/mm.h>
+> +#include <linux/highmem.h>
 
-> Am 12.09.2019 um 20:30 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> The thermal sensor in the omap3 family isn't accurate, but it's
-> better than nothing.  The various OPP's enabled for the omap3630
-> support up to OPP1G, however the datasheet for the DM3730 states
-> that OPP130 and OPP1G are not available above TJ of 90C.
+This is okay.
 
-We may have to add similar things for omap34xx as well. See
-data sheet 3.3 Recommended Operating Conditions
-
-But when reading them they do not limit temperature but
-number of operation hours of each OPP depending on temperature...
-That is clearly beyond what a kernel can do (we would have to
-have access to some NVRAM in the kernel counting hours).
-
->=20
-> This patch configures the thermal throttling to limit the
-> operating points of the omap3630 to Only OPP50 and OPP100 if
-
-s/Only/only/
-
-> the thermal sensor reads a value above 90C.
->=20
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->=20
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi =
-b/arch/arm/boot/dts/omap36xx.dtsi
-> index 4bb4f534afe2..58b9d347019f 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -25,6 +25,7 @@
->=20
-> 			vbb-supply =3D <&abb_mpu_iva>;
-> 			clock-latency =3D <300000>; /* =46rom =
-omap-cpufreq driver */
-> +			#cooling-cells =3D <2>;
-> 		};
-> 	};
->=20
-> @@ -195,6 +196,31 @@
-> 	};
-> };
->=20
-> +&cpu_thermal {
-> +	cpu_trips: trips {
-
-Yes, that is comparable to what I have seen in omap5 DT where I know
-that thermal throttling works.
-
-> +		/* OPP130 and OPP1G are not available above TJ of 90C. =
-*/
-> +		cpu_alert0: cpu_alert {
-> +			temperature =3D <90000>; /* millicelsius */
-> +			hysteresis =3D <2000>; /* millicelsius */
-> +			type =3D "passive";
-> +		};
+>  #include <asm/pgalloc.h>
+>  #include <asm/pgtable.h>
+>  
+> @@ -400,6 +401,8 @@ static int __init arch_pgtable_tests_init(void)
+>  	p4d_clear_tests(p4dp);
+>  	pgd_clear_tests(mm, pgdp);
+>  
+> +	pte_unmap(ptep);
 > +
-> +		cpu_crit: cpu_crit {
-> +			temperature =3D <125000>; /* millicelsius */
 
-Shouldn't this be 105=C2=B0C for all omap3 chips (industrial temperature =
-range)?
+Now the preemption imbalance via pte_alloc_map() path i.e
 
-> +			hysteresis =3D <2000>; /* millicelsius */
-> +			type =3D "critical";
-> +		};
-> +	};
-> +
-> +	cpu_cooling_maps: cooling-maps {
-> +		map0 {
-> +			trip =3D <&cpu_alert0>;
-> +			/* Only allow OPP50 and OPP100 */
-> +			cooling-device =3D <&cpu 0 1>;
+pte_alloc_map() -> pte_offset_map() -> kmap_atomic()
 
-omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
-understand their meaning (and how it relates to the opp list).
-
-> +		};
-> +	};
-
-Seems to make sense when comparing to omap4-cpu-thermal.dtsi...
-
-Maybe we can add the trip points to omap3-cpu-thermal.dtsi
-because they seem to be the same for all omap3 variants and
-just have a SoC variant specific cooling map for omap36xx.dtsi.
-
-> +};
-> +
-> /* OMAP3630 needs dss_96m_fck for VENC */
-> &venc {
-> 	clocks =3D <&dss_tv_fck>, <&dss_96m_fck>;
-> --=20
-> 2.17.1
->=20
-
-The question is how we can test that. Heating up the omap36xx to 90=C2=B0C=
-
-or even 105=C2=B0C isn't that easy like with omap5...
-
-Maybe we can modify the millicelsius values for testing purposes to
-something in reachable range, e.g. 60=C2=B0C and 70=C2=B0C and watch =
-what happens?
-
-BR,
-Nikolaus
-
-
-
+Is not this very much powerpc 32 specific or this will be applicable
+for all platform which uses kmap_XXX() to map high memory ?
