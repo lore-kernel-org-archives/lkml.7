@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EE72084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3792F206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfIMM6K (ORCPT
+        id S2387642AbfIMM6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:58:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44456 "EHLO mx1.suse.de"
+        Fri, 13 Sep 2019 08:58:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44634 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729863AbfIMM6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:58:10 -0400
+        id S1729863AbfIMM6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:58:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5CB5BB0B3;
-        Fri, 13 Sep 2019 12:58:08 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 6754BB116;
+        Fri, 13 Sep 2019 12:58:10 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -51,9 +51,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v9 1/8] powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
-Date:   Fri, 13 Sep 2019 14:57:55 +0200
-Message-Id: <2e5c00c054f5a1c8ea4b5944685940af0665bfc1.1568319275.git.msuchanek@suse.de>
+Subject: [PATCH v9 3/8] powerpc/perf: consolidate read_user_stack_32
+Date:   Fri, 13 Sep 2019 14:57:57 +0200
+Message-Id: <488f195b714b57c80045a89c2625afed924d3b83.1568319275.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568319275.git.msuchanek@suse.de>
 References: <cover.1568319275.git.msuchanek@suse.de>
@@ -64,50 +64,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This partially reverts commit caf6f9c8a326 ("asm-generic: Remove
-unneeded __ARCH_WANT_SYS_LLSEEK macro")
+There are two almost identical copies for 32bit and 64bit.
 
-When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
-
-There is resistance to both removing the llseek syscall from the 64bit
-syscall tables and building the llseek interface unconditionally.
-
-Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
-Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
+The function is used only in 32bit code which will be split out in next
+patch so consolidate to one function.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/unistd.h | 1 +
- fs/read_write.c                   | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+v6: new patch
+v8: move the consolidated function out of the ifdef block.
+---
+ arch/powerpc/perf/callchain.c | 59 +++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
-index b0720c7c3fcf..700fcdac2e3c 100644
---- a/arch/powerpc/include/asm/unistd.h
-+++ b/arch/powerpc/include/asm/unistd.h
-@@ -31,6 +31,7 @@
- #define __ARCH_WANT_SYS_SOCKETCALL
- #define __ARCH_WANT_SYS_FADVISE64
- #define __ARCH_WANT_SYS_GETPGRP
-+#define __ARCH_WANT_SYS_LLSEEK
- #define __ARCH_WANT_SYS_NICE
- #define __ARCH_WANT_SYS_OLD_GETRLIMIT
- #define __ARCH_WANT_SYS_OLD_UNAME
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 5bbf587f5bc1..89aa2701dbeb 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -331,7 +331,8 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index c84bbd4298a0..d86bdbffda9e 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -165,22 +165,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+ 	return read_user_stack_slow(ptr, ret, 8);
  }
- #endif
  
--#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
-+#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT) || \
-+	defined(__ARCH_WANT_SYS_LLSEEK)
- SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
- 		unsigned long, offset_low, loff_t __user *, result,
- 		unsigned int, whence)
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+-{
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	pagefault_disable();
+-	if (!__get_user_inatomic(*ret, ptr)) {
+-		pagefault_enable();
+-		return 0;
+-	}
+-	pagefault_enable();
+-
+-	return read_user_stack_slow(ptr, ret, 4);
+-}
+-
+ static inline int valid_user_sp(unsigned long sp, int is_64)
+ {
+ 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+@@ -295,25 +279,9 @@ static inline int current_is_64bit(void)
+ }
+ 
+ #else  /* CONFIG_PPC64 */
+-/*
+- * On 32-bit we just access the address and let hash_page create a
+- * HPTE if necessary, so there is no need to fall back to reading
+- * the page tables.  Since this is called at interrupt level,
+- * do_page_fault() won't treat a DSI as a page fault.
+- */
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+ {
+-	int rc;
+-
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	pagefault_disable();
+-	rc = __get_user_inatomic(*ret, ptr);
+-	pagefault_enable();
+-
+-	return rc;
++	return 0;
+ }
+ 
+ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+@@ -341,6 +309,29 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+ 
+ #endif /* CONFIG_PPC64 */
+ 
++/*
++ * On 32-bit we just access the address and let hash_page create a
++ * HPTE if necessary, so there is no need to fall back to reading
++ * the page tables.  Since this is called at interrupt level,
++ * do_page_fault() won't treat a DSI as a page fault.
++ */
++static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++{
++	int rc;
++
++	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
++	    ((unsigned long)ptr & 3))
++		return -EFAULT;
++
++	pagefault_disable();
++	rc = __get_user_inatomic(*ret, ptr);
++	pagefault_enable();
++
++	if (IS_ENABLED(CONFIG_PPC64) && rc)
++		return read_user_stack_slow(ptr, ret, 4);
++	return rc;
++}
++
+ /*
+  * Layout for non-RT signal frames
+  */
 -- 
 2.23.0
 
