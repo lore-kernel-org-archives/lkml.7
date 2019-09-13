@@ -5,67 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F63C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07141C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311F52089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82282083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqL6bhr+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+ggpLTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390688AbfIMXsj (ORCPT
+        id S2390732AbfIMXzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 19:48:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45783 "EHLO
+        Fri, 13 Sep 2019 19:55:15 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40735 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390597AbfIMXsi (ORCPT
+        with ESMTP id S2390695AbfIMXzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 19:48:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id f12so66282162iog.12;
-        Fri, 13 Sep 2019 16:48:37 -0700 (PDT)
+        Fri, 13 Sep 2019 19:55:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so66265154iof.7;
+        Fri, 13 Sep 2019 16:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=GM8PB7dX+o/8qn6bAAUtttU+f7SZoyImDe+8xUZo7YE=;
-        b=rqL6bhr+wZpI82VpkH0lghLYPfFzKW4vpMBu+cKu3dpDnhRTyKkTiZ+rxx2RHFQlpr
-         yHzrOMmqcPVi3Br7ng3sP5MF5dz0U5XL++uzjStYZ5RrmYY89pPcCQgmd/aXPWIJAw3b
-         SAEGanmvh6MEWQDoONuQvOurbv0fqYF6S3jsgtKSs+xIR9TCCbCsa2HNRgU8wvXgAwvW
-         zJN7ulRnCCi13T5n/DCC9uoRvhaGloOkuA5bWhxXAXSfSUgXPG6jV41BSbTm42+JCTPu
-         aDR2I9HKSk6LB+7l4LFELVpiaPhSFRgTsHD2e3RnKUTEYERChCk0Ywj0egzbV1MZmT68
-         SQ6g==
+        bh=3VViACYA451Huc+LtS7zi8sLCA8aVNyRPy9i0iM2GDI=;
+        b=u+ggpLTcaq339c2+f3rAkLb54fKQpdkq3J6sVCXOqfGhelJxp2mCB8bAEBNzC7FH8o
+         P8crxVpK13Nsp577LkLXyKaW2JJjz1OwcoICYOGPj3LNVO2Ath+NI60FjJpPWJ38JL8m
+         p324Omsau/Be646rkyZpswvsPYOgWeGFsIU8/JNTbrnCvBlSlTLJK5hJvzegJILcN7mx
+         m8kT5JwtTA+m8LJUZQfvpHit/UeP26CgqjQljfasFqss1kQ5wWXFlHe4tiObzhxZqxnp
+         UQd9L0o94P5palf14PIxjKxCOjPQFrDqlMj84BvliGEcbB24ZjE87nIwV1CQLaCwIXpj
+         YN9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GM8PB7dX+o/8qn6bAAUtttU+f7SZoyImDe+8xUZo7YE=;
-        b=U9ksryWF1LtznJEA3z3Nck2ZkK0yftDssgeRP2yPx8CT3e0UtL73s6sci6Zle699VP
-         TWfxIYzPjPSG+sO+K98an4ihuEU0jubGeX+mSG5nbt5XjuIm7bA+eRFE0/BVzmycoFdo
-         Tja0P4ZTxWElqWwc/bsKOjrLx5QFCW+dgaOucRaiXFTeSL2lSwwlZwRR27M6IygXa9Xt
-         IgmddbBVev7S+d53el1D4trVdj5EDxAj8WPAg+9SPuFcd4ZbypA5GIqQPptLu27crgb9
-         Mf1harAJohZ1ZpwvU5fgz4Zd7ZdxmfovCgOCfl605DlOHlT/zbHKQTm6WVUfZNyNVGWo
-         ZzZQ==
-X-Gm-Message-State: APjAAAUiUtkAFMHmQfP106c9m/bxVzYTKDZXKji8KptLkcJlcO91KPIT
-        w3IHlZhjYyp3i2QNEShdenQ=
-X-Google-Smtp-Source: APXvYqwybFQ8OXkHoqS/pXQXiUwqO4qQLl6hFL1gJ7ZtFFEOb4A+/dKBgPQ4EPKEbKamlLAFJFcLgQ==
-X-Received: by 2002:a5e:c107:: with SMTP id v7mr3041743iol.200.1568418516590;
-        Fri, 13 Sep 2019 16:48:36 -0700 (PDT)
+        bh=3VViACYA451Huc+LtS7zi8sLCA8aVNyRPy9i0iM2GDI=;
+        b=SAbbPV7da3xXyuuVPrFgWL2Po8KhClOZywCdu53H+0JWwDciRszlO38NeSbjG8Yh6S
+         DTotrRLjuIfs9KFFTK/3Nvpa2xjWOVhqPGG6El7egCbZ7jwb7T2bYZvwhSeCHq03YC5A
+         bnuAKbiER+gdgbs/nRSpT9KGu4gF6BkbEi2UUpQgKr0YGAoA3wI1zzYMKv5xcDOeaXzH
+         TZiy+HfJGeAotXc28UbPwImzuVqYTN3K2TfINYBE0jJJmxmniDCKZE9NcaI/TRMkED6F
+         JESpWRTQ9u1gnN5PMBRzklH7KcxeI6SMwM72io/OF/xK16SXDEqtkFJoOGUdoe+R2POr
+         M60Q==
+X-Gm-Message-State: APjAAAUDYFXH15fauIv02QCfr8F0fq91EN16m9onZ8shBrOFnKTiHJAz
+        JH2XIKC3ZyD/RYkJN5wSYdU=
+X-Google-Smtp-Source: APXvYqxkKUUtkwic4jRqCz27WVubjYpWonkpiAPsJeQd45CS9E9tD5VtULCBx/wyK4xtoT0vEOKphQ==
+X-Received: by 2002:a5e:9509:: with SMTP id r9mr3154422ioj.100.1568418913865;
+        Fri, 13 Sep 2019 16:55:13 -0700 (PDT)
 Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id t9sm3944122iop.86.2019.09.13.16.48.35
+        by smtp.googlemail.com with ESMTPSA id q74sm44394874iod.72.2019.09.13.16.55.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 16:48:36 -0700 (PDT)
+        Fri, 13 Sep 2019 16:55:13 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: ccp - release hmac_buf if ccp_run_sha_cmd fails
-Date:   Fri, 13 Sep 2019 18:48:23 -0500
-Message-Id: <20190913234824.8521-1-navid.emamdoost@gmail.com>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: usb: fix memory leak in af9005_identify_state
+Date:   Fri, 13 Sep 2019 18:55:02 -0500
+Message-Id: <20190913235505.9164-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,26 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-hmac_buf should be released.
+In af9005_identify_state when returning -EIO the allocated buffer should
+be released.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/crypto/ccp/ccp-ops.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/dvb-usb/af9005.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 9bc3c62157d7..cff16f0cc15b 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1782,6 +1782,7 @@ static int ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			       LSB_ITEM_SIZE);
- 			break;
- 		default:
-+			kfree(hmac_buf);
- 			ret = -EINVAL;
- 			goto e_ctx;
- 		}
+diff --git a/drivers/media/usb/dvb-usb/af9005.c b/drivers/media/usb/dvb-usb/af9005.c
+index 02697d86e8c1..aee500beaab6 100644
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -975,8 +975,10 @@ static int af9005_identify_state(struct usb_device *udev,
+ 		*cold = 1;
+ 	else if (reply == 0x02)
+ 		*cold = 0;
+-	else
++	else {
++		kfree(buf);
+ 		return -EIO;
++	}
+ 	deb_info("Identify state cold = %d\n", *cold);
+ 
+ err:
 -- 
 2.17.1
 
