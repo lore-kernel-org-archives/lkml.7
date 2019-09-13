@@ -3,68 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42160C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D48C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9EF20650
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02752089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfIMRz5 (ORCPT
+        id S1731169AbfIMR6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 13:55:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58934 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbfIMRz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 13:55:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 10:55:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
-   d="scan'208";a="185179047"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Sep 2019 10:55:56 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.103]) by
- ORSMSX105.amr.corp.intel.com ([169.254.2.66]) with mapi id 14.03.0439.000;
- Fri, 13 Sep 2019 10:55:56 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-CC:     Linux Edac Mailing List <linux-edac@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>
-Subject: RE: [PATCH 0/7] Address most issues when building with W=1
-Thread-Topic: [PATCH 0/7] Address most issues when building with W=1
-Thread-Index: AQHVakKk9KcXjUVwg0uJy6Jh5XeXhqcqWRUA//+LOOA=
-Date:   Fri, 13 Sep 2019 17:55:55 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F460ABA@ORSMSX115.amr.corp.intel.com>
-References: <cover.1568385816.git.mchehab+samsung@kernel.org>
- <20190913175320.GD4190@zn.tnic>
-In-Reply-To: <20190913175320.GD4190@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWU2ZDkxNTEtZDdkNC00NzcyLTk5YzEtYWQ5MTg3MjliZGIzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieVwvd0JIXC81eTdVOUR1a3dZbTF3bTZLdEdtdGF2Rmxhc1pPM2prRXA0UkhZYnhOQXlha1lFRG1rUEF1M3MxOElaIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 13 Sep 2019 13:58:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36772 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfIMR6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 13:58:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 67so30223981oto.3;
+        Fri, 13 Sep 2019 10:58:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fc8ArwY2yHMv3VLGfSx43u0p3YGfGGpe4m6tepZiINk=;
+        b=r3aVCvVytjIjwe/cpovpTALdFJONhd7f610WgoiZEDiMVJNy1HdVbeF0aKgJk0t945
+         WpuLHfcCTs38glsv9SCnjV7I+pY3qgdc6ltQochYaIUQgQBo+FfzUAdlYFr7jozRcZ+L
+         PxBjxVZM2CXEjIzKJCbzge9oF0PRPmk7G9yDbnnJz0w/6H6aT2cwHV3tXGhhagsGcz+z
+         h4lsYGmC/bZiqpWDi0P02yiVgBPuHX/tgeO/p00rSwblhk3fGapaueGsSy/8g6gzl/wB
+         80VgY/otAS34FZQZC7fWagChA3Z/jeSOKYOLulYeDzwCubybRhs9UtLp8R/ypWYKGSL0
+         khlg==
+X-Gm-Message-State: APjAAAW7Kh8Vhtxkymil/iGIHBRYzaZLG1Og902LfKqrCJmLj0QWaYCD
+        ZNBAVQhZbFCaxx3iw2sLKXjL8OzNmDfTR/32Zqk=
+X-Google-Smtp-Source: APXvYqzyImSnQNT/1nq0D+U2KoEgWBUwap3ooX9gDEXxtzeKquL0nJSL5mI7pRuhD9SS70qXmVNHPZNrhoiX0dxj2SU=
+X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr1341707otq.39.1568397484322;
+ Fri, 13 Sep 2019 10:58:04 -0700 (PDT)
 MIME-Version: 1.0
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <20190913010937.7fc20d93@lwn.net> <20190913114849.GP20699@kadam> <b579153b-3f6d-722c-aea8-abc0d026fa0d@infradead.org>
+In-Reply-To: <b579153b-3f6d-722c-aea8-abc0d026fa0d@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 13 Sep 2019 19:57:52 +0200
+Message-ID: <CAMuHMdWZyJ-z6dLFMOdCLotP8J114hGX9C7+bGgxk9ReQ-Si=w@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBMb29rcyBvayB0byBtZSBhdCBhIHF1aWNrIGdsYW5jZSwgQUNLLg0KDQpNZSB0b28uIEFsc28g
-QUNLLg0KDQotVG9ueQ0K
+Hi Randy,
+
+On Fri, Sep 13, 2019 at 5:00 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 9/13/19 4:48 AM, Dan Carpenter wrote:
+> >> So I'm expecting to take this kind of stuff into Documentation/.  My own
+> >> personal hope is that it can maybe serve to shame some of these "local
+> >> quirks" out of existence.  The evidence from this brief discussion suggests
+> >> that this might indeed happen.
+> >
+> > I don't think it's shaming, I think it's validating.  Everyone just
+> > insists that since it's written in the Book of Rules then it's our fault
+> > for not reading it.  It's like those EULA things where there is more
+> > text than anyone can physically read in a life time.
+>
+> Yes, agreed.
+>
+> > And the documentation doesn't help.  For example, I knew people's rules
+> > about capitalizing the subject but I'd just forget.  I say that if you
+> > can't be bothered to add it to checkpatch then it means you don't really
+> > care that strongly.
+>
+> If a subsystem requires a certain spelling/capitalization in patch email
+> subjects, it should be added to MAINTAINERS IMO.  E.g.,
+> E:      NuBus
+
+Oh, I understood the question differently.  I thought it was about
+"sub: system: Fix foo" vs. "sub: system: fix foo".
+
+For simple and trivial things, I tend to make changes while applying, as that's
+usually less work than complaining, and verifying that it's been fixed in the
+next (if any) version n days/weeks/months later.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
