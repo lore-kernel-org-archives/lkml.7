@@ -2,53 +2,52 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B601C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A7EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18945214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38462168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380727;
-	bh=wjPVZDNpf1ne6VkWo3z28b+bpBsCrl5aBCsA1BVOQDQ=;
+	s=default; t=1568380730;
+	bh=JI+LlexCq46LzQAHXI7seTKP9mBxXLQ00wYXThj9wTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=os4naxOYJrlw0i4mqboKicrI4ytfF+D6ggA4zWNbNymJ9Lq3JLSaeyf660FJUbjk5
-	 St4+TSs+/SLmXEAjQytCEHVeJzpvwrue97TaGN0O+4m1eRJHaGZQD48alpDVQjJIU0
-	 rOeH8k3fATVE7voKoCfBfOcNxRzwrYRgUB/1MOhw=
+	b=qID+vx5HDeXw7/rW7Z22E3E9VVaOZAIlQ9PdCbwpDFJTtvuxwNzC1O6v7eYPVvkh3
+	 jpq/iZ1J/kqBqckwPXGdRh5R8uyKgR5ca4KOLhx8AgtiebSyjlhj5978RYzLzKvY/b
+	 k1hjnV0yRyLauZ7bT0JHN/E1UYOYDtTaxLio+Qm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390284AbfIMNSq (ORCPT
+        id S2389747AbfIMNSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46344 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390253AbfIMNSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:43 -0400
+        id S2390277AbfIMNSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:45 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5216206A5;
-        Fri, 13 Sep 2019 13:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79A7214AE;
+        Fri, 13 Sep 2019 13:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380721;
-        bh=wjPVZDNpf1ne6VkWo3z28b+bpBsCrl5aBCsA1BVOQDQ=;
+        s=default; t=1568380724;
+        bh=JI+LlexCq46LzQAHXI7seTKP9mBxXLQ00wYXThj9wTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrknEn2dchblnvYKSls+LlS+nIinJLFIJP+oUaFFJb9jsdVQm+CEnabHy/Yv9hdGF
-         UT/96dx9tRpEctaZfgZrYB5fs7DoBN12r6st3awl5wjgVT7Qw4uMoY6wkE15c9W/Pe
-         x7IkN7EsLIrRih1ELCH0lQ/ALb5aJvbq9Jh8OVkQ=
+        b=RPyCn26k0anIv8qDuDz8d9POWq0hIuagxUj2+kP+ol8mxD15dVtg5GGuh+x4kad3V
+         B3mXgF7C4IrFVjvPFOBbxIe1bImkKJWPulY/0PNGs9+ZFF3sUgYEb/nAyd59TC0raE
+         oBeOlXB7wQF9KMyQZBiItola79OtdlPwLSu5piMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 156/190] KVM: PPC: Use ccr field in pt_regs struct embedded in vcpu struct
-Date:   Fri, 13 Sep 2019 14:06:51 +0100
-Message-Id: <20190913130612.388597658@linuxfoundation.org>
+Subject: [PATCH 4.19 139/190] Btrfs: fix race between block group removal and block group allocation
+Date:   Fri, 13 Sep 2019 14:06:34 +0100
+Message-Id: <20190913130611.111985374@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,345 +60,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fd0944baad806dfb4c777124ec712c55b714ff51 ]
+[ Upstream commit 8eaf40c0e24e98899a0f3ac9d25a33aafe13822a ]
 
-When the 'regs' field was added to struct kvm_vcpu_arch, the code
-was changed to use several of the fields inside regs (e.g., gpr, lr,
-etc.) but not the ccr field, because the ccr field in struct pt_regs
-is 64 bits on 64-bit platforms, but the cr field in kvm_vcpu_arch is
-only 32 bits.  This changes the code to use the regs.ccr field
-instead of cr, and changes the assembly code on 64-bit platforms to
-use 64-bit loads and stores instead of 32-bit ones.
+If a task is removing the block group that currently has the highest start
+offset amongst all existing block groups, there is a short time window
+where it races with a concurrent block group allocation, resulting in a
+transaction abort with an error code of EEXIST.
 
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+The following diagram explains the race in detail:
+
+      Task A                                                        Task B
+
+ btrfs_remove_block_group(bg offset X)
+
+   remove_extent_mapping(em offset X)
+     -> removes extent map X from the
+        tree of extent maps
+        (fs_info->mapping_tree), so the
+        next call to find_next_chunk()
+        will return offset X
+
+                                                   btrfs_alloc_chunk()
+                                                     find_next_chunk()
+                                                       --> returns offset X
+
+                                                     __btrfs_alloc_chunk(offset X)
+                                                       btrfs_make_block_group()
+                                                         btrfs_create_block_group_cache()
+                                                           --> creates btrfs_block_group_cache
+                                                               object with a key corresponding
+                                                               to the block group item in the
+                                                               extent, the key is:
+                                                               (offset X, BTRFS_BLOCK_GROUP_ITEM_KEY, 1G)
+
+                                                         --> adds the btrfs_block_group_cache object
+                                                             to the list new_bgs of the transaction
+                                                             handle
+
+                                                   btrfs_end_transaction(trans handle)
+                                                     __btrfs_end_transaction()
+                                                       btrfs_create_pending_block_groups()
+                                                         --> sees the new btrfs_block_group_cache
+                                                             in the new_bgs list of the transaction
+                                                             handle
+                                                         --> its call to btrfs_insert_item() fails
+                                                             with -EEXIST when attempting to insert
+                                                             the block group item key
+                                                             (offset X, BTRFS_BLOCK_GROUP_ITEM_KEY, 1G)
+                                                             because task A has not removed that key yet
+                                                         --> aborts the running transaction with
+                                                             error -EEXIST
+
+   btrfs_del_item()
+     -> removes the block group's key from
+        the extent tree, key is
+        (offset X, BTRFS_BLOCK_GROUP_ITEM_KEY, 1G)
+
+A sample transaction abort trace:
+
+  [78912.403537] ------------[ cut here ]------------
+  [78912.403811] BTRFS: Transaction aborted (error -17)
+  [78912.404082] WARNING: CPU: 2 PID: 20465 at fs/btrfs/extent-tree.c:10551 btrfs_create_pending_block_groups+0x196/0x250 [btrfs]
+  (...)
+  [78912.405642] CPU: 2 PID: 20465 Comm: btrfs Tainted: G        W         5.0.0-btrfs-next-46 #1
+  [78912.405941] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+  [78912.406586] RIP: 0010:btrfs_create_pending_block_groups+0x196/0x250 [btrfs]
+  (...)
+  [78912.407636] RSP: 0018:ffff9d3d4b7e3b08 EFLAGS: 00010282
+  [78912.407997] RAX: 0000000000000000 RBX: ffff90959a3796f0 RCX: 0000000000000006
+  [78912.408369] RDX: 0000000000000007 RSI: 0000000000000001 RDI: ffff909636b16860
+  [78912.408746] RBP: ffff909626758a58 R08: 0000000000000000 R09: 0000000000000000
+  [78912.409144] R10: ffff9095ff462400 R11: 0000000000000000 R12: ffff90959a379588
+  [78912.409521] R13: ffff909626758ab0 R14: ffff9095036c0000 R15: ffff9095299e1158
+  [78912.409899] FS:  00007f387f16f700(0000) GS:ffff909636b00000(0000) knlGS:0000000000000000
+  [78912.410285] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [78912.410673] CR2: 00007f429fc87cbc CR3: 000000014440a004 CR4: 00000000003606e0
+  [78912.411095] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [78912.411496] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [78912.411898] Call Trace:
+  [78912.412318]  __btrfs_end_transaction+0x5b/0x1c0 [btrfs]
+  [78912.412746]  btrfs_inc_block_group_ro+0xcf/0x160 [btrfs]
+  [78912.413179]  scrub_enumerate_chunks+0x188/0x5b0 [btrfs]
+  [78912.413622]  ? __mutex_unlock_slowpath+0x100/0x2a0
+  [78912.414078]  btrfs_scrub_dev+0x2ef/0x720 [btrfs]
+  [78912.414535]  ? __sb_start_write+0xd4/0x1c0
+  [78912.414963]  ? mnt_want_write_file+0x24/0x50
+  [78912.415403]  btrfs_ioctl+0x17fb/0x3120 [btrfs]
+  [78912.415832]  ? lock_acquire+0xa6/0x190
+  [78912.416256]  ? do_vfs_ioctl+0xa2/0x6f0
+  [78912.416685]  ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
+  [78912.417116]  do_vfs_ioctl+0xa2/0x6f0
+  [78912.417534]  ? __fget+0x113/0x200
+  [78912.417954]  ksys_ioctl+0x70/0x80
+  [78912.418369]  __x64_sys_ioctl+0x16/0x20
+  [78912.418812]  do_syscall_64+0x60/0x1b0
+  [78912.419231]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [78912.419644] RIP: 0033:0x7f3880252dd7
+  (...)
+  [78912.420957] RSP: 002b:00007f387f16ed68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  [78912.421426] RAX: ffffffffffffffda RBX: 000055f5becc1df0 RCX: 00007f3880252dd7
+  [78912.421889] RDX: 000055f5becc1df0 RSI: 00000000c400941b RDI: 0000000000000003
+  [78912.422354] RBP: 0000000000000000 R08: 00007f387f16f700 R09: 0000000000000000
+  [78912.422790] R10: 00007f387f16f700 R11: 0000000000000246 R12: 0000000000000000
+  [78912.423202] R13: 00007ffda49c266f R14: 0000000000000000 R15: 00007f388145e040
+  [78912.425505] ---[ end trace eb9bfe7c426fc4d3 ]---
+
+Fix this by calling remove_extent_mapping(), at btrfs_remove_block_group(),
+only at the very end, after removing the block group item key from the
+extent tree (and removing the free space tree entry if we are using the
+free space tree feature).
+
+Fixes: 04216820fe83d5 ("Btrfs: fix race between fs trimming and block group remove/allocation")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/kvm_book3s.h    |  4 ++--
- arch/powerpc/include/asm/kvm_book3s_64.h |  4 ++--
- arch/powerpc/include/asm/kvm_booke.h     |  4 ++--
- arch/powerpc/include/asm/kvm_host.h      |  2 --
- arch/powerpc/kernel/asm-offsets.c        |  4 ++--
- arch/powerpc/kvm/book3s_emulate.c        | 12 ++++++------
- arch/powerpc/kvm/book3s_hv.c             |  4 ++--
- arch/powerpc/kvm/book3s_hv_rmhandlers.S  |  4 ++--
- arch/powerpc/kvm/book3s_hv_tm.c          |  6 +++---
- arch/powerpc/kvm/book3s_hv_tm_builtin.c  |  5 +++--
- arch/powerpc/kvm/book3s_pr.c             |  4 ++--
- arch/powerpc/kvm/bookehv_interrupts.S    |  8 ++++----
- arch/powerpc/kvm/emulate_loadstore.c     |  1 -
- 13 files changed, 30 insertions(+), 32 deletions(-)
+ fs/btrfs/extent-tree.c | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_book3s.h b/arch/powerpc/include/asm/kvm_book3s.h
-index 83a9aa3cf6891..dd18d8174504f 100644
---- a/arch/powerpc/include/asm/kvm_book3s.h
-+++ b/arch/powerpc/include/asm/kvm_book3s.h
-@@ -301,12 +301,12 @@ static inline ulong kvmppc_get_gpr(struct kvm_vcpu *vcpu, int num)
- 
- static inline void kvmppc_set_cr(struct kvm_vcpu *vcpu, u32 val)
- {
--	vcpu->arch.cr = val;
-+	vcpu->arch.regs.ccr = val;
- }
- 
- static inline u32 kvmppc_get_cr(struct kvm_vcpu *vcpu)
- {
--	return vcpu->arch.cr;
-+	return vcpu->arch.regs.ccr;
- }
- 
- static inline void kvmppc_set_xer(struct kvm_vcpu *vcpu, ulong val)
-diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
-index dc435a5af7d6c..14fa07c73f44d 100644
---- a/arch/powerpc/include/asm/kvm_book3s_64.h
-+++ b/arch/powerpc/include/asm/kvm_book3s_64.h
-@@ -482,7 +482,7 @@ static inline u64 sanitize_msr(u64 msr)
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- static inline void copy_from_checkpoint(struct kvm_vcpu *vcpu)
- {
--	vcpu->arch.cr  = vcpu->arch.cr_tm;
-+	vcpu->arch.regs.ccr  = vcpu->arch.cr_tm;
- 	vcpu->arch.regs.xer = vcpu->arch.xer_tm;
- 	vcpu->arch.regs.link  = vcpu->arch.lr_tm;
- 	vcpu->arch.regs.ctr = vcpu->arch.ctr_tm;
-@@ -499,7 +499,7 @@ static inline void copy_from_checkpoint(struct kvm_vcpu *vcpu)
- 
- static inline void copy_to_checkpoint(struct kvm_vcpu *vcpu)
- {
--	vcpu->arch.cr_tm  = vcpu->arch.cr;
-+	vcpu->arch.cr_tm  = vcpu->arch.regs.ccr;
- 	vcpu->arch.xer_tm = vcpu->arch.regs.xer;
- 	vcpu->arch.lr_tm  = vcpu->arch.regs.link;
- 	vcpu->arch.ctr_tm = vcpu->arch.regs.ctr;
-diff --git a/arch/powerpc/include/asm/kvm_booke.h b/arch/powerpc/include/asm/kvm_booke.h
-index d513e3ed1c659..f0cef625f17ce 100644
---- a/arch/powerpc/include/asm/kvm_booke.h
-+++ b/arch/powerpc/include/asm/kvm_booke.h
-@@ -46,12 +46,12 @@ static inline ulong kvmppc_get_gpr(struct kvm_vcpu *vcpu, int num)
- 
- static inline void kvmppc_set_cr(struct kvm_vcpu *vcpu, u32 val)
- {
--	vcpu->arch.cr = val;
-+	vcpu->arch.regs.ccr = val;
- }
- 
- static inline u32 kvmppc_get_cr(struct kvm_vcpu *vcpu)
- {
--	return vcpu->arch.cr;
-+	return vcpu->arch.regs.ccr;
- }
- 
- static inline void kvmppc_set_xer(struct kvm_vcpu *vcpu, ulong val)
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 2b6049e839706..2f95e38f05491 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -538,8 +538,6 @@ struct kvm_vcpu_arch {
- 	ulong tar;
- #endif
- 
--	u32 cr;
--
- #ifdef CONFIG_PPC_BOOK3S
- 	ulong hflags;
- 	ulong guest_owned_ext;
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 89cf15566c4e8..7c3738d890e8b 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -438,7 +438,7 @@ int main(void)
- #ifdef CONFIG_PPC_BOOK3S
- 	OFFSET(VCPU_TAR, kvm_vcpu, arch.tar);
- #endif
--	OFFSET(VCPU_CR, kvm_vcpu, arch.cr);
-+	OFFSET(VCPU_CR, kvm_vcpu, arch.regs.ccr);
- 	OFFSET(VCPU_PC, kvm_vcpu, arch.regs.nip);
- #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
- 	OFFSET(VCPU_MSR, kvm_vcpu, arch.shregs.msr);
-@@ -695,7 +695,7 @@ int main(void)
- #endif /* CONFIG_PPC_BOOK3S_64 */
- 
- #else /* CONFIG_PPC_BOOK3S */
--	OFFSET(VCPU_CR, kvm_vcpu, arch.cr);
-+	OFFSET(VCPU_CR, kvm_vcpu, arch.regs.ccr);
- 	OFFSET(VCPU_XER, kvm_vcpu, arch.regs.xer);
- 	OFFSET(VCPU_LR, kvm_vcpu, arch.regs.link);
- 	OFFSET(VCPU_CTR, kvm_vcpu, arch.regs.ctr);
-diff --git a/arch/powerpc/kvm/book3s_emulate.c b/arch/powerpc/kvm/book3s_emulate.c
-index 36b11c5a0dbb9..2654df220d054 100644
---- a/arch/powerpc/kvm/book3s_emulate.c
-+++ b/arch/powerpc/kvm/book3s_emulate.c
-@@ -110,7 +110,7 @@ static inline void kvmppc_copyto_vcpu_tm(struct kvm_vcpu *vcpu)
- 	vcpu->arch.ctr_tm = vcpu->arch.regs.ctr;
- 	vcpu->arch.tar_tm = vcpu->arch.tar;
- 	vcpu->arch.lr_tm = vcpu->arch.regs.link;
--	vcpu->arch.cr_tm = vcpu->arch.cr;
-+	vcpu->arch.cr_tm = vcpu->arch.regs.ccr;
- 	vcpu->arch.xer_tm = vcpu->arch.regs.xer;
- 	vcpu->arch.vrsave_tm = vcpu->arch.vrsave;
- }
-@@ -129,7 +129,7 @@ static inline void kvmppc_copyfrom_vcpu_tm(struct kvm_vcpu *vcpu)
- 	vcpu->arch.regs.ctr = vcpu->arch.ctr_tm;
- 	vcpu->arch.tar = vcpu->arch.tar_tm;
- 	vcpu->arch.regs.link = vcpu->arch.lr_tm;
--	vcpu->arch.cr = vcpu->arch.cr_tm;
-+	vcpu->arch.regs.ccr = vcpu->arch.cr_tm;
- 	vcpu->arch.regs.xer = vcpu->arch.xer_tm;
- 	vcpu->arch.vrsave = vcpu->arch.vrsave_tm;
- }
-@@ -141,7 +141,7 @@ static void kvmppc_emulate_treclaim(struct kvm_vcpu *vcpu, int ra_val)
- 	uint64_t texasr;
- 
- 	/* CR0 = 0 | MSR[TS] | 0 */
--	vcpu->arch.cr = (vcpu->arch.cr & ~(CR0_MASK << CR0_SHIFT)) |
-+	vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & ~(CR0_MASK << CR0_SHIFT)) |
- 		(((guest_msr & MSR_TS_MASK) >> (MSR_TS_S_LG - 1))
- 		 << CR0_SHIFT);
- 
-@@ -220,7 +220,7 @@ void kvmppc_emulate_tabort(struct kvm_vcpu *vcpu, int ra_val)
- 	tm_abort(ra_val);
- 
- 	/* CR0 = 0 | MSR[TS] | 0 */
--	vcpu->arch.cr = (vcpu->arch.cr & ~(CR0_MASK << CR0_SHIFT)) |
-+	vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & ~(CR0_MASK << CR0_SHIFT)) |
- 		(((guest_msr & MSR_TS_MASK) >> (MSR_TS_S_LG - 1))
- 		 << CR0_SHIFT);
- 
-@@ -494,8 +494,8 @@ int kvmppc_core_emulate_op_pr(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 
- 			if (!(kvmppc_get_msr(vcpu) & MSR_PR)) {
- 				preempt_disable();
--				vcpu->arch.cr = (CR0_TBEGIN_FAILURE |
--				  (vcpu->arch.cr & ~(CR0_MASK << CR0_SHIFT)));
-+				vcpu->arch.regs.ccr = (CR0_TBEGIN_FAILURE |
-+				  (vcpu->arch.regs.ccr & ~(CR0_MASK << CR0_SHIFT)));
- 
- 				vcpu->arch.texasr = (TEXASR_FS | TEXASR_EXACT |
- 					(((u64)(TM_CAUSE_EMULATE | TM_CAUSE_PERSISTENT))
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 9595db30e6b87..05b32cc12e417 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -410,8 +410,8 @@ static void kvmppc_dump_regs(struct kvm_vcpu *vcpu)
- 	       vcpu->arch.shregs.sprg0, vcpu->arch.shregs.sprg1);
- 	pr_err("sprg2 = %.16llx sprg3 = %.16llx\n",
- 	       vcpu->arch.shregs.sprg2, vcpu->arch.shregs.sprg3);
--	pr_err("cr = %.8x  xer = %.16lx  dsisr = %.8x\n",
--	       vcpu->arch.cr, vcpu->arch.regs.xer, vcpu->arch.shregs.dsisr);
-+	pr_err("cr = %.8lx  xer = %.16lx  dsisr = %.8x\n",
-+	       vcpu->arch.regs.ccr, vcpu->arch.regs.xer, vcpu->arch.shregs.dsisr);
- 	pr_err("dar = %.16llx\n", vcpu->arch.shregs.dar);
- 	pr_err("fault dar = %.16lx dsisr = %.8x\n",
- 	       vcpu->arch.fault_dar, vcpu->arch.fault_dsisr);
-diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-index 5902a60f92268..68c7591f2b5f7 100644
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -1209,7 +1209,7 @@ BEGIN_FTR_SECTION
- END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 
- 	ld	r5, VCPU_LR(r4)
--	lwz	r6, VCPU_CR(r4)
-+	ld	r6, VCPU_CR(r4)
- 	mtlr	r5
- 	mtcr	r6
- 
-@@ -1320,7 +1320,7 @@ kvmppc_interrupt_hv:
- 	std	r3, VCPU_GPR(R12)(r9)
- 	/* CR is in the high half of r12 */
- 	srdi	r4, r12, 32
--	stw	r4, VCPU_CR(r9)
-+	std	r4, VCPU_CR(r9)
- BEGIN_FTR_SECTION
- 	ld	r3, HSTATE_CFAR(r13)
- 	std	r3, VCPU_CFAR(r9)
-diff --git a/arch/powerpc/kvm/book3s_hv_tm.c b/arch/powerpc/kvm/book3s_hv_tm.c
-index 008285058f9b5..888e2609e3f15 100644
---- a/arch/powerpc/kvm/book3s_hv_tm.c
-+++ b/arch/powerpc/kvm/book3s_hv_tm.c
-@@ -130,7 +130,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
- 			return RESUME_GUEST;
- 		}
- 		/* Set CR0 to indicate previous transactional state */
--		vcpu->arch.cr = (vcpu->arch.cr & 0x0fffffff) |
-+		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
- 			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
- 		/* L=1 => tresume, L=0 => tsuspend */
- 		if (instr & (1 << 21)) {
-@@ -174,7 +174,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
- 		copy_from_checkpoint(vcpu);
- 
- 		/* Set CR0 to indicate previous transactional state */
--		vcpu->arch.cr = (vcpu->arch.cr & 0x0fffffff) |
-+		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
- 			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
- 		vcpu->arch.shregs.msr &= ~MSR_TS_MASK;
- 		return RESUME_GUEST;
-@@ -204,7 +204,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcpu *vcpu)
- 		copy_to_checkpoint(vcpu);
- 
- 		/* Set CR0 to indicate previous transactional state */
--		vcpu->arch.cr = (vcpu->arch.cr & 0x0fffffff) |
-+		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
- 			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
- 		vcpu->arch.shregs.msr = msr | MSR_TS_S;
- 		return RESUME_GUEST;
-diff --git a/arch/powerpc/kvm/book3s_hv_tm_builtin.c b/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-index b2c7c6fca4f96..3cf5863bc06e8 100644
---- a/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-+++ b/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-@@ -89,7 +89,8 @@ int kvmhv_p9_tm_emulation_early(struct kvm_vcpu *vcpu)
- 		if (instr & (1 << 21))
- 			vcpu->arch.shregs.msr = (msr & ~MSR_TS_MASK) | MSR_TS_T;
- 		/* Set CR0 to 0b0010 */
--		vcpu->arch.cr = (vcpu->arch.cr & 0x0fffffff) | 0x20000000;
-+		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
-+			0x20000000;
- 		return 1;
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 0cc800d22a081..88c939f7aad96 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10478,22 +10478,6 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
  	}
+ 	spin_unlock(&block_group->lock);
  
-@@ -105,5 +106,5 @@ void kvmhv_emulate_tm_rollback(struct kvm_vcpu *vcpu)
- 	vcpu->arch.shregs.msr &= ~MSR_TS_MASK;	/* go to N state */
- 	vcpu->arch.regs.nip = vcpu->arch.tfhar;
- 	copy_from_checkpoint(vcpu);
--	vcpu->arch.cr = (vcpu->arch.cr & 0x0fffffff) | 0xa0000000;
-+	vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) | 0xa0000000;
- }
-diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
-index 614ebb4261f76..de9702219dee9 100644
---- a/arch/powerpc/kvm/book3s_pr.c
-+++ b/arch/powerpc/kvm/book3s_pr.c
-@@ -167,7 +167,7 @@ void kvmppc_copy_to_svcpu(struct kvm_vcpu *vcpu)
- 	svcpu->gpr[11] = vcpu->arch.regs.gpr[11];
- 	svcpu->gpr[12] = vcpu->arch.regs.gpr[12];
- 	svcpu->gpr[13] = vcpu->arch.regs.gpr[13];
--	svcpu->cr  = vcpu->arch.cr;
-+	svcpu->cr  = vcpu->arch.regs.ccr;
- 	svcpu->xer = vcpu->arch.regs.xer;
- 	svcpu->ctr = vcpu->arch.regs.ctr;
- 	svcpu->lr  = vcpu->arch.regs.link;
-@@ -249,7 +249,7 @@ void kvmppc_copy_from_svcpu(struct kvm_vcpu *vcpu)
- 	vcpu->arch.regs.gpr[11] = svcpu->gpr[11];
- 	vcpu->arch.regs.gpr[12] = svcpu->gpr[12];
- 	vcpu->arch.regs.gpr[13] = svcpu->gpr[13];
--	vcpu->arch.cr  = svcpu->cr;
-+	vcpu->arch.regs.ccr  = svcpu->cr;
- 	vcpu->arch.regs.xer = svcpu->xer;
- 	vcpu->arch.regs.ctr = svcpu->ctr;
- 	vcpu->arch.regs.link  = svcpu->lr;
-diff --git a/arch/powerpc/kvm/bookehv_interrupts.S b/arch/powerpc/kvm/bookehv_interrupts.S
-index 612b7f6a887f8..4e5081e584098 100644
---- a/arch/powerpc/kvm/bookehv_interrupts.S
-+++ b/arch/powerpc/kvm/bookehv_interrupts.S
-@@ -186,7 +186,7 @@ END_BTB_FLUSH_SECTION
- 	 */
- 	PPC_LL	r4, PACACURRENT(r13)
- 	PPC_LL	r4, (THREAD + THREAD_KVM_VCPU)(r4)
--	stw	r10, VCPU_CR(r4)
-+	PPC_STL	r10, VCPU_CR(r4)
- 	PPC_STL r11, VCPU_GPR(R4)(r4)
- 	PPC_STL	r5, VCPU_GPR(R5)(r4)
- 	PPC_STL	r6, VCPU_GPR(R6)(r4)
-@@ -296,7 +296,7 @@ _GLOBAL(kvmppc_handler_\intno\()_\srr1)
- 	PPC_STL	r4, VCPU_GPR(R4)(r11)
- 	PPC_LL	r4, THREAD_NORMSAVE(0)(r10)
- 	PPC_STL	r5, VCPU_GPR(R5)(r11)
--	stw	r13, VCPU_CR(r11)
-+	PPC_STL	r13, VCPU_CR(r11)
- 	mfspr	r5, \srr0
- 	PPC_STL	r3, VCPU_GPR(R10)(r11)
- 	PPC_LL	r3, THREAD_NORMSAVE(2)(r10)
-@@ -323,7 +323,7 @@ _GLOBAL(kvmppc_handler_\intno\()_\srr1)
- 	PPC_STL	r4, VCPU_GPR(R4)(r11)
- 	PPC_LL	r4, GPR9(r8)
- 	PPC_STL	r5, VCPU_GPR(R5)(r11)
--	stw	r9, VCPU_CR(r11)
-+	PPC_STL	r9, VCPU_CR(r11)
- 	mfspr	r5, \srr0
- 	PPC_STL	r3, VCPU_GPR(R8)(r11)
- 	PPC_LL	r3, GPR10(r8)
-@@ -647,7 +647,7 @@ lightweight_exit:
- 	PPC_LL	r3, VCPU_LR(r4)
- 	PPC_LL	r5, VCPU_XER(r4)
- 	PPC_LL	r6, VCPU_CTR(r4)
--	lwz	r7, VCPU_CR(r4)
-+	PPC_LL	r7, VCPU_CR(r4)
- 	PPC_LL	r8, VCPU_PC(r4)
- 	PPC_LD(r9, VCPU_SHARED_MSR, r11)
- 	PPC_LL	r0, VCPU_GPR(R0)(r4)
-diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
-index 75dce1ef3bc83..f91b1309a0a86 100644
---- a/arch/powerpc/kvm/emulate_loadstore.c
-+++ b/arch/powerpc/kvm/emulate_loadstore.c
-@@ -117,7 +117,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+-	if (remove_em) {
+-		struct extent_map_tree *em_tree;
+-
+-		em_tree = &fs_info->mapping_tree.map_tree;
+-		write_lock(&em_tree->lock);
+-		/*
+-		 * The em might be in the pending_chunks list, so make sure the
+-		 * chunk mutex is locked, since remove_extent_mapping() will
+-		 * delete us from that list.
+-		 */
+-		remove_extent_mapping(em_tree, em);
+-		write_unlock(&em_tree->lock);
+-		/* once for the tree */
+-		free_extent_map(em);
+-	}
+-
+ 	mutex_unlock(&fs_info->chunk_mutex);
  
- 	emulated = EMULATE_FAIL;
- 	vcpu->arch.regs.msr = vcpu->arch.shared->msr;
--	vcpu->arch.regs.ccr = vcpu->arch.cr;
- 	if (analyse_instr(&op, &vcpu->arch.regs, inst) == 0) {
- 		int type = op.type & INSTR_TYPE_MASK;
- 		int size = GETSIZE(op.type);
+ 	ret = remove_block_group_free_space(trans, block_group);
+@@ -10510,6 +10494,24 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		goto out;
+ 
+ 	ret = btrfs_del_item(trans, root, path);
++	if (ret)
++		goto out;
++
++	if (remove_em) {
++		struct extent_map_tree *em_tree;
++
++		em_tree = &fs_info->mapping_tree.map_tree;
++		write_lock(&em_tree->lock);
++		/*
++		 * The em might be in the pending_chunks list, so make sure the
++		 * chunk mutex is locked, since remove_extent_mapping() will
++		 * delete us from that list.
++		 */
++		remove_extent_mapping(em_tree, em);
++		write_unlock(&em_tree->lock);
++		/* once for the tree */
++		free_extent_map(em);
++	}
+ out:
+ 	btrfs_free_path(path);
+ 	return ret;
 -- 
 2.20.1
 
