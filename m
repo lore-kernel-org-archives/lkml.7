@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DCAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5398A20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E852084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrzvUUF5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtbuwLj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbfIMTPx (ORCPT
+        id S2390121AbfIMTP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:15:53 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39638 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389943AbfIMTPu (ORCPT
+        Fri, 13 Sep 2019 15:15:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39101 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390051AbfIMTPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:15:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so15719401pgi.6;
-        Fri, 13 Sep 2019 12:15:50 -0700 (PDT)
+        Fri, 13 Sep 2019 15:15:53 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i1so9820764pfa.6;
+        Fri, 13 Sep 2019 12:15:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x/1eUyWPGFj2wULry4fSJWpBPwqBU21SfxLgwHYAjPg=;
-        b=BrzvUUF5gYKFZkqIivZmB5392yuvze9AbbplQ0GK3OoiiglyzWFvtk2nrYz+Yb0TSc
-         cKpsMW+oSuKcUm8ZunWjTWq0L2bvfY3HjhKUrdvOswfnIyslNjK1foQRpPCO3sR+jzY/
-         seeby2arHTHMeF8pzPH765fwMrAuQAWaFwBmLENDmUJQt2DNNWHB+YNbeGMW97k/Vi3T
-         reEZIK9WFDsYEh0sCcBO+zZtXnwsA6t2vcryZu5xHijF7Q92xZXCo5QcWMsF/oEkvAJs
-         4fqKOGSWcf1CtJArCdyvwD3BCbgha1zh0+Q7ybYjK3fDfilNr3Hpz+iaOfHkdiS5/yZ9
-         8Nvw==
+        bh=BRtSatqLH/MfhNYbSV1CsCvP0aOfEd/XjwPUQaxk57I=;
+        b=jtbuwLj4zNgb1GtpmdFk0gc5/kOlfHWykktKB/RyfHGZlZ1uNNSe///SsSsOJUQYFF
+         Q9razuSg4mXJrOS3/UL7LsOqJCRQ3kwJ61kXoB9GaoWUMuk39DPbAje3201ECWIP6foO
+         5tvjebWmEksOAdijtNIJCgdo0QIt76FT2Cu4Uc8LjA7mpoLUgAeE7lJMuIXTsSOiR8TU
+         ZiJDd2lV4KYp8fZRljygwB/gZbxkKw2lXiLxI95TPPvR+hxQP5vhRdb5JGiCSBmj6VzY
+         uhkJTeOlUCpYzsaVOJtrHduNmkwVa2XZuljaU0dT/4SI5WtVmLAHjoR6E+SeaSvCf12j
+         Bw4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=x/1eUyWPGFj2wULry4fSJWpBPwqBU21SfxLgwHYAjPg=;
-        b=VInYcBrNGvz5y2g1T8EaUV8P5rLESCwYKmT4MlRHp7awBRrAwt678bEsR9ADxd6Mm9
-         AgOWDPZpefZqEJ/MrXX4U39eTLlbMcr2YKSrhMWurmy/O/GoP57sPLYYPf4e30+OlFaK
-         8JTM5dbxX7xZG1RRF2gLf/Lw7DcQPg4m3V1IG1Vq9GucSX2+BytFEvhmU2TuKrubW4xA
-         m3sUB6y3KkjxG1ie5VjCb8iL0bLphDxVihH+IlGbnh2ZuDss87mRXlJPy+SQVwN8azAU
-         hJSb9sdwaiAJgungv16tolvHUeWVJu1UFF3TMxGURlNBh0qNYkfR86yKqHH7RsArxRnZ
-         Bwwg==
-X-Gm-Message-State: APjAAAWJZ3KQp9iUU2wWF8/KvHFVTyvr9FE2A7TWNme2DsM3LSB7fhLb
-        +3RRCmqSsgt9tg8Smm/LPwmUjIoduHw=
-X-Google-Smtp-Source: APXvYqzF2s/bKLuw6kiJgc+ZNlKO896um1C1U0ZeAJYaxCjGTB/uSBl2HKUw3aBwzImKCG+aOqktMw==
-X-Received: by 2002:a63:bf01:: with SMTP id v1mr43807633pgf.278.1568402149873;
-        Fri, 13 Sep 2019 12:15:49 -0700 (PDT)
+        bh=BRtSatqLH/MfhNYbSV1CsCvP0aOfEd/XjwPUQaxk57I=;
+        b=Yoy9HlDON14GqNsJo+5BSOs+AxuzkvUBPfXwRf6QaZ6odYR4Lqz2xMkwhKkYjikbWo
+         hh5HrspqpG+7mEPhKaW+jbr9ROVTrGU33N1s6EhJH0w+GsjJmirdpVSy9GtmHTWVmenO
+         Rv/CoxY7cCMMfCI7+XHqmXzHC9U06QwSIQW3gFRiStVmmwHbZ1AsNA8Ul1p89t6wunpL
+         dMuCvvBjOnemfLlfCQQz30RRicSpxUYNNgBFhTrzBvca5uZtREMx7LGD7qlLpnld1eDB
+         kLgdz1PZL6vddIsEqVuTPwdx8RLeCbEVTaszr+M9mVrFHTr0zQyC2Gq5GLV4Si1jALxe
+         pXLQ==
+X-Gm-Message-State: APjAAAVIiyEucjhGThvLUPrrt6DZEKWw2zFrxHF3dpzXBGX1kYZ+oPZl
+        T8mm8M+hJ1HYTiMZgQUPeGd8d/LgUAo=
+X-Google-Smtp-Source: APXvYqzxO0qzlIQtB7mDNY47JFE1/g8cLqnGE+hjEzq3cLN7pORngII31PI7vqJXoRIRninpX2wrJQ==
+X-Received: by 2002:a63:e44b:: with SMTP id i11mr7318696pgk.297.1568402152112;
+        Fri, 13 Sep 2019 12:15:52 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m24sm6988149pgj.71.2019.09.13.12.15.48
+        by smtp.gmail.com with ESMTPSA id m24sm6988149pgj.71.2019.09.13.12.15.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 12:15:49 -0700 (PDT)
+        Fri, 13 Sep 2019 12:15:51 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
         ARCHITECTURE),
         linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: [PATCH v2 2/5] dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
-Date:   Fri, 13 Sep 2019 12:15:39 -0700
-Message-Id: <20190913191542.9908-3-f.fainelli@gmail.com>
+Subject: [PATCH v2 4/5] dt-bindings: Document brcm,int-fwd-mask property for bcm7038-l1-intc
+Date:   Fri, 13 Sep 2019 12:15:41 -0700
+Message-Id: <20190913191542.9908-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190913191542.9908-1-f.fainelli@gmail.com>
 References: <20190913191542.9908-1-f.fainelli@gmail.com>
@@ -81,27 +81,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
-controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
-which has been "standardized" across Broadcom interrupt controllers.
+Indicate that the brcm,int-fwd-mask property is optional and can be
+optionaly set on platforms which require to leave specific interrupts
+untouched from Linux and retain the firmware configuration.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt    | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-index 2117d4ac1ae5..4eb043270f5b 100644
+index 4eb043270f5b..31d31af408c5 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
 +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-@@ -31,6 +31,11 @@ Required properties:
- - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
-   node; valid values depend on the type of parent interrupt controller
+@@ -36,6 +36,10 @@ Optional properties:
+ - brcm,irq-can-wake: If present, this means the L1 controller can be used as a
+   wakeup source for system suspend/resume.
  
-+Optional properties:
-+
-+- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
-+  wakeup source for system suspend/resume.
++- brcm,int-fwd-mask: if present, a bit mask to indicate which interrupts
++  have already been configured by the firmware and should be left untouched.
++  This should have one 32-bit word per status/set/clear/mask group.
 +
  If multiple reg ranges and interrupt-parent entries are present on an SMP
  system, the driver will allow IRQ SMP affinity to be set up through the
