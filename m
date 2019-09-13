@@ -2,116 +2,142 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12236C4CECA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554C2206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9D3206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SZTN8S0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389174AbfIMUMx (ORCPT
+        id S2389341AbfIMUOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:12:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35426 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbfIMUMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:12:53 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1i8rw2-0003Ef-5N; Fri, 13 Sep 2019 22:12:50 +0200
-Date:   Fri, 13 Sep 2019 22:12:50 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.2.14-rt7
-Message-ID: <20190913201249.jyzvguhr6g3ayovo@linutronix.de>
+        Fri, 13 Sep 2019 16:14:00 -0400
+Received: from mail-eopbgr1310101.outbound.protection.outlook.com ([40.107.131.101]:29216
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730962AbfIMUN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 16:13:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gx+RwSdxphrUcI9PZBZaZcXcAdYqqaXZYmgKgjvl+/a8i2DA+Uc0UzQO9XXAO3xWVRo+5WiXCi46bpKuUs42+Bd3Ns67fzw80D1waaWRzcbO2dzAtl84db8oRI9djcrFiMa2WtKv/CZsbI4SO5R9BkXATPkKL/ukfN/KBpjTm1Hnf+SFDoGbDlGpLrjlIpfWQt1TRJluBRcAIWh6KgSEfbtI2GXTd9O11oDBtkVlz1rAwMvR/XuNMBbkOKADxIIVFl+V50U/qAcRzrrXnXl9P2WxWIql3l+ziQFIDfmPD16lx+SYBPYvTIiacK9VaMgImqh9lHGO4rwkojEjMXh8dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4ZEt1Vt1aGzamiHxMchWWEfePNe9vQOJzziJITgNIIU=;
+ b=V6krcTCfEeeu15/fGTNCpuMxAdL1PcId/eqJLiNuJDzEKGS4eHYWx3s6prgmawd28N0Kv+B2IABfp542UuI5JfBwS2LaQ+L0Yb7tNqehJYasW4S0jPNGrjX9alTyDbRWVabFIpY/UluEayfL7Xx9j1hmTt6xmUegqyLWI7M9vbiGsXXmMTt3xdPW+S5Iv6ZAXBUecPiYMYdgsoekIDOWeKoICZDfXq+NVUjkcO+4n3cOZz+mkX9MVGM+s+2stP7qAI5b18r9wojRxqV1PGTEeyFdruNjgHZmv2DafY5pz4nZSk/WpKO+C/IKm8oFIL9V8wEg7/8Td/8rw0QYiQDa9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4ZEt1Vt1aGzamiHxMchWWEfePNe9vQOJzziJITgNIIU=;
+ b=SZTN8S0NgZrjSyBhuJxwsk5TjF0VBJt2mTVPFIl/g3fpmG5B7QhnqJeKBiCtACEmIkLHgXHXXFbjOVdDMmFdaq2I6UDuW0jkNhQYNYiNakemIMWvDV68PA/qYM0tJB4FCd795+wbWlQchAgz7aktpFHoSgTHOZ4N8T+r90Gl+EE=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0105.APCP153.PROD.OUTLOOK.COM (10.170.188.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.10; Fri, 13 Sep 2019 20:13:51 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2284.009; Fri, 13 Sep 2019
+ 20:13:51 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     David Miller <davem@davemloft.net>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH][PATCH net-next] hv_sock: Add the support of hibernation
+Thread-Topic: [PATCH][PATCH net-next] hv_sock: Add the support of hibernation
+Thread-Index: AQHVam5fuqnF5X0xdU6fz1Wd/qHCbKcqCTvw
+Date:   Fri, 13 Sep 2019 20:13:50 +0000
+Message-ID: <PU1P153MB016988B39370FDB76C365614BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568245042-66967-1-git-send-email-decui@microsoft.com>
+ <20190913.210343.724088723062134961.davem@davemloft.net>
+In-Reply-To: <20190913.210343.724088723062134961.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: sashal@kernel.org
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-13T20:13:48.4838727Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3861a32e-9692-4bfd-8b02-1416e49afebb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [73.140.237.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24b1364e-19c4-4f4c-1ceb-08d73886e4d1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0105;
+x-ms-traffictypediagnostic: PU1P153MB0105:|PU1P153MB0105:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0105B8303424205B7A1930F6BFB30@PU1P153MB0105.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(39860400002)(376002)(366004)(136003)(189003)(199004)(6436002)(99286004)(66446008)(52536014)(66556008)(64756008)(66476007)(76116006)(66946007)(76176011)(25786009)(86362001)(229853002)(7696005)(186003)(22452003)(26005)(8990500004)(6506007)(102836004)(486006)(5660300002)(476003)(316002)(4744005)(110136005)(4326008)(107886003)(446003)(33656002)(11346002)(10090500001)(54906003)(10290500003)(6246003)(478600001)(6116002)(3846002)(74316002)(55016002)(8676002)(2906002)(53936002)(9686003)(305945005)(71190400001)(81166006)(81156014)(71200400001)(8936002)(14444005)(14454004)(7736002)(256004)(66066001)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0105;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: t2F7Y+NiHrOXQdKk+VKJBL8wDawwLDlFbtiUcL6SBbWKwapd+jpwARZSypA0qhqCZU0/RyMkr/KFqeNB0UHmqed7qe7fskRkkMvgVFXe5ektGX4ge7tDxXqkRGYR6nd1Zy/s1scWJRNaxkueaTGjjaJuzt55wzVq3hpqFphSZvpqLZlomjN+ieeWuAvK70Q0vke9s4f/KK5l5mtYXCt9NDz0Vwa+WiSwO1Yu720TdL2JvaS9wRfko+JbcbsqFV/kgCTMumF6L4rjNbbIbt9OJ7QTpl+KQSxinNT5VbA8nSW6hJ99PPN3/H9ET4JhqFb8HVJ8GeYCyQwj5QlwLXviJNJ8XQD5DdmvSj+t8ilTsWdGAN8zaOBd8ZhxdUAyTEoJJEz4hdV22TB+s1lC7WdiLSFkOWKe/BWppHCsaFISRnw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24b1364e-19c4-4f4c-1ceb-08d73886e4d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 20:13:50.8109
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 60IuVhvwtqwakYwNwrTLXhM2jrWFUWcEB9cQ68cjctaZdY4buafwJgiha//Mv+tC7ylxgaKsvBGWV+Cp3MwMoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+> From: David Miller <davem@davemloft.net>
+> Sent: Friday, September 13, 2019 1:04 PM
+>=20
+> From: Dexuan Cui <decui@microsoft.com>
+> Date: Wed, 11 Sep 2019 23:37:27 +0000
+> > I request this patch should go through Sasha's tree rather than the
+> > net-next tree.
+>=20
+> That's fine:
+>=20
+> Acked-by: David S. Miller <davem@davemloft.net>
 
-I'm pleased to announce the v5.2.14-rt7 patch set. 
+Thanks, David!
 
-Changes since v5.2.14-rt6:
+@Sasha: I found a few typos in my comment below. I'll post a v2.
 
-  - The recent hrtimer fix broke UP builds as reported by Alexander
-    Dahl.
+> > +/* hv_sock connections can not persist across hibernation, and all the=
+ hv_sock
+> >  + * channels are forceed to be rescinded before hibernation: see
 
-Known issues
-     - rcutorture is currently broken on -RT. Reported by Juri Lelli.
+forceed -> forced
 
-The delta patch against v5.2.14-rt6 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/incr/patch-5.2.14-rt6-rt7.patch.xz
+> >  + * are only needed because hibernation requires that every device's d=
+river
 
-You can get this release via the git tree at:
+every device's driver -> every vmbus device's driver
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.2.14-rt7
-
-The RT patch against v5.2.14 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patch-5.2.14-rt7.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patches-5.2.14-rt7.tar.xz
-
-Sebastian
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 5eb45a868de9a..b3adac366fd17 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -141,6 +141,11 @@ static struct hrtimer_cpu_base migration_cpu_base = {
- 
- #define migration_base	migration_cpu_base.clock_base[0]
- 
-+static inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return base == &migration_base;
-+}
-+
- /*
-  * We are using hashed locking: holding per_cpu(hrtimer_bases)[n].lock
-  * means that all timers which are tied to this base via timer->base are
-@@ -265,6 +270,11 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
- 
- #else /* CONFIG_SMP */
- 
-+static inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return false;
-+}
-+
- static inline struct hrtimer_clock_base *
- lock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
- {
-@@ -934,7 +944,7 @@ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
- {
- 	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
- 
--	if (timer->is_soft && base != &migration_base) {
-+	if (timer->is_soft && is_migration_base(base)) {
- 		spin_lock(&base->cpu_base->softirq_expiry_lock);
- 		spin_unlock(&base->cpu_base->softirq_expiry_lock);
- 	}
-diff --git a/localversion-rt b/localversion-rt
-index 8fc605d806670..045478966e9f1 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt6
-+-rt7
+Thanks,
+-- Dexuan
