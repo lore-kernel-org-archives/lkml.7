@@ -2,50 +2,54 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F1EC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC09EC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C976E206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83597217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380931;
-	bh=nwfOfhunG20kdXDdjg0VkRIACXc39rf2cOq4NEzaB74=;
+	s=default; t=1568380936;
+	bh=/nvSdDdkuOkxtV8ySXQRCik+0vs/UJWaIb4atO2eONE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRVa63apTD886dgWs0aFdTLVFrh90OuZqfaIZsIST2+GOT4aWbpo2kuvZKZbOE6G3
-	 XB0+Qn41CJAyS2pBFBoTmRXVkmgf/cXkjsqfT3xGdbAkEj88Hhn7P+LHYUDi9NjyMg
-	 usTL/JJzsWgXYOdwNbHabnyINYlk5TWpkzrKWukc=
+	b=rFoMMJ/IXpBLX2fxryP3GUSiyu4NZYX/OAaVjXhNCgLIIJm20yc4bcQd47j2JzEhl
+	 5L8RpXzI9SCfUNDTWlg+d0eSEjDKNyCYha5Zozh9+/57dpgZu1Tu+S3O4pFZAOVrGc
+	 4hmo50lqVUaGOSrnCqbITdIg/b3FvHmuPY+eGFkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390977AbfIMNWL (ORCPT
+        id S2390378AbfIMNWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390962AbfIMNWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:22:06 -0400
+        id S2390973AbfIMNWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:22:11 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5DD5214AE;
-        Fri, 13 Sep 2019 13:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73AEA214AE;
+        Fri, 13 Sep 2019 13:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380925;
-        bh=nwfOfhunG20kdXDdjg0VkRIACXc39rf2cOq4NEzaB74=;
+        s=default; t=1568380930;
+        bh=/nvSdDdkuOkxtV8ySXQRCik+0vs/UJWaIb4atO2eONE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0HGTmwiO6363lQiyAQnSVrtTS/xTVB0ukLeMrFv7ZCK27Rk8JY/pgDA5eBeMz9G9k
-         WJBqROkE6Wax4Ai6Vo5rAinUWV1N8tzsf+zPz0YTpWy0IqE+lu4KwpJd9Tmv5j2W9a
-         zvZz1/fj+LvWs+SA8DcT7oxr/OsZQTPX5x8v8RHc=
+        b=Pt4JnI8ySVxr4+V24ZrvjPAm1pXi5STlm4uP6I9xXLodhpZyD5rxzwfgwpTef91rU
+         oyMhvhor/79XCUn4SJQbOqzKjOzkPXsOoeWHN01b9SmKWGUkRFZ1HIk0RGx7AWUeb6
+         J0kIP89ukcBaEOWRGb9dtSiEvjph9i5fx972dURI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.2 27/37] usb: chipidea: imx: add imx7ulp support
-Date:   Fri, 13 Sep 2019 14:07:32 +0100
-Message-Id: <20190913130520.643456140@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 29/37] virtio/s390: fix race on airq_areas[]
+Date:   Fri, 13 Sep 2019 14:07:34 +0100
+Message-Id: <20190913130521.250696506@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -58,153 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this commit, we add CI_HDRC_PMQOS to avoid system entering idle,
-at imx7ulp, if the system enters idle, the DMA will stop, so the USB
-transfer can't work at this case.
+[ Upstream commit 4f419eb14272e0698e8c55bb5f3f266cc2a21c81 ]
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+The access to airq_areas was racy ever since the adapter interrupts got
+introduced to virtio-ccw, but since commit 39c7dcb15892 ("virtio/s390:
+make airq summary indicators DMA") this became an issue in practice as
+well. Namely before that commit the airq_info that got overwritten was
+still functional. After that commit however the two infos share a
+summary_indicator, which aggravates the situation. Which means
+auto-online mechanism occasionally hangs the boot with virtio_blk.
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 96b14536d935 ("virtio-ccw: virtio-ccw adapter interrupt support.")
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/ci_hdrc_imx.c | 28 +++++++++++++++++++++++++++-
- drivers/usb/chipidea/usbmisc_imx.c |  4 ++++
- include/linux/usb/chipidea.h       |  1 +
- 3 files changed, 32 insertions(+), 1 deletion(-)
+ drivers/s390/virtio/virtio_ccw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index ceec8d5985d46..a76708501236d 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -13,6 +13,7 @@
- #include <linux/usb/of.h>
- #include <linux/clk.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_qos.h>
- 
- #include "ci.h"
- #include "ci_hdrc_imx.h"
-@@ -63,6 +64,11 @@ static const struct ci_hdrc_imx_platform_flag imx7d_usb_data = {
- 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM,
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index 6a30768813219..8d47ad61bac3d 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -132,6 +132,7 @@ struct airq_info {
+ 	struct airq_iv *aiv;
  };
+ static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
++static DEFINE_MUTEX(airq_areas_lock);
  
-+static const struct ci_hdrc_imx_platform_flag imx7ulp_usb_data = {
-+	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
-+		CI_HDRC_PMQOS,
-+};
-+
- static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx23-usb", .data = &imx23_usb_data},
- 	{ .compatible = "fsl,imx28-usb", .data = &imx28_usb_data},
-@@ -72,6 +78,7 @@ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx6sx-usb", .data = &imx6sx_usb_data},
- 	{ .compatible = "fsl,imx6ul-usb", .data = &imx6ul_usb_data},
- 	{ .compatible = "fsl,imx7d-usb", .data = &imx7d_usb_data},
-+	{ .compatible = "fsl,imx7ulp-usb", .data = &imx7ulp_usb_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ci_hdrc_imx_dt_ids);
-@@ -93,6 +100,8 @@ struct ci_hdrc_imx_data {
- 	struct clk *clk_ahb;
- 	struct clk *clk_per;
- 	/* --------------------------------- */
-+	struct pm_qos_request pm_qos_req;
-+	const struct ci_hdrc_imx_platform_flag *plat_data;
- };
+ #define CCW_CMD_SET_VQ 0x13
+ #define CCW_CMD_VDEV_RESET 0x33
+@@ -244,9 +245,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+ 	unsigned long bit, flags;
  
- /* Common functions shared by usbmisc drivers */
-@@ -309,6 +318,8 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	data->plat_data = imx_platform_flag;
-+	pdata.flags |= imx_platform_flag->flags;
- 	platform_set_drvdata(pdev, data);
- 	data->usbmisc_data = usbmisc_get_init_data(dev);
- 	if (IS_ERR(data->usbmisc_data))
-@@ -369,6 +380,11 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 			}
- 		}
- 	}
-+
-+	if (pdata.flags & CI_HDRC_PMQOS)
-+		pm_qos_add_request(&data->pm_qos_req,
-+			PM_QOS_CPU_DMA_LATENCY, 0);
-+
- 	ret = imx_get_clks(dev);
- 	if (ret)
- 		goto disable_hsic_regulator;
-@@ -396,7 +412,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 		usb_phy_init(pdata.usb_phy);
- 	}
- 
--	pdata.flags |= imx_platform_flag->flags;
- 	if (pdata.flags & CI_HDRC_SUPPORTS_RUNTIME_PM)
- 		data->supports_runtime_pm = true;
- 
-@@ -439,6 +454,8 @@ err_clk:
- disable_hsic_regulator:
- 	if (data->hsic_pad_regulator)
- 		ret = regulator_disable(data->hsic_pad_regulator);
-+	if (pdata.flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
- 	return ret;
- }
- 
-@@ -455,6 +472,8 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
- 	if (data->override_phy_control)
- 		usb_phy_shutdown(data->phy);
- 	imx_disable_unprepare_clks(&pdev->dev);
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
- 	if (data->hsic_pad_regulator)
- 		regulator_disable(data->hsic_pad_regulator);
- 
-@@ -480,6 +499,9 @@ static int __maybe_unused imx_controller_suspend(struct device *dev)
- 	}
- 
- 	imx_disable_unprepare_clks(dev);
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_remove_request(&data->pm_qos_req);
-+
- 	data->in_lpm = true;
- 
- 	return 0;
-@@ -497,6 +519,10 @@ static int __maybe_unused imx_controller_resume(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (data->plat_data->flags & CI_HDRC_PMQOS)
-+		pm_qos_add_request(&data->pm_qos_req,
-+			PM_QOS_CPU_DMA_LATENCY, 0);
-+
- 	ret = imx_prepare_enable_clks(dev);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index d8b67e150b129..b7a5727d0c8a8 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -763,6 +763,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
- 		.compatible = "fsl,imx7d-usbmisc",
- 		.data = &imx7d_usbmisc_ops,
- 	},
-+	{
-+		.compatible = "fsl,imx7ulp-usbmisc",
-+		.data = &imx7d_usbmisc_ops,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 911e05af671ea..edd89b7c8f184 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -61,6 +61,7 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
- #define CI_HDRC_IMX_IS_HSIC		BIT(14)
-+#define CI_HDRC_PMQOS			BIT(15)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
+ 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
++		mutex_lock(&airq_areas_lock);
+ 		if (!airq_areas[i])
+ 			airq_areas[i] = new_airq_info();
+ 		info = airq_areas[i];
++		mutex_unlock(&airq_areas_lock);
+ 		if (!info)
+ 			return 0;
+ 		write_lock_irqsave(&info->lock, flags);
 -- 
 2.20.1
 
