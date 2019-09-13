@@ -2,210 +2,260 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E611C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA52C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1D42089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068CA2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oSo2mnx3"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="RZXNJsTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfIMOYj (ORCPT
+        id S1730526AbfIMO0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:24:39 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:25536 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfIMOYj (ORCPT
+        Fri, 13 Sep 2019 10:26:07 -0400
+Received: from mail.efficios.com ([167.114.142.138]:41478 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfIMO0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:24:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568384675;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0RQR4EVRvfIGS4a7f65/3zrJcdUshdLqla9xO5wB5Ic=;
-        b=oSo2mnx3J5Z8j6rxYvfuUN88Q2uQH98i6iOVhXbLbBNNEluKv2eut+eWyehhYG3hw8
-        0krM89wq0A9aFOnAbJ0sNgp2QrJu4H9JLaiyCCsQ1wJ2WPRw6jC/JuN71ZPfkz4d8sQO
-        SWBFuH0SwY8smkITV7dbq9fhGU12ov5DQu8nUFxt5mzp6ZFrJe4MBhpymG3yn8ily9dY
-        i5waaceXRm3WQii7888oCQqUkrAgMz2NS98OxiT+dm9YNrZuv2X+iaqG/pbulIx12hal
-        G3QLQ1q+lq/3nFwOCeptQZhNm01VnvWfF3NDnDgJYu43i1SfPQ0C7Tc/Jc6eB258tLZ3
-        w/Ew==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8DEOIIgj
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 13 Sep 2019 16:24:18 +0200 (CEST)
+        Fri, 13 Sep 2019 10:26:07 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 14C8E2D12C2;
+        Fri, 13 Sep 2019 10:26:05 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id TKAnLymlFryo; Fri, 13 Sep 2019 10:26:04 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 8746D2D12BF;
+        Fri, 13 Sep 2019 10:26:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8746D2D12BF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568384764;
+        bh=+vbUIGNxdYrEinf4GDuz93FUN8w4SV2XoMp2J6S3Sz4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=RZXNJsTJTtt6//1I2PmkVWYSHMy7nLbwpCDGfcrFthFVVJQf+ObLq4Mhu8fsJjAsE
+         Tc26sOYoFmQqfR2dNtyACKyeheH6/fm9OxknwV67R4+/nwmSCGFrDuIZ6l9DwBSXLc
+         rajLqONs80PR7fhJ3lmm6z/Ft4BVUHaKFpH24/JghhKk+o+HKrPRz3am9iFWbywcUc
+         AlwJv3mF+UUbJlvLamSaXHH5TNw+iKWAxlv0e3/4JKOWWidHOcPpBgnlkxjKpqvRl1
+         h2vAiZBY61NIJu9sFSmAtjnxl/4Y77qUJVhEQx8iB3/Pa/Ve/GTcZFWvDPKl8AMW4/
+         XqcUkygDhRztg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 4M6WUh3A1TuS; Fri, 13 Sep 2019 10:26:04 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 6F6052D12B6;
+        Fri, 13 Sep 2019 10:26:04 -0400 (EDT)
+Date:   Fri, 13 Sep 2019 10:26:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul Turner <pjt@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <2136508123.2398.1568384764381.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190911002744.8690-3-mathieu.desnoyers@efficios.com>
+References: <20190911002744.8690-1-mathieu.desnoyers@efficios.com> <20190911002744.8690-3-mathieu.desnoyers@efficios.com>
+Subject: Re: [RFC PATCH 3/4] rseq: Introduce unreg_clone_flags
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
-Date:   Fri, 13 Sep 2019 16:24:18 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com>
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: rseq: Introduce unreg_clone_flags
+Thread-Index: 3gtmfNwQV8V2jD0UQsjLKl9iGsMFRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On Sep 10, 2019, at 8:27 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->> Hi Adam,
->>=20
->>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
->>=20
->>>>> +     cpu_cooling_maps: cooling-maps {
->>>>> +             map0 {
->>>>> +                     trip =3D <&cpu_alert0>;
->>>>> +                     /* Only allow OPP50 and OPP100 */
->>>>> +                     cooling-device =3D <&cpu 0 1>;
->>>>=20
->>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
->>>> understand their meaning (and how it relates to the opp list).
->>>=20
->>> I read through the documentation, but it wasn't completely clear to
->>> me. AFAICT, the numbers after &cpu represent the min and max index =
-in
->>> the OPP table when the condition is hit.
->>=20
->> Ok. It seems to use "cooling state" for those and the first is =
-minimum
->> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
->> no limits.
->>=20
->> Since here we use the &cpu node it is likely that the "cooling state"
->> is the same as the OPP index currently in use.
->>=20
->> I have looked through the .dts which use cpu_crit and the picture is
->> not unique...
->>=20
->> omap4           seems to only define it
->> am57xx          has two different grade dtsi files
->> dra7            overwrites critical temperature value
->> am57xx-beagle   defines a gpio to control a fan
->=20
-> Checkout rk3288-veyron-mickey.dts
->=20
-> They have almost_warm, warm, almost_hot, hot, hotter, very_hot, and
-> critical for trips, and they have as many corresponding cooling maps
-> which appear to limit the CPU speeds, but their index references are
-> still confusing to me.
+> Considering that some custom libc could possibly choose not to use
+> CLONE_SETTLS, we should allow the libc to override the choice of clone
+> flags meant to unregister rseq. This is a policy decision which should
+> not be made by the kernel.
+> 
+> Therefore, introduce a new RSEQ_FLAG_UNREG_CLONE_FLAGS, which makes the
+> rseq system call expect an additional 5th argument: a mask of all the
+> clone flags which may each ensure rseq is unregistered upon clone.
+> 
+> So even if CLONE_SETTLS is eventually replaced by some other flag in the
+> future, the libc will be able to adapt and pass this new flag upon rseq
+> registration as well.
+> 
+> The default when RSEQ_FLAG_UNREG_CLONE_FLAGS is unset is to unregister
+> rseq on clone with CLONE_SETTLS.
 
-Seems to be quite sophistcated.
+Now that I think about this a bit more, perhaps it's better to just
+clear on clone CLONE_SETTLS, and wait until a libc actually requires this
+unreg_clone_flags override before introducing it.
 
-The arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi also has a lot
-of trip points. So there may be very different needs...
+Anyway, a "custom" libc could unregister / re-register around clone()
+as a stopgap solution.
 
-But it has potentially helpful comments...
+So I am tempted to drop this specific patch for now until actual libc
+requiring it show up.
 
-				/*=20
-				 * When reaching cpu0_alert3, reduce CPU
-				 * by 2 steps. On Exynos5422/5800 that =
-would
-				 * be: 1600 MHz and 1100 MHz.
-				 */
-				map3 {
-					trip =3D <&cpu0_alert3>;
-					cooling-device =3D <&cpu0 0 2>;
-				};
-				map4 {
-					trip =3D <&cpu0_alert3>;
-					cooling-device =3D <&cpu4 0 2>;
-				};
-				/*
-				 * When reaching cpu0_alert4, reduce CPU
-				 * further, down to 600 MHz (12 steps =
-for big,
-				 * 7 steps for LITTLE).
-				 */
-				map5 {
-					trip =3D <&cpu0_alert4>;
-					cooling-device =3D <&cpu0 3 7>;
-				};
-				map6 {
-					trip =3D <&cpu0_alert4>;
-					cooling-device =3D <&cpu4 3 12>;
-				};
+Thoughts ?
 
-That would mean the second integer is something about how
-many steps to reduce.
+Thanks,
 
-But the first is not explained.
+Mathieu
 
-BTW: this also demonstrates how a single trip point can map to multiple
-cooling-device actions (something we likely do not need).
+> 
+> Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "H . Peter Anvin" <hpa@zytor.com>
+> Cc: Paul Turner <pjt@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: linux-api@vger.kernel.org
+> ---
+> include/linux/sched.h     |  9 +++++++--
+> include/linux/syscalls.h  |  2 +-
+> include/uapi/linux/rseq.h |  1 +
+> kernel/rseq.c             | 14 +++++++++++---
+> 4 files changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index deb4154dbf11..c8faa6f8493d 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1138,6 +1138,7 @@ struct task_struct {
+> 	 * with respect to preemption.
+> 	 */
+> 	unsigned long rseq_event_mask;
+> +	int rseq_unreg_clone_flags;
+> #endif
+> 
+> 	struct tlbflush_unmap_batch	tlb_ubc;
+> @@ -1919,18 +1920,21 @@ static inline void rseq_migrate(struct task_struct *t)
+> 
+> /*
+>  * If parent process has a registered restartable sequences area, the
+> - * child inherits. Unregister rseq for a clone with CLONE_TLS set.
+> + * child inherits, except if it has been required to be explicitly
+> + * unregistered when any of the rseq_unreg_clone_flags are passed to clone.
+>  */
+> static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+> {
+> -	if (clone_flags & CLONE_TLS) {
+> +	if (clone_flags & t->rseq_unreg_clone_flags) {
+> 		t->rseq = NULL;
+> 		t->rseq_sig = 0;
+> 		t->rseq_event_mask = 0;
+> +		t->rseq_unreg_clone_flags = 0;
+> 	} else {
+> 		t->rseq = current->rseq;
+> 		t->rseq_sig = current->rseq_sig;
+> 		t->rseq_event_mask = current->rseq_event_mask;
+> +		t->rseq_unreg_clone_flags = current->rseq_unreg_clone_flags;
+> 	}
+> }
+> 
+> @@ -1939,6 +1943,7 @@ static inline void rseq_execve(struct task_struct *t)
+> 	t->rseq = NULL;
+> 	t->rseq_sig = 0;
+> 	t->rseq_event_mask = 0;
+> +	t->rseq_unreg_clone_flags = 0;
+> }
+> 
+> #else
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index 88145da7d140..6a242cfcc360 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -987,7 +987,7 @@ asmlinkage long sys_pkey_free(int pkey);
+> asmlinkage long sys_statx(int dfd, const char __user *path, unsigned flags,
+> 			  unsigned mask, struct statx __user *buffer);
+> asmlinkage long sys_rseq(struct rseq __user *rseq, uint32_t rseq_len,
+> -			 int flags, uint32_t sig);
+> +			 int flags, uint32_t sig, int unreg_clone_flags);
+> asmlinkage long sys_open_tree(int dfd, const char __user *path, unsigned flags);
+> asmlinkage long sys_move_mount(int from_dfd, const char __user *from_path,
+> 			       int to_dfd, const char __user *to_path,
+> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> index 9a402fdb60e9..d71e3c6b7fdb 100644
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -20,6 +20,7 @@ enum rseq_cpu_id_state {
+> 
+> enum rseq_flags {
+> 	RSEQ_FLAG_UNREGISTER = (1 << 0),
+> +	RSEQ_FLAG_UNREG_CLONE_FLAGS = (1 << 1),
+> };
+> 
+> enum rseq_cs_flags_bit {
+> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> index a4f86a9d6937..c59b8d3dc275 100644
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -304,8 +304,8 @@ void rseq_syscall(struct pt_regs *regs)
+> /*
+>  * sys_rseq - setup restartable sequences for caller thread.
+>  */
+> -SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+> -		int, flags, u32, sig)
+> +SYSCALL_DEFINE5(rseq, struct rseq __user *, rseq, u32, rseq_len,
+> +		int, flags, u32, sig, int, unreg_clone_flags)
+> {
+> 	int ret;
+> 
+> @@ -324,12 +324,16 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+> rseq_len,
+> 			return ret;
+> 		current->rseq = NULL;
+> 		current->rseq_sig = 0;
+> +		current->rseq_unreg_clone_flags = 0;
+> 		return 0;
+> 	}
+> 
+> -	if (unlikely(flags))
+> +	if (unlikely(flags & ~RSEQ_FLAG_UNREG_CLONE_FLAGS))
+> 		return -EINVAL;
+> 
+> +	if (!(flags & RSEQ_FLAG_UNREG_CLONE_FLAGS))
+> +		unreg_clone_flags = CLONE_SETTLS;
+> +
+> 	if (current->rseq) {
+> 		/*
+> 		 * If rseq is already registered, check whether
+> @@ -338,6 +342,9 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+> rseq_len,
+> 		 */
+> 		if (current->rseq != rseq || rseq_len != sizeof(*rseq))
+> 			return -EINVAL;
+> +		if ((flags & RSEQ_FLAG_UNREG_CLONE_FLAGS) &&
+> +		    current->rseq_unreg_clone_flags != unreg_clone_flags)
+> +			return -EINVAL;
+> 		if (current->rseq_sig != sig)
+> 			return -EPERM;
+> 		/* Already registered. */
+> @@ -355,6 +362,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+> rseq_len,
+> 		return -EFAULT;
+> 	current->rseq = rseq;
+> 	current->rseq_sig = sig;
+> +	current->rseq_unreg_clone_flags = unreg_clone_flags;
+> 	/*
+> 	 * If rseq was previously inactive, and has just been
+> 	 * registered, ensure the cpu_id_start and cpu_id fields
+> --
+> 2.17.1
 
->=20
-> For that device,
-> Warm and no limit first, then 4:   coolling-device =3D <&cpu0 =
-THERMAL_NO_LIMIT 4>
-> ...
-> very_hot uses a number then no limit: cooling-device =3D <&cpu0 8
-> THERMAL_NO_LIMIT>
->=20
-> This makes me wonder if the min and max are switched or the index
-> values go backwards.
-
-It may depend on the specific cpu driver? Maybe even omap rk and exynos
-have different interpretation in code?
-
->>=20
->> Then we can use the data sheet limits of 90=C2=B0C and 105=C2=B0C in =
-the trip point
->> table (which should not be tweaked for sensor inaccuracy).
->=20
-> I can see not compensating if it reads high, but if the temp reads
-> low, shouldn't compensate so we don't over temp the processor?
-
-I just mean that we must ensure that the TJ is <=3D 90=C2=B0 if the =
-bandgap
-ever reports 90=C2=B0. So it may report 10 or 20 or even 30 degrees more =
-than the
-real temperature but never less (reaching the critical temperature too =
-early
-but not too late).
-
-We can achieve that by adding bias or changing slope etc. in the bandgap =
-sensor
-driver.
-
-If I find some time I am curious enough to look into the code and the =
-data
-sheets to understand why it is said to be inaccurate... Maybe there is
-jitter from some LDO and it needs a median filter?
-
-And why it seems to add a bias of ca. 10=C2=B0 as soon as I read it more =
-than
-for the first time. And how well temperature correlates to ambient =
-temperature
-(it definitively correlates to cpufreq-set -f).
-
-But we should not modify the trip temperatures by 10 or 20 or 30 =
-degrees.
-IMHO they should have the values defined by the data sheet.
-
-BR,
-Nikolaus
-
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
