@@ -2,206 +2,120 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB100C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C79C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D80D206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380979;
-	bh=ZGQq7XmYS3Ko11gPlRhrnwMkCQgmaoPYqlC740uS8JE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgM3NH/fwqlXnBw90Ymmq2bDJ8Jn6O0hYncfXIL3HNBc91fq/mTo7ixpo39Sq5zqV
-	 SaWjkvRdHCVzLb14WCP61oe/SRn/Nk9Al2yyJjO5vxkpSNledGKh8OL3WstFr9uUxo
-	 V6NML+vhDYM3mBXBQznl6WHlniEJV7KmDEZOETmA=
+	by mail.kernel.org (Postfix) with ESMTP id 185B4206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y9dbMQc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391067AbfIMNW6 (ORCPT
+        id S2391082AbfIMNXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390909AbfIMNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:52 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0988E20717;
-        Fri, 13 Sep 2019 13:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380911;
-        bh=ZGQq7XmYS3Ko11gPlRhrnwMkCQgmaoPYqlC740uS8JE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOV3fhcmQCV1ZG3Z6geC8hBICzCeKey2XTDsDxTAzz/Z3ODcIElYirU3HHrwSwgD5
-         4IPsUGsRDwTRf2qMyz0wlPcsirpYw9oytXOONmwHz943xTkhzh/pueNolL3KrJlam1
-         TnqUhaJyW7wRyUVcJCPCkMaEY8Aw8y0ONI8+PCPc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zdenek Sojka <zsojka@seznam.cz>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        Drazen Kacar <drazen.kacar@oradian.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.2 35/37] Btrfs: fix unwritten extent buffers and hangs on future writeback attempts
-Date:   Fri, 13 Sep 2019 14:07:40 +0100
-Message-Id: <20190913130522.060024148@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
-References: <20190913130510.727515099@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 13 Sep 2019 09:23:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55284 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390909AbfIMNXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:23:01 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDMxhg074712;
+        Fri, 13 Sep 2019 08:22:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568380980;
+        bh=vnhD3PZ0mNE2hDulxxExCWGhochou6IDX6JVjee4zZo=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=Y9dbMQc0aE9/gKp7o4aKT4yxFvuv2bv5RTsbZG6T4voAXupV97yHdiktLJMPeHnCS
+         u5W5jOcO2C3h8b44NbwSPPTu+dAkEvtzrFtoCCbfhtuWojinwtmbkehD+/w2QkIol1
+         6J1Sc7IRV3IiYzDV7D6vH0U90p69qO9Y4xOrAvpA=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDMxnS116313
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Sep 2019 08:22:59 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
+ Sep 2019 08:22:59 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 13 Sep 2019 08:22:59 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDMxCB116905;
+        Fri, 13 Sep 2019 08:22:59 -0500
+Date:   Fri, 13 Sep 2019 08:25:04 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 02/13] media: am437x-vpfe: Fix missing first line
+Message-ID: <20190913132504.sh5fpb4hrv5wqorp@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-3-bparrot@ti.com>
+ <018a5f55-a750-c86d-da82-2b7c586cb33e@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <018a5f55-a750-c86d-da82-2b7c586cb33e@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:00:08 +0200]:
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > Previous generation of this driver were hard coded to handle
+> > encoder/decoder were the first line never contains any data and
+> 
+> were -> where
+> 
+> > was therefore always skipped, however when dealing with actual
+> > camera sensor the first line is always present.
+> 
+> sensor -> sensors
 
-commit 18dfa7117a3f379862dcd3f67cadd678013bb9dd upstream.
+I'll fix those.
 
-The lock_extent_buffer_io() returns 1 to the caller to tell it everything
-went fine and the callers needs to start writeback for the extent buffer
-(submit a bio, etc), 0 to tell the caller everything went fine but it does
-not need to start writeback for the extent buffer, and a negative value if
-some error happened.
+Thanks
 
-When it's about to return 1 it tries to lock all pages, and if a try lock
-on a page fails, and we didn't flush any existing bio in our "epd", it
-calls flush_write_bio(epd) and overwrites the return value of 1 to 0 or
-an error. The page might have been locked elsewhere, not with the goal
-of starting writeback of the extent buffer, and even by some code other
-than btrfs, like page migration for example, so it does not mean the
-writeback of the extent buffer was already started by some other task,
-so returning a 0 tells the caller (btree_write_cache_pages()) to not
-start writeback for the extent buffer. Note that epd might currently have
-either no bio, so flush_write_bio() returns 0 (success) or it might have
-a bio for another extent buffer with a lower index (logical address).
+Benoit
 
-Since we return 0 with the EXTENT_BUFFER_WRITEBACK bit set on the
-extent buffer and writeback is never started for the extent buffer,
-future attempts to writeback the extent buffer will hang forever waiting
-on that bit to be cleared, since it can only be cleared after writeback
-completes. Such hang is reported with a trace like the following:
-
-  [49887.347053] INFO: task btrfs-transacti:1752 blocked for more than 122 seconds.
-  [49887.347059]       Not tainted 5.2.13-gentoo #2
-  [49887.347060] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  [49887.347062] btrfs-transacti D    0  1752      2 0x80004000
-  [49887.347064] Call Trace:
-  [49887.347069]  ? __schedule+0x265/0x830
-  [49887.347071]  ? bit_wait+0x50/0x50
-  [49887.347072]  ? bit_wait+0x50/0x50
-  [49887.347074]  schedule+0x24/0x90
-  [49887.347075]  io_schedule+0x3c/0x60
-  [49887.347077]  bit_wait_io+0x8/0x50
-  [49887.347079]  __wait_on_bit+0x6c/0x80
-  [49887.347081]  ? __lock_release.isra.29+0x155/0x2d0
-  [49887.347083]  out_of_line_wait_on_bit+0x7b/0x80
-  [49887.347084]  ? var_wake_function+0x20/0x20
-  [49887.347087]  lock_extent_buffer_for_io+0x28c/0x390
-  [49887.347089]  btree_write_cache_pages+0x18e/0x340
-  [49887.347091]  do_writepages+0x29/0xb0
-  [49887.347093]  ? kmem_cache_free+0x132/0x160
-  [49887.347095]  ? convert_extent_bit+0x544/0x680
-  [49887.347097]  filemap_fdatawrite_range+0x70/0x90
-  [49887.347099]  btrfs_write_marked_extents+0x53/0x120
-  [49887.347100]  btrfs_write_and_wait_transaction.isra.4+0x38/0xa0
-  [49887.347102]  btrfs_commit_transaction+0x6bb/0x990
-  [49887.347103]  ? start_transaction+0x33e/0x500
-  [49887.347105]  transaction_kthread+0x139/0x15c
-
-So fix this by not overwriting the return value (ret) with the result
-from flush_write_bio(). We also need to clear the EXTENT_BUFFER_WRITEBACK
-bit in case flush_write_bio() returns an error, otherwise it will hang
-any future attempts to writeback the extent buffer, and undo all work
-done before (set back EXTENT_BUFFER_DIRTY, etc).
-
-This is a regression introduced in the 5.2 kernel.
-
-Fixes: 2e3c25136adfb ("btrfs: extent_io: add proper error handling to lock_extent_buffer_for_io()")
-Fixes: f4340622e0226 ("btrfs: extent_io: Move the BUG_ON() in flush_write_bio() one level up")
-Reported-by: Zdenek Sojka <zsojka@seznam.cz>
-Link: https://lore.kernel.org/linux-btrfs/GpO.2yos.3WGDOLpx6t%7D.1TUDYM@seznam.cz/T/#u
-Reported-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
-Link: https://lore.kernel.org/linux-btrfs/5c4688ac-10a7-fb07-70e8-c5d31a3fbb38@profihost.ag/T/#t
-Reported-by: Drazen Kacar <drazen.kacar@oradian.com>
-Link: https://lore.kernel.org/linux-btrfs/DB8PR03MB562876ECE2319B3E579590F799C80@DB8PR03MB5628.eurprd03.prod.outlook.com/
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204377
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/extent_io.c |   35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
-
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3591,6 +3591,13 @@ void wait_on_extent_buffer_writeback(str
- 		       TASK_UNINTERRUPTIBLE);
- }
- 
-+static void end_extent_buffer_writeback(struct extent_buffer *eb)
-+{
-+	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
-+	smp_mb__after_atomic();
-+	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
-+}
-+
- /*
-  * Lock eb pages and flush the bio if we can't the locks
-  *
-@@ -3662,8 +3669,11 @@ static noinline_for_stack int lock_exten
- 
- 		if (!trylock_page(p)) {
- 			if (!flush) {
--				ret = flush_write_bio(epd);
--				if (ret < 0) {
-+				int err;
-+
-+				err = flush_write_bio(epd);
-+				if (err < 0) {
-+					ret = err;
- 					failed_page_nr = i;
- 					goto err_unlock;
- 				}
-@@ -3678,16 +3688,23 @@ err_unlock:
- 	/* Unlock already locked pages */
- 	for (i = 0; i < failed_page_nr; i++)
- 		unlock_page(eb->pages[i]);
-+	/*
-+	 * Clear EXTENT_BUFFER_WRITEBACK and wake up anyone waiting on it.
-+	 * Also set back EXTENT_BUFFER_DIRTY so future attempts to this eb can
-+	 * be made and undo everything done before.
-+	 */
-+	btrfs_tree_lock(eb);
-+	spin_lock(&eb->refs_lock);
-+	set_bit(EXTENT_BUFFER_DIRTY, &eb->bflags);
-+	end_extent_buffer_writeback(eb);
-+	spin_unlock(&eb->refs_lock);
-+	percpu_counter_add_batch(&fs_info->dirty_metadata_bytes, eb->len,
-+				 fs_info->dirty_metadata_batch);
-+	btrfs_clear_header_flag(eb, BTRFS_HEADER_FLAG_WRITTEN);
-+	btrfs_tree_unlock(eb);
- 	return ret;
- }
- 
--static void end_extent_buffer_writeback(struct extent_buffer *eb)
--{
--	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
--	smp_mb__after_atomic();
--	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
--}
--
- static void set_btree_ioerr(struct page *page)
- {
- 	struct extent_buffer *eb = (struct extent_buffer *)page->private;
-
-
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index ab959d61f9c9..0ecb75bf5abd 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -345,13 +345,9 @@ static void vpfe_ccdc_setwin(struct vpfe_ccdc *ccdc,
+> >  	if (frm_fmt == CCDC_FRMFMT_INTERLACED) {
+> >  		vert_nr_lines = (image_win->height >> 1) - 1;
+> >  		vert_start >>= 1;
+> > -		/* Since first line doesn't have any data */
+> > -		vert_start += 1;
+> >  		/* configure VDINT0 */
+> >  		val = (vert_start << VPFE_VDINT_VDINT0_SHIFT);
+> >  	} else {
+> > -		/* Since first line doesn't have any data */
+> > -		vert_start += 1;
+> >  		vert_nr_lines = image_win->height - 1;
+> >  		/*
+> >  		 * configure VDINT0 and VDINT1. VDINT1 will be at half
+> > 
+> 
