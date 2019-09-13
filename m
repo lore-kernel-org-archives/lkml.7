@@ -2,125 +2,143 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12494C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28273C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CFE21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568353342;
-	bh=Dad/2dB2E/wqoGQmAFEVO2Ay51FWG0yohYBc/M581sY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2payaKViouX7VOVN39A0T0endl0T3CbojpngyGYA2zjTOktDWz+NeLteZYtti181V
-	 fmrVnCDvmeNmmECfGELuztEBx3I4AkpApTU1CuiJogECYqeJfr9V7QKiQGBd1M573y
-	 m31eZriy5G0uhZqazxq5993eMFn1Btwfeku4jOVY=
+	by mail.kernel.org (Postfix) with ESMTP id E058D20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c7EzigXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfIMFmU (ORCPT
+        id S1726516AbfIMFsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:42:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40032 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfIMFmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:42:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l3so7992817wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LSlNtFgitt14dDGHoASb+NTexJIytOoP8ixydWWFIH8=;
-        b=mC1t5L+2lz1Hw1YIv2BhKKIkjwR5PK0ME+T3ztDo6YWqH+2oZ05VaG0vCcdyBY5QU+
-         VeCxoxmLs4XcPdfzUIrxHjDJRv0PYdHUFYlG+l36yO3spe96pca/YBrF17ekuyhhe00N
-         9BNXPjzIpXbBigy+lqkQ3+gL0MB5bxzJh+vC3E+K/ENBv5qVFbb868OAiFKm6rxYTExf
-         L1Qnzz5XnrOCeWFjXUREeMxEC8AplbBezsaHiR7M4GUXACwhqss/Mo0bfn9JJcLHVCWK
-         rh+DbZtAALXcpp7Bv9jNJar955HILMxMuSox8VJPe/aIurBGBWFG/anyP/wh45iruqvc
-         JDOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LSlNtFgitt14dDGHoASb+NTexJIytOoP8ixydWWFIH8=;
-        b=P6DW/KOJFj02x/iMN2Sk9QK41OBLGMTQjNkwFJGVTKGA0YV9FWss04HXanQT24OWuq
-         dzg6QUcUse57alTXc02I4z2PT+yuKTSZkrOCLf9LtzZDMAy24ZCgCWvbSf9jeesCh6Ot
-         8vtgKEOCQHC6oZ34bYC1ChB3y092klGdlEwkgbmnKIEDOfrYbYSdDoiGdnODych+N+mY
-         m7ba03lvqrmEkCApQ+HB3QHzgvXZr5asu4i9oxEQN6BOVRAONZGj19ardjZjX0ziVd01
-         5ZvEFG4Iy0BrhKi9qAQDykmd7MvktI71tw2IUa4qicanccqfsyDFSOckYunUF/ILHHkB
-         rYrQ==
-X-Gm-Message-State: APjAAAVc3DdwedxflQ12EBFrZ08aDmVlIXk3wuROXvGqMv+z/ArSTSQN
-        pA0wT1tgAcQTVPFxAo6n6D4=
-X-Google-Smtp-Source: APXvYqzcAJKt51S/9FTwPoHhARkpmDjREAn9SsJv+fA3xw4KzDExfEm46OhtSIpDObQiUYsoK8C7kw==
-X-Received: by 2002:adf:a357:: with SMTP id d23mr10178038wrb.18.1568353338557;
-        Thu, 12 Sep 2019 22:42:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id s19sm40392869wrb.14.2019.09.12.22.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 22:42:18 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 07:42:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        ndesaulniers@google.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 6/6] x86: bug.h: use asm_inline in _BUG_FLAGS
- definitions
-Message-ID: <20190913054215.GB118828@gmail.com>
-References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
- <20190912221927.18641-1-linux@rasmusvillemoes.dk>
- <20190912221927.18641-7-linux@rasmusvillemoes.dk>
+        Fri, 13 Sep 2019 01:48:45 -0400
+Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:38151
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725385AbfIMFso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 01:48:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Md7nIJRWD8rRWiYOpNWXsWjikTdmw+1mHwXaoy0knyl6qBSzXzg81m/a8nWhV0+HsiSPq4HoxaNHCyupTUIcEy+GxlNpdNSlwP/qyyWeh28alp9/u4mf3jqkEKC9DjgDH4qLNzz81ngfx/cXnLKBncS8fV3xgKsnW5Wi4m+rXJx1qXeuKr0mq1YV13R+51zd9JXXmbs4SEdk+qws7RIbzrbE0E+VlGG1tD/Qvq8Uw6NhRe+NDWmu2/UCEKiPNYdRnfmDmfk4J+h3Ehm/2npLQZaHN94Jbh7ckxP7De8Gs+1B86oOxGMRupMdNZQLxtfeM0ExpCwI6STpSXW9PnjgSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zBCCnSJLpEpCMycoFYk04JXgRHL+UjgAb7/e8w8YAeI=;
+ b=Cf1gA7xPgeZH7lMHz7uwwVIUm5XZdYq2UyyI02biPNESMdioqsaD68iPS1iwM7zZyUuC568eSyn3/kLyfHoshXV4El0P7aTL6McE5nHdEUIV3p8XNxdNwuXmF4PLuj6Co5/yH24thMM47xYurvuGbuSWBe/tqGSBXma0G76Rsx5oGliEsovQQbfOdCGGw5mNqnq/wedc61YcN0BU8XQn1URk5nyiv0aTvXCTPl7jXPfVWAHML6VOIkNThD7iJhD52FlwkvoPqEZWZpfo+TQkfYyL8+kfqeJj8oi24QVHkdkeBvQGrT//AZYYMB02uvaa0ar/WYxPJKk2ngyQCg8s1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zBCCnSJLpEpCMycoFYk04JXgRHL+UjgAb7/e8w8YAeI=;
+ b=c7EzigXK38N6U3PYd7xzVZ+sA35yjF8tdi6Vy7t6SGK7kFWohNohHFWtQb7lvYoDJU61yslrfrpZ3DWXSLKdi7wM52hQY82wAR+olgSyix64bxqFVmd3HdT9g7LiVe3jVIBc4dKqpeFOyEwJgH2GzKI/4jYXgTpyPiCwrtetM6o=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6701.eurprd04.prod.outlook.com (20.179.235.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.20; Fri, 13 Sep 2019 05:48:40 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
+ 05:48:40 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
+ format
+Thread-Topic: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
+ format
+Thread-Index: AdVne99A50iblB+wSvqDBZhWvxbm4ACSRBCAAAw2tDA=
+Date:   Fri, 13 Sep 2019 05:48:40 +0000
+Message-ID: <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
+References: <VE1PR04MB64791308D87F91C51412DF53E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
+ <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 80d7f1c8-ba1a-45d3-6e9d-08d7380e07e2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR04MB6701;
+x-ms-traffictypediagnostic: VE1PR04MB6701:
+x-microsoft-antispam-prvs: <VE1PR04MB6701A1ECFCD5B77527DE78B1E3B30@VE1PR04MB6701.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(376002)(39860400002)(189003)(199004)(256004)(8676002)(76116006)(3846002)(66946007)(6116002)(5660300002)(81156014)(52536014)(99286004)(6246003)(81166006)(53936002)(14454004)(76176011)(7696005)(486006)(54906003)(66556008)(66446008)(64756008)(66476007)(316002)(2906002)(229853002)(11346002)(4326008)(66066001)(1411001)(7416002)(446003)(305945005)(476003)(6506007)(478600001)(7736002)(55016002)(8936002)(86362001)(102836004)(186003)(26005)(6916009)(9686003)(71190400001)(25786009)(6436002)(74316002)(71200400001)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6701;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vRfzF51we1zFpC03lvmDd+vNL4EZIt1dtj+HQa8TNvjHhUkCHZxvcQEldJS4HzlxEbwouGAzNQ3Kbl+kXXfPe3E31eshzv5xjV46Mfiv6EgkyeP0YR7fOi4fy57N/OPpXWYJ7LQ9CP92GKHiwlADBNV0lUiscF0zyzurOCMPzD/hrI2eePynDYwaCrujswr3NKyxhJXupjA+GWVbIrawrUMx2l3tVfga1uiVI8z9nyNhIie20XyATV9FtmWKxNIvkEXrnQM5nB9W7PCZ4eeYSm3lEfLflusEaeqxFitem/zZCUGQIxzRQ32j9Syx+6p4xk5B7PsJOQEMkX78xiE9K0adDoWrQ0/lgjL8dF30zDzfj0Gq68/v2j/PkYuMIEDqoND6OQ+z7tlweijdMwz/DZ6hweg24hJ2OyMu3dVXyds=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912221927.18641-7-linux@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80d7f1c8-ba1a-45d3-6e9d-08d7380e07e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 05:48:40.7752
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GIkSRxHUcaYmMn9kgeGtSEr7ArNIH3/+q4ObXJL+kVbiNS9b/ylmVoLwTE742i5XBKW/Tagij7gCZ62Lgc0V1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6701
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
-* Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+>=20
+> On Tue, Sep 10, 2019 at 02:07:25AM +0000, S.j. Wang wrote:
+> > > On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
+> > > > The ASRC support 24bit/16bit/8bit input width, so S20_3LE format
+> > > > should not be supported, it is word width is 20bit.
+> > >
+> > > I thought 3LE used 24-bit physical width. And the driver assigns
+> > > ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit
+> > > would go for that 24-bit slot also. I don't clearly recall if I had
+> > > explicitly tested S20_3LE, but I feel it should work since I put ther=
+e...
+> >
+> > For S20_3LE, the width is 20bit,  but the ASRC only support 24bit, if
+> > set the ASRMCR1n.IWD=3D 24bit, because the actual width is 20 bit, the
+> > volume is Lower than expected,  it likes 24bit data right shift 4 bit.
+> > So it is not supported.
+>=20
+> Hmm..S20_3LE right-aligns 20 bits in a 24-bit slot? I thought they're lef=
+t
+> aligned...
+>=20
+> If this is the case...shouldn't we have the same lower-volume problem for
+> all hardwares that support S20_3LE now?
 
-> This helps preventing a BUG* or WARN* in some static inline from
-> preventing that (or one of its callers) being inlined, so should allow
-> gcc to make better informed inlining decisions.
-> 
-> For example, with gcc 9.2, tcp_fastopen_no_cookie() vanishes from
-> net/ipv4/tcp_fastopen.o. It does not itself have any BUG or WARN, but
-> it calls dst_metric() which has a WARN_ON_ONCE - and despite that
-> WARN_ON_ONCE vanishing since the condition is compile-time false,
-> dst_metric() is apparently sufficiently "large" that when it gets
-> inlined into tcp_fastopen_no_cookie(), the latter becomes too large
-> for inlining.
-> 
-> Overall, if one asks size(1), .text decreases a little and .data
-> increases by about the same amount (x86-64 defconfig)
-> 
-> $ size vmlinux.{before,after}
->    text    data     bss     dec     hex filename
-> 19709726        5202600 1630280 26542606        195020e vmlinux.before
-> 19709330        5203068 1630280 26542678        1950256 vmlinux.after
-> 
-> while bloat-o-meter says
-> 
-> add/remove: 10/28 grow/shrink: 103/51 up/down: 3669/-2854 (815)
-> ...
-> Total: Before=14783683, After=14784498, chg +0.01%
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Actually some hardware/module when they do transmission from FIFO
+to shift register, they can select the start bit, for example from the 20th
+bit. but not all module have this capability.
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
+For ASRC, it haven't.  IWD can only cover the data width,  there is no
+Other bit for slot width.
 
-Thanks,
+Best regards
+Wang shengjiu
 
-	Ingo
+
+
