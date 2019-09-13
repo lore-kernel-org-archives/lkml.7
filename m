@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E43DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB9C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551BD208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DB2208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380148;
-	bh=hdZ1chB3WzXr0Y4hQLXkjIe8ePHY8MGeUnpJmhc0/3U=;
+	s=default; t=1568380150;
+	bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L28eYF0j/aVl3plrTMh9+2SgLvioERmMxjzdDTfxK3gLdKEeb6deCK+93zBXUg+D/
-	 PaVgCzVxdS3Y1EwhsR9lffPVoHB3OOIkt54x7B3Afhvuy3wnI0aFPtcRxga6TDLiRI
-	 gn4oYnFCzjZF92UjN2y3Lx+tH7lbmZvwWVGYjqy0=
+	b=zWvMWY96CtN2CRcVs43DgIn7xp85ltw8iYyJPss5AM/uPUG/9qbgyvqdz52zwwncY
+	 K/OYaazq2OKU3B05ZDFqyvT418O78MH5X7FFNbHKiJ8CpV/hNMa/GV5MZrYPHVwyrX
+	 z+2ElwVESO/pEdW1169LpEuf88Z/CEBei7RNPKtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388433AbfIMNJG (ORCPT
+        id S2388447AbfIMNJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfIMNJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:03 -0400
+        id S2388429AbfIMNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:06 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A1A214D8;
-        Fri, 13 Sep 2019 13:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA6902089F;
+        Fri, 13 Sep 2019 13:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380142;
-        bh=hdZ1chB3WzXr0Y4hQLXkjIe8ePHY8MGeUnpJmhc0/3U=;
+        s=default; t=1568380145;
+        bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aB4DUq8TGJllvpmWDx9kddnjsas89Yyt8cZLoTsABAkX/+aOk14bmcbpVRhxlXoat
-         evrNrs/w4g8CXsHXXK/3l8GC66+K18jYJgsk2I90EYXL4eLAlg8IN49PNcS81Xpd/T
-         V5LDUKfmyXsMXDZjVXOZR3OZgm41W2kl6Ldd75fQ=
+        b=wlltPRm5SVIN6qN3afvbKknzobJXIu/uZI1gWa766KxPksXcM+FW2QBy1cmMieuvn
+         wOMPTy2zs2JXAA6qtjBva0ImsB/qKZoAZPfk50IQGqsXHSBlA9Y76LEkiWiJWgSCuV
+         bM25DNPpD9tZyXal3r2AzaZJ14TYr2dBC2xLantA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lidong Chen <lidongchen@tencent.com>,
-        ruippan <ruippan@tencent.com>, yongduan <yongduan@tencent.com>,
+        stable@vger.kernel.org, Tiwei Bie <tiwei.bie@intel.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: [PATCH 4.4 9/9] vhost: make sure log_num < in_num
-Date:   Fri, 13 Sep 2019 14:06:59 +0100
-Message-Id: <20190913130432.563420115@linuxfoundation.org>
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 4.4 4/9] vhost/test: fix build for vhost test
+Date:   Fri, 13 Sep 2019 14:06:54 +0100
+Message-Id: <20190913130428.871493307@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
 References: <20190913130424.160808669@linuxfoundation.org>
@@ -61,54 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yongduan <yongduan@tencent.com>
+From: Tiwei Bie <tiwei.bie@intel.com>
 
-commit 060423bfdee3f8bc6e2c1bac97de24d5415e2bc4 upstream.
+commit 264b563b8675771834419057cbe076c1a41fb666 upstream.
 
-The code assumes log_num < in_num everywhere, and that is true as long as
-in_num is incremented by descriptor iov count, and log_num by 1. However
-this breaks if there's a zero sized descriptor.
+Since vhost_exceeds_weight() was introduced, callers need to specify
+the packet weight and byte weight in vhost_dev_init(). Note that, the
+packet weight isn't counted in this patch to keep the original behavior
+unchanged.
 
-As a result, if a malicious guest creates a vring desc with desc.len = 0,
-it may cause the host kernel to crash by overflowing the log array. This
-bug can be triggered during the VM migration.
-
-There's no need to log when desc.len = 0, so just don't increment log_num
-in this case.
-
-Fixes: 3a4d5c94e959 ("vhost_net: a kernel-level virtio server")
+Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
 Cc: stable@vger.kernel.org
-Reviewed-by: Lidong Chen <lidongchen@tencent.com>
-Signed-off-by: ruippan <ruippan@tencent.com>
-Signed-off-by: yongduan <yongduan@tencent.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/vhost.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/vhost/test.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -1324,7 +1324,7 @@ static int get_indirect(struct vhost_vir
- 		/* If this is an input descriptor, increment that count. */
- 		if (desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_WRITE)) {
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
- 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
- 				++*log_num;
-@@ -1453,7 +1453,7 @@ int vhost_get_vq_desc(struct vhost_virtq
- 			/* If this is an input descriptor,
- 			 * increment that count. */
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
- 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
- 				++*log_num;
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -23,6 +23,12 @@
+  * Using this limit prevents one virtqueue from starving others. */
+ #define VHOST_TEST_WEIGHT 0x80000
+ 
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * pkts.
++ */
++#define VHOST_TEST_PKT_WEIGHT 256
++
+ enum {
+ 	VHOST_TEST_VQ = 0,
+ 	VHOST_TEST_VQ_MAX = 1,
+@@ -81,10 +87,8 @@ static void handle_vq(struct vhost_test
+ 		}
+ 		vhost_add_used_and_signal(&n->dev, vq, head, 0);
+ 		total_len += len;
+-		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
+ 			break;
+-		}
+ 	}
+ 
+ 	mutex_unlock(&vq->mutex);
+@@ -116,7 +120,8 @@ static int vhost_test_open(struct inode
+ 	dev = &n->dev;
+ 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+ 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+-	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX);
++	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX,
++		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+ 
+ 	f->private_data = n;
+ 
 
 
