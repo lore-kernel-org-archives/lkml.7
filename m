@@ -2,197 +2,131 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B03C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5857BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE57A20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A08220678
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="i+EsRJLF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RtVOQl6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389846AbfIMP77 (ORCPT
+        id S1730418AbfIMQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:59:59 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25459 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728811AbfIMP76 (ORCPT
+        Fri, 13 Sep 2019 12:01:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37515 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfIMQBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:59:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1568390366; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=SLLlGc9nv+SD9CgdET16ANDVpnhBzDuR2sh4VVT9nLaLPzoBudiYAhT1wKIEs5rF5bTsBEMP5ZJCapcyYmZFaBe50oLlIrNIoytj9gLi+coZZli4u0jSS4gxQuJLCbcthLFsGz1HJiqRwgIx8QLbbBrX5+m5TjCX4brSjrrYomw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1568390366; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=IL7XvFCTAWRH0WfapoAjEN/ppfvJmC4N1IUgD1yn/nU=; 
-        b=bkuCYM/LLnwobDGxQSHTD/9ebvQ7AH273OiDlL6Yule0LqCB2khIbjrk4fiyc1ZxrcIt9IRT+8g6aM00ORZC6D+3EVnZS4DnLF3aUa34zgva8Tm0dHBWmHVpEo4CXg8ymHym/XVwOP14Lj5jqpXHqC5RVusP7st5AfsgnV0obcA=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=gb2yf8aMBgQQUV+YAfFw71i28sSXMDTY2vr+r1YrSH+AEoExjUOno+AksLgMbDhT768pTbTHGEV4
-    ugNpIPh23j5oJ3YpvA7DPIIjVilRFvERq7gvH3Cuzmx7QWfO+P2a  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1568390366;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=4148; bh=IL7XvFCTAWRH0WfapoAjEN/ppfvJmC4N1IUgD1yn/nU=;
-        b=i+EsRJLFX8bCwgiMZZeDMqINI/z9o2D5LXEBhGLDNMap+c4D1iRReuwfwxdLbvo/
-        EjPwPLeA9GjlcSQaUlYZV+cfxOMMQDBnoJWhRFGxlh6iNtaVuMiuyxbkpCzAjIsC/Gy
-        FrkzMTx+ZSBjWzg+pczu35ELjAUnxuSyPNBW0XDQ=
-Received: from [192.168.88.140] (171.221.112.87 [171.221.112.87]) by mx.zohomail.com
-        with SMTPS id 1568390363342552.6980296947244; Fri, 13 Sep 2019 08:59:23 -0700 (PDT)
-Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-mips@vger.kernel.org
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
- <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
- <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
-        paul.burton@mips.com, linus.walleij@linaro.org,
-        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org,
-        jiaxun.yang@flygoat.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5D7BBCCF.2010600@zoho.com>
-Date:   Fri, 13 Sep 2019 23:59:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Fri, 13 Sep 2019 12:01:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so32049066wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 09:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xK3P/MTBGgvM9inB0b/+0BFfc7AXQxejr+yyElk4fOo=;
+        b=RtVOQl6S0qDe3qqqZfOn+HYcBwzwBHLscsskaaMW8gjHeRO1yNBIApe4AbJfwm/AhP
+         Xy3Tly5958IZh4IzKxBy9rwkgCC7L/Zq5br8ZM7FUakg25OAfV+d7+Oief38xPlT+L5+
+         7STiYilmvmSxjFst7uVDgmNORsKFwriLEL/Cs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xK3P/MTBGgvM9inB0b/+0BFfc7AXQxejr+yyElk4fOo=;
+        b=Deah+szyOV9yMjXNnJd+nwZ7Q8lokjE+WdCs2aZ7fqE5+qB8ZlLCy1MdvP8nycjn3+
+         6h0mv/4bTbnFbiq+YdRW/2ij1K3L2pYwgtH1ILBjygmJ1x+FRu1IDEvVufR2ZeOiF/C7
+         JdAd/Ej84xghmhiedrIi12s8SSbBJ6Hdqmu0TBJK7sJS52AC5yjyt+rGB/sY6QJbDxYj
+         PCnmxFBP+0danbR1oJ0h9ML9+LMds1rvuwZKsbfKT88Pj37T8ovMcCT1F2uYYVvb/KXR
+         fJgi/l8pZVQkarGBB3RAoZtllTumBDsnEp2uL5gCpXRBuqInX1ZfJmheb7XzIjR2DDcy
+         lFKQ==
+X-Gm-Message-State: APjAAAVVyd1OCk6iwtouhfnIKXxGjtHleTC7YaFcg4hXFsKtS6+Mo/vN
+        Znm/H8Ud6hmtlJw15dxnRQeA+wnz6x7zA49hqD4/9Q==
+X-Google-Smtp-Source: APXvYqyEhc02o1CZzKDqnsA5N4VH62NZw/ZCFduDfVoTeL7AGFM1k8EQtzNWkOsjRFuc0dUlkz4Yo0uSyn3TKbVCo6k=
+X-Received: by 2002:a5d:62c6:: with SMTP id o6mr6921750wrv.243.1568390511848;
+ Fri, 13 Sep 2019 09:01:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+References: <20190912022740.161798-1-yuhsuan@chromium.org> <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
+In-Reply-To: <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Sat, 14 Sep 2019 00:01:40 +0800
+Message-ID: <CAGvk5PoWOQKYT4T18_xTzz=85k3_W_0hnSS3EJCEk4ukkaSzcw@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add
+ dmic format constraint
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> =E6=96=BC
+2019=E5=B9=B49=E6=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=889:0=
+2=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On 9/11/19 9:27 PM, Yu-Hsuan Hsu wrote:
+> > 24 bits recording from DMIC is not supported for KBL platform because
+> > the TDM slot between PCH and codec is 16 bits only. We should add a
+> > constraint to remove that unsupported format.
+>
+> Humm, when you use DMICs they are directly connected to the PCH with a
+> standard 1-bit PDM. There is no notion of TDM or slot.
+>
+> It could very well be that the firmware/topology only support 16 bit (I
+> vaguely recall another case where 24 bits was added), but the
+> description in the commit message would need to be modified to make the
+> reason for this change clearer.
 
-On 2019=E5=B9=B409=E6=9C=8813=E6=97=A5 23:32, Ezequiel Garcia wrote:
-> Hi Zhou,
->
-> Thanks for your interest in this driver, I'm glad
-> so see it's more used.
->
-> On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
->> Adjust the macro definition name to match the corresponding
->> register name in the datasheet.
->>
-> It's not really an issue to have slighlt different
-> names on the macros. They are currently sufficiently
-> descriptive, and I don't think it's deserves a patch.
-Thanks for your advice, I'll drop this in v2. Do you have any suggestions
-for the other three patches?
+(I sent it again because the previous email contains HTML subpart.
+Sorry for the inconvenience.)
 
-Best regards!
->
-> Thanks,
-> Ezequiel
->
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>   drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc=
-.c
->> index ffdbfaa..1b1fcb7 100644
->> --- a/drivers/mmc/host/jz4740_mmc.c
->> +++ b/drivers/mmc/host/jz4740_mmc.c
->> @@ -28,7 +28,7 @@
->>   #include <asm/mach-jz4740/dma.h>
->>  =20
->>   #define JZ_REG_MMC_STRPCL=090x00
->> -#define JZ_REG_MMC_STATUS=090x04
->> +#define JZ_REG_MMC_STAT=09=090x04
->>   #define JZ_REG_MMC_CLKRT=090x08
->>   #define JZ_REG_MMC_CMDAT=090x0C
->>   #define JZ_REG_MMC_RESTO=090x10
->> @@ -40,7 +40,7 @@
->>   #define JZ_REG_MMC_IREG=09=090x28
->>   #define JZ_REG_MMC_CMD=09=090x2C
->>   #define JZ_REG_MMC_ARG=09=090x30
->> -#define JZ_REG_MMC_RESP_FIFO=090x34
->> +#define JZ_REG_MMC_RES=09=090x34
->>   #define JZ_REG_MMC_RXFIFO=090x38
->>   #define JZ_REG_MMC_TXFIFO=090x3C
->>   #define JZ_REG_MMC_DMAC=09=090x44
->> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_m=
-mc_host *host)
->>  =20
->>   =09writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
->>   =09do {
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
->>   }
->>  =20
->> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host =
-*host)
->>   =09writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
->>   =09udelay(10);
->>   =09do {
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
->>   }
->>  =20
->> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct j=
-z4740_mmc_host *host,
->>   {
->>   =09int status;
->>  =20
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
->>   =09=09if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
->>   =09=09=09host->req->cmd->error =3D -ETIMEDOUT;
->> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc=
-_host *host,
->>   =09/* For whatever reason there is sometime one word more in the fifo =
-then
->>   =09 * requested */
->>   =09timeout =3D 1000;
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
->>   =09=09d =3D readl(fifo_addr);
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09}
->>  =20
->>   =09return false;
->> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_m=
-mc_host *host,
->>   {
->>   =09int i;
->>   =09uint16_t tmp;
->> -=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RESP_FIFO;
->> +=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RES;
->>  =20
->>   =09if (cmd->flags & MMC_RSP_136) {
->>   =09=09tmp =3D readw(fifo_addr);
->> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
->>   =09struct mmc_command *cmd =3D host->cmd;
->>   =09uint32_t irq_reg, status, tmp;
->>  =20
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09irq_reg =3D jz4740_mmc_read_irq_reg(host);
->>  =20
->>   =09tmp =3D irq_reg;
+Thanks for the review! If I'm not mistaken, the microphone is attached
+to external codec(rt5514) instead of PCH on Kabylake platform. So
+there should be a TDM between DMICs and PCH. We can see in the
+kabylake_ssp0_hw_params function, there are some operations about
+setting tdm slot_width to 16 bits. Therefore, I think it only supports
+S16_LE format for DMICs. Is it correct?
 >
 >
-
-
-
+>
+> >
+> > Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> > ---
+> >   sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >
+> > diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/soun=
+d/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> > index 74dda8784f1a01..67b276a65a8d2d 100644
+> > --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> > +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+> > @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_sub=
+stream *substream)
+> >       snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNEL=
+S,
+> >                       dmic_constraints);
+> >
+> > +     runtime->hw.formats =3D SNDRV_PCM_FMTBIT_S16_LE;
+> > +     snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
+> > +
+> >       return snd_pcm_hw_constraint_list(substream->runtime, 0,
+> >                       SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
+> >   }
+> >
+>
