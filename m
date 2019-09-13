@@ -2,130 +2,239 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92ECC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F9620830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:51:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAMsPgBc"
+	by mail.kernel.org (Postfix) with ESMTP id 91F1520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfIMFvX (ORCPT
+        id S1727104AbfIMF57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:51:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35903 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfIMFvW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:51:22 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t3so1313263wmj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jXC2JSeYDwfRzTDWTmvulHeraPlQ3lge32wRaYjTBZI=;
-        b=pAMsPgBcYtBzJAqYVIgj1LP8nysURYvTGbxAXtyPU4cqugH9uJT1fgMdCaKcf6wrcv
-         JkT2w42BprXACBM/JShBo/c0CgiThyWdqM35FSKY5pUoEpxFqsTjEqqxLsggPrx4fkgV
-         0cx+8EMqqUL40BkxCgOKSDPAu0ErLvO/CR5IzsqotQVUSYMyVN27g+o/gHIhWvEvOozz
-         YOfc3g8exQWaOLRnCrRgy8fVnQs/CesWfvBN+whWJzIzwlYvhrhyZn+hm2/DpMpo4A6/
-         axvvWeXlF8at7OsBUlDh11dX3igTLwuWDv64I5FlNg6Zdr4QdlymDHmuS5gVnueKq6zy
-         gxFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jXC2JSeYDwfRzTDWTmvulHeraPlQ3lge32wRaYjTBZI=;
-        b=ZJDZI2Hbn9ZLqvGe3ALuCge7mvA0kfkAKhvD8XfKL0J8zq98WEv1a/nmcEML35Y+Ap
-         cNHIqhOVuK/e184KVGnaPPLgDuAaOhtuzLR2OcWDcz3Hmklv4tGgU0NAjkM3SHKWeB+8
-         RVN3dx5Y+xwkQxFaZptSRVU+LW5r7TPICHo+RN5vUJEULrh+rOAganZOMXguhF12Gm1Z
-         LCinXOhnjxlm94b6rlmitz6oac0rEexIVPYkSEhxJ8tAQRlUJvMOPw1q9efdy6j09lpB
-         x0mt5fA6Zxvjj9YyR/UlZs6CTw7MIEFznZwDgzcYRORoC0AMRuK76Rtf4LOp9SgX4+7Y
-         JCyg==
-X-Gm-Message-State: APjAAAVmsPWUtZdLHEyGW0TXEA3mFJkRGhY7V7uEtdKI99haGvbKV9l9
-        rOICDDrxxlvisbHJmgm7KHKOqVAq
-X-Google-Smtp-Source: APXvYqyPuytCs7qgPT8aDxXS0ADHQ+Ao/igSxMfV2CjGE2qnx7wAaeoyMX0W1A8Z/HLqtS4yG8snFA==
-X-Received: by 2002:a1c:f913:: with SMTP id x19mr1751035wmh.2.1568353879564;
-        Thu, 12 Sep 2019 22:51:19 -0700 (PDT)
-Received: from localhost.localdomain ([62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id h125sm2429279wmf.31.2019.09.12.22.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 22:51:18 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 2/2] drm/etnaviv: print MMU exception cause
-Date:   Fri, 13 Sep 2019 07:50:37 +0200
-Message-Id: <20190913055052.25599-2-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190913055052.25599-1-christian.gmeiner@gmail.com>
-References: <20190913055052.25599-1-christian.gmeiner@gmail.com>
+        Fri, 13 Sep 2019 01:57:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:38984 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfIMF57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 01:57:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48CCF337;
+        Thu, 12 Sep 2019 22:57:58 -0700 (PDT)
+Received: from [10.162.41.125] (p8cg001049571a15.blr.arm.com [10.162.41.125])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C08F33F67D;
+        Thu, 12 Sep 2019 23:00:20 -0700 (PDT)
+Subject: Re: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
+        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
+        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
+References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+ <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
+ <20190912201517.GB1068@C02TF0J2HF1T.local>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <ce127798-3863-0f28-de04-84b177418310@arm.com>
+Date:   Fri, 13 Sep 2019 11:28:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190912201517.GB1068@C02TF0J2HF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Might be useful when debugging MMU exceptions.
+On 09/13/2019 01:45 AM, Catalin Marinas wrote:
+> Hi Anshuman,
+> 
+> Thanks for the details on the need for removing the page tables and
+> vmemmap backing. Some comments on the code below.
+> 
+> On Tue, Sep 03, 2019 at 03:15:58PM +0530, Anshuman Khandual wrote:
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -60,6 +60,14 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
+>>  
+>>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
+>>  
+>> +/*
+>> + * This represents if vmalloc and vmemmap address range overlap with
+>> + * each other on an intermediate level kernel page table entry which
+>> + * in turn helps in deciding whether empty kernel page table pages
+>> + * if any can be freed during memory hotplug operation.
+>> + */
+>> +static bool vmalloc_vmemmap_overlap;
+> 
+> I'd say just move the static find_vmalloc_vmemmap_overlap() function
+> here, the compiler should be sufficiently smart enough to figure out
+> that it's just a build-time constant.
 
-Changes in V2:
- - Use a static array of string for error message as suggested
-   by Lucas Stach.
+Sure, will do.
 
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> 
+>> @@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>>  void vmemmap_free(unsigned long start, unsigned long end,
+>>  		struct vmem_altmap *altmap)
+>>  {
+>> +#ifdef CONFIG_MEMORY_HOTPLUG
+>> +	/*
+>> +	 * FIXME: We should have called remove_pagetable(start, end, true).
+>> +	 * vmemmap and vmalloc virtual range might share intermediate kernel
+>> +	 * page table entries. Removing vmemmap range page table pages here
+>> +	 * can potentially conflict with a concurrent vmalloc() allocation.
+>> +	 *
+>> +	 * This is primarily because vmalloc() does not take init_mm ptl for
+>> +	 * the entire page table walk and it's modification. Instead it just
+>> +	 * takes the lock while allocating and installing page table pages
+>> +	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
+>> +	 * entry via memory hot remove can cause vmalloc() kernel page table
+>> +	 * walk pointers to be invalid on the fly which can cause corruption
+>> +	 * or worst, a crash.
+>> +	 *
+>> +	 * So free_empty_tables() gets called where vmalloc and vmemmap range
+>> +	 * do not overlap at any intermediate level kernel page table entry.
+>> +	 */
+>> +	unmap_hotplug_range(start, end, true);
+>> +	if (!vmalloc_vmemmap_overlap)
+>> +		free_empty_tables(start, end);
+>> +#endif
+>>  }
+> 
+> So, I see the risk with overlapping and I guess for some kernel
+> configurations (PAGE_SIZE == 64K) we may not be able to avoid it. If we
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index d47d1a8e0219..b8cd85153fe0 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1351,6 +1351,15 @@ static void sync_point_worker(struct work_struct *work)
- 
- static void dump_mmu_fault(struct etnaviv_gpu *gpu)
- {
-+	static const char *errors[] = {
-+		"slave not present",
-+		"page not present",
-+		"write violation",
-+		"out of bound",
-+		"read security violation",
-+		"write security violation",
-+	};
-+
- 	u32 status_reg, status;
- 	int i;
- 
-@@ -1364,10 +1373,16 @@ static void dump_mmu_fault(struct etnaviv_gpu *gpu)
- 
- 	for (i = 0; i < 4; i++) {
- 		u32 address_reg;
-+		const char *error = "unknown state";
- 
- 		if (!(status & (VIVS_MMUv2_STATUS_EXCEPTION0__MASK << (i * 4))))
- 			continue;
- 
-+		if (status < ARRAY_SIZE(errors))
-+			error = errors[status];
-+
-+		dev_err_ratelimited(gpu->dev, "MMU %d %s\n", i, error);
-+
- 		if (gpu->sec_mode == ETNA_SEC_NONE)
- 			address_reg = VIVS_MMUv2_EXCEPTION_ADDR(i);
- 		else
--- 
-2.21.0
+Did not see 64K config options to have overlap, do you suspect they might ?
+After the 52 bit KVA series has been merged, following configurations have
+the vmalloc-vmemmap range overlap problem.
 
+- 4K  page size with 48 bit VA space
+- 16K page size with 48 bit VA space
+
+> can, that's great, otherwise could we rewrite the above functions to
+> handle floor and ceiling similar to free_pgd_range()? (I wonder how this
+> function works if you called it on init_mm and kernel address range). By
+
+Hmm, never tried that. Are you wondering if this can be used directly ?
+There are two distinct elements which make it very specific to user page
+tables, mmu_gather based TLB tracking and mm->pgtable_bytes accounting
+with mm_dec_nr_pxx().
+
+> having the vmemmap start/end information it avoids freeing partially
+> filled page table pages.
+
+Did you mean page table pages which can partially overlap with vmalloc ?
+
+The problem (race) is not because of the inability to deal with partially
+filled table. We can handle that correctly as explained below [1]. The
+problem is with inadequate kernel page table locking during vmalloc()
+which might be accessing intermediate kernel page table pointers which is
+being freed with free_empty_tables() concurrently. Hence we cannot free
+any page table page which can ever have entries from vmalloc() range.
+
+Though not completely sure, whether I really understood the suggestion above
+with respect to the floor-ceiling mechanism as in free_pgd_range(). Are you
+suggesting that we should only attempt to free up those vmemmap range page
+table pages which *definitely* could never overlap with vmalloc by working
+on a modified (i.e cut down with floor-ceiling while avoiding vmalloc range
+at each level) vmemmap range instead ? This can be one restrictive version of
+the function free_empty_tables() called in case there is an overlap. So we
+will maintain two versions for free_empty_tables(). Please correct me if any
+the above assumptions or understanding is wrong.
+
+But yes, with this we should be able to free up some possible empty page
+table pages which were being left out in the current proposal when overlap
+happens.
+
+[1] Skipping partially filled page tables
+
+All free_pXX_table() functions take care in avoiding freeing partially filled
+page table pages whether they represent or ever represented linear or vmemmap
+or vmalloc mapping in init_mm. They go over each individual entry in a given
+page table making sure that each of them checks as pXX_none() before freeing
+the entire page table page.
+
+Though walking is restricted by the address range in question.
+
+free_empty_tables(start, end)
+	free_empty_pud_table(pgdp, addr, next);
+		free_empty_pmd_table(pudp, addr, next);
+			free_empty_pte_table(pmdp, addr, next);
+
+Page table pages being examined here on the way while freeing might contain
+entries which once represented address beyond vmemmap range in removal. But
+thats a good thing IMHO. It can accommodate vmemmap tear down from a previous
+hot remove for an adjacent range which might not have been freed last time.
+
+pudp = pud_offset(pgdp, 0UL);
+pmdp = pmd_offset(pudp, 0UL);
+ptep = pte_offset_kernel(pmdp, 0UL);
+
+pxx_none() makes sure that in such cases freeing of the page table page is
+skipped. But yes, even though it is more thorough, it might attempt to free
+page table pages which might contains entries not belonging to the range
+being removed.
+
+> 
+> Another question: could we do the page table and the actual vmemmap
+> pages freeing in a single pass (sorry if this has been discussed
+> before)?
+
+We could and some initial versions (till V5) of the series had that in fact.
+Initially Mark Rutland had suggested to do this in two passes. Some extracts
+from the previous discussion.
+
+https://lkml.org/lkml/2019/5/30/1159
+
+-----------------------
+Looking at this some more, I don't think this is quite right, and tI
+think that structure of the free_*() and remove_*() functions makes this
+unnecessarily hard to follow. We should aim for this to be obviously
+correct.
+
+The x86 code is the best template to follow here. As mentioned
+previously, I'm fairly certain it's not entirely correct (e.g. due to
+missing TLB maintenance), and we've already diverged a fair amount in
+fixing up obvious issues, so we shouldn't aim to mirror it.
+
+I think that the structure of unmap_region() is closer to what we want
+here -- do one pass to unmap leaf entries (and freeing the associated
+memory if unmapping the vmemmap), then do a second pass cleaning up any
+empty tables.
+----------------------
+
+Apart from the fact that two passes over the page table is cleaner and gives
+us more granular and modular infrastructure to use for later purposes, it is
+also a necessity in dealing with vmalloc-vmemmap overlap. free_empty_tables()
+which is the second pass, can be skipped cleanly when overlap is detected.
+
+> 
+>> @@ -1048,10 +1322,18 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>>  }
+>>  
+>>  #ifdef CONFIG_MEMORY_HOTPLUG
+>> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+>> +{
+>> +	unsigned long end = start + size;
+>> +
+>> +	WARN_ON(pgdir != init_mm.pgd);
+>> +	remove_pagetable(start, end, false);
+>> +}
+> 
+> I think the point I've made previously still stands: you only call
+> remove_pagetable() with sparse_vmap == false in this patch. Just remove
+> the extra argument and call unmap_hotplug_range() with sparse_vmap ==
+> false directly in remove_pagetable().
+
+Sure, will do. The original function signature was left unchanged in the hope
+that at a later point in time it can be called with "sparse_vmap == true" as
+mentioned by the comment in vmemmap_free(). Will change the comment as well.
