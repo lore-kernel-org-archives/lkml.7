@@ -2,248 +2,203 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D51C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13F320717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="F/KxLIs6"
+	by mail.kernel.org (Postfix) with ESMTP id 4114E206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568380965;
+	bh=D+ayJoqqDHf3tOg91N7qgIjywSwI/UaGuz/3VIYF/X4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GKT4nnPQr9lAySXc8H/Vw7V1q1jN9vtW3JPWyW8ESnCbefmyVVKWiCUNq0fRZJQGX
+	 9l3gO5thsJsfdOUG1fr7t+bSZU/1KpaW6Br17oZbPGR26fUz2MtKWhBckXX66OollK
+	 gzSqWsKpaWKSx3QddNZ75deS6Brfypnaav+WBIG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391034AbfIMNWe (ORCPT
+        id S2390427AbfIMNWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:22:34 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40459 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388828AbfIMNWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:22:22 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DDGDDQ008470;
-        Fri, 13 Sep 2019 15:21:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=XsRDAFdNpZsq68i7jv8FE3dvyRmLYMzu893o05OONls=;
- b=F/KxLIs604mI5tT9XNXLzWVfNZC04NPczB2rKfTrvl8xMvXssmxN5svUaiLe67H9xKIa
- L0nEQ7TtrcaKK/6/sNY/IEVt7WgSnCnhK5UgTUM+tH+H/au1HAvRlineBlxIhHNx6SqC
- P5QHdTRDFE0l5l4IwKSCPDgE/y/AawZCQJtce9h3FCdiOTDrjQBNFCDdI1TU2tsbqJOd
- LRqqWtcGgln1hvj55Ub1xCDl26GMyYHxuPrEKFDw3XEoncS7ou7oH6omH7QYjla5Y/mj
- QOYt+6e2zxX4X5gJ4wd5nvb2eW+lhTI3qMHIlG7H5Z703w9E/mO3vU0sA5ZpaNRlT8Vh IA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2uyte2w3k6-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 13 Sep 2019 15:21:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 90BA74B;
-        Fri, 13 Sep 2019 13:21:40 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E43132C2B99;
-        Fri, 13 Sep 2019 15:21:39 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep
- 2019 15:21:39 +0200
-Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep 2019 15:21:38 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
-Date:   Fri, 13 Sep 2019 15:21:30 +0200
-Message-ID: <1568380890-313-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 13 Sep 2019 09:22:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389953AbfIMNWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:22:08 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2324E20717;
+        Fri, 13 Sep 2019 13:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380927;
+        bh=D+ayJoqqDHf3tOg91N7qgIjywSwI/UaGuz/3VIYF/X4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBllPpAmTTtfv5ieuJwdN1DxoPHRRlDJYZ5zm8Ums9k07nNRNjk+xcGdjR0tPitL5
+         ukBIx8X07pACpU+kjfYVrGWZa0MbxWIQuzfPrdCQtt8amjjbQ4QfnFCDmIaMFr4cqi
+         9fvw2RJalPevjv41fwVphDiS3KfaTafX9nbRXy0I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 5.2 28/37] usb: chipidea: imx: fix EPROBE_DEFER support during driver probe
+Date:   Fri, 13 Sep 2019 14:07:33 +0100
+Message-Id: <20190913130521.093678100@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
+References: <20190913130510.727515099@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.1.232]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-13_06:2019-09-11,2019-09-13 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-End of conversion may be handled by using IRQ or DMA. There may be a
-race when two conversions complete at the same time on several ADCs.
-EOC can be read as 'set' for several ADCs, with:
-- an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
-  called in this case.
-- an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
-  request instead. It's then automatically cleared by DMA read. But the
-  handler gets called due to status bit is temporarily set (IRQ triggered
-  by the other ADC).
-So both EOC status bit in CSR and EOCIE control bit must be checked
-before invoking the interrupt handler (e.g. call ISR only for
-IRQ-enabled ADCs).
+If driver probe needs to be deferred, e.g. because ci_hdrc_add_device()
+isn't ready yet, this driver currently misbehaves badly:
+    a) success is still reported to the driver core (meaning a 2nd
+       probe attempt will never be done), leaving the driver in
+       a dysfunctional state and the hardware unusable
 
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+    b) driver remove / shutdown OOPSes:
+    [  206.786916] Unable to handle kernel paging request at virtual address fffffdff
+    [  206.794148] pgd = 880b9f82
+    [  206.796890] [fffffdff] *pgd=abf5e861, *pte=00000000, *ppte=00000000
+    [  206.803179] Internal error: Oops: 37 [#1] PREEMPT SMP ARM
+    [  206.808581] Modules linked in: wl18xx evbug
+    [  206.813308] CPU: 1 PID: 1 Comm: systemd-shutdow Not tainted 4.19.35+gf345c93b4195 #1
+    [  206.821053] Hardware name: Freescale i.MX7 Dual (Device Tree)
+    [  206.826813] PC is at ci_hdrc_remove_device+0x4/0x20
+    [  206.831699] LR is at ci_hdrc_imx_remove+0x20/0xe8
+    [  206.836407] pc : [<805cd4b0>]    lr : [<805d62cc>]    psr: 20000013
+    [  206.842678] sp : a806be40  ip : 00000001  fp : 80adbd3c
+    [  206.847906] r10: 80b1b794  r9 : 80d5dfe0  r8 : a8192c44
+    [  206.853136] r7 : 80db93a0  r6 : a8192c10  r5 : a8192c00  r4 : a93a4a00
+    [  206.859668] r3 : 00000000  r2 : a8192ce4  r1 : ffffffff  r0 : fffffdfb
+    [  206.866201] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+    [  206.873341] Control: 10c5387d  Table: a9e0c06a  DAC: 00000051
+    [  206.879092] Process systemd-shutdow (pid: 1, stack limit = 0xb271353c)
+    [  206.885624] Stack: (0xa806be40 to 0xa806c000)
+    [  206.889992] be40: a93a4a00 805d62cc a8192c1c a8170e10 a8192c10 8049a490 80d04d08 00000000
+    [  206.898179] be60: 00000000 80d0da2c fee1dead 00000000 a806a000 00000058 00000000 80148b08
+    [  206.906366] be80: 01234567 80148d8c a9858600 00000000 00000000 00000000 00000000 80d04d08
+    [  206.914553] bea0: 00000000 00000000 a82741e0 a9858600 00000024 00000002 a9858608 00000005
+    [  206.922740] bec0: 0000001e 8022c058 00000000 00000000 a806bf14 a9858600 00000000 a806befc
+    [  206.930927] bee0: a806bf78 00000000 7ee12c30 8022c18c a806bef8 a806befc 00000000 00000001
+    [  206.939115] bf00: 00000000 00000024 a806bf14 00000005 7ee13b34 7ee12c68 00000004 7ee13f20
+    [  206.947302] bf20: 00000010 7ee12c7c 00000005 7ee12d04 0000000a 76e7dc00 00000001 80d0f140
+    [  206.955490] bf40: ab637880 a974de40 60000013 80d0f140 ab6378a0 80d04d08 a8080470 a9858600
+    [  206.963677] bf60: a9858600 00000000 00000000 8022c24c 00000000 80144310 00000000 00000000
+    [  206.971864] bf80: 80101204 80d04d08 00000000 80d04d08 00000000 00000000 00000003 00000058
+    [  206.980051] bfa0: 80101204 80101000 00000000 00000000 fee1dead 28121969 01234567 00000000
+    [  206.988237] bfc0: 00000000 00000000 00000003 00000058 00000000 00000000 00000000 00000000
+    [  206.996425] bfe0: 0049ffb0 7ee13d58 0048a84b 76f245a6 60000030 fee1dead 00000000 00000000
+    [  207.004622] [<805cd4b0>] (ci_hdrc_remove_device) from [<805d62cc>] (ci_hdrc_imx_remove+0x20/0xe8)
+    [  207.013509] [<805d62cc>] (ci_hdrc_imx_remove) from [<8049a490>] (device_shutdown+0x16c/0x218)
+    [  207.022050] [<8049a490>] (device_shutdown) from [<80148b08>] (kernel_restart+0xc/0x50)
+    [  207.029980] [<80148b08>] (kernel_restart) from [<80148d8c>] (sys_reboot+0xf4/0x1f0)
+    [  207.037648] [<80148d8c>] (sys_reboot) from [<80101000>] (ret_fast_syscall+0x0/0x54)
+    [  207.045308] Exception stack(0xa806bfa8 to 0xa806bff0)
+    [  207.050368] bfa0:                   00000000 00000000 fee1dead 28121969 01234567 00000000
+    [  207.058554] bfc0: 00000000 00000000 00000003 00000058 00000000 00000000 00000000 00000000
+    [  207.066737] bfe0: 0049ffb0 7ee13d58 0048a84b 76f245a6
+    [  207.071799] Code: ebffffa8 e3a00000 e8bd8010 e92d4010 (e5904004)
+    [  207.078021] ---[ end trace be47424e3fd46e9f ]---
+    [  207.082647] Kernel panic - not syncing: Fatal exception
+    [  207.087894] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+    c) the error path in combination with driver removal causes
+       imbalanced calls to the clk_*() and pm_()* APIs
+
+a) happens because the original intended return value is
+   overwritten (with 0) by the return code of
+   regulator_disable() in ci_hdrc_imx_probe()'s error path
+b) happens because ci_pdev is -EPROBE_DEFER, which causes
+   ci_hdrc_remove_device() to OOPS
+
+Fix a) by being more careful in ci_hdrc_imx_probe()'s error
+path and not overwriting the real error code
+
+Fix b) by calling the respective cleanup functions during
+remove only when needed (when ci_pdev != NULL, i.e. when
+everything was initialised correctly). This also has the
+side effect of not causing imbalanced clk_*() and pm_*()
+API calls as part of the error code path.
+
+Fixes: 7c8e8909417e ("usb: chipidea: imx: add HSIC support")
+Signed-off-by: André Draszik <git@andred.net>
+Cc: stable <stable@vger.kernel.org>
+CC: Peter Chen <Peter.Chen@nxp.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
+CC: linux-usb@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20190810150758.17694-1-git@andred.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++++++++++---
- drivers/iio/adc/stm32-adc-core.h | 13 ++++++++++++
- drivers/iio/adc/stm32-adc.c      |  6 ------
- 3 files changed, 53 insertions(+), 9 deletions(-)
+ drivers/usb/chipidea/ci_hdrc_imx.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 9b85fef..7297396 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -71,6 +71,8 @@
-  * @eoc1:	adc1 end of conversion flag in @csr
-  * @eoc2:	adc2 end of conversion flag in @csr
-  * @eoc3:	adc3 end of conversion flag in @csr
-+ * @ier:	interrupt enable register offset for each adc
-+ * @eocie_msk:	end of conversion interrupt enable mask in @ier
-  */
- struct stm32_adc_common_regs {
- 	u32 csr;
-@@ -78,6 +80,8 @@ struct stm32_adc_common_regs {
- 	u32 eoc1_msk;
- 	u32 eoc2_msk;
- 	u32 eoc3_msk;
-+	u32 ier;
-+	u32 eocie_msk;
- };
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index a76708501236d..5faae96735e62 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -453,9 +453,11 @@ err_clk:
+ 	imx_disable_unprepare_clks(dev);
+ disable_hsic_regulator:
+ 	if (data->hsic_pad_regulator)
+-		ret = regulator_disable(data->hsic_pad_regulator);
++		/* don't overwrite original ret (cf. EPROBE_DEFER) */
++		regulator_disable(data->hsic_pad_regulator);
+ 	if (pdata.flags & CI_HDRC_PMQOS)
+ 		pm_qos_remove_request(&data->pm_qos_req);
++	data->ci_pdev = NULL;
+ 	return ret;
+ }
  
- struct stm32_adc_priv;
-@@ -303,6 +307,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
- 	.eoc1_msk = STM32F4_EOC1,
- 	.eoc2_msk = STM32F4_EOC2,
- 	.eoc3_msk = STM32F4_EOC3,
-+	.ier = STM32F4_ADC_CR1,
-+	.eocie_msk = STM32F4_EOCIE,
- };
+@@ -468,14 +470,17 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
+ 		pm_runtime_disable(&pdev->dev);
+ 		pm_runtime_put_noidle(&pdev->dev);
+ 	}
+-	ci_hdrc_remove_device(data->ci_pdev);
++	if (data->ci_pdev)
++		ci_hdrc_remove_device(data->ci_pdev);
+ 	if (data->override_phy_control)
+ 		usb_phy_shutdown(data->phy);
+-	imx_disable_unprepare_clks(&pdev->dev);
+-	if (data->plat_data->flags & CI_HDRC_PMQOS)
+-		pm_qos_remove_request(&data->pm_qos_req);
+-	if (data->hsic_pad_regulator)
+-		regulator_disable(data->hsic_pad_regulator);
++	if (data->ci_pdev) {
++		imx_disable_unprepare_clks(&pdev->dev);
++		if (data->plat_data->flags & CI_HDRC_PMQOS)
++			pm_qos_remove_request(&data->pm_qos_req);
++		if (data->hsic_pad_regulator)
++			regulator_disable(data->hsic_pad_regulator);
++	}
  
- /* STM32H7 common registers definitions */
-@@ -311,8 +317,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
- 	.ccr = STM32H7_ADC_CCR,
- 	.eoc1_msk = STM32H7_EOC_MST,
- 	.eoc2_msk = STM32H7_EOC_SLV,
-+	.ier = STM32H7_ADC_IER,
-+	.eocie_msk = STM32H7_EOCIE,
- };
- 
-+static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
-+	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
-+};
-+
-+static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
-+					  unsigned int adc)
-+{
-+	u32 ier, offset = stm32_adc_offset[adc];
-+
-+	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
-+
-+	return ier & priv->cfg->regs->eocie_msk;
-+}
-+
- /* ADC common interrupt for all instances */
- static void stm32_adc_irq_handler(struct irq_desc *desc)
- {
-@@ -323,13 +345,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
- 
--	if (status & priv->cfg->regs->eoc1_msk)
-+	/*
-+	 * End of conversion may be handled by using IRQ or DMA. There may be a
-+	 * race here when two conversions complete at the same time on several
-+	 * ADCs. EOC may be read 'set' for several ADCs, with:
-+	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
-+	 *   is then automatically cleared by DR read in hardware)
-+	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
-+	 *   be called in this case)
-+	 * So both EOC status bit in CSR and EOCIE control bit must be checked
-+	 * before invoking the interrupt handler (e.g. call ISR only for
-+	 * IRQ-enabled ADCs).
-+	 */
-+	if (status & priv->cfg->regs->eoc1_msk &&
-+	    stm32_adc_eoc_enabled(priv, 0))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 0));
- 
--	if (status & priv->cfg->regs->eoc2_msk)
-+	if (status & priv->cfg->regs->eoc2_msk &&
-+	    stm32_adc_eoc_enabled(priv, 1))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 1));
- 
--	if (status & priv->cfg->regs->eoc3_msk)
-+	if (status & priv->cfg->regs->eoc3_msk &&
-+	    stm32_adc_eoc_enabled(priv, 2))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 2));
- 
- 	chained_irq_exit(chip, desc);
-diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-index 8af507b..8dc936b 100644
---- a/drivers/iio/adc/stm32-adc-core.h
-+++ b/drivers/iio/adc/stm32-adc-core.h
-@@ -25,8 +25,21 @@
-  * --------------------------------------------------------
-  */
- #define STM32_ADC_MAX_ADCS		3
-+#define STM32_ADC_OFFSET		0x100
- #define STM32_ADCX_COMN_OFFSET		0x300
- 
-+/* STM32F4 - registers for each ADC instance */
-+#define STM32F4_ADC_CR1			0x04
-+
-+/* STM32F4_ADC_CR1 - bit fields */
-+#define STM32F4_EOCIE			BIT(5)
-+
-+/* STM32H7 - registers for each instance */
-+#define STM32H7_ADC_IER			0x04
-+
-+/* STM32H7_ADC_IER - bit fields */
-+#define STM32H7_EOCIE			BIT(2)
-+
- /**
-  * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
-  * @base:		control registers base cpu addr
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 6a7dd08..3c9f456 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -30,7 +30,6 @@
- 
- /* STM32F4 - Registers for each ADC instance */
- #define STM32F4_ADC_SR			0x00
--#define STM32F4_ADC_CR1			0x04
- #define STM32F4_ADC_CR2			0x08
- #define STM32F4_ADC_SMPR1		0x0C
- #define STM32F4_ADC_SMPR2		0x10
-@@ -54,7 +53,6 @@
- #define STM32F4_RES_SHIFT		24
- #define STM32F4_RES_MASK		GENMASK(25, 24)
- #define STM32F4_SCAN			BIT(8)
--#define STM32F4_EOCIE			BIT(5)
- 
- /* STM32F4_ADC_CR2 - bit fields */
- #define STM32F4_SWSTART			BIT(30)
-@@ -69,7 +67,6 @@
- 
- /* STM32H7 - Registers for each ADC instance */
- #define STM32H7_ADC_ISR			0x00
--#define STM32H7_ADC_IER			0x04
- #define STM32H7_ADC_CR			0x08
- #define STM32H7_ADC_CFGR		0x0C
- #define STM32H7_ADC_SMPR1		0x14
-@@ -89,9 +86,6 @@
- #define STM32H7_EOC			BIT(2)
- #define STM32H7_ADRDY			BIT(0)
- 
--/* STM32H7_ADC_IER - bit fields */
--#define STM32H7_EOCIE			STM32H7_EOC
--
- /* STM32H7_ADC_CR - bit fields */
- #define STM32H7_ADCAL			BIT(31)
- #define STM32H7_ADCALDIF		BIT(30)
+ 	return 0;
+ }
 -- 
-2.7.4
+2.20.1
+
+
 
