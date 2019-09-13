@@ -2,117 +2,85 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A06C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC2C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC78F20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fau/Eh2R"
+	by mail.kernel.org (Postfix) with ESMTP id 3C14220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfIMOGr (ORCPT
+        id S2388802AbfIMONr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:06:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59566 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388084AbfIMOGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:06:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DE6Q4g085351;
-        Fri, 13 Sep 2019 09:06:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568383586;
-        bh=rF+4FIKlVSHlEEHXf6QhcIJo8Cxci4JVbaPWe8BeTLU=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=Fau/Eh2RkxT2FjWYINFwq5ybCkEMljIcv/34t118YnCLwX7NW6QTXF//tC0XsvuEr
-         ql/gd1dKIh53WiL5srBH0sxo3Qs8zcVuJMZqTC6/VIniqVf/Vtcwz5ixYYq2M1tRyu
-         v+sIGtV0rhH7HozaZPTqdhqoMy2Py9vWLbZS3o5w=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DE6QNb056725
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Sep 2019 09:06:26 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
- Sep 2019 09:06:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 13 Sep 2019 09:06:25 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8DE6PlR112383;
-        Fri, 13 Sep 2019 09:06:25 -0500
-Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
-To:     Andreas Kemnade <andreas@kemnade.info>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>
-References: <20190912213257.24147-1-andreas@kemnade.info>
- <20190912213257.24147-2-andreas@kemnade.info>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b6d9fa2c-c23b-7310-e192-cff6185a72b1@ti.com>
-Date:   Fri, 13 Sep 2019 09:06:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 10:13:47 -0400
+Received: from sauhun.de ([88.99.104.3]:35910 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388349AbfIMONr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:13:47 -0400
+Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
+        by pokefinder.org (Postfix) with ESMTPSA id 8BC042C3115;
+        Fri, 13 Sep 2019 16:13:45 +0200 (CEST)
+Date:   Fri, 13 Sep 2019 15:13:45 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     andy.shevchenko@gmail.com, rafael@kernel.org, leoyang.li@nxp.com,
+        meenakshi.aggarwal@nxp.com, udit.kumar@nxp.com, rjw@rjwysocki.net,
+        chuanhua.han@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2] ACPI: support for NXP i2c controller
+Message-ID: <20190913141344.GB1022@kunai>
+References: <20190906075319.21244-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
+Content-Disposition: inline
+In-Reply-To: <20190906075319.21244-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andreas
 
-On 9/12/19 4:32 PM, Andreas Kemnade wrote:
-> add enable-gpios to describe HWEN pin
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+--i9LlY+UWpKt15+FH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+On Fri, Sep 06, 2019 at 03:53:19PM +0800, Biwen Li wrote:
+> From: Chuanhua Han <chuanhua.han@nxp.com>
+>=20
+> Enable NXP i2c controller to boot with ACPI
+>=20
+> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+
+Added Rafael's tag from v1 and applied to for-next, thanks!
 
 
-> ---
-> changes in v2: added example
-> changes in v3: added Acked-by
-> changes in v4: moved enable-gpios to the right position
->    in the example
->   .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> index dc129d9a329e..c8470628fe02 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -29,6 +29,10 @@ properties:
->     '#size-cells':
->       const: 0
->   
-> +  enable-gpios:
-> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
-> +    maxItems: 1
-> +
->   required:
->     - compatible
->     - reg
-> @@ -96,6 +100,7 @@ examples:
->           led-controller@38 {
->                   compatible = "ti,lm3630a";
->                   reg = <0x38>;
-> +                enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
->   
->                   #address-cells = <1>;
->                   #size-cells = <0>;
+--i9LlY+UWpKt15+FH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl17pBgACgkQFA3kzBSg
+Kba+Cg//Q9SHjSTH13UGRUp2U0vv+JXhqpjqwDHNLtrcgLy5K1XTRpVp+HFwE/kt
+RWOBpIHo4UHOwHLpxX9TcHYdKNPg/ZZx0lfoyIP4M50aznEXoDXxYeXTvtM+2RId
+gaTu/w6OHA2wIDty+8cCuJMzxiYeS+AEwgVn82WcF19ZFzFehCpUs6j0w1aqBi2k
+NunT4wQUO4AUlI9TdMUwY5/xm5/DZPKLYHtH3P6GKQTGkR0t3gyFTeVfNWtg8INJ
+Ih3bPh0bFO5IZXkUC46mRxuLaAM7q/WbfZ5kj8UyQz/3VZq0td+mGWnRfVix5P7v
+8if1Ay8jrv5bsiCcpfFmZMZteR4qseNNW+l9JL3yd3hjeH0pljaC8TiDxjIfEqYm
+O3kvmj7T0ZEGmrgFppq/81jH5+xFK5zShpCT6ijTubt8Pr/FTGSGzGX28jBQ240V
+ftguvv8FLZUBmHH8990eLIgHn1xHdETs2u1yutwlJxWN+UyJMeOBuwc6d2nwkNXR
+gixUEQOcQxdGjBAXZg6fmeuJpUvg2izKadNmkPDXILzp1VupbyqotIMlHPLHOD4X
+ky5v2eFbZfriCe4CbZqqV98pxIZFskzdHjZkXCNqzjGUpSz5Fgq8W6SWgzOJ40n6
+VA2OMoXrj72XfReZE7k+1IKRg6ZhAZXAv5tXsmuxs2W5VmGsBRg=
+=Jmts
+-----END PGP SIGNATURE-----
+
+--i9LlY+UWpKt15+FH--
