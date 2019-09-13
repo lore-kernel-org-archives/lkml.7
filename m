@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471DEC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3409C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175BD206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC38B2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380183;
-	bh=ztAw2WI8XHTgR5UIIm3S9StiBL4Qf7ooKL7SmAatFEg=;
+	s=default; t=1568380186;
+	bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfH/RnIh9qWZVW3/ZzYHK1xJHgygO8aXPyMBmmL1jlyCcz7EIKFjKFEFQKkHI6H5y
-	 DPPcIZkit08bRPAe1QKiqXcbfFANZ5ZkzdFE/8bib0ABwY6s1zOGQZ6zd503YRNsq8
-	 uquuZEDT/yldIztuXRuYZ1H8RWn/kBoZLkYP8AyU=
+	b=dIAiMvBuxGkBrrLXMjPHCf0wZ6naEl6T5nlvn00ExPvgjh2FC8ny+jtvR6+v0KRdp
+	 Owpn//hmkT7JtjxNI5zNiFw1RcotI4dVOJv1p+hbGZ+Lo8wqLzwPiA4tISKYN5DaEN
+	 VhWbz/cQEKT65oYNqNWt8oMm7L5gsjjZ9W2JGyuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388573AbfIMNJm (ORCPT
+        id S2388585AbfIMNJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34294 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388533AbfIMNJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:39 -0400
+        id S2388571AbfIMNJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:41 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75F1206A5;
-        Fri, 13 Sep 2019 13:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D611F206BB;
+        Fri, 13 Sep 2019 13:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380178;
-        bh=ztAw2WI8XHTgR5UIIm3S9StiBL4Qf7ooKL7SmAatFEg=;
+        s=default; t=1568380181;
+        bh=qmIDS1RUIUlk4PqP13Ji4FuXvckwkFyjkjtsRyDYu4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyImmD+83g/0Dpk0Jlz4l5Lox4AKnBqMDVGaNnQwhICjByvD6IDuLjDoqPuu8ExJu
-         9I4rzrewCwRD1HRRPX5DcOrSQLnFNb20TounpfKZtU33ZnxYWeE9l3u0rNS9pDPOiz
-         +1dHLJbAPvOhewuuMhS0RVSC5SFxJ+Xv7bhm3Z8M=
+        b=ek4Voz31ieF6pI3PW2p9NPczwIDUBaaPehp1dwKS2zyGC4Utd8fhiL9z9UAnKLESK
+         hD3cVhKJMYlMKDKcIdKDNsyDIO3WXS4YvBnfoQY+E9ubBaGZzrIlI3peGUcW2aFKSV
+         FsWdt9wtJ+qx7MPq8FYj4qfm39HqiS2Lf5+8hkik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Stefan Bader <stefan.bader@canonical.com>,
-        Peter Oskolkov <posk@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 4.9 07/14] ip6: fix skb leak in ip6frag_expire_frag_queue()
-Date:   Fri, 13 Sep 2019 14:07:00 +0100
-Message-Id: <20190913130444.894079575@linuxfoundation.org>
+        stable@vger.kernel.org, Tiwei Bie <tiwei.bie@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 4.9 08/14] vhost/test: fix build for vhost test
+Date:   Fri, 13 Sep 2019 14:07:01 +0100
+Message-Id: <20190913130445.124834201@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
 References: <20190913130440.264749443@linuxfoundation.org>
@@ -63,58 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Tiwei Bie <tiwei.bie@intel.com>
 
-commit 47d3d7fdb10a21c223036b58bd70ffdc24a472c4 upstream.
+commit 264b563b8675771834419057cbe076c1a41fb666 upstream.
 
-Since ip6frag_expire_frag_queue() now pulls the head skb
-from frag queue, we should no longer use skb_get(), since
-this leads to an skb leak.
+Since vhost_exceeds_weight() was introduced, callers need to specify
+the packet weight and byte weight in vhost_dev_init(). Note that, the
+packet weight isn't counted in this patch to keep the original behavior
+unchanged.
 
-Stefan Bader initially reported a problem in 4.4.stable [1] caused
-by the skb_get(), so this patch should also fix this issue.
-
-296583.091021] kernel BUG at /build/linux-6VmqmP/linux-4.4.0/net/core/skbuff.c:1207!
-[296583.091734] Call Trace:
-[296583.091749]  [<ffffffff81740e50>] __pskb_pull_tail+0x50/0x350
-[296583.091764]  [<ffffffff8183939a>] _decode_session6+0x26a/0x400
-[296583.091779]  [<ffffffff817ec719>] __xfrm_decode_session+0x39/0x50
-[296583.091795]  [<ffffffff818239d0>] icmpv6_route_lookup+0xf0/0x1c0
-[296583.091809]  [<ffffffff81824421>] icmp6_send+0x5e1/0x940
-[296583.091823]  [<ffffffff81753238>] ? __netif_receive_skb+0x18/0x60
-[296583.091838]  [<ffffffff817532b2>] ? netif_receive_skb_internal+0x32/0xa0
-[296583.091858]  [<ffffffffc0199f74>] ? ixgbe_clean_rx_irq+0x594/0xac0 [ixgbe]
-[296583.091876]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091893]  [<ffffffff8183d431>] icmpv6_send+0x21/0x30
-[296583.091906]  [<ffffffff8182b500>] ip6_expire_frag_queue+0xe0/0x120
-[296583.091921]  [<ffffffffc04eb27f>] nf_ct_frag6_expire+0x1f/0x30 [nf_defrag_ipv6]
-[296583.091938]  [<ffffffff810f3b57>] call_timer_fn+0x37/0x140
-[296583.091951]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091968]  [<ffffffff810f5464>] run_timer_softirq+0x234/0x330
-[296583.091982]  [<ffffffff8108a339>] __do_softirq+0x109/0x2b0
-
-Fixes: d4289fcc9b16 ("net: IP6 defrag: use rbtrees for IPv6 defrag")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-Cc: Peter Oskolkov <posk@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/ipv6_frag.h |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/vhost/test.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/include/net/ipv6_frag.h
-+++ b/include/net/ipv6_frag.h
-@@ -94,7 +94,6 @@ ip6frag_expire_frag_queue(struct net *ne
- 		goto out;
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -23,6 +23,12 @@
+  * Using this limit prevents one virtqueue from starving others. */
+ #define VHOST_TEST_WEIGHT 0x80000
  
- 	head->dev = dev;
--	skb_get(head);
- 	spin_unlock(&fq->q.lock);
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * pkts.
++ */
++#define VHOST_TEST_PKT_WEIGHT 256
++
+ enum {
+ 	VHOST_TEST_VQ = 0,
+ 	VHOST_TEST_VQ_MAX = 1,
+@@ -81,10 +87,8 @@ static void handle_vq(struct vhost_test
+ 		}
+ 		vhost_add_used_and_signal(&n->dev, vq, head, 0);
+ 		total_len += len;
+-		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
+ 			break;
+-		}
+ 	}
  
- 	icmpv6_send(head, ICMPV6_TIME_EXCEED, ICMPV6_EXC_FRAGTIME, 0);
+ 	mutex_unlock(&vq->mutex);
+@@ -116,7 +120,8 @@ static int vhost_test_open(struct inode
+ 	dev = &n->dev;
+ 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+ 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+-	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX);
++	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX,
++		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+ 
+ 	f->private_data = n;
+ 
 
 
