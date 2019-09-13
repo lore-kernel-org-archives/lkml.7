@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD26C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A9DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFE920640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C79420640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381438;
-	bh=OIl8hDJHmPG/euD1Pv+vrHgA9uVk7K8XCYaL8CAUYHo=;
+	s=default; t=1568381450;
+	bh=oLoLxCVWm85R5cD/wQVd3KJk46KFO1TqXFUdQI5TVY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f21dGxtzEv4iAhPVlOhk1VoXtgykKj9jVasbOXTMoUl3ORnsk78sR3xcwUTW9vaEk
-	 wBnRGPrto2JO6mh4i39gw7W4JGoPU0wX3jpl6Prn5TnWkdgeh2jOc5jV2iE7MNJjY1
-	 Z3fSlUUhC4iTuQ1D3E0dcLgRJ1HXzgCFo6jP8LEI=
+	b=Of7Y7xsFeOBfAJV//Tz07+EaDtJ9bhjoFoP3+Nd2cqVePAEFpQwUR8rSpMA9a82Rz
+	 aShx4K2g/lWIcmudODVnYCZj4AORWxKTG+nuQlF5pnO4o5qHeT+lEdraqHEcwNS0tA
+	 QGlkilozC3o1hU1O6c7EBRoonIK1dlfpOo1Q0UR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391360AbfIMNah (ORCPT
+        id S2391685AbfIMNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388466AbfIMNQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:25 -0400
+        id S2388620AbfIMNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:07 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD1E20CC7;
-        Fri, 13 Sep 2019 13:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6DF206BB;
+        Fri, 13 Sep 2019 13:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380584;
-        bh=OIl8hDJHmPG/euD1Pv+vrHgA9uVk7K8XCYaL8CAUYHo=;
+        s=default; t=1568380566;
+        bh=oLoLxCVWm85R5cD/wQVd3KJk46KFO1TqXFUdQI5TVY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJZiefrclkb63AV+R5ZxWHaMluiQEQtyhkd71m/96Q/+A/1oRnAhcr/pbXWEok2Xa
-         NlAa+o24V+i+Ytt7asEw/VvXtrJenRj3o8k7m59wiO/5IOEqXNuKDaxzFeQO9MqVii
-         d4kdjH70XUfF6gDVcDmNhKZYa1eWR/nj0eaTVbDg=
+        b=hXcQ47xlt/O3UJSI3iwQJlH53xu069pHGXPRKBOYDof4dT0fhcgdVQXCllymLhy6q
+         IxceGzY47jJJMsC04hGnhHb6yB7g1DN9BvZ6ftkfCuL2NPy5DK/t5/qmdwXzKe/UFy
+         f8oABAkJ9u5cdTtEdCBvZpXnLtK9TRWQ1PUEXnBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ley Foon Tan <ley.foon.tan@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/190] arm64: dts: stratix10: add the sysmgr-syscon property from the gmacs
-Date:   Fri, 13 Sep 2019 14:06:06 +0100
-Message-Id: <20190913130608.616982475@linuxfoundation.org>
+Subject: [PATCH 4.19 106/190] CIFS: Fix error paths in writeback code
+Date:   Fri, 13 Sep 2019 14:06:01 +0100
+Message-Id: <20190913130608.148793825@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,53 +61,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8efd6365417a044db03009724ecc1a9521524913 ]
+[ Upstream commit 9a66396f1857cc1de06f4f4771797315e1a4ea56 ]
 
-The gmac ethernet driver uses the "altr,sysmgr-syscon" property to
-configure phy settings for the gmac controller.
+This patch aims to address writeback code problems related to error
+paths. In particular it respects EINTR and related error codes and
+stores and returns the first error occurred during writeback.
 
-Add the "altr,sysmgr-syscon" property to all gmac nodes.
-
-This patch fixes:
-
-[    0.917530] socfpga-dwmac ff800000.ethernet: No sysmgr-syscon node found
-[    0.924209] socfpga-dwmac ff800000.ethernet: Unable to parse OF data
-
-Cc: stable@vger.kernel.org
-Reported-by: Ley Foon Tan <ley.foon.tan@intel.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Acked-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/cifsglob.h | 19 +++++++++++++++++++
+ fs/cifs/cifssmb.c  |  7 ++++---
+ fs/cifs/file.c     | 29 +++++++++++++++++++++++------
+ fs/cifs/inode.c    | 10 ++++++++++
+ 4 files changed, 56 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 5089aa64088fc..9a1ea8a464057 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -140,6 +140,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
- 			status = "disabled";
- 		};
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index 6f227cc781e5d..0ee0072c1f362 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1563,6 +1563,25 @@ static inline void free_dfs_info_array(struct dfs_info3_param *param,
+ 	kfree(param);
+ }
  
-@@ -156,6 +157,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
- 			status = "disabled";
- 		};
++static inline bool is_interrupt_error(int error)
++{
++	switch (error) {
++	case -EINTR:
++	case -ERESTARTSYS:
++	case -ERESTARTNOHAND:
++	case -ERESTARTNOINTR:
++		return true;
++	}
++	return false;
++}
++
++static inline bool is_retryable_error(int error)
++{
++	if (is_interrupt_error(error) || error == -EAGAIN)
++		return true;
++	return false;
++}
++
+ #define   MID_FREE 0
+ #define   MID_REQUEST_ALLOCATED 1
+ #define   MID_REQUEST_SUBMITTED 2
+diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+index 269471c8f42bf..a5cb7b2d1ac5d 100644
+--- a/fs/cifs/cifssmb.c
++++ b/fs/cifs/cifssmb.c
+@@ -2042,7 +2042,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
  
-@@ -172,6 +174,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x4c 0>;
- 			status = "disabled";
- 		};
+ 		for (j = 0; j < nr_pages; j++) {
+ 			unlock_page(wdata2->pages[j]);
+-			if (rc != 0 && rc != -EAGAIN) {
++			if (rc != 0 && !is_retryable_error(rc)) {
+ 				SetPageError(wdata2->pages[j]);
+ 				end_page_writeback(wdata2->pages[j]);
+ 				put_page(wdata2->pages[j]);
+@@ -2051,7 +2051,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
+ 
+ 		if (rc) {
+ 			kref_put(&wdata2->refcount, cifs_writedata_release);
+-			if (rc == -EAGAIN)
++			if (is_retryable_error(rc))
+ 				continue;
+ 			break;
+ 		}
+@@ -2060,7 +2060,8 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
+ 		i += nr_pages;
+ 	} while (i < wdata->nr_pages);
+ 
+-	mapping_set_error(inode->i_mapping, rc);
++	if (rc != 0 && !is_retryable_error(rc))
++		mapping_set_error(inode->i_mapping, rc);
+ 	kref_put(&wdata->refcount, cifs_writedata_release);
+ }
+ 
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 23cee91ed442e..933013543edab 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -749,7 +749,8 @@ reopen_success:
+ 
+ 	if (can_flush) {
+ 		rc = filemap_write_and_wait(inode->i_mapping);
+-		mapping_set_error(inode->i_mapping, rc);
++		if (!is_interrupt_error(rc))
++			mapping_set_error(inode->i_mapping, rc);
+ 
+ 		if (tcon->unix_ext)
+ 			rc = cifs_get_inode_info_unix(&inode, full_path,
+@@ -2137,6 +2138,7 @@ static int cifs_writepages(struct address_space *mapping,
+ 	pgoff_t end, index;
+ 	struct cifs_writedata *wdata;
+ 	int rc = 0;
++	int saved_rc = 0;
+ 
+ 	/*
+ 	 * If wsize is smaller than the page cache size, default to writing
+@@ -2163,8 +2165,10 @@ retry:
+ 
+ 		rc = server->ops->wait_mtu_credits(server, cifs_sb->wsize,
+ 						   &wsize, &credits);
+-		if (rc)
++		if (rc != 0) {
++			done = true;
+ 			break;
++		}
+ 
+ 		tofind = min((wsize / PAGE_SIZE) - 1, end - index) + 1;
+ 
+@@ -2172,6 +2176,7 @@ retry:
+ 						  &found_pages);
+ 		if (!wdata) {
+ 			rc = -ENOMEM;
++			done = true;
+ 			add_credits_and_wake_if(server, credits, 0);
+ 			break;
+ 		}
+@@ -2200,7 +2205,7 @@ retry:
+ 		if (rc != 0) {
+ 			add_credits_and_wake_if(server, wdata->credits, 0);
+ 			for (i = 0; i < nr_pages; ++i) {
+-				if (rc == -EAGAIN)
++				if (is_retryable_error(rc))
+ 					redirty_page_for_writepage(wbc,
+ 							   wdata->pages[i]);
+ 				else
+@@ -2208,7 +2213,7 @@ retry:
+ 				end_page_writeback(wdata->pages[i]);
+ 				put_page(wdata->pages[i]);
+ 			}
+-			if (rc != -EAGAIN)
++			if (!is_retryable_error(rc))
+ 				mapping_set_error(mapping, rc);
+ 		}
+ 		kref_put(&wdata->refcount, cifs_writedata_release);
+@@ -2218,6 +2223,15 @@ retry:
+ 			continue;
+ 		}
+ 
++		/* Return immediately if we received a signal during writing */
++		if (is_interrupt_error(rc)) {
++			done = true;
++			break;
++		}
++
++		if (rc != 0 && saved_rc == 0)
++			saved_rc = rc;
++
+ 		wbc->nr_to_write -= nr_pages;
+ 		if (wbc->nr_to_write <= 0)
+ 			done = true;
+@@ -2235,6 +2249,9 @@ retry:
+ 		goto retry;
+ 	}
+ 
++	if (saved_rc != 0)
++		rc = saved_rc;
++
+ 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+ 		mapping->writeback_index = index;
+ 
+@@ -2266,8 +2283,8 @@ cifs_writepage_locked(struct page *page, struct writeback_control *wbc)
+ 	set_page_writeback(page);
+ retry_write:
+ 	rc = cifs_partialpagewrite(page, 0, PAGE_SIZE);
+-	if (rc == -EAGAIN) {
+-		if (wbc->sync_mode == WB_SYNC_ALL)
++	if (is_retryable_error(rc)) {
++		if (wbc->sync_mode == WB_SYNC_ALL && rc == -EAGAIN)
+ 			goto retry_write;
+ 		redirty_page_for_writepage(wbc, page);
+ 	} else if (rc != 0) {
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 1fadd314ae7f9..53f3d08898af8 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2261,6 +2261,11 @@ cifs_setattr_unix(struct dentry *direntry, struct iattr *attrs)
+ 	 * the flush returns error?
+ 	 */
+ 	rc = filemap_write_and_wait(inode->i_mapping);
++	if (is_interrupt_error(rc)) {
++		rc = -ERESTARTSYS;
++		goto out;
++	}
++
+ 	mapping_set_error(inode->i_mapping, rc);
+ 	rc = 0;
+ 
+@@ -2404,6 +2409,11 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
+ 	 * the flush returns error?
+ 	 */
+ 	rc = filemap_write_and_wait(inode->i_mapping);
++	if (is_interrupt_error(rc)) {
++		rc = -ERESTARTSYS;
++		goto cifs_setattr_exit;
++	}
++
+ 	mapping_set_error(inode->i_mapping, rc);
+ 	rc = 0;
  
 -- 
 2.20.1
