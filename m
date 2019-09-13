@@ -2,102 +2,103 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48399C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E081BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA33206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gI7HG/Xi"
+	by mail.kernel.org (Postfix) with ESMTP id B4D6B214DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389822AbfIMTLn (ORCPT
+        id S2389118AbfIMTN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:11:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35208 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389759AbfIMTLn (ORCPT
+        Fri, 13 Sep 2019 15:13:27 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:54112 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725536AbfIMTN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:11:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n4so15740120pgv.2;
-        Fri, 13 Sep 2019 12:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zB86a38t1j6pUZX7wKvKorzViHS3w+ckWmUmwp2h98E=;
-        b=gI7HG/XiUYh1Ao5+fEC3rcxYJuPN8EUGQq+DlRy7ZJ37U4S8LjOzSVFBmtuJq/gbfA
-         14T0ut9/EOlCiuRj6xvuZz4ifF9MUWmkeryAIKF+kxYdHJqNEz3oXbC5BAIF8NTe6Bt2
-         XRTBc7grg0kubTUQBjMR4jeg2jhcr+9LkP9LOAV4PNS//Pg7pcYxrWvRyUJrhxzIICp8
-         oKz1+PAi7B3oa1rA/PIpDdCyjP/tNElWPXCUNt4ANAbZy8pFFrkDhgXjcVbTsWNXa61k
-         d0cfgRtzxvBhIlBk/ANreARsylptwd5yS8ErdzUe8m/PQ7JC7mTe4my6pCA/H5kLlw10
-         PrwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zB86a38t1j6pUZX7wKvKorzViHS3w+ckWmUmwp2h98E=;
-        b=Y0P2GEMR3MnuJhQ/TKCjqVmoFz0F6OySQSEzr1UTZKwfHJWMKDhp6tG2NJF16tZU+m
-         X79FpK9oEZAl3zXLFMl7mN29vjbcNqjYh4fzLlWJCRRXE9sD7Kwuk1OxI5r9FckJKdf/
-         mgWPNX1SwVcxzJcwFjpcUzLClJvYcE5NCMjtWC+vC11YnpwlLjpFmcsBUPYG7P9RZhH/
-         AEmc+sHOQYxthvdTH7xPuBbrlR7ShkPtA6g3c23RapR/OdsoNdY/p7p5gQe/DI02LXFs
-         jq5TYW+V7Vc0OOrKNcU3i/jQAanNxbbCbnNIzxEyUqyg8KsCGz4GVXjGpZGRFxM5vwqz
-         ND5w==
-X-Gm-Message-State: APjAAAUYZMnurgGo9tTE54b6UBrCh7Hn/R0TITd8PDQW7us4hDh8FOZm
-        XbQLOdPrlAp6WZfg/HWhmbMbKGfUvyE=
-X-Google-Smtp-Source: APXvYqw4n6cKLv1Cs9UOwQMhtv0NBTQj3q8b1m4DAIG+l+RyQ5psZVTENsDUHI9MZwX+E/djQh7vFw==
-X-Received: by 2002:aa7:9d8d:: with SMTP id f13mr58858236pfq.196.1568401830211;
-        Fri, 13 Sep 2019 12:10:30 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r18sm27273779pfc.3.2019.09.13.12.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 12:10:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: [PATCH 0/6] irqchip/irq-bcm7038-l1 updates
-Date:   Fri, 13 Sep 2019 12:10:20 -0700
-Message-Id: <20190913191026.8801-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 13 Sep 2019 15:13:27 -0400
+Received: (qmail 5375 invoked by uid 2102); 13 Sep 2019 15:13:26 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Sep 2019 15:13:26 -0400
+Date:   Fri, 13 Sep 2019 15:13:26 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Documentation for plain accesses and data races
+In-Reply-To: <20190912220126.GA14560@paulmck-ThinkPad-P72>
+Message-ID: <Pine.LNX.4.44L0.1909131509250.1466-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc, Jason, Thomas,
+On Thu, 12 Sep 2019, Paul E. McKenney wrote:
 
-This patch series contains some updates from our internal tree to
-support power management and allow configuring specific instances of the
-brcm,bcm7038-l1-intc to leave some interrupts untouched and how the
-firmware might have configured them.
+> On Fri, Sep 06, 2019 at 02:11:29PM -0400, Alan Stern wrote:
 
-Florian Fainelli (5):
-  dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
-  irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-  dt-bindings: Document brcm,int-fwd-mask property for bcm7038-l1-intc
-  irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-  fixup! irqchip/irq-bcm7038-l1: Add PM support
+> > To this end, the LKMM imposes three extra restrictions, together
+> > called the "plain-coherence" axiom because of their resemblance to the
+> > coherency rules:
+> > 
+> > 	If R and W conflict and it is possible to link R to W by one
+> > 	of the xb* sequences listed above, then W ->rfe R is not
+> > 	allowed (i.e., a load cannot read from a store that it
+> > 	executes before, even if one or both is plain).
+> > 
+> > 	If W and R conflict and it is possible to link W to R by one
+> > 	of the vis sequences listed above, then R ->fre W is not
+> > 	allowed (i.e., if a store is visible to a load then the load
+> > 	must read from that store or one coherence-after it).
+> > 
+> > 	If W and W' conflict and it is possible to link W to W' by one
+> > 	of the vis sequences listed above, then W' ->co W is not
+> > 	allowed (i.e., if one store is visible to another then it must
+> > 	come after in the coherence order).
 
-Justin Chen (1):
-  irqchip/irq-bcm7038-l1: Add PM support
+> I will need to read this last section again.  Perhaps more than once.  ;-)
 
- .../brcm,bcm7038-l1-intc.txt                  |   9 ++
- drivers/irqchip/irq-bcm7038-l1.c              | 117 +++++++++++++++++-
- 2 files changed, 124 insertions(+), 2 deletions(-)
+I decided this part could use some improvement.  Here is the updated
+text:
 
--- 
-2.17.1
+
+To this end, the LKMM imposes three extra restrictions, together
+called the "plain-coherence" axiom because of their resemblance to the
+rules used by the operational model to ensure cache coherence (that
+is, the rules governing the memory subsystem's choice of a store to
+satisfy a load request and its determination of where a store will
+fall in the coherence order):
+
+	If R and W conflict and it is possible to link R to W by one
+	of the xb* sequences listed above, then W ->rfe R is not
+	allowed (i.e., a load cannot read from a store that it
+	executes before, even if one or both is plain).
+
+	If W and R conflict and it is possible to link W to R by one
+	of the vis sequences listed above, then R ->fre W is not
+	allowed (i.e., if a store is visible to a load then the load
+	must read from that store or one coherence-after it).
+
+	If W and W' conflict and it is possible to link W to W' by one
+	of the vis sequences listed above, then W' ->co W is not
+	allowed (i.e., if one store is visible to a second then the
+	second must come after the first in the coherence order).
+
+
+Alan
 
