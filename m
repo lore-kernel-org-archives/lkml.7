@@ -2,54 +2,54 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906BCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B89AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A12920CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33280206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380988;
-	bh=gGAoRvVmfLKLryld/NWI3yrT14UDIS/O7HPmluM8Az8=;
+	s=default; t=1568380998;
+	bh=2vm8YHevuXCo4kKWe+2+Yss5Zn0lCSFJs4a64fJVIAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZqjXvmFolZIajRYfpW+zzgCrXgTMxiaxhTFzcDCSa/nZDI/9iwvHUveYk5Jh+CnU
-	 t7ASAk5f5hSr9V3KFnJ8cbvL8uY8fSrzshr1j13beDCTL+M2NtKW3KWOMd6IFl7SUu
-	 5ghnexGUQOAl83lkDN1GfDqtpEjMWGC4n6d700Ag=
+	b=lPIZYbyqlgjlg3PbpJHBujzNDlzs1OR9YnvQbW5zk2264cXSr1HVCdncJSzeflKvg
+	 qoSo0XwRBxtZol7pVAnPBurlFkS9WcftoT4HiZO/5y+mM7UhMbqbLAjyLamKubwjlD
+	 ZuZCzFkoVefrO5BqWm5ye4Frecr1jKmPEoJiWdTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389966AbfIMNVp (ORCPT
+        id S2390504AbfIMNXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51550 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390881AbfIMNVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:43 -0400
+        id S2390232AbfIMNVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:35 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53A9214D8;
-        Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8ABE216F4;
+        Fri, 13 Sep 2019 13:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380902;
-        bh=gGAoRvVmfLKLryld/NWI3yrT14UDIS/O7HPmluM8Az8=;
+        s=default; t=1568380895;
+        bh=2vm8YHevuXCo4kKWe+2+Yss5Zn0lCSFJs4a64fJVIAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6LKOAF17IhJXIUb8MyfROlNy6T6r9s37jXp3cWk8krQBEWU1wpDYeZucMJtOTRTn
-         J2g+DKJuETJvWWBT1hdSQ4O5J2wPY7vPUTOFh0W1KMhWLjOSEjFyMILWp0XDz4X18t
-         jAIDEj3rxPfFDHTPlEm6kabJKi3ng8QKOnJwqjQI=
+        b=GNVcnDCYkJAgFNtml5l08spPDWjAcztFY05a9vlgcpB2OU8qsGG9piFvKJtF9AzUw
+         xwP1Y37RcDCFnOFrUFD1dpr9Suq8xH19KaPfN6WSncL3sFPwnGrNGEv8zUrmJhRnh/
+         c6Xo7JCm66UeFStFLVLWjpsuDjjaPCX542aOWdKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 23/37] IB/hfi1: Unreserve a flushed OPFN request
-Date:   Fri, 13 Sep 2019 14:07:28 +0100
-Message-Id: <20190913130519.901112989@linuxfoundation.org>
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 13/37] powerpc/64e: Drop stale call to smp_processor_id() which hangs SMP startup
+Date:   Fri, 13 Sep 2019 14:07:18 +0100
+Message-Id: <20190913130515.860737471@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -62,100 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an OPFN request is flushed, the request is completed without
-unreserving itself from the send queue. Subsequently, when a new
-request is post sent, the following warning will be triggered:
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-WARNING: CPU: 4 PID: 8130 at rdmavt/qp.c:1761 rvt_post_send+0x72a/0x880 [rdmavt]
-Call Trace:
-[<ffffffffbbb61e41>] dump_stack+0x19/0x1b
-[<ffffffffbb497688>] __warn+0xd8/0x100
-[<ffffffffbb4977cd>] warn_slowpath_null+0x1d/0x20
-[<ffffffffc01c941a>] rvt_post_send+0x72a/0x880 [rdmavt]
-[<ffffffffbb4dcabe>] ? account_entity_dequeue+0xae/0xd0
-[<ffffffffbb61d645>] ? __kmalloc+0x55/0x230
-[<ffffffffc04e1a4c>] ib_uverbs_post_send+0x37c/0x5d0 [ib_uverbs]
-[<ffffffffc04e5e36>] ? rdma_lookup_put_uobject+0x26/0x60 [ib_uverbs]
-[<ffffffffc04dbce6>] ib_uverbs_write+0x286/0x460 [ib_uverbs]
-[<ffffffffbb6f9457>] ? security_file_permission+0x27/0xa0
-[<ffffffffbb641650>] vfs_write+0xc0/0x1f0
-[<ffffffffbb64246f>] SyS_write+0x7f/0xf0
-[<ffffffffbbb74ddb>] system_call_fastpath+0x22/0x27
+commit b9ee5e04fd77898208c51b1395fa0b5e8536f9b6 upstream.
 
-This patch fixes the problem by moving rvt_qp_wqe_unreserve() into
-rvt_qp_complete_swqe() to simplify the code and make it less
-error-prone.
+Commit ebb9d30a6a74 ("powerpc/mm: any thread in one core can be the
+first to setup TLB1") removed the need to know the cpu_id in
+early_init_this_mmu(), but the call to smp_processor_id() which was
+marked __maybe_used remained.
 
-Fixes: ca95f802ef51 ("IB/hfi1: Unreserve a reserved request when it is completed")
-Link: https://lore.kernel.org/r/20190715164528.74174.31364.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
+thread_info cannot be reached before MMU is properly set up.
+
+Drop this stale call to smp_processor_id() which makes SMP hang when
+CONFIG_PREEMPT is set.
+
+Fixes: ebb9d30a6a74 ("powerpc/mm: any thread in one core can be the first to setup TLB1")
+Fixes: ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
+Cc: stable@vger.kernel.org # v5.1+
+Reported-by: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/hfi1/rc.c | 2 --
- include/rdma/rdmavt_qp.h        | 9 ++++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ arch/powerpc/mm/nohash/tlb.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index 235bdbc706acc..5c0d90418e8c4 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -1835,7 +1835,6 @@ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah)
- 		    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) <= 0)
- 			break;
- 		trdma_clean_swqe(qp, wqe);
--		rvt_qp_wqe_unreserve(qp, wqe);
- 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
- 		rvt_qp_complete_swqe(qp,
- 				     wqe,
-@@ -1882,7 +1881,6 @@ struct rvt_swqe *do_rc_completion(struct rvt_qp *qp,
- 	if (cmp_psn(wqe->lpsn, qp->s_sending_psn) < 0 ||
- 	    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) > 0) {
- 		trdma_clean_swqe(qp, wqe);
--		rvt_qp_wqe_unreserve(qp, wqe);
- 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
- 		rvt_qp_complete_swqe(qp,
- 				     wqe,
-diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
-index 84d0f36afc2f7..85544777587db 100644
---- a/include/rdma/rdmavt_qp.h
-+++ b/include/rdma/rdmavt_qp.h
-@@ -540,7 +540,7 @@ static inline void rvt_qp_wqe_reserve(
- /**
-  * rvt_qp_wqe_unreserve - clean reserved operation
-  * @qp - the rvt qp
-- * @wqe - the send wqe
-+ * @flags - send wqe flags
-  *
-  * This decrements the reserve use count.
-  *
-@@ -552,11 +552,9 @@ static inline void rvt_qp_wqe_reserve(
-  * the compiler does not juggle the order of the s_last
-  * ring index and the decrementing of s_reserved_used.
-  */
--static inline void rvt_qp_wqe_unreserve(
--	struct rvt_qp *qp,
--	struct rvt_swqe *wqe)
-+static inline void rvt_qp_wqe_unreserve(struct rvt_qp *qp, int flags)
- {
--	if (unlikely(wqe->wr.send_flags & RVT_SEND_RESERVE_USED)) {
-+	if (unlikely(flags & RVT_SEND_RESERVE_USED)) {
- 		atomic_dec(&qp->s_reserved_used);
- 		/* insure no compiler re-order up to s_last change */
- 		smp_mb__after_atomic();
-@@ -743,6 +741,7 @@ rvt_qp_complete_swqe(struct rvt_qp *qp,
- 	u32 byte_len, last;
- 	int flags = wqe->wr.send_flags;
+--- a/arch/powerpc/mm/nohash/tlb.c
++++ b/arch/powerpc/mm/nohash/tlb.c
+@@ -630,7 +630,6 @@ static void early_init_this_mmu(void)
+ #ifdef CONFIG_PPC_FSL_BOOK3E
+ 	if (mmu_has_feature(MMU_FTR_TYPE_FSL_E)) {
+ 		unsigned int num_cams;
+-		int __maybe_unused cpu = smp_processor_id();
+ 		bool map = true;
  
-+	rvt_qp_wqe_unreserve(qp, flags);
- 	rvt_put_qp_swqe(qp, wqe);
- 
- 	need_completion =
--- 
-2.20.1
-
+ 		/* use a quarter of the TLBCAM for bolted linear map */
 
 
