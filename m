@@ -2,109 +2,110 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AB6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55828C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2158120830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E06E20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XcrIfAGL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQiMZnPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390376AbfIMPCl (ORCPT
+        id S2390600AbfIMPDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:02:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45557 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390433AbfIMPCk (ORCPT
+        Fri, 13 Sep 2019 11:03:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46145 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390420AbfIMPDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:02:40 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o205so2857844oib.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 08:02:40 -0700 (PDT)
+        Fri, 13 Sep 2019 11:03:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so18238822pfg.13;
+        Fri, 13 Sep 2019 08:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FL1GjXU4OxVtgje4G6mCeYw5JgQRyVmMHSk6LS6L6h0=;
-        b=XcrIfAGLgnCngGnqO1DJcdE95s67blXTpvCmuoC4POiBmx1B9clK5ZNugaQYZJsHUK
-         LRRlS7On0v8cTv9pXBKg5amy+FZZUlwUL7z05OwVEHx82wbE3R4S2AW1N/pUtqyq+coe
-         IxqcEgPQZzwzDUjxbbqdywUSKT8qPsXxZunO4CUbU0DklVvrpC3nBd3ULVxpo/T9HIUV
-         CxZ18AffXR0nlOKPGBkl6EiS3GhbOs46/HGXTUldnrXoG2kQLecamfhdRyIzxHQX4Ta4
-         86UKX/JIqHw9xYUfiv4/nwCOTRYSHTLVvwAOG3sBbWBbBCNaCkJREJNSrKCEVbUnh+Ms
-         xEtQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bztEqJMrHA1fGFkAFV2znJLCLhbELSJhkz/+uYwGTSk=;
+        b=hQiMZnPoWog/O+cXMT7nOr9DETT3+0AoDAix5Oz3FMB1TQdkJBfwMB/F1rEc/RU6G4
+         J2mLpwkvmEqsCs2lbZopJ9tQXfeagxBIpyQk8p3PdliGIuWU4iC8IgUbXI8Cm3kgBav/
+         5dWULR9yvMwc8X/h3gLf+nBmeyJWq+zSwWD3L0Q/y9jWozQrDgCiK7u+o0YCMe+MVrPF
+         qXSE78q899fFAqd88pcXEPFjJ1mEVbhOrjKbMlb0VTjJvIy7eHS3CcGFURJYanSLmv9w
+         olFvCBgTL+bmLN41bRItGTBpOWKfcazDs+KRrotSE8Z2rcYB+w+tmSypBF6LKkmpCEON
+         qO7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FL1GjXU4OxVtgje4G6mCeYw5JgQRyVmMHSk6LS6L6h0=;
-        b=W7NUcGoN2/tWL1SZ9eh8XXTfwiY2PKjQ66EkWVfATL8yUn+VzWdlM3s30Ww2wp4lwt
-         nuQaFhsRckEK5/HT/4WBe+XO/F/tpR6xLK7v58qYVpJKCnpNA29XBPBwDjgxrftNJCMR
-         hnvrwXM6UOQGFucLD3H8D3elVEvB5OisQTeFRgDw26owTCKRDMPjBr+Ay1d5M6Y8wo4Q
-         XpG1RquqYSWG3zZYUx6QtZMDM+i4EiESXJiOXJcenD6gugx4fMvryrR3YVr09rMAg0ON
-         QOh4pv8bhmmBjTWHr+sgF3V7tXc3VsCkcZJFYqef8CTlAyUhdekqUe7r1Q7ri2Wy6boU
-         d5RQ==
-X-Gm-Message-State: APjAAAW4Ca1a6J4oUDAUByt1UKHAccezJBwRov3PlydrlEXY3r9/oADe
-        EOppkfUaZGwIV1gjZSjp0nuDxCaMLTyvsQznUNChow==
-X-Google-Smtp-Source: APXvYqyeEJXWj7rpxrv1qz+5i2zLZaF/SLL5wmnwCw6eD+cUG7FsoCaEJNlzjXu8gUdNFX/hYHgq60QKgMlpEmp2U7Y=
-X-Received: by 2002:aca:4b05:: with SMTP id y5mr2670978oia.70.1568386960199;
- Fri, 13 Sep 2019 08:02:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu-UK75nCreZb=v7PQne4Ay25B7oRAeRg4AB1XopYXt3Cg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-UK75nCreZb=v7PQne4Ay25B7oRAeRg4AB1XopYXt3Cg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 13 Sep 2019 08:02:26 -0700
-Message-ID: <CAPcyv4jv8OacA-P+DFj_d9gq3P-7b9xcr4=m3kx7nTvyko6i2g@mail.gmail.com>
-Subject: Re: [PATCH v5 05/10] x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bztEqJMrHA1fGFkAFV2znJLCLhbELSJhkz/+uYwGTSk=;
+        b=gdhHo7Jx1c6DKkirYYeJReT6pN6E6Uozyeb6WiLjt1kefzOCVe1SHHjajRlej/nu0m
+         +9eVRCJIiEChVq1r05qGpQVxsdt/e2TVNA0YKlz40S6SiRF3aNVnQvA1MbYYAiLxCpqJ
+         CEOzor05NGiSOORg2whivdx4oWD+v0eFEtkNaqLAkAdjsLhzIacz7CIpB5siouvLr9yJ
+         N3ojWJ22l8B6DZrDLjYacHnj/h4zsFeTsU8FSq5ZWWNEvCRrxbOOM9HR8ww7pD+U2BSn
+         unJbFtZu9sPvTbRCPScpT5KtQ5dtDk0nHGE5coRxW4+VkoM190iWLjytQfTKme0oXnk4
+         V3aw==
+X-Gm-Message-State: APjAAAW6mV6hCaPogstDIB5xtYz02rpUlP1nXvOMHvK+hr6iaX49RLgL
+        TclXUwWL/8zpgXvGAqPiBJxHO0gC
+X-Google-Smtp-Source: APXvYqxs3dQ3r6MWKtoPmmX0dkpZfa8fjN6Jfn2hB2eDkrZDYJ/R7+3uX5JgEYlgKJhIqmLb0MFFLQ==
+X-Received: by 2002:a17:90a:8509:: with SMTP id l9mr5606118pjn.10.1568387020264;
+        Fri, 13 Sep 2019 08:03:40 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:a4da:99f6:4d93:495b])
+        by smtp.gmail.com with ESMTPSA id c8sm9551899pgw.37.2019.09.13.08.03.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 13 Sep 2019 08:03:39 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 0/1] leds: fix /sys/class/leds/<led>/trigger
+Date:   Sat, 14 Sep 2019 00:03:23 +0900
+Message-Id: <1568387004-3802-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 6:02 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Fri, 30 Aug 2019 at 03:07, Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Given that EFI_MEMORY_SP is platform BIOS policy descision for marking
->
-> decision
+(Resending with the version tag in the subject)
 
-Fixed.
+Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+However, the size of this file is limited to PAGE_SIZE because of the
+limitation for sysfs attribute.
 
->
-> > memory ranges as "reserved for a specific purpose" there will inevitably
-> > be scenarios where the BIOS omits the attribute in situations where it
-> > is desired. Unlike other attributes if the OS wants to reserve this
-> > memory from the kernel the reservation needs to happen early in init. So
-> > early, in fact, that it needs to happen before e820__memblock_setup()
-> > which is a pre-requisite for efi_fake_memmap() that wants to allocate
-> > memory for the updated table.
-> >
-> > Introduce an x86 specific efi_fake_memmap_early() that can search for
-> > attempts to set EFI_MEMORY_SP via efi_fake_mem and update the e820 table
-> > accordingly.
-> >
->
-> Is this early enough? The EFI stub runs before this, and allocates
-> memory as well.
+Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+and which trigger is currently activated.
 
-Unless I'm missing something the stub only allocates where the kernel
-will land. That should be handled by the new mem_avoid_memmap()
-extensions to consider "efi_fake_mem" in its exclusions.
+This patch converts /sys/class/leds/<led>/trigger to bin attribute and
+removes the PAGE_SIZE limitation.
+
+The first version of this seris provided the new api that follows the
+"one value per file" rule of sysfs. This second version dropped it because
+there have been a number of problems and it turns out that the new api
+should be submitted separately.
+
+* v2
+- Update commit message
+- Drop patches for new api
+
+Akinobu Mita (1):
+  leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+
+ drivers/leds/led-class.c    |  8 ++--
+ drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
+ drivers/leds/leds.h         |  6 +++
+ include/linux/leds.h        |  5 ---
+ 4 files changed, 79 insertions(+), 30 deletions(-)
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+-- 
+2.7.4
+
