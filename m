@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83258C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871AEC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C641208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5520C208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380504;
-	bh=phdMjRRH9fyWnwUJ9B/USK4+DRu5KncK54P2H1Ot7CQ=;
+	s=default; t=1568380508;
+	bh=regKA2GOvohh5LfW7rgzUKVkS60LhH0+sDOxmpKCkQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VieDEcIFdDXjk+GLijK7WDVtgxSZHQYrcZq8UtNN01xUDmPZD5vhhDFzZnYHMQ3+h
-	 w2Tnbc1Fyj0D+m4/TTpHFHj/AcyDdXlfa193zZYjvSBCmTrm3ZRnr3F44ITV4gUqjU
-	 5roc0dw8YhmNlBBz0OhYhHI9J4Qr6j+JHz5aY/6o=
+	b=CNVYRQqtrHzeYQWSp8qcyXtdE1Qbal4I2CPLDzN/U3u2p0kWStj9yduMN83drioL5
+	 o1GZCXUV3t+9q46Vn8ZTSqaNnusJbTaUUwUibSAQbcHMFZOsaEPogHkRXz0Q7uFEn4
+	 lxJFv8EL5j2wiqMt5C19D7h8gHPciMaH0Yx2pGgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389637AbfIMNPC (ORCPT
+        id S2389645AbfIMNPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbfIMNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:56 -0400
+        id S2389062AbfIMNPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:02 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C43E208C2;
-        Fri, 13 Sep 2019 13:14:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7AD206BB;
+        Fri, 13 Sep 2019 13:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380495;
-        bh=phdMjRRH9fyWnwUJ9B/USK4+DRu5KncK54P2H1Ot7CQ=;
+        s=default; t=1568380501;
+        bh=regKA2GOvohh5LfW7rgzUKVkS60LhH0+sDOxmpKCkQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEgXkkCk9CPJdv+5ldV2cTVY/xh1AEaC/Sx2HewJHiwotJ2TsJotdlcnBmXJSS6Sn
-         6mrOwl7Si6Zh5vF1VGNqnYZuK/pbmn3FcQo2hVZkRMsHVQEsuonmwNbKiGF76xIS/i
-         kf5TG9jhdH5LuI+fmWfVUZdtygL3U+PF628ZKFQg=
+        b=ZMZrqiRK3Vwg2M67yaVbwlU3tLqCwPEBuaIiVmttkWQU3WV5jXkYUYrbWugldRMPD
+         sjVKioWoFkwpKrYdr05N+F3Y/1rX8MPKpTqDSB1naIJe1+wVSaCZAi9RXN+Ti2PNPw
+         8QsoJwJYKp2QNYD2FNzJ/tkB59A8eRwHWre0aFbo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/190] tpm: Fix some name collisions with drivers/char/tpm.h
-Date:   Fri, 13 Sep 2019 14:05:39 +0100
-Message-Id: <20190913130606.252890561@linuxfoundation.org>
+Subject: [PATCH 4.19 086/190] bcache: treat stale && dirty keys as bad keys
+Date:   Fri, 13 Sep 2019 14:05:41 +0100
+Message-Id: <20190913130606.430130776@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,154 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ab547a2dcfac6ec184a5e036e1093eb3f7a215c ]
+[ Upstream commit 58ac323084ebf44f8470eeb8b82660f9d0ee3689 ]
 
-* Rename TPM_BUFSIZE defined in drivers/char/tpm/st33zp24/st33zp24.h to
-  ST33ZP24_BUFSIZE.
-* Rename TPM_BUFSIZE defined in drivers/char/tpm/tpm_i2c_infineon.c to
-  TPM_I2C_INFINEON_BUFSIZE.
-* Rename TPM_RETRY in tpm_i2c_nuvoton to TPM_I2C_RETRIES.
-* Remove TPM_HEADER_SIZE from tpm_i2c_nuvoton.
+Stale && dirty keys can be produced in the follow way:
+After writeback in write_dirty_finish(), dirty keys k1 will
+replace by clean keys k2
+==>ret = bch_btree_insert(dc->disk.c, &keys, NULL, &w->key);
+==>btree_insert_fn(struct btree_op *b_op, struct btree *b)
+==>static int bch_btree_insert_node(struct btree *b,
+       struct btree_op *op,
+       struct keylist *insert_keys,
+       atomic_t *journal_ref,
+Then two steps:
+A) update k1 to k2 in btree node memory;
+   bch_btree_insert_keys(b, op, insert_keys, replace_key)
+B) Write the bset(contains k2) to cache disk by a 30s delay work
+   bch_btree_leaf_dirty(b, journal_ref).
+But before the 30s delay work write the bset to cache device,
+these things happened:
+A) GC works, and reclaim the bucket k2 point to;
+B) Allocator works, and invalidate the bucket k2 point to,
+   and increase the gen of the bucket, and place it into free_inc
+   fifo;
+C) Until now, the 30s delay work still does not finish work,
+   so in the disk, the key still is k1, it is dirty and stale
+   (its gen is smaller than the gen of the bucket). and then the
+   machine power off suddenly happens;
+D) When the machine power on again, after the btree reconstruction,
+   the stale dirty key appear.
 
+In bch_extent_bad(), when expensive_debug_checks is off, it would
+treat the dirty key as good even it is stale keys, and it would
+cause bellow probelms:
+A) In read_dirty() it would cause machine crash:
+   BUG_ON(ptr_stale(dc->disk.c, &w->key, 0));
+B) It could be worse when reads hits stale dirty keys, it would
+   read old incorrect data.
+
+This patch tolerate the existence of these stale && dirty keys,
+and treat them as bad key in bch_extent_bad().
+
+(Coly Li: fix indent which was modified by sender's email client)
+
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
 Cc: stable@vger.kernel.org
-Fixes: bf38b8710892 ("tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)")
-Fixes: aad628c1d91a ("char/tpm: Add new driver for Infineon I2C TIS TPM")
-Fixes: 32d33b29ba07 ("TPM: Retry SaveState command in suspend path")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/st33zp24/i2c.c      |  2 +-
- drivers/char/tpm/st33zp24/spi.c      |  2 +-
- drivers/char/tpm/st33zp24/st33zp24.h |  4 ++--
- drivers/char/tpm/tpm_i2c_infineon.c  | 15 ++++++++-------
- drivers/char/tpm/tpm_i2c_nuvoton.c   | 16 +++++++---------
- 5 files changed, 19 insertions(+), 20 deletions(-)
+ drivers/md/bcache/extents.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/char/tpm/st33zp24/i2c.c b/drivers/char/tpm/st33zp24/i2c.c
-index be5d1abd3e8ef..8390c5b54c3be 100644
---- a/drivers/char/tpm/st33zp24/i2c.c
-+++ b/drivers/char/tpm/st33zp24/i2c.c
-@@ -33,7 +33,7 @@
+diff --git a/drivers/md/bcache/extents.c b/drivers/md/bcache/extents.c
+index 9560043666999..886710043025f 100644
+--- a/drivers/md/bcache/extents.c
++++ b/drivers/md/bcache/extents.c
+@@ -538,6 +538,7 @@ static bool bch_extent_bad(struct btree_keys *bk, const struct bkey *k)
+ {
+ 	struct btree *b = container_of(bk, struct btree, keys);
+ 	unsigned int i, stale;
++	char buf[80];
  
- struct st33zp24_i2c_phy {
- 	struct i2c_client *client;
--	u8 buf[TPM_BUFSIZE + 1];
-+	u8 buf[ST33ZP24_BUFSIZE + 1];
- 	int io_lpcpd;
- };
+ 	if (!KEY_PTRS(k) ||
+ 	    bch_extent_invalid(bk, k))
+@@ -547,19 +548,19 @@ static bool bch_extent_bad(struct btree_keys *bk, const struct bkey *k)
+ 		if (!ptr_available(b->c, k, i))
+ 			return true;
  
-diff --git a/drivers/char/tpm/st33zp24/spi.c b/drivers/char/tpm/st33zp24/spi.c
-index d7909ab287a85..ff019a1e3c68f 100644
---- a/drivers/char/tpm/st33zp24/spi.c
-+++ b/drivers/char/tpm/st33zp24/spi.c
-@@ -63,7 +63,7 @@
-  * some latency byte before the answer is available (max 15).
-  * We have 2048 + 1024 + 15.
-  */
--#define ST33ZP24_SPI_BUFFER_SIZE (TPM_BUFSIZE + (TPM_BUFSIZE / 2) +\
-+#define ST33ZP24_SPI_BUFFER_SIZE (ST33ZP24_BUFSIZE + (ST33ZP24_BUFSIZE / 2) +\
- 				  MAX_SPI_LATENCY)
+-	if (!expensive_debug_checks(b->c) && KEY_DIRTY(k))
+-		return false;
+-
+ 	for (i = 0; i < KEY_PTRS(k); i++) {
+ 		stale = ptr_stale(b->c, k, i);
  
++		if (stale && KEY_DIRTY(k)) {
++			bch_extent_to_text(buf, sizeof(buf), k);
++			pr_info("stale dirty pointer, stale %u, key: %s",
++				stale, buf);
++		}
++
+ 		btree_bug_on(stale > BUCKET_GC_GEN_MAX, b,
+ 			     "key too stale: %i, need_gc %u",
+ 			     stale, b->c->need_gc);
  
-diff --git a/drivers/char/tpm/st33zp24/st33zp24.h b/drivers/char/tpm/st33zp24/st33zp24.h
-index 6f4a4198af6aa..20da0a84988d6 100644
---- a/drivers/char/tpm/st33zp24/st33zp24.h
-+++ b/drivers/char/tpm/st33zp24/st33zp24.h
-@@ -18,8 +18,8 @@
- #ifndef __LOCAL_ST33ZP24_H__
- #define __LOCAL_ST33ZP24_H__
+-		btree_bug_on(stale && KEY_DIRTY(k) && KEY_SIZE(k),
+-			     b, "stale dirty pointer");
+-
+ 		if (stale)
+ 			return true;
  
--#define TPM_WRITE_DIRECTION             0x80
--#define TPM_BUFSIZE                     2048
-+#define TPM_WRITE_DIRECTION	0x80
-+#define ST33ZP24_BUFSIZE	2048
- 
- struct st33zp24_dev {
- 	struct tpm_chip *chip;
-diff --git a/drivers/char/tpm/tpm_i2c_infineon.c b/drivers/char/tpm/tpm_i2c_infineon.c
-index 977fd42daa1b1..3b4e9672ff6cd 100644
---- a/drivers/char/tpm/tpm_i2c_infineon.c
-+++ b/drivers/char/tpm/tpm_i2c_infineon.c
-@@ -26,8 +26,7 @@
- #include <linux/wait.h>
- #include "tpm.h"
- 
--/* max. buffer size supported by our TPM */
--#define TPM_BUFSIZE 1260
-+#define TPM_I2C_INFINEON_BUFSIZE 1260
- 
- /* max. number of iterations after I2C NAK */
- #define MAX_COUNT 3
-@@ -63,11 +62,13 @@ enum i2c_chip_type {
- 	UNKNOWN,
- };
- 
--/* Structure to store I2C TPM specific stuff */
- struct tpm_inf_dev {
- 	struct i2c_client *client;
- 	int locality;
--	u8 buf[TPM_BUFSIZE + sizeof(u8)]; /* max. buffer size + addr */
-+	/* In addition to the data itself, the buffer must fit the 7-bit I2C
-+	 * address and the direction bit.
-+	 */
-+	u8 buf[TPM_I2C_INFINEON_BUFSIZE + 1];
- 	struct tpm_chip *chip;
- 	enum i2c_chip_type chip_type;
- 	unsigned int adapterlimit;
-@@ -219,7 +220,7 @@ static int iic_tpm_write_generic(u8 addr, u8 *buffer, size_t len,
- 		.buf = tpm_dev.buf
- 	};
- 
--	if (len > TPM_BUFSIZE)
-+	if (len > TPM_I2C_INFINEON_BUFSIZE)
- 		return -EINVAL;
- 
- 	if (!tpm_dev.client->adapter->algo->master_xfer)
-@@ -527,8 +528,8 @@ static int tpm_tis_i2c_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	u8 retries = 0;
- 	u8 sts = TPM_STS_GO;
- 
--	if (len > TPM_BUFSIZE)
--		return -E2BIG;	/* command is too long for our tpm, sorry */
-+	if (len > TPM_I2C_INFINEON_BUFSIZE)
-+		return -E2BIG;
- 
- 	if (request_locality(chip, 0) < 0)
- 		return -EBUSY;
-diff --git a/drivers/char/tpm/tpm_i2c_nuvoton.c b/drivers/char/tpm/tpm_i2c_nuvoton.c
-index b8defdfdf2dc6..2803080097841 100644
---- a/drivers/char/tpm/tpm_i2c_nuvoton.c
-+++ b/drivers/char/tpm/tpm_i2c_nuvoton.c
-@@ -35,14 +35,12 @@
- #include "tpm.h"
- 
- /* I2C interface offsets */
--#define TPM_STS                0x00
--#define TPM_BURST_COUNT        0x01
--#define TPM_DATA_FIFO_W        0x20
--#define TPM_DATA_FIFO_R        0x40
--#define TPM_VID_DID_RID        0x60
--/* TPM command header size */
--#define TPM_HEADER_SIZE        10
--#define TPM_RETRY      5
-+#define TPM_STS			0x00
-+#define TPM_BURST_COUNT		0x01
-+#define TPM_DATA_FIFO_W		0x20
-+#define TPM_DATA_FIFO_R		0x40
-+#define TPM_VID_DID_RID		0x60
-+#define TPM_I2C_RETRIES		5
- /*
-  * I2C bus device maximum buffer size w/o counting I2C address or command
-  * i.e. max size required for I2C write is 34 = addr, command, 32 bytes data
-@@ -292,7 +290,7 @@ static int i2c_nuvoton_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 		dev_err(dev, "%s() count < header size\n", __func__);
- 		return -EIO;
- 	}
--	for (retries = 0; retries < TPM_RETRY; retries++) {
-+	for (retries = 0; retries < TPM_I2C_RETRIES; retries++) {
- 		if (retries > 0) {
- 			/* if this is not the first trial, set responseRetry */
- 			i2c_nuvoton_write_status(client,
 -- 
 2.20.1
 
