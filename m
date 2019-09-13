@@ -2,85 +2,318 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD86C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EDBC4CECA
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4286C20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0S6NAFBo"
+	by mail.kernel.org (Postfix) with ESMTP id 612FE20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389707AbfIMS13 (ORCPT
+        id S2389896AbfIMSmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 14:27:29 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38554 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387802AbfIMS13 (ORCPT
+        Fri, 13 Sep 2019 14:42:45 -0400
+Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:45584 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387802AbfIMSmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 14:27:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rUHXVclZXHF+9qsNmXDNmKFf2GeFqSzWSuwkR1JCZ7I=; b=0S6NAFBooMrp44Rx9duwP6fvW
-        ILLr/ywXbzUq3/H0KKZY+AqA4DUuQJVWiCgncsKYkGZgmaKmhl3hAje8C0yv692H5cWHsaRPU//Xe
-        8ZF8H40qaY0yT3zp728l67JIs57A3yiPMqE39lGW7BL2dJbxW80slK+E4wJ97WAv4dSaB4colLC7d
-        h1EeWjD4ELQhsppY//bfGtxRj8y3zTeDtNlfXwk3NenC56szHq4IuYr3ioB96km+6Ygsmi3Avx18T
-        4/Vwg+nNM/lILz0tmPnzrP+JCUFABB/id+2OJv4D8DoOSFrv0AhgHtkuxKHbjwyhVjG0o7fAfKhaf
-        G6YGHr6jg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39110)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i8qHu-0004DJ-Po; Fri, 13 Sep 2019 19:27:18 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i8qHp-00064I-Jr; Fri, 13 Sep 2019 19:27:13 +0100
-Date:   Fri, 13 Sep 2019 19:27:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mark.rutland@arm.com, peterz@infradead.org,
-        catalin.marinas@arm.com, takahiro.akashi@linaro.org,
-        james.morse@arm.com, hidehiro.kawai.ez@hitachi.com,
-        tglx@linutronix.de, will@kernel.org, dave.martin@arm.com,
-        linux-arm-kernel@lists.infradead.org, mingo@redhat.com,
-        x86@kernel.org, dzickus@redhat.com, ehabkost@redhat.com,
-        davem@davemloft.net, sparclinux@vger.kernel.org, hch@infradead.org
-Subject: Re: [RFC PATCH v2 00/12] Unify SMP stop generic logic to common code
-Message-ID: <20190913182713.GB13294@shell.armlinux.org.uk>
-References: <20190913181953.45748-1-cristian.marussi@arm.com>
+        Fri, 13 Sep 2019 14:42:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 4ED4D801A6AF;
+        Fri, 13 Sep 2019 18:42:42 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crook21_174f32285e930
+X-Filterd-Recvd-Size: 10261
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 13 Sep 2019 18:42:40 +0000 (UTC)
+Message-ID: <78f67ee934f167b433517da81c6a0d3f35c4b123.camel@perches.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 0/3] Maintainer Entry Profiles
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robherring2@gmail.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve French <stfrench@microsoft.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>
+Date:   Fri, 13 Sep 2019 11:42:38 -0700
+In-Reply-To: <CAL_JsqJju36BZPK6DJab28Ne-ORpEyPpxH0H4DuymxFMabpMRQ@mail.gmail.com>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <yq1o8zqeqhb.fsf@oracle.com> <6fe45562-9493-25cf-afdb-6c0e702a49b4@acm.org>
+         <44c08faf43fa77fb271f8dbb579079fb09007716.camel@perches.com>
+         <74984dc0-d5e4-f272-34b9-9a78619d5a83@acm.org>
+         <4299c79e33f22e237e42515ea436f187d8beb32e.camel@perches.com>
+         <CAL_JsqJju36BZPK6DJab28Ne-ORpEyPpxH0H4DuymxFMabpMRQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913181953.45748-1-cristian.marussi@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 07:19:41PM +0100, Cristian Marussi wrote:
-> Tested as follows:
-> 
-> - arm:
-> 1. boot
+On Fri, 2019-09-13 at 15:26 +0100, Rob Herring wrote:
+> On Fri, Sep 13, 2019 at 3:12 PM Joe Perches <joe@perches.com> wrote:
+> > On Thu, 2019-09-12 at 13:01 -0700, Bart Van Assche wrote:
+> > 
+> > > Another argument in favor of W=1 is that the formatting of kernel-doc
+> > > headers is checked only if W=1 is passed to make.
+> > 
+> > Actually, but for the fact there are far too many
+> > to generally enable that warning right now,
+> > (an x86-64 defconfig has more than 1000)
+> > that sounds pretty reasonable to me.
 
-So this basically means the code paths you're touching are untested on
-ARM... given that, and the variety of systems we have out there, why
-should the patches touching ARM be taken?
+> It's in the 1000s on arm because W=1 turns on more checks in building
+> .dts files. There are lots of duplicates as most of the dts content is
+> as an include file (e.g. board dts includes soc dts).
 
-Given that you're an ARM Ltd employee, I'm sure you can find 32-bit
-systems to test - or have ARM Ltd got rid of everything that isn't
-64-bit? ;)
+Yeah, dts[i] files in arm compilations are very noisy at W=1
+so moving those message types to W=2 seems sensible.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+$ { opt="ARCH=arm CROSS_COMPILE=arm-unknown-linux-gnueabi-" ; make $opt clean ; make $opt defconfig ; make $opt W=1 -j4 ; } > arm_make.log 2>&1
+
+$ grep -i -P 'dtsi?:.*warning' arm_make.log | wc -l
+69164
+
+Just fyi:  for an x86-64 defconfig with gcc 8.3
+
+$ { make clean ; make defconfig ; make -j4 W=1 ; } > make.log 2>&1
+
+There are ~300 W=1 for non kernel-doc -W<foo> warnings.
+
+$ grep -i -P -oh '\[\-W[\w\-]+\]' make.log |sort | uniq -c | sort -rn
+    163 [-Wmissing-prototypes]
+     69 [-Wunused-but-set-variable]
+     16 [-Wempty-body]
+     10 [-Wtype-limits]
+      6 [-Woverride-init]
+      2 [-Wstringop-truncation]
+      2 [-Wcast-function-type]
+      1 [-Wunused-but-set-parameter]
+
+And there are ~1000 kernel-doc only messages in various files
+
+$ grep -i 'function parameter' make.log | cut -f1 -d: | sort | uniq -c
+      6 arch/x86/events/intel/pt.c
+      2 arch/x86/kernel/apic/apic.c
+     10 arch/x86/kernel/cpu/mtrr/generic.c
+      5 arch/x86/kernel/crash_dump_64.c
+      1 arch/x86/kernel/i8259.c
+      3 arch/x86/kernel/smpboot.c
+      3 arch/x86/kernel/tsc.c
+      2 arch/x86/kernel/uprobes.c
+      1 arch/x86/lib/cmdline.c
+      1 arch/x86/lib/insn.c
+      2 arch/x86/lib/insn-eval.c
+      4 arch/x86/lib/msr.c
+      2 arch/x86/lib/usercopy_64.c
+      1 arch/x86/mm/pat.c
+     13 arch/x86/mm/pgtable.c
+      1 arch/x86/pci/i386.c
+      2 arch/x86/power/cpu.c
+      2 arch/x86/power/hibernate.c
+      8 certs/system_keyring.c
+      4 crypto/asymmetric_keys/asymmetric_type.c
+      3 crypto/asymmetric_keys/pkcs7_trust.c
+     16 crypto/jitterentropy.c
+      3 drivers/acpi/acpi_apd.c
+      3 drivers/acpi/bus.c
+      2 drivers/acpi/cppc_acpi.c
+      5 drivers/acpi/device_sysfs.c
+      2 drivers/acpi/dock.c
+      2 drivers/acpi/nvs.c
+      1 drivers/acpi/pci_root.c
+      5 drivers/acpi/property.c
+      4 drivers/acpi/sleep.c
+      7 drivers/acpi/utils.c
+      1 drivers/ata/libata-acpi.c
+      2 drivers/ata/libata-pmp.c
+      6 drivers/ata/libata-transport.c
+      4 drivers/ata/pata_amd.c
+      4 drivers/base/attribute_container.c
+      1 drivers/base/devcon.c
+      3 drivers/base/platform-msi.c
+      3 drivers/base/power/runtime.c
+      5 drivers/base/power/wakeup.c
+      2 drivers/char/agp/backend.c
+      3 drivers/char/agp/generic.c
+      2 drivers/clk/clk.c
+      1 drivers/clk/clk-fixed-factor.c
+      1 drivers/clk/clk-fixed-rate.c
+      3 drivers/connector/cn_proc.c
+     31 drivers/cpufreq/cpufreq.c
+      3 drivers/cpufreq/cpufreq_governor.c
+      7 drivers/cpufreq/freq_table.c
+      1 drivers/cpufreq/intel_pstate.c
+      6 drivers/cpuidle/sysfs.c
+      1 drivers/dma-buf/dma-buf.c
+      1 drivers/dma-buf/dma-fence-chain.c
+      6 drivers/dma/dmaengine.c
+      7 drivers/firewire/init_ohci1394_dma.c
+      2 drivers/firmware/efi/memmap.c
+      1 drivers/firmware/efi/vars.c
+     20 drivers/gpu/drm/drm_agpsupport.c
+      8 drivers/hid/hid-core.c
+      3 drivers/hid/hid-quirks.c
+      5 drivers/hid/usbhid/hid-pidff.c
+      3 drivers/input/mouse/synaptics.c
+      2 drivers/iommu/amd_iommu_init.c
+      2 drivers/iommu/dmar.c
+      1 drivers/iommu/intel-pasid.c
+      1 drivers/iommu/iommu.c
+      2 drivers/leds/led-class.c
+      2 drivers/mailbox/pcc.c
+      6 drivers/net/ethernet/intel/e1000/e1000_hw.c
+     21 drivers/net/ethernet/intel/e1000/e1000_main.c
+      1 drivers/net/ethernet/intel/e1000e/80003es2lan.c
+      6 drivers/net/ethernet/intel/e1000e/ich8lan.c
+     42 drivers/net/ethernet/intel/e1000e/netdev.c
+      3 drivers/net/ethernet/intel/e1000e/phy.c
+      2 drivers/net/ethernet/intel/e1000e/ptp.c
+      1 drivers/net/netconsole.c
+      3 drivers/net/phy/mdio-boardinfo.c
+      2 drivers/net/phy/mdio_device.c
+      2 drivers/pci/ats.c
+      3 drivers/pci/hotplug/acpi_pcihp.c
+      4 drivers/pci/pcie/aer.c
+      2 drivers/pci/pcie/pme.c
+      1 drivers/pci/setup-bus.c
+      1 drivers/pci/vc.c
+     22 drivers/pcmcia/cistpl.c
+     13 drivers/pcmcia/pcmcia_cis.c
+     13 drivers/pcmcia/pcmcia_resource.c
+     11 drivers/pcmcia/rsrc_nonstatic.c
+      1 drivers/pnp/system.c
+     11 drivers/rtc/interface.c
+      3 drivers/rtc/sysfs.c
+      2 drivers/thermal/step_wise.c
+      2 drivers/thermal/user_space.c
+      6 drivers/tty/n_tty.c
+      4 drivers/tty/pty.c
+      7 drivers/tty/tty_audit.c
+      7 drivers/tty/tty_baudrate.c
+     13 drivers/tty/tty_buffer.c
+     25 drivers/tty/tty_io.c
+      5 drivers/tty/tty_jobctrl.c
+      6 drivers/tty/tty_ldisc.c
+      6 drivers/tty/tty_port.c
+      5 drivers/tty/vt/consolemap.c
+      4 drivers/tty/vt/vt.c
+      3 drivers/tty/vt/vt_ioctl.c
+     12 drivers/usb/common/debug.c
+      1 drivers/usb/host/pci-quirks.c
+      1 drivers/usb/host/xhci.c
+      6 drivers/usb/host/xhci-mem.c
+      2 drivers/video/backlight/backlight.c
+      1 drivers/video/fbdev/core/fbmon.c
+      2 drivers/video/fbdev/core/fb_notify.c
+      7 fs/devpts/inode.c
+      4 fs/direct-io.c
+      3 fs/eventpoll.c
+      6 fs/fat/dir.c
+      3 fs/fat/misc.c
+      6 fs/fat/nfs.c
+      4 fs/fs_context.c
+      1 fs/fs_parser.c
+      2 fs/fs-writeback.c
+      5 fs/ioctl.c
+      1 fs/libfs.c
+      3 fs/namespace.c
+      2 fs/nfs_common/grace.c
+      2 fs/open.c
+      3 fs/posix_acl.c
+      1 fs/proc/proc_net.c
+      2 fs/proc/vmcore.c
+      2 fs/read_write.c
+      1 fs/super.c
+      5 fs/xattr.c
+      2 kernel/cgroup/cpuset.c
+      1 kernel/cpu.c
+      4 kernel/events/core.c
+      2 kernel/events/hw_breakpoint.c
+      5 kernel/fork.c
+     27 kernel/irq/irqdomain.c
+      3 kernel/irq/matrix.c
+      1 kernel/kprobes.c
+      5 kernel/locking/rtmutex.c
+      1 kernel/notifier.c
+      3 kernel/power/main.c
+      2 kernel/power/qos.c
+     51 kernel/power/snapshot.c
+      2 kernel/power/suspend.c
+     14 kernel/power/swap.c
+      1 kernel/reboot.c
+      4 kernel/seccomp.c
+      2 kernel/stacktrace.c
+      4 kernel/time/alarmtimer.c
+      1 kernel/time/clockevents.c
+      4 kernel/time/posix-cpu-timers.c
+      1 kernel/time/tick-broadcast.c
+      6 kernel/time/tick-oneshot.c
+      3 kernel/time/tick-sched.c
+      3 kernel/time/timeconv.c
+     23 kernel/time/timekeeping.c
+      9 kernel/trace/ring_buffer.c
+      8 kernel/trace/trace_events_filter.c
+      2 kernel/trace/trace_events_trigger.c
+      1 kernel/trace/trace_seq.c
+      1 lib/argv_split.c
+      1 lib/cpumask.c
+      5 lib/genalloc.c
+      4 lib/iov_iter.c
+      2 lib/nlattr.c
+      3 lib/percpu_counter.c
+      6 lib/radix-tree.c
+      2 lib/scatterlist.c
+      3 lib/win_minmax.c
+      1 mm/compaction.c
+      2 mm/oom_kill.c
+      1 mm/page_vma_mapped.c
+      2 mm/swap_state.c
+      1 mm/vmalloc.c
+      1 mm/vmscan.c
+      8 net/ipv4/cipso_ipv4.c
+      3 net/ipv4/ipmr.c
+      1 net/ipv4/tcp_input.c
+      5 net/ipv4/tcp_output.c
+      2 net/ipv4/tcp_timer.c
+      3 net/ipv4/udp.c
+      4 net/ipv6/calipso.c
+      1 net/ipv6/exthdrs.c
+      1 net/ipv6/ip6_output.c
+      3 net/ipv6/udp.c
+      1 net/mac80211/tx.c
+      5 net/netlabel/netlabel_calipso.c
+      2 net/netlabel/netlabel_domainhash.c
+      3 net/sched/ematch.c
+      1 net/socket.c
+      1 net/wireless/radiotap.c
+      4 net/wireless/reg.c
+      6 security/commoncap.c
+      1 security/lsm_audit.c
+     12 security/selinux/avc.c
+      7 security/selinux/netlabel.c
+      2 security/selinux/netport.c
+      4 security/selinux/ss/mls.c
+     34 security/selinux/ss/services.c
+      3 sound/hda/hdac_bus.c
+      1 sound/hda/hdac_component.c
+      2 sound/hda/hdac_controller.c
+     10 sound/hda/hdac_device.c
+      2 sound/hda/hdac_stream.c
+      1 sound/pci/hda/hda_codec.c
+
+
