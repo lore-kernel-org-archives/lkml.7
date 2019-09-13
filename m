@@ -2,271 +2,222 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F23C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26851C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96CF214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E538A20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IQZ3Bhb7"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="LgBrFGcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387871AbfIMIrY (ORCPT
+        id S2387630AbfIMIvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:47:24 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:47788 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387581AbfIMIrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:47:23 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190913084720euoutp029c29ecf574d0ab770cb0d41bdba12794~D8yYsCBRj0687906879euoutp02m
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 08:47:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190913084720euoutp029c29ecf574d0ab770cb0d41bdba12794~D8yYsCBRj0687906879euoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568364440;
-        bh=pHzQlbDo1C4cXmBS7A3CPSHtIvcSShpbfes0/svvBAk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=IQZ3Bhb7LDMPNUMHIk2lfvY63nLiQDJln2N9hGBybTPIBWde9NjzU6YpQ0Op/ygi8
-         c/fJq43NH5m6fF8+104+Sn1qlBuqYw8ZZnLTvITUu0O1AVsVb1js8mgUZ3evk0g86I
-         G5Og1+b5SKTebiE50AvNsmaPTRgl9pHrkAdUzdTU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190913084719eucas1p13dd58e4dc9a40d174f07f71221dfcdce~D8yX10TT02512225122eucas1p1X;
-        Fri, 13 Sep 2019 08:47:19 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1A.5A.04374.7975B7D5; Fri, 13
-        Sep 2019 09:47:19 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190913084718eucas1p1ddebd180b28385b21873144dfdaccc57~D8yW_3pEY2930829308eucas1p1x;
-        Fri, 13 Sep 2019 08:47:18 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190913084718eusmtrp1f4c3830eba1d66ec5047d67dfa572e37~D8yWwLvQY2570325703eusmtrp1d;
-        Fri, 13 Sep 2019 08:47:18 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-90-5d7b579784a9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7F.C4.04117.6975B7D5; Fri, 13
-        Sep 2019 09:47:18 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190913084717eusmtip20eec82ae46ffc257da69575ea68a8e64~D8yWEbZkx1334313343eusmtip2x;
-        Fri, 13 Sep 2019 08:47:17 +0000 (GMT)
-Subject: Re: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
-To:     Matt Redfearn <matt.redfearn@thinci.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <084ab580-8ba8-b018-bc7a-bd705027f200@samsung.com>
-Date:   Fri, 13 Sep 2019 10:47:15 +0200
+        Fri, 13 Sep 2019 04:51:05 -0400
+Received: from mout.gmx.net ([212.227.17.20]:37027 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387557AbfIMIvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:51:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1568364635;
+        bh=OZqY8YEmhSzYpVNahFixu1x4zax59nBDtoBfEOKOU5s=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=LgBrFGcKw3jzMlfJOCjItxE63zvj5he1+kky9ilivtcRdrHVQsn77FeH0WFVA/7o5
+         fQ+BbYa36NLTKwhjgpD+JeHKXyvPiuy7tyD+lNpC8LEHM5cMglVxMA/OIalDzoRSGI
+         n8ASzdbzVhqlhX/QhvOfCvQb7DyVFgu6o2AJUvF8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.90]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0Lzsf1-1iCMTA0Nu7-014yUk; Fri, 13
+ Sep 2019 10:50:35 +0200
+Subject: Re: [PATCH v5 0/4] Raspberry Pi 4 DMA addressing support
+To:     Matthias Brugger <mbrugger@suse.com>, catalin.marinas@arm.com,
+        marc.zyngier@arm.com, Matthias Brugger <matthias.bgg@gmail.com>,
+        robh+dt@kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, hch@lst.de,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     robin.murphy@arm.com, f.fainelli@gmail.com, will@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
+        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org
+References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+ <5a8af6e9-6b90-ce26-ebd7-9ee626c9fa0e@gmx.net>
+ <3f9af46e-2e1a-771f-57f2-86a53caaf94a@suse.com>
+ <09f82f88-a13a-b441-b723-7bb061a2f1e3@gmail.com>
+ <2c3e1ef3-0dba-9f79-52e2-314b6b500e14@gmx.net>
+ <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <48a6b72d-d554-b563-5ed6-9a79db5fb4ab@gmx.net>
+Date:   Fri, 13 Sep 2019 10:50:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <00e4f553-a02c-6d98-a0e8-28c0183a3c8c@thinci.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUyMcRz3u+flnuLscZW+81Jzw+YlMWY/I6PZPH+0+MOWoXHxuKIu7lF6
-        +cOZkJRdarUu9CLrZJTO9TZZLqSpSNIbLmlUSpZKt0ru8dT03+ft+/t+P9uPIZQT1CImRHuG
-        12nVoSramSx5YX/tlR4QG7j+fLoLTmqoleGfplyE340M0rj5dy+B68a9cG1/M4mvJOfJcVPF
-        DRpX2LJl2HrtIP6WM0Zgk92C8MeieoTtFbdIbB68QOKu3nxqB8sNtl6Uc5n6RpIrN36Uc19u
-        PnTQ+AyKe2l4K+M+vH9Mc6WjnRRnu1oj4/LSmmmuKimF5DJTuijuV7HHXsUB523H+NCQSF7n
-        vf2Ic3BGx8lTdSuj7rUMU3r03CMBOTHAboK+4Rw6ATkzStaEYOynRSaRYQTW8VYkkV8IEpsK
-        qJkRU1wxJRn5CPqtX6fJAILHcVNITLmwO+B7aY/DYBhXdh80564XMwT7hoRno3ZCzNDsKpg0
-        t9EiVrDboeplGRLzJLsC+n7MFWU3dj8MdVZTUmQB1GZ0kyJ2csTbC9PkIiZYT7hgySQk7A7t
-        3Vn/KgB7nwFzvG366l1gGOuaxi7QV/NILuEl8ColkZTwObCZ4ghpOB6BpaickIytUF3T+K8M
-        4Ti6sMJbknfCVP4DuSgDOx9aBxZIN8yH6yXphCQrIP6SUkovA1u9ZfpBd7jzZoQ2IJVxVjPj
-        rDbGWW2M//dmI7IAufMRQpiGFzZq+bPrBHWYEKHVrDsaHlaMHH/y1Z+akTL0ZCLIilgGqeYp
-        8NqYQCWljhSiw6wIGELlqvDrjw5UKo6po2N4XfhhXUQoL1jRYoZUuSti53QeVLIa9Rn+JM+f
-        4nUzroxxWqRHS0/7MLoPvkUdoT3LnPSu5s8hR5PCTzQlxCgrrVnLKw8N4OTbZX/ycs43rqmT
-        +0Jdakt9g5uNb+OFu0JVPmP03NNjCBqqrmp72rFtSsNvXv1Jm1puqEYL9ZsKQwIiorMrCY8t
-        9ZfTT+/2Y1LGXcfmePofzymftEeaffwLoko1KlIIVm9YTegE9V+4sB/sjwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsVy+t/xe7rTwqtjDW7uFbPoPXeSyeLDikWM
-        Fle+vmezuPr9JbPFmd+6FiffXGWx6Jy4hN3i8q45bBa77i9gsjjUF23xfOEPZosVP7cyWtzd
-        cJbR4ueueSwWm983s1g8ermc1UHA4/2NVnaP2Q0XWTx2zrrL7vF47kYgt2Mmq8eJCZeYPO5c
-        28Pmsf3bA1aP+93HmTyWTLvK5nGgdzKLx+zJj1g9Pm+SC+CN0rMpyi8tSVXIyC8usVWKNrQw
-        0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0MuYeTu74IxaxerrX1gbGI/KdTFyckgI
-        mEisaNnE2sXIxSEksJRRYsfNu0wQCXGJ3fPfMkPYwhJ/rnWxQRS9ZpS4dGwbWJGwgIPE6+0v
-        WEFsEYEQiRk9T8EmMQtcYpGY8fwpVMdmVomtS2aAjWIT0JT4u/kmG4jNK2AnceDEDsYuRg4O
-        FgFViVfvuEHCogIREod3zGKEKBGUODnzCQuIzQlUfmv9NHYQm1lAXeLPvEvMELa8RPPW2VC2
-        uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yfu4kRmBq2
-        Hfu5BejUd8GHGAU4GJV4eC10qmKFWBPLiitzDzFKcDArifD6vKmMFeJNSaysSi3Kjy8qzUkt
-        PsRoCvTbRGYp0eR8YNrKK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TB
-        KdXAyFI87+Gur7fLt06x1bWrWnji0dccxnLxl5cPl/hXrU68/K3l1DON9ZPlfqhM/3BkQ5R5
-        LceSV+c6mHb2MjsK75z/9ybn9PvnLh9ctNVkgVWfD8OyC78us9zT5L50WHcHT5DxPh3GA3c9
-        Sz9/Ul4X+bukLSv2hsrnEypXFNUlwx8unrQgPvu35CclluKMREMt5qLiRABEaVwuIwMAAA==
-X-CMS-MailID: 20190913084718eucas1p1ddebd180b28385b21873144dfdaccc57
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da
-References: <20190829060550.62095-1-john.stultz@linaro.org>
-        <CGME20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da@epcas3p1.samsung.com>
-        <CAF6AEGvborwLmjfC6_vgZ-ZbfvF3HEFFyb_NHSLRoYWF35bw+g@mail.gmail.com>
-        <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com>
-        <CAF6AEGtkvRpXSoddjmxer2U6LxnV_SAe+jwE2Ct8B8dDpFy2mA@mail.gmail.com>
-        <b925e340-4b6a-fbda-3d8d-5c27204d2814@samsung.com>
-        <CALAqxLU5Ov+__b5gxnuMxQP1RLjndXkB4jAiGgmb-OMdaKePug@mail.gmail.com>
-        <9d31af23-8a65-d8e8-b73d-b2eb815fcd6f@samsung.com>
-        <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
-        <16c9066b-091f-6d0e-23f1-2c1f83a7da1b@samsung.com>
-        <00e4f553-a02c-6d98-a0e8-28c0183a3c8c@thinci.com>
+X-Provags-ID: V03:K1:5fDbWcniG6VsoBWaSc+GYFShgEo4REYeFeRHrSgDDglxm5sD6x2
+ UrWf7vgL6ch3G20ivsSWNIYWs/Bz1I+ZBgUC3eKNW5tdmxyn8E7T09758U+Tzf0wd/Wfw8R
+ nrZhE9fM238lCEGselAeaRWRKnV6VycB/TqFyuOdS/3m/0VwhMdxszt4cj6OQds8ZEJHgz5
+ lsHhLpKSOwmBUbNVq/KdA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PLc07q3TRNY=:+TtDNvVyj685IvAHzOOktc
+ kx+vI+eRRKzbqWd9bDoq8bo6RUCq2UiiBjt/4MAb2tnL51PkKCkYHzlLLVBuwOSz9m+mSJGYi
+ 3zQd9+4D5ZLnGGpSJKEJVvz2kSVmQiofGovvP1jXFcZWenr8riydzYGNY+HAYiqCxRaUA/eFX
+ E6xKpZo0iCDgnGdKi8+8xebctj7qpdvBjQif0wnINKavSgNh68oh0AUaigrhNyTkx7yCZSwv1
+ DxjnGg4fcjODfNNNEyYWmUd8MReYV1F0ehLs33w2Nxw60jHXeGmiep953V4atjlczfyqThy1R
+ uLcOMT92s/f7l7jtsN4dC+ZACigrck1L2eh2cBjDP9jBvEC79BTYXAe5bJQ/NLYlFNJzuJ0L5
+ KeM/4DFNCEJzuFJiNH3QdltPzA+2EIlzIZXl259m8wC5K2jB+gnScjnB3ZNYEg2pbIS6i4vp7
+ eA4IRIA1+P2jzMG9K8WKQp0T1aShulE+puyTCFwsz2eXeqLdxWuEbvtPiac2qMMqjLolkaG48
+ FV7hnRI3NkswtrztAzqfO+VJ0qPM00Kw6xotij/QHh8oU0BqpdD9+cAo+clP+40ysg0uKxV1Y
+ PYE2OWrVVwhEODxtvsJ+PGPADi0/tXm4fF3RyKNK5YQ69FtWTzQhecT5phJsYxTuEO6JRVFEH
+ tCm1NM+lN48t6dHOKPZPMeyASDCIy8pelwOiO5uAyg6u/RM65mkYXam7rrmEnYFTzfsw2IiCC
+ +FyqOyFxRVQbxIwaMlTwaBXGbad61xAueSYnodWFeuByuX0hGZ2Zm/uqxnLGJuQTpVrNMUDiA
+ 80QTtrA0KYBIaL2uqVZvjnTBNklNcb+Bul0JTVLe1+wSd/xs73IvfO/EH5Go5NpdCD2CHGNh/
+ SGnV/vUI0sShAZB3yhkhzvPzBDG3iWzcjKLCq9GQ2XQV6vWt/AQEE0iXQBZX5Fi85Qkf/9Orb
+ 7ZPA0klbpejckcIoscN1Vandk0ERHH6JArUBfIAQokm/ElVeOHqF7RcfpzlarmXkaz65JFY03
+ 4ZAxD1pCVkNsGrtcfta2mXQ97NrVDDVR6ZBwKR6IshAUVzG02FtirFYR/uvzQCiLzbzjhd2Jv
+ hnHwsSRwRw5L/ZeWRxt5BQOx4FXI4aaq7/ANCbqqurfTzVZ+SH+M6W7oxUb51cW+JPzUAxTxt
+ zWlhgmJD26gIhkPblPuZX6IyXK2IU/IvYLe5QIFuATMSATrzDVrMYP+IWVG4UYw4WaAdMQQf/
+ IzirydQqcD7FTclu9dRm0zhhepscswytTs0NfKopHHrsepk8IMYtE7M4DYk0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.09.2019 16:18, Matt Redfearn wrote:
+Am 13.09.19 um 10:09 schrieb Matthias Brugger:
 >
-> On 12/09/2019 14:21, Andrzej Hajda wrote:
->> On 12.09.2019 04:38, John Stultz wrote:
->>> On Wed, Sep 4, 2019 at 3:26 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>> On 03.09.2019 18:18, John Stultz wrote:
->>>>> On Mon, Sep 2, 2019 at 6:22 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>> On 30.08.2019 19:00, Rob Clark wrote:
->>>>>>> On Thu, Aug 29, 2019 at 11:52 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>>>> Of course it seems you have different opinion what is the right thing in
->>>>>>>> this case, so if you convince us that your approach is better one can
->>>>>>>> revert the patch.
->>>>>>> I guess my strongest / most immediate opinion is to not break other
->>>>>>> existing adv75xx bridge users.
->>>>>> It is pity that breakage happened, and next time we should be more
->>>>>> strict about testing other platforms, before patch acceptance.
->>>>>>
->>>>>> But reverting it now will break also platform which depend on it.
->>>>> I'm really of no opinion of which approach is better here, but I will
->>>>> say that when a patch breaks previously working boards, that's a
->>>>> regression and justifying that some other board is now enabled that
->>>>> would be broken by the revert (of a patch that is not yet upstream)
->>>>> isn't really a strong argument.
+> On 12/09/2019 21:32, Stefan Wahren wrote:
+>> Am 12.09.19 um 19:18 schrieb Matthias Brugger:
+>>> On 10/09/2019 11:27, Matthias Brugger wrote:
+>>>> On 09/09/2019 21:33, Stefan Wahren wrote:
+>>>>> Hi Nicolas,
 >>>>>
->>>>> I'm happy to work with folks to try to fixup the kirin driver if this
->>>>> patch really is the right approach, but we need someone to do the same
->>>>> for the db410c, and I don't think its fair to just dump that work onto
->>>>> folks under the threat of the board breaking.
->>>> These drivers should be fixed anyway - assumption that
->>>> drm_bridge/drm_panel will be registered before the bus it is attached to
->>>> is just incorrect.
+>>>>> Am 09.09.19 um 11:58 schrieb Nicolas Saenz Julienne:
+>>>>>> Hi all,
+>>>>>> this series attempts to address some issues we found while bringing up
+>>>>>> the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
+>>>>>> up of these discussions:
+>>>>>> v4: https://lkml.org/lkml/2019/9/6/352
+>>>>>> v3: https://lkml.org/lkml/2019/9/2/589
+>>>>>> v2: https://lkml.org/lkml/2019/8/20/767
+>>>>>> v1: https://lkml.org/lkml/2019/7/31/922
+>>>>>> RFC: https://lkml.org/lkml/2019/7/17/476
+>>>>>>
+>>>>>> The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
+>>>>>> only address the first GB: their DMA address range is
+>>>>>> 0xc0000000-0xfc000000 which is aliased to the first GB of physical
+>>>>>> memory 0x00000000-0x3c000000. Note that only some peripherals have these
+>>>>>> limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
+>>>>>> view of the address space by virtue of being hooked up trough a second
+>>>>>> interconnect.
+>>>>>>
+>>>>>> Part of this is solved on arm32 by setting up the machine specific
+>>>>>> '.dma_zone_size = SZ_1G', which takes care of reserving the coherent
+>>>>>> memory area at the right spot. That said no buffer bouncing (needed for
+>>>>>> dma streaming) is available at the moment, but that's a story for
+>>>>>> another series.
+>>>>>>
+>>>>>> Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
+>>>>>> ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
+>>>>>> arch code as if all peripherals where be able to address the first 4GB
+>>>>>> of memory.
+>>>>>>
+>>>>>> In the light of this, the series implements the following changes:
+>>>>>>
+>>>>>> - Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
+>>>>>>   area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
+>>>>>>   the RPi4 is the only arm64 device with such DMA addressing limitations
+>>>>>>   so this hardcoded solution was deemed preferable.
+>>>>>>
+>>>>>> - Properly set ARCH_ZONE_DMA_BITS.
+>>>>>>
+>>>>>> - Reserve the CMA area in a place suitable for all peripherals.
+>>>>>>
+>>>>>> This series has been tested on multiple devices both by checking the
+>>>>>> zones setup matches the expectations and by double-checking physical
+>>>>>> addresses on pages allocated on the three relevant areas GFP_DMA,
+>>>>>> GFP_DMA32, GFP_KERNEL:
+>>>>>>
+>>>>>> - On an RPi4 with variations on the ram memory size. But also forcing
+>>>>>>   the situation where all three memory zones are nonempty by setting a 3G
+>>>>>>   ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
+>>>>>>
+>>>>> i like to test this series on Raspberry Pi 4 and i have some questions
+>>>>> to get arm64 running:
+>>>>>
+>>>>> Do you use U-Boot? Which tree?
+>>>> If you want to use U-Boot, try v2019.10-rc4, it should have everything you need
+>>>> to boot your kernel.
 >>>>
->>>> So instead of reverting, fixing and then re-applying the patch I have
->>>> gently proposed shorter path. If you prefer long path we can try to go
->>>> this way.
+>>> Ok, here is a thing. In the linux kernel we now use bcm2711 as SoC name, but the
+>>> RPi4 devicetree provided by the FW uses mostly bcm2838.
+>> Do you mean the DTB provided at runtime?
+>>
+>> You mean the merged U-Boot changes, doesn't work with my Raspberry Pi
+>> series?
+>>
+>>>  U-Boot in its default
+>>> config uses the devicetree provided by the FW, mostly because this way you don't
+>>> have to do anything to find out how many RAM you really have. Secondly because
+>>> this will allow us, in the near future, to have one U-boot binary for both RPi3
+>>> and RPi4 (and as a side effect one binary for RPi1 and RPi2).
+>>>
+>>> Anyway, I found at least, that the following compatibles need to be added:
+>>>
+>>> "brcm,bcm2838-cprman"
+>>> "brcm,bcm2838-gpio"
+>>>
+>>> Without at least the cprman driver update, you won't see anything.
+>>>
+>>> "brcm,bcm2838-rng200" is also a candidate.
+>>>
+>>> I also suppose we will need to add "brcm,bcm2838" to
+>>> arch/arm/mach-bcm/bcm2711.c, but I haven't verified this.
+>> How about changing this in the downstream kernel? Which is much easier.
+> I'm not sure I understand what you want to say. My goal is to use the upstream
+> kernel with the device tree blob provided by the FW.
+
+The device tree blob you are talking is defined in this repository:
+
+https://github.com/raspberrypi/linux
+
+So the word FW is misleading to me.
+
+>  If you talk about the
+> downstream kernel, I suppose you mean we should change this in the FW DT blob
+> and in the downstream kernel. That would work for me.
+>
+> Did I understand you correctly?
+
+Yes
+
+So i suggest to add the upstream compatibles into the repo mentioned above.
+
+Sorry, but in case you decided as a U-Boot developer to be compatible
+with a unreviewed DT, we also need to make U-Boot compatible with
+upstream and downstream DT blobs.
+
+>
+>>> Regards,
+>>> Matthias
+>>>
+>>>> Regards,
+>>>> Matthias
 >>>>
->>>> Matt, is the pure revert OK for you or is it possible to prepare some
->>>> workaround allowing cooperation with both approaches?
->>> Rob/Andrzej: What's the call here?
->>>
->>> Should I resubmit the kirin fix for the adv7511 regression here?
->>> Or do we revert the adv7511 patch? I believe db410c still needs a fix.
->>>
->>> I'd just like to keep the HiKey board from breaking, so let me know so
->>> I can get the fix submitted if needed.
+>>>>> Are there any config.txt tweaks necessary?
+>>>>>
+>>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 >>
->> Since there is no response from Matt, we can perform revert, since there
->> are no other ideas. I will apply it tomorrow, if there are no objections.
-> Hi,
->
-> Sorry - yeah I think reverting is probably best at this point to avoid 
-> breaking in-tree platforms.
-> It's a shame though that there is a built-in incompatibility within the 
-> tree between drivers.
-
-
-Quite common in development - some issues becomes visible after some time.
-
-> The way that the generic Synopsys DSI host driver 
-> probes is currently incompatible with the ADV7533 (hence the patch), 
-> other DSI host drivers are now compatible with the ADV7533 but break 
-> when we change it to probe in a similar way to panel drivers.
-
-
-1. The behavior should be consistent between all hosts/device drivers.
-
-2. DSI controlled devices can expose drm objects (drm_bridge/drm_panel)
-only when they can probe, ie DSI bus they sit on must be created 1st.
-
-1 and 2 enforces policy that all host drivers should 1st create control
-bus (DSI in this case) then look for higher level objects
-(drm_bridge/drm_panel).
-
-As a consequence all bridges and panels should 1st gather the resources
-they depends on, and then they can expose higher level objects.
-
-
->
->> And for the future: I guess it is not possible to make adv work with old
->> and new approach, but simple workaround for adv could be added later:
->>
->> if (source is msm or kirin)
->>
->>      do_the_old_way
->>
->> else
->>
->>      do_correctly.
-> Maybe this would work, but how do we know that the list "msm or kirin" 
-> is exhaustive to cope with all platforms?
-
-
-By checking dts/config files.
-
-
-> It seems to me the built in 
-> incompatibility between DSI hosts needs to be resolved really rather 
-> than trying to work around it in the ADV7533 driver (and any other DSI 
-> bus device that falls into this trap).
-
-
-If you know how, please describe. Atm the only real solution I see is
-explicit workaround to allow new adv7511, then fixing controllers,
-together with workaround-removal.
-
-OK, it could be possible to change msm, kirin and adv in one patch,
-however I am not sure if this is the best solution.
-
-
-Regards
-
-Andrzej
-
-
->
-> Anyway, my platform is out of tree so better to revert my patch and keep 
-> the in-tree platforms working.
->
-> Thanks everyone.
-> Matt
->
->>
->> And remove it after fixing both dsi masters.
->>
->>
->> Regards
->>
->> Andrzej
->>
->>
->>> thanks
->>> -john
->>>
->>>
-
