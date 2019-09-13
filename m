@@ -2,131 +2,196 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5857BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4798BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A08220678
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RtVOQl6S"
+	by mail.kernel.org (Postfix) with ESMTP id 25E7120678
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbfIMQBz (ORCPT
+        id S1730448AbfIMQDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 12:01:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37515 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIMQBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 12:01:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i1so32049066wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 09:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xK3P/MTBGgvM9inB0b/+0BFfc7AXQxejr+yyElk4fOo=;
-        b=RtVOQl6S0qDe3qqqZfOn+HYcBwzwBHLscsskaaMW8gjHeRO1yNBIApe4AbJfwm/AhP
-         Xy3Tly5958IZh4IzKxBy9rwkgCC7L/Zq5br8ZM7FUakg25OAfV+d7+Oief38xPlT+L5+
-         7STiYilmvmSxjFst7uVDgmNORsKFwriLEL/Cs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xK3P/MTBGgvM9inB0b/+0BFfc7AXQxejr+yyElk4fOo=;
-        b=Deah+szyOV9yMjXNnJd+nwZ7Q8lokjE+WdCs2aZ7fqE5+qB8ZlLCy1MdvP8nycjn3+
-         6h0mv/4bTbnFbiq+YdRW/2ij1K3L2pYwgtH1ILBjygmJ1x+FRu1IDEvVufR2ZeOiF/C7
-         JdAd/Ej84xghmhiedrIi12s8SSbBJ6Hdqmu0TBJK7sJS52AC5yjyt+rGB/sY6QJbDxYj
-         PCnmxFBP+0danbR1oJ0h9ML9+LMds1rvuwZKsbfKT88Pj37T8ovMcCT1F2uYYVvb/KXR
-         fJgi/l8pZVQkarGBB3RAoZtllTumBDsnEp2uL5gCpXRBuqInX1ZfJmheb7XzIjR2DDcy
-         lFKQ==
-X-Gm-Message-State: APjAAAVVyd1OCk6iwtouhfnIKXxGjtHleTC7YaFcg4hXFsKtS6+Mo/vN
-        Znm/H8Ud6hmtlJw15dxnRQeA+wnz6x7zA49hqD4/9Q==
-X-Google-Smtp-Source: APXvYqyEhc02o1CZzKDqnsA5N4VH62NZw/ZCFduDfVoTeL7AGFM1k8EQtzNWkOsjRFuc0dUlkz4Yo0uSyn3TKbVCo6k=
-X-Received: by 2002:a5d:62c6:: with SMTP id o6mr6921750wrv.243.1568390511848;
- Fri, 13 Sep 2019 09:01:51 -0700 (PDT)
+        Fri, 13 Sep 2019 12:03:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:46202 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfIMQDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 12:03:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DC281000;
+        Fri, 13 Sep 2019 09:03:40 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E22B93F67D;
+        Fri, 13 Sep 2019 09:03:38 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/panfrost: Prevent race when handling page fault
+Date:   Fri, 13 Sep 2019 17:03:10 +0100
+Message-Id: <20190913160310.50444-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190912022740.161798-1-yuhsuan@chromium.org> <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
-In-Reply-To: <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Sat, 14 Sep 2019 00:01:40 +0800
-Message-ID: <CAGvk5PoWOQKYT4T18_xTzz=85k3_W_0hnSS3EJCEk4ukkaSzcw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add
- dmic format constraint
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> =E6=96=BC
-2019=E5=B9=B49=E6=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=889:0=
-2=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On 9/11/19 9:27 PM, Yu-Hsuan Hsu wrote:
-> > 24 bits recording from DMIC is not supported for KBL platform because
-> > the TDM slot between PCH and codec is 16 bits only. We should add a
-> > constraint to remove that unsupported format.
->
-> Humm, when you use DMICs they are directly connected to the PCH with a
-> standard 1-bit PDM. There is no notion of TDM or slot.
->
-> It could very well be that the firmware/topology only support 16 bit (I
-> vaguely recall another case where 24 bits was added), but the
-> description in the commit message would need to be modified to make the
-> reason for this change clearer.
+When handling a GPU page fault addr_to_drm_mm_node() is used to
+translate the GPU address to a buffer object. However it is possible for
+the buffer object to be freed after the function has returned resulting
+in a use-after-free of the BO.
 
-(I sent it again because the previous email contains HTML subpart.
-Sorry for the inconvenience.)
+Change addr_to_drm_mm_node to return the panfrost_gem_object with an
+extra reference on it, preventing the BO from being freed until after
+the page fault has been handled.
 
-Thanks for the review! If I'm not mistaken, the microphone is attached
-to external codec(rt5514) instead of PCH on Kabylake platform. So
-there should be a TDM between DMICs and PCH. We can see in the
-kabylake_ssp0_hw_params function, there are some operations about
-setting tdm slot_width to 16 bits. Therefore, I think it only supports
-S16_LE format for DMICs. Is it correct?
->
->
->
-> >
-> > Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > ---
-> >   sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> >
-> > diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/soun=
-d/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > index 74dda8784f1a01..67b276a65a8d2d 100644
-> > --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_sub=
-stream *substream)
-> >       snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNEL=
-S,
-> >                       dmic_constraints);
-> >
-> > +     runtime->hw.formats =3D SNDRV_PCM_FMTBIT_S16_LE;
-> > +     snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
-> > +
-> >       return snd_pcm_hw_constraint_list(substream->runtime, 0,
-> >                       SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
-> >   }
-> >
->
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+Changes since v1:
+ * Hold the mm_lock around drm_mm_for_each_node()
+
+I've also posted a new IGT test for this:
+https://patchwork.freedesktop.org/patch/330513/
+
+ drivers/gpu/drm/panfrost/panfrost_mmu.c | 55 ++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+index 842bdd7cf6be..b6b281896ed6 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -392,28 +392,40 @@ void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
+ 	free_io_pgtable_ops(mmu->pgtbl_ops);
+ }
+ 
+-static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pfdev, int as, u64 addr)
++static struct panfrost_gem_object *
++addr_to_drm_mm_node(struct panfrost_device *pfdev, int as, u64 addr)
+ {
+-	struct drm_mm_node *node = NULL;
++	struct panfrost_gem_object *bo = NULL;
++	struct panfrost_file_priv *priv;
++	struct drm_mm_node *node;
+ 	u64 offset = addr >> PAGE_SHIFT;
+ 	struct panfrost_mmu *mmu;
+ 
+ 	spin_lock(&pfdev->as_lock);
+ 	list_for_each_entry(mmu, &pfdev->as_lru_list, list) {
+-		struct panfrost_file_priv *priv;
+-		if (as != mmu->as)
+-			continue;
++		if (as == mmu->as)
++			break;
++	}
++	if (as != mmu->as)
++		goto out;
++
++	priv = container_of(mmu, struct panfrost_file_priv, mmu);
+ 
+-		priv = container_of(mmu, struct panfrost_file_priv, mmu);
+-		drm_mm_for_each_node(node, &priv->mm) {
+-			if (offset >= node->start && offset < (node->start + node->size))
+-				goto out;
++	spin_lock(&priv->mm_lock);
++
++	drm_mm_for_each_node(node, &priv->mm) {
++		if (offset >= node->start &&
++				offset < (node->start + node->size)) {
++			bo = drm_mm_node_to_panfrost_bo(node);
++			drm_gem_object_get(&bo->base.base);
++			break;
+ 		}
+ 	}
+ 
++	spin_unlock(&priv->mm_lock);
+ out:
+ 	spin_unlock(&pfdev->as_lock);
+-	return node;
++	return bo;
+ }
+ 
+ #define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
+@@ -421,29 +433,28 @@ static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pfdev, in
+ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+ {
+ 	int ret, i;
+-	struct drm_mm_node *node;
+ 	struct panfrost_gem_object *bo;
+ 	struct address_space *mapping;
+ 	pgoff_t page_offset;
+ 	struct sg_table *sgt;
+ 	struct page **pages;
+ 
+-	node = addr_to_drm_mm_node(pfdev, as, addr);
+-	if (!node)
++	bo = addr_to_drm_mm_node(pfdev, as, addr);
++	if (!bo)
+ 		return -ENOENT;
+ 
+-	bo = drm_mm_node_to_panfrost_bo(node);
+ 	if (!bo->is_heap) {
+ 		dev_WARN(pfdev->dev, "matching BO is not heap type (GPU VA = %llx)",
+-			 node->start << PAGE_SHIFT);
+-		return -EINVAL;
++			 bo->node.start << PAGE_SHIFT);
++		ret = -EINVAL;
++		goto err_bo;
+ 	}
+ 	WARN_ON(bo->mmu->as != as);
+ 
+ 	/* Assume 2MB alignment and size multiple */
+ 	addr &= ~((u64)SZ_2M - 1);
+ 	page_offset = addr >> PAGE_SHIFT;
+-	page_offset -= node->start;
++	page_offset -= bo->node.start;
+ 
+ 	mutex_lock(&bo->base.pages_lock);
+ 
+@@ -452,7 +463,8 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+ 				     sizeof(struct sg_table), GFP_KERNEL | __GFP_ZERO);
+ 		if (!bo->sgts) {
+ 			mutex_unlock(&bo->base.pages_lock);
+-			return -ENOMEM;
++			ret = -ENOMEM;
++			goto err_bo;
+ 		}
+ 
+ 		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
+@@ -461,7 +473,8 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+ 			kfree(bo->sgts);
+ 			bo->sgts = NULL;
+ 			mutex_unlock(&bo->base.pages_lock);
+-			return -ENOMEM;
++			ret = -ENOMEM;
++			goto err_bo;
+ 		}
+ 		bo->base.pages = pages;
+ 		bo->base.pages_use_count = 1;
+@@ -499,12 +512,16 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+ 
+ 	dev_dbg(pfdev->dev, "mapped page fault @ AS%d %llx", as, addr);
+ 
++	drm_gem_object_put_unlocked(&bo->base.base);
++
+ 	return 0;
+ 
+ err_map:
+ 	sg_free_table(sgt);
+ err_pages:
+ 	drm_gem_shmem_put_pages(&bo->base);
++err_bo:
++	drm_gem_object_put_unlocked(&bo->base.base);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
