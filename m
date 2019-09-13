@@ -2,143 +2,134 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28273C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348F5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E058D20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0640F20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c7EzigXK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1Junbl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfIMFsp (ORCPT
+        id S1726841AbfIMFvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:48:45 -0400
-Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:38151
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725385AbfIMFso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:48:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Md7nIJRWD8rRWiYOpNWXsWjikTdmw+1mHwXaoy0knyl6qBSzXzg81m/a8nWhV0+HsiSPq4HoxaNHCyupTUIcEy+GxlNpdNSlwP/qyyWeh28alp9/u4mf3jqkEKC9DjgDH4qLNzz81ngfx/cXnLKBncS8fV3xgKsnW5Wi4m+rXJx1qXeuKr0mq1YV13R+51zd9JXXmbs4SEdk+qws7RIbzrbE0E+VlGG1tD/Qvq8Uw6NhRe+NDWmu2/UCEKiPNYdRnfmDmfk4J+h3Ehm/2npLQZaHN94Jbh7ckxP7De8Gs+1B86oOxGMRupMdNZQLxtfeM0ExpCwI6STpSXW9PnjgSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zBCCnSJLpEpCMycoFYk04JXgRHL+UjgAb7/e8w8YAeI=;
- b=Cf1gA7xPgeZH7lMHz7uwwVIUm5XZdYq2UyyI02biPNESMdioqsaD68iPS1iwM7zZyUuC568eSyn3/kLyfHoshXV4El0P7aTL6McE5nHdEUIV3p8XNxdNwuXmF4PLuj6Co5/yH24thMM47xYurvuGbuSWBe/tqGSBXma0G76Rsx5oGliEsovQQbfOdCGGw5mNqnq/wedc61YcN0BU8XQn1URk5nyiv0aTvXCTPl7jXPfVWAHML6VOIkNThD7iJhD52FlwkvoPqEZWZpfo+TQkfYyL8+kfqeJj8oi24QVHkdkeBvQGrT//AZYYMB02uvaa0ar/WYxPJKk2ngyQCg8s1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zBCCnSJLpEpCMycoFYk04JXgRHL+UjgAb7/e8w8YAeI=;
- b=c7EzigXK38N6U3PYd7xzVZ+sA35yjF8tdi6Vy7t6SGK7kFWohNohHFWtQb7lvYoDJU61yslrfrpZ3DWXSLKdi7wM52hQY82wAR+olgSyix64bxqFVmd3HdT9g7LiVe3jVIBc4dKqpeFOyEwJgH2GzKI/4jYXgTpyPiCwrtetM6o=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6701.eurprd04.prod.outlook.com (20.179.235.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.20; Fri, 13 Sep 2019 05:48:40 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
- 05:48:40 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
- format
-Thread-Topic: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
- format
-Thread-Index: AdVne99A50iblB+wSvqDBZhWvxbm4ACSRBCAAAw2tDA=
-Date:   Fri, 13 Sep 2019 05:48:40 +0000
-Message-ID: <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
-References: <VE1PR04MB64791308D87F91C51412DF53E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
- <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 80d7f1c8-ba1a-45d3-6e9d-08d7380e07e2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR04MB6701;
-x-ms-traffictypediagnostic: VE1PR04MB6701:
-x-microsoft-antispam-prvs: <VE1PR04MB6701A1ECFCD5B77527DE78B1E3B30@VE1PR04MB6701.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(346002)(376002)(39860400002)(189003)(199004)(256004)(8676002)(76116006)(3846002)(66946007)(6116002)(5660300002)(81156014)(52536014)(99286004)(6246003)(81166006)(53936002)(14454004)(76176011)(7696005)(486006)(54906003)(66556008)(66446008)(64756008)(66476007)(316002)(2906002)(229853002)(11346002)(4326008)(66066001)(1411001)(7416002)(446003)(305945005)(476003)(6506007)(478600001)(7736002)(55016002)(8936002)(86362001)(102836004)(186003)(26005)(6916009)(9686003)(71190400001)(25786009)(6436002)(74316002)(71200400001)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6701;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vRfzF51we1zFpC03lvmDd+vNL4EZIt1dtj+HQa8TNvjHhUkCHZxvcQEldJS4HzlxEbwouGAzNQ3Kbl+kXXfPe3E31eshzv5xjV46Mfiv6EgkyeP0YR7fOi4fy57N/OPpXWYJ7LQ9CP92GKHiwlADBNV0lUiscF0zyzurOCMPzD/hrI2eePynDYwaCrujswr3NKyxhJXupjA+GWVbIrawrUMx2l3tVfga1uiVI8z9nyNhIie20XyATV9FtmWKxNIvkEXrnQM5nB9W7PCZ4eeYSm3lEfLflusEaeqxFitem/zZCUGQIxzRQ32j9Syx+6p4xk5B7PsJOQEMkX78xiE9K0adDoWrQ0/lgjL8dF30zDzfj0Gq68/v2j/PkYuMIEDqoND6OQ+z7tlweijdMwz/DZ6hweg24hJ2OyMu3dVXyds=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Sep 2019 01:51:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38838 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfIMFvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 01:51:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l11so30707014wrx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Phaw5vbTT2faE0N3gJYnU+Jk+6mkAT8/6QLIHkDqelw=;
+        b=n1Junbl+PAAZAQDIPZK5uCYARN4Il+YCpwChpr2oNQQ/fP6+kYqUaUmkGkk70Y0tja
+         Q5hx+8kvb7FdV3kaQYo4PdOCoywynD4zVtl24jnqxOVHta064PTIy1KZZvCuCWIRlwUi
+         bwmJ0jVW10DKFf/IqA67ybeyPxW6EQYIPAv6ivjUDpecnj6EyRTfH8ufY+vcLQ2oijC/
+         Jzm9TJKV1lJe21DUh/wWh/gpOaYNePyjCtNBXWaORspnGSwCM7+Uigo4px77MrZ17ZNv
+         n0Z+2il/JAMxWNZzJTwoUG5nHMBFD6kJW5xUgNdSYMEcZMhR5EdK/qyQpjXhe0gqSQhc
+         pyHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Phaw5vbTT2faE0N3gJYnU+Jk+6mkAT8/6QLIHkDqelw=;
+        b=QvGxG0o8oajwS8qxhqfyZgxIlicdVgDtdp/pji9FSejl6R9UiyZYSq2iCNTKc4pMbZ
+         9oGoF0HWqsUcLfSXJlhPCMaxTcrFCh9RJBYOyw8UA6p3v1chxXLF9eitzf9Zc+oEJO7Y
+         qHqPyKeQCRGOI99VSyrG1HkjxibbAD9QpdkmPbWiMpJSOlF4hleYMFfLLUggP7g6rNTi
+         wuljDGkf7jwffVSHEWHEwamIhlJNLd1RD0JFjTij+DYp7Buk89V39yC/kW/xWM87Vjz2
+         hD8HkGH7NWpEj+5daKaTv4UHAaqxfaQVppgmt5D01jO8mCyqoqc/fuKQM6nBTG+OYPdi
+         XOmQ==
+X-Gm-Message-State: APjAAAVRLieboMG8IRPK4xyZmUOuR66qNjYCohiWHaSzz9y59Gq0VCX4
+        jD+eN5vNXiyJnEKMv98r3VM2Trz4
+X-Google-Smtp-Source: APXvYqxD+ywAwmLzUEqqo3xtMGt3wUdwMno0tLYEvxObOX4qB9I3z8Lk53z/BkFdH6spnuGDE8Qo0A==
+X-Received: by 2002:a05:6000:11cb:: with SMTP id i11mr2611823wrx.171.1568353857634;
+        Thu, 12 Sep 2019 22:50:57 -0700 (PDT)
+Received: from localhost.localdomain ([62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id h125sm2429279wmf.31.2019.09.12.22.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 22:50:56 -0700 (PDT)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 1/2] drm/etnaviv: update hardware headers from rnndb
+Date:   Fri, 13 Sep 2019 07:50:36 +0200
+Message-Id: <20190913055052.25599-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80d7f1c8-ba1a-45d3-6e9d-08d7380e07e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 05:48:40.7752
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GIkSRxHUcaYmMn9kgeGtSEr7ArNIH3/+q4ObXJL+kVbiNS9b/ylmVoLwTE742i5XBKW/Tagij7gCZ62Lgc0V1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6701
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Update the state HI header from rnndb commit
+a04283591a8a (rnndb: update MMU exception causes).
 
->=20
-> On Tue, Sep 10, 2019 at 02:07:25AM +0000, S.j. Wang wrote:
-> > > On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
-> > > > The ASRC support 24bit/16bit/8bit input width, so S20_3LE format
-> > > > should not be supported, it is word width is 20bit.
-> > >
-> > > I thought 3LE used 24-bit physical width. And the driver assigns
-> > > ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit
-> > > would go for that 24-bit slot also. I don't clearly recall if I had
-> > > explicitly tested S20_3LE, but I feel it should work since I put ther=
-e...
-> >
-> > For S20_3LE, the width is 20bit,  but the ASRC only support 24bit, if
-> > set the ASRMCR1n.IWD=3D 24bit, because the actual width is 20 bit, the
-> > volume is Lower than expected,  it likes 24bit data right shift 4 bit.
-> > So it is not supported.
->=20
-> Hmm..S20_3LE right-aligns 20 bits in a 24-bit slot? I thought they're lef=
-t
-> aligned...
->=20
-> If this is the case...shouldn't we have the same lower-volume problem for
-> all hardwares that support S20_3LE now?
+Changes in V2:
+ - Only update state_hi.xml as suggested by Lucas Stach.
 
-Actually some hardware/module when they do transmission from FIFO
-to shift register, they can select the start bit, for example from the 20th
-bit. but not all module have this capability.
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+---
+ drivers/gpu/drm/etnaviv/state_hi.xml.h | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-For ASRC, it haven't.  IWD can only cover the data width,  there is no
-Other bit for slot width.
-
-Best regards
-Wang shengjiu
-
-
+diff --git a/drivers/gpu/drm/etnaviv/state_hi.xml.h b/drivers/gpu/drm/etnaviv/state_hi.xml.h
+index 41d8da2b6f4f..0f93dbbbaaeb 100644
+--- a/drivers/gpu/drm/etnaviv/state_hi.xml.h
++++ b/drivers/gpu/drm/etnaviv/state_hi.xml.h
+@@ -8,17 +8,17 @@ This file was generated by the rules-ng-ng headergen tool in this git repository
+ git clone git://0x04.net/rules-ng-ng
+ 
+ The rules-ng-ng source files this header was generated from are:
+-- state.xml     (  26087 bytes, from 2017-12-18 16:51:59)
+-- common.xml    (  35468 bytes, from 2018-01-22 13:48:54)
+-- common_3d.xml (  14615 bytes, from 2017-12-18 16:51:59)
+-- state_hi.xml  (  30232 bytes, from 2018-02-15 15:48:01)
+-- copyright.xml (   1597 bytes, from 2016-12-08 16:37:56)
+-- state_2d.xml  (  51552 bytes, from 2016-12-08 16:37:56)
+-- state_3d.xml  (  79992 bytes, from 2017-12-18 16:51:59)
+-- state_blt.xml (  13405 bytes, from 2017-12-18 16:51:59)
+-- state_vg.xml  (   5975 bytes, from 2016-12-08 16:37:56)
+-
+-Copyright (C) 2012-2018 by the following authors:
++- state.xml     (  26666 bytes, from 2019-08-13 11:26:49)
++- common.xml    (  35468 bytes, from 2018-02-10 13:09:26)
++- common_3d.xml (  14322 bytes, from 2019-08-20 20:31:50)
++- state_hi.xml  (  30396 bytes, from 2019-08-20 20:34:03)
++- copyright.xml (   1597 bytes, from 2018-02-10 13:09:26)
++- state_2d.xml  (  51552 bytes, from 2018-02-10 13:09:26)
++- state_3d.xml  (  83505 bytes, from 2019-09-06 09:32:54)
++- state_blt.xml (  14252 bytes, from 2019-08-13 20:00:42)
++- state_vg.xml  (   5975 bytes, from 2018-02-10 13:09:26)
++
++Copyright (C) 2012-2019 by the following authors:
+ - Wladimir J. van der Laan <laanwj@gmail.com>
+ - Christian Gmeiner <christian.gmeiner@gmail.com>
+ - Lucas Stach <l.stach@pengutronix.de>
+@@ -48,6 +48,9 @@ DEALINGS IN THE SOFTWARE.
+ #define MMU_EXCEPTION_SLAVE_NOT_PRESENT				0x00000001
+ #define MMU_EXCEPTION_PAGE_NOT_PRESENT				0x00000002
+ #define MMU_EXCEPTION_WRITE_VIOLATION				0x00000003
++#define MMU_EXCEPTION_OUT_OF_BOUND				0x00000004
++#define MMU_EXCEPTION_READ_SECURITY_VIOLATION			0x00000005
++#define MMU_EXCEPTION_WRITE_SECURITY_VIOLATION			0x00000006
+ #define VIVS_HI							0x00000000
+ 
+ #define VIVS_HI_CLOCK_CONTROL					0x00000000
+-- 
+2.21.0
 
