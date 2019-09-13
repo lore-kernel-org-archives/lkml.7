@@ -2,52 +2,53 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163A6C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384B1C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D999A206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9FD2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380141;
-	bh=18tAscth9FF9plE93REuaZYkwT31wbrMuT8sabAMCe4=;
+	s=default; t=1568380144;
+	bh=xxcNvHAUzHqpe4b/uPFLBWmvx6l6ZoYVFfAIjThIUSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4gFUUugVQ9WwA0rajUgNiHbARrb0QUmYGKCDbsq/Cme4Qy9va5+sbwnnorBdLkzi
-	 gJDmxvDsBpc+VVA6/Ppedg27BoDc18dh1GLP1QF0CmJGzQbmrkeshdxCAOH3i6UKW7
-	 iX4GxfS/5bGXOxScjt52oI2Y8ulhqC2XrwCzzmE8=
+	b=m7irUYvgOn2Goy5mon8NdMZmFjoZd7MgutkiAPPC/VHEMKI3dfEn1S+vz1aFbKQOR
+	 Mk4iBG2ib/BD1TqT6iL4aDB1edjrhk7wgwkk3kzspFULcOqXh6+9LUZiv9m3d/oSVf
+	 rVlfSOT7g+wN8xRYfZ47LvEVWgOVm6ht6wd/cmHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfIMNJA (ORCPT
+        id S2388418AbfIMNJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388354AbfIMNI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:08:56 -0400
+        id S2388393AbfIMNI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:08:59 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D87F208C2;
-        Fri, 13 Sep 2019 13:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D6E20CC7;
+        Fri, 13 Sep 2019 13:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380136;
-        bh=18tAscth9FF9plE93REuaZYkwT31wbrMuT8sabAMCe4=;
+        s=default; t=1568380139;
+        bh=xxcNvHAUzHqpe4b/uPFLBWmvx6l6ZoYVFfAIjThIUSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1YX3lB1coAOlgUYIV2UxZ0QLkIib8sNd8IQAX6COMQb4DKKMCr3LmMNZSFebk/61
-         w3iFMljXtOlXJBNA7KemifQ755mU8Ihgau9tnSAZOAcR4dj49ngtQjW+yl4KKKNbFE
-         6yASltB8315kiyOq4Yb3Is5tSmHu52soWuJcfVqo=
+        b=LtoGSUkn9jr+SMUTRjFJg3tu2sBUCnjwzDdas20DtDWQyLvMEVIiKXCx0XVe+vY78
+         eDrOamobVi3jvNAIgTANsHOIT/CnLiZGQnUuRl/xI9zTOW8/P/LvC3vQ15iW5Nng0z
+         rWQb3cVBrrWvfq/oXLse37dSKq8npwviAcs7WqXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.4 7/9] x86, boot: Remove multiple copy of static function sanitize_boot_params()
-Date:   Fri, 13 Sep 2019 14:06:57 +0100
-Message-Id: <20190913130430.474572665@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jones <davej@codemonkey.org.uk>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 8/9] af_packet: tone down the Tx-ring unsupported spew.
+Date:   Fri, 13 Sep 2019 14:06:58 +0100
+Message-Id: <20190913130431.515555493@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
 References: <20190913130424.160808669@linuxfoundation.org>
@@ -60,56 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+[ Upstream commit 6ae81ced378820c4c6434b1dedba14a7122df310 ]
 
-commit 8c5477e8046ca139bac250386c08453da37ec1ae upstream.
+Trinity and other fuzzers can hit this WARN on far too easily,
+resulting in a tainted kernel that hinders automated fuzzing.
 
-Kernel build warns:
- 'sanitize_boot_params' defined but not used [-Wunused-function]
+Replace it with a rate-limited printk.
 
-at below files:
-  arch/x86/boot/compressed/cmdline.c
-  arch/x86/boot/compressed/error.c
-  arch/x86/boot/compressed/early_serial_console.c
-  arch/x86/boot/compressed/acpi.c
-
-That's becausethey each include misc.h which includes a definition of
-sanitize_boot_params() via bootparam_utils.h.
-
-Remove the inclusion from misc.h and have the c file including
-bootparam_utils.h directly.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
-[nc: Fixed conflict around lack of 67b6662559f7f]
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dave Jones <davej@codemonkey.org.uk>
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/misc.c |    1 +
- arch/x86/boot/compressed/misc.h |    1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -11,6 +11,7 @@
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 5d8988185c591..0dd9fc3f57e87 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4176,7 +4176,7 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
  
- #include "misc.h"
- #include "../string.h"
-+#include <asm/bootparam_utils.h>
+ 	/* Opening a Tx-ring is NOT supported in TPACKET_V3 */
+ 	if (!closing && tx_ring && (po->tp_version > TPACKET_V2)) {
+-		WARN(1, "Tx-ring is not supported.\n");
++		net_warn_ratelimited("Tx-ring is not supported.\n");
+ 		goto out;
+ 	}
  
- /* WARNING!!
-  * This code is compiled with -fPIC and it is relocated dynamically
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -19,7 +19,6 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
--#include <asm/bootparam_utils.h>
- 
- #define BOOT_BOOT_H
- #include "../ctype.h"
+-- 
+2.20.1
+
 
 
