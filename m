@@ -2,56 +2,57 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C1CC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111E2C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F200E20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBF6214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380852;
-	bh=qYVMk1Hx+6nEgYmyCC8RINbJ2qHv93AeLhQL+41kAmo=;
+	s=default; t=1568380854;
+	bh=V5ryNmRt/DI8n+3VX9CWi5D7HhqLdK0qwkg50RMMFtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vljrClNL0/Kd28FlXrVouSWMGsJ6gPShzIqPu9XwtmQYoEeXtHHSdxIGCMgio1n8n
-	 FVh7Bq6A1WAvaF2GS0dnwIq8Dmjyh90hsHeUfzlrV4XOY8VisFK7qqi4da9eJgGSNO
-	 hPqCdlLh0DMNBmrDikaG8UCMhfWdTSw9kGbHNKME=
+	b=o9wPfjhc6VtYQV9oiEdoPI+odISesd0CGlS4HO+cweXQrgNelf98x8aPuXpZSjcwU
+	 sKmQo/vfTBm5M3sw8rnpC9iqxq8H00ZhB/JlLvtxH0VqI/WMvQezyiQ5KdiQPVxk9j
+	 uuv2VNB4c412IL3joHyLePUCEwYRbEv+5fg/QH6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390665AbfIMNUv (ORCPT
+        id S2390679AbfIMNUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390644AbfIMNUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:49 -0400
+        id S2389901AbfIMNUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:51 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3089920CC7;
-        Fri, 13 Sep 2019 13:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876C5214AE;
+        Fri, 13 Sep 2019 13:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380848;
-        bh=qYVMk1Hx+6nEgYmyCC8RINbJ2qHv93AeLhQL+41kAmo=;
+        s=default; t=1568380851;
+        bh=V5ryNmRt/DI8n+3VX9CWi5D7HhqLdK0qwkg50RMMFtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bHyQdZPRaq+Yjnr5Ke2BwOih76zQZa5Qui8htFXBPtV2WRGLQeMb8xMyUL0e0yvuE
-         FfhJPiMD+syPJHQXQQ6u2q4/GDqDFs77T6nKvm5mdEp4hMw9JTk7WV/Lay8FoWKSiB
-         dq4tX7lqU8UTR1q1KjHn2HyBq7XRjWA5G7v/9q3c=
+        b=NH0PXGCcmp+ehA8t4Fap+g4ijjX0W460jl6C4qOWE4sqB8L7VY/31sSm2uBozci4Y
+         L2i1jsDjbUnAb/r8PXEfIhDwdvT77GIoebAcbDaURVYanRnTno2h7LwNo9M1WUZSnw
+         ms4S/iWoAMhu316ZSMJqJPiuCWsbNznMTp/ruaVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/190] ext4: fix block validity checks for journal inodes using indirect blocks
-Date:   Fri, 13 Sep 2019 14:07:19 +0100
-Message-Id: <20190913130614.571217202@linuxfoundation.org>
+        stable@vger.kernel.org, David Jander <david@protonic.nl>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.2 01/37] gpio: pca953x: correct type of reg_direction
+Date:   Fri, 13 Sep 2019 14:07:06 +0100
+Message-Id: <20190913130510.940562189@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
-References: <20190913130559.669563815@linuxfoundation.org>
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
+References: <20190913130510.727515099@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,44 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b ]
+From: David Jander <david@protonic.nl>
 
-Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
-block_validity") failed to add an exception for the journal inode in
-ext4_check_blockref(), which is the function used by ext4_get_branch()
-for indirect blocks.  This caused attempts to read from the ext3-style
-journals to fail with:
+commit bc624a06f0c5190bc37fec7d22cd82b43a579698 upstream.
 
-[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+The type of reg_direction needs to match the type of the regmap, which
+is u8.
 
-Fix this by adding the missing exception check.
+Fixes: 0f25fda840a9 ("gpio: pca953x: Zap ad-hoc reg_direction cache")
+Cc: Cc: <stable@vger.kernel.org>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpio/gpio-pca953x.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 9409b1e11a22e..cd7129b622f85 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -275,6 +275,11 @@ int ext4_check_blockref(const char *function, unsigned int line,
- 	__le32 *bref = p;
- 	unsigned int blk;
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -604,7 +604,7 @@ static void pca953x_irq_bus_sync_unlock(
+ 	u8 new_irqs;
+ 	int level, i;
+ 	u8 invert_irq_mask[MAX_BANK];
+-	int reg_direction[MAX_BANK];
++	u8 reg_direction[MAX_BANK];
  
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
-+
- 	while (bref < p+max) {
- 		blk = le32_to_cpu(*bref++);
- 		if (blk &&
--- 
-2.20.1
-
+ 	regmap_bulk_read(chip->regmap, chip->regs->direction, reg_direction,
+ 			 NBANK(chip));
+@@ -679,7 +679,7 @@ static bool pca953x_irq_pending(struct p
+ 	bool pending_seen = false;
+ 	bool trigger_seen = false;
+ 	u8 trigger[MAX_BANK];
+-	int reg_direction[MAX_BANK];
++	u8 reg_direction[MAX_BANK];
+ 	int ret, i;
+ 
+ 	if (chip->driver_data & PCA_PCAL) {
+@@ -768,7 +768,7 @@ static int pca953x_irq_setup(struct pca9
+ {
+ 	struct i2c_client *client = chip->client;
+ 	struct irq_chip *irq_chip = &chip->irq_chip;
+-	int reg_direction[MAX_BANK];
++	u8 reg_direction[MAX_BANK];
+ 	int ret, i;
+ 
+ 	if (!client->irq)
 
 
