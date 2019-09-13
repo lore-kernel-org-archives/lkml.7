@@ -2,127 +2,113 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9ABC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE7C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48B72089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="tP7X6ryB"
+	by mail.kernel.org (Postfix) with ESMTP id BE1CE2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403808AbfIMPMd (ORCPT
+        id S2403850AbfIMPMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:12:33 -0400
-Received: from mail.efficios.com ([167.114.142.138]:52500 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389163AbfIMPM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:12:26 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 2BCCB2D10D7;
-        Fri, 13 Sep 2019 11:12:25 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id twKIsIjuDRvb; Fri, 13 Sep 2019 11:12:24 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D2BE72D10CB;
-        Fri, 13 Sep 2019 11:12:24 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D2BE72D10CB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1568387544;
-        bh=HUhXlddIR0ayNdxCc8DHV66AuBM69hftfD2geU7aTqE=;
-        h=From:To:Date:Message-Id;
-        b=tP7X6ryBYfZBI+vmVx15zugftJOB0zj75/RbET8mn42SXAOrtdP3IgVS6STJ3Zbij
-         M2c5rTPeLd+f1SudZWi4sKR/vWGVmQuaczfKFFJgfTLITV3dFwPdV76Gt8wYtGNJNa
-         RX5LUNyxq5M8KcYrmiCSjFxpV34pdcdzcNGHpgB6eXq0Q5smeLgi0x0uGhWBaRn8e8
-         9JIGYCzdXqkt78588lI79h4iTYSoH6lFYB0yLGUCDCcZAIpvp8VMAIPMTkF7mHrTCz
-         mCWbf0bw8zmJ3RvJW5Qpakn4lrxKq3WC6LPIldYXy9mhs3zv6KbKjnHoSlh0hiPp/l
-         HODfq7Uk4LyGw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id KXxwLFY74But; Fri, 13 Sep 2019 11:12:24 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 979132D10C0;
-        Fri, 13 Sep 2019 11:12:24 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, linux-api@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH for 5.3 2/3] rseq: Fix: Unregister rseq for CLONE_SETTLS
-Date:   Fri, 13 Sep 2019 11:12:19 -0400
-Message-Id: <20190913151220.3105-2-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190913151220.3105-1-mathieu.desnoyers@efficios.com>
-References: <20190913151220.3105-1-mathieu.desnoyers@efficios.com>
+        Fri, 13 Sep 2019 11:12:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32854 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389163AbfIMPMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:12:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 08:12:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="197581837"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 13 Sep 2019 08:12:30 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i8nFM-0005c2-Js; Fri, 13 Sep 2019 18:12:28 +0300
+Date:   Fri, 13 Sep 2019 18:12:28 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     "Moore, Robert" <robert.moore@intel.com>
+Cc:     Nikolaus Voss <nv@vosn.de>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ferry Toth <ftoth@telfort.nl>,
+        "nikolaus.voss@loewensteinmedical.de" 
+        <nikolaus.voss@loewensteinmedical.de>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+Message-ID: <20190913151228.GT2680@smile.fi.intel.com>
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been reported by Google that rseq is not behaving properly
-with respect to clone when CLONE_VM is used without CLONE_THREAD.
-It keeps the prior thread's rseq TLS registered when the TLS of the
-thread has moved, so the kernel deals with the wrong TLS.
+On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
+> -----Original Message-----
+> From: Nikolaus Voss [mailto:nv@vosn.de] 
+> Sent: Friday, September 13, 2019 12:44 AM
+> To: Moore, Robert <robert.moore@intel.com>
+> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
+> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
+> 
+> Bob,
+> 
+> On Thu, 12 Sep 2019, Moore, Robert wrote:
+> > The ability to unload an ACPI table (especially AML tables such as
+> > SSDTs) is in the process of being deprecated in ACPICA -- since it is 
+> > also deprecated in the current ACPI specification. This is being done 
+> > because of the difficulty of deleting the namespace entries for the 
+> > table.  FYI, Windows does not properly support this function either.
+> 
+> ok, I see it can be a problem to unload an AML table with all it's consequences e.g. with respect to driver unregistering in setups with complex dependencies. It will only work properly under certain conditions
+> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
+> 
+> AcpiTbUnloadTable is not exported, it is an internal interface only -- as
+> recognized by the "AcpiTb".
 
-The approach of clearing the per task-struct rseq registration
-on clone with CLONE_THREAD flag is incomplete. It does not cover
-the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+In Linux it became a part of ABI when the
 
-Looking more closely at each of the clone flags:
+commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
+Author: Jan Kiszka <jan.kiszka@siemens.com>
+Date:   Fri Jun 9 20:36:31 2017 +0200
 
-- CLONE_THREAD,
-- CLONE_VM,
-- CLONE_SETTLS.
+    ACPI: configfs: Unload SSDT on configfs entry removal
 
-It appears that the flag we really want to track is CLONE_SETTLS, which
-moves the location of the TLS for the child, making the rseq
-registration point to the wrong TLS.
+appeared in the kernel.
 
-Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: linux-api@vger.kernel.org
-Cc: <stable@vger.kernel.org>
----
- include/linux/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> I'm not sure that I want to change the interface
+> to AcpiLoadTable just for something that is being deprecated. Already, we
+> throw an ACPI_EXCEPTION if the Unload operator is encountered in the AML byte
+> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
+> 
+>     ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
+>         "AML Unload operator is not supported"));
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9f51932bd543..76bf55b5cccf 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1919,11 +1919,11 @@ static inline void rseq_migrate(struct task_struct *t)
- 
- /*
-  * If parent process has a registered restartable sequences area, the
-- * child inherits. Only applies when forking a process, not a thread.
-+ * child inherits. Unregister rseq for a clone with CLONE_SETTLS set.
-  */
- static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
- {
--	if (clone_flags & CLONE_THREAD) {
-+	if (clone_flags & CLONE_SETTLS) {
- 		t->rseq = NULL;
- 		t->rseq_sig = 0;
- 		t->rseq_event_mask = 0;
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
