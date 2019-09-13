@@ -2,245 +2,199 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7843C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F6BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7B1206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A82206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388262AbfIMNFi (ORCPT
+        id S2388176AbfIMNGm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:05:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387533AbfIMNFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:05:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9E35DAEB8;
-        Fri, 13 Sep 2019 13:05:35 +0000 (UTC)
-Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        Huang Rui <ray.huang@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-5-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <88d5a253-ef9e-c998-6353-5ba8680129f2@suse.de>
-Date:   Fri, 13 Sep 2019 15:05:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 09:06:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42268 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387443AbfIMNGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:06:41 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E074330615C1;
+        Fri, 13 Sep 2019 13:06:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CB47413B;
+        Fri, 13 Sep 2019 13:06:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <25289.1568379639@warthog.procyon.org.uk>
+References: <25289.1568379639@warthog.procyon.org.uk>
+To:     torvalds@linuxfoundation.org
+Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: My just-shovel-data-through-for-X-amount-of-time test
 MIME-Version: 1.0
-In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="nWOOOT7UOLyu1G0Q4r9rVJDsYE2LkmBbc"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25717.1568379999.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 13 Sep 2019 14:06:39 +0100
+Message-ID: <25718.1568379999@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 13 Sep 2019 13:06:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---nWOOOT7UOLyu1G0Q4r9rVJDsYE2LkmBbc
-Content-Type: multipart/mixed; boundary="P9JePctjIFAF8jCFKV4ivu5NZDLMTjGAk";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>, Huang Rui <ray.huang@amd.com>,
- Christian Koenig <christian.koenig@amd.com>
-Message-ID: <88d5a253-ef9e-c998-6353-5ba8680129f2@suse.de>
-Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-5-kraxel@redhat.com>
-In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
+/*
+ * Benchmark a pipe by seeing how many 511-byte writes can be stuffed through
+ * it in a certain amount of time.  Compile with -lm.
+ */
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <signal.h>
+#include <math.h>
+#include <sys/wait.h>
+#include <sys/mman.h>
 
---P9JePctjIFAF8jCFKV4ivu5NZDLMTjGAk
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+static char buf1[4096] __attribute__((aligned(4096)));
+static char buf2[4096] __attribute__((aligned(4096)));
+static unsigned long long *results;
 
-Hi
+static volatile int stop;
+void sigalrm(int sig)
+{
+	stop = 1;
+}
 
-Am 13.09.19 um 14:29 schrieb Gerd Hoffmann:
-> Factor out ttm vma setup to a new function.  Reduces
-> code duplication a bit and allows to implement
-> &drm_gem_object_funcs.mmap in gem ttm helpers.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/ttm/ttm_bo_api.h    |  8 ++++++
->  drivers/gpu/drm/ttm/ttm_bo_vm.c | 47 ++++++++++++++++++---------------=
+static __attribute__((noreturn))
+void producer(int fd, int i)
+{
+	unsigned long long l = 0;
+	ssize_t n;
 
->  2 files changed, 33 insertions(+), 22 deletions(-)
->=20
-> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.=
-h
-> index 43c4929a2171..88c652f49602 100644
-> --- a/include/drm/ttm/ttm_bo_api.h
-> +++ b/include/drm/ttm/ttm_bo_api.h
-> @@ -734,6 +734,14 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
-uct ttm_buffer_object *bo);
->  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
->  		struct ttm_bo_device *bdev);
-> =20
-> +/**
-> + * ttm_bo_mmap_vma_setup - initialize vma for ttm bo mmap
-> + *
-> + * @bo: The buffer object.
-> + * @vma: vma as input from the mmap method.
-> + */
-> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
-a_struct *vma);
-> +
->  void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
-> =20
->  void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_=
-bo_vm.c
-> index 4aa007edffb0..7c0e85c10e0e 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -426,6 +426,29 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(=
-struct ttm_bo_device *bdev,
->  	return bo;
->  }
-> =20
-> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
-a_struct *vma)
-> +{
-> +	vma->vm_ops =3D &ttm_bo_vm_ops;
-> +
-> +	/*
-> +	 * Note: We're transferring the bo reference to
-> +	 * vma->vm_private_data here.
-> +	 */
-> +
-> +	vma->vm_private_data =3D bo;
-> +
-> +	/*
-> +	 * We'd like to use VM_PFNMAP on shared mappings, where
-> +	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
-> +	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
-> +	 * bad for performance. Until that has been sorted out, use
-> +	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
-> +	 */
-> +	vma->vm_flags |=3D VM_MIXEDMAP;
-> +	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-> +}
-> +EXPORT_SYMBOL(ttm_bo_mmap_vma_setup);
+	signal(SIGALRM, sigalrm);
+	alarm(1);
 
-To me, this function looks like an internal helper that should rather
-remain internal. As mentioned in my reply to patch 5, maybe re-using
-ttm_fbdev_mmap() could help.
+	while (!stop) {
+		n = write(fd, buf1, 511);
+		if (n == -1) {
+			perror("read");
+			exit(1);
+		}
 
-Best regards
-Thomas
+		l += n;
+	}
 
-> +
->  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
->  		struct ttm_bo_device *bdev)
->  {
-> @@ -449,24 +472,7 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_=
-struct *vma,
->  	if (unlikely(ret !=3D 0))
->  		goto out_unref;
-> =20
-> -	vma->vm_ops =3D &ttm_bo_vm_ops;
-> -
-> -	/*
-> -	 * Note: We're transferring the bo reference to
-> -	 * vma->vm_private_data here.
-> -	 */
-> -
-> -	vma->vm_private_data =3D bo;
-> -
-> -	/*
-> -	 * We'd like to use VM_PFNMAP on shared mappings, where
-> -	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
-> -	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
-> -	 * bad for performance. Until that has been sorted out, use
-> -	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
-> -	 */
-> -	vma->vm_flags |=3D VM_MIXEDMAP;
-> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-> +	ttm_bo_mmap_vma_setup(bo, vma);
->  	return 0;
->  out_unref:
->  	ttm_bo_put(bo);
-> @@ -481,10 +487,7 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
-uct ttm_buffer_object *bo)
-> =20
->  	ttm_bo_get(bo);
-> =20
-> -	vma->vm_ops =3D &ttm_bo_vm_ops;
-> -	vma->vm_private_data =3D bo;
-> -	vma->vm_flags |=3D VM_MIXEDMAP;
-> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND;
-> +	ttm_bo_mmap_vma_setup(bo, vma);
->  	return 0;
->  }
->  EXPORT_SYMBOL(ttm_fbdev_mmap);
->=20
+	results[i] = l;
+	exit(0);
+}
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
+static __attribute__((noreturn))
+void consumer(int fd)
+{
+	unsigned long long l = 0;
+	ssize_t n;
 
+	for (;;) {
+		n = read(fd, buf2, 4096);
+		if (n == 0)
+			break;
+		if (n == -1) {
+			perror("read");
+			exit(1);
+		}
 
---P9JePctjIFAF8jCFKV4ivu5NZDLMTjGAk--
+		l += n;
+	}
 
---nWOOOT7UOLyu1G0Q4r9rVJDsYE2LkmBbc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+	exit(0);
+}
 
------BEGIN PGP SIGNATURE-----
+unsigned long long stddev(const unsigned long long *vals, int nvals)
+{
+	double sum = 0.0, mean, sd = 0.0;
+	int i;
 
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl17lB4ACgkQaA3BHVML
-eiPPxgf+JQ9G3h4+YESWGhpDSwBbWmRWB9mEiB1dmn/XBI+8R6DaV7LQO87dZcJw
-pBtIHQa27YA55oA6410wQKYyNUs8dDNuEcqSfcY8Uu4G/C7Ecle/sYreoOmCh0UT
-Q7Zks4sKjlE0A5+3LMkXF7LsKPY1FitgomJ9DwnwFwFn8MF0OjAQpdZPJn9yRwsv
-lsTURpBf7/6rmzrITDQylr8CzugyA5uCwmwnfLcMWZluHr35q5iIHpZ5O941kIdd
-D0yVFxcUisj1qPVn5Zeqt0jkoC8DvpPUUjc/p7i4rgUkw8pK7MOhfWOa+OSMfPl0
-wzxlhv8pa19b6SV9new86OgvexlVGA==
-=y/Ql
------END PGP SIGNATURE-----
+	for (i = 0; i < nvals; i++)
+		sum += vals[i];
 
---nWOOOT7UOLyu1G0Q4r9rVJDsYE2LkmBbc--
+	mean = sum / nvals;
+	for (i = 0; i < nvals; i++)
+		sd += pow(vals[i] - mean, 2);
+	return sqrt(sd / 10);
+}
+
+int main()
+{
+	unsigned long long t = 0;
+	int ex = 0, i;
+
+	results = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANON, -1, 0);
+	if (results == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	for (i = 0; i < 16 && ex == 0; i++) {
+		pid_t prod, con;
+		int pfd[2], wt;
+
+		if (pipe2(pfd, 0) < 0) {
+			perror("pipe");
+			exit(1);
+		}
+
+		con = fork();
+		switch (con) {
+		case -1:
+			perror("fork/c");
+			exit(1);
+		case 0:
+			close(pfd[1]);
+			consumer(pfd[0]);
+		default:
+			break;
+		}
+
+		prod = fork();
+		switch (prod) {
+		case -1:
+			perror("fork/p");
+			exit(1);
+		case 0:
+			close(pfd[0]);
+			producer(pfd[1], i);
+		default:
+			break;
+		}
+
+		close(pfd[0]);
+		close(pfd[1]);
+
+		for (;;) {
+			errno = 0;
+			wait(&wt);
+			if (errno == ECHILD)
+				break;
+			if (!WIFEXITED(wt) || WEXITSTATUS(wt) != 0)
+				ex = 1;
+		}
+
+		printf("WR[%02u]: %12llu\n", i, results[i]);
+		t += results[i];
+	}
+
+	printf("total : %12llu\n", t);
+	printf("avg   : %12llu\n", t / i);
+	printf("stddev: %12llu\n", stddev(results, i));
+	exit(ex);
+}
