@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224FDC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3D3C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF741206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8BF20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380433;
-	bh=t78fak2R3hbe2qC8ZGzJ96szizI5PDtkkaJ2FnNMvBA=;
+	s=default; t=1568380436;
+	bh=gefNbHmOak9H16F1TzmWs7MZQQw1Ok0+B6RFIQ4rio4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqcx95pVepQ+xDdvKeGW2Te895XruercVsNH/idYL8E757fGHVNGXEstXGZN9vl9c
-	 ba+AxP1uVavkIX3Fymp85o3ffTYXnrLVRXKAJG5XraVhFBdxhX4ipiMHR5S9Pw5DzK
-	 DPFHWdgqIa+hR0GfDSaUKVleZg9hIcAKYxLDhTBU=
+	b=cnmwesSIrgdYCeKSQ0u9QLoNfAMTLfIDYNl88DcHrIxHVpW1WirrwB8kFrjo/Ii77
+	 QK2kurMQ02C+VxOIFK6PxmILyZVChU/jkpL9joV65r1LSFlcmL9uRQYawPQQT2pg21
+	 +pfwO4nodtE1Eq2WCUUpaFQ3LVs4Y6nD06I4HqnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389414AbfIMNNw (ORCPT
+        id S2389425AbfIMNNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389400AbfIMNNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:49 -0400
+        id S2389400AbfIMNNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:52 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D01C20CC7;
-        Fri, 13 Sep 2019 13:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BE9214AE;
+        Fri, 13 Sep 2019 13:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380428;
-        bh=t78fak2R3hbe2qC8ZGzJ96szizI5PDtkkaJ2FnNMvBA=;
+        s=default; t=1568380431;
+        bh=gefNbHmOak9H16F1TzmWs7MZQQw1Ok0+B6RFIQ4rio4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6DqiIfhs+bJFqYFRWmCuwzcAN5uk6L2EuiYtgJ6SlCpOfHh7obPKpJPdvjIWS6d+
-         4xQaBucIgmDZowIjr3Zooazeo3PiO0GJwXhfsFMhZa/xTrH4GZSDyZzdMO1MXSlkpM
-         +j79L//CXd/BqVWlAupLnY4KfrBbU3XTS9eMPi/E=
+        b=oMwNjxkCGM2/Q92rNwEgdbzLZyjuZvyIE3ixwAoJE559vV+vK2yacEuGV7NmEz3I3
+         rlvv/3EKqHklovzdZym7/hkJSLm1ln4TRzef0fvLhxbdYsXN2IsFuq2ibjhj0eJgei
+         KYdeqOc+hovYBkqHAc669Gu+pNON0RakiAgmichQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+69780d144754b8071f4b@syzkaller.appspotmail.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/190] media: vim2m: use cancel_delayed_work_sync instead of flush_schedule_work
-Date:   Fri, 13 Sep 2019 14:05:16 +0100
-Message-Id: <20190913130604.633527485@linuxfoundation.org>
+Subject: [PATCH 4.19 062/190] drm/i915: Restore sane defaults for KMS on GEM error load
+Date:   Fri, 13 Sep 2019 14:05:17 +0100
+Message-Id: <20190913130604.720362445@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,37 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 52117be68b82ee05c96da0a7beec319906ccf6cc ]
+[ Upstream commit 7ed43df720c007d60bee6d81da07bcdc7e4a55ae ]
 
-The use of flush_schedule_work() made no sense and caused a syzkaller error.
-Replace with the correct cancel_delayed_work_sync().
+If we fail during GEM initialisation, we scrub the HW state by
+performing a device level GPU resuet. However, we want to leave the
+system in a usable state (with functioning KMS but no GEM) so after
+scrubbing the HW state, we need to restore some sane defaults and
+re-enable the low-level common parts of the GPU (such as the GMCH).
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: syzbot+69780d144754b8071f4b@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>      # for v4.20 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+v2: Restore GTT entries.
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180726085033.4044-2-chris@chris-wilson.co.uk
+Reviewed-by: Michał Winiarski <michal.winiarski@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vim2m.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/i915_gem.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index 6f87ef025ff19..de7f9fe7e7cd9 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -797,10 +797,11 @@ static int vim2m_start_streaming(struct vb2_queue *q, unsigned count)
- static void vim2m_stop_streaming(struct vb2_queue *q)
- {
- 	struct vim2m_ctx *ctx = vb2_get_drv_priv(q);
-+	struct vim2m_dev *dev = ctx->dev;
- 	struct vb2_v4l2_buffer *vbuf;
- 	unsigned long flags;
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index 03cda197fb6b8..5019dfd8bcf16 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -5595,6 +5595,8 @@ err_uc_misc:
+ 		i915_gem_cleanup_userptr(dev_priv);
  
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&dev->work_run);
- 	for (;;) {
- 		if (V4L2_TYPE_IS_OUTPUT(q->type))
- 			vbuf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+ 	if (ret == -EIO) {
++		mutex_lock(&dev_priv->drm.struct_mutex);
++
+ 		/*
+ 		 * Allow engine initialisation to fail by marking the GPU as
+ 		 * wedged. But we only want to do this where the GPU is angry,
+@@ -5605,7 +5607,14 @@ err_uc_misc:
+ 					"Failed to initialize GPU, declaring it wedged!\n");
+ 			i915_gem_set_wedged(dev_priv);
+ 		}
+-		ret = 0;
++
++		/* Minimal basic recovery for KMS */
++		ret = i915_ggtt_enable_hw(dev_priv);
++		i915_gem_restore_gtt_mappings(dev_priv);
++		i915_gem_restore_fences(dev_priv);
++		intel_init_clock_gating(dev_priv);
++
++		mutex_unlock(&dev_priv->drm.struct_mutex);
+ 	}
+ 
+ 	i915_gem_drain_freed_objects(dev_priv);
 -- 
 2.20.1
 
