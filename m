@@ -2,143 +2,114 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CCAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D8BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA42053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0DF2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AmU0IYHz";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SFuM9u93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbfIMTx2 (ORCPT
+        id S2388685AbfIMTxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:53:28 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:24118 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729670AbfIMTx2 (ORCPT
+        Fri, 13 Sep 2019 15:53:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55468 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729670AbfIMTx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:53:28 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DJkMKw002171;
-        Fri, 13 Sep 2019 19:52:57 GMT
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2v0dbgwb29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 19:52:57 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 8389BD5;
-        Fri, 13 Sep 2019 19:52:56 +0000 (UTC)
-Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.61])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 87B4639;
-        Fri, 13 Sep 2019 19:52:55 +0000 (UTC)
-Date:   Fri, 13 Sep 2019 13:52:55 -0600
-From:   Jerry Hoemann <jerry.hoemann@hpe.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
- timestamp
-Message-ID: <20190913195255.GA20131@anatevka.americas.hpqcorp.net>
-Reply-To: Jerry.Hoemann@hpe.com
-References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com>
- <20190801211613.GB3578@hirez.programming.kicks-ass.net>
- <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
- <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
- <20190801214813.GB2332@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1908012352390.1789@nanos.tec.linutronix.de>
- <925c3458-aeae-a44b-ddd5-40a1e173a307@amd.com>
- <20190802162015.GA2349@hirez.programming.kicks-ass.net>
- <20190802163328.GB2349@hirez.programming.kicks-ass.net>
- <20190808203324.GA21769@anatevka.americas.hpqcorp.net>
+        Fri, 13 Sep 2019 15:53:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4009160770; Fri, 13 Sep 2019 19:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568404408;
+        bh=PBhczAxgGjJzcJPYs5T3OHtqWkVJvof+zdxMM1IFvbg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AmU0IYHzJcYptiF+l+/vTuBGnNyRRUPfS+N5FbkaaGQiA5HOpa5Sh1qbNNWlmWInH
+         QHEPBfQ9LaWRgMD1VNt4CEvVr5v6UN4ultrJvjswYEPdTerOumbK78jHVziDdWJ475
+         yQKjjp7MrvVFZxN7+xbhhlA/6SpK0/+HZf5EOt6k=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4539460770;
+        Fri, 13 Sep 2019 19:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568404407;
+        bh=PBhczAxgGjJzcJPYs5T3OHtqWkVJvof+zdxMM1IFvbg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SFuM9u936AWPbXLPJKuCFFyLQ7WsQYwG/6SiF23ViGYBu7kM6Iua3Sn2xtRkl9kU0
+         yyr0s3Ezs+KQ8zjr/8DACAdCwGfMo4RMvKoMixuyN4RWSV0nDIZ3FV9sOGaFlv0Gy9
+         mLJlSeEKrwJ1LFuiOZsOu+mYdYQ1r9/kb/dM7Q6w=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4539460770
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Fri, 13 Sep 2019 13:53:26 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, evgreen@chromium.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        mkshah@codeaurora.org, linux-gpio@vger.kernel.org,
+        rnayak@codeaurora.org, devicetree@vger.kernel.org, maz@kernel.org
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Message-ID: <20190913195326.GA3293@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+ <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+ <20190903170722.GA31716@codeaurora.org>
+ <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190808203324.GA21769@anatevka.americas.hpqcorp.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-13_09:2019-09-11,2019-09-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 suspectscore=0 bulkscore=0 adultscore=0
- spamscore=0 mlxscore=0 impostorscore=0 clxscore=1011 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909130202
+In-Reply-To: <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 02:33:24PM -0600, Jerry Hoemann wrote:
-> On Fri, Aug 02, 2019 at 06:33:28PM +0200, Peter Zijlstra wrote:
-> > On Fri, Aug 02, 2019 at 06:20:15PM +0200, Peter Zijlstra wrote:
-> > > On Fri, Aug 02, 2019 at 02:33:41PM +0000, Lendacky, Thomas wrote:
-> > 
-> > > > Talking to the hardware folks, they say setting CR8 is a serializing
-> > > > instruction and has to communicate out to the APIC, so it's better to
-> > > > use CLI/STI.
-> > > 
-> > > Bah; the Intel SDM states: "MOV CR* instructions, except for MOV CR8,
-> > > are serializing instructions", which had given me a little hope.
-> > > 
-> > > At the same time, all these chips still have the APIC TPR field too, so
-> > > much like how the TSC DEADLINE MSR is a hidden APIC write, so too is CR8
-> > > I suppose :-(
-> > > 
-> > > I'll still finish the patches I started, just to see what it would look
-> > > like.
-> > 
-> > Another 'fun' issue I ran into while doing these patches; STI has a 1
-> > instruction shadow, which we rely on, MOV CR8 does not. So things like:
-> > 
-> > native_safe_halt:
-> > 	sti
-> > 	hlt
-> > 
-> > turn into:
-> > 
-> > native_safe_halt:
-> > 	cli
-> > 	movl $0, %rax
-> > 	movq %rax, %cr8
-> > 	sti
-> > 	hlt
-> > 
-> 
-> Hi Peter,
-> 
-> What is our the next step here?
-> 
-> Are you still looking to make this change?
-> 
-> Do we want to pick up Tom Lendacky's patch on an interim basis while
-> you're working on the bigger change?  (I can say we tested Tom's
-> patch and it does address the issue we were seeing.)
-> 
-> Thanks
-> 
-> Jerry
-> 
+Sorry, I couldn't get to this earlier.
 
-Hi Peter,
+On Thu, Sep 05 2019 at 18:03 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2019-09-03 10:07:22)
+>> On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
+>> >On 02/09/2019 14:38, Rob Herring wrote:
+>> >> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+>> These are not GIC registers but located on the PDC interface to the GIC.
+>> They may or may not be secure access controlled, depending on the SoC.
+>>
+>
+>It looks like it falls under this "mailbox" device which is really the
+>catch all bucket for bits with no home besides they're related to the
+>apps CPUs/subsystem.
+>
+Thanks for pointing to this.
+>	apss_shared: mailbox@17990000 {
+>		compatible = "qcom,sdm845-apss-shared";
+>		reg = <0 0x17990000 0 0x1000>;
+But this doesn't seem correct. The registers in this page are all not
+mailbox door bell registers. We should restrict the space allocated to
+the mbox to 0xC or something, definitely, not the whole page. They all
+cannot be treated as a mailbox registers.
+>		#mbox-cells = <1>;
+>	};
+>
+>Can you point to this node with a phandle and then parse the reg
+>property out of it to use in the scm readl/writel APIs? Maybe it can be
+>a two cell property with <&apps_shared 0xf0> to indicate the offset to
+>the registers to read/write? In non-secure mode presumably we need to
+>also write these registers? Good news is that there's a regmap for this
+>driver already, so maybe that can be acquired from the pdc driver.
+>
+The register space collection seems to be mix of different types of
+application processor registers that should probably not be grouped up
+under one subsystem. A single regmap doesn't seem correct either.
 
-Have you gotten a chance to look into this more?
-
-Thanks
-
-Jerry
-
-
--- 
-
------------------------------------------------------------------------------
-Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
------------------------------------------------------------------------------
+-- Lina
