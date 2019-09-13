@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198C8C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F29C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27CA214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37572089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380176;
-	bh=p2OG/25OntIVnTzVIz2+SUyWxOBIql0bEaDlV5Vj7Nc=;
+	s=default; t=1568380178;
+	bh=3PY/NNR9mlGmTuaPwzlQKVuEgDoiAjQwTzC3+QkvHZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CORGQTtdKBn/JevHGcY/OhV1M86/mbVbWuxlf1uv5hIihVWU6BGpB/E/91wQmMpLF
-	 lNXKaPCBaDd4XDwbGS0onqWNMWCjE1nsmsos4hFHLKAPXJYN10NSlNRcK91zNeaUp1
-	 Mk1vOirsR/pCxwYZxaL1rWbI75qKV9GsTqYgL0XY=
+	b=BPQmyDVQ9ahWMAyDIEzZxFAHRXi6EKwhIL7Dh0FkHya64Pok7qRdpA58ng1ptRjUE
+	 hUTb4H8uenX6L6ze2AI/g+B5m+XPuONXkFAsYib/YnGTM8duLO0aJr7hPxWMDVJWnP
+	 fUbXKaFf5kyDqS+P8cYVJkXk3wgRN6LEbHsYZ9wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbfIMNJf (ORCPT
+        id S2388559AbfIMNJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34106 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388524AbfIMNJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:30 -0400
+        id S2388533AbfIMNJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:33 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAA720CC7;
-        Fri, 13 Sep 2019 13:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A762089F;
+        Fri, 13 Sep 2019 13:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380169;
-        bh=p2OG/25OntIVnTzVIz2+SUyWxOBIql0bEaDlV5Vj7Nc=;
+        s=default; t=1568380172;
+        bh=3PY/NNR9mlGmTuaPwzlQKVuEgDoiAjQwTzC3+QkvHZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PN7aJngVSBVqykgBBLB7nzSkkOBrfdxf/ALhUEuo6tDPXaIZPUzka4ytnI0Wv6CHl
-         FJhiw4h22XJRA09CcEo2yHsh029bOQtvmh4Sow4A9K3lQ0icVcbsDb8X6tVCrFnHgm
-         j9DZz0odvb/Pe8L7GUuAflysL4qZoVeYs+CTM6vE=
+        b=NtKmchMdDzdcbzrpCcWWg3MbJYoBSOQF364rdSxZ533jWKJ/9m4u43MxoJ5SA6wxx
+         2OL9AEepKieE+0zS2GAQnqxBrwwVaoxpe/hXJsBbdm4ljXS9szsmFVcSSqOd/MTkI9
+         81h5Hc4AagCky9FEIK26e7MFUkZCgiOMMX/4uezs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 4.9 04/14] drm/vmwgfx: Fix double free in vmw_recv_msg()
-Date:   Fri, 13 Sep 2019 14:06:57 +0100
-Message-Id: <20190913130443.808362056@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gustavo Romero <gromero@linux.vnet.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 05/14] powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
+Date:   Fri, 13 Sep 2019 14:06:58 +0100
+Message-Id: <20190913130444.097940154@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
 References: <20190913130440.264749443@linuxfoundation.org>
@@ -59,68 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Gustavo Romero <gromero@linux.ibm.com>
 
-commit 08b0c891605acf727e43e3e03a25857d3e789b61 upstream.
+commit 8205d5d98ef7f155de211f5e2eb6ca03d95a5a60 upstream.
 
-We recently added a kfree() after the end of the loop:
+When we take an FP unavailable exception in a transaction we have to
+account for the hardware FP TM checkpointed registers being
+incorrect. In this case for this process we know the current and
+checkpointed FP registers must be the same (since FP wasn't used
+inside the transaction) hence in the thread_struct we copy the current
+FP registers to the checkpointed ones.
 
-	if (retries == RETRIES) {
-		kfree(reply);
-		return -EINVAL;
-	}
+This copy is done in tm_reclaim_thread(). We use thread->ckpt_regs.msr
+to determine if FP was on when in userspace. thread->ckpt_regs.msr
+represents the state of the MSR when exiting userspace. This is setup
+by check_if_tm_restore_required().
 
-There are two problems.  First the test is wrong and because retries
-equals RETRIES if we succeed on the last iteration through the loop.
-Second if we fail on the last iteration through the loop then the kfree
-is a double free.
+Unfortunatley there is an optimisation in giveup_all() which returns
+early if tsk->thread.regs->msr (via local variable `usermsr`) has
+FP=VEC=VSX=SPE=0. This optimisation means that
+check_if_tm_restore_required() is not called and hence
+thread->ckpt_regs.msr is not updated and will contain an old value.
 
-When you're reading this code, please note the break statement at the
-end of the while loop.  This patch changes the loop so that if it's not
-successful then "reply" is NULL and we can test for that afterward.
+This can happen if due to load_fp=255 we start a userspace process
+with MSR FP=1 and then we are context switched out. In this case
+thread->ckpt_regs.msr will contain FP=1. If that same process is then
+context switched in and load_fp overflows, MSR will have FP=0. If that
+process now enters a transaction and does an FP instruction, the FP
+unavailable will not update thread->ckpt_regs.msr (the bug) and MSR
+FP=1 will be retained in thread->ckpt_regs.msr.  tm_reclaim_thread()
+will then not perform the required memcpy and the checkpointed FP regs
+in the thread struct will contain the wrong values.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 6b7c3b86f0b6 ("drm/vmwgfx: fix memory leak when too many retries have occurred")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+The code path for this happening is:
+
+       Userspace:                      Kernel
+                   Start userspace
+                    with MSR FP/VEC/VSX/SPE=0 TM=1
+                      < -----
+       ...
+       tbegin
+       bne
+       fp instruction
+                   FP unavailable
+                       ---- >
+                                        fp_unavailable_tm()
+					  tm_reclaim_current()
+					    tm_reclaim_thread()
+					      giveup_all()
+					        return early since FP/VMX/VSX=0
+						/* ckpt MSR not updated (Incorrect) */
+					      tm_reclaim()
+					        /* thread_struct ckpt FP regs contain junk (OK) */
+                                              /* Sees ckpt MSR FP=1 (Incorrect) */
+					      no memcpy() performed
+					        /* thread_struct ckpt FP regs not fixed (Incorrect) */
+					  tm_recheckpoint()
+					     /* Put junk in hardware checkpoint FP regs */
+                                         ....
+                      < -----
+                   Return to userspace
+                     with MSR TM=1 FP=1
+                     with junk in the FP TM checkpoint
+       TM rollback
+       reads FP junk
+
+This is a data integrity problem for the current process as the FP
+registers are corrupted. It's also a security problem as the FP
+registers from one process may be leaked to another.
+
+This patch moves up check_if_tm_restore_required() in giveup_all() to
+ensure thread->ckpt_regs.msr is updated correctly.
+
+A simple testcase to replicate this will be posted to
+tools/testing/selftests/powerpc/tm/tm-poison.c
+
+Similarly for VMX.
+
+This fixes CVE-2019-15030.
+
+Fixes: f48e91e87e67 ("powerpc/tm: Fix FP and VMX register corruption")
+Cc: stable@vger.kernel.org # 4.12+
+Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190904045529.23002-1-gromero@linux.vnet.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/process.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -264,7 +264,7 @@ static int vmw_recv_msg(struct rpc_chann
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -476,13 +476,14 @@ void giveup_all(struct task_struct *tsk)
+ 	if (!tsk->thread.regs)
+ 		return;
  
- 		if ((HIGH_WORD(ebx) & MESSAGE_STATUS_SUCCESS) == 0) {
- 			kfree(reply);
--
-+			reply = NULL;
- 			if ((HIGH_WORD(ebx) & MESSAGE_STATUS_CPT) != 0) {
- 				/* A checkpoint occurred. Retry. */
- 				continue;
-@@ -288,7 +288,7 @@ static int vmw_recv_msg(struct rpc_chann
++	check_if_tm_restore_required(tsk);
++
+ 	usermsr = tsk->thread.regs->msr;
  
- 		if ((HIGH_WORD(ecx) & MESSAGE_STATUS_SUCCESS) == 0) {
- 			kfree(reply);
--
-+			reply = NULL;
- 			if ((HIGH_WORD(ecx) & MESSAGE_STATUS_CPT) != 0) {
- 				/* A checkpoint occurred. Retry. */
- 				continue;
-@@ -300,10 +300,8 @@ static int vmw_recv_msg(struct rpc_chann
- 		break;
- 	}
+ 	if ((usermsr & msr_all_available) == 0)
+ 		return;
  
--	if (retries == RETRIES) {
--		kfree(reply);
-+	if (!reply)
- 		return -EINVAL;
--	}
+ 	msr_check_and_set(msr_all_available);
+-	check_if_tm_restore_required(tsk);
  
- 	*msg_len = reply_len;
- 	*msg     = reply;
+ #ifdef CONFIG_PPC_FPU
+ 	if (usermsr & MSR_FP)
 
 
