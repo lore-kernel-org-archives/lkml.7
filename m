@@ -2,111 +2,156 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30593C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F9AC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141EE2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA5A2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:31:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFPtjE9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfIMCM7 (ORCPT
+        id S1727472AbfIMCbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:12:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25920 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726262AbfIMCM6 (ORCPT
+        Thu, 12 Sep 2019 22:31:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35548 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfIMCbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:12:58 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8D2CkAu136516;
-        Thu, 12 Sep 2019 22:12:50 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uywkvy5ta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 22:12:47 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8D2AB5O017443;
-        Fri, 13 Sep 2019 02:12:11 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 2uyw58jej7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 02:12:11 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8D2C97N57737610
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 02:12:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B79B0BE056;
-        Fri, 13 Sep 2019 02:12:09 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91C01BE051;
-        Fri, 13 Sep 2019 02:12:07 +0000 (GMT)
-Received: from [9.199.46.176] (unknown [9.199.46.176])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Sep 2019 02:12:07 +0000 (GMT)
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <c2c734d3-ca8d-8485-9b9e-fd64e12aa0f0@linux.ibm.com>
-Date:   Fri, 13 Sep 2019 07:41:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 12 Sep 2019 22:31:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id f4so59008032ion.2;
+        Thu, 12 Sep 2019 19:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ZFwKrNvCS5ozupp0xprtAilLn59qOk6VcUa2IgFIOKA=;
+        b=kFPtjE9/T9YhOMfvGIw07n+Hb36I/MZw7Gn2swDx1dDU9BEYC76pOiZK0KXeqqgGZr
+         uLffLRDbLucglgBvkC0UsIebZuYbUYByN2cIGVvQyJ4oVPhB1bm7iPSJpo9eqiX4E/dk
+         q+hCruDqCQkKmo2vu31QbR2B3p6UjwFpEYN26cRucGfq/eiE+/3srgfa3T6VbexqisRw
+         FW9a+jQmc51P4XNWhxdsWmBCJFV04nLMGC6cJ+ENBkAm+4E8N7GofRNPF5QJQ5Lz0oN1
+         qW9Dali77iP/WLQMplrcndu54VGp4MzUMz9oaH47hbjEcv71QVppGo8Nk2rseEn/IDfD
+         EGIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZFwKrNvCS5ozupp0xprtAilLn59qOk6VcUa2IgFIOKA=;
+        b=rLn0roCvoOEkGzj4UIu7SR4x4o1pKuX+5+rhblA/1YpojKFabWTHS3nqV7zD6HBmBZ
+         tX4WdqwZnbn94PesTObbLDyJUKhD49KtLSFVXaAsBjqb5E5etM+bsUlaJvUwZP0XZxGv
+         XS8tUewXdfqFz1xC9XObtGLDAgA/SZMYqIT5XkyUNpeeHeBaXQlM8w9/VllYc430UkwI
+         A0p73j9kNqBGhAZ19wh/hFOQCfiowxuvPnr9c3tHLuUyK9QSAbI0N6yvW0fmq+LMNE+o
+         3oWVh4mUC34HVtNW6U9jHGslkdZR6/gyvDIju7121/I66NJyqwCxBeo+pkgiHJPF5HSc
+         6RqA==
+X-Gm-Message-State: APjAAAVVt8FMuklnxw1zRx+xoD9/bZlgViUEYwlZaoKjT1ITiCnTPTH3
+        M4ArkqY1Xf7Bo3F5q7uf9w==
+X-Google-Smtp-Source: APXvYqz/baGGAjOZVGA5+KhVa0VclSYB6jyYKdFJaP5EyObqc8KgJmtXn3/LHWbyEAqN/QnOWzdHmA==
+X-Received: by 2002:a05:6638:73d:: with SMTP id j29mr50176970jad.21.1568341909634;
+        Thu, 12 Sep 2019 19:31:49 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id x5sm21419690ior.46.2019.09.12.19.31.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Sep 2019 19:31:48 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 22:31:46 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] hv: vmbus: add fuzz testing to hv device
+Message-ID: <cover.1568320416.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190911184332.GL20699@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909130022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/12/19 12:13 AM, Dan Carpenter wrote:
-> On Wed, Sep 11, 2019 at 08:48:59AM -0700, Dan Williams wrote:
->> +Coding Style Addendum
->> +---------------------
->> +libnvdimm expects multi-line statements to be double indented. I.e.
->> +
->> +        if (x...
->> +                        && ...y) {
-> 
-> That looks horrible and it causes a checkpatch warning.  :(  Why not
-> do it the same way that everyone else does it.
-> 
-> 	if (blah_blah_x && <-- && has to be on the first line for checkpatch
-> 	    blah_blah_y) { <-- [tab][space][space][space][space]blah
-> 
-> Now all the conditions are aligned visually which makes it readable.
-> They aren't aligned with the indent block so it's easy to tell the
-> inside from the if condition.
+This patchset introduces a testing framework for Hyper-V drivers.
+This framework allows us to introduce delays in the packet receive
+path on a per-device basis. While the current code only supports
+introducing arbitrary delays in the host/guest communication path,
+we intend to expand this to support error injection in the future.
 
+changes in v5:
+  patch 1:
+	As per Stephen's suggestion, Moved CONFIG_HYPERV_TESTING
+	to lib/Kconfig.debug.
 
-I came across this while sending patches to libnvdimm subsystem. W.r.t 
-coding Style can we have consistent styles across the kernel? Otherwise, 
-one would have to change the editor settings as they work across 
-different subsystems in the kernel. In this specific case both 
-clang-format and emacs customization tip in the kernel documentation 
-directory suggest the later style.
+	Fixed build issue reported by Kbuild, with Michael's
+	suggestion to make hv_debugfs part of the hv_vmbus
+	module.
+	
+changes in v4:
+  patch 1:
+        Combined previous v3 patches 1 and 2, into a single patch
+        which is now patch 1. This was done so that calls to
+        the new debugfs functions are in the same patch as
+        the definitions for these functions.
 
--aneesh
+        Moved debugfs code from "vmbus_drv.c" that was in
+        previous v3 patch 2, into a new file "debugfs.c" in
+        drivers/hv.
 
+        Updated the Makefile to compile "debugfs.c" if
+        CONFIG_HYPERV_TESTING is enabled
+
+        As per Michael's comments, added empty implementations
+        of the new functions, so the compiler will not generate
+        code when CONFIG_HYPERV_TESTING is not enabled.
+
+  patch 2 (was previously v3 patch 3):
+        Based on Harrys comments, made the tool more
+        user friendly and added more error checking.
+
+changes in v3:
+  patch 2: change call to IS_ERR_OR_NULL, to IS_ERR.
+
+  patch 3: Align python tool to match Linux coding style.
+
+Changes in v2:
+  Patch 1: As per Vitaly's suggestion, wrapped the test code under an
+           #ifdef and updated the Kconfig file, so that the test code
+           will only be used when the config option is set to true.
+           (default is false).
+
+           Updated hyperv_vmbus header to contain new #ifdef with new
+           new functions for the test code.
+
+  Patch 2: Moved code from under sysfs to debugfs and wrapped it under
+           the new ifdef.
+
+           Updated MAINTAINERS file with new debugfs-hyperv file under
+           the section for hyperv.
+
+  Patch 3: Updated testing tool with new debugfs location.
+
+Branden Bonaby (2):
+  drivers: hv: vmbus: Introduce latency testing
+  tools: hv: add vmbus testing tool
+
+ Documentation/ABI/testing/debugfs-hyperv |  23 ++
+ MAINTAINERS                              |   1 +
+ drivers/hv/Makefile                      |   1 +
+ drivers/hv/connection.c                  |   1 +
+ drivers/hv/hv_debugfs.c                  | 185 +++++++++++
+ drivers/hv/hyperv_vmbus.h                |  31 ++
+ drivers/hv/ring_buffer.c                 |   2 +
+ drivers/hv/vmbus_drv.c                   |   6 +
+ include/linux/hyperv.h                   |  19 ++
+ lib/Kconfig.debug                        |   7 +
+ tools/hv/vmbus_testing                   | 376 +++++++++++++++++++++++
+ 11 files changed, 652 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ create mode 100644 drivers/hv/hv_debugfs.c
+ create mode 100644 tools/hv/vmbus_testing
+
+-- 
+2.17.1
 
