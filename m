@@ -2,76 +2,85 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006FAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD86C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D312420830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4286C20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0S6NAFBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbfIMSXq (ORCPT
+        id S2389707AbfIMS13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 14:23:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387802AbfIMSXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 14:23:46 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 52ACE10C0515;
-        Fri, 13 Sep 2019 18:23:46 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-125-105.rdu2.redhat.com [10.10.125.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C6FC5C1D4;
-        Fri, 13 Sep 2019 18:23:44 +0000 (UTC)
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <ae7edcb8-74e5-037c-17e7-01b3cf9320af@oracle.com>
- <b7d7d109-03cf-d750-3a56-a95837998372@redhat.com>
- <87ac9e4f-9301-9eb7-e68b-a877e7cf0384@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3d98ea00-ea0d-a9b1-9e1a-e78a731c20a5@redhat.com>
-Date:   Fri, 13 Sep 2019 14:23:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 13 Sep 2019 14:27:29 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38554 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387802AbfIMS13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 14:27:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rUHXVclZXHF+9qsNmXDNmKFf2GeFqSzWSuwkR1JCZ7I=; b=0S6NAFBooMrp44Rx9duwP6fvW
+        ILLr/ywXbzUq3/H0KKZY+AqA4DUuQJVWiCgncsKYkGZgmaKmhl3hAje8C0yv692H5cWHsaRPU//Xe
+        8ZF8H40qaY0yT3zp728l67JIs57A3yiPMqE39lGW7BL2dJbxW80slK+E4wJ97WAv4dSaB4colLC7d
+        h1EeWjD4ELQhsppY//bfGtxRj8y3zTeDtNlfXwk3NenC56szHq4IuYr3ioB96km+6Ygsmi3Avx18T
+        4/Vwg+nNM/lILz0tmPnzrP+JCUFABB/id+2OJv4D8DoOSFrv0AhgHtkuxKHbjwyhVjG0o7fAfKhaf
+        G6YGHr6jg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39110)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i8qHu-0004DJ-Po; Fri, 13 Sep 2019 19:27:18 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i8qHp-00064I-Jr; Fri, 13 Sep 2019 19:27:13 +0100
+Date:   Fri, 13 Sep 2019 19:27:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mark.rutland@arm.com, peterz@infradead.org,
+        catalin.marinas@arm.com, takahiro.akashi@linaro.org,
+        james.morse@arm.com, hidehiro.kawai.ez@hitachi.com,
+        tglx@linutronix.de, will@kernel.org, dave.martin@arm.com,
+        linux-arm-kernel@lists.infradead.org, mingo@redhat.com,
+        x86@kernel.org, dzickus@redhat.com, ehabkost@redhat.com,
+        davem@davemloft.net, sparclinux@vger.kernel.org, hch@infradead.org
+Subject: Re: [RFC PATCH v2 00/12] Unify SMP stop generic logic to common code
+Message-ID: <20190913182713.GB13294@shell.armlinux.org.uk>
+References: <20190913181953.45748-1-cristian.marussi@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <87ac9e4f-9301-9eb7-e68b-a877e7cf0384@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 13 Sep 2019 18:23:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913181953.45748-1-cristian.marussi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/12/19 5:43 PM, Mike Kravetz wrote:
-> On 9/12/19 2:06 AM, Waiman Long wrote:
->> If we can take the rwsem in read mode, that should solve the problem
->> AFAICS. As I don't have a full understanding of the history of that
->> code, I didn't try to do that in my patch.
-> Do you still have access to an environment that creates the long stalls?
-> If so, can you try the simple change of taking the semaphore in read mode
-> in huge_pmd_share.
->
-That is what I am planning to do. I don't have an environment to
-reproduce the problem myself. I have to create a test kernel and ask the
-customer to try it out.
+On Fri, Sep 13, 2019 at 07:19:41PM +0100, Cristian Marussi wrote:
+> Tested as follows:
+> 
+> - arm:
+> 1. boot
 
-Cheers,
-Longman
+So this basically means the code paths you're touching are untested on
+ARM... given that, and the variety of systems we have out there, why
+should the patches touching ARM be taken?
 
+Given that you're an ARM Ltd employee, I'm sure you can find 32-bit
+systems to test - or have ARM Ltd got rid of everything that isn't
+64-bit? ;)
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
