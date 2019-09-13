@@ -2,142 +2,109 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F526C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0036C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E27620717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6729208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568353341;
+	bh=zLeU3SJpF4cwPfzjc1+r4U4dp9oGpkrefaSILL1XmLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E0gN8Hj3I81o53hRL6ib68dfUYbGxqmkKtWShsR2ikVehiCU1vHnCNV4cZcOeKVKR
+	 tiTPXxC+ECSA+UXQYRFjR2BsINmdhSbp5ZZXZfCLZ9XE534wlDaoHcp6mJh1uantVM
+	 0EfNGUf3b7s2wL0ZiOrGKO2GisvXZ/hhP+fdJ4Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfIMFBc (ORCPT
+        id S1726794AbfIMFmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:01:32 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:55246 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfIMFBb (ORCPT
+        Fri, 13 Sep 2019 01:42:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40776 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfIMFmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:01:31 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46V3Q019Ztz1rK4R;
-        Fri, 13 Sep 2019 07:01:28 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46V3Q0126Nz1qqkv;
-        Fri, 13 Sep 2019 07:01:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Qp0MvBqXUJc7; Fri, 13 Sep 2019 07:01:27 +0200 (CEST)
-X-Auth-Info: lis+tYBhtem9nY2Dg2rwsSxWw1dsvqvbP8FR6yrGmhI=
-Received: from mail-internal.denx.de (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 13 Sep 2019 07:01:27 +0200 (CEST)
-Received: from pollux.denx.de (pollux [192.168.1.1])
-        by mail-internal.denx.de (Postfix) with ESMTP id 3656F183626;
-        Fri, 13 Sep 2019 07:01:08 +0200 (CEST)
-Received: by pollux.denx.de (Postfix, from userid 515)
-        id 169B31A8B94; Fri, 13 Sep 2019 07:01:08 +0200 (CEST)
-From:   Heiko Schocher <hs@denx.de>
-To:     linux-serial@vger.kernel.org
-Cc:     Heiko Schocher <hs@denx.de>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Fri, 13 Sep 2019 01:42:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m3so1271944wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ppV5KcUiF1CGYToYGdU0wfK/H3e+utN032f5iiPzYJI=;
+        b=f3szeRJXJ3wJoTpbV2bf+5DwUxTMNlZ1KtkL8aOHMBwt6sQRnv0Axno86oGWlQMOBS
+         za8ZxC5kq1+GdnSDV238IgFg3JY9vzwcahSgRPGHG6qf2p4IlzKIjjMl6BlJHwCrmlCF
+         NjdpDOPj+K4I88b5IDhidX4Cza7WOvTdeXMWehdqDHL9TE+zI5XuYOPCZpXEWbF+CzZ0
+         RvpMCS5taR8au6bzOGJQAOS/NA5W4EQTUdkM26zJ7T6DYqymkArOFNfP3aZgpy06n+yn
+         mQioWPJm/Wm4+6hJT2Nsu0/mFFlh1RMADuWS0/IYTRG9gRVt+KvumVwXNYUMBbFe8bD+
+         Wpvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ppV5KcUiF1CGYToYGdU0wfK/H3e+utN032f5iiPzYJI=;
+        b=H3CUGQfrpTBX91vpZtsCMudr8h1vlAxG32j3qh0mGvmux5RDx6nceBKEnKbJx6wuh2
+         5AtCbI3KOihaWtYcZyVH1RUo46kbs+7d4KWXiOR+0WRZ409NfJqgmeJNDTWRS+1w6VpA
+         qqY2IReiQXvcXMpVU4OXEC9p9l3ORIzdbb4GI8Po9TDNum1nS3u0YspLM5vRaP0iNaCk
+         9w6xML8hqLCYsXKwJfBeG3PJnB/3rXPJm+4NUU94SFaTI1OOXK4TpSzq97bbY3yrmrRf
+         0r+0lZxyZbAzGzIFN2UcKzw7M0cVlPYVcmfeGDbXu+XVc+YsRDGqyw8tpfEtp4//fAXq
+         PJzQ==
+X-Gm-Message-State: APjAAAWSXtPu67A/NlMKvE/hpOOhvbBoFQPPgAZZvbX80RYFbKRzJJ7r
+        2lAM9ocfs6nbh9V+K9lILLk=
+X-Google-Smtp-Source: APXvYqwbqS4T1d9NzD8JRMvOyeV+4zFbVtxUI/9498o6wGeH1bxIUEXZ6VLn6hv9JtUqzLd58veL/w==
+X-Received: by 2002:a7b:cc82:: with SMTP id p2mr1661963wma.165.1568353318563;
+        Thu, 12 Sep 2019 22:41:58 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id t6sm2097971wmf.8.2019.09.12.22.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 22:41:57 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 07:41:55 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        ndesaulniers@google.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        John Garry <john.garry@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: 8250_of: Use software emulated RS485 direction control
-Date:   Fri, 13 Sep 2019 07:01:05 +0200
-Message-Id: <20190913050105.1132080-1-hs@denx.de>
-X-Mailer: git-send-email 2.21.0
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nadav Amit <namit@vmware.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 5/6] x86: alternative.h: use asm_inline for all
+ alternative variants
+Message-ID: <20190913054155.GA118828@gmail.com>
+References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
+ <20190912221927.18641-1-linux@rasmusvillemoes.dk>
+ <20190912221927.18641-6-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912221927.18641-6-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use software emulated RS485 direction control to provide RS485 API
 
-Currently it is not possible to use rs485 as pointer to
-rs485_config struct in struct uart_port is NULL in case we
-configure the port through device tree.
+* Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+> Most, if not all, uses of the alternative* family just provide one or
+> two instructions in .text, but the string literal can be quite large,
+> causing gcc to overestimate the size of the generated code. That in
+> turn affects its decisions about inlining of the function containing
+> the alternative() asm statement.
+> 
+> New enough versions of gcc allow one to overrule the estimated size by
+> using "asm inline" instead of just "asm". So replace asm by the helper
+> asm_inline, which for older gccs just expands to asm.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
----
-Patch is based on:
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-commit:
-505a8ec7e11a - Revert "drm/i915/userptr: Acquire the page lock around set_page_dirty()"
+Acked-by: Ingo Molnar <mingo@kernel.org>
 
-checkpatch output:
-$ ./scripts/checkpatch.pl 0001-tty-8250_of-Use-software-emulated-RS485-direction-co.patch
-total: 0 errors, 0 warnings, 43 lines checked
+Thanks,
 
-0001-tty-8250_of-Use-software-emulated-RS485-direction-co.patch has no obvious style problems and is ready for submission.
-
- drivers/tty/serial/8250/8250_of.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index 0826cfdbd4063..92fbf46ce3bd9 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -48,6 +48,36 @@ static inline void tegra_serial_handle_break(struct uart_port *port)
- }
- #endif
- 
-+static int of_8250_rs485_config(struct uart_port *port,
-+				  struct serial_rs485 *rs485)
-+{
-+	struct uart_8250_port *up = up_to_u8250p(port);
-+
-+	/* Clamp the delays to [0, 100ms] */
-+	rs485->delay_rts_before_send = min(rs485->delay_rts_before_send, 100U);
-+	rs485->delay_rts_after_send  = min(rs485->delay_rts_after_send, 100U);
-+
-+	port->rs485 = *rs485;
-+
-+	/*
-+	 * Both serial8250_em485_init and serial8250_em485_destroy
-+	 * are idempotent
-+	 */
-+	if (rs485->flags & SER_RS485_ENABLED) {
-+		int ret = serial8250_em485_init(up);
-+
-+		if (ret) {
-+			rs485->flags &= ~SER_RS485_ENABLED;
-+			port->rs485.flags &= ~SER_RS485_ENABLED;
-+		}
-+		return ret;
-+	}
-+
-+	serial8250_em485_destroy(up);
-+
-+	return 0;
-+}
-+
- /*
-  * Fill a struct uart_port for a given device node
-  */
-@@ -178,6 +208,7 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
- 		port->flags |= UPF_SKIP_TEST;
- 
- 	port->dev = &ofdev->dev;
-+	port->rs485_config = of_8250_rs485_config;
- 
- 	switch (type) {
- 	case PORT_TEGRA:
--- 
-2.21.0
-
+	Ingo
