@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4313FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D9C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CF720640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2564D20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381264;
-	bh=liDOhdrjfDl+Uc8vsBQXTMRO5MS8qkzS+itCOqUDV08=;
+	s=default; t=1568381265;
+	bh=u302milZRn0ZoLRyfeUXBHpUQ+EilGgrUnqSMDAAkBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOM6mJo0RWpFAzT6rrJj3+KyxL8h9axuaUTjn4LgmPGe7K4Jha+5zMN63lGzw7AF4
-	 nnE1DrbxJHSckLepgBvShQ5+GFYvKLakUTRt6+aKtyV9cJi49Zk/cGYu0uUt+JOFb/
-	 YsBON+WvSwjfqBfTs8JKGIed0xxUn2b0+7a/scLA=
+	b=Vp26I+ZXeiveqilWJMeLbriB1APCp59Qg8SSu/oWLBnLej4yzWE42H0Obrz7VW8Op
+	 LXdrh9Rsrx19rYsa2vcNVSRzvhzBXXrFUrLLCy8PGlhy9FHWZCOH3QV0PQRk33Bq5/
+	 CRPlBNAzwv28Kuc1MBweJ3hGMBKULvoEUR4ccd0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391515AbfIMN0J (ORCPT
+        id S2391504AbfIMN0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:26:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59346 "EHLO mx1.redhat.com"
+        Fri, 13 Sep 2019 09:26:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59972 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391505AbfIMN0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:26:07 -0400
+        id S2391476AbfIMNZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:25:57 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BDB30307D91F;
-        Fri, 13 Sep 2019 13:26:06 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1144218CB8E7;
+        Fri, 13 Sep 2019 13:25:57 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E2975C22C;
-        Fri, 13 Sep 2019 13:26:03 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 681BF5C1D4;
+        Fri, 13 Sep 2019 13:25:55 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -43,321 +43,598 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 52/73] libperf: Add perf_evlist__mmap/munmap function
-Date:   Fri, 13 Sep 2019 15:23:34 +0200
-Message-Id: <20190913132355.21634-53-jolsa@kernel.org>
+Subject: [PATCH 48/73] libperf: Add perf_mmap__consume function
+Date:   Fri, 13 Sep 2019 15:23:30 +0200
+Message-Id: <20190913132355.21634-49-jolsa@kernel.org>
 In-Reply-To: <20190913132355.21634-1-jolsa@kernel.org>
 References: <20190913132355.21634-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 13 Sep 2019 13:26:06 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Fri, 13 Sep 2019 13:25:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding libperf's version of perf_evlist__mmap/munmap
-functions and exporting them in perf/evlist.h header.
+Move perf_mmap__consume function under libperf
+and export it in perf/mmap.h header.
 
-It's the backbone of what we have in perf code. The
-following changes will add needed callbacks and then
-we finally switch perf code to use libperf's version.
+Moving also needed helpers perf_mmap__write_tail,
+perf_mmap__read_head and perf_mmap__empty.
 
-Adding mmap/mmap_ovw 'struct perf_mmap' object arrays
-to hold maps for libperf's evlist.
-
-Link: http://lkml.kernel.org/n/tip-smr1w2e6j37ncbmsd1eet228@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-il44mm7h1m93imk0x84q7klp@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/evlist.c                  | 215 +++++++++++++++++++++++
- tools/perf/lib/include/internal/evlist.h |   2 +
- tools/perf/lib/include/perf/evlist.h     |   3 +
- tools/perf/lib/libperf.map               |   2 +
- 4 files changed, 222 insertions(+)
+ tools/perf/arch/x86/tests/perf-time-to-tsc.c |  3 +-
+ tools/perf/builtin-kvm.c                     |  5 +--
+ tools/perf/builtin-top.c                     |  3 +-
+ tools/perf/builtin-trace.c                   |  3 +-
+ tools/perf/lib/Makefile                      |  5 +--
+ tools/perf/lib/include/internal/mmap.h       |  2 ++
+ tools/perf/lib/include/perf/mmap.h           | 11 +++++++
+ tools/perf/lib/libperf.map                   |  1 +
+ tools/perf/lib/mmap.c                        | 32 ++++++++++++++++++++
+ tools/perf/tests/backward-ring-buffer.c      |  1 +
+ tools/perf/tests/bpf.c                       |  1 +
+ tools/perf/tests/code-reading.c              |  3 +-
+ tools/perf/tests/keep-tracking.c             |  3 +-
+ tools/perf/tests/mmap-basic.c                |  3 +-
+ tools/perf/tests/openat-syscall-tp-fields.c  |  3 +-
+ tools/perf/tests/perf-record.c               |  3 +-
+ tools/perf/tests/sw-clock.c                  |  3 +-
+ tools/perf/tests/switch-tracking.c           |  3 +-
+ tools/perf/tests/task-exit.c                 |  3 +-
+ tools/perf/util/evlist.c                     |  3 +-
+ tools/perf/util/mmap.c                       | 32 +++++---------------
+ tools/perf/util/mmap.h                       | 12 --------
+ tools/perf/util/python.c                     |  3 +-
+ 23 files changed, 87 insertions(+), 54 deletions(-)
+ create mode 100644 tools/perf/lib/include/perf/mmap.h
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 160393cb9bed..168bc5d0a1c8 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -7,13 +7,20 @@
- #include <internal/evlist.h>
- #include <internal/evsel.h>
- #include <internal/xyarray.h>
-+#include <internal/mmap.h>
-+#include <internal/cpumap.h>
-+#include <internal/threadmap.h>
-+#include <internal/xyarray.h>
-+#include <internal/lib.h>
- #include <linux/zalloc.h>
-+#include <sys/ioctl.h>
- #include <stdlib.h>
- #include <errno.h>
- #include <unistd.h>
- #include <fcntl.h>
- #include <signal.h>
- #include <poll.h>
-+#include <sys/mman.h>
+diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+index 0aa96f531653..c9b359a16f75 100644
+--- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
++++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+@@ -9,6 +9,7 @@
+ #include <sys/prctl.h>
  #include <perf/cpumap.h>
- #include <perf/threadmap.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
  
-@@ -101,6 +108,8 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
+ #include "debug.h"
+ #include "parse-events.h"
+@@ -139,7 +140,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
+ 				comm2_time = sample.time;
+ 			}
+ next_event:
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 		}
+ 		perf_mmap__read_done(md);
+ 	}
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index a90c7d4302b9..fea07ee4c68b 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -42,6 +42,7 @@
+ #include <semaphore.h>
+ #include <signal.h>
+ #include <math.h>
++#include <perf/mmap.h>
  
- void perf_evlist__delete(struct perf_evlist *evlist)
+ static const char *get_filename_for_perf_kvm(void)
  {
-+	free(evlist->mmap);
-+	free(evlist->mmap_ovw);
- 	free(evlist);
- }
+@@ -762,7 +763,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
+ 	while ((event = perf_mmap__read_event(md)) != NULL) {
+ 		err = perf_evlist__parse_sample_timestamp(evlist, event, &timestamp);
+ 		if (err) {
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 			pr_err("Failed to parse sample\n");
+ 			return -1;
+ 		}
+@@ -772,7 +773,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
+ 		 * FIXME: Here we can't consume the event, as perf_session__queue_event will
+ 		 *        point to it, and it'll get possibly overwritten by the kernel.
+ 		 */
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
  
-@@ -279,3 +288,209 @@ int perf_evlist__poll(struct perf_evlist *evlist, int timeout)
- {
- 	return fdarray__poll(&evlist->pollfd, timeout);
- }
-+
-+static int perf_evlist__alloc_maps(struct perf_evlist *evlist)
-+{
-+	struct perf_mmap **map;
-+
-+	evlist->nr_mmaps = perf_cpu_map__nr(evlist->cpus);
-+	if (perf_cpu_map__empty(evlist->cpus))
-+		evlist->nr_mmaps = perf_thread_map__nr(evlist->threads);
-+
-+	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap *));
-+	if (map)
-+		evlist->mmap = map;
-+
-+	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap *));
-+	if (map)
-+		evlist->mmap_ovw = map;
-+
-+	return 0;
-+}
-+
-+static void perf_evlist__set_sid_idx(struct perf_evlist *evlist,
-+				     struct perf_evsel *evsel, int idx, int cpu,
-+				     int thread)
-+{
-+	struct perf_sample_id *sid = SID(evsel, cpu, thread);
-+
-+	sid->idx = idx;
-+	if (evlist->cpus && cpu >= 0)
-+		sid->cpu = evlist->cpus->map[cpu];
-+	else
-+		sid->cpu = -1;
-+	if (!evsel->system_wide && evlist->threads && thread >= 0)
-+		sid->tid = perf_thread_map__pid(evlist->threads, thread);
-+	else
-+		sid->tid = -1;
-+}
-+
-+#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-+
-+static int
-+mmap_per_evsel(struct perf_evlist *evlist, int idx,
-+	       struct perf_mmap_param *mp, int cpu_idx,
-+	       int thread, int *_output, int *_output_overwrite)
-+{
-+	int evlist_cpu = perf_cpu_map__cpu(evlist->cpus, cpu_idx);
-+	struct perf_evsel *evsel;
-+	int revent;
-+
-+	perf_evlist__for_each_entry(evlist, evsel) {
-+		bool overwrite = evsel->attr.write_backward;
-+		struct perf_mmap *map;
-+		int *output, fd, cpu;
-+
-+		if (evsel->system_wide && thread)
-+			continue;
-+
-+		cpu = perf_cpu_map__idx(evsel->cpus, evlist_cpu);
-+		if (cpu == -1)
-+			continue;
-+
-+		map = perf_mmap__new(overwrite, NULL);
-+		if (map == NULL)
-+			return -ENOMEM;
-+
-+		if (overwrite) {
-+			mp->prot = PROT_READ;
-+			output   = _output_overwrite;
-+			evlist->mmap_ovw[idx] = map;
-+		} else {
-+			mp->prot = PROT_READ | PROT_WRITE;
-+			output   = _output;
-+			evlist->mmap[idx] = map;
-+		}
-+
-+		fd = FD(evsel, cpu, thread);
-+
-+		if (*output == -1) {
-+			*output = fd;
-+
-+			if (perf_mmap__mmap(map, mp, *output, evlist_cpu) < 0)
-+				return -1;
-+		} else {
-+			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
-+				return -1;
-+
-+			perf_mmap__get(map);
-+		}
-+
-+		revent = !overwrite ? POLLIN : 0;
-+
-+		if (!evsel->system_wide &&
-+		    perf_evlist__add_pollfd(evlist, fd, map, revent) < 0) {
-+			perf_mmap__put(map);
-+			return -1;
-+		}
-+
-+		if (evsel->attr.read_format & PERF_FORMAT_ID) {
-+			if (perf_evlist__id_add_fd(evlist, evsel, cpu, thread,
-+						   fd) < 0)
-+				return -1;
-+			perf_evlist__set_sid_idx(evlist, evsel, idx, cpu,
-+						 thread);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+mmap_per_thread(struct perf_evlist *evlist, struct perf_mmap_param *mp)
-+{
-+	int thread;
-+	int nr_threads = perf_thread_map__nr(evlist->threads);
-+
-+	for (thread = 0; thread < nr_threads; thread++) {
-+		int output = -1;
-+		int output_overwrite = -1;
-+
-+		if (mmap_per_evsel(evlist, thread, mp, 0, thread,
-+				   &output, &output_overwrite))
-+			goto out_unmap;
-+	}
-+
-+	return 0;
-+
-+out_unmap:
-+	perf_evlist__munmap(evlist);
-+	return -1;
-+}
-+
-+static int
-+mmap_per_cpu(struct perf_evlist *evlist, struct perf_mmap_param *mp)
-+{
-+	int nr_threads = perf_thread_map__nr(evlist->threads);
-+	int nr_cpus    = perf_cpu_map__nr(evlist->cpus);
-+	int cpu, thread;
-+
-+	for (cpu = 0; cpu < nr_cpus; cpu++) {
-+		int output = -1;
-+		int output_overwrite = -1;
-+
-+		for (thread = 0; thread < nr_threads; thread++) {
-+			if (mmap_per_evsel(evlist, cpu, mp, cpu,
-+					   thread, &output, &output_overwrite))
-+				goto out_unmap;
-+		}
-+	}
-+
-+	return 0;
-+
-+out_unmap:
-+	perf_evlist__munmap(evlist);
-+	return -1;
-+}
-+
-+int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
-+{
-+	struct perf_evsel *evsel;
-+	const struct perf_cpu_map *cpus = evlist->cpus;
-+	const struct perf_thread_map *threads = evlist->threads;
-+	struct perf_mmap_param mp;
-+
-+	if (!evlist->mmap && perf_evlist__alloc_maps(evlist))
-+		return -ENOMEM;
-+
-+	perf_evlist__for_each_entry(evlist, evsel) {
-+		if ((evsel->attr.read_format & PERF_FORMAT_ID) &&
-+		    evsel->sample_id == NULL &&
-+		    perf_evsel__alloc_id(evsel, perf_cpu_map__nr(cpus), threads->nr) < 0)
-+			return -ENOMEM;
-+	}
-+
-+	evlist->mmap_len = (pages + 1) * page_size;
-+	mp.mask = evlist->mmap_len - page_size - 1;
-+
-+	if (perf_cpu_map__empty(cpus))
-+		return mmap_per_thread(evlist, &mp);
-+
-+	return mmap_per_cpu(evlist, &mp);
-+}
-+
-+void perf_evlist__munmap(struct perf_evlist *evlist)
-+{
-+	int i;
-+
-+	if (evlist->mmap) {
-+		for (i = 0; i < evlist->nr_mmaps; i++) {
-+			struct perf_mmap *map = evlist->mmap[i];
-+
-+			perf_mmap__munmap(map);
-+			free(map);
-+		}
-+	}
-+
-+	if (evlist->mmap_ovw) {
-+		for (i = 0; i < evlist->nr_mmaps; i++) {
-+			struct perf_mmap *map = evlist->mmap_ovw[i];
-+
-+			perf_mmap__munmap(map);
-+			free(map);
-+		}
-+	}
-+
-+	zfree(&evlist->mmap);
-+	zfree(&evlist->mmap_ovw);
-+}
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 9f440ab12b76..b136d1b4ea72 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -22,6 +22,8 @@ struct perf_evlist {
- 	size_t			 mmap_len;
- 	struct fdarray		 pollfd;
- 	struct hlist_head	 heads[PERF_EVLIST__HLIST_SIZE];
-+	struct perf_mmap	**mmap;
-+	struct perf_mmap	**mmap_ovw;
- };
+ 		if (err) {
+ 			pr_err("Failed to enqueue sample: %d\n", err);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index fb62e10f4d4f..19775c7a5563 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -78,6 +78,7 @@
+ #include <linux/types.h>
  
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
-diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 8a2ce0757ab2..28b6a12a8a2b 100644
---- a/tools/perf/lib/include/perf/evlist.h
-+++ b/tools/perf/lib/include/perf/evlist.h
-@@ -33,4 +33,7 @@ LIBPERF_API void perf_evlist__set_maps(struct perf_evlist *evlist,
- 				       struct perf_thread_map *threads);
- LIBPERF_API int perf_evlist__poll(struct perf_evlist *evlist, int timeout);
+ #include <linux/ctype.h>
++#include <perf/mmap.h>
  
-+LIBPERF_API int perf_evlist__mmap(struct perf_evlist *evlist, int pages);
-+LIBPERF_API void perf_evlist__munmap(struct perf_evlist *evlist);
+ static volatile int done;
+ static volatile int resize;
+@@ -879,7 +880,7 @@ static void perf_top__mmap_read_idx(struct perf_top *top, int idx)
+ 		if (ret)
+ 			break;
+ 
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
+ 
+ 		if (top->qe.rotate) {
+ 			pthread_mutex_lock(&top->qe.mutex);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 55daadb001f6..fa8296e8be2a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -73,6 +73,7 @@
+ #include <sys/sysmacros.h>
+ 
+ #include <linux/ctype.h>
++#include <perf/mmap.h>
+ 
+ #ifndef O_CLOEXEC
+ # define O_CLOEXEC		02000000
+@@ -3456,7 +3457,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 			if (err)
+ 				goto out_disable;
+ 
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 
+ 			if (interrupted)
+ 				goto out_disable;
+diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+index 85ccb8c439a4..0889c9c3ec19 100644
+--- a/tools/perf/lib/Makefile
++++ b/tools/perf/lib/Makefile
+@@ -172,8 +172,9 @@ install_headers:
+ 		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
+-		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
+-		$(call do_install,include/perf/event.h,$(prefix)/include/perf,644);
++		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644); \
++		$(call do_install,include/perf/event.h,$(prefix)/include/perf,644); \
++		$(call do_install,include/perf/mmap.h,$(prefix)/include/perf,644);
+ 
+ install_pkgconfig: $(LIBPERF_PC)
+ 	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
+diff --git a/tools/perf/lib/include/internal/mmap.h b/tools/perf/lib/include/internal/mmap.h
+index 31946e26368a..30e34ec622bf 100644
+--- a/tools/perf/lib/include/internal/mmap.h
++++ b/tools/perf/lib/include/internal/mmap.h
+@@ -51,4 +51,6 @@ void perf_mmap__munmap(struct perf_mmap *map);
+ void perf_mmap__get(struct perf_mmap *map);
+ void perf_mmap__put(struct perf_mmap *map);
+ 
++u64 perf_mmap__read_head(struct perf_mmap *map);
 +
- #endif /* __LIBPERF_EVLIST_H */
+ #endif /* __LIBPERF_INTERNAL_MMAP_H */
+diff --git a/tools/perf/lib/include/perf/mmap.h b/tools/perf/lib/include/perf/mmap.h
+new file mode 100644
+index 000000000000..d3678d1834d9
+--- /dev/null
++++ b/tools/perf/lib/include/perf/mmap.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_MMAP_H
++#define __LIBPERF_MMAP_H
++
++#include <perf/core.h>
++
++struct perf_mmap;
++
++LIBPERF_API void perf_mmap__consume(struct perf_mmap *map);
++
++#endif /* __LIBPERF_MMAP_H */
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 6e7d9be3c35f..198dcf305356 100644
+index 2672f21b4908..8c876fbc1fa3 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -39,6 +39,8 @@ LIBPERF_0.0.1 {
+@@ -39,6 +39,7 @@ LIBPERF_0.0.1 {
  		perf_evlist__next;
  		perf_evlist__set_maps;
  		perf_evlist__poll;
-+		perf_evlist__mmap;
-+		perf_evlist__munmap;
- 		perf_mmap__consume;
- 		perf_mmap__read_init;
- 		perf_mmap__read_done;
++		perf_mmap__consume;
+ 	local:
+ 		*;
+ };
+diff --git a/tools/perf/lib/mmap.c b/tools/perf/lib/mmap.c
+index 720dda578ed9..8545e7a03691 100644
+--- a/tools/perf/lib/mmap.c
++++ b/tools/perf/lib/mmap.c
+@@ -1,6 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <sys/mman.h>
+ #include <linux/zalloc.h>
++#include <linux/ring_buffer.h>
++#include <linux/perf_event.h>
++#include <perf/mmap.h>
+ #include <internal/mmap.h>
+ #include <internal/lib.h>
+ 
+@@ -69,3 +72,32 @@ void perf_mmap__put(struct perf_mmap *map)
+ 	if (refcount_dec_and_test(&map->refcnt))
+ 		perf_mmap__munmap(map);
+ }
++
++static inline void perf_mmap__write_tail(struct perf_mmap *md, u64 tail)
++{
++	ring_buffer_write_tail(md->base, tail);
++}
++
++u64 perf_mmap__read_head(struct perf_mmap *map)
++{
++	return ring_buffer_read_head(map->base);
++}
++
++static bool perf_mmap__empty(struct perf_mmap *map)
++{
++	struct perf_event_mmap_page *pc = map->base;
++
++	return perf_mmap__read_head(map) == map->prev && !pc->aux_size;
++}
++
++void perf_mmap__consume(struct perf_mmap *map)
++{
++	if (!map->overwrite) {
++		u64 old = map->prev;
++
++		perf_mmap__write_tail(map, old);
++	}
++
++	if (refcount_read(&map->refcnt) == 1 && perf_mmap__empty(map))
++		perf_mmap__put(map);
++}
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 3297d2eb67fc..6d8a49b0d4e0 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -12,6 +12,7 @@
+ #include "parse-events.h"
+ #include <errno.h>
+ #include <linux/string.h>
++#include <perf/mmap.h>
+ 
+ #define NR_ITERS 111
+ 
+diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+index 20cacf1e980b..79acb857841c 100644
+--- a/tools/perf/tests/bpf.c
++++ b/tools/perf/tests/bpf.c
+@@ -15,6 +15,7 @@
+ #include <linux/string.h>
+ #include <api/fs/fs.h>
+ #include <bpf/bpf.h>
++#include <perf/mmap.h>
+ #include "tests.h"
+ #include "llvm.h"
+ #include "debug.h"
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 77dc68a23b70..8ce99aeadb34 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -10,6 +10,7 @@
+ #include <sys/param.h>
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ #include "debug.h"
+ #include "dso.h"
+@@ -429,7 +430,7 @@ static int process_events(struct machine *machine, struct evlist *evlist,
+ 
+ 		while ((event = perf_mmap__read_event(md)) != NULL) {
+ 			ret = process_event(machine, evlist, event, state);
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 			if (ret < 0)
+ 				return ret;
+ 		}
+diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
+index 2623b925b87f..2169d74d9872 100644
+--- a/tools/perf/tests/keep-tracking.c
++++ b/tools/perf/tests/keep-tracking.c
+@@ -5,6 +5,7 @@
+ #include <sys/prctl.h>
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ #include "debug.h"
+ #include "parse-events.h"
+@@ -46,7 +47,7 @@ static int find_comm(struct evlist *evlist, const char *comm)
+ 			    (pid_t)event->comm.tid == getpid() &&
+ 			    strcmp(event->comm.comm, comm) == 0)
+ 				found += 1;
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 		}
+ 		perf_mmap__read_done(md);
+ 	}
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 9b3b11702850..18dd25ed8a2c 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ /*
+  * This test will generate random numbers of calls to some getpid syscalls,
+@@ -139,7 +140,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 			goto out_delete_evlist;
+ 		}
+ 		nr_events[evsel->idx]++;
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
+ 	}
+ 	perf_mmap__read_done(md);
+ 
+diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
+index a5daf4cf17ac..878d32237fb3 100644
+--- a/tools/perf/tests/openat-syscall-tp-fields.c
++++ b/tools/perf/tests/openat-syscall-tp-fields.c
+@@ -12,6 +12,7 @@
+ #include "tests.h"
+ #include "debug.h"
+ #include <errno.h>
++#include <perf/mmap.h>
+ 
+ #ifndef O_DIRECTORY
+ #define O_DIRECTORY    00200000
+@@ -102,7 +103,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
+ 				++nr_events;
+ 
+ 				if (type != PERF_RECORD_SAMPLE) {
+-					perf_mmap__consume(md);
++					perf_mmap__consume(&md->core);
+ 					continue;
+ 				}
+ 
+diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+index 1b313da8bce9..b2552ee06329 100644
+--- a/tools/perf/tests/perf-record.c
++++ b/tools/perf/tests/perf-record.c
+@@ -6,6 +6,7 @@
+ #include <pthread.h>
+ 
+ #include <sched.h>
++#include <perf/mmap.h>
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "debug.h"
+@@ -275,7 +276,7 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+ 					++errs;
+ 				}
+ 
+-				perf_mmap__consume(md);
++				perf_mmap__consume(&md->core);
+ 			}
+ 			perf_mmap__read_done(md);
+ 		}
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index fbff60815be8..67615d90cd73 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -14,6 +14,7 @@
+ #include "util/cpumap.h"
+ #include "util/thread_map.h"
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ #define NR_LOOPS  10000000
+ 
+@@ -116,7 +117,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		total_periods += sample.period;
+ 		nr_samples++;
+ next_event:
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
+ 	}
+ 	perf_mmap__read_done(md);
+ 
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 29f503820a1e..529b39f39299 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -8,6 +8,7 @@
+ #include <linux/zalloc.h>
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ #include "debug.h"
+ #include "parse-events.h"
+@@ -275,7 +276,7 @@ static int process_events(struct evlist *evlist,
+ 		while ((event = perf_mmap__read_event(md)) != NULL) {
+ 			cnt += 1;
+ 			ret = add_event(evlist, &events, event);
+-			 perf_mmap__consume(md);
++			 perf_mmap__consume(&md->core);
+ 			if (ret < 0)
+ 				goto out_free_nodes;
+ 		}
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index e6e8a7a970b6..4fd52522357a 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -11,6 +11,7 @@
+ #include <signal.h>
+ #include <linux/string.h>
+ #include <perf/evlist.h>
++#include <perf/mmap.h>
+ 
+ static int exited;
+ static int nr_exit;
+@@ -123,7 +124,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 		if (event->header.type == PERF_RECORD_EXIT)
+ 			nr_exit++;
+ 
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
+ 	}
+ 	perf_mmap__read_done(md);
+ 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index f1af59df1167..e9cc637881b8 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -41,6 +41,7 @@
+ #include <perf/evlist.h>
+ #include <perf/evsel.h>
+ #include <perf/cpumap.h>
++#include <perf/mmap.h>
+ 
+ #include <internal/xyarray.h>
+ 
+@@ -1761,7 +1762,7 @@ static void *perf_evlist__poll_thread(void *arg)
+ 				else
+ 					pr_warning("cannot locate proper evsel for the side band event\n");
+ 
+-				perf_mmap__consume(map);
++				perf_mmap__consume(&map->core);
+ 				got_data = true;
+ 			}
+ 			perf_mmap__read_done(map);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 4b1d1ae79042..5ec12483e79d 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -12,6 +12,7 @@
+ #include <linux/zalloc.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <perf/mmap.h>
+ #ifdef HAVE_LIBNUMA_SUPPORT
+ #include <numaif.h>
+ #endif
+@@ -94,7 +95,7 @@ union perf_event *perf_mmap__read_event(struct mmap *map)
+ 
+ 	/* non-overwirte doesn't pause the ringbuffer */
+ 	if (!map->core.overwrite)
+-		map->core.end = perf_mmap__read_head(map);
++		map->core.end = perf_mmap__read_head(&map->core);
+ 
+ 	event = perf_mmap__read(map, &map->core.start, map->core.end);
+ 
+@@ -104,25 +105,6 @@ union perf_event *perf_mmap__read_event(struct mmap *map)
+ 	return event;
+ }
+ 
+-static bool perf_mmap__empty(struct mmap *map)
+-{
+-	struct perf_event_mmap_page *pc = map->core.base;
+-
+-	return perf_mmap__read_head(map) == map->core.prev && !pc->aux_size;
+-}
+-
+-void perf_mmap__consume(struct mmap *map)
+-{
+-	if (!map->core.overwrite) {
+-		u64 old = map->core.prev;
+-
+-		perf_mmap__write_tail(map, old);
+-	}
+-
+-	if (refcount_read(&map->core.refcnt) == 1 && perf_mmap__empty(map))
+-		perf_mmap__put(&map->core);
+-}
+-
+ int __weak auxtrace_mmap__mmap(struct auxtrace_mmap *mm __maybe_unused,
+ 			       struct auxtrace_mmap_params *mp __maybe_unused,
+ 			       void *userpg __maybe_unused,
+@@ -419,7 +401,7 @@ static int overwrite_rb_find_range(void *buf, int mask, u64 *start, u64 *end)
+  */
+ static int __perf_mmap__read_init(struct mmap *md)
+ {
+-	u64 head = perf_mmap__read_head(md);
++	u64 head = perf_mmap__read_head(&md->core);
+ 	u64 old = md->core.prev;
+ 	unsigned char *data = md->core.base + page_size;
+ 	unsigned long size;
+@@ -436,7 +418,7 @@ static int __perf_mmap__read_init(struct mmap *md)
+ 			WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
+ 
+ 			md->core.prev = head;
+-			perf_mmap__consume(md);
++			perf_mmap__consume(&md->core);
+ 			return -EAGAIN;
+ 		}
+ 
+@@ -465,7 +447,7 @@ int perf_mmap__read_init(struct mmap *map)
+ int perf_mmap__push(struct mmap *md, void *to,
+ 		    int push(struct mmap *map, void *to, void *buf, size_t size))
+ {
+-	u64 head = perf_mmap__read_head(md);
++	u64 head = perf_mmap__read_head(&md->core);
+ 	unsigned char *data = md->core.base + page_size;
+ 	unsigned long size;
+ 	void *buf;
+@@ -498,7 +480,7 @@ int perf_mmap__push(struct mmap *md, void *to,
+ 	}
+ 
+ 	md->core.prev = head;
+-	perf_mmap__consume(md);
++	perf_mmap__consume(&md->core);
+ out:
+ 	return rc;
+ }
+@@ -517,5 +499,5 @@ void perf_mmap__read_done(struct mmap *map)
+ 	if (!refcount_read(&map->core.refcnt))
+ 		return;
+ 
+-	map->core.prev = perf_mmap__read_head(map);
++	map->core.prev = perf_mmap__read_head(&map->core);
+ }
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 8a8f99cc7ecd..d90554168127 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -73,18 +73,6 @@ struct mmap_params {
+ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu);
+ void mmap__munmap(struct mmap *map);
+ 
+-void perf_mmap__consume(struct mmap *map);
+-
+-static inline u64 perf_mmap__read_head(struct mmap *mm)
+-{
+-	return ring_buffer_read_head(mm->core.base);
+-}
+-
+-static inline void perf_mmap__write_tail(struct mmap *md, u64 tail)
+-{
+-	ring_buffer_write_tail(md->core.base, tail);
+-}
+-
+ union perf_event *perf_mmap__read_forward(struct mmap *map);
+ 
+ union perf_event *perf_mmap__read_event(struct mmap *map);
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 48fd93a6a247..04c1d350a9c5 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -7,6 +7,7 @@
+ #include <perf/cpumap.h>
+ #include <traceevent/event-parse.h>
+ #include "debug.h"
++#include <perf/mmap.h>
+ #include "evlist.h"
+ #include "callchain.h"
+ #include "evsel.h"
+@@ -1039,7 +1040,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+ 		err = perf_evsel__parse_sample(evsel, event, &pevent->sample);
+ 
+ 		/* Consume the even only after we parsed it out. */
+-		perf_mmap__consume(md);
++		perf_mmap__consume(&md->core);
+ 
+ 		if (err)
+ 			return PyErr_Format(PyExc_OSError,
 -- 
 2.21.0
 
