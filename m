@@ -2,101 +2,69 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280ABC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0460EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D612089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZpddhD4W"
+	by mail.kernel.org (Postfix) with ESMTP id CE1EB21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568365508;
+	bh=y9zosm6Emxt7qS4zMnO2PZBMmj/UTTpSTgH+rozrYxY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=me4jWp7niawOxVqYRC13BOrNU8qfn6O6Cc7HGzL4YeOYO6m7kKRhEE8BDiKLogJum
+	 rb9oZl6lLfqWhWf18+7GcmkYgXuZXuo1nfzSbzDO8L6jmN1vqr5eEZl+AmyWYY3X3u
+	 /EFq6dzIb9BNF9a6IucRwYsvw5YMEBx+PGHkXqVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387641AbfIMJEK (ORCPT
+        id S2387873AbfIMJFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:04:10 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37348 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387513AbfIMJEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:04:09 -0400
-Received: from pendragon.ideasonboard.com (bl10-204-24.dsl.telepac.pt [85.243.204.24])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4DFB033A;
-        Fri, 13 Sep 2019 11:04:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568365447;
-        bh=rBMYwvvqL3UBs1e6XFztfLKo2R8+K/g/9AvBH5KoQa0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZpddhD4Wm8ABiqJwt0ssORXff5gBpf5FQpURY4pipMIeYTH48wsk1C7BKluVcFLPD
-         o997vSNrqnHnVX7h3Bvsr1PmmEL0fW+vae3NDxcXf4ASWNvaxP82EdHYVZ6rCOw30S
-         KUI2lEiRSANkrnCFWRel45Xazuu0hEDEZRFgnB+E=
-Date:   Fri, 13 Sep 2019 12:03:59 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
-Message-ID: <20190913090359.GC29992@pendragon.ideasonboard.com>
-References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
- <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
- <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 13 Sep 2019 05:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387613AbfIMJFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 05:05:07 -0400
+Subject: Re: [GIT PULL] cgroup fixes for v5.3-rc8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568365506;
+        bh=y9zosm6Emxt7qS4zMnO2PZBMmj/UTTpSTgH+rozrYxY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=qh+GPIuJXLFL+TLXp0P4fh/pWOakYAA83ToIlMeidNJucguuimgAT5TMrcW5WYBoe
+         I4tPNpNZerfoOJ4V2lMvlo34qVx9M9Vgz9kxp3MEvCaRx3oP6Hr5jrYNLyQYW3bIT2
+         5ilQt6psn5DHj0AP1pNkaJohdaim/LixCa/R0Z0o=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190912211150.GB3084169@devbig004.ftw2.facebook.com>
+References: <20190912211150.GB3084169@devbig004.ftw2.facebook.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190912211150.GB3084169@devbig004.ftw2.facebook.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.3-fixes
+X-PR-Tracked-Commit-Id: 97a61369830ab085df5aed0ff9256f35b07d425a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a7f89616b7376495424f682b6086e0c391a89a1d
+Message-Id: <156836550667.13985.9782542852327752376.pr-tracker-bot@kernel.org>
+Date:   Fri, 13 Sep 2019 09:05:06 +0000
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The pull request you sent on Thu, 12 Sep 2019 14:11:50 -0700:
 
-On Fri, Sep 13, 2019 at 10:21:29AM +0200, Simon Horman wrote:
-> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
-> > On 11.09.2019 22:25, Kieran Bingham wrote:
-> > 
-> > > Add direct support for the r8a77980 (V3H).
-> > > 
-> > > The V3H shares a common, compatible configuration with the r8a77970
-> > > (V3M) so that device info structure is reused.
-> > 
-> >    Do we really need to add yet another compatible in this case?
-> > I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
-> > a patch like this one didn't get posted by me.
-> 
-> The reason for having per-SoC compat strings is that the IP blocks
-> are not versioned and while we can observe that there are similarities
-> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
-> differences may not emerge at some point. By having per-SoC compat strings
-> we have the flexibility for the driver to address any such differences as
-> the need arises.
-> 
-> My recollection is that this scheme has been adopted for non-versioned
-> Renesas IP blocks since June 2015 and uses of this scheme well before that.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.3-fixes
 
-Sure, but we could use
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a7f89616b7376495424f682b6086e0c391a89a1d
 
-	compatible = "renesas,du-r8a77980", "renesas,du-r8a77970";
-
-in DT without updating the driver. If the r8a77980 turns out to be
-different, we'll then update the driver without a need to modify DT. I'm
-fine either way, so
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Thank you!
 
 -- 
-Regards,
-
-Laurent Pinchart
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
