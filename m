@@ -2,265 +2,596 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44996C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71BB20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAE0206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bj01quzs"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="r0zvv5P7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390651AbfIMQg5 (ORCPT
+        id S2390746AbfIMQjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 12:36:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35556 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388170AbfIMQg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 12:36:56 -0400
-Received: from zn.tnic (p200300EC2F0DC5006892875336F1420F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c500:6892:8753:36f1:420f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 513431EC026F;
-        Fri, 13 Sep 2019 18:36:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568392611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9OQbjVPYe1Zr33bmVGPtBiEvoOiy1OipJKbotsaYm/w=;
-        b=bj01quzsCivkmBTlTxA814nX8naT3/KY2hxtB/Zphw2qUpbw7WelUghgVDUUEZyPBqPijQ
-        eoFEu0ntNABh6FcYAWkJia8oP2n8hgB1iKRY6zywRoqP9N8HULfxqeHtxr2jUel35U0p8X
-        EbxOos91wAXMEVEEogj+x3UW4WEgAVA=
-Date:   Fri, 13 Sep 2019 18:36:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Rasmus Villemoes <mail@rasmusvillemoes.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        x86-ml <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Improve memset
-Message-ID: <20190913163645.GC4190@zn.tnic>
-References: <20190913072237.GA12381@zn.tnic>
- <CAHk-=wismo3SQvvKXg8j0W-eC+5Q-ctcYfr1QV3K-i90w5caBA@mail.gmail.com>
- <9dc9f1e6-5d19-167c-793d-2f4a5ebee097@rasmusvillemoes.dk>
- <20190913104232.GA4190@zn.tnic>
+        Fri, 13 Sep 2019 12:39:17 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44050 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390232AbfIMQjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 12:39:16 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so29990553otj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 09:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JtR10KJawUnnGcVCF00kGm5sROlH9pMSBBxqvYwwMj4=;
+        b=r0zvv5P7GhT10aLrDLFfPyzQFNSyXUw/FGT/+FneAOncR1W8VtcBmRnXKv4wMCP0WM
+         oH5kwiymxuSi5dhCOnmWKWG9vOHWP3igkfCVLWTvr3CXHy96IuSObn80topfnwXEUaiE
+         jlVE/Bb/k1acKClGLDa9tOPrvOQx3XUvIvqSIa32l3x0dqt4oS87wcDWF225NHoy888R
+         P8SxdjtU6kPnZ3YyNQ9428Pp/p5brZPiCeE2VDOw/hvJ9kdGF9bhbqW4uDmI2kLNgdac
+         dhyHz5+HR+SIsG0QF+AbjUslMzfHH9tvPv+pSHeHZPj7F6CY0sFcB4n3OL0oQyMpGmgc
+         zfqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JtR10KJawUnnGcVCF00kGm5sROlH9pMSBBxqvYwwMj4=;
+        b=oK0SwejM+nOaQiObsw/AhzzNAQ+E9NgdGy0VYelhdRWmlp66HTSeCHk8ymuTBRk3tH
+         aqwPIfcjlDrCfni+6PdtohFoZGNW0eNAimPFnN/ppHitgNDCQx7TDpCGE/p/AqzRGdBt
+         3ZQRrvL3bYmLDKIFllYBZdVCoJA4xn/NZubCW5CNw6AliTJ4XxkUTVdF41+Qpm6pgbP9
+         sUKqRU3mHeTYvXY+HZRCU60fZxPaL8xDOeppIcpAyMKDIc+HonztizCW9POdKc4glVUP
+         AJbtKndFaXkA4yZxLZURmTamKql06bxQ2JCjAy4yUuMAGnYYGZyX+H7Qan0LkOyhwew+
+         Z0DA==
+X-Gm-Message-State: APjAAAWBdMPq09tX2opGzA5C3X5/8U1m/ho7TNoz3gYZB+knFbNbgX6W
+        f6vnDmz3erIzPgV7akygGQA3B9mN9SPKzTGi0GBKrQ==
+X-Google-Smtp-Source: APXvYqzwQpfctv0nZfL1GJht7fZTjrOidtAlgxEcQlA79xbC0qWXcpuICJpKdUOqqhwh+i+T9PhHOH7J2s9/YjKqDGM=
+X-Received: by 2002:a05:6830:1b6b:: with SMTP id d11mr31375611ote.207.1568392754365;
+ Fri, 13 Sep 2019 09:39:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190913104232.GA4190@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156712995890.1616117.10724047366038926477.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8OOeLyuNwgG1eXM2FGDNrLvigMfR63uWwUB-Jg+WXM7A@mail.gmail.com>
+ <CAPcyv4hrEsQ0t1hTT1A5WKFqYhANq15n0ru67SLDfGf1ZG-XWA@mail.gmail.com> <CAKv+Gu9ofzdrn8AJkXVkiWM+x8=2_ixnC68Y=Gk5KhEi0X35GA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9ofzdrn8AJkXVkiWM+x8=2_ixnC68Y=Gk5KhEi0X35GA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 13 Sep 2019 09:39:00 -0700
+Message-ID: <CAPcyv4jn1UrxodWR77ut9LBGTHa45Q_98kdAhL6wdaHL9V9RsA@mail.gmail.com>
+Subject: Re: [PATCH v5 04/10] x86, efi: Reserve UEFI 2.8 Specific Purpose
+ Memory for dax
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 12:42:32PM +0200, Borislav Petkov wrote:
-> Or should we talk to Intel hw folks about it...
+On Fri, Sep 13, 2019 at 9:29 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Fri, 13 Sep 2019 at 17:22, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Fri, Sep 13, 2019 at 6:00 AM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > On Fri, 30 Aug 2019 at 03:06, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > interpretation of the EFI Memory Types as "reserved for a specific
+> > > > purpose".
+> > > >
+> > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > reserved for direct-access (device-dax) by default and not available for
+> > > > any kernel usage, not even as an OOM fallback.  Later, through udev
+> > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > node identifier. This device-dax management scheme implements "soft" in
+> > > > the "soft reserved" designation by allowing some or all of the
+> > > > reservation to be recovered as typical memory. This policy can be
+> > > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
+> > > > efi=nosoftreserve.
+> > > >
+> > > > This patch introduces 2 new concepts at once given the entanglement
+> > > > between early boot enumeration relative to memory that can optionally be
+> > > > reserved from the kernel page allocator by default. The new concepts
+> > > > are:
+> > > >
+> > > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
+> > > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
+> > > >   new type. Only perform this classification if the
+> > > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
+> > > >   typical ram.
+> > > >
+> > > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
+> > > >   a device driver to search iomem resources for application specific
+> > > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
+> > > >
+> > > > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > > now, just identify and reserve memory of this type.
+> > > >
+> > > > The translation of EFI_CONVENTIONAL_MEMORY + EFI_MEMORY_SP to "soft
+> > > > reserved" is x86/E820-only, but other archs could choose to publish
+> > > > IORES_DESC_SOFT_RESERVED resources from their platform-firmware memory
+> > > > map handlers. Other EFI-capable platforms would need to go audit their
+> > > > local usages of EFI_CONVENTIONAL_MEMORY to consider the soft reserved
+> > > > case.
+> > > >
+> > > > Cc: <x86@kernel.org>
+> > > > Cc: Borislav Petkov <bp@alien8.de>
+> > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > > Cc: Darren Hart <dvhart@infradead.org>
+> > > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > Hi Dan,
+> > >
+> > > I understand that non-x86 may be out of scope for you, but this patch
+> > > makes changes to x86 and generic code at the same time without regard
+> > > for other architectures.
+> >
+> > Yes, that did give me pause.
+> >
+> > > I'd prefer it if we could cover ARM cleanly as well right at the start.
+> >
+> > Let's do it.
+> >
+> > >
+> > > The first step would be to split out the EFI stub changes (i.e., to
+> > > avoid allocating memory from EFI_MEMORY_SP regions) and the EFI core
+> > > changes from the other changes. Then, I would like to ask for your
+> > > help to get the arm64 part implemented where EFI_MEMORY_SP memory gets
+> > > registered/reserved in a way that allows the HMAT code (which should
+> > > be arch agnostic) to operate in the same way as it does on x86. Would
+> > > it be enough to simply memblock_reserve() it and insert the iomem
+> > > resource with the soft_reserved attribute?
+> > >
+> > > Some more comments below.
+> > >
+> > > > ---
+> > > >  Documentation/admin-guide/kernel-parameters.txt |   19 +++++++--
+> > > >  arch/x86/Kconfig                                |   21 +++++++++
+> > > >  arch/x86/boot/compressed/eboot.c                |    7 +++
+> > > >  arch/x86/boot/compressed/kaslr.c                |    4 ++
+> > > >  arch/x86/include/asm/e820/types.h               |    8 ++++
+> > > >  arch/x86/include/asm/efi-stub.h                 |   11 +++++
+> > > >  arch/x86/kernel/e820.c                          |   12 +++++
+> > > >  arch/x86/platform/efi/efi.c                     |   51 +++++++++++++++++++++--
+> > > >  drivers/firmware/efi/efi.c                      |    3 +
+> > > >  drivers/firmware/efi/libstub/efi-stub-helper.c  |   12 +++++
+> > > >  include/linux/efi.h                             |    1
+> > > >  include/linux/ioport.h                          |    1
+> > > >  12 files changed, 139 insertions(+), 11 deletions(-)
+> > > >  create mode 100644 arch/x86/include/asm/efi-stub.h
+> > > >
+> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > > index 1c67acd1df65..dd28f0726309 100644
+> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > @@ -1152,7 +1152,8 @@
+> > > >                         Format: {"off" | "on" | "skip[mbr]"}
+> > > >
+> > > >         efi=            [EFI]
+> > > > -                       Format: { "old_map", "nochunk", "noruntime", "debug" }
+> > > > +                       Format: { "old_map", "nochunk", "noruntime", "debug",
+> > > > +                                 "nosoftreserve" }
+> > > >                         old_map [X86-64]: switch to the old ioremap-based EFI
+> > > >                         runtime services mapping. 32-bit still uses this one by
+> > > >                         default.
+> > > > @@ -1161,6 +1162,12 @@
+> > > >                         firmware implementations.
+> > > >                         noruntime : disable EFI runtime services support
+> > > >                         debug: enable misc debug output
+> > > > +                       nosoftreserve: The EFI_MEMORY_SP (Specific Purpose)
+> > > > +                       attribute may cause the kernel to reserve the
+> > > > +                       memory range for a memory mapping driver to
+> > > > +                       claim. Specify efi=nosoftreserve to disable this
+> > > > +                       reservation and treat the memory by its base type
+> > > > +                       (i.e. EFI_CONVENTIONAL_MEMORY / "System RAM").
+> > > >
+> > > >         efi_no_storage_paranoia [EFI; X86]
+> > > >                         Using this parameter you can use more than 50% of
+> > > > @@ -1173,15 +1180,21 @@
+> > > >                         updating original EFI memory map.
+> > > >                         Region of memory which aa attribute is added to is
+> > > >                         from ss to ss+nn.
+> > > > +
+> > > >                         If efi_fake_mem=2G@4G:0x10000,2G@0x10a0000000:0x10000
+> > > >                         is specified, EFI_MEMORY_MORE_RELIABLE(0x10000)
+> > > >                         attribute is added to range 0x100000000-0x180000000 and
+> > > >                         0x10a0000000-0x1120000000.
+> > > >
+> > > > +                       If efi_fake_mem=8G@9G:0x40000 is specified, the
+> > > > +                       EFI_MEMORY_SP(0x40000) attribute is added to
+> > > > +                       range 0x240000000-0x43fffffff.
+> > > > +
+> > > >                         Using this parameter you can do debugging of EFI memmap
+> > > > -                       related feature. For example, you can do debugging of
+> > > > +                       related features. For example, you can do debugging of
+> > > >                         Address Range Mirroring feature even if your box
+> > > > -                       doesn't support it.
+> > > > +                       doesn't support it, or mark specific memory as
+> > > > +                       "soft reserved".
+> > > >
+> > > >         efivar_ssdt=    [EFI; X86] Name of an EFI variable that contains an SSDT
+> > > >                         that is to be dynamically loaded by Linux. If there are
+> > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > > index 4195f44c6a09..bced13503bb1 100644
+> > > > --- a/arch/x86/Kconfig
+> > > > +++ b/arch/x86/Kconfig
+> > > > @@ -1981,6 +1981,27 @@ config EFI_MIXED
+> > > >
+> > > >            If unsure, say N.
+> > > >
+> > > > +config EFI_SOFT_RESERVE
+> > > > +       bool "Reserve EFI Specific Purpose Memory"
+> > > > +       depends on EFI && ACPI_HMAT
+> > > > +       default ACPI_HMAT
+> > > > +       ---help---
+> > > > +         On systems that have mixed performance classes of memory EFI
+> > > > +         may indicate specific purpose memory with an attribute (See
+> > > > +         EFI_MEMORY_SP in UEFI 2.8). A memory range tagged with this
+> > > > +         attribute may have unique performance characteristics compared
+> > > > +         to the system's general purpose "System RAM" pool. On the
+> > > > +         expectation that such memory has application specific usage,
+> > > > +         and its base EFI memory type is "conventional" answer Y to
+> > > > +         arrange for the kernel to reserve it as a "Soft Reserved"
+> > > > +         resource, and set aside for direct-access (device-dax) by
+> > > > +         default. The memory range can later be optionally assigned to
+> > > > +         the page allocator by system administrator policy via the
+> > > > +         device-dax kmem facility. Say N to have the kernel treat this
+> > > > +         memory as "System RAM" by default.
+> > > > +
+> > > > +         If unsure, say Y.
+> > > > +
+> > >
+> > > This should be in generic code.
+> >
+> > Agree.
+> >
+> > >
+> > > >  config SECCOMP
+> > > >         def_bool y
+> > > >         prompt "Enable seccomp to safely compute untrusted bytecode"
+> > > > diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+> > > > index d6662fdef300..f2dc5896d770 100644
+> > > > --- a/arch/x86/boot/compressed/eboot.c
+> > > > +++ b/arch/x86/boot/compressed/eboot.c
+> > > > @@ -10,6 +10,7 @@
+> > > >  #include <linux/pci.h>
+> > > >
+> > > >  #include <asm/efi.h>
+> > > > +#include <asm/efi-stub.h>
+> > > >  #include <asm/e820/types.h>
+> > > >  #include <asm/setup.h>
+> > > >  #include <asm/desc.h>
+> > > > @@ -553,7 +554,11 @@ setup_e820(struct boot_params *params, struct setup_data *e820ext, u32 e820ext_s
+> > > >                 case EFI_BOOT_SERVICES_CODE:
+> > > >                 case EFI_BOOT_SERVICES_DATA:
+> > > >                 case EFI_CONVENTIONAL_MEMORY:
+> > > > -                       e820_type = E820_TYPE_RAM;
+> > > > +                       if (!efi_nosoftreserve
+> > > > +                                       && (d->attribute & EFI_MEMORY_SP))
+> > > > +                               e820_type = E820_TYPE_SOFT_RESERVED;
+> > > > +                       else
+> > > > +                               e820_type = E820_TYPE_RAM;
+> > > >                         break;
+> > > >
+> > > >                 case EFI_ACPI_MEMORY_NVS:
+> > > > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+> > > > index 2e53c056ba20..093e84e28b7a 100644
+> > > > --- a/arch/x86/boot/compressed/kaslr.c
+> > > > +++ b/arch/x86/boot/compressed/kaslr.c
+> > > > @@ -38,6 +38,7 @@
+> > > >  #include <linux/efi.h>
+> > > >  #include <generated/utsrelease.h>
+> > > >  #include <asm/efi.h>
+> > > > +#include <asm/efi-stub.h>
+> > > >
+> > > >  /* Macros used by the included decompressor code below. */
+> > > >  #define STATIC
+> > > > @@ -760,6 +761,9 @@ process_efi_entries(unsigned long minimum, unsigned long image_size)
+> > > >                 if (md->type != EFI_CONVENTIONAL_MEMORY)
+> > > >                         continue;
+> > > >
+> > > > +               if (!efi_nosoftreserve && (md->attribute & EFI_MEMORY_SP))
+> > > > +                       continue;
+> > > > +
+> > > >                 if (efi_mirror_found &&
+> > > >                     !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
+> > > >                         continue;
+> > > > diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
+> > > > index c3aa4b5e49e2..314f75d886d0 100644
+> > > > --- a/arch/x86/include/asm/e820/types.h
+> > > > +++ b/arch/x86/include/asm/e820/types.h
+> > > > @@ -28,6 +28,14 @@ enum e820_type {
+> > > >          */
+> > > >         E820_TYPE_PRAM          = 12,
+> > > >
+> > > > +       /*
+> > > > +        * Special-purpose memory is indicated to the system via the
+> > > > +        * EFI_MEMORY_SP attribute. Define an e820 translation of this
+> > > > +        * memory type for the purpose of reserving this range and
+> > > > +        * marking it with the IORES_DESC_SOFT_RESERVED designation.
+> > > > +        */
+> > > > +       E820_TYPE_SOFT_RESERVED = 0xefffffff,
+> > > > +
+> > > >         /*
+> > > >          * Reserved RAM used by the kernel itself if
+> > > >          * CONFIG_INTEL_TXT=y is enabled, memory of this type
+> > > > diff --git a/arch/x86/include/asm/efi-stub.h b/arch/x86/include/asm/efi-stub.h
+> > > > new file mode 100644
+> > > > index 000000000000..16ebd036387b
+> > > > --- /dev/null
+> > > > +++ b/arch/x86/include/asm/efi-stub.h
+> > > > @@ -0,0 +1,11 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +#ifndef _X86_EFI_STUB_H_
+> > > > +#define _X86_EFI_STUB_H_
+> > > > +
+> > > > +#ifdef CONFIG_EFI_STUB
+> > > > +extern bool efi_nosoftreserve;
+> > > > +#else
+> > > > +#define efi_nosoftreserve (1)
+> > > > +#endif
+> > > > +
+> > > > +#endif /* _X86_EFI_STUB_H_ */
+> > >
+> > > Please put this in generic code as well (but you need a function not a
+> > > variable - see below)
+> > >
+> > > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> > > > index 7da2bcd2b8eb..9976106b57ec 100644
+> > > > --- a/arch/x86/kernel/e820.c
+> > > > +++ b/arch/x86/kernel/e820.c
+> > > > @@ -190,6 +190,7 @@ static void __init e820_print_type(enum e820_type type)
+> > > >         case E820_TYPE_RAM:             /* Fall through: */
+> > > >         case E820_TYPE_RESERVED_KERN:   pr_cont("usable");                      break;
+> > > >         case E820_TYPE_RESERVED:        pr_cont("reserved");                    break;
+> > > > +       case E820_TYPE_SOFT_RESERVED:   pr_cont("soft reserved");               break;
+> > > >         case E820_TYPE_ACPI:            pr_cont("ACPI data");                   break;
+> > > >         case E820_TYPE_NVS:             pr_cont("ACPI NVS");                    break;
+> > > >         case E820_TYPE_UNUSABLE:        pr_cont("unusable");                    break;
+> > > > @@ -1037,6 +1038,7 @@ static const char *__init e820_type_to_string(struct e820_entry *entry)
+> > > >         case E820_TYPE_PRAM:            return "Persistent Memory (legacy)";
+> > > >         case E820_TYPE_PMEM:            return "Persistent Memory";
+> > > >         case E820_TYPE_RESERVED:        return "Reserved";
+> > > > +       case E820_TYPE_SOFT_RESERVED:   return "Soft Reserved";
+> > > >         default:                        return "Unknown E820 type";
+> > > >         }
+> > > >  }
+> > > > @@ -1052,6 +1054,7 @@ static unsigned long __init e820_type_to_iomem_type(struct e820_entry *entry)
+> > > >         case E820_TYPE_PRAM:            /* Fall-through: */
+> > > >         case E820_TYPE_PMEM:            /* Fall-through: */
+> > > >         case E820_TYPE_RESERVED:        /* Fall-through: */
+> > > > +       case E820_TYPE_SOFT_RESERVED:   /* Fall-through: */
+> > > >         default:                        return IORESOURCE_MEM;
+> > > >         }
+> > > >  }
+> > > > @@ -1064,6 +1067,7 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+> > > >         case E820_TYPE_PMEM:            return IORES_DESC_PERSISTENT_MEMORY;
+> > > >         case E820_TYPE_PRAM:            return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+> > > >         case E820_TYPE_RESERVED:        return IORES_DESC_RESERVED;
+> > > > +       case E820_TYPE_SOFT_RESERVED:   return IORES_DESC_SOFT_RESERVED;
+> > > >         case E820_TYPE_RESERVED_KERN:   /* Fall-through: */
+> > > >         case E820_TYPE_RAM:             /* Fall-through: */
+> > > >         case E820_TYPE_UNUSABLE:        /* Fall-through: */
+> > > > @@ -1078,11 +1082,12 @@ static bool __init do_mark_busy(enum e820_type type, struct resource *res)
+> > > >                 return true;
+> > > >
+> > > >         /*
+> > > > -        * Treat persistent memory like device memory, i.e. reserve it
+> > > > -        * for exclusive use of a driver
+> > > > +        * Treat persistent memory and other special memory ranges like
+> > > > +        * device memory, i.e. reserve it for exclusive use of a driver
+> > > >          */
+> > > >         switch (type) {
+> > > >         case E820_TYPE_RESERVED:
+> > > > +       case E820_TYPE_SOFT_RESERVED:
+> > > >         case E820_TYPE_PRAM:
+> > > >         case E820_TYPE_PMEM:
+> > > >                 return false;
+> > > > @@ -1285,6 +1290,9 @@ void __init e820__memblock_setup(void)
+> > > >                 if (end != (resource_size_t)end)
+> > > >                         continue;
+> > > >
+> > > > +               if (entry->type == E820_TYPE_SOFT_RESERVED)
+> > > > +                       memblock_reserve(entry->addr, entry->size);
+> > > > +
+> > > >                 if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
+> > > >                         continue;
+> > > >
+> > > > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> > > > index 0bb58eb33ca0..9cfb7f1cf25d 100644
+> > > > --- a/arch/x86/platform/efi/efi.c
+> > > > +++ b/arch/x86/platform/efi/efi.c
+> > > > @@ -151,10 +151,18 @@ void __init efi_find_mirror(void)
+> > > >   * more than the max 128 entries that can fit in the e820 legacy
+> > > >   * (zeropage) memory map.
+> > > >   */
+> > > > +enum add_efi_mode {
+> > > > +       ADD_EFI_ALL,
+> > > > +       ADD_EFI_SOFT_RESERVED,
+> > > > +};
+> > > >
+> > > > -static void __init do_add_efi_memmap(void)
+> > > > +static void __init do_add_efi_memmap(enum add_efi_mode mode)
+> > > >  {
+> > > >         efi_memory_desc_t *md;
+> > > > +       int add = 0;
+> > > > +
+> > > > +       if (!efi_enabled(EFI_MEMMAP))
+> > > > +               return;
+> > > >
+> > > >         for_each_efi_memory_desc(md) {
+> > > >                 unsigned long long start = md->phys_addr;
+> > > > @@ -167,7 +175,10 @@ static void __init do_add_efi_memmap(void)
+> > > >                 case EFI_BOOT_SERVICES_CODE:
+> > > >                 case EFI_BOOT_SERVICES_DATA:
+> > > >                 case EFI_CONVENTIONAL_MEMORY:
+> > > > -                       if (md->attribute & EFI_MEMORY_WB)
+> > > > +                       if (efi_enabled(EFI_MEM_SOFT_RESERVE)
+> > > > +                                       && (md->attribute & EFI_MEMORY_SP))
+> > > > +                               e820_type = E820_TYPE_SOFT_RESERVED;
+> > > > +                       else if (md->attribute & EFI_MEMORY_WB)
+> > > >                                 e820_type = E820_TYPE_RAM;
+> > > >                         else
+> > > >                                 e820_type = E820_TYPE_RESERVED;
+> > > > @@ -193,9 +204,17 @@ static void __init do_add_efi_memmap(void)
+> > > >                         e820_type = E820_TYPE_RESERVED;
+> > > >                         break;
+> > > >                 }
+> > > > +
+> > > > +               if (e820_type == E820_TYPE_SOFT_RESERVED)
+> > > > +                       /* always add E820_TYPE_SOFT_RESERVED */;
+> > > > +               else if (mode == ADD_EFI_SOFT_RESERVED)
+> > > > +                       continue;
+> > > > +
+> > > > +               add++;
+> > > >                 e820__range_add(start, size, e820_type);
+> > > >         }
+> > > > -       e820__update_table(e820_table);
+> > > > +       if (add)
+> > > > +               e820__update_table(e820_table);
+> > > >  }
+> > > >
+> > > >  int __init efi_memblock_x86_reserve_range(void)
+> > > > @@ -227,8 +246,18 @@ int __init efi_memblock_x86_reserve_range(void)
+> > > >         if (rv)
+> > > >                 return rv;
+> > > >
+> > > > -       if (add_efi_memmap)
+> > > > -               do_add_efi_memmap();
+> > > > +       if (add_efi_memmap) {
+> > > > +               do_add_efi_memmap(ADD_EFI_ALL);
+> > > > +       } else {
+> > > > +               /*
+> > > > +                * Given add_efi_memmap defaults to 0 and there there is no e820
+> > > > +                * mechanism for soft-reserved memory. Explicitly scan for
+> > > > +                * soft-reserved memory. Otherwise, the mechanism to disable the
+> > > > +                * kernel's consideration of EFI_MEMORY_SP is the
+> > > > +                * efi=nosoftreserve option.
+> > > > +                */
+> > > > +               do_add_efi_memmap(ADD_EFI_SOFT_RESERVED);
+> > > > +       }
+> > > >
+> > > >         WARN(efi.memmap.desc_version != 1,
+> > > >              "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
+> > > > @@ -781,6 +810,15 @@ static bool should_map_region(efi_memory_desc_t *md)
+> > > >         if (IS_ENABLED(CONFIG_X86_32))
+> > > >                 return false;
+> > > >
+> > > > +       /*
+> > > > +        * EFI specific purpose memory may be reserved by default
+> > > > +        * depending on kernel config and boot options.
+> > > > +        */
+> > > > +       if (md->type == EFI_CONVENTIONAL_MEMORY
+> > > > +                       && efi_enabled(EFI_MEM_SOFT_RESERVE)
+> > > > +                       && (md->attribute & EFI_MEMORY_SP))
+> > > > +               return false;
+> > > > +
+> > > >         /*
+> > > >          * Map all of RAM so that we can access arguments in the 1:1
+> > > >          * mapping when making EFI runtime calls.
+> > > > @@ -1072,6 +1110,9 @@ static int __init arch_parse_efi_cmdline(char *str)
+> > > >         if (parse_option_str(str, "old_map"))
+> > > >                 set_bit(EFI_OLD_MEMMAP, &efi.flags);
+> > > >
+> > > > +       if (parse_option_str(str, "nosoftreserve"))
+> > > > +               clear_bit(EFI_MEM_SOFT_RESERVE, &efi.flags);
+> > > > +
+> > >
+> > > Can we move this to the generic efi= handling code?
+> >
+> > To parse_efi_cmdline() in drivers/fimrware/efi.c? Sure.
+> >
+> > >
+> > > >         return 0;
+> > > >  }
+> > > >  early_param("efi", arch_parse_efi_cmdline);
+> > > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > > index 363bb9d00fa5..6d54d5c74347 100644
+> > > > --- a/drivers/firmware/efi/efi.c
+> > > > +++ b/drivers/firmware/efi/efi.c
+> > > > @@ -52,6 +52,9 @@ struct efi __read_mostly efi = {
+> > > >         .tpm_log                = EFI_INVALID_TABLE_ADDR,
+> > > >         .tpm_final_log          = EFI_INVALID_TABLE_ADDR,
+> > > >         .mem_reserve            = EFI_INVALID_TABLE_ADDR,
+> > > > +#ifdef CONFIG_EFI_SOFT_RESERVE
+> > > > +       .flags                  = 1UL << EFI_MEM_SOFT_RESERVE,
+> > > > +#endif
+> > > >  };
+> > > >  EXPORT_SYMBOL(efi);
+> > > >
+> > >
+> > > I'd prefer it if we could call this EFI_MEM_NO_SOFT_RESERVE instead,
+> > > and invert the meaning of the bit.
+> >
+> > ...but that would mean repeat occurrences of
+> > "!efi_enabled(EFI_MEM_NO_SOFT_RESERVE)", doesn't the double negative
+> > seem less readable to you?
+> >
+>
+> One the one hand, yes. On the other hand, it is the only flag whose
+> default is 'enabled' which is also less than ideal.
 
-Or, I can do something like this, while waiting. Benchmark at the end.
+Ok, I can get on board with "default 0" being the non exception state
+of the flags.
 
-The numbers are from a KBL box:
+>
+> > >
+> > > > diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > > index 3caae7f2cf56..35ee98a2c00c 100644
+> > > > --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > > +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #define EFI_READ_CHUNK_SIZE    (1024 * 1024)
+> > > >
+> > > >  static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
+> > > > +bool efi_nosoftreserve;
+> > > >
+> > >
+> > > This needs a getter function if you want to access it from other
+> > > compilation units. This has to do with how the early relocation code
+> > > handles data symbol references. Please refer to nokaslr() for an
+> > > example.
+> >
+> > Ah, does that mean that the efi_nosoftreserve global variable
+> > instances in different compilation units are effectively static the
+> > way I currently have them defined?
+>
+> No, the problem had to do with relocation of GOT entries on some x86
+> builds. Then, things got more complicated when I added the 32-bit ARM
+> port, which puts other constraints related to how symbols are placed
+> in the binary.
+>
+> So please duplicate the pattern with the static variable and the
+> __pure setter, which has proven to be the most robust way to expose
+> variables to other compilation units in the stub.
 
-model           : 158
-model name      : Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz
-stepping        : 12
-
-and if I'm not doing anything wrong with the benchmark (the asm looks
-ok but I could very well be missing something), the numbers say that
-the REP; STOSB is better from sizes of 8 and upwards and up to two
-cachelines we're pretty much on-par with the builtin variant.
-
-But after that we're pretty close too.
-
-But this is just a single uarch which is pretty new, I guess the 32 or
-64 bytes cap should be good enough for most, especially those where REP;
-STOSB isn't as good.
-
-Hmm.
-
-Loops: 1000000
-size            builtin_memset  rep;stosb       memset_rep
-0               46              85              131
-8               88              65              104
-16              66              65              103
-24              66              65              103
-32              66              65              104
-40              66              65              104
-48              66              65              103
-56              66              65              103
-64              66              65              103
-72              66              65              103
-80              66              65              103
-88              66              65              103
-96              66              65              103
-104             66              65              103
-112             66              65              103
-120             66              65              103
-128             66              65              103
-136             66              71              108
-144             73              71              108
-152             72              71              108
-160             73              71              108
-168             73              71              108
-176             73              71              108
-184             73              71              108
-192             72              74              107
-200             75              78              116
-208             80              78              116
-216             80              78              116
-224             80              78              116
-232             80              78              116
-240             80              78              116
-248             80              78              116
-
-
----
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef unsigned long long u64;
-
-#define DECLARE_ARGS(val, low, high)    unsigned low, high
-#define EAX_EDX_VAL(val, low, high)     ((low) | ((u64)(high) << 32))
-#define EAX_EDX_ARGS(val, low, high)    "a" (low), "d" (high)
-#define EAX_EDX_RET(val, low, high)     "=a" (low), "=d" (high)
-
-static __always_inline unsigned long long rdtsc(void)
-{
-        DECLARE_ARGS(val, low, high);
-
-        asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
-
-        return EAX_EDX_VAL(val, low, high);
-}
-
-/**
- * rdtsc_ordered() - read the current TSC in program order
- *
- * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
- * It is ordered like a load to a global in-memory counter.  It should
- * be impossible to observe non-monotonic rdtsc_unordered() behavior
- * across multiple CPUs as long as the TSC is synced.
- */
-static __always_inline unsigned long long rdtsc_ordered(void)
-{
-        /*
-         * The RDTSC instruction is not ordered relative to memory
-         * access.  The Intel SDM and the AMD APM are both vague on this
-         * point, but empirically an RDTSC instruction can be
-         * speculatively executed before prior loads.  An RDTSC
-         * immediately after an appropriate barrier appears to be
-         * ordered as a normal load, that is, it provides the same
-         * ordering guarantees as reading from a global memory location
-         * that some other imaginary CPU is updating continuously with a
-         * time stamp.
-         */
-        asm volatile("mfence");
-        return rdtsc();
-}
-
-static __always_inline void *rep_stosb(void *dest, int c, size_t n)
-{
-        void *ret, *dummy;
-
-	asm volatile("rep; stosb"
-		     : "=&D" (ret), "=c" (dummy)
-		     : "0" (dest), "a" (c), "c" (n)
-		     : "memory");
-
-	return ret;
-}
-
-static __always_inline void *memset_rep(void *dest, int c, size_t n)
-{
-	void *ret, *dummy;
-
-	asm volatile("push %%rdi\n\t"
-		     "mov %%rax, %%rsi\n\t"
-		     "mov %%rcx, %%rdx\n\t"
-		     "andl $7,%%edx\n\t"
-		     "shrq $3,%%rcx\n\t"
-		     "movzbl %%sil,%%esi\n\t"
-		     "movabs $0x0101010101010101,%%rax\n\t"
-		     "imulq %%rsi,%%rax\n\t"
-		     "rep stosq\n\t"
-		     "movl %%edx,%%ecx\n\t"
-		     "rep stosb\n\t"
-		     "pop %%rax\n\t"
-		     : "=&D" (ret), "=c" (dummy)
-		     : "0" (dest), "a" (c), "c" (n)
-		     : "rsi", "rdx", "memory");
-
-	return ret;
-}
-
-#define BUF_SIZE 1024
-static void bench_memset(unsigned int loops)
-{
-	u64 p0, p1, m_cycles = 0, r_cycles = 0, rep_cyc = 0;
-	int i, s;
-	void *dst;
-
-	dst = malloc(BUF_SIZE);
-	if (!dst)
-		perror("malloc");
-
-	printf("Loops: %d\n", loops);
-	printf("size\t\tbuiltin_memset\trep;stosb\tmemset_rep\n");
-
-	for (s = 0; s < BUF_SIZE; s += 16) {
-		for (i = 0; i < loops; i++) {
-			p0 = rdtsc_ordered();
-			__builtin_memset(dst, 0, s);
-			p1 = rdtsc_ordered();
-
-			m_cycles += p1 - p0;
-		}
-
-		for (i = 0; i < loops; i++) {
-			p0 = rdtsc_ordered();
-			rep_stosb(dst, 0, s);
-			p1 = rdtsc_ordered();
-
-			r_cycles += p1 - p0;
-		}
-
-		for (i = 0; i < loops; i++) {
-			p0 = rdtsc_ordered();
-			memset_rep(dst, 0, s);
-			p1 = rdtsc_ordered();
-
-			rep_cyc += p1 - p0;
-		}
-
-
-		m_cycles /= loops;
-		r_cycles /= loops;
-		rep_cyc  /= loops;
-
-		printf("%d\t\t%llu\t\t%llu\t\t%llu\n", s, m_cycles, r_cycles, rep_cyc);
-		m_cycles = r_cycles = rep_cyc = 0;
-	}
-
-	free(dst);
-}
-
-int main(void)
-{
-	bench_memset(1000000);
-
-	return 0;
-}
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Will do.
