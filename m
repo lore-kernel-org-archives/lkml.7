@@ -2,121 +2,293 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C217EC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05189C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A386D20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FEE21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568381663;
+	bh=ena8FGoa/yE4ul4093QZR0zMnN1OaRh0oMqi3gLLeIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vaEe5OiA2Qg5YnO5HIZa5zvk1MEPsHlgMIsbiLT8+BVdzbHZ5SD5ROVnwcgbb6Ljh
+	 IPMufzyGgxXwkZx6TGqAB5KPoY264weFCa/GRKLUxEXvcbeyThzSRQUzJflPqTz63W
+	 3Y8g0Ivyxtbm6SJG8gqPwflzqODt19uRCyJXR4GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbfIMNdv (ORCPT
+        id S2391168AbfIMNeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:33:51 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42511 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388524AbfIMNdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:33:49 -0400
-Received: by mail-vs1-f66.google.com with SMTP id m22so18586781vsl.9;
-        Fri, 13 Sep 2019 06:33:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hnl7OpEfza4YbA2qYO4VUD1uuEgWDd+IAdiDL6hY/pM=;
-        b=IofTxCS7lwNQAocatR0C7ZiQ6XGfKbtmTucn1ZRXz9tNVv1mdEnNImBFrovzT4sv0g
-         JIk9w4c6owtM08W0VQUgumkJPpb25IKrmez2gU77KTE1E0UKwLJTbThIMq12FqyEeL67
-         CPFtFtDQ7Rs55U8hE5dHgidXx1cfABRcAcExlMpmo6csXZ/gsCENd77uYMeoeGJJYWiC
-         UVh48cDhoNTxWrMncsXjNcPjlP0rB/dfFjHsc4xqQI9RcMe6c7VSpLvtQSJUtPw+UDvh
-         qgu7+CHxT/nHUWKlY095X7lIXyDvJ9xK1wp2icCIXIkcSzyBAm1GlX5B4G8sb0I7jWM2
-         CGfQ==
-X-Gm-Message-State: APjAAAXvvBtcso/Sz2hoQ9QxRACtG9Z3mKkZsM0daBHX+sqM+6zWffw8
-        pNH1nN+HGbBxHR+1XhTNcgZeiMYdJ9MJuFCe+DQ=
-X-Google-Smtp-Source: APXvYqzXCO+EpVFbPYPlwDYijbuWIyqt5+tfpfwugxLjt/Ev9WUQG2jABsTvE5FdPYOUoUJaDM+fpDyxEF5WEXd7iPA=
-X-Received: by 2002:a67:fd97:: with SMTP id k23mr20291160vsq.220.1568381627687;
- Fri, 13 Sep 2019 06:33:47 -0700 (PDT)
+        Fri, 13 Sep 2019 09:34:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389172AbfIMNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:34:22 -0400
+Received: from localhost (unknown [106.51.107.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB30205ED;
+        Fri, 13 Sep 2019 13:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568381661;
+        bh=ena8FGoa/yE4ul4093QZR0zMnN1OaRh0oMqi3gLLeIg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dLa1oq0UwfvKlyWRccDy0PwkCZ2tnNgnNB1nTg2FctHyJ3zsArLkPOM0T8aDEOigu
+         reYzbSkRwwzXM+fBwajRMINlEl8QxMIxAg8thRkhLzu5QPBjaNU3OeAZM8IpYZFxd3
+         nHnHVc9gJLxzw40KiL+y8m+xX6V5W/2vku4S8Cns=
+Date:   Fri, 13 Sep 2019 19:03:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+Message-ID: <20190913133313.GF4392@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-2-peter.ujfalusi@ti.com>
+ <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
+ <20190908121058.GL2672@vkoul-mobl>
+ <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
+ <20190912170312.GD4392@vkoul-mobl>
+ <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
+ <20190913103654.GE4392@vkoul-mobl>
+ <12accd8e-a8ad-1ac6-d394-6f4d90011c9f@ti.com>
 MIME-Version: 1.0
-References: <20190913130559.669563815@linuxfoundation.org> <20190913130606.981926197@linuxfoundation.org>
-In-Reply-To: <20190913130606.981926197@linuxfoundation.org>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Fri, 13 Sep 2019 09:33:36 -0400
-Message-ID: <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <12accd8e-a8ad-1ac6-d394-6f4d90011c9f@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 13-09-19, 15:19, Peter Ujfalusi wrote:
+> Vinod,
+> 
+> On 13/09/2019 13.36, Vinod Koul wrote:
+> >>> So you have dma, xbar and client? And you need to use a specfic xbar,
+> >>> did i get that right?
+> >>
+> >> At the end yes.
+> > 
+> > :)
+> > 
+> >> EDMA have dedicated crossbar
+> >> sDMA have dedicated crossbar
+> > 
+> > So the domain mapping should point to crossbar.
+> > 
+> >> Slave devices must use the crossbar to request channel from the DMA
+> >> controllers. Non slave request are directed to the controllers directly
+> >> (no DT binding).
+> > 
+> > The clients for these are different right, if so slave clients will
+> > point to domain xbar and non slave will point to domain controller (to
+> > make everyone use domains). Non domain get any channel ... (fallback as
+> > well)
+> > 
+> > 
+> >> At minimum we would need a new property for DMA routers.
+> >> dma-domain-router perhaps which is pointing to the xbar.
+> > 
+> > Precisely!
+> 
+> After some thinking at the end we have two main type of DMA channels:
+> slave channels: Hw triggered channels
+> non-slave channels: SW triggered channels w/o DMA request lines
+> 
+> right?
 
-This feels like it's missing a From: line.
+yes and no
 
-commit b513a18cf1d705bd04efd91c417e79e4938be093
-Author: Lyude Paul <lyude@redhat.com>
-Date:   Mon Jan 28 16:03:50 2019 -0500
+You are correct in saying this but I would like to move away from the
+two concepts and generalize them a bit, it is long overdue.
 
-    drm/nouveau: Don't WARN_ON VCPI allocation failures
+So from domain point of view, we have channels (memcpy/slave) specifying
+one or more domains to use or no domain (memcpy, any channel)
 
-Is this an artifact of your notification-of-patches process and I
-never noticed before, or was the patch ingested incorrectly?
+> Slave channels must be described in DT as we need to specify the DMA
+> request number/line/trigger, whatever it is called on different platforms.
 
-Cheers,
+So in the cases where a specific channel/request/trigger is required, we
+would be required to specify that in DT as we do currently, but more
+modern controllers which uses muxes wont need this to be specified,
+pointing to domain (which can be controller/xbar) would do the trick!
 
-  -ilia
 
-On Fri, Sep 13, 2019 at 9:16 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> [ Upstream commit b513a18cf1d705bd04efd91c417e79e4938be093 ]
->
-> This is much louder then we want. VCPI allocation failures are quite
-> normal, since they will happen if any part of the modesetting process is
-> interrupted by removing the DP MST topology in question. So just print a
-> debugging message on VCPI failures instead.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: f479c0ba4a17 ("drm/nouveau/kms/nv50: initial support for DP 1.2 multi-stream")
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Cc: <stable@vger.kernel.org> # v4.10+
-> Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/dispnv50/disp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index f889d41a281fa..5e01bfb69d7a3 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -759,7 +759,8 @@ nv50_msto_enable(struct drm_encoder *encoder)
->
->         slots = drm_dp_find_vcpi_slots(&mstm->mgr, mstc->pbn);
->         r = drm_dp_mst_allocate_vcpi(&mstm->mgr, mstc->port, mstc->pbn, slots);
-> -       WARN_ON(!r);
-> +       if (!r)
-> +               DRM_DEBUG_KMS("Failed to allocate VCPI\n");
->
->         if (!mstm->links++)
->                 nv50_outp_acquire(mstm->outp);
-> --
-> 2.20.1
->
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> non-slave channels on the other hand can be requested from any
+> controllers which can execute it. Or in the scope of this series, from
+> the controller which is best suited to service the device or module.
+
+Right which takes care of your new requirement as well as older ones
+
+> If we really want to move to similar binding structure as interrupts
+> opposed to what we have atm (gpio, pwm, leds, etc uses the same
+> principle), then
+> 
+> dma-slave-controller: can point to a dma controller or dma router which
+> should be used from the node it is presented inherited by it's child
+> nodes for slave channels.
+> 
+> dma-nonslave-controller: can point to a dma controller which should be
+> used from the node it is presented inherited by it's child nodes for non
+> slave channels.
+> 
+> DMA routers have the phandle for the dma controller they are attached
+> to, so this should be fine, I guess.
+> 
+> Based on the topology of the SoC, these can be added in higher level in
+> the tree to divert from the higher level controller selection.
+
+Looks interesting to me and doable. But as I said earlier, lets do a bit
+more generalization in concepts please
+
+> >> A slave channel request would first look for dma-domain-router, if it is
+> >> there, the request goes via that.
+> >> If not then look for dma-domain-controller and use it for the request.
+> >> The DMA binding can drop the phandle to the xbar/dma.
+> >> Request for not slave channel would only look for dma-domain-controller.
+> >>
+> >>
+> >> But...
+> >>
+> >> - If we have one dedicated memcpy DMA and one for slave usage.
+> >> In top we declare dma-domain-controller = <&m2m_dma>;
+> >>
+> >> Then you have  a slave client somewhere
+> >> client1: peripheral@42 {
+> >> 	dma-domain-controller = <&slave_dma>;
+> >> 	dmas = <6>, <7>;
+> >> 	dma-names = "tx", "rx";
+> >> };
+> >>
+> >> This is fine I guess. But what would we do if the driver for client1
+> >> needs additional memcpy channel? By the definition of the binding the
+> >> non slave channel should be taken from the closest dma-domain-controller
+> >> which is not what we want. We want the channel from m2m_dma.
+> > 
+> > I would not envision same controller needs both memcpy or slave
+> > channels. If so, that should be represented as something like dma-names
+> > and represent two sets of dmas one for domain1 and another for domain2.
+> > 
+> > I would generalize it and not call it memcpy/slave but just domains and
+> > have a controller use multiple domains (if we have a super controller
+> > which can do that :D)
+> > 
+> > client1: peripheral@42 {
+> >         dma-domain-names = "memcpy", "slave";
+> >         dma-domains = <&mem_dma>, <&slave_dma>;
+> >         ...
+> > };
+> 
+> Right, similar thing should work, I guess.
+> 
+> / {
+> 	/* DDR to DDR is used in main_udmap */
+> 	dma-domain-names = "memcpy";
+> 	dma-domains = <&main_udmap>;
+> 
+> 	cbass_main {
+> 		/* memcpy is from main_udmap and slaves also */
+> 		dma-domain-names = "slave";
+> 		dma-domains = <&main_udmap>;
+> 
+> 		cbass_mcu {
+> 			/* memcpy is from mcu_udmap and slaves also */
+> 			dma-domain-names = "memcpy", "slave";
+> 			dma-domains = <&mcu_udmap>, <&mcu_udmap>;
+> 
+> 		};
+> 	};
+> };
+> 
+> or
+> 
+> / {
+> 	/* memcpy is from edma and slaves also */
+> 	dma-domain-names = "memcpy", "slave";
+> 	dma-domains = <&edma>, <&edma>;
+> 
+> 	edma_xbar1 xbar@0 {
+> 		/*
+> 		 * DMA router on front of edma,
+> 		 * optionally can be explicitly tell the DMA controller
+> 		 * to be used with the router if needed.
+> 		 */
+> 
+> 		dma-domain-names = "slave";
+> 		dma-domains = <&main_udmap>;
+> 	};
+> 
+> 	mcbsp muxed_dma@0 {
+> 		/* memcpy is from edma and slaves from edma_xbar1 */
+> 		dma-domain-names = "slave";
+> 		dma-domains = <&edma_xbar1>;
+> 	};
+> 
+> 	voice muxed_dma@1 {
+> 		/* memcpy is from edma and slaves from edma_xbar1 */
+> 		dma-domain-names = "slave";
+> 		dma-domains = <&edma_xbar1>;
+> 	};
+> 
+> 	something not_muxed@0 {
+> 		/* memcpy is from edma and slaves also */
+> 	};
+> };
+> 
+> Even the DMA router binding can be changed to look for the "slave"
+> domain it belongs to?
+> 
+> The the dmas can drop the phandle to the controller/router
+> 
+> Internal API wise, things could use
+> dmaengine_get_slave_domain(struct device *client_dev);
+> if we get a domain, we know the the binding does not include the phandle
+> for the controller.
+> 
+> and
+> dmaengine_get_nonslave_domain(struct device *client_dev);
+> 
+> The DMA routers and drivers might need to be changed, not sure if they
+> would notice the drop of the first phandle from the binding...
+> 
+> >>
+> >> And no, we can not start looking for the dma-domain-controller starting
+> >> from the root as in most cases the dma-domain-controller closer to the
+> >> client is what we really want and not the globally best controller.
+> >>
+> >> - How to handle the transition?
+> >>
+> >> If neither dma-domain-controller/router is found, assume that the first
+> >> argument in the binding is a phandle to the dma/router?
+> >> We need to carry the support for what we have today for a long time. The
+> >> kernel must boot with old DT blob.
+> >>
+> >> - Will it make things cleaner? Atm it is pretty easy to see which
+> >> controller/router is used for which device.
+> 
+> Is this big change worth to push for?
+> 
+> 
+> >> - Also to note that the EDMA and sDMA bindings are different, so we can
+> >> not just swap dma-domain-controller/router underneath, we also need to
+> >> modify the client's dmas line as well.
+> >>
+> >> - Péter
+> >>
+> >> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> >> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> > 
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+~Vinod
