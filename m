@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3C7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD95C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993DD214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D01206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380631;
-	bh=idB7S4GBwREfJt9IsNiq7AuzPjumW9BsBfo2bRyJezg=;
+	s=default; t=1568380635;
+	bh=Wg7z6mgIuceYzpBt4Wy510oq3yofwdeGfUZjLVoc2Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL7JgCh+kzmcuOxDgL6TlHWaNLywgbqocTv5dhgZJEcnikWcmXIvDP2rVdrlckTT4
-	 0nVThHpe+NaoaaJ+TbV8NsPE8AcYSMXLznRHz8KI8hFyS3xLNRCHqNmAJqTdBeI94Q
-	 5s4X9rLe/eElOL4Jl8TodIEpShHZ3jam2JTFJIeM=
+	b=vOY0mc63KioFC8BBS3riaK9pv9HXPlUcpa2kCuqaVRPGvP3nY59fjmspsCA2NugS2
+	 VAZIfpJxjlIoXMy+kHUt95iZohJEa0AZIHMgAPPwBRDWVsaeBae6CbTY7gM97L7s3+
+	 /nxi5vmF2SY/CuSaerJmKHPp5riim67YH1ISpBbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390012AbfIMNRK (ORCPT
+        id S2390030AbfIMNRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44168 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389415AbfIMNRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:06 -0400
+        id S2390017AbfIMNRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:12 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AD41208C0;
-        Fri, 13 Sep 2019 13:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F321206BB;
+        Fri, 13 Sep 2019 13:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380626;
-        bh=idB7S4GBwREfJt9IsNiq7AuzPjumW9BsBfo2bRyJezg=;
+        s=default; t=1568380631;
+        bh=Wg7z6mgIuceYzpBt4Wy510oq3yofwdeGfUZjLVoc2Hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oH9p1YssbclE8qHTUliWsrI/JfSXCfda4pJDY3icx7GJxlZVNe9F3v0hUaM9yRJ42
-         +ltNf0wttSWP0E9QN7NRSQ6b3SG7Jv3SyxsogmEWVzSuuZJvnPR2WGtwG6q0V8Y+cK
-         8tqi1jOI04787h4yBvhofJaTJ9hQTQLsJ5yGscTs=
+        b=0fXmfCUNU/mi7ueQiRgYQ6yo4+S4Tt3luJWhc291AyyDOx01GFnlh9rO7rY0mlnhg
+         Z7hLKMUiZ7TzbZuMIVn5RairskfRyA850oqpqnrIFYRnwheQ+hdZzk5j3gMrXpSisS
+         CE6G63V+sTKX2rTWAQKnIa4r7dmP6sQJ6CbQFKwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@vger.kernl.org,
-        Yufen Yu <yuyufen@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/190] dm mpath: fix missing call of path selector type->end_io
-Date:   Fri, 13 Sep 2019 14:06:21 +0100
-Message-Id: <20190913130609.957728739@linuxfoundation.org>
+Subject: [PATCH 4.19 128/190] mmc: sdhci-pci: Add support for Intel CML
+Date:   Fri, 13 Sep 2019 14:06:23 +0100
+Message-Id: <20190913130610.137457843@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,139 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5de719e3d01b4abe0de0d7b857148a880ff2a90b ]
+[ Upstream commit 765c59675ab571caf7ada456bbfd23a73136b535 ]
 
-After commit 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via
-blk_insert_cloned_request feedback"), map_request() will requeue the tio
-when issued clone request return BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE.
+Add PCI Ids for Intel CML.
 
-Thus, if device driver status is error, a tio may be requeued multiple
-times until the return value is not DM_MAPIO_REQUEUE.  That means
-type->start_io may be called multiple times, while type->end_io is only
-called when IO complete.
-
-In fact, even without commit 396eaf21ee17, setup_clone() failure can
-also cause tio requeue and associated missed call to type->end_io.
-
-The service-time path selector selects path based on in_flight_size,
-which is increased by st_start_io() and decreased by st_end_io().
-Missed calls to st_end_io() can lead to in_flight_size count error and
-will cause the selector to make the wrong choice.  In addition,
-queue-length path selector will also be affected.
-
-To fix the problem, call type->end_io in ->release_clone_rq before tio
-requeue.  map_info is passed to ->release_clone_rq() for map_request()
-error path that result in requeue.
-
-Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
-Cc: stable@vger.kernl.org
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-mpath.c         | 17 ++++++++++++++++-
- drivers/md/dm-rq.c            |  8 ++++----
- drivers/md/dm-target.c        |  3 ++-
- include/linux/device-mapper.h |  3 ++-
- 4 files changed, 24 insertions(+), 7 deletions(-)
+ drivers/mmc/host/sdhci-pci-core.c | 2 ++
+ drivers/mmc/host/sdhci-pci.h      | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-index baa966e2778c0..481e54ded9dc7 100644
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -554,8 +554,23 @@ static int multipath_clone_and_map(struct dm_target *ti, struct request *rq,
- 	return DM_MAPIO_REMAPPED;
- }
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+index c4115bae5db18..71794391f48fa 100644
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -1577,6 +1577,8 @@ static const struct pci_device_id pci_ids[] = {
+ 	SDHCI_PCI_DEVICE(INTEL, CNPH_SD,   intel_byt_sd),
+ 	SDHCI_PCI_DEVICE(INTEL, ICP_EMMC,  intel_glk_emmc),
+ 	SDHCI_PCI_DEVICE(INTEL, ICP_SD,    intel_byt_sd),
++	SDHCI_PCI_DEVICE(INTEL, CML_EMMC,  intel_glk_emmc),
++	SDHCI_PCI_DEVICE(INTEL, CML_SD,    intel_byt_sd),
+ 	SDHCI_PCI_DEVICE(O2, 8120,     o2),
+ 	SDHCI_PCI_DEVICE(O2, 8220,     o2),
+ 	SDHCI_PCI_DEVICE(O2, 8221,     o2),
+diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
+index 2ef0bdca91974..6f04a62b2998e 100644
+--- a/drivers/mmc/host/sdhci-pci.h
++++ b/drivers/mmc/host/sdhci-pci.h
+@@ -50,6 +50,8 @@
+ #define PCI_DEVICE_ID_INTEL_CNPH_SD	0xa375
+ #define PCI_DEVICE_ID_INTEL_ICP_EMMC	0x34c4
+ #define PCI_DEVICE_ID_INTEL_ICP_SD	0x34f8
++#define PCI_DEVICE_ID_INTEL_CML_EMMC	0x02c4
++#define PCI_DEVICE_ID_INTEL_CML_SD	0x02f5
  
--static void multipath_release_clone(struct request *clone)
-+static void multipath_release_clone(struct request *clone,
-+				    union map_info *map_context)
- {
-+	if (unlikely(map_context)) {
-+		/*
-+		 * non-NULL map_context means caller is still map
-+		 * method; must undo multipath_clone_and_map()
-+		 */
-+		struct dm_mpath_io *mpio = get_mpio(map_context);
-+		struct pgpath *pgpath = mpio->pgpath;
-+
-+		if (pgpath && pgpath->pg->ps.type->end_io)
-+			pgpath->pg->ps.type->end_io(&pgpath->pg->ps,
-+						    &pgpath->path,
-+						    mpio->nr_bytes);
-+	}
-+
- 	blk_put_request(clone);
- }
- 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 264b84e274aac..17c6a73c536c6 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -219,7 +219,7 @@ static void dm_end_request(struct request *clone, blk_status_t error)
- 	struct request *rq = tio->orig;
- 
- 	blk_rq_unprep_clone(clone);
--	tio->ti->type->release_clone_rq(clone);
-+	tio->ti->type->release_clone_rq(clone, NULL);
- 
- 	rq_end_stats(md, rq);
- 	if (!rq->q->mq_ops)
-@@ -270,7 +270,7 @@ static void dm_requeue_original_request(struct dm_rq_target_io *tio, bool delay_
- 	rq_end_stats(md, rq);
- 	if (tio->clone) {
- 		blk_rq_unprep_clone(tio->clone);
--		tio->ti->type->release_clone_rq(tio->clone);
-+		tio->ti->type->release_clone_rq(tio->clone, NULL);
- 	}
- 
- 	if (!rq->q->mq_ops)
-@@ -495,7 +495,7 @@ check_again:
- 	case DM_MAPIO_REMAPPED:
- 		if (setup_clone(clone, rq, tio, GFP_ATOMIC)) {
- 			/* -ENOMEM */
--			ti->type->release_clone_rq(clone);
-+			ti->type->release_clone_rq(clone, &tio->info);
- 			return DM_MAPIO_REQUEUE;
- 		}
- 
-@@ -505,7 +505,7 @@ check_again:
- 		ret = dm_dispatch_clone_request(clone, rq);
- 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
- 			blk_rq_unprep_clone(clone);
--			tio->ti->type->release_clone_rq(clone);
-+			tio->ti->type->release_clone_rq(clone, &tio->info);
- 			tio->clone = NULL;
- 			if (!rq->q->mq_ops)
- 				r = DM_MAPIO_DELAY_REQUEUE;
-diff --git a/drivers/md/dm-target.c b/drivers/md/dm-target.c
-index 314d17ca64668..64dd0b34fcf49 100644
---- a/drivers/md/dm-target.c
-+++ b/drivers/md/dm-target.c
-@@ -136,7 +136,8 @@ static int io_err_clone_and_map_rq(struct dm_target *ti, struct request *rq,
- 	return DM_MAPIO_KILL;
- }
- 
--static void io_err_release_clone_rq(struct request *clone)
-+static void io_err_release_clone_rq(struct request *clone,
-+				    union map_info *map_context)
- {
- }
- 
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index bef2e36c01b4b..91f9f95ad5066 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -62,7 +62,8 @@ typedef int (*dm_clone_and_map_request_fn) (struct dm_target *ti,
- 					    struct request *rq,
- 					    union map_info *map_context,
- 					    struct request **clone);
--typedef void (*dm_release_clone_request_fn) (struct request *clone);
-+typedef void (*dm_release_clone_request_fn) (struct request *clone,
-+					     union map_info *map_context);
- 
- /*
-  * Returns:
+ #define PCI_DEVICE_ID_SYSKONNECT_8000	0x8000
+ #define PCI_DEVICE_ID_VIA_95D0		0x95d0
 -- 
 2.20.1
 
