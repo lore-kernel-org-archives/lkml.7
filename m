@@ -2,241 +2,123 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7333C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798C420644
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gCqAsImP"
+	by mail.kernel.org (Postfix) with ESMTP id 6224B2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568367279;
+	bh=H9+NtvTN5Oyf3/3qCq7otSn6j+SjdYcEzVoUk777SgQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tczCtdGP8bcJuH9SJ3Eas++KV0JSARJsZnNv8e1PUGNuBAgCMoLe9NBeg6erFVeKZ
+	 VFrJ6H/pxv8t1yPICAantTu5Rx+q1wzyhVHCGVKlNevFOQ2FJkZNpPde7vjtOG90d6
+	 81Wfl+mAKdp81nIrJCSiH04mLwVQsokaO1g8C//c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388064AbfIMJdH (ORCPT
+        id S2388080AbfIMJei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:33:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38183 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388052AbfIMJdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:33:06 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l11so31337389wrx.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=YWFP3fiiNLYjg5KjJkJ+a3OV517hoFU0pK03RFIpW6w=;
-        b=gCqAsImP3QV/jRpUp78X70WSTXJQi/V7ELSvPz73RKUCHgYp7clqnmXe5aMb1WE3WF
-         BhHJw6DNizcIemoU1Npdpt6mBaQ4KgActLaEh6iHNVHTEfXbEj7synOzvxUt2oLPcS4U
-         MmIg8CnTk63LRlYYi1AhYyFVbQH3OBFGGf/3/UoSe/WQlaKvqxgai7pJ8zp+N45VJjHR
-         hs+o66YyYZqE7+EmfYGF4kBzeRNepmy9w1m8jZHk1ZuxO+bRfspNI3pv1D33KxL0AqqS
-         auQadt4ZeBxwA0IiAe/NVOFU0aQx5sSqJ6YDk/7OCdakTwNDoSmMTWSc0iwZt57jaumf
-         Ly2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to;
-        bh=YWFP3fiiNLYjg5KjJkJ+a3OV517hoFU0pK03RFIpW6w=;
-        b=OCP0Fp57i++qEdBrqAMfZbp50H69/xs9PXcsCQYRq7QlBtTqXvOyU1omkHj0Qkm5r1
-         cseaIcXfoUfm2IFtWZVmHRFOvHjNQJUKGGKRmCiDLdXUPJLcdRgfv/OXEUSpJ8r7DKjm
-         3Rfic13uNSGvQZFUZbSnw2b0QJKmJWt+ffMrVBVt2U1h6JwGbtosPtnkJ2MWSJLobvsw
-         q+sDkPecfC/zsFWXdJN2SM7pKK6LG/yooSrImqYDrgsRuZpnfENqtGh1vdpEDI96d9rM
-         +gbv69eQufUWVgJCgsTKFvfohc9XloN5bGsrRRekqJ10gVwAiodcDEvTbpV2sI5xKGHo
-         pwGA==
-X-Gm-Message-State: APjAAAUS8vvAFUMroGBOYESpqpmzhIfBVuXzXQWHH1tPXw3BedNeYIXe
-        OPk5L5yLeKI7vT9sIiuj1b/cag==
-X-Google-Smtp-Source: APXvYqyTnY/BRnv5bnnwc3B97riovmka3Ma52ZQaQTgF3mOK8Nhr8fElod8xICY3ABgLgTy6zXeJkA==
-X-Received: by 2002:a5d:650d:: with SMTP id x13mr5675866wru.37.1568367184374;
-        Fri, 13 Sep 2019 02:33:04 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h8sm679528wmc.5.2019.09.13.02.33.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Sep 2019 02:33:03 -0700 (PDT)
-Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Cheng-yi Chiang <cychiang@chromium.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>
-References: <20190717083327.47646-1-cychiang@chromium.org>
- <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
- <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
- <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
- <7019a223-cc97-e1c6-907b-e6b3d626164f@baylibre.com>
- <20190909135346.GG2036@sirena.org.uk>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <3fc94731-f66a-223d-995e-97ac67f9e882@baylibre.com>
-Date:   Fri, 13 Sep 2019 11:32:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 05:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388065AbfIMJei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 05:34:38 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4242089F;
+        Fri, 13 Sep 2019 09:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568367277;
+        bh=H9+NtvTN5Oyf3/3qCq7otSn6j+SjdYcEzVoUk777SgQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JUqhdO25DXtP+/RWXYCZ+QzcenkF30JQc17F0M637aEG6Cr7d9fjAAghLKlTBks1m
+         PZdMQr0mtwB+Q1ancXtSnTJDmjouIGnkh00QbSaAl4KEJ54L9val4FyW2vkiT4yBvV
+         FYkafksXggWKy+TYjnm8Jp0xTNYfexQvhn1KtrXs=
+Received: by mail-lj1-f172.google.com with SMTP id a4so26411321ljk.8;
+        Fri, 13 Sep 2019 02:34:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXzwVcrCGOaqX9IHoNh6bEmuCu6hStgnkXWjzfvHlJqe6ZHz0UZ
+        grnw1vz7rnXzMfC5oNF2Vu5Wgkk00UdbD6DOOBI=
+X-Google-Smtp-Source: APXvYqy5o658AEBPc5fOVRFV7GUypotpgi43Z/aqyQfjnJkobgK4lZIRZ8dAvgCn3EqfTws0Ta/hoGRE/Pj+V5zRQXQ=
+X-Received: by 2002:a2e:8785:: with SMTP id n5mr25373427lji.210.1568367275146;
+ Fri, 13 Sep 2019 02:34:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190909135346.GG2036@sirena.org.uk>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl"
+References: <20190912093315.5744-1-m.falkowski@samsung.com>
+ <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
+ <20190912161538.4321-1-m.falkowski@samsung.com> <20190913062945.GA10283@pi3>
+ <e082996a-743d-807a-38c0-dee65b490771@samsung.com> <CAJKOXPdSQJ4CR_0BQjudx1NdaC0E_rU8ZDtFVSB9XwcTbxSdUg@mail.gmail.com>
+In-Reply-To: <CAJKOXPdSQJ4CR_0BQjudx1NdaC0E_rU8ZDtFVSB9XwcTbxSdUg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 13 Sep 2019 11:34:23 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd58jsqSycgQF=v_iBti292X+ECeCQ0Tf7ErycYXrkTmQ@mail.gmail.com>
+Message-ID: <CAJKOXPd58jsqSycgQF=v_iBti292X+ECeCQ0Tf7ErycYXrkTmQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to dt-schema
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Maciej Falkowski <m.falkowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        Andrzej Hajda <a.hajda@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl
-Content-Type: multipart/mixed; boundary="rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY";
- protected-headers="v1"
-From: Neil Armstrong <narmstrong@baylibre.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Cheng-yi Chiang <cychiang@chromium.org>,
- Tzung-Bi Shih <tzungbi@google.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Hans Verkuil <hverkuil@xs4all.nl>, Liam Girdwood <lgirdwood@gmail.com>,
- Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
- Russell King <rmk+kernel@armlinux.org.uk>,
- Andrzej Hajda <a.hajda@samsung.com>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- Heiko Stuebner <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>,
- Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
- ALSA development <alsa-devel@alsa-project.org>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, Jernej Skrabec
- <jernej.skrabec@siol.net>, Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <3fc94731-f66a-223d-995e-97ac67f9e882@baylibre.com>
-Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
-References: <20190717083327.47646-1-cychiang@chromium.org>
- <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
- <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
- <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
- <7019a223-cc97-e1c6-907b-e6b3d626164f@baylibre.com>
- <20190909135346.GG2036@sirena.org.uk>
-In-Reply-To: <20190909135346.GG2036@sirena.org.uk>
+On Fri, 13 Sep 2019 at 11:29, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Fri, 13 Sep 2019 at 11:15, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> >
+> > Hi Krzysztof,
+> >
+> > On 9/13/19 8:29 AM, Krzysztof Kozlowski wrote:
+> > > On Thu, Sep 12, 2019 at 06:15:38PM +0200, Maciej Falkowski wrote:
+> > >> Convert Samsung Image Rotator to newer dt-schema format.
+> > >>
+> > >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> > >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > Just to make it clear, Marek's signed-off should appear for one of
+> > > conditions:
+> > >   - he contributed some source code to your patch,
+> > >   - he took your patch, rebased, send by himself (not a case here, I
+> > >     think),
+> > >   - he contributed significant ideas, although for this there is a
+> > >     "Co-developed-by" tag.
+> > >
+> > > If someone made just review - add Reviewed-by. If someone suggested the
+> > > patch - add Suggested-by.
+> >
+> > My signed-off here was added to mark that this patch is allowed to be
+> > submitted to the public mailing list, as I have required company
+> > permissions for such activity. It is not that uncommon that a given
+> > patch has more than one signed-off and still the main author has the
+> > first signed-off tag.
+>
+> Thanks for explanations. If I understand correctly, your SoB appears
+> because some internal Samsung rules. That is not what SoB is meant
+> for:
+> https://elixir.bootlin.com/linux/v5.3-rc8/source/Documentation/process/submitting-patches.rst#L431
+> If you do not contributed to the patch, did not touch it (e.g.
+> rebasing) and you are not sending it, then your SoB should not be
+> there. It looks like the same madness with Kyungmin Park long time
+> ago:
+> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/commit/?h=for-next&id=6c6cf64b16438eac6da9a90412a82316ad196e7c
+> Every patch was marked with SoB even though he was not involved at all
+> in the process.
+>
+> That's not what kernel's SoB is for.
 
---rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Ah, and if you meant that Maciej does not have the permissions to send
+the patches, then your SoB along with patch going through your account
+makes sense. Otherwise, adding your SoB and sending by Maciej, is a
+joke of company regulations. It means absolutely nothing and then
+strip it out.
 
-Hi,
-
-On 09/09/2019 15:53, Mark Brown wrote:
-> On Mon, Sep 09, 2019 at 09:37:14AM +0200, Neil Armstrong wrote:
->=20
->> I'd like some review from ASoC people and other drm bridge reviewers,
->> Jernej, Jonas & Andrzej.
->=20
->> Jonas could have some comments on the overall patchset.
->=20
-> The ASoC bits look basically fine, I've gone ahead and applied
-> patch 1 as is since we're just before the merge window and that
-> way we reduce potential cross tree issues.  I know there's a lot
-> of discussion on the DRM side about how they want to handle
-> things with jacks, I'm not 100% sure what the latest thinking is
-> there.
->=20
-
-Thanks Mark.
-
-
-Cheng-Yi can you resent this serie without the already applied
-first patch with Jernej, Jonas, and Jerome Brunet <jbrunet@baylibre.com> =
-CCed ?
-
-Thanks,
-Neil
-
-
---rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY--
-
---UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEPVPGJshWBf4d9CyLd9zb2sjISdEFAl17YkkACgkQd9zb2sjI
-SdFL8xAAm/uVVOJY0VK0uVX/gv2nNJ+t90WPrW3BfoWCLRaSr1czldafQkylTwQl
-EOHl8NcYz5pttql0d1ZKh6uZSCTsMtWRb6Qwm14c3ptFaD9y1TI8X+R+zryTIgA5
-fuaLScVQ+kDpMwWYvZvVdWnu7/7Wdtj+uDNEooXlxeIvylxQzPYGQLcrdyZz54DZ
-vPl/scouuoKobHYXHw5AUs/ipsHUxcfD9wm+s4lrcIcE8FSjoVqbwZsonqDlHfOY
-lCykwi/sj2A567r0fL0Qipj4cqa5Zzvy955v0K5E1bHbTFs3I9kKsMsrLmYrpVB8
-pG+Tz31EKziArzadGNlxjjI6ViRQxwXAOPUfDZW7JFmWPD+aF2ZquQttp3GGlbwf
-9ndAcqd0yPqBaWwaPWAZJ/CbZiKPeDtAVcBtiR/pHYDUgMiDq88O3deynxUer4qw
-06IrtU9X8yn02vEh2L+6fLCG3NfMCUdyl4lRCmxSJ8K83pCOx1iMpcawEJq+xktX
-qvQVxXHrp1D5drRUA+87MDZmI5aQ/9HoYY+tIMTC21D7JFB/x2U6n0nFRyLi/muG
-gD0oD4cBhYhH+xJhKQeBmx+cA6xb90J4mfzFvpWvwDeGNsJJ+QaLGmdz9b50Aqd9
-XKP4tzxUvHbepIhN1NPCh1Xe2cU06KRt2S/ID9usnk2cnXoigUg=
-=JmCa
------END PGP SIGNATURE-----
-
---UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl--
+Best regards,
+Krzysztof
