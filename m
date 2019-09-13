@@ -2,85 +2,84 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC2C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D006BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C14220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A590720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388802AbfIMONr (ORCPT
+        id S2389012AbfIMON4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:13:47 -0400
-Received: from sauhun.de ([88.99.104.3]:35910 "EHLO pokefinder.org"
+        Fri, 13 Sep 2019 10:13:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:53775 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388349AbfIMONr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:13:47 -0400
-Received: from localhost (234.77.63.94.rev.vodafone.pt [94.63.77.234])
-        by pokefinder.org (Postfix) with ESMTPSA id 8BC042C3115;
-        Fri, 13 Sep 2019 16:13:45 +0200 (CEST)
-Date:   Fri, 13 Sep 2019 15:13:45 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     andy.shevchenko@gmail.com, rafael@kernel.org, leoyang.li@nxp.com,
-        meenakshi.aggarwal@nxp.com, udit.kumar@nxp.com, rjw@rjwysocki.net,
-        chuanhua.han@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [v2] ACPI: support for NXP i2c controller
-Message-ID: <20190913141344.GB1022@kunai>
-References: <20190906075319.21244-1-biwen.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-In-Reply-To: <20190906075319.21244-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S2388349AbfIMONz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:13:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 07:13:54 -0700
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="385420725"
+Received: from jacubero-mobl.amr.corp.intel.com ([10.254.63.107])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 07:13:54 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [BUG RT] backtrace on v5.2.9-rt3
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+In-Reply-To: <20190913134243.3zoliue6yqfzyatl@linutronix.de>
+Date:   Fri, 13 Sep 2019 07:13:53 -0700
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <67E837E1-E67B-4C49-96EF-4626CFE71954@linux.intel.com>
+References: <20190830120106.301bd9f3@gandalf.local.home>
+ <20190913134243.3zoliue6yqfzyatl@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 06, 2019 at 03:53:19PM +0800, Biwen Li wrote:
-> From: Chuanhua Han <chuanhua.han@nxp.com>
->=20
-> Enable NXP i2c controller to boot with ACPI
->=20
-> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> On Sep 13, 2019, at 6:42 AM, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> 
+> On 2019-08-30 12:01:06 [-0400], Steven Rostedt wrote:
+>> 
+>> I'm triggering the following call splat on 5.2-rt.
+>> 
+>> [   63.099414] 006: BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
+>> [   63.108423] 006: in_atomic(): 0, irqs_disabled(): 1, pid: 173, name: kworker/6:1
+> …
+>> [   63.141041] 006: Call Trace:
+>> [   63.143916] 006:  dump_stack+0x5c/0x80
+>> [   63.147654] 006:  ___might_sleep.cold.92+0x8d/0x9a
+>> [   63.152423] 006:  rt_spin_lock+0x31/0x40
+>> [   63.156332] 006:  intel_engine_breadcrumbs_irq+0x56/0x320 [i915]
+>> [   63.162350] 006:  intel_engine_signal_breadcrumbs+0x11/0x20 [i915]
+>> [   63.168540] 006:  i915_hangcheck_elapsed+0x199/0x420 [i915]
+> …
+>> [   63.309375] 006:  process_one_work+0x1e8/0x4c0
+> …
+>> Attached is the config and the full dmesg.
+> 
+> just for book keeping: Clark reported the same thing, posted patches and
+> will try an alternative on Monday (as far as I'm been told). I will
+> continue to reply in the other thread.
+> 
+> Sebastian
 
-Added Rafael's tag from v1 and applied to for-next, thanks!
+I was able to reproduce Clark’s earlier splat report and also test the posted patches with no issues. 
+This was also the approach that Chris Wilson suggested.  I agree Steven’s issue looks to be the same, but with LPC did not have time to go back to it.
 
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl17pBgACgkQFA3kzBSg
-Kba+Cg//Q9SHjSTH13UGRUp2U0vv+JXhqpjqwDHNLtrcgLy5K1XTRpVp+HFwE/kt
-RWOBpIHo4UHOwHLpxX9TcHYdKNPg/ZZx0lfoyIP4M50aznEXoDXxYeXTvtM+2RId
-gaTu/w6OHA2wIDty+8cCuJMzxiYeS+AEwgVn82WcF19ZFzFehCpUs6j0w1aqBi2k
-NunT4wQUO4AUlI9TdMUwY5/xm5/DZPKLYHtH3P6GKQTGkR0t3gyFTeVfNWtg8INJ
-Ih3bPh0bFO5IZXkUC46mRxuLaAM7q/WbfZ5kj8UyQz/3VZq0td+mGWnRfVix5P7v
-8if1Ay8jrv5bsiCcpfFmZMZteR4qseNNW+l9JL3yd3hjeH0pljaC8TiDxjIfEqYm
-O3kvmj7T0ZEGmrgFppq/81jH5+xFK5zShpCT6ijTubt8Pr/FTGSGzGX28jBQ240V
-ftguvv8FLZUBmHH8990eLIgHn1xHdETs2u1yutwlJxWN+UyJMeOBuwc6d2nwkNXR
-gixUEQOcQxdGjBAXZg6fmeuJpUvg2izKadNmkPDXILzp1VupbyqotIMlHPLHOD4X
-ky5v2eFbZfriCe4CbZqqV98pxIZFskzdHjZkXCNqzjGUpSz5Fgq8W6SWgzOJ40n6
-VA2OMoXrj72XfReZE7k+1IKRg6ZhAZXAv5tXsmuxs2W5VmGsBRg=
-=Jmts
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+Sean
