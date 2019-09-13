@@ -2,215 +2,103 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF03C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9219C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C27F206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AD620640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568381373;
+	bh=+HLiC11vGqxHSXKdFpYDJRMhz3DLeHPkz4fOm8VWOuc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GhT3/tXSaZrJiREywGlF7PVJEh6xvvyI3zl+4LO4j3mUeb5mlL4c+IMEucQ+elirJ
+	 oveYbHrEaZQqGfM4gW/ZXc8DQccwx0ui1tuDrenN0HRd2/bAvjtb7wiBR8IseWdhcV
+	 i/uyZK6cIPH0Ya+Rxt+Ut2Sz2FM7bCcKfOdc8+U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391555AbfIMN3V (ORCPT
+        id S2391654AbfIMN3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:29:21 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33885 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390444AbfIMNT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:58 -0400
-Received: from [IPv6:2001:420:44c1:2577:888a:538c:8dda:557b] ([IPv6:2001:420:44c1:2577:888a:538c:8dda:557b])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 8lUOiWodCV17O8lURi2q7R; Fri, 13 Sep 2019 15:19:55 +0200
-Subject: Re: [Patch 12/13] media: am437x-vpfe: Remove per bus width static
- data
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-13-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <add3cb62-1391-f8e3-15f3-f1345e18da47@xs4all.nl>
-Date:   Fri, 13 Sep 2019 15:19:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 09:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390390AbfIMNTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:14 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE45F20640;
+        Fri, 13 Sep 2019 13:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380753;
+        bh=+HLiC11vGqxHSXKdFpYDJRMhz3DLeHPkz4fOm8VWOuc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hNW2KzMruo4eaKmDpri9ZyrSMUrlDW6AUVRx4t0vAUYJ5cX9QbPi6QkNHD/KKmcNx
+         hqMO43PGRsKu7JiYTvdqInR6abFG9sHyjTnf9HYiFESRH/TEJ3/ji3WQzrGKqaw4B+
+         uRM1Uy2gU2AR+72dNYeid0gmnmL7/EYtIBCKzDgQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 146/190] scsi: target/iblock: Fix overrun in WRITE SAME emulation
+Date:   Fri, 13 Sep 2019 14:06:41 +0100
+Message-Id: <20190913130611.632934574@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
+References: <20190913130559.669563815@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190909162743.30114-13-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDPD79xpkAXnqWG0IqlGd95oDOl6bT+t+OMAuRgFfzmSo+y5satYA0w6avFYMQClcPT72By7btbxBlcfIXJSYFPmzapLt0p05YQz0Ot3cIej0Rrjv4rD
- TKGUjwt56ya8Kk68vFVAt6s0E8gulCm1cc+HpK1IMy8v+ScJy7+KSr7sSe9EneEp6fgS1+OyQ84o9VQBbAa+ePjkH2/hsogZjV+3lAtajqplQ7d6Zfk3drHT
- Fb0mX1fXJmHUFDdc4fsSWJ1Ex4z7/OOTkLfNU70O3a3x+vnAe7yNOIxlzqQQZnuNUTb4KnPYY/bUrtZweAkj0NinkPrpt0O2Pj9yPiKbxdWq3wmYBueBtsYO
- SuyWNIAajdqqtnl1BvkyjHMFrXIlbtnhaLlh0oXT71i5JixTJfK12uwvqfweIBHva2PL4usEX/Ij6hmDt1IVHFyRcEJCaw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> The bus related static data include in the vpfe_fmt
-> static table can be derived dynamically instead.
-> This simplify the table and it's use.
+[ Upstream commit 5676234f20fef02f6ca9bd66c63a8860fce62645 ]
 
-simplify -> simplifies
-it's -> its
+WRITE SAME corrupts data on the block device behind iblock if the command
+is emulated. The emulation code issues (M - 1) * N times more bios than
+requested, where M is the number of 512 blocks per real block size and N is
+the NUMBER OF LOGICAL BLOCKS specified in WRITE SAME command. So, for a
+device with 4k blocks, 7 * N more LBAs gets written after the requested
+range.
 
-> 
-> We instead replace the per bus data info with just
-> the usual bit per pixel value for each supported
+The issue happens because the number of 512 byte sectors to be written is
+decreased one by one while the real bios are typically from 1 to 8 512 byte
+sectors per bio.
 
-bit -> bits
+Fixes: c66ac9db8d4a ("[SCSI] target: Add LIO target core v4.0.0-rc6")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_iblock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> pixel format.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/am437x/am437x-vpfe.c | 56 ++++++---------------
->  drivers/media/platform/am437x/am437x-vpfe.h | 16 +-----
->  2 files changed, 16 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> index 9759ed398943..9855d4cb1d13 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> @@ -73,73 +73,43 @@ static struct vpfe_fmt formats[] = {
->  	{
->  		.fourcc		= V4L2_PIX_FMT_YUYV,
->  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_UYVY,
->  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_YVYU,
->  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_VYUY,
->  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
->  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 2,
-> -		.s.width	= 8,
-> -		.s.bpp		= 1,
-> +		.bitsperpixel	= 8,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
->  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 2,
-> -		.s.width	= 8,
-> -		.s.bpp		= 1,
-> +		.bitsperpixel	= 8,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
->  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 2,
-> -		.s.width	= 8,
-> -		.s.bpp		= 1,
-> +		.bitsperpixel	= 8,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
->  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
-> -		.l.width	= 10,
-> -		.l.bpp		= 2,
-> -		.s.width	= 8,
-> -		.s.bpp		= 1,
-> +		.bitsperpixel	= 8,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_RGB565,
->  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_RGB565X,
->  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
-> -		.l.width	= 10,
-> -		.l.bpp		= 4,
-> -		.s.width	= 8,
-> -		.s.bpp		= 2,
-> +		.bitsperpixel	= 16,
->  	},
->  };
->  
-> @@ -184,9 +154,11 @@ static unsigned int __get_bytesperpixel(struct vpfe_device *vpfe,
->  {
->  	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
->  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
-> -	u32 bpp;
-> +	u32 bpp, bus_width_bytes, clocksperpixel;
->  
-> -	bpp = (bus_width == 10) ? fmt->l.bpp : fmt->s.bpp;
-> +	bus_width_bytes = ALIGN(bus_width, 8) >> 3;
-> +	clocksperpixel = DIV_ROUND_UP(fmt->bitsperpixel, bus_width);
-> +	bpp = clocksperpixel * bus_width_bytes;
->  
->  	return bpp;
->  }
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-> index 0d10d2b4d7a2..2c9e89395bea 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.h
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.h
-> @@ -215,28 +215,16 @@ struct vpfe_ccdc {
->  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
->  };
->  
-> -/*
-> - * struct bus_format - VPFE bus format information
-> - * @width: Bits per pixel (when transferred over a bus)
-> - * @bpp: Bytes per pixel (when stored in memory)
-> - */
-> -struct bus_format {
-> -	unsigned int width;
-> -	unsigned int bpp;
-> -};
-> -
->  /*
->   * struct vpfe_fmt - VPFE media bus format information
->   * @fourcc: V4L2 pixel format code
->   * @code: V4L2 media bus format code
-> - * @l: 10 bit bus format info
-> - * @s: 8 bit bus format info
-> + * @bitsperpixel: Bits per pixel over the bus
->   */
->  struct vpfe_fmt {
->  	u32 fourcc;
->  	u32 code;
-> -	struct bus_format l;
-> -	struct bus_format s;
-> +	u32 bitsperpixel;
->  };
->  
->  /*
-> 
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 1bc9b14236d8b..854b2bcca7c1a 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -515,7 +515,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+ 
+ 		/* Always in 512 byte units for Linux/Block */
+ 		block_lba += sg->length >> SECTOR_SHIFT;
+-		sectors -= 1;
++		sectors -= sg->length >> SECTOR_SHIFT;
+ 	}
+ 
+ 	iblock_submit_bios(&list);
+-- 
+2.20.1
 
-Regards,
 
-	Hans
+
