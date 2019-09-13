@@ -2,33 +2,33 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E53FC4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B246C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351EC20856
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F34D20856
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfIMBO7 (ORCPT
+        id S1728555AbfIMBOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 21:14:59 -0400
+        Thu, 12 Sep 2019 21:14:47 -0400
 Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfIMBOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:14:47 -0400
+        id S1727518AbfIMBOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:14:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:47 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197403712"
+   d="scan'208";a="197403705"
 Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:46 -0700
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:43 -0700
 From:   Megha Dey <megha.dey@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
@@ -38,213 +38,225 @@ Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
         Megha Dey <megha.dey@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: [RFC V1 5/7] x86/ims: Introduce x86_ims_ops
-Date:   Thu, 12 Sep 2019 18:32:06 -0700
-Message-Id: <1568338328-22458-6-git-send-email-megha.dey@linux.intel.com>
+Subject: [RFC V1 3/7] x86/ims: Add support for a new IMS irq domain
+Date:   Thu, 12 Sep 2019 18:32:04 -0700
+Message-Id: <1568338328-22458-4-git-send-email-megha.dey@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
 References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces an x86 specific indirect mechanism to setup the
-interrupt message storage. The IMS specific functions (setup, teardown,
-restore) become function pointers in an x86_ims_ops struct, that
-defaults to their implementations in ims.c and ims-msi.c.
+This patch adds support for the creation of a new IMS irq domain. It
+creates a new irq_chip associated with the IMS domain and adds the
+necessary domain operations to it.
 
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- arch/x86/include/asm/pci.h      |  4 ++++
- arch/x86/include/asm/x86_init.h | 10 ++++++++++
- arch/x86/kernel/apic/ims.c      | 18 ++++++++++++++++++
- arch/x86/kernel/x86_init.c      | 23 +++++++++++++++++++++++
- drivers/base/ims-msi.c          | 34 ++++++++++++++++++++++++++++++++++
- include/linux/msi.h             |  6 ++++++
- 6 files changed, 95 insertions(+)
+ arch/x86/include/asm/msi.h       |  4 ++
+ arch/x86/kernel/apic/Makefile    |  1 +
+ arch/x86/kernel/apic/ims.c       | 93 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/apic/msi.c       |  4 +-
+ drivers/vfio/mdev/mdev_core.c    |  6 +++
+ drivers/vfio/mdev/mdev_private.h |  1 -
+ include/linux/mdev.h             |  2 +
+ 7 files changed, 108 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/kernel/apic/ims.c
 
-diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-index e662f98..2ef513f 100644
---- a/arch/x86/include/asm/pci.h
-+++ b/arch/x86/include/asm/pci.h
-@@ -114,6 +114,10 @@ struct msi_desc;
- int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
- void native_teardown_msi_irq(unsigned int irq);
- void native_restore_msi_irqs(struct pci_dev *dev);
-+#ifdef CONFIG_MSI_IMS
-+int native_setup_ims_irqs(struct device *dev, int nvec);
-+#endif
-+
- #else
- #define native_setup_msi_irqs		NULL
- #define native_teardown_msi_irq		NULL
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index ac09341..9c2cbbb 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -287,6 +287,15 @@ struct x86_msi_ops {
- 	void (*restore_msi_irqs)(struct pci_dev *dev);
- };
+diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+index 25ddd09..51f9d25 100644
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
  
-+struct device;
-+
-+struct x86_ims_ops {
-+	int (*setup_ims_irqs)(struct device *dev, int nvec);
-+	void (*teardown_ims_irq)(unsigned int irq);
-+	void (*teardown_ims_irqs)(struct device *dev);
-+	void (*restore_ims_irqs)(struct device *dev);
-+};
-+
- struct x86_apic_ops {
- 	unsigned int	(*io_apic_read)   (unsigned int apic, unsigned int reg);
- 	void		(*restore)(void);
-@@ -297,6 +306,7 @@ extern struct x86_cpuinit_ops x86_cpuinit;
- extern struct x86_platform_ops x86_platform;
- extern struct x86_msi_ops x86_msi;
- extern struct x86_apic_ops x86_apic_ops;
-+extern struct x86_ims_ops x86_ims;
+ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
  
- extern void x86_early_init_platform_quirks(void);
- extern void x86_init_noop(void);
++struct msi_domain_info;
++
++irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
++						msi_alloc_info_t *arg);
+ #endif /* _ASM_X86_MSI_H */
+diff --git a/arch/x86/kernel/apic/Makefile b/arch/x86/kernel/apic/Makefile
+index a6fcaf16..75a2270 100644
+--- a/arch/x86/kernel/apic/Makefile
++++ b/arch/x86/kernel/apic/Makefile
+@@ -12,6 +12,7 @@ obj-y				+= hw_nmi.o
+ 
+ obj-$(CONFIG_X86_IO_APIC)	+= io_apic.o
+ obj-$(CONFIG_PCI_MSI)		+= msi.o
++obj-$(CONFIG_MSI_IMS)		+= ims.o
+ obj-$(CONFIG_SMP)		+= ipi.o
+ 
+ ifeq ($(CONFIG_X86_64),y)
 diff --git a/arch/x86/kernel/apic/ims.c b/arch/x86/kernel/apic/ims.c
-index d9808a5..a539666 100644
---- a/arch/x86/kernel/apic/ims.c
+new file mode 100644
+index 0000000..d9808a5
+--- /dev/null
 +++ b/arch/x86/kernel/apic/ims.c
-@@ -9,6 +9,7 @@
- #include <linux/irq.h>
- #include <linux/mdev.h>
- #include <linux/pci.h>
-+#include <asm/irq_remapping.h>
- 
- /*
-  * Determine if a dev is mdev or not. Return NULL if not mdev device.
-@@ -45,6 +46,23 @@ static struct pci_dev *ims_get_pci_dev(struct device *dev)
- 	return pdev;
- }
- 
-+int native_setup_ims_irqs(struct device *dev, int nvec)
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright © 2019 Intel Corporation.
++ *
++ * Author: Megha Dey <megha.dey@intel.com>
++ */
++
++#include <linux/dmar.h>
++#include <linux/irq.h>
++#include <linux/mdev.h>
++#include <linux/pci.h>
++
++/*
++ * Determine if a dev is mdev or not. Return NULL if not mdev device.
++ * Return mdev's parent dev if success.
++ */
++static inline struct device *mdev_to_parent(struct device *dev)
 +{
-+	struct irq_domain *domain;
-+	struct irq_alloc_info info;
++	struct device *ret = NULL;
++	struct device *(*fn)(struct device *dev);
++	struct bus_type *bus = symbol_get(mdev_bus_type);
++
++	if (bus && dev->bus == bus) {
++		fn = symbol_get(mdev_dev_to_parent_dev);
++		ret = fn(dev);
++		symbol_put(mdev_dev_to_parent_dev);
++		symbol_put(mdev_bus_type);
++	}
++
++	return ret;
++}
++
++static struct pci_dev *ims_get_pci_dev(struct device *dev)
++{
++	struct pci_dev *pdev;
++
++	if (dev_is_mdev(dev)) {
++		struct device *parent = mdev_to_parent(dev);
++
++		pdev = to_pci_dev(parent);
++	} else {
++		pdev = to_pci_dev(dev);
++	}
++
++	return pdev;
++}
++
++int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
++		    msi_alloc_info_t *arg)
++{
 +	struct pci_dev *pdev = ims_get_pci_dev(dev);
 +
-+	init_irq_alloc_info(&info, NULL);
-+	info.type = X86_IRQ_ALLOC_TYPE_MSIX;
-+	info.msi_dev = pdev;
++	init_irq_alloc_info(arg, NULL);
++	arg->msi_dev = pdev;
++	arg->type = X86_IRQ_ALLOC_TYPE_MSIX;
 +
-+	domain = irq_remapping_get_ims_irq_domain(&info);
-+	if (!domain)
-+		return -ENOSYS;
-+
-+	return msi_domain_alloc_irqs(domain, dev, nvec);
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(dev_ims_prepare);
 +
- int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
- 		    msi_alloc_info_t *arg)
- {
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 1bef687..3ce42d4 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -153,6 +153,29 @@ void arch_restore_msi_irqs(struct pci_dev *dev)
- }
- #endif
- 
-+#if defined(CONFIG_MSI_IMS)
-+struct x86_ims_ops x86_ims __ro_after_init = {
-+	.setup_ims_irqs		= native_setup_ims_irqs,
-+	.teardown_ims_irqs	= dev_ims_teardown_irqs,
-+	.restore_ims_irqs	= dev_ims_restore_irqs,
++#ifdef CONFIG_IRQ_REMAP
++
++static struct msi_domain_ops dev_ims_domain_ops = {
++	.get_hwirq	= msi_get_hwirq,
++	.msi_prepare	= dev_ims_prepare,
 +};
 +
-+int arch_setup_ims_irqs(struct device *dev, int nvec)
++static struct irq_chip dev_ims_ir_controller = {
++	.name			= "IR-DEV-IMS",
++	.irq_unmask		= dev_ims_unmask_irq,
++	.irq_mask		= dev_ims_mask_irq,
++	.irq_ack		= irq_chip_ack_parent,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
++	.flags			= IRQCHIP_SKIP_SET_WAKE,
++	.irq_write_msi_msg	= dev_ims_write_msg,
++};
++
++static struct msi_domain_info ims_ir_domain_info = {
++	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
++	.ops		= &dev_ims_domain_ops,
++	.chip		= &dev_ims_ir_controller,
++	.handler	= handle_edge_irq,
++	.handler_name	= "edge",
++};
++
++struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent)
 +{
-+	return x86_ims.setup_ims_irqs(dev, nvec);
++	return pci_msi_create_irq_domain(NULL, &ims_ir_domain_info, parent);
 +}
 +
-+void arch_teardown_ims_irqs(struct device *dev)
-+{
-+	x86_ims.teardown_ims_irqs(dev);
-+}
-+
-+void arch_restore_ims_irqs(struct device *dev)
-+{
-+	x86_ims.restore_ims_irqs(dev);
-+}
 +#endif
-+
- struct x86_apic_ops x86_apic_ops __ro_after_init = {
- 	.io_apic_read	= native_io_apic_read,
- 	.restore	= native_restore_boot_irq_mode,
-diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-index 68dc10f..df28ee2 100644
---- a/drivers/base/ims-msi.c
-+++ b/drivers/base/ims-msi.c
-@@ -92,3 +92,37 @@ void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg)
- 	__dev_write_ims_msg(desc, msg);
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 435bcda..65da813 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -84,7 +84,7 @@ void native_teardown_msi_irq(unsigned int irq)
+ 	irq_domain_free_irqs(irq, 1);
  }
- EXPORT_SYMBOL_GPL(dev_ims_write_msg);
-+
-+void dev_ims_teardown_irqs(struct device *dev)
-+{
-+	struct msi_desc *entry;
-+
-+	for_each_msi_entry(entry, dev)
-+		if (entry->irq && entry->tag == IRQ_MSI_TAG_IMS)
-+			arch_teardown_msi_irq(entry->irq);
-+}
-+
-+static void dev_ims_restore_irq(struct device *dev, int irq)
-+{
-+	struct msi_desc *entry = NULL;
-+	struct dev_ims_ops *ops;
-+
-+	for_each_msi_entry(entry, dev)
-+		if (irq == entry->irq && entry->tag == IRQ_MSI_TAG_IMS)
-+			break;
-+
-+	if (entry) {
-+		ops = entry->dev_ims.priv->ims_ops;
-+		if (ops && ops->irq_write_msi_msg)
-+			ops->irq_write_msi_msg(entry, &entry->msg);
-+	}
-+}
-+
-+void dev_ims_restore_irqs(struct device *dev)
-+{
-+	struct msi_desc *entry;
-+
-+	for_each_msi_entry(entry, dev)
-+		if (entry->tag == IRQ_MSI_TAG_IMS)
-+			dev_ims_restore_irq(dev, entry->irq);
-+}
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 246285a..37070bf 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -233,6 +233,8 @@ void pci_msi_unmask_irq(struct irq_data *data);
- void dev_ims_unmask_irq(struct irq_data *data);
- void dev_ims_mask_irq(struct irq_data *data);
- void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg);
-+void dev_ims_teardown_irqs(struct device *dev);
-+void dev_ims_restore_irqs(struct device *dev);
  
- /*
-  * The arch hooks to setup up msi irqs. Those functions are
-@@ -245,6 +247,10 @@ int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
- void arch_teardown_msi_irqs(struct pci_dev *dev);
- void arch_restore_msi_irqs(struct pci_dev *dev);
+-static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++irq_hw_number_t msi_get_hwirq(struct msi_domain_info *info,
+ 					 msi_alloc_info_t *arg)
+ {
+ 	return arg->msi_hwirq;
+@@ -116,7 +116,7 @@ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+ EXPORT_SYMBOL_GPL(pci_msi_set_desc);
  
-+int arch_setup_ims_irqs(struct device *dev, int nvec);
-+void arch_teardown_ims_irqs(struct device *dev);
-+void arch_restore_ims_irqs(struct device *dev);
+ static struct msi_domain_ops pci_msi_domain_ops = {
+-	.get_hwirq	= pci_msi_get_hwirq,
++	.get_hwirq	= msi_get_hwirq,
+ 	.msi_prepare	= pci_msi_prepare,
+ 	.set_desc	= pci_msi_set_desc,
+ };
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index b558d4c..cecc6a6 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
+ }
+ EXPORT_SYMBOL(mdev_parent_dev);
+ 
++struct device *mdev_dev_to_parent_dev(struct device *dev)
++{
++	return to_mdev_device(dev)->parent->dev;
++}
++EXPORT_SYMBOL(mdev_dev_to_parent_dev);
 +
- void default_teardown_msi_irqs(struct pci_dev *dev);
- void default_restore_msi_irqs(struct pci_dev *dev);
+ void *mdev_get_drvdata(struct mdev_device *mdev)
+ {
+ 	return mdev->driver_data;
+diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+index 7d92295..c21f130 100644
+--- a/drivers/vfio/mdev/mdev_private.h
++++ b/drivers/vfio/mdev/mdev_private.h
+@@ -36,7 +36,6 @@ struct mdev_device {
+ };
  
+ #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+-#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+ 
+ struct mdev_type {
+ 	struct kobject kobj;
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index 0ce30ca..9dcbffe 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -144,5 +144,7 @@ void mdev_unregister_driver(struct mdev_driver *drv);
+ struct device *mdev_parent_dev(struct mdev_device *mdev);
+ struct device *mdev_dev(struct mdev_device *mdev);
+ struct mdev_device *mdev_from_dev(struct device *dev);
++struct device *mdev_dev_to_parent_dev(struct device *dev);
+ 
++#define dev_is_mdev(d)          ((d)->bus == symbol_get(mdev_bus_type))
+ #endif /* MDEV_H */
 -- 
 2.7.4
 
