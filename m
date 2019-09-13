@@ -7,64 +7,62 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B34CC4CEC8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490AC4CEC5
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D8520830
+	by mail.kernel.org (Postfix) with ESMTP id 3194F206A5
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a16SB8y7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4dhKWyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403927AbfIMWDZ (ORCPT
+        id S2403874AbfIMWDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:03:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41879 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389617AbfIMWDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 18:03:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so18900270pfo.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:03:24 -0700 (PDT)
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41096 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389849AbfIMWDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 18:03:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so15946422pgg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=peRAbMQ2xKT0fFJ89FYNdeBR3nBllTZJZRN8uGrtZQY=;
-        b=a16SB8y7DtHAZOq5Hes9SBNTETQkEg+2M16auoZs6P5Nx+GDEkq6hcyakn5++4DdcB
-         xuotJ1/LBSLQ6/x9i8PSx9EORvkMkkcAslecx1PEO2e932P8IGbrvFqJcEOscwYd0Qjl
-         JGGr1z03FZH0C+mmPO4aH9P6LGbCOROUFsGTs=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=25qzplbXApZnP+DKOlWLX+iTXkqbrEK2FpGiW9vlz0c=;
+        b=P4dhKWyP4Ub/MZ6AMjDsPu+4zpjqVjT5+JSJvszkLnyJkhnTrKAvWBbD6wZ8exTXmo
+         B+5l22PlldcHjMBnQWB/mDb/xj+p+hpHx91A9h0RsvI9KUVmPgzWrlQEDFnTFWWv3xzb
+         RQyZVEjJNoL+QwHQ8/dWtl55tNjy7n4XIuRAc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=peRAbMQ2xKT0fFJ89FYNdeBR3nBllTZJZRN8uGrtZQY=;
-        b=ns79cB5KgDOCWRDGZIOUJl/OMart86GI+Tkto5odGVa/8NvSEjTQXvP9VpAWnBZr3+
-         nzwK9XS6MxLt4bBk/o9bnu9okAmcdsHpaHHcdVCX+ji4tHculgDrdwhxT0HtjwG+CO56
-         nKDXB9IRe9Cjfs9LmkqmzMyzxfPLundwuqskaV/OVPC0V5vsm7iCWYJQu3LP9ervy5yi
-         9YdebWDPopQ1KjaskakAOxQiBf3yi821pBsZRBmhOhBqwe9N26l0ci8B49GuJWmrkyP8
-         K0SwPX/V/GoJExVNAdl34snQCAb4vae15WzXlTqGDTaRT16RZYkfZVMcFr/Xvi8SJOi9
-         5jjA==
-X-Gm-Message-State: APjAAAUGk6VkaKt6Hz1mSSL1sZqwFUm5QxQ9tJ8nN7sx8oEI5eQS9uAO
-        oo+Fu9RerowkGQhEihjnn4TfcA==
-X-Google-Smtp-Source: APXvYqyKIbWs4Y3boyjYAXcLk2CgyMhKDAHsPob+taOZvGOpsX89CxIujHHpsDtA4DxKLQQ7FYVN9Q==
-X-Received: by 2002:a63:c149:: with SMTP id p9mr11350330pgi.50.1568412203692;
-        Fri, 13 Sep 2019 15:03:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=25qzplbXApZnP+DKOlWLX+iTXkqbrEK2FpGiW9vlz0c=;
+        b=ndReCjn7hdjKl8VTW9CbGLo4rjcVGkSpc0rUshgT+O04+B6WiGkIq33harjP01tjfw
+         YT3LGasvbmuey7SQ2tWKA+vBnJUJuytKnJtUZ+iZcKZR2TfuNt+BUil910XYLCF8Cy0v
+         7xN3VRTpwFA72R0Wo9+gq3XpBTpVNKg0mwy61W8jCHYaEc9jAhsNMVVmI0Sh76hRPjr5
+         XMPkkOGIgZMII+4f22r43W8xoJiURkf+W2AMU5leG2KcyRvUBA8/FmP2VTzWBpRtRbkC
+         LaNk95lBlWS531ZAXYBiew96Uyu9NhGcTgTiNP+XgXEQ8NN+ykCMj/sQ7v3HkZProCDE
+         U7PA==
+X-Gm-Message-State: APjAAAUDY5ZcwvzdjF1yFEqfl5vaSF2fndsRmTL+D1q91rXJtqG0rAV7
+        RY6xlymZ3bMy3HY7Cu8zGSrDIA==
+X-Google-Smtp-Source: APXvYqyYA+41djJA2irqj5wpO7M+ULzOQnTc8ElqcWKy1Ruq7000CypPFM4TDB2HUSKSTm1A9MSd3Q==
+X-Received: by 2002:a62:780c:: with SMTP id t12mr57332149pfc.211.1568412201427;
+        Fri, 13 Sep 2019 15:03:21 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o19sm2524486pjr.23.2019.09.13.15.03.22
+        by smtp.gmail.com with ESMTPSA id o19sm2524486pjr.23.2019.09.13.15.03.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 15:03:22 -0700 (PDT)
+        Fri, 13 Sep 2019 15:03:20 -0700 (PDT)
 From:   Dmitry Torokhov <dtor@chromium.org>
 To:     Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc:     Nicolas Boichat <drinkcat@chromium.org>,
         Benson Leung <bleung@chromium.org>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] HID: google: whiskers: signal tablet mode on connect
-Date:   Fri, 13 Sep 2019 15:03:17 -0700
-Message-Id: <20190913220317.58289-3-dtor@chromium.org>
+Subject: [PATCH 1/3] HID: google: whiskers: more robust tablet mode detection
+Date:   Fri, 13 Sep 2019 15:03:15 -0700
+Message-Id: <20190913220317.58289-1-dtor@chromium.org>
 X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
-In-Reply-To: <20190913220317.58289-1-dtor@chromium.org>
-References: <20190913220317.58289-1-dtor@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,44 +70,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we receive "keyboard position" event from Whiskers we can
-conclude that the base is attached, even if we did not get EC event
-for that. We may miss EC event because there are some units which
-have a lot of leakage on the ADC pins that the EC uses to determine
-whether or not a base is attached.
+The USB interface may get detected before the platform/EC one, so let's
+note the state of the base (if we receive event) and use it to correctly
+initialize the tablet mode switch state.
+
+Also let's start the HID interface immediately when probing, this will
+ensure that we correctly process "base folded" events that may be sent
+as we initialize the base. Note that this requires us to add a release()
+function where we stop and close the hardware and switch the LED
+registration away from devm interface as we need to make sure that we
+destroy the LED instance before we stop the hardware.
 
 Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
 ---
- drivers/hid/hid-google-hammer.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/hid/hid-google-hammer.c | 71 ++++++++++++++++++++++++++-------
+ 1 file changed, 56 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 3dc6116c8f76..31e4a39946f5 100644
+index 84f8c127ebdc..4f64f93ddfcb 100644
 --- a/drivers/hid/hid-google-hammer.c
 +++ b/drivers/hid/hid-google-hammer.c
-@@ -402,16 +402,16 @@ static int hammer_event(struct hid_device *hid, struct hid_field *field,
+@@ -35,6 +35,7 @@ struct cbas_ec {
+ 	struct device *dev;	/* The platform device (EC) */
+ 	struct input_dev *input;
+ 	bool base_present;
++	bool base_folded;
+ 	struct notifier_block notifier;
+ };
+ 
+@@ -208,7 +209,14 @@ static int __cbas_ec_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
+-	input_report_switch(input, SW_TABLET_MODE, !cbas_ec.base_present);
++	if (!cbas_ec.base_present)
++		cbas_ec.base_folded = false;
++
++	dev_dbg(&pdev->dev, "%s: base: %d, folded: %d\n", __func__,
++		cbas_ec.base_present, cbas_ec.base_folded);
++
++	input_report_switch(input, SW_TABLET_MODE,
++			    !cbas_ec.base_present || cbas_ec.base_folded);
+ 
+ 	cbas_ec_set_input(input);
+ 
+@@ -322,10 +330,9 @@ static int hammer_kbd_brightness_set_blocking(struct led_classdev *cdev,
+ static int hammer_register_leds(struct hid_device *hdev)
+ {
+ 	struct hammer_kbd_leds *kbd_backlight;
++	int error;
+ 
+-	kbd_backlight = devm_kzalloc(&hdev->dev,
+-				     sizeof(*kbd_backlight),
+-				     GFP_KERNEL);
++	kbd_backlight = kzalloc(sizeof(*kbd_backlight), GFP_KERNEL);
+ 	if (!kbd_backlight)
+ 		return -ENOMEM;
+ 
+@@ -339,7 +346,26 @@ static int hammer_register_leds(struct hid_device *hdev)
+ 	/* Set backlight to 0% initially. */
+ 	hammer_kbd_brightness_set_blocking(&kbd_backlight->cdev, 0);
+ 
+-	return devm_led_classdev_register(&hdev->dev, &kbd_backlight->cdev);
++	error = led_classdev_register(&hdev->dev, &kbd_backlight->cdev);
++	if (error)
++		goto err_free_mem;
++
++	hid_set_drvdata(hdev, kbd_backlight);
++	return 0;
++
++err_free_mem:
++	kfree(kbd_backlight);
++	return error;
++}
++
++static void hammer_unregister_leds(struct hid_device *hdev)
++{
++	struct hammer_kbd_leds *kbd_backlight = hid_get_drvdata(hdev);
++
++	if (kbd_backlight) {
++		led_classdev_unregister(&kbd_backlight->cdev);
++		kfree(kbd_backlight);
++	}
+ }
+ 
+ #define HID_UP_GOOGLEVENDOR	0xffd10000
+@@ -376,8 +402,9 @@ static int hammer_event(struct hid_device *hid, struct hid_field *field,
  	    usage->hid == WHISKERS_KBD_FOLDED) {
  		spin_lock_irqsave(&cbas_ec_lock, flags);
  
-+		/*
-+		 * If we are getting events from Whiskers that means that it
-+		 * is attached to the lid.
-+		 */
-+		cbas_ec.base_present = true;
- 		cbas_ec.base_folded = value;
++		cbas_ec.base_folded = value;
  		hid_dbg(hid, "%s: base: %d, folded: %d\n", __func__,
- 			cbas_ec.base_present, cbas_ec.base_folded);
+-			cbas_ec.base_present, value);
++			cbas_ec.base_present, cbas_ec.base_folded);
  
--		/*
--		 * We should not get event if base is detached, but in case
--		 * we happen to service HID and EC notifications out of order
--		 * let's still check the "base present" flag.
--		 */
--		if (cbas_ec.input && cbas_ec.base_present) {
-+		if (cbas_ec.input) {
- 			input_report_switch(cbas_ec.input,
- 					    SW_TABLET_MODE, value);
- 			input_sync(cbas_ec.input);
+ 		/*
+ 		 * We should not get event if base is detached, but in case
+@@ -436,6 +463,14 @@ static int hammer_probe(struct hid_device *hdev,
+ {
+ 	int error;
+ 
++	error = hid_parse(hdev);
++	if (error)
++		return error;
++
++	error = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++	if (error)
++		return error;
++
+ 	/*
+ 	 * We always want to poll for, and handle tablet mode events from
+ 	 * Whiskers, even when nobody has opened the input device. This also
+@@ -443,16 +478,12 @@ static int hammer_probe(struct hid_device *hdev,
+ 	 * the device.
+ 	 */
+ 	if (hdev->product == USB_DEVICE_ID_GOOGLE_WHISKERS &&
+-			hammer_is_keyboard_interface(hdev))
++	    hammer_is_keyboard_interface(hdev)) {
+ 		hdev->quirks |= HID_QUIRK_ALWAYS_POLL;
+-
+-	error = hid_parse(hdev);
+-	if (error)
+-		return error;
+-
+-	error = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+-	if (error)
+-		return error;
++		error = hid_hw_open(hdev);
++		if (error)
++			return error;
++	}
+ 
+ 	if (hammer_has_backlight_control(hdev)) {
+ 		error = hammer_register_leds(hdev);
+@@ -465,6 +496,15 @@ static int hammer_probe(struct hid_device *hdev,
+ 	return 0;
+ }
+ 
++static void hammer_remove(struct hid_device *hdev)
++{
++	if (hdev->product == USB_DEVICE_ID_GOOGLE_WHISKERS &&
++			hammer_is_keyboard_interface(hdev))
++		hid_hw_close(hdev);
++
++	hammer_unregister_leds(hdev);
++	hid_hw_stop(hdev);
++}
+ 
+ static const struct hid_device_id hammer_devices[] = {
+ 	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+@@ -483,6 +523,7 @@ static struct hid_driver hammer_driver = {
+ 	.name = "hammer",
+ 	.id_table = hammer_devices,
+ 	.probe = hammer_probe,
++	.remove = hammer_remove,
+ 	.input_mapping = hammer_input_mapping,
+ 	.event = hammer_event,
+ };
 -- 
 2.23.0.237.gc6a4ce50a0-goog
 
