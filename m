@@ -2,52 +2,54 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761AAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB100C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42773206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D80D206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380970;
-	bh=dr/3q4xEag8ZZD5QWE8l46z2vNadbV8mbae5Rtsfj2A=;
+	s=default; t=1568380979;
+	bh=ZGQq7XmYS3Ko11gPlRhrnwMkCQgmaoPYqlC740uS8JE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MzS3JbZ16LomR3EXe8yeLnOIVSLXZ+4yAMrhNOHjKEVHuxWDuPdnUt5j3OsgGYDj
-	 A0S3SCXQ5zeh/S1U+yLLlJv+zrDnHDEejMLK0iWmYDr23EFcqC7KYQj5CMrGr1OgSg
-	 85niNFG7Dxy0/EnxPWqkylAoiboeZYH7hYHXkZoM=
+	b=PgM3NH/fwqlXnBw90Ymmq2bDJ8Jn6O0hYncfXIL3HNBc91fq/mTo7ixpo39Sq5zqV
+	 SaWjkvRdHCVzLb14WCP61oe/SRn/Nk9Al2yyJjO5vxkpSNledGKh8OL3WstFr9uUxo
+	 V6NML+vhDYM3mBXBQznl6WHlniEJV7KmDEZOETmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391046AbfIMNWt (ORCPT
+        id S2391067AbfIMNW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52174 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390950AbfIMNWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:22:03 -0400
+        id S2390909AbfIMNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:52 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DF1920717;
-        Fri, 13 Sep 2019 13:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0988E20717;
+        Fri, 13 Sep 2019 13:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380923;
-        bh=dr/3q4xEag8ZZD5QWE8l46z2vNadbV8mbae5Rtsfj2A=;
+        s=default; t=1568380911;
+        bh=ZGQq7XmYS3Ko11gPlRhrnwMkCQgmaoPYqlC740uS8JE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13xP7EXThORmR6HFuTBADbHmtF2GhjJ495UtMrTFgeOnBaBSVKPkXTMpzMrLF49o7
-         O3FhGcfbNpDAnnmGih7tS+XNbtJciTHla2qWhlfoIVSLNGzMqFIV4sulvSGI9LUutx
-         JdHg70O3Jzq3VvXBk+f2rg1Od3R+OtYU8S2ITOg8=
+        b=dOV3fhcmQCV1ZG3Z6geC8hBICzCeKey2XTDsDxTAzz/Z3ODcIElYirU3HHrwSwgD5
+         4IPsUGsRDwTRf2qMyz0wlPcsirpYw9oytXOONmwHz943xTkhzh/pueNolL3KrJlam1
+         TnqUhaJyW7wRyUVcJCPCkMaEY8Aw8y0ONI8+PCPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 26/37] mmc: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
-Date:   Fri, 13 Sep 2019 14:07:31 +0100
-Message-Id: <20190913130520.354894570@linuxfoundation.org>
+        stable@vger.kernel.org, Zdenek Sojka <zsojka@seznam.cz>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        Drazen Kacar <drazen.kacar@oradian.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.2 35/37] Btrfs: fix unwritten extent buffers and hangs on future writeback attempts
+Date:   Fri, 13 Sep 2019 14:07:40 +0100
+Message-Id: <20190913130522.060024148@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -60,191 +62,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c6303c5d52d5ec3e5bce2e6a5480fa2a1baa45e6 ]
+From: Filipe Manana <fdmanana@suse.com>
 
-The SD host controller specification defines 3 types software reset:
-software reset for data line, software reset for command line and software
-reset for all. Software reset for all means this reset affects the entire
-Host controller except for the card detection circuit.
+commit 18dfa7117a3f379862dcd3f67cadd678013bb9dd upstream.
 
-In sdhci_runtime_resume_host() we always do a software "reset for all",
-which causes the Spreadtrum variant controller to work abnormally after
-resuming. To fix the problem, let's do a software reset for the data and
-the command part, rather than "for all".
+The lock_extent_buffer_io() returns 1 to the caller to tell it everything
+went fine and the callers needs to start writeback for the extent buffer
+(submit a bio, etc), 0 to tell the caller everything went fine but it does
+not need to start writeback for the extent buffer, and a negative value if
+some error happened.
 
-However, as sdhci_runtime_resume() is a common sdhci function and we don't
-want to change the behaviour for other variants, let's introduce a new
-in-parameter for it. This enables the caller to decide if a "reset for all"
-shall be done or not.
+When it's about to return 1 it tries to lock all pages, and if a try lock
+on a page fails, and we didn't flush any existing bio in our "epd", it
+calls flush_write_bio(epd) and overwrites the return value of 1 to 0 or
+an error. The page might have been locked elsewhere, not with the goal
+of starting writeback of the extent buffer, and even by some code other
+than btrfs, like page migration for example, so it does not mean the
+writeback of the extent buffer was already started by some other task,
+so returning a 0 tells the caller (btree_write_cache_pages()) to not
+start writeback for the extent buffer. Note that epd might currently have
+either no bio, so flush_write_bio() returns 0 (success) or it might have
+a bio for another extent buffer with a lower index (logical address).
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Since we return 0 with the EXTENT_BUFFER_WRITEBACK bit set on the
+extent buffer and writeback is never started for the extent buffer,
+future attempts to writeback the extent buffer will hang forever waiting
+on that bit to be cleared, since it can only be cleared after writeback
+completes. Such hang is reported with a trace like the following:
+
+  [49887.347053] INFO: task btrfs-transacti:1752 blocked for more than 122 seconds.
+  [49887.347059]       Not tainted 5.2.13-gentoo #2
+  [49887.347060] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [49887.347062] btrfs-transacti D    0  1752      2 0x80004000
+  [49887.347064] Call Trace:
+  [49887.347069]  ? __schedule+0x265/0x830
+  [49887.347071]  ? bit_wait+0x50/0x50
+  [49887.347072]  ? bit_wait+0x50/0x50
+  [49887.347074]  schedule+0x24/0x90
+  [49887.347075]  io_schedule+0x3c/0x60
+  [49887.347077]  bit_wait_io+0x8/0x50
+  [49887.347079]  __wait_on_bit+0x6c/0x80
+  [49887.347081]  ? __lock_release.isra.29+0x155/0x2d0
+  [49887.347083]  out_of_line_wait_on_bit+0x7b/0x80
+  [49887.347084]  ? var_wake_function+0x20/0x20
+  [49887.347087]  lock_extent_buffer_for_io+0x28c/0x390
+  [49887.347089]  btree_write_cache_pages+0x18e/0x340
+  [49887.347091]  do_writepages+0x29/0xb0
+  [49887.347093]  ? kmem_cache_free+0x132/0x160
+  [49887.347095]  ? convert_extent_bit+0x544/0x680
+  [49887.347097]  filemap_fdatawrite_range+0x70/0x90
+  [49887.347099]  btrfs_write_marked_extents+0x53/0x120
+  [49887.347100]  btrfs_write_and_wait_transaction.isra.4+0x38/0xa0
+  [49887.347102]  btrfs_commit_transaction+0x6bb/0x990
+  [49887.347103]  ? start_transaction+0x33e/0x500
+  [49887.347105]  transaction_kthread+0x139/0x15c
+
+So fix this by not overwriting the return value (ret) with the result
+from flush_write_bio(). We also need to clear the EXTENT_BUFFER_WRITEBACK
+bit in case flush_write_bio() returns an error, otherwise it will hang
+any future attempts to writeback the extent buffer, and undo all work
+done before (set back EXTENT_BUFFER_DIRTY, etc).
+
+This is a regression introduced in the 5.2 kernel.
+
+Fixes: 2e3c25136adfb ("btrfs: extent_io: add proper error handling to lock_extent_buffer_for_io()")
+Fixes: f4340622e0226 ("btrfs: extent_io: Move the BUG_ON() in flush_write_bio() one level up")
+Reported-by: Zdenek Sojka <zsojka@seznam.cz>
+Link: https://lore.kernel.org/linux-btrfs/GpO.2yos.3WGDOLpx6t%7D.1TUDYM@seznam.cz/T/#u
+Reported-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+Link: https://lore.kernel.org/linux-btrfs/5c4688ac-10a7-fb07-70e8-c5d31a3fbb38@profihost.ag/T/#t
+Reported-by: Drazen Kacar <drazen.kacar@oradian.com>
+Link: https://lore.kernel.org/linux-btrfs/DB8PR03MB562876ECE2319B3E579590F799C80@DB8PR03MB5628.eurprd03.prod.outlook.com/
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204377
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci-acpi.c      | 2 +-
- drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
- drivers/mmc/host/sdhci-of-at91.c   | 2 +-
- drivers/mmc/host/sdhci-pci-core.c  | 4 ++--
- drivers/mmc/host/sdhci-pxav3.c     | 2 +-
- drivers/mmc/host/sdhci-s3c.c       | 2 +-
- drivers/mmc/host/sdhci-sprd.c      | 2 +-
- drivers/mmc/host/sdhci-xenon.c     | 2 +-
- drivers/mmc/host/sdhci.c           | 4 ++--
- drivers/mmc/host/sdhci.h           | 2 +-
- 10 files changed, 12 insertions(+), 12 deletions(-)
+ fs/btrfs/extent_io.c |   35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-index b3a130a9ee233..1604f512c7bd1 100644
---- a/drivers/mmc/host/sdhci-acpi.c
-+++ b/drivers/mmc/host/sdhci-acpi.c
-@@ -883,7 +883,7 @@ static int sdhci_acpi_runtime_resume(struct device *dev)
- 
- 	sdhci_acpi_byt_setting(&c->pdev->dev);
- 
--	return sdhci_runtime_resume_host(c->host);
-+	return sdhci_runtime_resume_host(c->host, 0);
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3591,6 +3591,13 @@ void wait_on_extent_buffer_writeback(str
+ 		       TASK_UNINTERRUPTIBLE);
  }
  
- #endif
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index c391510e9ef40..776a942162488 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1705,7 +1705,7 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
- 		esdhc_pltfm_set_clock(host, imx_data->actual_clock);
- 	}
++static void end_extent_buffer_writeback(struct extent_buffer *eb)
++{
++	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
++	smp_mb__after_atomic();
++	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
++}
++
+ /*
+  * Lock eb pages and flush the bio if we can't the locks
+  *
+@@ -3662,8 +3669,11 @@ static noinline_for_stack int lock_exten
  
--	err = sdhci_runtime_resume_host(host);
-+	err = sdhci_runtime_resume_host(host, 0);
- 	if (err)
- 		goto disable_ipg_clk;
- 
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index d4993582f0f63..e7d1920729fbc 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -289,7 +289,7 @@ static int sdhci_at91_runtime_resume(struct device *dev)
- 	}
- 
- out:
--	return sdhci_runtime_resume_host(host);
-+	return sdhci_runtime_resume_host(host, 0);
- }
- #endif /* CONFIG_PM */
- 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 4154ee11b47dc..267b90374fa48 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -167,7 +167,7 @@ static int sdhci_pci_runtime_suspend_host(struct sdhci_pci_chip *chip)
- 
- err_pci_runtime_suspend:
- 	while (--i >= 0)
--		sdhci_runtime_resume_host(chip->slots[i]->host);
-+		sdhci_runtime_resume_host(chip->slots[i]->host, 0);
+ 		if (!trylock_page(p)) {
+ 			if (!flush) {
+-				ret = flush_write_bio(epd);
+-				if (ret < 0) {
++				int err;
++
++				err = flush_write_bio(epd);
++				if (err < 0) {
++					ret = err;
+ 					failed_page_nr = i;
+ 					goto err_unlock;
+ 				}
+@@ -3678,16 +3688,23 @@ err_unlock:
+ 	/* Unlock already locked pages */
+ 	for (i = 0; i < failed_page_nr; i++)
+ 		unlock_page(eb->pages[i]);
++	/*
++	 * Clear EXTENT_BUFFER_WRITEBACK and wake up anyone waiting on it.
++	 * Also set back EXTENT_BUFFER_DIRTY so future attempts to this eb can
++	 * be made and undo everything done before.
++	 */
++	btrfs_tree_lock(eb);
++	spin_lock(&eb->refs_lock);
++	set_bit(EXTENT_BUFFER_DIRTY, &eb->bflags);
++	end_extent_buffer_writeback(eb);
++	spin_unlock(&eb->refs_lock);
++	percpu_counter_add_batch(&fs_info->dirty_metadata_bytes, eb->len,
++				 fs_info->dirty_metadata_batch);
++	btrfs_clear_header_flag(eb, BTRFS_HEADER_FLAG_WRITTEN);
++	btrfs_tree_unlock(eb);
  	return ret;
  }
  
-@@ -181,7 +181,7 @@ static int sdhci_pci_runtime_resume_host(struct sdhci_pci_chip *chip)
- 		if (!slot)
- 			continue;
- 
--		ret = sdhci_runtime_resume_host(slot->host);
-+		ret = sdhci_runtime_resume_host(slot->host, 0);
- 		if (ret)
- 			return ret;
- 	}
-diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
-index 3ddecf4792958..e55037ceda734 100644
---- a/drivers/mmc/host/sdhci-pxav3.c
-+++ b/drivers/mmc/host/sdhci-pxav3.c
-@@ -554,7 +554,7 @@ static int sdhci_pxav3_runtime_resume(struct device *dev)
- 	if (!IS_ERR(pxa->clk_core))
- 		clk_prepare_enable(pxa->clk_core);
- 
--	return sdhci_runtime_resume_host(host);
-+	return sdhci_runtime_resume_host(host, 0);
- }
- #endif
- 
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index 8e4a8ba33f050..f5753aef71511 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -745,7 +745,7 @@ static int sdhci_s3c_runtime_resume(struct device *dev)
- 	clk_prepare_enable(busclk);
- 	if (ourhost->cur_clk >= 0)
- 		clk_prepare_enable(ourhost->clk_bus[ourhost->cur_clk]);
--	ret = sdhci_runtime_resume_host(host);
-+	ret = sdhci_runtime_resume_host(host, 0);
- 	return ret;
- }
- #endif
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index fc892a8d882fd..53f3af53b3fba 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -497,7 +497,7 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
- 		return ret;
- 	}
- 
--	sdhci_runtime_resume_host(host);
-+	sdhci_runtime_resume_host(host, 1);
- 
- 	return 0;
- }
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 8a18f14cf842d..1dea1ba66f7b4 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -638,7 +638,7 @@ static int xenon_runtime_resume(struct device *dev)
- 		priv->restore_needed = false;
- 	}
- 
--	ret = sdhci_runtime_resume_host(host);
-+	ret = sdhci_runtime_resume_host(host, 0);
- 	if (ret)
- 		goto out;
- 	return 0;
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 59acf8e3331ee..a5dc5aae973e6 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3320,7 +3320,7 @@ int sdhci_runtime_suspend_host(struct sdhci_host *host)
- }
- EXPORT_SYMBOL_GPL(sdhci_runtime_suspend_host);
- 
--int sdhci_runtime_resume_host(struct sdhci_host *host)
-+int sdhci_runtime_resume_host(struct sdhci_host *host, int soft_reset)
+-static void end_extent_buffer_writeback(struct extent_buffer *eb)
+-{
+-	clear_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+-	smp_mb__after_atomic();
+-	wake_up_bit(&eb->bflags, EXTENT_BUFFER_WRITEBACK);
+-}
+-
+ static void set_btree_ioerr(struct page *page)
  {
- 	struct mmc_host *mmc = host->mmc;
- 	unsigned long flags;
-@@ -3331,7 +3331,7 @@ int sdhci_runtime_resume_host(struct sdhci_host *host)
- 			host->ops->enable_dma(host);
- 	}
- 
--	sdhci_init(host, 0);
-+	sdhci_init(host, soft_reset);
- 
- 	if (mmc->ios.power_mode != MMC_POWER_UNDEFINED &&
- 	    mmc->ios.power_mode != MMC_POWER_OFF) {
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 199712e7adbb3..d2c7c9c436c97 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -781,7 +781,7 @@ void sdhci_adma_write_desc(struct sdhci_host *host, void **desc,
- int sdhci_suspend_host(struct sdhci_host *host);
- int sdhci_resume_host(struct sdhci_host *host);
- int sdhci_runtime_suspend_host(struct sdhci_host *host);
--int sdhci_runtime_resume_host(struct sdhci_host *host);
-+int sdhci_runtime_resume_host(struct sdhci_host *host, int soft_reset);
- #endif
- 
- void sdhci_cqe_enable(struct mmc_host *mmc);
--- 
-2.20.1
-
+ 	struct extent_buffer *eb = (struct extent_buffer *)page->private;
 
 
