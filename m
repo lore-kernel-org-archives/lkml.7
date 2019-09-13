@@ -2,89 +2,183 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5753C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36284C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EB02084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568388082;
-	bh=+6GdpZ0O3YbNJKjrM1giv9kYLtozeTpToDWgbjtGWX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xk5z3P2MLv7i4uCV7ebnFk4eyI6x9wjAQAPRh649QqUkyBPaRdiflvL0MBiytrU0P
-	 uNjU2hkCCdKSl9L9aXBfqnK7250IrUnKjqGRIalipgpqbfatixxSVRHf5rhmFPJNCD
-	 efVsHFoRBIv9/V2vormacbG2kiDW97txKOk+pLNE=
+	by mail.kernel.org (Postfix) with ESMTP id 0828B20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403910AbfIMPVV (ORCPT
+        id S2390687AbfIMPYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48682 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 11:24:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46516 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388354AbfIMPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:21:20 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821DB20717;
-        Fri, 13 Sep 2019 15:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568388080;
-        bh=+6GdpZ0O3YbNJKjrM1giv9kYLtozeTpToDWgbjtGWX0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mJfj29OEMLko69rdIb/Mnmjca/GGH9fAeRSRzlZsd34LIqyPtSVdsMV2T1zz7a3Un
-         90LQxOCZoL0njVuVqptkAA/Db5+ieByVY5Uge10RA4AHGuAhwfdx+UJ7ep9bqqrwVL
-         j2cvVHVtyW6F0WLcGH+Bn5aDEWc/4yQUhysJ86Y8=
-Date:   Fri, 13 Sep 2019 16:21:17 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 0/6] make use of gcc 9's "asm inline()"
-Message-ID: <20190913152117.GA458892@kroah.com>
-References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
- <20190912221927.18641-1-linux@rasmusvillemoes.dk>
- <CANiq72n_KxKGwrN4onWotocTuZjVSAqENF_5Pk9t1-pk7NDrgQ@mail.gmail.com>
- <d47740cc-a373-91a9-df33-d2def69a370d@rasmusvillemoes.dk>
+        id S2388354AbfIMPYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:24:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 08:24:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="179706190"
+Received: from gao-cwp.sh.intel.com (HELO gao-cwp) ([10.239.159.26])
+  by orsmga008.jf.intel.com with ESMTP; 13 Sep 2019 08:24:16 -0700
+Date:   Fri, 13 Sep 2019 23:28:20 +0800
+From:   Chao Gao <chao.gao@intel.com>
+To:     "Spassov, Stanislav" <stanspas@amazon.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "jbeulich@suse.com" <jbeulich@suse.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH] xen: xen-pciback: Reset MSI-X state when exposing a
+ device
+Message-ID: <20190913152818.GA688@gao-cwp>
+References: <1543976357-1053-1-git-send-email-chao.gao@intel.com>
+ <2c0ad3bf96551ea6e96e812229507221b76876c6.camel@amazon.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d47740cc-a373-91a9-df33-d2def69a370d@rasmusvillemoes.dk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c0ad3bf96551ea6e96e812229507221b76876c6.camel@amazon.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 08:11:24AM +0200, Rasmus Villemoes wrote:
-> On 13/09/2019 00.30, Miguel Ojeda wrote:
-> > On Fri, Sep 13, 2019 at 12:19 AM Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> >>
-> >> Patch 1 has already been picked up by Greg in staging-next, it's
-> >> included here for completeness. I don't know how to route the rest, or
-> >> if they should simply wait for 5.5 given how close we are to the merge
-> >> window for 5.4.
-> > 
-> > If you want I can pick this up in compiler-attributes and submit it as
-> > a whole if we get Acks from rtl8723bs/x86/...maintainers.
-> 
-> Ingo has now acked the x86 parts, and Greg has already picked up the
-> rtl8723bs patch, which is at least an implicit ack. I'm just unsure of
-> how and if it will work if you also pick up that one - but, if you
-> don't, your tree would be (somewhat) dependent on Greg's staging-next :(
+On Fri, Sep 13, 2019 at 10:02:24AM +0000, Spassov, Stanislav wrote:
+>On Thu, Dec 13, 2018 at 07:54, Chao Gao wrote:
+>>On Thu, Dec 13, 2018 at 12:54:52AM -0700, Jan Beulich wrote:
+>>>>>> On 13.12.18 at 04:46, <chao.gao@intel.com> wrote:
+>>>> On Wed, Dec 12, 2018 at 08:21:39AM -0700, Jan Beulich wrote:
+>>>>>>>> On 12.12.18 at 16:18, <chao.gao@intel.com> wrote:
+>>>>>> On Wed, Dec 12, 2018 at 01:51:01AM -0700, Jan Beulich wrote:
+>>>>>>>>>> On 12.12.18 at 08:06, <chao.gao@intel.com> wrote:
+>>>>>>>> On Wed, Dec 05, 2018 at 09:01:33AM -0500, Boris Ostrovsky wrote:
+>>>>>>>>>On 12/5/18 4:32 AM, Roger Pau Monné wrote:
+>>>>>>>>>> On Wed, Dec 05, 2018 at 10:19:17AM +0800, Chao Gao wrote:
+>>>>>>>>>>> I find some pass-thru devices don't work any more across guest reboot.
+>>>>>>>>>>> Assigning it to another guest also meets the same issue. And the only
+>>>>>>>>>>> way to make it work again is un-binding and binding it to pciback.
+>>>>>>>>>>> Someone reported this issue one year ago [1]. More detail also can be
+>>>>>>>>>>> found in [2].
+>>>>>>>>>>>
+>>>>>>>>>>> The root-cause is Xen's internal MSI-X state isn't reset properly
+>>>>>>>>>>> during reboot or re-assignment. In the above case, Xen set maskall bit
+>>>>>>>>>>> to mask all MSI interrupts after it detected a potential security
+>>>>>>>>>>> issue. Even after device reset, Xen didn't reset its internal maskall
+>>>>>>>>>>> bit. As a result, maskall bit would be set again in next write to
+>>>>>>>>>>> MSI-X message control register.
+>>>>>>>>>>>
+>>>>>>>>>>> Given that PHYSDEVOPS_prepare_msix() also triggers Xen resetting MSI-X
+>>>>>>>>>>> internal state of a device, we employ it to fix this issue rather than
+>>>>>>>>>>> introducing another dedicated sub-hypercall.
+>>>>>>>>>>>
+>>>>>>>>>>> Note that PHYSDEVOPS_release_msix() will fail if the mapping between
+>>>>>>>>>>> the device's msix and pirq has been created. This limitation prevents
+>>>>>>>>>>> us calling this function when detaching a device from a guest during
+>>>>>>>>>>> guest shutdown. Thus it is called right before calling
+>>>>>>>>>>> PHYSDEVOPS_prepare_msix().
+>>>>>>>>>> s/PHYSDEVOPS/PHYSDEVOP/ (no final S). And then I would also drop the
+>>>>>>>>>> () at the end of the hypercall name since it's not a function.
+>>>>>>>>>>
+>>>>>>>>>> I'm also wondering why the release can't be done when the device is
+>>>>>>>>>> detached from the guest (or the guest has been shut down). This makes
+>>>>>>>>>> me worry about the raciness of the attach/detach procedure: if there's
+>>>>>>>>>> a state where pciback assumes the device has been detached from the
+>>>>>>>>>> guest, but there are still pirqs bound, an attempt to attach to
+>>>>>>>>>> another guest in such state will fail.
+>>>>>>>>>
+>>>>>>>>>I wonder whether this additional reset functionality could be done out
+>>>>>>>>>of xen_pcibk_xenbus_remove(). We first do a (best effort) device reset
+>>>>>>>>>and then do the extra things that are not properly done there.
+>>>>>>>> 
+>>>>>>>> No. It cannot be done in xen_pcibk_xenbus_remove() without modifying
+>>>>>>>> the handler of PHYSDEVOP_release_msix. To do a successful Xen internal
+>>>>>>>> MSI-X state reset, PHYSDEVOP_{release, prepare}_msix should be finished
+>>>>>>>> without error. But ATM, xen expects that no msi is bound to pirq when
+>>>>>>>> doing PHYSDEVOP_release_msix. Otherwise it fails with error code -EBUSY.
+>>>>>>>> However, the expectation isn't guaranteed in xen_pcibk_xenbus_remove().
+>>>>>>>> In some cases, if qemu fails to unmap MSIs, MSIs are unmapped by Xen
+>>>>>>>> at last minute, which happens after device reset in 
+>>>>>>>> xen_pcibk_xenbus_remove().
+>>>>>>>
+>>>>>>>But that may need taking care of: I don't think it is a good idea to have
+>>>>>>>anything left from the prior owning domain when the device gets reset.
+>>>>>>>I.e. left over IRQ bindings should perhaps be forcibly cleared before
+>>>>>>>invoking the reset;
+>>>>>> 
+>>>>>> Agree. How about pciback to track the established IRQ bindings? Then
+>>>>>> pciback can clear irq binding before invoking the reset.
+>>>>>
+>>>>>How would pciback even know of those mappings, when it's qemu
+>>>>>who establishes (and manages) them?
+>>>> 
+>>>> I meant to expose some interfaces from pciback. And pciback serves
+>>>> as the proxy of IRQ (un)binding APIs.
+>>>
+>>>If at all possible we should avoid having to change more parties (qemu,
+>>>libxc, kernel, hypervisor) than really necessary. Remember that such
+>>>a bug fix may want backporting, and making sure affected people have
+>>>all relevant components updated is increasingly difficult with their
+>>>number growing.
+>>>
+>>>>>>>in fact I'd expect this to happen in the course of
+>>>>>>>domain destruction, and I'd expect the device reset to come after the
+>>>>>>>domain was cleaned up. Perhaps simply an ordering issue in the tool
+>>>>>>>stack?
+>>>>>> 
+>>>>>> I don't think reversing the sequences of device reset and domain
+>>>>>> destruction would be simple. Furthermore, during device hot-unplug,
+>>>>>> device reset is done when the owner is alive. So if we use domain
+>>>>>> destruction to enforce all irq binding cleared, in theory, it won't be
+>>>>>> applicable to hot-unplug case (if qemu's hot-unplug logic is
+>>>>>> compromised).
+>>>>>
+>>>>>Even in the hot-unplug case the tool stack could issue unbind
+>>>>>requests, behind the back of the possibly compromised qemu,
+>>>>>once neither the guest nor qemu have access to the device
+>>>>>anymore.
+>>>> 
+>>>> But currently, tool stack doesn't know the remaining IRQ bindings.
+>>>> If tool stack can maintaine IRQ binding information of a pass-thru
+>>>> device (stored in Xenstore?), we can come up with a clean solution
+>>>> without modifying linux kernel and Xen.
+>>>
+>>>If there's no way for the tool stack to either find out the bindings
+>>>or "blindly" issue unbind requests (accepting them to fail), then a
+>>>"wildcard" unbind operation may want adding. Or, perhaps even
+>>>better, XEN_DOMCTL_deassign_device could unbind anything left
+>>>in place for the specified device.
+>>
+>>Good idea. I will take this advice.
+>>
+>>Thanks
+>>Chao
+>
+>I am having the same issue, and cannot find a fix in either xen-pciback or the Xen codebase.
+>Was a solution ever pushed as a result of this thread?
+>
 
-Feel free to also take that patch through any tree, it's "obviously
-correct" :)
+I submitted patches [1] to Xen community. But I didn't get it merged.
+We made a change in device driver to disable MSI-X during guest OS
+shutdown to mitigate the issue. But when guest or qemu was crashed, we
+encountered this issue again. I have no plan to get back to these
+patches. But if you want to fix the issue completely along what the
+patches below did, please go ahead.
 
-greg k-h
+[1]: https://lists.xenproject.org/archives/html/xen-devel/2019-01/msg01227.html
+
+Thanks
+Chao
