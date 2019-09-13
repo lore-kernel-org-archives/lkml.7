@@ -2,121 +2,129 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EFDC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F347C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D81920692
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA5F20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lv802009"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="1eBnZE/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388826AbfIMT4X (ORCPT
+        id S2388899AbfIMT7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:56:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33499 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730847AbfIMT4T (ORCPT
+        Fri, 13 Sep 2019 15:59:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39007 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730272AbfIMT7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:56:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so28258294ljd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:56:17 -0700 (PDT)
+        Fri, 13 Sep 2019 15:59:08 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so3075776wrj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YangW0nZxTvuxMasR2T71zvAAP15OctV2hgPwvy27lg=;
-        b=Lv802009QJLjWjD4UFEK/0Dz70rSsQfJEfZlJop0qI82z5JcfLHl/2r2yyVgEryl7W
-         1V7VB3t+6OehDmsN2DQE6ni7NaHcNp2Qjk+v7bOHqiHHSz/ZfSd5aH8FGktHFz/WpMz/
-         D8RTy+RrxlShPKtX937BcbB6hfALtCl/w/SIvP1D5hP+Ix7kQz7pUK9Ag6Bd/qsGEfY5
-         KhFEStm+Ybxo1UKqlwTX0KMQD9eMED1Y042cfErh2l0YgwbTnPYwD9nVFRq3Gzh+TfHO
-         fqaWvWl9PsK0qoDo6vcQ6e0OPQ13DFgLWXPo9HATYldmlKn3Y8H/flKflvJiDhZuxMkB
-         e/ng==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=TdseWFi9nNeS6hr9vU8WMp7sk4P8F8KbbFD+cmn/ufY=;
+        b=1eBnZE/+gh9aEOaSP2pMP908RRNY9uy1w9hH+H0Z1cp6geaVgU3mChga6jyRi/7Tbt
+         veg53Xkay91ImDnDnwh46ECDoWdDd5JAbdZhWcHyDVes/zAZqLIpz5LhDMvLABZiylbN
+         NM2ELn1myjOeYVxitL8VbegAnzlbdd3VkaBwiouoKkQJ9awUUSoJs9j9TqNo8eXTNDQ4
+         S10k2IsVmnfLRk0b+rXWvaRG0XlCNvrDCg2gjnSulx9QngV9fPfKa2ONJoombcVZ8k9y
+         pVQnWDBe5CJhpYpa0FMfGFEgRIelvwiu30tIw3s/BEAQ+N712lPldxcJaP0kHqe4ympa
+         bubw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=YangW0nZxTvuxMasR2T71zvAAP15OctV2hgPwvy27lg=;
-        b=sP7UvN76MKT9sj44neNXIQc66Tq64zv8ZdObTiyWcAqPxdL06YCim0kCuRxPIPCvZX
-         t2HCe7SBKUMKWmrfCEB7FkH64XLOkK+PoWqFHqmB7tc+oYDCNK5IBknez5bKBr0gkbO+
-         PKYtkpXSTAlhi8VpbP0ZXy1F6doDBK+Oruft8CEnG78Hk4RDvPSekS1kOLQYfoIkGM2X
-         gr8kPdNfu1jYyTh1ItPQtRsMyCS0GxsH54FZI3HzXtu3yAKLfWipLJQXR4pujGScQLYe
-         OyL5ZdKwMUhDANwhZRB+XsOFYSDWqrMhnQt4Mlawdw0spWc72i/gaoC5kceQCNlV7oVQ
-         3KDw==
-X-Gm-Message-State: APjAAAXWwyKq9XmLJVU+L0Oa9fSZfm1TZoAzjol/rDeW8yZ/XzcgoEMG
-        1AwlsAlnO/CTsqD1TQ3GViAOQA==
-X-Google-Smtp-Source: APXvYqxU70mxnPTmi2ptT3akvixZSFIEhcR1gb+O4j9tliEriL3aAlVfx0PwNFAE3sW28jupZdNinA==
-X-Received: by 2002:a2e:7801:: with SMTP id t1mr16881585ljc.140.1568404576977;
-        Fri, 13 Sep 2019 12:56:16 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id p8sm6581687ljn.93.2019.09.13.12.56.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Sep 2019 12:56:16 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 22:56:14 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH bpf-next 01/11] samples: bpf: makefile: fix HDR_PROBE
- "echo"
-Message-ID: <20190913195612.GA26724@khorivan>
-Mail-Followup-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
- <20190910103830.20794-2-ivan.khoronzhuk@linaro.org>
- <55803f7e-a971-d71a-fcc2-76ae1cf813bf@cogentembedded.com>
- <20190910145359.GD3053@khorivan>
- <4251fe86-ccc7-f1ce-e954-2d488d2a95a9@cogentembedded.com>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=TdseWFi9nNeS6hr9vU8WMp7sk4P8F8KbbFD+cmn/ufY=;
+        b=JbT6zZpUX8zszPuqB9eLl0YePAq1cwIImlq/UsSk1KuXF6znzjRVwPLPFAS+yLms3H
+         P4Ll0/ZMd8+8IXnTbAzdN6Rd0Ed+efQ9U2XvgHeooZL9+tK2qBX6SEF8uebTqfztCwwH
+         pFb12QKnK2KnEqKghlFqicRxuehp2grxcosi4TvBzR7ZQZVhDY5MyWhcFdhOyI8Quwmf
+         4APNFupWZMIzqG7HKUvVD3DIMSHDV9YOrM16mE0OioOJyQr2eWR5MNu+EIhGzICOtScB
+         jXbnOJiCqayzxhL9xvKMf4WSoEM8qRaPp3eJQYGjYF0t8cnJKzJI2FKtR6n4nwpJ19aH
+         /rhA==
+X-Gm-Message-State: APjAAAWNQROqSx080Z2fStoq9CrM5DrZEAKQPOAkVF0T4SakUOfUsgjW
+        YRAuRqQJ+Karo74XKQPkrBheWQ==
+X-Google-Smtp-Source: APXvYqysffBDWYB0LA8vb7HG7aQb8HEmcDPvGh1FA8r902eVXah1k2TXA8e6ZdsELApCXCfgSYVvOA==
+X-Received: by 2002:a05:6000:1632:: with SMTP id v18mr22256824wrb.233.1568404746082;
+        Fri, 13 Sep 2019 12:59:06 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d12sm3153871wme.33.2019.09.13.12.59.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Sep 2019 12:59:05 -0700 (PDT)
+Message-ID: <5d7bf509.1c69fb81.25a99.f298@mx.google.com>
+Date:   Fri, 13 Sep 2019 12:59:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4251fe86-ccc7-f1ce-e954-2d488d2a95a9@cogentembedded.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.14.143-22-g6073f0ee406c
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.14.y
+In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
+References: <20190913130501.285837292@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/21] 4.14.144-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 02:02:11PM +0300, Sergei Shtylyov wrote:
->On 10.09.2019 17:54, Ivan Khoronzhuk wrote:
->
->>>Hello!
->>>
->>>On 10.09.2019 13:38, Ivan Khoronzhuk wrote:
->>>
->>>>echo should be replaced on echo -e to handle \n correctly, but instead,
->>>
->>> s/on/with/?
->>s/echo/printf/ instead of s/echo/echo -e/
->
->   I only pointed that 'on' is incorrect there. You replace something 
->/with/ something other...
->
->>
->>printf looks better.
->>
->>>
->>>>replace it on printf as some systems can't handle echo -e.
->>>
->>>  Likewise?
->
->   Same grammatical mistake.
-Oh, will correct it next v.
+stable-rc/linux-4.14.y boot: 130 boots: 0 failed, 122 passed with 8 offline=
+ (v4.14.143-22-g6073f0ee406c)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.143-22-g6073f0ee406c/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.143-22-g6073f0ee406c/
 
--- 
-Regards,
-Ivan Khoronzhuk
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.143-22-g6073f0ee406c
+Git Commit: 6073f0ee406c52baaf3625e28c631a33b20efef5
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 66 unique boards, 23 SoC families, 13 builds out of 201
+
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
