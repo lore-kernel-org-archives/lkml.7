@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70328C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00CAC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4477520717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32E0206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380898;
-	bh=f1ussyl0yeIxmZBfMJ7r0itbq7fEnM3dbc1i3oePXxk=;
+	s=default; t=1568380901;
+	bh=Bm1BnlIDZUnwryajTE320S6bTasMDDIgTNO3VcEA5Og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5XBCIaLk9+tiSjNC6jqF+XFdeKNnUrGzQr1CZIRdP6TbEU2Z/PKaDKYKb1J2QBHW
-	 yCweCGoPx22NV6p56OJp8lOh92YWQKVqpjqvz+XBhNo6iyTKcMCRqxvUEACE6z5LWx
-	 4NqRDxJo2y6Q4/16f93Y0HXSmBSlP+rzZAAFp3Jg=
+	b=uuXxyZqWCw7R1E9iBE2Ja1vZrbR3siSdcD9MWjt3sJiix/45S+kCIZ2ApdNVw51tS
+	 MeSBtd1qP1G62sEl07OvfCfQeWp4mLdDs7IHOlYKCa7Kwz6zFbaCSDbaysGpBzCuQY
+	 d4dxax+8sJlM3Jgk5VgqJ+JPVCy7fDe0La8FICTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390863AbfIMNVh (ORCPT
+        id S2390874AbfIMNVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390847AbfIMNVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:33 -0400
+        id S2390847AbfIMNVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:38 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CFE206BB;
-        Fri, 13 Sep 2019 13:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12C44206BB;
+        Fri, 13 Sep 2019 13:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380892;
-        bh=f1ussyl0yeIxmZBfMJ7r0itbq7fEnM3dbc1i3oePXxk=;
+        s=default; t=1568380897;
+        bh=Bm1BnlIDZUnwryajTE320S6bTasMDDIgTNO3VcEA5Og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXvexKfZ3PZyJ2ICH5Xu1gZfX+T79akEzjIdk4GPSSRVRtO8OzmXC2Xxl/Tw5qiE3
-         HAG7pTARpZ0/g1vPKbm8JzIZZmkWDTDJ39A0+5E8TdKFn/3GsI2f2W6vTxeOobha0R
-         Ab7CvM2iMH26cdK81wb7Dti8xz7Fr7jzjE5mdGtw=
+        b=J0TEHSpt7IPdnwZzv/kFZz9TlYy6bxsnqdG1hjpMwMca4JxOnQGErBYQCQqfuxXcH
+         CDLCNeIznuq4JS0Rh7D+2ifcFR2m00x07ZCi0wT1ShbFcDuoCd8u38mYq93ieMI9/h
+         z3Glo/jQIkstwvA2OHHjvM6Mf8p72sPYmjPqGVdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiwei Bie <tiwei.bie@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 5.2 12/37] vhost/test: fix build for vhost test - again
-Date:   Fri, 13 Sep 2019 14:07:17 +0100
-Message-Id: <20190913130515.217540495@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gustavo Romero <gromero@linux.vnet.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 14/37] powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
+Date:   Fri, 13 Sep 2019 14:07:19 +0100
+Message-Id: <20190913130516.440597006@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -60,62 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiwei Bie <tiwei.bie@intel.com>
+From: Gustavo Romero <gromero@linux.ibm.com>
 
-commit 264b563b8675771834419057cbe076c1a41fb666 upstream.
+commit 8205d5d98ef7f155de211f5e2eb6ca03d95a5a60 upstream.
 
-Since vhost_exceeds_weight() was introduced, callers need to specify
-the packet weight and byte weight in vhost_dev_init(). Note that, the
-packet weight isn't counted in this patch to keep the original behavior
-unchanged.
+When we take an FP unavailable exception in a transaction we have to
+account for the hardware FP TM checkpointed registers being
+incorrect. In this case for this process we know the current and
+checkpointed FP registers must be the same (since FP wasn't used
+inside the transaction) hence in the thread_struct we copy the current
+FP registers to the checkpointed ones.
 
-Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+This copy is done in tm_reclaim_thread(). We use thread->ckpt_regs.msr
+to determine if FP was on when in userspace. thread->ckpt_regs.msr
+represents the state of the MSR when exiting userspace. This is setup
+by check_if_tm_restore_required().
+
+Unfortunatley there is an optimisation in giveup_all() which returns
+early if tsk->thread.regs->msr (via local variable `usermsr`) has
+FP=VEC=VSX=SPE=0. This optimisation means that
+check_if_tm_restore_required() is not called and hence
+thread->ckpt_regs.msr is not updated and will contain an old value.
+
+This can happen if due to load_fp=255 we start a userspace process
+with MSR FP=1 and then we are context switched out. In this case
+thread->ckpt_regs.msr will contain FP=1. If that same process is then
+context switched in and load_fp overflows, MSR will have FP=0. If that
+process now enters a transaction and does an FP instruction, the FP
+unavailable will not update thread->ckpt_regs.msr (the bug) and MSR
+FP=1 will be retained in thread->ckpt_regs.msr.  tm_reclaim_thread()
+will then not perform the required memcpy and the checkpointed FP regs
+in the thread struct will contain the wrong values.
+
+The code path for this happening is:
+
+       Userspace:                      Kernel
+                   Start userspace
+                    with MSR FP/VEC/VSX/SPE=0 TM=1
+                      < -----
+       ...
+       tbegin
+       bne
+       fp instruction
+                   FP unavailable
+                       ---- >
+                                        fp_unavailable_tm()
+					  tm_reclaim_current()
+					    tm_reclaim_thread()
+					      giveup_all()
+					        return early since FP/VMX/VSX=0
+						/* ckpt MSR not updated (Incorrect) */
+					      tm_reclaim()
+					        /* thread_struct ckpt FP regs contain junk (OK) */
+                                              /* Sees ckpt MSR FP=1 (Incorrect) */
+					      no memcpy() performed
+					        /* thread_struct ckpt FP regs not fixed (Incorrect) */
+					  tm_recheckpoint()
+					     /* Put junk in hardware checkpoint FP regs */
+                                         ....
+                      < -----
+                   Return to userspace
+                     with MSR TM=1 FP=1
+                     with junk in the FP TM checkpoint
+       TM rollback
+       reads FP junk
+
+This is a data integrity problem for the current process as the FP
+registers are corrupted. It's also a security problem as the FP
+registers from one process may be leaked to another.
+
+This patch moves up check_if_tm_restore_required() in giveup_all() to
+ensure thread->ckpt_regs.msr is updated correctly.
+
+A simple testcase to replicate this will be posted to
+tools/testing/selftests/powerpc/tm/tm-poison.c
+
+Similarly for VMX.
+
+This fixes CVE-2019-15030.
+
+Fixes: f48e91e87e67 ("powerpc/tm: Fix FP and VMX register corruption")
+Cc: stable@vger.kernel.org # 4.12+
+Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190904045529.23002-1-gromero@linux.vnet.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/test.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/process.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -22,6 +22,12 @@
-  * Using this limit prevents one virtqueue from starving others. */
- #define VHOST_TEST_WEIGHT 0x80000
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -497,13 +497,14 @@ void giveup_all(struct task_struct *tsk)
+ 	if (!tsk->thread.regs)
+ 		return;
  
-+/* Max number of packets transferred before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others with
-+ * pkts.
-+ */
-+#define VHOST_TEST_PKT_WEIGHT 256
++	check_if_tm_restore_required(tsk);
 +
- enum {
- 	VHOST_TEST_VQ = 0,
- 	VHOST_TEST_VQ_MAX = 1,
-@@ -80,10 +86,8 @@ static void handle_vq(struct vhost_test
- 		}
- 		vhost_add_used_and_signal(&n->dev, vq, head, 0);
- 		total_len += len;
--		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
--			vhost_poll_queue(&vq->poll);
-+		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
- 			break;
--		}
- 	}
+ 	usermsr = tsk->thread.regs->msr;
  
- 	mutex_unlock(&vq->mutex);
-@@ -115,7 +119,8 @@ static int vhost_test_open(struct inode
- 	dev = &n->dev;
- 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
- 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV);
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-+		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+ 	if ((usermsr & msr_all_available) == 0)
+ 		return;
  
- 	f->private_data = n;
+ 	msr_check_and_set(msr_all_available);
+-	check_if_tm_restore_required(tsk);
+ 
+ 	WARN_ON((usermsr & MSR_VSX) && !((usermsr & MSR_FP) && (usermsr & MSR_VEC)));
  
 
 
