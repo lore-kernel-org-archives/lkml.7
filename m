@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB98C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFC1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44393206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A86208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380219;
-	bh=p9mHRsmfBsXdcwHg/vnu6HtpVEgWh8FoLp6eVRBalP0=;
+	s=default; t=1568380224;
+	bh=S089siSzkWik0/nefmawD6CYI0z6SyrQGP6BHrVof68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEDft5QuEeQpEUMA4WcZVWjbcT1AMUZo0lETPj1RLH8i8YzyV4CUlLOtoJyK2d1yE
-	 nuTWBTMHq1dBBEjMxchcpPbilIC6z8LWEv4vykJBy0mLf7ZVp3O2W7N86nkccyzeeq
-	 UU2APPgySf2VSJesRQcGA00A51365tnkvlbx7A+g=
+	b=zDH2kfagtegxruGbWT/4ZB+btraMwVvwtyf1Bsyh2GcFd6KkUm3z66DcioJcgYi4b
+	 jJflPDuZHp6lUCk6noGUqbr8HfzAMLryaiwZGUPQTk0A645r9SiM/ecifzfsNhG+y+
+	 u1IcP/yvr2Oml5aOLoWRbUJ5TrYjBaGIIlMw2VCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388726AbfIMNKS (ORCPT
+        id S2388751AbfIMNKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388711AbfIMNKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:15 -0400
+        id S2388734AbfIMNKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:21 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F0F208C0;
-        Fri, 13 Sep 2019 13:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 492E3206A5;
+        Fri, 13 Sep 2019 13:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380214;
-        bh=p9mHRsmfBsXdcwHg/vnu6HtpVEgWh8FoLp6eVRBalP0=;
+        s=default; t=1568380220;
+        bh=S089siSzkWik0/nefmawD6CYI0z6SyrQGP6BHrVof68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4G6VmpzCc9awfX4TuJZ+8iCMPiB6nc/2jFG9lewX9nhGLqP6RMg4ZyXf2fj7PooB
-         hbXkbU4qknMMNEmCkgQ+e8pmLYoll0SSVzJyNrhAaiHP8WETZPrUJXUzfVCNeyOKHi
-         KKeQ1uOUSNEslavztNSDNLuNc8/w5NAdYjbDXUs8=
+        b=XtOsFxPQbxpC5cJjww8BPUuewBZeJp1TFGHTlZaZZSOJ5ZIGm68AF6CutlEySFJ9s
+         qWWn0l/EwMn5Pb+crlwb8+9l6Ok6aYNItGlKwK6kzfUs5frjVxvDnArlNHUfErdVjz
+         uicjIyvLlH62Q06k6ZMQomCprR3f1n6snps89p/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Voytik <voytikd@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/21] arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-rock64
-Date:   Fri, 13 Sep 2019 14:07:09 +0100
-Message-Id: <20190913130508.059005072@linuxfoundation.org>
+Subject: [PATCH 4.14 18/21] clk: s2mps11: Add used attribute to s2mps11_dt_match
+Date:   Fri, 13 Sep 2019 14:07:11 +0100
+Message-Id: <20190913130509.004448784@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
@@ -60,40 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26e2d7b03ea7ff254bf78305aa44dda62e70b78e ]
+[ Upstream commit 9c940bbe2bb47e03ca5e937d30b6a50bf9c0e671 ]
 
-After commit ef05bcb60c1a, boot from USB drives is broken.
-Fix this problem by enabling usb-host regulators during boot time.
+Clang warns after commit 8985167ecf57 ("clk: s2mps11: Fix matching when
+built as module and DT node contains compatible"):
 
-Fixes: ef05bcb60c1a ("arm64: dts: rockchip: fix vcc_host1_5v pin assign on rk3328-rock64")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Voytik <voytikd@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+drivers/clk/clk-s2mps11.c:242:34: warning: variable 's2mps11_dt_match'
+is not needed and will not be emitted [-Wunneeded-internal-declaration]
+static const struct of_device_id s2mps11_dt_match[] = {
+                                 ^
+1 warning generated.
+
+This warning happens when a variable is used in some construct that
+doesn't require a reference to that variable to be emitted in the symbol
+table; in this case, it's MODULE_DEVICE_TABLE, which only needs to hold
+the data of the variable, not the variable itself.
+
+$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_dt_match
+00000078 000003d4 R __mod_of__s2mps11_dt_match_device_table
+
+Normally, with device ID table variables, it means that the variable
+just needs to be tied to the device declaration at the bottom of the
+file, like s2mps11_clk_id:
+
+$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_clk_id
+00000000 00000078 R __mod_platform__s2mps11_clk_id_device_table
+00000000 00000078 r s2mps11_clk_id
+
+However, because the comment above this deliberately doesn't want this
+variable added to .of_match_table, we need to mark s2mps11_dt_match as
+__used to silence this warning. This makes it clear to Clang that the
+variable is used for something, even if a reference to it isn't being
+emitted.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: 8985167ecf57 ("clk: s2mps11: Fix matching when built as module and DT node contains compatible")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/clk-s2mps11.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index e720f40bbd5d7..3f8f528099a80 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -77,6 +77,7 @@
- 		pinctrl-0 = <&usb30_host_drv>;
- 		regulator-name = "vcc_host_5v";
- 		regulator-always-on;
-+		regulator-boot-on;
- 		vin-supply = <&vcc_sys>;
- 	};
- 
-@@ -87,6 +88,7 @@
- 		pinctrl-0 = <&usb20_host_drv>;
- 		regulator-name = "vcc_host1_5v";
- 		regulator-always-on;
-+		regulator-boot-on;
- 		vin-supply = <&vcc_sys>;
- 	};
- 
+diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
+index 14071a57c9262..f5d74e8db4327 100644
+--- a/drivers/clk/clk-s2mps11.c
++++ b/drivers/clk/clk-s2mps11.c
+@@ -255,7 +255,7 @@ MODULE_DEVICE_TABLE(platform, s2mps11_clk_id);
+  * This requires of_device_id table.  In the same time this will not change the
+  * actual *device* matching so do not add .of_match_table.
+  */
+-static const struct of_device_id s2mps11_dt_match[] = {
++static const struct of_device_id s2mps11_dt_match[] __used = {
+ 	{
+ 		.compatible = "samsung,s2mps11-clk",
+ 		.data = (void *)S2MPS11X,
 -- 
 2.20.1
 
