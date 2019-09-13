@@ -2,219 +2,189 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9B7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838D3C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B891206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D54206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C2ObW/Cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfIMBPH (ORCPT
+        id S1726391AbfIMBqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 21:15:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIMBOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:14:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197403708"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:46 -0700
-From:   Megha Dey <megha.dey@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jgg@mellanox.com
-Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: [RFC V1 4/7] irq_remapping: New interfaces to support IMS irqdomain
-Date:   Thu, 12 Sep 2019 18:32:05 -0700
-Message-Id: <1568338328-22458-5-git-send-email-megha.dey@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
-References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+        Thu, 12 Sep 2019 21:46:08 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40926 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfIMBqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:46:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so14419106pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 18:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V6ZASlvWSN+T484aUlx76RKyuEnQ4L0RkMkGolD8D7c=;
+        b=C2ObW/Cr1/1pZMLcduDH2bviiisZSpRBfTvt0UPo2UDygEGZo8w8BLE/XjJuI5lIan
+         5ktW6ZwUJLa6fQvfDKOJHZhttSk9eoczn2OfFCy7dcZdaTOlvl223yqarGRgaikBbUje
+         I325surmEVTeQ3mXI3lvxonHZjBSc4XotItGw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V6ZASlvWSN+T484aUlx76RKyuEnQ4L0RkMkGolD8D7c=;
+        b=PCqVdIx6lcHHXMG+Kijm15WtbDYMyTcKnGju2UmZz3gbG/ML5+QDve+Vbl29Z+tYbz
+         QtX4/X0QQpAU1WK4p8W9kVeE2cyrhjxXOPRf5YU2KH99xhaAmEktL3ONKOAoiMOCnSQE
+         1h48BBA3QQckstWg4VOT5/kL2pes7Xw9vvFchBXTbq984fEZCJuUT3btsWFzZYMqs0xp
+         RHG0CfH33h2PGnCaykyNQK2/emtTYDiX69kSMho6lJ401q2DmLF/CaC45W7QM9hMso/s
+         VJ1+fX1ItttAkXn9EQmuabyXK25kbnLHPmeAr2MuU6gUv0AQ8VTx/F1c3iH7AeBU3ZFU
+         PIsg==
+X-Gm-Message-State: APjAAAXXxi22lhTydxSTKGWArvxTL7NAOmNVuMf2CkfumMGFAOpFKVKP
+        jU1J3isnUnIvk9eRB9CC9wc6vw==
+X-Google-Smtp-Source: APXvYqyAo72HjBMEAKSgzzn9KuQ0eevJXBWTCLKHDZFrNtTiatEfNwg15R3m65Y50nu5FukhBI4bPQ==
+X-Received: by 2002:a17:90a:2464:: with SMTP id h91mr2192411pje.9.1568339166649;
+        Thu, 12 Sep 2019 18:46:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x5sm27484682pfn.149.2019.09.12.18.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2019 18:46:05 -0700 (PDT)
+Date:   Thu, 12 Sep 2019 18:46:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, X86 ML <x86@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org
+Subject: Re: problem starting /sbin/init (32-bit 5.3-rc8)
+Message-ID: <201909121753.C242E16AA@keescook>
+References: <a6010953-16f3-efb9-b507-e46973fc9275@infradead.org>
+ <201909121637.B9C39DF@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909121637.B9C39DF@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce new interfaces for interrupt remapping drivers to support
-IMS irqdomains:
+On Thu, Sep 12, 2019 at 05:16:02PM -0700, Kees Cook wrote:
+> On Thu, Sep 12, 2019 at 02:40:19PM -0700, Randy Dunlap wrote:
+> > This is 32-bit kernel, just happens to be running on a 64-bit laptop.
+> > I added the debug printk in __phys_addr() just before "[cut here]".
+> > 
+> > CONFIG_HARDENED_USERCOPY=y
+> 
+> I can reproduce this under CONFIG_DEBUG_VIRTUAL=y, and it goes back
+> to at least to v5.2. Booting with "hardened_usercopy=off" or without
+> CONFIG_DEBUG_VIRTUAL makes this go away (since __phys_addr() doesn't
+> get called):
+> 
+> __check_object_size+0xff/0x1b0:
+> pfn_to_section_nr at include/linux/mmzone.h:1153
+> (inlined by) __pfn_to_section at include/linux/mmzone.h:1291
+> (inlined by) virt_to_head_page at include/linux/mm.h:729
+> (inlined by) check_heap_object at mm/usercopy.c:230
+> (inlined by) __check_object_size at mm/usercopy.c:280
+> 
+> Is virt_to_head_page() illegal to use under some recently new conditions?
 
-irq_remapping_get_ims_irq_domain(): get the IMS irqdomain for an IRQ
-allocation. We must build one IMS irqdomain for each interrupt remapping
-unit. The driver calls this interface to get the IMS irqdomain associated
-with an IR irqdomain which manages the devices.
+This combination appears to be bugged since the original introduction
+of hardened usercopy in v4.8. Is this an untested combination until
+now? (I don't usually do tests with CONFIG_DEBUG_VIRTUAL, but I guess
+I will from now on!)
 
-Architecture specific hooks:
-arch_create_ims_irq_domain(): create an IMS irqdomain associated with the
-interrupt remapping unit.
+Note from the future (i.e. the end of this email where I figure it out):
+it turns out it's actually these three together:
 
-We also add following callback into struct irq_remap_ops:
-struct irq_domain *(*get_ims_irq_domain)(struct irq_alloc_info *);
+CONFIG_HIGHMEM=y
+CONFIG_DEBUG_VIRTUAL=y
+CONFIG_HARDENED_USERCOPY=y
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
----
- arch/x86/include/asm/irq_remapping.h | 13 +++++++++++++
- drivers/iommu/intel_irq_remapping.c  | 30 ++++++++++++++++++++++++++++++
- drivers/iommu/irq_remapping.c        |  9 +++++++++
- drivers/iommu/irq_remapping.h        |  3 +++
- include/linux/intel-iommu.h          |  1 +
- 5 files changed, 56 insertions(+)
+> 
+> > The BUG is this line in arch/x86/mm/physaddr.c:
+> > 		VIRTUAL_BUG_ON((phys_addr >> PAGE_SHIFT) > max_low_pfn);
+> > It's line 83 in my source file only due to adding <linux/printk.h> and
+> > a conditional pr_crit() call.
 
-diff --git a/arch/x86/include/asm/irq_remapping.h b/arch/x86/include/asm/irq_remapping.h
-index 4bc985f..a735507 100644
---- a/arch/x86/include/asm/irq_remapping.h
-+++ b/arch/x86/include/asm/irq_remapping.h
-@@ -48,11 +48,18 @@ extern struct irq_domain *
- irq_remapping_get_ir_irq_domain(struct irq_alloc_info *info);
- extern struct irq_domain *
- irq_remapping_get_irq_domain(struct irq_alloc_info *info);
-+extern struct irq_domain *
-+irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info);
+What exactly is this trying to test?
+
+> > [   19.730409][    T1] debug: unmapping init [mem 0xdc7bc000-0xdca30fff]
+> > [   19.734289][    T1] Write protecting kernel text and read-only data: 13888k
+> > [   19.737675][    T1] rodata_test: all tests were successful
+> > [   19.740757][    T1] Run /sbin/init as init process
+> > [   19.792877][    T1] __phys_addr: max_low_pfn=0x36ffe, x=0xff001ff1, phys_addr=0x3f001ff1
+
+It seems like this address is way out of range of the physical memory.
+That seems like it's vmalloc or something, but that was actually
+explicitly tested for back in the v4.8 version (it became unneeded
+later).
+
+> > [   19.796561][    T1] ------------[ cut here ]------------
+> > [   19.797501][    T1] kernel BUG at ../arch/x86/mm/physaddr.c:83!
+> > [   19.802799][    T1] invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
+> > [   19.803782][    T1] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
+> > [   19.803782][    T1] Hardware name: Dell Inc. Inspiron 1318                   /0C236D, BIOS A04 01/15/2009
+> > [   19.803782][    T1] EIP: __phys_addr+0xaf/0x100
+> > [   19.803782][    T1] Code: 85 c0 74 67 89 f7 c1 ef 0c 39 f8 73 2e 56 53 50 68 90 9f 1f dc 68 00 eb 45 dc e8 ec b3 09 00 83 c4 14 3b 3d 30 55 cf dc 76 11 <0f> 0b b8 7c 3b 5c dc e8 45 53 4c 00 90 8d 74 26 00 89 d8 e8 39 cd
+> > [   19.803782][    T1] EAX: 00000044 EBX: ff001ff1 ECX: 00000000 EDX: db90a471
+> > [   19.803782][    T1] ESI: 3f001ff1 EDI: 0003f001 EBP: f41ddea0 ESP: f41dde90
+> > [   19.803782][    T1] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010216
+> > [   19.803782][    T1] CR0: 80050033 CR2: dc218544 CR3: 1ca39000 CR4: 000406d0
+> > [   19.803782][    T1] Call Trace:
+> > [   19.803782][    T1]  __check_object_size+0xaf/0x3c0
+> > [   19.803782][    T1]  ? __might_sleep+0x80/0xa0
+> > [   19.803782][    T1]  copy_strings+0x1c2/0x370
+
+Oh, this is actually copying into a kmap() pointer due to the weird
+stuff exec() does:
+
+                        kaddr = kmap(kmapped_page);
+                ...
+                if (copy_from_user(kaddr+offset, str, bytes_to_copy)) {
+
+> > [   19.803782][    T1]  copy_strings_kernel+0x2b/0x40
+> > 
+> > Full boot log or kernel .config file are available if wanted.
+
+Is kmap somewhere "unexpected" in this case? Ah-ha, yes, it seems it is.
+There is even a helper to do the "right" thing as virt_to_page(). This
+seems to be used very rarely in the kernel... is there a page type for
+kmap pages? This seems like a hack, but it fixes it:
+
+
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index 98e924864554..5a14b80ad63e 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -11,6 +11,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- /* Create PCI MSI/MSIx irqdomain, use @parent as the parent irqdomain. */
- extern struct irq_domain *
- arch_create_remap_msi_irq_domain(struct irq_domain *par, const char *n, int id);
+ #include <linux/mm.h>
++#include <linux/highmem.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+@@ -227,7 +228,7 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 	if (!virt_addr_valid(ptr))
+ 		return;
  
-+/* Create IMS irqdomain, use @parent as the parent irqdomain. */
-+#ifdef CONFIG_MSI_IMS
-+extern struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent);
-+#endif
-+
- /* Get parent irqdomain for interrupt remapping irqdomain */
- static inline struct irq_domain *arch_get_ir_parent_domain(void)
- {
-@@ -85,5 +92,11 @@ irq_remapping_get_irq_domain(struct irq_alloc_info *info)
- 	return NULL;
- }
+-	page = virt_to_head_page(ptr);
++	page = compound_head(kmap_to_page((void *)ptr));
  
-+static inline struct irq_domain *
-+irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info)
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_IRQ_REMAP */
- #endif /* __X86_IRQ_REMAPPING_H */
-diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-index 4786ca0..3c0c0cb 100644
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -573,6 +573,10 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
- 						 "INTEL-IR-MSI",
- 						 iommu->seq_id);
- 
-+#ifdef CONFIG_MSI_IMS
-+	iommu->ir_ims_domain = arch_create_ims_irq_domain(iommu->ir_domain);
-+#endif
-+
- 	ir_table->base = page_address(pages);
- 	ir_table->bitmap = bitmap;
- 	iommu->ir_table = ir_table;
-@@ -633,6 +637,10 @@ static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
- 			irq_domain_remove(iommu->ir_msi_domain);
- 			iommu->ir_msi_domain = NULL;
- 		}
-+		if (iommu->ir_ims_domain) {
-+			irq_domain_remove(iommu->ir_ims_domain);
-+			iommu->ir_ims_domain = NULL;
-+		}
- 		if (iommu->ir_domain) {
- 			irq_domain_remove(iommu->ir_domain);
- 			iommu->ir_domain = NULL;
-@@ -1139,6 +1147,27 @@ static struct irq_domain *intel_get_irq_domain(struct irq_alloc_info *info)
- 	return NULL;
- }
- 
-+static struct irq_domain *intel_get_ims_irq_domain(struct irq_alloc_info *info)
-+{
-+	struct intel_iommu *iommu;
-+
-+	if (!info)
-+		return NULL;
-+
-+	switch (info->type) {
-+	case X86_IRQ_ALLOC_TYPE_MSI:
-+	case X86_IRQ_ALLOC_TYPE_MSIX:
-+		iommu = map_dev_to_ir(info->msi_dev);
-+		if (iommu)
-+			return iommu->ir_ims_domain;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return NULL;
-+}
-+
- struct irq_remap_ops intel_irq_remap_ops = {
- 	.prepare		= intel_prepare_irq_remapping,
- 	.enable			= intel_enable_irq_remapping,
-@@ -1147,6 +1176,7 @@ struct irq_remap_ops intel_irq_remap_ops = {
- 	.enable_faulting	= enable_drhd_fault_handling,
- 	.get_ir_irq_domain	= intel_get_ir_irq_domain,
- 	.get_irq_domain		= intel_get_irq_domain,
-+	.get_ims_irq_domain     = intel_get_ims_irq_domain,
- };
- 
- static void intel_ir_reconfigure_irte(struct irq_data *irqd, bool force)
-diff --git a/drivers/iommu/irq_remapping.c b/drivers/iommu/irq_remapping.c
-index 83f36f6..c4352fc 100644
---- a/drivers/iommu/irq_remapping.c
-+++ b/drivers/iommu/irq_remapping.c
-@@ -193,3 +193,12 @@ irq_remapping_get_irq_domain(struct irq_alloc_info *info)
- 
- 	return remap_ops->get_irq_domain(info);
- }
-+
-+struct irq_domain *
-+irq_remapping_get_ims_irq_domain(struct irq_alloc_info *info)
-+{
-+	if (!remap_ops || !remap_ops->get_ims_irq_domain)
-+		return NULL;
-+
-+	return remap_ops->get_ims_irq_domain(info);
-+}
-diff --git a/drivers/iommu/irq_remapping.h b/drivers/iommu/irq_remapping.h
-index 6a190d5..8e198ad 100644
---- a/drivers/iommu/irq_remapping.h
-+++ b/drivers/iommu/irq_remapping.h
-@@ -48,6 +48,9 @@ struct irq_remap_ops {
- 
- 	/* Get the MSI irqdomain associated with the IOMMU device */
- 	struct irq_domain *(*get_irq_domain)(struct irq_alloc_info *);
-+
-+	/* Get the IMS irqdomain associated with the IOMMU device */
-+	struct irq_domain *(*get_ims_irq_domain)(struct irq_alloc_info *);
- };
- 
- extern struct irq_remap_ops intel_irq_remap_ops;
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 4fc6454f..26be769 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -546,6 +546,7 @@ struct intel_iommu {
- 	struct ir_table *ir_table;	/* Interrupt remapping info */
- 	struct irq_domain *ir_domain;
- 	struct irq_domain *ir_msi_domain;
-+	struct irq_domain *ir_ims_domain;
- #endif
- 	struct iommu_device iommu;  /* IOMMU core code handle */
- 	int		node;
+ 	if (PageSlab(page)) {
+ 		/* Check slab allocator for flags and size. */
+
+
+What's the right way to "ignore" the kmap range? (i.e. it's not Slab, so
+ignore it here: I can't find a page type nor a "is this kmap?" helper...)
+
 -- 
-2.7.4
-
+Kees Cook
