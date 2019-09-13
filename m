@@ -2,93 +2,105 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F38C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9168EC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52D20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfaFgpOc"
+	by mail.kernel.org (Postfix) with ESMTP id 73F8E21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbfIMIQB (ORCPT
+        id S2387499AbfIMISM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:16:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33162 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbfIMIQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:16:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so1273610wme.0;
-        Fri, 13 Sep 2019 01:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZegFrMDjH93Hiq0kHvBQhWYD8nMzTsPX5Ki5O2UQQBw=;
-        b=PfaFgpOc/mwAvCtHhBsRPA+6Ol+RiRcKVXOGMihUGWWyCWsA1+I6o1qgk/PiSHh6RE
-         Ju2GeDAIOlYZa17BJLlN4iW/K68eE6FP1Nf0e0W/AZI9JbmYGaVuTRWXtLRFa4vKcS+I
-         QRD5WdlC18keKleZAijwxzfB6JEDtrXoUkD9/c3Tw5LCv+d7LKNswrSDmwCdtEKsODVv
-         Zjkcg3sA7er7sa/oskcEj5JGpFQcUH97a4jskF38uGmg9zU9iJ0870v7jd+mz9DpF2+c
-         IRoUhaE/7y0FaQf/ZJrozuXnNE5yE+sUMDKs8x2nBWRlP8nNIEvyiy27n1Bwq/lBBPff
-         2Uww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZegFrMDjH93Hiq0kHvBQhWYD8nMzTsPX5Ki5O2UQQBw=;
-        b=tZIuyRXP9sTpdMnBatjJLTqfmdDcpRSdPAAEcx7zU+8zVjveBKQJxx4A107oXnVfTI
-         IeWsBKmnmGih4BGvbRl4V37x6d8Iw0/dMvPXnTBa2EWgMf9X2u2N5OQ4o1vhSdcTunTe
-         Wb2+ReZc7rg50gtawpG5l8nOjGesnn/k77wBdXKfQWumTGH/YsEV8ZvEpVxh0XkHlUzl
-         RUlNUJteQxKcJyXD0Au9QDgNuuXgZNTpNA/uMELEeStfSJXnHSn/BgkYNbk0HmzaqSgy
-         mI1gcIFC0hjX1lssAeDZrYmhU2XOwbIuIisOlAby5ead/ipZ/nwKv9Xp7txQQ2VXzrLj
-         K0vg==
-X-Gm-Message-State: APjAAAXwNjVMYISarMiPalpOPW6dDnxj3FBFCUeVFumNs3uLBEXByONW
-        oONx7MWJZL/ZFXXya125Eb0=
-X-Google-Smtp-Source: APXvYqzPD1KCCVP4u+I/AiOqS7VPDqe6WMu/bSWxf0dd5zj8hnFNJt6HCrlNrBbEx+fA2Bvtt9hzFw==
-X-Received: by 2002:a7b:c045:: with SMTP id u5mr2263014wmc.139.1568362558329;
-        Fri, 13 Sep 2019 01:15:58 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id q25sm1546037wmj.22.2019.09.13.01.15.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Sep 2019 01:15:57 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 10:15:55 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 9/9] sunxi_defconfig: add new crypto options
-Message-ID: <20190913081555.GA22538@Red>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-10-clabbe.montjoie@gmail.com>
- <20190907040353.hrz7gmqgzpfpo4xj@flea>
+        Fri, 13 Sep 2019 04:18:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62430 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387480AbfIMISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:18:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 01:18:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,500,1559545200"; 
+   d="scan'208";a="200920538"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 13 Sep 2019 01:18:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 13 Sep 2019 11:18:07 +0300
+Date:   Fri, 13 Sep 2019 11:18:07 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
+Message-ID: <20190913081807.GB27291@lahna.fi.intel.com>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190907040353.hrz7gmqgzpfpo4xj@flea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:03:53AM +0300, Maxime Ripard wrote:
-> On Fri, Sep 06, 2019 at 08:45:51PM +0200, Corentin Labbe wrote:
-> > This patch adds the new allwinner crypto configs to sunxi_defconfig
+On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
+> Hi Rahul,
+> 
+> thanks for your patches!
+> 
+> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
+> <rahul.tanwar@linux.intel.com> wrote:
+> 
+> > This series is to add pinctrl & GPIO controller driver for a new SoC.
+> > Patch 1 adds pinmux & GPIO controller driver.
+> > Patch 2 adds the dt bindings document & include file.
 > >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  arch/arm/configs/sunxi_defconfig | 2 ++
-> >  1 file changed, 2 insertions(+)
+> > Patches are against Linux 5.3-rc5 at below Git tree:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 > 
-> Can you also enable it in arm64's defconfig as a module?
-> 
+> OK nice, I think you need to include Mika Westerberg on this review
+> as well, because I think he likes to stay on top of all things intel
+> in pin control. (Also included two other Intel folks in Finland who usually
+> take an interest in these things.)
 
-Does you prefer adding a Kconfig "DEFAULT m if ARCH_SUNXI" which permit to not touch any defconfig ?
+Thanks Linus for looping me in.
+
+Even if this is not directly based on the stuff we have under
+drivers/pinctrl/intel/*, I have a couple of comments. I don't have this
+patch series in my inbox so I'm commenting here.
+
+Since the driver name is equilibrium I suggest you to name
+intel_pinctrl_driver and the like (probe, remove) to follow that
+convention to avoid confusing this with the Intel pinctrl drivers under
+drivers/pinctrl/intel/*.
+
+Maybe use eqbr prefix so then intel_pinctrl_driver becomes
+eqbr_pinctrl_driver and so on. Also all the structures like
+intel_pinctrl_drv_data should be changed accordingly.
+
+Ditto for:
+
+MODULE_DESCRIPTION("Intel Pinctrl Driver for LGM SoC");
+
+I think better would be:
+
+MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
+
+Anyway you get the idea :)
