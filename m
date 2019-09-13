@@ -2,150 +2,446 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12790C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D952C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCB9206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381230;
-	bh=mALGsTevCUazf6XAF7PmxXR83AJgoqKrui7HH/OqZP0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WI21TdvR6eeCnS23iSlaqVXVCPg6ub0hl7Ec2atXOfprX3GnpETsLE57g6uoogtZC
-	 gNg3tyIgrCrdj6tBTm7qgVsn1XUzXJNycWFMrgJEdxevQrqOPxystEium0xiow6HzW
-	 OFRXLzAkdSRg+R0BRsVpKQ8gGmhktv5uEsUMZsQs=
+	by mail.kernel.org (Postfix) with ESMTP id 5F26620640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lgOOlulz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403827AbfIMN0i (ORCPT
+        id S2391614AbfIMN1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:26:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56018 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391568AbfIMN0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:26:36 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B99FCCFE6;
-        Fri, 13 Sep 2019 13:26:35 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3EFE5C1D4;
-        Fri, 13 Sep 2019 13:26:33 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 65/73] libperf: Add perf_evlist__filter_pollfd function
-Date:   Fri, 13 Sep 2019 15:23:47 +0200
-Message-Id: <20190913132355.21634-66-jolsa@kernel.org>
-In-Reply-To: <20190913132355.21634-1-jolsa@kernel.org>
-References: <20190913132355.21634-1-jolsa@kernel.org>
+        Fri, 13 Sep 2019 09:27:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38242 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390650AbfIMN1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:27:09 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDR7Y9090656;
+        Fri, 13 Sep 2019 08:27:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568381227;
+        bh=BOT4+HTjzQxXq3OYIv0dSDS89qORhvStj/UKjz7Ij3E=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=lgOOlulzYuIrz65W47cZ1pwJFxhpecP4+6kb/VfsR2evESeC4jlwgpiiOeGjsxOoo
+         z648ITvZuq6tVIHIuL+coHjcuJnv2e7+vn8YLkiNsATUj4LHX1DAH4FZc1WYo18ljY
+         EjTbVlB6I40o8fYcQbwyYV3uF+EO3v4jn3f0/brc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDR7K0037102
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Sep 2019 08:27:07 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
+ Sep 2019 08:27:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 13 Sep 2019 08:27:07 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDR7cJ101515;
+        Fri, 13 Sep 2019 08:27:07 -0500
+Date:   Fri, 13 Sep 2019 08:29:12 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 07/13] media: am437x-vpfe: Use a per instance format
+ array instead of a static one
+Message-ID: <20190913132912.jbf3u32a2oshelyb@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-8-bparrot@ti.com>
+ <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 13 Sep 2019 13:26:35 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding perf_evlist__filter_pollfd function and exporting
-it in perf/evlist.h header, so libperf users can check if
-descriptor is still alive.
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:07:29 +0200]:
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > Using a statically defined format array would cause issue when
+> > multiple vpfe instance would be connected to sub-device of
+> > different capabilities. We need to use an instance based array
+> > instead to properly maintain a per port/instance format list.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 108 ++++++++------------
+> >  drivers/media/platform/am437x/am437x-vpfe.h |  34 ++++++
+> >  2 files changed, 74 insertions(+), 68 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index ac759c066d00..e76dc2b3b7b8 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -69,30 +69,6 @@ static const struct vpfe_standard vpfe_standards[] = {
+> >  	{V4L2_STD_625_50, 720, 576, {54, 59}, 1},
+> >  };
+> >  
+> > -struct bus_format {
+> > -	unsigned int width;
+> > -	unsigned int bpp;
+> > -};
+> > -
+> > -/*
+> > - * struct vpfe_fmt - VPFE media bus format information
+> > - * @code: V4L2 media bus format code
+> > - * @shifted: V4L2 media bus format code for the same pixel layout but
+> > - *	shifted to be 8 bits per pixel. =0 if format is not shiftable.
+> > - * @pixelformat: V4L2 pixel format FCC identifier
+> > - * @width: Bits per pixel (when transferred over a bus)
+> > - * @bpp: Bytes per pixel (when stored in memory)
+> > - * @supported: Indicates format supported by subdev
+> > - */
+> > -struct vpfe_fmt {
+> > -	u32 fourcc;
+> > -	u32 code;
+> > -	struct bus_format l;
+> > -	struct bus_format s;
+> > -	bool supported;
+> > -	u32 index;
+> > -};
+> > -
+> >  static struct vpfe_fmt formats[] = {
+> >  	{
+> >  		.fourcc		= V4L2_PIX_FMT_YUYV,
+> > @@ -101,7 +77,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_UYVY,
+> >  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+> > @@ -109,7 +84,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_YVYU,
+> >  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+> > @@ -117,7 +91,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_VYUY,
+> >  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+> > @@ -125,7 +98,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+> >  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+> > @@ -133,7 +105,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 2,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 1,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+> >  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+> > @@ -141,7 +112,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 2,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 1,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+> >  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+> > @@ -149,7 +119,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 2,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 1,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+> >  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+> > @@ -157,7 +126,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 2,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 1,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_RGB565,
+> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+> > @@ -165,7 +133,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	}, {
+> >  		.fourcc		= V4L2_PIX_FMT_RGB565X,
+> >  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+> > @@ -173,7 +140,6 @@ static struct vpfe_fmt formats[] = {
+> >  		.l.bpp		= 4,
+> >  		.s.width	= 8,
+> >  		.s.bpp		= 2,
+> > -		.supported	= false,
+> >  	},
+> >  };
+> >  
+> > @@ -181,13 +147,14 @@ static int
+> >  __vpfe_get_format(struct vpfe_device *vpfe,
+> >  		  struct v4l2_format *format, unsigned int *bpp);
+> >  
+> > -static struct vpfe_fmt *find_format_by_code(unsigned int code)
+> > +static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+> > +					    unsigned int code)
+> >  {
+> >  	struct vpfe_fmt *fmt;
+> >  	unsigned int k;
+> >  
+> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> > -		fmt = &formats[k];
+> > +	for (k = 0; k < vpfe->num_active_fmt; k++) {
+> > +		fmt = vpfe->active_fmt[k];
+> >  		if (fmt->code == code)
+> >  			return fmt;
+> >  	}
+> > @@ -195,13 +162,14 @@ static struct vpfe_fmt *find_format_by_code(unsigned int code)
+> >  	return NULL;
+> >  }
+> >  
+> > -static struct vpfe_fmt *find_format_by_pix(unsigned int pixelformat)
+> > +static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+> > +					   unsigned int pixelformat)
+> >  {
+> >  	struct vpfe_fmt *fmt;
+> >  	unsigned int k;
+> >  
+> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> > -		fmt = &formats[k];
+> > +	for (k = 0; k < vpfe->num_active_fmt; k++) {
+> > +		fmt = vpfe->active_fmt[k];
+> >  		if (fmt->fourcc == pixelformat)
+> >  			return fmt;
+> >  	}
+> > @@ -218,7 +186,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
+> >  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+> >  	struct vpfe_fmt *fmt;
+> >  
+> > -	fmt = find_format_by_code(mbus->code);
+> > +	fmt = find_format_by_code(vpfe, mbus->code);
+> >  	if (WARN_ON(fmt == NULL)) {
+> >  		pr_err("Invalid mbus code set\n");
+> >  		*bpp = 1;
+> > @@ -241,12 +209,12 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+> >  {
+> >  	struct vpfe_fmt *fmt;
+> >  
+> > -	fmt = find_format_by_pix(pix_fmt->pixelformat);
+> > +	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
+> >  	if (!fmt) {
+> >  		/* default to first entry */
+> >  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+> >  			pix_fmt->pixelformat);
+> > -		fmt = &formats[0];
+> > +		fmt = vpfe->active_fmt[0];
+> >  	}
+> >  
+> >  	memset(mbus_fmt, 0, sizeof(*mbus_fmt));
+> > @@ -1494,8 +1462,7 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+> >  {
+> >  	struct vpfe_device *vpfe = video_drvdata(file);
+> >  	struct vpfe_subdev_info *sdinfo;
+> > -	struct vpfe_fmt *fmt = NULL;
+> > -	unsigned int k;
+> > +	struct vpfe_fmt *fmt;
+> >  
+> >  	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
+> >  		f->index);
+> > @@ -1504,17 +1471,10 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+> >  	if (!sdinfo->sd)
+> >  		return -EINVAL;
+> >  
+> > -	if (f->index > ARRAY_SIZE(formats))
+> > +	if (f->index >= vpfe->num_active_fmt)
+> >  		return -EINVAL;
+> >  
+> > -	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> > -		if (formats[k].index == f->index) {
+> > -			fmt = &formats[k];
+> > -			break;
+> > -		}
+> > -	}
+> > -	if (!fmt)
+> > -		return -EINVAL;
+> > +	fmt = vpfe->active_fmt[f->index];
+> >  
+> >  	f->pixelformat = fmt->fourcc;
+> >  
+> > @@ -1593,7 +1553,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+> >  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+> >  
+> >  	/* check for valid format */
+> > -	fmt = find_format_by_pix(fsize->pixel_format);
+> > +	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
+> >  	if (!fmt) {
+> >  		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+> >  			fsize->pixel_format);
+> > @@ -2281,8 +2241,10 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+> >  					       struct vpfe_device, v4l2_dev);
+> >  	struct v4l2_subdev_mbus_code_enum mbus_code;
+> >  	struct vpfe_subdev_info *sdinfo;
+> > +	struct vpfe_fmt *fmt;
+> > +	int ret = 0;
+> >  	bool found = false;
+> > -	int i, j;
+> > +	int i, j, k;
+> >  
+> >  	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
+> >  
+> > @@ -2304,27 +2266,37 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+> >  
+> >  	vpfe->video_dev.tvnorms |= sdinfo->inputs[0].std;
+> >  
+> > -	/* setup the supported formats & indexes */
+> > -	for (j = 0, i = 0; ; ++j) {
+> > -		struct vpfe_fmt *fmt;
+> > -		int ret;
+> > -
+> > +	vpfe->num_active_fmt = 0;
+> > +	for (j = 0, i = 0; (ret != -EINVAL); ++j) {
+> >  		memset(&mbus_code, 0, sizeof(mbus_code));
+> >  		mbus_code.index = j;
+> >  		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> >  		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
+> > -			       NULL, &mbus_code);
+> > +				       NULL, &mbus_code);
+> >  		if (ret)
+> > -			break;
+> > -
+> > -		fmt = find_format_by_code(mbus_code.code);
+> > -		if (!fmt)
+> >  			continue;
+> >  
+> > -		fmt->supported = true;
+> > -		fmt->index = i++;
+> > +		vpfe_dbg(3, vpfe,
+> > +			 "subdev %s: code: %04x idx: %d\n",
+> > +			 subdev->name, mbus_code.code, j);
+> > +
+> > +		for (k = 0; k < ARRAY_SIZE(formats); k++) {
+> > +			fmt = &formats[k];
+> > +			if (mbus_code.code != fmt->code)
+> > +				continue;
+> > +			vpfe->active_fmt[i] = fmt;
+> > +			vpfe_dbg(3, vpfe,
+> > +				 "matched fourcc: %4.4s code: %04x idx: %d\n",
+> > +				 (char *)&fmt->fourcc, mbus_code.code, i);
+> > +			vpfe->num_active_fmt = ++i;
+> > +		}
+> >  	}
+> >  
+> > +	if (!i) {
+> > +		vpfe_err(vpfe, "No suitable format reported by subdev %s\n",
+> > +			 subdev->name);
+> > +		return -EINVAL;
+> > +	}
+> >  	return 0;
+> >  }
+> >  
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+> > index 2dde09780215..6f25750f84e4 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.h
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+> > @@ -215,6 +215,37 @@ struct vpfe_ccdc {
+> >  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
+> >  };
+> >  
+> > +/*
+> > + * struct bus_format - VPFE bus format information
+> > + * @width: Bits per pixel (when transferred over a bus)
+> > + * @bpp: Bytes per pixel (when stored in memory)
+> 
+> Slightly confused: the '@' indicates docbook format, but the '/*'
+> indicates a regular comment. Either choose '/**' or drop the @.
 
-Link: http://lkml.kernel.org/n/tip-7lmjzpk6k2wfhh1os8qw1dxz@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/lib/evlist.c              | 15 +++++++++++++++
- tools/perf/lib/include/perf/evlist.h |  2 ++
- tools/perf/lib/libperf.map           |  1 +
- tools/perf/util/evlist.c             | 12 +-----------
- 4 files changed, 19 insertions(+), 11 deletions(-)
+Yeah I think this driver pre-date all of that.
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 8920833afa9e..ee1d364460e6 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -313,6 +313,21 @@ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
- 	return pos;
- }
- 
-+static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
-+					 void *arg __maybe_unused)
-+{
-+	struct perf_mmap *map = fda->priv[fd].ptr;
-+
-+	if (map)
-+		perf_mmap__put(map);
-+}
-+
-+int perf_evlist__filter_pollfd(struct perf_evlist *evlist, short revents_and_mask)
-+{
-+	return fdarray__filter(&evlist->pollfd, revents_and_mask,
-+			       perf_evlist__munmap_filtered, NULL);
-+}
-+
- int perf_evlist__poll(struct perf_evlist *evlist, int timeout)
- {
- 	return fdarray__poll(&evlist->pollfd, timeout);
-diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 28b6a12a8a2b..16f526e74d13 100644
---- a/tools/perf/lib/include/perf/evlist.h
-+++ b/tools/perf/lib/include/perf/evlist.h
-@@ -32,6 +32,8 @@ LIBPERF_API void perf_evlist__set_maps(struct perf_evlist *evlist,
- 				       struct perf_cpu_map *cpus,
- 				       struct perf_thread_map *threads);
- LIBPERF_API int perf_evlist__poll(struct perf_evlist *evlist, int timeout);
-+LIBPERF_API int perf_evlist__filter_pollfd(struct perf_evlist *evlist,
-+					   short revents_and_mask);
- 
- LIBPERF_API int perf_evlist__mmap(struct perf_evlist *evlist, int pages);
- LIBPERF_API void perf_evlist__munmap(struct perf_evlist *evlist);
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 198dcf305356..90aee2a635b2 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -41,6 +41,7 @@ LIBPERF_0.0.1 {
- 		perf_evlist__poll;
- 		perf_evlist__mmap;
- 		perf_evlist__munmap;
-+		perf_evlist__filter_pollfd;
- 		perf_mmap__consume;
- 		perf_mmap__read_init;
- 		perf_mmap__read_done;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 0c69621e2b2e..9edb0855f711 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -398,19 +398,9 @@ int evlist__add_pollfd(struct evlist *evlist, int fd)
- 	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN);
- }
- 
--static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
--					 void *arg __maybe_unused)
--{
--	struct perf_mmap *map = fda->priv[fd].ptr;
--
--	if (map)
--		perf_mmap__put(map);
--}
--
- int evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask)
- {
--	return fdarray__filter(&evlist->core.pollfd, revents_and_mask,
--			       perf_evlist__munmap_filtered, NULL);
-+	return perf_evlist__filter_pollfd(&evlist->core, revents_and_mask);
- }
- 
- int evlist__poll(struct evlist *evlist, int timeout)
--- 
-2.21.0
+Now did you mean to fix just the above comments or all of the other ones
+also.
 
+Frankly, I do not have a clear idea either way.
+I guess i'll just remove the '@' tag then.
+
+> 
+> > + */
+> > +struct bus_format {
+> > +	unsigned int width;
+> > +	unsigned int bpp;
+> > +};
+> > +
+> > +/*
+> > + * struct vpfe_fmt - VPFE media bus format information
+> > + * @fourcc: V4L2 pixel format code
+> > + * @code: V4L2 media bus format code
+> > + * @l: 10 bit bus format info
+> > + * @s: 8 bit bus format info
+> > + */
+> > +struct vpfe_fmt {
+> > +	u32 fourcc;
+> > +	u32 code;
+> > +	struct bus_format l;
+> > +	struct bus_format s;
+> > +};
+> > +
+> > +/*
+> > + * This value needs to be at least as large as the number of entry in
+> > + * formats[].
+> > + * When formats[] is modified make sure to adjust this value also.
+> > + */
+> > +#define VPFE_MAX_ACTIVE_FMT	10
+> 
+> I recommend adding something like:
+> 
+> #if ARRAY_SIZE(formats) > VPFE_MAX_ACTIVE_FMT
+> 	#error must update VPFE_MAX_ACTIVE_FMT
+> #endif
+> 
+> to am437x-vpfe.c.
+> 
+> Or something along those lines. Don't rely on just the comment :-)
+
+Ah yes very good.
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > +
+> >  struct vpfe_device {
+> >  	/* V4l2 specific parameters */
+> >  	/* Identifies video device for this channel */
+> > @@ -252,6 +283,9 @@ struct vpfe_device {
+> >  	struct v4l2_format fmt;
+> >  	/* Used to store current bytes per pixel based on current format */
+> >  	unsigned int bpp;
+> > +	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
+> > +	unsigned int num_active_fmt;
+> > +
+> >  	/*
+> >  	 * used when IMP is chained to store the crop window which
+> >  	 * is different from the image window
+> > 
+> 
