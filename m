@@ -2,200 +2,217 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E4AC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C760C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844F3206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:43:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MyzBBF8F";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UFK4Ffj+"
+	by mail.kernel.org (Postfix) with ESMTP id 05194206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfIMVnv (ORCPT
+        id S1731306AbfIMVoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:43:51 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:28144 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727985AbfIMVnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:43:51 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DLhEi0028653;
-        Fri, 13 Sep 2019 14:43:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=t29OAYCSJodBeaQ4OAYLbJt+9h6OFHwbktpmVfe1jKM=;
- b=MyzBBF8F05/+yBdNgHDkYeg0D3gAvzXTTwRDlM0XLyUdtEK02sdXRcX42Q471h+4UlSc
- Rpnt8slmVvA6yhXxkFU5L4Qb5SF7xnfAU17ocCppxrSUP6uMInhDSFzWw7645eOJFzNP
- 3xMI2rjfbJdirg++cFR4uPekb9AS1eDCdpQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2v0ehf1cd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 14:43:25 -0700
-Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 13 Sep 2019 14:43:24 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 13 Sep 2019 14:43:24 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 13 Sep 2019 14:43:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dl1r6nKZeBfwEW2DULCJQfwWRw9aipl03EEhf/N9IQg9v1PFXPCdfNkB8fuGafw7AgcbCpZ7CyJI85DphyR+3Osia43333Aez1A1+tV9R+JTITllU03ozVRvn4goVTsv4jjcT9XuliWzfCi3YeR8MmbdXvP4vNiodbkYVuWjyK5/OoEDBRaVMicJMrLkK3+mN/6fAsmeCNQgXwrBVaNhP8ZWFzLiAmr8JywKJTkEkNHQ2RPeK6Di4PIllMLdnQ05t0beQZMLSX6zHNd2ZJYQhi27yPrFmtRBMBGAV/gM/4oLUqTn34FSoz62yp+MOVqgkwiSOOG8hV82zBqnzQFywA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t29OAYCSJodBeaQ4OAYLbJt+9h6OFHwbktpmVfe1jKM=;
- b=QELwGw1HVCkkpLLAC09FeNrTbDfquJlfNmiy3Sip2g13zjmnFOiwzTIu4d+Mbbw6rQidAHCny4fAypZOcsPe3t9/FfkNeA1gJ4lwpTukCGTB1eqg943sq2Pe0ME89uJmlzj9u9VBJSjIeZfbWgyn605i/nuNY282RTJzsyoeJFsuz1Vadtm1Nz6NLRq0Xg4GcLkhfxGMEmJLLZClfEqwSOgKsPHvCGYI4hDyxrdIMMXOHBOswDCsvzceeonmUl+QmP0sd7I03todofW6hHBFPb7WRwQUXqk3fJm3JG/ftjgg3OLWKtnSDbJwdsuuHCjGVZBac5ILq5s02wutYXI9Nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t29OAYCSJodBeaQ4OAYLbJt+9h6OFHwbktpmVfe1jKM=;
- b=UFK4Ffj+kmSrP4fSAS75ZGKdSOELrW5eb6q+8MOSY0CNipBq1Niz5aFe9sNr/njM0mItqnjVTQyPbRofhxGqMSecW4oS/qrlDxzHZJ/jEVMunyhqUDABSKQ3aWFjcHOT2oFuIz3lHBZzwLZlSpDDym0O0Krx/Xmy7SC+kH2TXqs=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.60.27) by
- BYAPR15MB2790.namprd15.prod.outlook.com (20.179.158.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Fri, 13 Sep 2019 21:43:23 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::95ab:61a0:29f4:e07e]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::95ab:61a0:29f4:e07e%6]) with mapi id 15.20.2263.021; Fri, 13 Sep 2019
- 21:43:22 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH bpf-next 10/11] libbpf: makefile: add C/CXX/LDFLAGS to
- libbpf.so and test_libpf targets
-Thread-Topic: [PATCH bpf-next 10/11] libbpf: makefile: add C/CXX/LDFLAGS to
- libbpf.so and test_libpf targets
-Thread-Index: AQHVZ8P227ZjVLoXXk6TohiF3lwY/qcqKPuA
-Date:   Fri, 13 Sep 2019 21:43:22 +0000
-Message-ID: <0ad42019-2614-b70c-f93e-527c136bba83@fb.com>
-References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
- <20190910103830.20794-11-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190910103830.20794-11-ivan.khoronzhuk@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW2PR16CA0057.namprd16.prod.outlook.com
- (2603:10b6:907:1::34) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:112::27)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::ec5b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0811495f-7f13-455d-f49e-08d738936674
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB2790;
-x-ms-traffictypediagnostic: BYAPR15MB2790:
-x-microsoft-antispam-prvs: <BYAPR15MB27901BEF426C2D8EEDCABC0FD3B30@BYAPR15MB2790.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:172;
-x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(39860400002)(396003)(189003)(199004)(6512007)(2906002)(478600001)(66556008)(305945005)(110136005)(66476007)(6486002)(81156014)(8676002)(6436002)(66446008)(54906003)(486006)(86362001)(256004)(2501003)(71200400001)(71190400001)(316002)(476003)(7416002)(36756003)(14454004)(76176011)(99286004)(7736002)(31686004)(64756008)(31696002)(2201001)(5660300002)(4326008)(25786009)(52116002)(81166006)(6116002)(66946007)(8936002)(229853002)(102836004)(386003)(53546011)(186003)(6506007)(446003)(11346002)(2616005)(53936002)(6246003)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2790;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h6eI+6TiSSBB2gQwkFT9WOhp6Qvb/zIcqCZFReq/T4GzXVA8gRzSVd7tnF700OsjoL5zKGvl1SbMNPtHtV7fe0lJjwzmUApqR9+dzj7eNKFI5P7zhDdjJjqgjoCymgBTtJkLfh/Q/SYpIr1EMW/z/WUXkZcO6CdZu7Bwww5/Nt8ztoHPXTW76tQEXxFan80nsKGqubBEeyAFE3tneu8OZ+pKyV5j9qVdRed8W9VB0TJNDraVSx9Qj4XnqzS+Spx8ORjc/2EKgdTHbpb4qd1Q0bOXycvsS0z4kWYndIxpV4ZLsKkC5rPsJVmq9OaNdRQ5sxkuWPfKSdckTpJwA2+tDAFcIsErrAJQ+wgPf9e3LfUsyVxH9KIuEYGaoAaDUizMia3LsE5L23PbQd2EMHQePeRKJrjEckNMrc4Fs6u2T3o=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9276BE0779FC2146AD5B81D975A87A3E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 13 Sep 2019 17:44:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37804 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730990AbfIMVoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 17:44:23 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 271317F75E;
+        Fri, 13 Sep 2019 21:44:23 +0000 (UTC)
+Received: from [10.36.116.16] (ovpn-116-16.ams2.redhat.com [10.36.116.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 700B95D712;
+        Fri, 13 Sep 2019 21:44:21 +0000 (UTC)
+Subject: Re: [PATCH] hv_balloon: Add the support of hibernation
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+References: <1568245010-66879-1-git-send-email-decui@microsoft.com>
+ <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
+ <PU1P153MB0169E922DF7A5A43C7026D82BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <7d218fd5-76d9-f5fa-548a-76fe5dfab230@redhat.com>
+ <PU1P153MB01691EC455AAF37BC6AF26DDBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <ef6f8554-8324-a4d8-4549-759495e482b7@redhat.com>
+Date:   Fri, 13 Sep 2019 23:44:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0811495f-7f13-455d-f49e-08d738936674
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 21:43:22.8652
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +yq3wAw+VXgg+4uUkBDgU+vAgTJyJnd1QQ1Ujz+mijBS2FFuwTjzT8FOeb0Ng2xb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2790
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-13_10:2019-09-11,2019-09-13 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909130216
-X-FB-Internal: deliver
+In-Reply-To: <PU1P153MB01691EC455AAF37BC6AF26DDBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 13 Sep 2019 21:44:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDkvMTAvMTkgMTE6MzggQU0sIEl2YW4gS2hvcm9uemh1ayB3cm90ZToNCj4gSW4gY2Fz
-ZSBvZiBMREZMQUdTIGFuZCBFWFRSQV9DQy9DWFggZmxhZ3MgdGhlcmUgaXMgbm8gd2F5IHRvIHBh
-c3MgdGhlbQ0KPiBjb3JyZWN0bHkgdG8gYnVpbGQgY29tbWFuZCwgZm9yIGluc3RhbmNlIHdoZW4g
-LS1zeXNyb290IGlzIHVzZWQgb3INCj4gZXh0ZXJuYWwgbGlicmFyaWVzIGFyZSB1c2VkLCBsaWtl
-IC1sZWxmLCB3aWNoIGNhbiBiZSBhYnNlbnQgaW4NCj4gdG9vbGNoYWluLiBUaGlzIGlzIHVzZWQg
-Zm9yIHNhbXBsZXMvYnBmIGNyb3NzLWNvbXBpbGluZyBhbGxvd2luZyB0bw0KPiBnZXQgZWxmIGxp
-YiBmcm9tIHN5c3Jvb3QuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBJdmFuIEtob3JvbnpodWsgPGl2
-YW4ua2hvcm9uemh1a0BsaW5hcm8ub3JnPg0KPiAtLS0NCj4gICBzYW1wbGVzL2JwZi9NYWtlZmls
-ZSAgIHwgIDggKysrKysrKy0NCj4gICB0b29scy9saWIvYnBmL01ha2VmaWxlIHwgMTEgKysrKysr
-KystLS0NCj4gICAyIGZpbGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
-KC0pDQoNCkNvdWxkIHlvdSBzZXBhcmF0ZSB0aGlzIHBhdGNoIGludG8gdHdvPw0KT25lIG9mIGxp
-YmJwZiBhbmQgYW5vdGhlciBmb3Igc2FtcGxlcy4NCg0KVGhlIHN1YmplY3QgJ2xpYmJwZjogLi4u
-JyBpcyBub3QgZW50aXJlbHkgYWNjdXJhdGUuDQoNCj4gDQo+IGRpZmYgLS1naXQgYS9zYW1wbGVz
-L2JwZi9NYWtlZmlsZSBiL3NhbXBsZXMvYnBmL01ha2VmaWxlDQo+IGluZGV4IDc5YzlhYTQxODMy
-ZS4uNGVkYzUyMzJjZmMxIDEwMDY0NA0KPiAtLS0gYS9zYW1wbGVzL2JwZi9NYWtlZmlsZQ0KPiAr
-KysgYi9zYW1wbGVzL2JwZi9NYWtlZmlsZQ0KPiBAQCAtMTg2LDYgKzE4NiwxMCBAQCBjY2ZsYWdz
-LXkgKz0gLUkkKHNyY3RyZWUpL3Rvb2xzL3BlcmYNCj4gICBjY2ZsYWdzLXkgKz0gJChEX09QVElP
-TlMpDQo+ICAgY2NmbGFncy15ICs9IC1XYWxsDQo+ICAgY2NmbGFncy15ICs9IC1mb21pdC1mcmFt
-ZS1wb2ludGVyDQo+ICsNCj4gK0VYVFJBX0NYWEZMQUdTIDo9ICQoY2NmbGFncy15KQ0KPiArDQo+
-ICsjIG9wdGlvbnMgbm90IHZhbGlkIGZvciBDKysNCj4gICBjY2ZsYWdzLXkgKz0gLVdtaXNzaW5n
-LXByb3RvdHlwZXMNCj4gICBjY2ZsYWdzLXkgKz0gLVdzdHJpY3QtcHJvdG90eXBlcw0KPiAgIA0K
-PiBAQCAtMjUyLDcgKzI1Niw5IEBAIGNsZWFuOg0KPiAgIA0KPiAgICQoTElCQlBGKTogRk9SQ0UN
-Cj4gICAjIEZpeCB1cCB2YXJpYWJsZXMgaW5oZXJpdGVkIGZyb20gS2J1aWxkIHRoYXQgdG9vbHMv
-IGJ1aWxkIHN5c3RlbSB3b24ndCBsaWtlDQo+IC0JJChNQUtFKSAtQyAkKGRpciAkQCkgUk09J3Jt
-IC1yZicgTERGTEFHUz0gc3JjdHJlZT0kKEJQRl9TQU1QTEVTX1BBVEgpLy4uLy4uLyBPPQ0KPiAr
-CSQoTUFLRSkgLUMgJChkaXIgJEApIFJNPSdybSAtcmYnIEVYVFJBX0NGTEFHUz0iJChQUk9HU19D
-RkxBR1MpIiBcDQo+ICsJCUVYVFJBX0NYWEZMQUdTPSIkKEVYVFJBX0NYWEZMQUdTKSIgTERGTEFH
-Uz0kKFBST0dTX0xERkxBR1MpIFwNCj4gKwkJc3JjdHJlZT0kKEJQRl9TQU1QTEVTX1BBVEgpLy4u
-Ly4uLyBPPQ0KPiAgIA0KPiAgICQob2JqKS9zeXNjYWxsX25ycy5oOgkkKG9iaikvc3lzY2FsbF9u
-cnMucyBGT1JDRQ0KPiAgIAkkKGNhbGwgZmlsZWNoayxvZmZzZXRzLF9fU1lTQ0FMTF9OUlNfSF9f
-KQ0KPiBkaWZmIC0tZ2l0IGEvdG9vbHMvbGliL2JwZi9NYWtlZmlsZSBiL3Rvb2xzL2xpYi9icGYv
-TWFrZWZpbGUNCj4gaW5kZXggYzZmOTRjZmZlMDZlLi5iY2NmYTU1NmVmNGUgMTAwNjQ0DQo+IC0t
-LSBhL3Rvb2xzL2xpYi9icGYvTWFrZWZpbGUNCj4gKysrIGIvdG9vbHMvbGliL2JwZi9NYWtlZmls
-ZQ0KPiBAQCAtOTQsNiArOTQsMTAgQEAgZWxzZQ0KPiAgICAgQ0ZMQUdTIDo9IC1nIC1XYWxsDQo+
-ICAgZW5kaWYNCj4gICANCj4gK2lmZGVmIEVYVFJBX0NYWEZMQUdTDQo+ICsgIENYWEZMQUdTIDo9
-ICQoRVhUUkFfQ1hYRkxBR1MpDQo+ICtlbmRpZg0KPiArDQo+ICAgaWZlcSAoJChmZWF0dXJlLWxp
-YmVsZi1tbWFwKSwgMSkNCj4gICAgIG92ZXJyaWRlIENGTEFHUyArPSAtREhBVkVfTElCRUxGX01N
-QVBfU1VQUE9SVA0KPiAgIGVuZGlmDQo+IEBAIC0xNzYsOCArMTgwLDkgQEAgJChCUEZfSU4pOiBm
-b3JjZSBlbGZkZXAgYnBmZGVwDQo+ICAgJChPVVRQVVQpbGliYnBmLnNvOiAkKE9VVFBVVClsaWJi
-cGYuc28uJChMSUJCUEZfVkVSU0lPTikNCj4gICANCj4gICAkKE9VVFBVVClsaWJicGYuc28uJChM
-SUJCUEZfVkVSU0lPTik6ICQoQlBGX0lOKQ0KPiAtCSQoUVVJRVRfTElOSykkKENDKSAtLXNoYXJl
-ZCAtV2wsLXNvbmFtZSxsaWJicGYuc28uJChMSUJCUEZfTUFKT1JfVkVSU0lPTikgXA0KPiAtCQkJ
-CSAgICAtV2wsLS12ZXJzaW9uLXNjcmlwdD0kKFZFUlNJT05fU0NSSVBUKSAkXiAtbGVsZiAtbyAk
-QA0KPiArCSQoUVVJRVRfTElOSykkKENDKSAkKExERkxBR1MpIFwNCj4gKwkJLS1zaGFyZWQgLVds
-LC1zb25hbWUsbGliYnBmLnNvLiQoTElCQlBGX01BSk9SX1ZFUlNJT04pIFwNCj4gKwkJLVdsLC0t
-dmVyc2lvbi1zY3JpcHQ9JChWRVJTSU9OX1NDUklQVCkgJF4gLWxlbGYgLW8gJEANCj4gICAJQGxu
-IC1zZiAkKEBGKSAkKE9VVFBVVClsaWJicGYuc28NCj4gICAJQGxuIC1zZiAkKEBGKSAkKE9VVFBV
-VClsaWJicGYuc28uJChMSUJCUEZfTUFKT1JfVkVSU0lPTikNCj4gICANCj4gQEAgLTE4NSw3ICsx
-OTAsNyBAQCAkKE9VVFBVVClsaWJicGYuYTogJChCUEZfSU4pDQo+ICAgCSQoUVVJRVRfTElOSykk
-KFJNKSAkQDsgJChBUikgcmNzICRAICReDQo+ICAgDQo+ICAgJChPVVRQVVQpdGVzdF9saWJicGY6
-IHRlc3RfbGliYnBmLmNwcCAkKE9VVFBVVClsaWJicGYuYQ0KPiAtCSQoUVVJRVRfTElOSykkKENY
-WCkgJChJTkNMVURFUykgJF4gLWxlbGYgLW8gJEANCj4gKwkkKFFVSUVUX0xJTkspJChDWFgpICQo
-Q1hYRkxBR1MpICQoTERGTEFHUykgJChJTkNMVURFUykgJF4gLWxlbGYgLW8gJEANCj4gICANCj4g
-ICAkKE9VVFBVVClsaWJicGYucGM6DQo+ICAgCSQoUVVJRVRfR0VOKXNlZCAtZSAic3xAUFJFRklY
-QHwkKHByZWZpeCl8IiBcDQo+IA0K
+On 13.09.19 22:54, Dexuan Cui wrote:
+>> From: David Hildenbrand <david@redhat.com>
+>> Sent: Friday, September 13, 2019 12:46 AM
+>>
+>> On 12.09.19 21:18, Dexuan Cui wrote:
+>>> 3. Hibernation can be especially useful when we pass through a PCIe device,
+>>> e.g. a NIC, a NVMe controller or a GPU, to the VM, as usually save/restore
+>>> and live migration can not work with this kind of configuration, because
+>>> usually the host doesn't know how to save/restore the state of the PCIe
+>>> device.
+>>
+>> Interesting. Under QEMU/KVM (especially for migration), the discussed
+>> solutions I am aware of rather wanted to temporarily unplug the PCI
+>> devices or replace them with some kind of "standby" device temporarily.
+> 
+> For the complex devices like a modern GPU, there may not be an 
+> equivalent "standby" software-emulated device for it, and unplugging the
+> PCI device temporarily is not good, as it may not be transparent to the
+> userspace applications. Hibernation here is especially useful, e.g. to Virtual
+> Desktop Infrastructure users whose VMs can own physical GPUs, because
+> all the userspace applications are frozen when the VM is hibernated, and
+> when the VM resumes back, the applications are automatically resumed 
+> and continue to run seamlessly, at least in theory. A hibernated VM saves
+> compute resources and cost for the users.
+
+Yes, I can see how GPUs might be problematic, especially for desktop
+infrastructures (and maybe especially when running specific guest
+operating systems :) ). Thanks for the explanation.
+
+[...]
+
+> On recent Windows Server 2019+ hosts, the toolstacks on the hosts
+> guarantees that Dynamic Memory and Memory Resizing can not be enabled
+> if the virtual ACPI S4 state is enabled, and vice versa. Please refer to the
+> long write-up I made here: https://lkml.org/lkml/2019/9/5/1160 .
+
+Hah, so the patch here is not actually relevant for modern Hyper-V
+installations. (I would have loved to read that in the patch description
+- but maybe I missed that)
+
+> 
+> And, to make the hibernation functionality automated, the host is able to
+> send a "please hibernate" message to the VM via the Hyper-V shutdown
+> device upon the user's request (e.g. via GUI or scripting): see 
+> https://lkml.org/lkml/2019/9/13/811 . When the host sends the message,
+> it checks if the virtual ACPI S4 state is enabled for the VM: if not, the host
+> refuses to send the message. This means that the user does want to make
+> sure the virtual ACPI S4 state is enabled for the VM, if the user of the VM
+> wants to use the hibernation feature, and this means Dynamic Memory
+> and Memory Resizing can not be active due to the restrictions from the 
+> host toolstack.
+
+Okay, *but* this is a current limitation. Just saying. If you could at
+least support balloon inflate/deflate, that would be a clear win for
+users. And less configuration knobs.
+
+> 
+> And the hibernation functionality won't be officially supported on old
+> Windows Server hosts.
+> 
+> So, IMHO we can't be bother to implement the idea you described in
+> detail. Sorry. :-)
+
+No worries, I neither develop for, use or work with Hyper-V. I was just
+reading along and wondering why you basically make the hv_balloon
+unusable in these environments. (initially I thought, "why don't you
+just disallow probing the device completely")
+
+I am aware of the (hypervisor) issues of hibernation/suspend when it
+comes to balloon drivers / memory hot(un)plug. (currently working on
+virtio-mem myself and initially decided to block any
+hibernation/suspension attempts in case the driver is loaded and memory
+was plugged/unplugged)
+
+> 
+> And, while I agree your idea is good, technically speaking I suspect it may
+> not be really useful, because once hv_balloon allows balloon-up/down,
+> hv_balloon effectively loses control of memory pages: after the host
+> takes some memory away, the VM never knows when exactly the
+> host will give it back -- actually the host never guarantees how soon
+> it will give the memory back. Consequently, the VM almost immediately
+> ends up in an un-hibernatable state...
+If you go via the host, you might be able to make sure to request to
+deflate the balloon before you try to hibernate, and inflate again when
+back up. You might even ask the user for permissions. Of course, once
+you deflated the balloon, it might not be guaranteed to inflate the
+balloon to the original size. But after all, it's "dynamic memory", so
+it might even be what the name suggests. It could be very well
+controlled from the host.
+
+If you go via the guest, you would first have to tell your hypervisor
+"please allow me to deflate so I can hibernate", or something like that.
+After hibernation (or some time X), the host might then decide to
+inflate again.
+
+E.g., take a look at virtio-balloon. When suspending, it simply deflates
+(without asking ...), to inflate again when resuming. Not saying that's
+the best approach (it's not :) ), but one approach to at least make it work.
+
+Anyhow, just some comments from my side :) I can see how Windows Server
+worked around that issue right now by just XOR'ing both features.
+
+> 
+> Thanks,
+> -- Dexuan
+> 
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
