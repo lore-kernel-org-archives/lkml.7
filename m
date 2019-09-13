@@ -2,136 +2,178 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F1DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C6DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A0A20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5886214DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vXIy2wUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfIMVUz (ORCPT
+        id S2389558AbfIMVYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:20:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37878 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731105AbfIMVUz (ORCPT
+        Fri, 13 Sep 2019 17:24:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32863 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731214AbfIMVYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:20:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so16105583pfo.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:20:54 -0700 (PDT)
+        Fri, 13 Sep 2019 17:24:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d10so23166782lfi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M7RhwXkvx5UdXmM9G4lNP2WF3fIHiZECXKfzifEwcp4=;
+        b=vXIy2wUt6CHXoGo9KPMbdEWFr+4Ws+dQLZDXXickxOjGdu3VW2EHmmG5X71zL4Ew/2
+         mc1yYqRPVxOTrS1mjS9mO3DqGj2lneRbZuDyTEKfYxOizw/XJgcgxgUrYGTvqJYeBuJV
+         ZEGU4RVBYG8GkE0kL2ee7rXMfkpO4MMQlBSd/pwcSBCULXbdkyy97eS5ZepJxd/E5FKY
+         xBy5f3WSxa+qiw84F+Ue1OFUO/JAcKtlWa577IzduLR/cvVivD6r9GEyvtHJQHO1qInK
+         82j/HEJowx+BF5Q2Xgqq99Mb2/W/MN+huQjMXUjsOqV0V0csQV8NQWxF4+N0wE2BB4s4
+         2q+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=9P/XjVbI97/jTRRG3gmFq66lGI4E5K6bWBMtKJXZDto=;
-        b=jOoyPEKWjbet+gBera2P92KJv6JMNMBnex1/tgwXFB4G1e5sIzNzJeJzvr/+lOo7k/
-         msICywoBTqm/JsZjDoiqY3pKCCwCQYfwB0XHnQsrQeHaC0K77ks/ky4075ztQ3x1GxK2
-         reEJwyAcdzNnxDj4BqEfQ1jQMcaJotBtXnqQzIilewen3j7HEUYdqXpa25RcmRO66cjD
-         hd4MYi1Z3Buu3/hCd+9Q8EjOOO36vzDunMiorPBQE5NiQ8P7jciJD/roGLgtTAB7vuD1
-         CRnRm87X9N7IuAq4qgsGwvmkj6dd1WKX8M/b6m7OAtPMpuEZ5c3iDuGYsTRyOSHAnDdf
-         fzTg==
-X-Gm-Message-State: APjAAAUPlnYt5ddLvoKGhztxKHvKpYBlHxu2MBUmXNhSKJ5o6Pxa1/z1
-        g4FlhiToNgU16WVLS+PdCvuiXg==
-X-Google-Smtp-Source: APXvYqxGX38OpJukmSdJgfGgVppHv0oE3pZZWx0OtjxeuAEjhQlb/mU/6Zxreniznz8l4dOfPg2gHQ==
-X-Received: by 2002:a17:90a:37d1:: with SMTP id v75mr7640029pjb.33.1568409654241;
-        Fri, 13 Sep 2019 14:20:54 -0700 (PDT)
-Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
-        by smtp.gmail.com with ESMTPSA id s73sm2940942pjb.15.2019.09.13.14.20.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 14:20:53 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 14:20:53 -0700 (PDT)
-X-Google-Original-Date: Fri, 13 Sep 2019 14:18:36 PDT (-0700)
-Subject:     Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-In-Reply-To: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
-CC:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, sagar.kadam@sifive.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=M7RhwXkvx5UdXmM9G4lNP2WF3fIHiZECXKfzifEwcp4=;
+        b=XITf6N/2Bn3ImdKnswkE4wIiQlQQqX8pAV9mFiPaVYtZTv6XzoXab1gcDhX//vdlmW
+         YZA7XUj+/IwLhyTs6Hv6AGi6DMuiqFWiSKa1AzWIQ2BfmDY8wDogpFx/xgnalCl8fUqH
+         F6QcMJOtLuTtoPyKg7Z4OxKvtQZM22L+t4ePUTuw7INlKIm8zn7Sv2GV4zdQ6djGbZBE
+         /77CMRkJ79oSL9HlYGN+s/t8faS/Od49abhkeu6NglMxt38dDzxmaDSbvUSy+Uz4c0hp
+         eUyhpMDtphB05KTKljDVkYUyGQIA1QjhbD/lbgxhb8QUKy2TP1zC6Y/5u4ws8QKBFZ0h
+         tE9w==
+X-Gm-Message-State: APjAAAX5q71oANnFl4SBKxwxLfZwBnuWsXWVwfiBwS2nihobpSNX0TvJ
+        GLK1G/4lREhgr1zFMudGTuQ2Eh892wI=
+X-Google-Smtp-Source: APXvYqz4+ycJ/IxKPzka58i4Xx9/yTLRhRavI/eAkAU02kKZDMblx3U4TzjFff6RCcX5HmTFSELOjw==
+X-Received: by 2002:a19:4a10:: with SMTP id x16mr34910188lfa.126.1568409846959;
+        Fri, 13 Sep 2019 14:24:06 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id p8sm6619563ljn.93.2019.09.13.14.24.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Sep 2019 14:24:06 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 00:24:04 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH bpf-next 05/11] samples: bpf: makefile: use D vars from
+ KBUILD_CFLAGS to handle headers
+Message-ID: <20190913212402.GB26724@khorivan>
+Mail-Followup-To: Yonghong Song <yhs@fb.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" <clang-built-linux@googlegroups.com>
+References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
+ <20190910103830.20794-6-ivan.khoronzhuk@linaro.org>
+ <97ca4228-145a-2449-b4ba-8e79380a54f4@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <97ca4228-145a-2449-b4ba-8e79380a54f4@fb.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 02:52:07 PDT (-0700), yash.shah@sifive.com wrote:
-> Hi,
+On Fri, Sep 13, 2019 at 09:12:01PM +0000, Yonghong Song wrote:
 >
-> Any comments on this patch?
-
-I don't see "sifive,pwm0" in the DT bindings documentation, and it doesn't 
-match our standard way of doing these things (which would have at least 
-"sifive,fu540-c000-pwm").
-
 >
-> - Yash
->
-> On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
+>On 9/10/19 11:38 AM, Ivan Khoronzhuk wrote:
+>> The kernel headers are reused from samples bpf, and autoconf.h is not
+>> enough to reflect complete arch configuration for clang. But CLANG-bpf
+>> cmds are sensitive for assembler part taken from linux headers and -D
+>> vars, usually used in CFLAGS, should be carefully added for each arch.
+>> For that, for CLANG-bpf, lets filter them only for arm arch as it
+>> definitely requires __LINUX_ARM_ARCH__ to be set, but ignore for
+>> others till it's really needed. For arm, -D__LINUX_ARM_ARCH__ is min
+>> version used as instruction set selector. In another case errors
+>> like "SMP is not supported" for arm and bunch of other errors are
+>> issued resulting to incorrect final object.
 >>
->> Add the PWM DT node in SiFive FU540 soc-specific DT file.
->> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
->>
->> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>> Later D_OPTIONS can be used for gcc part.
 >> ---
->>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
->>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
->>  2 files changed, 27 insertions(+)
+>>   samples/bpf/Makefile | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
 >>
->> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> index 42b5ec2..bb422db 100644
->> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> @@ -230,6 +230,25 @@
->>                         #size-cells = <0>;
->>                         status = "disabled";
->>                 };
->> +               pwm0: pwm@10020000 {
->> +                       compatible = "sifive,pwm0";
->> +                       reg = <0x0 0x10020000 0x0 0x1000>;
->> +                       interrupt-parent = <&plic0>;
->> +                       interrupts = <42 43 44 45>;
->> +                       clocks = <&prci PRCI_CLK_TLCLK>;
->> +                       #pwm-cells = <3>;
->> +                       status = "disabled";
->> +               };
->> +               pwm1: pwm@10021000 {
->> +                       compatible = "sifive,pwm0";
->> +                       reg = <0x0 0x10021000 0x0 0x1000>;
->> +                       interrupt-parent = <&plic0>;
->> +                       interrupts = <46 47 48 49>;
->> +                       reg-names = "control";
->> +                       clocks = <&prci PRCI_CLK_TLCLK>;
->> +                       #pwm-cells = <3>;
->> +                       status = "disabled";
->> +               };
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 8ecc5d0c2d5b..6492b7e65c08 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -185,6 +185,15 @@ HOSTLDLIBS_map_perf_test	+= -lrt
+>>   HOSTLDLIBS_test_overhead	+= -lrt
+>>   HOSTLDLIBS_xdpsock		+= -pthread
 >>
->>         };
->>  };
->> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> index 93d68cb..104d334 100644
->> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> @@ -85,3 +85,11 @@
->>                 reg = <0>;
->>         };
->>  };
+>> +# Strip all expet -D options needed to handle linux headers
+>> +# for arm it's __LINUX_ARM_ARCH__ and potentially others fork vars
+>> +D_OPTIONS = $(shell echo "$(KBUILD_CFLAGS) " | sed 's/[[:blank:]]/\n/g' | \
+>> +	sed '/^-D/!d' | tr '\n' ' ')
 >> +
->> +&pwm0 {
->> +       status = "okay";
->> +};
+>> +ifeq ($(ARCH), arm)
+>> +CLANG_EXTRA_CFLAGS := $(D_OPTIONS)
+>> +endif
+>
+>Do you need this for native compilation?
+Yes, native "arm" also requires it.
+
+>
+>so arm64 compilation does not need this?
+yes, now only arm
+
+>If only -D__LINUX_ARM_ARCH__ is needed, maybe just
+>with
+>    CLANG_EXTRA_CFLAGS := -D__LINUX_ARM_ARCH__
+Value also needed: -D__LINUX_ARM_ARCH_=7 or -D__LINUX_ARM_ARCH_=6
+So, need retrieve it.
+
+>Otherwise, people will wonder whether this is needed for
+>other architectures. Or just do
+>    CLANG_EXTRA_CFLAGS := $(D_OPTIONS)
+>for all cross compilation?
+arm, cross and native requires it.
+
+Will do this:
+
+# Strip all expet -D options needed to handle linux headers
+# for arm it's __LINUX_ARM_ARCH__ and potentially others fork vars
+ifeq ($(ARCH), arm)
+D_OPTIONS = $(shell echo "$(KBUILD_CFLAGS) " | sed 's/[[:blank:]]/\n/g' | \
+	sed '/^-D/!d' | tr '\n' ' ')
+endif
+
+CLANG_EXTRA_CFLAGS := $(D_OPTIONS)
+
+
+
+>
 >> +
->> +&pwm1 {
->> +       status = "okay";
->> +};
->> --
->> 1.9.1
+>>   # Allows pointing LLC/CLANG to a LLVM backend with bpf support, redefine on cmdline:
+>>   #  make samples/bpf/ LLC=~/git/llvm/build/bin/llc CLANG=~/git/llvm/build/bin/clang
+>>   LLC ?= llc
 >>
+
+-- 
+Regards,
+Ivan Khoronzhuk
