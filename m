@@ -2,227 +2,214 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDA0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54D5C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBBD214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568356193;
-	bh=QCfwLXArx+PBt2uAmHpq8Q+cTWOUQZK/UmpkuJYlH2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DeBZlHYAGQPfXVq0X/NuqzDBjGlHVZn0wOBcU40ktmNA2/Z7sPr4YXOc3b3SKxXy+
-	 yEUCPd6A/2pV+AXJtAtB72Jb0UekCpkSfTKG0UegzFW9ZvlhQy7Z/eVFO9iIS5Vsmh
-	 pDJFd8l4zw3h8NN0mHa0fDqlJa3VtPznxQi3lUQc=
+	by mail.kernel.org (Postfix) with ESMTP id 719CC2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uY5+cHed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfIMG3w (ORCPT
+        id S1728220AbfIMGab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 02:29:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40046 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfIMG3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 02:29:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m3so1376359wmc.5;
-        Thu, 12 Sep 2019 23:29:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pn2QgivTbeqtu2l0M3XS0fw7E3G3pQp+Hr7YG5Qb+oY=;
-        b=GdfZdvmgclv3mS1AIMDO2YPvExh1AKQL0QK2mOrtQ/+0PEIff74k8J3Sivn6mTHIl0
-         cURxcDw+VF1B4X0L2RMj8tXYW4m/k+OvhqVx9HTzoqgTOktB/66dbPvU/GXZe7QUIIi5
-         yqO75QP7of8INDKE9OYeFs1mUsjigu7gxQQJMVNgIVt4blJt8uNTeccQMo3QgqcBXvrV
-         wPBY9JL6A1ONoU1Ip6+xru+khk7m26gKGKEFekgIIzl4cqYxdvL87KTtBd6uSJfgSr5/
-         N9pa/NIj3M+SnNESlrcgBl/ZZYoG5e/oKgAS1XIgkCF+kKCtYuK9QeBMMsaZO1cfbiki
-         7bLw==
-X-Gm-Message-State: APjAAAWuakpa3U5Pp7G8HYGyiCjIPck/pz8hEhQU1xRSFaisNcI1lA/G
-        6/GF2aWdVdpUHL8X6QVRg+0=
-X-Google-Smtp-Source: APXvYqxsmKCSOQkEnLH1A18YyjWgoTqq4r05C9UlLyHjOJchp4X8cPnGcavBcUQoam2wKeQuPwLPZQ==
-X-Received: by 2002:a1c:2883:: with SMTP id o125mr1841777wmo.31.1568356189059;
-        Thu, 12 Sep 2019 23:29:49 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id g3sm14751047wrq.64.2019.09.12.23.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 23:29:48 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 08:29:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Maciej Falkowski <m.falkowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.hajda@samsung.com, m.szyprowski@samsung.com
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to
- dt-schema
-Message-ID: <20190913062945.GA10283@pi3>
-References: <20190912093315.5744-1-m.falkowski@samsung.com>
- <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
- <20190912161538.4321-1-m.falkowski@samsung.com>
+        Fri, 13 Sep 2019 02:30:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:27283 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbfIMGaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:30:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46V5Ng1ggyz9vKGc;
+        Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uY5+cHed; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id hTfAidC5OknU; Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46V5Ng0CK5z9vKGb;
+        Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568356227; bh=HrnbpUjOdH2O99QrUiRX6bCSReFaAawQQMZp1ROobsw=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=uY5+cHedX8EBA/3u7WV7Bo2q8qsDdacLeTyW2xe+lgyb8kWMDhYUWwj5wLahYQvWL
+         KxO7OKM/TU1ZZyLoG0lbZV7z9dEEqRaHKloWaa1nFI6aHx9nq3Ne0YnB6oY9Fj8KCq
+         q8niX4qFtO7jgdwzJtyzsS2XllvoT2vb8TfAEVvc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E1F008B7FD;
+        Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 2ivNC-fiIQGc; Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7C5A18B770;
+        Fri, 13 Sep 2019 08:30:27 +0200 (CEST)
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        linux-arm-kernel@lists.infradead.org,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+ <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+ <4cf31ca9-39e4-87e4-7eef-a6f3f0ea7576@c-s.fr>
+ <31aa6043-3b11-a936-bf35-6ed84bff9304@c-s.fr>
+ <600a7c62-eea9-e26f-f7cf-f2103b7c228c@c-s.fr>
+Message-ID: <09fa20e8-a587-34ce-ec44-ebe159009350@c-s.fr>
+Date:   Fri, 13 Sep 2019 08:30:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190912161538.4321-1-m.falkowski@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <600a7c62-eea9-e26f-f7cf-f2103b7c228c@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 06:15:38PM +0200, Maciej Falkowski wrote:
-> Convert Samsung Image Rotator to newer dt-schema format.
+
+
+Le 12/09/2019 à 17:52, Christophe Leroy a écrit :
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Just to make it clear, Marek's signed-off should appear for one of
-conditions:
- - he contributed some source code to your patch,
- - he took your patch, rebased, send by himself (not a case here, I
-   think),
- - he contributed significant ideas, although for this there is a
-   "Co-developed-by" tag.
-
-If someone made just review - add Reviewed-by. If someone suggested the
-patch - add Suggested-by.
-
-> ---
-> v2:
-> - add required properties
-> - add proper commit recipients
-> ---
->  .../bindings/gpu/samsung-rotator.txt          | 28 ----------
->  .../bindings/gpu/samsung-rotator.yaml         | 52 +++++++++++++++++++
->  2 files changed, 52 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-> deleted file mode 100644
-> index 3aca2578da0b..000000000000
-> --- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-> +++ /dev/null
-> @@ -1,28 +0,0 @@
-> -* Samsung Image Rotator
-> -
-> -Required properties:
-> -  - compatible : value should be one of the following:
-> -	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
-> -	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
-> -	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
-> -	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
-> -
-> -  - reg : Physical base address of the IP registers and length of memory
-> -	  mapped region.
-> -
-> -  - interrupts : Interrupt specifier for rotator interrupt, according to format
-> -		 specific to interrupt parent.
-> -
-> -  - clocks : Clock specifier for rotator clock, according to generic clock
-> -	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-> -
-> -  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
-> -
-> -Example:
-> -	rotator@12810000 {
-> -		compatible = "samsung,exynos4210-rotator";
-> -		reg = <0x12810000 0x1000>;
-> -		interrupts = <0 83 0>;
-> -		clocks = <&clock 278>;
-> -		clock-names = "rotator";
-> -	};
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-> new file mode 100644
-> index 000000000000..96afafe98388
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Image Rotator
-
-Thanks Maciej for working on this.
-
-I am trying to make the names more consistent:
-1. For Exynos bindings:
-Samsung Exynos SoC xxx yyy zzz
-
-2. For multiple SoCs (S3C, S5P, Exynos etc):
-Samsung SoC xxx yyy zzz
-
-Currently the names are mixture of legacy and new names. It is a
-nit-pick but makes all bindings look like a part of bigger effort, not
-bunch of patches done by random people. :)
-
-If there are no objections, maybe you could change it to:
-Samsung SoC Image Rotator
-
-> +
-> +maintainers:
-> +  - Inki Dae <inki.dae@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - "samsung,s5pv210-rotator"    # for Rotator IP in S5PV210
-> +      - "samsung,exynos4210-rotator" # for Rotator IP in Exynos4210
-> +      - "samsung,exynos4212-rotator" # for Rotator IP in Exynos4212/4412
-> +      - "samsung,exynos5250-rotator" # for Rotator IP in Exynos5250
-
-The comments are duplicating the compatible, so skip them.
-
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: |
-> +      Clock specifier for rotator clock according to generic clock
-> +      bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-
-Skip the description. Clocks property is a well-known binding.
-
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +    - const: rotator
-> +    maxItems: 1
-
-I think there is no need to maxItems since all possible items are fixed.
-
-Best regards,
-Krzysztof
-
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    rotator@12810000 {
-> +        compatible = "samsung,exynos4210-rotator";
-> +        reg = <0x12810000 0x1000>;
-> +        interrupts = <0 83 0>;
-> +        clocks = <&clock 278>;
-> +        clock-names = "rotator";
-> +    };
-> +
-> -- 
-> 2.17.1
+> Le 12/09/2019 à 17:36, Christophe Leroy a écrit :
+>>
+>>
+>> Le 12/09/2019 à 17:00, Christophe Leroy a écrit :
+>>>
+>>>
+>>> On 09/12/2019 06:02 AM, Anshuman Khandual wrote:
+>>>> This adds a test module which will validate architecture page table 
+>>>> helpers
+>>>> and accessors regarding compliance with generic MM semantics 
+>>>> expectations.
+>>>> This will help various architectures in validating changes to the 
+>>>> existing
+>>>> page table helpers or addition of new ones.
+>>>>
+>>>> Test page table and memory pages creating it's entries at various 
+>>>> level are
+>>>> all allocated from system memory with required alignments. If memory 
+>>>> pages
+>>>> with required size and alignment could not be allocated, then all 
+>>>> depending
+>>>> individual tests are skipped.
+>>>
+>>> Build failure on powerpc book3s/32. This is because asm/highmem.h is 
+>>> missing. It can't be included from asm/book3s/32/pgtable.h because it 
+>>> creates circular dependency. So it has to be included from 
+>>> mm/arch_pgtable_test.c
+>>
+>> In fact it is <linux/highmem.h> that needs to be added, adding 
+>> <asm/highmem.h> directly provokes build failure at link time.
+>>
 > 
+> I get the following failure,
+> 
+> [    0.704685] ------------[ cut here ]------------
+> [    0.709239] initcall arch_pgtable_tests_init+0x0/0x228 returned with 
+> preemption imbalance
+
+preempt_disable() is called from kmap_atomic() which is called from 
+pte_alloc_map() via pte_offset_map().
+
+pte_unmap() has to be called to release the mapped pte and re-enable 
+preemtion.
+
+Christophe
+
+
+> [    0.717539] WARNING: CPU: 0 PID: 1 at init/main.c:952 
+> do_one_initcall+0x18c/0x1d4
+> [    0.724922] CPU: 0 PID: 1 Comm: swapper Not tainted 
+> 5.3.0-rc7-s3k-dev-00880-g28fd02a838e5-dirty #2307
+> [    0.734070] NIP:  c070e674 LR: c070e674 CTR: c001292c
+> [    0.739084] REGS: df4a5dd0 TRAP: 0700   Not tainted 
+> (5.3.0-rc7-s3k-dev-00880-g28fd02a838e5-dirty)
+> [    0.747975] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 28000222  XER: 00000000
+> [    0.754628]
+> [    0.754628] GPR00: c070e674 df4a5e88 df4a0000 0000004e 0000000a 
+> 00000000 000000ca 38207265
+> [    0.754628] GPR08: 00001032 00000800 00000000 00000000 22000422 
+> 00000000 c0004a7c 00000000
+> [    0.754628] GPR16: 00000000 00000000 00000000 00000000 00000000 
+> c0810000 c0800000 c0816f30
+> [    0.754628] GPR24: c070dc20 c074702c 00000006 0000009c 00000000 
+> c0724494 c074e140 00000000
+> [    0.789339] NIP [c070e674] do_one_initcall+0x18c/0x1d4
+> [    0.794435] LR [c070e674] do_one_initcall+0x18c/0x1d4
+> [    0.799437] Call Trace:
+> [    0.801867] [df4a5e88] [c070e674] do_one_initcall+0x18c/0x1d4 
+> (unreliable)
+> [    0.808694] [df4a5ee8] [c070e8c0] kernel_init_freeable+0x204/0x2dc
+> [    0.814830] [df4a5f28] [c0004a94] kernel_init+0x18/0x110
+> [    0.820107] [df4a5f38] [c00122ac] ret_from_kernel_thread+0x14/0x1c
+> [    0.826220] Instruction dump:
+> [    0.829161] 4beb1069 7d2000a6 61298000 7d200124 89210008 2f890000 
+> 41be0048 3c60c06a
+> [    0.836849] 38a10008 7fa4eb78 3863cacc 4b915115 <0fe00000> 4800002c 
+> 81220070 712a0004
+> [    0.844723] ---[ end trace 969d686308d40b33 ]---
+> 
+> Then starting init fails:
+> 
+> [    3.894074] Run /init as init process
+> [    3.898403] Failed to execute /init (error -14)
+> [    3.903009] Run /sbin/init as init process
+> [    3.907172] Run /etc/init as init process
+> [    3.911251] Run /bin/init as init process
+> [    3.915513] Run /bin/sh as init process
+> [    3.919471] Starting init: /bin/sh exists but couldn't execute it 
+> (error -14)
+> [    3.926732] Kernel panic - not syncing: No working init found.  Try 
+> passing init= option to kernel. See Linux 
+> Documentation/admin-guide/init.rst for guidance.
+> [    3.940864] CPU: 0 PID: 1 Comm: init Tainted: G        W 
+> 5.3.0-rc7-s3k-dev-00880-g28fd02a838e5-dirty #2307
+> [    3.951165] Call Trace:
+> [    3.953617] [df4a5ec8] [c002392c] panic+0x12c/0x320 (unreliable)
+> [    3.959621] [df4a5f28] [c0004b8c] rootfs_mount+0x0/0x2c
+> [    3.964849] [df4a5f38] [c00122ac] ret_from_kernel_thread+0x14/0x1c
+> 
+> 
+> Christophe
