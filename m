@@ -2,85 +2,130 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83570C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F247C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5777E20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Iogji4XO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ifV51aP/"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3D920644
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfIMOU0 (ORCPT
+        id S2389155AbfIMOUb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:20:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41998 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387693AbfIMOU0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:20:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E297360767; Fri, 13 Sep 2019 14:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568384424;
-        bh=SAShVU3cg4kjywNYAt7pKciptCpXufeKkrQJMy1mPa8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Iogji4XO3mbNTK32q4D4/esmb6Vhsxq5yp5+u396vfkSihudz8gJtquOfmM7XopVD
-         fiYLp2Rx17FWwjrgY7oM/5Km3ehIW8cbXLugTEYoPxvdsEPnVm4vTdwob5qNmYdgHK
-         K98RFjKmpLfjZ9bzOvbCikv5VpeTdDSzJcTBrGtc=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 102C1602EE;
-        Fri, 13 Sep 2019 14:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568384424;
-        bh=SAShVU3cg4kjywNYAt7pKciptCpXufeKkrQJMy1mPa8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=ifV51aP/DalYVwZ0paErOcsj7IYtPXIvU6ZTf9vg8ODEwcgGIckgdqurkwHsbt+95
-         5//khtFQ2FmdHPBZ6H7dhxiAFBa9cJKJuplZ3apPRCSbu+1XQH0ibuhkhxRoaCr3iX
-         GOlgjVHs13GFHKWOtruhnO4iQDd185PxxpajncNo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 102C1602EE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 13 Sep 2019 10:20:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:44618 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbfIMOU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:20:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 07:20:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
+   d="scan'208";a="185111065"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Sep 2019 07:20:22 -0700
+Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 13 Sep 2019 07:20:22 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.57]) by
+ ORSMSX162.amr.corp.intel.com ([169.254.3.217]) with mapi id 14.03.0439.000;
+ Fri, 13 Sep 2019 07:20:22 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+CC:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        "Pavel Machek" <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ferry Toth <ftoth@telfort.nl>,
+        "nikolaus.voss@loewensteinmedical.de" 
+        <nikolaus.voss@loewensteinmedical.de>
+Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
+Thread-Topic: [PATCH] ACPICA: make acpi_load_table() return table index
+Thread-Index: AQHVaUE6M44QnoJV0UqVXW85SrAmnKcoFnTQgAGaZwD///c2gA==
+Date:   Fri, 13 Sep 2019 14:20:21 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+In-Reply-To: <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWVkNGQxYWEtM2M4NC00MTUzLWIwMDYtMzBjYzUxNWY4ZTA3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieHFETnZUbHBtcml3MkEzS1lRaXBLSVVZdktQaHUrQkp0MnZWNFwvU1pMV1ErSUdwZ29cL1wvMjJcL3JHZDV2aVM2dmMifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] brcmsmac: Use DIV_ROUND_CLOSEST directly to make it
- readable
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1567700648-28162-1-git-send-email-zhongjiang@huawei.com>
-References: <1567700648-28162-1-git-send-email-zhongjiang@huawei.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <zhongjiang@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190913142024.E297360767@smtp.codeaurora.org>
-Date:   Fri, 13 Sep 2019 14:20:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhong jiang <zhongjiang@huawei.com> wrote:
 
-> The kernel.h macro DIV_ROUND_CLOSEST performs the computation (x + d/2)/d
-> but is perhaps more readable.
-> 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 
-Patch applied to wireless-drivers-next.git, thanks.
+-----Original Message-----
+From: Nikolaus Voss [mailto:nv@vosn.de] 
+Sent: Friday, September 13, 2019 12:44 AM
+To: Moore, Robert <robert.moore@intel.com>
+Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
+Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
 
-3dfb22003f98 brcmsmac: Use DIV_ROUND_CLOSEST directly to make it readable
+Bob,
 
--- 
-https://patchwork.kernel.org/patch/11133663/
+On Thu, 12 Sep 2019, Moore, Robert wrote:
+> The ability to unload an ACPI table (especially AML tables such as
+> SSDTs) is in the process of being deprecated in ACPICA -- since it is 
+> also deprecated in the current ACPI specification. This is being done 
+> because of the difficulty of deleting the namespace entries for the 
+> table.  FYI, Windows does not properly support this function either.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+ok, I see it can be a problem to unload an AML table with all it's consequences e.g. with respect to driver unregistering in setups with complex dependencies. It will only work properly under certain conditions
+- nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
 
+AcpiTbUnloadTable is not exported, it is an internal interface only -- as recognized by the "AcpiTb". I'm not sure that I want to change the interface to AcpiLoadTable just for something that is being deprecated. Already, we throw an ACPI_EXCEPTION if the Unload operator is encountered in the AML byte stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
+
+
+    ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
+        "AML Unload operator is not supported"));
+
+
+The API change I request is not directly related to table unloading, it's just that the index of the loaded table is returned for future reference:
+
+[...]
+
+>> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h index 
+>> 3845c8fcc94e5..c90bbdc4146a6 100644
+>> --- a/include/acpi/acpixf.h
+>> +++ b/include/acpi/acpixf.h
+>> @@ -452,7 +452,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>> 					       u8 physical))
+>>
+>> ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>> -			    acpi_load_table(struct acpi_table_header *table))
+>> +			    acpi_load_table(struct acpi_table_header *table,
+>> +					    u32 *table_idx))
+>>
+>> ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>> 			    acpi_unload_parent_table(acpi_handle object))
+>> --
+>> 2.17.1
+>>
+
+This allows for a simple fix of the regression and doesn't imply future support for table unloading. Would this be acceptable?
+
+Niko
