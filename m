@@ -2,132 +2,323 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20259C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE2EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD7206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3AF20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbfIMREi (ORCPT
+        id S1731020AbfIMRG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 13:04:38 -0400
-Received: from mailfilter04-out31.webhostingserver.nl ([141.138.168.145]:65339
-        "EHLO mailfilter04-out31.webhostingserver.nl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729293AbfIMREh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 13:04:37 -0400
-X-Greylist: delayed 963 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Sep 2019 13:04:36 EDT
-X-Halon-ID: 310a252d-d646-11e9-b6df-001a4a4cb95f
-Received: from s198.webhostingserver.nl (unknown [195.211.72.171])
-        by mailfilter04.webhostingserver.nl (Halon) with ESMTPSA
-        id 310a252d-d646-11e9-b6df-001a4a4cb95f;
-        Fri, 13 Sep 2019 16:47:37 +0000 (UTC)
-Received: from cust-178-250-146-69.breedbanddelft.nl ([178.250.146.69] helo=[10.8.0.6])
-        by s198.webhostingserver.nl with esmtpa (Exim 4.92.2)
-        (envelope-from <fntoth@gmail.com>)
-        id 1i8okI-00ERzi-8M; Fri, 13 Sep 2019 18:48:30 +0200
-Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
-To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Moore, Robert" <robert.moore@intel.com>
-Cc:     Nikolaus Voss <nv@vosn.de>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nikolaus.voss@loewensteinmedical.de" 
-        <nikolaus.voss@loewensteinmedical.de>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Newsgroups: gmane.linux.kernel,gmane.linux.acpi.devel
-References: <20190906174605.GY2680@smile.fi.intel.com>
- <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
- <20190913151228.GT2680@smile.fi.intel.com>
-From:   Ferry Toth <fntoth@gmail.com>
-Message-ID: <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com>
-Date:   Fri, 13 Sep 2019 18:48:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 13:06:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54859 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfIMRG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 13:06:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 10:06:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="336954836"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 13 Sep 2019 10:06:56 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i8p27-0007jY-K7; Fri, 13 Sep 2019 20:06:55 +0300
+Date:   Fri, 13 Sep 2019 20:06:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.4-1
+Message-ID: <20190913170655.GA29705@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190913151228.GT2680@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format="flowed"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SendingUser: hidden
-X-SendingServer: hidden
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
-X-Authenticated-Id: hidden
-X-SendingUser: hidden
-X-SendingServer: hidden
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190913164828.I0woJ8XJfYHdjbQThPXBydA6XmX87Dy-fexwulGaX80@z>
 
-Hello all,
+Hi Linus,
 
-Sorry to have sent our message with cancelled e-mail address. I have 
-correct this now.
+Set of changes of PDx86 for v5.4. No conflicts with recent origin/master.
+Pity, but I have to move the status from Maintained to Odd Fixes.
 
-Op 13-09-19 om 17:12 schreef Shevchenko, Andriy:
-> On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
->> -----Original Message-----
->> From: Nikolaus Voss [mailto:nv@vosn.de]
->> Sent: Friday, September 13, 2019 12:44 AM
->> To: Moore, Robert <robert.moore@intel.com>
->> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
->> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
->>
->> Bob,
->>
->> On Thu, 12 Sep 2019, Moore, Robert wrote:
->>> The ability to unload an ACPI table (especially AML tables such as
->>> SSDTs) is in the process of being deprecated in ACPICA -- since it is
->>> also deprecated in the current ACPI specification. This is being done
->>> because of the difficulty of deleting the namespace entries for the
->>> table.  FYI, Windows does not properly support this function either.
->>
->> ok, I see it can be a problem to unload an AML table with all it's consequences e.g. with respect to driver unregistering in setups with complex dependencies. It will only work properly under certain conditions
->> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
->>
->> AcpiTbUnloadTable is not exported, it is an internal interface only -- as
->> recognized by the "AcpiTb".
-> 
-> In Linux it became a part of ABI when the
-> 
-> commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
-> Author: Jan Kiszka <jan.kiszka@siemens.com>
-> Date:   Fri Jun 9 20:36:31 2017 +0200
-> 
->      ACPI: configfs: Unload SSDT on configfs entry removal
-> 
-> appeared in the kernel.
+Thanks,
 
-And the commit message explains quite well why it is an important feature:
+With Best Regards,
+Andy Shevchenko
 
-"This allows to change SSDTs without rebooting the system.
-It also allows to destroy devices again that a dynamically loaded SSDT
-created.
+The following changes since commit f14312a93b34b9350dc33ff0b4215c24f4c82617:
 
-This is widely similar to the DT overlay behavior."
+  platform/x86: pcengines-apuv2: use KEY_RESTART for front button (2019-07-29 18:24:59 +0300)
 
->> I'm not sure that I want to change the interface
->> to AcpiLoadTable just for something that is being deprecated. Already, we
->> throw an ACPI_EXCEPTION if the Unload operator is encountered in the AML byte
->> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
->>
->>      ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
->>          "AML Unload operator is not supported"));
-> 
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.4-1
+
+for you to fetch changes up to f690790c9da3122dd7ee1b0d64d97973a7c34135:
+
+  MAINTAINERS: Switch PDx86 subsystem status to Odd Fixes (2019-09-12 17:36:42 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.4-1
+
+* ASUS WMI driver got couple of worth to mention updates, i.e. support of
+  FAN is fixed for recent products and the charge threshold support has been
+  added.
+
+* Two uknown key events for Dell laptops are being ignored now to avoid spam
+  user with harmless messages.
+
+* HP ZBook 17 G5 and ASUS Zenbook UX430UNR have got accelerometer support.
+
+* Intel CherryTrail platforms got a regression with wake up. Now it's fixed.
+
+* Intel PMC driver got fixed in order to work nicely in Xen environment.
+
+* Intel Speed Select driver provides bucket vs core count relationship.
+  Besides that the tools has been updated for better output.
+
+* The PrivacyGuard is enabled on Lenovo ThinkPad laptops.
+
+* Three tablets, i.e. Trekstor Primebook C11B 2-in-1, Irbis TW90 and
+  Chuwi Surbook Mini, have got touchscreen support.
+
+The following is an automated git shortlog grouped by driver:
+
+acer-wmi:
+ -  Switch to acpi_dev_get_first_match_dev()
+
+asus-nb-wmi:
+ -  Support ALS on the Zenbook UX430UNR
+
+asus-wmi:
+ -  Refactor charge threshold to use the battery hooking API
+ -  Rename CHARGE_THRESHOLD to RSOC
+ -  Reorder ASUS_WMI_CHARGE_THRESHOLD
+ -  Fix condition in charge_threshold_store()
+ -  Remove unnecessary blank lines
+ -  Drop indentation level by inverting conditionals
+ -  Use clamp_val() instead of open coded variant
+ -  Replace sscanf() with kstrtoint()
+ -  Refactor charge_threshold_store()
+ -  Add support for charge threshold
+ -  fix CPU fan control on recent products
+ -  add a helper for device presence
+ -  cleanup AGFN fan handling
+ -  Use kmemdup rather than duplicating its implementation
+
+compal-laptop:
+ -  Initialize "value" in ec_read_u8()
+
+dell-wmi:
+ -  Use existing defined KBD_LED_* magic values
+ -  Ignore keyboard backlight change KBD_LED_AUTO_TOKEN
+ -  Ignore keyboard backlight change KBD_LED_ON_TOKEN
+
+hp_accel:
+ -  Add support for HP ZBook 17 G5
+
+i2c-multi-instantiate:
+ -  Use struct_size() helper
+
+intel_bxtwc_tmu:
+ -  Remove dev_err() usage after platform_get_irq()
+
+intel_int0002_vgpio:
+ -  Use device_init_wakeup
+ -  Fix wakeups not working on Cherry Trail
+ -  Remove dev_err() usage after platform_get_irq()
+
+intel_pmc_core:
+ -  Do not ioremap RAM
+
+intel_pmc_core_pltdrv:
+ -  Module removal warning fix
+
+intel_pmc_ipc:
+ -  Remove dev_err() usage after platform_get_irq()
+
+ISST:
+ -  Allow additional TRL MSRs
+ -  Use dev_get_drvdata
+
+MAINTAINERS:
+ -  Switch PDx86 subsystem status to Odd Fixes
+
+pcengines-apuv2:
+ -  wire up simswitch gpio as led
+ -  add mpcie reset gpio export
+
+platform/mellanox:
+ -  mlxreg-hotplug: Remove dev_err() usage after platform_get_irq()
+
+pmc_atom:
+ -  Add Siemens SIMATIC IPC227E to critclk_systems DMI table
+
+thinkpad_acpi:
+ -  Add ThinkPad PrivacyGuard
+ -  Use kmemdup rather than duplicating its implementation
+
+tools/power/x86/intel-speed-select:
+ -  Display core count for bucket
+ -  Fix memory leak
+ -  Output success/failed for command output
+ -  Output human readable CPU list
+ -  Change turbo ratio output to maximum turbo frequency
+ -  Switch output to MHz
+ -  Simplify output for turbo-freq and base-freq
+ -  Fix cpu-count output
+ -  Fix help option typo
+ -  Fix package typo
+ -  Fix a read overflow in isst_set_tdp_level_msr()
+
+touchscreen_dmi:
+ -  Add info for the Trekstor Primebook C11B 2-in-1
+ -  Add info for the Irbis TW90 tablet
+ -  Add info for the Chuwi Surbook Mini tablet
+
+wmi:
+ -  Remove acpi_has_method() call
+
+----------------------------------------------------------------
+Alexander Schremmer (1):
+      platform/x86: thinkpad_acpi: Add ThinkPad PrivacyGuard
+
+Andy Shevchenko (8):
+      platform/x86: acer-wmi: Switch to acpi_dev_get_first_match_dev()
+      platform/x86: i2c-multi-instantiate: Use struct_size() helper
+      platform/x86: asus-wmi: Refactor charge_threshold_store()
+      platform/x86: asus-wmi: Replace sscanf() with kstrtoint()
+      platform/x86: asus-wmi: Use clamp_val() instead of open coded variant
+      platform/x86: asus-wmi: Drop indentation level by inverting conditionals
+      platform/x86: asus-wmi: Remove unnecessary blank lines
+      MAINTAINERS: Switch PDx86 subsystem status to Odd Fixes
+
+Chuhong Yuan (1):
+      platform/x86: ISST: Use dev_get_drvdata
+
+Dan Carpenter (2):
+      platform/x86: asus-wmi: Fix condition in charge_threshold_store()
+      tools/power/x86/intel-speed-select: Fix a read overflow in isst_set_tdp_level_msr()
+
+Daniel Drake (3):
+      platform/x86: asus-wmi: cleanup AGFN fan handling
+      platform/x86: asus-wmi: add a helper for device presence
+      platform/x86: asus-wmi: fix CPU fan control on recent products
+
+Enrico Weigelt (1):
+      platform/x86: pcengines-apuv2: wire up simswitch gpio as led
+
+Florian Eckert (1):
+      platform/x86: pcengines-apuv2: add mpcie reset gpio export
+
+Fuqian Huang (2):
+      platform/x86: asus-wmi: Use kmemdup rather than duplicating its implementation
+      platform/x86: thinkpad_acpi: Use kmemdup rather than duplicating its implementation
+
+Giang Le (1):
+      platform/x86: touchscreen_dmi: Add info for the Chuwi Surbook Mini tablet
+
+Hans de Goede (4):
+      platform/x86: touchscreen_dmi: Add info for the Irbis TW90 tablet
+      platform/x86: touchscreen_dmi: Add info for the Trekstor Primebook C11B 2-in-1
+      platform/x86: intel_int0002_vgpio: Fix wakeups not working on Cherry Trail
+      platform/x86: intel_int0002_vgpio: Use device_init_wakeup
+
+Jan Kiszka (1):
+      platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to critclk_systems DMI table
+
+Kai-Heng Feng (1):
+      platform/x86: hp_accel: Add support for HP ZBook 17 G5
+
+Kelsey Skunberg (1):
+      platform/x86: wmi: Remove acpi_has_method() call
+
+Kristian Klausen (5):
+      platform/x86: asus-nb-wmi: Support ALS on the Zenbook UX430UNR
+      platform/x86: asus-wmi: Add support for charge threshold
+      platform/x86: asus-wmi: Reorder ASUS_WMI_CHARGE_THRESHOLD
+      platform/x86: asus-wmi: Rename CHARGE_THRESHOLD to RSOC
+      platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API
+
+M. Vefa Bicakci (2):
+      platform/x86: intel_pmc_core: Do not ioremap RAM
+      platform/x86: intel_pmc_core_pltdrv: Module removal warning fix
+
+Prarit Bhargava (9):
+      tools/power/x86/intel-speed-select: Fix package typo
+      tools/power/x86/intel-speed-select: Fix help option typo
+      tools/power/x86/intel-speed-select: Fix cpu-count output
+      tools/power/x86/intel-speed-select: Simplify output for turbo-freq and base-freq
+      tools/power/x86/intel-speed-select: Switch output to MHz
+      tools/power/x86/intel-speed-select: Change turbo ratio output to maximum turbo frequency
+      tools/power/x86/intel-speed-select: Output human readable CPU list
+      tools/power/x86/intel-speed-select: Output success/failed for command output
+      tools/power/x86/intel-speed-select: Fix memory leak
+
+Rhys Kidd (3):
+      platform/x86: dell-wmi: Ignore keyboard backlight change KBD_LED_ON_TOKEN
+      platform/x86: dell-wmi: Ignore keyboard backlight change KBD_LED_AUTO_TOKEN
+      platform/x86: dell-wmi: Use existing defined KBD_LED_* magic values
+
+Srinivas Pandruvada (2):
+      platform/x86: ISST: Allow additional TRL MSRs
+      tools/power/x86/intel-speed-select: Display core count for bucket
+
+Stephen Boyd (4):
+      platform/x86: intel_pmc_ipc: Remove dev_err() usage after platform_get_irq()
+      platform/mellanox: mlxreg-hotplug: Remove dev_err() usage after platform_get_irq()
+      platform/x86: intel_bxtwc_tmu: Remove dev_err() usage after platform_get_irq()
+      platform/x86: intel_int0002_vgpio: Remove dev_err() usage after platform_get_irq()
+
+Yizhuo (1):
+      platform/x86: compal-laptop: Initialize "value" in ec_read_u8()
+
+ .../admin-guide/laptops/thinkpad-acpi.rst          |  23 +
+ MAINTAINERS                                        |   2 +-
+ drivers/platform/mellanox/mlxreg-hotplug.c         |   5 +-
+ drivers/platform/x86/acer-wmi.c                    |  49 +-
+ drivers/platform/x86/asus-nb-wmi.c                 |   9 +
+ drivers/platform/x86/asus-wmi.c                    | 534 +++++++++++++--------
+ drivers/platform/x86/compal-laptop.c               |   2 +-
+ drivers/platform/x86/dell-wmi.c                    |  12 +-
+ drivers/platform/x86/hp_accel.c                    |   1 +
+ drivers/platform/x86/i2c-multi-instantiate.c       |   4 +-
+ drivers/platform/x86/intel_bxtwc_tmu.c             |   5 +-
+ drivers/platform/x86/intel_int0002_vgpio.c         |  15 +-
+ drivers/platform/x86/intel_pmc_core.c              |   8 +-
+ drivers/platform/x86/intel_pmc_core_pltdrv.c       |   8 +
+ drivers/platform/x86/intel_pmc_ipc.c               |   4 +-
+ .../x86/intel_speed_select_if/isst_if_common.c     |   2 +
+ .../x86/intel_speed_select_if/isst_if_mmio.c       |   8 +-
+ drivers/platform/x86/pcengines-apuv2.c             |  13 +-
+ drivers/platform/x86/pmc_atom.c                    |   7 +
+ drivers/platform/x86/thinkpad_acpi.c               | 122 ++++-
+ drivers/platform/x86/touchscreen_dmi.c             |  58 +++
+ drivers/platform/x86/wmi.c                         |   4 +-
+ include/linux/platform_data/x86/asus-wmi.h         |   8 +-
+ tools/power/x86/intel-speed-select/isst-config.c   |  21 +-
+ tools/power/x86/intel-speed-select/isst-core.c     |  26 +-
+ tools/power/x86/intel-speed-select/isst-display.c  | 126 +++--
+ tools/power/x86/intel-speed-select/isst.h          |   1 +
+ 27 files changed, 728 insertions(+), 349 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
