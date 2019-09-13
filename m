@@ -2,23 +2,22 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284C8C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DFBC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E582084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844892084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfIMCrB (ORCPT
+        id S1728368AbfIMCrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:47:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58605 "EHLO mga07.intel.com"
+        Thu, 12 Sep 2019 22:47:07 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58608 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbfIMCqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726032AbfIMCqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 22:46:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +25,7 @@ Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 19:46:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="176159513"
+   d="scan'208";a="176159501"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 19:46:13 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,12 +39,10 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         James Harvey <jamespharvey20@gmail.com>,
         Alex Willamson <alex.williamson@redhat.com>
-Subject: [PATCH 04/11] KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow page related tracepoints""
-Date:   Thu, 12 Sep 2019 19:46:05 -0700
-Message-Id: <20190913024612.28392-5-sean.j.christopherson@intel.com>
+Subject: [PATCH 00/11] KVM: x86/mmu: Restore fast invalidate/zap flow
+Date:   Thu, 12 Sep 2019 19:46:01 -0700
+Message-Id: <20190913024612.28392-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
-References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,58 +50,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the fast invalidate mechanism has been reintroduced, restore
-tracing of the generation number in shadow page tracepoints.
+Restore the fast invalidate flow for zapping shadow pages and use it
+whenever vCPUs can be active in the VM.  This fixes (in theory, not yet
+confirmed) a regression reported by James Harvey where KVM can livelock
+in kvm_mmu_zap_all() when it's invoked in response to a memslot update.
 
-This reverts commit b59c4830ca185ba0e9f9e046fb1cd10a4a92627a.
+The fast invalidate flow was removed as it was deemed to be unnecessary
+after its primary user, memslot flushing, was reworked to zap only the
+memslot in question instead of all shadow pages.  Unfortunately, zapping
+only the memslot being (re)moved during a memslot update introduced a
+regression for VMs with assigned devices.  Because we could not discern
+why zapping only the relevant memslot broke device assignment, or if the
+regression extended beyond device assignment, we reverted to zapping all
+shadow pages when a memslot is (re)moved.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmutrace.h | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+The revert to "zap all" failed to account for subsequent changes that
+have been made to kvm_mmu_zap_all() between then and now.  Specifically,
+kvm_mmu_zap_all() now conditionally drops reschedules and drops mmu_lock
+if a reschedule is needed or if the lock is contended.  Dropping the lock
+allows other vCPUs to add shadow pages, and, with enough vCPUs, can cause
+kvm_mmu_zap_all() to get stuck in an infinite loop as it can never zap all
+pages before observing lock contention or the need to reschedule.
 
-diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
-index d8001b4bca05..e9832b5ec53c 100644
---- a/arch/x86/kvm/mmutrace.h
-+++ b/arch/x86/kvm/mmutrace.h
-@@ -8,16 +8,18 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM kvmmmu
- 
--#define KVM_MMU_PAGE_FIELDS \
--	__field(__u64, gfn) \
--	__field(__u32, role) \
--	__field(__u32, root_count) \
-+#define KVM_MMU_PAGE_FIELDS			\
-+	__field(unsigned long, mmu_valid_gen)	\
-+	__field(__u64, gfn)			\
-+	__field(__u32, role)			\
-+	__field(__u32, root_count)		\
- 	__field(bool, unsync)
- 
--#define KVM_MMU_PAGE_ASSIGN(sp)			     \
--	__entry->gfn = sp->gfn;			     \
--	__entry->role = sp->role.word;		     \
--	__entry->root_count = sp->root_count;        \
-+#define KVM_MMU_PAGE_ASSIGN(sp)				\
-+	__entry->mmu_valid_gen = sp->mmu_valid_gen;	\
-+	__entry->gfn = sp->gfn;				\
-+	__entry->role = sp->role.word;			\
-+	__entry->root_count = sp->root_count;		\
- 	__entry->unsync = sp->unsync;
- 
- #define KVM_MMU_PAGE_PRINTK() ({				        \
-@@ -29,8 +31,9 @@
- 								        \
- 	role.word = __entry->role;					\
- 									\
--	trace_seq_printf(p, "sp gfn %llx l%u %u-byte q%u%s %s%s"	\
-+	trace_seq_printf(p, "sp gen %lx gfn %llx l%u %u-byte q%u%s %s%s"\
- 			 " %snxe %sad root %u %s%c",			\
-+			 __entry->mmu_valid_gen,			\
- 			 __entry->gfn, role.level,			\
- 			 role.gpte_is_8_bytes ? 8 : 4,			\
- 			 role.quadrant,					\
+The reasoning behind having kvm_mmu_zap_all() conditionally reschedule was
+that it would only be used when the VM is inaccesible, e.g. when its
+mm_struct is dying or when the VM itself is being destroyed.  In that case,
+playing nice with the rest of the kernel instead of hogging cycles to free
+unused shadow pages made sense.
+
+Since it's unlikely we'll root cause the device assignment regression any
+time soon, and that simply removing the conditional rescheduling isn't
+guaranteed to return us to a known good state, restore the fast invalidate
+flow for zapping on memslot updates, including mmio generation wraparound.
+Opportunisticaly tack on a bug fix and a couple enhancements.
+
+Alex and James, it probably goes without saying... please test, especially
+patch 01/11 as a standalone patch as that'll likely need to be applied to
+stable branches, assuming it works.  Thanks!
+
+Sean Christopherson (11):
+  KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
+  KVM: x86/mmu: Treat invalid shadow pages as obsolete
+  KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
+  KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow
+    page related tracepoints""
+  KVM: x86/mmu: Revert "Revert "KVM: MMU: add tracepoint for
+    kvm_mmu_invalidate_all_pages""
+  KVM: x86/mmu: Revert "Revert "KVM: MMU: zap pages in batch""
+  KVM: x86/mmu: Revert "Revert "KVM: MMU: collapse TLB flushes when zap
+    all pages""
+  KVM: x86/mmu: Revert "Revert "KVM: MMU: reclaim the zapped-obsolete
+    page first""
+  KVM: x86/mmu: Revert "KVM: x86/mmu: Remove is_obsolete() call"
+  KVM: x86/mmu: Explicitly track only a single invalid mmu generation
+  KVM: x86/mmu: Skip invalid pages during zapping iff root_count is zero
+
+ arch/x86/include/asm/kvm_host.h |   4 +-
+ arch/x86/kvm/mmu.c              | 154 ++++++++++++++++++++++++++++----
+ arch/x86/kvm/mmutrace.h         |  42 +++++++--
+ arch/x86/kvm/x86.c              |   1 +
+ 4 files changed, 173 insertions(+), 28 deletions(-)
+
 -- 
 2.22.0
 
