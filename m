@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB71BC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1829C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4FA217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A691920717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380738;
-	bh=l3+xhIZ4Qtoji4jU2cv1PVfYcIhXQZ+s11XP5hq4HRo=;
+	s=default; t=1568380741;
+	bh=hOxgvApp/1gfEFAkPo+InjWQiHi/zzIKADkmRTtA6vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5uPAW5e8s28Wa5bv/RcA3HJwttUwnixmp/ASpgKmNQlDp8mezmOFUtb67yijbQPj
-	 +wYJBRrARtacRVwgudX4JbIu/LBXXhm1J9k0NbrtpYmTOG7PN+0zZ9bYxwD5Rd5eHF
-	 nmSyG5wj0nF1hVuZ7eON2Is288V1HWnTscpyv3s0=
+	b=qeL9Fl2JQHZZDr95OWNSVX0gf1wjKBcQyEz+RHIrSxPQPdpPATo1QPbW9OInUk7e2
+	 MhKExOSGTZSoHnYbBV5OLlAiE1VThtmHNI6sR2KICpKWL9SL6J6IYwlMX/IaVu/NJ1
+	 /3ePRhU0aR+dtorCSZQlziFW5HP9rX06mbIwUBbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390330AbfIMNS5 (ORCPT
+        id S2390338AbfIMNTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390291AbfIMNSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:54 -0400
+        id S2390322AbfIMNS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:56 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF405206A5;
-        Fri, 13 Sep 2019 13:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7A2E20717;
+        Fri, 13 Sep 2019 13:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380733;
-        bh=l3+xhIZ4Qtoji4jU2cv1PVfYcIhXQZ+s11XP5hq4HRo=;
+        s=default; t=1568380736;
+        bh=hOxgvApp/1gfEFAkPo+InjWQiHi/zzIKADkmRTtA6vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6zj2aNGgGyjHSAbibAgAwAFIb5AszRb5EoDYnsaqKs3x9HneJLbPn2lSc3LZDYyf
-         /3D82C3UojFkK3fz5tjkMEFdMJe5n0npr0wdU0fcWHW/UFjHRGvnBgUJYxc1yekuql
-         Rv7HBnME5e4yWr6t+y0chtXtQ2KK0C/Rf4pgglr0=
+        b=GFBbK+aP1pvRXqsOgQEpoPXeI0QTICive7aYjf/sJK/gh75SfjL6PkLgiHeFp2BkY
+         Fxkbtr7PrIAIO1t175XERKouFiLWoPQPgD7c6TXnPxQeqCQ2vFnEy72BRi4jNxGu6J
+         PxdIRBUdt3fa1ozgNiPJ0zj6L1mcdn9hPX2/G3Vs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Gorenko <sergeygo@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/190] RDMA/srp: Document srp_parse_in() arguments
-Date:   Fri, 13 Sep 2019 14:06:54 +0100
-Message-Id: <20190913130612.619070952@linuxfoundation.org>
+Subject: [PATCH 4.19 140/190] cifs: add spinlock for the openFileList to cifsInodeInfo
+Date:   Fri, 13 Sep 2019 14:06:35 +0100
+Message-Id: <20190913130611.187003688@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,34 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e37df2d5b569390e3b80ebed9a73fd5b9dcda010 ]
+[ Upstream commit 487317c99477d00f22370625d53be3239febabbe ]
 
-This patch avoids that a warning is reported when building with W=1.
+We can not depend on the tcon->open_file_lock here since in multiuser mode
+we may have the same file/inode open via multiple different tcons.
 
-Cc: Sergey Gorenko <sergeygo@mellanox.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Cc: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+The current code is race prone and will crash if one user deletes a file
+at the same time a different user opens/create the file.
+
+To avoid this we need to have a spinlock attached to the inode and not the tcon.
+
+RHBZ:  1580165
+
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/cifsfs.c   | 1 +
+ fs/cifs/cifsglob.h | 5 +++++
+ fs/cifs/file.c     | 8 ++++++--
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 2c1114ee0c6da..9da30d88a615e 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -3401,6 +3401,9 @@ static const match_table_t srp_opt_tokens = {
+diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+index fb32f3d6925e8..64e3888f30e6d 100644
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -292,6 +292,7 @@ cifs_alloc_inode(struct super_block *sb)
+ 	cifs_inode->uniqueid = 0;
+ 	cifs_inode->createtime = 0;
+ 	cifs_inode->epoch = 0;
++	spin_lock_init(&cifs_inode->open_file_lock);
+ 	generate_random_uuid(cifs_inode->lease_key);
  
- /**
-  * srp_parse_in - parse an IP address and port number combination
-+ * @net:	   [in]  Network namespace.
-+ * @sa:		   [out] Address family, IP address and port number.
-+ * @addr_port_str: [in]  IP address and port number.
+ 	/*
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index 0ee0072c1f362..57af9bac0045a 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1287,6 +1287,7 @@ struct cifsInodeInfo {
+ 	struct rw_semaphore lock_sem;	/* protect the fields above */
+ 	/* BB add in lists for dirty pages i.e. write caching info for oplock */
+ 	struct list_head openFileList;
++	spinlock_t	open_file_lock;	/* protects openFileList */
+ 	__u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
+ 	unsigned int oplock;		/* oplock/lease level we have */
+ 	unsigned int epoch;		/* used to track lease state changes */
+@@ -1687,10 +1688,14 @@ require use of the stronger protocol */
+  *  tcp_ses_lock protects:
+  *	list operations on tcp and SMB session lists
+  *  tcon->open_file_lock protects the list of open files hanging off the tcon
++ *  inode->open_file_lock protects the openFileList hanging off the inode
+  *  cfile->file_info_lock protects counters and fields in cifs file struct
+  *  f_owner.lock protects certain per file struct operations
+  *  mapping->page_lock protects certain per page operations
   *
-  * Parse the following address formats:
-  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
++ *  Note that the cifs_tcon.open_file_lock should be taken before
++ *  not after the cifsInodeInfo.open_file_lock
++ *
+  *  Semaphores
+  *  ----------
+  *  sesSem     operations on smb session
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 933013543edab..8703b5f26f452 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -336,10 +336,12 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
+ 	list_add(&cfile->tlist, &tcon->openFileList);
+ 
+ 	/* if readable file instance put first in list*/
++	spin_lock(&cinode->open_file_lock);
+ 	if (file->f_mode & FMODE_READ)
+ 		list_add(&cfile->flist, &cinode->openFileList);
+ 	else
+ 		list_add_tail(&cfile->flist, &cinode->openFileList);
++	spin_unlock(&cinode->open_file_lock);
+ 	spin_unlock(&tcon->open_file_lock);
+ 
+ 	if (fid->purge_cache)
+@@ -411,7 +413,9 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
+ 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
+ 
+ 	/* remove it from the lists */
++	spin_lock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->flist);
++	spin_unlock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->tlist);
+ 
+ 	if (list_empty(&cifsi->openFileList)) {
+@@ -1929,10 +1933,10 @@ refind_writable:
+ 		if (!rc)
+ 			return inv_file;
+ 		else {
+-			spin_lock(&tcon->open_file_lock);
++			spin_lock(&cifs_inode->open_file_lock);
+ 			list_move_tail(&inv_file->flist,
+ 					&cifs_inode->openFileList);
+-			spin_unlock(&tcon->open_file_lock);
++			spin_unlock(&cifs_inode->open_file_lock);
+ 			cifsFileInfo_put(inv_file);
+ 			++refind;
+ 			inv_file = NULL;
 -- 
 2.20.1
 
