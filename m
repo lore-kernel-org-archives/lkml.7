@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240A3C4CEC6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B926EC4CEC8
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF8F20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AA5208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfIMBOs (ORCPT
+        id S1728678AbfIMBOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 12 Sep 2019 21:14:48 -0400
 Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfIMBOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:14:44 -0400
+        id S1725775AbfIMBOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:14:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:43 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197403699"
+   d="scan'208";a="197403715"
 Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:43 -0700
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:47 -0700
 From:   Megha Dey <megha.dey@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
@@ -38,269 +38,281 @@ Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
         Megha Dey <megha.dey@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: [RFC V1 2/7] drivers/base: Introduce callbacks for IMS interrupt domain
-Date:   Thu, 12 Sep 2019 18:32:03 -0700
-Message-Id: <1568338328-22458-3-git-send-email-megha.dey@linux.intel.com>
+Subject: [RFC V1 6/7] ims-msi: Add APIs to allocate/free IMS interrupts
+Date:   Thu, 12 Sep 2019 18:32:07 -0700
+Message-Id: <1568338328-22458-7-git-send-email-megha.dey@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
 References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch serves as a preparatory patch to introduce a new IMS
-(Interrupt Message Store) domain. It consists of APIs which would
-be used as callbacks to the IRQ chip associated with the IMS domain.
-
-The APIs introduced in this patch are:
-dev_ims_mask_irq - Generic irq chip callback to mask IMS interrupts
-dev_ims_unmask_irq - Generic irq chip callback to unmask IMS interrupts
-dev_ims_domain_write_msg - Helper to write MSI message to Device IMS
-
-It also introduces IMS specific structures namely:
-dev_ims_ops - Callbacks for IMS domain ops
-dev_ims_desc - Device specific IMS msi descriptor data
-dev_ims_priv_data - Internal data structure containing a unique devid
-and a pointer to the IMS domain ops
-
-Lastly, it adds a new config option MSI_IMS which must be enabled by
-any driver who would want to use the IMS infrastructure.
-
-Since IMS is not PCI compliant (like platform-msi), most of the code is
-similar to platform-msi.c.
-
-TODO: Conclude if ims-msi.c and platform-msi.c can be merged.
+This patch introduces APIs to allocate and free IMS interrupts.
 
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- drivers/base/Kconfig   |  7 ++++
- drivers/base/Makefile  |  1 +
- drivers/base/ims-msi.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/msi.h    | 35 ++++++++++++++++++-
- 4 files changed, 136 insertions(+), 1 deletion(-)
- create mode 100644 drivers/base/ims-msi.c
+ drivers/base/ims-msi.c | 216 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/msi.h    |   2 +
+ 2 files changed, 218 insertions(+)
 
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index dc40449..038fabd 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -206,3 +206,10 @@ config GENERIC_ARCH_TOPOLOGY
- 	  runtime.
- 
- endmenu
-+
-+config MSI_IMS
-+	bool "Device Specific Interrupt Message Storage (IMS)"
-+	select GENERIC_MSI_IRQ
-+	help
-+	  This allows device drivers to enable device specific
-+	  interrupt message storage (IMS) besides standard MSI-X interrupts.
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index 1574520..659b9b0 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_SOC_BUS) += soc.o
- obj-$(CONFIG_PINCTRL) += pinctrl.o
- obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
- obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
-+obj-$(CONFIG_MSI_IMS) += ims-msi.o
- obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
- 
- obj-y			+= test/
 diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-new file mode 100644
-index 0000000..68dc10f
---- /dev/null
+index df28ee2..3e579c9 100644
+--- a/drivers/base/ims-msi.c
 +++ b/drivers/base/ims-msi.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright © 2019 Intel Corporation.
-+ *
-+ * Author: Megha Dey <megha.dey@intel.com>
-+ */
+@@ -7,9 +7,12 @@
+ 
+ #include <linux/device.h>
+ #include <linux/export.h>
++#include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/msi.h>
+ 
++#define DEVIMS_ID_SHIFT        21
 +
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/irq.h>
-+#include <linux/msi.h>
+ struct dev_ims_priv_data {
+ 	struct device		*dev;
+ 	msi_alloc_info_t	arg;
+@@ -17,6 +20,8 @@ struct dev_ims_priv_data {
+ 	struct dev_ims_ops	*ims_ops;
+ };
+ 
++static DEFINE_IDA(dev_ims_devid_ida);
 +
-+struct dev_ims_priv_data {
-+	struct device		*dev;
-+	msi_alloc_info_t	arg;
-+	int			devid;
-+	struct dev_ims_ops	*ims_ops;
-+};
+ u32 __dev_ims_desc_mask_irq(struct msi_desc *desc, u32 flag)
+ {
+ 	u32 mask_bits = desc->dev_ims.masked;
+@@ -126,3 +131,214 @@ void dev_ims_restore_irqs(struct device *dev)
+ 		if (entry->tag == IRQ_MSI_TAG_IMS)
+ 			dev_ims_restore_irq(dev, entry->irq);
+ }
 +
-+u32 __dev_ims_desc_mask_irq(struct msi_desc *desc, u32 flag)
++static void dev_ims_free_descs(struct device *dev)
 +{
-+	u32 mask_bits = desc->dev_ims.masked;
-+	struct dev_ims_ops *ops;
++	struct msi_desc *desc, *tmp;
 +
-+	ops = desc->dev_ims.priv->ims_ops;
-+	if (!ops)
-+		return 0;
++	for_each_msi_entry(desc, dev)
++		if (desc->irq && desc->tag == IRQ_MSI_TAG_IMS)
++			BUG_ON(irq_has_action(desc->irq));
 +
-+	if (flag) {
-+		if (ops->irq_mask)
-+			mask_bits = ops->irq_mask(desc);
-+	} else {
-+		if (ops->irq_unmask)
-+			mask_bits = ops->irq_unmask(desc);
++	dev_ims_teardown_irqs(dev);
++
++	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
++		if (desc->tag == IRQ_MSI_TAG_IMS) {
++			list_del(&desc->list);
++			free_msi_entry(desc);
++		}
++	}
++}
++
++static int dev_ims_setup_msi_irqs(struct device *dev, int nvec)
++{
++	struct irq_domain *domain;
++
++	domain = dev_get_msi_domain(dev);
++	if (domain && irq_domain_is_hierarchy(domain))
++		return msi_domain_alloc_irqs(domain, dev, nvec);
++
++	return arch_setup_ims_irqs(dev, nvec);
++}
++
++static struct dev_ims_priv_data *
++dev_ims_alloc_priv_data(struct device *dev, unsigned int nvec,
++			struct dev_ims_ops *ops)
++{
++	struct dev_ims_priv_data *datap;
++	int ret;
++
++	/*
++	 * Currently there is no limit to the number of IRQs a device can
++	 * allocate.
++	 */
++	if (!nvec)
++		return ERR_PTR(-EINVAL);
++
++	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
++	if (!datap)
++		return ERR_PTR(-ENOMEM);
++
++	ret = ida_simple_get(&dev_ims_devid_ida,
++				0, 1 << DEVIMS_ID_SHIFT, GFP_KERNEL);
++
++	if (ret < 0) {
++		kfree(datap);
++		return ERR_PTR(ret);
 +	}
 +
-+	return mask_bits;
++	datap->devid = ret;
++	datap->ims_ops = ops;
++	datap->dev = dev;
++
++	return datap;
 +}
 +
-+static void ims_mask_irq(struct msi_desc *desc, u32 flag)
++static int dev_ims_alloc_descs(struct device *dev,
++			       int nvec, struct dev_ims_priv_data *data,
++			       struct irq_affinity *affd)
 +{
-+	desc->dev_ims.masked = __dev_ims_desc_mask_irq(desc, flag);
++	struct irq_affinity_desc *curmsk, *masks = NULL;
++	struct msi_desc *desc;
++	int i, base = 0;
++
++	if (!list_empty(dev_to_msi_list(dev))) {
++		desc = list_last_entry(dev_to_msi_list(dev),
++					struct msi_desc, list);
++		base = desc->dev_ims.ims_index + 1;
++	}
++
++	if (affd) {
++		masks = irq_create_affinity_masks(nvec, affd);
++		if (!masks)
++			dev_err(dev, "Unable to allocate affinity masks, ignoring\n");
++	}
++
++	for (i = 0, curmsk = masks; i < nvec; i++) {
++		desc = alloc_msi_entry(dev, 1, NULL);
++		if (!desc)
++			break;
++
++		desc->dev_ims.priv = data;
++		desc->tag = IRQ_MSI_TAG_IMS;
++		desc->dev_ims.ims_index = base + i;
++
++		list_add_tail(&desc->list, dev_to_msi_list(dev));
++
++		if (masks)
++			curmsk++;
++	}
++
++	kfree(masks);
++
++	if (i != nvec) {
++		/* Clean up the mess */
++		dev_ims_free_descs(dev);
++		return -ENOMEM;
++	}
++
++	return 0;
 +}
 +
-+static void ims_set_mask_bit(struct irq_data *data, u32 flag)
++static void dev_ims_free_priv_data(struct dev_ims_priv_data *data)
 +{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
-+
-+	ims_mask_irq(desc, flag);
-+}
-+
-+static void __dev_write_ims_msg(struct msi_desc *desc, struct msi_msg *msg)
-+{
-+	struct dev_ims_ops *ops;
-+
-+	ops = desc->dev_ims.priv->ims_ops;
-+	if (ops && ops->irq_write_msi_msg)
-+		ops->irq_write_msi_msg(desc, msg);
-+
-+	desc->msg = *msg;
++	ida_simple_remove(&dev_ims_devid_ida, data->devid);
++	kfree(data);
 +}
 +
 +/**
-+ * dev_ims_mask_irq - Generic irq chip callback to mask IMS interrupts
-+ * @data: pointer to irqdata associated to that interrupt
++ * dev_ims_enable_irqs - Allocate IMS interrupts for @dev
++ * @dev:		The device for which to allocate interrupts
++ * @nvec:		The number of interrupts to allocate
++ * @ops:		IMS device operations
++ * @affd:		optional description of the affinity requirements
++ *
++ * Returns:
++ * Zero for success, or an error code in case of failure
 + */
-+void dev_ims_mask_irq(struct irq_data *data)
++int dev_ims_enable_irqs(struct device *dev, unsigned int nvec,
++			struct dev_ims_ops *ops,
++			struct irq_affinity *affd)
 +{
-+	ims_set_mask_bit(data, 1);
++	struct dev_ims_priv_data *priv_data;
++	int err;
++
++	priv_data = dev_ims_alloc_priv_data(dev, nvec, ops);
++	if (IS_ERR(priv_data))
++		return PTR_ERR(priv_data);
++
++	err = dev_ims_alloc_descs(dev, nvec, priv_data, affd);
++	if (err)
++		goto out_free_priv_data;
++
++	err = dev_ims_setup_msi_irqs(dev, nvec);
++	if (err)
++		goto out_free_desc;
++
++	return 0;
++
++out_free_desc:
++	dev_ims_free_descs(dev);
++out_free_priv_data:
++	dev_ims_free_priv_data(priv_data);
++
++	return err;
 +}
-+EXPORT_SYMBOL_GPL(dev_ims_mask_irq);
++EXPORT_SYMBOL_GPL(dev_ims_enable_irqs);
++
++int __dev_ims_alloc_irqs(struct device *dev, int nvec,
++			 struct dev_ims_ops *ops,
++			 struct irq_affinity *affd)
++{
++	int nvec1;
++	int rc;
++
++	for (;;) {
++		if (affd) {
++			nvec1 = irq_calc_affinity_vectors(nvec, nvec, affd);
++			if (nvec < nvec1)
++				return -ENOSPC;
++		}
++
++		rc = dev_ims_enable_irqs(dev, nvec, ops, affd);
++		if (rc == 0)
++			return nvec;
++
++		if (rc < 0)
++			return rc;
++		if (rc < nvec)
++			return -ENOSPC;
++
++		nvec = rc;
++	}
++}
 +
 +/**
-+ * dev_msi_unmask_irq - Generic irq chip callback to unmask IMS interrupts
-+ * @data: pointer to irqdata associated to that interrupt
++ * dev_ims_alloc_irqs - Alloc IMS interrupts for @dev
++ * @dev:	The device for which to allocate interrupts
++ * @nvec:	The number of interrupts to allocate
++ * @ops:	IMS device operations
 + */
-+void dev_ims_unmask_irq(struct irq_data *data)
++int dev_ims_alloc_irqs(struct device *dev, int nvec, struct dev_ims_ops *ops)
 +{
-+	ims_set_mask_bit(data, 0);
++	return __dev_ims_alloc_irqs(dev, nvec, ops, NULL);
 +}
-+EXPORT_SYMBOL_GPL(dev_ims_unmask_irq);
++EXPORT_SYMBOL_GPL(dev_ims_alloc_irqs);
 +
 +/**
-+ * dev_ims_write_msg - Helper to write MSI message to Device IMS
-+ * @irq_data: Pointer to interrupt data of the MSI interrupt
-+ * @msg:      Pointer to the message
++ * dev_ims_domain_free_irqs - Free IMS interrupts for @dev
++ * @dev:	The device for which to free interrupts
 + */
-+void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg)
++void dev_ims_free_irqs(struct device *dev)
 +{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
++	struct msi_desc *desc;
 +
-+	__dev_write_ims_msg(desc, msg);
++	for_each_msi_entry(desc, dev)
++		if (desc->tag == IRQ_MSI_TAG_IMS) {
++			dev_ims_free_priv_data(desc->dev_ims.priv);
++			break;
++	}
++
++	dev_ims_free_descs(dev);
 +}
-+EXPORT_SYMBOL_GPL(dev_ims_write_msg);
++EXPORT_SYMBOL_GPL(dev_ims_free_irqs);
 diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 22591b6..246285a 100644
+index 37070bf..4543bbf 100644
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -17,6 +17,7 @@ struct irq_data;
- struct msi_desc;
- struct pci_dev;
- struct platform_msi_priv_data;
-+struct dev_ims_priv_data;
- void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
- #ifdef CONFIG_GENERIC_MSI_IRQ
- void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg);
-@@ -40,6 +41,31 @@ struct platform_msi_desc {
- };
+@@ -235,6 +235,8 @@ void dev_ims_mask_irq(struct irq_data *data);
+ void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg);
+ void dev_ims_teardown_irqs(struct device *dev);
+ void dev_ims_restore_irqs(struct device *dev);
++int dev_ims_alloc_irqs(struct device *dev, int nvec, struct dev_ims_ops *ops);
++void dev_ims_free_irqs(struct device *dev);
  
- /**
-+ * dev_ims_ops - Callbacks for IMS domain ops
-+ * @irq_mask:		mask an interrupt source
-+ * @irq_unmask:		unmask an interrupt source
-+ * @irq_write_msi_msg:	write message content
-+ */
-+struct dev_ims_ops {
-+	unsigned int	(*irq_mask)(struct msi_desc *desc);
-+	unsigned int	(*irq_unmask)(struct msi_desc *desc);
-+	void		(*irq_write_msi_msg)(struct msi_desc *desc,
-+						struct msi_msg *msg);
-+};
-+
-+/**
-+ * dev_ims_desc - Device specific interrupt message storage msi desc data
-+ * @ims_priv_data:	Pointer to device private data
-+ * @ims_index:		The index of the MSI descriptor
-+ * @masked:		mask bits
-+ */
-+struct dev_ims_desc {
-+	struct dev_ims_priv_data	*priv;
-+	u16				ims_index;
-+	u32				masked;
-+};
-+
-+/**
-  * fsl_mc_msi_desc - FSL-MC device specific msi descriptor data
-  * @msi_index:		The index of the MSI descriptor
-  */
-@@ -90,6 +116,7 @@ enum msi_desc_tags {
-  * @platform:	[platform]  Platform device specific msi descriptor data
-  * @fsl_mc:	[fsl-mc]    FSL MC device specific msi descriptor data
-  * @inta:	[INTA]	    TISCI based INTA specific msi descriptor data
-+ * @dev_ims:	[dev_ims]   Device specific IMS msi descriptor data
-  */
- struct msi_desc {
- 	/* Shared device/bus type independent data */
-@@ -136,6 +163,7 @@ struct msi_desc {
- 		struct platform_msi_desc platform;
- 		struct fsl_mc_msi_desc fsl_mc;
- 		struct ti_sci_inta_msi_desc inta;
-+		struct dev_ims_desc dev_ims;
- 	};
- };
- 
-@@ -180,6 +208,7 @@ static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
- struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc);
- void *msi_desc_to_pci_sysdata(struct msi_desc *desc);
- void pci_write_msi_msg(unsigned int irq, struct msi_msg *msg);
-+
- #else /* CONFIG_PCI_MSI */
- static inline void *msi_desc_to_pci_sysdata(struct msi_desc *desc)
- {
-@@ -201,6 +230,10 @@ u32 __pci_msi_desc_mask_irq(struct msi_desc *desc, u32 mask, u32 flag);
- void pci_msi_mask_irq(struct irq_data *data);
- void pci_msi_unmask_irq(struct irq_data *data);
- 
-+void dev_ims_unmask_irq(struct irq_data *data);
-+void dev_ims_mask_irq(struct irq_data *data);
-+void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg);
-+
  /*
   * The arch hooks to setup up msi irqs. Those functions are
-  * implemented as weak symbols so that they /can/ be overriden by
-@@ -228,7 +261,7 @@ struct msi_controller {
- 	void (*teardown_irq)(struct msi_controller *chip, unsigned int irq);
- };
- 
--#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-+#if defined(CONFIG_GENERIC_MSI_IRQ_DOMAIN) || defined(CONFIG_MSI_IMS)
- 
- #include <linux/irqhandler.h>
- #include <asm/msi.h>
 -- 
 2.7.4
 
