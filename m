@@ -6,92 +6,136 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD52C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B7AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2FC20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9B420693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfIMLeD (ORCPT
+        id S1729027AbfIMLkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 07:34:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:41964 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbfIMLeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 07:34:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AFF028;
-        Fri, 13 Sep 2019 04:34:02 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71BE93F59C;
-        Fri, 13 Sep 2019 04:34:01 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 12:33:55 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: fix function types in COND_SYSCALL
-Message-ID: <20190913113355.GA32453@lakrids.cambridge.arm.com>
-References: <20190910224044.100388-1-samitolvanen@google.com>
- <20190911151545.GD3360@blommer>
- <20190912131143.u3rncvqdgx4z3ckz@willie-the-truck>
+        Fri, 13 Sep 2019 07:40:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54935 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbfIMLkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 07:40:12 -0400
+Received: from ip5b402a24.dynamic.kabel-deutschland.de ([91.64.42.36] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i8jvt-0000Un-Br; Fri, 13 Sep 2019 11:40:09 +0000
+Date:   Fri, 13 Sep 2019 13:40:07 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3] fork: check exit_signal passed in clone3() call
+Message-ID: <20190913114006.7dfwzfm6a76grlk3@wittgenstein>
+References: <cover.1568223594.git.esyr@redhat.com>
+ <4b38fa4ce420b119a4c6345f42fe3cec2de9b0b5.1568223594.git.esyr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190912131143.u3rncvqdgx4z3ckz@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <4b38fa4ce420b119a4c6345f42fe3cec2de9b0b5.1568223594.git.esyr@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 02:11:44PM +0100, Will Deacon wrote:
-> On Wed, Sep 11, 2019 at 04:15:46PM +0100, Mark Rutland wrote:
-> > On Tue, Sep 10, 2019 at 03:40:44PM -0700, Sami Tolvanen wrote:
-> > > Define a weak function in COND_SYSCALL instead of a weak alias to
-> > > sys_ni_syscall, which has an incompatible type. This fixes indirect
-> > > call mismatches with Control-Flow Integrity (CFI) checking.
-> > > 
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > 
-> > This looks correct to me, builds fine, and I asume has been tested, so FWIW:
-> > 
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > In looking at this, I came to the conclusion that we can drop the ifdeffery
-> > around our SYSCALL_DEFINE0(), COND_SYSCALL(), and SYS_NI(), which I evidently
-> > cargo-culted from x86 (where the ifdeffery is actually necessary).
+On Wed, Sep 11, 2019 at 06:45:40PM +0100, Eugene Syromiatnikov wrote:
+> Previously, higher 32 bits of exit_signal fields were lost when
+> copied to the kernel args structure (that uses int as a type for the
+> respective field).  Moreover, as Oleg has noted[1], exit_signal is used
+> unchecked, so it has to be checked for sanity before use; for the legacy
+> syscalls, applying CSIGNAL mask guarantees that it is at least non-negative;
+> however, there's no such thing is done in clone3() code path, and that can
+> break at least thread_group_leader.
 > 
-> Curious: why is it required on x86?
-
-Due to the way they share some native calls with (IA32) compat, but need
-slightly different wrappers to marshall registers, they have ifdeffery
-like:
-
-#ifdef CONFIG_IA32_EMULATION
-#define COND_SYSCALL(name)                                              \
-        cond_syscall(__x64_sys_##name);                                 \
-        cond_syscall(__ia32_sys_##name)
-#endif
-
-#ifndef COND_SYSCALL
-#define COND_SYSCALL(name) cond_syscall(__x64_sys_##name)
-#endif
-
-... so that they define the compat wrapper when necessary, but not otherwise.
-
-As we don't share the native syscall table with compat tasks, we don't
-need to do anything like that, and can unconditionally define the native
-case once.
-
-> > I can send a follow up for that.
+> Adding checks that user-passed exit_signal fits into int and passes
+> valid_signal() check solves both of these problems.
 > 
-> Yes, please.
+> [1] https://lkml.org/lkml/2019/9/10/467
+> 
+> * kernel/fork.c (copy_clone_args_from_user): Fail with -EINVAL if
+> args.exit_signal is greater than UINT_MAX or is not a valid signal.
+> (_do_fork): Note that exit_signal is expected to be checked for the
+> sanity by the caller.
+> 
+> Fixes: 7f192e3cd316 ("fork: add clone3")
+> Reported-by: Oleg Nesterov <oleg@redhat.com>
+> Co-authored-by: Oleg Nesterov <oleg@redhat.com>
+> Co-authored-by: Dmitry V. Levin <ldv@altlinux.org>
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 
-I'll cook that up now, atop of Sami's patch applied to arm64's
-for-next/core.
+For the sake of posterity I appended a reproducer to the patch (cf. [1])
+that I pushed to mainline which illustrates how without this patch you
+can cause a crash. I'll also explain how I think this happens here.
 
-Thanks,
-Mark.
+By passing in a negative signal you can cause a segfault in
+proc_flush_task(). The reason is that at process creation time
+
+static inline bool thread_group_leader(struct task_struct *p)
+{
+	return p->exit_signal >= 0;
+}
+
+will return false even though it should return true because exit_signal
+overflowed in copy_clone_args_from_user. This means, the kernel
+thinks this is a thread and doesn't make the process a thread-group
+leader. In proc_flush_task() the kernel will then try to retrieve the
+thread group leader but there'll be none ultimately causing a segfault.
+Specifically:
+
+void proc_flush_task(struct task_struct *task)
+{
+	int i;
+	struct pid *pid, *tgid;
+	struct upid *upid;
+
+	pid = task_pid(task);
+	tgid = task_tgid(task); #### tgid is NULL ####
+
+	for (i = 0; i <= pid->level; i++) {
+		upid = &pid->numbers[i];
+		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
+					tgid->numbers[i].nr); #### NULL pointer deref ####
+	}
+}
+
+[1]:
+  #define _GNU_SOURCE
+ #include <linux/sched.h>
+ #include <linux/types.h>
+ #include <sched.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/syscall.h>
+ #include <sys/wait.h>
+ #include <unistd.h>
+
+ int main(int argc, char *argv[])
+ {
+        pid_t pid = -1;
+        struct clone_args args = {0};
+        args.exit_signal = -1;
+
+        pid = syscall(__NR_clone3, &args, sizeof(struct clone_args));
+        if (pid < 0)
+                exit(EXIT_FAILURE);
+
+        if (pid == 0)
+                exit(EXIT_SUCCESS);
+
+        wait(NULL);
+
+        exit(EXIT_SUCCESS);
+ }
+
+ Christian
