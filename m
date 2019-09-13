@@ -2,226 +2,195 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE9C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F5BC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405962084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D2F2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568385389;
-	bh=nthBLQoPDeIw/Cjr/p121TBjqps1npoJ2aVtTTRj15U=;
+	s=default; t=1568385391;
+	bh=d1XpjjTQOQkHx4YysW2TT+CYnntt3Dq1O4tgEnY32RQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GhaSt/bCxZIZXf99ZUBmraA4EVo3ZISizKWWXE4a0MbqX76wLE643/LajNNVJZpwu
-	 ad3Wtmm4jRX9K8G1MeP40XAhAoptzjo3p23hFHjyq17iTszDjvWjyFCxdI6FqwTJLz
-	 G9KKvMvPwy7UuqHz64hWHGtIm6egC7jox3hpM3/U=
+	b=gmg6BeN6CgyEIKSip8EbBbcCD/fyCdTAfxVdQdtccK0fc+8WAonYuaXJOovAZejNH
+	 YHeyJyrbctXOMmbxOabQjI6TFTyd1s4G3RPNxa95ZdDbZ+pu9IDdFjImUrtJfsOLU7
+	 XaTCaDOru45hrZgvAI8i3kwUwB/eUVTXxzg4pmMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfIMOg2 (ORCPT
+        id S1730914AbfIMOga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:36:28 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35841 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbfIMOg1 (ORCPT
+        Fri, 13 Sep 2019 10:36:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37278 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbfIMOg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:36:27 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k20so2820547oih.3;
-        Fri, 13 Sep 2019 07:36:26 -0700 (PDT)
+        Fri, 13 Sep 2019 10:36:29 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s28so29685626otd.4;
+        Fri, 13 Sep 2019 07:36:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+gFzsRCMB/S5/2NImCatrFU6mHejOO77M/5QHXhL2CE=;
-        b=jrutpeE7+krC7rUouqgACbAycUGqck/gLe1i/gMID+BhQg83ZN4ZkEPa7P3D6EtL6M
-         gmH67GqOwwnqDzyFlXm+cPWwAjviUzNxc2CoNPu1bs83Hn7pM72kKigGBG0rbahgFyzW
-         eu3oq2Pzj9nDoebdu6GSVRvkxIG8jeA4Ep53yfOJ3aaL8a5S+OhQEDwBhMPEBUFOoXk3
-         fFgEXp4JaOy2eY3CKBmW5aU4eVN75854bQz2fkepNthqKKxUuJ4LN9epJpK/cxEoRECO
-         RPojgTRJiJl/34f5ej0wj6bWks2giWZCn2Lu5It+t3CpbCbZ/6SU2dbYC1i9Qe0s+pJI
-         FiBg==
-X-Gm-Message-State: APjAAAWJ7NZLfmw3nzvPw/0ARfma9GNCFoqhWbZaitspuLL/ocFkPRRh
-        3jFcaSpzaQMiCIZzkDTTNQ==
-X-Google-Smtp-Source: APXvYqzDJcu7XMQwyfdu88xRNFK5/eDi+cajXRPFFVqk0IhjM9XwyTsN3OWNGDYIZvHiX+LnZBRMuw==
-X-Received: by 2002:a05:6808:8e3:: with SMTP id d3mr3373504oic.153.1568385385768;
-        Fri, 13 Sep 2019 07:36:25 -0700 (PDT)
+        bh=6mdxbSnWKNEAwVfvLxB2FfniJx8A4oxY0hM22xopaEM=;
+        b=SRdh1/SXprYgx6EGtc1mDfIlNaJ7wWNH5Nd11yJyopLIlEZkZfr6NmVrZsMiCSWNl2
+         BCfHSdayYALVh1nyU4scC+5qiLzVJESQXmi768vN7idtfbg3vCBaN6OwQBLEHv917iwf
+         WSCMBm8Xb33tfb2UkTybNMRBUet59Geoo+OcTZ9u3LPPxQZ/DQGNMKk5XH2J96GbJ2ZJ
+         eAWXbwiCGiKSvfT+OdOv9Q7A/8rslMh2OPoupV/pTZ2lGjr4W6V9ag4ZGtMZn72dSNTr
+         0LH3PkFhqmb/WNZGPfDK3OwL90lGhBQrkhXmoB34huctGhnrTbgRdg/lKWnIX1FS8jgK
+         qfrw==
+X-Gm-Message-State: APjAAAXS5wPkR/J3NUsNqbZBtyOuwNAEKGurfmI/BnZrVCh1ENrkvQCT
+        bk5Fx5YqVQ37WfZ8vx9Hiw==
+X-Google-Smtp-Source: APXvYqzn+6nvNXJy1guR0eNWhQFcmEFwvOR5OJ3M+fz3f5Pzd7rqZacnsC89vhMVWQUfRbYFCcPn+Q==
+X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr16025354ote.0.1568385388075;
+        Fri, 13 Sep 2019 07:36:28 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o19sm841989oic.26.2019.09.13.07.36.24
+        by smtp.gmail.com with ESMTPSA id v6sm913853oie.4.2019.09.13.07.36.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 07:36:25 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 15:36:24 +0100
+        Fri, 13 Sep 2019 07:36:27 -0700 (PDT)
+Message-ID: <5d7ba96b.1c69fb81.edf8e.655e@mx.google.com>
+Date:   Fri, 13 Sep 2019 15:36:26 +0100
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] dt-bindings: pwm: Convert Samsung PWM bindings
- to json-schema
-Message-ID: <20190912175001.GA29884@bogus>
-References: <20190909183436.9045-1-krzk@kernel.org>
- <20190909183436.9045-2-krzk@kernel.org>
+To:     Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc:     palmer@sifive.com, paul.walmsley@sifive.com,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: dt-bindings: Convert spi-sifive binding to
+ json-schema
+References: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190909183436.9045-2-krzk@kernel.org>
-X-Mutt-References: <20190909183436.9045-2-krzk@kernel.org>
+In-Reply-To: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
+X-Mutt-References: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 08:34:36PM +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
-> format using json-schema.
+On Tue, Sep 10, 2019 at 12:32:51PM +0530, Pragnesh Patel wrote:
+> Convert the spi-sifive binding to DT schema format.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 --------
->  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 111 ++++++++++++++++++
->  2 files changed, 111 insertions(+), 51 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+>  .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
+>  .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
+>  2 files changed, 86 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
 
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+> diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
 > new file mode 100644
-> index 000000000000..90fb467bcdd5
+> index 0000000..368f5d5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-> @@ -0,0 +1,111 @@
+> +++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+> @@ -0,0 +1,86 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
+> +$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Samsung SoC PWM timers
+> +title: SiFive SPI controller
 > +
 > +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  Samsung SoCs contain PWM timer blocks which can be used for system clock source
-> +  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
-> +  PWM timer block provides 5 PWM channels (not all of them can drive physical
-> +  outputs - see SoC and board manual).
-> +
-> +  Be aware that the clocksource driver supports only uniprocessor systems.
+> +  - Pragnesh Patel <pragnesh.patel@sifive.com>
+> +  - Paul Walmsley  <paul.walmsley@sifive.com>
+> +  - Palmer Dabbelt <palmer@sifive.com>
 > +
 > +allOf:
-> +  - $ref: pwm.yaml#
+> +  - $ref: "spi-controller.yaml#"
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
-> +      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
-> +      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
-> +      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
-> +      - samsung,exynos4210-pwm          # 32-bit, Exynos
+> +    items:
+> +      - const: sifive,fu540-c000-spi
+> +      - const: sifive,spi0
+> +
+> +    description:
+> +      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
+> +      Supported compatible strings are -
+> +      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
+> +      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
+> +      SPI v0 IP block with no chip integration tweaks.
+> +      Please refer to sifive-blocks-ip-versioning.txt for details
+> +
+> +      SPI RTL that corresponds to the IP block version numbers can be found here -
+> +      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    description: |
-> +      Should contain all following required clock names:
-> +      - "timers" - PWM base clock used to generate PWM signals,
-> +      and any subset of following optional clock names:
-> +      - "pwm-tclk0" - first external PWM clock source,
-> +      - "pwm-tclk1" - second external PWM clock source.
-> +      Note that not all IP variants allow using all external clock sources.
-> +      Refer to SoC documentation to learn which clock source configurations
-> +      are available.
-> +    oneOf:
-> +      - items:
-> +        - const: "timers"
-> +      - items:
-> +        - const: "timers"
-> +        - const: "pwm-tclk0"
-> +      - items:
-> +        - const: "timers"
-> +        - const: "pwm-tclk1"
-> +      - items:
-> +        - const: "timers"
-> +        - const: "pwm-tclk0"
-> +        - const: "pwm-tclk1"
+> +    description:
+> +      Physical base address and size of SPI registers map
+> +      A second (optional) range can indicate memory mapped flash
 > +
 > +  interrupts:
-> +    description:
-> +      One interrupt per timer, starting at timer 0.
-> +    minItems: 1
-> +    maxItems: 5
+> +    maxItems: 1
 > +
-> +  "#pwm-cells":
-> +    description:
-> +      The only third cell flag supported by this binding
-> +      is PWM_POLARITY_INVERTED.
-> +    const: 3
+> +  clocks:
+> +    maxItems: 1
 > +
-> +  samsung,pwm-outputs:
 > +    description:
-> +      A list of PWM channels used as PWM outputs on particular platform.
-> +      It is an array of up to 5 elements being indices of PWM channels
-> +      (from 0 to 4), the order does not matter.
-> +    # TODO: Values should not repeat
+> +      Must reference the frequency given to the controller
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
 
-uniqueItems: true
+These 2 are covered by spi-controller.yaml, so you can drop them.
 
-Though it looks like we have to enable that keyword. (As silently 
-ignoring unknown keywords (such as typos) is 'feature' of json-schema, 
-we explicitly list keywords we use.)
+> +
+> +  sifive,fifo-depth:
+> +    description:
+> +      Depth of hardware queues; defaults to 8
 
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      # FIXME: min/max limit of items does not work
-> +      - items:
-> +          minItems: 1
-> +          maxItems: 5
-> +      - items:
-> +          minimum: 0
-> +          maximum: 4
+default: 8
 
-I think you want:
+What are valid values?
 
-minItems: 1
-maxItems: 2
-items:
-  minimum: 0
-  maximum: 4
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+
+Will need to be under 'allOf' with the above constraints.
+
+> +
+> +  sifive,max-bits-per-word:
+> +    description:
+> +      Maximum bits per word; defaults to 8
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+
+Same comments here.
 
 > +
 > +required:
-> +  - clocks
-> +  - clock-names
 > +  - compatible
-> +  - interrupts
-> +  - "#pwm-cells"
 > +  - reg
+> +  - interrupts
+> +  - clocks
 > +
 > +examples:
 > +  - |
-> +    pwm@7f006000 {
-> +      compatible = "samsung,s3c6400-pwm";
-> +      reg = <0x7f006000 0x1000>;
-> +      interrupt-parent = <&vic0>;
-> +      interrupts = <23>, <24>, <25>, <27>, <28>;
-> +      clocks = <&clock 67>;
-> +      clock-names = "timers";
-> +      samsung,pwm-outputs = <0>, <1>;
-> +      #pwm-cells = <3>;
+> +    spi: spi@10040000 {
+> +      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+> +      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
+> +      interrupt-parent = <&plic>;
+> +      interrupts = <51>;
+> +      clocks = <&tlclk>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      sifive,fifo-depth = <8>;
+> +      sifive,max-bits-per-word = <8>;
 > +    };
+> +
+> +...
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 
