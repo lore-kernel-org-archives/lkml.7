@@ -2,173 +2,236 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49F9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58DFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A8920830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D590208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ENeynBjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfIMLJw (ORCPT
+        id S1729564AbfIMLMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 07:09:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726754AbfIMLJv (ORCPT
+        Fri, 13 Sep 2019 07:12:10 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:40034 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729471AbfIMLMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 07:09:51 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8DB92In140430
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 07:09:50 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v09tggexb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 07:09:50 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Fri, 13 Sep 2019 12:09:48 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 13 Sep 2019 12:09:44 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8DB9hGG46399596
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 11:09:43 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D65FA4054;
-        Fri, 13 Sep 2019 11:09:43 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6658A4062;
-        Fri, 13 Sep 2019 11:09:42 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.117.92])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Sep 2019 11:09:42 +0000 (GMT)
-Subject: Re: [PATCH 0/3] powerpc/mm: Conditionally call H_BLOCK_REMOVE
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190830120712.22971-1-ldufour@linux.ibm.com>
- <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Fri, 13 Sep 2019 13:09:42 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Fri, 13 Sep 2019 07:12:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id CD26C3F8D3;
+        Fri, 13 Sep 2019 13:12:07 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="ENeynBjX";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id niRmrq4Fp0ZP; Fri, 13 Sep 2019 13:12:05 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id D7E663F7CA;
+        Fri, 13 Sep 2019 13:12:00 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id D2013360195;
+        Fri, 13 Sep 2019 13:11:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568373119; bh=oVO0huRC63nNaAcmPyXTeKnX14VYqMTwWij4ToHPRag=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=ENeynBjXKPO+fu/mcg8v1dkU/vWW8JjcTx8ukBdSUdk5jJC1HPptRwsH49bhKicFO
+         1VLaQdDL15HW94NgLRR2PeF6lyMYwdHmKq7fIwgZJFYjlDW/IPztyvoEhVYbjuUJXk
+         Gg9PDdUJJr5dI+AMYZy+R/AayqJyLv1/xHWla2Tg=
+Subject: Re: [RFC PATCH 1/7] mm: Add write-protect and clean utilities for
+ address space ranges
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>, pv-drivers@vmware.com,
+        Minchan Kim <minchan@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-graphics-maintainer@vmware.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190913093213.27254-1-thomas_os@shipmail.org>
+ <20190913093213.27254-2-thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <a70b7de4-32bf-2c78-4d15-21473be6842b@shipmail.org>
+Date:   Fri, 13 Sep 2019 13:11:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
+In-Reply-To: <20190913093213.27254-2-thomas_os@shipmail.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091311-0028-0000-0000-0000039BCDFA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091311-0029-0000-0000-0000245E3CB4
-Message-Id: <6d9ca38f-2b80-a2a5-491e-d818a3ebcd32@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909130107
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 12/09/2019 à 15:44, Aneesh Kumar K.V a écrit :
-> On 8/30/19 5:37 PM, Laurent Dufour wrote:
->> Since the commit ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE"),
->> the call to H_BLOCK_REMOVE is always done if the feature is exhibited.
->>
->> On some system, the hypervisor may not support all the combination of
->> segment base page size and page size. When this happens the hcall is
->> returning H_PARAM, which is triggering a BUG_ON check leading to a panic.
->>
->> The PAPR document is specifying a TLB Block Invalidate Characteristics item
->> detailing which couple base page size, page size the hypervisor is
->> supporting through H_BLOCK_REMOVE. Furthermore, the characteristics are
->> also providing the size of the block the hcall could process.
->>
->> Supporting various block size seems not needed as all systems I was able to
->> play with was support an 8 addresses block size, which is the maximum
->> through the hcall. Supporting various size may complexify the algorithm in
->> call_block_remove() so unless this is required, this is not done.
->>
->> In the case of block size different from 8, a warning message is displayed
->> at boot time and that block size will be ignored checking for the
->> H_BLOCK_REMOVE support.
->>
->> Due to the minimal amount of hardware showing a limited set of
->> H_BLOCK_REMOVE supported page size, I don't think there is a need to push
->> this series to the stable mailing list.
->>
->> The first patch is initializing the penc values for each page size to an
->> invalid value to be able to detect those which have been initialized as 0
->> is a valid value.
->>
->> The second patch is reading the characteristic through the hcall
->> ibm,get-system-parameter and record the supported block size for each page
->> size.
->>
->> The third patch is changing the check used to detect the H_BLOCK_REMOVE
->> availability to take care of the base page size and page size couple.
->>
-> 
-> So ibm,segment-page-sizes indicates wether we support a combination of base 
-> page size and actual page size. You are suggesting that the value reported 
-> by that is not correct? Can you also share the early part of dmesg as below.
+On 9/13/19 11:32 AM, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+>
+> Add two utilities to a) write-protect and b) clean all ptes pointing into
+> a range of an address space.
+> The utilities are intended to aid in tracking dirty pages (either
+> driver-allocated system memory or pci device memory).
+> The write-protect utility should be used in conjunction with
+> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
+> accesses. Typically one would want to use this on sparse accesses into
+> large memory regions. The clean utility should be used to utilize
+> hardware dirtying functionality and avoid the overhead of page-faults,
+> typically on large accesses into small memory regions.
+>
+> The added file "as_dirty_helpers.c" is initially listed as maintained by
+> VMware under our DRM driver. If somebody would like it elsewhere,
+> that's of course no problem.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
+> ---
+>   MAINTAINERS           |   1 +
+>   include/linux/mm.h    |  13 +-
+>   mm/Kconfig            |   3 +
+>   mm/Makefile           |   1 +
+>   mm/as_dirty_helpers.c | 392 ++++++++++++++++++++++++++++++++++++++++++
+>   5 files changed, 409 insertions(+), 1 deletion(-)
+>   create mode 100644 mm/as_dirty_helpers.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c2d975da561f..b596c7cf4a85 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5287,6 +5287,7 @@ T:	git git://people.freedesktop.org/~thomash/linux
+>   S:	Supported
+>   F:	drivers/gpu/drm/vmwgfx/
+>   F:	include/uapi/drm/vmwgfx_drm.h
+> +F:	mm/as_dirty_helpers.c
+>   
+>   DRM DRIVERS
+>   M:	David Airlie <airlied@linux.ie>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0334ca97c584..27ff341ecbdc 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2657,7 +2657,6 @@ typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
+>   extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+>   			       unsigned long size, pte_fn_t fn, void *data);
+>   
+> -
+>   #ifdef CONFIG_PAGE_POISONING
+>   extern bool page_poisoning_enabled(void);
+>   extern void kernel_poison_pages(struct page *page, int numpages, int enable);
+> @@ -2891,5 +2890,17 @@ void __init setup_nr_node_ids(void);
+>   static inline void setup_nr_node_ids(void) {}
+>   #endif
+>   
+> +#ifdef CONFIG_AS_DIRTY_HELPERS
+> +unsigned long apply_as_clean(struct address_space *mapping,
+> +			     pgoff_t first_index, pgoff_t nr,
+> +			     pgoff_t bitmap_pgoff,
+> +			     unsigned long *bitmap,
+> +			     pgoff_t *start,
+> +			     pgoff_t *end);
+> +
+> +unsigned long apply_as_wrprotect(struct address_space *mapping,
+> +				 pgoff_t first_index, pgoff_t nr);
+> +#endif
+> +
+>   #endif /* __KERNEL__ */
+>   #endif /* _LINUX_MM_H */
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 56cec636a1fc..594350e9d78e 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -736,4 +736,7 @@ config ARCH_HAS_PTE_SPECIAL
+>   config ARCH_HAS_HUGEPD
+>   	bool
+>   
+> +config AS_DIRTY_HELPERS
+> +        bool
+> +
+>   endmenu
+> diff --git a/mm/Makefile b/mm/Makefile
+> index d0b295c3b764..4086f1eefbc6 100644
+> --- a/mm/Makefile
+> +++ b/mm/Makefile
+> @@ -105,3 +105,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+>   obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+>   obj-$(CONFIG_HMM_MIRROR) += hmm.o
+>   obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+> +obj-$(CONFIG_AS_DIRTY_HELPERS) += as_dirty_helpers.o
+> diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
+> new file mode 100644
+> index 000000000000..3be06fe8f1d2
+> --- /dev/null
+> +++ b/mm/as_dirty_helpers.c
+> @@ -0,0 +1,392 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/hugetlb.h>
+> +#include <linux/bitops.h>
+> +#include <linux/mmu_notifier.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/tlbflush.h>
+> +
+> +/**
+> + * struct as_walk - Argument to as_pte_fn_t
 
-I'm not saying that the value reported by ibm,segment-page-sizes are 
-incorrect, I'm saying that some couple are not supported by the hcall 
-H_BLOCK_REMOVE.
+Argument to struct as_walk_ops callbacks
 
-May be should I change the second sentence by
+> + * @vma: Pointer to the struct vmw_area_struct currently being walked.
+> + *
+> + * Embeddable argument to struct as__pte_fn_t
 
-On some system, the hypervisor may not support all the combination of 
-segment base page size and page size for the hcall H_BLOCK_REMOVE. When 
-this happens the hcall is returning H_PARAM, which is triggering a BUG_ON 
-check leading to a panic.
+Here as well.
 
-Is that clear enough now ?
 
-> 
-> [    0.000000] hash-mmu: Page sizes from device-tree:
-> [    0.000000] hash-mmu: base_shift=12: shift=12, sllp=0x0000, 
-> avpnm=0x00000000, tlbiel=1, penc=0
-> [    0.000000] hash-mmu: base_shift=12: shift=16, sllp=0x0000, 
-> avpnm=0x00000000, tlbiel=1, penc=7
-> [    0.000000] hash-mmu: base_shift=12: shift=24, sllp=0x0000, 
-> avpnm=0x00000000, tlbiel=1, penc=56
-> [    0.000000] hash-mmu: base_shift=16: shift=16, sllp=0x0110, 
-> avpnm=0x00000000, tlbiel=1, penc=1
-> [    0.000000] hash-mmu: base_shift=16: shift=24, sllp=0x0110, 
-> avpnm=0x00000000, tlbiel=1, penc=8
-> [    0.000000] hash-mmu: base_shift=24: shift=24, sllp=0x0100, 
-> avpnm=0x00000001, tlbiel=0, penc=0
-> [    0.000000] hash-mmu: base_shift=34: shift=34, sllp=0x0120, 
-> avpnm=0x000007ff, tlbiel=0, penc=3
-> 
-> That shows different base page size and actual page size combination.
-> 
-> 
->> Laurent Dufour (3):
->>    powerpc/mm: Initialize the HPTE encoding values
->>    powperc/mm: read TLB Block Invalidate Characteristics
->>    powerpc/mm: call H_BLOCK_REMOVE when supported
->>
->>   arch/powerpc/include/asm/book3s/64/mmu.h |   3 +
->>   arch/powerpc/mm/book3s64/hash_utils.c    |   8 +-
->>   arch/powerpc/platforms/pseries/lpar.c    | 118 ++++++++++++++++++++++-
->>   3 files changed, 125 insertions(+), 4 deletions(-)
->>
-> 
-> 
-> -aneesh
+> + */
+> +struct as_walk {
+> +	struct vm_area_struct *vma;
+> +};
+> +
+> +/**
+> + * struct as_walk_ops - Callbacks for entries of various page table levels.
+> + * extend for additional level support.
+> + */
+> +struct as_walk_ops {
+> +	/**
+> +	 * pte-entry: Callback for PTEs
+> +	 * @pte: Pointer to the PTE.
+> +	 * @addr: Virtual address.
+> +	 * @asw: Struct as_walk argument for the walk. Embed for additional
+> +	 * data.
+> +	 */
+> +	void (*const pte_entry) (pte_t *pte, unsigned long addr,
+> +				 struct as_walk *asw);
+> +};
 
