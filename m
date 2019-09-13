@@ -2,193 +2,198 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B618C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4982FC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5CF2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ov0Eu2b4"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7132084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfIMCqj (ORCPT
+        id S1728171AbfIMCql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:46:39 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40419 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfIMCqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 22:46:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58611 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727460AbfIMCqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Sep 2019 22:46:16 -0400
-Received: by mail-yw1-f66.google.com with SMTP id e205so6763322ywc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 19:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zLkW+74wc48chMaJ/KVuQ7uRrxWQIHDU9l5rh4JtIOY=;
-        b=ov0Eu2b4I7Q12uq0yRcdvZeS638ThpP0iTtsvSfkqDaN3X5+nLqrTerinuZIfna51K
-         ER7JlMfi5/Xu1xECvpsZcwQmhvhwoLwRqAPlPWqHJtZA7E3crnhbm2dtm58n6JAXzaQf
-         2T0+yGLXET7Xb/mVjCPGiy29t7BebbCUCgQvtmhJenAsZrYgFnd3UBsdjOcz1nBBeixn
-         RWF1cIKC/XL5R85ZJoORWeIr7lVJxbiTwBsMdRvb0/1jCmuU1W8iNdIVbzoEOl5sYa+C
-         fS9XTVFXDaMoKeVfsnierV2HeVhjobRSLZFev3F2n/AbX8NhzyhVUqkaoCWdqZ+qdRob
-         6p2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zLkW+74wc48chMaJ/KVuQ7uRrxWQIHDU9l5rh4JtIOY=;
-        b=NJEO+/q3yfAT4wdMK6fQEvjb2C4ikLmro5uh08cDsciYT1EaaIDkB2sgQjwiBed2bG
-         89VwGhYhf3XPEKCVez4CufTtXPSIHWBIDHOmC2DFBxvJwi42wC0ef/PDfDDYZu/PIodC
-         IvvCp6GfrCS9WydITDU8HNcBg/2WNfkl7I6zKBnj1fVhRtj1VP1w6Di3X1Z9r/+Gn0EA
-         DJ47l5KR653CBhDTdz/A0Gi99Ohb01MzJOgJcl6XGwpeB1BssgtfogFQZ2b1XgrP/PfT
-         vEIf38YYx/shSgC1I/fud8IYG6tBOWVtOIuU3Yo+v983kyqni41RhMhJdMwQpKZzX5m7
-         jXhw==
-X-Gm-Message-State: APjAAAVXOxQweHK2L/rxuFhNXhdZQzUpXSyUgv+3wgO4FvmNgetzwy5J
-        joBoliM2in05+d9I8pZm2sJJwMYPIujVFR0NEYHqCw==
-X-Google-Smtp-Source: APXvYqxVM4s8F4BS1Zlcn5M6gNmvcyM6ChJG6gCcHFmoDtUB11R5vxC7LO/naIitvw995GJ4Ao0m100O1UmzFVjsq2k=
-X-Received: by 2002:a81:30c3:: with SMTP id w186mr27042004yww.10.1568342775235;
- Thu, 12 Sep 2019 19:46:15 -0700 (PDT)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 19:46:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="176159531"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 19:46:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        James Harvey <jamespharvey20@gmail.com>,
+        Alex Willamson <alex.williamson@redhat.com>
+Subject: [PATCH 10/11] KVM: x86/mmu: Explicitly track only a single invalid mmu generation
+Date:   Thu, 12 Sep 2019 19:46:11 -0700
+Message-Id: <20190913024612.28392-11-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
+References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <31131c2d-a936-8bbf-e58d-a3baaa457340@gmail.com>
- <20190906125608.32129-1-mhocko@kernel.org> <CALvZod5w72jH8fJSFRaw7wgQTnzF6nb=+St-sSXVGSiG6Bs3Lg@mail.gmail.com>
- <20190909112245.GH27159@dhcp22.suse.cz> <20190911120002.GQ4023@dhcp22.suse.cz>
- <20190911073740.b5c40cd47ea845884e25e265@linux-foundation.org> <20190911151612.GI4023@dhcp22.suse.cz>
-In-Reply-To: <20190911151612.GI4023@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 12 Sep 2019 19:46:04 -0700
-Message-ID: <CALvZod65jCCH+fHqAQwk0RTZhyhxG71F-sHE7qxrmZ_L1tDbvw@mail.gmail.com>
-Subject: Re: [PATCH] memcg, kmem: do not fail __GFP_NOFAIL charges
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 8:16 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Wed 11-09-19 07:37:40, Andrew Morton wrote:
-> > On Wed, 11 Sep 2019 14:00:02 +0200 Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > > On Mon 09-09-19 13:22:45, Michal Hocko wrote:
-> > > > On Fri 06-09-19 11:24:55, Shakeel Butt wrote:
-> > > [...]
-> > > > > I wonder what has changed since
-> > > > > <http://lkml.kernel.org/r/20180525185501.82098-1-shakeelb@google.com/>.
-> > > >
-> > > > I have completely forgot about that one. It seems that we have just
-> > > > repeated the same discussion again. This time we have a poor user who
-> > > > actually enabled the kmem limit.
-> > > >
-> > > > I guess there was no real objection to the change back then. The primary
-> > > > discussion revolved around the fact that the accounting will stay broken
-> > > > even when this particular part was fixed. Considering this leads to easy
-> > > > to trigger crash (with the limit enabled) then I guess we should just
-> > > > make it less broken and backport to stable trees and have a serious
-> > > > discussion about discontinuing of the limit. Start by simply failing to
-> > > > set any limit in the current upstream kernels.
-> > >
-> > > Any more concerns/objections to the patch? I can add a reference to your
-> > > earlier post Shakeel if you want or to credit you the way you prefer.
-> > >
-> > > Also are there any objections to start deprecating process of kmem
-> > > limit? I would see it in two stages
-> > > - 1st warn in the kernel log
-> > >     pr_warn("kmem.limit_in_bytes is deprecated and will be removed.
-> > >             "Please report your usecase to linux-mm@kvack.org if you "
-> > >             "depend on this functionality."
-> >
-> > pr_warn_once() :)
-> >
-> > > - 2nd fail any write to kmem.limit_in_bytes
-> > > - 3rd remove the control file completely
-> >
-> > Sounds good to me.
->
-> Here we go
->
-> From 512822e551fe2960040c23b12c7b27a5fdab9013 Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Wed, 11 Sep 2019 17:02:33 +0200
-> Subject: [PATCH] memcg, kmem: deprecate kmem.limit_in_bytes
->
-> Cgroup v1 memcg controller has exposed a dedicated kmem limit to users
-> which turned out to be really a bad idea because there are paths which
-> cannot shrink the kernel memory usage enough to get below the limit
-> (e.g. because the accounted memory is not reclaimable). There are cases
-> when the failure is even not allowed (e.g. __GFP_NOFAIL). This means
-> that the kmem limit is in excess to the hard limit without any way to
-> shrink and thus completely useless. OOM killer cannot be invoked to
-> handle the situation because that would lead to a premature oom killing.
->
-> As a result many places might see ENOMEM returning from kmalloc and
-> result in unexpected errors. E.g. a global OOM killer when there is a
-> lot of free memory because ENOMEM is translated into VM_FAULT_OOM in #PF
-> path and therefore pagefault_out_of_memory would result in OOM killer.
->
-> Please note that the kernel memory is still accounted to the overall
-> limit along with the user memory so removing the kmem specific limit
-> should still allow to contain kernel memory consumption. Unlike the kmem
-> one, though, it invokes memory reclaim and targeted memcg oom killing if
-> necessary.
->
-> Start the deprecation process by crying to the kernel log. Let's see
-> whether there are relevant usecases and simply return to EINVAL in the
-> second stage if nobody complains in few releases.
->
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+Toggle mmu_valid_gen between '0' and '1' instead of blindly incrementing
+the generation.  Because slots_lock is held for the entire duration of
+zapping obsolete pages, it's impossible for there to be multiple invalid
+generations associated with shadow pages at any given time.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Toggling between the two generations (valid vs. invalid) allows changing
+mmu_valid_gen from an unsigned long to a u8, which reduces the size of
+struct kvm_mmu_page from 160 to 152 bytes on 64-bit KVM, i.e. reduces
+KVM's memory footprint by 8 bytes per shadow page.
 
-> ---
->  Documentation/admin-guide/cgroup-v1/memory.rst | 3 +++
->  mm/memcontrol.c                                | 3 +++
->  2 files changed, 6 insertions(+)
->
-> diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
-> index 41bdc038dad9..e53fc2f31549 100644
-> --- a/Documentation/admin-guide/cgroup-v1/memory.rst
-> +++ b/Documentation/admin-guide/cgroup-v1/memory.rst
-> @@ -87,6 +87,9 @@ Brief summary of control files.
->                                      node
->
->   memory.kmem.limit_in_bytes          set/show hard limit for kernel memory
-> +                                     This knob is deprecated it shouldn't be
-> +                                     used. It is planned to be removed in
-> +                                     a foreseeable future.
->   memory.kmem.usage_in_bytes          show current kernel memory allocation
->   memory.kmem.failcnt                 show the number of kernel memory usage
->                                      hits limits
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e18108b2b786..113969bc57e8 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3518,6 +3518,9 @@ static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
->                         ret = mem_cgroup_resize_max(memcg, nr_pages, true);
->                         break;
->                 case _KMEM:
-> +                       pr_warn_once("kmem.limit_in_bytes is deprecated and will be removed. "
-> +                                    "Please report your usecase to linux-mm@kvack.org if you "
-> +                                    "depend on this functionality.\n");
->                         ret = memcg_update_kmem_max(memcg, nr_pages);
->                         break;
->                 case _TCP:
-> --
-> 2.20.1
->
->
-> --
-> Michal Hocko
-> SUSE Labs
+Set sp->mmu_valid_gen before it is added to active_mmu_pages.
+Functionally this has no effect as kvm_mmu_alloc_page() has a single
+caller that sets sp->mmu_valid_gen soon thereafter, but visually it is
+jarring to see a shadow page being added to the list without its
+mmu_valid_gen first being set.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h |  4 ++--
+ arch/x86/kvm/mmu.c              | 14 ++++++++++++--
+ arch/x86/kvm/mmutrace.h         | 16 ++++++++--------
+ 3 files changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 6e4fa75351fd..8912b04d4ae1 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -320,6 +320,7 @@ struct kvm_mmu_page {
+ 	struct list_head link;
+ 	struct hlist_node hash_link;
+ 	bool unsync;
++	u8 mmu_valid_gen;
+ 
+ 	/*
+ 	 * The following two entries are used to key the shadow page in the
+@@ -334,7 +335,6 @@ struct kvm_mmu_page {
+ 	int root_count;          /* Currently serving as active root */
+ 	unsigned int unsync_children;
+ 	struct kvm_rmap_head parent_ptes; /* rmap pointers to parent sptes */
+-	unsigned long mmu_valid_gen;
+ 	DECLARE_BITMAP(unsync_child_bitmap, 512);
+ 
+ #ifdef CONFIG_X86_32
+@@ -856,7 +856,7 @@ struct kvm_arch {
+ 	unsigned long n_requested_mmu_pages;
+ 	unsigned long n_max_mmu_pages;
+ 	unsigned int indirect_shadow_pages;
+-	unsigned long mmu_valid_gen;
++	u8 mmu_valid_gen;
+ 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+ 	/*
+ 	 * Hash table of struct kvm_mmu_page.
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index bce19918ca5a..a7b14750cde9 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -2101,6 +2101,7 @@ static struct kvm_mmu_page *kvm_mmu_alloc_page(struct kvm_vcpu *vcpu, int direct
+ 	 * depends on valid pages being added to the head of the list.  See
+ 	 * comments in kvm_zap_obsolete_pages().
+ 	 */
++	sp->mmu_valid_gen = vcpu->kvm->arch.mmu_valid_gen;
+ 	list_add(&sp->link, &vcpu->kvm->arch.active_mmu_pages);
+ 	kvm_mod_used_mmu_pages(vcpu->kvm, +1);
+ 	return sp;
+@@ -2537,7 +2538,6 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+ 		if (level > PT_PAGE_TABLE_LEVEL && need_sync)
+ 			flush |= kvm_sync_pages(vcpu, gfn, &invalid_list);
+ 	}
+-	sp->mmu_valid_gen = vcpu->kvm->arch.mmu_valid_gen;
+ 	clear_page(sp->spt);
+ 	trace_kvm_mmu_get_page(sp, true);
+ 
+@@ -5737,9 +5737,19 @@ static void kvm_zap_obsolete_pages(struct kvm *kvm)
+  */
+ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
+ {
++	lockdep_assert_held(&kvm->slots_lock);
++
+ 	spin_lock(&kvm->mmu_lock);
+ 	trace_kvm_mmu_zap_all_fast(kvm);
+-	kvm->arch.mmu_valid_gen++;
++
++	/*
++	 * Toggle mmu_valid_gen between '0' and '1'.  Because slots_lock is
++	 * held for the entire duration of zapping obsolete pages, it's
++	 * impossible for there to be multiple invalid generations associated
++	 * with *valid* shadow pages at any given time, i.e. there is exactly
++	 * one valid generation and (at most) one invalid generation.
++	 */
++	kvm->arch.mmu_valid_gen = kvm->arch.mmu_valid_gen ? 0 : 1;
+ 
+ 	/*
+ 	 * Notify all vcpus to reload its shadow page table and flush TLB.
+diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
+index 1a063ba76281..7ca8831c7d1a 100644
+--- a/arch/x86/kvm/mmutrace.h
++++ b/arch/x86/kvm/mmutrace.h
+@@ -8,11 +8,11 @@
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM kvmmmu
+ 
+-#define KVM_MMU_PAGE_FIELDS			\
+-	__field(unsigned long, mmu_valid_gen)	\
+-	__field(__u64, gfn)			\
+-	__field(__u32, role)			\
+-	__field(__u32, root_count)		\
++#define KVM_MMU_PAGE_FIELDS		\
++	__field(__u8, mmu_valid_gen)	\
++	__field(__u64, gfn)		\
++	__field(__u32, role)		\
++	__field(__u32, root_count)	\
+ 	__field(bool, unsync)
+ 
+ #define KVM_MMU_PAGE_ASSIGN(sp)				\
+@@ -31,7 +31,7 @@
+ 								        \
+ 	role.word = __entry->role;					\
+ 									\
+-	trace_seq_printf(p, "sp gen %lx gfn %llx l%u %u-byte q%u%s %s%s"\
++	trace_seq_printf(p, "sp gen %u gfn %llx l%u %u-byte q%u%s %s%s"	\
+ 			 " %snxe %sad root %u %s%c",			\
+ 			 __entry->mmu_valid_gen,			\
+ 			 __entry->gfn, role.level,			\
+@@ -288,7 +288,7 @@ TRACE_EVENT(
+ 	TP_ARGS(kvm),
+ 
+ 	TP_STRUCT__entry(
+-		__field(unsigned long, mmu_valid_gen)
++		__field(__u8, mmu_valid_gen)
+ 		__field(unsigned int, mmu_used_pages)
+ 	),
+ 
+@@ -297,7 +297,7 @@ TRACE_EVENT(
+ 		__entry->mmu_used_pages = kvm->arch.n_used_mmu_pages;
+ 	),
+ 
+-	TP_printk("kvm-mmu-valid-gen %lx used_pages %x",
++	TP_printk("kvm-mmu-valid-gen %u used_pages %x",
+ 		  __entry->mmu_valid_gen, __entry->mmu_used_pages
+ 	)
+ );
+-- 
+2.22.0
+
