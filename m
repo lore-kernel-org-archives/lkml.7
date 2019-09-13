@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFC1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5353BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A86208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255C52089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380224;
-	bh=S089siSzkWik0/nefmawD6CYI0z6SyrQGP6BHrVof68=;
+	s=default; t=1568380228;
+	bh=z5rnTMs+tdlhPnxCIKntD5EnyecOwAsmNlrXbnYt9qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDH2kfagtegxruGbWT/4ZB+btraMwVvwtyf1Bsyh2GcFd6KkUm3z66DcioJcgYi4b
-	 jJflPDuZHp6lUCk6noGUqbr8HfzAMLryaiwZGUPQTk0A645r9SiM/ecifzfsNhG+y+
-	 u1IcP/yvr2Oml5aOLoWRbUJ5TrYjBaGIIlMw2VCk=
+	b=kmELf6QQ27l0u7EAs2dRh7Oea9tyA7cLYWYsxQqggiJy08YFAqk9WNo7o3wUwtVBE
+	 BonxgSZcWAwUksK1jl5EO/3fU5tUm+2zVlIueu4L8BNucu7R5XtyZ8REGLv7eDiQW0
+	 XPvALdrZ0Ne5KxGErd4VmqB7qEH4qn0m9ONHwdfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388751AbfIMNKX (ORCPT
+        id S2388763AbfIMNK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388734AbfIMNKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:21 -0400
+        id S2388734AbfIMNKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:24 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492E3206A5;
-        Fri, 13 Sep 2019 13:10:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A985206A5;
+        Fri, 13 Sep 2019 13:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380220;
-        bh=S089siSzkWik0/nefmawD6CYI0z6SyrQGP6BHrVof68=;
+        s=default; t=1568380224;
+        bh=z5rnTMs+tdlhPnxCIKntD5EnyecOwAsmNlrXbnYt9qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XtOsFxPQbxpC5cJjww8BPUuewBZeJp1TFGHTlZaZZSOJ5ZIGm68AF6CutlEySFJ9s
-         qWWn0l/EwMn5Pb+crlwb8+9l6Ok6aYNItGlKwK6kzfUs5frjVxvDnArlNHUfErdVjz
-         uicjIyvLlH62Q06k6ZMQomCprR3f1n6snps89p/o=
+        b=T1a2+r2SdkkrGb3LwPGSeKRuHLiQemBHnldwtlrH1148ik51YTPtlO23EN8kfla5R
+         2wDnUj9Dz4Pm0S5emhhcgZ4mPaCoXftasOy6DYqc3L2fCZmMRLYG3EgYJJwe6+ophZ
+         FH7ys+2Bw//u2Bo1VMqn3ZlUjXzgtR+IAdPKAzYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        YueHaibing <yuehaibing@huawei.com>, Jessica Yu <jeyu@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/21] clk: s2mps11: Add used attribute to s2mps11_dt_match
-Date:   Fri, 13 Sep 2019 14:07:11 +0100
-Message-Id: <20190913130509.004448784@linuxfoundation.org>
+Subject: [PATCH 4.14 19/21] kernel/module: Fix mem leak in module_add_modinfo_attrs
+Date:   Fri, 13 Sep 2019 14:07:12 +0100
+Message-Id: <20190913130509.223326961@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
@@ -61,60 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c940bbe2bb47e03ca5e937d30b6a50bf9c0e671 ]
+[ Upstream commit bc6f2a757d525e001268c3658bd88822e768f8db ]
 
-Clang warns after commit 8985167ecf57 ("clk: s2mps11: Fix matching when
-built as module and DT node contains compatible"):
+In module_add_modinfo_attrs if sysfs_create_file
+fails, we forget to free allocated modinfo_attrs
+and roll back the sysfs files.
 
-drivers/clk/clk-s2mps11.c:242:34: warning: variable 's2mps11_dt_match'
-is not needed and will not be emitted [-Wunneeded-internal-declaration]
-static const struct of_device_id s2mps11_dt_match[] = {
-                                 ^
-1 warning generated.
-
-This warning happens when a variable is used in some construct that
-doesn't require a reference to that variable to be emitted in the symbol
-table; in this case, it's MODULE_DEVICE_TABLE, which only needs to hold
-the data of the variable, not the variable itself.
-
-$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_dt_match
-00000078 000003d4 R __mod_of__s2mps11_dt_match_device_table
-
-Normally, with device ID table variables, it means that the variable
-just needs to be tied to the device declaration at the bottom of the
-file, like s2mps11_clk_id:
-
-$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_clk_id
-00000000 00000078 R __mod_platform__s2mps11_clk_id_device_table
-00000000 00000078 r s2mps11_clk_id
-
-However, because the comment above this deliberately doesn't want this
-variable added to .of_match_table, we need to mark s2mps11_dt_match as
-__used to silence this warning. This makes it clear to Clang that the
-variable is used for something, even if a reference to it isn't being
-emitted.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Fixes: 8985167ecf57 ("clk: s2mps11: Fix matching when built as module and DT node contains compatible")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-s2mps11.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/module.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
-index 14071a57c9262..f5d74e8db4327 100644
---- a/drivers/clk/clk-s2mps11.c
-+++ b/drivers/clk/clk-s2mps11.c
-@@ -255,7 +255,7 @@ MODULE_DEVICE_TABLE(platform, s2mps11_clk_id);
-  * This requires of_device_id table.  In the same time this will not change the
-  * actual *device* matching so do not add .of_match_table.
-  */
--static const struct of_device_id s2mps11_dt_match[] = {
-+static const struct of_device_id s2mps11_dt_match[] __used = {
- 	{
- 		.compatible = "samsung,s2mps11-clk",
- 		.data = (void *)S2MPS11X,
+diff --git a/kernel/module.c b/kernel/module.c
+index 4b372c14d9a1f..4685675912414 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1695,6 +1695,8 @@ static int add_usage_links(struct module *mod)
+ 	return ret;
+ }
+ 
++static void module_remove_modinfo_attrs(struct module *mod, int end);
++
+ static int module_add_modinfo_attrs(struct module *mod)
+ {
+ 	struct module_attribute *attr;
+@@ -1709,24 +1711,34 @@ static int module_add_modinfo_attrs(struct module *mod)
+ 		return -ENOMEM;
+ 
+ 	temp_attr = mod->modinfo_attrs;
+-	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
++	for (i = 0; (attr = modinfo_attrs[i]); i++) {
+ 		if (!attr->test || attr->test(mod)) {
+ 			memcpy(temp_attr, attr, sizeof(*temp_attr));
+ 			sysfs_attr_init(&temp_attr->attr);
+ 			error = sysfs_create_file(&mod->mkobj.kobj,
+ 					&temp_attr->attr);
++			if (error)
++				goto error_out;
+ 			++temp_attr;
+ 		}
+ 	}
++
++	return 0;
++
++error_out:
++	if (i > 0)
++		module_remove_modinfo_attrs(mod, --i);
+ 	return error;
+ }
+ 
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ 	struct module_attribute *attr;
+ 	int i;
+ 
+ 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
++		if (end >= 0 && i > end)
++			break;
+ 		/* pick a field to test for end of list */
+ 		if (!attr->attr.name)
+ 			break;
+@@ -1814,7 +1826,7 @@ static int mod_sysfs_setup(struct module *mod,
+ 	return 0;
+ 
+ out_unreg_modinfo_attrs:
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ out_unreg_param:
+ 	module_param_sysfs_remove(mod);
+ out_unreg_holders:
+@@ -1850,7 +1862,7 @@ static void mod_sysfs_fini(struct module *mod)
+ {
+ }
+ 
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ }
+ 
+@@ -1866,7 +1878,7 @@ static void init_param_lock(struct module *mod)
+ static void mod_sysfs_teardown(struct module *mod)
+ {
+ 	del_usage_links(mod);
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ 	module_param_sysfs_remove(mod);
+ 	kobject_put(mod->mkobj.drivers_dir);
+ 	kobject_put(mod->holders_dir);
 -- 
 2.20.1
 
