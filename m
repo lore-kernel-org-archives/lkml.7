@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00CAC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D51C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32E0206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F08420717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380901;
-	bh=Bm1BnlIDZUnwryajTE320S6bTasMDDIgTNO3VcEA5Og=;
+	s=default; t=1568380904;
+	bh=ZHa7rEENihqV/0KTMZkFZicFXDV49RlTYVZmkEMkbR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uuXxyZqWCw7R1E9iBE2Ja1vZrbR3siSdcD9MWjt3sJiix/45S+kCIZ2ApdNVw51tS
-	 MeSBtd1qP1G62sEl07OvfCfQeWp4mLdDs7IHOlYKCa7Kwz6zFbaCSDbaysGpBzCuQY
-	 d4dxax+8sJlM3Jgk5VgqJ+JPVCy7fDe0La8FICTk=
+	b=PC8fljKj0wWjbAHRa/tjOkxCD/ceRDFsy1Dd6ItA+86e2fww/dhgnFiW42k6GCqtz
+	 dCUd6eKGoZdQh9l4SgmhzkWEGPvJ/InuR7x9MMCuf5+IS1tSi4q1EFZxF7kMAG2vrx
+	 Y4Mr8FAr4XGLECO9zUwyIMd/sEqvbjj6G41RIF+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390874AbfIMNVk (ORCPT
+        id S2389876AbfIMNVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390847AbfIMNVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:38 -0400
+        id S2390868AbfIMNVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:40 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C44206BB;
-        Fri, 13 Sep 2019 13:21:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E6620830;
+        Fri, 13 Sep 2019 13:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380897;
-        bh=Bm1BnlIDZUnwryajTE320S6bTasMDDIgTNO3VcEA5Og=;
+        s=default; t=1568380899;
+        bh=ZHa7rEENihqV/0KTMZkFZicFXDV49RlTYVZmkEMkbR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0TEHSpt7IPdnwZzv/kFZz9TlYy6bxsnqdG1hjpMwMca4JxOnQGErBYQCQqfuxXcH
-         CDLCNeIznuq4JS0Rh7D+2ifcFR2m00x07ZCi0wT1ShbFcDuoCd8u38mYq93ieMI9/h
-         z3Glo/jQIkstwvA2OHHjvM6Mf8p72sPYmjPqGVdI=
+        b=KfQPabEIqjBWxpYdmKPJesDXLw0Wxt+BjaKWpJKycSXB3W9GHOYrochyBrUFvEj4U
+         U765Cz/0BFFzU/ZGrtxaZOl20FZfz7qt5CH5+wdk82/t5Amwth4LpFCOICU3HnRtzu
+         vbH8d9Ezz8GsJxHGBv8OTCFcbD1c9ZssccOw/PZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 14/37] powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
-Date:   Fri, 13 Sep 2019 14:07:19 +0100
-Message-Id: <20190913130516.440597006@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Bazley <sambazley@fastmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 05/37] ALSA: hda/realtek - Add quirk for HP Pavilion 15
+Date:   Fri, 13 Sep 2019 14:07:10 +0100
+Message-Id: <20190913130512.071594930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -61,114 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.ibm.com>
+From: Sam Bazley <sambazley@fastmail.com>
 
-commit 8205d5d98ef7f155de211f5e2eb6ca03d95a5a60 upstream.
+commit d33cd42d86671bed870827aa399aeb9f1da74119 upstream.
 
-When we take an FP unavailable exception in a transaction we have to
-account for the hardware FP TM checkpointed registers being
-incorrect. In this case for this process we know the current and
-checkpointed FP registers must be the same (since FP wasn't used
-inside the transaction) hence in the thread_struct we copy the current
-FP registers to the checkpointed ones.
+HP Pavilion 15 (AMD Ryzen-based model) with 103c:84e7 needs the same
+quirk like HP Envy/Spectre x360 for enabling the mute LED over Mic3 pin.
 
-This copy is done in tm_reclaim_thread(). We use thread->ckpt_regs.msr
-to determine if FP was on when in userspace. thread->ckpt_regs.msr
-represents the state of the MSR when exiting userspace. This is setup
-by check_if_tm_restore_required().
+[ rearranged in the SSID number order by tiwai ]
 
-Unfortunatley there is an optimisation in giveup_all() which returns
-early if tsk->thread.regs->msr (via local variable `usermsr`) has
-FP=VEC=VSX=SPE=0. This optimisation means that
-check_if_tm_restore_required() is not called and hence
-thread->ckpt_regs.msr is not updated and will contain an old value.
-
-This can happen if due to load_fp=255 we start a userspace process
-with MSR FP=1 and then we are context switched out. In this case
-thread->ckpt_regs.msr will contain FP=1. If that same process is then
-context switched in and load_fp overflows, MSR will have FP=0. If that
-process now enters a transaction and does an FP instruction, the FP
-unavailable will not update thread->ckpt_regs.msr (the bug) and MSR
-FP=1 will be retained in thread->ckpt_regs.msr.  tm_reclaim_thread()
-will then not perform the required memcpy and the checkpointed FP regs
-in the thread struct will contain the wrong values.
-
-The code path for this happening is:
-
-       Userspace:                      Kernel
-                   Start userspace
-                    with MSR FP/VEC/VSX/SPE=0 TM=1
-                      < -----
-       ...
-       tbegin
-       bne
-       fp instruction
-                   FP unavailable
-                       ---- >
-                                        fp_unavailable_tm()
-					  tm_reclaim_current()
-					    tm_reclaim_thread()
-					      giveup_all()
-					        return early since FP/VMX/VSX=0
-						/* ckpt MSR not updated (Incorrect) */
-					      tm_reclaim()
-					        /* thread_struct ckpt FP regs contain junk (OK) */
-                                              /* Sees ckpt MSR FP=1 (Incorrect) */
-					      no memcpy() performed
-					        /* thread_struct ckpt FP regs not fixed (Incorrect) */
-					  tm_recheckpoint()
-					     /* Put junk in hardware checkpoint FP regs */
-                                         ....
-                      < -----
-                   Return to userspace
-                     with MSR TM=1 FP=1
-                     with junk in the FP TM checkpoint
-       TM rollback
-       reads FP junk
-
-This is a data integrity problem for the current process as the FP
-registers are corrupted. It's also a security problem as the FP
-registers from one process may be leaked to another.
-
-This patch moves up check_if_tm_restore_required() in giveup_all() to
-ensure thread->ckpt_regs.msr is updated correctly.
-
-A simple testcase to replicate this will be posted to
-tools/testing/selftests/powerpc/tm/tm-poison.c
-
-Similarly for VMX.
-
-This fixes CVE-2019-15030.
-
-Fixes: f48e91e87e67 ("powerpc/tm: Fix FP and VMX register corruption")
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190904045529.23002-1-gromero@linux.vnet.ibm.com
+Signed-off-by: Sam Bazley <sambazley@fastmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/process.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -497,13 +497,14 @@ void giveup_all(struct task_struct *tsk)
- 	if (!tsk->thread.regs)
- 		return;
- 
-+	check_if_tm_restore_required(tsk);
-+
- 	usermsr = tsk->thread.regs->msr;
- 
- 	if ((usermsr & msr_all_available) == 0)
- 		return;
- 
- 	msr_check_and_set(msr_all_available);
--	check_if_tm_restore_required(tsk);
- 
- 	WARN_ON((usermsr & MSR_VSX) && !((usermsr & MSR_FP) && (usermsr & MSR_VEC)));
- 
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6981,6 +6981,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
++	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 
 
