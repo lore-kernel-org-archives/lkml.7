@@ -2,210 +2,188 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E723EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF493206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41CA208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380263;
-	bh=SjPkWZcBWn0D1WC3gIwVHSRDQdoNIdR8pd86m7TBVv8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOVGIA3NMecMaoMaUhpa2P88sgK/D6guevj8JlH7e39CaupSsv3rE2FPLfl7jtm0Y
-	 TybVqOi9+B1uz0fuDv0c86ySQiiWEeKn4GiCuxoR06iLLmx3+Jstvqyi9MT5pzGc/E
-	 F8D1PPtyLm9xufCbyv94QJU1+zRfH2LLj8nbII7M=
+	s=default; t=1568380266;
+	bh=pKksRBfefjsbMWHmPIzphWYVgZ+LljCtQlKtgIFTsS4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cPOCedNJ7nKmF/iHQtsZQ4cljsfK4+qpc8DrZup9/36obu0m/oB811kzu450vRcNx
+	 Ji+6ZYOqh9HywwudR5bEYD7HjLCyzdKRSTzKegC1VnDth2gfnIPhF71Yte3KzBPrnk
+	 19tPKBCXsGIBmvqzDqvxfAe4wzznLuEvG3dliBDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbfIMNLC (ORCPT
+        id S2388888AbfIMNLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388852AbfIMNK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:59 -0400
+        id S2388872AbfIMNLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:03 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46B5020CC7;
-        Fri, 13 Sep 2019 13:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58DAC206BB;
+        Fri, 13 Sep 2019 13:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380258;
-        bh=SjPkWZcBWn0D1WC3gIwVHSRDQdoNIdR8pd86m7TBVv8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjOv4dfJfUm47Q4LAzXGNXr1c5l3n4PXgxmvRsI8YLUeTaop+3r4xXUvGON21cbkw
-         HvuZx/cQmduvUQ+S7Ap72Pw9z2Pqh7E2e5sNpjXb99nwJCOlWSbE2sHI7w+rqhknys
-         9Yog+VRq8Uavp3Dn786b5LW2E0svk5D7gHn+aqks=
+        s=default; t=1568380261;
+        bh=pKksRBfefjsbMWHmPIzphWYVgZ+LljCtQlKtgIFTsS4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=t16ZzxXtDWyRXw8129ME6I23m946GrORAglTIRzHDYjpFlkVoCyTUSZm82bZ1PNqX
+         fnfXb1T2m9A8pY7yJmiOOya8wgUp++SbjERBck0uvDFT2lj+iWx0OP4HUJk2kry9De
+         capdk8qrxc+ZCp1lhErBmvajvUnXCA06WspJZ1Bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@axis.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.14 09/21] PCI: designware-ep: Fix find_first_zero_bit() usage
-Date:   Fri, 13 Sep 2019 14:07:02 +0100
-Message-Id: <20190913130504.516843119@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/21] 4.14.144-stable review
+Date:   Fri, 13 Sep 2019 14:06:53 +0100
+Message-Id: <20190913130501.285837292@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
-References: <20190913130501.285837292@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.144-rc1
+X-KernelTest-Deadline: 2019-09-15T13:05+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+This is the start of the stable review cycle for the 4.14.144 release.
+There are 21 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit ad4a5becc689c3f32bbbc2b37eff89efe19dc2f9 upstream.
+Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+Anything received after that time might be too late.
 
-find_first_zero_bit()'s parameter 'size' is defined in bits,
-not in bytes.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-find_first_zero_bit() is called with size in bytes rather than bits,
-which thus defines a too low upper limit, causing
-dw_pcie_ep_inbound_atu() to assign iatu index #4 to both bar 4
-and bar 5, which makes bar 5 overwrite the settings set by bar 4.
+thanks,
 
-Since the sizes of the bitmaps are known, dynamically allocate the
-bitmaps, and use the correct size when calling find_first_zero_bit().
+greg k-h
 
-Additionally, make sure that ep->num_ob_windows and ep->num_ib_windows,
-which are obtained from device tree, are smaller than the maximum number
-of iATUs (MAX_IATU_IN/MAX_IATU_OUT).
+-------------
+Pseudo-Shortlog of commits:
 
-Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.144-rc1
 
----
- drivers/pci/dwc/pcie-designware-ep.c |   34 ++++++++++++++++++++++++++--------
- drivers/pci/dwc/pcie-designware.h    |    8 ++++++--
- 2 files changed, 32 insertions(+), 10 deletions(-)
+yongduan <yongduan@tencent.com>
+    vhost: make sure log_num < in_num
 
---- a/drivers/pci/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/dwc/pcie-designware-ep.c
-@@ -74,8 +74,7 @@ static int dw_pcie_ep_inbound_atu(struct
- 	u32 free_win;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	free_win = find_first_zero_bit(&ep->ib_window_map,
--				       sizeof(ep->ib_window_map));
-+	free_win = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
- 	if (free_win >= ep->num_ib_windows) {
- 		dev_err(pci->dev, "no free inbound window\n");
- 		return -EINVAL;
-@@ -89,7 +88,7 @@ static int dw_pcie_ep_inbound_atu(struct
- 	}
- 
- 	ep->bar_to_atu[bar] = free_win;
--	set_bit(free_win, &ep->ib_window_map);
-+	set_bit(free_win, ep->ib_window_map);
- 
- 	return 0;
- }
-@@ -100,8 +99,7 @@ static int dw_pcie_ep_outbound_atu(struc
- 	u32 free_win;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
--	free_win = find_first_zero_bit(&ep->ob_window_map,
--				       sizeof(ep->ob_window_map));
-+	free_win = find_first_zero_bit(ep->ob_window_map, ep->num_ob_windows);
- 	if (free_win >= ep->num_ob_windows) {
- 		dev_err(pci->dev, "no free outbound window\n");
- 		return -EINVAL;
-@@ -110,7 +108,7 @@ static int dw_pcie_ep_outbound_atu(struc
- 	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
- 				  phys_addr, pci_addr, size);
- 
--	set_bit(free_win, &ep->ob_window_map);
-+	set_bit(free_win, ep->ob_window_map);
- 	ep->outbound_addr[free_win] = phys_addr;
- 
- 	return 0;
-@@ -125,7 +123,7 @@ static void dw_pcie_ep_clear_bar(struct
- 	dw_pcie_ep_reset_bar(pci, bar);
- 
- 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_INBOUND);
--	clear_bit(atu_index, &ep->ib_window_map);
-+	clear_bit(atu_index, ep->ib_window_map);
- }
- 
- static int dw_pcie_ep_set_bar(struct pci_epc *epc, enum pci_barno bar,
-@@ -181,7 +179,7 @@ static void dw_pcie_ep_unmap_addr(struct
- 		return;
- 
- 	dw_pcie_disable_atu(pci, atu_index, DW_PCIE_REGION_OUTBOUND);
--	clear_bit(atu_index, &ep->ob_window_map);
-+	clear_bit(atu_index, ep->ob_window_map);
- }
- 
- static int dw_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
-@@ -302,12 +300,32 @@ int dw_pcie_ep_init(struct dw_pcie_ep *e
- 		dev_err(dev, "unable to read *num-ib-windows* property\n");
- 		return ret;
- 	}
-+	if (ep->num_ib_windows > MAX_IATU_IN) {
-+		dev_err(dev, "invalid *num-ib-windows*\n");
-+		return -EINVAL;
-+	}
- 
- 	ret = of_property_read_u32(np, "num-ob-windows", &ep->num_ob_windows);
- 	if (ret < 0) {
- 		dev_err(dev, "unable to read *num-ob-windows* property\n");
- 		return ret;
- 	}
-+	if (ep->num_ob_windows > MAX_IATU_OUT) {
-+		dev_err(dev, "invalid *num-ob-windows*\n");
-+		return -EINVAL;
-+	}
-+
-+	ep->ib_window_map = devm_kzalloc(dev, sizeof(long) *
-+					 BITS_TO_LONGS(ep->num_ib_windows),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kzalloc(dev, sizeof(long) *
-+					 BITS_TO_LONGS(ep->num_ob_windows),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
- 
- 	addr = devm_kzalloc(dev, sizeof(phys_addr_t) * ep->num_ob_windows,
- 			    GFP_KERNEL);
---- a/drivers/pci/dwc/pcie-designware.h
-+++ b/drivers/pci/dwc/pcie-designware.h
-@@ -114,6 +114,10 @@
- #define MAX_MSI_IRQS			32
- #define MAX_MSI_CTRLS			(MAX_MSI_IRQS / 32)
- 
-+/* Maximum number of inbound/outbound iATUs */
-+#define MAX_IATU_IN			256
-+#define MAX_IATU_OUT			256
-+
- struct pcie_port;
- struct dw_pcie;
- struct dw_pcie_ep;
-@@ -193,8 +197,8 @@ struct dw_pcie_ep {
- 	size_t			page_size;
- 	u8			bar_to_atu[6];
- 	phys_addr_t		*outbound_addr;
--	unsigned long		ib_window_map;
--	unsigned long		ob_window_map;
-+	unsigned long		*ib_window_map;
-+	unsigned long		*ob_window_map;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
- };
+Michael S. Tsirkin <mst@redhat.com>
+    vhost: block speculation of translated descriptors
+
+YueHaibing <yuehaibing@huawei.com>
+    kernel/module: Fix mem leak in module_add_modinfo_attrs
+
+Nathan Chancellor <natechancellor@gmail.com>
+    clk: s2mps11: Add used attribute to s2mps11_dt_match
+
+Nicolas Boichat <drinkcat@chromium.org>
+    scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
+
+Dmitry Voytik <voytikd@gmail.com>
+    arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-rock64
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    powerpc/64: mark start_here_multiplatform as __ref
+
+Dexuan Cui <decui@microsoft.com>
+    hv_sock: Fix hang when a connection is closed
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Only read OGM tvlv_len after buffer len check
+
+Eric Dumazet <edumazet@google.com>
+    batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
+
+Tiwei Bie <tiwei.bie@intel.com>
+    vhost/test: fix build for vhost test
+
+Vignesh R <vigneshr@ti.com>
+    PCI: dra7xx: Fix legacy INTD IRQ handling
+
+Niklas Cassel <niklas.cassel@axis.com>
+    PCI: designware-ep: Fix find_first_zero_bit() usage
+
+Eric Dumazet <edumazet@google.com>
+    ip6: fix skb leak in ip6frag_expire_frag_queue()
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    xfrm: clean up xfrm protocol checks
+
+Gustavo Romero <gromero@linux.ibm.com>
+    powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    drm/vmwgfx: Fix double free in vmw_recv_msg()
+
+Liangyan <liangyan.peng@linux.alibaba.com>
+    sched/fair: Don't assign runtime for throttled cfs_rq
+
+Hui Wang <hui.wang@canonical.com>
+    ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Fix overridden device-specific initialization
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda - Fix potential endless loop at applying quirks
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                       |  4 +--
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |  2 ++
+ arch/powerpc/kernel/head_64.S                  |  2 ++
+ arch/powerpc/kernel/process.c                  |  3 ++-
+ drivers/clk/clk-s2mps11.c                      |  2 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c            |  8 +++---
+ drivers/pci/dwc/pci-dra7xx.c                   |  3 ++-
+ drivers/pci/dwc/pcie-designware-ep.c           | 34 ++++++++++++++++++++------
+ drivers/pci/dwc/pcie-designware.h              |  8 ++++--
+ drivers/vhost/test.c                           | 13 +++++++---
+ drivers/vhost/vhost.c                          | 10 +++++---
+ include/net/ipv6_frag.h                        |  1 -
+ include/net/xfrm.h                             | 17 +++++++++++++
+ kernel/module.c                                | 22 +++++++++++++----
+ kernel/sched/fair.c                            |  5 ++++
+ net/batman-adv/bat_iv_ogm.c                    | 20 +++++++++------
+ net/batman-adv/netlink.c                       |  2 +-
+ net/key/af_key.c                               |  4 ++-
+ net/vmw_vsock/hyperv_transport.c               |  8 ++++++
+ net/xfrm/xfrm_state.c                          |  2 +-
+ net/xfrm/xfrm_user.c                           | 14 +----------
+ scripts/decode_stacktrace.sh                   |  2 +-
+ sound/pci/hda/hda_auto_parser.c                |  4 +--
+ sound/pci/hda/hda_generic.c                    |  3 ++-
+ sound/pci/hda/hda_generic.h                    |  1 +
+ sound/pci/hda/patch_realtek.c                  |  4 +++
+ 26 files changed, 137 insertions(+), 61 deletions(-)
 
 
