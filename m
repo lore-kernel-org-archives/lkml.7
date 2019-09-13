@@ -2,121 +2,264 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83334C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C0DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3DF2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C762084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="AUKNIKib"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DR8OfQ2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfIMKGV (ORCPT
+        id S1729330AbfIMKJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 06:06:21 -0400
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:39606
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfIMKGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:06:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G7XpFdPyW1++CZtvKgIVvQF6A9l+cDkWx25wExnNBE9U15+jnUqkGwurWjD9EbYcFdtsetw91P6aX6uzauhFynTFr0bDrnBXnKc+48G+AWqBss1b6kuHQwyMfUr5R2M0J5uINUfUmCgHwl3biyHP36hKy4uDv9CRv0eNQ4fgh6apnp7Q+AGkhEs0+Cn1XDRnAgNmcOffXm8fzPgcG3Nz0/e59m3824WXAjd7wNTgTQcGzSx4JIL+u0pbcVY3+mIiBXMarCKGmc1eqXxkh/kYRuDKaeCkR4leEkhPIz6xoyuLWgDxHMSvs6ORHxzaooy4DJpghSO5o+bl6c0P00IufA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4UMb/C55jzDLYhngtUZ7zsu2uXXOoTPtN8O+cCvkyOE=;
- b=FPMWU03FSQpqomV5OnRRsUzaVGrRfKxEUGd7asdlUR3VI3mWZkZ8lj6tzAFyclvLCGMMjWQjgh+jTmM8nCxFHTKlTaPuu605jJk+hnhZTFAma/7Njn3aWL/asb9ezI/Dqbwyj9t15XVPt9VsaPgpIAHmbzeHtZZJ5tpn/H/5dxRHwrKvccHLFpDy0RRYVuHfFLyNxcBYAX0NDHwPm5k9iv9Q0+Y/CCQdmUkcGQW2IZlgCwdsmUIlp4wcwYGbYCPwEMs37H7zTvXngrR/F1pgyZAmuXxPzfIyjuhCmwRaA19hnfSWcf9Mu1DqegLkSkkVBLGz8EuRXMNHOaxQS/AEKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4UMb/C55jzDLYhngtUZ7zsu2uXXOoTPtN8O+cCvkyOE=;
- b=AUKNIKiblmL2g+9kxJnS1E6n6wwk1u9oNaRfoPgVNtljGeJQNrZYjJgJYbuDWJBPL+KSNbXXAJcKToTrbUwp4kdrMrHlsihlraz+ZTlsLFU0dyKnXCh+DaZVLnjBPoAw67CDLeVPn2SfCI2E30csNmGokHxgt/aJnxPvCR/pALM=
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
- DB6PR0501MB2280.eurprd05.prod.outlook.com (10.168.55.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.21; Fri, 13 Sep 2019 10:06:15 +0000
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::f839:378:4972:3e43]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::f839:378:4972:3e43%12]) with mapi id 15.20.2241.022; Fri, 13 Sep 2019
- 10:06:15 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "zhongjiang@huawei.com" <zhongjiang@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5: Remove unneeded variable in mlx5_unload_one
-Thread-Topic: [PATCH] net/mlx5: Remove unneeded variable in mlx5_unload_one
-Thread-Index: AQHVaYvRsuIrAOzWrkqFyb9MhUmdeacpYp8A
-Date:   Fri, 13 Sep 2019 10:06:15 +0000
-Message-ID: <05f34a7c8a7ff369f9179a98eea6dad924de2d6f.camel@mellanox.com>
-References: <1568307542-43797-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1568307542-43797-1-git-send-email-zhongjiang@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [109.186.200.217]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 28cf7d13-88a8-4ce2-87ea-08d7383203c4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2280;
-x-ms-traffictypediagnostic: DB6PR0501MB2280:
-x-microsoft-antispam-prvs: <DB6PR0501MB2280F80AC91F2FC25E21F32CBEB30@DB6PR0501MB2280.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(136003)(376002)(346002)(199004)(189003)(118296001)(2501003)(2906002)(6116002)(86362001)(36756003)(3846002)(102836004)(26005)(186003)(6506007)(76176011)(476003)(2616005)(11346002)(446003)(66946007)(81166006)(81156014)(8676002)(8936002)(99286004)(91956017)(76116006)(66476007)(66556008)(64756008)(66446008)(66066001)(6436002)(6512007)(6486002)(229853002)(53936002)(5660300002)(6246003)(58126008)(54906003)(110136005)(316002)(71190400001)(71200400001)(7736002)(305945005)(486006)(256004)(25786009)(4326008)(478600001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2280;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8QrnWTpizCgunkAiYcakD3VXJu/jrb+NfnOofX/63q29Nn4Fv24NNeJiCRQcqG7/nb9LIF6GVZkisuoNFko6lIANFQZ+FjeGBW7lyfHERDWYL9MovatBT+oPOp7rE6lBNjZ1TxyYzYZqkZ0RuBGVSG4ajodwrj5kyckE7MnpjhkO+bNeibtShhE25MXXZYNQx4kqPaF2kAkBRChUZMKKJe1S7ePLnQeCtBUMUvnYJnuPdANrdiNxuZP+KQgUui3yM+rDu2QVvffSq9sHPnI0HE2XcZgvON8R8mHbhPK1cXpHlpMYwwy++2zDWd/+yhZ2340ArsXk+vMul5MlwK7Rgx9LKGON2BRADwHoEi2QfcozKMdQS/NjMZ7iV/oNgAy4LJpub/gJY2fGp17n1Ls1UOgKtdV6vskokEZ8ZzGo/ms=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E9C4C52ABC5B964FB9BF288CA8050101@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 13 Sep 2019 06:09:32 -0400
+Received: from mout.gmx.net ([212.227.17.21]:45127 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbfIMKJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 06:09:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1568369330;
+        bh=9bA09uyPUsa4rSDaO/r8LV/sYb6PDtbXgwK11PIuxMQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DR8OfQ2UBNtmgTQptPR6wuLP3LJv9z3EqklzF7PaipEJmCIvPr3kfswNKfO3MEBak
+         i/rSMFEN9myvLIr+GE8J4iNj2pdMLwsnJbBUDDZMW8Z5DPLyRq5DHDMo/MX8Al/+d8
+         NbtiTyOJlRWfPRSqT7R6t82NtsdfER4EHMC8PdGQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.90]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MGhyc-1huwqm24Xq-00Dlwi; Fri, 13
+ Sep 2019 12:08:50 +0200
+Subject: Re: [PATCH v5 0/4] Raspberry Pi 4 DMA addressing support
+To:     Matthias Brugger <mbrugger@suse.com>, catalin.marinas@arm.com,
+        marc.zyngier@arm.com, Matthias Brugger <matthias.bgg@gmail.com>,
+        robh+dt@kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, hch@lst.de,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     robin.murphy@arm.com, f.fainelli@gmail.com, will@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.org,
+        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org
+References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
+ <5a8af6e9-6b90-ce26-ebd7-9ee626c9fa0e@gmx.net>
+ <3f9af46e-2e1a-771f-57f2-86a53caaf94a@suse.com>
+ <09f82f88-a13a-b441-b723-7bb061a2f1e3@gmail.com>
+ <2c3e1ef3-0dba-9f79-52e2-314b6b500e14@gmx.net>
+ <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
+ <48a6b72d-d554-b563-5ed6-9a79db5fb4ab@gmx.net>
+ <2fcc5ad6-fa90-6565-e75c-d20b46965733@suse.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <3163f80b-72e5-5da8-0909-a8950d3669f7@gmx.net>
+Date:   Fri, 13 Sep 2019 12:08:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28cf7d13-88a8-4ce2-87ea-08d7383203c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 10:06:15.8056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yp92xvQmd35Vow0n6eEiDyVLDECt64IGziOMMJ5Ia/8GaG4PJE9+F+25Xmg9LMy5sgg6KGHMRkBlsHbZlxNB1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2280
+In-Reply-To: <2fcc5ad6-fa90-6565-e75c-d20b46965733@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:5/92jOSBvjomzH7Yzels/hq0griHPnSHYlpVXEOGI5T0CE7VL29
+ 3nej+bDE18/HtpA4fg7IZzRuzLyOgf/la7KsOoNDP2u/RjnvbW+mtrmZq9CMqcwOTn6pVfF
+ pl73uISF1GXn9ngpe5YQtJMHxp8tHOsgNa0roIlFaXvT4y0k4j219c4oHLdj0+p95uTVB/1
+ 8BHrT5O5pn5ZRadsa5fzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HaDKMkz8fog=:UcGhBcytZldS09Vbi1n/nP
+ zmmEcPDfw8LTZiIegCxldLuMj2r3SCzkEgZtTmC6v6IcarZKQ9v7UGOZfI6sIpEyz+J7qux5d
+ ss/eui8zl97QX0AKcWEw/ge1GFSepsj0UybSdSjbq3fH/f3rlVfeEvcwO1eR7Uf4iLFr6Im02
+ fByc4g/6cMyPnKqw9A/C0K3HeGyhN9PQ354saoL0fcN3rwmBkmTqHaMOpgBWNE0FFfqjtarh8
+ H7kNwYzMdkqLoVJPZVyZkG9+ncDs6Mnxb6q29uokPXsyTd4nPNPEuh7R0xGqE+YdNh723KQsu
+ ZWDKUgNgF5S1HH7bkP0aRZAo9wiw/6r8wfGujvRiZNd4tjgC0cKgLFezxJ00FkIjWyLYUz+Yx
+ Oh88Vxgdb/6B6hxCRmRZ9qxljD7sWQyjLVWXpPFEtO6V1R8DoO9Y2OIXUs4x1TKFxEAH6WZ8i
+ 13eCUR6EMZ/ID0/qop3b5QVNz/ZsEGd+Va6uRI8fMBRqx2j5ZpDaxeWTc2CoZcax2R/5rCmVn
+ onuqZcjM/zueGc6nc9mCtCckufLoTKRPkWyPupRUvzs1ZlnWHIdKuLx/5Dexwa74YoCHS61zP
+ wMgV+9htXzfbTvRKS0gYFR/pNAezzsBK/ieQqxf3MNbhb9hPhguu4WxgLuN+P5aDBc4WNYrRn
+ Te3o3bAwKmpZmPlw3q8EFynlOXmNqwxyyNmjoCJhrxxbm5m8at6L8lCiPmIKdGeYjHJ3kojle
+ jSfgKKIYcb6+YIC0JNwBkdK9SZtqqZ7T7qWqaLdGaO1i/V2DqvNcinF1xsvSBWUCR/xsab9Ab
+ LC4tjLNBTltZZFdUSX50dyPIYbMhNBxircBjPFNXLtylSyL4w8b99SJeBLKBT2/GpGxRWc35u
+ gvjJdRrSAfgbz87iHG+wRy2HAW4B1h2LZUrGeEktLHLcCLSdqMmSFKf17fVMCWkHsATcft8CB
+ otyFf1gMOsF0kK1IsdMUp18HXwNCcEU8twf/4mNuxLp44t3VmxTyii2Y/32lpq/yAR/b4Ra9U
+ 3P/edLrDdSnz5JC+jjg89+5f1DJpYMWTHo/SCiJk6ELnLzH0KMO+lKwAOi5KY0iVlLXTlEebc
+ 7uvTPQ/J5RfL1XmZvKPLaPbn3D1Lyqb4EbJmOtBkl31asla7038piOKgMXHMYtIUhO6By2acW
+ FJelLD+wI1jK+S+xCIPUXOaefWTTlOawi1qRnrCLHQk/5Ep1pK5k0R1cLe+OPUOE06rNjmSf+
+ VfGnSL65lLYSyPxbPohEQpu7QM8rrqcsSElE1rif2B44CX0gSOSwo9mmKQfk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA5LTEzIGF0IDAwOjU5ICswODAwLCB6aG9uZyBqaWFuZyB3cm90ZToNCj4g
-bWx4NV91bmxvYWRfb25lIGRvIG5vdCBuZWVkIGxvY2FsIHZhcmlhYmxlIHRvIHN0b3JlIGRpZmZl
-cmVudCB2YWx1ZSwNCj4gSGVuY2UganVzdCByZW1vdmUgaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiB6aG9uZyBqaWFuZyA8emhvbmdqaWFuZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
-bmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9tYWluLmMgfCA0ICstLS0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbWFpbi5jDQo+IGIv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL21haW4uYw0KPiBpbmRleCA5
-NjQ4YzIyLi5jMzliYjM3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
-YW5veC9tbHg1L2NvcmUvbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxh
-bm94L21seDUvY29yZS9tYWluLmMNCj4gQEAgLTEyMjgsOCArMTIyOCw2IEBAIHN0YXRpYyBpbnQg
-bWx4NV9sb2FkX29uZShzdHJ1Y3QgbWx4NV9jb3JlX2Rldg0KPiAqZGV2LCBib29sIGJvb3QpDQo+
-ICANCj4gIHN0YXRpYyBpbnQgbWx4NV91bmxvYWRfb25lKHN0cnVjdCBtbHg1X2NvcmVfZGV2ICpk
-ZXYsIGJvb2wgY2xlYW51cCkNCj4gIHsNCj4gLQlpbnQgZXJyID0gMDsNCj4gLQ0KPiAgCWlmIChj
-bGVhbnVwKSB7DQo+ICAJCW1seDVfdW5yZWdpc3Rlcl9kZXZpY2UoZGV2KTsNCj4gIAkJbWx4NV9k
-cmFpbl9oZWFsdGhfd3EoZGV2KTsNCj4gQEAgLTEyNTcsNyArMTI1NSw3IEBAIHN0YXRpYyBpbnQg
-bWx4NV91bmxvYWRfb25lKHN0cnVjdCBtbHg1X2NvcmVfZGV2DQo+ICpkZXYsIGJvb2wgY2xlYW51
-cCkNCj4gIAltbHg1X2Z1bmN0aW9uX3RlYXJkb3duKGRldiwgY2xlYW51cCk7DQo+ICBvdXQ6DQo+
-ICAJbXV0ZXhfdW5sb2NrKCZkZXYtPmludGZfc3RhdGVfbXV0ZXgpOw0KPiAtCXJldHVybiBlcnI7
-DQo+ICsJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgbWx4NV9tZGV2X2luaXQo
-c3RydWN0IG1seDVfY29yZV9kZXYgKmRldiwgaW50DQo+IHByb2ZpbGVfaWR4KQ0KDQpBY2tlZC1i
-eTogU2FlZWQgTWFoYW1lZWQgPHNhZWVkbUBtZWxsYW5veC5jb20+DQo=
+Am 13.09.19 um 11:25 schrieb Matthias Brugger:
+>
+> On 13/09/2019 10:50, Stefan Wahren wrote:
+>> Am 13.09.19 um 10:09 schrieb Matthias Brugger:
+>>> On 12/09/2019 21:32, Stefan Wahren wrote:
+>>>> Am 12.09.19 um 19:18 schrieb Matthias Brugger:
+>>>>> On 10/09/2019 11:27, Matthias Brugger wrote:
+>>>>>> On 09/09/2019 21:33, Stefan Wahren wrote:
+>>>>>>> Hi Nicolas,
+>>>>>>>
+>>>>>>> Am 09.09.19 um 11:58 schrieb Nicolas Saenz Julienne:
+>>>>>>>> Hi all,
+>>>>>>>> this series attempts to address some issues we found while bringing up
+>>>>>>>> the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
+>>>>>>>> up of these discussions:
+>>>>>>>> v4: https://lkml.org/lkml/2019/9/6/352
+>>>>>>>> v3: https://lkml.org/lkml/2019/9/2/589
+>>>>>>>> v2: https://lkml.org/lkml/2019/8/20/767
+>>>>>>>> v1: https://lkml.org/lkml/2019/7/31/922
+>>>>>>>> RFC: https://lkml.org/lkml/2019/7/17/476
+>>>>>>>>
+>>>>>>>> The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
+>>>>>>>> only address the first GB: their DMA address range is
+>>>>>>>> 0xc0000000-0xfc000000 which is aliased to the first GB of physical
+>>>>>>>> memory 0x00000000-0x3c000000. Note that only some peripherals have these
+>>>>>>>> limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
+>>>>>>>> view of the address space by virtue of being hooked up trough a second
+>>>>>>>> interconnect.
+>>>>>>>>
+>>>>>>>> Part of this is solved on arm32 by setting up the machine specific
+>>>>>>>> '.dma_zone_size = SZ_1G', which takes care of reserving the coherent
+>>>>>>>> memory area at the right spot. That said no buffer bouncing (needed for
+>>>>>>>> dma streaming) is available at the moment, but that's a story for
+>>>>>>>> another series.
+>>>>>>>>
+>>>>>>>> Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
+>>>>>>>> ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
+>>>>>>>> arch code as if all peripherals where be able to address the first 4GB
+>>>>>>>> of memory.
+>>>>>>>>
+>>>>>>>> In the light of this, the series implements the following changes:
+>>>>>>>>
+>>>>>>>> - Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
+>>>>>>>>   area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
+>>>>>>>>   the RPi4 is the only arm64 device with such DMA addressing limitations
+>>>>>>>>   so this hardcoded solution was deemed preferable.
+>>>>>>>>
+>>>>>>>> - Properly set ARCH_ZONE_DMA_BITS.
+>>>>>>>>
+>>>>>>>> - Reserve the CMA area in a place suitable for all peripherals.
+>>>>>>>>
+>>>>>>>> This series has been tested on multiple devices both by checking the
+>>>>>>>> zones setup matches the expectations and by double-checking physical
+>>>>>>>> addresses on pages allocated on the three relevant areas GFP_DMA,
+>>>>>>>> GFP_DMA32, GFP_KERNEL:
+>>>>>>>>
+>>>>>>>> - On an RPi4 with variations on the ram memory size. But also forcing
+>>>>>>>>   the situation where all three memory zones are nonempty by setting a 3G
+>>>>>>>>   ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
+>>>>>>>>
+>>>>>>> i like to test this series on Raspberry Pi 4 and i have some questions
+>>>>>>> to get arm64 running:
+>>>>>>>
+>>>>>>> Do you use U-Boot? Which tree?
+>>>>>> If you want to use U-Boot, try v2019.10-rc4, it should have everything you need
+>>>>>> to boot your kernel.
+>>>>>>
+>>>>> Ok, here is a thing. In the linux kernel we now use bcm2711 as SoC name, but the
+>>>>> RPi4 devicetree provided by the FW uses mostly bcm2838.
+>>>> Do you mean the DTB provided at runtime?
+>>>>
+>>>> You mean the merged U-Boot changes, doesn't work with my Raspberry Pi
+>>>> series?
+>>>>
+>>>>>  U-Boot in its default
+>>>>> config uses the devicetree provided by the FW, mostly because this way you don't
+>>>>> have to do anything to find out how many RAM you really have. Secondly because
+>>>>> this will allow us, in the near future, to have one U-boot binary for both RPi3
+>>>>> and RPi4 (and as a side effect one binary for RPi1 and RPi2).
+>>>>>
+>>>>> Anyway, I found at least, that the following compatibles need to be added:
+>>>>>
+>>>>> "brcm,bcm2838-cprman"
+>>>>> "brcm,bcm2838-gpio"
+>>>>>
+>>>>> Without at least the cprman driver update, you won't see anything.
+>>>>>
+>>>>> "brcm,bcm2838-rng200" is also a candidate.
+>>>>>
+>>>>> I also suppose we will need to add "brcm,bcm2838" to
+>>>>> arch/arm/mach-bcm/bcm2711.c, but I haven't verified this.
+>>>> How about changing this in the downstream kernel? Which is much easier.
+>>> I'm not sure I understand what you want to say. My goal is to use the upstream
+>>> kernel with the device tree blob provided by the FW.
+>> The device tree blob you are talking is defined in this repository:
+>>
+>> https://github.com/raspberrypi/linux
+>>
+>> So the word FW is misleading to me.
+>>
+> No, it's part of
+> https://github.com/raspberrypi/firmware.git
+> file boot/bcm2711-rpi-4-b.dtb
+The compiled DT blobs incl. the kernel image are stored in this artifact
+repository. But the sources for the kernel and the DT are in the Linux
+repo. This is necessary to be compliant to the GPL.
+>
+>>>  If you talk about the
+>>> downstream kernel, I suppose you mean we should change this in the FW DT blob
+>>> and in the downstream kernel. That would work for me.
+>>>
+>>> Did I understand you correctly?
+>> Yes
+>>
+>> So i suggest to add the upstream compatibles into the repo mentioned above.
+>>
+>> Sorry, but in case you decided as a U-Boot developer to be compatible
+>> with a unreviewed DT, we also need to make U-Boot compatible with
+>> upstream and downstream DT blobs.
+>>
+> Well RPi3 is working with the DT blob provided by the FW, as I mentioned earlier
+> if we can use this DTB we can work towards one binary that can boot both RPi3
+> and RPi4. On the other hand we can rely on the FW to detect the amount of memory
+> our RPi4 has.
+>
+> That said, I agree that we should make sure that U-Boot can boot with both DTBs,
+> the upstream one and the downstream. Now the question is how to get to this. I'm
+> a bit puzzled that by talking about "unreviewed DT" you insinuate that bcm2711
+> compatible is already reviewed and can't be changed. From what I can see none of
+> these compatibles got merged for now, so we are still at time to change them.
+
+Stephen Boyd was okay with clk changes except of a small nit. So i fixed
+this is as he suggested in a separate series. Unfortunately this hasn't
+be applied yet [1].
+
+The i2c, pinctrl and the sdhci changes has been applied yet.
+
+In my opinion it isn't the job of the mainline kernel to adapt to a
+vendor device tree. It's the vendor device tree which needs to be fixed.
+
+Sorry, but this is my holiday. I will back after the weekend.
+
+Best regards
+Stefan
+
+[1] - https://www.spinics.net/lists/linux-clk/msg40534.html
+
+>
+> Apart from the point Florian made, to stay consistent with the RPi SoC naming,
+> it will save us work, both in the kernel and in U-Boot, as we would need to add
+> both compatibles to the code-base.
+>
+> Regards,
+> Matthias
+>
+>>>>> Regards,
+>>>>> Matthias
+>>>>>
+>>>>>> Regards,
+>>>>>> Matthias
+>>>>>>
+>>>>>>> Are there any config.txt tweaks necessary?
+>>>>>>>
+>>>>>>>
+>>>>>> _______________________________________________
+>>>>>> linux-arm-kernel mailing list
+>>>>>> linux-arm-kernel@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>>>>
+>>>>> _______________________________________________
+>>>>> linux-arm-kernel mailing list
+>>>>> linux-arm-kernel@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
