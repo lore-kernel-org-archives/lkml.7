@@ -2,137 +2,271 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B1C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BEDC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FF32081B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D964214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="SUD42aeX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcOazIdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389244AbfIMTjK (ORCPT
+        id S2389589AbfIMTq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:39:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38847 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388919AbfIMTjJ (ORCPT
+        Fri, 13 Sep 2019 15:46:59 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35364 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388211AbfIMTq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:39:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so33137226wrx.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:39:06 -0700 (PDT)
+        Fri, 13 Sep 2019 15:46:59 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w6so23025189lfl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=ZyJCNuOAdc3HwIafydT/ebM1uCX5N3TqLtB8kuskFZs=;
-        b=SUD42aeXFnXHJaLyp51bT2MlmQEQ7QDV+2hi6y6yEdBaCsF/RmmxIXgMfFYZUCXS1B
-         q4mup8CXz8RuwNf2zHrEHuaaJpSljgp61OSA/KlEeIUGKeJs5tnIN8slNL4g/yVfdRSA
-         9tYSsVaA3TUic1zQBoHfuwvfAwPhcBhGz3oS6HXyEPY4DqPjy5b+JGr8cC+Pknobzwv0
-         6huBoHtQ6SzVrsNKzwpXTS4vLRdc/DrNP5Gqp7KycHe+kAmLl8thsU5t5MdWfJJ+sREP
-         QXtr/+z0tdM0pqnzjHp//Ru2ZZytRJk6tePRB5Rk2G/u9E6AxgsrweW1UVegJ4qTnzeg
-         zWbg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hODFJZyoJjSmmRYWMOJEJfcm53I4w912l6n4+LWHTEE=;
+        b=RcOazIdH9d40Xk6cQVhkhqCPkv5+tWTB7oyy0tbMqmeCtuHLwUhwBEYetiFHLmqNeS
+         N+fvPM7ietagWkoeuNc/klR5GmqrvRS4Y2JPUY56yqoC0MOP4zbB+loU4Iw8Kw6SHYsh
+         +rIN1sUn14h34Dt0/XhbN7eBEAr3LnukmE/4Z+shbyxtLvDeS3Gf0OU/y6a5T/Kx01rt
+         vxN1a/gSxKGGYEIE6W8SUbBdxd+WblMUi7JoQVg46FfRsoc3X+33PhLjmdb2TcZd1hOM
+         Ueke4akyz3ncYUYE0l5i1Otos+1fQZOVhl6dP6pU4nI/jAi9tvaUqBO4bmpQ823zW9Mk
+         4gzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=ZyJCNuOAdc3HwIafydT/ebM1uCX5N3TqLtB8kuskFZs=;
-        b=iiaTsx/DaxctuXb87MYSvGx2HN2RjnYYDob92MsPLPzK+wFLz4S6okOBjorX8TsSW3
-         CHEOOGijXEkUFmBrXybSsalTU1L4AglzK9ljzBsC4MjLr2suUbHgwNgdysWBnljrDAS5
-         geDRFVVf8jXg5RGrbnF6icjK5kdomLfcJBMGg6cuhnt6whvidVEbp2PHepo/PefMayup
-         TJ5WDpV4NBNjkuG9sEZVQWXohIYkhyD8aPKXlMRZZ0oYIlVgqdSmlhOgOub6elxfUcnd
-         jtV3EoD+57pHWQVob3p5FloIjyg5oCZyHGIXL7w5NuF/3Pogipk+GIVzjCl527KbEyCF
-         XFyg==
-X-Gm-Message-State: APjAAAXPdLyLwpn5Mer50yP+FAQzRw829YKRkoxxBj1YVf0zohk19qHp
-        OL0BOUAduA+BvVHARwurPwfsYI9HumDW1A==
-X-Google-Smtp-Source: APXvYqz8Wu/Nfp31mYpgGuNcvvmcgL3pdExhbyEzWv4bt55l/lu5dxmPgYsU/ZULUZTH536sQo5yew==
-X-Received: by 2002:adf:fe0f:: with SMTP id n15mr3373655wrr.343.1568403546055;
-        Fri, 13 Sep 2019 12:39:06 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id g15sm2523966wmk.17.2019.09.13.12.39.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Sep 2019 12:39:05 -0700 (PDT)
-Message-ID: <5d7bf059.1c69fb81.b7fb2.bc5b@mx.google.com>
-Date:   Fri, 13 Sep 2019 12:39:05 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hODFJZyoJjSmmRYWMOJEJfcm53I4w912l6n4+LWHTEE=;
+        b=kwUo2ngzO7OM7VHPLXmnl/VLmPlPGyKInjcbxYDAbcWaRKoEDk72im4pGf2/018hDX
+         r1Fz1EXyZoHpfNMNpcvHGEJd8BEqVE0rVRos63eyYhfFiXYWTLEPUKiMLSGXZGbjQ3rJ
+         4HYxmhBzT9Sk4o6YCHRvlcM/IyGUQ91UKqLhSWgc9Nu6P3OrluvpWy2UhDYXUuZbYHo9
+         UTcmi6FgVDmhaNhFKv8nR/ilbvEM73NvsExLCSMkabEv4HZ5MVGkJbxJiNR+3mpkg+z8
+         1Yv6+P3oddbmIyhL+GjUmfw5zOJo6x5nhSFvElEMVlD8524E6F8RPOtx8KpWoSEhMogJ
+         zSBQ==
+X-Gm-Message-State: APjAAAU1m+gAU03uszXIxvnU1nMugZpvnN9aUt+6wDaFxV0FCjMnhhNS
+        F8E1RvW2AJvQvO9AAyyI62ksAULqub9chzGTVms=
+X-Google-Smtp-Source: APXvYqxtGatgstWPZclceZPd8UN+I5XKmjT31SJ8PK5IdB229s04CTMLdkLCjHf/S94qc2rIKV+4KV+VFvLGrpgFHdA=
+X-Received: by 2002:ac2:50c5:: with SMTP id h5mr1679174lfm.105.1568404016517;
+ Fri, 13 Sep 2019 12:46:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.2.14-38-gda2614d2744a
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-5.2.y
-In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
-References: <20190913130510.727515099@linuxfoundation.org>
-Subject: Re: [PATCH 5.2 00/37] 5.2.15-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <CAFqt6zaVAuvoHveT9YeU5GWjWPZBeTXWnRjmHEazxZSUctT7+Q@mail.gmail.com>
+ <20190913192907.96530-1-lucian@fb.com>
+In-Reply-To: <20190913192907.96530-1-lucian@fb.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Sat, 14 Sep 2019 01:16:44 +0530
+Message-ID: <CAFqt6zaXWLk7uNQrHPWc_HacZN6=ZxAriT_g3nDLrh_ZxfCmfA@mail.gmail.com>
+Subject: Re: [PATCH] mm: memory: fix /proc/meminfo reporting for MLOCK_ONFAULT
+To:     Lucian Adrian Grijincu <lucian@fb.com>
+Cc:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.2.y boot: 146 boots: 2 failed, 136 passed with 8 offline =
-(v5.2.14-38-gda2614d2744a)
+On Sat, Sep 14, 2019 at 12:59 AM Lucian Adrian Grijincu <lucian@fb.com> wrote:
+>
+> As pages are faulted in MLOCK_ONFAULT correctly updates
+> /proc/self/smaps, but doesn't update /proc/meminfo's Mlocked field.
+>
+> - Before this /proc/meminfo fields didn't change as pages were faulted in:
+>
+> ```
+> = Start =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> = Creating testfile =
+>
+> = after mlock2(MLOCK_ONFAULT) =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:                0 kB
+>
+> = after reading half of the file =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:           524288 kB
+>
+> = after reading the entire the file =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:          1048576 kB
+>
+> = after munmap =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> ```
+>
+> - After: /proc/meminfo fields are properly updated as pages are touched:
+>
+> ```
+> = Start =
+> /proc/meminfo
+> Unevictable:          60 kB
+> Mlocked:              60 kB
+> = Creating testfile =
+>
+> = after mlock2(MLOCK_ONFAULT) =
+> /proc/meminfo
+> Unevictable:          60 kB
+> Mlocked:              60 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:                0 kB
+>
+> = after reading half of the file =
+> /proc/meminfo
+> Unevictable:      524220 kB
+> Mlocked:          524220 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:           524288 kB
+>
+> = after reading the entire the file =
+> /proc/meminfo
+> Unevictable:     1048496 kB
+> Mlocked:         1048508 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:          1048576 kB
+>
+> = after munmap =
+> /proc/meminfo
+> Unevictable:         176 kB
+> Mlocked:              60 kB
+> /proc/self/smaps
+> ```
+>
+> Repro code.
+> ---
+>
+> int mlock2wrap(const void* addr, size_t len, int flags) {
+>   return syscall(SYS_mlock2, addr, len, flags);
+> }
+>
+> void smaps() {
+>   char smapscmd[1000];
+>   snprintf(
+>       smapscmd,
+>       sizeof(smapscmd) - 1,
+>       "grep testfile -A 20 /proc/%d/smaps | grep -E '(testfile|Locked)'",
+>       getpid());
+>   printf("/proc/self/smaps\n");
+>   fflush(stdout);
+>   system(smapscmd);
+> }
+>
+> void meminfo() {
+>   const char* meminfocmd = "grep -E '(Mlocked|Unevictable)' /proc/meminfo";
+>   printf("/proc/meminfo\n");
+>   fflush(stdout);
+>   system(meminfocmd);
+> }
+>
+>   {                                                 \
+>     int rc = (call);                                \
+>     if (rc != 0) {                                  \
+>       printf("error %d %s\n", rc, strerror(errno)); \
+>       exit(1);                                      \
+>     }                                               \
+>   }
+> int main(int argc, char* argv[]) {
+>   printf("= Start =\n");
+>   meminfo();
+>
+>   printf("= Creating testfile =\n");
+>   size_t size = 1 << 30; // 1 GiB
+>   int fd = open("testfile", O_CREAT | O_RDWR, 0666);
+>   {
+>     void* buf = malloc(size);
+>     write(fd, buf, size);
+>     free(buf);
+>   }
+>   int ret = 0;
+>   void* addr = NULL;
+>   addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+>
+>   if (argc > 1) {
+>     PCHECK(mlock2wrap(addr, size, MLOCK_ONFAULT));
+>     printf("= after mlock2(MLOCK_ONFAULT) =\n");
+>     meminfo();
+>     smaps();
+>
+>     for (size_t i = 0; i < size / 2; i += 4096) {
+>       ret += ((char*)addr)[i];
+>     }
+>     printf("= after reading half of the file =\n");
+>     meminfo();
+>     smaps();
+>
+>     for (size_t i = 0; i < size; i += 4096) {
+>       ret += ((char*)addr)[i];
+>     }
+>     printf("= after reading the entire the file =\n");
+>     meminfo();
+>     smaps();
+>
+>   } else {
+>     PCHECK(mlock(addr, size));
+>     printf("= after mlock =\n");
+>     meminfo();
+>     smaps();
+>   }
+>
+>   PCHECK(munmap(addr, size));
+>   printf("= after munmap =\n");
+>   meminfo();
+>   smaps();
+>
+>   return ret;
+> }
+>
+> ---
+>
+> Signed-off-by: Lucian Adrian Grijincu <lucian@fb.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.2.y/kernel/v5.2.14-38-gda2614d2744a/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
-/kernel/v5.2.14-38-gda2614d2744a/
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+(For the comment on v1)
 
-Tree: stable-rc
-Branch: linux-5.2.y
-Git Describe: v5.2.14-38-gda2614d2744a
-Git Commit: da2614d2744ab16514a2288de2039732935749d9
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 83 unique boards, 28 SoC families, 17 builds out of 209
+Patch version need to be change to v2.
 
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxl-s905d-p230: 1 failed lab
-            rk3399-firefly: 1 failed lab
-
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+> ---
+>  mm/memory.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e0c232fe81d9..55da24f33bc4 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3311,6 +3311,8 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+>         } else {
+>                 inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+>                 page_add_file_rmap(page, false);
+> +               if (vma->vm_flags & VM_LOCKED && !PageTransCompound(page))
+> +                       mlock_vma_page(page);
+>         }
+>         set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+>
+> --
+> 2.17.1
+>
