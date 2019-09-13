@@ -2,89 +2,140 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB769C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2EB20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF3121479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pIuI2bid";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CsoGNqj+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="LI1o/E3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbfIMPHI (ORCPT
+        id S2391022AbfIMPJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:07:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41492 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389880AbfIMPHI (ORCPT
+        Fri, 13 Sep 2019 11:09:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:27397 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390046AbfIMPJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:07:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 584DA60767; Fri, 13 Sep 2019 15:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568387227;
-        bh=nM0m64M+U4PgSysi9mFISXqSJW1Dxue3D6672lamj4k=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=pIuI2bidydmzrgHJmDeR4tifLa25wRqVRzrJliCORZk36yBIX7m6NtgmHeDECB9SV
-         hWFLKJdeitr/1gDYC6+8lj9CR+A1snplmpkQzdV6lmEsZCiaEfT9mItmQBrFt5x5NF
-         ThUkRa7aGbj8Mz/X/bY1pwuc6Udo31VpCVnmJ7kA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2FC08602F8;
-        Fri, 13 Sep 2019 15:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568387226;
-        bh=nM0m64M+U4PgSysi9mFISXqSJW1Dxue3D6672lamj4k=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=CsoGNqj+uua0YTo6fQb63fi9EiAIYsRv05G5lt5A+8xgy1G5zcn5Ndi//6R3tHa9n
-         nB9rECfgobogY5jisDv5ZCUfYqPQphHkDgTjq3yK9BxcnxyrMpe7/+/pUq8kYYtru+
-         KeYp6BC172wDl4qmIO3JIF3FtwpA2ARxRoJf/gkI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2FC08602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/3] rtlwifi: rtl8192ce: replace
- _rtl92c_evm_db_to_percentage with generic version
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190910190422.63378-2-straube.linux@gmail.com>
-References: <20190910190422.63378-2-straube.linux@gmail.com>
-To:     Michael Straube <straube.linux@gmail.com>
-Cc:     pkshih@realtek.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190913150707.584DA60767@smtp.codeaurora.org>
-Date:   Fri, 13 Sep 2019 15:07:07 +0000 (UTC)
+        Fri, 13 Sep 2019 11:09:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568387362;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=MjDaNE23KGmdcexxJE0YAkaPMCvMuA5pb1NItekYG4A=;
+        b=LI1o/E3kaCf9Augbo30pbZlQ5M0sVyBh96Ra84FNbjvgosJfw6/K9Qe8uIci1xJBCb
+        oXSV584w+uqfOEoXirnhGS087d+wBOSMvv1q50lL20PLxYE/3okNsnm6fWQNx2nLE57V
+        UkEH+w1Muu46ACxZWfccJS6u+c3vqxA4xPGpnL+WrXEtwJ/2QC1Aed3/Yi7xqkiuoTWs
+        bDA+YNH+Im0dZ9gQ3IJIDGICcegeONFyeiJSIGsWWy8BSWPsaPZIkYLxz+ZgWj6j0OBA
+        KQzpnKnx3YS7jYZhUji3DoLGRzEh4Wpw73C2tC2xgdlOsy6L0Lod3FQXZJtG1KSAHjUV
+        Ht2A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8DF8xIqW
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 13 Sep 2019 17:08:59 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
+Date:   Fri, 13 Sep 2019 17:09:00 +0200
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com>
+References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com> <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com> <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Straube <straube.linux@gmail.com> wrote:
 
-> Function _rtl92c_evm_db_to_percentage is functionally identical
-> to the generic version rtl_evm_db_to_percentage, so remove
-> _rtl92c_evm_db_to_percentage and use the generic version instead.
-> 
-> Signed-off-by: Michael Straube <straube.linux@gmail.com>
+> Am 13.09.2019 um 17:01 schrieb Adam Ford <aford173@gmail.com>:
+>=20
+> On Fri, Sep 13, 2019 at 9:24 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>=20
+>>=20
+>>> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
+>>>=20
+>>> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>>>=20
+>>>> Hi Adam,
+>>>>=20
+>>>>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
+>>>>=20
+>>>>>>> +     cpu_cooling_maps: cooling-maps {
+>>>>>>> +             map0 {
+>>>>>>> +                     trip =3D <&cpu_alert0>;
+>>>>>>> +                     /* Only allow OPP50 and OPP100 */
+>>>>>>> +                     cooling-device =3D <&cpu 0 1>;
+>>>>>>=20
+>>>>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do =
+not
+>>>>>> understand their meaning (and how it relates to the opp list).
+>>>>>=20
+>>>>> I read through the documentation, but it wasn't completely clear =
+to
+>>>>> me. AFAICT, the numbers after &cpu represent the min and max index =
+in
+>>>>> the OPP table when the condition is hit.
+>>>>=20
+>>>> Ok. It seems to use "cooling state" for those and the first is =
+minimum
+>>>> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to =
+have
+>>>> no limits.
+>>>>=20
+>>>> Since here we use the &cpu node it is likely that the "cooling =
+state"
+>>>> is the same as the OPP index currently in use.
+>>>>=20
+>>>> I have looked through the .dts which use cpu_crit and the picture =
+is
+>>>> not unique...
+>>>>=20
+>>>> omap4           seems to only define it
+>>>> am57xx          has two different grade dtsi files
+>>>> dra7            overwrites critical temperature value
+>>>> am57xx-beagle   defines a gpio to control a fan
+>>>=20
+>=20
+> I am going to push a separate but related RFC with 2 patches in the
+> series.  This new one will setup the alerts and maps without any
+> throttling for all omap3's in the first patch.  The second patch will
+> consolidate the thermal references to omap3.dtsi so omap34, omap36 and
+> am35 can all use them without having to duplicate the entries.
+>=20
+> It will make the omap36xx changes simpler to manage, because we can
+> just modify a portion of the entries instead of having the whole
+> table.
+>=20
+> Once this parallel RFC gets comments/feedback, I'll re-integrate the
+> omap36xx throttling.
 
-3 patches applied to wireless-drivers-next.git, thanks.
+Good idea. I have looked over them and they seem to be ok.
 
-1335ad27bd07 rtlwifi: rtl8192ce: replace _rtl92c_evm_db_to_percentage with generic version
-622c19ed3607 rtlwifi: rtl8192cu: replace _rtl92c_evm_db_to_percentage with generic version
-3a1f85798e9f rtlwifi: rtl8192de: replace _rtl92d_evm_db_to_percentage with generic version
+>=20
+> adam
 
--- 
-https://patchwork.kernel.org/patch/11140005/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+BR and thanks,
+Nikolaus
 
