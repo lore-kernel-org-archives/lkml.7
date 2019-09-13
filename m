@@ -2,75 +2,107 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F466C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92724C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DF1206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE1A20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:36:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JePFpv4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfIMUf7 (ORCPT
+        id S2388865AbfIMUgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:35:59 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:54314 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730723AbfIMUf6 (ORCPT
+        Fri, 13 Sep 2019 16:36:33 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34418 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388167AbfIMUgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:35:58 -0400
-Received: (qmail 6179 invoked by uid 2102); 13 Sep 2019 16:35:57 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 Sep 2019 16:35:57 -0400
-Date:   Fri, 13 Sep 2019 16:35:57 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <balbi@kernel.org>,
-        <chunfeng.yun@mediatek.com>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in dummy_timer
-In-Reply-To: <0000000000004fb020059274a5ff@google.com>
-Message-ID: <Pine.LNX.4.44L0.1909131629230.1466-100000@iolanthe.rowland.org>
+        Fri, 13 Sep 2019 16:36:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r12so18838235pfh.1;
+        Fri, 13 Sep 2019 13:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Z0dOj7erolHZiw1ueP8ahOWvD/RxOwlZu4iI2DGsYgY=;
+        b=JePFpv4jtqm3k75bUAhPaPeBOwPkjKb3EuMgifyS9dp25EFyVs80DCTRNwV71LN8JG
+         q0HGjOttvImzdDcFSWsc3m3WRBF1Zuzsh3rf6fvIc9JA3STlrLCw/SbYb7GlNlsD0uAG
+         pmtv2LqXsvijDvTfM7RnMcO/dcBPqAQEADVflXWerp9hLIPenzIMUMdiyoVlt8bazfMI
+         pAH5O49V9Qqp/scpI+Ie50M4p3TCVeMtdph0WSJfYtrfvkwXlwM1YBkpOuNTUDrGWR67
+         VJRFRWj/oPnnCdHoGQboYS4BfBd8KpMD9prEqCpFBJTtGSLFswCb8ayr//NRy7i1GfmS
+         RAkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Z0dOj7erolHZiw1ueP8ahOWvD/RxOwlZu4iI2DGsYgY=;
+        b=KttOUdmuVv74NZSH6HW4qPr6TWP1w/Ad+4FFCFszMZjCUnu8kbhujzhMoNDqo5+K7P
+         r6fLy0LuNmS8GBw0rBqf5cNOkA0NmJLGQKasa5YKcd00B8mI7gIrX4WboHQWbTKK9mj3
+         SSjTI8BstCKm/mux+/wSGocmbQUs05vtiKtkpfkgYZoW6mQ/xipoggXdwxUZf6NbyXmi
+         QOjo7HyFHDP2Y0/qCfSRp+8Ejhsr5o+P+flqDHE4xsewoF712e9CPHyVbHg1IN7x5Hu/
+         1/l1cdMFYD2bY68ymGKr5rgQBfQmbK7ar3EORoOcQVC0BA4UO1wSWJb7duFIwTDb0dh2
+         itSQ==
+X-Gm-Message-State: APjAAAWhq0AJGHSo91Hh3ueo9/bN5uZTzVZA47FhQuAS7s2OgtvGOeKb
+        4HjldWJiFHP+m6tT8MHqrVM=
+X-Google-Smtp-Source: APXvYqzbYlUr99W7oZuQgWRIU0dwuUdr89WZOpA54Xc4iE0OSywy0WJV9EA3/sI4FKC424tlR62nRw==
+X-Received: by 2002:aa7:8dcf:: with SMTP id j15mr48595781pfr.5.1568406992288;
+        Fri, 13 Sep 2019 13:36:32 -0700 (PDT)
+Received: from SARKAR ([1.186.12.73])
+        by smtp.gmail.com with ESMTPSA id u9sm30215333pfn.29.2019.09.13.13.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 13:36:31 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 02:06:27 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        gregkh@linuxfoundation.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Rodrigo Carvalho <rodrigorsdc@gmail.com>,
+        rohitsarkar5398@gmail.com
+Subject: [PATCH] staging: iio: ADIS16240: Remove unused include
+Message-ID: <20190913203627.GA1320@SARKAR>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019, syzbot wrote:
+Bcc: 
+Subject: [PATCH] staging: iio: adis16240: remove unused include
+Reply-To: 
 
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1146550d600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b24d736f18a1541ad550
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11203fa5600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162cd335600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
-> 
-> yurex 3-1:0.101: yurex_interrupt - unknown status received: -71
-> yurex 5-1:0.101: yurex_interrupt - unknown status received: -71
-> yurex 6-1:0.101: yurex_interrupt - unknown status received: -71
-> rcu: INFO: rcu_sched self-detected stall on CPU
+'#include<linux/gpio.h>' isn't being used anywhere. Remove it.
 
-Andrey:
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+---
+ drivers/staging/iio/accel/adis16240.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This problem may be a result of overloading dummy_timer.  The kernel 
-config you are using has CONFIG_HZ=100, but dummy-hcd needs 
-CONFIG_HZ=1000 (see the comment on line 1789).  That is, lower values 
-of HZ will occasionally lead to trouble, and this may be an example.
-
-Can you change the config value for HZ and see if the bug still 
-reproduces?
-
-Alan Stern
+diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+index 82099db4bf0c..a480409090c0 100644
+--- a/drivers/staging/iio/accel/adis16240.c
++++ b/drivers/staging/iio/accel/adis16240.c
+@@ -7,7 +7,6 @@
+ 
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/gpio.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+-- 
+2.17.1
 
