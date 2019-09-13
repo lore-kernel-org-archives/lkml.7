@@ -2,153 +2,143 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0919C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CCAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF69208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:50:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="b84tKznb"
+	by mail.kernel.org (Postfix) with ESMTP id 16CA42053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389592AbfIMTuz (ORCPT
+        id S2388202AbfIMTx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:50:55 -0400
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:46819
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729614AbfIMTuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:50:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UKC473r+BRCzDQ6WeIoWlufTQ8/ss0JYo+tO809ME0+6D+eNVlL1Jb83VQ8sfYjYsG4eJQhnpSo5Vean9ft0DxhRhxFgEiikJ3qm0ZKdXbsnErvqksngg0N2UqXFg7CQRMn9FfBNZC4XIdJmnzAj6qZxnvtVOyRjloaNoMe35RYJZ56mPRTQTQczaq9KSoImJJobq5hpSjpSIF+a/rLIM5FGPxi+6KKSaXhCYnzJdxywV/DdZi2d/TYm1nDNIszB8XtNhA5YuhEcleW+Vy0iVKb/xwNpC28ZDY7aYuMJTKNALP8bsA+hNJ+I+ZgLZ5HFKAM5QRD+3rO3jn1BQ+UsOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pO7dE0cbaEZsJ5xiah12EiX8QFktExTGmjSV5awP7Ng=;
- b=VT4IC4+Jwuu0tbZWrcSpKgdzNQ31np8a4TdKT2by/fim1VU6TpgMlTB5zwRT0UgKw96o3DHJHdx78UP5H3WMbirbmHY0IkLEserC/lt+VmY8S9xUX+Revt9gj7k02TZu2GHBkJ0cPorzFWCxrIjumOfL2fxZx3NCZUkJGW8qYCzXhoecEeJ3bbDPm79X+rHgTof97Sw/vWggGsFXokICBT7/vINheDhggugUOk6WvSBG+zFnVKTEdE2G874SKnJvhtBeTlOwL09EDrwbXuWGnfEzFxTr98aG39sLCqwD66QivO5GURSEnnV/nOV5XX84Mz8nUx8YnUlFxvXiW70Zmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pO7dE0cbaEZsJ5xiah12EiX8QFktExTGmjSV5awP7Ng=;
- b=b84tKznbxKnsTcO7sLul8D4i9HHQKW/+Fs/IXM+/oS2Cgosuxtmg9seJQtwIlN95je12ovaspN11v9QdeOZwb1xsw+oW98PletTUhMj8MCoTSU+c68hv7+XJO2ATgUpfjbDA01zu+vKqrmn1v+FMQZYYC7e9A9qj9dX2PVDLmwQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6574.eurprd05.prod.outlook.com (20.179.25.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Fri, 13 Sep 2019 19:50:50 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
- 19:50:50 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Megha Dey <megha.dey@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "megha.dey@intel.com" <megha.dey@intel.com>,
-        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>
-Subject: Re: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
-Thread-Topic: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
-Thread-Index: AQHVadCis80jNXQJ7ESbv2tE+P8b86cpe96A
-Date:   Fri, 13 Sep 2019 19:50:50 +0000
-Message-ID: <VI1PR05MB4141EAE19EE47DA20A75AE21CFB30@VI1PR05MB4141.eurprd05.prod.outlook.com>
-References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
-In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0064.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::41) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.167.223.10]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10c13d9d-3244-4ac1-9fd2-08d73883ad75
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6574;
-x-ms-traffictypediagnostic: VI1PR05MB6574:
-x-microsoft-antispam-prvs: <VI1PR05MB6574A412D433E70E5B18C9C1CFB30@VI1PR05MB6574.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(39830400003)(366004)(346002)(199004)(189003)(33656002)(256004)(52116002)(66066001)(66556008)(66476007)(66446008)(66946007)(64756008)(7696005)(76176011)(5660300002)(74316002)(52536014)(8936002)(6506007)(386003)(54906003)(446003)(11346002)(6116002)(486006)(3846002)(476003)(9686003)(55016002)(81156014)(478600001)(25786009)(81166006)(99286004)(2906002)(53936002)(86362001)(8676002)(6916009)(14444005)(4326008)(6246003)(26005)(316002)(71200400001)(7416002)(229853002)(305945005)(102836004)(7736002)(71190400001)(186003)(14454004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6574;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: li6kZpccTJ8Pxw4lnNhbNj3fEj2+exwWrmfAgsFsKQY7W/w+lwq2GNvaJoRQtIgzyA902SGi3JrSSpetdVcm9J7qrmolOJ1ILNqrwaLjRTE5+gmulB1W4lLTyNLvAfyg0eOJ3PbEfJ4sLExS12FFwwTwOiC1anVpKykfW3Czpz8++lnItikIpL2jZVFAv4tbOJtIqU584dx35Xi2XT4Q0GNKE+cZ+qrrKjxQUhQ1ku56X4MZBxZPMHk4BC3BZZu54ZpvsdQHvYfC8zM4ITDroc3jy9hq1XLt/2tlCX4cpvrGwxXwVUiEkdgtiY/lB+/k3ubiT5HEUNpHJWzRVUBG00p7HVngVqzw7Dr7T0867nn9WZocPCFryMIRgDkmxsv9aVlSwM6ahg6dOQJEQWHlAq8IQFTxDFsap/gZIUTccg4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4EFF5AE607A0DD409FA0740C7E8393F3@Mellanox365.onmicrosoft.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 13 Sep 2019 15:53:28 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:24118 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729670AbfIMTx2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:53:28 -0400
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DJkMKw002171;
+        Fri, 13 Sep 2019 19:52:57 GMT
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2v0dbgwb29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 19:52:57 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 8389BD5;
+        Fri, 13 Sep 2019 19:52:56 +0000 (UTC)
+Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.61])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 87B4639;
+        Fri, 13 Sep 2019 19:52:55 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 13:52:55 -0600
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
+ timestamp
+Message-ID: <20190913195255.GA20131@anatevka.americas.hpqcorp.net>
+Reply-To: Jerry.Hoemann@hpe.com
+References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com>
+ <20190801211613.GB3578@hirez.programming.kicks-ass.net>
+ <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
+ <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
+ <20190801214813.GB2332@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1908012352390.1789@nanos.tec.linutronix.de>
+ <925c3458-aeae-a44b-ddd5-40a1e173a307@amd.com>
+ <20190802162015.GA2349@hirez.programming.kicks-ass.net>
+ <20190802163328.GB2349@hirez.programming.kicks-ass.net>
+ <20190808203324.GA21769@anatevka.americas.hpqcorp.net>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10c13d9d-3244-4ac1-9fd2-08d73883ad75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:50:50.0721
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3eZnf7MHKvpvtNkRL2TW5Y3btaGLtlJvhBfAiRHiHeP8DNc6JVwLgxckMBewyvWLhdqm4ScXpYycE3DDGfbDmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6574
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808203324.GA21769@anatevka.americas.hpqcorp.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-13_09:2019-09-11,2019-09-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 suspectscore=0 bulkscore=0 adultscore=0
+ spamscore=0 mlxscore=0 impostorscore=0 clxscore=1011 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909130202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 06:32:01PM -0700, Megha Dey wrote:
+On Thu, Aug 08, 2019 at 02:33:24PM -0600, Jerry Hoemann wrote:
+> On Fri, Aug 02, 2019 at 06:33:28PM +0200, Peter Zijlstra wrote:
+> > On Fri, Aug 02, 2019 at 06:20:15PM +0200, Peter Zijlstra wrote:
+> > > On Fri, Aug 02, 2019 at 02:33:41PM +0000, Lendacky, Thomas wrote:
+> > 
+> > > > Talking to the hardware folks, they say setting CR8 is a serializing
+> > > > instruction and has to communicate out to the APIC, so it's better to
+> > > > use CLI/STI.
+> > > 
+> > > Bah; the Intel SDM states: "MOV CR* instructions, except for MOV CR8,
+> > > are serializing instructions", which had given me a little hope.
+> > > 
+> > > At the same time, all these chips still have the APIC TPR field too, so
+> > > much like how the TSC DEADLINE MSR is a hidden APIC write, so too is CR8
+> > > I suppose :-(
+> > > 
+> > > I'll still finish the patches I started, just to see what it would look
+> > > like.
+> > 
+> > Another 'fun' issue I ran into while doing these patches; STI has a 1
+> > instruction shadow, which we rely on, MOV CR8 does not. So things like:
+> > 
+> > native_safe_halt:
+> > 	sti
+> > 	hlt
+> > 
+> > turn into:
+> > 
+> > native_safe_halt:
+> > 	cli
+> > 	movl $0, %rax
+> > 	movq %rax, %cr8
+> > 	sti
+> > 	hlt
+> > 
+> 
+> Hi Peter,
+> 
+> What is our the next step here?
+> 
+> Are you still looking to make this change?
+> 
+> Do we want to pick up Tom Lendacky's patch on an interim basis while
+> you're working on the bigger change?  (I can say we tested Tom's
+> patch and it does address the issue we were seeing.)
+> 
+> Thanks
+> 
+> Jerry
+> 
 
-> This series is a basic patchset to get the ball rolling and receive some
-> inital comments. As per my discussion with Marc Zyngier and Thomas Gleixn=
-er
-> at the Linux Plumbers, I need to do the following:
-> 1. Since a device can support MSI-X and IMS simultaneously, ensure proper
->    locking mechanism for the 'msi_list' in the device structure.
-> 2. Introduce dynamic allocation of IMS vectors perhaps by using a group I=
-D
-> 3. IMS support of a device needs to be discoverable. A bit in the vendor
->    specific capability in the PCI config is to be added rather than getti=
-ng
->    this information from each device driver.
+Hi Peter,
 
-Why #3? The point of this scheme is to delegate programming the
-addr/data pairs to the driver so it can be done in some
-device-specific way. There is no PCI standard behind this, and no
-change in PCI semantics.=20
+Have you gotten a chance to look into this more?
 
-I think it would be a tall ask to get a config space bit from PCI-SIG
-for something that has little to do with PCI.
+Thanks
 
-After seeing that we already have a platform device based version of
-this same idea (drivers/base/platform-msi.c), I think the task here is
-really just to extend and expand that approach to work generically for
-platform and PCI devices. Along the way tidying the arch interface so
-x86 and ARM's stuff to support that uses the same generic interfaces.
+Jerry
 
-ie it is re-organizing code and ideas already in Linux, not defining
-some new standard.
 
-I also think refering to this existing idea by some new IMS name is
-only confusing people what the goal is... Which is perhaps why #3 was
-suggested??
+-- 
 
-Stated more clearly, I think all uses would be satisfied if
-platform_msi_domain_alloc_irqs() could be called for struct
-pci_device, could be called multiple times for the same struct
-pci_device, and co-existed with MSI and MSI-X on the same pci_device.
-
-Jason
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
