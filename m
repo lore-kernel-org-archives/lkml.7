@@ -2,64 +2,56 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ACCC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF0CC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19F6214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8416E214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380863;
-	bh=ww+gVDIXtSAvjhRKsGbFxasDZ5cA5jpz7i8WP2lR2w0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KSERCFXWOP84voQQqChEFmX637noO6kbztHgC/PS+7UhZaGvHordhEBC2FmjADeIp
-	 SkzNOOw/zHp5scnXSTJp0BcuSz+8BjL6OUUyY7n7TqOh2p6oNDrFFTEg3rSw0Sc7hH
-	 mDD9Uo4p4Pf9Wy6f+7uF8t0agEFkyZgCPhWZ2ueM=
+	s=default; t=1568380866;
+	bh=QMVlag0qqeZVF7AtUAiqBf+PBP+FgaKrteIQgjAKXPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rrLVRAyhtxQDJoHF0nV/0xxYUHt25dIIREvrEaOWoLjj6ZwbSX5qXN/KD6YPd2tKM
+	 IQmVxUmufPszkQLwb1+EEe8Dz2O1RQVsoMwstSDHYwBwQNcDRGM6o+ByHQa+u7Pw4G
+	 5Rg+tkvDIiE/19CIkAq5nM3Rv/oAtnaNsX9GtIOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390726AbfIMNVC (ORCPT
+        id S2390737AbfIMNVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390714AbfIMNVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:01 -0400
+        id S2390714AbfIMNVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:03 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF22920CC7;
-        Fri, 13 Sep 2019 13:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C59E206BB;
+        Fri, 13 Sep 2019 13:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380860;
-        bh=ww+gVDIXtSAvjhRKsGbFxasDZ5cA5jpz7i8WP2lR2w0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rY3NQZWR5N4w8YY6m+scbo27NHY01wKHMDjnSuAq0YL9deYVVN3ZSE1rz0LlEEXQb
-         i2Uvfd8dmdNcVKS8Da4HgNYM2GRKNwV8z1aIBnU1MHwflcHamCpFwVqvtDpcnLngB+
-         fLP/CSZryW2ZvppJjuH46WIDTXle0GcUf4uBO368=
+        s=default; t=1568380862;
+        bh=QMVlag0qqeZVF7AtUAiqBf+PBP+FgaKrteIQgjAKXPw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bXFtB5Wh892O42pPslZytxDP+fkS9lSkKnw2WqiE/O5GplTknT1AJx7QNkphSeSxq
+         yYIz6bNkAfRgZXipT3/Ec6jqPI3dvI2kIbby8Rseqa/dVpl5H6U2FgqpUa7fvoyNI2
+         72RfADro8oO+9aWXGB8F2azDF+CWlVJwLftXCLXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.2 00/37] 5.2.15-stable review
-Date:   Fri, 13 Sep 2019 14:07:05 +0100
-Message-Id: <20190913130510.727515099@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 06/37] ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL
+Date:   Fri, 13 Sep 2019 14:07:11 +0100
+Message-Id: <20190913130512.188810278@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
+References: <20190913130510.727515099@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.15-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.2.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.2.15-rc1
-X-KernelTest-Deadline: 2019-09-15T13:05+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,186 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.2.15 release.
-There are 37 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-Anything received after that time might be too late.
+commit 60083f9e94b2f28047d71ed778adf89357c1a8fb upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.15-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-and the diffstat can be found below.
+Original pin node values of ASUS UX431FL with ALC294:
 
-thanks,
+0x12 0xb7a60140
+0x13 0x40000000
+0x14 0x90170110
+0x15 0x411111f0
+0x16 0x411111f0
+0x17 0x90170111
+0x18 0x411111f0
+0x19 0x411111f0
+0x1a 0x411111f0
+0x1b 0x411111f0
+0x1d 0x4066852d
+0x1e 0x411111f0
+0x1f 0x411111f0
+0x21 0x04211020
 
-greg k-h
+1. Has duplicated internal speakers (0x14 & 0x17) which makes the output
+   route become confused. So, the output volume cannot be changed by
+   setting.
+2. Misses the headset mic pin node.
 
--------------
-Pseudo-Shortlog of commits:
+This patch disables the confusing speaker (NID 0x14) and enables the
+headset mic (NID 0x19).
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.2.15-rc1
+Link: https://lore.kernel.org/r/20190902100054.6941-1-jian-hong@endlessm.com
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-yongduan <yongduan@tencent.com>
-    vhost: make sure log_num < in_num
+---
+ sound/pci/hda/patch_realtek.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Michael S. Tsirkin <mst@redhat.com>
-    vhost: block speculation of translated descriptors
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: fix unwritten extent buffers and hangs on future writeback attempts
-
-Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-    drm/i915/icl: whitelist PS_(DEPTH|INVOCATION)_COUNT
-
-John Harrison <John.C.Harrison@Intel.com>
-    drm/i915: Add whitelist workarounds for ICL
-
-Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-    drm/i915: whitelist PS_(DEPTH|INVOCATION)_COUNT
-
-John Harrison <John.C.Harrison@Intel.com>
-    drm/i915: Support whitelist workarounds on all engines
-
-John Harrison <John.C.Harrison@Intel.com>
-    drm/i915: Support flags in whitlist WAs
-
-Halil Pasic <pasic@linux.ibm.com>
-    virtio/s390: fix race on airq_areas[]
-
-André Draszik <git@andred.net>
-    usb: chipidea: imx: fix EPROBE_DEFER support during driver probe
-
-Peter Chen <peter.chen@nxp.com>
-    usb: chipidea: imx: add imx7ulp support
-
-Baolin Wang <baolin.wang@linaro.org>
-    mmc: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    drm/i915: Make sure cdclk is high enough for DP audio on VLV/CHV
-
-Kenneth Graunke <kenneth@whitecape.org>
-    drm/i915: Disable SAMPLER_STATE prefetching on all Gen11 steppings.
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/hfi1: Unreserve a flushed OPFN request
-
-Mike Marciniszyn <mike.marciniszyn@intel.com>
-    IB/{rdmavt, qib, hfi1}: Convert to new completion API
-
-Mike Marciniszyn <mike.marciniszyn@intel.com>
-    IB/rdmavt: Add new completion inline
-
-Coly Li <colyli@suse.de>
-    bcache: fix race in btree_flush_write()
-
-Coly Li <colyli@suse.de>
-    bcache: add comments for mutex_lock(&b->write_lock)
-
-Coly Li <colyli@suse.de>
-    bcache: only clear BTREE_NODE_dirty bit when it is set
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Only read OGM tvlv_len after buffer len check
-
-Eric Dumazet <edumazet@google.com>
-    batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-
-Gustavo Romero <gromero@linux.ibm.com>
-    powerpc/tm: Fix restoring FP/VMX facility incorrectly on interrupts
-
-Gustavo Romero <gromero@linux.ibm.com>
-    powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    powerpc/64e: Drop stale call to smp_processor_id() which hangs SMP startup
-
-Tiwei Bie <tiwei.bie@intel.com>
-    vhost/test: fix build for vhost test - again
-
-Tiwei Bie <tiwei.bie@intel.com>
-    vhost/test: fix build for vhost test
-
-Ben Skeggs <bskeggs@redhat.com>
-    drm/nouveau/sec2/gp102: add missing MODULE_FIRMWAREs
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    drm/vmwgfx: Fix double free in vmw_recv_msg()
-
-Liangyan <liangyan.peng@linux.alibaba.com>
-    sched/fair: Don't assign runtime for throttled cfs_rq
-
-Hui Wang <hui.wang@canonical.com>
-    ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
-
-Jian-Hong Pan <jian-hong@endlessm.com>
-    ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL
-
-Sam Bazley <sambazley@fastmail.com>
-    ALSA: hda/realtek - Add quirk for HP Pavilion 15
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda/realtek - Fix overridden device-specific initialization
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda - Fix potential endless loop at applying quirks
-
-David Jander <david@protonic.nl>
-    gpio: pca953x: use pca953x_read_regs instead of regmap_bulk_read
-
-David Jander <david@protonic.nl>
-    gpio: pca953x: correct type of reg_direction
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/powerpc/kernel/process.c                      |  21 +---
- arch/powerpc/mm/nohash/tlb.c                       |   1 -
- drivers/gpio/gpio-pca953x.c                        |  15 +--
- drivers/gpu/drm/i915/i915_reg.h                    |   7 ++
- drivers/gpu/drm/i915/intel_cdclk.c                 |  11 ++
- drivers/gpu/drm/i915/intel_workarounds.c           | 136 +++++++++++++++++----
- .../gpu/drm/nouveau/nvkm/subdev/secboot/gp102.c    |  12 ++
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c                |   8 +-
- drivers/infiniband/hw/hfi1/rc.c                    |  28 +----
- drivers/infiniband/hw/qib/qib_rc.c                 |  26 +---
- drivers/infiniband/sw/rdmavt/qp.c                  |  31 ++---
- drivers/md/bcache/btree.c                          |  49 +++++++-
- drivers/md/bcache/btree.h                          |   2 +
- drivers/md/bcache/journal.c                        |   7 ++
- drivers/mmc/host/sdhci-acpi.c                      |   2 +-
- drivers/mmc/host/sdhci-esdhc-imx.c                 |   2 +-
- drivers/mmc/host/sdhci-of-at91.c                   |   2 +-
- drivers/mmc/host/sdhci-pci-core.c                  |   4 +-
- drivers/mmc/host/sdhci-pxav3.c                     |   2 +-
- drivers/mmc/host/sdhci-s3c.c                       |   2 +-
- drivers/mmc/host/sdhci-sprd.c                      |   2 +-
- drivers/mmc/host/sdhci-xenon.c                     |   2 +-
- drivers/mmc/host/sdhci.c                           |   4 +-
- drivers/mmc/host/sdhci.h                           |   2 +-
- drivers/s390/virtio/virtio_ccw.c                   |   3 +
- drivers/usb/chipidea/ci_hdrc_imx.c                 |  43 ++++++-
- drivers/usb/chipidea/usbmisc_imx.c                 |   4 +
- drivers/vhost/test.c                               |  13 +-
- drivers/vhost/vhost.c                              |  10 +-
- fs/btrfs/extent_io.c                               |  35 ++++--
- include/linux/usb/chipidea.h                       |   1 +
- include/rdma/rdmavt_qp.h                           | 117 +++++++++++-------
- kernel/sched/fair.c                                |   5 +
- net/batman-adv/bat_iv_ogm.c                        |  20 +--
- net/batman-adv/netlink.c                           |   2 +-
- sound/pci/hda/hda_auto_parser.c                    |   4 +-
- sound/pci/hda/hda_generic.c                        |   3 +-
- sound/pci/hda/hda_generic.h                        |   1 +
- sound/pci/hda/patch_realtek.c                      |  17 +++
- 40 files changed, 439 insertions(+), 221 deletions(-)
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5799,6 +5799,7 @@ enum {
+ 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
++	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6839,6 +6840,16 @@ static const struct hda_fixup alc269_fix
+ 			{ }
+ 		}
+ 	},
++	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
++			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6998,6 +7009,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
++	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
 
 
