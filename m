@@ -2,240 +2,147 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F83C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036BFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D338214DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:47:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WJkm19FF"
+	by mail.kernel.org (Postfix) with ESMTP id CF2A12089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfIMHrx (ORCPT
+        id S1729139AbfIMHsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:47:53 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:41731 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbfIMHrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:47:52 -0400
-Received: by mail-ua1-f65.google.com with SMTP id w12so8881987uam.8
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 00:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BY3Xdm/EuEh+5xQuU5r1eTj+ek/4Ndp2HWrdgEDsjzc=;
-        b=WJkm19FFgfc2GD6vL1mFJQN6LlvObf/GmbYBDNtuIIzm2tqbA9cMbf4vr4LQorJO/Q
-         EZiMU05SVRjKv3jYbT3b9WhN25IIYPTSxoS56bRuaTpAtWiEVtIc8Spxw+BM5TKvPPeU
-         XppVfL9AmQttSDSycCqcd77+sVw9EdQ15SSXzrczsbZ5qZzO7AFNaZQEvPf1JBPFT8e4
-         GTU3DlXxwGRmMsGsbLyQcyiYxxNaSE2cXKAKyuMoOF2GBTfsW1RiO+xBKkVKEQJUFvfk
-         RwLopqoFtujhyyjh23scuKoskkK/GRlHujIsHBn4bsklMNzeE2Pg1ac6lzQLkVZXLVXG
-         SoCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BY3Xdm/EuEh+5xQuU5r1eTj+ek/4Ndp2HWrdgEDsjzc=;
-        b=b14BuJpdK3vwcS1ragExn0Fq+JSu1Rur4UIXuYZRxtsSjdK8HigdAl6tJax+ar6Nuk
-         6/RnKkMDI7lrnbmjHIm3fSfj2yx4uvqHairVSJLT5trbOPmTttraDkZ1tPA+Im5QDrz1
-         KJQRtwh/Mayda7lvR4OOCbWxSF5WGrsBpjNdVkjhUZwZuRcNtEB8hRLkgEX1hAORtWCM
-         RH9d8SUsc8MizDdf1EBf9UBI4kOeOtEMQ7LSEjIVew3OFOliGkCBLzYHt0xNv4Ew0w2l
-         3OQ4v5onitiaY+gLwVm44wdWQ4KVNIEqUIUKz6ipVRLONSb8gPMowyTzOr16OxFkqQp9
-         F3UQ==
-X-Gm-Message-State: APjAAAXT1O6eX+91STSEIWcDHCBsi8TbXetguuAwS/181wE0Y7zWc5bI
-        7swE0uQooupdLK391WWW3XOhFIIbhzHCwsFJRqEVOA==
-X-Google-Smtp-Source: APXvYqw+RuXy2zCguY4C1QAkE27a8kK5UVarVaOFgDQP/kO/+YACn54gFQCdTxOviAuCW1sKD8pQvibhMSHWBtF6fqA=
-X-Received: by 2002:ab0:2855:: with SMTP id c21mr23850232uaq.67.1568360870892;
- Fri, 13 Sep 2019 00:47:50 -0700 (PDT)
+        Fri, 13 Sep 2019 03:48:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49572 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727405AbfIMHsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 03:48:00 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23820308123B;
+        Fri, 13 Sep 2019 07:48:00 +0000 (UTC)
+Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 864155D704;
+        Fri, 13 Sep 2019 07:47:58 +0000 (UTC)
+Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
+ KVM_S390_INTERRUPT ioctl
+To:     Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190912090050.20295-1-thuth@redhat.com>
+ <6905df78-95f0-3d6d-aaae-910cd2d7a232@redhat.com>
+ <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
+ <f9d07b66-a048-6626-e209-9fe455a2bed3@de.ibm.com>
+ <239c8d0f-40fb-264a-bc10-445931a3cd9a@redhat.com>
+ <20190913092030.373a9254.cohuck@redhat.com>
+ <ed0cf9eb-e3dc-f8d5-1eea-9034e5c0498d@redhat.com>
+ <1d3f9799-41dd-4f7e-009b-c37610de22f7@redhat.com>
+ <5632e756-ee92-ad8a-8c7c-efc5ee011f52@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <2a1b5ace-5077-3c3c-ec66-00f8f207701f@redhat.com>
+Date:   Fri, 13 Sep 2019 09:47:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190821222421.30242-1-glaroque@baylibre.com> <20190821222421.30242-5-glaroque@baylibre.com>
- <7hsgpu5c7j.fsf@baylibre.com>
-In-Reply-To: <7hsgpu5c7j.fsf@baylibre.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 13 Sep 2019 13:17:39 +0530
-Message-ID: <CAHLCerPtDH2VLGBgETJkqkLQZ=8T5C=8VY-=SLKAAEpx5nZf5A@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] arm64: dts: meson: sei510: Add minimal thermal zone
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5632e756-ee92-ad8a-8c7c-efc5ee011f52@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 13 Sep 2019 07:48:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 4:59 AM Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Guillaume La Roque <glaroque@baylibre.com> writes:
->
-> > Add minimal thermal zone for two temperature sensor
-> > One is located close to the DDR and the other one is
-> > located close to the PLLs (between the CPU and GPU)
-> >
-> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  .../boot/dts/amlogic/meson-g12a-sei510.dts    | 70 +++++++++++++++++++
-> >  1 file changed, 70 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> > index c9fa23a56562..35d2ebbd6d4e 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> > @@ -10,6 +10,7 @@
-> >  #include <dt-bindings/input/input.h>
-> >  #include <dt-bindings/gpio/meson-g12a-gpio.h>
-> >  #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >       compatible = "seirobotics,sei510", "amlogic,g12a";
-> > @@ -33,6 +34,67 @@
-> >               ethernet0 = &ethmac;
-> >       };
-> >
-> > +     thermal-zones {
-> > +             cpu-thermal {
-> > +                     polling-delay = <1000>;
-> > +                     polling-delay-passive = <100>;
-> > +                     thermal-sensors = <&cpu_temp>;
-> > +
-> > +                     trips {
-> > +                             cpu_hot: cpu-hot {
-> > +                                     temperature = <85000>; /* millicelsius */
-> > +                                     hysteresis = <2000>; /* millicelsius */
-> > +                                     type = "hot";
-> > +                             };
+On 13.09.19 09:43, Thomas Huth wrote:
+> On 13/09/2019 09.37, David Hildenbrand wrote:
+>> On 13.09.19 09:34, Thomas Huth wrote:
+>>> On 13/09/2019 09.20, Cornelia Huck wrote:
+>>>> On Thu, 12 Sep 2019 13:23:38 +0200
+>>>> Thomas Huth <thuth@redhat.com> wrote:
+>>>>
+>>>>> Hmm, we already talked about deprecating support for pre-3.15 kernel
+>>>>> stuff in the past (see
+>>>>> https://wiki.qemu.org/ChangeLog/2.12#Future_incompatible_changes for
+>>>>> example),
+>>>>
+>>>> Btw: did we ever do that? I don't quite recall what code we were
+>>>> talking about...
+>>>
+>>> We never really did - but we also never fixed the issue: If you run the
+>>> current QEMU on a kernel before 3.15, it refuses to work due to the
+>>> missing in-kernel FLIC device:
+>>>
+>>> Initialization of device s390-flic-kvm failed: KVM is missing capability
+>>> KVM_CAP_DEVICE_CTR
+>>>
+>>> Since nobody really complained so far that running QEMU with KVM is
+>>> still required on a kernel < 3.15, I think we could make this also
+>>> "official" now and improve the error message a little bit, pointing the
+>>> user to a kernel >= 3.15.
+>>
+>> Didn't we discuss back then to clean up *QEMU* and not the *kernel*?
+>> Especially, to wait with cleanups until somebody requests to fix
+>> instead. I mean you could have any user space in the wild that still
+>> makes use of these interfaces ...
+> 
+> Yes, that error message is part of QEMU, so I was referring to that one.
+> Sorry for mixing this into a mail thread on the kernel mailing list :-/
 
-No passive trip point? That is where the cooling-maps are really useful.
+Ah okay, I messed up then :)
 
-> > +
-> > +                             cpu_critical: cpu-critical {
-> > +                                     temperature = <110000>; /* millicelsius */
-> > +                                     hysteresis = <2000>; /* millicelsius */
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +
+-- 
 
-I think, what you really want is to change your hot trip point above
-to passive. And if you need another trip before that (to send
-notification to userspace, for example), just add another hot trip
-point at a lower temperature.
+Thanks,
 
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu_hot>;
-> > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +
-> > +                             map1 {
-> > +                                     trip = <&cpu_critical>;
-> > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-
-The cooling-map associated with a critical trip point is of no use in
-my experience because the device is already on its way to shutting
-down then.
-
-> > +                     };
-> > +             };
-> > +
-> > +             ddr-thermal {
-> > +                     polling-delay = <1000>;
-> > +                     polling-delay-passive = <100>;
-> > +                     thermal-sensors = <&ddr_temp>;
-> > +
-> > +                     trips {
-> > +                             ddr_critical: ddr-critical {
-> > +                                     temperature = <110000>; /* millicelsius */
-> > +                                     hysteresis = <2000>; /* millicelsius */
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +
-> > +                     cooling-maps {
-> > +                             map {
-> > +                                     trip = <&ddr_critical>;
-> > +                                     cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-
-Same here. The cooling-map makes more sense against a passive trip type.
-
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> >       mono_dac: audio-codec-0 {
-> >               compatible = "maxim,max98357a";
-> >               #sound-dai-cells = <0>;
-> > @@ -321,6 +383,7 @@
-> >       operating-points-v2 = <&cpu_opp_table>;
-> >       clocks = <&clkc CLKID_CPU_CLK>;
-> >       clock-latency = <50000>;
-> > +     #cooling-cells = <2>;
-> >  };
-> >
-> >  &cpu1 {
-> > @@ -328,6 +391,7 @@
-> >       operating-points-v2 = <&cpu_opp_table>;
-> >       clocks = <&clkc CLKID_CPU_CLK>;
-> >       clock-latency = <50000>;
-> > +     #cooling-cells = <2>;
-> >  };
-> >
-> >  &cpu2 {
-> > @@ -335,6 +399,7 @@
-> >       operating-points-v2 = <&cpu_opp_table>;
-> >       clocks = <&clkc CLKID_CPU_CLK>;
-> >       clock-latency = <50000>;
-> > +     #cooling-cells = <2>;
-> >  };
-> >
-> >  &cpu3 {
-> > @@ -342,6 +407,7 @@
-> >       operating-points-v2 = <&cpu_opp_table>;
-> >       clocks = <&clkc CLKID_CPU_CLK>;
-> >       clock-latency = <50000>;
-> > +     #cooling-cells = <2>;
-> >  };
-> >
-> >  &cvbs_vdac_port {
-> > @@ -368,6 +434,10 @@
-> >       status = "okay";
-> >  };
-> >
-> > +&mali {
-> > +     #cooling-cells = <2>;
-> > +};
-> > +
->
-> Is there a reason these #cooling-cells properties belong in the SoC
-> .dtsi and not the board .dts.  Seems like you'll have to repeat this in
-> every board .dts which doesn't seem necessary.
->
-> Same comment for patch 5/6
-
-Agreed. Even the thermal zones belong in the SoC .dtsi. You can always
-override the trip-points in a board .dts if required if you have a
-board designed in a different form-factor or with active cooling.
-
-/Amit
+David / dhildenb
