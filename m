@@ -2,89 +2,155 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75B7C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E09C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D88E208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618CD20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="egbUYVJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388695AbfIMOtK (ORCPT
+        id S2388814AbfIMOuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:49:10 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36190 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388244AbfIMOtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:49:09 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v19so13637543vsv.3;
-        Fri, 13 Sep 2019 07:49:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nw7T83KKQvMYoShbp1YlvamGMfFATFsgELkQvR1PLxc=;
-        b=oPCQ7TuDbfbWKUTXZRjQSiNvEdfc+x9Akuu33BeMd/Xxwdvydwqwy7deG2WZPRGCJu
-         57/ujwsftQsJaHx755eotMVAWlyiQpkRFKBzqdGblga0XVUuSFoeUwWcKMj5ks45CBbD
-         HC5t+PYQN/O1FyqmymkCcTAGagybwCjyi5PD3XvHo2/+od2nKSeqBkLyQdvUEeSwGkW+
-         09NjcydGvq/1e+gMgUOxvmeAaQTVbUqEJmPiuMy8iVUUhYzUMi0jGX1XumLa+pXFNz+W
-         E+W9cITgHAWVW7uOJ1z/9Tn4eqxCrXULQ6LL0ikdLt8bW6WDW2ZIfuUYblidTU3OiSz0
-         8pdA==
-X-Gm-Message-State: APjAAAWN0MyXlUMqBT5ZXFTxTfP8uHuww3Iv20zszLcdCabv/sQK0ma2
-        GiSP7PUAEM78JAxvzcmZO6o2wMjSgnipXPKKO/9T4A==
-X-Google-Smtp-Source: APXvYqybdR2BZuJUvlriiROjoC+yPYWDVTolJxZjwIstMw1q2QyxRZT/OZXpWARLJ1Hw7JnHFDzCdQ3wbE4RoUSYhcw=
-X-Received: by 2002:a67:d410:: with SMTP id c16mr26690546vsj.37.1568386148550;
- Fri, 13 Sep 2019 07:49:08 -0700 (PDT)
+        Fri, 13 Sep 2019 10:50:08 -0400
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:52246
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388704AbfIMOuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:50:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NBm9EGwTIljPsLVMpngBTbTAsjJmH+2XCyk8L7J1PCcjcYAbGy6fx33H/WbV3B685G9L9TFeBIV7WpwkFpqn+uDjqBvrBUbvqJDyQDB2LnpQQOTuIFDR5/YBW/3kZp9WONvxA5IRgRN9JDNxDG5oHDqKLEgAu/cyqKT+1+yR8L1BvL3I7FDjp1LGXQqxgsqpc+ClOIDksUfOP9N8cAWDdfiAKmzjJC438zAT9AfinaFcc3V0uRgxpgUFKDj1XtH+05pzyKD2dqx1TcFBsVHFwEDmAaTROQvs+dlmpQxPgJolsMviLCS76Wyrlb5aY356nCJHAtQ6mAVxjvKzJ0xjRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gs6Twr0TMVYu6cbaOulpZ41+/1RpFqrC4bVhoE/h3M4=;
+ b=Ha6YRNd4imOXZaONUHLU+VYWCkP0I6ZfcIGcME/ciFJXP4kM+NKSttUARwpqBS4mwrvUI25BgtFxkH2Lsr2LTLWHWmb9oJBtm4rLGCMK1pqDYi9+Fr1/h7wDpOIMUNLAXAeH3fV0/9qWAZq43IpoQokbigMQJrBT7TM0l1g/CHnGjrjFJ97NH8BW8vwl1EifMpjl5JFskRdZ05M/FK0qm8l20DZrQ5qBKa0l66BycLQsGuRjfgJPqRdp4c9ceDvewKq/IHFYUJgXJq5JUu97ONqUnzqfoaMCFM2BzBF9GHynhc56tNI1qBKjlr/p+yDLsTFWGjZ6UESTHpfzZCFy7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gs6Twr0TMVYu6cbaOulpZ41+/1RpFqrC4bVhoE/h3M4=;
+ b=egbUYVJtqWkGsak+VBjFQZ0qYNiUJjA6MrKbiYtR5QUGvgTKDNC2cYp89M6C/WkyirtZfJ4WAQIVGTIljpVP94t5YiNvwAT0jV5HTKVvpqZg7m+0lMx1FkEfDz6zb6YgbwTAnwx5SvIvblH+MVEyew3MRG/1GlC3hzfAaKdmQZ8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4128.eurprd05.prod.outlook.com (10.171.182.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Fri, 13 Sep 2019 14:50:03 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
+ 14:50:03 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Megha Dey <megha.dey@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "megha.dey@intel.com" <megha.dey@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>
+Subject: Re: [RFC V1 2/7] drivers/base: Introduce callbacks for IMS interrupt
+ domain
+Thread-Topic: [RFC V1 2/7] drivers/base: Introduce callbacks for IMS interrupt
+ domain
+Thread-Index: AQHVadCjtpoaSeeDPUmnY03B0M+Gi6cpsWSA
+Date:   Fri, 13 Sep 2019 14:50:03 +0000
+Message-ID: <20190913144957.GB5310@mellanox.com>
+References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+ <1568338328-22458-3-git-send-email-megha.dey@linux.intel.com>
+In-Reply-To: <1568338328-22458-3-git-send-email-megha.dey@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: QB1PR01CA0034.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.223.10]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f868815d-dbff-45fa-3889-08d73859a8d6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB4128;
+x-ms-traffictypediagnostic: VI1PR05MB4128:
+x-microsoft-antispam-prvs: <VI1PR05MB41282A93CE7693F15E8CC530CFB30@VI1PR05MB4128.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(189003)(199004)(66476007)(64756008)(6116002)(66446008)(66946007)(53936002)(6436002)(6916009)(256004)(6512007)(33656002)(486006)(4326008)(71200400001)(71190400001)(11346002)(446003)(52116002)(66066001)(476003)(2616005)(3846002)(76176011)(66556008)(99286004)(2906002)(6486002)(229853002)(102836004)(7416002)(26005)(6506007)(86362001)(186003)(478600001)(6246003)(54906003)(25786009)(316002)(305945005)(7736002)(8676002)(386003)(8936002)(5660300002)(81156014)(36756003)(14454004)(1076003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4128;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BwLs0NE2dRXTVpFz3wj9FyLihtpWukHKHTtlDZAJl2SS3dZFGFd37kssYkJsctjcM281MIoFtBttxQAj93yzfV3NgasDPf0qfQ4UyYg+mDBTbvhWFlMEDr3aIvHZYjvzCktsagEg8CVoLWRB2QKy+fbhZWi9nWAsivKc8MpZWf6Gu/91YSXmBdNa1EXGA0wnzqlhMl66MGrqNBGPTzseFuVFN3SKAxfTR7/W1SV5vEx54DZ7lVDhbBSGjsHNN+0sjuTTc/DGMUeaor9r+Ri0txKU8okKXL6fMwoxRunCM9jM3U/Zq+gsmxhi54un9VLUta7aJ6U2VHt6s3qJQvZgZrBqgV2YQarJnm1XjpTVXj2syRvcMgCaShTDUuhKYqc+Xhd55yRu6fTpss5UxEWLV7+4nVOLodBoOk1ePK3jUB8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <84249D392BFF2640B5D61544F3308566@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190913130559.669563815@linuxfoundation.org> <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com> <20190913144627.GH1546@sasha-vm>
-In-Reply-To: <20190913144627.GH1546@sasha-vm>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Fri, 13 Sep 2019 10:48:57 -0400
-Message-ID: <CAKb7UvgS5uGRP55Z7mcD=PTcPHmHMXB23gpP83kjn-vFcverJQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f868815d-dbff-45fa-3889-08d73859a8d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 14:50:03.3649
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S+YJOsxUFHp9togYxk9MBCIShQDFk4RjvX76fv/M2Wl5cY3FysUIECIqE5ar5wTBSlINIID/G3XefouxxOsR9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 10:46 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
-> >Hi Greg,
-> >
-> >This feels like it's missing a From: line.
-> >
-> >commit b513a18cf1d705bd04efd91c417e79e4938be093
-> >Author: Lyude Paul <lyude@redhat.com>
-> >Date:   Mon Jan 28 16:03:50 2019 -0500
-> >
-> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
-> >
-> >Is this an artifact of your notification-of-patches process and I
-> >never noticed before, or was the patch ingested incorrectly?
->
-> It was always like this for patches that came through me. Greg's script
-> generates an explicit "From:" line in the patch, but I never saw the
-> value in that since git does the right thing by looking at the "From:"
-> line in the mail header.
+On Thu, Sep 12, 2019 at 06:32:03PM -0700, Megha Dey wrote:
+> This patch serves as a preparatory patch to introduce a new IMS
+> (Interrupt Message Store) domain. It consists of APIs which would
+> be used as callbacks to the IRQ chip associated with the IMS domain.
+>=20
+> The APIs introduced in this patch are:
+> dev_ims_mask_irq - Generic irq chip callback to mask IMS interrupts
+> dev_ims_unmask_irq - Generic irq chip callback to unmask IMS interrupts
+> dev_ims_domain_write_msg - Helper to write MSI message to Device IMS
+>=20
+> It also introduces IMS specific structures namely:
+> dev_ims_ops - Callbacks for IMS domain ops
+> dev_ims_desc - Device specific IMS msi descriptor data
+> dev_ims_priv_data - Internal data structure containing a unique devid
+> and a pointer to the IMS domain ops
+>=20
+> Lastly, it adds a new config option MSI_IMS which must be enabled by
+> any driver who would want to use the IMS infrastructure.
+>=20
+> Since IMS is not PCI compliant (like platform-msi), most of the code is
+> similar to platform-msi.c.
 
-That's right -- the email's From header gets used in the case of no
-explicit From in the email body. But Greg is sending the emails From:
-Greg, so if I were to ingest that email, I would end up with a patch
-From: Greg, not From: Lyude as it ought to be.
+It is very unclear what driver facing API is being proposed here
+without a driver code example.
 
-Cheers,
+> TODO: Conclude if ims-msi.c and platform-msi.c can be merged.
 
-  -ilia
+Wow, the commit message for platform-msi.c explains that it is doing
+*exactly* the same thing as ims - at least as far as the driver is
+concerned.
+
+Clearly the ims idea already exists and the driver facing API should
+be harmonized and enhanced to support both PCI and platform devices.
+
+It would also make sense if the arch facing API was harmonized between
+ARM and x86 as well. Would updating x86 to use the new generic
+msi_domains ARM is using be needed?
+
+Jason
