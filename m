@@ -2,55 +2,54 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C67C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF51C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797B920640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9F820640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381601;
-	bh=nSkMp5SsJUzwDtJgQta27vFYYjdo66MfE/icZS4DgVo=;
+	s=default; t=1568381606;
+	bh=Xs++mhuXmM6PCHfhoFnMqARTGYYms+RpHEFXyftpFBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkJeWlLbu2s5ggxUm9kQxtmAU2us9qtvBnV/ZgeBDeaVBOxYp/V+TxF+xuTQIgVN4
-	 9SVGInBnRgh9Zcby0urnvjt+SL+jBM3Txk6X3cxRYY7rsF3nq2o5mm8a4+H7W2tAtl
-	 5j1ci4cG3AVo53LtiPJESUVdKiBOUj5wmZ1deSe8=
+	b=nuRin/v6YoiXAYtKjiMT7p6Zzm6heU5XEtHAv47bGieML1RPQot3MC28GMVypPw4E
+	 RbsBj8dnlV9gYE90A+KDtUO72WMCy7Dj+RqZKmFUrb4WDKLmM3QT4Dtc3PBV+IY6Tv
+	 s2ADR1S3mBTtI0PxutQuQo1t2giuIIMZrvnMzku0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbfIMNLA (ORCPT
+        id S2388740AbfIMNKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388817AbfIMNKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:53 -0400
+        id S2388711AbfIMNKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:19 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EC31206A5;
-        Fri, 13 Sep 2019 13:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38184206A5;
+        Fri, 13 Sep 2019 13:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380253;
-        bh=nSkMp5SsJUzwDtJgQta27vFYYjdo66MfE/icZS4DgVo=;
+        s=default; t=1568380217;
+        bh=Xs++mhuXmM6PCHfhoFnMqARTGYYms+RpHEFXyftpFBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcmr7NHIrMy7WB3sm4Mo0Qt3Um7yehCDoFd4snlHoB18r+Z0F24yr3KEi5+9cJqmN
-         YrCo0x3vNNqpVpbhZMDX6eJD+CcE9kJ0rhNIf5C0bdswKHhUT2grVSRqO4u1mj2eVC
-         Fo+oVbg0DOzlgc0wDeFryhqa9MkmtreKOBmo3YAI=
+        b=IENhk3ia0zIPlNP2LhgUAdts7Y70qAFyr2GpdZke9vmYs2lCCli2gAQ49KO4+/d9A
+         3pzxYG7xjowq1a/BQqAd8R7KKmFEu+0qDL5l9fwjnjrtO1LNq76IZU4grI8Vk3iRTj
+         2y9/x4u8mCUmWPOH8n2NqljbaXP7pumMzHkDSrmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.14 07/21] xfrm: clean up xfrm protocol checks
-Date:   Fri, 13 Sep 2019 14:07:00 +0100
-Message-Id: <20190913130504.096382429@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 17/21] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
+Date:   Fri, 13 Sep 2019 14:07:10 +0100
+Message-Id: <20190913130508.286213499@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
@@ -63,116 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
 
-commit dbb2483b2a46fbaf833cfb5deb5ed9cace9c7399 upstream.
+The basepath may contain special characters, which would confuse the regex
+matcher.  ${var#prefix} does the right thing.
 
-In commit 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
-I introduced a check for xfrm protocol, but according to Herbert
-IPSEC_PROTO_ANY should only be used as a wildcard for lookup, so
-it should be removed from validate_tmpl().
-
-And, IPSEC_PROTO_ANY is expected to only match 3 IPSec-specific
-protocols, this is why xfrm_state_flush() could still miss
-IPPROTO_ROUTING, which leads that those entries are left in
-net->xfrm.state_all before exit net. Fix this by replacing
-IPSEC_PROTO_ANY with zero.
-
-This patch also extracts the check from validate_tmpl() to
-xfrm_id_proto_valid() and uses it in parse_ipsecrequest().
-With this, no other protocols should be added into xfrm.
-
-Fixes: 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
-Reported-by: syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
+Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h    |   17 +++++++++++++++++
- net/key/af_key.c      |    4 +++-
- net/xfrm/xfrm_state.c |    2 +-
- net/xfrm/xfrm_user.c  |   14 +-------------
- 4 files changed, 22 insertions(+), 15 deletions(-)
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1366,6 +1366,23 @@ static inline int xfrm_state_kern(const
- 	return atomic_read(&x->tunnel_users);
- }
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index c4a9ddb174bc5..5aa75a0a1cede 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -78,7 +78,7 @@ parse_symbol() {
+ 	fi
  
-+static inline bool xfrm_id_proto_valid(u8 proto)
-+{
-+	switch (proto) {
-+	case IPPROTO_AH:
-+	case IPPROTO_ESP:
-+	case IPPROTO_COMP:
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case IPPROTO_ROUTING:
-+	case IPPROTO_DSTOPTS:
-+#endif
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+/* IPSEC_PROTO_ANY only matches 3 IPsec protocols, 0 could match all. */
- static inline int xfrm_id_proto_match(u8 proto, u8 userproto)
- {
- 	return (!userproto || proto == userproto ||
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -1951,8 +1951,10 @@ parse_ipsecrequest(struct xfrm_policy *x
+ 	# Strip out the base of the path
+-	code=${code//^$basepath/""}
++	code=${code#$basepath/}
  
- 	if (rq->sadb_x_ipsecrequest_mode == 0)
- 		return -EINVAL;
-+	if (!xfrm_id_proto_valid(rq->sadb_x_ipsecrequest_proto))
-+		return -EINVAL;
- 
--	t->id.proto = rq->sadb_x_ipsecrequest_proto; /* XXX check proto */
-+	t->id.proto = rq->sadb_x_ipsecrequest_proto;
- 	if ((mode = pfkey_mode_to_xfrm(rq->sadb_x_ipsecrequest_mode)) < 0)
- 		return -EINVAL;
- 	t->mode = mode;
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -2330,7 +2330,7 @@ void xfrm_state_fini(struct net *net)
- 	unsigned int sz;
- 
- 	flush_work(&net->xfrm.state_hash_work);
--	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
-+	xfrm_state_flush(net, 0, false);
- 	flush_work(&xfrm_state_gc_work);
- 
- 	WARN_ON(!list_empty(&net->xfrm.state_all));
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1489,20 +1489,8 @@ static int validate_tmpl(int nr, struct
- 			return -EINVAL;
- 		}
- 
--		switch (ut[i].id.proto) {
--		case IPPROTO_AH:
--		case IPPROTO_ESP:
--		case IPPROTO_COMP:
--#if IS_ENABLED(CONFIG_IPV6)
--		case IPPROTO_ROUTING:
--		case IPPROTO_DSTOPTS:
--#endif
--		case IPSEC_PROTO_ANY:
--			break;
--		default:
-+		if (!xfrm_id_proto_valid(ut[i].id.proto))
- 			return -EINVAL;
--		}
--
- 	}
- 
- 	return 0;
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
+-- 
+2.20.1
+
 
 
