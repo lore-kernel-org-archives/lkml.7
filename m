@@ -2,156 +2,131 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FE3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB76AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334F920830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E62206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFdb5zkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfIMMtK convert rfc822-to-8bit (ORCPT
+        id S1729956AbfIMMwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:49:10 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58073 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729686AbfIMMtK (ORCPT
+        Fri, 13 Sep 2019 08:52:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33474 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729558AbfIMMwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:49:10 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D2E30240016;
-        Fri, 13 Sep 2019 12:49:04 +0000 (UTC)
-Date:   Fri, 13 Sep 2019 14:49:03 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Piotr Sroka <piotrs@cadence.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        BrianNorris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
-Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Message-ID: <20190913144903.0323a23a@xps13>
-In-Reply-To: <20190911150422.GA4973@global.cadence.com>
-References: <20190725145804.8886-1-piotrs@cadence.com>
-        <20190725145955.13951-1-piotrs@cadence.com>
-        <20190830114638.33dc4eb2@xps13>
-        <20190911150422.GA4973@global.cadence.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 13 Sep 2019 08:52:34 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t11so13206987plo.0;
+        Fri, 13 Sep 2019 05:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BlZu7IMkJJ2x30qqdls5PsoF2ZWD58HPtmFSp7MDs2k=;
+        b=kFdb5zkOXd5y0cnDElxLxkNkj3H/77rTt5mQnZ3elYPwnT8P8Hrd1EjosCLZtj4tP4
+         2xNHXUfkpFJ3ZcDloXG2fql3zkhJSdqI0QymoBDm7N2p1o6VM4L/NHT0CtpKSOHbe573
+         pB7oc5a3csyZjGfckA5BXuo6BN1eAVtpQCWzMiiZIYncpPAUJ1wvtJlNTcJQh5gNt1n7
+         QuqR5wgtG8iqQv+kmkyvn9NrDb8FbGlHopTaBS5OYaUzKLd5RT/G2RWPkQqhFr14Q/el
+         hDwqsH2o4FltSZyafQcpRDOn/fksXbmOQERM6uUWDg6tfyHMpvFsEWLCgceYS/eENozt
+         SNqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BlZu7IMkJJ2x30qqdls5PsoF2ZWD58HPtmFSp7MDs2k=;
+        b=fTca09TUuq9+AYfu1bG9yOKuxDxje1PLlvEcgTkwxVNd8EdOU3kVvO6NeWYO5K5PtG
+         euhakeY5fX8FYmEhyHujYeC4bSPAoZX0NNgo3yTfOH10lIJd33vJeUmwPlWjwxxgJWri
+         yO6y9d3rGSOEMScogz9q+qX2XpyuScEJHySnnY3w1rLJqLlex3Pd0kWWDpGBhfStPRnb
+         qinazLwoPOW3pEhO/3ao+BIIIRx8VIaqEVl2nhT6Ek6gckpMRB5aWnuOB0n1u7rExMxx
+         Ab1mKG6nwjkmi3imHRcQezK6zgBdOqfCEHi3szS/c4QR3cecGQM3y9hvBwLDMy9mgm5W
+         39HQ==
+X-Gm-Message-State: APjAAAXw0dvlRQ5ah0OJiUJ+1s2DEgMkop7fQuDH+GxVe8h5BZXh1hqK
+        i6r4A3eypoTng5Hb6CGsFzppKtCw
+X-Google-Smtp-Source: APXvYqwjmvmY8Afq7+jugXxpufBl19WoXMLG/Ft2zLNI/Q6l3LDqBmerh51C6Xa3uhKbuQixlLkMSg==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr49143964plr.330.1568379152495;
+        Fri, 13 Sep 2019 05:52:32 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g12sm6707212pfb.97.2019.09.13.05.52.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Sep 2019 05:52:31 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 05:52:30 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH 1/2] watchdog: pm8916_wdt: fix pretimeout registration
+ flow
+Message-ID: <20190913125230.GA18629@roeck-us.net>
+References: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Piotr,
-
-Piotr Sroka <piotrs@cadence.com> wrote on Wed, 11 Sep 2019 16:04:24
-+0100:
-
-> Hi Miquel
+On Fri, Sep 06, 2019 at 10:30:53PM +0200, Jorge Ramirez-Ortiz wrote:
+> When an IRQ is present in the dts, the probe function shall fail if
+> the interrupt can not be registered.
 > 
-> The 08/30/2019 11:46, Miquel Raynal wrote:
-> >EXTERNAL MAIL
-> >
-> >
-> >Hi Piotr,
-> >
-> >Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
-> >+0100:
-> >  
-> >> Document the bindings used by Cadence NAND controller driver
-> >>
-> >> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-> >> ---
-> >> Changes for v5:
-> >> - replace "_" by "-" in all properties
-> >> - change compatible name from cdns,hpnfc to cdns,hp-nfc
-> >> Changes for v4:
-> >> - add commit message
-> >> Changes for v3:
-> >> - add unit suffix for board_delay
-> >> - move child description to proper place
-> >> - remove prefix cadence_ for reg and sdma fields
-> >> Changes for v2:
-> >> - remove chip dependends parameters from dts bindings
-> >> - add names for register ranges in dts bindings
-> >> - add generic bindings to describe NAND chip representation
-> >> ---
-> >>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
-> >>  1 file changed, 50 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >> new file mode 100644
-> >> index 000000000000..423547a3f993
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >> @@ -0,0 +1,50 @@
-> >> +* Cadence NAND controller
-> >> +
-> >> +Required properties:
-> >> +  - compatible : "cdns,hp-nfc"
-> >> +  - reg : Contains two entries, each of which is a tuple consisting of a
-> >> +	  physical address and length. The first entry is the address and
-> >> +	  length of the controller register set. The second entry is the
-> >> +	  address and length of the Slave DMA data port.
-> >> +  - reg-names: should contain "reg" and "sdma"
-> >> +  - interrupts : The interrupt number.
-> >> +  - clocks: phandle of the controller core clock (nf_clk).
-> >> +
-> >> +Optional properties:
-> >> +  - dmas: shall reference DMA channel associated to the NAND controller
-> >> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
-> >> +    round trip delay for the signals and is used for deciding on values
-> >> +    associated with data read capture. The example formula for SDR mode is
-> >> +    the following:
-> >> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
-> >> +    + DQ PAD delay
-> >> +
-> >> +Child nodes represent the available NAND chips.
-> >> +
-> >> +Required properties of NAND chips:
-> >> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
-> >> +    the cadence nand flash controller
-> >> +
-> >> +
-> >> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-> >> +generic bindings.
-> >> +
-> >> +Example:
-> >> +
-> >> +nand_controller: nand-controller @60000000 {
-> >> +	  compatible = "cdns,hp-nfc";
-> >> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
-> >> +	  reg-names = "reg", "sdma";
-> >> +	  clocks = <&nf_clk>;
-> >> +	  cdns,board-delay-ps = <4830>;  
-> >
-> >Are you sure you want to export this to the user? Not sure it is easily
-> >understandable and tunable... I'm not against but I would have troubles
-> >tuning it myself, unless using the documented value. Maybe you should
-> >explain more how to derive it?  
-> I need to export this parameter somehow. The default value may not be
-> valid for other platforms. This value depends on platform, and may be different on different SoCs. So I think the DTS is the best place to put such configuration
-> parameter.
+> The probe function shall also be retried if getting the irq is being
+> deferred.
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Reviewed-by: Loic Poulain <loic.poulain@linaro.org>
 
-What about a different compatible if it depends on the SoC?
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-This way you can retrieve a different driver data structure and avoid
-the pain for the user.
+with nitpick below.
 
+> ---
+>  drivers/watchdog/pm8916_wdt.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/watchdog/pm8916_wdt.c b/drivers/watchdog/pm8916_wdt.c
+> index 2d3652004e39..cb5304c26ac3 100644
+> --- a/drivers/watchdog/pm8916_wdt.c
+> +++ b/drivers/watchdog/pm8916_wdt.c
+> @@ -163,9 +163,18 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq > 0) {
+> -		if (devm_request_irq(dev, irq, pm8916_wdt_isr, 0, "pm8916_wdt",
+> -				     wdt))
+> -			irq = 0;
+> +		err = devm_request_irq(dev, irq, pm8916_wdt_isr, 0,
+> +				       "pm8916_wdt", wdt);
+> +		if (err)
+> +			return err;
+> +
+> +		wdt->wdev.info = &pm8916_wdt_pt_ident;
+> +
 
-Thanks,
-Miquèl
+Unnecessary empty line.
+
+> +	} else {
+> +		if (irq == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		wdt->wdev.info = &pm8916_wdt_ident;
+>  	}
+>  
+>  	/* Configure watchdog to hard-reset mode */
+> @@ -177,7 +186,6 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> -	wdt->wdev.info = (irq > 0) ? &pm8916_wdt_pt_ident : &pm8916_wdt_ident,
+>  	wdt->wdev.ops = &pm8916_wdt_ops,
+>  	wdt->wdev.parent = dev;
+>  	wdt->wdev.min_timeout = PM8916_WDT_MIN_TIMEOUT;
