@@ -2,126 +2,240 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D8AC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967DEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1502084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZMxtNP3u"
+	by mail.kernel.org (Postfix) with ESMTP id 63162208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbfIMK7g (ORCPT
+        id S2388065AbfIMLER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 06:59:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31868 "EHLO pegase1.c-s.fr"
+        Fri, 13 Sep 2019 07:04:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42687 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbfIMK7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:59:36 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46VCM86DMLz9tykB;
-        Fri, 13 Sep 2019 12:59:32 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ZMxtNP3u; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id nFZiyoqF3F_M; Fri, 13 Sep 2019 12:59:32 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46VCM854bqz9tyk9;
-        Fri, 13 Sep 2019 12:59:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568372372; bh=PFT2imOGaHgvctcTYuVwoMHpMQBOPw/fM32Pu9Q/A5I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZMxtNP3udpntKBpuh9VLJh+f+N+9ucXH19eM2oHhwPzKZED1+FYZoTdaHiSPEKS8c
-         +Uq4KUGDPyQvva3HWfPVEw7omeVxY3wUy4UuX/Gimy7XPpFOcjkQibpmfb8MFxElIB
-         O7Np2Zi50vPPkPhKPAqNaZfpvxccexmeWo5bRhiE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA20D8B987;
-        Fri, 13 Sep 2019 12:59:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 56Gk8pTuWhWo; Fri, 13 Sep 2019 12:59:33 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C99078B958;
-        Fri, 13 Sep 2019 12:59:33 +0200 (CEST)
-Subject: Re: [PATCH v2 4/8] powerpc/vdso32: inline __get_datapage()
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1566491310.git.christophe.leroy@c-s.fr>
- <194fb7bc973ef2ce43016c97dd32f2b2dcbae4e7.1566491310.git.christophe.leroy@c-s.fr>
- <87h864iiq9.fsf@santosiv.in.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a95c4a58-bc59-3e75-46db-414f6d0f1412@c-s.fr>
-Date:   Fri, 13 Sep 2019 12:59:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2387858AbfIMLER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 07:04:17 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 97AEF1DB0;
+        Fri, 13 Sep 2019 11:04:16 +0000 (UTC)
+Received: from elisabeth (ovpn-200-24.brq.redhat.com [10.40.200.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3532E5C219;
+        Fri, 13 Sep 2019 11:04:10 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 13:04:05 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Pravin Shelar <pshelar@ovn.org>
+Cc:     Hillf Danton <hdanton@sina.com>, ovs dev <dev@openvswitch.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Greg Rose <gvrose8192@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jiri Benc <jbenc@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH] net: openvswitch: free vport unless
+ register_netdevice() succeeds
+Message-ID: <20190913130405.20580eae@elisabeth>
+In-Reply-To: <CAOrHB_AoBJ37+gFNysZr+v1ySXWZP1CHTw0SDR826fWGgFRZ+g@mail.gmail.com>
+References: <20190809035515.13968-1-hdanton@sina.com>
+        <CAOrHB_AoBJ37+gFNysZr+v1ySXWZP1CHTw0SDR826fWGgFRZ+g@mail.gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <87h864iiq9.fsf@santosiv.in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 13 Sep 2019 11:04:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Santosh,
+On Sat, 10 Aug 2019 00:34:55 -0700
+Pravin Shelar <pshelar@ovn.org> wrote:
 
-Le 26/08/2019 à 07:44, Santosh Sivaraj a écrit :
-> Hi Christophe,
+> On Thu, Aug 8, 2019 at 8:55 PM Hillf Danton <hdanton@sina.com> wrote:
+> >
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=148d3d1a600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=30cef20daf3e9977
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=13210896153522fe1ee5
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136aa8c4600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109ba792600000
+> >
+> > =====================================================================
+> > BUG: memory leak
+> > unreferenced object 0xffff8881207e4100 (size 128):
+> >    comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
+> >    hex dump (first 32 bytes):
+> >      00 70 16 18 81 88 ff ff 80 af 8c 22 81 88 ff ff  .p........."....
+> >      00 b6 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  ..#.............
+> >    backtrace:
+> >      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+> >      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+> >      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
+> >      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
+> >      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
+> >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+> >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+> >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+> >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+> >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+> >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+> >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+> >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+> >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+> >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+> >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+> >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+> >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+> >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+> >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+> >      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
+> >      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
+> >      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
+> >
+> > BUG: memory leak
+> > unreferenced object 0xffff88811723b600 (size 64):
+> >    comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
+> >    hex dump (first 32 bytes):
+> >      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+> >      00 00 00 00 00 00 00 00 02 00 00 00 05 35 82 c1  .............5..
+> >    backtrace:
+> >      [<00000000352f46d8>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+> >      [<00000000352f46d8>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<00000000352f46d8>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<00000000352f46d8>] __do_kmalloc mm/slab.c:3653 [inline]
+> >      [<00000000352f46d8>] __kmalloc+0x169/0x300 mm/slab.c:3664
+> >      [<000000008e48f3d1>] kmalloc include/linux/slab.h:557 [inline]
+> >      [<000000008e48f3d1>] ovs_vport_set_upcall_portids+0x54/0xd0  net/openvswitch/vport.c:343
+> >      [<00000000541e4f4a>] ovs_vport_alloc+0x7f/0xf0  net/openvswitch/vport.c:139
+> >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+> >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+> >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+> >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+> >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+> >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+> >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+> >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+> >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+> >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+> >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+> >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+> >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+> >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+> >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+> >
+> > BUG: memory leak
+> > unreferenced object 0xffff8881228ca500 (size 128):
+> >    comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
+> >    hex dump (first 32 bytes):
+> >      00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
+> >      40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
+> >    backtrace:
+> >      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+> >      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+> >      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
+> >      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
+> >      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
+> >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+> >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+> >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+> >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+> >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+> >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+> >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+> >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+> >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+> >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+> >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+> >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+> >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+> >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+> >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+> >      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
+> >      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
+> >      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
+> > =====================================================================
+> >
+> > The function in net core, register_netdevice(), may fail with vport's
+> > destruction callback either invoked or not. After commit 309b66970ee2,
+> > the duty to destroy vport is offloaded from the driver OTOH, which ends
+> > up in the memory leak reported.
+> >
+> > It is fixed by releasing vport unless device is registered successfully.
+> > To do that, the callback assignment is defered until device is registered.
+> >
+> > Reported-by: syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com
+> > Fixes: 309b66970ee2 ("net: openvswitch: do not free vport if register_netdevice() is failed.")
+> > Cc: Taehee Yoo <ap420073@gmail.com>
+> > Cc: Greg Rose <gvrose8192@gmail.com>
+> > Cc: Eric Dumazet <eric.dumazet@gmail.com>
+> > Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > Cc: Ying Xue <ying.xue@windriver.com>
+> > Cc: Andrey Konovalov <andreyknvl@google.com>
+> > Signed-off-by: Hillf Danton <hdanton@sina.com>
+> > ---
+> >
+> > --- a/net/openvswitch/vport-internal_dev.c
+> > +++ b/net/openvswitch/vport-internal_dev.c
+> > @@ -137,7 +137,7 @@ static void do_setup(struct net_device *
+> >         netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
+> >                               IFF_NO_QUEUE;
+> >         netdev->needs_free_netdev = true;
+> > -       netdev->priv_destructor = internal_dev_destructor;
+> > +       netdev->priv_destructor = NULL;
+> >         netdev->ethtool_ops = &internal_dev_ethtool_ops;
+> >         netdev->rtnl_link_ops = &internal_dev_link_ops;
+> >
+> > @@ -159,7 +159,6 @@ static struct vport *internal_dev_create
+> >         struct internal_dev *internal_dev;
+> >         struct net_device *dev;
+> >         int err;
+> > -       bool free_vport = true;
+> >
+> >         vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
+> >         if (IS_ERR(vport)) {
+> > @@ -190,10 +189,9 @@ static struct vport *internal_dev_create
+> >
+> >         rtnl_lock();
+> >         err = register_netdevice(vport->dev);
+> > -       if (err) {
+> > -               free_vport = false;
+> > +       if (err)
+> >                 goto error_unlock;
+> > -       }
+> > +       vport->dev->priv_destructor = internal_dev_destructor;
+> >  
 > 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> 
->> __get_datapage() is only a few instructions to retrieve the
->> address of the page where the kernel stores data to the VDSO.
->>
->> By inlining this function into its users, a bl/blr pair and
->> a mflr/mtlr pair is avoided, plus a few reg moves.
->>
->> The improvement is noticeable (about 55 nsec/call on an 8xx)
->>
->> vdsotest before the patch:
->> gettimeofday:    vdso: 731 nsec/call
->> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>
->> vdsotest after the patch:
->> gettimeofday:    vdso: 677 nsec/call
->> clock-gettime-realtime-coarse:    vdso: 613 nsec/call
->> clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/vdso32/cacheflush.S   | 10 +++++-----
->>   arch/powerpc/kernel/vdso32/datapage.S     | 29 ++++-------------------------
->>   arch/powerpc/kernel/vdso32/datapage.h     | 11 +++++++++++
->>   arch/powerpc/kernel/vdso32/gettimeofday.S | 13 ++++++-------
->>   4 files changed, 26 insertions(+), 37 deletions(-)
->>   create mode 100644 arch/powerpc/kernel/vdso32/datapage.h
-> 
-> The datapage.h file should ideally be moved under include/asm, then we can use
-> the same for powerpc64 too.
+> Looks good.
+> Acked-by: Pravin B Shelar <pshelar@ovn.org>
 
-I have a more ambitious project indeed.
+Pravin, Hillf,
 
-Most of the VDSO code is duplicated between vdso32 and vdso64. I'm 
-aiming at merging everything into a single source code.
+It looks like this patch was never posted to netdev, so it wasn't
+picked up by Patchwork -- am I missing something? If not, Hillf, can
+you please re-send this patch to the list? Thanks.
 
-This means we would have to generate vdso32.so and vdso64.so out of the 
-same source files. Any idea on how to do that ? I'm not too good at 
-creating Makefiles. I guess we would have everything in 
-arch/powerpc/kernel/vdso/ and would have to build the objects twice, 
-once in arch/powerpc/kernel/vdso32/ and once in arch/powerpc/kernel/vdso64/
-
-Christophe
+-- 
+Stefano
