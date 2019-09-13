@@ -2,100 +2,85 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D059C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35382C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730612084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CvmO9oXI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XVcCRMi9"
+	by mail.kernel.org (Postfix) with ESMTP id 01657206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568412102;
+	bh=fUTEfA0XCPIjUoxGbNxcsNTgP5CrQTXhEMZCCQ4JXhs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JvweTt0V01gh9afqNmvYPfTvtDhGMl82eglZYhoKr2COVkg5L1Z7A46W1kJ834GNe
+	 yZSkPXtbh/3MMOT7JVSmsWPqIDoNSPcSkYrVmYyq+37KT++kvKsfMhqtzBd7H4qx/0
+	 HZNp9YpTGIRgMiH/ZtXOJjp8Lj1WTQvthFumKFHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403944AbfIMWAf (ORCPT
+        id S2403958AbfIMWBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:00:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59510 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731449AbfIMV7p (ORCPT
+        Fri, 13 Sep 2019 18:01:41 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43726 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389815AbfIMWBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:59:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6192160A00; Fri, 13 Sep 2019 21:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411984;
-        bh=6f0lTQnrx5z1wDAiPKuaRnk5KF6fWCBKtD1ja6XdbS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvmO9oXIZENnRUtpeIiLieiwnQ315SnlUgJmIltt6U61JE7hYnijToNkl2TBRYyUp
-         zo41uofQCRaf9CvAR96iFDrmMpfPFHNVEUACuERB99hpvN2Gl4P6mSYUqMeaRsFlMe
-         0G7NFtrGSiOFi1Z8RoNGqlov5b54PrQkKMw3E7TU=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C42460790;
-        Fri, 13 Sep 2019 21:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411983;
-        bh=6f0lTQnrx5z1wDAiPKuaRnk5KF6fWCBKtD1ja6XdbS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVcCRMi9TpjLkyFd0vQLOh2Wa4zb8VngMPImuZAdAZx8RArDt3VQ9R9PWAP19EdNK
-         TA4gK2k54cC19j0K96nx/pEOWjgFHcpB8JlHJWeick1td5KqwKtgWDjA9Afk5QG+1Q
-         /pt1YHixaRh9e4d1JcTA8foTnXZ38GHtA9MAk8N0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C42460790
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC v2 02/14] drivers: irqchip: qcom-pdc: update max PDC interrupts
-Date:   Fri, 13 Sep 2019 15:59:10 -0600
-Message-Id: <1568411962-1022-3-git-send-email-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+        Fri, 13 Sep 2019 18:01:41 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so3884624oih.10;
+        Fri, 13 Sep 2019 15:01:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NhX4q4VvHbxL/YFwtYgsj7GHy+7WGzMk/sM+hDn3XjY=;
+        b=e0MMXgN3HjOjicjL8rm5PX7wMyau6lGtrmqX+QRoBElImog6eDpDaKlWKl1+R/Ml50
+         NjDqLoZvH/V7pvZJqEYOxIRx5Zr2/45gLsr2EzOANw6gcI8XUoDFEaq7VTUFHCaMNRXY
+         HFYdI3USEak15CEIgDuCwezyLyG0mjZ6oovXFP+p4n1GiUZxx1bdhkwSYCZpPWW2MOjL
+         5pdew7IqfF1rKW0T2hu4tncR0kbcKatObIGgyD4n9zYfKu+kaXEk0M7JTaLWUUNwxtiV
+         LRW29mc5wJYwVWcAKI51qtBg15ZAZOw7QfvjPmN7Q0xTmii/2TmYSTDIZbGusnsK3oIv
+         vzyg==
+X-Gm-Message-State: APjAAAWOVl8jCzVRR3rfavegNf/gfbS24Xy4157TStngu8JtOeyQKuWy
+        N2EKZSBmJUjqrcDQYrKuTQ==
+X-Google-Smtp-Source: APXvYqyMN6cGhqQElJmPF0IJsDj8JgHPGW102AuveDAChh2mS8gBIHVvwPO4qeAYrkFmDMbX3MGMWg==
+X-Received: by 2002:aca:3ed7:: with SMTP id l206mr5582343oia.25.1568412100159;
+        Fri, 13 Sep 2019 15:01:40 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n23sm620772oie.24.2019.09.13.15.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 15:01:39 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 17:01:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: qcom: fix spelling mistake "ambigous" -> "ambiguous"
+Message-ID: <20190913220138.GA17592@bogus>
+References: <20190911153947.10203-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190911153947.10203-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer SoCs have increased the number of interrupts routed to the PDC
-interrupt controller. Update the definition of max PDC interrupts.
+On Wed, 11 Sep 2019 16:39:47 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake on the documentation. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Applied, thanks.
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index faa7d61..b230794 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/err.h>
-@@ -18,7 +18,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--#define PDC_MAX_IRQS		126
-+#define PDC_MAX_IRQS		168
- 
- #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
- #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Rob
