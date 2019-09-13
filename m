@@ -2,230 +2,97 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75258C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E25C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380962081B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABEB2081B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="u7Ba4grh"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Jx2b331Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbfIMTCy (ORCPT
+        id S1730309AbfIMTDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:02:54 -0400
-Received: from mail-eopbgr820057.outbound.protection.outlook.com ([40.107.82.57]:58712
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388708AbfIMTCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:02:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UJpZBtb5PPfNM5VxHroP5HinsLsvqzlQRnbOXqYs7mvd1l++CdlZoimaMogCyj5o68BJQNcKTzNvIHvRRFbMeWjPilTCVB29W58S6rjWnUvNYgaM0MeQseEDgQn8CXbEjmp5XbyQIu36asItFGIM8iQOOOKQ+WA8ygCu5Acy1F8e0yvmRkeu6xymldb0MDeTCYzm8aNPQ6F/SIFPz/jbR6tMx4IfbCQL66IIH1omTfyKUV6FAzzLfo4LLDZ6GdWrgQimgL5xY8WRsJCZrb4q/p4Djcwa0LXNZsCsUjibdFzu/rTYZBKU8GRUBaq92YHQVKdwskPf5Lrf0k+aKVLCbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HosefMQyYoGJi+WqpDVBLlIApQ/5zryyf31rOTp7TvY=;
- b=Ikbhjt4g6o5+zkNF+jPTW8Mdj5k7WDtSiqPJcT86ujzQ8p2M5LFMNMsm2/tb9obJbsoMaJUg7ZsYhlnQ3lcj4gRYNjEZV+uV7Cqbq4XYF/QWB8DZ13gkAGEmtPgPZj17hJx60aiXlzlxgMI8FzLhDvu4IoczB51Z0/gsYiz3DN9SHPu5vLdx9e6vOPH8T3SEta7csVgN/Ho9IeztpeYUZKeXbSWAadvsi6QJ+jo8DJ+CGQYoqiXBLlwYUWqbz1AXQRr/JACihj0d+J8DTMa+Mmxebxw7vEA3ik2oQV4HfejvHuN9G5oZGRaT46WI6wiYlnOsLwLo4CJLaObRBDju7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 13 Sep 2019 15:03:38 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45558 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfIMTDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:03:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x3so13608041plr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:03:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HosefMQyYoGJi+WqpDVBLlIApQ/5zryyf31rOTp7TvY=;
- b=u7Ba4grh5NyD3BYe/ghqB1nN8kAgixIGnYg62CvpUoS6k5q2dl16mpzl7+s/UQZtdGLPVYzAxDzKACYEA27NS9Fkh25tsvxOqxOHqZYCi9XYE0ozbMMBWNM6kI9+0Rk8W+2h/e7vnMqAipPKPBqeomqqYnjTJY8+cRaAkE+yH6o=
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
- DM6PR12MB3804.namprd12.prod.outlook.com (10.255.173.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.20; Fri, 13 Sep 2019 19:00:56 +0000
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::201f:ac0f:4576:e997]) by DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::201f:ac0f:4576:e997%3]) with mapi id 15.20.2241.022; Fri, 13 Sep 2019
- 19:00:56 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH v3 06/16] kvm: x86: svm: Add support to activate/deactivate
- posted interrupts
-Thread-Topic: [PATCH v3 06/16] kvm: x86: svm: Add support to
- activate/deactivate posted interrupts
-Thread-Index: AQHVamWS7aEJ/uHZSEquRMsBUfXUeg==
-Date:   Fri, 13 Sep 2019 19:00:56 +0000
-Message-ID: <1568401242-260374-7-git-send-email-suravee.suthikulpanit@amd.com>
-References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
-In-Reply-To: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.78.1]
-x-clientproxiedby: SN6PR08CA0021.namprd08.prod.outlook.com
- (2603:10b6:805:66::34) To DM6PR12MB2844.namprd12.prod.outlook.com
- (2603:10b6:5:45::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9883ea0b-6bf4-47a8-56c5-08d7387cb528
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3804;
-x-ms-traffictypediagnostic: DM6PR12MB3804:
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3804735466C2105282C4D8B0F3B30@DM6PR12MB3804.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0159AC2B97
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(189003)(199004)(6436002)(6512007)(478600001)(6486002)(7416002)(53936002)(2906002)(4326008)(6116002)(3846002)(25786009)(86362001)(99286004)(66946007)(446003)(64756008)(66446008)(36756003)(486006)(71190400001)(71200400001)(52116002)(66556008)(256004)(4720700003)(2616005)(476003)(11346002)(14444005)(102836004)(305945005)(14454004)(7736002)(316002)(50226002)(386003)(6506007)(26005)(2501003)(8936002)(66066001)(8676002)(186003)(81156014)(81166006)(110136005)(5660300002)(76176011)(54906003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3804;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Je/+73RHpfNQnSQiFsviJkLpsEkNFx9dwFBiufkDBA7HOy3bGMfWbQXjbwouHlzI813LlFMIm1GZjKbviRg4LpqaeAQtlc+YnueIZa6/pPcAuDfxphBnTshhgYqeTFUXUtrijUupVDNLzJPiMQOpPUl2SysyiruXrM54yNs0JzT6ddQU2FavI7ZrK7OwWAKSxJ+DoGfI1ioBESUmqjLsZk2HeFCtWFoQOGZqDNYTlXc7qGj86xg9HJmXsyyEDWB9UmK4vVoFfzeiv/0RMvRs3/+2TunlE0LmROOGWIdEKVrqca0waubhForSpbraop+AKc9I7ZUEaowPiurZclUAKf1NajqyHxqHvVSykISsECibLeePXAqKr/WkadBotR63ECXfFais52cxkecnvOyiMhqbUtPPTTEKP7ncaLwrenE=
-Content-Type: text/plain; charset="iso-8859-1"
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=WbrTJOUc5fow26/05txxAkFKsoG+s+1MOG8nC+UoQHE=;
+        b=Jx2b331YcQIB5XHOHcqhfFYzeFRlTXAa03ZGn4APJFHaGujwV0TUHrf32x3qXmnt6O
+         EbdoyWnr2WC9j8WenYOeIYrS0m2fqTbyBBzfbQa/S2oZEUX7i06j08lVNafisBMUQm48
+         gjBmdKswLD4qB9MlCWOVfTJR1bn/0P4qnbbMzd6ABM+kPGTmcSoslBTBhV2wuTK0Zi8l
+         D3+CwOAwrl7ofWbkOhyxt1vO8f6pdE/cTUs1ll6C1R6OgW+n1gXhqnifBJYqEmkAMJ8V
+         HtVnF2OWwKrQtneWvuSO6CyBl+Io+/pASdF31FsHcI0YtkWg2+R4gCIyLPHtP2IMKSeI
+         kGyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=WbrTJOUc5fow26/05txxAkFKsoG+s+1MOG8nC+UoQHE=;
+        b=ONPARhRcE9dzkH4C7OMUK3g1AZzIJk/TFcC46MQhXiGYsXt3Yugnx1dEpDMnz92rlz
+         j/OyXTlGp7w4GkEeg1vyvgX5pTRfilqwL9oJoxRe6Su9G1TGPPjkJeNrqXkpstJPimfK
+         0j9MrcwL8jliIzoazIhzZCnfsEcw8x6ivwi8RkJtdJCEU8GCKN9fBUh4GFxAIOFcDbk5
+         X9ZAXDwAa0LNlpck9zIspEz3Imr6UCpsVamytta2UVhbKZ9yCn9n2BkzamVIDd6Xs1x/
+         I7Dms+5+8nWsypGUX0cxYniVhj4E1ZjqXr394DcphyXJRrwRHg36BQdIKqprlDAaYRT/
+         tejw==
+X-Gm-Message-State: APjAAAUxhPJTRXRVLZQUKjVQMOGtxZd4bLHPPNOIKp1p3QzCRNa2LHfb
+        FBmKeNaiVbvQCPdHUa/XPo6NXg==
+X-Google-Smtp-Source: APXvYqwNcEpgp1tn+eOxWrPilX5NmCs+GwiEMgBuEnPIsqLwbmNBY34fxWPa+cFebILuHRGPshoZbQ==
+X-Received: by 2002:a17:902:d70b:: with SMTP id w11mr50019606ply.313.1568401416649;
+        Fri, 13 Sep 2019 12:03:36 -0700 (PDT)
+Received: from ?IPv6:2600:380:7650:9a3f:9db9:3552:f45d:5be1? ([2600:380:7650:9a3f:9db9:3552:f45d:5be1])
+        by smtp.gmail.com with ESMTPSA id u4sm26448972pfh.55.2019.09.13.12.03.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2019 12:03:35 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9883ea0b-6bf4-47a8-56c5-08d7387cb528
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:00:56.6402
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0Gg5O7rkNMKkOexJZoqKBhZyOjQLRqZFU7rBPcC1b00O59fIOUWh7CcZFcuhpIHZ0l+57nEQTgzh5FkuoBD/CA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3804
+From:   Jens Axboe <axboe@kernel.dk>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 0/4] null_blk: fixes around nr_devices and log improvements
+Date:   Fri, 13 Sep 2019 12:03:34 -0700
+Message-Id: <FFDFD18F-C242-46D2-B64B-5515987AD82D@kernel.dk>
+References: <20190913185746.337429-1-andrealmeid@collabora.com>
+Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net, kernel@collabora.com,
+        krisman@collabora.com
+In-Reply-To: <20190913185746.337429-1-andrealmeid@collabora.com>
+To:     =?utf-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
+X-Mailer: iPhone Mail (17A5837a)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce interface for activate/deactivate posted interrupts, and
-implement SVM hooks to toggle AMD IOMMU guest virtual APIC mode.
+On Sep 13, 2019, at 11:58 AM, Andr=C3=A9 Almeida <andrealmeid@collabora.com>=
+ wrote:
+>=20
+> =EF=BB=BFHello,
+>=20
+> This patch series address feedback for a previous patch series sent by
+> me "docs: block: null_blk: enhance document style"[1].
+>=20
+> First patch removes a restriction that prevents null_blk to load with
+> (nr_devices =3D=3D 0). This restriction breaks applications, so it's a bug=
+. I
+> have tested it running the kernel with `null_blk.nr_devices=3D0`.
+>=20
+> In the previous series I have changed the type of var nr_devices, but I
+> forgot to change the type at module_param(). The second patch fix that.
+>=20
+> The third patch uses a cleaver approach to make log messages consistent
+> using pr_fmt and the last one add a note on how to do that at the
+> coding style documentation.
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- arch/x86/include/asm/kvm_host.h |  4 ++++
- arch/x86/kvm/svm.c              | 44 +++++++++++++++++++++++++++++++++++++=
-++++
- arch/x86/kvm/x86.c              |  5 +++++
- 3 files changed, 53 insertions(+)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
-t.h
-index a50fca1b..624e883 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1193,6 +1193,10 @@ struct kvm_x86_ops {
-=20
- 	int (*update_pi_irte)(struct kvm *kvm, unsigned int host_irq,
- 			      uint32_t guest_irq, bool set);
-+
-+	int (*activate_pi_irte)(struct kvm_vcpu *vcpu);
-+	int (*deactivate_pi_irte)(struct kvm_vcpu *vcpu);
-+
- 	void (*apicv_post_state_restore)(struct kvm_vcpu *vcpu);
- 	bool (*dy_apicv_has_pending_interrupt)(struct kvm_vcpu *vcpu);
-=20
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 245bde0..8673617 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5398,6 +5398,48 @@ static int svm_update_pi_irte(struct kvm *kvm, unsig=
-ned int host_irq,
- 	return ret;
- }
-=20
-+static int svm_set_pi_irte_mode(struct kvm_vcpu *vcpu, bool activate)
-+{
-+	int ret =3D 0;
-+	unsigned long flags;
-+	struct amd_svm_iommu_ir *ir;
-+	struct vcpu_svm *svm =3D to_svm(vcpu);
-+
-+	if (!kvm_arch_has_assigned_device(vcpu->kvm))
-+		return 0;
-+
-+	/*
-+	 * Here, we go through the per-vcpu ir_list to update all existing
-+	 * interrupt remapping table entry targeting this vcpu.
-+	 */
-+	spin_lock_irqsave(&svm->ir_list_lock, flags);
-+
-+	if (list_empty(&svm->ir_list))
-+		goto out;
-+
-+	list_for_each_entry(ir, &svm->ir_list, node) {
-+		if (activate)
-+			ret =3D amd_iommu_activate_guest_mode(ir->data);
-+		else
-+			ret =3D amd_iommu_deactivate_guest_mode(ir->data);
-+		if (ret)
-+			break;
-+	}
-+out:
-+	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-+	return ret;
-+}
-+
-+static int svm_activate_pi_irte(struct kvm_vcpu *vcpu)
-+{
-+	return svm_set_pi_irte_mode(vcpu, true);
-+}
-+
-+static int svm_deactivate_pi_irte(struct kvm_vcpu *vcpu)
-+{
-+	return svm_set_pi_irte_mode(vcpu, false);
-+}
-+
- static int svm_nmi_allowed(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm =3D to_svm(vcpu);
-@@ -7321,6 +7363,8 @@ static bool svm_need_emulation_on_page_fault(struct k=
-vm_vcpu *vcpu)
- 	.deliver_posted_interrupt =3D svm_deliver_avic_intr,
- 	.dy_apicv_has_pending_interrupt =3D svm_dy_apicv_has_pending_interrupt,
- 	.update_pi_irte =3D svm_update_pi_irte,
-+	.activate_pi_irte =3D svm_activate_pi_irte,
-+	.deactivate_pi_irte =3D svm_deactivate_pi_irte,
- 	.setup_mce =3D svm_setup_mce,
-=20
- 	.smi_allowed =3D svm_smi_allowed,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index bc74876..1540629 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7198,6 +7198,9 @@ void kvm_vcpu_activate_apicv(struct kvm_vcpu *vcpu)
- 	kvm_apic_update_apicv(vcpu);
-=20
- 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
-+
-+	if (kvm_x86_ops->activate_pi_irte)
-+		kvm_x86_ops->activate_pi_irte(vcpu);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_activate_apicv);
-=20
-@@ -7212,6 +7215,8 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu)
-=20
- 	vcpu->arch.apicv_active =3D false;
- 	kvm_apic_update_apicv(vcpu);
-+	if (kvm_x86_ops->deactivate_pi_irte)
-+		kvm_x86_ops->deactivate_pi_irte(vcpu);
- 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_deactivate_apicv);
---=20
-1.8.3.1
+Please add Fixes tags to your patches.=20
 
