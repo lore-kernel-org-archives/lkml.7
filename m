@@ -2,54 +2,51 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A3C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98924C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F749206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E33920717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380884;
-	bh=upUGwm/msuem5sT6UoS7SFgRcUJ9ZfVcRt9ovRejGh0=;
+	s=default; t=1568380886;
+	bh=Dg3jlNIf/h+RkBDZwXD9XN8GZU8Y+STpvMeX0kaOBqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oTumetbml5xQf1SkQ5rIklR9aeijjeEmC2zdJ6xiyS1G03ff9nEzAaDHTPAvvuOBR
-	 RXDQBBtHbrVK+oN9GZf6dUzgq1xwW1qNje96geA7lrp2p0pJrMh/svUhvi8W5sGEZB
-	 ly+3hk2LbWyCMyXZLQYFc8K3MZhwQrjOCP6W3JiA=
+	b=L860uOYaDThfonMpUI97zMx0td9VKNOL/q9cAbGVd7sJ1BeZl3inlrZ6xFyv6hyUf
+	 vJso4VX6R205RQIItJ6C4axgllpdAAs/CYqUoXmXpHY9d+GcujoEN1PpA0eb0VUna8
+	 P6o0ZWQYz2s5FAGtr4tqV/7jECAJ6XHKvO0YxbQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390809AbfIMNVX (ORCPT
+        id S2390818AbfIMNVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388155AbfIMNVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:19 -0400
+        id S2390798AbfIMNVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:21 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81886206A5;
-        Fri, 13 Sep 2019 13:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C50B9206A5;
+        Fri, 13 Sep 2019 13:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380879;
-        bh=upUGwm/msuem5sT6UoS7SFgRcUJ9ZfVcRt9ovRejGh0=;
+        s=default; t=1568380881;
+        bh=Dg3jlNIf/h+RkBDZwXD9XN8GZU8Y+STpvMeX0kaOBqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zepvc19JQyh51SB3EWTh82LZ07vs7x+TlGowziSgSiBYQwwpH1BSNU+44ZxLxhGyx
-         B/7gL07zTaCnoPevgbmULpxyn4NyLbyAf6U1Hnm/1Qba5pvr7ZfrlzCVqpbJyAUTek
-         CsH5xU9NnIHhf6VpQqOEsFiMfPT+2UjrSJ0HsTl4=
+        b=1RaaYjZITt2Vm5c+qW3aGR4oeN8GIRj+ieNQln8Fl7DBv05oLrNFnVIO+JRLpND7L
+         sBOzIFhuh4eEDs3y38pStzxcz7IudXg+4BpB04IzYIkByuWDUJH95+niSWNibfWxit
+         6I1tMm85vXEf56qHQ5Id1OCHU43GS0aE84/S+ZLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 5.2 21/37] IB/rdmavt: Add new completion inline
-Date:   Fri, 13 Sep 2019 14:07:26 +0100
-Message-Id: <20190913130519.201854592@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 07/37] ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
+Date:   Fri, 13 Sep 2019 14:07:12 +0100
+Message-Id: <20190913130512.344461813@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -62,112 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is opencoded send completion logic all over all
-the drivers.
+From: Hui Wang <hui.wang@canonical.com>
 
-We need to convert to this routine to enforce ordering
-issues for completions.  This routine fixes an ordering
-issue where the read of the SWQE fields necessary for creating
-the completion can race with a post send if the post send catches
-a send queue at the edge of being full.  Is is possible in that situation
-to read SWQE fields that are being written.
+commit 2a36c16efab254dd6017efeb35ad88ecc96f2328 upstream.
 
-This new routine insures that SWQE fields are read prior to advancing
-the index that post send uses to determine queue fullness.
+This ThinkCentre machine has a new realtek codec alc222, it is not
+in the support list, we add it in the realtek.c then this machine
+can apply FIXUPs for the realtek codec.
 
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+And this machine has two front mics which can't be handled
+by PA so far, it uses the pin 0x18 and 0x19 as the front mics, as
+a result the existing FIXUP ALC294_FIXUP_LENOVO_MIC_LOCATION doesn't
+work on this machine. Fortunately another FIXUP
+ALC283_FIXUP_HEADSET_MIC also can change the location for one of the
+two mics on this machine.
+
+Link: https://lore.kernel.org/r/20190904055327.9883-1-hui.wang@canonical.com
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/rdma/rdmavt_qp.h | 72 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
-index 68e38c20afc04..6014f17669071 100644
---- a/include/rdma/rdmavt_qp.h
-+++ b/include/rdma/rdmavt_qp.h
-@@ -737,6 +737,78 @@ static inline void rvt_put_qp_swqe(struct rvt_qp *qp, struct rvt_swqe *wqe)
- 		atomic_dec(&ibah_to_rvtah(wqe->ud_wr.ah)->refcount);
- }
- 
-+/**
-+ * rvt_qp_sqwe_incr - increment ring index
-+ * @qp: the qp
-+ * @val: the starting value
-+ *
-+ * Return: the new value wrapping as appropriate
-+ */
-+static inline u32
-+rvt_qp_swqe_incr(struct rvt_qp *qp, u32 val)
-+{
-+	if (++val >= qp->s_size)
-+		val = 0;
-+	return val;
-+}
-+
-+/**
-+ * rvt_qp_complete_swqe - insert send completion
-+ * @qp - the qp
-+ * @wqe - the send wqe
-+ * @opcode - wc operation (driver dependent)
-+ * @status - completion status
-+ *
-+ * Update the s_last information, and then insert a send
-+ * completion into the completion
-+ * queue if the qp indicates it should be done.
-+ *
-+ * See IBTA 10.7.3.1 for info on completion
-+ * control.
-+ *
-+ * Return: new last
-+ */
-+static inline u32
-+rvt_qp_complete_swqe(struct rvt_qp *qp,
-+		     struct rvt_swqe *wqe,
-+		     enum ib_wc_opcode opcode,
-+		     enum ib_wc_status status)
-+{
-+	bool need_completion;
-+	u64 wr_id;
-+	u32 byte_len, last;
-+	int flags = wqe->wr.send_flags;
-+
-+	rvt_put_qp_swqe(qp, wqe);
-+
-+	need_completion =
-+		!(flags & RVT_SEND_RESERVE_USED) &&
-+		(!(qp->s_flags & RVT_S_SIGNAL_REQ_WR) ||
-+		(flags & IB_SEND_SIGNALED) ||
-+		status != IB_WC_SUCCESS);
-+	if (need_completion) {
-+		wr_id = wqe->wr.wr_id;
-+		byte_len = wqe->length;
-+		/* above fields required before writing s_last */
-+	}
-+	last = rvt_qp_swqe_incr(qp, qp->s_last);
-+	/* see rvt_qp_is_avail() */
-+	smp_store_release(&qp->s_last, last);
-+	if (need_completion) {
-+		struct ib_wc w = {
-+			.wr_id = wr_id,
-+			.status = status,
-+			.opcode = opcode,
-+			.qp = &qp->ibqp,
-+			.byte_len = byte_len,
-+		};
-+
-+		rvt_cq_enter(ibcq_to_rvtcq(qp->ibqp.send_cq), &w,
-+			     status != IB_WC_SUCCESS);
-+	}
-+	return last;
-+}
-+
- extern const int  ib_rvt_state_ops[];
- 
- struct rvt_dev_info;
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7087,6 +7087,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+@@ -8961,6 +8962,7 @@ static int patch_alc680(struct hda_codec
+ static const struct hda_device_id snd_hda_id_realtek[] = {
+ 	HDA_CODEC_ENTRY(0x10ec0215, "ALC215", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0221, "ALC221", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0222, "ALC222", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0225, "ALC225", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0231, "ALC231", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0233, "ALC233", patch_alc269),
 
 
