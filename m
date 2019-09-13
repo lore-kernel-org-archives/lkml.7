@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C86C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A45C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F500214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5905A214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380590;
-	bh=ska6GvcMvDccfwAgcRVlSXG3/h/lqthHXrPwemOftNU=;
+	s=default; t=1568380593;
+	bh=zOG44NvZII34L1rJxUscROwjCbvLnAhsBzplt5zW7gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPvs6w2Ssp/XkMYDmVGGW1z2f0piLRtE88Vg8nV7AnIdFfjsGYF4HJ9C76/uglXwS
-	 GuNjwQbGxVL1JP93vks6mW1BzIOQnHqvusSO0+TvoSaFgg/0fqUGswHzKTFXOezfLq
-	 yvB4nefqqvWcWQPT35AWRfv55GdM4qQEjWzwuTkw=
+	b=UNDFe5NJ2V8dbW2PTLuA5ra7QVj1V0bThZTuE9qYeROgNdksNwqR1OKCMqxAeZMQ5
+	 zNvIjAt48UsSYLFGI0ihUTwMZrOnlOvLTUOsiqZ6tbZxT6X/S3f4EpBTBgSIJS2ZCp
+	 tPdA1yPDsCFuN0UJCogL38v4ie2qTW0huD0Q4Vps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389283AbfIMNQ3 (ORCPT
+        id S2388708AbfIMNQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388921AbfIMNQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:22 -0400
+        id S2389857AbfIMNQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:28 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274FC20717;
-        Fri, 13 Sep 2019 13:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1886B20CC7;
+        Fri, 13 Sep 2019 13:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380581;
-        bh=ska6GvcMvDccfwAgcRVlSXG3/h/lqthHXrPwemOftNU=;
+        s=default; t=1568380587;
+        bh=zOG44NvZII34L1rJxUscROwjCbvLnAhsBzplt5zW7gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MIzPkQHCLewdRK+2DjIRsQHAiji9eBjrlWawdkGgrGx9uS41Rj07/wDx0AeVdcM1X
-         EKJ6/0o31EJNOOhpg/DN1qzK9XxCCx5Zm5ED+n6IoblW+rpvYdwSYR8dirb8tvIydp
-         k2QTlLoGG+ieRP+GpIoS+1DMvuk+4HI9Ah/VcOyI=
+        b=rMGbEDQaIgJqotn8TtEeOZBstFJiWMDoNjzJtw9PyzKt3xBDCGT7V2l3gC92EYdmb
+         JDGWcQ813/S2+3fbHX89DcHoAvPndziK9jr/JCM3KkAVhmBDVFXF4OHtMyqM2kzCws
+         qaZHNKSEf664DVjsmgZ4pJwiucfImCJ4XB4DvfIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/190] usb: typec: tcpm: Try PD-2.0 if sink does not respond to 3.0 source-caps
-Date:   Fri, 13 Sep 2019 14:06:05 +0100
-Message-Id: <20190913130608.527985720@linuxfoundation.org>
+Subject: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
+Date:   Fri, 13 Sep 2019 14:05:47 +0100
+Message-Id: <20190913130606.981926197@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,76 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 976daf9d1199932df80e7b04546d1a1bd4ed5ece ]
+[ Upstream commit b513a18cf1d705bd04efd91c417e79e4938be093 ]
 
-PD 2.0 sinks are supposed to accept src-capabilities with a 3.0 header and
-simply ignore any src PDOs which the sink does not understand such as PPS
-but some 2.0 sinks instead ignore the entire PD_DATA_SOURCE_CAP message,
-causing contract negotiation to fail.
+This is much louder then we want. VCPI allocation failures are quite
+normal, since they will happen if any part of the modesetting process is
+interrupted by removing the DP MST topology in question. So just print a
+debugging message on VCPI failures instead.
 
-This commit fixes such sinks not working by re-trying the contract
-negotiation with PD-2.0 source-caps messages if we don't have a contract
-after PD_N_HARD_RESET_COUNT hard-reset attempts.
-
-The problem fixed by this commit was noticed with a Type-C to VGA dongle.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: f479c0ba4a17 ("drm/nouveau/kms/nv50: initial support for DP 1.2 multi-stream")
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index fb20aa974ae12..819ae3b2bd7e8 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -37,6 +37,7 @@
- 	S(SRC_ATTACHED),			\
- 	S(SRC_STARTUP),				\
- 	S(SRC_SEND_CAPABILITIES),		\
-+	S(SRC_SEND_CAPABILITIES_TIMEOUT),	\
- 	S(SRC_NEGOTIATE_CAPABILITIES),		\
- 	S(SRC_TRANSITION_SUPPLY),		\
- 	S(SRC_READY),				\
-@@ -2987,10 +2988,34 @@ static void run_state_machine(struct tcpm_port *port)
- 			/* port->hard_reset_count = 0; */
- 			port->caps_count = 0;
- 			port->pd_capable = true;
--			tcpm_set_state_cond(port, hard_reset_state(port),
-+			tcpm_set_state_cond(port, SRC_SEND_CAPABILITIES_TIMEOUT,
- 					    PD_T_SEND_SOURCE_CAP);
- 		}
- 		break;
-+	case SRC_SEND_CAPABILITIES_TIMEOUT:
-+		/*
-+		 * Error recovery for a PD_DATA_SOURCE_CAP reply timeout.
-+		 *
-+		 * PD 2.0 sinks are supposed to accept src-capabilities with a
-+		 * 3.0 header and simply ignore any src PDOs which the sink does
-+		 * not understand such as PPS but some 2.0 sinks instead ignore
-+		 * the entire PD_DATA_SOURCE_CAP message, causing contract
-+		 * negotiation to fail.
-+		 *
-+		 * After PD_N_HARD_RESET_COUNT hard-reset attempts, we try
-+		 * sending src-capabilities with a lower PD revision to
-+		 * make these broken sinks work.
-+		 */
-+		if (port->hard_reset_count < PD_N_HARD_RESET_COUNT) {
-+			tcpm_set_state(port, HARD_RESET_SEND, 0);
-+		} else if (port->negotiated_rev > PD_REV20) {
-+			port->negotiated_rev--;
-+			port->hard_reset_count = 0;
-+			tcpm_set_state(port, SRC_SEND_CAPABILITIES, 0);
-+		} else {
-+			tcpm_set_state(port, hard_reset_state(port), 0);
-+		}
-+		break;
- 	case SRC_NEGOTIATE_CAPABILITIES:
- 		ret = tcpm_pd_check_request(port);
- 		if (ret < 0) {
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index f889d41a281fa..5e01bfb69d7a3 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -759,7 +759,8 @@ nv50_msto_enable(struct drm_encoder *encoder)
+ 
+ 	slots = drm_dp_find_vcpi_slots(&mstm->mgr, mstc->pbn);
+ 	r = drm_dp_mst_allocate_vcpi(&mstm->mgr, mstc->port, mstc->pbn, slots);
+-	WARN_ON(!r);
++	if (!r)
++		DRM_DEBUG_KMS("Failed to allocate VCPI\n");
+ 
+ 	if (!mstm->links++)
+ 		nv50_outp_acquire(mstm->outp);
 -- 
 2.20.1
 
