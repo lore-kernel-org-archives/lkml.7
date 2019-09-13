@@ -2,239 +2,109 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4130BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AB6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFF720830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2158120830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:02:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfxjsW6B"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XcrIfAGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390431AbfIMPCI (ORCPT
+        id S2390376AbfIMPCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:02:08 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46738 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390376AbfIMPCI (ORCPT
+        Fri, 13 Sep 2019 11:02:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45557 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390433AbfIMPCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:02:08 -0400
-Received: by mail-io1-f66.google.com with SMTP id d17so41260561ios.13;
-        Fri, 13 Sep 2019 08:02:07 -0700 (PDT)
+        Fri, 13 Sep 2019 11:02:40 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o205so2857844oib.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 08:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=l5FDHbt8lqGJHAWfO4cgNSZrnf0h9Sq8dTow7K6r8jI=;
-        b=GfxjsW6Bh/ewfSByUpN0azT/eN5lDwC4a3uApj0HQfyln/Gjb8leQ6dkQCNLMvMLfE
-         yDw83dcFS5bbpyltm2p64jdbE+Yj5bbnqdlmHubkkp/bgxWkgh4rhlBmvPxk+YaZlOEf
-         jZfVRncSyeSN+UhxuflBLrOuSwSMkB255pqKoQPtKd6N4JqspKs2v8IaOMEAKnQ4TlVj
-         WFIfzmPXJModv8i21LNvwthrar48qdihLsiqMreCL6nLOUI0fBIQD8oenmWgwB3bjgNj
-         HlH3jH9VHuN8ukr/Zdv9BstVhIW3Y4aFqjN0BzWwheHgy+T58iXFwbAZO5u41CbS3c1e
-         xnfQ==
+         :cc;
+        bh=FL1GjXU4OxVtgje4G6mCeYw5JgQRyVmMHSk6LS6L6h0=;
+        b=XcrIfAGLgnCngGnqO1DJcdE95s67blXTpvCmuoC4POiBmx1B9clK5ZNugaQYZJsHUK
+         LRRlS7On0v8cTv9pXBKg5amy+FZZUlwUL7z05OwVEHx82wbE3R4S2AW1N/pUtqyq+coe
+         IxqcEgPQZzwzDUjxbbqdywUSKT8qPsXxZunO4CUbU0DklVvrpC3nBd3ULVxpo/T9HIUV
+         CxZ18AffXR0nlOKPGBkl6EiS3GhbOs46/HGXTUldnrXoG2kQLecamfhdRyIzxHQX4Ta4
+         86UKX/JIqHw9xYUfiv4/nwCOTRYSHTLVvwAOG3sBbWBbBCNaCkJREJNSrKCEVbUnh+Ms
+         xEtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=l5FDHbt8lqGJHAWfO4cgNSZrnf0h9Sq8dTow7K6r8jI=;
-        b=YAcgmPtuzgz/H/LKtj+z+9aP7Gblx+/fShU/kIYDBCmdg6fWNyXVjPuC4MSRxSxTBK
-         Jwmc9qyGPJ3awg7HFTT3t/Dnov6wAIqh9+V5zMGux2as/2AChNDHYkyaXIne+Asfvufr
-         9vT1rHVjeniEwiC2J+/p+e/cZYJgY1QquinL3vyhYM3663h/t2oppVn8tRm/061rFenw
-         wQB7X5yGQpEZZXI3f9MGQaIms6/E3Xq0W/YtPgGxHSevGN65JwlNSHj6hLmXfrf5eRkh
-         Wh/YGRQziHYhP1pfOvqsMb/K70TAB+/k/xPKDBVZwQC8srz4AshAGDp95GfpYioTZP4d
-         ZIbw==
-X-Gm-Message-State: APjAAAVi8t1N2HZLlPpkrIidsFKn0xDNHKCr4hnAoogvRiV/H+ja9PC6
-        O7BvGE+RN3MsdTjOScdidn0D7F7klSUEoC8KftonaA==
-X-Google-Smtp-Source: APXvYqyS8kp3Oxa+ZkW/xzmIjtGuJ0ULPdjfslQ9lAlwJPx9It9zOZQBbTgQMX3Fg2Uomu/X6GZz5ZKg0eZg4TAsyBI=
-X-Received: by 2002:a6b:c581:: with SMTP id v123mr286873iof.158.1568386926591;
- Fri, 13 Sep 2019 08:02:06 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=FL1GjXU4OxVtgje4G6mCeYw5JgQRyVmMHSk6LS6L6h0=;
+        b=W7NUcGoN2/tWL1SZ9eh8XXTfwiY2PKjQ66EkWVfATL8yUn+VzWdlM3s30Ww2wp4lwt
+         nuQaFhsRckEK5/HT/4WBe+XO/F/tpR6xLK7v58qYVpJKCnpNA29XBPBwDjgxrftNJCMR
+         hnvrwXM6UOQGFucLD3H8D3elVEvB5OisQTeFRgDw26owTCKRDMPjBr+Ay1d5M6Y8wo4Q
+         XpG1RquqYSWG3zZYUx6QtZMDM+i4EiESXJiOXJcenD6gugx4fMvryrR3YVr09rMAg0ON
+         QOh4pv8bhmmBjTWHr+sgF3V7tXc3VsCkcZJFYqef8CTlAyUhdekqUe7r1Q7ri2Wy6boU
+         d5RQ==
+X-Gm-Message-State: APjAAAW4Ca1a6J4oUDAUByt1UKHAccezJBwRov3PlydrlEXY3r9/oADe
+        EOppkfUaZGwIV1gjZSjp0nuDxCaMLTyvsQznUNChow==
+X-Google-Smtp-Source: APXvYqyeEJXWj7rpxrv1qz+5i2zLZaF/SLL5wmnwCw6eD+cUG7FsoCaEJNlzjXu8gUdNFX/hYHgq60QKgMlpEmp2U7Y=
+X-Received: by 2002:aca:4b05:: with SMTP id y5mr2670978oia.70.1568386960199;
+ Fri, 13 Sep 2019 08:02:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
- <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
- <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
- <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com>
-In-Reply-To: <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 13 Sep 2019 10:01:55 -0500
-Message-ID: <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
+References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-UK75nCreZb=v7PQne4Ay25B7oRAeRg4AB1XopYXt3Cg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-UK75nCreZb=v7PQne4Ay25B7oRAeRg4AB1XopYXt3Cg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 13 Sep 2019 08:02:26 -0700
+Message-ID: <CAPcyv4jv8OacA-P+DFj_d9gq3P-7b9xcr4=m3kx7nTvyko6i2g@mail.gmail.com>
+Subject: Re: [PATCH v5 05/10] x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
+        linux-efi <linux-efi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 9:24 AM H. Nikolaus Schaller <hns@goldelico.com> wr=
-ote:
+On Fri, Sep 13, 2019 at 6:02 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
+> On Fri, 30 Aug 2019 at 03:07, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > Given that EFI_MEMORY_SP is platform BIOS policy descision for marking
 >
-> > Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
-> >
-> > On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller <hns@goldelico.com=
-> wrote:
-> >>
-> >> Hi Adam,
-> >>
-> >>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
-> >>
-> >>>>> +     cpu_cooling_maps: cooling-maps {
-> >>>>> +             map0 {
-> >>>>> +                     trip =3D <&cpu_alert0>;
-> >>>>> +                     /* Only allow OPP50 and OPP100 */
-> >>>>> +                     cooling-device =3D <&cpu 0 1>;
-> >>>>
-> >>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
-> >>>> understand their meaning (and how it relates to the opp list).
-> >>>
-> >>> I read through the documentation, but it wasn't completely clear to
-> >>> me. AFAICT, the numbers after &cpu represent the min and max index in
-> >>> the OPP table when the condition is hit.
-> >>
-> >> Ok. It seems to use "cooling state" for those and the first is minimum
-> >> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
-> >> no limits.
-> >>
-> >> Since here we use the &cpu node it is likely that the "cooling state"
-> >> is the same as the OPP index currently in use.
-> >>
-> >> I have looked through the .dts which use cpu_crit and the picture is
-> >> not unique...
-> >>
-> >> omap4           seems to only define it
-> >> am57xx          has two different grade dtsi files
-> >> dra7            overwrites critical temperature value
-> >> am57xx-beagle   defines a gpio to control a fan
-> >
+> decision
 
-I am going to push a separate but related RFC with 2 patches in the
-series.  This new one will setup the alerts and maps without any
-throttling for all omap3's in the first patch.  The second patch will
-consolidate the thermal references to omap3.dtsi so omap34, omap36 and
-am35 can all use them without having to duplicate the entries.
+Fixed.
 
-It will make the omap36xx changes simpler to manage, because we can
-just modify a portion of the entries instead of having the whole
-table.
+>
+> > memory ranges as "reserved for a specific purpose" there will inevitably
+> > be scenarios where the BIOS omits the attribute in situations where it
+> > is desired. Unlike other attributes if the OS wants to reserve this
+> > memory from the kernel the reservation needs to happen early in init. So
+> > early, in fact, that it needs to happen before e820__memblock_setup()
+> > which is a pre-requisite for efi_fake_memmap() that wants to allocate
+> > memory for the updated table.
+> >
+> > Introduce an x86 specific efi_fake_memmap_early() that can search for
+> > attempts to set EFI_MEMORY_SP via efi_fake_mem and update the e820 table
+> > accordingly.
+> >
+>
+> Is this early enough? The EFI stub runs before this, and allocates
+> memory as well.
 
-Once this parallel RFC gets comments/feedback, I'll re-integrate the
-omap36xx throttling.
-
-adam
-
-> > Checkout rk3288-veyron-mickey.dts
-> >
-> > They have almost_warm, warm, almost_hot, hot, hotter, very_hot, and
-> > critical for trips, and they have as many corresponding cooling maps
-> > which appear to limit the CPU speeds, but their index references are
-> > still confusing to me.
->
-> Seems to be quite sophistcated.
->
-> The arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi also has a lot
-> of trip points. So there may be very different needs...
->
-> But it has potentially helpful comments...
->
->                                 /*
->                                  * When reaching cpu0_alert3, reduce CPU
->                                  * by 2 steps. On Exynos5422/5800 that wo=
-uld
->                                  * be: 1600 MHz and 1100 MHz.
->                                  */
->                                 map3 {
->                                         trip =3D <&cpu0_alert3>;
->                                         cooling-device =3D <&cpu0 0 2>;
->                                 };
->                                 map4 {
->                                         trip =3D <&cpu0_alert3>;
->                                         cooling-device =3D <&cpu4 0 2>;
->                                 };
->                                 /*
->                                  * When reaching cpu0_alert4, reduce CPU
->                                  * further, down to 600 MHz (12 steps for=
- big,
->                                  * 7 steps for LITTLE).
->                                  */
->                                 map5 {
->                                         trip =3D <&cpu0_alert4>;
->                                         cooling-device =3D <&cpu0 3 7>;
->                                 };
->                                 map6 {
->                                         trip =3D <&cpu0_alert4>;
->                                         cooling-device =3D <&cpu4 3 12>;
->                                 };
->
-> That would mean the second integer is something about how
-> many steps to reduce.
->
-> But the first is not explained.
->
-> BTW: this also demonstrates how a single trip point can map to multiple
-> cooling-device actions (something we likely do not need).
->
-> >
-> > For that device,
-> > Warm and no limit first, then 4:   coolling-device =3D <&cpu0 THERMAL_N=
-O_LIMIT 4>
-> > ...
-> > very_hot uses a number then no limit: cooling-device =3D <&cpu0 8
-> > THERMAL_NO_LIMIT>
-> >
-> > This makes me wonder if the min and max are switched or the index
-> > values go backwards.
->
-> It may depend on the specific cpu driver? Maybe even omap rk and exynos
-> have different interpretation in code?
->
-> >>
-> >> Then we can use the data sheet limits of 90=C2=B0C and 105=C2=B0C in t=
-he trip point
-> >> table (which should not be tweaked for sensor inaccuracy).
-> >
-> > I can see not compensating if it reads high, but if the temp reads
-> > low, shouldn't compensate so we don't over temp the processor?
->
-> I just mean that we must ensure that the TJ is <=3D 90=C2=B0 if the bandg=
-ap
-> ever reports 90=C2=B0. So it may report 10 or 20 or even 30 degrees more =
-than the
-> real temperature but never less (reaching the critical temperature too ea=
-rly
-> but not too late).
->
-> We can achieve that by adding bias or changing slope etc. in the bandgap =
-sensor
-> driver.
->
-> If I find some time I am curious enough to look into the code and the dat=
-a
-> sheets to understand why it is said to be inaccurate... Maybe there is
-> jitter from some LDO and it needs a median filter?
->
-> And why it seems to add a bias of ca. 10=C2=B0 as soon as I read it more =
-than
-> for the first time. And how well temperature correlates to ambient temper=
-ature
-> (it definitively correlates to cpufreq-set -f).
->
-> But we should not modify the trip temperatures by 10 or 20 or 30 degrees.
-> IMHO they should have the values defined by the data sheet.
->
-> BR,
-> Nikolaus
->
+Unless I'm missing something the stub only allocates where the kernel
+will land. That should be handled by the new mem_avoid_memmap()
+extensions to consider "efi_fake_mem" in its exclusions.
