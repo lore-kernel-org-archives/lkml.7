@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AA9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41384C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC5A206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17133206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380756;
-	bh=HAmmkIcp7no0uC3WdtdrKjJJZWCoxqdHRWx5eZr7dXk=;
+	s=default; t=1568380760;
+	bh=PerjJq8RtcCHS4m1Bz+YroaFuFXujxQwpgh+O0P6CYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGKlfL1azsW1HenfEvj51uKnx7HWq71BBFrGkSAUcfsI5qLmbT42xmBzSo28xbeev
-	 EOoD4VJB1a6MPt9ivzXfJHoU5DodTAR63cUgj/COXZL9MD8d/kDAfyUXb28ZZKkGsr
-	 /W4VTtSwrf8m+UM/qcRhnK3LTQ4ZPIyOvfLxSG3s=
+	b=InFena7L7DKbfCN3tWkOMoPvU/7wkFWBCV/Dh+ddVmSuGvGP6RVpagYTthvREvePv
+	 eeXPKWdducNZd+wdalGieYFDnPEtnPSU5gbFi7tfUz1oKJ5xfqvI8MxgTs3dw1ALtH
+	 vk3Hf9OAK2cbKnWK+u+Dz6x63LncaTopoJCumE1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389632AbfIMNTP (ORCPT
+        id S2390408AbfIMNTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47036 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390356AbfIMNTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:08 -0400
+        id S2390356AbfIMNTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:17 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CEC820640;
-        Fri, 13 Sep 2019 13:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E26CA206A5;
+        Fri, 13 Sep 2019 13:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380747;
-        bh=HAmmkIcp7no0uC3WdtdrKjJJZWCoxqdHRWx5eZr7dXk=;
+        s=default; t=1568380756;
+        bh=PerjJq8RtcCHS4m1Bz+YroaFuFXujxQwpgh+O0P6CYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHHnwz+7LUz+A+8gK95fnUCcsF+1SkLkjHS3pa2WENKjYq8beBXyzJh4vRUKi0G3E
-         6NejthWzxwByL5oBqEcu0sYiGY5WEb9nLDE0ULJdjjogAM4wxRUgjHVlnxUOlIj9ZV
-         y7ZFHlc47PaCj4StApQoZMnhnEWHw4ijuI2+F8gU=
+        b=RRskDQvWZfGC9pbDXbH/Vv0rda1Ddspu4zqiYUqxSvEd/HWemVC8Ir+m1WzKKI8uu
+         IixIruIyO2EsZ+Vumi0Dmk6GloO1HExpEof8i7tjcejjot0zq9iY59v5rVtSMD1eNx
+         3L6EyajUywV01OxYzElv079IuLxiTAhVKvAbwkKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Salvatore <mike.salvatore@canonical.com>,
-        John Johansen <john.johansen@canonical.com>,
+        stable@vger.kernel.org, Louis Li <Ching-shih.Li@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 144/190] apparmor: reset pos on failure to unpack for various functions
-Date:   Fri, 13 Sep 2019 14:06:39 +0100
-Message-Id: <20190913130611.488999485@linuxfoundation.org>
+Subject: [PATCH 4.19 137/190] drm/amdgpu: fix ring test failure issue during s3 in vce 3.0 (V2)
+Date:   Fri, 13 Sep 2019 14:06:32 +0100
+Message-Id: <20190913130610.950072079@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,148 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 156e42996bd84eccb6acf319f19ce0cb140d00e3 ]
+[ Upstream commit ce0e22f5d886d1b56c7ab4347c45b9ac5fcc058d ]
 
-Each function that manipulates the aa_ext struct should reset it's "pos"
-member on failure. This ensures that, on failure, no changes are made to
-the state of the aa_ext struct.
+[What]
+vce ring test fails consistently during resume in s3 cycle, due to
+mismatch read & write pointers.
+On debug/analysis its found that rptr to be compared is not being
+correctly updated/read, which leads to this failure.
+Below is the failure signature:
+	[drm:amdgpu_vce_ring_test_ring] *ERROR* amdgpu: ring 12 test failed
+	[drm:amdgpu_device_ip_resume_phase2] *ERROR* resume of IP block <vce_v3_0> failed -110
+	[drm:amdgpu_device_resume] *ERROR* amdgpu_device_ip_resume failed (-110).
 
-There are paths were elements are optional and the error path is
-used to indicate the optional element is not present. This means
-instead of just aborting on error the unpack stream can become
-unsynchronized on optional elements, if using one of the affected
-functions.
+[How]
+fetch rptr appropriately, meaning move its read location further down
+in the code flow.
+With this patch applied the s3 failure is no more seen for >5k s3 cycles,
+which otherwise is pretty consistent.
 
+V2: remove reduntant fetch of rptr
+
+Signed-off-by: Louis Li <Ching-shih.Li@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
-Signed-off-by: Mike Salvatore <mike.salvatore@canonical.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/policy_unpack.c | 40 +++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
-index 088ea2ac85706..612f737cee836 100644
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -223,16 +223,21 @@ static void *kvmemdup(const void *src, size_t len)
- static size_t unpack_u16_chunk(struct aa_ext *e, char **chunk)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
+index 5f3f540738187..17862b9ecccd7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
+@@ -1070,7 +1070,7 @@ void amdgpu_vce_ring_emit_fence(struct amdgpu_ring *ring, u64 addr, u64 seq,
+ int amdgpu_vce_ring_test_ring(struct amdgpu_ring *ring)
  {
- 	size_t size = 0;
-+	void *pos = e->pos;
+ 	struct amdgpu_device *adev = ring->adev;
+-	uint32_t rptr = amdgpu_ring_get_rptr(ring);
++	uint32_t rptr;
+ 	unsigned i;
+ 	int r, timeout = adev->usec_timeout;
  
- 	if (!inbounds(e, sizeof(u16)))
--		return 0;
-+		goto fail;
- 	size = le16_to_cpu(get_unaligned((__le16 *) e->pos));
- 	e->pos += sizeof(__le16);
- 	if (!inbounds(e, size))
--		return 0;
-+		goto fail;
- 	*chunk = e->pos;
- 	e->pos += size;
- 	return size;
-+
-+fail:
-+	e->pos = pos;
-+	return 0;
- }
- 
- /* unpack control byte */
-@@ -294,49 +299,66 @@ fail:
- 
- static bool unpack_u32(struct aa_ext *e, u32 *data, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_U32, name)) {
- 		if (!inbounds(e, sizeof(u32)))
--			return 0;
-+			goto fail;
- 		if (data)
- 			*data = le32_to_cpu(get_unaligned((__le32 *) e->pos));
- 		e->pos += sizeof(u32);
- 		return 1;
+@@ -1084,6 +1084,9 @@ int amdgpu_vce_ring_test_ring(struct amdgpu_ring *ring)
+ 			  ring->idx, r);
+ 		return r;
  	}
 +
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
++	rptr = amdgpu_ring_get_rptr(ring);
++
+ 	amdgpu_ring_write(ring, VCE_CMD_END);
+ 	amdgpu_ring_commit(ring);
  
- static bool unpack_u64(struct aa_ext *e, u64 *data, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_U64, name)) {
- 		if (!inbounds(e, sizeof(u64)))
--			return 0;
-+			goto fail;
- 		if (data)
- 			*data = le64_to_cpu(get_unaligned((__le64 *) e->pos));
- 		e->pos += sizeof(u64);
- 		return 1;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static size_t unpack_array(struct aa_ext *e, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_ARRAY, name)) {
- 		int size;
- 		if (!inbounds(e, sizeof(u16)))
--			return 0;
-+			goto fail;
- 		size = (int)le16_to_cpu(get_unaligned((__le16 *) e->pos));
- 		e->pos += sizeof(u16);
- 		return size;
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
- static size_t unpack_blob(struct aa_ext *e, char **blob, const char *name)
- {
-+	void *pos = e->pos;
-+
- 	if (unpack_nameX(e, AA_BLOB, name)) {
- 		u32 size;
- 		if (!inbounds(e, sizeof(u32)))
--			return 0;
-+			goto fail;
- 		size = le32_to_cpu(get_unaligned((__le32 *) e->pos));
- 		e->pos += sizeof(u32);
- 		if (inbounds(e, (size_t) size)) {
-@@ -345,6 +367,9 @@ static size_t unpack_blob(struct aa_ext *e, char **blob, const char *name)
- 			return size;
- 		}
- 	}
-+
-+fail:
-+	e->pos = pos;
- 	return 0;
- }
- 
-@@ -361,9 +386,10 @@ static int unpack_str(struct aa_ext *e, const char **string, const char *name)
- 			if (src_str[size - 1] != 0)
- 				goto fail;
- 			*string = src_str;
-+
-+			return size;
- 		}
- 	}
--	return size;
- 
- fail:
- 	e->pos = pos;
 -- 
 2.20.1
 
