@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758BDC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E669C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7F220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63AC20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381614;
-	bh=a2w4CYDBcGWKAeQc/xMACf+a/RKVnsKjdeVupWJ8Ix8=;
+	s=default; t=1568381625;
+	bh=K6pKLWXHqc+Yt0nYkI/jxp9x1HNQc4F9C1cm09K8eFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0l4ZxiFD6eLeP0Llk+qDiRYD5rCJtRkz2i9UHe22Y0QI/Fja2QLVWR8fVnwka9LKG
-	 0rZeaFh/ze7vImLgASqOdZ+QBu0NWWXZT5lq2pGjPUzkF1WFONOufJ1siYYd9I5jtw
-	 g/G2p9gmUcm0n/Rb/u/e9VJO0S1RY1fjxooG4ZI4=
+	b=jVFU1Q+2Kzt5LpZUGaOdtE0nxwe0L515bUDvJ7EgxGaL4SSfw8WgMTq7Qik8/Wpm3
+	 URszj5cp5pTtBkFIDH9CCJw+mYnAIR2EGKQ907ix1vfYngNK+WBTv917pxaPmCuaLs
+	 a1dF1rH2jQ1vkia/r+I0G9cEgAC4WwmolbztNPQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388677AbfIMNKI (ORCPT
+        id S2391760AbfIMNdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34888 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:33:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388665AbfIMNKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:06 -0400
+        id S2388524AbfIMNJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:36 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5282214D8;
-        Fri, 13 Sep 2019 13:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D566720CC7;
+        Fri, 13 Sep 2019 13:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380205;
-        bh=a2w4CYDBcGWKAeQc/xMACf+a/RKVnsKjdeVupWJ8Ix8=;
+        s=default; t=1568380175;
+        bh=K6pKLWXHqc+Yt0nYkI/jxp9x1HNQc4F9C1cm09K8eFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtA2iz2nU1EYIUjq5XD/G9OQEWAG7/0zf82lr/ScvBgvX3AGm5VNtgmL5+dfR30h7
-         y7AqP0JXbe/yPxGl/eA99L0KX4/aMVlwwpObgjCuk2zaiTfY34Y/YDoVEB+gpJ8Y5e
-         YR3GFhwsrG1lOLMs7OEjNqAB4U0BL9oTTJhOQ5uU=
+        b=OBmPFQBe02QarFq7wYcIaAqzjT3zG2lp0eS84Dxp0vgc5tVxHCJzSDc+31j7FYNcm
+         YcW1MVX3Mie2XvGsZv/pXTaSWCwJu/Nx7RjV9zeClJXr0gGFMvray2N/6/iGREduim
+         4oIQpZwqbhXIp3cvDZZ3zTt+NNZyVIJEqR3yJ8H0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.14 13/21] batman-adv: Only read OGM tvlv_len after buffer len check
-Date:   Fri, 13 Sep 2019 14:07:06 +0100
-Message-Id: <20190913130506.836333693@linuxfoundation.org>
+        syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.9 06/14] xfrm: clean up xfrm protocol checks
+Date:   Fri, 13 Sep 2019 14:06:59 +0100
+Message-Id: <20190913130444.653504118@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
-References: <20190913130501.285837292@linuxfoundation.org>
+In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
+References: <20190913130440.264749443@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,81 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
+commit dbb2483b2a46fbaf833cfb5deb5ed9cace9c7399 upstream.
 
-Multiple batadv_ogm_packet can be stored in an skbuff. The functions
-batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
-batadv_iv_ogm_aggr_packet() to check if there is another additional
-batadv_ogm_packet in the skb or not before they continue processing the
-packet.
+In commit 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
+I introduced a check for xfrm protocol, but according to Herbert
+IPSEC_PROTO_ANY should only be used as a wildcard for lookup, so
+it should be removed from validate_tmpl().
 
-The length for such an OGM is BATADV_OGM_HLEN +
-batadv_ogm_packet->tvlv_len. The check must first check that at least
-BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
+And, IPSEC_PROTO_ANY is expected to only match 3 IPSec-specific
+protocols, this is why xfrm_state_flush() could still miss
+IPPROTO_ROUTING, which leads that those entries are left in
+net->xfrm.state_all before exit net. Fix this by replacing
+IPSEC_PROTO_ANY with zero.
 
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+This patch also extracts the check from validate_tmpl() to
+xfrm_id_proto_valid() and uses it in parse_ipsecrequest().
+With this, no other protocols should be added into xfrm.
+
+Fixes: 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
+Reported-by: syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/bat_iv_ogm.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ include/net/xfrm.h    |   17 +++++++++++++++++
+ net/key/af_key.c      |    4 +++-
+ net/xfrm/xfrm_state.c |    2 +-
+ net/xfrm/xfrm_user.c  |   14 +-------------
+ 4 files changed, 22 insertions(+), 15 deletions(-)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -450,17 +450,23 @@ static u8 batadv_hop_penalty(u8 tq, cons
-  * batadv_iv_ogm_aggr_packet - checks if there is another OGM attached
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm_packet: potential OGM in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
--				      __be16 tvlv_len)
-+static bool
-+batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
-+			  const struct batadv_ogm_packet *ogm_packet)
- {
- 	int next_buff_pos = 0;
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1297,6 +1297,23 @@ static inline int xfrm_state_kern(const
+ 	return atomic_read(&x->tunnel_users);
+ }
  
--	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm_packet);
-+	if (next_buff_pos > packet_len)
++static inline bool xfrm_id_proto_valid(u8 proto)
++{
++	switch (proto) {
++	case IPPROTO_AH:
++	case IPPROTO_ESP:
++	case IPPROTO_COMP:
++#if IS_ENABLED(CONFIG_IPV6)
++	case IPPROTO_ROUTING:
++	case IPPROTO_DSTOPTS:
++#endif
++		return true;
++	default:
 +		return false;
++	}
++}
 +
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm_packet->tvlv_len);
++/* IPSEC_PROTO_ANY only matches 3 IPsec protocols, 0 could match all. */
+ static inline int xfrm_id_proto_match(u8 proto, u8 userproto)
+ {
+ 	return (!userproto || proto == userproto ||
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -1969,8 +1969,10 @@ parse_ipsecrequest(struct xfrm_policy *x
  
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -488,7 +494,7 @@ static void batadv_iv_ogm_send_to_if(str
+ 	if (rq->sadb_x_ipsecrequest_mode == 0)
+ 		return -EINVAL;
++	if (!xfrm_id_proto_valid(rq->sadb_x_ipsecrequest_proto))
++		return -EINVAL;
  
- 	/* adjust all flags and log packets */
- 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
--					 batadv_ogm_packet->tvlv_len)) {
-+					 batadv_ogm_packet)) {
- 		/* we might have aggregated direct link packets with an
- 		 * ordinary base packet
- 		 */
-@@ -1838,7 +1844,7 @@ static int batadv_iv_ogm_receive(struct
+-	t->id.proto = rq->sadb_x_ipsecrequest_proto; /* XXX check proto */
++	t->id.proto = rq->sadb_x_ipsecrequest_proto;
+ 	if ((mode = pfkey_mode_to_xfrm(rq->sadb_x_ipsecrequest_mode)) < 0)
+ 		return -EINVAL;
+ 	t->mode = mode;
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -2168,7 +2168,7 @@ void xfrm_state_fini(struct net *net)
+ 	unsigned int sz;
  
- 	/* unpack the aggregated packets and process them one by one */
- 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					 ogm_packet->tvlv_len)) {
-+					 ogm_packet)) {
- 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
+ 	flush_work(&net->xfrm.state_hash_work);
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
++	xfrm_state_flush(net, 0, false);
+ 	flush_work(&xfrm_state_gc_work);
  
- 		ogm_offset += BATADV_OGM_HLEN;
+ 	WARN_ON(!list_empty(&net->xfrm.state_all));
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1452,20 +1452,8 @@ static int validate_tmpl(int nr, struct
+ 			return -EINVAL;
+ 		}
+ 
+-		switch (ut[i].id.proto) {
+-		case IPPROTO_AH:
+-		case IPPROTO_ESP:
+-		case IPPROTO_COMP:
+-#if IS_ENABLED(CONFIG_IPV6)
+-		case IPPROTO_ROUTING:
+-		case IPPROTO_DSTOPTS:
+-#endif
+-		case IPSEC_PROTO_ANY:
+-			break;
+-		default:
++		if (!xfrm_id_proto_valid(ut[i].id.proto))
+ 			return -EINVAL;
+-		}
+-
+ 	}
+ 
+ 	return 0;
 
 
