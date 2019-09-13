@@ -2,146 +2,220 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF0FC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE2AC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724CD2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568397919;
-	bh=hMS4vWxuaEBLE8yPr7tk2aJPR/Tk+t6RWfDGBoOwgzg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r/1tkH4sEmrXMrXxy5JXA5lpAY/Teep2hY/jcRMMigxhIl/jNFaYLNIYdSPhCPeSu
-	 woE/EK230cc2NhMM5ul3S1SN6AJN7bt/oGHCN6WHD2WdVySu92Mmq3eXwueA5O2HKf
-	 1Yq7lYpgeawKdU0kDEQAYDNo4MOcd0GJeK9/an1I=
+	by mail.kernel.org (Postfix) with ESMTP id F127E2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388618AbfIMSFS (ORCPT
+        id S2388771AbfIMSF2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 14:05:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38806 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387471AbfIMSFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 14:05:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6FeydvuMSyFH5WFdFmV29KNR4XubywUJhosL4frnFWg=; b=ORJ/R7wjjla/6INq3ICv5Ux+n
-        LOzC4bRtAQsQAf0M+n+kS+iOctQArTc9sBuiB3spkNC4fTnGg8TpGFeoDRRiW9IPEDHpfGbtrNXHf
-        kjmgQqe9ujn85tmVTkl0CNkpCGmKBVvInLpnUVlsiaaTQhqYcBx3W2KWPAE6lfEfZpthVUKheBQ9H
-        O+bsrbGrASxDCmo5LkuNyUiERPLnDrxs0i/fEXA6piLbbLrd4bf4RGGgz1Fh7/zcjBX2WQuQAmCTz
-        4HQRG34Pjg8doJ/Itbuh9Yys93zYHlaa+fc4UDwZAZtbg9bO1F9TFpLCcX6Z6ZI6gaUaHEpn6wesw
-        o1umAXYvA==;
-Received: from 177.96.232.144.dynamic.adsl.gvt.net.br ([177.96.232.144] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i8pwa-0000Qa-P3; Fri, 13 Sep 2019 18:05:17 +0000
-Date:   Fri, 13 Sep 2019 15:05:12 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Linux Edac Mailing List <linux-edac@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>
-Subject: Re: [PATCH 0/7] Address most issues when building with W=1
-Message-ID: <20190913150512.6c4e4d87@coco.lan>
-In-Reply-To: <20190913175320.GD4190@zn.tnic>
-References: <cover.1568385816.git.mchehab+samsung@kernel.org>
-        <20190913175320.GD4190@zn.tnic>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 13 Sep 2019 14:05:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35694 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387471AbfIMSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 14:05:28 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9FEB5307CDFC;
+        Fri, 13 Sep 2019 18:05:27 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4855F60600;
+        Fri, 13 Sep 2019 18:05:27 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 12:05:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ben Luo <luoben@linux.alibaba.com>
+Cc:     cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v2] vfio/type1: avoid redundant PageReserved checking
+Message-ID: <20190913120526.363e7592@x1.home>
+In-Reply-To: <5c9c57ba-ca5f-f080-3bb0-417a08788235@linux.alibaba.com>
+References: <20190827124041.4f986005@x1.home>
+        <3517844d6371794cff59b13bf9c2baf1dcbe571c.1566966365.git.luoben@linux.alibaba.com>
+        <20190828095501.12e71bd3@x1.home>
+        <6c234632-b7e9-45c7-3d70-51a4c83161f6@linux.alibaba.com>
+        <20190829110601.6dd74052@x1.home>
+        <5c9c57ba-ca5f-f080-3bb0-417a08788235@linux.alibaba.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 13 Sep 2019 18:05:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 13 Sep 2019 19:53:20 +0200
-Borislav Petkov <bp@alien8.de> escreveu:
+On Mon, 2 Sep 2019 15:32:42 +0800
+Ben Luo <luoben@linux.alibaba.com> wrote:
 
-> On Fri, Sep 13, 2019 at 11:50:25AM -0300, Mauro Carvalho Chehab wrote:
-> > There is a recent discussion at KS ML with regards to use W=3D1 as defa=
-ult.
-> >=20
-> > No idea if this will happen or not, but it doesn't hurt cleaning up W=
-=3D1
-> > warnings from the EDAC subsystem, specially since it helps to cleanup
-> > a few things.
-> >=20
-> > This patch series addresses most of such warnings.  After this series,
-> > there will be just two W=3D1 warnings:
-> >=20
-> > 1) i5100 EDAC driver:
-> >=20
-> > 	drivers/edac/i5100_edac.c: In function =E2=80=98i5100_read_log=E2=80=
-=99:
-> > 	drivers/edac/i5100_edac.c:487:11: warning: variable =E2=80=98ecc_loc=
-=E2=80=99 set but not used [-Wunused-but-set-variable]
-> > 	  487 |  unsigned ecc_loc =3D 0;
-> > 	      |           ^~~~~~~
-> >=20
-> >=20
-> >    The ecc_loc contents is filled from MC data, but it is not used anyw=
-ere.
-> >    The i5100 MC is very old: the affected code was added in 2008. It sh=
-ould
-> >    probably be safe to just drop the corresponding data, but, as it may
-> >    contain some relevant info, I was a little reticent of doing that.
-> >=20
-> > 2) Xgene EDAC driver:
-> >=20
-> > 	drivers/edac/xgene_edac.c: In function =E2=80=98xgene_edac_rb_report=
-=E2=80=99:
-> > 	drivers/edac/xgene_edac.c:1486:7: warning: variable =E2=80=98address=
-=E2=80=99 set but not used [-Wunused-but-set-variable]
-> > 	 1486 |   u32 address;
-> > 	      |       ^~~~~~~
-> >=20
-> >    I suspect that the content of the address field should actually be u=
-sed on
-> >    at least some of the logs. =20
->=20
-> + Khuong Dinh <khuong@os.amperecomputing.com> for that.
+> 在 2019/8/30 上午1:06, Alex Williamson 写道:
+> > On Fri, 30 Aug 2019 00:58:22 +0800
+> > Ben Luo <luoben@linux.alibaba.com> wrote:
+> >  
+> >> 在 2019/8/28 下午11:55, Alex Williamson 写道:  
+> >>> On Wed, 28 Aug 2019 12:28:04 +0800
+> >>> Ben Luo <luoben@linux.alibaba.com> wrote:
+> >>>     
+> >>>> currently, if the page is not a tail of compound page, it will be
+> >>>> checked twice for the same thing.
+> >>>>
+> >>>> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+> >>>> ---
+> >>>>    drivers/vfio/vfio_iommu_type1.c | 3 +--
+> >>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> >>>> index 054391f..d0f7346 100644
+> >>>> --- a/drivers/vfio/vfio_iommu_type1.c
+> >>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >>>> @@ -291,11 +291,10 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
+> >>>>    static bool is_invalid_reserved_pfn(unsigned long pfn)
+> >>>>    {
+> >>>>    	if (pfn_valid(pfn)) {
+> >>>> -		bool reserved;
+> >>>>    		struct page *tail = pfn_to_page(pfn);
+> >>>>    		struct page *head = compound_head(tail);
+> >>>> -		reserved = !!(PageReserved(head));
+> >>>>    		if (head != tail) {
+> >>>> +			bool reserved = PageReserved(head);
+> >>>>    			/*
+> >>>>    			 * "head" is not a dangling pointer
+> >>>>    			 * (compound_head takes care of that)  
+> >>> Thinking more about this, the code here was originally just a copy of
+> >>> kvm_is_mmio_pfn() which was simplified in v3.12 with the commit below.
+> >>> Should we instead do the same thing here?  Thanks,
+> >>>
+> >>> Alex  
+> >> ok, and kvm_is_mmio_pfn() has also been updated since then, I will take
+> >> a look at that and compose a new patch  
+> > I'm not sure if the further updates are quite as relevant for vfio, but
+> > appreciate your review of them.  Thanks,
+> >
+> > Alex  
+> 
+> After studying the related code, my personal understandings are:
+> 
+> kvm_is_mmio_pfn() is used to find out whether a memory range is MMIO 
+> mapped so that to set
+> the proper MTRR TYPE to spte.
+> 
+> is_invalid_reserved_pfn() is used in two scenarios:
+>      1. to tell whether a page should be counted against user's mlock 
+> limits, as the function's name
+> implies, all 'invalid' PFNs who are not backed by struct page and those 
+> reserved pages (including
+> zero page and those from NVDIMM DAX) should be excluded.
+> 2. to check if we have got a valid and pinned pfn for the vma 
+> with VM_PFNMAP flag.
+> 
+> So, for the zero page and 'RAM' backed PFNs without 'struct page', 
+> kvm_is_mmio_pfn() should
+> return false because they are not MMIO and are cacheable, but 
+> is_invalid_reserved_pfn() should
+> return true since they are truely reserved or invalid and should not be 
+> counted against user's
+> mlock limits.
+> 
+> For fsdax-page, current get_user_pages() returns -EOPNOTSUPP, and VFIO 
+> also returns this
+> error code to user, seems not support fsdax for now, so there is no 
+> chance to call into
+> is_invalid_reserved_pfn() currently, if fsdax is to be supported, not 
+> only this function needs to be
+> updated, vaddr_get_pfn() also needs some changes.
+> 
+> Now, with the assumption that PFNs of compound pages with reserved bit 
+> set in head will not be
+> passed to is_invalid_reserved_pfn(), we can simplify this function to:
+> 
+> static bool is_invalid_reserved_pfn(unsigned long pfn)
+> {
+>          if (pfn_valid(pfn))
+>                  return PageReserved(pfn_to_page(pfn));
+> 
+>          return true;
+> }
+> 
+> But, I am not sure if the assumption above is true, if not, we still 
+> need to check the reserved bit of
+> head for a tail page as this PATCH v2 does.
 
-Thanks!
+I believe what you've described is correct.  Andrea, have we missed
+anything?  Thanks,
 
->=20
-> > I may eventually submit patches later to address the above cases, but l=
-et's
-> > solve first the other cases, as they all sound trivial enough.
-> >=20
-> > Mauro Carvalho Chehab (7):
-> >   EDAC: i5100_edac: get rid of an unused var
-> >   EDAC: i7300_edac: rename a kernel-doc var description
-> >   EDAC: i7300_edac: fix a kernel-doc syntax
-> >   EDAC: i5400_edac: print type at debug message
-> >   EDAC: i5400_edac: get rid of some unused vars
-> >   EDAC: sb_edac: get rid of unused vars
-> >   EDAC: skx_common: get rid of unused type var
-> >=20
-> >  drivers/edac/i5100_edac.c |  2 --
-> >  drivers/edac/i5400_edac.c | 15 +++------------
-> >  drivers/edac/i7300_edac.c |  4 ++--
-> >  drivers/edac/sb_edac.c    | 21 ++++++++-------------
-> >  drivers/edac/skx_common.c |  5 +----
-> >  5 files changed, 14 insertions(+), 33 deletions(-) =20
->=20
-> Looks ok to me at a quick glance, ACK.
->=20
-> I've already sent the 5.4 pull request to Linus so you could queue those
-> after -rc1. It's not like they're urgent or so.
+Alex
 
-Yeah, that's my plan.
 
-Thanks,
-Mauro
+> >  
+> >>> commit 11feeb498086a3a5907b8148bdf1786a9b18fc55
+> >>> Author: Andrea Arcangeli <aarcange@redhat.com>
+> >>> Date:   Thu Jul 25 03:04:38 2013 +0200
+> >>>
+> >>>       kvm: optimize away THP checks in kvm_is_mmio_pfn()
+> >>>       
+> >>>       The checks on PG_reserved in the page structure on head and tail pages
+> >>>       aren't necessary because split_huge_page wouldn't transfer the
+> >>>       PG_reserved bit from head to tail anyway.
+> >>>       
+> >>>       This was a forward-thinking check done in the case PageReserved was
+> >>>       set by a driver-owned page mapped in userland with something like
+> >>>       remap_pfn_range in a VM_PFNMAP region, but using hugepmds (not
+> >>>       possible right now). It was meant to be very safe, but it's overkill
+> >>>       as it's unlikely split_huge_page could ever run without the driver
+> >>>       noticing and tearing down the hugepage itself.
+> >>>       
+> >>>       And if a driver in the future will really want to map a reserved
+> >>>       hugepage in userland using an huge pmd it should simply take care of
+> >>>       marking all subpages reserved too to keep KVM safe. This of course
+> >>>       would require such a hypothetical driver to tear down the huge pmd
+> >>>       itself and splitting the hugepage itself, instead of relaying on
+> >>>       split_huge_page, but that sounds very reasonable, especially
+> >>>       considering split_huge_page wouldn't currently transfer the reserved
+> >>>       bit anyway.
+> >>>       
+> >>>       Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> >>>       Signed-off-by: Gleb Natapov <gleb@redhat.com>
+> >>>
+> >>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> >>> index d2836788561e..0fc25aed79a8 100644
+> >>> --- a/virt/kvm/kvm_main.c
+> >>> +++ b/virt/kvm/kvm_main.c
+> >>> @@ -102,28 +102,8 @@ static bool largepages_enabled = true;
+> >>>    
+> >>>    bool kvm_is_mmio_pfn(pfn_t pfn)
+> >>>    {
+> >>> -       if (pfn_valid(pfn)) {
+> >>> -               int reserved;
+> >>> -               struct page *tail = pfn_to_page(pfn);
+> >>> -               struct page *head = compound_trans_head(tail);
+> >>> -               reserved = PageReserved(head);
+> >>> -               if (head != tail) {
+> >>> -                       /*
+> >>> -                        * "head" is not a dangling pointer
+> >>> -                        * (compound_trans_head takes care of that)
+> >>> -                        * but the hugepage may have been splitted
+> >>> -                        * from under us (and we may not hold a
+> >>> -                        * reference count on the head page so it can
+> >>> -                        * be reused before we run PageReferenced), so
+> >>> -                        * we've to check PageTail before returning
+> >>> -                        * what we just read.
+> >>> -                        */
+> >>> -                       smp_rmb();
+> >>> -                       if (PageTail(tail))
+> >>> -                               return reserved;
+> >>> -               }
+> >>> -               return PageReserved(tail);
+> >>> -       }
+> >>> +       if (pfn_valid(pfn))
+> >>> +               return PageReserved(pfn_to_page(pfn));
+> >>>    
+> >>>           return true;
+> >>>    }  
+
