@@ -2,107 +2,134 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D48C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271BDC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02752089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 17:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FCE2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="lrI5FdZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbfIMR6G (ORCPT
+        id S1731186AbfIMSAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 13:58:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36772 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfIMR6F (ORCPT
+        Fri, 13 Sep 2019 14:00:17 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42425 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfIMSAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 13:58:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 67so30223981oto.3;
-        Fri, 13 Sep 2019 10:58:04 -0700 (PDT)
+        Fri, 13 Sep 2019 14:00:16 -0400
+Received: by mail-io1-f65.google.com with SMTP id n197so64512008iod.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 11:00:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sk6zRwIJkZ2nyuNbu/AWU1hA4NRPSM/+3OMmqohibwM=;
+        b=lrI5FdZBZbr1i2i77IO8wCLdCsTcgGeHbG8y41JH7Ws/WAQU7J5fsrqfY12FGrQoTg
+         a8xct/3ZzUwV7y27q3/mHMdsQpWSdIbreEVgNft/rQJq/W09w8kV/lcIFru/w6ClWt5d
+         C1PlJa10gJXQYJ/xiVhD0+X5tdwlE5YsY4TyP9l7+HL8AOEeq4dt5Srq3JG6hIn3ifEc
+         dyYCHNRZCfEqw7ByiqYt6T5PeGSs4k0JJm41MxglB3Y7HRjd1Cl1ek+mQy4TYusGP5GJ
+         yuy8bu8vx/IDy7yCiI7XLWON9aqo449Yj5d3ZDLpqYhGaWx/cI7+0gKPWdqOx9s05wzS
+         ctRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Fc8ArwY2yHMv3VLGfSx43u0p3YGfGGpe4m6tepZiINk=;
-        b=r3aVCvVytjIjwe/cpovpTALdFJONhd7f610WgoiZEDiMVJNy1HdVbeF0aKgJk0t945
-         WpuLHfcCTs38glsv9SCnjV7I+pY3qgdc6ltQochYaIUQgQBo+FfzUAdlYFr7jozRcZ+L
-         PxBjxVZM2CXEjIzKJCbzge9oF0PRPmk7G9yDbnnJz0w/6H6aT2cwHV3tXGhhagsGcz+z
-         h4lsYGmC/bZiqpWDi0P02yiVgBPuHX/tgeO/p00rSwblhk3fGapaueGsSy/8g6gzl/wB
-         80VgY/otAS34FZQZC7fWagChA3Z/jeSOKYOLulYeDzwCubybRhs9UtLp8R/ypWYKGSL0
-         khlg==
-X-Gm-Message-State: APjAAAW7Kh8Vhtxkymil/iGIHBRYzaZLG1Og902LfKqrCJmLj0QWaYCD
-        ZNBAVQhZbFCaxx3iw2sLKXjL8OzNmDfTR/32Zqk=
-X-Google-Smtp-Source: APXvYqzyImSnQNT/1nq0D+U2KoEgWBUwap3ooX9gDEXxtzeKquL0nJSL5mI7pRuhD9SS70qXmVNHPZNrhoiX0dxj2SU=
-X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr1341707otq.39.1568397484322;
- Fri, 13 Sep 2019 10:58:04 -0700 (PDT)
+        bh=sk6zRwIJkZ2nyuNbu/AWU1hA4NRPSM/+3OMmqohibwM=;
+        b=EA7HzgZ9GFlb6+HzMmu53ZGOP6Y6lB+IsdrUgTOf/jU4KMp52HIC/HQPmOjp4J3VZV
+         oiddup91xLsJghqSeIYlVnv9mu8r7bZeUL4FLDj6PDrpMOt/tgEKhFNGf37hVr6deQZo
+         ctCnsY7TLZ64uysd12Zza75eu0qi1RBRt0Rwemll9DAY/q9KosFTk6jy+7tvoTRgVzXN
+         djozUaLoOn+pVNIehTkj9zSubw8KMcrzisVBI58CaRXGcbeHqfcnNRM9v8b2Li5Kbs47
+         eFqVGN78vuDCyRs8ifbEOYwmJsF5Dg+ZCW11wOxF6podnuS3si9YZJYUtwl57xgwMxBM
+         zo6Q==
+X-Gm-Message-State: APjAAAU7OSOJxZc5hmLza2nOgLmDy8vSTVcbfe7do8n2Im7YUhxLBIr1
+        3mE4TnY3sUJkm+tMYdyzZQoVi4coGS7L6IYYwjuBaQ==
+X-Google-Smtp-Source: APXvYqwSlwzTZNcbl3yCX0l6je8Y8gPsFxZbFPl9h2VkEqTXGEpwHg+21I17GTvPkbxSq7iF+dim1lFL4xqXx75vtN0=
+X-Received: by 2002:a6b:6f0d:: with SMTP id k13mr1175320ioc.277.1568397615643;
+ Fri, 13 Sep 2019 11:00:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
- <20190913010937.7fc20d93@lwn.net> <20190913114849.GP20699@kadam> <b579153b-3f6d-722c-aea8-abc0d026fa0d@infradead.org>
-In-Reply-To: <b579153b-3f6d-722c-aea8-abc0d026fa0d@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 13 Sep 2019 19:57:52 +0200
-Message-ID: <CAMuHMdWZyJ-z6dLFMOdCLotP8J114hGX9C7+bGgxk9ReQ-Si=w@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+References: <20190729000631.GA24165@embeddedor> <201907290936.F5F486A6F@keescook>
+In-Reply-To: <201907290936.F5F486A6F@keescook>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 13 Sep 2019 19:00:04 +0100
+Message-ID: <CAOesGMh=H8MnZYH7xUFjF4rGWTt+cdkOGfDG4gr=Uaa1mU8A+A@mail.gmail.com>
+Subject: Re: [PATCH] usb: phy: ab8500-usb: Mark expected switch fall-throughs
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
+        Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
-
-On Fri, Sep 13, 2019 at 5:00 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 9/13/19 4:48 AM, Dan Carpenter wrote:
-> >> So I'm expecting to take this kind of stuff into Documentation/.  My own
-> >> personal hope is that it can maybe serve to shame some of these "local
-> >> quirks" out of existence.  The evidence from this brief discussion suggests
-> >> that this might indeed happen.
+On Mon, Jul 29, 2019 at 5:36 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sun, Jul 28, 2019 at 07:06:31PM -0500, Gustavo A. R. Silva wrote:
+> > Mark switch cases where we are expecting to fall through.
 > >
-> > I don't think it's shaming, I think it's validating.  Everyone just
-> > insists that since it's written in the Book of Rules then it's our fault
-> > for not reading it.  It's like those EULA things where there is more
-> > text than anyone can physically read in a life time.
+> > This patch fixes the following warnings:
+> >
+> > drivers/usb/phy/phy-ab8500-usb.c: In function 'ab8500_usb_link_status_update':
+> > drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDB;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:425:2: note: here
+> >   case USB_LINK_NOT_CONFIGURED_8500:
+> >   ^~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDC;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:441:2: note: here
+> >   case USB_LINK_STD_HOST_NC_8500:
+> >   ^~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDA;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:460:2: note: here
+> >   case USB_LINK_HM_IDGND_8500:
+> >   ^~~~
+> > drivers/usb/phy/phy-ab8500-usb.c: In function 'ab8505_usb_link_status_update':
+> > drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDB;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:333:2: note: here
+> >   case USB_LINK_NOT_CONFIGURED_8505:
+> >   ^~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDC;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:353:2: note: here
+> >   case USB_LINK_STD_HOST_NC_8505:
+> >   ^~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    event = UX500_MUSB_RIDA;
+> >    ~~~~~~^~~~~~~~~~~~~~~~~
+> > drivers/usb/phy/phy-ab8500-usb.c:371:2: note: here
+> >   case USB_LINK_HM_IDGND_8505:
+> >   ^~~~
+> >
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 >
-> Yes, agreed.
->
-> > And the documentation doesn't help.  For example, I knew people's rules
-> > about capitalizing the subject but I'd just forget.  I say that if you
-> > can't be bothered to add it to checkpatch then it means you don't really
-> > care that strongly.
->
-> If a subsystem requires a certain spelling/capitalization in patch email
-> subjects, it should be added to MAINTAINERS IMO.  E.g.,
-> E:      NuBus
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Oh, I understood the question differently.  I thought it was about
-"sub: system: Fix foo" vs. "sub: system: fix foo".
+Acked-by: Olof Johansson <olof@lixom.net>
 
-For simple and trivial things, I tend to make changes while applying, as that's
-usually less work than complaining, and verifying that it's been fixed in the
-next (if any) version n days/weeks/months later.
+Felipe, Greg, this is still throwing warnings, several months later --
+patch was never applied.
 
-Gr{oetje,eeting}s,
+Mind picking it up as a fix to get a quieter build?
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-Olof
