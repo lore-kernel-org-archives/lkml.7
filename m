@@ -2,110 +2,175 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D25C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0256EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F3620693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD8720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDywiucK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tf9r7it5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389934AbfIMQfV (ORCPT
+        id S2390163AbfIMQf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 12:35:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40664 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387822AbfIMQfV (ORCPT
+        Fri, 13 Sep 2019 12:35:29 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36784 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387822AbfIMQf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 12:35:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so15533829pgj.7;
-        Fri, 13 Sep 2019 09:35:20 -0700 (PDT)
+        Fri, 13 Sep 2019 12:35:28 -0400
+Received: by mail-io1-f67.google.com with SMTP id b136so63959363iof.3;
+        Fri, 13 Sep 2019 09:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=U1A+7K7DBCYzZ10LaOWX7DewnzC97b4Covgem9tPITc=;
-        b=WDywiucKcTd0TVEp5ZnkILQ3wgFeKxmG4pJuqgS4DyzPjMacxPh4ZxfK8KjJHI+iXP
-         zmlKc+R7wpq+uJM57/COIqb9U7qbCJGVk3yxz8BP9Kv8B5CkktfoGswxvL4zE/PXOL91
-         Q0cYM1ZHnEZWUQcXweTJA6zJWDTf9ZrGrilmKZyz0JVO+Vstxc6G88AsEtpZO6BK+mXq
-         DtvlrHN+SlH4eMhNh9gsB/bF/k0neI1OPvHCn/H48KeaIDC0kNX5/lFrKVGuO/s+dnnf
-         x9w33nx6mfwNk0ApBaRG+WXN1oMC6tEW/D58bHZTFgbIsxPIgfjVfR7DI7ZmbwWAPS/4
-         mOxw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KjwJiwmcH2/79ybI6jcq3ploVvAGPGEEuHdJsNide34=;
+        b=Tf9r7it5Nm7p62KuSGGb2k8JtyI/gS7gqlZcv+2cBaRdH/9pRVAIuSBQrX4XqlfCV3
+         Bp1wmypp2i1tkjtr3pUaVrd/MzIS+whjmHWKnbPHlt3qZ+M7ThRXAmgL7R7a/oSFs3S6
+         AbgFSXAVujz552kbjEVI+7DS2dCCI8ytdols0iBbY0rJyMTtlnF9+nMuTV7OJXQo7rpz
+         xkm0TRUwWVghrcrpVajExH89/J4whoqJLSUGZe/IGV3GVtmNxZ6VYSFrpeHEmvWF089g
+         bFU050zLq86T/khbSfqIAltZY6/Z3MSoNVa7qeRi4tOL9C+C4y5P+fdtSkZPSYQKGOtC
+         fGng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=U1A+7K7DBCYzZ10LaOWX7DewnzC97b4Covgem9tPITc=;
-        b=rtK9s8JvqWf7nr8wuG6rzP2SDkm9sx1khi26fZ8RzKUAlSpYy31szL9tMrDp8KxJ6Y
-         RwUKMhzBQUcgg5QmABNKeNr+i1x4lKOMiz6zl4fftPI34rvZTAb/Tx+52L6YxlntEKlM
-         VxoW2PAOirETQ38gez2BMRbPfW+S9KpLV9IBOrF/p9Hm//2mrVFGuSFPBQFRYFDMSj75
-         dir5Y/+XDdIeDxb9h5v04xQIv8AyluP0C3mMPLEc/OyP2/S3N4DAMHUSOvWvl5OK8oNc
-         E8/5yCP1HYeoG1qWn/be+iQJ5B6WBbQGTyzY9gMf77nKeJYX+E7ZD6+CAQw39pvwhJ+C
-         mANw==
-X-Gm-Message-State: APjAAAUc2pVcYf7EtX0Qd1FeOKdKZiAA2GFniLpzs88I63BIRBeLalN4
-        gpg2W+24O6IeY48BlzP5I/s=
-X-Google-Smtp-Source: APXvYqw2x57TgLuZYyv7s+sdwpz6y9pno7nl9Tn8GS7DnHpyGJ6XnIwjsmPewtoeMUodWUryGoKfIw==
-X-Received: by 2002:a17:90a:eac7:: with SMTP id ev7mr6337926pjb.61.1568392519733;
-        Fri, 13 Sep 2019 09:35:19 -0700 (PDT)
-Received: from SD ([106.222.13.126])
-        by smtp.gmail.com with ESMTPSA id c62sm40785154pfa.92.2019.09.13.09.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 09:35:19 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 22:05:06 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] security: ima: make use of kmemdup
-Message-ID: <20190913163506.GA30916@SD>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KjwJiwmcH2/79ybI6jcq3ploVvAGPGEEuHdJsNide34=;
+        b=Ntyg0NAkLDxWmIliSMimrJyZWwSoq12rlwMph+h8SPcoeiXmIcxmSLHUWXuGVRWGFe
+         GawKwI0FUyOiAWiBNa0gDxqU1GYzQvVmwZW4gNH16S0GSGkGtQWpZ3k8vP4wVGUN1fgo
+         PBjCISpRDqNoZv0fwQp1ZJIaqVZMCzqummOraLhqKMHfZAc2cIcehT95rEjIsXDVn85M
+         0HZrkzZSLTOxoZWYN9qckkd1YEYftrpzgPo4ZYC6LmsTeOH+Prrs16QLfqf3+ruCd6/Z
+         qmLi675ZazCgc6kbG9EH9NYWUpNtkZ/0qPuq4DwjXvBHScTKAIUiWZDTwfmQudArDwmR
+         lGxg==
+X-Gm-Message-State: APjAAAUq3RFMRD+EOHWEb63Ir8jShEZhdaImRQ0D5yHkhPUTmJCkB0lb
+        hFY7RmJAwmIpV89NJuttE7JrvTAGj7lQUuDeb8M=
+X-Google-Smtp-Source: APXvYqzKeHmSJRvJtlL+yF2VNMXHs6xIV1eggn3tngTE5IZYb9CUEvFC5LomeFzRpoLiqJM8NNneb8dprT+qGrS1nic=
+X-Received: by 2002:a6b:b213:: with SMTP id b19mr714079iof.58.1568392527255;
+ Fri, 13 Sep 2019 09:35:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
+ <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
+ <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
+ <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com> <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
+ <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com>
+In-Reply-To: <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 13 Sep 2019 11:35:16 -0500
+Message-ID: <CAHCN7x+_f_jrttUGyKHBOUyYjkOx0mJxba1Yb3tPm9ee7+21og@mail.gmail.com>
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
+        kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace call to kmalloc followed by memcpy with a direct call
-to kmemdup to achieve same functionality.
+On Fri, Sep 13, 2019 at 10:09 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+>
+> > Am 13.09.2019 um 17:01 schrieb Adam Ford <aford173@gmail.com>:
+> >
+> > On Fri, Sep 13, 2019 at 9:24 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >>
+> >>
+> >>> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
+> >>>
+> >>> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >>>>
+> >>>> Hi Adam,
+> >>>>
+> >>>>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
+> >>>>
+> >>>>>>> +     cpu_cooling_maps: cooling-maps {
+> >>>>>>> +             map0 {
+> >>>>>>> +                     trip = <&cpu_alert0>;
+> >>>>>>> +                     /* Only allow OPP50 and OPP100 */
+> >>>>>>> +                     cooling-device = <&cpu 0 1>;
+> >>>>>>
+> >>>>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
+> >>>>>> understand their meaning (and how it relates to the opp list).
+> >>>>>
+> >>>>> I read through the documentation, but it wasn't completely clear to
+> >>>>> me. AFAICT, the numbers after &cpu represent the min and max index in
+> >>>>> the OPP table when the condition is hit.
+> >>>>
+> >>>> Ok. It seems to use "cooling state" for those and the first is minimum
+> >>>> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
+> >>>> no limits.
+> >>>>
+> >>>> Since here we use the &cpu node it is likely that the "cooling state"
+> >>>> is the same as the OPP index currently in use.
+> >>>>
+> >>>> I have looked through the .dts which use cpu_crit and the picture is
+> >>>> not unique...
+> >>>>
+> >>>> omap4           seems to only define it
+> >>>> am57xx          has two different grade dtsi files
+> >>>> dra7            overwrites critical temperature value
+> >>>> am57xx-beagle   defines a gpio to control a fan
+> >>>
+> >
+> > I am going to push a separate but related RFC with 2 patches in the
+> > series.  This new one will setup the alerts and maps without any
+> > throttling for all omap3's in the first patch.  The second patch will
+> > consolidate the thermal references to omap3.dtsi so omap34, omap36 and
+> > am35 can all use them without having to duplicate the entries.
+> >
+> > It will make the omap36xx changes simpler to manage, because we can
+> > just modify a portion of the entries instead of having the whole
+> > table.
+> >
+> > Once this parallel RFC gets comments/feedback, I'll re-integrate the
+> > omap36xx throttling.
+>
+> Good idea. I have looked over them and they seem to be ok.
 
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- security/integrity/ima/ima_policy.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Rebasing my omap36xx throttling after the v2 RFC I pushed moving the
+omap3-cpu thermal stuff, I modified the omap36xx accordingly to try
+and force the alert condition:
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 6df7f641ff66..1bd77c5eaeb7 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -262,15 +262,14 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	struct ima_rule_entry *nentry;
- 	int i, result;
- 
--	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
--	if (!nentry)
--		return NULL;
--
- 	/*
- 	 * Immutable elements are copied over as pointers and data; only
- 	 * lsm rules can change
- 	 */
--	memcpy(nentry, entry, sizeof(*nentry));
-+	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
-+	if (!nentry)
-+		return NULL;
-+
- 	memset(nentry->lsm, 0, FIELD_SIZEOF(struct ima_rule_entry, lsm));
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--- 
-2.20.1
+&cpu_alert0 {
+     temperature = <55000>; /* millicelsius */
+};
 
+&cpu_cooling_maps {
+     map0 {
+          /* OPP130 and OPP1G are not available above 90C */
+          cooling-device = <&cpu 0 2>;
+     };
+};
+
+I would expect that with the temperature set for 55C, it would have
+done something, but it doesn't appear to be working as I would expect.
+
+# cat /sys/devices/virtual/thermal/thermal_zone0/temp
+58500
+
+# cat /sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies
+300000 600000 800000
+#
+
+:-(
+
+
+>
+> >
+> > adam
+>
+> BR and thanks,
+> Nikolaus
+>
