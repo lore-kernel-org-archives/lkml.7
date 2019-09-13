@@ -2,48 +2,47 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78149C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0C6C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C8C20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0930020693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbfIMPdA (ORCPT
+        id S2389144AbfIMPec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:33:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57372 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfIMPc7 (ORCPT
+        Fri, 13 Sep 2019 11:34:32 -0400
+Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:56490 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388052AbfIMPec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:32:59 -0400
-Received: from [IPv6:2001:8a0:6c2f:b301:66f4:e6a0:633:7a5e] (unknown [IPv6:2001:8a0:6c2f:b301:66f4:e6a0:633:7a5e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ezequiel)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 279BE28B9BE;
-        Fri, 13 Sep 2019 16:32:56 +0100 (BST)
-Message-ID: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
-Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Zhou Yanjie <zhouyanjie@zoho.com>, linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
-        paul.burton@mips.com, linus.walleij@linaro.org,
-        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org,
-        jiaxun.yang@flygoat.com
-Date:   Fri, 13 Sep 2019 16:32:52 +0100
-In-Reply-To: <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
-         <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
-Organization: Collabora
-X-Priority: 1
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 13 Sep 2019 11:34:32 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 9637C182CED28;
+        Fri, 13 Sep 2019 15:34:30 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sheet96_7e8e2efbebd31
+X-Filterd-Recvd-Size: 2567
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 13 Sep 2019 15:34:29 +0000 (UTC)
+Message-ID: <595dffd5c7ba9196522319d2e087c9c1a8e67104.camel@perches.com>
+Subject: Re: [PATCH] checkpatch.pl: Don't complain about nominal authors if
+ there isn't one
+From:   Joe Perches <joe@perches.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Date:   Fri, 13 Sep 2019 08:34:28 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1909131014410.1466-200000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1909131014410.1466-200000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,108 +50,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
-
-Thanks for your interest in this driver, I'm glad
-so see it's more used.
-
-On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
-> Adjust the macro definition name to match the corresponding
-> register name in the datasheet.
+On Fri, 2019-09-13 at 10:22 -0400, Alan Stern wrote:
+> On Thu, 12 Sep 2019, Joe Perches wrote:
 > 
-
-It's not really an issue to have slighlt different
-names on the macros. They are currently sufficiently
-descriptive, and I don't think it's deserves a patch.
-
-Thanks,
-Ezequiel
-
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> > On Thu, 2019-09-12 at 16:55 -0400, Alan Stern wrote:
+> > > checkpatch.pl shouldn't warn about a "Missing Signed-off-by: line by
+> > > nominal patch author" if there is no nominal patch author.  Without
+> > > this change, checkpatch always gives me the following warning:
+> > > 
+> > >         WARNING: Missing Signed-off-by: line by nominal patch author ''
+> > 
+> > When/how does this occur?  Example please.
 > 
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index ffdbfaa..1b1fcb7 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -28,7 +28,7 @@
->  #include <asm/mach-jz4740/dma.h>
->  
->  #define JZ_REG_MMC_STRPCL	0x00
-> -#define JZ_REG_MMC_STATUS	0x04
-> +#define JZ_REG_MMC_STAT		0x04
->  #define JZ_REG_MMC_CLKRT	0x08
->  #define JZ_REG_MMC_CMDAT	0x0C
->  #define JZ_REG_MMC_RESTO	0x10
-> @@ -40,7 +40,7 @@
->  #define JZ_REG_MMC_IREG		0x28
->  #define JZ_REG_MMC_CMD		0x2C
->  #define JZ_REG_MMC_ARG		0x30
-> -#define JZ_REG_MMC_RESP_FIFO	0x34
-> +#define JZ_REG_MMC_RES		0x34
->  #define JZ_REG_MMC_RXFIFO	0x38
->  #define JZ_REG_MMC_TXFIFO	0x3C
->  #define JZ_REG_MMC_DMAC		0x44
-> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_mmc_host *host)
->  
->  	writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
->  	do {
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
->  }
->  
-> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host *host)
->  	writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
->  	udelay(10);
->  	do {
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
->  }
->  
-> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct jz4740_mmc_host *host,
->  {
->  	int status;
->  
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
->  		if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
->  			host->req->cmd->error = -ETIMEDOUT;
-> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc_host *host,
->  	/* For whatever reason there is sometime one word more in the fifo then
->  	 * requested */
->  	timeout = 1000;
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
->  		d = readl(fifo_addr);
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	}
->  
->  	return false;
-> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_mmc_host *host,
->  {
->  	int i;
->  	uint16_t tmp;
-> -	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RESP_FIFO;
-> +	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RES;
->  
->  	if (cmd->flags & MMC_RSP_136) {
->  		tmp = readw(fifo_addr);
-> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
->  	struct mmc_command *cmd = host->cmd;
->  	uint32_t irq_reg, status, tmp;
->  
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	irq_reg = jz4740_mmc_read_irq_reg(host);
->  
->  	tmp = irq_reg;
+> The patch itself is a good example.  Attached to this email is the
+> patch file in the form I keep it (from quilt, not git; note that quilt
+> doesn't do a good job of handling the "---" line so I leave it out and
+> insert it when submitting the patch).  Try saving the attachment and
+> running it through checkpatch.pl.  Here's what I get:
 
+Andrew?
 
+Does checkpatch emit this warning for you on
+your quilt content?
+
+If so, how do you handle it?
+
+> $ scripts/checkpatch.pl /tmp/checkpatch-author-fix.patch 
+> WARNING: Missing Signed-off-by: line by nominal patch author ''
+> 
+> total: 0 errors, 1 warnings, 8 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> /tmp/checkpatch-author-fix.patch has style problems, please review.
+> 
+> NOTE: If any of the errors are false positives, please report
+>       them to the maintainer, see CHECKPATCH in MAINTAINERS.
+> 
+> 
+> Would you like me to resubmit the patch with this example added to the
+> patch description?
+> 
+> Alan Stern
 
