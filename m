@@ -2,140 +2,115 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB769C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4060CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF3121479
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="LI1o/E3k"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE04214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391022AbfIMPJY (ORCPT
+        id S2391069AbfIMPJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:09:24 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:27397 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390046AbfIMPJY (ORCPT
+        Fri, 13 Sep 2019 11:09:34 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44256 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390046AbfIMPJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568387362;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=MjDaNE23KGmdcexxJE0YAkaPMCvMuA5pb1NItekYG4A=;
-        b=LI1o/E3kaCf9Augbo30pbZlQ5M0sVyBh96Ra84FNbjvgosJfw6/K9Qe8uIci1xJBCb
-        oXSV584w+uqfOEoXirnhGS087d+wBOSMvv1q50lL20PLxYE/3okNsnm6fWQNx2nLE57V
-        UkEH+w1Muu46ACxZWfccJS6u+c3vqxA4xPGpnL+WrXEtwJ/2QC1Aed3/Yi7xqkiuoTWs
-        bDA+YNH+Im0dZ9gQ3IJIDGICcegeONFyeiJSIGsWWy8BSWPsaPZIkYLxz+ZgWj6j0OBA
-        KQzpnKnx3YS7jYZhUji3DoLGRzEh4Wpw73C2tC2xgdlOsy6L0Lod3FQXZJtG1KSAHjUV
-        Ht2A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8DF8xIqW
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 13 Sep 2019 17:08:59 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
-Date:   Fri, 13 Sep 2019 17:09:00 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com>
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com> <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com> <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 13 Sep 2019 11:09:34 -0400
+Received: by mail-vs1-f65.google.com with SMTP id w195so18812272vsw.11;
+        Fri, 13 Sep 2019 08:09:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pIMiAKhzqydevxJ4SfxaOnAOQBbzxpXSTX/hNzVTWH8=;
+        b=DjzBNiaKjsMGHR07OIEmEen2+Lt/bBmp1Im7bvBL0Qyigc+KaPcUpSijaBk9qUvjPS
+         8xfSM5N0ecxBI+SLJedJHEnX6TEJ0j27vOUx8Jw7FCZk7SUcTjqva1YAQHwjSIUJhkG2
+         GEiQHAMjFoj/YGlkmia0w46DElvxbqcHNJpI1iZdYVhZIStFlgXRq8gJyNcoBXCNKZSH
+         0iexM3SpO7cNn/bBajlIeVTnbG+kjwHbLwFA2HedyLW3QL7/twvq7bHJc388NUIJRsTi
+         FDvnMsRl9dBxXBgGW4J2MjPU5mMBTH9gr7+90lAa5v5r2/0fagq2vKuVajogwmzeCInk
+         SO+g==
+X-Gm-Message-State: APjAAAUQzT4a0f/FCHNPJOjMVWMeOBcsgt2oTHBGpg9gScXdnqCVXaOR
+        q8Gv7DUwXT9t2pkCTa7Tl1dSVierkUbfOUOmwj4=
+X-Google-Smtp-Source: APXvYqylu2hrm9+jShjlZBaJJtsqTtMpCZ46oIHdTl6adXUbUxfPuEUiLtfCfDfh1ckXZtmG7LMM+KfUH5p8IZnGJJ4=
+X-Received: by 2002:a05:6102:195:: with SMTP id r21mr21052393vsq.210.1568387373173;
+ Fri, 13 Sep 2019 08:09:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190913130559.669563815@linuxfoundation.org> <20190913130606.981926197@linuxfoundation.org>
+ <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
+ <20190913144627.GH1546@sasha-vm> <20190913145456.GA456842@kroah.com> <20190913150111.GI1546@sasha-vm>
+In-Reply-To: <20190913150111.GI1546@sasha-vm>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Fri, 13 Sep 2019 11:09:22 -0400
+Message-ID: <CAKb7Uvj31ZuxB6S4EH8WBRsa2mDScpZN=dRjHScZmN94ajD0EA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "# 3.9+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 13, 2019 at 11:01 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
+> >On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
+> >> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
+> >> > Hi Greg,
+> >> >
+> >> > This feels like it's missing a From: line.
+> >> >
+> >> > commit b513a18cf1d705bd04efd91c417e79e4938be093
+> >> > Author: Lyude Paul <lyude@redhat.com>
+> >> > Date:   Mon Jan 28 16:03:50 2019 -0500
+> >> >
+> >> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
+> >> >
+> >> > Is this an artifact of your notification-of-patches process and I
+> >> > never noticed before, or was the patch ingested incorrectly?
+> >>
+> >> It was always like this for patches that came through me. Greg's script
+> >> generates an explicit "From:" line in the patch, but I never saw the
+> >> value in that since git does the right thing by looking at the "From:"
+> >> line in the mail header.
+> >>
+> >> The right thing is being done in stable-rc and for the releases. For
+> >> your example here, this is how it looks like in the stable-rc tree:
+> >>
+> >> commit bdcc885be68289a37d0d063cd94390da81fd8178
+> >> Author:     Lyude Paul <lyude@redhat.com>
+> >> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
+> >> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> CommitDate: Fri Sep 13 14:05:29 2019 +0100
+> >>
+> >>    drm/nouveau: Don't WARN_ON VCPI allocation failures
+> >
+> >Yeah, we should fix your scripts to put the explicit From: line in here
+> >as we are dealing with patches in this format and it causes confusion at
+> >times (like now.)  It's not the first time and that's why I added those
+> >lines to the patches.
+>
+> Heh, didn't think anyone cared about this scenario for the stable-rc
+> patches.
+>
+> I'll go add it.
+>
+> But... why do you actually care?
 
-> Am 13.09.2019 um 17:01 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Fri, Sep 13, 2019 at 9:24 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->>=20
->>> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
->>>=20
->>> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>=20
->>>> Hi Adam,
->>>>=20
->>>>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
->>>>=20
->>>>>>> +     cpu_cooling_maps: cooling-maps {
->>>>>>> +             map0 {
->>>>>>> +                     trip =3D <&cpu_alert0>;
->>>>>>> +                     /* Only allow OPP50 and OPP100 */
->>>>>>> +                     cooling-device =3D <&cpu 0 1>;
->>>>>>=20
->>>>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do =
-not
->>>>>> understand their meaning (and how it relates to the opp list).
->>>>>=20
->>>>> I read through the documentation, but it wasn't completely clear =
-to
->>>>> me. AFAICT, the numbers after &cpu represent the min and max index =
-in
->>>>> the OPP table when the condition is hit.
->>>>=20
->>>> Ok. It seems to use "cooling state" for those and the first is =
-minimum
->>>> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to =
-have
->>>> no limits.
->>>>=20
->>>> Since here we use the &cpu node it is likely that the "cooling =
-state"
->>>> is the same as the OPP index currently in use.
->>>>=20
->>>> I have looked through the .dts which use cpu_crit and the picture =
-is
->>>> not unique...
->>>>=20
->>>> omap4           seems to only define it
->>>> am57xx          has two different grade dtsi files
->>>> dra7            overwrites critical temperature value
->>>> am57xx-beagle   defines a gpio to control a fan
->>>=20
->=20
-> I am going to push a separate but related RFC with 2 patches in the
-> series.  This new one will setup the alerts and maps without any
-> throttling for all omap3's in the first patch.  The second patch will
-> consolidate the thermal references to omap3.dtsi so omap34, omap36 and
-> am35 can all use them without having to duplicate the entries.
->=20
-> It will make the omap36xx changes simpler to manage, because we can
-> just modify a portion of the entries instead of having the whole
-> table.
->=20
-> Once this parallel RFC gets comments/feedback, I'll re-integrate the
-> omap36xx throttling.
+Just a hygiene thing. Everyone else sends patches the normal way, with
+accurate attribution. Why should stable be different?
 
-Good idea. I have looked over them and they seem to be ok.
+(I was surprised to see Greg contributing to nouveau when I first saw
+the patch. But then realized it was the stable ingestion
+notification.)
 
->=20
-> adam
-
-BR and thanks,
-Nikolaus
-
+  -ilia
