@@ -2,125 +2,111 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891EAC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E458C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F7921479
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568388060;
-	bh=q86oWfeuxhAlqPdIFDld2EkKC+0kFRxERRG8Te0t3rM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rv47ZvKZpf6yWyUwH3FqixC7a9A0WlX3trsrhbK4qh9nVuXvY4zPRCHSSjxhPuSpl
-	 S9jWwCps7MZUSdDW0FR44FyLyOyE3pu3XuB46tq7DIAOX23ohfURkn1IWG/Sj/VRVb
-	 K8ioaAFAhm046zGlGcTaDMS+s5yb3nMLkaUtpPZM=
+	by mail.kernel.org (Postfix) with ESMTP id 5349F20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:21:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="J9wIDRik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391421AbfIMPU7 (ORCPT
+        id S2403886AbfIMPVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388354AbfIMPU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:20:59 -0400
-Received: from localhost (195-23-252-136.net.novis.pt [195.23.252.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2EFE20640;
-        Fri, 13 Sep 2019 15:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568388058;
-        bh=q86oWfeuxhAlqPdIFDld2EkKC+0kFRxERRG8Te0t3rM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sJiKQwMlQfFioahXvYXlLgUY7+I3SYCR6dXjOBMBL+5fjEezw8ouWjJerqnIbqAxa
-         PyEGipKy8fHQO3fl6L2SxhNZcR4p9aU+kUJpkB0WhQet48CpxA6PwLz1PdJZhy3Cxt
-         AU5PpFAg2lp4GctjLgVo5/IzWfqUt4OyUm7dV2c4=
-Date:   Fri, 13 Sep 2019 11:20:54 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
- failures
-Message-ID: <20190913152054.GJ1546@sasha-vm>
-References: <20190913130559.669563815@linuxfoundation.org>
- <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
- <20190913144627.GH1546@sasha-vm>
- <20190913145456.GA456842@kroah.com>
- <20190913150111.GI1546@sasha-vm>
- <20190913151051.GB458191@kroah.com>
+        Fri, 13 Sep 2019 11:21:04 -0400
+Received: from mail.efficios.com ([167.114.142.138]:56164 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388354AbfIMPVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:21:03 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 233132D13B1;
+        Fri, 13 Sep 2019 11:21:02 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id CFoNyovJVe_P; Fri, 13 Sep 2019 11:20:57 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3EEBF2D13AB;
+        Fri, 13 Sep 2019 11:20:57 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3EEBF2D13AB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568388057;
+        bh=uyjeHRABbg33hV2BOaw8TWyHoPbqXM+813BJEngMtQw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=J9wIDRikZY7PrhNElCf5wOIuUg9NgaBfuo0Xnk1hxPG5kCr/WLon7xAceBqgqbVR+
+         R9E6wpEISVY0EEruJ6edkV7y0HE446R41OhHKnOd7Ks8BtjYhNTDQZbzg9XWKxLX7a
+         M0T1jBM1QyehUYnTKp0TKz+6MegBsiP5a0ds+oIEVhgVLunV+14Opo65Rkk7snMWBI
+         fr0Jzi6TM1WOUPjUuyGLuXlTCu0+YnKEMX23rfG5cZ2obL2ftkcuddn/0jfGZsDRFT
+         MxmoNKlRw+AlM0A4Mc6dybQVR4ZIuH/6e61xIOX6jpzzAJ1Jc3P3YN3xQSn3DGOUcy
+         yX4vgP1KgYG1w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id utNUGfVAnKKJ; Fri, 13 Sep 2019 11:20:57 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 256932D13A2;
+        Fri, 13 Sep 2019 11:20:57 -0400 (EDT)
+Date:   Fri, 13 Sep 2019 11:20:56 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <1629045844.2645.1568388056947.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190909110036.GC6719@redhat.com>
+References: <20190906082305.GU2349@hirez.programming.kicks-ass.net> <20190908134909.12389-1-mathieu.desnoyers@efficios.com> <20190909110036.GC6719@redhat.com>
+Subject: Re: [RFC PATCH 4/4] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load (v2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190913151051.GB458191@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load (v2)
+Thread-Index: SLK12JUbrQMEyYCzu/XRb/7xOGRepw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 04:10:51PM +0100, Greg Kroah-Hartman wrote:
->On Fri, Sep 13, 2019 at 11:01:11AM -0400, Sasha Levin wrote:
->> On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
->> > On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
->> > > On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
->> > > > Hi Greg,
->> > > >
->> > > > This feels like it's missing a From: line.
->> > > >
->> > > > commit b513a18cf1d705bd04efd91c417e79e4938be093
->> > > > Author: Lyude Paul <lyude@redhat.com>
->> > > > Date:   Mon Jan 28 16:03:50 2019 -0500
->> > > >
->> > > >    drm/nouveau: Don't WARN_ON VCPI allocation failures
->> > > >
->> > > > Is this an artifact of your notification-of-patches process and I
->> > > > never noticed before, or was the patch ingested incorrectly?
->> > >
->> > > It was always like this for patches that came through me. Greg's script
->> > > generates an explicit "From:" line in the patch, but I never saw the
->> > > value in that since git does the right thing by looking at the "From:"
->> > > line in the mail header.
->> > >
->> > > The right thing is being done in stable-rc and for the releases. For
->> > > your example here, this is how it looks like in the stable-rc tree:
->> > >
->> > > commit bdcc885be68289a37d0d063cd94390da81fd8178
->> > > Author:     Lyude Paul <lyude@redhat.com>
->> > > AuthorDate: Mon Jan 28 16:03:50 2019 -0500
->> > > Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> > > CommitDate: Fri Sep 13 14:05:29 2019 +0100
->> > >
->> > >    drm/nouveau: Don't WARN_ON VCPI allocation failures
->> >
->> > Yeah, we should fix your scripts to put the explicit From: line in here
->> > as we are dealing with patches in this format and it causes confusion at
->> > times (like now.)  It's not the first time and that's why I added those
->> > lines to the patches.
->>
->> Heh, didn't think anyone cared about this scenario for the stable-rc
->> patches.
->>
->> I'll go add it.
->>
->> But... why do you actually care?
->
->On the emails we send out, it has inproper author information which can
->cause confusion that the sender of the email (i.e. me) is somehow saying
->that they are the author of the patch.
+----- On Sep 9, 2019, at 7:00 AM, Oleg Nesterov oleg@redhat.com wrote:
 
-Right right, I agree this is wrong and I'll fix it. I'm just concerned
-about what exactly you are doing with the -rc patches to actually care
-about this :)
+> On 09/08, Mathieu Desnoyers wrote:
+>>
+>> +static void sync_runqueues_membarrier_state(struct mm_struct *mm)
+>> +{
+>> +	int membarrier_state = atomic_read(&mm->membarrier_state);
+>> +	bool fallback = false;
+>> +	cpumask_var_t tmpmask;
+>> +	int cpu;
+>> +
+>> +	if (atomic_read(&mm->mm_users) == 1 || num_online_cpus() == 1) {
+>> +		WRITE_ONCE(this_rq()->membarrier_state, membarrier_state);
+> 
+> This doesn't look safe, this caller can migrate to another CPU after
+> it calculates the per-cpu ptr.
+> 
+> I think you need do disable preemption or simply use this_cpu_write().
 
---
+Good point! I'll use this_cpu_write() there and within
+membarrier_exec_mmap(), which seems to be affected by the same problem.
+
 Thanks,
-Sasha
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
