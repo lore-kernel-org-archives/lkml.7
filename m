@@ -2,104 +2,72 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5062CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C11C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9C42084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568386501;
-	bh=I7N/O9xEYf2S+/1euHytIwV3P/IP5katELShfV4ians=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KuXO1hOuP+HcXm3QsY401QhvsdGNp+7prj+Ogz9CTgmgt0EiToF4096Al0ecfWkeb
-	 cuWl4mtySgqNuSX9o8RJcUvWz2l5EqZKj0uOTAkg73NIndy/YADNz3pclZrbUVlG2K
-	 eSHYETVOf7jiT9bFQNkjl9gG5cTmV23MDBMyUwnk=
+	by mail.kernel.org (Postfix) with ESMTP id 3145C20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="cWJEtaKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390143AbfIMOzA (ORCPT
+        id S2390183AbfIMO6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388225AbfIMOy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:54:59 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F4320830;
-        Fri, 13 Sep 2019 14:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568386498;
-        bh=I7N/O9xEYf2S+/1euHytIwV3P/IP5katELShfV4ians=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lqP1Wlpgl1cMbfKyUFPqE69Wyp3hjAEy9a+k4Npoq58NLF4T+5sA7hQgFJ663QAzU
-         lyBgII60a9xGRS5jgWgDnhaOFwixdpzkmW2nWAeaczl2D/zBbbZXXm2UUP+nT1X2Cz
-         tB4lAE0yZ+ub0QARhDWbUPMMk3U40fPlP5sVCK/M=
-Date:   Fri, 13 Sep 2019 15:54:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
- failures
-Message-ID: <20190913145456.GA456842@kroah.com>
-References: <20190913130559.669563815@linuxfoundation.org>
- <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
- <20190913144627.GH1546@sasha-vm>
+        Fri, 13 Sep 2019 10:58:53 -0400
+Received: from a9-92.smtp-out.amazonses.com ([54.240.9.92]:42196 "EHLO
+        a9-92.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388734AbfIMO6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:58:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1568386731;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=Goi0pBynSANamO6sTU161ewP9+QZv8oVwAm3jBmdO0U=;
+        b=cWJEtaKYNZrlYAzqOAoWpjRP6vbJ+T2ICB8RBSUIcjzY8rfpYslXS94P4fm2+2um
+        F8FykUozRy0/DelRQ0U2zHZsjxeTmxZwnfBkrzY926zHv2q5Ns5buB8tEaA0mr2V14l
+        AdyviHsmn3NT3ijwlvQK4kxwlZ2lf2htFRpdF5Tc=
+Date:   Fri, 13 Sep 2019 14:58:51 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Yu Zhao <yuzhao@google.com>
+cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] mm: lock slub page when listing objects
+In-Reply-To: <20190912023111.219636-4-yuzhao@google.com>
+Message-ID: <0100016d2b224ef4-8660f7e9-3093-48fa-bc40-63d20e9f2444-000000@email.amazonses.com>
+References: <20190912004401.jdemtajrspetk3fh@box> <20190912023111.219636-1-yuzhao@google.com> <20190912023111.219636-4-yuzhao@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913144627.GH1546@sasha-vm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.09.13-54.240.9.92
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
-> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
-> > Hi Greg,
-> > 
-> > This feels like it's missing a From: line.
-> > 
-> > commit b513a18cf1d705bd04efd91c417e79e4938be093
-> > Author: Lyude Paul <lyude@redhat.com>
-> > Date:   Mon Jan 28 16:03:50 2019 -0500
-> > 
-> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
-> > 
-> > Is this an artifact of your notification-of-patches process and I
-> > never noticed before, or was the patch ingested incorrectly?
-> 
-> It was always like this for patches that came through me. Greg's script
-> generates an explicit "From:" line in the patch, but I never saw the
-> value in that since git does the right thing by looking at the "From:"
-> line in the mail header.
-> 
-> The right thing is being done in stable-rc and for the releases. For
-> your example here, this is how it looks like in the stable-rc tree:
-> 
-> commit bdcc885be68289a37d0d063cd94390da81fd8178
-> Author:     Lyude Paul <lyude@redhat.com>
-> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
-> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CommitDate: Fri Sep 13 14:05:29 2019 +0100
-> 
->    drm/nouveau: Don't WARN_ON VCPI allocation failures
+On Wed, 11 Sep 2019, Yu Zhao wrote:
 
-Yeah, we should fix your scripts to put the explicit From: line in here
-as we are dealing with patches in this format and it causes confusion at
-times (like now.)  It's not the first time and that's why I added those
-lines to the patches.
+> Though I have no idea what the side effect of such race would be,
+> apparently we want to prevent the free list from being changed
+> while debugging the objects.
 
-thanks,
+process_slab() is called under the list_lock which prevents any allocation
+from the free list in the slab page. This means that new objects can be
+added to the freelist which occurs by updating the freelist pointer in the
+slab page with a pointer to the newly free object which in turn contains
+the old freelist pointr.
 
-greg k-h
+It is therefore possible to safely traverse the objects on the freelist
+after the pointer has been retrieved
+
+NAK.
+
