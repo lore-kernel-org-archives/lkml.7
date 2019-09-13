@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CA6C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B7EC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FB2208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D244520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380458;
-	bh=L5lXlUw5/PMXuCH5X8+4oMPcGDM7AqtUwpF/lxNLzdg=;
+	s=default; t=1568380461;
+	bh=/yCKiWZ4Jraybi1+/7SAM/NgnOajGDl0IFaunuwaOic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PPngxu123p86zDLBdljnkd2Vsy121pF/g5sTZcF4zS7HQ95Egrm4+CzL8m07VU20e
-	 B5cruZliE5MVQufBBdlOBb96abR2A2RuLL4DICWt9oDh2dtv45FkYMB595da9x2w3C
-	 8I3XnSzAhv+u1pjWjIjTLJO89OI5gx7N3l8pgNe8=
+	b=ebMneCO6BptxNmxxdXSmXNTwtvvectaAtNTLoeirOAFVCVg84jG+uBzoR4MUQPxth
+	 8ZUOfR3aMH5PJDG2w9xPwG1lPVLwOX0sJwsncAHEmVxsqPHjAQbXQruUKorg+tHGj4
+	 i0WTukPdhAJAMfUUkQBklLh12Z1MI1JdrAsotezY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbfIMNOR (ORCPT
+        id S2388906AbfIMNOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40054 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388465AbfIMNOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:10 -0400
+        id S2388885AbfIMNOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:14:14 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C926206BB;
-        Fri, 13 Sep 2019 13:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E46E206BB;
+        Fri, 13 Sep 2019 13:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380450;
-        bh=L5lXlUw5/PMXuCH5X8+4oMPcGDM7AqtUwpF/lxNLzdg=;
+        s=default; t=1568380453;
+        bh=/yCKiWZ4Jraybi1+/7SAM/NgnOajGDl0IFaunuwaOic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1hqkrDFb/74ZYme1KLKlwSzP5n5IRywmfwYnDaqttii4uy57Z4A91J/CulhY//kUs
-         J8B6ipmFS6datgYUGlVDUSBP90hbz1vRyE7UYidde6GUxIMaaxCHVh/m/P28OYu/rN
-         rJctbvZlXBIxo4hSGwT5kIhTAV6gsj8v0hy73GxQ=
+        b=JyaMgPeY0FSbGS05wwjZYkAgtZSbtv1LIreoKBRZdbQ/iQuG9ATI3NnmDz2PWUsQi
+         lm/sAfVp0YIa30UNJUEwIKLv2Nnqr9noC67+7XaPBjw7zjqAvIcyHSSmxhtNqhb2yO
+         iNeRnqvSpfDRxxfjNgDNZt+YD4WH/Wy3UYJnkAwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        stable@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/190] drm/i915: Fix intel_dp_mst_best_encoder()
-Date:   Fri, 13 Sep 2019 14:05:00 +0100
-Message-Id: <20190913130603.372065665@linuxfoundation.org>
+        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 046/190] drm/i915: Rename PLANE_CTL_DECOMPRESSION_ENABLE
+Date:   Fri, 13 Sep 2019 14:05:01 +0100
+Message-Id: <20190913130603.454680731@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,45 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9f9ca33d1fe9325f414914be526c0fc4ba5281c ]
+[ Upstream commit 53867b46fa8443713b3aee520d6ca558b222d829 ]
 
-Currently, i915 appears to rely on blocking modesets on
-no-longer-present MSTB ports by simply returning NULL for
-->best_encoder(), which in turn causes any new atomic commits that don't
-disable the CRTC to fail. This is wrong however, since we still want to
-allow userspace to disable CRTCs on no-longer-present MSTB ports by
-changing the DPMS state to off and this still requires that we retrieve
-an encoder.
+Rename PLANE_CTL_DECOMPRESSION_ENABLE to resemble the bpsec name -
+PLANE_CTL_RENDER_DECOMPRESSION_ENABLE
 
-So, fix this by always returning a valid encoder regardless of the state
-of the MST port.
-
-Changes since v1:
-- Remove mst atomic helper, since this got replaced with a much simpler
-  solution
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20181008232437.5571-6-lyude@redhat.com
+Suggested-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180822015053.1420-2-dhinakaran.pandiyan@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_dp_mst.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/i915/i915_reg.h      | 2 +-
+ drivers/gpu/drm/i915/intel_display.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
-index 1fec0c71b4d95..58ba14966d4f1 100644
---- a/drivers/gpu/drm/i915/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/intel_dp_mst.c
-@@ -408,8 +408,6 @@ static struct drm_encoder *intel_mst_atomic_best_encoder(struct drm_connector *c
- 	struct intel_dp *intel_dp = intel_connector->mst_port;
- 	struct intel_crtc *crtc = to_intel_crtc(state->crtc);
- 
--	if (!READ_ONCE(connector->registered))
--		return NULL;
- 	return &intel_dp->mst_encoders[crtc->pipe]->base.base;
- }
- 
+diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
+index 16f5d2d938014..4e070afb2738b 100644
+--- a/drivers/gpu/drm/i915/i915_reg.h
++++ b/drivers/gpu/drm/i915/i915_reg.h
+@@ -6531,7 +6531,7 @@ enum {
+ #define   PLANE_CTL_YUV422_UYVY			(1 << 16)
+ #define   PLANE_CTL_YUV422_YVYU			(2 << 16)
+ #define   PLANE_CTL_YUV422_VYUY			(3 << 16)
+-#define   PLANE_CTL_DECOMPRESSION_ENABLE	(1 << 15)
++#define   PLANE_CTL_RENDER_DECOMPRESSION_ENABLE	(1 << 15)
+ #define   PLANE_CTL_TRICKLE_FEED_DISABLE	(1 << 14)
+ #define   PLANE_CTL_PLANE_GAMMA_DISABLE		(1 << 13) /* Pre-GLK */
+ #define   PLANE_CTL_TILED_MASK			(0x7 << 10)
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index 3bd44d042a1d9..f5367bdc04049 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -3561,11 +3561,11 @@ static u32 skl_plane_ctl_tiling(uint64_t fb_modifier)
+ 	case I915_FORMAT_MOD_Y_TILED:
+ 		return PLANE_CTL_TILED_Y;
+ 	case I915_FORMAT_MOD_Y_TILED_CCS:
+-		return PLANE_CTL_TILED_Y | PLANE_CTL_DECOMPRESSION_ENABLE;
++		return PLANE_CTL_TILED_Y | PLANE_CTL_RENDER_DECOMPRESSION_ENABLE;
+ 	case I915_FORMAT_MOD_Yf_TILED:
+ 		return PLANE_CTL_TILED_YF;
+ 	case I915_FORMAT_MOD_Yf_TILED_CCS:
+-		return PLANE_CTL_TILED_YF | PLANE_CTL_DECOMPRESSION_ENABLE;
++		return PLANE_CTL_TILED_YF | PLANE_CTL_RENDER_DECOMPRESSION_ENABLE;
+ 	default:
+ 		MISSING_CASE(fb_modifier);
+ 	}
+@@ -8812,13 +8812,13 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
+ 		fb->modifier = I915_FORMAT_MOD_X_TILED;
+ 		break;
+ 	case PLANE_CTL_TILED_Y:
+-		if (val & PLANE_CTL_DECOMPRESSION_ENABLE)
++		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
+ 			fb->modifier = I915_FORMAT_MOD_Y_TILED_CCS;
+ 		else
+ 			fb->modifier = I915_FORMAT_MOD_Y_TILED;
+ 		break;
+ 	case PLANE_CTL_TILED_YF:
+-		if (val & PLANE_CTL_DECOMPRESSION_ENABLE)
++		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
+ 			fb->modifier = I915_FORMAT_MOD_Yf_TILED_CCS;
+ 		else
+ 			fb->modifier = I915_FORMAT_MOD_Yf_TILED;
 -- 
 2.20.1
 
