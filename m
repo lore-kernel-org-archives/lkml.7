@@ -2,175 +2,195 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45713C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4934FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AFE20650
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124B820830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbfIMV14 (ORCPT
+        id S2390056AbfIMVcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:27:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62224 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387554AbfIMV1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:27:10 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8DLGx2r180203;
-        Fri, 13 Sep 2019 17:27:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v0f68yp7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 17:27:08 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8DLKVNZ186100;
-        Fri, 13 Sep 2019 17:27:07 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v0f68yp7j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 17:27:07 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8DLK8Mx005405;
-        Fri, 13 Sep 2019 21:27:07 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 2uyvqqk15x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 21:27:06 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8DLR5dN42533272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 21:27:05 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF2FA2805C;
-        Fri, 13 Sep 2019 21:27:04 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B67428059;
-        Fri, 13 Sep 2019 21:27:04 +0000 (GMT)
-Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.152.57])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 13 Sep 2019 21:27:04 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v6 03/10] s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
-Date:   Fri, 13 Sep 2019 17:26:51 -0400
-Message-Id: <1568410018-10833-4-git-send-email-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
-References: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909130213
+        Fri, 13 Sep 2019 17:32:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35002 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388719AbfIMVct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 17:32:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 06AA11DA4;
+        Fri, 13 Sep 2019 21:32:49 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 590CE5D71C;
+        Fri, 13 Sep 2019 21:32:48 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 15:32:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
+Message-ID: <20190913153247.0309d016@x1.home>
+In-Reply-To: <AM0PR05MB48667E374853D485788D8159D1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190902042436.23294-1-parav@mellanox.com>
+        <AM0PR05MB4866F76F807409ED887537D7D1B70@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190911145610.453b32ec@x1.home>
+        <AM0PR05MB48668DFF8E816F0D2D3041BFD1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <AM0PR05MB48667E374853D485788D8159D1B10@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 13 Sep 2019 21:32:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's allow AP resources - i.e., adapters, domains and control domains -
-to be assigned to or unassigned from an AP matrix mdev while it is in use
-by a guest. If an AP resource is assigned while a guest is using the
-matrix mdev, the guest's CRYCB will be dynamically updated as follows:
+On Wed, 11 Sep 2019 16:38:49 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-* When assigning an adapter or domain, each APQN that is derived from the
-  Cartesian product of the adapter numbers (APID) and domain numbers
-  (APQI) assigned must reference an AP queue device that is bound to the
-  vfio_ap device driver. If a particular APQN does not reference a queue
-  bound to vfio_ap, the bits corresponding to the APID and APQI will not
-  be set in the guest's CRYCB.
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-  
+> > owner@vger.kernel.org> On Behalf Of Parav Pandit  
+> > Sent: Wednesday, September 11, 2019 10:31 AM
+> > To: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
+> > cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
+> > 
+> > Hi Alex,
+> >   
+> > > -----Original Message-----
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Wednesday, September 11, 2019 8:56 AM
+> > > To: Parav Pandit <parav@mellanox.com>
+> > > Cc: Jiri Pirko <jiri@mellanox.com>; kwankhede@nvidia.com;
+> > > cohuck@redhat.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org; netdev@vger.kernel.org
+> > > Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
+> > >
+> > > On Mon, 9 Sep 2019 20:42:32 +0000
+> > > Parav Pandit <parav@mellanox.com> wrote:
+> > >  
+> > > > Hi Alex,
+> > > >  
+> > > > > -----Original Message-----
+> > > > > From: Parav Pandit <parav@mellanox.com>
+> > > > > Sent: Sunday, September 1, 2019 11:25 PM
+> > > > > To: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> > > > > kwankhede@nvidia.com; cohuck@redhat.com; davem@davemloft.net
+> > > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > > netdev@vger.kernel.org; Parav Pandit <parav@mellanox.com>
+> > > > > Subject: [PATCH v3 0/5] Introduce variable length mdev alias
+> > > > >
+> > > > > To have consistent naming for the netdevice of a mdev and to have
+> > > > > consistent naming of the devlink port [1] of a mdev, which is
+> > > > > formed using phys_port_name of the devlink port, current UUID is
+> > > > > not usable because UUID is too long.
+> > > > >
+> > > > > UUID in string format is 36-characters long and in binary 128-bit.
+> > > > > Both formats are not able to fit within 15 characters limit of
+> > > > > netdev  
+> > > name.  
+> > > > >
+> > > > > It is desired to have mdev device naming consistent using UUID.
+> > > > > So that widely used user space framework such as ovs [2] can make
+> > > > > use of mdev representor in similar way as PCIe SR-IOV VF and PF  
+> > > representors.  
+> > > > >
+> > > > > Hence,
+> > > > > (a) mdev alias is created which is derived using sha1 from the
+> > > > > mdev  
+> > > name.  
+> > > > > (b) Vendor driver describes how long an alias should be for the
+> > > > > child mdev created for a given parent.
+> > > > > (c) Mdev aliases are unique at system level.
+> > > > > (d) alias is created optionally whenever parent requested.
+> > > > > This ensures that non networking mdev parents can function without
+> > > > > alias creation overhead.
+> > > > >
+> > > > > This design is discussed at [3].
+> > > > >
+> > > > > An example systemd/udev extension will have,
+> > > > >
+> > > > > 1. netdev name created using mdev alias available in sysfs.
+> > > > >
+> > > > > mdev UUID=83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+> > > > > mdev 12 character alias=cd5b146a80a5
+> > > > >
+> > > > > netdev name of this mdev = enmcd5b146a80a5 Here en = Ethernet link
+> > > > > m = mediated device
+> > > > >
+> > > > > 2. devlink port phys_port_name created using mdev alias.
+> > > > > devlink phys_port_name=pcd5b146a80a5
+> > > > >
+> > > > > This patchset enables mdev core to maintain unique alias for a mdev.
+> > > > >
+> > > > > Patch-1 Introduces mdev alias using sha1.
+> > > > > Patch-2 Ensures that mdev alias is unique in a system.
+> > > > > Patch-3 Exposes mdev alias in a sysfs hirerchy, update
+> > > > > Documentation
+> > > > > Patch-4 Introduces mdev_alias() API.
+> > > > > Patch-5 Extends mtty driver to optionally provide alias generation.
+> > > > > This also enables to test UUID based sha1 collision and trigger
+> > > > > error handling for duplicate sha1 results.
+> > > > >
+> > > > > [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
+> > > > > [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
+> > > > > [3] https://patchwork.kernel.org/cover/11084231/
+> > > > >
+> > > > > ---
+> > > > > Changelog:
+> > > > > v2->v3:
+> > > > >  - Addressed comment from Yunsheng Lin
+> > > > >  - Changed strcmp() ==0 to !strcmp()
+> > > > >  - Addressed comment from Cornelia Hunk
+> > > > >  - Merged sysfs Documentation patch with syfs patch
+> > > > >  - Added more description for alias return value  
+> > > >
+> > > > Did you get a chance review this updated series?
+> > > > I addressed Cornelia's and yours comment.
+> > > > I do not think allocating alias memory twice, once for comparison
+> > > > and once for storing is good idea or moving alias generation logic
+> > > > inside the mdev_list_lock(). So I didn't address that suggestion of  
+> > Cornelia.  
+> > >
+> > > Sorry, I'm at LPC this week.  I agree, I don't think the double
+> > > allocation is necessary, I thought the comment was sufficient to
+> > > clarify null'ing the variable.  It's awkward, but seems correct.
+> > >
+> > > I'm not sure what we do with this patch series though, has the real
+> > > consumer of this even been proposed?    
+> 
+> Jiri already acked to use mdev_alias() to generate phys_port_name several days back in the discussion we had in [1].
+> After concluding in the thread [1], I proceed with mdev_alias().
+> mlx5_core patches are not yet present on netdev mailing list, but we
+> all agree to use it in mdev_alias() in devlink phys_port_name
+> generation. So we have collective agreement on how to proceed
+> forward. I wasn't probably clear enough in previous email reply about
+> it, so adding link here.
+> 
+> [1] https://patchwork.kernel.org/cover/11084231/#22838955
 
-* When assigning a control domain, the bit corresponding to the domain
-  number of the control domain will be set in the guest's CRYCB.
+Jiri may have agreed to the concept, but without patches on the list
+proving an end to end solution, I think it's too early for us to commit
+to this by preemptively adding it to our API.  "Acked" and "collective
+agreement" seem like they overstate something that seems not to have
+seen the light of day yet.  Instead I'll say, it looks reasonable, come
+back when the real consumer has actually been proposed upstream and has
+more buy-in from the community and we'll see if it still looks like the
+right approach from an mdev perspective then.  Thanks,
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 18da9ab2b2fb..18270f286dec 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -511,10 +511,6 @@ static ssize_t assign_adapter_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow assignment of adapter */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &apid);
- 	if (ret)
- 		return ret;
-@@ -565,10 +561,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow un-assignment of adapter */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &apid);
- 	if (ret)
- 		return ret;
-@@ -627,10 +619,6 @@ static ssize_t assign_domain_store(struct device *dev,
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
- 
--	/* If the guest is running, disallow assignment of domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &apqi);
- 	if (ret)
- 		return ret;
-@@ -681,10 +669,6 @@ static ssize_t unassign_domain_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow un-assignment of domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &apqi);
- 	if (ret)
- 		return ret;
-@@ -725,10 +709,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow assignment of control domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &id);
- 	if (ret)
- 		return ret;
-@@ -770,10 +750,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
- 
--	/* If the guest is running, disallow un-assignment of control domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
--
- 	ret = kstrtoul(buf, 0, &domid);
- 	if (ret)
- 		return ret;
--- 
-2.7.4
-
+Alex
