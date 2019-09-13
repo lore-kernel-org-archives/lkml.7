@@ -2,405 +2,76 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FD6C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0253C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E024020830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwLFFLFW"
+	by mail.kernel.org (Postfix) with ESMTP id 87D2D20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568361435;
+	bh=p7cjNFjW8pPTHEfP9s6WMR26sSINsqGMJq16WsR6ntc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uEZiliy3veXUaT6fY1IEGvPmzc367qCWOOEUYKIYdGi5ynqvwOV/e3I80uLPUP0/U
+	 I8p+55JajDzvVQE/To7uY8Nn5/mrJMWUOhF0a8z+t2n/wR+9Qc3kdD3Dyfk1f1jKOj
+	 4jFg5IDZjXY0xlqgvZmbiAHTkbLdbP1tguOH1RSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfIMHz2 (ORCPT
+        id S1729140AbfIMH5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:55:28 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:43128 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbfIMHz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:55:27 -0400
-Received: by mail-vk1-f194.google.com with SMTP id p189so5732731vkf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 00:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d2tWwia+mbaqyWF/gx1TiPXSb/yh2QIl2IHNsihm2XM=;
-        b=jwLFFLFWEVVUcCaxIQCnDZAt/4F4QDNsElBEXujXptRdirXUOGNMIfEi0oslRVEBVH
-         pnOibEX+wvh20E2CoNIoiDmXTeNxIL1f+JgGqISP8o/Kky1D3CY7UkpunpBtuD3C+koV
-         iKTUMEDHLr0zmqHKVKr1HD4pGMobfVS7OPlfJvc96/N9QTENWEAX+I5eMPTa2JCUyGX4
-         hj+LhvYUcZ2UtZRGGcEey4ebMkzZzwEKGFCrngIbELZmBapRhe5K0IEJQqhKGfkWv6cu
-         eI5h2p3HKG9wdhqwDoBvDXVGAV+Wo6ociKHkfzC+jbywOOMeeNkqYD0h62xVczf+1qA/
-         ej/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2tWwia+mbaqyWF/gx1TiPXSb/yh2QIl2IHNsihm2XM=;
-        b=AACfomga0DBNr14/k8BEyNOJl/syTdqdOfQfXqp3wZsPo6867Won3oBUNmgQ+CakSv
-         OCwglFyWn65RTstA71kOIOstQgWs0Cb/8ucsXFaxHQyDpJ+r9/rwGVyU+qy/AwUi2RUY
-         r4mN0ptrc+rX9V1XXs5+80td9gvNERiWkJt3YNhZQTHFtF8bdC+Lo7W6Chxjor1MjHwP
-         +kf4h1G+GOe3uZpyJbuwakPga00QN2IEMQ+3SPMeqOVm6lz1eHlygJkaja410CzpPKB0
-         G962ukVzLQevtfCmEEJm9IfyKkdVrMfy2vF4ehZOuq5qZsOajKcRZfHegY4N1GKUbGrQ
-         1q8g==
-X-Gm-Message-State: APjAAAUEWxEtWAst23FRF6YKNOeGisPMtVRwDX53NGyHzknC/cx8TscF
-        01jMFnW9TWv7+x34MQu3YOrEv/5WCiDgeB0SfERbkA==
-X-Google-Smtp-Source: APXvYqzVIc2tzPK1lwpEhty7Ze1GgnWvPsC7Bjl1HM/h+xRa+LmG+5iIajH3UMNkM4v1K1iSO7YMb4sPxhCGwAZ7s6A=
-X-Received: by 2002:a1f:da45:: with SMTP id r66mr725890vkg.36.1568361326117;
- Fri, 13 Sep 2019 00:55:26 -0700 (PDT)
+        Fri, 13 Sep 2019 03:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbfIMH5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 03:57:14 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367AD20830;
+        Fri, 13 Sep 2019 07:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568361433;
+        bh=p7cjNFjW8pPTHEfP9s6WMR26sSINsqGMJq16WsR6ntc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U3AyRFzEsTvHtIKhjb/IKQmhEmEBxOk2DXyK+R6MoAP/b2aWL+H/cCPH4YNMEvdLF
+         kymz08dFHy2WgNzTqemgeLLiMsWxp/O7K3Syj3WPNXr0NcjjrybFLRGBUN77X1qusf
+         BjnIuPP7ToNd697XuTWyomufq3xuieJPqnvXdCpU=
+Date:   Fri, 13 Sep 2019 09:57:09 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] media: v4l: cadence: Fix how unsued lanes are handled in
+ 'csi2rx_start()'
+Message-ID: <20190913075709.t35ggip624tybd6l@localhost.localdomain>
+References: <20190912204450.17625-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
- <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFpzeF6Adu9qBTFazTzbe=rv90x1UjKqC2LvCDpoXBJfVQ@mail.gmail.com> <5D7AA7F9.1060603@linaro.org>
-In-Reply-To: <5D7AA7F9.1060603@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 13 Sep 2019 09:54:49 +0200
-Message-ID: <CAPDyKFrB=g=6CvWVcoc6Dr8g1dXgr51zRoob8jc-9Ks_0Pst_g@mail.gmail.com>
-Subject: Re: [PATCH 4/5] thermal: Add generic power domain warming device driver.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
-        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912204450.17625-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 at 22:18, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> On 09/12/2019 11:04 AM, Ulf Hansson wrote:
->
-> Hi Ulf,
->
-> Thanks for the review.
-> > On Tue, 10 Sep 2019 at 19:14, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> >>
-> >> Resources modeled as power domains in linux kenrel
-> >> can  be used to warm the SoC(eg. mx power domain on sdm845).
-> >> To support this feature, introduce a generic power domain
-> >> warming device driver that can be plugged into the thermal framework
-> >> (The thermal framework itself requires further modifiction to
-> >> support a warming device in place of a cooling device.
-> >> Those extensions are not introduced in this patch series).
-> >>
-> >> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> >> ---
-> >> v1->v2:
-> >>         - Make power domain based warming device driver a generic
-> >>         driver in the thermal framework. v1 implemented this as a
-> >>         Qualcomm specific driver.
-> >>         - Rename certain variables as per review suggestions on the
-> >>         mailing list.
-> >>
-> >>  drivers/thermal/Kconfig              |  11 +++
-> >>  drivers/thermal/Makefile             |   2 +
-> >>  drivers/thermal/pwr_domain_warming.c | 174 +++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 187 insertions(+)
-> >>  create mode 100644 drivers/thermal/pwr_domain_warming.c
-> >>
-> >> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> >> index 9966364..eeb6018 100644
-> >> --- a/drivers/thermal/Kconfig
-> >> +++ b/drivers/thermal/Kconfig
-> >> @@ -187,6 +187,17 @@ config DEVFREQ_THERMAL
-> >>
-> >>           If you want this support, you should say Y here.
-> >>
-> >> +config PWR_DOMAIN_WARMING_THERMAL
-> >> +       bool "Power Domain based warming device"
-> >> +       depends on PM_GENERIC_DOMAINS
-> >> +       depends on PM_GENERIC_DOMAINS_OF
-> >
-> > PM_GENERIC_DOMAINS_OF can't be set unless PM_GENERIC_DOMAINS is set too.
-> >
-> > So I assume it's sufficient to depend on PM_GENERIC_DOMAINS_OF?
->
-> Yes, you are right. I will change it.
-> >
-> >> +       help
-> >> +         This implements the generic power domain based warming
-> >> +         mechanism through increasing the performance state of
-> >> +         a power domain.
-> >> +
-> >> +         If you want this support, you should say Y here.
-> >> +
-> >>  config THERMAL_EMULATION
-> >>         bool "Thermal emulation mode support"
-> >>         help
-> >> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> >> index 74a37c7..382c64a 100644
-> >> --- a/drivers/thermal/Makefile
-> >> +++ b/drivers/thermal/Makefile
-> >> @@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
-> >>  # devfreq cooling
-> >>  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-> >>
-> >> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pwr_domain_warming.o
-> >> +
-> >>  # platform thermal drivers
-> >>  obj-y                          += broadcom/
-> >>  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> >> diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
-> >> new file mode 100644
-> >> index 0000000..3dd792b
-> >> --- /dev/null
-> >> +++ b/drivers/thermal/pwr_domain_warming.c
-> >> @@ -0,0 +1,174 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019, Linaro Ltd
-> >> + */
-> >> +#include <linux/err.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/init.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/pm_domain.h>
-> >> +#include <linux/pm_runtime.h>
-> >> +#include <linux/thermal.h>
-> >> +
-> >> +struct pd_warming_device {
-> >> +       struct thermal_cooling_device *cdev;
-> >> +       struct device *dev;
-> >> +       int max_state;
-> >> +       int cur_state;
-> >> +       bool runtime_resumed;
-> >> +};
-> >> +
-> >> +static const struct of_device_id pd_wdev_match_table[] = {
-> >> +       { .compatible = "thermal-power-domain-wdev", .data = NULL },
-> >> +       { }
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, pd_wdev_match_table);
-> >> +
-> >> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> >> +                                unsigned long *state)
-> >> +{
-> >> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> >> +
-> >> +       *state = pd_wdev->max_state;
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> >> +                                unsigned long *state)
-> >> +{
-> >> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> >> +
-> >> +       *state = dev_pm_genpd_get_performance_state(pd_wdev->dev);
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> >> +                                unsigned long state)
-> >> +{
-> >> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> >> +       struct device *dev = pd_wdev->dev;
-> >> +       int ret;
-> >> +
-> >> +       ret = dev_pm_genpd_set_performance_state(dev, state);
-> >> +
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       if (state && !pd_wdev->runtime_resumed) {
-> >> +               ret = pm_runtime_get_sync(dev);
-> >> +               pd_wdev->runtime_resumed = true;
-> >> +       } else if (!state && pd_wdev->runtime_resumed) {
-> >> +               ret = pm_runtime_put(dev);
-> >> +               pd_wdev->runtime_resumed = false;
-> >> +       }
-> >> +
-> >> +       return ret;
-> >> +}
-> >> +
-> >> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> >> +       .get_max_state = pd_wdev_get_max_state,
-> >> +       .get_cur_state = pd_wdev_get_cur_state,
-> >> +       .set_cur_state = pd_wdev_set_cur_state,
-> >> +};
-> >> +
-> >> +static int pd_wdev_create(struct device *dev, const char *name)
-> >> +{
-> >> +       struct pd_warming_device *pd_wdev;
-> >> +       int state_count;
-> >> +
-> >> +       pd_wdev = devm_kzalloc(dev, sizeof(*pd_wdev), GFP_KERNEL);
-> >> +       if (!pd_wdev)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       state_count = dev_pm_genpd_performance_state_count(dev);
-> >> +       if (state_count < 0)
-> >> +               return state_count;
-> >> +
-> >> +       pd_wdev->dev = dev;
-> >> +       pd_wdev->max_state = state_count - 1;
-> >> +       pd_wdev->runtime_resumed = false;
-> >> +
-> >> +       pm_runtime_enable(dev);
-> >> +
-> >> +       pd_wdev->cdev = thermal_of_cooling_device_register
-> >> +                                       (dev->of_node, name,
-> >> +                                        pd_wdev,
-> >> +                                        &pd_warming_device_ops);
-> >> +       if (IS_ERR(pd_wdev->cdev)) {
-> >> +               dev_err(dev, "unable to register %s cooling device\n", name);
-> >> +               pm_runtime_disable(dev);
-> >> +
-> >> +               return PTR_ERR(pd_wdev->cdev);
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int pd_wdev_probe(struct platform_device *pdev)
-> >> +{
-> >> +       struct device *dev = &pdev->dev, *pd_dev;
-> >> +       const char *pd_name;
-> >> +       int id, count, ret = 0;
-> >> +
-> >> +       count = of_count_phandle_with_args(dev->of_node, "power-domains",
-> >> +                                          "#power-domain-cells");
-> >
-> > Perhaps this should be converted to genpd OF helper function instead,
-> > that allows the caller to know how many power-domains there are
-> > specified for a device node.
->
-> I am ok with this if you think that a OF helper to get the number of
-> power domains is a useful helper in the genpd framework. I can add it as
-> part of the next revision. Or do you want me to send it across separate?
+Hi Christophe,
 
-Feel free to include in the next version of the series. In case it's needed.
+On Thu, Sep 12, 2019 at 10:44:50PM +0200, Christophe JAILLET wrote:
+> The 2nd parameter of 'find_first_zero_bit()' is a number of bits, not of
+> bytes. So use 'BITS_PER_LONG' instead of 'sizeof(lanes_used)'.
+> 
+> Fixes: 1fc3b37f34f6 ("media: v4l: cadence: Add Cadence MIPI-CSI2 RX driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is purely speculative. Using BITS_PER_LONG looks logical to me,
+> but I'm not 100% sure that it is what is expected here. 'csi2rx->max_lanes'
+> could also be a good candidate.
 
-> >
-> >> +
-> >> +       if (count > 1) {
-> >> +               for (id = 0; id < count; id++) {
-> >> +                       ret = of_property_read_string_index
-> >> +                                       (dev->of_node, "power-domain-names",
-> >> +                                        id, &pd_name);
-> >> +                       if (ret) {
-> >> +                               dev_err(dev, "Error reading the power domain name %d\n", ret);
-> >> +                               continue;
-> >> +                       }
-> >
-> > It looks a bit awkward that you want to re-use the power-domain-names
-> > as the name for the cooling (warming) device. This isn't really what
-> > we use the "*-names" bindings for in general, I think.
-> >
-> > Anyway, if you want a name corresponding to the actual attached PM
-> > domain, perhaps re-using "->name" from the struct generic_pm_domain is
-> > better. We can add a genpd helper for that, no problem. Of course it
-> > also means that you must call dev_pm_domain_attach_by_id() first, to
-> > attach the device and then get the name of the genpd, but that should
-> > be fine.
->
-> Ya. I need a name corresponding to the power domain name (or something
-> very close) to identify the actual warming device in the sysfs entries.
-> I can use genpd->name and a helper function to achieve it. I can include
-> it in Patch 1/5 where I add other helper functions.
+Yeah, csi2rx->max_lanes would make more sense in that context. Could
+you resend a new version?
 
-A separate patch please, but yeah, fold it in into @subject series.
-
-> >
-> >> +
-> >> +                       pd_dev = dev_pm_domain_attach_by_id(dev, id);
-> >> +                       if (IS_ERR(pd_dev)) {
-> >> +                               dev_err(dev, "Error attaching power domain %s %ld\n", pd_name, PTR_ERR(pd_dev));
-> >> +                               continue;
-> >> +                       }
-> >> +
-> >> +                       ret = pd_wdev_create(pd_dev, pd_name);
-> >> +                       if (ret) {
-> >> +                               dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
-> >> +                               dev_pm_domain_detach(pd_dev, false);
-> >> +                               continue;
-> >> +                       }
-> >
-> > I am wondering about the use case of having multiple PM domains
-> > attached to the cooling (warming) device. Is that really needed?
-> > Perhaps you can elaborate on that a bit?
-> Ya. I though about this as well. I don't have a use case. In my current
-> case it is just one power domain on the SoC. But considering this is now
-> a generic driver, in my opinion this has to be a generic solution. So if
-> you think about this, the device should be able to specify any number of
-> power domains that can behave as a warming device since a SoC can have
-> any number of power domain based warming devices. May be one to warm up
-> the cpus, one for gpus etc.
-
-I get that, but you can always have more than one warming device. Each
-warming device would then be attached to a single PM domain. Or is
-there a problem with that?
-
-In any case, if you don't have use case for multiple PM domains per
-warming device at this point, I would rather keep it simple and start
-to support only the single PM domain case.
-
->
-> So another way of implementing this whole thing is to avoid having a
-> special power domain warming device defined in the device tree. Instead,
-> add a few new binding to the power-domain controller/provider entries
-> to specify if a power domain controlled by the provider can act as a
-> warming device or not. And have the initialization code for the power
-> domain controller (of_genpd_add_provider_onecell or any other suitable
-> API) register the specified power domain as a warming device.  The DT
-> entries should probably look something like below in the case.
->
-> rpmhpd: power-controller {
->                                 compatible = "qcom,sdm845-rpmhpd";
->                                 #power-domain-cells = <1>;
->                                 hosts-warming-dev;
->                                 warming-dev-names = "mx";
->                                 operating-points-v2 = <&rpmhpd_opp_table>;
->
->                                 rpmhpd_opp_table: opp-table {
->                                         compatible = "operating-points-v2";
-> ....
->
-> And have the following in of_genpd_add_provider_onecell
->
-> if (hosts-warming-dev)
->         # loop through the warming-dev-names and register them as power domain
-> warming devices.
->
-> You think this is a better idea?
-
-Not really, but you need to re-direct that question to DT maintainers
-if want a better answer.
-
->
-> >
-> >> +               }
-> >> +       } else if (count == 1) {
-> >> +               ret = of_property_read_string_index(dev->of_node,
-> >> +                                                   "power-domain-names",
-> >> +                                                   0, &pd_name);
-> >> +               if (ret) {
-> >> +                       dev_err(dev, "Error reading the power domain name %d\n", ret);
-> >> +                       goto exit;
-> >> +               }
-> >
-> > According to my comment above, perhaps we simply don't have to use the
-> > "power-domain-names" binding at all.
-> I will use genpd->name
->
-
-[...]
-
-Kind regards
-Uffe
+Thanks!
+Maxime
