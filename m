@@ -2,222 +2,208 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26851C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24C5C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E538A20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7193E216F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="LgBrFGcK"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="M6Wl/quw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387630AbfIMIvF (ORCPT
+        id S2387666AbfIMIvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:51:05 -0400
-Received: from mout.gmx.net ([212.227.17.20]:37027 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387557AbfIMIvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:51:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1568364635;
-        bh=OZqY8YEmhSzYpVNahFixu1x4zax59nBDtoBfEOKOU5s=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=LgBrFGcKw3jzMlfJOCjItxE63zvj5he1+kky9ilivtcRdrHVQsn77FeH0WFVA/7o5
-         fQ+BbYa36NLTKwhjgpD+JeHKXyvPiuy7tyD+lNpC8LEHM5cMglVxMA/OIalDzoRSGI
-         n8ASzdbzVhqlhX/QhvOfCvQb7DyVFgu6o2AJUvF8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.90]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0Lzsf1-1iCMTA0Nu7-014yUk; Fri, 13
- Sep 2019 10:50:35 +0200
-Subject: Re: [PATCH v5 0/4] Raspberry Pi 4 DMA addressing support
-To:     Matthias Brugger <mbrugger@suse.com>, catalin.marinas@arm.com,
-        marc.zyngier@arm.com, Matthias Brugger <matthias.bgg@gmail.com>,
-        robh+dt@kernel.org, linux-mm@kvack.org,
+        Fri, 13 Sep 2019 04:51:37 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41978 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387626AbfIMIvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:51:37 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z9so26340003edq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 01:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ljRy//1oqpxbNqcuLvCNHWlNadtkzDq51hCzmFakYzM=;
+        b=M6Wl/quwPsEOiMFNCv3xSOrdnDulq5fkBOVf8YSY3tiw77PxkkHJwmP5iEk0kohLlY
+         pg4uPVtKpUEevoagc8enKn4uPrSlBiZORCgQoAOniX52xYmOZkzG1/HzuVuRwG1eo1oP
+         UUMYm6uVKM/ZyICPXIY6dw0BD4t6sF6ZjlwPzQZa+ZeBzMMqOs4xYJXwzCpcBNDo8jhx
+         jXjUL9kfKg583djOtcu64hthdRWYl9M2FSJHI0vB9ZCDV10OZHe+j1P2FdlMaHZTn/Du
+         o7aK3kotbpwDLHIjGD7A7LXZ8OC4HcGT0NeYVB7fDkav49RWCtmQCPySSqquXilUNVHm
+         pP3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ljRy//1oqpxbNqcuLvCNHWlNadtkzDq51hCzmFakYzM=;
+        b=dEf/X6YUC6JZkbwKY46J16fI8cgUIrYSi/APhRXtd8u4bbgHZw4hoJldjfTXQcEiVA
+         JHka039kDi39WQwjZLCrbWmPFU9HQpkwPXcbS9R636iyAV0e5baIPWZxNQdsD/2WlqWo
+         6D6apwy/uw/QJuyD8F2UW31OnW23ho0EmZsZSZhS3Yf7ljf3VcBJgFFnl3C9Cuq1bJBI
+         ei0WBbvjyPCchI3C9QeJIe331rJ33dfE7BPzxCSP19E6WG5ErtSf3nCsyTaFamO/0Jmh
+         PXm17emgoFSmFlE77OT/DL14M/ddmTDTG571ms0/engw6thLP+cuTiHCbkxWGD9A7Eje
+         zZyg==
+X-Gm-Message-State: APjAAAXohmzxSCdKy4GygN5fMjXuYOaWyEvBDTQ3qLZDjHKi+5U2EfgE
+        NeuouoEpz+1GO76o2iyruqH1bw==
+X-Google-Smtp-Source: APXvYqxZm96QADm/8SST6BnmvoIUqtDzA7VCb5AHjQ8XsG2pGy1aWbbiVHhIwmyiU7DjVjOntMuCeQ==
+X-Received: by 2002:a50:ee92:: with SMTP id f18mr24791178edr.253.1568364694523;
+        Fri, 13 Sep 2019 01:51:34 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j30sm5287480edb.8.2019.09.13.01.51.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Sep 2019 01:51:33 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id A972310160B; Fri, 13 Sep 2019 11:51:35 +0300 (+03)
+Date:   Fri, 13 Sep 2019 11:51:35 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, hch@lst.de,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     robin.murphy@arm.com, f.fainelli@gmail.com, will@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org
-References: <20190909095807.18709-1-nsaenzjulienne@suse.de>
- <5a8af6e9-6b90-ce26-ebd7-9ee626c9fa0e@gmx.net>
- <3f9af46e-2e1a-771f-57f2-86a53caaf94a@suse.com>
- <09f82f88-a13a-b441-b723-7bb061a2f1e3@gmail.com>
- <2c3e1ef3-0dba-9f79-52e2-314b6b500e14@gmx.net>
- <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <48a6b72d-d554-b563-5ed6-9a79db5fb4ab@gmx.net>
-Date:   Fri, 13 Sep 2019 10:50:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] mm/pgtable/debug: Fix test validating architecture page
+ table helpers
+Message-ID: <20190913085135.rfr3zrabghi2qo2t@box>
+References: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
+ <527dd29d-45fa-4d83-1899-6cbf268dd749@arm.com>
+ <e2b42446-7f91-83f1-ac12-08dff75c4d35@c-s.fr>
+ <cb226b56-ff20-3136-7ffb-890657e56870@c-s.fr>
+ <bdf7f152-d093-1691-4e96-77da7eb9e20a@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <4a6f965b-c988-5839-169f-9f24a0e7a567@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:5fDbWcniG6VsoBWaSc+GYFShgEo4REYeFeRHrSgDDglxm5sD6x2
- UrWf7vgL6ch3G20ivsSWNIYWs/Bz1I+ZBgUC3eKNW5tdmxyn8E7T09758U+Tzf0wd/Wfw8R
- nrZhE9fM238lCEGselAeaRWRKnV6VycB/TqFyuOdS/3m/0VwhMdxszt4cj6OQds8ZEJHgz5
- lsHhLpKSOwmBUbNVq/KdA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PLc07q3TRNY=:+TtDNvVyj685IvAHzOOktc
- kx+vI+eRRKzbqWd9bDoq8bo6RUCq2UiiBjt/4MAb2tnL51PkKCkYHzlLLVBuwOSz9m+mSJGYi
- 3zQd9+4D5ZLnGGpSJKEJVvz2kSVmQiofGovvP1jXFcZWenr8riydzYGNY+HAYiqCxRaUA/eFX
- E6xKpZo0iCDgnGdKi8+8xebctj7qpdvBjQif0wnINKavSgNh68oh0AUaigrhNyTkx7yCZSwv1
- DxjnGg4fcjODfNNNEyYWmUd8MReYV1F0ehLs33w2Nxw60jHXeGmiep953V4atjlczfyqThy1R
- uLcOMT92s/f7l7jtsN4dC+ZACigrck1L2eh2cBjDP9jBvEC79BTYXAe5bJQ/NLYlFNJzuJ0L5
- KeM/4DFNCEJzuFJiNH3QdltPzA+2EIlzIZXl259m8wC5K2jB+gnScjnB3ZNYEg2pbIS6i4vp7
- eA4IRIA1+P2jzMG9K8WKQp0T1aShulE+puyTCFwsz2eXeqLdxWuEbvtPiac2qMMqjLolkaG48
- FV7hnRI3NkswtrztAzqfO+VJ0qPM00Kw6xotij/QHh8oU0BqpdD9+cAo+clP+40ysg0uKxV1Y
- PYE2OWrVVwhEODxtvsJ+PGPADi0/tXm4fF3RyKNK5YQ69FtWTzQhecT5phJsYxTuEO6JRVFEH
- tCm1NM+lN48t6dHOKPZPMeyASDCIy8pelwOiO5uAyg6u/RM65mkYXam7rrmEnYFTzfsw2IiCC
- +FyqOyFxRVQbxIwaMlTwaBXGbad61xAueSYnodWFeuByuX0hGZ2Zm/uqxnLGJuQTpVrNMUDiA
- 80QTtrA0KYBIaL2uqVZvjnTBNklNcb+Bul0JTVLe1+wSd/xs73IvfO/EH5Go5NpdCD2CHGNh/
- SGnV/vUI0sShAZB3yhkhzvPzBDG3iWzcjKLCq9GQ2XQV6vWt/AQEE0iXQBZX5Fi85Qkf/9Orb
- 7ZPA0klbpejckcIoscN1Vandk0ERHH6JArUBfIAQokm/ElVeOHqF7RcfpzlarmXkaz65JFY03
- 4ZAxD1pCVkNsGrtcfta2mXQ97NrVDDVR6ZBwKR6IshAUVzG02FtirFYR/uvzQCiLzbzjhd2Jv
- hnHwsSRwRw5L/ZeWRxt5BQOx4FXI4aaq7/ANCbqqurfTzVZ+SH+M6W7oxUb51cW+JPzUAxTxt
- zWlhgmJD26gIhkPblPuZX6IyXK2IU/IvYLe5QIFuATMSATrzDVrMYP+IWVG4UYw4WaAdMQQf/
- IzirydQqcD7FTclu9dRm0zhhepscswytTs0NfKopHHrsepk8IMYtE7M4DYk0=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bdf7f152-d093-1691-4e96-77da7eb9e20a@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 13.09.19 um 10:09 schrieb Matthias Brugger:
->
-> On 12/09/2019 21:32, Stefan Wahren wrote:
->> Am 12.09.19 um 19:18 schrieb Matthias Brugger:
->>> On 10/09/2019 11:27, Matthias Brugger wrote:
->>>> On 09/09/2019 21:33, Stefan Wahren wrote:
->>>>> Hi Nicolas,
->>>>>
->>>>> Am 09.09.19 um 11:58 schrieb Nicolas Saenz Julienne:
->>>>>> Hi all,
->>>>>> this series attempts to address some issues we found while bringing up
->>>>>> the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
->>>>>> up of these discussions:
->>>>>> v4: https://lkml.org/lkml/2019/9/6/352
->>>>>> v3: https://lkml.org/lkml/2019/9/2/589
->>>>>> v2: https://lkml.org/lkml/2019/8/20/767
->>>>>> v1: https://lkml.org/lkml/2019/7/31/922
->>>>>> RFC: https://lkml.org/lkml/2019/7/17/476
->>>>>>
->>>>>> The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
->>>>>> only address the first GB: their DMA address range is
->>>>>> 0xc0000000-0xfc000000 which is aliased to the first GB of physical
->>>>>> memory 0x00000000-0x3c000000. Note that only some peripherals have these
->>>>>> limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
->>>>>> view of the address space by virtue of being hooked up trough a second
->>>>>> interconnect.
->>>>>>
->>>>>> Part of this is solved on arm32 by setting up the machine specific
->>>>>> '.dma_zone_size = SZ_1G', which takes care of reserving the coherent
->>>>>> memory area at the right spot. That said no buffer bouncing (needed for
->>>>>> dma streaming) is available at the moment, but that's a story for
->>>>>> another series.
->>>>>>
->>>>>> Unfortunately there is no such thing as 'dma_zone_size' in arm64. Only
->>>>>> ZONE_DMA32 is created which is interpreted by dma-direct and the arm64
->>>>>> arch code as if all peripherals where be able to address the first 4GB
->>>>>> of memory.
->>>>>>
->>>>>> In the light of this, the series implements the following changes:
->>>>>>
->>>>>> - Create both DMA zones in arm64, ZONE_DMA will contain the first 1G
->>>>>>   area and ZONE_DMA32 the rest of the 32 bit addressable memory. So far
->>>>>>   the RPi4 is the only arm64 device with such DMA addressing limitations
->>>>>>   so this hardcoded solution was deemed preferable.
->>>>>>
->>>>>> - Properly set ARCH_ZONE_DMA_BITS.
->>>>>>
->>>>>> - Reserve the CMA area in a place suitable for all peripherals.
->>>>>>
->>>>>> This series has been tested on multiple devices both by checking the
->>>>>> zones setup matches the expectations and by double-checking physical
->>>>>> addresses on pages allocated on the three relevant areas GFP_DMA,
->>>>>> GFP_DMA32, GFP_KERNEL:
->>>>>>
->>>>>> - On an RPi4 with variations on the ram memory size. But also forcing
->>>>>>   the situation where all three memory zones are nonempty by setting a 3G
->>>>>>   ZONE_DMA32 ceiling on a 4G setup. Both with and without NUMA support.
->>>>>>
->>>>> i like to test this series on Raspberry Pi 4 and i have some questions
->>>>> to get arm64 running:
->>>>>
->>>>> Do you use U-Boot? Which tree?
->>>> If you want to use U-Boot, try v2019.10-rc4, it should have everything you need
->>>> to boot your kernel.
->>>>
->>> Ok, here is a thing. In the linux kernel we now use bcm2711 as SoC name, but the
->>> RPi4 devicetree provided by the FW uses mostly bcm2838.
->> Do you mean the DTB provided at runtime?
->>
->> You mean the merged U-Boot changes, doesn't work with my Raspberry Pi
->> series?
->>
->>>  U-Boot in its default
->>> config uses the devicetree provided by the FW, mostly because this way you don't
->>> have to do anything to find out how many RAM you really have. Secondly because
->>> this will allow us, in the near future, to have one U-boot binary for both RPi3
->>> and RPi4 (and as a side effect one binary for RPi1 and RPi2).
->>>
->>> Anyway, I found at least, that the following compatibles need to be added:
->>>
->>> "brcm,bcm2838-cprman"
->>> "brcm,bcm2838-gpio"
->>>
->>> Without at least the cprman driver update, you won't see anything.
->>>
->>> "brcm,bcm2838-rng200" is also a candidate.
->>>
->>> I also suppose we will need to add "brcm,bcm2838" to
->>> arch/arm/mach-bcm/bcm2711.c, but I haven't verified this.
->> How about changing this in the downstream kernel? Which is much easier.
-> I'm not sure I understand what you want to say. My goal is to use the upstream
-> kernel with the device tree blob provided by the FW.
+On Fri, Sep 13, 2019 at 02:12:45PM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 09/13/2019 12:41 PM, Christophe Leroy wrote:
+> > 
+> > 
+> > Le 13/09/2019 à 09:03, Christophe Leroy a écrit :
+> >>
+> >>
+> >> Le 13/09/2019 à 08:58, Anshuman Khandual a écrit :
+> >>> On 09/13/2019 11:53 AM, Christophe Leroy wrote:
+> >>>> Fix build failure on powerpc.
+> >>>>
+> >>>> Fix preemption imbalance.
+> >>>>
+> >>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> >>>> ---
+> >>>>   mm/arch_pgtable_test.c | 3 +++
+> >>>>   1 file changed, 3 insertions(+)
+> >>>>
+> >>>> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
+> >>>> index 8b4a92756ad8..f2b3c9ec35fa 100644
+> >>>> --- a/mm/arch_pgtable_test.c
+> >>>> +++ b/mm/arch_pgtable_test.c
+> >>>> @@ -24,6 +24,7 @@
+> >>>>   #include <linux/swap.h>
+> >>>>   #include <linux/swapops.h>
+> >>>>   #include <linux/sched/mm.h>
+> >>>> +#include <linux/highmem.h>
+> >>>
+> >>> This is okay.
+> >>>
+> >>>>   #include <asm/pgalloc.h>
+> >>>>   #include <asm/pgtable.h>
+> >>>> @@ -400,6 +401,8 @@ static int __init arch_pgtable_tests_init(void)
+> >>>>       p4d_clear_tests(p4dp);
+> >>>>       pgd_clear_tests(mm, pgdp);
+> >>>> +    pte_unmap(ptep);
+> >>>> +
+> >>>
+> >>> Now the preemption imbalance via pte_alloc_map() path i.e
+> >>>
+> >>> pte_alloc_map() -> pte_offset_map() -> kmap_atomic()
+> >>>
+> >>> Is not this very much powerpc 32 specific or this will be applicable
+> >>> for all platform which uses kmap_XXX() to map high memory ?
+> >>>
+> >>
+> >> See https://elixir.bootlin.com/linux/v5.3-rc8/source/include/linux/highmem.h#L91
+> >>
+> >> I think it applies at least to all arches using the generic implementation.
+> >>
+> >> Applies also to arm:
+> >> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/arm/mm/highmem.c#L52
+> >>
+> >> Applies also to mips:
+> >> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/mips/mm/highmem.c#L47
+> >>
+> >> Same on sparc:
+> >> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/sparc/mm/highmem.c#L52
+> >>
+> >> Same on x86:
+> >> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/x86/mm/highmem_32.c#L34
+> >>
+> >> I have not checked others, but I guess it is like that for all.
+> >>
+> > 
+> > 
+> > Seems like I answered too quickly. All kmap_atomic() do preempt_disable(), but not all pte_alloc_map() call kmap_atomic().
+> > 
+> > However, for instance ARM does:
+> > 
+> > https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/arm/include/asm/pgtable.h#L200
+> > 
+> > And X86 as well:
+> > 
+> > https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/x86/include/asm/pgtable_32.h#L51
+> > 
+> > Microblaze also:
+> > 
+> > https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/microblaze/include/asm/pgtable.h#L495
+> 
+> All the above platforms checks out to be using k[un]map_atomic(). I am wondering whether
+> any of the intermediate levels will have similar problems on any these 32 bit platforms
+> or any other platforms which might be using generic k[un]map_atomic().
 
-The device tree blob you are talking is defined in this repository:
+No. Kernel only allocates pte page table from highmem. All other page
+tables are always visible in kernel address space.
 
-https://github.com/raspberrypi/linux
-
-So the word FW is misleading to me.
-
->  If you talk about the
-> downstream kernel, I suppose you mean we should change this in the FW DT blob
-> and in the downstream kernel. That would work for me.
->
-> Did I understand you correctly?
-
-Yes
-
-So i suggest to add the upstream compatibles into the repo mentioned above.
-
-Sorry, but in case you decided as a U-Boot developer to be compatible
-with a unreviewed DT, we also need to make U-Boot compatible with
-upstream and downstream DT blobs.
-
->
->>> Regards,
->>> Matthias
->>>
->>>> Regards,
->>>> Matthias
->>>>
->>>>> Are there any config.txt tweaks necessary?
->>>>>
->>>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
+-- 
+ Kirill A. Shutemov
