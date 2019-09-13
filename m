@@ -2,70 +2,95 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D458BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A75DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37B8207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AF3206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfIMHnq (ORCPT
+        id S1729086AbfIMHoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:43:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47589 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbfIMHnp (ORCPT
+        Fri, 13 Sep 2019 03:44:04 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:58042 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbfIMHoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:43:45 -0400
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i8gF3-0003Jj-62; Fri, 13 Sep 2019 07:43:41 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ath10k: fix spelling mistake "eanble" -> "enable"
-Date:   Fri, 13 Sep 2019 08:43:39 +0100
-Message-Id: <20190913074339.27280-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Sep 2019 03:44:04 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id 1F5CF46A74; Fri, 13 Sep 2019 09:44:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 1BA5446776;
+        Fri, 13 Sep 2019 09:44:02 +0200 (CEST)
+Date:   Fri, 13 Sep 2019 09:44:02 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Moore, Robert" <robert.moore@intel.com>
+cc:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ferry Toth <ftoth@telfort.nl>,
+        nikolaus.voss@loewensteinmedical.de
+Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+Message-ID: <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+References: <20190906174605.GY2680@smile.fi.intel.com> <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de> <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Bob,
 
-There is a spelling mistake in a ath10k_warn warning message. Fix it.
+On Thu, 12 Sep 2019, Moore, Robert wrote:
+> The ability to unload an ACPI table (especially AML tables such as 
+> SSDTs) is in the process of being deprecated in ACPICA -- since it is 
+> also deprecated in the current ACPI specification. This is being done 
+> because of the difficulty of deleting the namespace entries for the 
+> table.  FYI, Windows does not properly support this function either.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/ath/ath10k/mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ok, I see it can be a problem to unload an AML table with all it's 
+consequences e.g. with respect to driver unregistering in setups with 
+complex dependencies. It will only work properly under certain conditions 
+- nevertheless acpi_tb_unload_table() is still exported in ACPICA and we 
+should get this working as it worked before.
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 12dad659bf68..a3d612f5f652 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -7418,7 +7418,7 @@ static bool ath10k_mac_set_vht_bitrate_mask_fixup(struct ath10k *ar,
- 	err = ath10k_wmi_peer_set_param(ar, arvif->vdev_id, sta->addr,
- 					WMI_PEER_PARAM_FIXED_RATE, rate);
- 	if (err)
--		ath10k_warn(ar, "failed to eanble STA %pM peer fixed rate: %d\n",
-+		ath10k_warn(ar, "failed to enable STA %pM peer fixed rate: %d\n",
- 			    sta->addr, err);
- 
- 	return true;
--- 
-2.20.1
+The API change I request is not directly related to table unloading, it's 
+just that the index of the loaded table is returned for future reference:
 
+[...]
+
+>> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h index 3845c8fcc94e5..c90bbdc4146a6 100644
+>> --- a/include/acpi/acpixf.h
+>> +++ b/include/acpi/acpixf.h
+>> @@ -452,7 +452,8 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>> 					       u8 physical))
+>>
+>> ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>> -			    acpi_load_table(struct acpi_table_header *table))
+>> +			    acpi_load_table(struct acpi_table_header *table,
+>> +					    u32 *table_idx))
+>>
+>> ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>> 			    acpi_unload_parent_table(acpi_handle object))
+>> --
+>> 2.17.1
+>>
+
+This allows for a simple fix of the regression and doesn't imply future 
+support for table unloading. Would this be acceptable?
+
+Niko
