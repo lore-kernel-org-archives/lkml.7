@@ -2,181 +2,192 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE6DC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99256C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01439206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E6920692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaCyKRbo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yduZq7G9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404116AbfIMW2X (ORCPT
+        id S2404075AbfIMWdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:28:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45770 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404102AbfIMW2W (ORCPT
+        Fri, 13 Sep 2019 18:33:19 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36931 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404024AbfIMWdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:28:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l16so33384524wrv.12;
-        Fri, 13 Sep 2019 15:28:21 -0700 (PDT)
+        Fri, 13 Sep 2019 18:33:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w67so23264549lff.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tdU6m/5tnwqD2qEYA/L7MQWWo5R8oi1LocB0y0eYQ5o=;
-        b=kaCyKRboocVKY5DzrnmVkwAz3ufQOPecnpbfl0Pc+D4eIMRI5NZ0HGkVHGhPxhNh+v
-         L4Ar2MhJFDzzidnTeNm4mmmi9oWJifQFHeRhxj7t8B8VWLubK2DRzAPXH+UYJKgJWUA2
-         pt3v8z69izjqbxeQWFiLIKr+ksf6qiS7ygM31lExJ5/1OJ2EPXjRXuoplnaheaMuNXr2
-         mSNkvZBvGlB8I9+UQin+KwTFoHPJlKjE2PFcaXt6LgBM0PXMq5Samx0YaHrjvBXhc86W
-         npc8AuSEOPbpCRqBv6cBo5mVroPMrENfhBtsVs3ZP+M3KXUtmORZMm6bjR72Wmw0L6TB
-         zqvA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ihmb3q/NdECGRR5zzEyyPCuHVNkS8lC17ByG/rKgfTs=;
+        b=yduZq7G9bgba7AT9kCxy32dgPaU1+nS3rrt1SkQVewbNckwKWpgGRfVk3Y0BmZy3T/
+         hc2tkDna8PRu8vNhOjxNByF3gi1YbIztijqkbhAoC0kl/huMcgyMEk7x+UOox7gG5Okn
+         ERaOtSaA+6nr1OQd+i6MuHkecmR0NZ6yG1bytGiA2TZdg814CgUE9pwPlLQmCnF84+sz
+         r4AibbVNdmVlRPAmkkCeAvkdCvvVpjbSUpjQqldGzJ6ayRZmm5g9gO5o4tPxeYdpWy+a
+         BWT6QgDvq860MsINwgU27P5zHGS0QcTdpKsGoyx9agaR7mf2aT5/DB+d+PDfqtbPB3O5
+         NRxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tdU6m/5tnwqD2qEYA/L7MQWWo5R8oi1LocB0y0eYQ5o=;
-        b=jv1W1qjk7prLQHZfD7Y/buk1AHkdP9unuGNDrMYkPDGxxLTYj5QGZFTDiLCbaCQrRF
-         XPHeYPGvXyXfuU79sXNOtkL8efMTTMgDtcWUk2i1uKZ5cyhtnv8ycikvKcggk/dtdfUr
-         uz9EhoXodW+6qcXZ/3LIANnyObSf+TdNHa8Fq+52kNIq+ty57tLe6yBVvhuvV3Do+a7E
-         b//CMHIJ5aUUbE3/aLqQ0RWKM492UJCH+aPiMWXNczUvvAdiqMhdwF05tdFVNWDH2kf8
-         K77b3OmLGxHxmKM/ioo8dT+lMjjhG+OwJKjB8QThcv1B1lAM6D3xSX4HwTeDoqAPntuc
-         vTPA==
-X-Gm-Message-State: APjAAAUSxf1n+tXojNbApgvMWlCzU1ZqniDBQJ/QojbMwMw9nM5Knyfx
-        iA5WWWN3yFUwd83CvHEMTKk=
-X-Google-Smtp-Source: APXvYqwXiqK8hNMctc+9E3sU6LIcYAWLGA9V42DhmIKlW9MfqVSe7zqG/u+mPMuejMGFWA7GlMsAXw==
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr5982765wrv.30.1568413700857;
-        Fri, 13 Sep 2019 15:28:20 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.151.137])
-        by smtp.gmail.com with ESMTPSA id d12sm3456107wme.33.2019.09.13.15.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 15:28:20 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [RFC PATCH 2/2] io_uring: Optimise cq waiting with wait_threshold
-Date:   Sat, 14 Sep 2019 01:28:02 +0300
-Message-Id: <71aa08dfd7fee3093845957cdcf32b21f9194892.1568413210.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1568413210.git.asml.silence@gmail.com>
-References: <cover.1568413210.git.asml.silence@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ihmb3q/NdECGRR5zzEyyPCuHVNkS8lC17ByG/rKgfTs=;
+        b=TrvOrnjIzPF34gJq2wnMXxt6NuwCrSmZERUz8e51vG8zvu7NB3LPiuJe+y1ZEqoLjw
+         MLeY68Y0U98DiIV1fKGx405aO2w+Lqsvm2WFnMSghEN9xLK8hwEvkolga62F8cFg3PJc
+         Lkgpcu2SSumvTGP9SNayjNBQ0NbgH49ObNHLJ8p3kz1A7rTpEfmo9BRabkY+TdZYI9GU
+         xfveHUE0lIxDfsaEWzEoqwJiESMsaJMwX8tro0FnoUQv3FTB5ipoWT6hXeewUzQRWPQN
+         SyV5KCRy8eB0SJkmQSobV3uZMBmakPcv43Pol3IM+b9gR9CkOoKH5o7FKnKv6Eq0I4TJ
+         YyKQ==
+X-Gm-Message-State: APjAAAWFvLjtsNjVdRxXmgdFQwVwo/vbf9FJCyp9qLaSi00yzp6oX3IN
+        hI/u60KhHDxPDXBKGJMJ9R+11A==
+X-Google-Smtp-Source: APXvYqwhyEj6qqlzJGRhzh2nm6Ue6JgbrQHXynRGsrsIq7IeayiUmrTW8RDYxiR2eoWifL/xp/4mAA==
+X-Received: by 2002:a19:d6:: with SMTP id 205mr9338872lfa.144.1568413996212;
+        Fri, 13 Sep 2019 15:33:16 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id r19sm6732884ljd.95.2019.09.13.15.33.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Sep 2019 15:33:16 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 01:33:13 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH bpf-next 10/11] libbpf: makefile: add C/CXX/LDFLAGS to
+ libbpf.so and test_libpf targets
+Message-ID: <20190913223313.GF26724@khorivan>
+Mail-Followup-To: Yonghong Song <yhs@fb.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" <clang-built-linux@googlegroups.com>
+References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
+ <20190910103830.20794-11-ivan.khoronzhuk@linaro.org>
+ <0ad42019-2614-b70c-f93e-527c136bba83@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <0ad42019-2614-b70c-f93e-527c136bba83@fb.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+On Fri, Sep 13, 2019 at 09:43:22PM +0000, Yonghong Song wrote:
+>
+>
+>On 9/10/19 11:38 AM, Ivan Khoronzhuk wrote:
+>> In case of LDFLAGS and EXTRA_CC/CXX flags there is no way to pass them
+>> correctly to build command, for instance when --sysroot is used or
+>> external libraries are used, like -lelf, wich can be absent in
+>> toolchain. This is used for samples/bpf cross-compiling allowing to
+>> get elf lib from sysroot.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>   samples/bpf/Makefile   |  8 +++++++-
+>>   tools/lib/bpf/Makefile | 11 ++++++++---
+>>   2 files changed, 15 insertions(+), 4 deletions(-)
+>
+>Could you separate this patch into two?
+>One of libbpf and another for samples.
+>
+>The subject 'libbpf: ...' is not entirely accurate.
+Yes, ofc.
+But there is too many patches already, but better a lot of small
+changes then couple huge.
 
-While waiting for completion events in io_cqring_wait(), the process
-will be waken up inside wait_threshold_interruptible() on any request
-completion, check num of events in completion queue and potentially go
-to sleep again.
+>
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 79c9aa41832e..4edc5232cfc1 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -186,6 +186,10 @@ ccflags-y += -I$(srctree)/tools/perf
+>>   ccflags-y += $(D_OPTIONS)
+>>   ccflags-y += -Wall
+>>   ccflags-y += -fomit-frame-pointer
+>> +
+>> +EXTRA_CXXFLAGS := $(ccflags-y)
+>> +
+>> +# options not valid for C++
+>>   ccflags-y += -Wmissing-prototypes
+>>   ccflags-y += -Wstrict-prototypes
+>>
+>> @@ -252,7 +256,9 @@ clean:
+>>
+>>   $(LIBBPF): FORCE
+>>   # Fix up variables inherited from Kbuild that tools/ build system won't like
+>> -	$(MAKE) -C $(dir $@) RM='rm -rf' LDFLAGS= srctree=$(BPF_SAMPLES_PATH)/../../ O=
+>> +	$(MAKE) -C $(dir $@) RM='rm -rf' EXTRA_CFLAGS="$(PROGS_CFLAGS)" \
+>> +		EXTRA_CXXFLAGS="$(EXTRA_CXXFLAGS)" LDFLAGS=$(PROGS_LDFLAGS) \
+>> +		srctree=$(BPF_SAMPLES_PATH)/../../ O=
+>>
+>>   $(obj)/syscall_nrs.h:	$(obj)/syscall_nrs.s FORCE
+>>   	$(call filechk,offsets,__SYSCALL_NRS_H__)
+>> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+>> index c6f94cffe06e..bccfa556ef4e 100644
+>> --- a/tools/lib/bpf/Makefile
+>> +++ b/tools/lib/bpf/Makefile
+>> @@ -94,6 +94,10 @@ else
+>>     CFLAGS := -g -Wall
+>>   endif
+>>
+>> +ifdef EXTRA_CXXFLAGS
+>> +  CXXFLAGS := $(EXTRA_CXXFLAGS)
+>> +endif
+>> +
+>>   ifeq ($(feature-libelf-mmap), 1)
+>>     override CFLAGS += -DHAVE_LIBELF_MMAP_SUPPORT
+>>   endif
+>> @@ -176,8 +180,9 @@ $(BPF_IN): force elfdep bpfdep
+>>   $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+>>
+>>   $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
+>> -	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+>> -				    -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
+>> +	$(QUIET_LINK)$(CC) $(LDFLAGS) \
+>> +		--shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+>> +		-Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
+>>   	@ln -sf $(@F) $(OUTPUT)libbpf.so
+>>   	@ln -sf $(@F) $(OUTPUT)libbpf.so.$(LIBBPF_MAJOR_VERSION)
+>>
+>> @@ -185,7 +190,7 @@ $(OUTPUT)libbpf.a: $(BPF_IN)
+>>   	$(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
+>>
+>>   $(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
+>> -	$(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
+>> +	$(QUIET_LINK)$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^ -lelf -o $@
+>>
+>>   $(OUTPUT)libbpf.pc:
+>>   	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
+>>
 
-Apparently, there could be a lot of such spurious wakeups with lots of
-overhead. It especially manifests itself, when min_events is large, and
-completions are arriving one by one or in small batches (that usually
-is true).
-
-E.g. if device completes requests one by one and io_uring_enter is
-waiting for 100 events, then there will be ~99 spurious wakeups.
-
-Use new wait_threshold_*() instead, which won't wake it up until
-necessary number of events is collected.
-
-Performance test:
-The first thread generates requests (QD=512) one by one, so they will
-be completed in the similar pattern. The second thread waiting for
-128 events to complete.
-
-Tested with null_blk with 5us delay
-and 3.8GHz Intel CPU.
-
-throughput before: 270 KIOPS
-throughput after:  370 KIOPS
-So, ~40% throughput boost on this exaggerate test.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 37395208a729..17d2d30b763a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -70,6 +70,7 @@
- #include <linux/nospec.h>
- #include <linux/sizes.h>
- #include <linux/hugetlb.h>
-+#include <linux/wait_threshold.h>
- 
- #include <uapi/linux/io_uring.h>
- 
-@@ -403,6 +404,13 @@ static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
- 	return ctx;
- }
- 
-+static unsigned int io_cqring_events(struct io_rings *rings)
-+{
-+	/* See comment at the top of this file */
-+	smp_rmb();
-+	return READ_ONCE(rings->cq.tail) - READ_ONCE(rings->cq.head);
-+}
-+
- static inline bool io_sequence_defer(struct io_ring_ctx *ctx,
- 				     struct io_kiocb *req)
- {
-@@ -521,7 +529,7 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
- static void io_cqring_ev_posted(struct io_ring_ctx *ctx)
- {
- 	if (waitqueue_active(&ctx->wait))
--		wake_up(&ctx->wait);
-+		wake_up_threshold(&ctx->wait, io_cqring_events(ctx->rings));
- 	if (waitqueue_active(&ctx->sqo_wait))
- 		wake_up(&ctx->sqo_wait);
- 	if (ctx->cq_ev_fd)
-@@ -546,7 +554,7 @@ static void io_ring_drop_ctx_refs(struct io_ring_ctx *ctx, unsigned refs)
- 	percpu_ref_put_many(&ctx->refs, refs);
- 
- 	if (waitqueue_active(&ctx->wait))
--		wake_up(&ctx->wait);
-+		wake_up_threshold(&ctx->wait, io_cqring_events(ctx->rings));
- }
- 
- static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
-@@ -681,12 +689,6 @@ static void io_put_req(struct io_kiocb *req)
- 		io_free_req(req);
- }
- 
--static unsigned io_cqring_events(struct io_rings *rings)
--{
--	/* See comment at the top of this file */
--	smp_rmb();
--	return READ_ONCE(rings->cq.tail) - READ_ONCE(rings->cq.head);
--}
- 
- /*
-  * Find and free completed poll iocbs
-@@ -2591,7 +2593,8 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			return ret;
- 	}
- 
--	ret = wait_event_interruptible(ctx->wait, io_cqring_events(rings) >= min_events);
-+	ret = wait_threshold_interruptible(ctx->wait, min_events,
-+					   io_cqring_events(rings));
- 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 	if (ret == -ERESTARTSYS)
- 		ret = -EINTR;
 -- 
-2.22.0
-
+Regards,
+Ivan Khoronzhuk
