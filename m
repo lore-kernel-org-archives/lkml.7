@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3823C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8272C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF23208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0046206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JUF1dGb0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ChBh9U/6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cxphENNd";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cxphENNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403918AbfIMWAN (ORCPT
+        id S2390400AbfIMV7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:00:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59948 "EHLO
+        Fri, 13 Sep 2019 17:59:48 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59698 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390509AbfIMV7v (ORCPT
+        with ESMTP id S2390268AbfIMV7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:59:51 -0400
+        Fri, 13 Sep 2019 17:59:47 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 45DF36134E; Fri, 13 Sep 2019 21:59:50 +0000 (UTC)
+        id A686B60A60; Fri, 13 Sep 2019 21:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411990;
-        bh=HWa3T7WBLldguTdBL77UhjGPppY1kGqNexVz8j95mJo=;
+        s=default; t=1568411986;
+        bh=Nma9mWXyYVp2E0wi8Zqshh5FM0cWL4gvjEG+g+1UyeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUF1dGb08TQJaSPfP4/vLOL0SXNaW8Xq4IgysVfuFOtg4VGjHbpG2oVIfAPnFP7sG
-         +b7IhDAmBDXo9IPLoHXMwl6gWYIPiry0rVhpkReTuLhy1tlr50pOzFGLuud0YPucRI
-         oP26vuLEXxva/wsB5FvLYHoquxeXcUip8E8APtpM=
+        b=cxphENNdwsUDWvQuIOiqIc4JWPFSWkaGsuRImOb9XIuVtKg/Fs7xzokdrGyS74xnV
+         MXJr57gCG6whBnAjGq5pvgiVejWJXwqvT9iRk7hLQzPjML3JtneFCtSjeb1IWxQTob
+         D3G/VePO0vz3G6VZi1BTrHhqn1wsNe3JdTORylxA=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8CCB061215;
-        Fri, 13 Sep 2019 21:59:48 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DF0560C72;
+        Fri, 13 Sep 2019 21:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411989;
-        bh=HWa3T7WBLldguTdBL77UhjGPppY1kGqNexVz8j95mJo=;
+        s=default; t=1568411986;
+        bh=Nma9mWXyYVp2E0wi8Zqshh5FM0cWL4gvjEG+g+1UyeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ChBh9U/6oOwqK3wMOxW3DwvFOifAU48UTZT4uloj3FeTugaToJ7G9QNFRHp6CgZ/J
-         809XILEYeGw61mX7Vfr6eRZkLINIgQAmLXjcg6FczH2Jol0hde86akq/L1TDjSFw0n
-         ouRD8qDah9+FuvrGEuGJQj5i87fzvn2VbWedPVbc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8CCB061215
+        b=cxphENNdwsUDWvQuIOiqIc4JWPFSWkaGsuRImOb9XIuVtKg/Fs7xzokdrGyS74xnV
+         MXJr57gCG6whBnAjGq5pvgiVejWJXwqvT9iRk7hLQzPjML3JtneFCtSjeb1IWxQTob
+         D3G/VePO0vz3G6VZi1BTrHhqn1wsNe3JdTORylxA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DF0560C72
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -54,10 +54,11 @@ To:     swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org,
         linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC v2 08/14] genirq: Introduce irq_chip_get/set_parent_state calls
-Date:   Fri, 13 Sep 2019 15:59:16 -0600
-Message-Id: <1568411962-1022-9-git-send-email-ilina@codeaurora.org>
+        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH RFC v2 05/14] of: irq: document properties for wakeup interrupt parent
+Date:   Fri, 13 Sep 2019 15:59:13 -0600
+Message-Id: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
 References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
@@ -66,104 +67,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+Some interrupt controllers in a SoC, are always powered on and have a
+select interrupts routed to them, so that they can wakeup the SoC from
+suspend. Add wakeup-parent DT property to refer to these interrupt
+controllers.
 
-On certain QTI chipsets some GPIOs are direct-connect interrupts to the
-GIC to be used as regular interrupt lines. When the GPIOs are not used
-for interrupt generation the interrupt line is disabled. But disabling
-the interrupt at GIC does not prevent the interrupt to be reported as
-pending at GIC_ISPEND. Later, when drivers call enable_irq() on the
-interrupt, an unwanted interrupt occurs.
-
-Introduce get and set methods for irqchip's parent to clear it's pending
-irq state. This then can be invoked by the GPIO interrupt controller on
-the parents in it hierarchy to clear the interrupt before enabling the
-interrupt.
-
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-[updated commit text and minor code fixes]
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes in RFC v2 -
-	- Rephrase commit text
-	- Address code review comments
----
- include/linux/irq.h |  6 ++++++
- kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ .../devicetree/bindings/interrupt-controller/interrupts.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index fb301cf..7853eb9 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
- extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
-+extern int irq_chip_set_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool val);
-+extern int irq_chip_get_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool *state);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b76703b..b3fa2d8 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1298,6 +1298,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
- #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
- 
- /**
-+ * irq_chip_set_parent_state - set the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: State to be restored (one of IRQCHIP_STATE_*)
-+ * @val: Value corresponding to @which
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_set_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool val)
-+{
-+	data = data->parent_data;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+index 8a3c408..c10e310 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -108,3 +108,16 @@ commonly used:
+ 			sensitivity = <7>;
+ 		};
+ 	};
 +
-+	if (!data || !data->chip->irq_set_irqchip_state)
-+		return 0;
++3) Interrupt wakeup parent
++--------------------------
 +
-+	return data->chip->irq_set_irqchip_state(data, which, val);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_set_parent_state);
++Some interrupt controllers in a SoC, are always powered on and have a select
++interrupts routed to them, so that they can wakeup the SoC from suspend. These
++interrupt controllers do not fall into the category of a parent interrupt
++controller and can be specified by the "wakeup-parent" property and contain a
++single phandle referring to the wakeup capable interrupt controller.
 +
-+/**
-+ * irq_chip_get_parent_state - get the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: one of IRQCHIP_STATE_* the caller wants to know
-+ * @state: a pointer to a boolean where the state is to be stored
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_get_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool *state)
-+{
-+	data = data->parent_data;
++   Example:
++	wakeup-parent = <&pdc_intc>;
 +
-+	if (!data || !data->chip->irq_get_irqchip_state)
-+		return 0;
-+
-+	return data->chip->irq_get_irqchip_state(data, which, state);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
-+
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
