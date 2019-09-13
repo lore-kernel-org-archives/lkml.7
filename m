@@ -2,145 +2,243 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B863C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE276C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D762089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA3E20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yWIvAi71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403947AbfIMWLQ (ORCPT
+        id S2403934AbfIMWPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:11:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38190 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403902AbfIMWLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:11:16 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83CE980F7C
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 22:11:15 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id s25so1178045wmh.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:11:15 -0700 (PDT)
+        Fri, 13 Sep 2019 18:15:00 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35469 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390255AbfIMWPA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 18:15:00 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q22so23910486ljj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Aws4qLTU0wWFl3XhWF/GSUsHrXBVOSQQwQxzuiN2xN0=;
+        b=yWIvAi71EhlHzCIVwDfDDbPfCTzA3GqRJL4xVjp+4yE3LIJT4p9CeK76GSeSnFgn61
+         8ZxhkeHuWFqiKYjWJGaDOBOxfHgjQcvDCVbx3V9DbEuLBvZ2XI2FUMVmW04FvxOwVEZ5
+         aMg/9h9g9acJ0eSgOSpKg8+26ULeOyMbe6xYDa4+zXK1KotBl9WXbEkOYgaYMhhwHdQn
+         XAx7jn9seCLMHjGGywKuEPCGqoC8U8gG+wSXZWJgumcdffpaFX32soDlRa2lvh+VLjXQ
+         S8HLuTKqYa5hM7AMsI43M3KfqO2IJySOxGyjgfr2DTf8vuYsHCNSz/JeU24eIG67v/jx
+         T95g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hr2S3cXatEQEjg97ibO0S46MGU+IMBQToXpc/8fv2pA=;
-        b=KJYPA0NMwAhA2uwQDGZlRtQ4kgcq+BZfvjMHN7jOgP0wY1XHdAtI0DhLgcr6996/8K
-         yP7FQ4KwCeEGasFEf/HanhDfAW6MRBjuI4kOH8W6kJ8YngM9n+XdYBXDA592Xe8hqq44
-         GQoul/Ek4XsFBKvifYsomms8bCQbtXLk2bi4VGIVFuHIc21WcdnS1dZiEr4kFZQcX7o3
-         YHyoBrLmjV8vV1pNv5nURj0dh8VNIWsDSUhpitWeoFioiHQshfiJTNJCktYEfhxLaOW7
-         Py75TE1oSR2BE2exiRx4fCAlV6vceLYZ6zZl5Bh9bR98Q4rhDUzeL4CUwEfxpQUAtP7m
-         mGaw==
-X-Gm-Message-State: APjAAAUUCFSIavqfDf6nTE46cinZqxDSOsHyMkg4KOF9KmhjQBZIiGOb
-        ROzkHNrJbh3gMz2PvkDlxDEBIemeKbnSgMUywbvKqkrK1/dLAJFN1kVjOWgY9jrqolj+a8l/psA
-        2YVb49W671koCbxQVOI2LxHoW
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr40466672wru.209.1568412674069;
-        Fri, 13 Sep 2019 15:11:14 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwvg5mcGBMQcH69oTg4Zy/5SDck0mdoQ+L7PhYICLf0u+uCx46qLIxP64BzdPr6T4XAIhrtHA==
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr40466656wru.209.1568412673788;
-        Fri, 13 Sep 2019 15:11:13 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3166:d768:e1a7:aab8? ([2001:b07:6468:f312:3166:d768:e1a7:aab8])
-        by smtp.gmail.com with ESMTPSA id r16sm34574925wrc.81.2019.09.13.15.11.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2019 15:11:13 -0700 (PDT)
-Subject: Re: [PATCH 00/11] KVM: x86/mmu: Restore fast invalidate/zap flow
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        James Harvey <jamespharvey20@gmail.com>,
-        Alex Willamson <alex.williamson@redhat.com>
-References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <d40b0e36-8a6a-d79e-4242-dda24a209bcd@redhat.com>
-Date:   Sat, 14 Sep 2019 00:11:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Aws4qLTU0wWFl3XhWF/GSUsHrXBVOSQQwQxzuiN2xN0=;
+        b=pDb66o9cJqJg3gi4yMYAvQWqUyftvVywG+4Lg3mwWIr3sBS77Ju0Ush5QyL+sq8xcC
+         udsnSu4x2jzQcd1LUfM9pzehDGviHSPfyZ7R4UjPPjUyzXONEAcnJ4ySqTdXli/XuDQH
+         iaW2/hSHBsLdZbFfopOFT3c5wQ7UPwxT/GddBDEv9Gxfpdj2x6H/xFD8SQDQ1onqpJIr
+         nucwD1mTdTKYgFWWpIg5g4cwa40AOqjznWVxFVTaDlTeOwU3VglrEp7SGCPXvFQca6FT
+         Vh2yoQSDX3kHYxzv+Q5D8fgLAYB7UmCARk0B3T4EniKJdmOQEaVt2hPXO/bEaDWMjACH
+         e6PA==
+X-Gm-Message-State: APjAAAVgut9u7rosiBuJNa3Aj0ZAPkXFuoFTNYHzHkwTafCuORadULjV
+        hhDOI30zDgJEfiujWSdagQloeQ==
+X-Google-Smtp-Source: APXvYqwlnHCevB0S7cA0qpBG5jlZDBao84E1GD8LnJh21I2z6KDrBVlkh/b4zGUa95Y8PdeNBSN+Pg==
+X-Received: by 2002:a2e:3618:: with SMTP id d24mr30461361lja.179.1568412897370;
+        Fri, 13 Sep 2019 15:14:57 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id w13sm666947lfk.47.2019.09.13.15.14.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 13 Sep 2019 15:14:56 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 01:14:54 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH bpf-next 07/11] samples: bpf: add makefile.prog for
+ separate CC build
+Message-ID: <20190913221453.GD26724@khorivan>
+Mail-Followup-To: Yonghong Song <yhs@fb.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" <clang-built-linux@googlegroups.com>
+References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
+ <20190910103830.20794-8-ivan.khoronzhuk@linaro.org>
+ <1720c5a5-5c64-46a3-be2f-56b59614f82a@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1720c5a5-5c64-46a3-be2f-56b59614f82a@fb.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/19 04:46, Sean Christopherson wrote:
-> Restore the fast invalidate flow for zapping shadow pages and use it
-> whenever vCPUs can be active in the VM.  This fixes (in theory, not yet
-> confirmed) a regression reported by James Harvey where KVM can livelock
-> in kvm_mmu_zap_all() when it's invoked in response to a memslot update.
-> 
-> The fast invalidate flow was removed as it was deemed to be unnecessary
-> after its primary user, memslot flushing, was reworked to zap only the
-> memslot in question instead of all shadow pages.  Unfortunately, zapping
-> only the memslot being (re)moved during a memslot update introduced a
-> regression for VMs with assigned devices.  Because we could not discern
-> why zapping only the relevant memslot broke device assignment, or if the
-> regression extended beyond device assignment, we reverted to zapping all
-> shadow pages when a memslot is (re)moved.
-> 
-> The revert to "zap all" failed to account for subsequent changes that
-> have been made to kvm_mmu_zap_all() between then and now.  Specifically,
-> kvm_mmu_zap_all() now conditionally drops reschedules and drops mmu_lock
-> if a reschedule is needed or if the lock is contended.  Dropping the lock
-> allows other vCPUs to add shadow pages, and, with enough vCPUs, can cause
-> kvm_mmu_zap_all() to get stuck in an infinite loop as it can never zap all
-> pages before observing lock contention or the need to reschedule.
-> 
-> The reasoning behind having kvm_mmu_zap_all() conditionally reschedule was
-> that it would only be used when the VM is inaccesible, e.g. when its
-> mm_struct is dying or when the VM itself is being destroyed.  In that case,
-> playing nice with the rest of the kernel instead of hogging cycles to free
-> unused shadow pages made sense.
-> 
-> Since it's unlikely we'll root cause the device assignment regression any
-> time soon, and that simply removing the conditional rescheduling isn't
-> guaranteed to return us to a known good state, restore the fast invalidate
-> flow for zapping on memslot updates, including mmio generation wraparound.
-> Opportunisticaly tack on a bug fix and a couple enhancements.
-> 
-> Alex and James, it probably goes without saying... please test, especially
-> patch 01/11 as a standalone patch as that'll likely need to be applied to
-> stable branches, assuming it works.  Thanks!
-> 
-> Sean Christopherson (11):
->   KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
->   KVM: x86/mmu: Treat invalid shadow pages as obsolete
->   KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow
->     page related tracepoints""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: add tracepoint for
->     kvm_mmu_invalidate_all_pages""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: zap pages in batch""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: collapse TLB flushes when zap
->     all pages""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: reclaim the zapped-obsolete
->     page first""
->   KVM: x86/mmu: Revert "KVM: x86/mmu: Remove is_obsolete() call"
->   KVM: x86/mmu: Explicitly track only a single invalid mmu generation
->   KVM: x86/mmu: Skip invalid pages during zapping iff root_count is zero
-> 
->  arch/x86/include/asm/kvm_host.h |   4 +-
->  arch/x86/kvm/mmu.c              | 154 ++++++++++++++++++++++++++++----
->  arch/x86/kvm/mmutrace.h         |  42 +++++++--
->  arch/x86/kvm/x86.c              |   1 +
->  4 files changed, 173 insertions(+), 28 deletions(-)
-> 
+On Fri, Sep 13, 2019 at 09:33:58PM +0000, Yonghong Song wrote:
+>
+>
+>On 9/10/19 11:38 AM, Ivan Khoronzhuk wrote:
+>> The makefile.prog is added only, will be used in sample/bpf/Makefile
+>> later in order to switch cross-compiling on CC from HOSTCC.
+>>
+>> The HOSTCC is supposed to build binaries and tools running on the host
+>> afterwards, in order to simplify build or so, like "fixdep" or else.
+>> In case of cross compiling "fixdep" is executed on host when the rest
+>> samples should run on target arch. In order to build binaries for
+>> target arch with CC and tools running on host with HOSTCC, lets add
+>> Makefile.prog for simplicity, having definition and routines similar
+>> to ones, used in script/Makefile.host. This allows later add
+>> cross-compilation to samples/bpf with minimum changes.
+>
+>So this is really Makefile.host or Makefile.user, right?
+It's cut and modified version of Makefile.host
 
-Thanks, I'm testing patch 1 and should send a pull request to Linus
-tomorrow morning as soon as I get the results.
+>In BPF, 'prog' can refers to user prog or bpf prog.
+>To avoid ambiguity, maybe Makefile.host?
+Makefile.target? as target = host not always.
+Makefile.user also looks ok, but doesn't contain target,
+maybe "targetuser", but bpf is also target...
+Initially I was thinking about Makefile.targetprog, but it looks too long.
 
-Paolo
+>
+>>
+>> Makefile.prog contains only stuff needed for samples/bpf, potentially
+>> can be reused and extended for other prog sets later and now needed
+>
+>What do you mean 'extended for other prog sets'? I am wondering whether
+Another kind of samples...with c++ for instance.
+
+>we could just include 'scripts/Makefile.host'? How hard it is?
+It's bound to HOSTCC and it's environment. It is included by default and
+was used before this patchset, blocking cross complication.
+
+>
+>> only for unblocking tricky samples/bpf cross compilation.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>   samples/bpf/Makefile.prog | 77 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 77 insertions(+)
+>>   create mode 100644 samples/bpf/Makefile.prog
+>>
+>> diff --git a/samples/bpf/Makefile.prog b/samples/bpf/Makefile.prog
+>> new file mode 100644
+>> index 000000000000..3781999b9193
+>> --- /dev/null
+>> +++ b/samples/bpf/Makefile.prog
+>> @@ -0,0 +1,77 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# ==========================================================================
+>> +# Building binaries on the host system
+>> +# Binaries are not used during the compilation of the kernel, and intendent
+>> +# to be build for target board, target board can be host ofc. Added to build
+>> +# binaries to run not on host system.
+>> +#
+>> +# Only C is supported, but can be extended for C++.
+>
+>The above comment is not needed.
+will drop it.
+
+>samples/bpf/ only have C now. I am wondering whether your below scripts
+>can be simplified, e.g., removing cxxobjs.
+I think yes, will try
+
+>
+>> +#
+>> +# Sample syntax (see Documentation/kbuild/makefiles.rst for reference)
+>> +# progs-y := xsk_example
+>> +# Will compile xdpsock_example.c and create an executable named xsk_example
+>> +#
+>> +# progs-y    := xdpsock
+>> +# xdpsock-objs := xdpsock_1.o xdpsock_2.o
+>> +# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
+>> +# xdpsock, based on xdpsock_1.o and xdpsock_2.o
+>> +#
+>> +# Inherited from scripts/Makefile.host
+>> +#
+>> +__progs := $(sort $(progs-y))
+>> +
+>> +# C code
+>> +# Executables compiled from a single .c file
+>> +prog-csingle	:= $(foreach m,$(__progs), \
+>> +			$(if $($(m)-objs)$($(m)-cxxobjs),,$(m)))
+>> +
+>> +# C executables linked based on several .o files
+>> +prog-cmulti	:= $(foreach m,$(__progs),\
+>> +		   $(if $($(m)-cxxobjs),,$(if $($(m)-objs),$(m))))
+>> +
+>> +# Object (.o) files compiled from .c files
+>> +prog-cobjs	:= $(sort $(foreach m,$(__progs),$($(m)-objs)))
+>> +
+>> +prog-csingle	:= $(addprefix $(obj)/,$(prog-csingle))
+>> +prog-cmulti	:= $(addprefix $(obj)/,$(prog-cmulti))
+>> +prog-cobjs	:= $(addprefix $(obj)/,$(prog-cobjs))
+>> +
+>> +#####
+>> +# Handle options to gcc. Support building with separate output directory
+>> +
+>> +_progc_flags   = $(PROGS_CFLAGS) \
+>> +                 $(PROGCFLAGS_$(basetarget).o)
+>> +
+>> +# $(objtree)/$(obj) for including generated headers from checkin source files
+>> +ifeq ($(KBUILD_EXTMOD),)
+>> +ifdef building_out_of_srctree
+>> +_progc_flags   += -I $(objtree)/$(obj)
+>> +endif
+>> +endif
+>> +
+>> +progc_flags    = -Wp,-MD,$(depfile) $(_progc_flags)
+>> +
+>> +# Create executable from a single .c file
+>> +# prog-csingle -> Executable
+>> +quiet_cmd_prog-csingle 	= CC  $@
+>> +      cmd_prog-csingle	= $(CC) $(progc_flags) $(PROGS_LDFLAGS) -o $@ $< \
+>> +		$(PROGS_LDLIBS) $(PROGLDLIBS_$(@F))
+>> +$(prog-csingle): $(obj)/%: $(src)/%.c FORCE
+>> +	$(call if_changed_dep,prog-csingle)
+>> +
+>> +# Link an executable based on list of .o files, all plain c
+>> +# prog-cmulti -> executable
+>> +quiet_cmd_prog-cmulti	= LD  $@
+>> +      cmd_prog-cmulti	= $(CC) $(progc_flags) $(PROGS_LDFLAGS) -o $@ \
+>> +			  $(addprefix $(obj)/,$($(@F)-objs)) \
+>> +			  $(PROGS_LDLIBS) $(PROGLDLIBS_$(@F))
+>> +$(prog-cmulti): $(prog-cobjs) FORCE
+>> +	$(call if_changed,prog-cmulti)
+>> +$(call multi_depend, $(prog-cmulti), , -objs)
+>> +
+>> +# Create .o file from a single .c file
+>> +# prog-cobjs -> .o
+>> +quiet_cmd_prog-cobjs	= CC  $@
+>> +      cmd_prog-cobjs	= $(CC) $(progc_flags) -c -o $@ $<
+>> +$(prog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
+>> +	$(call if_changed_dep,prog-cobjs)
+>>
+
+-- 
+Regards,
+Ivan Khoronzhuk
