@@ -2,293 +2,379 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05189C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FEE21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381663;
-	bh=ena8FGoa/yE4ul4093QZR0zMnN1OaRh0oMqi3gLLeIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vaEe5OiA2Qg5YnO5HIZa5zvk1MEPsHlgMIsbiLT8+BVdzbHZ5SD5ROVnwcgbb6Ljh
-	 IPMufzyGgxXwkZx6TGqAB5KPoY264weFCa/GRKLUxEXvcbeyThzSRQUzJflPqTz63W
-	 3Y8g0Ivyxtbm6SJG8gqPwflzqODt19uRCyJXR4GA=
+	by mail.kernel.org (Postfix) with ESMTP id 787FF205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391168AbfIMNeX (ORCPT
+        id S2388955AbfIMNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389172AbfIMNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:34:22 -0400
-Received: from localhost (unknown [106.51.107.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB30205ED;
-        Fri, 13 Sep 2019 13:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568381661;
-        bh=ena8FGoa/yE4ul4093QZR0zMnN1OaRh0oMqi3gLLeIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dLa1oq0UwfvKlyWRccDy0PwkCZ2tnNgnNB1nTg2FctHyJ3zsArLkPOM0T8aDEOigu
-         reYzbSkRwwzXM+fBwajRMINlEl8QxMIxAg8thRkhLzu5QPBjaNU3OeAZM8IpYZFxd3
-         nHnHVc9gJLxzw40KiL+y8m+xX6V5W/2vku4S8Cns=
-Date:   Fri, 13 Sep 2019 19:03:13 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Message-ID: <20190913133313.GF4392@vkoul-mobl>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
- <20190908121058.GL2672@vkoul-mobl>
- <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
- <20190912170312.GD4392@vkoul-mobl>
- <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
- <20190913103654.GE4392@vkoul-mobl>
- <12accd8e-a8ad-1ac6-d394-6f4d90011c9f@ti.com>
+        Fri, 13 Sep 2019 09:34:37 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33625 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389172AbfIMNef (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:34:35 -0400
+Received: from [IPv6:2001:420:44c1:2577:888a:538c:8dda:557b] ([IPv6:2001:420:44c1:2577:888a:538c:8dda:557b])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8liWiWuDRV17O8liai2unZ; Fri, 13 Sep 2019 15:34:32 +0200
+Subject: Re: [Patch 08/13] media: am437x-vpfe: Maintain a reference to the
+ current vpfe_fmt
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-9-bparrot@ti.com>
+ <8b3d5c23-6784-fb1c-5e14-f3759b10aa0b@xs4all.nl>
+ <20190913133245.6rvajfhlghbocuf4@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <693c483f-5342-ab0a-7023-222f06bd011e@xs4all.nl>
+Date:   Fri, 13 Sep 2019 15:34:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <12accd8e-a8ad-1ac6-d394-6f4d90011c9f@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190913133245.6rvajfhlghbocuf4@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfImM0td0oRcDxKFUYicQBanvMfTvbG+fKHcuUh11/5jg+bwiQcU2Iv0vU4YidXrglMcGpZoTCi0oQP8LPwb3+kjWLb+gpT7GZzFSyF3W7wEv/AucWZoj
+ Xymxrkllf8t+JXJmw4xpZcCsnbgprdSv3ZQkOnfPZ3yWxlOY4cFZXYU8H5iFDbS0qWShYQuGJRIKh4lcn9pbrdN+ZT4gspIK7Km7N5qandeIYTiK3KdI0xKJ
+ rZFQqNVy0SaOwUS52FmQjpAi7Xeb8GpkQ+GDkL/CXC1N2YYpA5B1hvnGucqClh07drNBZihgPyi1bqoclYpkx/33+21hiQ84akmtMNVZfcbtghiNJ8bFgN1Z
+ D0Sidlgw4SAjHQdMNYmMEjV35SyKTREb+4zDNtSxke7H9dJagEpGhlBHDv9DlfIFHca57SEfDtuB4piQjd/RqvaV8vxxjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-09-19, 15:19, Peter Ujfalusi wrote:
-> Vinod,
+On 9/13/19 3:32 PM, Benoit Parrot wrote:
+> Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:14:45 +0200]:
+>> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+>>> Keep a reference to the currently selected struct vpfe_fmt * object.
+>>> By doing so we rename the current struct v4l2_format * member from
+>>> fmt to v_fmt.
+>>> The added struct vpfe_fmt * reference is set to "const" so we also
+>>> constify all accesses and related helper functions.
+>>
+>> This explains what you do, but not why you do it.
 > 
-> On 13/09/2019 13.36, Vinod Koul wrote:
-> >>> So you have dma, xbar and client? And you need to use a specfic xbar,
-> >>> did i get that right?
-> >>
-> >> At the end yes.
-> > 
-> > :)
-> > 
-> >> EDMA have dedicated crossbar
-> >> sDMA have dedicated crossbar
-> > 
-> > So the domain mapping should point to crossbar.
-> > 
-> >> Slave devices must use the crossbar to request channel from the DMA
-> >> controllers. Non slave request are directed to the controllers directly
-> >> (no DT binding).
-> > 
-> > The clients for these are different right, if so slave clients will
-> > point to domain xbar and non slave will point to domain controller (to
-> > make everyone use domains). Non domain get any channel ... (fallback as
-> > well)
-> > 
-> > 
-> >> At minimum we would need a new property for DMA routers.
-> >> dma-domain-router perhaps which is pointing to the xbar.
-> > 
-> > Precisely!
+> Hmm ok I'll rework this a bit.
 > 
-> After some thinking at the end we have two main type of DMA channels:
-> slave channels: Hw triggered channels
-> non-slave channels: SW triggered channels w/o DMA request lines
+>>
+>> And I think fmt vs v_fmt is *very* confusing naming.
 > 
-> right?
+> Well in this case v_fmt stands for "v4l2_fmt" and depending on the function
+> I was using fmt to either mean a vpfe_fmt pointer or a v4l2_format pointer
+> so tried (and apparently failed) to make it clearer which was which.
 
-yes and no
+Well, v_fmt could refer to either v4l2_format or vpfe_fmt, so that prefix
+doesn't help me :-)
 
-You are correct in saying this but I would like to move away from the
-two concepts and generalize them a bit, it is long overdue.
+Since 'fmt' was already defined in struct vpfe_device as v4l2_format, I'd
+just keep that rather than causing code churn by changing it. And come up
+with a better name for when you refer to a vpfe_fmt struct.
 
-So from domain point of view, we have channels (memcpy/slave) specifying
-one or more domains to use or no domain (memcpy, any channel)
+Regards,
 
-> Slave channels must be described in DT as we need to specify the DMA
-> request number/line/trigger, whatever it is called on different platforms.
+	Hans
 
-So in the cases where a specific channel/request/trigger is required, we
-would be required to specify that in DT as we do currently, but more
-modern controllers which uses muxes wont need this to be specified,
-pointing to domain (which can be controller/xbar) would do the trick!
+> 
+>>
+>> I'd keep fmt as-is, and come up with a different name for the vpfe_fmt
+>> pointer. ref_vpfe_fmt?
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+>>> ---
+>>>  drivers/media/platform/am437x/am437x-vpfe.c | 88 +++++++++++++--------
+>>>  drivers/media/platform/am437x/am437x-vpfe.h |  3 +-
+>>>  2 files changed, 55 insertions(+), 36 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+>>> index e76dc2b3b7b8..a8f6cf1d06a0 100644
+>>> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+>>> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+>>> @@ -147,8 +147,8 @@ static int
+>>>  __vpfe_get_format(struct vpfe_device *vpfe,
+>>>  		  struct v4l2_format *format, unsigned int *bpp);
+>>>  
+>>> -static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+>>> -					    unsigned int code)
+>>> +static const struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+>>> +						  unsigned int code)
+>>>  {
+>>>  	struct vpfe_fmt *fmt;
+>>>  	unsigned int k;
+>>> @@ -162,8 +162,8 @@ static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+>>>  	return NULL;
+>>>  }
+>>>  
+>>> -static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+>>> -					   unsigned int pixelformat)
+>>> +static const struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+>>> +						 unsigned int pixelformat)
+>>>  {
+>>>  	struct vpfe_fmt *fmt;
+>>>  	unsigned int k;
+>>> @@ -184,7 +184,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
+>>>  {
+>>>  	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
+>>>  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+>>> -	struct vpfe_fmt *fmt;
+>>> +	const struct vpfe_fmt *fmt;
+>>>  
+>>>  	fmt = find_format_by_code(vpfe, mbus->code);
+>>>  	if (WARN_ON(fmt == NULL)) {
+>>> @@ -207,7 +207,7 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+>>>  			struct v4l2_pix_format *pix_fmt,
+>>>  			struct v4l2_mbus_framefmt *mbus_fmt)
+>>>  {
+>>> -	struct vpfe_fmt *fmt;
+>>> +	const struct vpfe_fmt *fmt;
+>>>  
+>>>  	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
+>>>  	if (!fmt) {
+>>> @@ -990,10 +990,10 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>>>  	vpfe_dbg(2, vpfe, "vpfe_config_ccdc_image_format\n");
+>>>  
+>>>  	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+>>> -		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
+>>> +		print_fourcc(vpfe->v_fmt.fmt.pix.pixelformat));
+>>>  
+>>>  	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
+>>> -			vpfe->fmt.fmt.pix.pixelformat) < 0) {
+>>> +			vpfe->v_fmt.fmt.pix.pixelformat) < 0) {
+>>>  		vpfe_err(vpfe, "couldn't set pix format in ccdc\n");
+>>>  		return -EINVAL;
+>>>  	}
+>>> @@ -1001,7 +1001,7 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>>>  	/* configure the image window */
+>>>  	vpfe_ccdc_set_image_window(&vpfe->ccdc, &vpfe->crop, vpfe->bpp);
+>>>  
+>>> -	switch (vpfe->fmt.fmt.pix.field) {
+>>> +	switch (vpfe->v_fmt.fmt.pix.field) {
+>>>  	case V4L2_FIELD_INTERLACED:
+>>>  		/* do nothing, since it is default */
+>>>  		ret = vpfe_ccdc_set_buftype(
+>>> @@ -1043,7 +1043,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>>>  static int vpfe_config_image_format(struct vpfe_device *vpfe,
+>>>  				    v4l2_std_id std_id)
+>>>  {
+>>> -	struct v4l2_pix_format *pix = &vpfe->fmt.fmt.pix;
+>>> +	const struct vpfe_fmt *fmt;
+>>> +	struct v4l2_pix_format *pix = &vpfe->v_fmt.fmt.pix;
+>>>  	int i, ret;
+>>>  
+>>>  	for (i = 0; i < ARRAY_SIZE(vpfe_standards); i++) {
+>>> @@ -1078,10 +1079,18 @@ static int vpfe_config_image_format(struct vpfe_device *vpfe,
+>>>  	else
+>>>  		pix->field = V4L2_FIELD_NONE;
+>>>  
+>>> -	ret = __vpfe_get_format(vpfe, &vpfe->fmt, &vpfe->bpp);
+>>> +	ret = __vpfe_get_format(vpfe, &vpfe->v_fmt, &vpfe->bpp);
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> +	fmt = find_format_by_pix(vpfe, pix->pixelformat);
+>>> +	if (!fmt) {
+>>> +		vpfe_dbg(3, vpfe, "Invalid pixel code: %4.4s\n",
+>>> +			 (char *)&pix->pixelformat);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +	vpfe->fmt = fmt;
+>>> +
+>>>  	/* Update the crop window based on found values */
+>>>  	vpfe->crop.width = pix->width;
+>>>  	vpfe->crop.height = pix->height;
+>>> @@ -1227,7 +1236,7 @@ static inline void vpfe_schedule_bottom_field(struct vpfe_device *vpfe)
+>>>  static inline void vpfe_process_buffer_complete(struct vpfe_device *vpfe)
+>>>  {
+>>>  	vpfe->cur_frm->vb.vb2_buf.timestamp = ktime_get_ns();
+>>> -	vpfe->cur_frm->vb.field = vpfe->fmt.fmt.pix.field;
+>>> +	vpfe->cur_frm->vb.field = vpfe->v_fmt.fmt.pix.field;
+>>>  	vpfe->cur_frm->vb.sequence = vpfe->sequence++;
+>>>  	vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, VB2_BUF_STATE_DONE);
+>>>  	vpfe->cur_frm = vpfe->next_frm;
+>>> @@ -1296,7 +1305,7 @@ static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
+>>>  static irqreturn_t vpfe_isr(int irq, void *dev)
+>>>  {
+>>>  	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
+>>> -	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
+>>> +	enum v4l2_field field = vpfe->v_fmt.fmt.pix.field;
+>>>  	int intr_status, stopping = vpfe->stopping;
+>>>  
+>>>  	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
+>>> @@ -1397,7 +1406,7 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
+>>>  		mbus_to_pix(vpfe, &mbus_fmt, &format->fmt.pix, bpp);
+>>>  	}
+>>>  
+>>> -	format->type = vpfe->fmt.type;
+>>> +	format->type = vpfe->v_fmt.type;
+>>>  
+>>>  	vpfe_dbg(1, vpfe,
+>>>  		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+>>> @@ -1434,7 +1443,7 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+>>>  	v4l2_fill_pix_format(&format->fmt.pix, &fmt.format);
+>>>  	mbus_to_pix(vpfe, &fmt.format, &format->fmt.pix, bpp);
+>>>  
+>>> -	format->type = vpfe->fmt.type;
+>>> +	format->type = vpfe->v_fmt.type;
+>>>  
+>>>  	vpfe_dbg(1, vpfe,
+>>>  		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+>>> @@ -1452,7 +1461,7 @@ static int vpfe_g_fmt(struct file *file, void *priv,
+>>>  
+>>>  	vpfe_dbg(2, vpfe, "vpfe_g_fmt\n");
+>>>  
+>>> -	*fmt = vpfe->fmt;
+>>> +	*fmt = vpfe->v_fmt;
+>>>  
+>>>  	return 0;
+>>>  }
+>>> @@ -1496,9 +1505,10 @@ static int vpfe_try_fmt(struct file *file, void *priv,
+>>>  }
+>>>  
+>>>  static int vpfe_s_fmt(struct file *file, void *priv,
+>>> -		      struct v4l2_format *fmt)
+>>> +		      struct v4l2_format *f)
+>>>  {
+>>>  	struct vpfe_device *vpfe = video_drvdata(file);
+>>> +	const struct vpfe_fmt *fmt;
+>>>  	struct v4l2_format format;
+>>>  	unsigned int bpp;
+>>>  	int ret;
+>>> @@ -1515,25 +1525,32 @@ static int vpfe_s_fmt(struct file *file, void *priv,
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> -
+>>> -	if (!cmp_v4l2_format(fmt, &format)) {
+>>> +	if (!cmp_v4l2_format(f, &format)) {
+>>>  		/* Sensor format is different from the requested format
+>>>  		 * so we need to change it
+>>>  		 */
+>>> -		ret = __vpfe_set_format(vpfe, fmt, &bpp);
+>>> +		ret = __vpfe_set_format(vpfe, f, &bpp);
+>>>  		if (ret)
+>>>  			return ret;
+>>>  	} else /* Just make sure all of the fields are consistent */
+>>> -		*fmt = format;
+>>> +		*f = format;
+>>> +
+>>> +	fmt = find_format_by_pix(vpfe, f->fmt.pix.pixelformat);
+>>> +	if (!fmt) {
+>>> +		vpfe_dbg(3, vpfe, "Invalid pixel code: %4.4s, This should not happen!!\n",
+>>> +			 (char *)&f->fmt.pix.pixelformat);
+>>> +		return -EINVAL;
+>>> +	}
+>>>  
+>>>  	/* First detach any IRQ if currently attached */
+>>>  	vpfe_detach_irq(vpfe);
+>>> -	vpfe->fmt = *fmt;
+>>> +	vpfe->v_fmt = *f;
+>>>  	vpfe->bpp = bpp;
+>>> +	vpfe->fmt = fmt;
+>>>  
+>>>  	/* Update the crop window based on found values */
+>>> -	vpfe->crop.width = fmt->fmt.pix.width;
+>>> -	vpfe->crop.height = fmt->fmt.pix.height;
+>>> +	vpfe->crop.width = f->fmt.pix.width;
+>>> +	vpfe->crop.height = f->fmt.pix.height;
+>>>  
+>>>  	/* set image capture parameters in the ccdc */
+>>>  	return vpfe_config_ccdc_image_format(vpfe);
+>>> @@ -1547,7 +1564,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+>>>  	struct vpfe_subdev_info *sdinfo;
+>>>  	struct v4l2_mbus_framefmt mbus;
+>>>  	struct v4l2_pix_format pix;
+>>> -	struct vpfe_fmt *fmt;
+>>> +	const struct vpfe_fmt *fmt;
+>>>  	int ret;
+>>>  
+>>>  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+>>> @@ -1850,7 +1867,7 @@ static int vpfe_queue_setup(struct vb2_queue *vq,
+>>>  			    unsigned int sizes[], struct device *alloc_devs[])
+>>>  {
+>>>  	struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+>>> -	unsigned size = vpfe->fmt.fmt.pix.sizeimage;
+>>> +	unsigned int size = vpfe->v_fmt.fmt.pix.sizeimage;
+>>>  
+>>>  	if (vq->num_buffers + *nbuffers < 3)
+>>>  		*nbuffers = 3 - vq->num_buffers;
+>>> @@ -1886,12 +1903,12 @@ static int vpfe_buffer_prepare(struct vb2_buffer *vb)
+>>>  	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+>>>  	struct vpfe_device *vpfe = vb2_get_drv_priv(vb->vb2_queue);
+>>>  
+>>> -	vb2_set_plane_payload(vb, 0, vpfe->fmt.fmt.pix.sizeimage);
+>>> +	vb2_set_plane_payload(vb, 0, vpfe->v_fmt.fmt.pix.sizeimage);
+>>>  
+>>>  	if (vb2_get_plane_payload(vb, 0) > vb2_plane_size(vb, 0))
+>>>  		return -EINVAL;
+>>>  
+>>> -	vbuf->field = vpfe->fmt.fmt.pix.field;
+>>> +	vbuf->field = vpfe->v_fmt.fmt.pix.field;
+>>>  
+>>>  	return 0;
+>>>  }
+>>> @@ -2116,11 +2133,12 @@ vpfe_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
+>>>  	s->r = vpfe->crop = r;
+>>>  
+>>>  	vpfe_ccdc_set_image_window(&vpfe->ccdc, &r, vpfe->bpp);
+>>> -	vpfe->fmt.fmt.pix.width = r.width;
+>>> -	vpfe->fmt.fmt.pix.height = r.height;
+>>> -	vpfe->fmt.fmt.pix.bytesperline = vpfe_ccdc_get_line_length(&vpfe->ccdc);
+>>> -	vpfe->fmt.fmt.pix.sizeimage = vpfe->fmt.fmt.pix.bytesperline *
+>>> -						vpfe->fmt.fmt.pix.height;
+>>> +	vpfe->v_fmt.fmt.pix.width = r.width;
+>>> +	vpfe->v_fmt.fmt.pix.height = r.height;
+>>> +	vpfe->v_fmt.fmt.pix.bytesperline =
+>>> +		vpfe_ccdc_get_line_length(&vpfe->ccdc);
+>>> +	vpfe->v_fmt.fmt.pix.sizeimage = vpfe->v_fmt.fmt.pix.bytesperline *
+>>> +						vpfe->v_fmt.fmt.pix.height;
+>>>  
+>>>  	vpfe_dbg(1, vpfe, "cropped (%d,%d)/%dx%d of %dx%d\n",
+>>>  		 r.left, r.top, r.width, r.height, cr.width, cr.height);
+>>> @@ -2156,7 +2174,7 @@ static long vpfe_ioctl_default(struct file *file, void *priv,
+>>>  			return ret;
+>>>  		}
+>>>  		ret = vpfe_get_ccdc_image_format(vpfe,
+>>> -						 &vpfe->fmt);
+>>> +						 &vpfe->v_fmt);
+>>>  		if (ret < 0) {
+>>>  			vpfe_dbg(2, vpfe,
+>>>  				"Invalid image format at CCDC\n");
+>>> @@ -2309,7 +2327,7 @@ static int vpfe_probe_complete(struct vpfe_device *vpfe)
+>>>  	spin_lock_init(&vpfe->dma_queue_lock);
+>>>  	mutex_init(&vpfe->lock);
+>>>  
+>>> -	vpfe->fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+>>> +	vpfe->v_fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+>>>  
+>>>  	/* set first sub device as current one */
+>>>  	vpfe->current_subdev = &vpfe->cfg->sub_devs[0];
+>>> diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+>>> index 6f25750f84e4..64a25bf720e4 100644
+>>> --- a/drivers/media/platform/am437x/am437x-vpfe.h
+>>> +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+>>> @@ -280,7 +280,8 @@ struct vpfe_device {
+>>>  	/* Pointer pointing to next v4l2_buffer */
+>>>  	struct vpfe_cap_buffer *next_frm;
+>>>  	/* Used to store pixel format */
+>>> -	struct v4l2_format fmt;
+>>> +	const struct vpfe_fmt *fmt;
+>>> +	struct v4l2_format v_fmt;
+>>>  	/* Used to store current bytes per pixel based on current format */
+>>>  	unsigned int bpp;
+>>>  	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
+>>>
+>>
 
-
-> non-slave channels on the other hand can be requested from any
-> controllers which can execute it. Or in the scope of this series, from
-> the controller which is best suited to service the device or module.
-
-Right which takes care of your new requirement as well as older ones
-
-> If we really want to move to similar binding structure as interrupts
-> opposed to what we have atm (gpio, pwm, leds, etc uses the same
-> principle), then
-> 
-> dma-slave-controller: can point to a dma controller or dma router which
-> should be used from the node it is presented inherited by it's child
-> nodes for slave channels.
-> 
-> dma-nonslave-controller: can point to a dma controller which should be
-> used from the node it is presented inherited by it's child nodes for non
-> slave channels.
-> 
-> DMA routers have the phandle for the dma controller they are attached
-> to, so this should be fine, I guess.
-> 
-> Based on the topology of the SoC, these can be added in higher level in
-> the tree to divert from the higher level controller selection.
-
-Looks interesting to me and doable. But as I said earlier, lets do a bit
-more generalization in concepts please
-
-> >> A slave channel request would first look for dma-domain-router, if it is
-> >> there, the request goes via that.
-> >> If not then look for dma-domain-controller and use it for the request.
-> >> The DMA binding can drop the phandle to the xbar/dma.
-> >> Request for not slave channel would only look for dma-domain-controller.
-> >>
-> >>
-> >> But...
-> >>
-> >> - If we have one dedicated memcpy DMA and one for slave usage.
-> >> In top we declare dma-domain-controller = <&m2m_dma>;
-> >>
-> >> Then you have  a slave client somewhere
-> >> client1: peripheral@42 {
-> >> 	dma-domain-controller = <&slave_dma>;
-> >> 	dmas = <6>, <7>;
-> >> 	dma-names = "tx", "rx";
-> >> };
-> >>
-> >> This is fine I guess. But what would we do if the driver for client1
-> >> needs additional memcpy channel? By the definition of the binding the
-> >> non slave channel should be taken from the closest dma-domain-controller
-> >> which is not what we want. We want the channel from m2m_dma.
-> > 
-> > I would not envision same controller needs both memcpy or slave
-> > channels. If so, that should be represented as something like dma-names
-> > and represent two sets of dmas one for domain1 and another for domain2.
-> > 
-> > I would generalize it and not call it memcpy/slave but just domains and
-> > have a controller use multiple domains (if we have a super controller
-> > which can do that :D)
-> > 
-> > client1: peripheral@42 {
-> >         dma-domain-names = "memcpy", "slave";
-> >         dma-domains = <&mem_dma>, <&slave_dma>;
-> >         ...
-> > };
-> 
-> Right, similar thing should work, I guess.
-> 
-> / {
-> 	/* DDR to DDR is used in main_udmap */
-> 	dma-domain-names = "memcpy";
-> 	dma-domains = <&main_udmap>;
-> 
-> 	cbass_main {
-> 		/* memcpy is from main_udmap and slaves also */
-> 		dma-domain-names = "slave";
-> 		dma-domains = <&main_udmap>;
-> 
-> 		cbass_mcu {
-> 			/* memcpy is from mcu_udmap and slaves also */
-> 			dma-domain-names = "memcpy", "slave";
-> 			dma-domains = <&mcu_udmap>, <&mcu_udmap>;
-> 
-> 		};
-> 	};
-> };
-> 
-> or
-> 
-> / {
-> 	/* memcpy is from edma and slaves also */
-> 	dma-domain-names = "memcpy", "slave";
-> 	dma-domains = <&edma>, <&edma>;
-> 
-> 	edma_xbar1 xbar@0 {
-> 		/*
-> 		 * DMA router on front of edma,
-> 		 * optionally can be explicitly tell the DMA controller
-> 		 * to be used with the router if needed.
-> 		 */
-> 
-> 		dma-domain-names = "slave";
-> 		dma-domains = <&main_udmap>;
-> 	};
-> 
-> 	mcbsp muxed_dma@0 {
-> 		/* memcpy is from edma and slaves from edma_xbar1 */
-> 		dma-domain-names = "slave";
-> 		dma-domains = <&edma_xbar1>;
-> 	};
-> 
-> 	voice muxed_dma@1 {
-> 		/* memcpy is from edma and slaves from edma_xbar1 */
-> 		dma-domain-names = "slave";
-> 		dma-domains = <&edma_xbar1>;
-> 	};
-> 
-> 	something not_muxed@0 {
-> 		/* memcpy is from edma and slaves also */
-> 	};
-> };
-> 
-> Even the DMA router binding can be changed to look for the "slave"
-> domain it belongs to?
-> 
-> The the dmas can drop the phandle to the controller/router
-> 
-> Internal API wise, things could use
-> dmaengine_get_slave_domain(struct device *client_dev);
-> if we get a domain, we know the the binding does not include the phandle
-> for the controller.
-> 
-> and
-> dmaengine_get_nonslave_domain(struct device *client_dev);
-> 
-> The DMA routers and drivers might need to be changed, not sure if they
-> would notice the drop of the first phandle from the binding...
-> 
-> >>
-> >> And no, we can not start looking for the dma-domain-controller starting
-> >> from the root as in most cases the dma-domain-controller closer to the
-> >> client is what we really want and not the globally best controller.
-> >>
-> >> - How to handle the transition?
-> >>
-> >> If neither dma-domain-controller/router is found, assume that the first
-> >> argument in the binding is a phandle to the dma/router?
-> >> We need to carry the support for what we have today for a long time. The
-> >> kernel must boot with old DT blob.
-> >>
-> >> - Will it make things cleaner? Atm it is pretty easy to see which
-> >> controller/router is used for which device.
-> 
-> Is this big change worth to push for?
-> 
-> 
-> >> - Also to note that the EDMA and sDMA bindings are different, so we can
-> >> not just swap dma-domain-controller/router underneath, we also need to
-> >> modify the client's dmas line as well.
-> >>
-> >> - Péter
-> >>
-> >> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> >> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> > 
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-~Vinod
