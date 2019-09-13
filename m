@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9219C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB74CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AD620640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E433206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381373;
-	bh=+HLiC11vGqxHSXKdFpYDJRMhz3DLeHPkz4fOm8VWOuc=;
+	s=default; t=1568381380;
+	bh=S6XxT86l/ksRBPK8+YZyeHode4P/CRetxe0Zxrx4S28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhT3/tXSaZrJiREywGlF7PVJEh6xvvyI3zl+4LO4j3mUeb5mlL4c+IMEucQ+elirJ
-	 oveYbHrEaZQqGfM4gW/ZXc8DQccwx0ui1tuDrenN0HRd2/bAvjtb7wiBR8IseWdhcV
-	 i/uyZK6cIPH0Ya+Rxt+Ut2Sz2FM7bCcKfOdc8+U0=
+	b=woO1j5nLATySl5+Qt6xhlfPWopV+S1ilaXKQ1Ef7XZGG5dq8EsH0Wgs1LoL82mJqe
+	 lVLoXv4YK92AKKOES//Bw6AYNGr01GEsLok6+7wP03VJvOPfwYrx+TdynK/F236D17
+	 6x8kTutufNSJhwgSuhVBcXmuf4K2h6p/e9wnBP8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391654AbfIMN3d (ORCPT
+        id S2390358AbfIMNTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390390AbfIMNTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:14 -0400
+        id S2390340AbfIMNTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:02 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE45F20640;
-        Fri, 13 Sep 2019 13:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6674A20640;
+        Fri, 13 Sep 2019 13:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380753;
-        bh=+HLiC11vGqxHSXKdFpYDJRMhz3DLeHPkz4fOm8VWOuc=;
+        s=default; t=1568380742;
+        bh=S6XxT86l/ksRBPK8+YZyeHode4P/CRetxe0Zxrx4S28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNW2KzMruo4eaKmDpri9ZyrSMUrlDW6AUVRx4t0vAUYJ5cX9QbPi6QkNHD/KKmcNx
-         hqMO43PGRsKu7JiYTvdqInR6abFG9sHyjTnf9HYiFESRH/TEJ3/ji3WQzrGKqaw4B+
-         uRM1Uy2gU2AR+72dNYeid0gmnmL7/EYtIBCKzDgQ=
+        b=MkC7KGIp2Lxcjo20LtUEx/avuS8ZEOEpVnt95juVGo3GOsa1s1GQPmADcwVocOkhZ
+         RvVej84LHSdkhiooOAvY3IuMAhlNjSavqk0SMJ7EW3mQYlTP7NYBThAZ31Bc2XH3Oy
+         jxjSgmmsSxhAsLq+OU93LNueJ802+7UjoIHPJHP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/190] scsi: target/iblock: Fix overrun in WRITE SAME emulation
-Date:   Fri, 13 Sep 2019 14:06:41 +0100
-Message-Id: <20190913130611.632934574@linuxfoundation.org>
+Subject: [PATCH 4.19 142/190] clk: tegra210: Fix default rates for HDA clocks
+Date:   Fri, 13 Sep 2019 14:06:37 +0100
+Message-Id: <20190913130611.359838894@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,42 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5676234f20fef02f6ca9bd66c63a8860fce62645 ]
+[ Upstream commit 9caec6620f25b6d15646bbdb93062c872ba3b56f ]
 
-WRITE SAME corrupts data on the block device behind iblock if the command
-is emulated. The emulation code issues (M - 1) * N times more bios than
-requested, where M is the number of 512 blocks per real block size and N is
-the NUMBER OF LOGICAL BLOCKS specified in WRITE SAME command. So, for a
-device with 4k blocks, 7 * N more LBAs gets written after the requested
-range.
+Currently the default clock rates for the HDA and HDA2CODEC_2X clocks
+are both 19.2MHz. However, the default rates for these clocks should
+actually be 51MHz and 48MHz, respectively. The current clock settings
+results in a distorted output during audio playback. Correct the default
+clock rates for these clocks by specifying them in the clock init table
+for Tegra210.
 
-The issue happens because the number of 512 byte sectors to be written is
-decreased one by one while the real bios are typically from 1 to 8 512 byte
-sectors per bio.
-
-Fixes: c66ac9db8d4a ("[SCSI] target: Add LIO target core v4.0.0-rc6")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_iblock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra210.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index 1bc9b14236d8b..854b2bcca7c1a 100644
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -515,7 +515,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
- 
- 		/* Always in 512 byte units for Linux/Block */
- 		block_lba += sg->length >> SECTOR_SHIFT;
--		sectors -= 1;
-+		sectors -= sg->length >> SECTOR_SHIFT;
- 	}
- 
- 	iblock_submit_bios(&list);
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index f58480fe17674..080bfa24863ee 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -3376,6 +3376,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_I2S3_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
+ 	{ TEGRA210_CLK_I2S4_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
+ 	{ TEGRA210_CLK_VIMCLK_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
++	{ TEGRA210_CLK_HDA, TEGRA210_CLK_PLL_P, 51000000, 0 },
++	{ TEGRA210_CLK_HDA2CODEC_2X, TEGRA210_CLK_PLL_P, 48000000, 0 },
+ 	/* This MUST be the last entry. */
+ 	{ TEGRA210_CLK_CLK_MAX, TEGRA210_CLK_CLK_MAX, 0, 0 },
+ };
 -- 
 2.20.1
 
