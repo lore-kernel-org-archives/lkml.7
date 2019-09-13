@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA9CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB71BC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AC6214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4FA217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380736;
-	bh=WJbq07PQexHhHh8h+8A/c7rxEiPdXwlQTv9J9HxJxdU=;
+	s=default; t=1568380738;
+	bh=l3+xhIZ4Qtoji4jU2cv1PVfYcIhXQZ+s11XP5hq4HRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5i3op6LhBP0+FbFxwTiAaWzrLnmAHooFwiIEAU1sw/g5PY0G6r3VDbLnH2fJXCxZ
-	 UP1VJIKXlaZIrqLmtfAxpZ6DOILVdUlDUrxSRMEDd9Afxf6+cMOlUUBXCs3EfRQaly
-	 1hFajoWyx5URZjd3hpcNbRuRGoYhR0FkB3TDI8tY=
+	b=t5uPAW5e8s28Wa5bv/RcA3HJwttUwnixmp/ASpgKmNQlDp8mezmOFUtb67yijbQPj
+	 +wYJBRrARtacRVwgudX4JbIu/LBXXhm1J9k0NbrtpYmTOG7PN+0zZ9bYxwD5Rd5eHF
+	 nmSyG5wj0nF1hVuZ7eON2Is288V1HWnTscpyv3s0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390318AbfIMNSz (ORCPT
+        id S2390330AbfIMNS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390296AbfIMNSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:50 -0400
+        id S2390291AbfIMNSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:54 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5C17206A5;
-        Fri, 13 Sep 2019 13:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF405206A5;
+        Fri, 13 Sep 2019 13:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380730;
-        bh=WJbq07PQexHhHh8h+8A/c7rxEiPdXwlQTv9J9HxJxdU=;
+        s=default; t=1568380733;
+        bh=l3+xhIZ4Qtoji4jU2cv1PVfYcIhXQZ+s11XP5hq4HRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PEzzxPuSHZ36V7KcwsAZS5PLhe58dVlDOJHrM2TUP1TdwX8EA4xCc9lkRivLbqG6q
-         X7JGFF7C0dOt+euzaTmwiE3xkVovBHqDukrzLd62bou2vEt2uW9RL5EtZsaluuX9iW
-         YSX9j02rUZ5yfJ9/cWIk65MZ+qTHcPho1ETFNjWM=
+        b=M6zj2aNGgGyjHSAbibAgAwAFIb5AszRb5EoDYnsaqKs3x9HneJLbPn2lSc3LZDYyf
+         /3D82C3UojFkK3fz5tjkMEFdMJe5n0npr0wdU0fcWHW/UFjHRGvnBgUJYxc1yekuql
+         Rv7HBnME5e4yWr6t+y0chtXtQ2KK0C/Rf4pgglr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Sergey Gorenko <sergeygo@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 158/190] ARM: dts: gemini: Set DIR-685 SPI CS as active low
-Date:   Fri, 13 Sep 2019 14:06:53 +0100
-Message-Id: <20190913130612.543697910@linuxfoundation.org>
+Subject: [PATCH 4.19 159/190] RDMA/srp: Document srp_parse_in() arguments
+Date:   Fri, 13 Sep 2019 14:06:54 +0100
+Message-Id: <20190913130612.619070952@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,34 +63,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f90b8fda3a9d72a9422ea80ae95843697f94ea4a ]
+[ Upstream commit e37df2d5b569390e3b80ebed9a73fd5b9dcda010 ]
 
-The SPI to the display on the DIR-685 is active low, we were
-just saved by the SPI library enforcing active low on everything
-before, so set it as active low to avoid ambiguity.
+This patch avoids that a warning is reported when building with W=1.
 
-Link: https://lore.kernel.org/r/20190715202101.16060-1-linus.walleij@linaro.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Cc: Sergey Gorenko <sergeygo@mellanox.com>
+Cc: Max Gurtovoy <maxg@mellanox.com>
+Cc: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/gemini-dlink-dir-685.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/srp/ib_srp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-index 502a361d1fe90..15d6157b661db 100644
---- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-+++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-@@ -65,7 +65,7 @@
- 		gpio-miso = <&gpio1 8 GPIO_ACTIVE_HIGH>;
- 		gpio-mosi = <&gpio1 7 GPIO_ACTIVE_HIGH>;
- 		/* Collides with pflash CE1, not so cool */
--		cs-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
- 		num-chipselects = <1>;
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index 2c1114ee0c6da..9da30d88a615e 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -3401,6 +3401,9 @@ static const match_table_t srp_opt_tokens = {
  
- 		panel: display@0 {
+ /**
+  * srp_parse_in - parse an IP address and port number combination
++ * @net:	   [in]  Network namespace.
++ * @sa:		   [out] Address family, IP address and port number.
++ * @addr_port_str: [in]  IP address and port number.
+  *
+  * Parse the following address formats:
+  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
 -- 
 2.20.1
 
