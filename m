@@ -2,91 +2,113 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CD8C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D854AC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E120830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rhcGyriU"
+	by mail.kernel.org (Postfix) with ESMTP id B02FB20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568386876;
+	bh=d5LyY7lEBC5SV24eCUuLaBZ+kemQPetOKLdbtly1Mhw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N0F+DOioEn4bzcWjsaXxJQHraozoK3LKgtPrasJJgwDBNWBdtzxxuNBU+xDARy7EF
+	 JSVONuIYMLbeLiEjP6fOP8LnMGq6fO4kHX9aq3r+qj6JaERvUD+hFORKd91iUpEtju
+	 2A97KJLdTQ/JSy4NCeSiefeoCOjfE/OJqX89S/Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390259AbfIMPAq (ORCPT
+        id S2390319AbfIMPBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:00:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43348 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388211AbfIMPAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:00:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/rrOO5cRfnuT0HPH0sG11kpD8hb/EFmQkUJiAynpSfI=; b=rhcGyriUGdM0uLIxwPsUds2QT
-        t+M0Zs7sOBv6zqYYMm7GBfHI8C5o8Wn19/FCGzhLLfkakZqlASZkCnoNm1ElzdSTNHs5DJzfwQ0S/
-        sAs15ESalJ9S2r2ftIZc8Y1T0YZ7pzRl8jxQVlMibUStwIfn91AVf+5NKl5l7qv72VxeDZGsgOok7
-        UXm4bOQOokOzPjF9h+WMsBoTJUBRU+L78K5hAPL1I7FPhBnPzhNxbdWzQR5XXLAUcuCyAJOHLffEI
-        p9Ovn+qpuOdt1PbCis4hoqBgSJre4ax2VCiIp/Ev1VjI9J3m/zLiVwnWY9LsF49wzYWf4M6kKbVmv
-        oNAcnnchg==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i8n3z-0006Au-6N; Fri, 13 Sep 2019 15:00:43 +0000
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam>
- <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
- <20190913010937.7fc20d93@lwn.net> <20190913114849.GP20699@kadam>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b579153b-3f6d-722c-aea8-abc0d026fa0d@infradead.org>
-Date:   Fri, 13 Sep 2019 08:00:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 11:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388950AbfIMPBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:01:15 -0400
+Received: from localhost (195-23-252-136.net.novis.pt [195.23.252.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CB82054F;
+        Fri, 13 Sep 2019 15:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568386875;
+        bh=d5LyY7lEBC5SV24eCUuLaBZ+kemQPetOKLdbtly1Mhw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SyzHJxtY+DiAeTBBFqnKKVdTlRNhYA5/YA+nAgMJgirE71hpMhWU6ebQ/kg8+vWpM
+         4cnlDLPdlrd6s0JsBhlc8hB6ZKcnhpr3l6Md54QBn7deDXGP8L5YjC99MPnOAPpXiM
+         ZPbSRFuUWlSg3Zt0um7QIQ1FX5UrdNqPdKqsjeoc=
+Date:   Fri, 13 Sep 2019 11:01:11 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "# 3.9+" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
+ failures
+Message-ID: <20190913150111.GI1546@sasha-vm>
+References: <20190913130559.669563815@linuxfoundation.org>
+ <20190913130606.981926197@linuxfoundation.org>
+ <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
+ <20190913144627.GH1546@sasha-vm>
+ <20190913145456.GA456842@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190913114849.GP20699@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190913145456.GA456842@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/13/19 4:48 AM, Dan Carpenter wrote:
+On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
+>On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
+>> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
+>> > Hi Greg,
+>> >
+>> > This feels like it's missing a From: line.
+>> >
+>> > commit b513a18cf1d705bd04efd91c417e79e4938be093
+>> > Author: Lyude Paul <lyude@redhat.com>
+>> > Date:   Mon Jan 28 16:03:50 2019 -0500
+>> >
+>> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
+>> >
+>> > Is this an artifact of your notification-of-patches process and I
+>> > never noticed before, or was the patch ingested incorrectly?
+>>
+>> It was always like this for patches that came through me. Greg's script
+>> generates an explicit "From:" line in the patch, but I never saw the
+>> value in that since git does the right thing by looking at the "From:"
+>> line in the mail header.
+>>
+>> The right thing is being done in stable-rc and for the releases. For
+>> your example here, this is how it looks like in the stable-rc tree:
+>>
+>> commit bdcc885be68289a37d0d063cd94390da81fd8178
+>> Author:     Lyude Paul <lyude@redhat.com>
+>> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
+>> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> CommitDate: Fri Sep 13 14:05:29 2019 +0100
+>>
+>>    drm/nouveau: Don't WARN_ON VCPI allocation failures
+>
+>Yeah, we should fix your scripts to put the explicit From: line in here
+>as we are dealing with patches in this format and it causes confusion at
+>times (like now.)  It's not the first time and that's why I added those
+>lines to the patches.
 
->> So I'm expecting to take this kind of stuff into Documentation/.  My own
->> personal hope is that it can maybe serve to shame some of these "local
->> quirks" out of existence.  The evidence from this brief discussion suggests
->> that this might indeed happen.
-> 
-> I don't think it's shaming, I think it's validating.  Everyone just
-> insists that since it's written in the Book of Rules then it's our fault
-> for not reading it.  It's like those EULA things where there is more
-> text than anyone can physically read in a life time.
+Heh, didn't think anyone cared about this scenario for the stable-rc
+patches.
 
-Yes, agreed.
+I'll go add it.
 
-> And the documentation doesn't help.  For example, I knew people's rules
-> about capitalizing the subject but I'd just forget.  I say that if you
-> can't be bothered to add it to checkpatch then it means you don't really
-> care that strongly.
+But... why do you actually care?
 
-If a subsystem requires a certain spelling/capitalization in patch email
-subjects, it should be added to MAINTAINERS IMO.  E.g.,
-E:	NuBus
-
--- 
-~Randy
+--
+Thanks,
+Sasha
