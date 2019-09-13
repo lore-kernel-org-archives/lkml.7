@@ -2,132 +2,168 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D572DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4B7C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD568208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC343207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 06:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VJ4CF4p8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LnqR4bXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfIMGcR (ORCPT
+        id S1728238AbfIMGh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 02:32:17 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40505 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbfIMGcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 02:32:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46V5Qj000Sz9vKGb;
-        Fri, 13 Sep 2019 08:32:12 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=VJ4CF4p8; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tJ-xaM53VrCX; Fri, 13 Sep 2019 08:32:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46V5Qh5lbpz9vKGZ;
-        Fri, 13 Sep 2019 08:32:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568356332; bh=ReBvPV0Z/m9MUram7yhwHTiidcmJNZL+BD+hfnsloLA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VJ4CF4p8hg1KKGgIhCeAsV4qMKvXYlzNNehQ7ceZ4a6ZuNVr4zWlfLC2C/d+4Vx6x
-         bOBxjzejDmg2+91ZvpNauetOhqSmZP1lVWbg5kakCMndFFbJsOS+UyolY/r68IIfBa
-         7Uu12tw9w30LmD65sqocpmha8manvmPDWe4ylXUw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A62D88B7FD;
-        Fri, 13 Sep 2019 08:32:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LcWRvZH4vQC7; Fri, 13 Sep 2019 08:32:13 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 334838B770;
-        Fri, 13 Sep 2019 08:32:13 +0200 (CEST)
-Subject: Re: [PATCH V2 0/2] mm/debug: Add tests for architecture exported page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <527edfce-c986-de4c-e286-34a70f6a2790@c-s.fr>
- <1b467d7a-0324-eb2c-876a-f04a99b9c596@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <ba2314ff-54c1-0deb-b207-b591647fac9d@c-s.fr>
-Date:   Fri, 13 Sep 2019 08:32:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 13 Sep 2019 02:37:57 -0400
+Received: from mail-eopbgr1300120.outbound.protection.outlook.com ([40.107.130.120]:63906
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725817AbfIMGh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:37:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CnAwZpsXNZSduj9A978aNxUaI/IKbDWdbSyGFfVmdd3RK2L5sAybDkElEw2jS/5xbeG3CsOWRj7q5Zjaao96UZRZpUbuz263AWydyHtO2B7SZXfZzfriay/fYCarGoZuEcMbx83YyZY7nN455Y+WaRkLTRaerfQRbTtvVGOlAPFrtJBBuqRIOJOzQ0C5+6WCdJkGfYdm/wBW22pCz3GWLfK6Veka3zlHaqc70jAlD/TH2stDL1dFokydCjNOYyh5/cHr7tgtYhAloSnvikIbyK5g9R3OEoTGEX7quFiZPvQA7DjyZrQnJNVpChU+HfO9/PinYAp8/p/HzwcrIiU1cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpFQ3fSvlzWzHo6tu36TU5GGCcT5nGwbFPKlmFt9Gnk=;
+ b=YbzB4VJFGND6fsfvma3VU0N7kN5sb8D6Uj/wg2jg92SrZ2gnEbMqLc0CNdCJT8ygqYbYha4E/CWWLBU6GMTNGm6hWHR4rhVb2/3VQy1ocrvOy6Db7xrwO9/rPk3vHO6pTVaRce6TBHHyNcUXbAj8pPvjzYjVxKfCr1q8I5IeDJB/NV0WB5MpFI50Kmn4/MJEgiZH+KoJZLS6ES/l6U/jxOrH3wTqLSXl2cL7Xi5O0zf0pmbkkQ/IZzCcjTWhVfel4OT4y5CwQUrq52XBK8Feyxv3vnrXQmVKNG4GO6E5DfEOnt207Adk5dsTNKK6ivts7azi/K77UhEvciguc47dFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpFQ3fSvlzWzHo6tu36TU5GGCcT5nGwbFPKlmFt9Gnk=;
+ b=LnqR4bXuUVuIXyL0KiZ8pDcNwsdxkSFfuC9FXx70Cc/g2bDj7dp1MSKrDWtZebQ/+irQLQ7AFwaSgats1Q1Ih27C/OGTT1Gx6okBTTMByeP/LzE5766YfJ8J4CpZAYuYSbgbcxyP1+/ulOeyCqms9GTk0ZZZEREIpVhFMi5DH68=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.7; Fri, 13 Sep 2019 06:37:38 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2284.007; Fri, 13 Sep 2019
+ 06:37:38 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVafjiL2AndauzGUaHnigxWapFw6cpJzCw
+Date:   Fri, 13 Sep 2019 06:37:37 +0000
+Message-ID: <PU1P153MB0169E5E73D258A034B4869DCBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190913060209.3604-1-weh@microsoft.com>
+In-Reply-To: <20190913060209.3604-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-13T06:37:36.0011933Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d71db6b2-3d7b-491a-98c9-03546d3c3e58;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:49e:db48:e427:c2a0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8bc4b9f3-6785-45b3-0e4f-08d73814df00
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0153;
+x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB01531A845D6660BD7234D85BBFB30@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(376002)(366004)(346002)(39860400002)(189003)(199004)(14454004)(76176011)(2906002)(55016002)(99286004)(71190400001)(71200400001)(8676002)(81166006)(81156014)(8936002)(6116002)(478600001)(6636002)(9686003)(229853002)(1511001)(25786009)(6436002)(7696005)(2201001)(10290500003)(66476007)(66446008)(64756008)(76116006)(446003)(66946007)(53936002)(110136005)(52536014)(476003)(186003)(8990500004)(6506007)(33656002)(7416002)(102836004)(2501003)(86362001)(6246003)(22452003)(305945005)(7736002)(1250700005)(316002)(10090500001)(46003)(11346002)(5660300002)(14444005)(74316002)(486006)(256004)(66556008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tkAwKpY35VwMxE2f+lhrQUZYpGGUFRPniOiTkDSeSCYKTigqYqUpyJmeLwBqh6riXpINgMOtK/Hbn1FUbYulITzHEjkYlhvUi3iggOiIC0M5vCdOa4NEx6C8NN4uDE88sZr8lTFcEIT19M59jlWW5nTvLVru1D4MKUmjLkSN9NqVnnBbpiL1yTMKlOhep4lTRmX49NJ7YmOCatZwZd/8BScR3R6mKX0ZuQG6Vm1DOFnuQdFLOH3667659BztJfVEXxtIA1sfY5KZjZgXVXJB/J9hJ11W3/l4bUypu0AkvfxYql29C0wFR0uK/QTe8RB2fvuEa/p8q+zfw2tPyLUXyxZbpzHsGM+9sBe43JHgEmzJweq3tEuhZPtQ7/fkuxj8J7YwcIuWr5pJBG+hyebYXFhs617u2BTKu/xvS74HNIw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <1b467d7a-0324-eb2c-876a-f04a99b9c596@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bc4b9f3-6785-45b3-0e4f-08d73814df00
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 06:37:38.3391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FcgYO0zRAYLzjEersqHT0iE4fIPsOW9ybQm0j1nJX8tKIWbq1sxCb86QOOroHXjMpBrOf62BMCFvRUEuc/VPQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Wei Hu <weh@microsoft.com>
+> Sent: Thursday, September 12, 2019 11:03 PM
+>=20
+> Without deferred IO support, hyperv_fb driver informs the host to refresh
+> the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter ther=
+e
+> is screen update or not. This patch supports deferred IO for screens in
+> graphics mode and also enables the frame buffer on-demand refresh. The
+> highest refresh rate is still set at 20Hz.
+>=20
+> Currently Hyper-V only takes a physical address from guest as the startin=
+g
+> address of frame buffer. This implies the guest must allocate contiguous
+> physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+> accept address from MMIO region as frame buffer address. Due to these
+> limitations on Hyper-V host, we keep a shadow copy of frame buffer
+> in the guest. This means one more copy of the dirty rectangle inside
+> guest when doing the on-demand refresh. This can be optimized in the
+> future with help from host. For now the host performance gain from deferr=
+ed
+> IO outweighs the shadow copy impact in the guest.
+>=20
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>     v2: Incorporated review comments from Michael Kelley
+>     - Increased dirty rectangle by one row in deferred IO case when sendi=
+ng
+>     to Hyper-V.
+>     - Corrected the dirty rectangle size in the text mode.
+>     - Added more comments.
+>     - Other minor code cleanups.
+>=20
+>     v3: Incorporated more review comments
+>     - Removed a few unnecessary variable tests
+>=20
+>     v4: Incorporated test and review feedback from Dexuan Cui
+>     - Not disable interrupt while acquiring docopy_lock in
+>       hvfb_update_work(). This avoids significant bootup delay in
+>       large vCPU count VMs.
+>=20
+>     v5: Completely remove the unnecessary docopy_lock after discussing
+>     with Dexuan Cui.
 
+Thanks! Looks good to me.
 
-Le 13/09/2019 à 08:24, Anshuman Khandual a écrit :
-> 
-> 
-> On 09/12/2019 08:12 PM, Christophe Leroy wrote:
->> Hi,
->>
->> I didn't get patch 1 of this series, and it is not on linuxppc-dev patchwork either. Can you resend ?
-> 
-> Its there on linux-mm patchwork and copied on linux-kernel@vger.kernel.org
-> as well. The CC list for the first patch was different than the second one.
-> 
-> https://patchwork.kernel.org/patch/11142317/
-> 
-> Let me know if you can not find it either on MM or LKML list.
-> 
-
-I finaly found it on linux-mm archive, thanks. See my other mails and my 
-fixing patch.
-
-Christophe
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
