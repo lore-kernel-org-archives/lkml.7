@@ -4,209 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94155C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6587F20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68ADB20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568385370;
-	bh=yUH6OCGvHhyQTZpyfpuHu9LxH3S+yNq5VNeZI6f7go0=;
+	s=default; t=1568385372;
+	bh=lUBs7/rSDwcq7tVD+ev2KJ1TPSAoTvzSaIknRSLD1Sc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c3Wd5SWnwZxAvkI+KmQtfDmKM1ACDiieBcSZrz8yI0RoFh4Kt1gGjjQx9TCDatw6J
-	 8lOUneMDFUZVB/cmi7lNg7sPyKa7a1uPAu9EOzxeNb3oBmQewIv2czirtGNxu3737e
-	 m7ypJ1pf72X37cb2KhL8zAk/63b0SUzFqyOZrIgw=
+	b=TN9pGLAI902AlhCoW/qgM0YUMo34VVH8fOri9LsetGkG884TvDISx1SQqVZY8EPKi
+	 9n8jgLW7L+o14EFZs49hS2m8v53R9uye29/qnM/PfauQFao6zLfMEK1iDBfaAkVdv2
+	 Slrc9zl0S9+Zgk7jGSnn9f3r623bA0C/PxaxhtTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfIMOgJ (ORCPT
+        id S1730616AbfIMOgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:36:09 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35004 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIMOgJ (ORCPT
+        Fri, 13 Sep 2019 10:36:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37031 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730579AbfIMOgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 10:36:09 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t6so16445799otp.2;
-        Fri, 13 Sep 2019 07:36:08 -0700 (PDT)
+Received: by mail-oi1-f194.google.com with SMTP id 11so2824823oix.4;
+        Fri, 13 Sep 2019 07:36:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EhVYjm/YBm0igQafg8TH8nGG75SYappzyaYQWt33XPA=;
-        b=g6f4AWIbnXROw0N9q2CL4QeEc/7hW/RSjc/Y9BNQeNMy9mPVmxsEKomrsrb94QFDSg
-         NRWUwM8TCt46Hk5hMaP41+0fklHgBeekr6tc9QX8QcYmCpqrwc93PpJW2pK5JG4B/CHn
-         0LrPwv46chPV8prMnJKomUdNqD0TbUGyUAhddiXr9qnM0wNbXcw1usvOrXkmmlhYyEPo
-         KNGMhCc+m3biHbifCfLkpat/z26kUO9qbPoKVqh5saNi8YZ3rZb2JQGCZlWkeBX0UbIl
-         qU70/4y1llvhMVJrIWyHz9UKJ0A3YECN3RrdvPaKsIrTCL4dfqR+ucSXS5E5wJGz9n03
-         rgdg==
-X-Gm-Message-State: APjAAAXZPoQoOx8bhzY8WfiW2JYEInBqnKrsxP7EVpjiLASYLEBFM/8Q
-        sGHrliIqSh1OAgUfi0KDOiIlNlA=
-X-Google-Smtp-Source: APXvYqxFXbXgcv9cvlYNEsqbSyTU5GT2myXwn5HRX+RIDFQZX6Of/xSC0KyE0TaktDfaACiCpcljCA==
-X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7219205otq.147.1568385367903;
-        Fri, 13 Sep 2019 07:36:07 -0700 (PDT)
+        bh=x59L5apnJL40NtS0tdeDtuo7G6k5ZSeB+XKw0XxxnFI=;
+        b=FD1ecM1H32wUPzCvVXdAafndTauPHO9rXjMXrf9FVpgf29n51sK9NLfwSdMNXMkMxB
+         G9L7M5tvo9U1EKe7r2+CfrGhr76jiCs/RddmQmSk8Mh4SOHxkfrHHU511KUFfXYq1jLj
+         iziMgSn2kNt/d50zvtRbLDivRio7YB9U7TvlkYQxmSZvcDQD+ODVuU6DuCu2JNtLaBKL
+         lWPvI8ssMJRfbcmQJeRGyjxBQXCvr53y/tPnytFUCgrwQSfn9pRGSFc9jcgD2+zxaUW4
+         f4jI//Of1jLe0MmCZVyJtCIrFyXAAzXtZrvIg/0ZViFJBfKLCl/p5kY+RvogQUR66w3F
+         7r8A==
+X-Gm-Message-State: APjAAAU6NbNT+1uE4HpLQn7AguPVnwwQEZr/br+lvTqnX6HyTNPlGrnr
+        c+JZcJfg+aOpruvQ1heStw==
+X-Google-Smtp-Source: APXvYqwcZJeRHC1PVNC2DKjUVCVr9+SFzeO0M0kOrsz2lu3agim9M0Aj63nSjTgT/vcdVxuD4z+A6g==
+X-Received: by 2002:a05:6808:7c1:: with SMTP id f1mr2510604oij.123.1568385369033;
+        Fri, 13 Sep 2019 07:36:09 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 36sm10597332ott.66.2019.09.13.07.36.07
+        by smtp.gmail.com with ESMTPSA id s194sm921883oie.19.2019.09.13.07.36.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 07:36:07 -0700 (PDT)
-Message-ID: <5d7ba957.1c69fb81.a8a33.834a@mx.google.com>
-Date:   Fri, 13 Sep 2019 15:36:06 +0100
+        Fri, 13 Sep 2019 07:36:08 -0700 (PDT)
+Message-ID: <5d7ba958.1c69fb81.d998a.6602@mx.google.com>
+Date:   Fri, 13 Sep 2019 15:36:07 +0100
 From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 12/18] dt-bindings: mips: Add loongson cpus & boards
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
- <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     bp@alien8.de, mchehab@kernel.org, james.morse@arm.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, barakw@amazon.com
+Subject: Re: [PATCH 1/3] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+References: <1567603943-25316-1-git-send-email-talel@amazon.com>
+ <1567603943-25316-2-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
-X-Mutt-References: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+In-Reply-To: <1567603943-25316-2-git-send-email-talel@amazon.com>
+X-Mutt-References: <1567603943-25316-2-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:32:26PM +0800, Jiaxun Yang wrote:
-> Prepare for later dts.
+On Wed, Sep 04, 2019 at 04:32:21PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
 > ---
->  .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
->  .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
->  2 files changed, 102 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+>  .../devicetree/bindings/edac/amazon,al-mc-edac.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
 > new file mode 100644
-> index 000000000000..dc6dd5114d5e
+> index 0000000..9a3803f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
+> @@ -0,0 +1,24 @@
+> +Amazon's Annapurna Labs Memory Controller EDAC
 > +
-> +title: Loongson CPUs bindings
+> +EDAC node is defined to describe on-chip error detection and correction for
+> +Amazon's Annapurna Labs Memory Controller.
 > +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +Required properties:
+> +- compatible:	Shall be "amazon,al-mc-edac".
+> +- reg:		DDR controller resource.
 > +
-> +description: |+
-> +  The device tree allows to describe the layout of CPUs in a system through
-> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> +  defining properties for every cpu.
+> +Optional:
+> +- interrupt-names:	may include "ue", for uncorrectable errors,
+> +			and/or "ce", for correctable errors.
+> +- interrupts:		should contain the interrupts associated with the
+> +			interrupts names.
 > +
-> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
+> +Example:
 > +
-> +  https://www.devicetree.org/specifications/
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-> +
-> +  compatible:
-> +    enum:
-> +      - loongson,gs464
-> +      - loongson,gs464e
-> +      - loongson,gs264
-> +      - loongson,gs464v
-> +
-> +required:
-> +  - device_type
-> +  - reg
-> +  - compatible
-> +...
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> new file mode 100644
-> index 000000000000..aa6c42013d2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson based Platforms Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +al_mc_edac {
 
-Add a blank line here.
+edac@f0080000
 
-> +description: |
-> +  Devices with a Loongson CPU shall have the following properties.
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Loongson 3A1000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-1way
+With that,
 
-This is a board or a chip? Normally we have a board compatible followed 
-by a SoC compatible.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-What's the difference between 1-way, 2-way, 4-way? Maybe there's another 
-way to describe that. 
-
-> +
-> +      - description: Loongson 3A1000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-2way
-> +
-> +      - description: Loongson 3A1000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-4way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3b-780e-1way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3b-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-1way
-> +
-> +      - description: Loongson 3A2000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-4way
-> +
-> +      - description: Loongson 3A3000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-1way
-> +
-> +      - description: Loongson 3A3000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-2way
-> +
-> +      - description: Loongson 3A3000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-4way
-> +
-> +...
+> +	compatible = "amazon,al-mc-edac";
+> +	reg = <0x0 0xf0080000 0x0 0x00010000>;
+> +	interrupt-parent = <&amazon_al_system_fabric>;
+> +	interrupt-names = "ue";
+> +	interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +};
 > -- 
-> 2.22.0
+> 2.7.4
 > 
 
