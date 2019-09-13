@@ -2,402 +2,197 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB61C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B03C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD71020640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE57A20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="i+EsRJLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389691AbfIMP6W (ORCPT
+        id S2389846AbfIMP77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:58:22 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44601 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387621AbfIMP6V (ORCPT
+        Fri, 13 Sep 2019 11:59:59 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25459 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728811AbfIMP76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:58:21 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 91F7B1C0008;
-        Fri, 13 Sep 2019 15:58:15 +0000 (UTC)
-Date:   Fri, 13 Sep 2019 17:58:15 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings
- documentation
-Message-ID: <20190913155815.GA1554@aptenodytes>
-References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
- <20190910153409.111901-2-paul.kocialkowski@bootlin.com>
- <20190913143510.GA9504@bogus>
+        Fri, 13 Sep 2019 11:59:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1568390366; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=SLLlGc9nv+SD9CgdET16ANDVpnhBzDuR2sh4VVT9nLaLPzoBudiYAhT1wKIEs5rF5bTsBEMP5ZJCapcyYmZFaBe50oLlIrNIoytj9gLi+coZZli4u0jSS4gxQuJLCbcthLFsGz1HJiqRwgIx8QLbbBrX5+m5TjCX4brSjrrYomw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1568390366; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=IL7XvFCTAWRH0WfapoAjEN/ppfvJmC4N1IUgD1yn/nU=; 
+        b=bkuCYM/LLnwobDGxQSHTD/9ebvQ7AH273OiDlL6Yule0LqCB2khIbjrk4fiyc1ZxrcIt9IRT+8g6aM00ORZC6D+3EVnZS4DnLF3aUa34zgva8Tm0dHBWmHVpEo4CXg8ymHym/XVwOP14Lj5jqpXHqC5RVusP7st5AfsgnV0obcA=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=gb2yf8aMBgQQUV+YAfFw71i28sSXMDTY2vr+r1YrSH+AEoExjUOno+AksLgMbDhT768pTbTHGEV4
+    ugNpIPh23j5oJ3YpvA7DPIIjVilRFvERq7gvH3Cuzmx7QWfO+P2a  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1568390366;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=4148; bh=IL7XvFCTAWRH0WfapoAjEN/ppfvJmC4N1IUgD1yn/nU=;
+        b=i+EsRJLFX8bCwgiMZZeDMqINI/z9o2D5LXEBhGLDNMap+c4D1iRReuwfwxdLbvo/
+        EjPwPLeA9GjlcSQaUlYZV+cfxOMMQDBnoJWhRFGxlh6iNtaVuMiuyxbkpCzAjIsC/Gy
+        FrkzMTx+ZSBjWzg+pczu35ELjAUnxuSyPNBW0XDQ=
+Received: from [192.168.88.140] (171.221.112.87 [171.221.112.87]) by mx.zohomail.com
+        with SMTPS id 1568390363342552.6980296947244; Fri, 13 Sep 2019 08:59:23 -0700 (PDT)
+Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-mips@vger.kernel.org
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+ <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+ <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
+        paul.burton@mips.com, linus.walleij@linaro.org,
+        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        jiaxun.yang@flygoat.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5D7BBCCF.2010600@zoho.com>
+Date:   Fri, 13 Sep 2019 23:59:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
-In-Reply-To: <20190913143510.GA9504@bogus>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ezequiel,
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019=E5=B9=B409=E6=9C=8813=E6=97=A5 23:32, Ezequiel Garcia wrote:
+> Hi Zhou,
+>
+> Thanks for your interest in this driver, I'm glad
+> so see it's more used.
+>
+> On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
+>> Adjust the macro definition name to match the corresponding
+>> register name in the datasheet.
+>>
+> It's not really an issue to have slighlt different
+> names on the macros. They are currently sufficiently
+> descriptive, and I don't think it's deserves a patch.
+Thanks for your advice, I'll drop this in v2. Do you have any suggestions
+for the other three patches?
 
-Hi Rob and thanks for the review!
+Best regards!
+>
+> Thanks,
+> Ezequiel
+>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>   drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
+>>   1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc=
+.c
+>> index ffdbfaa..1b1fcb7 100644
+>> --- a/drivers/mmc/host/jz4740_mmc.c
+>> +++ b/drivers/mmc/host/jz4740_mmc.c
+>> @@ -28,7 +28,7 @@
+>>   #include <asm/mach-jz4740/dma.h>
+>>  =20
+>>   #define JZ_REG_MMC_STRPCL=090x00
+>> -#define JZ_REG_MMC_STATUS=090x04
+>> +#define JZ_REG_MMC_STAT=09=090x04
+>>   #define JZ_REG_MMC_CLKRT=090x08
+>>   #define JZ_REG_MMC_CMDAT=090x0C
+>>   #define JZ_REG_MMC_RESTO=090x10
+>> @@ -40,7 +40,7 @@
+>>   #define JZ_REG_MMC_IREG=09=090x28
+>>   #define JZ_REG_MMC_CMD=09=090x2C
+>>   #define JZ_REG_MMC_ARG=09=090x30
+>> -#define JZ_REG_MMC_RESP_FIFO=090x34
+>> +#define JZ_REG_MMC_RES=09=090x34
+>>   #define JZ_REG_MMC_RXFIFO=090x38
+>>   #define JZ_REG_MMC_TXFIFO=090x3C
+>>   #define JZ_REG_MMC_DMAC=09=090x44
+>> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_m=
+mc_host *host)
+>>  =20
+>>   =09writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
+>>   =09do {
+>> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
+>>   }
+>>  =20
+>> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host =
+*host)
+>>   =09writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
+>>   =09udelay(10);
+>>   =09do {
+>> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
+>>   }
+>>  =20
+>> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct j=
+z4740_mmc_host *host,
+>>   {
+>>   =09int status;
+>>  =20
+>> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
+>>   =09=09if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
+>>   =09=09=09host->req->cmd->error =3D -ETIMEDOUT;
+>> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc=
+_host *host,
+>>   =09/* For whatever reason there is sometime one word more in the fifo =
+then
+>>   =09 * requested */
+>>   =09timeout =3D 1000;
+>> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
+>>   =09=09d =3D readl(fifo_addr);
+>> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09}
+>>  =20
+>>   =09return false;
+>> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_m=
+mc_host *host,
+>>   {
+>>   =09int i;
+>>   =09uint16_t tmp;
+>> -=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RESP_FIFO;
+>> +=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RES;
+>>  =20
+>>   =09if (cmd->flags & MMC_RSP_136) {
+>>   =09=09tmp =3D readw(fifo_addr);
+>> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
+>>   =09struct mmc_command *cmd =3D host->cmd;
+>>   =09uint32_t irq_reg, status, tmp;
+>>  =20
+>> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
+>> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
+>>   =09irq_reg =3D jz4740_mmc_read_irq_reg(host);
+>>  =20
+>>   =09tmp =3D irq_reg;
+>
+>
 
-On Fri 13 Sep 19, 15:35, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
-> > The Xylon LogiCVC is a display controller implemented as programmable
-> > logic in Xilinx FPGAs.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++++++++++
-> >  1 file changed, 188 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/xylon,log=
-icvc.txt
->=20
-> Consider converting this to DT schema format. See=20
-> Documentation/devicetree/writing-schema.rst (.md in 5.3).
 
-Oh right, that would certainly be much more future-proof!
 
-> > diff --git a/Documentation/devicetree/bindings/display/xylon,logicvc.tx=
-t b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
-> > new file mode 100644
-> > index 000000000000..eb4b1553888a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
-> > @@ -0,0 +1,188 @@
-> > +Xylon LogiCVC display controller
-> > +
-> > +The Xylon LogiCVC is a display controller that supports multiple layer=
-s.
-> > +It is usually implemented as programmable logic and was optimized for =
-use
-> > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
-> > +
-> > +Because the controller is intended for use in a FPGA, most of the conf=
-iguration
-> > +of the controller takes place at logic configuration bitstream synthes=
-is time.
-> > +As a result, many of the device-tree bindings are meant to reflect the
-> > +synthesis configuration. These do not allow configuring the controller
-> > +differently than synthesis configuration.
-> > +
-> > +Layers are declared in the "layers" sub-node and have dedicated config=
-uration.
-> > +In version 3 of the controller, each layer has fixed memory offset and=
- address
-> > +starting from the video memory base address for its framebuffer. With =
-version 4,
-> > +framebuffers are configured with a direct memory address instead.
-> > +
-> > +Matching synthesis parameters are provided when applicable.
-> > +
-> > +Required properties:
-> > +- compatible: Should be one of:
-> > +  "xylon,logicvc-3.02.a-display"
-> > +  "xylon,logicvc-4.01.a-display"
-> > +- reg: Physical base address and size for the controller registers.
-> > +- clocks: List of phandle and clock-specifier pairs, one for each entry
-> > +  in 'clock-names'
-> > +- clock-names: List of clock names that should at least contain:
-> > +  - "vclk": The VCLK video clock input.
-> > +- interrupts: The interrupt to use for VBLANK signaling.
-> > +- xylon,display-interface: Display interface in use, should be one of:
-> > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE =3D=3D 4).
-> > +- xylon,display-colorspace: Display output colorspace in use, should b=
-e one of:
-> > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE =3D=3D 0).
-> > +- xylon,display-depth: Display output depth in use (C_PIXEL_DATA_WIDTH=
-).
-> > +- xylon,row-stride: Fixed number of pixels in a framebuffer row (C_ROW=
-_STRIDE).
-> > +- xylon,layers-count: The number of available layers (C_NUM_OF_LAYERS).
->=20
-> Presumably some of this is determined by the display attached. Isn't it=
-=20
-> safe to assume the IP was configured correctly for the intended display=
-=20
-> and you can just get this from the panel?
-
-Layers are what corresponds to DRM planes, which are not actually indicated
-by the panel but are a charasteristic of the display controller. In our cas=
-e,
-this is directly selected at bitstream synthesis time for the controller.
-
-So I'm afraid there is no way we can auto-detect this from the driver.
-
->=20
-> > +Optional properties:
-> > +- memory-region: phandle to a node describing memory, as specified in:
-> > +  Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > +- clock-names: List of clock names that can optionally contain:
-> > +  - "vclk2": The VCLK2 doubled-rate video clock input.
-> > +  - "lvdsclk": The LVDS clock.
-> > +  - "lvdsclkn": The LVDS clock inverted.
->=20
-> How are these really optional?
-
-Well, the controller currently only supports LVDS, but more interfaces may =
-be
-added later, so the lvdsclk clock will be optional when another interface
-is used instead. Maybe I'm mistaken about how to categorize them though.
-
-My understanding is that the need for vclk2 and lvdsclkn depend on the targ=
-et
-FPGA family. I've developped the driver without the need for them, but the
-datasheet states that they may be needed (but doesn't provide significant
-details about their role though).
-
-> > +- xylon,syscon: Syscon phandle representing the logicvc instance.
-> > +- xylon,dithering: Dithering module is enabled (C_XCOLOR).
-> > +- xylon,background-layer: The last layer is used to display a black ba=
-ckground
-> > +  (C_USE_BACKGROUND). It must still be registered.
-> > +- xylon,layers-configurable: Configuration of layers' size, position a=
-nd offset
-> > +  is enabled (C_USE_SIZE_POSITION).
->=20
-> I would think this will effectively have to be enabled to make this=20
-> usable with DRM. I'm not sure if a "standard" userspace would use any of=
-=20
-> the layers if all this is fixed.
-
-I was going with the same assumption, but drm_atomic_helper_check_plane_sta=
-te
-has a can_position parameter, which will check that the plane covers the
-whole CRTC if set to false. So I guess it is somewhat expected that this can
-be the case and some drivers (e.g. arm/hdlcd_crtc.c) also set this to false.
-
-I guess this falls under a more generic discussion of what should be expect=
-ed
-by userspace when it comes to DRM. Since drivers may reject commits because=
- of
-any hardware-specific limitation, there is definitely a significant grey ar=
-ea
-there and apparently no common rule.
-
-> > +
-> > +Required sub-nodes:
-> > +- layers: The description of the display controller layers, containing=
- layer
-> > +  sub-nodes that each describe a registered layer.
-> > +- ports: The LogiCVC connection to an encoder input port. The connecti=
-on
-> > +  is modeled using the OF graph bindings, as specified in:
-> > +  Documentation/devicetree/bindings/graph.txt
-> > +
-> > +Required layer properties:
-> > +- reg: Layer index (from front to back, starting at 0).
-> > +- xylon,layer-depth: Layer depth in use (C_LAYER_0_DATA_WIDTH).
-> > +- xylon,layer-colorspace: Layer colorspace in use, should be one of:
-> > + - "rgb": RGB colorspace (C_LAYER_*_TYPE =3D=3D 0).
->=20
-> Why is this needed if there's only 1?
-
-The hardware supports more but support is no implemented yet, so the binding
-document may be enriched along with the driver in the future.
-
-Should I describe other colorspaces even if they are not currently supporte=
-d?
-
-> > +- xylon,layer-alpha-mode: Alpha mode for the layer, should be one of:
-> > + - "layer": Alpha is configured layer-wide (C_LAYER_*_ALPHA_MODE =3D=
-=3D 0).
-> > + - "pixel": Alpha is configured per-pixel (C_LAYER_*_ALPHA_MODE =3D=3D=
- 1).
->=20
-> Could just be boolean.
-
-In this instance too, there are other modes that are not yet implemented but
-supported by the hardware, so I did not describe them yet but they may be a=
-dded
-later.
-
-> > +- xylon,layer-base-offset: offset in number of lines (C_LAYER_*_OFFSET=
-) starting
-> > +  from the video RAM base (C_VMEM_BASEADDR), only for version 3.
-> > +- xylon,layer-buffer-offset: offset in number of lines (C_BUFFER_*_OFF=
-SET)
-> > +  starting from the layer base offset for the second buffer used in
-> > +  double-buffering.
->=20
-> It might be better to define all this in terms of byte offsets. I'd=20
-> guess that is what CPU accesses are going to need.
-
-I agree that it is more convenient from a driver's perspective, but the
-rationale is that this allows copying parameters directly from the synthesis
-configuration file, where these are expressed as a number of lines.
-
-I would like to keep both delcarations as close to eachother as possible, a=
-s to
-facilitate integration work for future users of the driver. But maybe this =
-is a
-bit too much in that case. What do you think?
-
-Thanks again for the constructive feedback!
-
-Cheers,
-
-Paul
-
-> > +
-> > +Optional layer properties:
-> > +- xylon,layer-primary: Layer should be registered as a primary plane (=
-exactly
-> > +  one is required).
-> > +
-> > +Example:
-> > +
-> > +	reserved-memory {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <1>;
-> > +		ranges;
-> > +
-> > +		logicvc_cma: cma@1f800000 {
-> > +			compatible =3D "shared-dma-pool";
-> > +			size =3D <0x800000>;
-> > +			alloc-ranges =3D <0x1f800000 0x800000>;
-> > +			reusable;
-> > +		};
-> > +	};
-> > +
-> > +	logicvc: logicvc@43c00000 {
-> > +		compatible =3D "syscon", "simple-mfd";
-> > +		reg =3D <0x43c00000 0x6000>;
-> > +
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <1>;
-> > +
-> > +		logicvc_display: display-engine@0 {
-> > +			compatible =3D "xylon,logicvc-3.02.a-display";
-> > +			reg =3D <0x0 0x6000>;
-> > +			memory-region =3D <&logicvc_cma>;
-> > +
-> > +			clocks =3D <&logicvc_vclk 0>, <&logicvc_lvdsclk 0>;
-> > +			clock-names =3D "vclk", "lvdsclk";
-> > +
-> > +			interrupt-parent =3D <&intc>;
-> > +			interrupts =3D <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +			xylon,syscon =3D <&logicvc>;
-> > +
-> > +			xylon,display-interface =3D "lvds-4bits";
-> > +			xylon,display-colorspace =3D "rgb";
-> > +			xylon,display-depth =3D <16>;
-> > +			xylon,row-stride =3D <1024>;
-> > +
-> > +			xylon,layers-configurable;
-> > +			xylon,layers-count =3D <5>;
-> > +
-> > +			layers {
-> > +				#address-cells =3D <1>;
-> > +				#size-cells =3D <0>;
-> > +
-> > +				layer@0 {
-> > +					reg =3D <0>;
-> > +					xylon,layer-depth =3D <16>;
-> > +					xylon,layer-colorspace =3D "rgb";
-> > +					xylon,layer-alpha-mode =3D "layer";
-> > +					xylon,layer-base-offset =3D <0>;
-> > +					xylon,layer-buffer-offset =3D <480>;
-> > +					xylon,layer-primary;
-> > +				};
-> > +
-> > +				layer@1 {
-> > +					reg =3D <1>;
-> > +					xylon,layer-depth =3D <16>;
-> > +					xylon,layer-colorspace =3D "rgb";
-> > +					xylon,layer-alpha-mode =3D "layer";
-> > +					xylon,layer-base-offset =3D <2400>;
-> > +					xylon,layer-buffer-offset =3D <480>;
-> > +				};
-> > +
-> > +				layer@2 {
-> > +					reg =3D <2>;
-> > +					xylon,layer-depth =3D <16>;
-> > +					xylon,layer-colorspace =3D "rgb";
-> > +					xylon,layer-alpha-mode =3D "layer";
-> > +					xylon,layer-base-offset =3D <960>;
-> > +					xylon,layer-buffer-offset =3D <480>;
-> > +				};
-> > +
-> > +				layer@3 {
-> > +					reg =3D <3>;
-> > +					xylon,layer-depth =3D <16>;
-> > +					xylon,layer-colorspace =3D "rgb";
-> > +					xylon,layer-alpha-mode =3D "layer";
-> > +					xylon,layer-base-offset =3D <480>;
-> > +					xylon,layer-buffer-offset =3D <480>;
-> > +				};
-> > +
-> > +				layer@4 {
-> > +					reg =3D <4>;
-> > +					xylon,layer-depth =3D <16>;
-> > +					xylon,layer-colorspace =3D "rgb";
-> > +					xylon,layer-alpha-mode =3D "layer";
-> > +					xylon,layer-base-offset =3D <8192>;
-> > +					xylon,layer-buffer-offset =3D <480>;
-> > +				};
-> > +			};
-> > +
-> > +			ports {
-> > +				#address-cells =3D <1>;
-> > +				#size-cells =3D <0>;
-> > +
-> > +				logicvc_out: port@1 {
-> > +					reg =3D <1>;
-> > +
-> > +					#address-cells =3D <1>;
-> > +					#size-cells =3D <0>;
-> > +
-> > +					logicvc_output: endpoint@0 {
-> > +						reg =3D <0>;
-> > +						remote-endpoint =3D <&panel_input>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > --=20
-> > 2.23.0
-> >=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl17vJcACgkQ3cLmz3+f
-v9GkNgf/bvKdo9VSwr1LmI2F/lBdm7ahWJs2b1IHBcirnANnGpq4I0APdVAaP1i1
-A6D6BBcXQM26VR89G4cHMz7MovxJ8szarQRs28KseOJ0dBSuv48JCafyAU5NyKL0
-ta54b1rnuq5JXXvWZW4FOMV0hkefGXTYNA7ZQHhF6+E8iIXz501fjehkAql2yGvF
-8xCRpgU16HSGcBF112JtpLnc8FoPqSs7+12PN7j6S6HG2Rg9pkOZiRFTOTKeqmfo
-z0Z9DKRMmG/enVk17ag6IkFv2pWsQp+HeXcjQg1McrIxjKzNmrOTOnM/w8/zNzRD
-OXgI6nEf0Gq3fVhdez2w6WqG67JSng==
-=L8S8
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
