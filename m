@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC03FC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E00AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A69B206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0BA20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380763;
-	bh=sQbqaxrii2zY1QYbohis0YsDCiUuRlcV6xj55GfCo4w=;
+	s=default; t=1568380767;
+	bh=KxUOp7ijc9eGbcBZe+sogtDTqJXqY+JCETG+3nA4NxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2W5NoevdKWabOd4JLj5yuDa/i/LgBq23K8FEl7/v67jOx+tHcajtTbLET0P2TPILc
-	 L5ZLtHwfPzpe+KKj2at15nZukUcAsopPqS0NjvEWk9m675ffSoz/DuUUZRn36MNb9/
-	 yzRgYAimushI+0Ylls6hrAnlIsBeZWmiZs6ovI/A=
+	b=fRJyboH4u+A0m/AuN4i4LEwYWjSZMwez2fyYjT5MI5pZ2rCmNsaQAP2v86kxe09dZ
+	 c5/QoD0db93C7Gagcs4oLZ6Kqj6RN9OyKWGPgHWBdmSKW3pQE6CN//o14t1vzuRi1h
+	 sri3JFUnKyD8rTrUTXiuSzjg4/s4oQav79fRMW5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390416AbfIMNTW (ORCPT
+        id S1729830AbfIMNT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:19:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389826AbfIMNTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:20 -0400
+        id S2390414AbfIMNTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:23 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1E5206A5;
-        Fri, 13 Sep 2019 13:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBFE1206A5;
+        Fri, 13 Sep 2019 13:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380759;
-        bh=sQbqaxrii2zY1QYbohis0YsDCiUuRlcV6xj55GfCo4w=;
+        s=default; t=1568380762;
+        bh=KxUOp7ijc9eGbcBZe+sogtDTqJXqY+JCETG+3nA4NxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOBkrFVLUSSAuky0B9JFr+CNNJo8IGgLyMme2seu7OwpQ+wcuQqTmNCa0Br3ScUvp
-         H8gJuyZRbPSr94shK+/8hjf4AtYe/5R8TJl5WxOuB4lQ831iO0LlsrwDjUy7g+TmID
-         Hm+aNh8pOvsbJWFpgj/1/Pg+NnkDlUpiy5Ucxtkk=
+        b=dBwrw3b+Nmu7mPBn2M08riPGtLFXW4Nuj0/ZHTXDB7qohINf+3WBEPRvZzXHH/gMK
+         6vJmkRDHOZrEDUW4MjV+ARf/ySUQ4vNHGbhMmPnhpeMLiqNLZrP/KrsAv/IGibCb9B
+         O5Esi5Xo9vmiMgzL5MRpJ9hkeKAo91vtnRB8LITo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 161/190] btrfs: correctly validate compression type
-Date:   Fri, 13 Sep 2019 14:06:56 +0100
-Message-Id: <20190913130612.773751935@linuxfoundation.org>
+Subject: [PATCH 4.19 170/190] iommu/iova: Remove stale cached32_node
+Date:   Fri, 13 Sep 2019 14:07:05 +0100
+Message-Id: <20190913130613.384700649@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,167 +61,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa53e3bfac7205fb3a8815ac1c937fd6ed01b41e ]
+[ Upstream commit 9eed17d37c77171cf5ffb95c4257f87df3cd4c8f ]
 
-Nikolay reported the following KASAN splat when running btrfs/048:
+Since the cached32_node is allowed to be advanced above dma_32bit_pfn
+(to provide a shortcut into the limited range), we need to be careful to
+remove the to be freed node if it is the cached32_node.
 
-[ 1843.470920] ==================================================================
-[ 1843.471971] BUG: KASAN: slab-out-of-bounds in strncmp+0x66/0xb0
-[ 1843.472775] Read of size 1 at addr ffff888111e369e2 by task btrfs/3979
+[   48.477773] BUG: KASAN: use-after-free in __cached_rbnode_delete_update+0x68/0x110
+[   48.477812] Read of size 8 at addr ffff88870fc19020 by task kworker/u8:1/37
+[   48.477843]
+[   48.477879] CPU: 1 PID: 37 Comm: kworker/u8:1 Tainted: G     U            5.2.0+ #735
+[   48.477915] Hardware name: Intel Corporation NUC7i5BNK/NUC7i5BNB, BIOS BNKBL357.86A.0052.2017.0918.1346 09/18/2017
+[   48.478047] Workqueue: i915 __i915_gem_free_work [i915]
+[   48.478075] Call Trace:
+[   48.478111]  dump_stack+0x5b/0x90
+[   48.478137]  print_address_description+0x67/0x237
+[   48.478178]  ? __cached_rbnode_delete_update+0x68/0x110
+[   48.478212]  __kasan_report.cold.3+0x1c/0x38
+[   48.478240]  ? __cached_rbnode_delete_update+0x68/0x110
+[   48.478280]  ? __cached_rbnode_delete_update+0x68/0x110
+[   48.478308]  __cached_rbnode_delete_update+0x68/0x110
+[   48.478344]  private_free_iova+0x2b/0x60
+[   48.478378]  iova_magazine_free_pfns+0x46/0xa0
+[   48.478403]  free_iova_fast+0x277/0x340
+[   48.478443]  fq_ring_free+0x15a/0x1a0
+[   48.478473]  queue_iova+0x19c/0x1f0
+[   48.478597]  cleanup_page_dma.isra.64+0x62/0xb0 [i915]
+[   48.478712]  __gen8_ppgtt_cleanup+0x63/0x80 [i915]
+[   48.478826]  __gen8_ppgtt_cleanup+0x42/0x80 [i915]
+[   48.478940]  __gen8_ppgtt_clear+0x433/0x4b0 [i915]
+[   48.479053]  __gen8_ppgtt_clear+0x462/0x4b0 [i915]
+[   48.479081]  ? __sg_free_table+0x9e/0xf0
+[   48.479116]  ? kfree+0x7f/0x150
+[   48.479234]  i915_vma_unbind+0x1e2/0x240 [i915]
+[   48.479352]  i915_vma_destroy+0x3a/0x280 [i915]
+[   48.479465]  __i915_gem_free_objects+0xf0/0x2d0 [i915]
+[   48.479579]  __i915_gem_free_work+0x41/0xa0 [i915]
+[   48.479607]  process_one_work+0x495/0x710
+[   48.479642]  worker_thread+0x4c7/0x6f0
+[   48.479687]  ? process_one_work+0x710/0x710
+[   48.479724]  kthread+0x1b2/0x1d0
+[   48.479774]  ? kthread_create_worker_on_cpu+0xa0/0xa0
+[   48.479820]  ret_from_fork+0x1f/0x30
+[   48.479864]
+[   48.479907] Allocated by task 631:
+[   48.479944]  save_stack+0x19/0x80
+[   48.479994]  __kasan_kmalloc.constprop.6+0xc1/0xd0
+[   48.480038]  kmem_cache_alloc+0x91/0xf0
+[   48.480082]  alloc_iova+0x2b/0x1e0
+[   48.480125]  alloc_iova_fast+0x58/0x376
+[   48.480166]  intel_alloc_iova+0x90/0xc0
+[   48.480214]  intel_map_sg+0xde/0x1f0
+[   48.480343]  i915_gem_gtt_prepare_pages+0xb8/0x170 [i915]
+[   48.480465]  huge_get_pages+0x232/0x2b0 [i915]
+[   48.480590]  ____i915_gem_object_get_pages+0x40/0xb0 [i915]
+[   48.480712]  __i915_gem_object_get_pages+0x90/0xa0 [i915]
+[   48.480834]  i915_gem_object_prepare_write+0x2d6/0x330 [i915]
+[   48.480955]  create_test_object.isra.54+0x1a9/0x3e0 [i915]
+[   48.481075]  igt_shared_ctx_exec+0x365/0x3c0 [i915]
+[   48.481210]  __i915_subtests.cold.4+0x30/0x92 [i915]
+[   48.481341]  __run_selftests.cold.3+0xa9/0x119 [i915]
+[   48.481466]  i915_live_selftests+0x3c/0x70 [i915]
+[   48.481583]  i915_pci_probe+0xe7/0x220 [i915]
+[   48.481620]  pci_device_probe+0xe0/0x180
+[   48.481665]  really_probe+0x163/0x4e0
+[   48.481710]  device_driver_attach+0x85/0x90
+[   48.481750]  __driver_attach+0xa5/0x180
+[   48.481796]  bus_for_each_dev+0xda/0x130
+[   48.481831]  bus_add_driver+0x205/0x2e0
+[   48.481882]  driver_register+0xca/0x140
+[   48.481927]  do_one_initcall+0x6c/0x1af
+[   48.481970]  do_init_module+0x106/0x350
+[   48.482010]  load_module+0x3d2c/0x3ea0
+[   48.482058]  __do_sys_finit_module+0x110/0x180
+[   48.482102]  do_syscall_64+0x62/0x1f0
+[   48.482147]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   48.482190]
+[   48.482224] Freed by task 37:
+[   48.482273]  save_stack+0x19/0x80
+[   48.482318]  __kasan_slab_free+0x12e/0x180
+[   48.482363]  kmem_cache_free+0x70/0x140
+[   48.482406]  __free_iova+0x1d/0x30
+[   48.482445]  fq_ring_free+0x15a/0x1a0
+[   48.482490]  queue_iova+0x19c/0x1f0
+[   48.482624]  cleanup_page_dma.isra.64+0x62/0xb0 [i915]
+[   48.482749]  __gen8_ppgtt_cleanup+0x63/0x80 [i915]
+[   48.482873]  __gen8_ppgtt_cleanup+0x42/0x80 [i915]
+[   48.482999]  __gen8_ppgtt_clear+0x433/0x4b0 [i915]
+[   48.483123]  __gen8_ppgtt_clear+0x462/0x4b0 [i915]
+[   48.483250]  i915_vma_unbind+0x1e2/0x240 [i915]
+[   48.483378]  i915_vma_destroy+0x3a/0x280 [i915]
+[   48.483500]  __i915_gem_free_objects+0xf0/0x2d0 [i915]
+[   48.483622]  __i915_gem_free_work+0x41/0xa0 [i915]
+[   48.483659]  process_one_work+0x495/0x710
+[   48.483704]  worker_thread+0x4c7/0x6f0
+[   48.483748]  kthread+0x1b2/0x1d0
+[   48.483787]  ret_from_fork+0x1f/0x30
+[   48.483831]
+[   48.483868] The buggy address belongs to the object at ffff88870fc19000
+[   48.483868]  which belongs to the cache iommu_iova of size 40
+[   48.483920] The buggy address is located 32 bytes inside of
+[   48.483920]  40-byte region [ffff88870fc19000, ffff88870fc19028)
+[   48.483964] The buggy address belongs to the page:
+[   48.484006] page:ffffea001c3f0600 refcount:1 mapcount:0 mapping:ffff8888181a91c0 index:0x0 compound_mapcount: 0
+[   48.484045] flags: 0x8000000000010200(slab|head)
+[   48.484096] raw: 8000000000010200 ffffea001c421a08 ffffea001c447e88 ffff8888181a91c0
+[   48.484141] raw: 0000000000000000 0000000000120012 00000001ffffffff 0000000000000000
+[   48.484188] page dumped because: kasan: bad access detected
+[   48.484230]
+[   48.484265] Memory state around the buggy address:
+[   48.484314]  ffff88870fc18f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   48.484361]  ffff88870fc18f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   48.484406] >ffff88870fc19000: fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc
+[   48.484451]                                ^
+[   48.484494]  ffff88870fc19080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   48.484530]  ffff88870fc19100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
 
-[ 1843.473904] CPU: 3 PID: 3979 Comm: btrfs Not tainted 5.2.0-rc3-default #536
-[ 1843.475009] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 1843.476322] Call Trace:
-[ 1843.476674]  dump_stack+0x7c/0xbb
-[ 1843.477132]  ? strncmp+0x66/0xb0
-[ 1843.477587]  print_address_description+0x114/0x320
-[ 1843.478256]  ? strncmp+0x66/0xb0
-[ 1843.478740]  ? strncmp+0x66/0xb0
-[ 1843.479185]  __kasan_report+0x14e/0x192
-[ 1843.479759]  ? strncmp+0x66/0xb0
-[ 1843.480209]  kasan_report+0xe/0x20
-[ 1843.480679]  strncmp+0x66/0xb0
-[ 1843.481105]  prop_compression_validate+0x24/0x70
-[ 1843.481798]  btrfs_xattr_handler_set_prop+0x65/0x160
-[ 1843.482509]  __vfs_setxattr+0x71/0x90
-[ 1843.483012]  __vfs_setxattr_noperm+0x84/0x130
-[ 1843.483606]  vfs_setxattr+0xac/0xb0
-[ 1843.484085]  setxattr+0x18c/0x230
-[ 1843.484546]  ? vfs_setxattr+0xb0/0xb0
-[ 1843.485048]  ? __mod_node_page_state+0x1f/0xa0
-[ 1843.485672]  ? _raw_spin_unlock+0x24/0x40
-[ 1843.486233]  ? __handle_mm_fault+0x988/0x1290
-[ 1843.486823]  ? lock_acquire+0xb4/0x1e0
-[ 1843.487330]  ? lock_acquire+0xb4/0x1e0
-[ 1843.487842]  ? mnt_want_write_file+0x3c/0x80
-[ 1843.488442]  ? debug_lockdep_rcu_enabled+0x22/0x40
-[ 1843.489089]  ? rcu_sync_lockdep_assert+0xe/0x70
-[ 1843.489707]  ? __sb_start_write+0x158/0x200
-[ 1843.490278]  ? mnt_want_write_file+0x3c/0x80
-[ 1843.490855]  ? __mnt_want_write+0x98/0xe0
-[ 1843.491397]  __x64_sys_fsetxattr+0xba/0xe0
-[ 1843.492201]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[ 1843.493201]  do_syscall_64+0x6c/0x230
-[ 1843.493988]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1843.495041] RIP: 0033:0x7fa7a8a7707a
-[ 1843.495819] Code: 48 8b 0d 21 de 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 be 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ee dd 2b 00 f7 d8 64 89 01 48
-[ 1843.499203] RSP: 002b:00007ffcb73bca38 EFLAGS: 00000202 ORIG_RAX: 00000000000000be
-[ 1843.500210] RAX: ffffffffffffffda RBX: 00007ffcb73bda9d RCX: 00007fa7a8a7707a
-[ 1843.501170] RDX: 00007ffcb73bda9d RSI: 00000000006dc050 RDI: 0000000000000003
-[ 1843.502152] RBP: 00000000006dc050 R08: 0000000000000000 R09: 0000000000000000
-[ 1843.503109] R10: 0000000000000002 R11: 0000000000000202 R12: 00007ffcb73bda91
-[ 1843.504055] R13: 0000000000000003 R14: 00007ffcb73bda82 R15: ffffffffffffffff
-
-[ 1843.505268] Allocated by task 3979:
-[ 1843.505771]  save_stack+0x19/0x80
-[ 1843.506211]  __kasan_kmalloc.constprop.5+0xa0/0xd0
-[ 1843.506836]  setxattr+0xeb/0x230
-[ 1843.507264]  __x64_sys_fsetxattr+0xba/0xe0
-[ 1843.507886]  do_syscall_64+0x6c/0x230
-[ 1843.508429]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-[ 1843.509558] Freed by task 0:
-[ 1843.510188] (stack is not available)
-
-[ 1843.511309] The buggy address belongs to the object at ffff888111e369e0
-                which belongs to the cache kmalloc-8 of size 8
-[ 1843.514095] The buggy address is located 2 bytes inside of
-                8-byte region [ffff888111e369e0, ffff888111e369e8)
-[ 1843.516524] The buggy address belongs to the page:
-[ 1843.517561] page:ffff88813f478d80 refcount:1 mapcount:0 mapping:ffff88811940c300 index:0xffff888111e373b8 compound_mapcount: 0
-[ 1843.519993] flags: 0x4404000010200(slab|head)
-[ 1843.520951] raw: 0004404000010200 ffff88813f48b008 ffff888119403d50 ffff88811940c300
-[ 1843.522616] raw: ffff888111e373b8 000000000016000f 00000001ffffffff 0000000000000000
-[ 1843.524281] page dumped because: kasan: bad access detected
-
-[ 1843.525936] Memory state around the buggy address:
-[ 1843.526975]  ffff888111e36880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[ 1843.528479]  ffff888111e36900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[ 1843.530138] >ffff888111e36980: fc fc fc fc fc fc fc fc fc fc fc fc 02 fc fc fc
-[ 1843.531877]                                                        ^
-[ 1843.533287]  ffff888111e36a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[ 1843.534874]  ffff888111e36a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[ 1843.536468] ==================================================================
-
-This is caused by supplying a too short compression value ('lz') in the
-test-case and comparing it to 'lzo' with strncmp() and a length of 3.
-strncmp() read past the 'lz' when looking for the 'o' and thus caused an
-out-of-bounds read.
-
-Introduce a new check 'btrfs_compress_is_valid_type()' which not only
-checks the user-supplied value against known compression types, but also
-employs checks for too short values.
-
-Reported-by: Nikolay Borisov <nborisov@suse.com>
-Fixes: 272e5326c783 ("btrfs: prop: fix vanished compression property after failed set")
-CC: stable@vger.kernel.org # 5.1+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108602
+Fixes: e60aa7b53845 ("iommu/iova: Extend rbtree node caching")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: <stable@vger.kernel.org> # v4.15+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/compression.c | 16 ++++++++++++++++
- fs/btrfs/compression.h |  1 +
- fs/btrfs/props.c       |  6 +-----
- 3 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/iommu/iova.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-index 9bfa66592aa7b..c71e534ca7ef6 100644
---- a/fs/btrfs/compression.c
-+++ b/fs/btrfs/compression.c
-@@ -42,6 +42,22 @@ const char* btrfs_compress_type2str(enum btrfs_compression_type type)
- 	return NULL;
- }
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 60348d707b993..9a576ae837dcb 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -148,8 +148,9 @@ __cached_rbnode_delete_update(struct iova_domain *iovad, struct iova *free)
+ 	struct iova *cached_iova;
  
-+bool btrfs_compress_is_valid_type(const char *str, size_t len)
-+{
-+	int i;
-+
-+	for (i = 1; i < ARRAY_SIZE(btrfs_compress_types); i++) {
-+		size_t comp_len = strlen(btrfs_compress_types[i]);
-+
-+		if (len < comp_len)
-+			continue;
-+
-+		if (!strncmp(btrfs_compress_types[i], str, comp_len))
-+			return true;
-+	}
-+	return false;
-+}
-+
- static int btrfs_decompress_bio(struct compressed_bio *cb);
+ 	cached_iova = rb_entry(iovad->cached32_node, struct iova, node);
+-	if (free->pfn_hi < iovad->dma_32bit_pfn &&
+-	    free->pfn_lo >= cached_iova->pfn_lo)
++	if (free == cached_iova ||
++	    (free->pfn_hi < iovad->dma_32bit_pfn &&
++	     free->pfn_lo >= cached_iova->pfn_lo))
+ 		iovad->cached32_node = rb_next(&free->node);
  
- static inline int compressed_bio_size(struct btrfs_fs_info *fs_info,
-diff --git a/fs/btrfs/compression.h b/fs/btrfs/compression.h
-index ddda9b80bf204..f97d90a1fa531 100644
---- a/fs/btrfs/compression.h
-+++ b/fs/btrfs/compression.h
-@@ -127,6 +127,7 @@ extern const struct btrfs_compress_op btrfs_lzo_compress;
- extern const struct btrfs_compress_op btrfs_zstd_compress;
- 
- const char* btrfs_compress_type2str(enum btrfs_compression_type type);
-+bool btrfs_compress_is_valid_type(const char *str, size_t len);
- 
- int btrfs_compress_heuristic(struct inode *inode, u64 start, u64 end);
- 
-diff --git a/fs/btrfs/props.c b/fs/btrfs/props.c
-index 61d22a56c0ba4..6980a0e13f18e 100644
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -366,11 +366,7 @@ int btrfs_subvol_inherit_props(struct btrfs_trans_handle *trans,
- 
- static int prop_compression_validate(const char *value, size_t len)
- {
--	if (!strncmp("lzo", value, 3))
--		return 0;
--	else if (!strncmp("zlib", value, 4))
--		return 0;
--	else if (!strncmp("zstd", value, 4))
-+	if (btrfs_compress_is_valid_type(value, len))
- 		return 0;
- 
- 	return -EINVAL;
+ 	cached_iova = rb_entry(iovad->cached_node, struct iova, node);
 -- 
 2.20.1
 
