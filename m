@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19F6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F7DC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98511206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9F42089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380196;
-	bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+	s=default; t=1568380199;
+	bh=/UeehScbMu3t7XqRJk6imFK9H3ouhpY1b8trKpClpXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1ev3+UtZ+8L6i/rLIVcftf+yNhkfAX7DEPococzmCdUJaC0eR8h0QI1NhoCGsjTm
-	 g8UjCNCEfQLfXo+odqg5o0UcwkJ1MNsj0l4SXX8HpFxZlEQUQxe5fuOgAsasLnAVuh
-	 l/JGm4Kuz/+NcqpUDdt9ajmNOEvl03Uj/FsvZ6uE=
+	b=m3eKzg0u9yBP1wEKWZIc07enDa/goQWjko+KUebhe/lkJUiEUfrtLGred/5iqWciT
+	 kFQ8cpzhiI6NWl9SMZTF6Ei6K4GxZj0Vc6UgdFsdX+a8DmDDcyTXaZ+YO0qTpnYJMC
+	 7qEiRkQlc+g6PFH7TiuRjj6cyl9PwcenaDWtFepI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388624AbfIMNJz (ORCPT
+        id S2388636AbfIMNJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34598 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388579AbfIMNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:54 -0400
+        id S2388579AbfIMNJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:57 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA1BB206BB;
-        Fri, 13 Sep 2019 13:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C5D2089F;
+        Fri, 13 Sep 2019 13:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380193;
-        bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+        s=default; t=1568380196;
+        bh=/UeehScbMu3t7XqRJk6imFK9H3ouhpY1b8trKpClpXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjISDUGjV/eX5WMZs0h8I29ma06BESD+NMRwfLTtkXIotD7nErZfma3aTkUqQAADe
-         xx6Hs8o9THqHo36WFdBl8YRrpLoDhVb0xdXoWU/qvKlwaLpefJsCB6f3M+9W+9d29I
-         o3evgV7mF6/N4+I12h2lQh1GPtFd4UoAzjmJJHUk=
+        b=hk4AT1hvXlP86nKsIbACGGBWItO8kWRk/WO5UeyDjbUvyJlDsZ8eYPlvHbTEEI8QC
+         QpS6vDdniQPrzdreQHxxYgTICCOgXCTw9Xnh1brFG3kwuR3kd5tYDB9ac+KBUpnwZ0
+         ZNfev+lqaRfM3RrymOMU2k1JSR3ZNznnoumfc94U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 01/21] ALSA: hda - Fix potential endless loop at applying quirks
-Date:   Fri, 13 Sep 2019 14:06:54 +0100
-Message-Id: <20190913130502.425859767@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Chris Welch <Chris.Welch@viavisolutions.com>,
+        Vignesh R <vigneshr@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.14 10/21] PCI: dra7xx: Fix legacy INTD IRQ handling
+Date:   Fri, 13 Sep 2019 14:07:03 +0100
+Message-Id: <20190913130505.079444042@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,43 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vignesh R <vigneshr@ti.com>
 
-commit 333f31436d3db19f4286f8862a00ea1d8d8420a1 upstream.
+commit 524d59f6e30aab5b618da55e604c802ccd83e708 upstream.
 
-Since the chained quirks via chained_before flag is applied before the
-depth check, it may lead to the endless recursive calls, when the
-chain were set up incorrectly.  Fix it by moving the depth check at
-the beginning of the loop.
+Legacy INTD IRQ handling is broken on dra7xx due to fact that driver
+uses hwirq in range of 1-4 for INTA, INTD whereas IRQ domain is of size
+4 which is numbered 0-3. Therefore when INTD IRQ line is used with
+pci-dra7xx driver following warning is seen:
 
-Fixes: 1f57825077dc ("ALSA: hda - Add chained_before flag to the fixup entry")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+       WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:342 irq_domain_associate+0x12c/0x1c4
+       error: hwirq 0x4 is too large for dummy
+
+Fix this by using pci_irqd_intx_xlate() helper to translate the INTx 1-4
+range into the 0-3 as done in other PCIe drivers.
+
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_auto_parser.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/dwc/pci-dra7xx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_auto_parser.c
-+++ b/sound/pci/hda/hda_auto_parser.c
-@@ -828,6 +828,8 @@ static void apply_fixup(struct hda_codec
- 	while (id >= 0) {
- 		const struct hda_fixup *fix = codec->fixup_list + id;
+--- a/drivers/pci/dwc/pci-dra7xx.c
++++ b/drivers/pci/dwc/pci-dra7xx.c
+@@ -227,6 +227,7 @@ static int dra7xx_pcie_intx_map(struct i
  
-+		if (++depth > 10)
-+			break;
- 		if (fix->chained_before)
- 			apply_fixup(codec, fix->chain_id, action, depth + 1);
+ static const struct irq_domain_ops intx_domain_ops = {
+ 	.map = dra7xx_pcie_intx_map,
++	.xlate = pci_irqd_intx_xlate,
+ };
  
-@@ -867,8 +869,6 @@ static void apply_fixup(struct hda_codec
- 		}
- 		if (!fix->chained || fix->chained_before)
- 			break;
--		if (++depth > 10)
--			break;
- 		id = fix->chain_id;
+ static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+@@ -270,7 +271,7 @@ static irqreturn_t dra7xx_pcie_msi_irq_h
+ 	case INTC:
+ 	case INTD:
+ 		generic_handle_irq(irq_find_mapping(dra7xx->irq_domain,
+-						    ffs(reg)));
++						    ffs(reg) - 1));
+ 		break;
  	}
- }
+ 
 
 
