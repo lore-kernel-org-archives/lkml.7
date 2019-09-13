@@ -2,87 +2,210 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AB2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E611C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB23206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1D42089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QkEiSFQz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PDSf1WNZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oSo2mnx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfIMOYK (ORCPT
+        id S1730487AbfIMOYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:24:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42924 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfIMOYK (ORCPT
+        Fri, 13 Sep 2019 10:24:39 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:25536 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfIMOYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:24:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1180760769; Fri, 13 Sep 2019 14:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568384649;
-        bh=7Mu6zb2zVJC32hBRU8iS+CwGW1/scWJt1XF34sRcaXw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=QkEiSFQzOu4Au82YolR++ShD11XBiedosHtmdUtigV0NGlg2bJoPVD+3ybSXyFvZA
-         KFoc3PmTHkX3NkEwvWKo9MU9UX1qbMZ1k4dkBDPpnsQGrs6EQ+S/aW1wLE+wFtOJ1r
-         gUpRyrVWLwBYuSPNs8VQm5TwuFbtAPbuTHNORzig=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C28A602F8;
-        Fri, 13 Sep 2019 14:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568384648;
-        bh=7Mu6zb2zVJC32hBRU8iS+CwGW1/scWJt1XF34sRcaXw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=PDSf1WNZe2hp95ECdCcGsQcSVsHbscquivaeFSqDiUtmHiUd7MMZw1GXRQZl8PxTR
-         K2BWq/eZOwwCUj1rLcN8UXMgNzM2Cuhby0Jrgp2Mfy9oBIug2duXMTyISPYaF8zEr/
-         eVz6XKGYVNqXvKE1bDnmQjfMuLN3tqCNICdK6pDs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C28A602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] libertas: use mesh_wdev->ssid instead of priv->mesh_ssid
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190907151855.2637984-1-lkundrak@v3.sk>
-References: <20190907151855.2637984-1-lkundrak@v3.sk>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190913142409.1180760769@smtp.codeaurora.org>
-Date:   Fri, 13 Sep 2019 14:24:08 +0000 (UTC)
+        Fri, 13 Sep 2019 10:24:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568384675;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=0RQR4EVRvfIGS4a7f65/3zrJcdUshdLqla9xO5wB5Ic=;
+        b=oSo2mnx3J5Z8j6rxYvfuUN88Q2uQH98i6iOVhXbLbBNNEluKv2eut+eWyehhYG3hw8
+        0krM89wq0A9aFOnAbJ0sNgp2QrJu4H9JLaiyCCsQ1wJ2WPRw6jC/JuN71ZPfkz4d8sQO
+        SWBFuH0SwY8smkITV7dbq9fhGU12ov5DQu8nUFxt5mzp6ZFrJe4MBhpymG3yn8ily9dY
+        i5waaceXRm3WQii7888oCQqUkrAgMz2NS98OxiT+dm9YNrZuv2X+iaqG/pbulIx12hal
+        G3QLQ1q+lq/3nFwOCeptQZhNm01VnvWfF3NDnDgJYu43i1SfPQ0C7Tc/Jc6eB258tLZ3
+        w/Ew==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8DEOIIgj
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 13 Sep 2019 16:24:18 +0200 (CEST)
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
+Date:   Fri, 13 Sep 2019 16:24:18 +0200
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com>
+References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lubomir Rintel <lkundrak@v3.sk> wrote:
 
-> With the commit e86dc1ca4676 ("Libertas: cfg80211 support") we've lost
-> the ability to actually set the Mesh SSID from userspace.
-> NL80211_CMD_SET_INTERFACE with NL80211_ATTR_MESH_ID sets the mesh point
-> interface's ssid field. Let's use that one for the Libertas Mesh
-> operation
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
+>=20
+> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>=20
+>> Hi Adam,
+>>=20
+>>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
+>>=20
+>>>>> +     cpu_cooling_maps: cooling-maps {
+>>>>> +             map0 {
+>>>>> +                     trip =3D <&cpu_alert0>;
+>>>>> +                     /* Only allow OPP50 and OPP100 */
+>>>>> +                     cooling-device =3D <&cpu 0 1>;
+>>>>=20
+>>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
+>>>> understand their meaning (and how it relates to the opp list).
+>>>=20
+>>> I read through the documentation, but it wasn't completely clear to
+>>> me. AFAICT, the numbers after &cpu represent the min and max index =
+in
+>>> the OPP table when the condition is hit.
+>>=20
+>> Ok. It seems to use "cooling state" for those and the first is =
+minimum
+>> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
+>> no limits.
+>>=20
+>> Since here we use the &cpu node it is likely that the "cooling state"
+>> is the same as the OPP index currently in use.
+>>=20
+>> I have looked through the .dts which use cpu_crit and the picture is
+>> not unique...
+>>=20
+>> omap4           seems to only define it
+>> am57xx          has two different grade dtsi files
+>> dra7            overwrites critical temperature value
+>> am57xx-beagle   defines a gpio to control a fan
+>=20
+> Checkout rk3288-veyron-mickey.dts
+>=20
+> They have almost_warm, warm, almost_hot, hot, hotter, very_hot, and
+> critical for trips, and they have as many corresponding cooling maps
+> which appear to limit the CPU speeds, but their index references are
+> still confusing to me.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Seems to be quite sophistcated.
 
-2199c9817670 libertas: use mesh_wdev->ssid instead of priv->mesh_ssid
+The arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi also has a lot
+of trip points. So there may be very different needs...
 
--- 
-https://patchwork.kernel.org/patch/11136509/
+But it has potentially helpful comments...
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+				/*=20
+				 * When reaching cpu0_alert3, reduce CPU
+				 * by 2 steps. On Exynos5422/5800 that =
+would
+				 * be: 1600 MHz and 1100 MHz.
+				 */
+				map3 {
+					trip =3D <&cpu0_alert3>;
+					cooling-device =3D <&cpu0 0 2>;
+				};
+				map4 {
+					trip =3D <&cpu0_alert3>;
+					cooling-device =3D <&cpu4 0 2>;
+				};
+				/*
+				 * When reaching cpu0_alert4, reduce CPU
+				 * further, down to 600 MHz (12 steps =
+for big,
+				 * 7 steps for LITTLE).
+				 */
+				map5 {
+					trip =3D <&cpu0_alert4>;
+					cooling-device =3D <&cpu0 3 7>;
+				};
+				map6 {
+					trip =3D <&cpu0_alert4>;
+					cooling-device =3D <&cpu4 3 12>;
+				};
+
+That would mean the second integer is something about how
+many steps to reduce.
+
+But the first is not explained.
+
+BTW: this also demonstrates how a single trip point can map to multiple
+cooling-device actions (something we likely do not need).
+
+>=20
+> For that device,
+> Warm and no limit first, then 4:   coolling-device =3D <&cpu0 =
+THERMAL_NO_LIMIT 4>
+> ...
+> very_hot uses a number then no limit: cooling-device =3D <&cpu0 8
+> THERMAL_NO_LIMIT>
+>=20
+> This makes me wonder if the min and max are switched or the index
+> values go backwards.
+
+It may depend on the specific cpu driver? Maybe even omap rk and exynos
+have different interpretation in code?
+
+>>=20
+>> Then we can use the data sheet limits of 90=C2=B0C and 105=C2=B0C in =
+the trip point
+>> table (which should not be tweaked for sensor inaccuracy).
+>=20
+> I can see not compensating if it reads high, but if the temp reads
+> low, shouldn't compensate so we don't over temp the processor?
+
+I just mean that we must ensure that the TJ is <=3D 90=C2=B0 if the =
+bandgap
+ever reports 90=C2=B0. So it may report 10 or 20 or even 30 degrees more =
+than the
+real temperature but never less (reaching the critical temperature too =
+early
+but not too late).
+
+We can achieve that by adding bias or changing slope etc. in the bandgap =
+sensor
+driver.
+
+If I find some time I am curious enough to look into the code and the =
+data
+sheets to understand why it is said to be inaccurate... Maybe there is
+jitter from some LDO and it needs a median filter?
+
+And why it seems to add a bias of ca. 10=C2=B0 as soon as I read it more =
+than
+for the first time. And how well temperature correlates to ambient =
+temperature
+(it definitively correlates to cpufreq-set -f).
+
+But we should not modify the trip temperatures by 10 or 20 or 30 =
+degrees.
+IMHO they should have the values defined by the data sheet.
+
+BR,
+Nikolaus
 
