@@ -2,216 +2,173 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF362C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49F9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B55208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:07:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJRyKhrq"
+	by mail.kernel.org (Postfix) with ESMTP id B7A8920830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388102AbfIMLHR (ORCPT
+        id S1729355AbfIMLJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 07:07:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45992 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfIMLHR (ORCPT
+        Fri, 13 Sep 2019 07:09:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17190 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726754AbfIMLJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 07:07:17 -0400
-Received: by mail-io1-f66.google.com with SMTP id f12so62090312iog.12;
-        Fri, 13 Sep 2019 04:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+it3l7EZlC06BR1tFmXvlooaTOd7KUj8rVaU3kT78So=;
-        b=aJRyKhrqHbI7r51J28Q9ujktQgqvN/FP78RQSKg9eRQjBw+YXvrnvR8mKWVrfwY/l8
-         Hgka5BS8TZtZEfoSNUm2KVlkf5xzsUy/bce2ClcqLpBlHj5zQoT5eRVDOybTxWtUm1c8
-         fEwuQu5hHuMK7n/Kigf8a1173M50QCwNzKecnlVmO9ln6/ji10GbBpaePee0rX/28GMC
-         yoREg9aLFVWGr55nB6mMmIHTe1icAWLO0xeyKTExQpKJgkV/oLoMfFrG+kNl+W4Q/2eT
-         otph+lYZtohYHNaTAdn9SIoCxMoP/1lEO6FHltjIegFnQ9Bj6aZuNj14nL3OYbHbQYYP
-         3o9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+it3l7EZlC06BR1tFmXvlooaTOd7KUj8rVaU3kT78So=;
-        b=d+1mAm7WZ6pfOEWAIVUQoaesNTRuMcjXyrFNJ+Cl8OIVgb/tE52oaKDTjU9UDr7CoW
-         0skyw1m0pL4WBgctZtsm4u0QVMOPeBKQAnumy/6hPFzTLsJ54jxnQrFUeY1MmA/e4Uxa
-         tm+ge7vx2IHRlKA0wOE2cAvP/8dMO7hUVPKzasCpGXk4sfW4Xfh5tOcEvF8FiR5DM1qL
-         HXiB8V9pyCjvlZAosSVdzNr25At18cC4rxXbzxrfE/7BHuEF8RZ06JuuDfh+JeFdfE83
-         1UmygtINkhrhX/BpWlzokrSpnPl82dSu/gqk3D4uny6qxA1v8QeqK++/6VNhWneXfR0l
-         MeeQ==
-X-Gm-Message-State: APjAAAWCkbH7dd+cseJ61J+6ksfFuJM/FjbslHiOC9p7kU56GE9EkYkG
-        i+L0K5kf2Sh0ypQYhKLa6XnXZrGi2CkjTH7q4VY=
-X-Google-Smtp-Source: APXvYqzcZ8Thl5h48qLjrotj69eV6Fk89T9qtfvZ+uqSB+i5YNJHBd56UVsiaQiGjNYaDttqGhlhkjIx/WKBk2tevvI=
-X-Received: by 2002:a6b:b78b:: with SMTP id h133mr10274111iof.276.1568372835849;
- Fri, 13 Sep 2019 04:07:15 -0700 (PDT)
+        Fri, 13 Sep 2019 07:09:51 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8DB92In140430
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 07:09:50 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v09tggexb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 07:09:50 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Fri, 13 Sep 2019 12:09:48 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Sep 2019 12:09:44 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8DB9hGG46399596
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 11:09:43 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D65FA4054;
+        Fri, 13 Sep 2019 11:09:43 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6658A4062;
+        Fri, 13 Sep 2019 11:09:42 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.117.92])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Sep 2019 11:09:42 +0000 (GMT)
+Subject: Re: [PATCH 0/3] powerpc/mm: Conditionally call H_BLOCK_REMOVE
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        npiggin@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830120712.22971-1-ldufour@linux.ibm.com>
+ <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Fri, 13 Sep 2019 13:09:42 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
-In-Reply-To: <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 13 Sep 2019 06:07:03 -0500
-Message-ID: <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1c499131-36f2-9d89-ed4c-5cb59a08398d@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091311-0028-0000-0000-0000039BCDFA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091311-0029-0000-0000-0000245E3CB4
+Message-Id: <6d9ca38f-2b80-a2a5-491e-d818a3ebcd32@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909130107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 1:56 AM H. Nikolaus Schaller <hns@goldelico.com> wr=
-ote:
->
-> Hi Adam,
->
-> > Am 12.09.2019 um 20:30 schrieb Adam Ford <aford173@gmail.com>:
-> >
-> > The thermal sensor in the omap3 family isn't accurate, but it's
-> > better than nothing.  The various OPP's enabled for the omap3630
-> > support up to OPP1G, however the datasheet for the DM3730 states
-> > that OPP130 and OPP1G are not available above TJ of 90C.
->
-> We may have to add similar things for omap34xx as well. See
-> data sheet 3.3 Recommended Operating Conditions
->
-> But when reading them they do not limit temperature but
-> number of operation hours of each OPP depending on temperature...
-> That is clearly beyond what a kernel can do (we would have to
-> have access to some NVRAM in the kernel counting hours).
->
-> >
-> > This patch configures the thermal throttling to limit the
-> > operating points of the omap3630 to Only OPP50 and OPP100 if
->
-> s/Only/only/
+Le 12/09/2019 à 15:44, Aneesh Kumar K.V a écrit :
+> On 8/30/19 5:37 PM, Laurent Dufour wrote:
+>> Since the commit ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE"),
+>> the call to H_BLOCK_REMOVE is always done if the feature is exhibited.
+>>
+>> On some system, the hypervisor may not support all the combination of
+>> segment base page size and page size. When this happens the hcall is
+>> returning H_PARAM, which is triggering a BUG_ON check leading to a panic.
+>>
+>> The PAPR document is specifying a TLB Block Invalidate Characteristics item
+>> detailing which couple base page size, page size the hypervisor is
+>> supporting through H_BLOCK_REMOVE. Furthermore, the characteristics are
+>> also providing the size of the block the hcall could process.
+>>
+>> Supporting various block size seems not needed as all systems I was able to
+>> play with was support an 8 addresses block size, which is the maximum
+>> through the hcall. Supporting various size may complexify the algorithm in
+>> call_block_remove() so unless this is required, this is not done.
+>>
+>> In the case of block size different from 8, a warning message is displayed
+>> at boot time and that block size will be ignored checking for the
+>> H_BLOCK_REMOVE support.
+>>
+>> Due to the minimal amount of hardware showing a limited set of
+>> H_BLOCK_REMOVE supported page size, I don't think there is a need to push
+>> this series to the stable mailing list.
+>>
+>> The first patch is initializing the penc values for each page size to an
+>> invalid value to be able to detect those which have been initialized as 0
+>> is a valid value.
+>>
+>> The second patch is reading the characteristic through the hcall
+>> ibm,get-system-parameter and record the supported block size for each page
+>> size.
+>>
+>> The third patch is changing the check used to detect the H_BLOCK_REMOVE
+>> availability to take care of the base page size and page size couple.
+>>
+> 
+> So ibm,segment-page-sizes indicates wether we support a combination of base 
+> page size and actual page size. You are suggesting that the value reported 
+> by that is not correct? Can you also share the early part of dmesg as below.
 
-I will fix when I do V2
->
-> > the thermal sensor reads a value above 90C.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> >
-> > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36=
-xx.dtsi
-> > index 4bb4f534afe2..58b9d347019f 100644
-> > --- a/arch/arm/boot/dts/omap36xx.dtsi
-> > +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> > @@ -25,6 +25,7 @@
-> >
-> >                       vbb-supply =3D <&abb_mpu_iva>;
-> >                       clock-latency =3D <300000>; /* From omap-cpufreq =
-driver */
-> > +                     #cooling-cells =3D <2>;
-> >               };
-> >       };
-> >
-> > @@ -195,6 +196,31 @@
-> >       };
-> > };
-> >
-> > +&cpu_thermal {
-> > +     cpu_trips: trips {
->
-> Yes, that is comparable to what I have seen in omap5 DT where I know
-> that thermal throttling works.
->
-> > +             /* OPP130 and OPP1G are not available above TJ of 90C. */
-> > +             cpu_alert0: cpu_alert {
-> > +                     temperature =3D <90000>; /* millicelsius */
-> > +                     hysteresis =3D <2000>; /* millicelsius */
-> > +                     type =3D "passive";
-> > +             };
-> > +
-> > +             cpu_crit: cpu_crit {
-> > +                     temperature =3D <125000>; /* millicelsius */
->
-> Shouldn't this be 105=C2=B0C for all omap3 chips (industrial temperature =
-range)?
+I'm not saying that the value reported by ibm,segment-page-sizes are 
+incorrect, I'm saying that some couple are not supported by the hcall 
+H_BLOCK_REMOVE.
 
-You are correct.  I forgot to change this when I did my copy-paste.
->
-> > +                     hysteresis =3D <2000>; /* millicelsius */
-> > +                     type =3D "critical";
-> > +             };
-> > +     };
-> > +
-> > +     cpu_cooling_maps: cooling-maps {
-> > +             map0 {
-> > +                     trip =3D <&cpu_alert0>;
-> > +                     /* Only allow OPP50 and OPP100 */
-> > +                     cooling-device =3D <&cpu 0 1>;
->
-> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
-> understand their meaning (and how it relates to the opp list).
+May be should I change the second sentence by
 
-I read through the documentation, but it wasn't completely clear to
-me. AFAICT, the numbers after &cpu represent the min and max index in
-the OPP table when the condition is hit.
->
-> > +             };
-> > +     };
->
-> Seems to make sense when comparing to omap4-cpu-thermal.dtsi...
->
-> Maybe we can add the trip points to omap3-cpu-thermal.dtsi
-> because they seem to be the same for all omap3 variants and
-> just have a SoC variant specific cooling map for omap36xx.dtsi.
+On some system, the hypervisor may not support all the combination of 
+segment base page size and page size for the hcall H_BLOCK_REMOVE. When 
+this happens the hcall is returning H_PARAM, which is triggering a BUG_ON 
+check leading to a panic.
 
-The OPP's for OMAP3530 show that OPP5 and OPP6 are capable of
-operating at 105C.  AM3517 is a little different also, so I didn't
-want to make a generic omap3 throttling table.  Since my goal was to
-try to remove the need for the turbo option from the newly supported
-1GHz omap3630/3730, I was hoping to get this pushed first.  From
-there, we can tweak the 34xx.dtsi and 3517.dtsi for their respective
-thermal information.
+Is that clear enough now ?
 
->
-> > +};
-> > +
-> > /* OMAP3630 needs dss_96m_fck for VENC */
-> > &venc {
-> >       clocks =3D <&dss_tv_fck>, <&dss_96m_fck>;
-> > --
-> > 2.17.1
-> >
->
-> The question is how we can test that. Heating up the omap36xx to 90=C2=B0=
-C
-> or even 105=C2=B0C isn't that easy like with omap5...
->
-> Maybe we can modify the millicelsius values for testing purposes to
-> something in reachable range, e.g. 60=C2=B0C and 70=C2=B0C and watch what=
- happens?
+> 
+> [    0.000000] hash-mmu: Page sizes from device-tree:
+> [    0.000000] hash-mmu: base_shift=12: shift=12, sllp=0x0000, 
+> avpnm=0x00000000, tlbiel=1, penc=0
+> [    0.000000] hash-mmu: base_shift=12: shift=16, sllp=0x0000, 
+> avpnm=0x00000000, tlbiel=1, penc=7
+> [    0.000000] hash-mmu: base_shift=12: shift=24, sllp=0x0000, 
+> avpnm=0x00000000, tlbiel=1, penc=56
+> [    0.000000] hash-mmu: base_shift=16: shift=16, sllp=0x0110, 
+> avpnm=0x00000000, tlbiel=1, penc=1
+> [    0.000000] hash-mmu: base_shift=16: shift=24, sllp=0x0110, 
+> avpnm=0x00000000, tlbiel=1, penc=8
+> [    0.000000] hash-mmu: base_shift=24: shift=24, sllp=0x0100, 
+> avpnm=0x00000001, tlbiel=0, penc=0
+> [    0.000000] hash-mmu: base_shift=34: shift=34, sllp=0x0120, 
+> avpnm=0x000007ff, tlbiel=0, penc=3
+> 
+> That shows different base page size and actual page size combination.
+> 
+> 
+>> Laurent Dufour (3):
+>>    powerpc/mm: Initialize the HPTE encoding values
+>>    powperc/mm: read TLB Block Invalidate Characteristics
+>>    powerpc/mm: call H_BLOCK_REMOVE when supported
+>>
+>>   arch/powerpc/include/asm/book3s/64/mmu.h |   3 +
+>>   arch/powerpc/mm/book3s64/hash_utils.c    |   8 +-
+>>   arch/powerpc/platforms/pseries/lpar.c    | 118 ++++++++++++++++++++++-
+>>   3 files changed, 125 insertions(+), 4 deletions(-)
+>>
+> 
+> 
+> -aneesh
 
-I have access to a thermal chamber at work, but the guy who knows how
-to use it is out for the rest of the week.  My plan was do as you
-suggested and change the milicelsius values, but I wanted to get some
-buy-in from TI people and/or Tony.  This also means enabling the omap3
-thermal stuff which clearly throws a message that it's inaccurate.  I
-don't know how much it's inaccurate, so we may have to make the 90C
-value lower to compensate.
-
-adam
->
-> BR,
-> Nikolaus
->
->
->
