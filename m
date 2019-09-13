@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A2C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7867C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C0D206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9125520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380314;
-	bh=VqNzzUOuKwTukUd28y7P1lYA35/hn2Tp0oQEZy8nl/w=;
+	s=default; t=1568380316;
+	bh=/u4erf792tzOJqlpKbVrkMu2X3XVufsaWCH5312aUHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTiuSf8lGEOXC3/qgcwthIYqNA09NMGUVOS/4LnHcm4VSpI+fcR9FHBJwNx6tX8Dk
-	 Gxh5Qm20yYdtzm2l/lwHHoNYvjEdVtcsC0wNlrDLREVd7v6A575jD0wa2ybmtjkeOx
-	 fvalbhjjefd9br0lWLvaXnp64dl4YB+Xcinm35iI=
+	b=dZP49kaL4/5r8GBZjMubfbLs1rM98uzeh6doWUH6thyLtRlYcHTWx2aw1xaM1oXYL
+	 zfjx65E3CICMMZnQT1VQXFsfUHP6U1lycnSH3fF7AETsccl11SX0Fc3AnxFndnKNq1
+	 j6fiw8u9akNckpDiM6oCiRQ8c8djSfEVObH3PQCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbfIMNLx (ORCPT
+        id S2389066AbfIMNLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389035AbfIMNLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:50 -0400
+        id S2389035AbfIMNLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:53 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7854E214D8;
-        Fri, 13 Sep 2019 13:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7037E206A5;
+        Fri, 13 Sep 2019 13:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380310;
-        bh=VqNzzUOuKwTukUd28y7P1lYA35/hn2Tp0oQEZy8nl/w=;
+        s=default; t=1568380313;
+        bh=/u4erf792tzOJqlpKbVrkMu2X3XVufsaWCH5312aUHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9OHFR0Xca514RMA1A4PoWaZu6jIeV+Fsoi1X5Tl5iet0y4Ks9VxIN9ruQvprFjo3
-         J2rmPFeW3hkM51ieNjMFP8blRiB19txiqSlveoRA+a1QZj52F2m4tocDBP+ABySAIv
-         /IfipXXRh5FgtzFPxiWzIzh/1biPUq4AMZJoo4G0=
+        b=DNe+c23RZ+C03SFr7td1Twpy/qKtjr9iuYLn0IvytF3QWMIl9Z0LK07y9PivxkGtr
+         tJwWb4G4izNvMsHu/toYtCFPtNrW1yNc88rz2KK4LfxsD9Iy45ImO+okK+xKDHMcw/
+         QvNEKHCHCPtH45rFizPLQZhkFfF8CN5PSsnWc4rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tiwei Bie <tiwei.bie@intel.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 4.19 008/190] vhost/test: fix build for vhost test
-Date:   Fri, 13 Sep 2019 14:04:23 +0100
-Message-Id: <20190913130600.303904103@linuxfoundation.org>
+Subject: [PATCH 4.19 009/190] vhost/test: fix build for vhost test - again
+Date:   Fri, 13 Sep 2019 14:04:24 +0100
+Message-Id: <20190913130600.371763800@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,12 +62,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tiwei Bie <tiwei.bie@intel.com>
 
-commit 93d2c4de8d8129b97ee1e1a222aedb0719d2fcd9 upstream.
+commit 264b563b8675771834419057cbe076c1a41fb666 upstream.
 
-Since below commit, callers need to specify the iov_limit in
-vhost_dev_init() explicitly.
+Since vhost_exceeds_weight() was introduced, callers need to specify
+the packet weight and byte weight in vhost_dev_init(). Note that, the
+packet weight isn't counted in this patch to keep the original behavior
+unchanged.
 
-Fixes: b46a0bf78ad7 ("vhost: fix OOB in get_rx_bufs()")
+Fixes: e82b9b0727ff ("vhost: introduce vhost_exceeds_weight()")
 Cc: stable@vger.kernel.org
 Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
@@ -75,17 +77,43 @@ Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/test.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 --- a/drivers/vhost/test.c
 +++ b/drivers/vhost/test.c
-@@ -116,7 +116,7 @@ static int vhost_test_open(struct inode
+@@ -23,6 +23,12 @@
+  * Using this limit prevents one virtqueue from starving others. */
+ #define VHOST_TEST_WEIGHT 0x80000
+ 
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * pkts.
++ */
++#define VHOST_TEST_PKT_WEIGHT 256
++
+ enum {
+ 	VHOST_TEST_VQ = 0,
+ 	VHOST_TEST_VQ_MAX = 1,
+@@ -81,10 +87,8 @@ static void handle_vq(struct vhost_test
+ 		}
+ 		vhost_add_used_and_signal(&n->dev, vq, head, 0);
+ 		total_len += len;
+-		if (unlikely(total_len >= VHOST_TEST_WEIGHT)) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
+ 			break;
+-		}
+ 	}
+ 
+ 	mutex_unlock(&vq->mutex);
+@@ -116,7 +120,8 @@ static int vhost_test_open(struct inode
  	dev = &n->dev;
  	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
  	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX);
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV);
+-	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV);
++	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
++		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
  
  	f->private_data = n;
  
