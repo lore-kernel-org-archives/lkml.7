@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49257C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA24BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC94206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9881E208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380577;
-	bh=Jca2Y4YgeNJeQz0dr97Q6CH5BvgAV0DjfudxgcwUv78=;
+	s=default; t=1568380582;
+	bh=kQb2lO5SeC/552C3y6/UkLfJlBEviMXtrHmh+PN1ors=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmB0oUXqfaAei4r/fAVWTGAqIW+gKrHc7MzLyj92AvWBnAbCNKaVGue3eA9rOyTMI
-	 R8GhT4WUA/mddkmrXMaZNNnnjjPJmEknSQx5nN45O/RwLDtcQJuPPmBjMDU5NUzl2j
-	 AeJKVzbGyp+7gFzuQKXYNtBY0eVlTLANVpBCGS2U=
+	b=CMuSQkuOKsx9ue4XtYbzQDC7i859T+Olz/dk3qUUl8C6moi1ui6404fVYJ9uTzNxs
+	 yRSxND6okm004wLZO9FdcSc2DqFpXFXRour8bwyYGGSzKTaMHMi9c2NtpAvcSMBBmA
+	 KKieTkCoXyka4d8KwhqT8C+HXRxrH6ZJkuvOeg20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389824AbfIMNQQ (ORCPT
+        id S2389845AbfIMNQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389787AbfIMNQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:13 -0400
+        id S2388932AbfIMNQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:19 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B6A0206A5;
-        Fri, 13 Sep 2019 13:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 165F8206A5;
+        Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380572;
-        bh=Jca2Y4YgeNJeQz0dr97Q6CH5BvgAV0DjfudxgcwUv78=;
+        s=default; t=1568380578;
+        bh=kQb2lO5SeC/552C3y6/UkLfJlBEviMXtrHmh+PN1ors=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UYc87Fpb1I88410q9ibLyf4oOqr5JPk/05MSnikAJ6cMYGLmA7jTgbXT7N0yf9jBi
-         wbc6tgSc3pDyITw0QOh9/d2BOXG3LDPbFapUDd8BK4R4DfhqU+0mRHF5vwVpY246/8
-         05jxzFUe1yXcNDJTvA+CPG4Jywt+6bXbAX1c5ofE=
+        b=2Q9p+9piCSU+U0ian/02WO7q8Y7lNOxlKfKrDSPZa1j1n99SJXwzpFy65/cDsL1GD
+         O3D/1fLy3Z8odN8KtjCqNm0iS7IPkwiuPNZLznNGxGf5hrOmPrILP5SMKRgN6B25bh
+         oGw7PTPMX16gjTA+4RsoN7CZGv1fL2gWNxB2hTX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Zabrocki <adamza@microsoft.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        stable@vger.kernel.org,
+        Antonio Argenziano <antonio.argenziano@intel.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Subject: [PATCH 4.19 108/190] drm/i915: Handle vm_mmap error during I915_GEM_MMAP ioctl with WC set
-Date:   Fri, 13 Sep 2019 14:06:03 +0100
-Message-Id: <20190913130608.340127771@linuxfoundation.org>
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 109/190] drm/i915: Sanity check mmap length against object size
+Date:   Fri, 13 Sep 2019 14:06:04 +0100
+Message-Id: <20190913130608.433465428@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,69 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebfb6977801da521d8d5d752d373a187e2a2b9b3 ]
+[ Upstream commit 000c4f90e3f0194eef218ff2c6a8fd8ca1de4313 ]
 
-Add err goto label and use it when VMA can't be established or changes
-underneath.
+We assumed that vm_mmap() would reject an attempt to mmap past the end of
+the filp (our object), but we were wrong.
 
-v2:
-- Dropping Fixes: as it's indeed impossible to race an object to the
-  error address. (Chris)
-v3:
-- Use IS_ERR_VALUE (Chris)
+Applications that tried to use the mmap beyond the end of the object
+would be greeted by a SIGBUS. After this patch, those applications will
+be told about the error on creating the mmap, rather than at a random
+moment on later access.
 
-Reported-by: Adam Zabrocki <adamza@microsoft.com>
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc: Adam Zabrocki <adamza@microsoft.com>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com> #v2
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190207085454.10598-2-joonas.lahtinen@linux.intel.com
+Reported-by: Antonio Argenziano <antonio.argenziano@intel.com>
+Testcase: igt/gem_mmap/bad-size
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Antonio Argenziano <antonio.argenziano@intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190314075829.16838-1-chris@chris-wilson.co.uk
+(cherry picked from commit 794a11cb67201ad1bb61af510bb8460280feb3f3)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/i915_gem.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index e81abd468a15d..9634d3adb8d01 100644
+index 9634d3adb8d01..9372877100420 100644
 --- a/drivers/gpu/drm/i915/i915_gem.c
 +++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -1881,6 +1881,9 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 	addr = vm_mmap(obj->base.filp, 0, args->size,
- 		       PROT_READ | PROT_WRITE, MAP_SHARED,
- 		       args->offset);
-+	if (IS_ERR_VALUE(addr))
+@@ -1874,8 +1874,13 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 	 * pages from.
+ 	 */
+ 	if (!obj->base.filp) {
+-		i915_gem_object_put(obj);
+-		return -ENXIO;
++		addr = -ENXIO;
 +		goto err;
++	}
 +
- 	if (args->flags & I915_MMAP_WC) {
- 		struct mm_struct *mm = current->mm;
- 		struct vm_area_struct *vma;
-@@ -1896,17 +1899,22 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 		else
- 			addr = -ENOMEM;
- 		up_write(&mm->mmap_sem);
-+		if (IS_ERR_VALUE(addr))
-+			goto err;
- 
- 		/* This may race, but that's ok, it only gets set */
- 		WRITE_ONCE(obj->frontbuffer_ggtt_origin, ORIGIN_CPU);
++	if (range_overflows(args->offset, args->size, (u64)obj->base.size)) {
++		addr = -EINVAL;
++		goto err;
  	}
+ 
+ 	addr = vm_mmap(obj->base.filp, 0, args->size,
+@@ -1889,8 +1894,8 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 		struct vm_area_struct *vma;
+ 
+ 		if (down_write_killable(&mm->mmap_sem)) {
+-			i915_gem_object_put(obj);
+-			return -EINTR;
++			addr = -EINTR;
++			goto err;
+ 		}
+ 		vma = find_vma(mm, addr);
+ 		if (vma && __vma_matches(vma, obj->base.filp, addr, args->size))
+@@ -1908,12 +1913,10 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
  	i915_gem_object_put(obj);
--	if (IS_ERR((void *)addr))
--		return addr;
  
  	args->addr_ptr = (uint64_t) addr;
- 
+-
  	return 0;
-+
-+err:
-+	i915_gem_object_put(obj);
-+
-+	return addr;
+ 
+ err:
+ 	i915_gem_object_put(obj);
+-
+ 	return addr;
  }
  
- static unsigned int tile_row_pages(struct drm_i915_gem_object *obj)
 -- 
 2.20.1
 
