@@ -2,202 +2,108 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6367EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1E4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B362089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pvM+9iBi"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDC1206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 16:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfIMQv7 (ORCPT
+        id S1730853AbfIMQzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 12:51:59 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:24390 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729293AbfIMQv7 (ORCPT
+        Fri, 13 Sep 2019 12:55:11 -0400
+Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:60074
+        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730773AbfIMQzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 12:51:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568393515;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=qPhbhefBgtyhWPxfa8BR3laZABGISzXGBiSkAB29TrU=;
-        b=pvM+9iBis1HR3yYHSSo4xnLFTQwa1cWu6d0rExk2+8a7dV8wQKpwXwAEKjlCN4cIIL
-        1LfRiq+SBwZsY934ILh3gf+O8+mI6qxWlf3SV9nWxiRtwCp9IdID85kdQk5rBZJUDn9n
-        4RbXVI4k6jzAdoSrQqiWlFa6+IzaMyUgKQ+Nd1vBJMXTtcIQ0eGkJgfxSmtDT9yXSXe/
-        B6YOEiBSdLaEwrHKo+zjqXJ+lHZUW3shvbIFVaafURdxMULfx1XrC4C6f4MXi0RvEcbu
-        kixStRqIXGk3NTBB7SJGW8yH+OXb0ji3bJBEnukJrl5vRTVL6tvGlXLekGYsUf/GR8M4
-        NdLw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSVXA4OAWU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8DGpaJ4Q
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 13 Sep 2019 18:51:36 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xLODa114M77-rX9WHT+uJtsH3yOmbFG2KdEjZpTSECs2w@mail.gmail.com>
-Date:   Fri, 13 Sep 2019 18:51:35 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D3AF2868-F9A4-4176-A851-5DCF029B65A9@goldelico.com>
-References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com> <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com> <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com> <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com> <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com> <CAHCN7x+_f_jrttUGyKHBOUyYjkOx0mJxba1Yb3tPm9ee7+21og@mail.gmail.com> <CAHCN7xLODa114M77-rX9WHT+uJtsH3yOmbFG2KdEjZpTSECs2w@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 13 Sep 2019 12:55:10 -0400
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
+        id 1i8oqh-000DiX-Gy
+        for linux-kernel@vger.kernel.org; Fri, 13 Sep 2019 18:55:07 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+Date:   Fri, 13 Sep 2019 18:48:28 +0200
+Message-ID: <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com>
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
+ <20190913151228.GT2680@smile.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+In-Reply-To: <20190913151228.GT2680@smile.fi.intel.com>
+Content-Language: en-US
+Cc:     linux-acpi@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello all,
 
-> Am 13.09.2019 um 18:42 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Fri, Sep 13, 2019 at 11:35 AM Adam Ford <aford173@gmail.com> wrote:
->>=20
->> On Fri, Sep 13, 2019 at 10:09 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>=20
->>>=20
->>>> Am 13.09.2019 um 17:01 schrieb Adam Ford <aford173@gmail.com>:
->>>>=20
->>>> On Fri, Sep 13, 2019 at 9:24 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>>=20
->>>>>=20
->>>>>> Am 13.09.2019 um 16:05 schrieb Adam Ford <aford173@gmail.com>:
->>>>>>=20
->>>>>> On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>>>>=20
->>>>>>> Hi Adam,
->>>>>>>=20
->>>>>>>> Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
->>>>>>>=20
->>>>>>>>>> +     cpu_cooling_maps: cooling-maps {
->>>>>>>>>> +             map0 {
->>>>>>>>>> +                     trip =3D <&cpu_alert0>;
->>>>>>>>>> +                     /* Only allow OPP50 and OPP100 */
->>>>>>>>>> +                     cooling-device =3D <&cpu 0 1>;
->>>>>>>>>=20
->>>>>>>>> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I =
-do not
->>>>>>>>> understand their meaning (and how it relates to the opp list).
->>>>>>>>=20
->>>>>>>> I read through the documentation, but it wasn't completely =
-clear to
->>>>>>>> me. AFAICT, the numbers after &cpu represent the min and max =
-index in
->>>>>>>> the OPP table when the condition is hit.
->>>>>>>=20
->>>>>>> Ok. It seems to use "cooling state" for those and the first is =
-minimum
->>>>>>> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to =
-have
->>>>>>> no limits.
->>>>>>>=20
->>>>>>> Since here we use the &cpu node it is likely that the "cooling =
-state"
->>>>>>> is the same as the OPP index currently in use.
->>>>>>>=20
->>>>>>> I have looked through the .dts which use cpu_crit and the =
-picture is
->>>>>>> not unique...
->>>>>>>=20
->>>>>>> omap4           seems to only define it
->>>>>>> am57xx          has two different grade dtsi files
->>>>>>> dra7            overwrites critical temperature value
->>>>>>> am57xx-beagle   defines a gpio to control a fan
->>>>>>=20
->>>>=20
->>>> I am going to push a separate but related RFC with 2 patches in the
->>>> series.  This new one will setup the alerts and maps without any
->>>> throttling for all omap3's in the first patch.  The second patch =
-will
->>>> consolidate the thermal references to omap3.dtsi so omap34, omap36 =
-and
->>>> am35 can all use them without having to duplicate the entries.
->>>>=20
->>>> It will make the omap36xx changes simpler to manage, because we can
->>>> just modify a portion of the entries instead of having the whole
->>>> table.
->>>>=20
->>>> Once this parallel RFC gets comments/feedback, I'll re-integrate =
-the
->>>> omap36xx throttling.
->>>=20
->>> Good idea. I have looked over them and they seem to be ok.
->>=20
->> Rebasing my omap36xx throttling after the v2 RFC I pushed moving the
->> omap3-cpu thermal stuff, I modified the omap36xx accordingly to try
->> and force the alert condition:
->>=20
->> &cpu_alert0 {
->>     temperature =3D <55000>; /* millicelsius */
->> };
->>=20
->> &cpu_cooling_maps {
->>     map0 {
->>          /* OPP130 and OPP1G are not available above 90C */
->>          cooling-device =3D <&cpu 0 2>;
->>     };
->> };
->>=20
->> I would expect that with the temperature set for 55C, it would have
->> done something, but it doesn't appear to be working as I would =
-expect.
->>=20
->> # cat /sys/devices/virtual/thermal/thermal_zone0/temp
->> 58500
->>=20
->> # cat =
-/sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies
->> 300000 600000 800000
->> #
->>=20
->> :-(
->>=20
->=20
-> Good news (I think)
->=20
-> With cooling-device =3D <&cpu 1 2> setup, I was able to ask the max
-> frequency and it returned 600MHz.
->=20
-> # cat /sys/devices/virtual/thermal/thermal_zone0/temp
-> 58500
-> # cat =
-/sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies
-> 300000 600000 800000
-> # cat /sys/devices/system/cpu/cpufreq/policy0/scaling_m
-> scaling_max_freq  scaling_min_freq
-> # cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-> 600000
+Sorry to have sent our message with cancelled e-mail address. I have 
+correct this now.
 
-looks good!
-But we have to understand what the <&cpu 1 2> exactly means...
+Op 13-09-19 om 17:12 schreef Shevchenko, Andriy:
+> On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
+>> -----Original Message-----
+>> From: Nikolaus Voss [mailto:nv@vosn.de]
+>> Sent: Friday, September 13, 2019 12:44 AM
+>> To: Moore, Robert <robert.moore@intel.com>
+>> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
+>> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
+>>
+>> Bob,
+>>
+>> On Thu, 12 Sep 2019, Moore, Robert wrote:
+>>> The ability to unload an ACPI table (especially AML tables such as
+>>> SSDTs) is in the process of being deprecated in ACPICA -- since it is
+>>> also deprecated in the current ACPI specification. This is being done
+>>> because of the difficulty of deleting the namespace entries for the
+>>> table.  FYI, Windows does not properly support this function either.
+>>
+>> ok, I see it can be a problem to unload an AML table with all it's consequences e.g. with respect to driver unregistering in setups with complex dependencies. It will only work properly under certain conditions
+>> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
+>>
+>> AcpiTbUnloadTable is not exported, it is an internal interface only -- as
+>> recognized by the "AcpiTb".
+> 
+> In Linux it became a part of ABI when the
+> 
+> commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
+> Author: Jan Kiszka <jan.kiszka@siemens.com>
+> Date:   Fri Jun 9 20:36:31 2017 +0200
+> 
+>      ACPI: configfs: Unload SSDT on configfs entry removal
+> 
+> appeared in the kernel.
 
-Hopefully someone reading your RFCv2 can answer...
+And the commit message explains quite well why it is an important feature:
 
-What happens with trip point 60000?
-(unfortunately one has to reboot in between or can you kexec between two =
-kernel/dtb versions?)
+"This allows to change SSDTs without rebooting the system.
+It also allows to destroy devices again that a dynamically loaded SSDT
+created.
 
-BR,
-Nikolaus
+This is widely similar to the DT overlay behavior."
+
+>> I'm not sure that I want to change the interface
+>> to AcpiLoadTable just for something that is being deprecated. Already, we
+>> throw an ACPI_EXCEPTION if the Unload operator is encountered in the AML byte
+>> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
+>>
+>>      ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
+>>          "AML Unload operator is not supported"));
+> 
+
 
