@@ -2,87 +2,127 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A277C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADCD20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568411344;
-	bh=5MC2UuZnwHy8x8XvaORdS+p/DTQxXcjtIxUj85fmD10=;
-	h=Date:From:Subject:References:In-Reply-To:Cc:To:List-ID:From;
-	b=tswkF3sHVwdE72qwpbKITx+usFkdTpGeJKOSEIxS7v5NCqpW+bfs/Ojzyht9oNqDG
-	 DEZusxoAH3FQ67zbKr3TyrRGv2BAK9TOakxm+gUZ/r1noqjcBfAaETAgQRomKBomA8
-	 bPz7YsYPV21HoD+7pyaSWvxfPfj6PgtjNzj/janM=
+	by mail.kernel.org (Postfix) with ESMTP id 1642C206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k6NvvxGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbfIMVtD (ORCPT
+        id S1731370AbfIMV5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:49:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45818 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389815AbfIMVtB (ORCPT
+        Fri, 13 Sep 2019 17:57:37 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37862 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfIMV5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:49:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o205so3858683oib.12;
-        Fri, 13 Sep 2019 14:48:59 -0700 (PDT)
+        Fri, 13 Sep 2019 17:57:37 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i1so28301290edv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lXBmtndFJEiSa/yuibypv1aaQRLxwTUng1HNafafXIY=;
+        b=k6NvvxGL20jhmIbQNZHUehQSfjwxafrfGKMF+7Mszkt2KZeb4LPp0Qqy1S5zFk0q2g
+         W6ia+WdiQXO0gCeeGWwHmfghLR7pCB7YngFyIumjsinbmjC4BXPxsslVr5ZiqPTNoBTs
+         bgG+9M9HwwMQbSp38i5i1GVBel+ddoouQXqL2Y3Se+UftarnUzjcavmSfgACwzE3qvY1
+         rc1p3phfC5r/lTr5tMmJjop4Dr8eq3CwItaBifLeW2tIkNr3J7ulrfUiEJ1dBY6aD/Qy
+         kzLa1aIt4bO38Yj9rVet++7TvFTf55KnSeVY9lBRG67Vhc1UphXi+blm2RdyfoUXY81N
+         pr4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:subject:references
-         :in-reply-to:cc:to;
-        bh=yfgqSFtw1luhLgArZwnEc8F6Xhggtmf4n8ZGTf+re+Q=;
-        b=bz1yG4NHplyXnQ3Gz5TkD6Rc1wMDy5lO+dMNbCM5/cKeEqunpaGO6uj0Xqfjwb5/iK
-         N17s9h2XgXQoSV0nGDIiLm2ndKo5a2cPkkp5Xu9ns/afYTDocPmvYu17P2hv4aS2k6Ms
-         Pb+NGhuDpSc9iTVgcFp2qxgSskZnAaI+AJDYUvYwxB6XQCwuDztQk/yl1zdC2Vlt92JC
-         I7hffJFaf5zpruym6Ki/aVhH1bDo66QqLGqfkTv0I6Q8mLiSsPmChaIC3BZA+Jo8EeHX
-         YgYKuZW65S2poO+XTaAGJMNFVpSDKHoBl9nXGK1Ifl1lFqx8cmfKxWCpm9KMTTS3TYry
-         hLfg==
-X-Gm-Message-State: APjAAAXX4GpjxNb31wGBrDc8ieUVvnE+LlQZpgUrBSlrsmyM1hw/SRaR
-        0LZ+W1H79F2jmggwHEiQ9rgKCY0=
-X-Google-Smtp-Source: APXvYqwXGGOdmVJ9VM0SMs+yDbufGw9QI/c2JyZOHo8t7vKAYhKyPcGBFklrMw7/VRt0sQyrUUFE9A==
-X-Received: by 2002:aca:ebd1:: with SMTP id j200mr5079576oih.111.1568411339449;
-        Fri, 13 Sep 2019 14:48:59 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r7sm1417118oih.41.2019.09.13.14.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 14:48:59 -0700 (PDT)
-Message-ID: <5d7c0ecb.1c69fb81.74810.a358@mx.google.com>
-Date:   Fri, 13 Sep 2019 16:48:58 -0500
-From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 10/12] dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org> <1568375771-22933-11-git-send-email-gokulsri@codeaurora.org>
-In-Reply-To: <1568375771-22933-11-git-send-email-gokulsri@codeaurora.org>
-Cc:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
-        robh+dt@kernel.org, sricharan@codeaurora.org,
-        nprakash@codeaurora.org
-To:     Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lXBmtndFJEiSa/yuibypv1aaQRLxwTUng1HNafafXIY=;
+        b=Ic7ti15LrSqHcn6Bo4LfrUXyt8PleTixyBFpwyF5dtozlHJczKn8Y+85G3TgAI+E6k
+         wmTAHsEM/pnmNz4govFTULdFiYap5UPGhX0hBL1ZMVRmIbAyHsYyYlO/BqWoKuuf9oMr
+         eBrw+HYvGlmj5AofXCva/sZNnWdtGck5I2MEy7+RRueNU7le4rzn4wjyCMJL3d2tQTnx
+         ls9R6OVdy3/oGu1gK9PMb7LJ/wv9fg/F/3Ob6Idcf+467rqkO/pHooj9aYTwjkAsbNvP
+         UkMtwaUfajoisPU9uUttVtBJFTcXEOQktm2XZonTn2jToiKen0AmhiB0R1dLQ480XVfX
+         vwqg==
+X-Gm-Message-State: APjAAAUXA2XNpEIo488tBhi2cyb+8Hk0YOrlo7ZHnRejLXP8YChlpHR8
+        FbfUtvAUkqkn1rKf7OC/p7ODMfJRN2xv2MGJxCSDBw==
+X-Google-Smtp-Source: APXvYqyNOjOgrj3kaKKwB1QlWHXqQvBx4UDlJrb7HS+QDlZNVYw6g1q/V0tb1aYTJy5+4lGg4Xvm/wSth0HRmECmTt0=
+X-Received: by 2002:a50:9512:: with SMTP id u18mr49332377eda.182.1568411853796;
+ Fri, 13 Sep 2019 14:57:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190904160339.2800-1-niklas.cassel@linaro.org>
+In-Reply-To: <20190904160339.2800-1-niklas.cassel@linaro.org>
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+Date:   Fri, 13 Sep 2019 14:57:23 -0700
+Message-ID: <CAOCOHw7+0t-HPY5t8EA+vZ_A-CTt1m8V1KNUvTS7zz_3wFwhNw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: fix find_next_bit() usage
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 17:26:09 +0530, Gokul Sriram Palanisamy wrote:
-> Add compatible for IPQ8074 support.
-> This does not need clocks for scm calls.
-> 
-> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+On Wed, Sep 4, 2019 at 9:03 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> find_next_bit() takes a parameter of size long, and performs arithmetic
+> that assumes that the argument is of size long.
+>
+> Therefore we cannot pass a u32, since this will cause find_next_bit()
+> to read outside the stack buffer and will produce the following print:
+> BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
+>
+> Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
 > ---
->  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index d3156446ff27..45f21640c977 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
+>  irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>  {
+>         int i, pos, irq;
+> -       u32 val, num_ctrls;
+> +       unsigned long val;
+> +       u32 status, num_ctrls;
+>         irqreturn_t ret = IRQ_NONE;
+>
+>         num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> @@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>         for (i = 0; i < num_ctrls; i++) {
+>                 dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
+>                                         (i * MSI_REG_CTRL_BLOCK_SIZE),
+> -                                   4, &val);
+> -               if (!val)
+> +                                   4, &status);
+> +               if (!status)
+>                         continue;
+>
+>                 ret = IRQ_HANDLED;
+> +               val = status;
+>                 pos = 0;
+> -               while ((pos = find_next_bit((unsigned long *) &val,
+> -                                           MAX_MSI_IRQS_PER_CTRL,
+> +               while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+>                                             pos)) != MAX_MSI_IRQS_PER_CTRL) {
+>                         irq = irq_find_mapping(pp->irq_domain,
+>                                                (i * MAX_MSI_IRQS_PER_CTRL) +
+> --
+> 2.21.0
+>
