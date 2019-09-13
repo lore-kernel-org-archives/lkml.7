@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC02AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A7CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8C620717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1B6206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380679;
-	bh=OoFd6LHIGfcy+8FuV5qUsgVRuSFH1j4po4DWiHEIOVQ=;
+	s=default; t=1568380683;
+	bh=AqqOg5iy/s9eIyKbX0tlcAjeF/e5Rb01A2K/tdXc0pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhdGiGPVJ0Kpt9aA2sQikuTmMqArdNDOXfqHjznIgRCGCogI3+vR/BxfR6nGu+0zp
-	 5GIa3VysVIhnwL4miQHCIzHOKf7dHZJpa9tO2wtLodT8sLurGhFv2rhQW3/tpV110I
-	 kUsNEWm1eEUXDc8ptVEKGvaRHM7+1vOTD9Mxcn1s=
+	b=gZyTz5PtrcOau1gMkJ85flCOh0uhjwj/YQmzz4koV0F514F2g7B1AzCznDY9fU5X4
+	 2tcxxE784M2CGUsEAgd93COiurmp/0ef6ySZwqRyejp0K124bOvxGrOWJAcYl1upGu
+	 pUlrKVabC2QpIU2dKHlYN9LyW7f9M+PDDxn+rW+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390135AbfIMNR6 (ORCPT
+        id S2390144AbfIMNSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390122AbfIMNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:53 -0400
+        id S2390122AbfIMNR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:58 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8EAF20717;
-        Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC8B9206BB;
+        Fri, 13 Sep 2019 13:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380672;
-        bh=OoFd6LHIGfcy+8FuV5qUsgVRuSFH1j4po4DWiHEIOVQ=;
+        s=default; t=1568380678;
+        bh=AqqOg5iy/s9eIyKbX0tlcAjeF/e5Rb01A2K/tdXc0pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vaK14gbPyH+5XpmIWxfKar1ky+R1Nnr+EON9PRBjWIE3EhgCFmywi5mGV6XksBQV3
-         c6sIgvQmfHNKhl2Yik8A1blYsrS7GlDZ5Mh5znCyhfP7lyGdFrcoOJRrKYhsdGJPEA
-         AQBUTz7xzCPuHtoaxYy7ND6jHw8+INbtHNdKL1KU=
+        b=WdYpLFA+gfbk/qgXYehh1tM8873EkR6nyGXhaXWFj6J96lw5D7vjFmJoMVBNQW8Cg
+         ooHo04ImqvCfhqtvJNHyq69vtx2RRlQwJAUPaZiTC4p7QbuCk1o5dtLmvQYyqPRgPe
+         Ncg1HkIoOu8gV53Oh5wDHd2r2yjg37dhXZra2/RQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Koen Vandeputte <koen.vandeputte@ncentric.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Mathias Kresin <dev@kresin.me>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 117/190] media: i2c: tda1997x: select V4L2_FWNODE
-Date:   Fri, 13 Sep 2019 14:06:12 +0100
-Message-Id: <20190913130609.164200975@linuxfoundation.org>
+Subject: [PATCH 4.19 119/190] ARM: dts: qcom: ipq4019: fix PCI range
+Date:   Fri, 13 Sep 2019 14:06:14 +0100
+Message-Id: <20190913130609.338745524@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,42 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f2efda71c09b12012053f457fac7692f268b72c ]
+[ Upstream commit da89f500cb55fb3f19c4b399b46d8add0abbd4d6 ]
 
-Building tda1997x fails now unless V4L2_FWNODE is selected:
+The PCI range is invalid and PCI attached devices doen't work.
 
-drivers/media/i2c/tda1997x.o: in function `tda1997x_parse_dt'
-undefined reference to `v4l2_fwnode_endpoint_parse'
-
-While at it, also sort the selections alphabetically
-
-Fixes: 9ac0038db9a7 ("media: i2c: Add TDA1997x HDMI receiver driver")
-
-Signed-off-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
-Cc: stable@vger.kernel.org # v4.17+
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 63c9ac2c6a5ff..8b1ae1d6680b7 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -60,8 +60,9 @@ config VIDEO_TDA1997X
- 	tristate "NXP TDA1997x HDMI receiver"
- 	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API
- 	depends on SND_SOC
--	select SND_PCM
- 	select HDMI
-+	select SND_PCM
-+	select V4L2_FWNODE
- 	---help---
- 	  V4L2 subdevice driver for the NXP TDA1997x HDMI receivers.
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 78db67337ed4a..2c3168d95a2d5 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -387,7 +387,7 @@
+ 			#size-cells = <2>;
  
+ 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
+-				  0x82000000 0 0x48000000 0x48000000 0 0x10000000>;
++				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
+ 
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
+ 			interrupt-names = "msi";
 -- 
 2.20.1
 
