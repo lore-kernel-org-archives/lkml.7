@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7DC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB40C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F04205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D2C206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381473;
-	bh=QuVe6d5LdFxeyz/vanqYXnbMCvw8HZFJkhzvjfWyPao=;
+	s=default; t=1568381480;
+	bh=VKeBhnU2OZGxUtOFmDwiH/+gnCKfaZhuTAMfn4Ruuwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CCBJD16B7vHe/yeVFg3Yo1G6RW8GGwInCNvu/lIY7/wxJ52qDV1dWyFsi0ILbydqE
-	 PqJEhnebyloVeAmPRGVIuVy4N+yy1gXQRT5VN8369DHe6uxT/8J5greJSy6ze8Sem8
-	 l/Ju5/YbHsFGBzP5F51aWB/P42JGNmvFap+T9LX8=
+	b=RR1Pe6CDsXRRKPXLobYNgH4roAKHpDwIba/YG6EHqnlHmCtl6g8ue/09PPMqqdoVE
+	 RN74eCRvVdN62qlcCCkp/TirXlxnwr1pGYJNP+1Ni6BWgDN9KMvGCoJysQ9D+3HiIq
+	 yIyVIn4nvmLkcx+GEuguPffAr8l2oVFfbn/oHL+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391709AbfIMNbM (ORCPT
+        id S2391713AbfIMNbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388745AbfIMNPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:25 -0400
+        id S2388270AbfIMNPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:09 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F5A208C2;
-        Fri, 13 Sep 2019 13:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB0B206BB;
+        Fri, 13 Sep 2019 13:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380525;
-        bh=QuVe6d5LdFxeyz/vanqYXnbMCvw8HZFJkhzvjfWyPao=;
+        s=default; t=1568380507;
+        bh=VKeBhnU2OZGxUtOFmDwiH/+gnCKfaZhuTAMfn4Ruuwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDj+Axa9+WD6K+VNkp3wBb75mscCKNiiwR9+8EFhixgfplmCtnkTcaPJZlb+bYaxN
-         TT8dwVXqfmGJFWauKKGeI74pNrMDHWOMMgyapgtiIYwkmFqAQ9DUpPx+oZ0JInoHe1
-         pSMC/wo0gKTbc5BA0PgZjNvDV1KdMR4Bk7UOQSok=
+        b=axUsc4X+i9SYojsR9AKEpARj5OLIoaerTTcUQSWXh6y1HKA4yjqTJL7m7PiLVZl4j
+         vw0AInNk/c+lbZ/ZqECGpzc7DykZK8p2iTmQGzWnJebNsPIAUzixNWQALTQscqP1i4
+         /dEB5eE0tywRuCjzcujfTDn20QPby1dlccungX+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/190] btrfs: Use real device structure to verify dev extent
-Date:   Fri, 13 Sep 2019 14:05:29 +0100
-Message-Id: <20190913130605.491752937@linuxfoundation.org>
+Subject: [PATCH 4.19 087/190] KVM: VMX: Compare only a single byte for VMCS "launched" in vCPU-run
+Date:   Fri, 13 Sep 2019 14:05:42 +0100
+Message-Id: <20190913130606.517354432@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,70 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b3922a8bc74231f9a767d1be6d9a061a4d4eeab ]
+[ Upstream commit 61c08aa9606d4e48a8a50639c956448a720174c3 ]
 
-[BUG]
-Linux v5.0-rc1 will fail fstests/btrfs/163 with the following kernel
-message:
+The vCPU-run asm blob does a manual comparison of a VMCS' launched
+status to execute the correct VM-Enter instruction, i.e. VMLAUNCH vs.
+VMRESUME.  The launched flag is a bool, which is a typedef of _Bool.
+C99 does not define an exact size for _Bool, stating only that is must
+be large enough to hold '0' and '1'.  Most, if not all, compilers use
+a single byte for _Bool, including gcc[1].
 
-  BTRFS error (device dm-6): dev extent devid 1 physical offset 13631488 len 8388608 is beyond device boundary 0
-  BTRFS error (device dm-6): failed to verify dev extents against chunks: -117
-  BTRFS error (device dm-6): open_ctree failed
+Originally, 'launched' was of type 'int' and so the asm blob used 'cmpl'
+to check the launch status.  When 'launched' was moved to be stored on a
+per-VMCS basis, struct vcpu_vmx's "temporary" __launched flag was added
+in order to avoid having to pass the current VMCS into the asm blob.
+The new  '__launched' was defined as a 'bool' and not an 'int', but the
+'cmp' instruction was not updated.
 
-[CAUSE]
-Commit cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent
-mapping check") introduced strict check on dev extents.
+This has not caused any known problems, likely due to compilers aligning
+variables to 4-byte or 8-byte boundaries and KVM zeroing out struct
+vcpu_vmx during allocation.  I.e. vCPU-run accesses "junk" data, it just
+happens to always be zero and so doesn't affect the result.
 
-We use btrfs_find_device() with dev uuid and fs uuid set to NULL, and
-only dependent on @devid to find the real device.
+[1] https://gcc.gnu.org/ml/gcc-patches/2000-10/msg01127.html
 
-For seed devices, we call clone_fs_devices() in open_seed_devices() to
-allow us search seed devices directly.
-
-However clone_fs_devices() just populates devices with devid and dev
-uuid, without populating other essential members, like disk_total_bytes.
-
-This makes any device returned by btrfs_find_device(fs_info, devid,
-NULL, NULL) is just a dummy, with 0 disk_total_bytes, and any dev
-extents on the seed device will not pass the device boundary check.
-
-[FIX]
-This patch will try to verify the device returned by btrfs_find_device()
-and if it's a dummy then re-search in seed devices.
-
-Fixes: cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent mapping check")
-CC: stable@vger.kernel.org # 4.19+
-Reported-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: d462b8192368 ("KVM: VMX: Keep list of loaded VMCSs, instead of vcpus")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/kvm/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index c20708bfae561..a8297e7489d98 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7469,6 +7469,18 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
- 		ret = -EUCLEAN;
- 		goto out;
- 	}
-+
-+	/* It's possible this device is a dummy for seed device */
-+	if (dev->disk_total_bytes == 0) {
-+		dev = find_device(fs_info->fs_devices->seed, devid, NULL);
-+		if (!dev) {
-+			btrfs_err(fs_info, "failed to find seed devid %llu",
-+				  devid);
-+			ret = -EUCLEAN;
-+			goto out;
-+		}
-+	}
-+
- 	if (physical_offset + physical_len > dev->disk_total_bytes) {
- 		btrfs_err(fs_info,
- "dev extent devid %llu physical offset %llu len %llu is beyond device boundary %llu",
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 2e310ea62d609..562f5dc4645b6 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -10808,7 +10808,7 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 		"mov %%" _ASM_AX", %%cr2 \n\t"
+ 		"3: \n\t"
+ 		/* Check if vmlaunch of vmresume is needed */
+-		"cmpl $0, %c[launched](%0) \n\t"
++		"cmpb $0, %c[launched](%0) \n\t"
+ 		/* Load guest registers.  Don't clobber flags. */
+ 		"mov %c[rax](%0), %%" _ASM_AX " \n\t"
+ 		"mov %c[rbx](%0), %%" _ASM_BX " \n\t"
 -- 
 2.20.1
 
