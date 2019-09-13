@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99986C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7538CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7238F206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BD6214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380477;
-	bh=UDR+5hImiLzYx7LmLJEvKFLTLIW+pBVxrLeNRlnantY=;
+	s=default; t=1568380481;
+	bh=OnKi+XjHkcxy4KMjehZd0bdHUy34p6CJx5mNPyTeRQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FgyotWGeT/z25Ys+BvDHvwBU+aA2H7AkhN1XO/g362e+bMhxIdrD4vTIiMS2KV4CC
-	 DctPoKNvfx7MzxCONqTIW8Ut4iqPf9RveYeP6iU/8tVSLs4It0WYpB1asov6+667wZ
-	 GLEagDkvfb5v5sn7IM8cK2LBPw0o8lsASmVwJahM=
+	b=uZInwH3l5qioMshhfqsHaAo860YXuULEOse6L861Qt3wbIJ3u9oCdNBK+Bb7VnKHD
+	 zdWp4JH6/QqNI3fNu8aYEvlyAnbCaI+Ph04cx56GPWEQSiKhyXBH+igkH6LH0vRtwa
+	 fxrObknEjQH7bmnIhU/HOythOSw9S8haUsY5dYSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389552AbfIMNOg (ORCPT
+        id S2389562AbfIMNOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388983AbfIMNOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:35 -0400
+        id S2388983AbfIMNOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:14:38 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B539E21734;
-        Fri, 13 Sep 2019 13:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6DDB214D8;
+        Fri, 13 Sep 2019 13:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380474;
-        bh=UDR+5hImiLzYx7LmLJEvKFLTLIW+pBVxrLeNRlnantY=;
+        s=default; t=1568380477;
+        bh=OnKi+XjHkcxy4KMjehZd0bdHUy34p6CJx5mNPyTeRQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wp4pWSbGeQRQLNNTjuVral8rt1vd9Or8TuyiFIgtQB2XMNmxCQ9mjATu240zXZx/d
-         VqyvYKOv7LqJKBv2KHs6IfvFHsT43vfBRBuc4dk1t5m1xX3kR11OYiSusi900MIHyU
-         P7V/+E2+jnjRSOvvESLJV/0H0FRI8jXKLWRjI1xM=
+        b=HqSlGytgHGTcbA6QHRg9Em4DnJZt4G8gNZIw1/yDE6rPdTyvak1rpSldog/Jiyne0
+         PZUZAO1uyOCDFtqyavYaT9U4HP6miUbp4FYLrLyUIpHuMd+3JiIiMdGDfP2HK+pzed
+         1q7+NM+ZVrfOAWjntXSQLPrn5Dpx7zI4nXLy4IS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/190] ARC: mm: do_page_fault fixes #1: relinquish mmap_sem if signal arrives while handle_mm_fault
-Date:   Fri, 13 Sep 2019 14:05:32 +0100
-Message-Id: <20190913130605.678955806@linuxfoundation.org>
+Subject: [PATCH 4.19 078/190] IB/uverbs: Fix OOPs upon device disassociation
+Date:   Fri, 13 Sep 2019 14:05:33 +0100
+Message-Id: <20190913130605.747261224@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -59,104 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d447455e73b47c43dd35fcc38ed823d3182a474 ]
+[ Upstream commit 425784aa5b029eeb80498c73a68f62c3ad1d3b3f ]
 
-do_page_fault() forgot to relinquish mmap_sem if a signal came while
-handling handle_mm_fault() - due to say a ctl+c or oom etc.
-This would later cause a deadlock by acquiring it twice.
+The async_file might be freed before the disassociation has been ended,
+causing qp shutdown to use after free on it.
 
-This came to light when running libc testsuite tst-tls3-malloc test but
-is likely also the cause for prior seen LTP failures. Using lockdep
-clearly showed what the issue was.
+Since uverbs_destroy_ufile_hw is not a fence, it returns if a
+disassociation is ongoing in another thread. It has to be written this way
+to avoid deadlock. However this means that the ufile FD close cannot
+destroy anything that may still be used by an active kref, such as the the
+async_file.
 
-| # while true; do ./tst-tls3-malloc ; done
-| Didn't expect signal from child: got `Segmentation fault'
-| ^C
-| ============================================
-| WARNING: possible recursive locking detected
-| 4.17.0+ #25 Not tainted
-| --------------------------------------------
-| tst-tls3-malloc/510 is trying to acquire lock:
-| 606c7728 (&mm->mmap_sem){++++}, at: __might_fault+0x28/0x5c
-|
-|but task is already holding lock:
-|606c7728 (&mm->mmap_sem){++++}, at: do_page_fault+0x9c/0x2a0
-|
-| other info that might help us debug this:
-|  Possible unsafe locking scenario:
-|
-|       CPU0
-|       ----
-|  lock(&mm->mmap_sem);
-|  lock(&mm->mmap_sem);
-|
-| *** DEADLOCK ***
-|
+To fix that move the kref_put() to be in ib_uverbs_release_file().
 
-------------------------------------------------------------
-What the change does is not obvious (note to myself)
+ BUG: unable to handle kernel paging request at ffffffffba682787
+ PGD bc80e067 P4D bc80e067 PUD bc80f063 PMD 1313df163 PTE 80000000bc682061
+ Oops: 0003 [#1] SMP PTI
+ CPU: 1 PID: 32410 Comm: bash Tainted: G           OE 4.20.0-rc6+ #3
+ Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+ RIP: 0010:__pv_queued_spin_lock_slowpath+0x1b3/0x2a0
+ Code: 98 83 e2 60 49 89 df 48 8b 04 c5 80 18 72 ba 48 8d
+		ba 80 32 02 00 ba 00 80 00 00 4c 8d 65 14 41 bd 01 00 00 00 48 01 c7 85
+		d2 <48> 89 2f 48 89 fb 74 14 8b 45 08 85 c0 75 42 84 d2 74 6b f3 90 83
+ RSP: 0018:ffffc1bbc064fb58 EFLAGS: 00010006
+ RAX: ffffffffba65f4e7 RBX: ffff9f209c656c00 RCX: 0000000000000001
+ RDX: 0000000000008000 RSI: 0000000000000000 RDI: ffffffffba682787
+ RBP: ffff9f217bb23280 R08: 0000000000000001 R09: 0000000000000000
+ R10: ffff9f209d2c7800 R11: ffffffffffffffe8 R12: ffff9f217bb23294
+ R13: 0000000000000001 R14: 0000000000000000 R15: ffff9f209c656c00
+ FS:  00007fac55aad740(0000) GS:ffff9f217bb00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffffffba682787 CR3: 000000012f8e0000 CR4: 00000000000006e0
+ Call Trace:
+  _raw_spin_lock_irq+0x27/0x30
+  ib_uverbs_release_uevent+0x1e/0xa0 [ib_uverbs]
+  uverbs_free_qp+0x7e/0x90 [ib_uverbs]
+  destroy_hw_idr_uobject+0x1c/0x50 [ib_uverbs]
+  uverbs_destroy_uobject+0x2e/0x180 [ib_uverbs]
+  __uverbs_cleanup_ufile+0x73/0x90 [ib_uverbs]
+  uverbs_destroy_ufile_hw+0x5d/0x120 [ib_uverbs]
+  ib_uverbs_remove_one+0xea/0x240 [ib_uverbs]
+  ib_unregister_device+0xfb/0x200 [ib_core]
+  mlx5_ib_remove+0x51/0xe0 [mlx5_ib]
+  mlx5_remove_device+0xc1/0xd0 [mlx5_core]
+  mlx5_unregister_device+0x3d/0xb0 [mlx5_core]
+  remove_one+0x2a/0x90 [mlx5_core]
+  pci_device_remove+0x3b/0xc0
+  device_release_driver_internal+0x16d/0x240
+  unbind_store+0xb2/0x100
+  kernfs_fop_write+0x102/0x180
+  __vfs_write+0x36/0x1a0
+  ? __alloc_fd+0xa9/0x170
+  ? set_close_on_exec+0x49/0x70
+  vfs_write+0xad/0x1a0
+  ksys_write+0x52/0xc0
+  do_syscall_64+0x5b/0x180
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fac551aac60
 
-prior code was
-
-| do_page_fault
-|
-|   down_read()		<-- lock taken
-|   handle_mm_fault	<-- signal pending as this runs
-|   if fatal_signal_pending
-|       if VM_FAULT_ERROR
-|           up_read
-|       if user_mode
-|          return	<-- lock still held, this was the BUG
-
-New code
-
-| do_page_fault
-|
-|   down_read()		<-- lock taken
-|   handle_mm_fault	<-- signal pending as this runs
-|   if fatal_signal_pending
-|       if VM_FAULT_RETRY
-|          return       <-- not same case as above, but still OK since
-|                           core mm already relinq lock for FAULT_RETRY
-|    ...
-|
-|   < Now falls through for bug case above >
-|
-|   up_read()		<-- lock relinquished
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Cc: <stable@vger.kernel.org> # 4.2
+Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/mm/fault.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/infiniband/core/uverbs_main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
-index db6913094be3c..f28db0b112a30 100644
---- a/arch/arc/mm/fault.c
-+++ b/arch/arc/mm/fault.c
-@@ -143,12 +143,17 @@ good_area:
- 	 */
- 	fault = handle_mm_fault(vma, address, flags);
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index 50152c1b10045..357de3b4fdddf 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -265,6 +265,9 @@ void ib_uverbs_release_file(struct kref *ref)
+ 	if (atomic_dec_and_test(&file->device->refcount))
+ 		ib_uverbs_comp_dev(file->device);
  
--	/* If Pagefault was interrupted by SIGKILL, exit page fault "early" */
- 	if (unlikely(fatal_signal_pending(current))) {
--		if ((fault & VM_FAULT_ERROR) && !(fault & VM_FAULT_RETRY))
--			up_read(&mm->mmap_sem);
--		if (user_mode(regs))
-+
-+		/*
-+		 * if fault retry, mmap_sem already relinquished by core mm
-+		 * so OK to return to user mode (with signal handled first)
-+		 */
-+		if (fault & VM_FAULT_RETRY) {
-+			if (!user_mode(regs))
-+				goto no_context;
- 			return;
-+		}
++	if (file->async_file)
++		kref_put(&file->async_file->ref,
++			 ib_uverbs_release_async_event_file);
+ 	kobject_put(&file->device->kobj);
+ 	kfree(file);
+ }
+@@ -915,10 +918,6 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
  	}
+ 	mutex_unlock(&file->device->lists_mutex);
  
- 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+-	if (file->async_file)
+-		kref_put(&file->async_file->ref,
+-			 ib_uverbs_release_async_event_file);
+-
+ 	kref_put(&file->ref, ib_uverbs_release_file);
+ 
+ 	return 0;
 -- 
 2.20.1
 
