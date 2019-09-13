@@ -2,88 +2,159 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9429DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01745C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E12020830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2FF20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 11:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bmVh2TBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfIMLsT (ORCPT
+        id S1729376AbfIMLtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 07:48:19 -0400
-Received: from mail.ispras.ru ([83.149.199.45]:49012 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbfIMLsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 07:48:19 -0400
-Received: from [192.168.43.132] (unknown [176.59.5.179])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 39039540089;
-        Fri, 13 Sep 2019 14:48:16 +0300 (MSK)
-Subject: Re: [PATCH v2] lib/memweight.c: open codes bitmap_weight()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     akpm@linux-foundation.org, Akinobu Mita <akinobu.mita@gmail.com>,
-        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <matthew@wil.cx>, dm-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-        Erdem Tumurov <erdemus@gmail.com>,
-        Vladimir Shelekhov <vshel@iis.nsk.su>
-References: <20190821074200.2203-1-efremov@ispras.ru>
- <20190824100102.1167-1-efremov@ispras.ru>
- <20190825061158.GC28002@bombadil.infradead.org>
- <ba051566-0343-ea75-0484-8852f65a15da@ispras.ru>
- <20190826183956.GF15933@bombadil.infradead.org>
-From:   Denis Efremov <efremov@ispras.ru>
-Message-ID: <85d9e45a-9631-a139-2d65-86a6753a35e6@ispras.ru>
-Date:   Fri, 13 Sep 2019 14:48:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Fri, 13 Sep 2019 07:49:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39278 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfIMLte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 07:49:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DBnPpN011179;
+        Fri, 13 Sep 2019 11:49:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=RuG4XRa8Ih2CITWnXLqdpBQAq1yXah+Xb9pxGK9n/fA=;
+ b=bmVh2TBBl/5wnrx9pWWERaOohnKADAnNiiwm0SLH8J2i3n9ZqdULeCeJT2i0Dm14DBqf
+ j0WmtyH+8AtOZ00T7xf17ddP6QyWBmAtrCh5n6XV8fZNKVcHsncMBFT3jnZfHQqx1xB8
+ ZYpj0eBKtEMkXXp1S4cbxC3rLnRYTqO20o8/jKLsZj+LkhJCT74vk7SrD1YLR81fPPWq
+ c4oSLU4FPrRsJC1a16EQ7O6UNWtnKvJPy3zmlc8rh5Eew1ES2ojZvtebvuubvjeNy02n
+ 8Hps+3eil9MHhbrqXhypwuZEK4+NZf11CTlYE8ylK4FgQPEVItKSZUJjy8xK0FIL01hf Ug== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2uytd347h6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 11:49:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DBn8nA002132;
+        Fri, 13 Sep 2019 11:49:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uytdq3t5g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 11:49:24 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8DBn0pj002926;
+        Fri, 13 Sep 2019 11:49:00 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Sep 2019 04:48:59 -0700
+Date:   Fri, 13 Sep 2019 14:48:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+Message-ID: <20190913114849.GP20699@kadam>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam>
+ <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <20190913010937.7fc20d93@lwn.net>
 MIME-Version: 1.0
-In-Reply-To: <20190826183956.GF15933@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913010937.7fc20d93@lwn.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909130115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909130115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Sep 13, 2019 at 01:09:37AM -0600, Jonathan Corbet wrote:
+> On Wed, 11 Sep 2019 16:11:29 -0600
+> Jens Axboe <axboe@kernel.dk> wrote:
+> 
+> > On 9/11/19 12:43 PM, Dan Carpenter wrote:
+> > > 
+> > > I kind of hate all this extra documentation because now everyone thinks
+> > > they can invent new hoops to jump through.
+> > 
+> > FWIW, I completely agree with Dan (Carpenter) here. I absolutely
+> > dislike having these kinds of files, and with subsystems imposing weird
+> > restrictions on style (like the quoted example, yuck).
+> > 
+> > Additionally, it would seem saner to standardize rules around when
+> > code is expected to hit the maintainers hands for kernel releases. Both
+> > yours and Martins deals with that, there really shouldn't be the need
+> > to have this specified in detail per sub-system.
+> 
+> This sort of objection came up at the maintainers summit yesterday; the
+> consensus was that, while we might not like subsystem-specific rules, they
+> do currently exist and we're just documenting reality.  To paraphrase
+> Phillip K. Dick, reality is that which, when you refuse to document it,
+> doesn't go away.
 
-Sorry for reviving this conversation, but it looks to me like
-this function could be reduced to a single bitmap_weight call:
+There aren't that many subsystem rules.  The big exception is
+networking, with the comment style and reverse Chrismas tree
+declarations.  Also you have to label which git tree the patch applies
+to like [net] or [net-next].
 
-static inline size_t memweight(const void *ptr, size_t bytes)
-{
-        BUG_ON(bytes >= UINT_MAX / BITS_PER_BYTE);
-        return bitmap_weight(ptr, bytes * BITS_PER_BYTE);
-}
+It used to be that infiniband used "sizeof foo" instead of sizeof(foo)
+but now there is a new maintainer.
 
-Comparing to the current implementation
-https://elixir.bootlin.com/linux/latest/source/lib/memweight.c#L11 
-this results in a signification simplification. 
+There is one subsystem which where the maintainer will capitalize your
+patch prefix and complain.  There are others where they will silently
+change it to lower case.  (Maybe that has changed in recent years).
 
-__bitmap_weight already count last bits with hweight_long as we
-discussed earlier.
+There is one subsystem where the maintainer is super strict rules that
+you can't use "I" or "we" in the commit message.  So you can't say "I
+noticed a bug while reviewing", you have to say "The code has a bug".
 
-int __bitmap_weight(const unsigned long *bitmap, unsigned int bits)
-{
-	...
-	if (bits % BITS_PER_LONG)
-		w += hweight_long(bitmap[k] & BITMAP_LAST_WORD_MASK(bits));
-	...
-}
+Some maintainers have rules about what you can put in the declaration
+block.  No kmalloc() in the declarations is a common rule.
+"struct foo *p = kmalloc();".
 
-and __arch_hweight* functions use popcnt instruction.
+Some people (I do) have strict rules for error handling, but most won't
+complain unless the error handling has bugs.
 
-I've briefly tested the equivalence of 2 implementations on x86_64 with
-fuzzing here: https://gist.github.com/evdenis/95a8b9b8041e09368b31c3a9510491a5
+The bpf people want you to put [bpf] or [bpf-next] in the subject.
+Everyone just guesses, and uneducated guesses are worse than leaving it
+blank, but that's just my opinion.
 
-What do you think making this function static inline and moving it
-to include/linux/string.h? I could prepare a patch for it and add some tests for
-memweight and bitmap_weight. Or maybe I miss something again?
+> So I'm expecting to take this kind of stuff into Documentation/.  My own
+> personal hope is that it can maybe serve to shame some of these "local
+> quirks" out of existence.  The evidence from this brief discussion suggests
+> that this might indeed happen.
 
-Best regards,
-Denis
+I don't think it's shaming, I think it's validating.  Everyone just
+insists that since it's written in the Book of Rules then it's our fault
+for not reading it.  It's like those EULA things where there is more
+text than anyone can physically read in a life time.
+
+And the documentation doesn't help.  For example, I knew people's rules
+about capitalizing the subject but I'd just forget.  I say that if you
+can't be bothered to add it to checkpatch then it means you don't really
+care that strongly.
+
+regards,
+dan carpenter
