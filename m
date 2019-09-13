@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA94DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DD4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D96D206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA65206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380239;
-	bh=boF61tNb6XatUKNw1ZGpKnGUN8RpjdfWG2vpBkeuOsU=;
+	s=default; t=1568380245;
+	bh=tkJcgBZW8JC4MFQC4qLn5EjHybwkphxctT5vZCfwBnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekUiYOhsvEcuaP32oHznNo10rK/FIKIevaoyPLJuoE4m3WW5X8rwFJ7itJIMId06S
-	 eBOBXMSOcu/yHY7b/VJW5uFudhR+ScsWng7yXHsrCbbca8nENmebmnsAUFIAQHtYkB
-	 QWBBE2Ay1MZGlQsE0FNJrzrd0Q09t9F4n9ijNR68=
+	b=hdBc1SJAP5xAGKcTcCNsJWYHkPALaZVDjgfFebFifykbVGnykI1x5ie4DOaowGMWg
+	 0CpYSFRg2P+hJU/yV9o1ziAUPIxwZdSLofqZoozhlwzQzvz2joQ1Htlwm0RU7l9ENZ
+	 ehFtl1E/bkw2ByfVNTeSRY4pFbvq1E1hSRfByTnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388776AbfIMNKb (ORCPT
+        id S2388812AbfIMNKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35286 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388734AbfIMNK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:27 -0400
+        id S2387443AbfIMNKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:41 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 853DD206BB;
-        Fri, 13 Sep 2019 13:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74237206BB;
+        Fri, 13 Sep 2019 13:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380227;
-        bh=boF61tNb6XatUKNw1ZGpKnGUN8RpjdfWG2vpBkeuOsU=;
+        s=default; t=1568380241;
+        bh=tkJcgBZW8JC4MFQC4qLn5EjHybwkphxctT5vZCfwBnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixtodDtG8X1iU0V7LwvbuazYMYtL4IHK7BSoollsUG77iNRCn3EUk49lAL/UzeZP7
-         0z/VAoaBStSdjUHvdsFXP68AedYKkkqIjqP49EcORGe8HKpb/HmFfGWuh6WnUEhaKn
-         4+syxWRBrPUvQgEon+ubg4Ffbm3k0VedfXkqgIiw=
+        b=2F0sva9DBcnYhLG0gdxwvn02kEDij+37prWBavWP871Fe7CmdO/qXpD8ximNBsMvx
+         MXEWeB9tyRHEif54v2GK6cco45lJDDtjhS/zxB3DL6uG1Xm9WVBFjKi1JK8ds1DI8G
+         vz9w1SNgjPaTQv/qZKul4SrNgStjDSMnoWfY2Q2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 02/21] ALSA: hda/realtek - Fix overridden device-specific initialization
-Date:   Fri, 13 Sep 2019 14:06:55 +0100
-Message-Id: <20190913130502.714475863@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 03/21] ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
+Date:   Fri, 13 Sep 2019 14:06:56 +0100
+Message-Id: <20190913130503.004205289@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
@@ -58,69 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
+commit 2a36c16efab254dd6017efeb35ad88ecc96f2328 upstream.
 
-The recent change to shuffle the codec initialization procedure for
-Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
-later") caused the silent output on some machines.  This change was
-supposed to be safe, but it isn't actually; some devices have quirk
-setups to override the EAPD via COEF or BTL in the additional verb
-table, which is applied at the beginning of snd_hda_gen_init().  And
-this EAPD setup is again overridden in alc_auto_init_amp().
+This ThinkCentre machine has a new realtek codec alc222, it is not
+in the support list, we add it in the realtek.c then this machine
+can apply FIXUPs for the realtek codec.
 
-For recovering from the regression, tell snd_hda_gen_init() not to
-apply the verbs there by a new flag, then apply the verbs in
-alc_init().
+And this machine has two front mics which can't be handled
+by PA so far, it uses the pin 0x18 and 0x19 as the front mics, as
+a result the existing FIXUP ALC294_FIXUP_LENOVO_MIC_LOCATION doesn't
+work on this machine. Fortunately another FIXUP
+ALC283_FIXUP_HEADSET_MIC also can change the location for one of the
+two mics on this machine.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
-Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
+Link: https://lore.kernel.org/r/20190904055327.9883-1-hui.wang@canonical.com
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_generic.c   |    3 ++-
- sound/pci/hda/hda_generic.h   |    1 +
  sound/pci/hda/patch_realtek.c |    2 ++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ 1 file changed, 2 insertions(+)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -5854,7 +5854,8 @@ int snd_hda_gen_init(struct hda_codec *c
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
- 
--	snd_hda_apply_verbs(codec);
-+	if (!spec->skip_verbs)
-+		snd_hda_apply_verbs(codec);
- 
- 	init_multi_out(codec);
- 	init_extra_out(codec);
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -237,6 +237,7 @@ struct hda_gen_spec {
- 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
- 	unsigned int have_aamix_ctl:1;
- 	unsigned int hp_mic_jack_modes:1;
-+	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
- 
- 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
- 	u64 mute_bits;
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -781,9 +781,11 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
- 
-+	spec->gen.skip_verbs = 1; /* applied in below */
- 	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
-+	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
- 
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
+@@ -6588,6 +6588,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+@@ -8289,6 +8290,7 @@ static int patch_alc680(struct hda_codec
+ static const struct hda_device_id snd_hda_id_realtek[] = {
+ 	HDA_CODEC_ENTRY(0x10ec0215, "ALC215", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0221, "ALC221", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0222, "ALC222", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0225, "ALC225", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0231, "ALC231", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0233, "ALC233", patch_alc269),
 
 
