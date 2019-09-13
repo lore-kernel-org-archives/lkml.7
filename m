@@ -2,169 +2,83 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D05C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7502168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Lo9C+SEB"
+	by mail.kernel.org (Postfix) with ESMTP id 2AA7F20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfIMHDw (ORCPT
+        id S1728483AbfIMHJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:03:52 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:50885 "EHLO pegase1.c-s.fr"
+        Fri, 13 Sep 2019 03:09:43 -0400
+Received: from ms.lwn.net ([45.79.88.28]:57676 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfIMHDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:03:51 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46V6776BP6z9vKH5;
-        Fri, 13 Sep 2019 09:03:47 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Lo9C+SEB; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zWniB8M1cFKh; Fri, 13 Sep 2019 09:03:47 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46V6774QYRz9vKH2;
-        Fri, 13 Sep 2019 09:03:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568358227; bh=AyuxYMR1Yo8syZCcIPlzcrvbLyPmuxun2LLiIZt5UxY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Lo9C+SEBqaduXoGOyBorDnpf+8JwISLneOlSFGcgJJY8qlWGaZzsb4C7dcuadXTZC
-         e5yGHtqWF6SrMhGyiQ0R4zx8DT4H4ASM+Fu1/D2UfL9R3Mf34r4ji6F/P+voIkRuzO
-         LAG9Ma5mTL5t0idPrnoCF8zSRDucaQop7Q6UvTR4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 80E098B963;
-        Fri, 13 Sep 2019 09:03:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9VHWBJ-wdCJw; Fri, 13 Sep 2019 09:03:48 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EBB1B8B958;
-        Fri, 13 Sep 2019 09:03:47 +0200 (CEST)
-Subject: Re: [PATCH] mm/pgtable/debug: Fix test validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        id S1727661AbfIMHJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 03:09:43 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D794177D;
+        Fri, 13 Sep 2019 07:09:40 +0000 (UTC)
+Date:   Fri, 13 Sep 2019 01:09:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        linux-arm-kernel@lists.infradead.org,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
- <527dd29d-45fa-4d83-1899-6cbf268dd749@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e2b42446-7f91-83f1-ac12-08dff75c4d35@c-s.fr>
-Date:   Fri, 13 Sep 2019 09:03:46 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+Message-ID: <20190913010937.7fc20d93@lwn.net>
+In-Reply-To: <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20190911184332.GL20699@kadam>
+        <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <527dd29d-45fa-4d83-1899-6cbf268dd749@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Sep 2019 16:11:29 -0600
+Jens Axboe <axboe@kernel.dk> wrote:
 
-
-Le 13/09/2019 à 08:58, Anshuman Khandual a écrit :
-> On 09/13/2019 11:53 AM, Christophe Leroy wrote:
->> Fix build failure on powerpc.
->>
->> Fix preemption imbalance.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   mm/arch_pgtable_test.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
->> index 8b4a92756ad8..f2b3c9ec35fa 100644
->> --- a/mm/arch_pgtable_test.c
->> +++ b/mm/arch_pgtable_test.c
->> @@ -24,6 +24,7 @@
->>   #include <linux/swap.h>
->>   #include <linux/swapops.h>
->>   #include <linux/sched/mm.h>
->> +#include <linux/highmem.h>
+> On 9/11/19 12:43 PM, Dan Carpenter wrote:
+> > 
+> > I kind of hate all this extra documentation because now everyone thinks
+> > they can invent new hoops to jump through.  
 > 
-> This is okay.
+> FWIW, I completely agree with Dan (Carpenter) here. I absolutely
+> dislike having these kinds of files, and with subsystems imposing weird
+> restrictions on style (like the quoted example, yuck).
 > 
->>   #include <asm/pgalloc.h>
->>   #include <asm/pgtable.h>
->>   
->> @@ -400,6 +401,8 @@ static int __init arch_pgtable_tests_init(void)
->>   	p4d_clear_tests(p4dp);
->>   	pgd_clear_tests(mm, pgdp);
->>   
->> +	pte_unmap(ptep);
->> +
-> 
-> Now the preemption imbalance via pte_alloc_map() path i.e
-> 
-> pte_alloc_map() -> pte_offset_map() -> kmap_atomic()
-> 
-> Is not this very much powerpc 32 specific or this will be applicable
-> for all platform which uses kmap_XXX() to map high memory ?
-> 
+> Additionally, it would seem saner to standardize rules around when
+> code is expected to hit the maintainers hands for kernel releases. Both
+> yours and Martins deals with that, there really shouldn't be the need
+> to have this specified in detail per sub-system.
 
-See 
-https://elixir.bootlin.com/linux/v5.3-rc8/source/include/linux/highmem.h#L91
+This sort of objection came up at the maintainers summit yesterday; the
+consensus was that, while we might not like subsystem-specific rules, they
+do currently exist and we're just documenting reality.  To paraphrase
+Phillip K. Dick, reality is that which, when you refuse to document it,
+doesn't go away.
 
-I think it applies at least to all arches using the generic implementation.
+So I'm expecting to take this kind of stuff into Documentation/.  My own
+personal hope is that it can maybe serve to shame some of these "local
+quirks" out of existence.  The evidence from this brief discussion suggests
+that this might indeed happen.
 
-Applies also to arm:
-https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/arm/mm/highmem.c#L52
+Thanks,
 
-Applies also to mips:
-https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/mips/mm/highmem.c#L47
-
-Same on sparc:
-https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/sparc/mm/highmem.c#L52
-
-Same on x86:
-https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/x86/mm/highmem_32.c#L34
-
-I have not checked others, but I guess it is like that for all.
-
-Christophe
+jon
