@@ -2,73 +2,243 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEFCC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C578AC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8865206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941052084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd9zXjfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388913AbfIMTIp (ORCPT
+        id S2389011AbfIMTKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:08:45 -0400
-Received: from smtprelay0136.hostedemail.com ([216.40.44.136]:48689 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388137AbfIMTIo (ORCPT
+        Fri, 13 Sep 2019 15:10:33 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34259 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388321AbfIMTKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:08:44 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 9F01A83777ED;
-        Fri, 13 Sep 2019 19:08:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: debt02_68f1b9ca37a41
-X-Filterd-Recvd-Size: 1986
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 13 Sep 2019 19:08:41 +0000 (UTC)
-Message-ID: <3028cb117886ccc40f160500bd712f005ff6d5f3.camel@perches.com>
-Subject: Re: [PATCH 4/4] coding-style: add explanation about pr_fmt macro
-From:   Joe Perches <joe@perches.com>
-To:     =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, axboe@kernel.dk, kernel@collabora.com,
-        krisman@collabora.com
-Date:   Fri, 13 Sep 2019 12:08:39 -0700
-In-Reply-To: <20190913185746.337429-5-andrealmeid@collabora.com>
-References: <20190913185746.337429-1-andrealmeid@collabora.com>
-         <20190913185746.337429-5-andrealmeid@collabora.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Sep 2019 15:10:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d3so13666238plr.1;
+        Fri, 13 Sep 2019 12:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=FFcP+UDVFEHmJs1QxzZlzSRhhd6SePZOlYiyZUxy6po=;
+        b=rd9zXjfQyCb3Bo8/P721KqHGHmPAJdBE4Wvuh9BsBaFIMShZkZreNJdo45Iil47Q5O
+         OJ1xVbGjR4CtVETA8CGjZgFkhg5sWt5vWyp8po9A9iiw0vybB5CW9ZzVryy8jydu8ibr
+         I+flMYYZb9/gcuzP2XbygxSjwejGAa/u7XsEnlTWPeQ1KIew1BrWuKQc8a6duT8Lc7se
+         ny9adHtm4i2uxwvfEvCOQKgfwCAW24Lr4uvig+e471z50K8bkPJ7QBv20hkg36gURXwb
+         pVrhJB7ZI5FO6B64XUX/C6rIofqWwUhGjXII0k72FrVaRkQP1ZiF7PgGie4Zvws9Gk6R
+         tygA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=FFcP+UDVFEHmJs1QxzZlzSRhhd6SePZOlYiyZUxy6po=;
+        b=ivq6Cnd9Ek4yOfQ6a0qwWUMW8qPOTwK0NA3Kl/V1bLyL6u7y7s0tNW7H/j6syUntQO
+         0mU63NNTn73UyFLjVuPf+ieTXIPF+bJz1vAkQnSVd5MY4qSbP5FFveZtaqsW5dJFb0rD
+         y9ZI0bd6St7H65OOzZWBxrMrkCKHyUX0lfnbWlv0w9HL7yxQGibe+ZGl0y891oTsyUPR
+         r9k1kaZ7NTranGdJfExdqch7PXQkvUtifK5dfOlftKC1a3xEuYAnqVrBeEK0oXUcmCJA
+         m30JqN+cquXPTTy4As5P6gpK1LiEH+4QtDnvLJIlPXiWt/aUDzfSqlFjUZzZkMYxqFE/
+         Li3g==
+X-Gm-Message-State: APjAAAWz1pidOOEcncNtupg19FzCCzBQAyhrc1kWXiJPA4eQiNxeqrEX
+        OiT9WCDp2t+5KH+Mv5i6XGq/RpZ8q6U=
+X-Google-Smtp-Source: APXvYqyUX3O49Mdt0MzVDLtyNcXrGaddTXK4bW6BELEhUNQ8Ab33gUUR75qABZaEiC50qikFLcf60w==
+X-Received: by 2002:a17:902:8c8a:: with SMTP id t10mr28825173plo.109.1568401831271;
+        Fri, 13 Sep 2019 12:10:31 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id r18sm27273779pfc.3.2019.09.13.12.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 12:10:30 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Justin Chen <justinpopo6@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
+Subject: [PATCH 1/6] irqchip/irq-bcm7038-l1: Add PM support
+Date:   Fri, 13 Sep 2019 12:10:21 -0700
+Message-Id: <20190913191026.8801-2-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
+References: <20190913191026.8801-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-13 at 15:57 -0300, André Almeida wrote:
-> The pr_fmt macro is useful to format log messages printed by pr_XXXX()
-> functions. Add text to explain the purpose of it, how to use and an
-> example.
-[]
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-[]
-> @@ -819,7 +819,15 @@ which you should use to make sure messages are matched to the right device
->  and driver, and are tagged with the right level:  dev_err(), dev_warn(),
->  dev_info(), and so forth.  For messages that aren't associated with a
->  particular device, <linux/printk.h> defines pr_notice(), pr_info(),
-> -pr_warn(), pr_err(), etc.
-> +pr_warn(), pr_err(), etc. It's possible to format pr_XXX() messages using the
-> +macro pr_fmt() to prevent rewriting the style of messages. It should be
-> +defined before including ``include/printk.h``, to avoid compiler warning about
+From: Justin Chen <justinpopo6@gmail.com>
 
-Please make this '#include <linux/kernel.h>'
+The current l1 controller does not mask any interrupts when dropping
+into suspend. This mean we can receive unexpected wake up sources.
+Modified MIPS l1 controller to mask the all non-wake interrupts before
+dropping into suspend.
 
-printk.h should normally not be #included.
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fc75c61233aa..c7e37eefec6d 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -27,6 +27,7 @@
+ #include <linux/types.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/syscore_ops.h>
+ 
+ #define IRQS_PER_WORD		32
+ #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
+@@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
+ 	unsigned int		n_words;
+ 	struct irq_domain	*domain;
+ 	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
++#ifdef CONFIG_PM_SLEEP
++	struct list_head	list;
++	u32			wake_mask[MAX_WORDS];
++#endif
+ 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+ };
+ 
+@@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
+ 	u32			mask_cache[0];
+ };
+ 
++/*
++ * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
++ * used because the struct chip_type suspend/resume hooks are not called
++ * unless chip_type is hooked onto a generic_chip. Since this driver does
++ * not use generic_chip, we need to manually hook our resume/suspend to
++ * syscore_ops.
++ */
++#ifdef CONFIG_PM_SLEEP
++static LIST_HEAD(bcm7038_l1_intcs_list);
++#endif
++
+ /*
+  * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
+  *
+@@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int bcm7038_l1_suspend(void)
++{
++	struct bcm7038_l1_chip *intc;
++	unsigned long flags;
++	int boot_cpu, word;
++
++	/* Wakeup interrupt should only come from the boot cpu */
++	boot_cpu = cpu_logical_map(smp_processor_id());
++
++	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
++		raw_spin_lock_irqsave(&intc->lock, flags);
++		for (word = 0; word < intc->n_words; word++) {
++			l1_writel(~intc->wake_mask[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_set(intc, word));
++			l1_writel(intc->wake_mask[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_clr(intc, word));
++		}
++		raw_spin_unlock_irqrestore(&intc->lock, flags);
++	}
++
++	return 0;
++}
++
++static void bcm7038_l1_resume(void)
++{
++	struct bcm7038_l1_chip *intc;
++	unsigned long flags;
++	int boot_cpu, word;
++
++	boot_cpu = cpu_logical_map(smp_processor_id());
++
++	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
++		raw_spin_lock_irqsave(&intc->lock, flags);
++		for (word = 0; word < intc->n_words; word++) {
++			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_set(intc, word));
++			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_clr(intc, word));
++		}
++		raw_spin_unlock_irqrestore(&intc->lock, flags);
++	}
++}
++
++static struct syscore_ops bcm7038_l1_syscore_ops = {
++	.suspend	= bcm7038_l1_suspend,
++	.resume		= bcm7038_l1_resume,
++};
++
++static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
++{
++	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
++	unsigned long flags;
++	u32 word = d->hwirq / IRQS_PER_WORD;
++	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
++
++	raw_spin_lock_irqsave(&intc->lock, flags);
++	if (on)
++		intc->wake_mask[word] |= mask;
++	else
++		intc->wake_mask[word] &= ~mask;
++	raw_spin_unlock_irqrestore(&intc->lock, flags);
++
++	return 0;
++}
++#endif
++
+ static struct irq_chip bcm7038_l1_irq_chip = {
+ 	.name			= "bcm7038-l1",
+ 	.irq_mask		= bcm7038_l1_mask,
+@@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+ #ifdef CONFIG_SMP
+ 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
+ #endif
++#if CONFIG_PM_SLEEP
++	.irq_set_wake		= bcm7038_l1_set_wake,
++#endif
+ };
+ 
+ static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
+@@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
+ 		goto out_unmap;
+ 	}
+ 
++#ifdef CONFIG_PM_SLEEP
++	/* Add bcm7038_l1_chip into a list */
++	INIT_LIST_HEAD(&intc->list);
++	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
++
++	register_syscore_ops(&bcm7038_l1_syscore_ops);
++#endif
++
+ 	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
+ 		dn, IRQS_PER_WORD * intc->n_words);
+ 
+-- 
+2.17.1
 
