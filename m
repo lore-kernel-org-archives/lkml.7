@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD7BC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680F1C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541F420717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367D720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381552;
-	bh=/aEczhmxV0vNgZu3Sc/REWLdkz8GghfVEszL5Jkcgu0=;
+	s=default; t=1568381555;
+	bh=Dg5xxp6XDyUNhywFnjd4CywNXen2+N6sfss7jCc7eNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNU9bZn0n436cXjja/ow+j4QrnVoIpzy9qRtmwfBrAZiAGZkUjuUNnL54rqwuJAFQ
-	 7Poyu5fQIdhT1r9JV2KY/lssb54VYMACCO+z6y99MzZCTH9lZMR1pyuv65tMlFMe6/
-	 GLzOW35O01TB6aur2KOtronXPDHgYI6p0WoKl66Y=
+	b=ddQAz2lWKMEt9z3WeZK2SwJ8oHxaFnrc7CJ12Tb5mqGiv62IBHHMf7xb1K7IBSlMG
+	 yz57/GYP/QXsenqbYeDB33wI1O+Y5dnyw8MCttGAmacJ3yNOzBbWTxbMFGunltLba0
+	 6FKEnN2AeNBw6flfFMa/M7YlOBPXTyozeG4zbFRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbfIMNNE (ORCPT
+        id S2389207AbfIMNMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387856AbfIMNNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:01 -0400
+        id S2388580AbfIMNMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:40 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE09206BB;
-        Fri, 13 Sep 2019 13:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1220D214AE;
+        Fri, 13 Sep 2019 13:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380380;
-        bh=/aEczhmxV0vNgZu3Sc/REWLdkz8GghfVEszL5Jkcgu0=;
+        s=default; t=1568380359;
+        bh=Dg5xxp6XDyUNhywFnjd4CywNXen2+N6sfss7jCc7eNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EttRl2jhTVy32IwqvN0iZeAj6VsIzGNeq2TLuSuwJ/jz1yUinlII3El6IoE5hg6LQ
-         R9KmjimHPUqt3N/e/Kjf9qhQBuuGNNqDDgh8L9qtCGAzRxbzOikV6Bkgw1FTzk0w7m
-         g0Nf7TZ39R1KqihR45fiKVoRpGGyW3sDRR7zCVxI=
+        b=hFQgKMwQnaAij0Y6GDdV15fHXdaR3zbKmLXxlO8d1kEXUz8g9E0g32PAD6bBdF8Pt
+         isldhcLiJlAmK5ToMbzLBePuwFVeEaxSK+8mr7/5mRjNdA1EwB3qjG7XpzF3eLFGKl
+         Tggwl+cuPb4eqy4bYWMrs0xtyKB7TbnjicvjE4lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Kaiser <lists@kaiser.cx>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        David Lechner <david@lechnology.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/190] modules: always page-align module section allocations
-Date:   Fri, 13 Sep 2019 14:04:43 +0100
-Message-Id: <20190913130601.887343656@linuxfoundation.org>
+        stable@vger.kernel.org, Feifei Xu <Feifei.Xu@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 039/190] drm/amdgpu: Update gc_9_0 golden settings.
+Date:   Fri, 13 Sep 2019 14:04:54 +0100
+Message-Id: <20190913130602.842018619@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,55 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 38f054d549a869f22a02224cd276a27bf14b6171 ]
+[ Upstream commit c55045adf7210d246a016c961916f078ed31a951 ]
 
-Some arches (e.g., arm64, x86) have moved towards non-executable
-module_alloc() allocations for security hardening reasons. That means
-that the module loader will need to set the text section of a module to
-executable, regardless of whether or not CONFIG_STRICT_MODULE_RWX is set.
+Add mmDB_DEBUG3 settings.
 
-When CONFIG_STRICT_MODULE_RWX=y, module section allocations are always
-page-aligned to handle memory rwx permissions. On some arches with
-CONFIG_STRICT_MODULE_RWX=n however, when setting the module text to
-executable, the BUG_ON() in frob_text() gets triggered since module
-section allocations are not page-aligned when CONFIG_STRICT_MODULE_RWX=n.
-Since the set_memory_* API works with pages, and since we need to call
-set_memory_x() regardless of whether CONFIG_STRICT_MODULE_RWX is set, we
-might as well page-align all module section allocations for ease of
-managing rwx permissions of module sections (text, rodata, etc).
-
-Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
-Reported-by: Martin Kaiser <lists@kaiser.cx>
-Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Tested-by: David Lechner <david@lechnology.com>
-Tested-by: Martin Kaiser <martin@kaiser.cx>
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Feifei Xu <Feifei.Xu@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 3fda10c549a25..2dec3d4a9b627 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -76,14 +76,9 @@
- 
- /*
-  * Modules' sections will be aligned on page boundaries
-- * to ensure complete separation of code and data, but
-- * only when CONFIG_STRICT_MODULE_RWX=y
-+ * to ensure complete separation of code and data
-  */
--#ifdef CONFIG_STRICT_MODULE_RWX
- # define debug_align(X) ALIGN(X, PAGE_SIZE)
--#else
--# define debug_align(X) (X)
--#endif
- 
- /* If this is set, the section belongs in the init part of the module */
- #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index f040ec10eecf6..7824116498169 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -83,6 +83,7 @@ MODULE_FIRMWARE("amdgpu/raven_rlc.bin");
+ static const struct soc15_reg_golden golden_settings_gc_9_0[] =
+ {
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmDB_DEBUG2, 0xf00fffff, 0x00000400),
++	SOC15_REG_GOLDEN_VALUE(GC, 0, mmDB_DEBUG3, 0x80000000, 0x80000000),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmGB_GPU_ID, 0x0000000f, 0x00000000),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmPA_SC_BINNER_EVENT_CNTL_3, 0x00000003, 0x82400024),
+ 	SOC15_REG_GOLDEN_VALUE(GC, 0, mmPA_SC_ENHANCE, 0x3fffffff, 0x00000001),
 -- 
 2.20.1
 
