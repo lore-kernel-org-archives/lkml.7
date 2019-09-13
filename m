@@ -2,131 +2,244 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB76AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F378C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E62206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFdb5zkO"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9F2206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfIMMwf (ORCPT
+        id S1730023AbfIMM4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:52:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33474 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729558AbfIMMwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:52:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t11so13206987plo.0;
-        Fri, 13 Sep 2019 05:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BlZu7IMkJJ2x30qqdls5PsoF2ZWD58HPtmFSp7MDs2k=;
-        b=kFdb5zkOXd5y0cnDElxLxkNkj3H/77rTt5mQnZ3elYPwnT8P8Hrd1EjosCLZtj4tP4
-         2xNHXUfkpFJ3ZcDloXG2fql3zkhJSdqI0QymoBDm7N2p1o6VM4L/NHT0CtpKSOHbe573
-         pB7oc5a3csyZjGfckA5BXuo6BN1eAVtpQCWzMiiZIYncpPAUJ1wvtJlNTcJQh5gNt1n7
-         QuqR5wgtG8iqQv+kmkyvn9NrDb8FbGlHopTaBS5OYaUzKLd5RT/G2RWPkQqhFr14Q/el
-         hDwqsH2o4FltSZyafQcpRDOn/fksXbmOQERM6uUWDg6tfyHMpvFsEWLCgceYS/eENozt
-         SNqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BlZu7IMkJJ2x30qqdls5PsoF2ZWD58HPtmFSp7MDs2k=;
-        b=fTca09TUuq9+AYfu1bG9yOKuxDxje1PLlvEcgTkwxVNd8EdOU3kVvO6NeWYO5K5PtG
-         euhakeY5fX8FYmEhyHujYeC4bSPAoZX0NNgo3yTfOH10lIJd33vJeUmwPlWjwxxgJWri
-         yO6y9d3rGSOEMScogz9q+qX2XpyuScEJHySnnY3w1rLJqLlex3Pd0kWWDpGBhfStPRnb
-         qinazLwoPOW3pEhO/3ao+BIIIRx8VIaqEVl2nhT6Ek6gckpMRB5aWnuOB0n1u7rExMxx
-         Ab1mKG6nwjkmi3imHRcQezK6zgBdOqfCEHi3szS/c4QR3cecGQM3y9hvBwLDMy9mgm5W
-         39HQ==
-X-Gm-Message-State: APjAAAXw0dvlRQ5ah0OJiUJ+1s2DEgMkop7fQuDH+GxVe8h5BZXh1hqK
-        i6r4A3eypoTng5Hb6CGsFzppKtCw
-X-Google-Smtp-Source: APXvYqwjmvmY8Afq7+jugXxpufBl19WoXMLG/Ft2zLNI/Q6l3LDqBmerh51C6Xa3uhKbuQixlLkMSg==
-X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr49143964plr.330.1568379152495;
-        Fri, 13 Sep 2019 05:52:32 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g12sm6707212pfb.97.2019.09.13.05.52.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Sep 2019 05:52:31 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 05:52:30 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH 1/2] watchdog: pm8916_wdt: fix pretimeout registration
- flow
-Message-ID: <20190913125230.GA18629@roeck-us.net>
-References: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
+        Fri, 13 Sep 2019 08:56:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43212 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726771AbfIMM4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:56:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20133AF16;
+        Fri, 13 Sep 2019 12:56:15 +0000 (UTC)
+Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-5-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <7c8d1570-3b07-719a-01d3-59bd32c51366@suse.de>
+Date:   Fri, 13 Sep 2019 14:56:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906203054.26725-1-jorge.ramirez-ortiz@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="01I9AVx8wLpLKz26gC3vdxN95YMACFY2y"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 10:30:53PM +0200, Jorge Ramirez-Ortiz wrote:
-> When an IRQ is present in the dts, the probe function shall fail if
-> the interrupt can not be registered.
-> 
-> The probe function shall also be retried if getting the irq is being
-> deferred.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Loic Poulain <loic.poulain@linaro.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--01I9AVx8wLpLKz26gC3vdxN95YMACFY2y
+Content-Type: multipart/mixed; boundary="ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ open list <linux-kernel@vger.kernel.org>
+Message-ID: <7c8d1570-3b07-719a-01d3-59bd32c51366@suse.de>
+Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-5-kraxel@redhat.com>
+In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+--ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-with nitpick below.
+Hi
 
+Am 13.09.19 um 14:29 schrieb Gerd Hoffmann:
+> Factor out ttm vma setup to a new function.  Reduces
+> code duplication a bit and allows to implement
+> &drm_gem_object_funcs.mmap in gem ttm helpers.
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > ---
->  drivers/watchdog/pm8916_wdt.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/watchdog/pm8916_wdt.c b/drivers/watchdog/pm8916_wdt.c
-> index 2d3652004e39..cb5304c26ac3 100644
-> --- a/drivers/watchdog/pm8916_wdt.c
-> +++ b/drivers/watchdog/pm8916_wdt.c
-> @@ -163,9 +163,18 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq > 0) {
-> -		if (devm_request_irq(dev, irq, pm8916_wdt_isr, 0, "pm8916_wdt",
-> -				     wdt))
-> -			irq = 0;
-> +		err = devm_request_irq(dev, irq, pm8916_wdt_isr, 0,
-> +				       "pm8916_wdt", wdt);
-> +		if (err)
-> +			return err;
-> +
-> +		wdt->wdev.info = &pm8916_wdt_pt_ident;
-> +
+>  include/drm/ttm/ttm_bo_api.h    |  8 ++++++
+>  drivers/gpu/drm/ttm/ttm_bo_vm.c | 47 ++++++++++++++++++---------------=
 
-Unnecessary empty line.
-
-> +	} else {
-> +		if (irq == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
+>  2 files changed, 33 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.=
+h
+> index 43c4929a2171..88c652f49602 100644
+> --- a/include/drm/ttm/ttm_bo_api.h
+> +++ b/include/drm/ttm/ttm_bo_api.h
+> @@ -734,6 +734,14 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
+uct ttm_buffer_object *bo);
+>  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
+>  		struct ttm_bo_device *bdev);
+> =20
+> +/**
+> + * ttm_bo_mmap_vma_setup - initialize vma for ttm bo mmap
+> + *
+> + * @bo: The buffer object.
+> + * @vma: vma as input from the mmap method.
+> + */
+> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
+a_struct *vma);
 > +
-> +		wdt->wdev.info = &pm8916_wdt_ident;
->  	}
->  
->  	/* Configure watchdog to hard-reset mode */
-> @@ -177,7 +186,6 @@ static int pm8916_wdt_probe(struct platform_device *pdev)
->  		return err;
->  	}
->  
-> -	wdt->wdev.info = (irq > 0) ? &pm8916_wdt_pt_ident : &pm8916_wdt_ident,
->  	wdt->wdev.ops = &pm8916_wdt_ops,
->  	wdt->wdev.parent = dev;
->  	wdt->wdev.min_timeout = PM8916_WDT_MIN_TIMEOUT;
+>  void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
+> =20
+>  void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_=
+bo_vm.c
+> index 4aa007edffb0..7c0e85c10e0e 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> @@ -426,6 +426,29 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(=
+struct ttm_bo_device *bdev,
+>  	return bo;
+>  }
+> =20
+> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
+a_struct *vma)
+> +{
+> +	vma->vm_ops =3D &ttm_bo_vm_ops;
+> +
+> +	/*
+> +	 * Note: We're transferring the bo reference to
+> +	 * vma->vm_private_data here.
+> +	 */
+> +
+> +	vma->vm_private_data =3D bo;
+> +
+> +	/*
+> +	 * We'd like to use VM_PFNMAP on shared mappings, where
+> +	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
+> +	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
+> +	 * bad for performance. Until that has been sorted out, use
+> +	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
+> +	 */
+> +	vma->vm_flags |=3D VM_MIXEDMAP;
+> +	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+> +}
+> +EXPORT_SYMBOL(ttm_bo_mmap_vma_setup);
+> +
+>  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
+>  		struct ttm_bo_device *bdev)
+>  {
+> @@ -449,24 +472,7 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_=
+struct *vma,
+>  	if (unlikely(ret !=3D 0))
+>  		goto out_unref;
+> =20
+> -	vma->vm_ops =3D &ttm_bo_vm_ops;
+> -
+> -	/*
+> -	 * Note: We're transferring the bo reference to
+> -	 * vma->vm_private_data here.
+> -	 */
+> -
+> -	vma->vm_private_data =3D bo;
+> -
+> -	/*
+> -	 * We'd like to use VM_PFNMAP on shared mappings, where
+> -	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
+> -	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
+> -	 * bad for performance. Until that has been sorted out, use
+> -	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
+> -	 */
+> -	vma->vm_flags |=3D VM_MIXEDMAP;
+> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+> +	ttm_bo_mmap_vma_setup(bo, vma);
+>  	return 0;
+>  out_unref:
+>  	ttm_bo_put(bo);
+> @@ -481,10 +487,7 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
+uct ttm_buffer_object *bo)
+> =20
+>  	ttm_bo_get(bo);
+> =20
+> -	vma->vm_ops =3D &ttm_bo_vm_ops;
+> -	vma->vm_private_data =3D bo;
+> -	vma->vm_flags |=3D VM_MIXEDMAP;
+> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND;
+> +	ttm_bo_mmap_vma_setup(bo, vma);
+Just double-checking:  ttm_bo_mmap_vma_setup() will set VM_DONTDUMP in
+vm_flags. Is that OK?
+
+Best regards
+Thomas
+
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(ttm_fbdev_mmap);
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG--
+
+--01I9AVx8wLpLKz26gC3vdxN95YMACFY2y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl17kewACgkQaA3BHVML
+eiNnzwf/U7y5Zywsc1PInKlLN4S5M55DLwTWa6WMEbkDNDlmiHFT/T3Lj0EFBYmJ
+VfoKAgRdaY5/eWN/Gw1Wxi/BHyhPaCYTxaOEjllz4qiQwzlIYtzUmThl2n8TOb88
+gDtg7wYwOYvNTH+8D5VY0gXYhuklgBZkdYnH8FCHaVyKRuIyflTGD8xF7bGAQcuF
+8y4EwAK8vCA442ccUEa6MfsFHrvhsUtcX7c5ljE6NF2yPIAEAH8ANC0CSR79dtoN
+WyCd2E1I2T7zDVcRMfC8mzASBjjpsod/Y8nQYlIvN5z9k+i36eSOEELKHwL3zr6g
+webkH9iuq7zjr3mUoMtMwdi4mgfh2A==
+=MaVs
+-----END PGP SIGNATURE-----
+
+--01I9AVx8wLpLKz26gC3vdxN95YMACFY2y--
