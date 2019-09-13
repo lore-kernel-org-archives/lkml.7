@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C578AC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFDAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941052084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F54320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd9zXjfQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmTU+XQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389011AbfIMTKd (ORCPT
+        id S2389309AbfIMTKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:10:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34259 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388321AbfIMTKc (ORCPT
+        Fri, 13 Sep 2019 15:10:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38700 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388321AbfIMTKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:10:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d3so13666238plr.1;
-        Fri, 13 Sep 2019 12:10:31 -0700 (PDT)
+        Fri, 13 Sep 2019 15:10:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h195so18664881pfe.5;
+        Fri, 13 Sep 2019 12:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FFcP+UDVFEHmJs1QxzZlzSRhhd6SePZOlYiyZUxy6po=;
-        b=rd9zXjfQyCb3Bo8/P721KqHGHmPAJdBE4Wvuh9BsBaFIMShZkZreNJdo45Iil47Q5O
-         OJ1xVbGjR4CtVETA8CGjZgFkhg5sWt5vWyp8po9A9iiw0vybB5CW9ZzVryy8jydu8ibr
-         I+flMYYZb9/gcuzP2XbygxSjwejGAa/u7XsEnlTWPeQ1KIew1BrWuKQc8a6duT8Lc7se
-         ny9adHtm4i2uxwvfEvCOQKgfwCAW24Lr4uvig+e471z50K8bkPJ7QBv20hkg36gURXwb
-         pVrhJB7ZI5FO6B64XUX/C6rIofqWwUhGjXII0k72FrVaRkQP1ZiF7PgGie4Zvws9Gk6R
-         tygA==
+        bh=iEP53jXE1H7ai299FkwmfDyKSeiJcsObnQa2nVkj7GM=;
+        b=RmTU+XQhLlb77l+u6rtOMoxnjiC4sUe9yqmMLEoWDQpaVJWSGUnNkGUZLHwo0wggVs
+         j2oI6XkqFsOc7YGifwwBDLX+v4ftQFWjFOU5xX09feO1DH4K0h9SHDcVBBPXDuAvHfFi
+         o0SBM7dOTwL8hmns8bawZ9R7As9D19uePMMA8yoBwjw9R3ZuJ7Zj8rl9NzICa5QCyl0b
+         9zXTg8ykarZj0dbFBSNbu+sVHXdrzJlxMh0gr7ICtNlnoJps46lvBVPm3I1pn4Kq11WJ
+         rrW1Qw6HVKqGa77aUw9YeqHBzpmROGVLhR4OAdXu3f+5Ec/Y05pjhpPXIsw7n1Ec47Ch
+         fi0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FFcP+UDVFEHmJs1QxzZlzSRhhd6SePZOlYiyZUxy6po=;
-        b=ivq6Cnd9Ek4yOfQ6a0qwWUMW8qPOTwK0NA3Kl/V1bLyL6u7y7s0tNW7H/j6syUntQO
-         0mU63NNTn73UyFLjVuPf+ieTXIPF+bJz1vAkQnSVd5MY4qSbP5FFveZtaqsW5dJFb0rD
-         y9ZI0bd6St7H65OOzZWBxrMrkCKHyUX0lfnbWlv0w9HL7yxQGibe+ZGl0y891oTsyUPR
-         r9k1kaZ7NTranGdJfExdqch7PXQkvUtifK5dfOlftKC1a3xEuYAnqVrBeEK0oXUcmCJA
-         m30JqN+cquXPTTy4As5P6gpK1LiEH+4QtDnvLJIlPXiWt/aUDzfSqlFjUZzZkMYxqFE/
-         Li3g==
-X-Gm-Message-State: APjAAAWz1pidOOEcncNtupg19FzCCzBQAyhrc1kWXiJPA4eQiNxeqrEX
-        OiT9WCDp2t+5KH+Mv5i6XGq/RpZ8q6U=
-X-Google-Smtp-Source: APXvYqyUX3O49Mdt0MzVDLtyNcXrGaddTXK4bW6BELEhUNQ8Ab33gUUR75qABZaEiC50qikFLcf60w==
-X-Received: by 2002:a17:902:8c8a:: with SMTP id t10mr28825173plo.109.1568401831271;
-        Fri, 13 Sep 2019 12:10:31 -0700 (PDT)
+        bh=iEP53jXE1H7ai299FkwmfDyKSeiJcsObnQa2nVkj7GM=;
+        b=Pv1WD0RdinSfj7paZLeJl+trV2PpgcT+OvWAk820p0YZMFg1KUFPN5MAJ3fqpHqpqB
+         jWdaYoHTo/DV1iX2yYAe2lNPSHyqBx6Nl7fpXomujwujOdjj3jJ5L4LCzY7obCrCclj7
+         Nl23Is/UxcHJvNl2NV8api3FjGAv8nbTO9rSzsUgIeKd5/E3CVmUuN1a4YiBWow+SkhM
+         QplBa/avD3czUNYQTa6bhNcf+rTpAQtZ72c4ydw4Rdt7Lx9UxQBk0ZI0puC6BK1wt+HK
+         dKExyUTjuLO3ZwD8kf9WCJXPGmeP+O0vUaPCCwsudo5IItaBegODBWJmxjgWZXShm/4f
+         Nw0Q==
+X-Gm-Message-State: APjAAAXay2wd/kCCRxI7gTK1c98bMVRjtBR9ndVudAC799Cwv8siiDJd
+        cRsOzFXC8uA2Ntmg7aGv29sXaZDrnsc=
+X-Google-Smtp-Source: APXvYqwZiwo1tQoW5TA31J5VMCx37dKX/0t8zB3TPFBw/T8fvXEn6i2sWUrClMrwhVWgjCOH0YFDug==
+X-Received: by 2002:a65:41c6:: with SMTP id b6mr44482007pgq.269.1568401833576;
+        Fri, 13 Sep 2019 12:10:33 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r18sm27273779pfc.3.2019.09.13.12.10.30
+        by smtp.gmail.com with ESMTPSA id r18sm27273779pfc.3.2019.09.13.12.10.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 12:10:30 -0700 (PDT)
+        Fri, 13 Sep 2019 12:10:33 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Justin Chen <justinpopo6@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>,
@@ -71,9 +70,9 @@ Cc:     Justin Chen <justinpopo6@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
         ARCHITECTURE),
         linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: [PATCH 1/6] irqchip/irq-bcm7038-l1: Add PM support
-Date:   Fri, 13 Sep 2019 12:10:21 -0700
-Message-Id: <20190913191026.8801-2-f.fainelli@gmail.com>
+Subject: [PATCH 3/6] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
+Date:   Fri, 13 Sep 2019 12:10:23 -0700
+Message-Id: <20190913191026.8801-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
 References: <20190913191026.8801-1-f.fainelli@gmail.com>
@@ -82,162 +81,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+If the 'brcm,irq-can-wake' property is specified, make sure we also
+enable the corresponding parent interrupt we are attached to.
 
-The current l1 controller does not mask any interrupts when dropping
-into suspend. This mean we can receive unexpected wake up sources.
-Modified MIPS l1 controller to mask the all non-wake interrupts before
-dropping into suspend.
-
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fc75c61233aa..c7e37eefec6d 100644
+index c7e37eefec6d..0ad473249f16 100644
 --- a/drivers/irqchip/irq-bcm7038-l1.c
 +++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -27,6 +27,7 @@
- #include <linux/types.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/syscore_ops.h>
- 
- #define IRQS_PER_WORD		32
- #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
-@@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
- 	unsigned int		n_words;
- 	struct irq_domain	*domain;
- 	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
-+#ifdef CONFIG_PM_SLEEP
-+	struct list_head	list;
-+	u32			wake_mask[MAX_WORDS];
-+#endif
- 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
- };
- 
-@@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
- 	u32			mask_cache[0];
- };
- 
-+/*
-+ * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
-+ * used because the struct chip_type suspend/resume hooks are not called
-+ * unless chip_type is hooked onto a generic_chip. Since this driver does
-+ * not use generic_chip, we need to manually hook our resume/suspend to
-+ * syscore_ops.
-+ */
-+#ifdef CONFIG_PM_SLEEP
-+static LIST_HEAD(bcm7038_l1_intcs_list);
-+#endif
-+
- /*
-  * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
-  *
-@@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int bcm7038_l1_suspend(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
-+
-+	/* Wakeup interrupt should only come from the boot cpu */
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(~intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static void bcm7038_l1_resume(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
-+
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+}
-+
-+static struct syscore_ops bcm7038_l1_syscore_ops = {
-+	.suspend	= bcm7038_l1_suspend,
-+	.resume		= bcm7038_l1_resume,
-+};
-+
-+static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	unsigned long flags;
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	if (on)
-+		intc->wake_mask[word] |= mask;
-+	else
-+		intc->wake_mask[word] &= ~mask;
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
- static struct irq_chip bcm7038_l1_irq_chip = {
- 	.name			= "bcm7038-l1",
- 	.irq_mask		= bcm7038_l1_mask,
-@@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
- #ifdef CONFIG_SMP
- 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
- #endif
-+#if CONFIG_PM_SLEEP
-+	.irq_set_wake		= bcm7038_l1_set_wake,
-+#endif
- };
- 
- static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
-@@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
- 		goto out_unmap;
+@@ -297,6 +297,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		pr_err("failed to map parent interrupt %d\n", parent_irq);
+ 		return -EINVAL;
  	}
- 
-+#ifdef CONFIG_PM_SLEEP
-+	/* Add bcm7038_l1_chip into a list */
-+	INIT_LIST_HEAD(&intc->list);
-+	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
 +
-+	register_syscore_ops(&bcm7038_l1_syscore_ops);
-+#endif
++	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
++		enable_irq_wake(parent_irq);
 +
- 	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
- 		dn, IRQS_PER_WORD * intc->n_words);
+ 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
+ 					 intc);
  
 -- 
 2.17.1
