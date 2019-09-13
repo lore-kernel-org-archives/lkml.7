@@ -2,102 +2,157 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCAFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78149C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFFA20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C8C20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388622AbfIMPc5 (ORCPT
+        id S2389023AbfIMPdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:32:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:45788 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727452AbfIMPc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:32:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB2A21000;
-        Fri, 13 Sep 2019 08:32:55 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2CC43F67D;
-        Fri, 13 Sep 2019 08:32:50 -0700 (PDT)
-Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     mark.rutland@arm.com, x86@kernel.org, wanpengli@tencent.com,
-        kvm@vger.kernel.org, narmstrong@baylibre.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, hpa@zytor.com,
-        khilman@baylibre.com, joro@8bytes.org, rkrcmar@redhat.com,
-        mingo@redhat.com, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>,
-        devicetree@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        robh+dt@kernel.org, bp@alien8.de,
-        linux-amlogic@lists.infradead.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, jmattson@google.com,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        carlo@caione.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <000000000000a9d4f705924cff7a@google.com>
- <87lfutei1j.fsf@vitty.brq.redhat.com>
- <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
- <20190913044614.GA120223@kroah.com>
- <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
- <20190913130226.GB403359@kroah.com>
- <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <462660f4-1537-cece-b55f-0ceba0269eb8@arm.com>
-Date:   Fri, 13 Sep 2019 16:32:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 13 Sep 2019 11:33:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57372 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfIMPc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:32:59 -0400
+Received: from [IPv6:2001:8a0:6c2f:b301:66f4:e6a0:633:7a5e] (unknown [IPv6:2001:8a0:6c2f:b301:66f4:e6a0:633:7a5e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ezequiel)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 279BE28B9BE;
+        Fri, 13 Sep 2019 16:32:56 +0100 (BST)
+Message-ID: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
+Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Zhou Yanjie <zhouyanjie@zoho.com>, linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
+        paul.burton@mips.com, linus.walleij@linaro.org,
+        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        jiaxun.yang@flygoat.com
+Date:   Fri, 13 Sep 2019 16:32:52 +0100
+In-Reply-To: <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+         <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+Organization: Collabora
+X-Priority: 1
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/2019 16:01, Paolo Bonzini wrote:
-> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
->> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
->> not need this type of thing.  If we got it wrong, please let us know and
->> then yes, a fix like this would be most appreciated :)
-> 
-> I still see
-> 
-> 	/* some USB hosts just use PIO */
-> 	if (!hcd_uses_dma(hcd)) {
-> 		*dma = ~(dma_addr_t) 0;
-> 		return kmalloc(size, mem_flags);
-> 	}
-> 
-> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
->   I also see the same
-> 
-> 	if (remap_pfn_range(vma, vma->vm_start,
-> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-> 			size, vma->vm_page_prot) < 0) {
-> 		...
-> 	}
-> 
-> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
-> branch, or just being dense.
+Hi Zhou,
 
-Oh, that bit of usbdev_mmap() is already known to be pretty much totally 
-bogus for various reasons - there have been a few threads about it, of 
-which I think [1] is both the most recent and the most informative. 
-There was another patch[2], but that might have stalled (and might need 
-reworking with additional hcd_uses_dma() checks anyway).
+Thanks for your interest in this driver, I'm glad
+so see it's more used.
 
-Robin.
+On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
+> Adjust the macro definition name to match the corresponding
+> register name in the datasheet.
+> 
 
-[1] 
-https://lore.kernel.org/linux-arm-kernel/20190808084636.GB15080@priv-mua.localdomain/
-[2] 
-https://lore.kernel.org/linux-usb/20190801220134.3295-1-gavinli@thegavinli.com/
+It's not really an issue to have slighlt different
+names on the macros. They are currently sufficiently
+descriptive, and I don't think it's deserves a patch.
+
+Thanks,
+Ezequiel
+
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+> index ffdbfaa..1b1fcb7 100644
+> --- a/drivers/mmc/host/jz4740_mmc.c
+> +++ b/drivers/mmc/host/jz4740_mmc.c
+> @@ -28,7 +28,7 @@
+>  #include <asm/mach-jz4740/dma.h>
+>  
+>  #define JZ_REG_MMC_STRPCL	0x00
+> -#define JZ_REG_MMC_STATUS	0x04
+> +#define JZ_REG_MMC_STAT		0x04
+>  #define JZ_REG_MMC_CLKRT	0x08
+>  #define JZ_REG_MMC_CMDAT	0x0C
+>  #define JZ_REG_MMC_RESTO	0x10
+> @@ -40,7 +40,7 @@
+>  #define JZ_REG_MMC_IREG		0x28
+>  #define JZ_REG_MMC_CMD		0x2C
+>  #define JZ_REG_MMC_ARG		0x30
+> -#define JZ_REG_MMC_RESP_FIFO	0x34
+> +#define JZ_REG_MMC_RES		0x34
+>  #define JZ_REG_MMC_RXFIFO	0x38
+>  #define JZ_REG_MMC_TXFIFO	0x3C
+>  #define JZ_REG_MMC_DMAC		0x44
+> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_mmc_host *host)
+>  
+>  	writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
+>  	do {
+> -		status = readl(host->base + JZ_REG_MMC_STATUS);
+> +		status = readl(host->base + JZ_REG_MMC_STAT);
+>  	} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
+>  }
+>  
+> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host *host)
+>  	writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
+>  	udelay(10);
+>  	do {
+> -		status = readl(host->base + JZ_REG_MMC_STATUS);
+> +		status = readl(host->base + JZ_REG_MMC_STAT);
+>  	} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
+>  }
+>  
+> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct jz4740_mmc_host *host,
+>  {
+>  	int status;
+>  
+> -	status = readl(host->base + JZ_REG_MMC_STATUS);
+> +	status = readl(host->base + JZ_REG_MMC_STAT);
+>  	if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
+>  		if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
+>  			host->req->cmd->error = -ETIMEDOUT;
+> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc_host *host,
+>  	/* For whatever reason there is sometime one word more in the fifo then
+>  	 * requested */
+>  	timeout = 1000;
+> -	status = readl(host->base + JZ_REG_MMC_STATUS);
+> +	status = readl(host->base + JZ_REG_MMC_STAT);
+>  	while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
+>  		d = readl(fifo_addr);
+> -		status = readl(host->base + JZ_REG_MMC_STATUS);
+> +		status = readl(host->base + JZ_REG_MMC_STAT);
+>  	}
+>  
+>  	return false;
+> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_mmc_host *host,
+>  {
+>  	int i;
+>  	uint16_t tmp;
+> -	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RESP_FIFO;
+> +	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RES;
+>  
+>  	if (cmd->flags & MMC_RSP_136) {
+>  		tmp = readw(fifo_addr);
+> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
+>  	struct mmc_command *cmd = host->cmd;
+>  	uint32_t irq_reg, status, tmp;
+>  
+> -	status = readl(host->base + JZ_REG_MMC_STATUS);
+> +	status = readl(host->base + JZ_REG_MMC_STAT);
+>  	irq_reg = jz4740_mmc_read_irq_reg(host);
+>  
+>  	tmp = irq_reg;
+
+
+
