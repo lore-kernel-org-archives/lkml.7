@@ -5,50 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAFBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C189EC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A322171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B38720717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380810;
-	bh=bgl7nUni9RQRQL9FRML8kLPCV5dpzQQ+fXp1/vppIaI=;
+	s=default; t=1568380816;
+	bh=H6rv7gekM6TM7NVq6Lf4Z3odoSAzQlt/TcNxyRz5CRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwqTydCqn1U/wWXuPgeRcro9Xd95ONm5GSVFyKLnnR433IVCkLhqaxAEWumo47Oj5
-	 yUXuPHvIjXZuMYUNl3lP7/jvBhQioXRvEbJvTKbtd/cwsTAH4glFRjsSMe/dp9OeEy
-	 p4H8Zvn7bnLZKgq6tbr0O/CEDAOY1JE/0zw5mJRo=
+	b=Q4iIOdtt3zF4MXbaJKUEiI2/FfKvHum0PdO8VJUMo88WvaZWuC9UzDZkg+uRAzKSh
+	 UBMmlBH5W3Z4NpltcVIi8hr3YfcmHoZErOfOTFGNVkc8PVyvOyyPC9zFKWzqMZYShf
+	 bsCMnvah30jmUX8W4iQkbPxtxLF5r3Q1PuD7Lmf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390537AbfIMNUJ (ORCPT
+        id S2390547AbfIMNUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390513AbfIMNUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:07 -0400
+        id S2389983AbfIMNUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:14 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B00214DE;
-        Fri, 13 Sep 2019 13:20:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D51E42171F;
+        Fri, 13 Sep 2019 13:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380806;
-        bh=bgl7nUni9RQRQL9FRML8kLPCV5dpzQQ+fXp1/vppIaI=;
+        s=default; t=1568380812;
+        bh=H6rv7gekM6TM7NVq6Lf4Z3odoSAzQlt/TcNxyRz5CRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCYikmi9hnohWIRHAEef0MkfIPatAsz9K3jCWKaGOBFcwJwwKvxczP4S8fVBREgtK
-         FlI1hLwRBt7O8xv2nVn/7RJR+/yQ+xZwre0I6YEIsqJZD0LqTbyQOZeov2nknQ5YRw
-         2wS2zItoDew87XXYzlhOpwK6+oi8pFG0ygiHgApU=
+        b=CYJURzFfW/+aDaE8qXqjkX834fDoUtiiYHnJRfaYME2OI4GIAfs3oP1nmqhzaKs4f
+         15MAxwRJNEf8zDFcEr1wlNdehrm8CCycpDvLyON8LIdyKNL6LHBo9F/NX0iJK24nh3
+         nzyqiVpvGuYVFGTKc4gBpaS0JA9wwapVLF4loAnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Rue <dan.rue@linaro.org>,
-        Theodore Tso <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 183/190] ext4: dont perform block validity checks on the journal inode
-Date:   Fri, 13 Sep 2019 14:07:18 +0100
-Message-Id: <20190913130614.485465467@linuxfoundation.org>
+Subject: [PATCH 4.19 164/190] resource: fix locking in find_next_iomem_res()
+Date:   Fri, 13 Sep 2019 14:06:59 +0100
+Message-Id: <20190913130613.010643960@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,55 +67,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 ]
+[ Upstream commit 49f17c26c123b60fd1c74629eef077740d16ffc2 ]
 
-Since the journal inode is already checked when we added it to the
-block validity's system zone, if we check it again, we'll just trigger
-a failure.
+Since resources can be removed, locking should ensure that the resource
+is not removed while accessing it.  However, find_next_iomem_res() does
+not hold the lock while copying the data of the resource.
 
-This was causing failures like this:
+Keep holding the lock while the data is copied.  While at it, change the
+return value to a more informative value.  It is disregarded by the
+callers.
 
-[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
-#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
-[   53.938480] Aborting journal on device sda-8.
-
-... but only if the system was under enough memory pressure that
-logical->physical mapping for the journal inode gets pushed out of the
-extent cache.  (This is why it wasn't noticed earlier.)
-
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Dan Rue <dan.rue@linaro.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+[akpm@linux-foundation.org: fix find_next_iomem_res() documentation]
+Link: http://lkml.kernel.org/r/20190613045903.4922-2-namit@vmware.com
+Fixes: ff3cc952d3f00 ("resource: Add remove_resource interface")
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/resource.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 45aea792d22a0..00bf0b67aae87 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -518,10 +518,14 @@ __read_extent_tree_block(const char *function, unsigned int line,
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 38b8d11c9eaf4..bce773cc5e416 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -325,7 +325,7 @@ EXPORT_SYMBOL(release_resource);
+  *
+  * If a resource is found, returns 0 and *res is overwritten with the part
+  * of the resource that's within [start..end]; if none is found, returns
+- * -1.
++ * -ENODEV.  Returns -EINVAL for invalid parameters.
+  *
+  * This function walks the whole tree and not just first level children
+  * unless @first_level_children_only is true.
+@@ -359,16 +359,16 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 			break;
  	}
- 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
- 		return bh;
--	err = __ext4_ext_check(function, line, inode,
--			       ext_block_hdr(bh), depth, pblk);
--	if (err)
--		goto errout;
-+	if (!ext4_has_feature_journal(inode->i_sb) ||
-+	    (inode->i_ino !=
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
-+		err = __ext4_ext_check(function, line, inode,
-+				       ext_block_hdr(bh), depth, pblk);
-+		if (err)
-+			goto errout;
+ 
++	if (p) {
++		/* copy data */
++		res->start = max(start, p->start);
++		res->end = min(end, p->end);
++		res->flags = p->flags;
++		res->desc = p->desc;
 +	}
- 	set_buffer_verified(bh);
- 	/*
- 	 * If this is a leaf block, cache all of its entries
++
+ 	read_unlock(&resource_lock);
+-	if (!p)
+-		return -1;
+-
+-	/* copy data */
+-	res->start = max(start, p->start);
+-	res->end = min(end, p->end);
+-	res->flags = p->flags;
+-	res->desc = p->desc;
+-	return 0;
++	return p ? 0 : -ENODEV;
+ }
+ 
+ static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
 -- 
 2.20.1
 
