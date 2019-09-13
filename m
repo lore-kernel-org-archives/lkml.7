@@ -2,622 +2,491 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A646C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3081CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF6B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E503220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dzDS6nBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbfIMJUh (ORCPT
+        id S2387868AbfIMJVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:20:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25745 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbfIMJUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:20:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 02:20:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
-   d="scan'208";a="360714152"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 13 Sep 2019 02:20:35 -0700
-Received: from [10.226.39.17] (ekotax-mobl.gar.corp.intel.com [10.226.39.17])
-        by linux.intel.com (Postfix) with ESMTP id A5937580862;
-        Fri, 13 Sep 2019 02:20:27 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
- <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
- <3a3d040e-e57a-3efd-0337-2c2d0b27ad1a@linux.intel.com>
- <20190906112044.GF9720@e119886-lin.cambridge.arm.com>
- <959a5f9b-2646-96e3-6a0f-0af1051ae1cb@linux.intel.com>
- <20190909083117.GH9720@e119886-lin.cambridge.arm.com>
- <22857835-1f98-b251-c94b-16b4b0a6dba2@linux.intel.com>
- <20190911103058.GP9720@e119886-lin.cambridge.arm.com>
- <aefd143c-66d2-b303-d992-a55f75a91b2e@linux.intel.com>
- <20190912082517.GA9720@e119886-lin.cambridge.arm.com>
- <cd73e351-5633-bfa8-a4dc-77357d917a0b@linux.intel.com>
- <DM6PR12MB4010AEA876F20E25FFFE06BDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <b7a1b955-4c3e-6ffe-ec6a-04afe33e70cd@linux.intel.com>
-Date:   Fri, 13 Sep 2019 17:20:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Fri, 13 Sep 2019 05:21:52 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38393 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387639AbfIMJVw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 05:21:52 -0400
+Received: by mail-vs1-f67.google.com with SMTP id b123so18146144vsb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=big2HULPivzHfZmaXKJHGwm/n0VyuWpgbxvzS70YyAg=;
+        b=dzDS6nBPcO/J6ewiK3IwZONfAjF6rzCS5xnHaSsFb83Iiz7Ji45b8t+S/h3OfwVELs
+         EnYWZCQwh1dHZjrHHhwnZcCPdcBxSecVjpuPg0RoiCyodHRe+ipXps2B1ci+fUfEnqfb
+         E/MtKZfQB84wPKTw1ATnBSCqho12IKY72cms8gjh+6OKBJz/0GaK22w4XNIfhrAp5Jgh
+         6G/6deWNUdLqJ32ZxypOp0jNfuEpO/n3uRvE8EGvSJOv928fv7dLlMIQU+Z9zsQwc/Es
+         gB9YiFMpIgas4S090SyWDl7cDZi8Kfe33HKYz5QSCbmxwtp7akYZJKB0j4lrM9deB+/3
+         r6HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=big2HULPivzHfZmaXKJHGwm/n0VyuWpgbxvzS70YyAg=;
+        b=lIymM2wx3RtFOFA0T5U9HIbAKMRLdaHBmloM6VIEQG0tnVjw9Atzqwu5WKTy41VRty
+         4usNsyM/2pu8Ui1AesDezj1klr5U148PNvrEoXTPdZ1hgh4eaF+VnyPViib6j6flV6Go
+         Jm0BGQYZNVqHJJHseQjETRRWfV87n3L1Otd6yu6BTDWox1zCAvJBLfKX08Fi6qTf9m+h
+         zAGWn5xSO3yLjqUByGV1dspTBoypW3lWHBp8zQV0HP9b1Qdzkx91VWTJCkW9hJCh/VFQ
+         +1LyUD8wid8bRNY24q/eY941Nn0l4X54xe5OXJh9KT8FrfRmD5K4N1zLxFBTBhC3QzIS
+         QOxw==
+X-Gm-Message-State: APjAAAXQ8zjnUcpr4D0Pf0l2TGByowt8UToIREnYvXBY1NQtZ09enXHe
+        bfr+uOBUXFK8CE6zk1q6WCQ2ejYXxqwM60oCRzWHTDPHu4MSiw==
+X-Google-Smtp-Source: APXvYqxObXH8K4LvJBm4wEarzokwooZWQiVlvrIZJoHc2GNiDfS7LJHjX0EYCCa+N9FMYBVdjqRu9R79OaWrmk0EirU=
+X-Received: by 2002:a67:6044:: with SMTP id u65mr25601254vsb.95.1568366510536;
+ Fri, 13 Sep 2019 02:21:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DM6PR12MB4010AEA876F20E25FFFE06BDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190821222421.30242-1-glaroque@baylibre.com> <20190821222421.30242-3-glaroque@baylibre.com>
+In-Reply-To: <20190821222421.30242-3-glaroque@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Fri, 13 Sep 2019 14:51:38 +0530
+Message-ID: <CAHLCerM-RJze_f49yucCcB1nnyLXo5f=aBob0_rQfa+jauOz+A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] thermal: amlogic: Add thermal driver to support
+ G12 SoCs
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 3:54 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Amlogic G12A and G12B SoCs integrate two thermal sensors
+> with the same design.
+> One is located close to the DDR controller and the other one is
+> located close to the PLLs (between the CPU and GPU).
 
-On 9/12/2019 6:49 PM, Gustavo Pimentel wrote:
-> On Thu, Sep 12, 2019 at 10:23:31, Dilip Kota
-> <eswara.kota@linux.intel.com> wrote:
->
->> Quoting Andrew Murray:
->> Quoting Gustavo Pimentel:
->>
->> On 9/12/2019 4:25 PM, Andrew Murray wrote:
->>> [...]
->>>>>>>>>>>> +static void intel_pcie_max_link_width_setup(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	u32 mask, val;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	/* HW auto bandwidth negotiation must be enabled */
->>>>>>>>>>>> +	pcie_rc_cfg_wr_mask(lpp, PCIE_LCTLSTS_HW_AW_DIS, 0, PCIE_LCTLSTS);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	mask = PCIE_DIRECT_LINK_WIDTH_CHANGE | PCIE_TARGET_LINK_WIDTH;
->>>>>>>>>>>> +	val = PCIE_DIRECT_LINK_WIDTH_CHANGE | lpp->lanes;
->>>>>>>>>>>> +	pcie_rc_cfg_wr_mask(lpp, mask, val, PCIE_MULTI_LANE_CTRL);
->>>>>>>>>>> Is this identical functionality to the writing of PCIE_PORT_LINK_CONTROL
->>>>>>>>>>> in dw_pcie_setup?
->>>>>>>>>>>
->>>>>>>>>>> I ask because if the user sets num-lanes in the DT, will it have the
->>>>>>>>>>> desired effect?
->>>>>>>>>> intel_pcie_max_link_width_setup() function will be called by sysfs attribute pcie_width_store() to change on the fly.
->>>>>>>>> Indeed, but a user may also set num-lanes in the device tree. I'm wondering
->>>>>>>>> if, when set in device-tree, it will have the desired effect. Because I don't
->>>>>>>>> see anything similar to PCIE_LCTLSTS_HW_AW_DIS in dw_pcie_setup which is what
->>>>>>>>> your function does here.
->>>>>>>>>
->>>>>>>>> I guess I'm trying to avoid the suitation where num-lanes doesn't have the
->>>>>>>>> desired effect and the only way to set the num-lanes is throught the sysfs
->>>>>>>>> control.
->>>>>>>> I will check this and get back to you.
->>>>>> intel_pcie_max_link_width_setup() is doing the lane resizing which is
->>>>>> different from the link up/establishment happening during probe. Also
->>>>>> PCIE_LCTLSTS_HW_AW_DIS default value is 0 so not setting during the probe or
->>>>>> dw_pcie_setup.
->>>>>>
->>>>>> intel_pcie_max_link_width_setup() is programming as per the designware PCIe
->>>>>> controller databook instructions for lane resizing.
->>>>>>
->>>>>> Below lines are from Designware PCIe databook for lane resizing.
->>>>>>
->>>>>>     Program the TARGET_LINK_WIDTH[5:0] field of the MULTI_LANE_CONTROL_OFF
->>>>>> register.
->>>>>>     Program the DIRECT_LINK_WIDTH_CHANGE2 field of the MULTI_LANE_CONTROL_OFF
->>>>>> register.
->>>>>> It is assumed that the PCIE_CAP_HW_AUTO_WIDTH_DISABLE field in the
->>>>>> LINK_CONTROL_LINK_STATUS_REG register is 0.
->>>>> OK, so there is a difference between initial training and then resizing
->>>>> of the link. Given that this is not Intel specific, should this function
->>>>> exist within the designware driver for the benefit of others?
->>>> I am ok to add if maintainer agrees with it.
->> Gustavo Pimentel,
->>
->> Could you please let us know your opinion on this.
-> Hi, I just return from parental leave, therefore I still trying to get
-> the pace in mailing list discussion.
->
-> However your suggestion looks good, I agree that can go into DesignWare
-> driver to be available to all.
-Thanks Gustavo for the confirmation, i will add it in the next patch version
->
-> Just a small request, please do in general:
-> s/designware/DesignWare
+Merge into one paragraph?
 
-Sorry, i didnt understand this.
-
-Regards,
-Dilip
-
+> The calibration data for each of the thermal sensors instance is
+> stored in a different location within the AO region.
 >
-> Regards,
-> Gustavo
+> Implement reading the temperature from each thermal sensor.
 >
->> [...]
->>
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	u32 val, mask, fts;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	switch (lpp->max_speed) {
->>>>>>>>>>>> +	case PCIE_LINK_SPEED_GEN1:
->>>>>>>>>>>> +	case PCIE_LINK_SPEED_GEN2:
->>>>>>>>>>>> +		fts = PCIE_AFR_GEN12_FTS_NUM_DFT;
->>>>>>>>>>>> +		break;
->> [...]
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (device_property_read_u32(dev, "max-link-speed", &lpp->link_gen))
->>>>>>>>>>>> +		lpp->link_gen = 0; /* Fallback to auto */
->>>>>>>>>>> Is it possible to use of_pci_get_max_link_speed here instead?
->>>>>>>>>> Thanks for pointing it. of_pci_get_max_link_speed() can be used here. I will
->>>>>>>>>> update it in the next patch revision.
->>>>>> I just remember, earlier we were using  of_pci_get_max_link_speed() itself.
->>>>>> As per reviewer comments changed to device_property_read_u32() to maintain
->>>>>> symmetry in parsing device tree properties from device node.
->>>>>> Let me know your view.
->>>>> I couldn't find an earlier version of this series that used of_pci_get_max_link_speed,
->>>>> have I missed it somewhere?
->>>> It happened in our internal review.
->>>> What's your suggestion please, either to go with symmetry in parsing
->>>> "device_property_read_u32()" or with pci helper function
->>>> "of_pci_get_max_link_speed"?
->>> I'd prefer the helper, the added benefit of this is additional error checking.
->>> It also means users can be confident that max-link-speed will behave in the
->>> same way as other host controllers that use this field.
->> Ok, i will update it in the next patch version.
->>
->>
->> Regards,
->>
->> Dilip
->>
->>> Thanks,
->>>
->>> Andrew Murray
->>>
->>>>>>>>>>>> +
->>>>>>>>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
->>>>>>>>>>>> +	if (!res)
->>>>>>>>>>>> +		return -ENXIO;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp->app_base = devm_ioremap_resource(dev, res);
->>>>>>>>>>>> +	if (IS_ERR(lpp->app_base))
->>>>>>>>>>>> +		return PTR_ERR(lpp->app_base);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = intel_pcie_ep_rst_init(lpp);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>> Given that this is called from a function '..._get_resources' I don't think
->>>>>>>>>>> we should be resetting anything here.
->>>>>>>>>> Agree. I will move it out of get_resources().
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp->phy = devm_phy_get(dev, "pciephy");
->>>>>>>>>>>> +	if (IS_ERR(lpp->phy)) {
->>>>>>>>>>>> +		ret = PTR_ERR(lpp->phy);
->>>>>>>>>>>> +		if (ret != -EPROBE_DEFER)
->>>>>>>>>>>> +			dev_err(dev, "couldn't get pcie-phy: %d\n", ret);
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +	}
->>>>>>>>>>>> +	return 0;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static void intel_pcie_deinit_phy(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	phy_exit(lpp->phy);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_wait_l2(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	u32 value;
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (lpp->max_speed < PCIE_LINK_SPEED_GEN3)
->>>>>>>>>>>> +		return 0;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	/* Send PME_TURN_OFF message */
->>>>>>>>>>>> +	pcie_app_wr_mask(lpp, PCIE_APP_MSG_XMT_PM_TURNOFF,
->>>>>>>>>>>> +			 PCIE_APP_MSG_XMT_PM_TURNOFF, PCIE_APP_MSG_CR);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	/* Read PMC status and wait for falling into L2 link state */
->>>>>>>>>>>> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
->>>>>>>>>>>> +				 (value & PCIE_APP_PMC_IN_L2), 20,
->>>>>>>>>>>> +				 jiffies_to_usecs(5 * HZ));
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		dev_err(lpp->pci.dev, "PCIe link enter L2 timeout!\n");
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return ret;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static void intel_pcie_turn_off(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	if (dw_pcie_link_up(&lpp->pci))
->>>>>>>>>>>> +		intel_pcie_wait_l2(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	/* Put EP in reset state */
->>>>>>>>>>> EP?
->>>>>>>>>> End point device. I will update it.
->>>>>>>>> Is this not a host bridge controller?
->>>>>>>> It is PERST#, signals hardware reset to the End point .
->>>>>>>>             /* Put EP in reset state */
->>>>>>>>             intel_pcie_device_rst_assert(lpp);
->>>>>>> OK.
->>>>>>>
->>>>>>>>>>>> +	intel_pcie_device_rst_assert(lpp);
->>>>>>>>>>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY, 0, PCI_COMMAND);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_core_rst_assert(lpp);
->>>>>>>>>>>> +	intel_pcie_device_rst_assert(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = phy_init(lpp->phy);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_core_rst_deassert(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = clk_prepare_enable(lpp->core_clk);
->>>>>>>>>>>> +	if (ret) {
->>>>>>>>>>>> +		dev_err(lpp->pci.dev, "Core clock enable failed: %d\n", ret);
->>>>>>>>>>>> +		goto clk_err;
->>>>>>>>>>>> +	}
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_rc_setup(lpp);
->>>>>>>>>>>> +	ret = intel_pcie_app_logic_setup(lpp);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		goto app_init_err;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = intel_pcie_setup_irq(lpp);
->>>>>>>>>>>> +	if (!ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_turn_off(lpp);
->>>>>>>>>>>> +app_init_err:
->>>>>>>>>>>> +	clk_disable_unprepare(lpp->core_clk);
->>>>>>>>>>>> +clk_err:
->>>>>>>>>>>> +	intel_pcie_core_rst_assert(lpp);
->>>>>>>>>>>> +	intel_pcie_deinit_phy(lpp);
->>>>>>>>>>>> +	return ret;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static ssize_t
->>>>>>>>>>>> +pcie_link_status_show(struct device *dev, struct device_attribute *attr,
->>>>>>>>>>>> +		      char *buf)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	u32 reg, width, gen;
->>>>>>>>>>>> +	struct intel_pcie_port *lpp;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp = dev_get_drvdata(dev);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
->>>>>>>>>>>> +	width = FIELD_GET(PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH, reg);
->>>>>>>>>>>> +	gen = FIELD_GET(PCIE_LCTLSTS_LINK_SPEED, reg);
->>>>>>>>>>>> +	if (gen > lpp->max_speed)
->>>>>>>>>>>> +		return -EINVAL;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
->>>>>>>>>>>> +		       width, pcie_link_gen_to_str(gen));
->>>>>>>>>>>> +}
->>>>>>>>>>>> +static DEVICE_ATTR_RO(pcie_link_status);
->>>>>>>>>>>> +
->>>>>>>>>>>> +static ssize_t pcie_speed_store(struct device *dev,
->>>>>>>>>>>> +				struct device_attribute *attr,
->>>>>>>>>>>> +				const char *buf, size_t len)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct intel_pcie_port *lpp;
->>>>>>>>>>>> +	unsigned long val;
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp = dev_get_drvdata(dev);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = kstrtoul(buf, 10, &val);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (val > lpp->max_speed)
->>>>>>>>>>>> +		return -EINVAL;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp->link_gen = val;
->>>>>>>>>>>> +	intel_pcie_max_speed_setup(lpp);
->>>>>>>>>>>> +	intel_pcie_speed_change_disable(lpp);
->>>>>>>>>>>> +	intel_pcie_speed_change_enable(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return len;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +static DEVICE_ATTR_WO(pcie_speed);
->>>>>>>>>>>> +
->>>>>>>>>>>> +/*
->>>>>>>>>>>> + * Link width change on the fly is not always successful.
->>>>>>>>>>>> + * It also depends on the partner.
->>>>>>>>>>>> + */
->>>>>>>>>>>> +static ssize_t pcie_width_store(struct device *dev,
->>>>>>>>>>>> +				struct device_attribute *attr,
->>>>>>>>>>>> +				const char *buf, size_t len)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct intel_pcie_port *lpp;
->>>>>>>>>>>> +	unsigned long val;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp = dev_get_drvdata(dev);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (kstrtoul(buf, 10, &val))
->>>>>>>>>>>> +		return -EINVAL;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (val > lpp->max_width)
->>>>>>>>>>>> +		return -EINVAL;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp->lanes = val;
->>>>>>>>>>>> +	intel_pcie_max_link_width_setup(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return len;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +static DEVICE_ATTR_WO(pcie_width);
->>>>>>>>>>> You mentioned that a use-case for changing width/speed on the fly was to
->>>>>>>>>>> control power consumption (and this also helps debugging issues). As I
->>>>>>>>>>> understand there is no current support for this in the kernel - yet it is
->>>>>>>>>>> something that would provide value.
->>>>>>>>>>>
->>>>>>>>>>> I haven't looked in much detail, however as I understand the PCI spec
->>>>>>>>>>> allows an upstream partner to change the link speed and retrain. (I'm not
->>>>>>>>>>> sure about link width). Given that we already have
->>>>>>>>>>> [current,max]_link_[speed,width] is sysfs for each PCI device, it would
->>>>>>>>>>> seem natural to extend this to allow for writing a max width or speed.
->>>>>>>>>>>
->>>>>>>>>>> So ideally this type of thing would be moved to the core or at least in
->>>>>>>>>>> the dwc driver. This way the benefits can be applied to more devices on
->>>>>>>>>>> larger PCI fabrics - Though perhaps others here will have a different view
->>>>>>>>>>> and I'm keen to hear them.
->>>>>>>>>>>
->>>>>>>>>>> I'm keen to limit the differences between the DWC controller drivers and
->>>>>>>>>>> unify common code - thus it would be helpful to have a justification as to
->>>>>>>>>>> why this is only relevant for this controller.
->>>>>>>>>>>
->>>>>>>>>>> For user-space only control, it is possible to achieve what you have here
->>>>>>>>>>> with userspace utilities (something like setpci) (assuming the standard
->>>>>>>>>>> looking registers you currently access are exposed in the normal config
->>>>>>>>>>> space way - though PCIe capabilities).
->>>>>>>>>>>
->>>>>>>>>>> My suggestion would be to drop these changes and later add something that
->>>>>>>>>>> can benefit more devices. In any case if these changes stay within this
->>>>>>>>>>> driver then it would be helpful to move them to a separate patch.
->>>>>>>>>> Sure, i will submit these entity in separate patch.
->>>>>>>>> Please ensure that all supporting macros, functions and defines go with that
->>>>>>>>> other patch as well please.
->>>>>>>> Sure.
->>>>>>>>>>>> +
->>>>>>>>>>>> +static struct attribute *pcie_cfg_attrs[] = {
->>>>>>>>>>>> +	&dev_attr_pcie_link_status.attr,
->>>>>>>>>>>> +	&dev_attr_pcie_speed.attr,
->>>>>>>>>>>> +	&dev_attr_pcie_width.attr,
->>>>>>>>>>>> +	NULL,
->>>>>>>>>>>> +};
->>>>>>>>>>>> +ATTRIBUTE_GROUPS(pcie_cfg);
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
->>>>>>>>>>>> +			    0, PCI_COMMAND);
->>>>>>>>>>>> +	intel_pcie_core_irq_disable(lpp);
->>>>>>>>>>>> +	intel_pcie_turn_off(lpp);
->>>>>>>>>>>> +	clk_disable_unprepare(lpp->core_clk);
->>>>>>>>>>>> +	intel_pcie_core_rst_assert(lpp);
->>>>>>>>>>>> +	intel_pcie_deinit_phy(lpp);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_remove(struct platform_device *pdev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
->>>>>>>>>>>> +	struct pcie_port *pp = &lpp->pci.pp;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	dw_pcie_host_deinit(pp);
->>>>>>>>>>>> +	__intel_pcie_remove(lpp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return 0;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int __maybe_unused intel_pcie_suspend_noirq(struct device *dev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_core_irq_disable(lpp);
->>>>>>>>>>>> +	ret = intel_pcie_wait_l2(lpp);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	intel_pcie_deinit_phy(lpp);
->>>>>>>>>>>> +	clk_disable_unprepare(lpp->core_clk);
->>>>>>>>>>>> +	return ret;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int __maybe_unused intel_pcie_resume_noirq(struct device *dev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	return intel_pcie_host_setup(lpp);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_rc_init(struct pcie_port *pp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>>>>>>>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	/* RC/host initialization */
->>>>>>>>>>>> +	ret = intel_pcie_host_setup(lpp);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>> Insert new line here.
->>>>>>>>>> Ok.
->>>>>>>>>>>> +	ret = intel_pcie_sysfs_init(lpp);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		__intel_pcie_remove(lpp);
->>>>>>>>>>>> +	return ret;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +int intel_pcie_msi_init(struct pcie_port *pp)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	dev_dbg(pci->dev, "PCIe MSI/MSIx is handled by MSI in x86 processor\n");
->>>>>>>>>>> What about other processors? (Noting that this driver doesn't depend on
->>>>>>>>>>> any specific ARCH in the KConfig).
->>>>>>>>>> Agree. i will mark the dependency in Kconfig.
->>>>>>>>> OK, please also see how other drivers use the COMPILE_TEST Kconfig option.
->>>>>>>> Ok sure.
->>>>>>>>> I'd suggest that the dev_dbg just becomes a code comment.
->>>>>> Ok
->>>>>>>>>>>> +	return 0;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	return cpu_addr + BUS_IATU_OFFS;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static const struct dw_pcie_ops intel_pcie_ops = {
->>>>>>>>>>>> +	.cpu_addr_fixup = intel_pcie_cpu_addr,
->>>>>>>>>>>> +};
->>>>>>>>>>>> +
->>>>>>>>>>>> +static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
->>>>>>>>>>>> +	.host_init =		intel_pcie_rc_init,
->>>>>>>>>>>> +	.msi_host_init =	intel_pcie_msi_init,
->>>>>>>>>>>> +};
->>>>>>>>>>>> +
->>>>>>>>>>>> +static const struct intel_pcie_soc pcie_data = {
->>>>>>>>>>>> +	.pcie_ver =		0x520A,
->>>>>>>>>>>> +	.pcie_atu_offset =	0xC0000,
->>>>>>>>>>>> +	.num_viewport =		3,
->>>>>>>>>>>> +};
->>>>>>>>>>>> +
->>>>>>>>>>>> +static int intel_pcie_probe(struct platform_device *pdev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	const struct intel_pcie_soc *data;
->>>>>>>>>>>> +	struct device *dev = &pdev->dev;
->>>>>>>>>>>> +	struct intel_pcie_port *lpp;
->>>>>>>>>>>> +	struct pcie_port *pp;
->>>>>>>>>>>> +	struct dw_pcie *pci;
->>>>>>>>>>>> +	int ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
->>>>>>>>>>>> +	if (!lpp)
->>>>>>>>>>>> +		return -ENOMEM;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	platform_set_drvdata(pdev, lpp);
->>>>>>>>>>>> +	pci = &lpp->pci;
->>>>>>>>>>>> +	pci->dev = dev;
->>>>>>>>>>>> +	pp = &pci->pp;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = intel_pcie_get_resources(pdev);
->>>>>>>>>>>> +	if (ret)
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	data = device_get_match_data(dev);
->>>>>>>>>>>> +	pci->ops = &intel_pcie_ops;
->>>>>>>>>>>> +	pci->version = data->pcie_ver;
->>>>>>>>>>>> +	pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
->>>>>>>>>>>> +	pp->ops = &intel_pcie_dw_ops;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	ret = dw_pcie_host_init(pp);
->>>>>>>>>>>> +	if (ret) {
->>>>>>>>>>>> +		dev_err(dev, "cannot initialize host\n");
->>>>>>>>>>>> +		return ret;
->>>>>>>>>>>> +	}
->>>>>>>>>>> Add a new line after the closing brace.
->>>>>>>>>> Ok
->>>>>>>>>>>> +	/* Intel PCIe doesn't configure IO region, so configure
->>>>>>>>>>>> +	 * viewport to not to access IO region during register
->>>>>>>>>>>> +	 * read write operations.
->>>>>>>>>>>> +	 */
->>>>>>>>>>>> +	pci->num_viewport = data->num_viewport;
->>>>>>>>>>>> +	dev_info(dev,
->>>>>>>>>>>> +		 "Intel AXI PCIe Root Complex Port %d Init Done\n", lpp->id);
->>>>>>>>>>>> +	return ret;
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static const struct dev_pm_ops intel_pcie_pm_ops = {
->>>>>>>>>>>> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pcie_suspend_noirq,
->>>>>>>>>>>> +				      intel_pcie_resume_noirq)
->>>>>>>>>>>> +};
->>>>>>>>>>>> +
->>>>>>>>>>>> +static const struct of_device_id of_intel_pcie_match[] = {
->>>>>>>>>>>> +	{ .compatible = "intel,lgm-pcie", .data = &pcie_data },
->>>>>>>>>>>> +	{}
->>>>>>>>>>>> +};
->>>>>>>>>>>> +
->>>>>>>>>>>> +static struct platform_driver intel_pcie_driver = {
->>>>>>>>>>>> +	.probe = intel_pcie_probe,
->>>>>>>>>>>> +	.remove = intel_pcie_remove,
->>>>>>>>>>>> +	.driver = {
->>>>>>>>>>>> +		.name = "intel-lgm-pcie",
->>>>>>>>>>> Is there a reason why the we use intel-lgm-pcie here and pcie-intel-axi
->>>>>>>>>>> elsewhere? What does lgm mean?
->>>>>>>>>> lgm is the name of intel SoC.  I will name it to pcie-intel-axi to be
->>>>>>>>>> generic.
->>>>>>>>> I'm keen to ensure that it is consistently named. I've seen other comments
->>>>>>>>> regarding what the name should be - I don't have a strong opinion though
->>>>>>>>> I do think that *-axi may be too generic.
->>>>>> This PCIe driver is for the Intel Gateway SoCs. So how about naming it is as
->>>>>> "pcie-intel-gw"; pcie-intel-gw.c and Kconfig as PCIE_INTEL_GW.
->>>>> I don't have a problem with this, though others may have differing views.
->>>> Sure. thank you.
->>>>> Thanks,
->>>>>
->>>>> Andrew Murray
->>>>>
->>>>>> Regards,
->>>>>> Dilip
->>>>>>
->>>>>>>> Ok, i will check and get back to you on this.
->>>>>>>> Regards,
->>>>>>> Thanks,
->>>>>>>
->>>>>>> Andrew Murray
->>>>>>>
->>>>>>>> Dilip
->>>>>>>>
->>>>>>>>> Thanks,
->>>>>>>>>
->>>>>>>>> Andrew Murray
->>>>>>>>>
->>>>>>>>>>> Thanks,
->>>>>>>>>>>
->>>>>>>>>>> Andrew Murray
->>>>>>>>>>>
->>>>>>>>>>>> +		.of_match_table = of_intel_pcie_match,
->>>>>>>>>>>> +		.pm = &intel_pcie_pm_ops,
->>>>>>>>>>>> +	},
->>>>>>>>>>>> +};
->>>>>>>>>>>> +builtin_platform_driver(intel_pcie_driver);
->>>>>>>>>>>> -- 
->>>>>>>>>>>> 2.11.0
->>>>>>>>>>>>
+> The IP block has more functionality, which may be added to this driver
+> in the future:
+> - chip reset when the temperature exceeds a configurable threshold
+> - up to four interrupts when the temperature has risen above a
+> configurable threshold
+> - up to four interrupts when the temperature has fallen below a
+> configurable threshold
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  drivers/thermal/Kconfig           |  11 +
+>  drivers/thermal/Makefile          |   1 +
+>  drivers/thermal/amlogic_thermal.c | 335 ++++++++++++++++++++++++++++++
+>  3 files changed, 347 insertions(+)
+>  create mode 100644 drivers/thermal/amlogic_thermal.c
+>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 9966364a6deb..0f31bb4bc372 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -348,6 +348,17 @@ config MTK_THERMAL
+>           Enable this option if you want to have support for thermal management
+>           controller present in Mediatek SoCs
+>
+> +config AMLOGIC_THERMAL
+> +       tristate "Amlogic Thermal Support"
+> +       default ARCH_MESON
+> +       depends on OF && ARCH_MESON
+> +       help
+> +         If you say yes here you get support for Amlogic Thermal
+> +         for G12 SoC Family.
+> +
+> +         This driver can also be built as a module. If so, the module will
+> +         be called amlogic_thermal.
+> +
+>  menu "Intel thermal drivers"
+>  depends on X86 || X86_INTEL_QUARK || COMPILE_TEST
+>  source "drivers/thermal/intel/Kconfig"
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 74a37c7f847a..baeb70bf0568 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -54,3 +54,4 @@ obj-$(CONFIG_MTK_THERMAL)     += mtk_thermal.o
+>  obj-$(CONFIG_GENERIC_ADC_THERMAL)      += thermal-generic-adc.o
+>  obj-$(CONFIG_ZX2967_THERMAL)   += zx2967_thermal.o
+>  obj-$(CONFIG_UNIPHIER_THERMAL) += uniphier_thermal.o
+> +obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+> diff --git a/drivers/thermal/amlogic_thermal.c b/drivers/thermal/amlogic_thermal.c
+> new file mode 100644
+> index 000000000000..173d808048d2
+> --- /dev/null
+> +++ b/drivers/thermal/amlogic_thermal.c
+> @@ -0,0 +1,335 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Thermal Sensor Driver
+> + *
+> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
+> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
+> + *
+> + * Register value to celsius temperature formulas:
+> + *     Read_Val            m * U
+> + * U = ---------, Uptat = ---------
+> + *     2^16              1 + n * U
+> + *
+> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
+> + *
+> + *  A B m n : calibration parameters
+> + *  u_efuse : fused calibration value, it's a signed 16 bits value
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/thermal.h>
+> +
+> +#include "thermal_core.h"
+> +
+> +#define TSENSOR_CFG_REG1                       0x4
+> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
+> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
+> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
+> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
+> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
+> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
+> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
+> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
+> +       #define TSENSOR_CFG_REG1_ENABLE         \
+> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
+> +                TSENSOR_CFG_REG1_VCM_EN |      \
+> +                TSENSOR_CFG_REG1_VBG_EN |      \
+> +                TSENSOR_CFG_REG1_DEM_EN |      \
+> +                TSENSOR_CFG_REG1_CH_SEL)
+> +
+> +#define TSENSOR_STAT0                  0x40
+> +
+> +#define TSENSOR_STAT9                  0x64
+> +
+> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
+> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
+> +
+> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
+> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
+> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
+> +
+> +#define TSENSOR_TRIM_VERSION(_version) \
+> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
+> +
+> +#define TSENSOR_TRIM_CALIB_VALID_MASK  (GENMASK(3, 2) | BIT(7))
+> +
+> +#define TSENSOR_CALIB_OFFSET   1
+> +#define TSENSOR_CALIB_SHIFT    4
+> +
+> +/**
+> + * struct amlogic_thermal_soc_calib_data
+> + * @A, B, m, n: calibration parameters
+> + * This structure is required for configuration of amlogic thermal driver.
+> + */
+> +struct amlogic_thermal_soc_calib_data {
+> +       int A;
+> +       int B;
+> +       int m;
+> +       int n;
+> +};
+> +
+> +/**
+> + * struct amlogic_thermal_data
+> + * @u_efuse_off: register offset to read fused calibration value
+> + * @soc: calibration parameters structure pointer
+
+This doesn't match the member below.
+
+> + * @regmap_config: regmap config for the device
+> + * This structure is required for configuration of amlogic thermal driver.
+> + */
+> +struct amlogic_thermal_data {
+> +       int u_efuse_off;
+> +       const struct amlogic_thermal_soc_calib_data *calibration_parameters;
+> +       const struct regmap_config *regmap_config;
+> +};
+> +
+> +struct amlogic_thermal {
+> +       struct platform_device *pdev;
+> +       const struct amlogic_thermal_data *data;
+> +       struct regmap *regmap;
+> +       struct regmap *sec_ao_map;
+> +       struct clk *clk;
+> +       struct thermal_zone_device *tzd;
+> +       u32 trim_info;
+> +};
+> +
+> +/*
+> + * Calculate a temperature value from a temperature code.
+> + * The unit of the temperature is degree milliCelsius.
+> + */
+> +static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
+> +                                               int temp_code)
+> +{
+> +       const struct amlogic_thermal_soc_calib_data *param =
+> +                                       pdata->data->calibration_parameters;
+> +       int temp;
+> +       s64 factor, Uptat, uefuse;
+> +
+> +       uefuse = pdata->trim_info & TSENSOR_TRIM_SIGN_MASK ?
+> +                            ~(pdata->trim_info & TSENSOR_TRIM_TEMP_MASK) + 1 :
+> +                            (pdata->trim_info & TSENSOR_TRIM_TEMP_MASK);
+> +
+> +       factor = param->n * temp_code;
+> +       factor = div_s64(factor, 100);
+> +
+> +       Uptat = temp_code * param->m;
+> +       Uptat = div_s64(Uptat, 100);
+> +       Uptat = Uptat * BIT(16);
+> +       Uptat = div_s64(Uptat, BIT(16) + factor);
+> +
+> +       temp = (Uptat + uefuse) * param->A;
+> +       temp = div_s64(temp, BIT(16));
+> +       temp = (temp - param->B) * 100;
+> +
+> +       return temp;
+> +}
+> +
+> +static int amlogic_thermal_initialize(struct amlogic_thermal *pdata)
+> +{
+> +       int ret = 0;
+> +       int ver;
+> +
+> +       regmap_read(pdata->sec_ao_map, pdata->data->u_efuse_off,
+> +                   &pdata->trim_info);
+> +
+> +       ver = TSENSOR_TRIM_VERSION(pdata->trim_info);
+> +
+> +       if ((ver & TSENSOR_TRIM_CALIB_VALID_MASK) == 0) {
+> +               ret = -EINVAL;
+> +               dev_err(&pdata->pdev->dev,
+> +                       "tsensor thermal calibration not supported: 0x%x!\n",
+> +                       ver);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int amlogic_thermal_enable(struct amlogic_thermal *data)
+> +{
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(data->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static int amlogic_thermal_disable(struct amlogic_thermal *data)
+> +{
+> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, 0);
+> +       clk_disable_unprepare(data->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int amlogic_thermal_get_temp(void *data, int *temp)
+> +{
+> +       unsigned int tval;
+> +       struct amlogic_thermal *pdata = data;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       regmap_read(pdata->regmap, TSENSOR_STAT0, &tval);
+> +       *temp =
+> +          amlogic_thermal_code_to_millicelsius(pdata,
+> +                                               tval & TSENSOR_READ_TEMP_MASK);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops amlogic_thermal_ops = {
+> +       .get_temp       = amlogic_thermal_get_temp,
+> +};
+> +
+> +static const struct regmap_config amlogic_thermal_regmap_config_g12a = {
+> +       .reg_bits = 8,
+> +       .val_bits = 32,
+> +       .reg_stride = 4,
+> +       .max_register = TSENSOR_STAT9,
+> +};
+> +
+> +static const struct amlogic_thermal_soc_calib_data amlogic_thermal_g12a = {
+> +       .A = 9411,
+> +       .B = 3159,
+> +       .m = 424,
+> +       .n = 324,
+> +};
+> +
+> +static const struct amlogic_thermal_data amlogic_thermal_g12a_cpu_param = {
+> +       .u_efuse_off = 0x128,
+> +       .calibration_parameters = &amlogic_thermal_g12a,
+> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
+> +};
+> +
+> +static const struct amlogic_thermal_data amlogic_thermal_g12a_ddr_param = {
+> +       .u_efuse_off = 0xf0,
+> +       .calibration_parameters = &amlogic_thermal_g12a,
+> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
+> +};
+> +
+> +static const struct of_device_id of_amlogic_thermal_match[] = {
+> +       {
+> +               .compatible = "amlogic,g12a-ddr-thermal",
+> +               .data = &amlogic_thermal_g12a_ddr_param,
+> +       },
+> +       {
+> +               .compatible = "amlogic,g12a-cpu-thermal",
+> +               .data = &amlogic_thermal_g12a_cpu_param,
+> +       },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_amlogic_thermal_match);
+> +
+> +static int amlogic_thermal_probe(struct platform_device *pdev)
+> +{
+> +       struct amlogic_thermal *pdata;
+> +       struct device *dev = &pdev->dev;
+> +       struct resource *res;
+> +       void __iomem *base;
+> +       int ret;
+> +
+> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return -ENOMEM;
+> +
+> +       pdata->data = of_device_get_match_data(dev);
+> +       pdata->pdev = pdev;
+> +       platform_set_drvdata(pdev, pdata);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+Use devm_platform_ioremap_resource instead.
+
+> +       base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(base)) {
+> +               dev_err(dev, "failed to get io address\n");
+> +               return PTR_ERR(base);
+> +       }
+> +
+> +       pdata->regmap = devm_regmap_init_mmio(dev, base,
+> +                                             pdata->data->regmap_config);
+> +       if (IS_ERR(pdata->regmap))
+> +               return PTR_ERR(pdata->regmap);
+> +
+> +       pdata->clk = devm_clk_get(dev, NULL);
+> +       if (IS_ERR(pdata->clk)) {
+> +               if (PTR_ERR(pdata->clk) != -EPROBE_DEFER)
+> +                       dev_err(dev, "failed to get clock\n");
+> +               return PTR_ERR(pdata->clk);
+> +       }
+> +
+> +       pdata->sec_ao_map = syscon_regmap_lookup_by_phandle
+> +               (pdev->dev.of_node, "amlogic,ao-secure");
+> +       if (IS_ERR(pdata->sec_ao_map)) {
+> +               dev_err(dev, "syscon regmap lookup failed.\n");
+> +               return PTR_ERR(pdata->sec_ao_map);
+> +       }
+> +
+> +       pdata->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev,
+> +                                                         0,
+> +                                                         pdata,
+> +                                                         &amlogic_thermal_ops);
+> +       if (IS_ERR(pdata->tzd)) {
+> +               ret = PTR_ERR(pdata->tzd);
+> +               dev_err(dev, "Failed to register tsensor: %d\n", ret);
+> +               return PTR_ERR(pdata->tzd);
+
+return ret;
+
+> +       }
+> +
+> +       ret = amlogic_thermal_initialize(pdata);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = amlogic_thermal_enable(pdata);
+> +
+> +       return ret;
+> +}
+> +
+> +static int amlogic_thermal_remove(struct platform_device *pdev)
+> +{
+> +       struct amlogic_thermal *data = platform_get_drvdata(pdev);
+> +
+> +       return amlogic_thermal_disable(data);
+> +}
+> +
+> +static int __maybe_unused amlogic_thermal_suspend(struct device *dev)
+> +{
+> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
+> +
+> +       return amlogic_thermal_disable(data);
+> +}
+> +
+> +static int __maybe_unused amlogic_thermal_resume(struct device *dev)
+> +{
+> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
+> +
+> +       return amlogic_thermal_enable(data);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(amlogic_thermal_pm_ops,
+> +                        amlogic_thermal_suspend, amlogic_thermal_resume);
+> +
+> +static struct platform_driver amlogic_thermal_driver = {
+> +       .driver = {
+> +               .name           = "amlogic_thermal",
+> +               .pm             = &amlogic_thermal_pm_ops,
+> +               .of_match_table = of_amlogic_thermal_match,
+> +       },
+> +       .probe  = amlogic_thermal_probe,
+> +       .remove = amlogic_thermal_remove,
+> +};
+> +
+> +module_platform_driver(amlogic_thermal_driver);
+> +
+> +MODULE_AUTHOR("Guillaume La Roque <glaroque@baylibre.com>");
+> +MODULE_DESCRIPTION("Amlogic thermal driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.17.1
 >
