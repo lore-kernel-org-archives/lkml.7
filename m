@@ -2,210 +2,248 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD5DC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A6D206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380951;
-	bh=WU84xUoe0tYLWwJG8iE934g2D098MEcnZqMAR9KL6IE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecHhMTvWoa9/+4N+r1j0LNZ25SEcMGHzc7u2TYk4ZGyO+xL2lxWyQkDb1sZhwT6hZ
-	 QhG7NTlV52lSS/0I/kg+j10U/FkLx+vqtP9i3OjzylIzq4sk2mLUVoZk86OPDJMimk
-	 Q4Y9/x4aOniSDxVfrVJHskuu3uWb0jbfOHl2YNi8=
+	by mail.kernel.org (Postfix) with ESMTP id E13F320717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="F/KxLIs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391005AbfIMNWW (ORCPT
+        id S2391034AbfIMNWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 13 Sep 2019 09:22:34 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40459 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388828AbfIMNWW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 09:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390989AbfIMNWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:22:16 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF368206BB;
-        Fri, 13 Sep 2019 13:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380935;
-        bh=WU84xUoe0tYLWwJG8iE934g2D098MEcnZqMAR9KL6IE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdpXP74NwSlbtKulzTwUEmg52gowE5KLZSrZZNz6FithAlkPLwwEVD8shDFEpuRkB
-         32NKUSLR0I+Sp6S5nGzypR2nLALPh0WmGBmeiWkXqi8gO6R27kPn0BgTQqBCDSq99Q
-         m6/9bFySnWFoivSrP+xNZNSFFm2JrFjLqHiYl728=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Harrison <John.C.Harrison@Intel.com>,
-        "Robert M. Fosha" <robert.m.fosha@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 31/37] drm/i915: Support whitelist workarounds on all engines
-Date:   Fri, 13 Sep 2019 14:07:36 +0100
-Message-Id: <20190913130521.552482786@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
-References: <20190913130510.727515099@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DDGDDQ008470;
+        Fri, 13 Sep 2019 15:21:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=XsRDAFdNpZsq68i7jv8FE3dvyRmLYMzu893o05OONls=;
+ b=F/KxLIs604mI5tT9XNXLzWVfNZC04NPczB2rKfTrvl8xMvXssmxN5svUaiLe67H9xKIa
+ L0nEQ7TtrcaKK/6/sNY/IEVt7WgSnCnhK5UgTUM+tH+H/au1HAvRlineBlxIhHNx6SqC
+ P5QHdTRDFE0l5l4IwKSCPDgE/y/AawZCQJtce9h3FCdiOTDrjQBNFCDdI1TU2tsbqJOd
+ LRqqWtcGgln1hvj55Ub1xCDl26GMyYHxuPrEKFDw3XEoncS7ou7oH6omH7QYjla5Y/mj
+ QOYt+6e2zxX4X5gJ4wd5nvb2eW+lhTI3qMHIlG7H5Z703w9E/mO3vU0sA5ZpaNRlT8Vh IA== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2uyte2w3k6-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 13 Sep 2019 15:21:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 90BA74B;
+        Fri, 13 Sep 2019 13:21:40 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E43132C2B99;
+        Fri, 13 Sep 2019 15:21:39 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep
+ 2019 15:21:39 +0200
+Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep 2019 15:21:38 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
+Date:   Fri, 13 Sep 2019 15:21:30 +0200
+Message-ID: <1568380890-313-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.48.1.232]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-13_06:2019-09-11,2019-09-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebd2de47a19f1c17ae47f8331aae3cd436766663 ]
+End of conversion may be handled by using IRQ or DMA. There may be a
+race when two conversions complete at the same time on several ADCs.
+EOC can be read as 'set' for several ADCs, with:
+- an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
+  called in this case.
+- an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
+  request instead. It's then automatically cleared by DMA read. But the
+  handler gets called due to status bit is temporarily set (IRQ triggered
+  by the other ADC).
+So both EOC status bit in CSR and EOCIE control bit must be checked
+before invoking the interrupt handler (e.g. call ISR only for
+IRQ-enabled ADCs).
 
-Newer hardware requires setting up whitelists on engines other than
-render. So, extend the whitelist code to support all engines.
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
 
-Signed-off-by: John Harrison <John.C.Harrison@Intel.com>
-Signed-off-by: Robert M. Fosha <robert.m.fosha@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-3-John.C.Harrison@Intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/gpu/drm/i915/intel_workarounds.c | 65 +++++++++++++++++-------
- 1 file changed, 47 insertions(+), 18 deletions(-)
+ drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++++++++++---
+ drivers/iio/adc/stm32-adc-core.h | 13 ++++++++++++
+ drivers/iio/adc/stm32-adc.c      |  6 ------
+ 3 files changed, 53 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
-index 1db826b12774e..0b80fde927899 100644
---- a/drivers/gpu/drm/i915/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -1012,48 +1012,79 @@ static void gen9_whitelist_build(struct i915_wa_list *w)
- 	whitelist_reg(w, GEN8_HDC_CHICKEN1);
- }
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 9b85fef..7297396 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -71,6 +71,8 @@
+  * @eoc1:	adc1 end of conversion flag in @csr
+  * @eoc2:	adc2 end of conversion flag in @csr
+  * @eoc3:	adc3 end of conversion flag in @csr
++ * @ier:	interrupt enable register offset for each adc
++ * @eocie_msk:	end of conversion interrupt enable mask in @ier
+  */
+ struct stm32_adc_common_regs {
+ 	u32 csr;
+@@ -78,6 +80,8 @@ struct stm32_adc_common_regs {
+ 	u32 eoc1_msk;
+ 	u32 eoc2_msk;
+ 	u32 eoc3_msk;
++	u32 ier;
++	u32 eocie_msk;
+ };
  
--static void skl_whitelist_build(struct i915_wa_list *w)
-+static void skl_whitelist_build(struct intel_engine_cs *engine)
+ struct stm32_adc_priv;
+@@ -303,6 +307,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
+ 	.eoc1_msk = STM32F4_EOC1,
+ 	.eoc2_msk = STM32F4_EOC2,
+ 	.eoc3_msk = STM32F4_EOC3,
++	.ier = STM32F4_ADC_CR1,
++	.eocie_msk = STM32F4_EOCIE,
+ };
+ 
+ /* STM32H7 common registers definitions */
+@@ -311,8 +317,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
+ 	.ccr = STM32H7_ADC_CCR,
+ 	.eoc1_msk = STM32H7_EOC_MST,
+ 	.eoc2_msk = STM32H7_EOC_SLV,
++	.ier = STM32H7_ADC_IER,
++	.eocie_msk = STM32H7_EOCIE,
+ };
+ 
++static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
++	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
++};
++
++static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
++					  unsigned int adc)
++{
++	u32 ier, offset = stm32_adc_offset[adc];
++
++	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
++
++	return ier & priv->cfg->regs->eocie_msk;
++}
++
+ /* ADC common interrupt for all instances */
+ static void stm32_adc_irq_handler(struct irq_desc *desc)
  {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	gen9_whitelist_build(w);
+@@ -323,13 +345,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
  
- 	/* WaDisableLSQCROPERFforOCL:skl */
- 	whitelist_reg(w, GEN8_L3SQCREG4);
- }
+-	if (status & priv->cfg->regs->eoc1_msk)
++	/*
++	 * End of conversion may be handled by using IRQ or DMA. There may be a
++	 * race here when two conversions complete at the same time on several
++	 * ADCs. EOC may be read 'set' for several ADCs, with:
++	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
++	 *   is then automatically cleared by DR read in hardware)
++	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
++	 *   be called in this case)
++	 * So both EOC status bit in CSR and EOCIE control bit must be checked
++	 * before invoking the interrupt handler (e.g. call ISR only for
++	 * IRQ-enabled ADCs).
++	 */
++	if (status & priv->cfg->regs->eoc1_msk &&
++	    stm32_adc_eoc_enabled(priv, 0))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 0));
  
--static void bxt_whitelist_build(struct i915_wa_list *w)
-+static void bxt_whitelist_build(struct intel_engine_cs *engine)
- {
--	gen9_whitelist_build(w);
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
-+	gen9_whitelist_build(&engine->whitelist);
- }
+-	if (status & priv->cfg->regs->eoc2_msk)
++	if (status & priv->cfg->regs->eoc2_msk &&
++	    stm32_adc_eoc_enabled(priv, 1))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 1));
  
--static void kbl_whitelist_build(struct i915_wa_list *w)
-+static void kbl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	gen9_whitelist_build(w);
+-	if (status & priv->cfg->regs->eoc3_msk)
++	if (status & priv->cfg->regs->eoc3_msk &&
++	    stm32_adc_eoc_enabled(priv, 2))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 2));
  
- 	/* WaDisableLSQCROPERFforOCL:kbl */
- 	whitelist_reg(w, GEN8_L3SQCREG4);
- }
+ 	chained_irq_exit(chip, desc);
+diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
+index 8af507b..8dc936b 100644
+--- a/drivers/iio/adc/stm32-adc-core.h
++++ b/drivers/iio/adc/stm32-adc-core.h
+@@ -25,8 +25,21 @@
+  * --------------------------------------------------------
+  */
+ #define STM32_ADC_MAX_ADCS		3
++#define STM32_ADC_OFFSET		0x100
+ #define STM32_ADCX_COMN_OFFSET		0x300
  
--static void glk_whitelist_build(struct i915_wa_list *w)
-+static void glk_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
++/* STM32F4 - registers for each ADC instance */
++#define STM32F4_ADC_CR1			0x04
 +
-+	if (engine->class != RENDER_CLASS)
-+		return;
++/* STM32F4_ADC_CR1 - bit fields */
++#define STM32F4_EOCIE			BIT(5)
 +
- 	gen9_whitelist_build(w);
++/* STM32H7 - registers for each instance */
++#define STM32H7_ADC_IER			0x04
++
++/* STM32H7_ADC_IER - bit fields */
++#define STM32H7_EOCIE			BIT(2)
++
+ /**
+  * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
+  * @base:		control registers base cpu addr
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 6a7dd08..3c9f456 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -30,7 +30,6 @@
  
- 	/* WA #0862: Userspace has to set "Barrier Mode" to avoid hangs. */
- 	whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
- }
+ /* STM32F4 - Registers for each ADC instance */
+ #define STM32F4_ADC_SR			0x00
+-#define STM32F4_ADC_CR1			0x04
+ #define STM32F4_ADC_CR2			0x08
+ #define STM32F4_ADC_SMPR1		0x0C
+ #define STM32F4_ADC_SMPR2		0x10
+@@ -54,7 +53,6 @@
+ #define STM32F4_RES_SHIFT		24
+ #define STM32F4_RES_MASK		GENMASK(25, 24)
+ #define STM32F4_SCAN			BIT(8)
+-#define STM32F4_EOCIE			BIT(5)
  
--static void cfl_whitelist_build(struct i915_wa_list *w)
-+static void cfl_whitelist_build(struct intel_engine_cs *engine)
- {
--	gen9_whitelist_build(w);
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
-+	gen9_whitelist_build(&engine->whitelist);
- }
+ /* STM32F4_ADC_CR2 - bit fields */
+ #define STM32F4_SWSTART			BIT(30)
+@@ -69,7 +67,6 @@
  
--static void cnl_whitelist_build(struct i915_wa_list *w)
-+static void cnl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	/* WaEnablePreemptionGranularityControlByUMD:cnl */
- 	whitelist_reg(w, GEN8_CS_CHICKEN1);
- }
+ /* STM32H7 - Registers for each ADC instance */
+ #define STM32H7_ADC_ISR			0x00
+-#define STM32H7_ADC_IER			0x04
+ #define STM32H7_ADC_CR			0x08
+ #define STM32H7_ADC_CFGR		0x0C
+ #define STM32H7_ADC_SMPR1		0x14
+@@ -89,9 +86,6 @@
+ #define STM32H7_EOC			BIT(2)
+ #define STM32H7_ADRDY			BIT(0)
  
--static void icl_whitelist_build(struct i915_wa_list *w)
-+static void icl_whitelist_build(struct intel_engine_cs *engine)
- {
-+	struct i915_wa_list *w = &engine->whitelist;
-+
-+	if (engine->class != RENDER_CLASS)
-+		return;
-+
- 	/* WaAllowUMDToModifyHalfSliceChicken7:icl */
- 	whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
- 
-@@ -1069,24 +1100,22 @@ void intel_engine_init_whitelist(struct intel_engine_cs *engine)
- 	struct drm_i915_private *i915 = engine->i915;
- 	struct i915_wa_list *w = &engine->whitelist;
- 
--	GEM_BUG_ON(engine->id != RCS0);
+-/* STM32H7_ADC_IER - bit fields */
+-#define STM32H7_EOCIE			STM32H7_EOC
 -
- 	wa_init_start(w, "whitelist");
- 
- 	if (IS_GEN(i915, 11))
--		icl_whitelist_build(w);
-+		icl_whitelist_build(engine);
- 	else if (IS_CANNONLAKE(i915))
--		cnl_whitelist_build(w);
-+		cnl_whitelist_build(engine);
- 	else if (IS_COFFEELAKE(i915))
--		cfl_whitelist_build(w);
-+		cfl_whitelist_build(engine);
- 	else if (IS_GEMINILAKE(i915))
--		glk_whitelist_build(w);
-+		glk_whitelist_build(engine);
- 	else if (IS_KABYLAKE(i915))
--		kbl_whitelist_build(w);
-+		kbl_whitelist_build(engine);
- 	else if (IS_BROXTON(i915))
--		bxt_whitelist_build(w);
-+		bxt_whitelist_build(engine);
- 	else if (IS_SKYLAKE(i915))
--		skl_whitelist_build(w);
-+		skl_whitelist_build(engine);
- 	else if (INTEL_GEN(i915) <= 8)
- 		return;
- 	else
+ /* STM32H7_ADC_CR - bit fields */
+ #define STM32H7_ADCAL			BIT(31)
+ #define STM32H7_ADCALDIF		BIT(30)
 -- 
-2.20.1
-
-
+2.7.4
 
