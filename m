@@ -2,126 +2,115 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3EFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37C0208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E0E20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cvk.de header.i=@cvk.de header.b="K/7939ls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388425AbfIMMUL (ORCPT
+        id S1729701AbfIMMZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:20:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43464 "EHLO mx1.redhat.com"
+        Fri, 13 Sep 2019 08:25:16 -0400
+Received: from cvk-fw2.cvk.de ([194.39.189.12]:34822 "EHLO cvk-fw2.cvk.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfIMMRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:17:50 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D47E8C053FDF;
-        Fri, 13 Sep 2019 12:17:49 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B6719608AB;
-        Fri, 13 Sep 2019 12:17:49 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id C190F20BF9; Fri, 13 Sep 2019 08:17:48 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/26] nfs: stash nfs_subversion reference into nfs_mount_info
-Date:   Fri, 13 Sep 2019 08:17:30 -0400
-Message-Id: <20190913121748.25391-9-smayhew@redhat.com>
-In-Reply-To: <20190913121748.25391-1-smayhew@redhat.com>
-References: <20190913121748.25391-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 13 Sep 2019 12:17:49 +0000 (UTC)
+        id S1726771AbfIMMZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:25:16 -0400
+Received: from localhost (cvk-fw2 [127.0.0.1])
+        by cvk-fw2.cvk.de (Postfix) with ESMTP id 46VFG16pVxz4xrd
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:25:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cvk.de; h=
+        mime-version:content-transfer-encoding:content-type:content-type
+        :content-language:accept-language:message-id:date:date:subject
+        :subject:from:from; s=mailcvk20190509; t=1568377513; x=
+        1570191914; bh=TPwPQL5cCJ15Ks4CMna9H0KgsAQcT58ggxOhpQB391w=; b=K
+        /7939lsK0dnm2Td6mpi5aGx4n1PwSG3dvlyRJaZ5DS5r8lZK5udFz8r9bb8rt+O9
+        knjZc2HNIOn5d99AaJ4bv1oFwYR1SyTIoTh6k7WjXVfBUvZHesSenGPJgQi47PIC
+        2PJP9ylOKWGidBG2Xysecs51uOIMY5RIYEnNnZnkdXQDcYFUe570ARg5vuCp/zeM
+        o6IbHOzYJ6vomfvmatUSW/ll/NHs8Lp6/IA2BC58oMvn8mEqWv6tRXxnyOKVWIok
+        c2iMgrn8+j8deVxg8f/7XhQ2x46AkVC1G4lN443ctwb0YMHosOxr7kLkfojgm2H5
+        KFggrcrFGPQ/QJyDZd+og==
+X-Virus-Scanned: by amavisd-new at cvk.de
+Received: from cvk-fw2.cvk.de ([127.0.0.1])
+        by localhost (cvk-fw2.cvk.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id pmex5ZjYrIr1 for <linux-kernel@vger.kernel.org>;
+        Fri, 13 Sep 2019 14:25:13 +0200 (CEST)
+Received: from cvk027.cvk.de (cvk027.cvk.de [10.1.0.22])
+        by cvk-fw2.cvk.de (Postfix) with ESMTP
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:25:13 +0200 (CEST)
+Received: from cvk038.intra.cvk.de (cvk038.intra.cvk.de [10.1.0.38])
+        by cvk027.cvk.de (Postfix) with ESMTP id 9A36C84AE1A
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:25:14 +0200 (CEST)
+Received: from CVK038.intra.cvk.de ([::1]) by cvk038.intra.cvk.de ([::1]) with
+ mapi id 14.03.0468.000; Fri, 13 Sep 2019 14:25:14 +0200
+From:   "Bartschies, Thomas" <Thomas.Bartschies@cvk.de>
+To:     "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: big ICMP requests get disrupted on IPSec tunnel activation
+Thread-Topic: big ICMP requests get disrupted on IPSec tunnel activation
+Thread-Index: AdVqLkX3YVEzmvmfRqSBzJS46Ii+RA==
+Date:   Fri, 13 Sep 2019 12:25:14 +0000
+Message-ID: <EB8510AA7A943D43916A72C9B8F4181F629D9D90@cvk038.intra.cvk.de>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.11.10.4]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-GBS-PROC: 5zoD1qfZ1bhzGU/FjtQuf/lTuRddoiqbj9aNu4Hj/Hw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hello together,
 
-That will allow to get rid of passing those references around in
-quite a few places.  Moreover, that will allow to merge xdev and
-remote file_system_type.
+since kenel 4.20 we're observing a strange behaviour when sending big ICMP =
+packets. An example is a packet size of 3000 bytes.
+The packets should be forwarded by a linux gateway (firewall) having multip=
+le interfaces also acting as a vpn gateway.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/internal.h  | 1 +
- fs/nfs/namespace.c | 6 +++---
- fs/nfs/nfs4super.c | 1 +
- fs/nfs/super.c     | 1 +
- 4 files changed, 6 insertions(+), 3 deletions(-)
+Test steps:
+1. Disabled all iptables rules
+2. Enabled the VPN IPSec Policies.
+3. Start a ping with packet size (e.g. 3000 bytes) from a client in the DMZ=
+ passing the machine targeting another LAN machine 4. Ping works 5. Enable =
+a VPN policy by sending pings from the gateway to a tunnel target. System t=
+ries to create the tunnel 6. Ping from 3. immediately stalls. No error mess=
+ages. Just stops.
+7. Stop Ping from 3. Start another without packet size parameter. Stalls al=
+so.
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index eeb54b45875c..0c42cf685d4b 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -150,6 +150,7 @@ struct nfs_mount_info {
- 	struct nfs_clone_mount *cloned;
- 	struct nfs_server *server;
- 	struct nfs_fh *mntfh;
-+	struct nfs_subversion *nfs_mod;
- };
- 
- extern int nfs_mount(struct nfs_mount_request *info);
-diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
-index 7c78e6956639..0d0587ed7d94 100644
---- a/fs/nfs/namespace.c
-+++ b/fs/nfs/namespace.c
-@@ -233,8 +233,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
- 		.set_security = nfs_clone_sb_security,
- 		.cloned = &mountdata,
- 		.mntfh = fh,
-+		.nfs_mod = NFS_SB(sb)->nfs_client->cl_nfs_mod,
- 	};
--	struct nfs_subversion *nfs_mod = NFS_SB(sb)->nfs_client->cl_nfs_mod;
- 	struct nfs_server *server;
- 	struct vfsmount *mnt;
- 	char *page = (char *) __get_free_page(GFP_USER);
-@@ -243,8 +243,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
- 	if (page == NULL)
- 		return ERR_PTR(-ENOMEM);
- 
--	server = nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
--						fattr, authflavor);
-+	server = mount_info.nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
-+							   fattr, authflavor);
- 	if (IS_ERR(server))
- 		return ERR_CAST(server);
- 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 91ba1b6741dc..88d83cab8e9b 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -248,6 +248,7 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
- 		.fill_super = nfs_fill_super,
- 		.set_security = nfs_clone_sb_security,
- 		.cloned = data,
-+		.nfs_mod = &nfs_v4,
- 	};
- 	struct dentry *res;
- 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 7fc354207347..2a6b4e4b0a2d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2736,6 +2736,7 @@ struct dentry *nfs_fs_mount(struct file_system_type *fs_type,
- 		mntroot = ERR_CAST(nfs_mod);
- 		goto out;
- 	}
-+	mount_info.nfs_mod = nfs_mod;
- 
- 	mntroot = nfs_mod->rpc_ops->try_mount(flags, dev_name, &mount_info, nfs_mod);
- 
--- 
-2.17.2
+Result:
+Connections from the client to other services on the LAN machine still work=
+. Tracepath works. Only ICMP requests do not pass the gateway anymore. tcpd=
+ump sees them on incoming interface, but not on the outgoing LAN interface.=
+ IMCP requests to any other target IP address in LAN still work. Until one =
+uses a bigger packet size. Then these alternative connections stall also.
 
+Flushing the policy table has no effect. Flushing the conntrack table has n=
+o effect. Setting rp_filter to loose (2) has no effect.
+Flush the route cache has no effect.
+
+Only a reboot of the gateway restores normal behavior.
+
+Is this a bug?
+
+Best regards,
+--
+i. A. Thomas Bartschies=20
+IT Systeme
+
+Cornelsen Verlagskontor GmbH
+Kammerratsheide 66
+33609 Bielefeld
+Telefon: +49 (0)521 9719-310
+Telefax: +49 (0)521 9719-93310
+thomas.bartschies@cvk.de
+http://www.cvk.de
