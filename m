@@ -2,188 +2,101 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907A5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41CA208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66249208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380266;
-	bh=pKksRBfefjsbMWHmPIzphWYVgZ+LljCtQlKtgIFTsS4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cPOCedNJ7nKmF/iHQtsZQ4cljsfK4+qpc8DrZup9/36obu0m/oB811kzu450vRcNx
-	 Ji+6ZYOqh9HywwudR5bEYD7HjLCyzdKRSTzKegC1VnDth2gfnIPhF71Yte3KzBPrnk
-	 19tPKBCXsGIBmvqzDqvxfAe4wzznLuEvG3dliBDg=
+	s=default; t=1568380269;
+	bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0JiMlkyIh9wuDDamTgfwEK3S+yFJ7B8Rxhsw7IaDO+3WD5MnARUTa3GvT0YTjHRh6
+	 qK5KwT4bcQnZ7TsEmUF5loVFRXYETvnnJiF6HHpvpNK4OJ6EGpuo9HjX9/K3Y9DbQB
+	 hdUhN2M4Fu3w/u9Xbkba0m/rmHJhdHkOjZU29hrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbfIMNLF (ORCPT
+        id S2388899AbfIMNLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388872AbfIMNLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:03 -0400
+        id S2388155AbfIMNLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:05 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58DAC206BB;
-        Fri, 13 Sep 2019 13:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A6BF208C0;
+        Fri, 13 Sep 2019 13:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380261;
-        bh=pKksRBfefjsbMWHmPIzphWYVgZ+LljCtQlKtgIFTsS4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=t16ZzxXtDWyRXw8129ME6I23m946GrORAglTIRzHDYjpFlkVoCyTUSZm82bZ1PNqX
-         fnfXb1T2m9A8pY7yJmiOOya8wgUp++SbjERBck0uvDFT2lj+iWx0OP4HUJk2kry9De
-         capdk8qrxc+ZCp1lhErBmvajvUnXCA06WspJZ1Bs=
+        s=default; t=1568380264;
+        bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ec0spOsnFul2XeL6gJq90BdIUPidOEtWmHX+5M4dgy8STaEG3IFvU17rIJKttaIuC
+         /oKN3Zf1ewSfzcCGjyx+AqZ1meu7G1MiSv24nsL2WT8p62A6zhgOuZ1/+L7cAJ8JJe
+         OMWmMBMHyYMeNGvMjQWJEs0y0ww8kgvg41jk2yPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/21] 4.14.144-stable review
-Date:   Fri, 13 Sep 2019 14:06:53 +0100
-Message-Id: <20190913130501.285837292@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 001/190] ALSA: hda - Fix potential endless loop at applying quirks
+Date:   Fri, 13 Sep 2019 14:04:16 +0100
+Message-Id: <20190913130559.784678558@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
+References: <20190913130559.669563815@linuxfoundation.org>
 User-Agent: quilt/0.66
 X-stable: review
 X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.144-rc1
-X-KernelTest-Deadline: 2019-09-15T13:05+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.144 release.
-There are 21 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Takashi Iwai <tiwai@suse.de>
 
-Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-Anything received after that time might be too late.
+commit 333f31436d3db19f4286f8862a00ea1d8d8420a1 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+Since the chained quirks via chained_before flag is applied before the
+depth check, it may lead to the endless recursive calls, when the
+chain were set up incorrectly.  Fix it by moving the depth check at
+the beginning of the loop.
 
-thanks,
+Fixes: 1f57825077dc ("ALSA: hda - Add chained_before flag to the fixup entry")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ sound/pci/hda/hda_auto_parser.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.144-rc1
-
-yongduan <yongduan@tencent.com>
-    vhost: make sure log_num < in_num
-
-Michael S. Tsirkin <mst@redhat.com>
-    vhost: block speculation of translated descriptors
-
-YueHaibing <yuehaibing@huawei.com>
-    kernel/module: Fix mem leak in module_add_modinfo_attrs
-
-Nathan Chancellor <natechancellor@gmail.com>
-    clk: s2mps11: Add used attribute to s2mps11_dt_match
-
-Nicolas Boichat <drinkcat@chromium.org>
-    scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-
-Dmitry Voytik <voytikd@gmail.com>
-    arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-rock64
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    powerpc/64: mark start_here_multiplatform as __ref
-
-Dexuan Cui <decui@microsoft.com>
-    hv_sock: Fix hang when a connection is closed
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Only read OGM tvlv_len after buffer len check
-
-Eric Dumazet <edumazet@google.com>
-    batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-
-Tiwei Bie <tiwei.bie@intel.com>
-    vhost/test: fix build for vhost test
-
-Vignesh R <vigneshr@ti.com>
-    PCI: dra7xx: Fix legacy INTD IRQ handling
-
-Niklas Cassel <niklas.cassel@axis.com>
-    PCI: designware-ep: Fix find_first_zero_bit() usage
-
-Eric Dumazet <edumazet@google.com>
-    ip6: fix skb leak in ip6frag_expire_frag_queue()
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    xfrm: clean up xfrm protocol checks
-
-Gustavo Romero <gromero@linux.ibm.com>
-    powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    drm/vmwgfx: Fix double free in vmw_recv_msg()
-
-Liangyan <liangyan.peng@linux.alibaba.com>
-    sched/fair: Don't assign runtime for throttled cfs_rq
-
-Hui Wang <hui.wang@canonical.com>
-    ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda/realtek - Fix overridden device-specific initialization
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda - Fix potential endless loop at applying quirks
-
-
--------------
-
-Diffstat:
-
- Makefile                                       |  4 +--
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |  2 ++
- arch/powerpc/kernel/head_64.S                  |  2 ++
- arch/powerpc/kernel/process.c                  |  3 ++-
- drivers/clk/clk-s2mps11.c                      |  2 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c            |  8 +++---
- drivers/pci/dwc/pci-dra7xx.c                   |  3 ++-
- drivers/pci/dwc/pcie-designware-ep.c           | 34 ++++++++++++++++++++------
- drivers/pci/dwc/pcie-designware.h              |  8 ++++--
- drivers/vhost/test.c                           | 13 +++++++---
- drivers/vhost/vhost.c                          | 10 +++++---
- include/net/ipv6_frag.h                        |  1 -
- include/net/xfrm.h                             | 17 +++++++++++++
- kernel/module.c                                | 22 +++++++++++++----
- kernel/sched/fair.c                            |  5 ++++
- net/batman-adv/bat_iv_ogm.c                    | 20 +++++++++------
- net/batman-adv/netlink.c                       |  2 +-
- net/key/af_key.c                               |  4 ++-
- net/vmw_vsock/hyperv_transport.c               |  8 ++++++
- net/xfrm/xfrm_state.c                          |  2 +-
- net/xfrm/xfrm_user.c                           | 14 +----------
- scripts/decode_stacktrace.sh                   |  2 +-
- sound/pci/hda/hda_auto_parser.c                |  4 +--
- sound/pci/hda/hda_generic.c                    |  3 ++-
- sound/pci/hda/hda_generic.h                    |  1 +
- sound/pci/hda/patch_realtek.c                  |  4 +++
- 26 files changed, 137 insertions(+), 61 deletions(-)
+--- a/sound/pci/hda/hda_auto_parser.c
++++ b/sound/pci/hda/hda_auto_parser.c
+@@ -828,6 +828,8 @@ static void apply_fixup(struct hda_codec
+ 	while (id >= 0) {
+ 		const struct hda_fixup *fix = codec->fixup_list + id;
+ 
++		if (++depth > 10)
++			break;
+ 		if (fix->chained_before)
+ 			apply_fixup(codec, fix->chain_id, action, depth + 1);
+ 
+@@ -867,8 +869,6 @@ static void apply_fixup(struct hda_codec
+ 		}
+ 		if (!fix->chained || fix->chained_before)
+ 			break;
+-		if (++depth > 10)
+-			break;
+ 		id = fix->chain_id;
+ 	}
+ }
 
 
