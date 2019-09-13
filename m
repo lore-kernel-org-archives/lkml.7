@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00242C4CECA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76E4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF59208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC19208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fCguyrRZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fCguyrRZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KsllB6Em";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KsllB6Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403805AbfIMV7z (ORCPT
+        id S2403930AbfIMWAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:59:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60104 "EHLO
+        Fri, 13 Sep 2019 18:00:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59988 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390559AbfIMV7x (ORCPT
+        with ESMTP id S2390350AbfIMV7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:59:53 -0400
+        Fri, 13 Sep 2019 17:59:52 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D10846141D; Fri, 13 Sep 2019 21:59:52 +0000 (UTC)
+        id EC264613A6; Fri, 13 Sep 2019 21:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411992;
-        bh=rmhnZDa5DvGyEFcw8DBTGLtXibcXJptqhTVYshv2Dc0=;
+        s=default; t=1568411990;
+        bh=PdwMJsA9h89YRbDUO1YMlOlH2+m9AQqQkm7xDJFf0jQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCguyrRZhptn9hkMLD8LhOUGm47YnF8a7XCBbsO6hZUFaK3ofylISPbLs7uCs4Pph
-         y+xnttDVufQBS1k4zw8wi71oIVzVs1DqD/PI5+GFPH1+oPhiyoIoVBL99xmcrrDyNU
-         CkztHJyM1zfcLwLspk6mwEf1h9X03177Iy+w4++k=
+        b=KsllB6EmSPRPeZKRIyykgAO0eUava43hncoPY7JCxMPWRh1fGinfiQc28YDpQmCGl
+         IQv1/oEZHRK2dJK2XpsZLsQkJtIQnuYwD55zFjH+oq9UF9DIM2yxOCw4z+FMBqMm1N
+         8NG+2/UZhCkOmXubu5dicruAO8gOwSKDJXxL45Ag=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D25161418;
-        Fri, 13 Sep 2019 21:59:51 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9132A611CE;
+        Fri, 13 Sep 2019 21:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568411992;
-        bh=rmhnZDa5DvGyEFcw8DBTGLtXibcXJptqhTVYshv2Dc0=;
+        s=default; t=1568411990;
+        bh=PdwMJsA9h89YRbDUO1YMlOlH2+m9AQqQkm7xDJFf0jQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCguyrRZhptn9hkMLD8LhOUGm47YnF8a7XCBbsO6hZUFaK3ofylISPbLs7uCs4Pph
-         y+xnttDVufQBS1k4zw8wi71oIVzVs1DqD/PI5+GFPH1+oPhiyoIoVBL99xmcrrDyNU
-         CkztHJyM1zfcLwLspk6mwEf1h9X03177Iy+w4++k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D25161418
+        b=KsllB6EmSPRPeZKRIyykgAO0eUava43hncoPY7JCxMPWRh1fGinfiQc28YDpQmCGl
+         IQv1/oEZHRK2dJK2XpsZLsQkJtIQnuYwD55zFjH+oq9UF9DIM2yxOCw4z+FMBqMm1N
+         8NG+2/UZhCkOmXubu5dicruAO8gOwSKDJXxL45Ag=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9132A611CE
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -55,9 +55,9 @@ To:     swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC v2 11/14] drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
-Date:   Fri, 13 Sep 2019 15:59:19 -0600
-Message-Id: <1568411962-1022-12-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH RFC v2 09/14] drivers: irqchip: pdc: Add irqchip set/get state calls
+Date:   Fri, 13 Sep 2019 15:59:17 -0600
+Message-Id: <1568411962-1022-10-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
 References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
@@ -66,63 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interrupt parents for wakeup capable GPIOs for Qualcomm SDM845 SoC.
+From: Maulik Shah <mkshah@codeaurora.org>
 
+Add irqchip calls to set/get interrupt state from the parent interrupt
+controller. When GPIOs are renabled as interrupt lines, it is desirable
+to clear the interrupt state at the GIC. This avoids any unwanted
+interrupt as a result of stale pending state recorded when the line was
+used as a GPIO.
+
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+[updated commit text]
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
-Changes in RFC v2:
-	- Rearranged GPIO wakeup parent map
----
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/irqchip/qcom-pdc.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index 39f498c..9cff3a4 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-  */
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index affb0bfa..2b49e70 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -5,6 +5,7 @@
  
- #include <linux/acpi.h>
-@@ -1282,6 +1282,24 @@ static const int sdm845_acpi_reserved_gpios[] = {
- 	0, 1, 2, 3, 81, 82, 83, 84, -1
- };
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+@@ -87,6 +88,24 @@ static void qcom_pdc_gic_disable(struct irq_data *d)
+ 	irq_chip_disable_parent(d);
+ }
  
-+static const struct msm_gpio_wakeirq_map sdm845_pdc_map[] = {
-+	{ 1, 30 }, { 3, 31 }, { 5, 32 }, { 10, 33 }, { 11, 34 },
-+	{ 20, 35 }, { 22, 36 }, { 24, 37 }, { 26, 38 }, { 30, 39 },
-+	{ 31, 117 }, { 32, 41 }, { 34, 42 }, { 36, 43 }, { 37, 44 },
-+	{ 38, 45 }, { 39, 46 }, { 40, 47 }, { 41, 115 }, { 43, 49 },
-+	{ 44, 50 }, { 46, 51 }, { 48, 52 }, { 49, 118 }, { 52, 54 },
-+	{ 53, 55 }, { 54, 56 }, { 56, 57 }, { 57, 58 }, { 58, 59 },
-+	{ 59, 60 }, { 60, 61 }, { 61, 62 }, { 62, 63 }, { 63, 64 },
-+	{ 64, 65 }, { 66, 66 }, { 68, 67 }, { 71, 68 }, { 73, 69 },
-+	{ 77, 70 }, { 78, 71 }, { 79, 72 }, { 80, 73 }, { 84, 74 },
-+	{ 85, 75 }, { 86, 76 }, { 88, 77 }, { 89, 116 }, { 91, 79 },
-+	{ 92, 80 }, { 95, 81 }, { 96, 82 }, { 97, 83 }, { 101, 84 },
-+	{ 103, 85 }, { 104, 86 }, { 115, 90 }, { 116, 91 }, { 117, 92 },
-+	{ 118, 93 }, { 119, 94 }, { 120, 95 }, { 121, 96 }, { 122, 97 },
-+	{ 123, 98 }, { 124, 99 }, { 125, 100 }, { 127, 102 }, { 128, 103 },
-+	{ 129, 104 }, { 130, 105 }, { 132, 106 }, { 133, 107 }, { 145, 108 },
-+};
++static int qcom_pdc_gic_get_irqchip_state(struct irq_data *d,
++		enum irqchip_irq_state which, bool *state)
++{
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return 0;
 +
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.pins = sdm845_pins,
- 	.npins = ARRAY_SIZE(sdm845_pins),
-@@ -1290,6 +1308,9 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.groups = sdm845_groups,
- 	.ngroups = ARRAY_SIZE(sdm845_groups),
- 	.ngpios = 151,
-+	.wakeirq_map = sdm845_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(sdm845_pdc_map),
++	return irq_chip_get_parent_state(d, which, state);
++}
 +
- };
- 
- static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
++static int qcom_pdc_gic_set_irqchip_state(struct irq_data *d,
++		enum irqchip_irq_state which, bool value)
++{
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
++		return 0;
++
++	return irq_chip_set_parent_state(d, which, value);
++}
++
+ static void qcom_pdc_gic_enable(struct irq_data *d)
+ {
+ 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
+@@ -248,6 +267,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
+ 	.irq_unmask		= qcom_pdc_gic_unmask,
+ 	.irq_disable		= qcom_pdc_gic_disable,
+ 	.irq_enable		= qcom_pdc_gic_enable,
++	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
++	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ 	.irq_set_type		= qcom_pdc_gic_set_type,
+ 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
