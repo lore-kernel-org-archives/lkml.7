@@ -2,56 +2,58 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8015C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C67C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA93205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797B920640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381595;
-	bh=PAKaJQyWgyfTcBY6l1xp4O9eU92shj7WJb6AV3Ggkrk=;
+	s=default; t=1568381601;
+	bh=nSkMp5SsJUzwDtJgQta27vFYYjdo66MfE/icZS4DgVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXXg0/Vre276T6PcdVKSM4Unbakc72S2TQSPnYGFrE671kYUwroXuXiKddE/ygRJj
-	 D+RC+2aaxR2K9u7938SzvhwlSqlFnUVmIOrUP5Lt406Je0IR8hrUW4zlgWW4DY+vCl
-	 H+5nm5IznK8VKVKb5gDSI7a7pai8GBRghwqc5sts=
+	b=KkJeWlLbu2s5ggxUm9kQxtmAU2us9qtvBnV/ZgeBDeaVBOxYp/V+TxF+xuTQIgVN4
+	 9SVGInBnRgh9Zcby0urnvjt+SL+jBM3Txk6X3cxRYY7rsF3nq2o5mm8a4+H7W2tAtl
+	 5j1ci4cG3AVo53LtiPJESUVdKiBOUj5wmZ1deSe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391364AbfIMNdO (ORCPT
+        id S2388856AbfIMNLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387788AbfIMNLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:17 -0400
+        id S2388817AbfIMNKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:53 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97413208C2;
-        Fri, 13 Sep 2019 13:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EC31206A5;
+        Fri, 13 Sep 2019 13:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380277;
-        bh=PAKaJQyWgyfTcBY6l1xp4O9eU92shj7WJb6AV3Ggkrk=;
+        s=default; t=1568380253;
+        bh=nSkMp5SsJUzwDtJgQta27vFYYjdo66MfE/icZS4DgVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pYVZ7PdTvHp+g+kAsK8+OpwvXIMBM5zSGQMQxApDLeI+lpnkW7KJmJ/e0vDvO/WR9
-         3ZNkZJd/xpvPeJqVZdhkNESABvksFl8o/oxSJK6ib3a4lvajXdpNu6krhP8BbMbsS8
-         tRffp5CuleArV8hPJc6fpWMcWiQr4YZ1fQs3KeE8=
+        b=bcmr7NHIrMy7WB3sm4Mo0Qt3Um7yehCDoFd4snlHoB18r+Z0F24yr3KEi5+9cJqmN
+         YrCo0x3vNNqpVpbhZMDX6eJD+CcE9kJ0rhNIf5C0bdswKHhUT2grVSRqO4u1mj2eVC
+         Fo+oVbg0DOzlgc0wDeFryhqa9MkmtreKOBmo3YAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/190] hv_sock: Fix hang when a connection is closed
-Date:   Fri, 13 Sep 2019 14:04:28 +0100
-Message-Id: <20190913130600.658336649@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.14 07/21] xfrm: clean up xfrm protocol checks
+Date:   Fri, 13 Sep 2019 14:07:00 +0100
+Message-Id: <20190913130504.096382429@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
-References: <20190913130559.669563815@linuxfoundation.org>
+In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
+References: <20190913130501.285837292@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,69 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 685703b497bacea8765bb409d6b73455b73c540e ]
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-There is a race condition for an established connection that is being closed
-by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
-'remove_sock' is false):
+commit dbb2483b2a46fbaf833cfb5deb5ed9cace9c7399 upstream.
 
-1 for the initial value;
-1 for the sk being in the bound list;
-1 for the sk being in the connected list;
-1 for the delayed close_work.
+In commit 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
+I introduced a check for xfrm protocol, but according to Herbert
+IPSEC_PROTO_ANY should only be used as a wildcard for lookup, so
+it should be removed from validate_tmpl().
 
-After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
-decrease the refcnt to 3.
+And, IPSEC_PROTO_ANY is expected to only match 3 IPSec-specific
+protocols, this is why xfrm_state_flush() could still miss
+IPPROTO_ROUTING, which leads that those entries are left in
+net->xfrm.state_all before exit net. Fix this by replacing
+IPSEC_PROTO_ANY with zero.
 
-Concurrently, hvs_close_connection() runs in another thread:
-  calls vsock_remove_sock() to decrease the refcnt by 2;
-  call sock_put() to decrease the refcnt to 0, and free the sk;
-  next, the "release_sock(sk)" may hang due to use-after-free.
+This patch also extracts the check from validate_tmpl() to
+xfrm_id_proto_valid() and uses it in parse_ipsecrequest().
+With this, no other protocols should be added into xfrm.
 
-In the above, after hvs_release() finishes, if hvs_close_connection() runs
-faster than "__vsock_release() -> sock_put(sk)", then there is not any issue,
-because at the beginning of hvs_close_connection(), the refcnt is still 4.
+Fixes: 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
+Reported-by: syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The issue can be resolved if an extra reference is taken when the
-connection is established.
-
-Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/hyperv_transport.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/net/xfrm.h    |   17 +++++++++++++++++
+ net/key/af_key.c      |    4 +++-
+ net/xfrm/xfrm_state.c |    2 +-
+ net/xfrm/xfrm_user.c  |   14 +-------------
+ 4 files changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 9c7da811d130f..98f193fd5315e 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -320,6 +320,11 @@ static void hvs_close_connection(struct vmbus_channel *chan)
- 	lock_sock(sk);
- 	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
-+
-+	/* Release the refcnt for the channel that's opened in
-+	 * hvs_open_connection().
-+	 */
-+	sock_put(sk);
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1366,6 +1366,23 @@ static inline int xfrm_state_kern(const
+ 	return atomic_read(&x->tunnel_users);
  }
  
- static void hvs_open_connection(struct vmbus_channel *chan)
-@@ -388,6 +393,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
++static inline bool xfrm_id_proto_valid(u8 proto)
++{
++	switch (proto) {
++	case IPPROTO_AH:
++	case IPPROTO_ESP:
++	case IPPROTO_COMP:
++#if IS_ENABLED(CONFIG_IPV6)
++	case IPPROTO_ROUTING:
++	case IPPROTO_DSTOPTS:
++#endif
++		return true;
++	default:
++		return false;
++	}
++}
++
++/* IPSEC_PROTO_ANY only matches 3 IPsec protocols, 0 could match all. */
+ static inline int xfrm_id_proto_match(u8 proto, u8 userproto)
+ {
+ 	return (!userproto || proto == userproto ||
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -1951,8 +1951,10 @@ parse_ipsecrequest(struct xfrm_policy *x
+ 
+ 	if (rq->sadb_x_ipsecrequest_mode == 0)
+ 		return -EINVAL;
++	if (!xfrm_id_proto_valid(rq->sadb_x_ipsecrequest_proto))
++		return -EINVAL;
+ 
+-	t->id.proto = rq->sadb_x_ipsecrequest_proto; /* XXX check proto */
++	t->id.proto = rq->sadb_x_ipsecrequest_proto;
+ 	if ((mode = pfkey_mode_to_xfrm(rq->sadb_x_ipsecrequest_mode)) < 0)
+ 		return -EINVAL;
+ 	t->mode = mode;
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -2330,7 +2330,7 @@ void xfrm_state_fini(struct net *net)
+ 	unsigned int sz;
+ 
+ 	flush_work(&net->xfrm.state_hash_work);
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
++	xfrm_state_flush(net, 0, false);
+ 	flush_work(&xfrm_state_gc_work);
+ 
+ 	WARN_ON(!list_empty(&net->xfrm.state_all));
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1489,20 +1489,8 @@ static int validate_tmpl(int nr, struct
+ 			return -EINVAL;
+ 		}
+ 
+-		switch (ut[i].id.proto) {
+-		case IPPROTO_AH:
+-		case IPPROTO_ESP:
+-		case IPPROTO_COMP:
+-#if IS_ENABLED(CONFIG_IPV6)
+-		case IPPROTO_ROUTING:
+-		case IPPROTO_DSTOPTS:
+-#endif
+-		case IPSEC_PROTO_ANY:
+-			break;
+-		default:
++		if (!xfrm_id_proto_valid(ut[i].id.proto))
+ 			return -EINVAL;
+-		}
+-
  	}
  
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
-+
-+	/* This reference will be dropped by hvs_close_connection(). */
-+	sock_hold(conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
- 	/* Set the pending send size to max packet size to always get
--- 
-2.20.1
-
+ 	return 0;
 
 
