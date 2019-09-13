@@ -2,78 +2,63 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F243C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E528C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B2720692
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72048206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 20:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfIMUGW convert rfc822-to-8bit (ORCPT
+        id S2388568AbfIMUG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 16:06:22 -0400
-Received: from mailoutvs39.siol.net ([185.57.226.230]:47326 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730930AbfIMUGV (ORCPT
+        Fri, 13 Sep 2019 16:06:59 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48710 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730185AbfIMUG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 16:06:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 1A96A522590;
-        Fri, 13 Sep 2019 22:06:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Yu6tDdrqQ1J6; Fri, 13 Sep 2019 22:06:18 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id B54C1522597;
-        Fri, 13 Sep 2019 22:06:18 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id D201E522590;
-        Fri, 13 Sep 2019 22:06:16 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date:   Fri, 13 Sep 2019 22:06:15 +0200
-Message-ID: <6033065.vD0Azduf8t@jernej-laptop>
-In-Reply-To: <20190913091147.42nsldzxwzfjoiak@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <4613446.95M5L3lKvs@jernej-laptop> <20190913091147.42nsldzxwzfjoiak@localhost.localdomain>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Sep 2019 16:06:59 -0400
+Received: from localhost (93-63-141-166.ip28.fastwebnet.it [93.63.141.166])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ED4C41539B17F;
+        Fri, 13 Sep 2019 13:06:56 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 21:06:55 +0100 (WEST)
+Message-Id: <20190913.210655.1982553055937864765.davem@davemloft.net>
+To:     maowenan@huawei.com
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 net 0/3] fix memory leak for sctp_do_bind
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190912040219.67517-1-maowenan@huawei.com>
+References: <7a450679-40ca-8a84-4cba-7a16f22ea3c0@huawei.com>
+        <20190912040219.67517-1-maowenan@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 13 Sep 2019 13:06:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Mao Wenan <maowenan@huawei.com>
+Date: Thu, 12 Sep 2019 12:02:16 +0800
 
-Dne petek, 13. september 2019 ob 11:11:47 CEST je Maxime Ripard napisal(a):
-> Hi,
+> First two patches are to do cleanup, remove redundant assignment,
+> and change return type of sctp_get_port_local.
+> Third patch is to fix memory leak for sctp_do_bind if failed
+> to bind address.
 > 
-> On Thu, Sep 12, 2019 at 10:43:28PM +0200, Jernej Škrabec wrote:
-> > Dne četrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard 
-napisal(a):
-> > > > +	clk_set_rate(dev->mod_clk, 300000000);
-> 
-> I just realized I missed this too. If you really need the rate to be
-> fixed, and if the controller cannot operate properly at any other
-> frequency, you probably want to use clk_set_rate_exclusive there.
+> ---
+>  v2: add one patch to change return type of sctp_get_port_local.
 
-I don't think that's needed. Parents of deinterlace clock are pll-periph0 and 
-pll-periph1 which both have fixed clock and thus deinterlace clock will never 
-be changed. I just set it to same frequency as it is set in BSP driver. I 
-think it works with 600 MHz too, but that's overkill.
+Series applied with Fixes: tag removed from patch #1.
 
-Best regards,
-Jernej 
-
-
-
+Thanks.
