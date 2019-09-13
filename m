@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEFCC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208D5205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECAA205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381518;
-	bh=dJNcMUrF4d+5ai/nzCp/2wnmvg7jODEbqCsqyHQX1bI=;
+	s=default; t=1568381526;
+	bh=UUoHt1rrBOdqn11d3un8b9stphkaG4XRwE4Cyn9LGMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vzjxX9ZN8rjSLJyjbSRCd/C7yBU3OWqR0RTbDFbaitUCjxToaFw7Altf19AyHmP7m
-	 gOlebMrvBoCiObt2+bLu7Djv1euormiBA3jtQRrBAf3F06NSlbfaAm6+yeEWL2qsjg
-	 GZWDJFnZkate1r9xL7MKkRQ2TissuHZyapkJomDA=
+	b=dnRUG/mCyd2IivGNSNrPZpuEW1wSjSaSyw1KsHhDyDuq6z+5U/V/+ItACzcLiLp85
+	 wepuno8RQtsZLVFXVKqYc2m0iKbuivlH0O9eyzUQhxOJvZJGph/e7qcfZu6H0PI0lg
+	 Dih2fLt9MT+vO9qSGKCUPQO1bn+SZQHyl6cjjqJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391280AbfIMNb4 (ORCPT
+        id S2388608AbfIMNNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40178 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388894AbfIMNOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:14:17 -0400
+        id S2389388AbfIMNNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:47 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96CF9206BB;
-        Fri, 13 Sep 2019 13:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 646C0206BB;
+        Fri, 13 Sep 2019 13:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380456;
-        bh=dJNcMUrF4d+5ai/nzCp/2wnmvg7jODEbqCsqyHQX1bI=;
+        s=default; t=1568380426;
+        bh=UUoHt1rrBOdqn11d3un8b9stphkaG4XRwE4Cyn9LGMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAw9N/4h6MxRgW3Gbj1w8YNs1voV1wx019TVeuXEwJbbGv3iE2eQPFsKrDNR70TbO
-         6/3QcZCKP16ZvOKKlupJ+osjMPCwHT+kDdzlRJfTt5IdOUCID6rnWi2U6DODQ0mlq5
-         tdyxFmjICNa1Ztz+yDOVmcm+AD5vnx4jsTX0rhik=
+        b=aGgIWHknBJPwQIZ9Rbc7UQiKALcKIoUsBmV1lfk6VaXJK8suJEy07C294CVREgce1
+         c+jC3l/rAD1UWziNgPC3Q5VNfasqMo1WzNu+eniNOQ73HhGXUb0kWipU0Jvy2DVooc
+         yJJHuCbEC+NikrYn14Ko0/iDmvA22bmWkUBBSyy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, ronald@innovation.ch,
-        Imre Deak <imre.deak@intel.com>,
+        stable@vger.kernel.org, Ladi Prosek <lprosek@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/190] drm/i915/gen9+: Fix initial readout for Y tiled framebuffers
-Date:   Fri, 13 Sep 2019 14:05:02 +0100
-Message-Id: <20190913130603.530686793@linuxfoundation.org>
+Subject: [PATCH 4.19 043/190] KVM: hyperv: define VP assist page helpers
+Date:   Fri, 13 Sep 2019 14:04:58 +0100
+Message-Id: <20190913130603.202370862@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -64,87 +62,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 914a4fd8cd28016038ce749a818a836124a8d270 ]
+[ Upstream commit 72bbf9358c3676bd89dc4bd8fb0b1f2a11c288fc ]
 
-If BIOS configured a Y tiled FB we failed to set up the backing object
-tiling accordingly, leading to a lack of GT fence installed and a
-garbled console.
+The state related to the VP assist page is still managed by the LAPIC
+code in the pv_eoi field.
 
-The problem was bisected to
-commit 011f22eb545a ("drm/i915: Do NOT skip the first 4k of stolen memory for pre-allocated buffers v2")
-but it just revealed a pre-existing issue.
-
-Kudos to Ville who suspected a missing fence looking at the corruption
-on the screen.
-
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: <ronald@innovation.ch>
-Cc: <stable@vger.kernel.org>
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reported-by: <ronald@innovation.ch>
-Tested-by: <ronald@innovation.ch>
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108264
-Fixes: bc8d7dffacb1 ("drm/i915/skl: Provide a Skylake version of get_plane_config()")
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181016160011.28347-1-imre.deak@intel.com
+Signed-off-by: Ladi Prosek <lprosek@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_display.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ arch/x86/kvm/hyperv.c | 23 +++++++++++++++++++++--
+ arch/x86/kvm/hyperv.h |  4 ++++
+ arch/x86/kvm/lapic.c  |  4 ++--
+ arch/x86/kvm/lapic.h  |  2 +-
+ arch/x86/kvm/x86.c    |  2 +-
+ 5 files changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index f5367bdc04049..2622dfc7d2d9a 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -2712,6 +2712,17 @@ intel_alloc_initial_plane_obj(struct intel_crtc *crtc,
- 	if (size_aligned * 2 > dev_priv->stolen_usable_size)
- 		return false;
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 2bb554b90b3c2..5842c5f587fe9 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -691,6 +691,24 @@ void kvm_hv_vcpu_uninit(struct kvm_vcpu *vcpu)
+ 		stimer_cleanup(&hv_vcpu->stimer[i]);
+ }
  
-+	switch (fb->modifier) {
-+	case DRM_FORMAT_MOD_LINEAR:
-+	case I915_FORMAT_MOD_X_TILED:
-+	case I915_FORMAT_MOD_Y_TILED:
-+		break;
-+	default:
-+		DRM_DEBUG_DRIVER("Unsupported modifier for initial FB: 0x%llx\n",
-+				 fb->modifier);
++bool kvm_hv_assist_page_enabled(struct kvm_vcpu *vcpu)
++{
++	if (!(vcpu->arch.hyperv.hv_vapic & HV_X64_MSR_VP_ASSIST_PAGE_ENABLE))
 +		return false;
-+	}
++	return vcpu->arch.pv_eoi.msr_val & KVM_MSR_ENABLED;
++}
++EXPORT_SYMBOL_GPL(kvm_hv_assist_page_enabled);
 +
- 	mutex_lock(&dev->struct_mutex);
- 	obj = i915_gem_object_create_stolen_for_preallocated(dev_priv,
- 							     base_aligned,
-@@ -2721,8 +2732,17 @@ intel_alloc_initial_plane_obj(struct intel_crtc *crtc,
- 	if (!obj)
- 		return false;
- 
--	if (plane_config->tiling == I915_TILING_X)
--		obj->tiling_and_stride = fb->pitches[0] | I915_TILING_X;
-+	switch (plane_config->tiling) {
-+	case I915_TILING_NONE:
-+		break;
-+	case I915_TILING_X:
-+	case I915_TILING_Y:
-+		obj->tiling_and_stride = fb->pitches[0] | plane_config->tiling;
-+		break;
-+	default:
-+		MISSING_CASE(plane_config->tiling);
++bool kvm_hv_get_assist_page(struct kvm_vcpu *vcpu,
++			    struct hv_vp_assist_page *assist_page)
++{
++	if (!kvm_hv_assist_page_enabled(vcpu))
 +		return false;
-+	}
++	return !kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.pv_eoi.data,
++				      assist_page, sizeof(*assist_page));
++}
++EXPORT_SYMBOL_GPL(kvm_hv_get_assist_page);
++
+ static void stimer_prepare_msg(struct kvm_vcpu_hv_stimer *stimer)
+ {
+ 	struct hv_message *msg = &stimer->msg;
+@@ -1076,7 +1094,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
  
- 	mode_cmd.pixel_format = fb->format->format;
- 	mode_cmd.width = fb->width;
-@@ -8812,6 +8832,7 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
- 		fb->modifier = I915_FORMAT_MOD_X_TILED;
+ 		if (!(data & HV_X64_MSR_VP_ASSIST_PAGE_ENABLE)) {
+ 			hv_vcpu->hv_vapic = data;
+-			if (kvm_lapic_enable_pv_eoi(vcpu, 0))
++			if (kvm_lapic_enable_pv_eoi(vcpu, 0, 0))
+ 				return 1;
+ 			break;
+ 		}
+@@ -1089,7 +1107,8 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
+ 		hv_vcpu->hv_vapic = data;
+ 		kvm_vcpu_mark_page_dirty(vcpu, gfn);
+ 		if (kvm_lapic_enable_pv_eoi(vcpu,
+-					    gfn_to_gpa(gfn) | KVM_MSR_ENABLED))
++					    gfn_to_gpa(gfn) | KVM_MSR_ENABLED,
++					    sizeof(struct hv_vp_assist_page)))
+ 			return 1;
  		break;
- 	case PLANE_CTL_TILED_Y:
-+		plane_config->tiling = I915_TILING_Y;
- 		if (val & PLANE_CTL_RENDER_DECOMPRESSION_ENABLE)
- 			fb->modifier = I915_FORMAT_MOD_Y_TILED_CCS;
- 		else
+ 	}
+diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+index d6aa969e20f19..0e66c12ed2c3d 100644
+--- a/arch/x86/kvm/hyperv.h
++++ b/arch/x86/kvm/hyperv.h
+@@ -62,6 +62,10 @@ void kvm_hv_vcpu_init(struct kvm_vcpu *vcpu);
+ void kvm_hv_vcpu_postcreate(struct kvm_vcpu *vcpu);
+ void kvm_hv_vcpu_uninit(struct kvm_vcpu *vcpu);
+ 
++bool kvm_hv_assist_page_enabled(struct kvm_vcpu *vcpu);
++bool kvm_hv_get_assist_page(struct kvm_vcpu *vcpu,
++			    struct hv_vp_assist_page *assist_page);
++
+ static inline struct kvm_vcpu_hv_stimer *vcpu_to_stimer(struct kvm_vcpu *vcpu,
+ 							int timer_index)
+ {
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 5f5bc59768042..5427fd0aa97e1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2633,7 +2633,7 @@ int kvm_hv_vapic_msr_read(struct kvm_vcpu *vcpu, u32 reg, u64 *data)
+ 	return 0;
+ }
+ 
+-int kvm_lapic_enable_pv_eoi(struct kvm_vcpu *vcpu, u64 data)
++int kvm_lapic_enable_pv_eoi(struct kvm_vcpu *vcpu, u64 data, unsigned long len)
+ {
+ 	u64 addr = data & ~KVM_MSR_ENABLED;
+ 	if (!IS_ALIGNED(addr, 4))
+@@ -2643,7 +2643,7 @@ int kvm_lapic_enable_pv_eoi(struct kvm_vcpu *vcpu, u64 data)
+ 	if (!pv_eoi_enabled(vcpu))
+ 		return 0;
+ 	return kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.pv_eoi.data,
+-					 addr, sizeof(u8));
++					 addr, len);
+ }
+ 
+ void kvm_apic_accept_events(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index ed0ed39abd369..ff6ef9c3d760c 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -120,7 +120,7 @@ static inline bool kvm_hv_vapic_assist_page_enabled(struct kvm_vcpu *vcpu)
+ 	return vcpu->arch.hyperv.hv_vapic & HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
+ }
+ 
+-int kvm_lapic_enable_pv_eoi(struct kvm_vcpu *vcpu, u64 data);
++int kvm_lapic_enable_pv_eoi(struct kvm_vcpu *vcpu, u64 data, unsigned long len);
+ void kvm_lapic_init(void);
+ void kvm_lapic_exit(void);
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c27ce60590905..86e35df8fbce3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2494,7 +2494,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 
+ 		break;
+ 	case MSR_KVM_PV_EOI_EN:
+-		if (kvm_lapic_enable_pv_eoi(vcpu, data))
++		if (kvm_lapic_enable_pv_eoi(vcpu, data, sizeof(u8)))
+ 			return 1;
+ 		break;
+ 
 -- 
 2.20.1
 
