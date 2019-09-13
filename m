@@ -2,244 +2,112 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F378C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9F2206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EE72084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfIMM4S (ORCPT
+        id S1730214AbfIMM6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:56:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43212 "EHLO mx1.suse.de"
+        Fri, 13 Sep 2019 08:58:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44456 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726771AbfIMM4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:56:18 -0400
+        id S1729863AbfIMM6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:58:10 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 20133AF16;
-        Fri, 13 Sep 2019 12:56:15 +0000 (UTC)
-Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-5-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <7c8d1570-3b07-719a-01d3-59bd32c51366@suse.de>
-Date:   Fri, 13 Sep 2019 14:56:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.suse.de (Postfix) with ESMTP id 5CB5BB0B3;
+        Fri, 13 Sep 2019 12:58:08 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Breno Leitao <leitao@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Stanley <joel@jms.id.au>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Hildenbrand <david@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v9 1/8] powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+Date:   Fri, 13 Sep 2019 14:57:55 +0200
+Message-Id: <2e5c00c054f5a1c8ea4b5944685940af0665bfc1.1568319275.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1568319275.git.msuchanek@suse.de>
+References: <cover.1568319275.git.msuchanek@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="01I9AVx8wLpLKz26gC3vdxN95YMACFY2y"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---01I9AVx8wLpLKz26gC3vdxN95YMACFY2y
-Content-Type: multipart/mixed; boundary="ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
- Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-Message-ID: <7c8d1570-3b07-719a-01d3-59bd32c51366@suse.de>
-Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-5-kraxel@redhat.com>
-In-Reply-To: <20190913122908.784-5-kraxel@redhat.com>
+This partially reverts commit caf6f9c8a326 ("asm-generic: Remove
+unneeded __ARCH_WANT_SYS_LLSEEK macro")
 
---ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
 
-Hi
+There is resistance to both removing the llseek syscall from the 64bit
+syscall tables and building the llseek interface unconditionally.
 
-Am 13.09.19 um 14:29 schrieb Gerd Hoffmann:
-> Factor out ttm vma setup to a new function.  Reduces
-> code duplication a bit and allows to implement
-> &drm_gem_object_funcs.mmap in gem ttm helpers.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/ttm/ttm_bo_api.h    |  8 ++++++
->  drivers/gpu/drm/ttm/ttm_bo_vm.c | 47 ++++++++++++++++++---------------=
+Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
+Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
 
->  2 files changed, 33 insertions(+), 22 deletions(-)
->=20
-> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.=
-h
-> index 43c4929a2171..88c652f49602 100644
-> --- a/include/drm/ttm/ttm_bo_api.h
-> +++ b/include/drm/ttm/ttm_bo_api.h
-> @@ -734,6 +734,14 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
-uct ttm_buffer_object *bo);
->  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
->  		struct ttm_bo_device *bdev);
-> =20
-> +/**
-> + * ttm_bo_mmap_vma_setup - initialize vma for ttm bo mmap
-> + *
-> + * @bo: The buffer object.
-> + * @vma: vma as input from the mmap method.
-> + */
-> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
-a_struct *vma);
-> +
->  void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
-> =20
->  void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_=
-bo_vm.c
-> index 4aa007edffb0..7c0e85c10e0e 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -426,6 +426,29 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(=
-struct ttm_bo_device *bdev,
->  	return bo;
->  }
-> =20
-> +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_are=
-a_struct *vma)
-> +{
-> +	vma->vm_ops =3D &ttm_bo_vm_ops;
-> +
-> +	/*
-> +	 * Note: We're transferring the bo reference to
-> +	 * vma->vm_private_data here.
-> +	 */
-> +
-> +	vma->vm_private_data =3D bo;
-> +
-> +	/*
-> +	 * We'd like to use VM_PFNMAP on shared mappings, where
-> +	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
-> +	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
-> +	 * bad for performance. Until that has been sorted out, use
-> +	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
-> +	 */
-> +	vma->vm_flags |=3D VM_MIXEDMAP;
-> +	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-> +}
-> +EXPORT_SYMBOL(ttm_bo_mmap_vma_setup);
-> +
->  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
->  		struct ttm_bo_device *bdev)
->  {
-> @@ -449,24 +472,7 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_=
-struct *vma,
->  	if (unlikely(ret !=3D 0))
->  		goto out_unref;
-> =20
-> -	vma->vm_ops =3D &ttm_bo_vm_ops;
-> -
-> -	/*
-> -	 * Note: We're transferring the bo reference to
-> -	 * vma->vm_private_data here.
-> -	 */
-> -
-> -	vma->vm_private_data =3D bo;
-> -
-> -	/*
-> -	 * We'd like to use VM_PFNMAP on shared mappings, where
-> -	 * (vma->vm_flags & VM_SHARED) !=3D 0, for performance reasons,
-> -	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
-> -	 * bad for performance. Until that has been sorted out, use
-> -	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
-> -	 */
-> -	vma->vm_flags |=3D VM_MIXEDMAP;
-> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-> +	ttm_bo_mmap_vma_setup(bo, vma);
->  	return 0;
->  out_unref:
->  	ttm_bo_put(bo);
-> @@ -481,10 +487,7 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, str=
-uct ttm_buffer_object *bo)
-> =20
->  	ttm_bo_get(bo);
-> =20
-> -	vma->vm_ops =3D &ttm_bo_vm_ops;
-> -	vma->vm_private_data =3D bo;
-> -	vma->vm_flags |=3D VM_MIXEDMAP;
-> -	vma->vm_flags |=3D VM_IO | VM_DONTEXPAND;
-> +	ttm_bo_mmap_vma_setup(bo, vma);
-Just double-checking:  ttm_bo_mmap_vma_setup() will set VM_DONTDUMP in
-vm_flags. Is that OK?
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/powerpc/include/asm/unistd.h | 1 +
+ fs/read_write.c                   | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Best regards
-Thomas
+diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
+index b0720c7c3fcf..700fcdac2e3c 100644
+--- a/arch/powerpc/include/asm/unistd.h
++++ b/arch/powerpc/include/asm/unistd.h
+@@ -31,6 +31,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ #define __ARCH_WANT_SYS_OLD_UNAME
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 5bbf587f5bc1..89aa2701dbeb 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -331,7 +331,8 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
+ }
+ #endif
+ 
+-#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
++#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT) || \
++	defined(__ARCH_WANT_SYS_LLSEEK)
+ SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
+ 		unsigned long, offset_low, loff_t __user *, result,
+ 		unsigned int, whence)
+-- 
+2.23.0
 
->  	return 0;
->  }
->  EXPORT_SYMBOL(ttm_fbdev_mmap);
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---ZQ3vYwpbCndbYAU2F0Y1252ZFwvBh0VpG--
-
---01I9AVx8wLpLKz26gC3vdxN95YMACFY2y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl17kewACgkQaA3BHVML
-eiNnzwf/U7y5Zywsc1PInKlLN4S5M55DLwTWa6WMEbkDNDlmiHFT/T3Lj0EFBYmJ
-VfoKAgRdaY5/eWN/Gw1Wxi/BHyhPaCYTxaOEjllz4qiQwzlIYtzUmThl2n8TOb88
-gDtg7wYwOYvNTH+8D5VY0gXYhuklgBZkdYnH8FCHaVyKRuIyflTGD8xF7bGAQcuF
-8y4EwAK8vCA442ccUEa6MfsFHrvhsUtcX7c5ljE6NF2yPIAEAH8ANC0CSR79dtoN
-WyCd2E1I2T7zDVcRMfC8mzASBjjpsod/Y8nQYlIvN5z9k+i36eSOEELKHwL3zr6g
-webkH9iuq7zjr3mUoMtMwdi4mgfh2A==
-=MaVs
------END PGP SIGNATURE-----
-
---01I9AVx8wLpLKz26gC3vdxN95YMACFY2y--
