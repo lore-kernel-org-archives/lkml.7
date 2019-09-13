@@ -2,85 +2,135 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35382C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F943C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01657206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568412102;
-	bh=fUTEfA0XCPIjUoxGbNxcsNTgP5CrQTXhEMZCCQ4JXhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JvweTt0V01gh9afqNmvYPfTvtDhGMl82eglZYhoKr2COVkg5L1Z7A46W1kJ834GNe
-	 yZSkPXtbh/3MMOT7JVSmsWPqIDoNSPcSkYrVmYyq+37KT++kvKsfMhqtzBd7H4qx/0
-	 HZNp9YpTGIRgMiH/ZtXOJjp8Lj1WTQvthFumKFHc=
+	by mail.kernel.org (Postfix) with ESMTP id 74995208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZKFaxzvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403958AbfIMWBl (ORCPT
+        id S2390498AbfIMWDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:01:41 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43726 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389815AbfIMWBl (ORCPT
+        Fri, 13 Sep 2019 18:03:23 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41877 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389617AbfIMWDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:01:41 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t84so3884624oih.10;
-        Fri, 13 Sep 2019 15:01:40 -0700 (PDT)
+        Fri, 13 Sep 2019 18:03:23 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so18900235pfo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5OuUUYePxpHluCqMl7cvfllWii8PgjzTxgE9+4rxXRM=;
+        b=ZKFaxzvWbhRmu4uN/9qxncrxzMsoDyXA3zns7wrGS75pXmzy0AKIHEhTb5ikpfucyR
+         c3XuA4tHbMivSmlOavtBIf/v8rQxgAgkdlQXPCd4heteRYJHEATd/4UlHvGJTngZjT87
+         mZw6Po9kl50Ad/koB+J1mrjckoQCmoJ/0yadY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NhX4q4VvHbxL/YFwtYgsj7GHy+7WGzMk/sM+hDn3XjY=;
-        b=e0MMXgN3HjOjicjL8rm5PX7wMyau6lGtrmqX+QRoBElImog6eDpDaKlWKl1+R/Ml50
-         NjDqLoZvH/V7pvZJqEYOxIRx5Zr2/45gLsr2EzOANw6gcI8XUoDFEaq7VTUFHCaMNRXY
-         HFYdI3USEak15CEIgDuCwezyLyG0mjZ6oovXFP+p4n1GiUZxx1bdhkwSYCZpPWW2MOjL
-         5pdew7IqfF1rKW0T2hu4tncR0kbcKatObIGgyD4n9zYfKu+kaXEk0M7JTaLWUUNwxtiV
-         LRW29mc5wJYwVWcAKI51qtBg15ZAZOw7QfvjPmN7Q0xTmii/2TmYSTDIZbGusnsK3oIv
-         vzyg==
-X-Gm-Message-State: APjAAAWOVl8jCzVRR3rfavegNf/gfbS24Xy4157TStngu8JtOeyQKuWy
-        N2EKZSBmJUjqrcDQYrKuTQ==
-X-Google-Smtp-Source: APXvYqyMN6cGhqQElJmPF0IJsDj8JgHPGW102AuveDAChh2mS8gBIHVvwPO4qeAYrkFmDMbX3MGMWg==
-X-Received: by 2002:aca:3ed7:: with SMTP id l206mr5582343oia.25.1568412100159;
-        Fri, 13 Sep 2019 15:01:40 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n23sm620772oie.24.2019.09.13.15.01.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5OuUUYePxpHluCqMl7cvfllWii8PgjzTxgE9+4rxXRM=;
+        b=OS/rjJiTuy3oFEtjQdc/aB16q8//yo1lXXVMNdpyN6CWa7x8khszClVblJhEY2nvsK
+         KK/sAup6caIB11P7CQMtSRwM8Wj0MVAG14m8e+Bw6EpChfbH4fQU3JngmK0yQ9j9me9O
+         u/uOtG8xKR89JXKAY5wm9AZk+TC4XBfAhGdEwM3ZyflLuCCB+rIoQKG4EpKsXegtTqiu
+         NQBIH5kO9r6MSGcqOZ5YHwxNEPKfzofC3+sWRdJot/Bh2bmXkC/YqyNZstjBHRbxbCrj
+         g4IZZQp8Or64NAQKIJHpRL8XLB00K46GpCqgPyZi+34gBkWa0a+h+XtPRMk0nZbdLweC
+         AVjA==
+X-Gm-Message-State: APjAAAW35TLD+gXl66Z9kUms98olANPNYRFel4SZ+gXdjig9KWe/8ivv
+        Q0eIThs+8QyJcNF7I8SDHqi7Rw==
+X-Google-Smtp-Source: APXvYqzKmKHK77rdEuBzDi0l1gLCv207/3lzWYVAdIll1ShglSz2Vkv1JOJ6nXMEhcOaN+r8ppGAtw==
+X-Received: by 2002:a63:29c7:: with SMTP id p190mr9445210pgp.124.1568412202462;
+        Fri, 13 Sep 2019 15:03:22 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o19sm2524486pjr.23.2019.09.13.15.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 15:01:39 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 17:01:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: qcom: fix spelling mistake "ambigous" -> "ambiguous"
-Message-ID: <20190913220138.GA17592@bogus>
-References: <20190911153947.10203-1-colin.king@canonical.com>
+        Fri, 13 Sep 2019 15:03:21 -0700 (PDT)
+From:   Dmitry Torokhov <dtor@chromium.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] HID: google: whiskers: signal tablet mode switch on disconnect
+Date:   Fri, 13 Sep 2019 15:03:16 -0700
+Message-Id: <20190913220317.58289-2-dtor@chromium.org>
+X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
+In-Reply-To: <20190913220317.58289-1-dtor@chromium.org>
+References: <20190913220317.58289-1-dtor@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911153947.10203-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Sep 2019 16:39:47 +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake on the documentation. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Currently, the tablet mode switch that takes two signals as its input:
+base attached switch from the EC and some GMR signal from whiskers when
+it's folded over. This tablet mode switch is then sent to Chrome, which
+changes the UI.
 
-Applied, thanks.
+However, there are some units which have a lot of leakage on the ADC
+pins that the EC uses to determine whether or not a base is attached.
+This can result in the base being physically detached, but the EC
+thinking that it's still attached. The user would then be stuck in
+laptop mode and wouldn't be able to rotate their display.
 
-Rob
+To work around this let's send "tablet mode" signal when we remove HID
+interface, which normally happens when we physically disconnect
+whiskers.
+
+Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+---
+ drivers/hid/hid-google-hammer.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index 4f64f93ddfcb..3dc6116c8f76 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -498,11 +498,33 @@ static int hammer_probe(struct hid_device *hdev,
+ 
+ static void hammer_remove(struct hid_device *hdev)
+ {
++	unsigned long flags;
++
+ 	if (hdev->product == USB_DEVICE_ID_GOOGLE_WHISKERS &&
+-			hammer_is_keyboard_interface(hdev))
++			hammer_is_keyboard_interface(hdev)) {
+ 		hid_hw_close(hdev);
+ 
++		/*
++		 * If we are disconnecting then most likely Whiskers is
++		 * being removed. Even if it is not removed, without proper
++		 * keyboard we should not stay in clamshell mode.
++		 *
++		 * The reason for doing it here and not waiting for signal
++		 * from EC, is that on some devices there are high leakage
++		 * on Whiskers pins and we do not detect disconnect reliably,
++		 * resulting in devices being stuck in clamshell mode.
++		 */
++		spin_lock_irqsave(&cbas_ec_lock, flags);
++		if (cbas_ec.input && cbas_ec.base_present) {
++			input_report_switch(cbas_ec.input, SW_TABLET_MODE, 1);
++			input_sync(cbas_ec.input);
++		}
++		cbas_ec.base_present = false;
++		spin_unlock_irqrestore(&cbas_ec_lock, flags);
++	}
++
+ 	hammer_unregister_leds(hdev);
++
+ 	hid_hw_stop(hdev);
+ }
+ 
+-- 
+2.23.0.237.gc6a4ce50a0-goog
+
