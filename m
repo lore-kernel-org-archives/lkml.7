@@ -2,155 +2,107 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213F1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA78AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014D9206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF07C206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:32:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FGjNcf2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbfIMM3N (ORCPT
+        id S1730056AbfIMMcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:29:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57132 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbfIMM3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:29:13 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7BF418C892F;
-        Fri, 13 Sep 2019 12:29:12 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 940C45C219;
-        Fri, 13 Sep 2019 12:29:11 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 58C6931F38; Fri, 13 Sep 2019 14:29:09 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
-Date:   Fri, 13 Sep 2019 14:29:04 +0200
-Message-Id: <20190913122908.784-5-kraxel@redhat.com>
-In-Reply-To: <20190913122908.784-1-kraxel@redhat.com>
-References: <20190913122908.784-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 13 Sep 2019 12:29:12 +0000 (UTC)
+        Fri, 13 Sep 2019 08:32:54 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40879 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729686AbfIMMcx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:32:53 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so1011489oib.7
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 05:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aEYQIpGLFGpiORmG/YphEOzgf9q35cmGzwyvDDgVdfI=;
+        b=FGjNcf2SPFV0dd3loyWVFwUayH+0IxcwiJUIy6dOXzuWyTtY0y8QecA2uy4lmYKsG1
+         CMqEqSrjgFPK34+KsCcAk8aFSYR8wM1rd8knXHlpm0swDLuB1bPvjezhnbLs5zn5QpnB
+         vlI+rH+4JXjhYTz07jyFpa8RpZoRVt1tjWiObn43kbMbegzBrGBk7o6lf9dpRdkBXId/
+         dFS2Ad/Sq9BX3cFMtQKq4Pl+71Nu3am8PKSM5oACJSWKBgn0UDqHKtTdIQNZnKlOF9Te
+         wJXBmMZeG+zTcN4dtHh9Fonz2WBLnrAKY2j7oEOQcFy6uyShpUwU90dQXmQD/r9OxwIW
+         C5Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aEYQIpGLFGpiORmG/YphEOzgf9q35cmGzwyvDDgVdfI=;
+        b=nzcxO9kB8DpdyHi1tmFgSGutrzIaCDXkaIreENlitQfZJe51ihM0r4i/7lCtWPHMma
+         YblrWzpEFaai+v0sLcWuN5TPi3XXQGyLAVIMRAQ7H+euT7fTIsD28iFLqsi2JLuVLzE/
+         K1pQiXqfYL0XC8vYkkWr2tje8r3p1NAftevManvcsdWnHgEyQHlZ/qvisPtiCRfu8l1v
+         p8LHJDpkVY8nL37mOoNbIt+3d2208kih+hneMX5AAaYmlHjhDa3AlUvroAyLdVQBpfcR
+         u5PgzWD9MLvLdkc/5zGQyRTfzbka8XCzKom2KoL8ZEPfE/1qOhQ5ifG6x++YBaKG2N+p
+         fzNA==
+X-Gm-Message-State: APjAAAX2fz1+UtXbqmDh8x8P6psVl2sLSbzXSPfA6EkJMwK6GVeUQfMx
+        Itb5NVo/zTlY2R3WaL4vTK/lPo7QXjGIGLnjyf16CA==
+X-Google-Smtp-Source: APXvYqxrUrl9/dFIzDVCWG8qUEt2wyEuoV1i+6GilTuek7dV3WXIr7fJ+wGxFimvSr6IDdYWypN2jqOJ+uGNztYms48=
+X-Received: by 2002:aca:4b05:: with SMTP id y5mr1860258oia.70.1568377973003;
+ Fri, 13 Sep 2019 05:32:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156712995374.1616117.8463747608355533922.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu_6zkq0cfp715sn-boGD=ZVDJ-Xk7venkQb1Gry_hxoeg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_6zkq0cfp715sn-boGD=ZVDJ-Xk7venkQb1Gry_hxoeg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 13 Sep 2019 05:32:41 -0700
+Message-ID: <CAPcyv4jRR1aYta9bNSBKqq4Hf+CQPW9UmpkEfqxJMui129JQjQ@mail.gmail.com>
+Subject: Re: [PATCH v5 03/10] x86, efi: Push EFI_MEMMAP check into leaf routines
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out ttm vma setup to a new function.  Reduces
-code duplication a bit and allows to implement
-&drm_gem_object_funcs.mmap in gem ttm helpers.
+On Fri, Sep 13, 2019 at 2:06 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Fri, 30 Aug 2019 at 03:06, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > In preparation for adding another EFI_MEMMAP dependent call that needs
+> > to occur before e820__memblock_setup() fixup the existing efi calls to
+> > check for EFI_MEMMAP internally. This ends up being cleaner than the
+> > alternative of checking EFI_MEMMAP multiple times in setup_arch().
+> >
+> > Cc: <x86@kernel.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> I'd prefer it if the spurious whitespace changes could be dropped, but
+> otherwise, this looks fine to me, so I am not going to obsess about
+> it.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- include/drm/ttm/ttm_bo_api.h    |  8 ++++++
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 47 ++++++++++++++++++---------------
- 2 files changed, 33 insertions(+), 22 deletions(-)
+Fair point, I'll drop those when I resubmit after -rc1.
 
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 43c4929a2171..88c652f49602 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -734,6 +734,14 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
- int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
- 		struct ttm_bo_device *bdev);
- 
-+/**
-+ * ttm_bo_mmap_vma_setup - initialize vma for ttm bo mmap
-+ *
-+ * @bo: The buffer object.
-+ * @vma: vma as input from the mmap method.
-+ */
-+void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_area_struct *vma);
-+
- void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
- 
- void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 4aa007edffb0..7c0e85c10e0e 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -426,6 +426,29 @@ static struct ttm_buffer_object *ttm_bo_vm_lookup(struct ttm_bo_device *bdev,
- 	return bo;
- }
- 
-+void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_area_struct *vma)
-+{
-+	vma->vm_ops = &ttm_bo_vm_ops;
-+
-+	/*
-+	 * Note: We're transferring the bo reference to
-+	 * vma->vm_private_data here.
-+	 */
-+
-+	vma->vm_private_data = bo;
-+
-+	/*
-+	 * We'd like to use VM_PFNMAP on shared mappings, where
-+	 * (vma->vm_flags & VM_SHARED) != 0, for performance reasons,
-+	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
-+	 * bad for performance. Until that has been sorted out, use
-+	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
-+	 */
-+	vma->vm_flags |= VM_MIXEDMAP;
-+	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-+}
-+EXPORT_SYMBOL(ttm_bo_mmap_vma_setup);
-+
- int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
- 		struct ttm_bo_device *bdev)
- {
-@@ -449,24 +472,7 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
- 	if (unlikely(ret != 0))
- 		goto out_unref;
- 
--	vma->vm_ops = &ttm_bo_vm_ops;
--
--	/*
--	 * Note: We're transferring the bo reference to
--	 * vma->vm_private_data here.
--	 */
--
--	vma->vm_private_data = bo;
--
--	/*
--	 * We'd like to use VM_PFNMAP on shared mappings, where
--	 * (vma->vm_flags & VM_SHARED) != 0, for performance reasons,
--	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
--	 * bad for performance. Until that has been sorted out, use
--	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
--	 */
--	vma->vm_flags |= VM_MIXEDMAP;
--	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
-+	ttm_bo_mmap_vma_setup(bo, vma);
- 	return 0;
- out_unref:
- 	ttm_bo_put(bo);
-@@ -481,10 +487,7 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
- 
- 	ttm_bo_get(bo);
- 
--	vma->vm_ops = &ttm_bo_vm_ops;
--	vma->vm_private_data = bo;
--	vma->vm_flags |= VM_MIXEDMAP;
--	vma->vm_flags |= VM_IO | VM_DONTEXPAND;
-+	ttm_bo_mmap_vma_setup(bo, vma);
- 	return 0;
- }
- EXPORT_SYMBOL(ttm_fbdev_mmap);
--- 
-2.18.1
+> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
+Thanks!
