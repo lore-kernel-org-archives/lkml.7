@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B0CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0134C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786B12089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78999206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380213;
-	bh=eFOTFJwtAfNBqRCj+iWOaH/R8rthngrWfSDc49ovITY=;
+	s=default; t=1568380216;
+	bh=8YSDy2u6E/WVlGythR0eFFxaJtGt2InuQirVz2+ZNxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eViFrEqdDhZRqE/VVH4FpdA1UpgP2gWNwg5E9i9fXLGKyI68F1GA46Z+O7PH/d+7z
-	 NChDtKeRSe7GRjw+lCthDrNz6DWdRRbNm2YscZ8crMdMuWOxw3vCls21zHdtOU1zYT
-	 i6HN57bSgVCXgEXWL63Hjd1wdYObf+edyZtClWPs=
+	b=07A09zAWyXO4cQAGn024n6rE5KLG+SeN4K53KqPP7r4kpl2vgnNRJt+wwGOSphMS/
+	 i6a0piqlLjxcz+B9ifX2FF5zstfjxaUJWZu7dPTfdSPe5U/hXMlrVGdlZ3JzcQDe3G
+	 l+ky6HygyuK+2Jc4PvSYIsyP2yELTowXUeoR5fvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbfIMNKM (ORCPT
+        id S2388714AbfIMNKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388665AbfIMNKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:10:09 -0400
+        id S2388699AbfIMNKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:10:12 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03892206BB;
-        Fri, 13 Sep 2019 13:10:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A0E206BB;
+        Fri, 13 Sep 2019 13:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380208;
-        bh=eFOTFJwtAfNBqRCj+iWOaH/R8rthngrWfSDc49ovITY=;
+        s=default; t=1568380211;
+        bh=8YSDy2u6E/WVlGythR0eFFxaJtGt2InuQirVz2+ZNxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEEUVhY2H3s4H5Tzi9DNwST7pkTUHKpxq/yd3RdyA7163qaZolVuc8YL7RKHK3lyL
-         kakEMM4PvpOxm4ZjCV7IjAMo9T1DiXLMUgPYn995lxhGWRpWhsmPRfEq8LVhA0kZRy
-         LFTDnyYWaHXOOMz9hS9Hkg/kbectH/mV3kYceWj0=
+        b=boRA7D3qceiW9b6vt/MTrjj7H8gbUtOuJ6NimOD4m613X79SkFed12305+ehErjRM
+         uiKm8HC2flTBpAnabz0GqR85A835bbcCkuW7otg9096VRvusx/Xe9BdWIkkpL3oWvs
+         mfSOHh+3UJDnMy1IzPTSri8A6h9HnZNwqrnmPkOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/21] hv_sock: Fix hang when a connection is closed
-Date:   Fri, 13 Sep 2019 14:07:07 +0100
-Message-Id: <20190913130507.116698849@linuxfoundation.org>
+Subject: [PATCH 4.14 15/21] powerpc/64: mark start_here_multiplatform as __ref
+Date:   Fri, 13 Sep 2019 14:07:08 +0100
+Message-Id: <20190913130507.324567227@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
 References: <20190913130501.285837292@linuxfoundation.org>
@@ -61,67 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 685703b497bacea8765bb409d6b73455b73c540e ]
+[ Upstream commit 9c4e4c90ec24652921e31e9551fcaedc26eec86d ]
 
-There is a race condition for an established connection that is being closed
-by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
-'remove_sock' is false):
+Otherwise, the following warning is encountered:
 
-1 for the initial value;
-1 for the sk being in the bound list;
-1 for the sk being in the connected list;
-1 for the delayed close_work.
+WARNING: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup()
+The function start_here_multiplatform() references
+the function __init .early_setup().
+This is often because start_here_multiplatform lacks a __init
+annotation or the annotation of .early_setup is wrong.
 
-After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
-decrease the refcnt to 3.
-
-Concurrently, hvs_close_connection() runs in another thread:
-  calls vsock_remove_sock() to decrease the refcnt by 2;
-  call sock_put() to decrease the refcnt to 0, and free the sk;
-  next, the "release_sock(sk)" may hang due to use-after-free.
-
-In the above, after hvs_release() finishes, if hvs_close_connection() runs
-faster than "__vsock_release() -> sock_put(sk)", then there is not any issue,
-because at the beginning of hvs_close_connection(), the refcnt is still 4.
-
-The issue can be resolved if an extra reference is taken when the
-connection is established.
-
-Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 56c46bba9bbf ("powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX")
+Cc: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/hyperv_transport.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/powerpc/kernel/head_64.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 52ac3e49c7efd..ec72a5edaa1b8 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -320,6 +320,11 @@ static void hvs_close_connection(struct vmbus_channel *chan)
- 	lock_sock(sk);
- 	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
-+
-+	/* Release the refcnt for the channel that's opened in
-+	 * hvs_open_connection().
-+	 */
-+	sock_put(sk);
- }
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 4f2e18266e34a..8c04c51a6e148 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -897,6 +897,7 @@ p_toc:	.8byte	__toc_start + 0x8000 - 0b
+ /*
+  * This is where the main kernel code starts.
+  */
++__REF
+ start_here_multiplatform:
+ 	/* set up the TOC */
+ 	bl      relative_toc
+@@ -972,6 +973,7 @@ start_here_multiplatform:
+ 	RFI
+ 	b	.	/* prevent speculative execution */
  
- static void hvs_open_connection(struct vmbus_channel *chan)
-@@ -389,6 +394,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 	}
++	.previous
+ 	/* This is where all platforms converge execution */
  
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
-+
-+	/* This reference will be dropped by hvs_close_connection(). */
-+	sock_hold(conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
- 	/* Set the pending send size to max packet size to always get
+ start_here_common:
 -- 
 2.20.1
 
