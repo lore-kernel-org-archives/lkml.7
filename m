@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC02AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB07214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8C620717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380675;
-	bh=X1WLh8m5qUM/4GsLtFFx8PoxJ0mo2dnLrxq/Zk8hGoY=;
+	s=default; t=1568380679;
+	bh=OoFd6LHIGfcy+8FuV5qUsgVRuSFH1j4po4DWiHEIOVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+749SVxUSbnl0zDjHV5lApGo0CuxjY8m851Q0TqnrNDz5Jf/EwK0LN/HVk80Aesl
-	 wnh0Cun35TaSaC3H3xjDmP/IwQKOqlQ663JjPpBwap0cHI5L3w277eJGHv+vjeZRMS
-	 D0FM3t00PL9SBKsMTioffuddDLpri5HyUZTiq4W4=
+	b=JhdGiGPVJ0Kpt9aA2sQikuTmMqArdNDOXfqHjznIgRCGCogI3+vR/BxfR6nGu+0zp
+	 5GIa3VysVIhnwL4miQHCIzHOKf7dHZJpa9tO2wtLodT8sLurGhFv2rhQW3/tpV110I
+	 kUsNEWm1eEUXDc8ptVEKGvaRHM7+1vOTD9Mxcn1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390128AbfIMNRy (ORCPT
+        id S2390135AbfIMNR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45194 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390112AbfIMNRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:50 -0400
+        id S2390122AbfIMNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:53 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81C3206BB;
-        Fri, 13 Sep 2019 13:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8EAF20717;
+        Fri, 13 Sep 2019 13:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380669;
-        bh=X1WLh8m5qUM/4GsLtFFx8PoxJ0mo2dnLrxq/Zk8hGoY=;
+        s=default; t=1568380672;
+        bh=OoFd6LHIGfcy+8FuV5qUsgVRuSFH1j4po4DWiHEIOVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AaMfd7b3tdmSNNnM1adIj1+WlYiN41PWglED86nWuSePYcaMzMeWmqC3OztULMB0g
-         ZirGP6zxT9frxFwcWB7sy1FKAhek7zsEOau9dEmqwtl+nzkrv55zjo8P+vjC9sfQtz
-         J8rMx9zdJWMTFVUz/pEAOZHwmzA0JcigMQQ6r3/E=
+        b=vaK14gbPyH+5XpmIWxfKar1ky+R1Nnr+EON9PRBjWIE3EhgCFmywi5mGV6XksBQV3
+         c6sIgvQmfHNKhl2Yik8A1blYsrS7GlDZ5Mh5znCyhfP7lyGdFrcoOJRrKYhsdGJPEA
+         AQBUTz7xzCPuHtoaxYy7ND6jHw8+INbtHNdKL1KU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
+        stable@vger.kernel.org,
+        Koen Vandeputte <koen.vandeputte@ncentric.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/190] cifs: Fix lease buffer length error
-Date:   Fri, 13 Sep 2019 14:06:11 +0100
-Message-Id: <20190913130609.066285882@linuxfoundation.org>
+Subject: [PATCH 4.19 117/190] media: i2c: tda1997x: select V4L2_FWNODE
+Date:   Fri, 13 Sep 2019 14:06:12 +0100
+Message-Id: <20190913130609.164200975@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,85 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b57a55e2200ede754e4dc9cce4ba9402544b9365 ]
+[ Upstream commit 5f2efda71c09b12012053f457fac7692f268b72c ]
 
-There is a KASAN slab-out-of-bounds:
-BUG: KASAN: slab-out-of-bounds in _copy_from_iter_full+0x783/0xaa0
-Read of size 80 at addr ffff88810c35e180 by task mount.cifs/539
+Building tda1997x fails now unless V4L2_FWNODE is selected:
 
-CPU: 1 PID: 539 Comm: mount.cifs Not tainted 4.19 #10
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-            rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-Call Trace:
- dump_stack+0xdd/0x12a
- print_address_description+0xa7/0x540
- kasan_report+0x1ff/0x550
- check_memory_region+0x2f1/0x310
- memcpy+0x2f/0x80
- _copy_from_iter_full+0x783/0xaa0
- tcp_sendmsg_locked+0x1840/0x4140
- tcp_sendmsg+0x37/0x60
- inet_sendmsg+0x18c/0x490
- sock_sendmsg+0xae/0x130
- smb_send_kvec+0x29c/0x520
- __smb_send_rqst+0x3ef/0xc60
- smb_send_rqst+0x25a/0x2e0
- compound_send_recv+0x9e8/0x2af0
- cifs_send_recv+0x24/0x30
- SMB2_open+0x35e/0x1620
- open_shroot+0x27b/0x490
- smb2_open_op_close+0x4e1/0x590
- smb2_query_path_info+0x2ac/0x650
- cifs_get_inode_info+0x1058/0x28f0
- cifs_root_iget+0x3bb/0xf80
- cifs_smb3_do_mount+0xe00/0x14c0
- cifs_do_mount+0x15/0x20
- mount_fs+0x5e/0x290
- vfs_kern_mount+0x88/0x460
- do_mount+0x398/0x31e0
- ksys_mount+0xc6/0x150
- __x64_sys_mount+0xea/0x190
- do_syscall_64+0x122/0x590
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+drivers/media/i2c/tda1997x.o: in function `tda1997x_parse_dt'
+undefined reference to `v4l2_fwnode_endpoint_parse'
 
-It can be reproduced by the following step:
-  1. samba configured with: server max protocol = SMB2_10
-  2. mount -o vers=default
+While at it, also sort the selections alphabetically
 
-When parse the mount version parameter, the 'ops' and 'vals'
-was setted to smb30,  if negotiate result is smb21, just
-update the 'ops' to smb21, but the 'vals' is still smb30.
-When add lease context, the iov_base is allocated with smb21
-ops, but the iov_len is initiallited with the smb30. Because
-the iov_len is longer than iov_base, when send the message,
-copy array out of bounds.
+Fixes: 9ac0038db9a7 ("media: i2c: Add TDA1997x HDMI receiver driver")
 
-we need to keep the 'ops' and 'vals' consistent.
-
-Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.1 and later)")
-Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
+Cc: stable@vger.kernel.org # v4.17+
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 2bc47eb6215e2..cbe633f1840a2 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -712,6 +712,7 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
- 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
- 			/* ops set to 3.0 by default for default so update */
- 			ses->server->ops = &smb21_operations;
-+			ses->server->vals = &smb21_values;
- 		}
- 	} else if (le16_to_cpu(rsp->DialectRevision) !=
- 				ses->server->vals->protocol_id) {
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 63c9ac2c6a5ff..8b1ae1d6680b7 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -60,8 +60,9 @@ config VIDEO_TDA1997X
+ 	tristate "NXP TDA1997x HDMI receiver"
+ 	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API
+ 	depends on SND_SOC
+-	select SND_PCM
+ 	select HDMI
++	select SND_PCM
++	select V4L2_FWNODE
+ 	---help---
+ 	  V4L2 subdevice driver for the NXP TDA1997x HDMI receivers.
+ 
 -- 
 2.20.1
 
