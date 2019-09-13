@@ -2,271 +2,384 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A9DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575F9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C79420640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381450;
-	bh=oLoLxCVWm85R5cD/wQVd3KJk46KFO1TqXFUdQI5TVY4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Of7Y7xsFeOBfAJV//Tz07+EaDtJ9bhjoFoP3+Nd2cqVePAEFpQwUR8rSpMA9a82Rz
-	 aShx4K2g/lWIcmudODVnYCZj4AORWxKTG+nuQlF5pnO4o5qHeT+lEdraqHEcwNS0tA
-	 QGlkilozC3o1hU1O6c7EBRoonIK1dlfpOo1Q0UR4=
+	by mail.kernel.org (Postfix) with ESMTP id 1C69F20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J9OjVEwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391685AbfIMNat (ORCPT
+        id S2391675AbfIMNaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388620AbfIMNQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:07 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A6DF206BB;
-        Fri, 13 Sep 2019 13:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380566;
-        bh=oLoLxCVWm85R5cD/wQVd3KJk46KFO1TqXFUdQI5TVY4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXcQ47xlt/O3UJSI3iwQJlH53xu069pHGXPRKBOYDof4dT0fhcgdVQXCllymLhy6q
-         IxceGzY47jJJMsC04hGnhHb6yB7g1DN9BvZ6ftkfCuL2NPy5DK/t5/qmdwXzKe/UFy
-         f8oABAkJ9u5cdTtEdCBvZpXnLtK9TRWQ1PUEXnBg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/190] CIFS: Fix error paths in writeback code
-Date:   Fri, 13 Sep 2019 14:06:01 +0100
-Message-Id: <20190913130608.148793825@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
-References: <20190913130559.669563815@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 13 Sep 2019 09:30:46 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47772 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388466AbfIMNam (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:30:42 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDUftG048250;
+        Fri, 13 Sep 2019 08:30:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568381441;
+        bh=2m6mcajPv1Z1K6pTrfmgnsJNvDFMJIV/odpPIq/CZSs=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=J9OjVEwbbn1AV68LT/W9hegOZjkQuS8E2MzQTsCGc7tb34XuGk9OZbRYo0h+Eu8Bj
+         cKMhOkzddegZq7aRIwjzvgmtLsCVYakc0yEqgYJ5kiG4h59Xnfnqv2vMB+SnmcZ3El
+         Zjv+JStqMUvTDkxNAe3SZ4v2AXU2i20/ZnKXMg5U=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDUe9u127213
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Sep 2019 08:30:41 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
+ Sep 2019 08:30:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 13 Sep 2019 08:30:40 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDUekJ057158;
+        Fri, 13 Sep 2019 08:30:40 -0500
+Date:   Fri, 13 Sep 2019 08:32:45 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 08/13] media: am437x-vpfe: Maintain a reference to the
+ current vpfe_fmt
+Message-ID: <20190913133245.6rvajfhlghbocuf4@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-9-bparrot@ti.com>
+ <8b3d5c23-6784-fb1c-5e14-f3759b10aa0b@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <8b3d5c23-6784-fb1c-5e14-f3759b10aa0b@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a66396f1857cc1de06f4f4771797315e1a4ea56 ]
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:14:45 +0200]:
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > Keep a reference to the currently selected struct vpfe_fmt * object.
+> > By doing so we rename the current struct v4l2_format * member from
+> > fmt to v_fmt.
+> > The added struct vpfe_fmt * reference is set to "const" so we also
+> > constify all accesses and related helper functions.
+> 
+> This explains what you do, but not why you do it.
 
-This patch aims to address writeback code problems related to error
-paths. In particular it respects EINTR and related error codes and
-stores and returns the first error occurred during writeback.
+Hmm ok I'll rework this a bit.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/cifs/cifsglob.h | 19 +++++++++++++++++++
- fs/cifs/cifssmb.c  |  7 ++++---
- fs/cifs/file.c     | 29 +++++++++++++++++++++++------
- fs/cifs/inode.c    | 10 ++++++++++
- 4 files changed, 56 insertions(+), 9 deletions(-)
+> 
+> And I think fmt vs v_fmt is *very* confusing naming.
 
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 6f227cc781e5d..0ee0072c1f362 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1563,6 +1563,25 @@ static inline void free_dfs_info_array(struct dfs_info3_param *param,
- 	kfree(param);
- }
- 
-+static inline bool is_interrupt_error(int error)
-+{
-+	switch (error) {
-+	case -EINTR:
-+	case -ERESTARTSYS:
-+	case -ERESTARTNOHAND:
-+	case -ERESTARTNOINTR:
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static inline bool is_retryable_error(int error)
-+{
-+	if (is_interrupt_error(error) || error == -EAGAIN)
-+		return true;
-+	return false;
-+}
-+
- #define   MID_FREE 0
- #define   MID_REQUEST_ALLOCATED 1
- #define   MID_REQUEST_SUBMITTED 2
-diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-index 269471c8f42bf..a5cb7b2d1ac5d 100644
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2042,7 +2042,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 
- 		for (j = 0; j < nr_pages; j++) {
- 			unlock_page(wdata2->pages[j]);
--			if (rc != 0 && rc != -EAGAIN) {
-+			if (rc != 0 && !is_retryable_error(rc)) {
- 				SetPageError(wdata2->pages[j]);
- 				end_page_writeback(wdata2->pages[j]);
- 				put_page(wdata2->pages[j]);
-@@ -2051,7 +2051,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 
- 		if (rc) {
- 			kref_put(&wdata2->refcount, cifs_writedata_release);
--			if (rc == -EAGAIN)
-+			if (is_retryable_error(rc))
- 				continue;
- 			break;
- 		}
-@@ -2060,7 +2060,8 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 		i += nr_pages;
- 	} while (i < wdata->nr_pages);
- 
--	mapping_set_error(inode->i_mapping, rc);
-+	if (rc != 0 && !is_retryable_error(rc))
-+		mapping_set_error(inode->i_mapping, rc);
- 	kref_put(&wdata->refcount, cifs_writedata_release);
- }
- 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 23cee91ed442e..933013543edab 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -749,7 +749,8 @@ reopen_success:
- 
- 	if (can_flush) {
- 		rc = filemap_write_and_wait(inode->i_mapping);
--		mapping_set_error(inode->i_mapping, rc);
-+		if (!is_interrupt_error(rc))
-+			mapping_set_error(inode->i_mapping, rc);
- 
- 		if (tcon->unix_ext)
- 			rc = cifs_get_inode_info_unix(&inode, full_path,
-@@ -2137,6 +2138,7 @@ static int cifs_writepages(struct address_space *mapping,
- 	pgoff_t end, index;
- 	struct cifs_writedata *wdata;
- 	int rc = 0;
-+	int saved_rc = 0;
- 
- 	/*
- 	 * If wsize is smaller than the page cache size, default to writing
-@@ -2163,8 +2165,10 @@ retry:
- 
- 		rc = server->ops->wait_mtu_credits(server, cifs_sb->wsize,
- 						   &wsize, &credits);
--		if (rc)
-+		if (rc != 0) {
-+			done = true;
- 			break;
-+		}
- 
- 		tofind = min((wsize / PAGE_SIZE) - 1, end - index) + 1;
- 
-@@ -2172,6 +2176,7 @@ retry:
- 						  &found_pages);
- 		if (!wdata) {
- 			rc = -ENOMEM;
-+			done = true;
- 			add_credits_and_wake_if(server, credits, 0);
- 			break;
- 		}
-@@ -2200,7 +2205,7 @@ retry:
- 		if (rc != 0) {
- 			add_credits_and_wake_if(server, wdata->credits, 0);
- 			for (i = 0; i < nr_pages; ++i) {
--				if (rc == -EAGAIN)
-+				if (is_retryable_error(rc))
- 					redirty_page_for_writepage(wbc,
- 							   wdata->pages[i]);
- 				else
-@@ -2208,7 +2213,7 @@ retry:
- 				end_page_writeback(wdata->pages[i]);
- 				put_page(wdata->pages[i]);
- 			}
--			if (rc != -EAGAIN)
-+			if (!is_retryable_error(rc))
- 				mapping_set_error(mapping, rc);
- 		}
- 		kref_put(&wdata->refcount, cifs_writedata_release);
-@@ -2218,6 +2223,15 @@ retry:
- 			continue;
- 		}
- 
-+		/* Return immediately if we received a signal during writing */
-+		if (is_interrupt_error(rc)) {
-+			done = true;
-+			break;
-+		}
-+
-+		if (rc != 0 && saved_rc == 0)
-+			saved_rc = rc;
-+
- 		wbc->nr_to_write -= nr_pages;
- 		if (wbc->nr_to_write <= 0)
- 			done = true;
-@@ -2235,6 +2249,9 @@ retry:
- 		goto retry;
- 	}
- 
-+	if (saved_rc != 0)
-+		rc = saved_rc;
-+
- 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
- 		mapping->writeback_index = index;
- 
-@@ -2266,8 +2283,8 @@ cifs_writepage_locked(struct page *page, struct writeback_control *wbc)
- 	set_page_writeback(page);
- retry_write:
- 	rc = cifs_partialpagewrite(page, 0, PAGE_SIZE);
--	if (rc == -EAGAIN) {
--		if (wbc->sync_mode == WB_SYNC_ALL)
-+	if (is_retryable_error(rc)) {
-+		if (wbc->sync_mode == WB_SYNC_ALL && rc == -EAGAIN)
- 			goto retry_write;
- 		redirty_page_for_writepage(wbc, page);
- 	} else if (rc != 0) {
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 1fadd314ae7f9..53f3d08898af8 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2261,6 +2261,11 @@ cifs_setattr_unix(struct dentry *direntry, struct iattr *attrs)
- 	 * the flush returns error?
- 	 */
- 	rc = filemap_write_and_wait(inode->i_mapping);
-+	if (is_interrupt_error(rc)) {
-+		rc = -ERESTARTSYS;
-+		goto out;
-+	}
-+
- 	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
- 
-@@ -2404,6 +2409,11 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
- 	 * the flush returns error?
- 	 */
- 	rc = filemap_write_and_wait(inode->i_mapping);
-+	if (is_interrupt_error(rc)) {
-+		rc = -ERESTARTSYS;
-+		goto cifs_setattr_exit;
-+	}
-+
- 	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
- 
--- 
-2.20.1
+Well in this case v_fmt stands for "v4l2_fmt" and depending on the function
+I was using fmt to either mean a vpfe_fmt pointer or a v4l2_format pointer
+so tried (and apparently failed) to make it clearer which was which.
 
-
-
+> 
+> I'd keep fmt as-is, and come up with a different name for the vpfe_fmt
+> pointer. ref_vpfe_fmt?
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 88 +++++++++++++--------
+> >  drivers/media/platform/am437x/am437x-vpfe.h |  3 +-
+> >  2 files changed, 55 insertions(+), 36 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index e76dc2b3b7b8..a8f6cf1d06a0 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -147,8 +147,8 @@ static int
+> >  __vpfe_get_format(struct vpfe_device *vpfe,
+> >  		  struct v4l2_format *format, unsigned int *bpp);
+> >  
+> > -static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+> > -					    unsigned int code)
+> > +static const struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+> > +						  unsigned int code)
+> >  {
+> >  	struct vpfe_fmt *fmt;
+> >  	unsigned int k;
+> > @@ -162,8 +162,8 @@ static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
+> >  	return NULL;
+> >  }
+> >  
+> > -static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+> > -					   unsigned int pixelformat)
+> > +static const struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
+> > +						 unsigned int pixelformat)
+> >  {
+> >  	struct vpfe_fmt *fmt;
+> >  	unsigned int k;
+> > @@ -184,7 +184,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
+> >  {
+> >  	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
+> >  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+> > -	struct vpfe_fmt *fmt;
+> > +	const struct vpfe_fmt *fmt;
+> >  
+> >  	fmt = find_format_by_code(vpfe, mbus->code);
+> >  	if (WARN_ON(fmt == NULL)) {
+> > @@ -207,7 +207,7 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+> >  			struct v4l2_pix_format *pix_fmt,
+> >  			struct v4l2_mbus_framefmt *mbus_fmt)
+> >  {
+> > -	struct vpfe_fmt *fmt;
+> > +	const struct vpfe_fmt *fmt;
+> >  
+> >  	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
+> >  	if (!fmt) {
+> > @@ -990,10 +990,10 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+> >  	vpfe_dbg(2, vpfe, "vpfe_config_ccdc_image_format\n");
+> >  
+> >  	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+> > -		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
+> > +		print_fourcc(vpfe->v_fmt.fmt.pix.pixelformat));
+> >  
+> >  	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
+> > -			vpfe->fmt.fmt.pix.pixelformat) < 0) {
+> > +			vpfe->v_fmt.fmt.pix.pixelformat) < 0) {
+> >  		vpfe_err(vpfe, "couldn't set pix format in ccdc\n");
+> >  		return -EINVAL;
+> >  	}
+> > @@ -1001,7 +1001,7 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+> >  	/* configure the image window */
+> >  	vpfe_ccdc_set_image_window(&vpfe->ccdc, &vpfe->crop, vpfe->bpp);
+> >  
+> > -	switch (vpfe->fmt.fmt.pix.field) {
+> > +	switch (vpfe->v_fmt.fmt.pix.field) {
+> >  	case V4L2_FIELD_INTERLACED:
+> >  		/* do nothing, since it is default */
+> >  		ret = vpfe_ccdc_set_buftype(
+> > @@ -1043,7 +1043,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+> >  static int vpfe_config_image_format(struct vpfe_device *vpfe,
+> >  				    v4l2_std_id std_id)
+> >  {
+> > -	struct v4l2_pix_format *pix = &vpfe->fmt.fmt.pix;
+> > +	const struct vpfe_fmt *fmt;
+> > +	struct v4l2_pix_format *pix = &vpfe->v_fmt.fmt.pix;
+> >  	int i, ret;
+> >  
+> >  	for (i = 0; i < ARRAY_SIZE(vpfe_standards); i++) {
+> > @@ -1078,10 +1079,18 @@ static int vpfe_config_image_format(struct vpfe_device *vpfe,
+> >  	else
+> >  		pix->field = V4L2_FIELD_NONE;
+> >  
+> > -	ret = __vpfe_get_format(vpfe, &vpfe->fmt, &vpfe->bpp);
+> > +	ret = __vpfe_get_format(vpfe, &vpfe->v_fmt, &vpfe->bpp);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	fmt = find_format_by_pix(vpfe, pix->pixelformat);
+> > +	if (!fmt) {
+> > +		vpfe_dbg(3, vpfe, "Invalid pixel code: %4.4s\n",
+> > +			 (char *)&pix->pixelformat);
+> > +		return -EINVAL;
+> > +	}
+> > +	vpfe->fmt = fmt;
+> > +
+> >  	/* Update the crop window based on found values */
+> >  	vpfe->crop.width = pix->width;
+> >  	vpfe->crop.height = pix->height;
+> > @@ -1227,7 +1236,7 @@ static inline void vpfe_schedule_bottom_field(struct vpfe_device *vpfe)
+> >  static inline void vpfe_process_buffer_complete(struct vpfe_device *vpfe)
+> >  {
+> >  	vpfe->cur_frm->vb.vb2_buf.timestamp = ktime_get_ns();
+> > -	vpfe->cur_frm->vb.field = vpfe->fmt.fmt.pix.field;
+> > +	vpfe->cur_frm->vb.field = vpfe->v_fmt.fmt.pix.field;
+> >  	vpfe->cur_frm->vb.sequence = vpfe->sequence++;
+> >  	vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, VB2_BUF_STATE_DONE);
+> >  	vpfe->cur_frm = vpfe->next_frm;
+> > @@ -1296,7 +1305,7 @@ static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
+> >  static irqreturn_t vpfe_isr(int irq, void *dev)
+> >  {
+> >  	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
+> > -	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
+> > +	enum v4l2_field field = vpfe->v_fmt.fmt.pix.field;
+> >  	int intr_status, stopping = vpfe->stopping;
+> >  
+> >  	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
+> > @@ -1397,7 +1406,7 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
+> >  		mbus_to_pix(vpfe, &mbus_fmt, &format->fmt.pix, bpp);
+> >  	}
+> >  
+> > -	format->type = vpfe->fmt.type;
+> > +	format->type = vpfe->v_fmt.type;
+> >  
+> >  	vpfe_dbg(1, vpfe,
+> >  		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+> > @@ -1434,7 +1443,7 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+> >  	v4l2_fill_pix_format(&format->fmt.pix, &fmt.format);
+> >  	mbus_to_pix(vpfe, &fmt.format, &format->fmt.pix, bpp);
+> >  
+> > -	format->type = vpfe->fmt.type;
+> > +	format->type = vpfe->v_fmt.type;
+> >  
+> >  	vpfe_dbg(1, vpfe,
+> >  		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+> > @@ -1452,7 +1461,7 @@ static int vpfe_g_fmt(struct file *file, void *priv,
+> >  
+> >  	vpfe_dbg(2, vpfe, "vpfe_g_fmt\n");
+> >  
+> > -	*fmt = vpfe->fmt;
+> > +	*fmt = vpfe->v_fmt;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -1496,9 +1505,10 @@ static int vpfe_try_fmt(struct file *file, void *priv,
+> >  }
+> >  
+> >  static int vpfe_s_fmt(struct file *file, void *priv,
+> > -		      struct v4l2_format *fmt)
+> > +		      struct v4l2_format *f)
+> >  {
+> >  	struct vpfe_device *vpfe = video_drvdata(file);
+> > +	const struct vpfe_fmt *fmt;
+> >  	struct v4l2_format format;
+> >  	unsigned int bpp;
+> >  	int ret;
+> > @@ -1515,25 +1525,32 @@ static int vpfe_s_fmt(struct file *file, void *priv,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -
+> > -	if (!cmp_v4l2_format(fmt, &format)) {
+> > +	if (!cmp_v4l2_format(f, &format)) {
+> >  		/* Sensor format is different from the requested format
+> >  		 * so we need to change it
+> >  		 */
+> > -		ret = __vpfe_set_format(vpfe, fmt, &bpp);
+> > +		ret = __vpfe_set_format(vpfe, f, &bpp);
+> >  		if (ret)
+> >  			return ret;
+> >  	} else /* Just make sure all of the fields are consistent */
+> > -		*fmt = format;
+> > +		*f = format;
+> > +
+> > +	fmt = find_format_by_pix(vpfe, f->fmt.pix.pixelformat);
+> > +	if (!fmt) {
+> > +		vpfe_dbg(3, vpfe, "Invalid pixel code: %4.4s, This should not happen!!\n",
+> > +			 (char *)&f->fmt.pix.pixelformat);
+> > +		return -EINVAL;
+> > +	}
+> >  
+> >  	/* First detach any IRQ if currently attached */
+> >  	vpfe_detach_irq(vpfe);
+> > -	vpfe->fmt = *fmt;
+> > +	vpfe->v_fmt = *f;
+> >  	vpfe->bpp = bpp;
+> > +	vpfe->fmt = fmt;
+> >  
+> >  	/* Update the crop window based on found values */
+> > -	vpfe->crop.width = fmt->fmt.pix.width;
+> > -	vpfe->crop.height = fmt->fmt.pix.height;
+> > +	vpfe->crop.width = f->fmt.pix.width;
+> > +	vpfe->crop.height = f->fmt.pix.height;
+> >  
+> >  	/* set image capture parameters in the ccdc */
+> >  	return vpfe_config_ccdc_image_format(vpfe);
+> > @@ -1547,7 +1564,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+> >  	struct vpfe_subdev_info *sdinfo;
+> >  	struct v4l2_mbus_framefmt mbus;
+> >  	struct v4l2_pix_format pix;
+> > -	struct vpfe_fmt *fmt;
+> > +	const struct vpfe_fmt *fmt;
+> >  	int ret;
+> >  
+> >  	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+> > @@ -1850,7 +1867,7 @@ static int vpfe_queue_setup(struct vb2_queue *vq,
+> >  			    unsigned int sizes[], struct device *alloc_devs[])
+> >  {
+> >  	struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> > -	unsigned size = vpfe->fmt.fmt.pix.sizeimage;
+> > +	unsigned int size = vpfe->v_fmt.fmt.pix.sizeimage;
+> >  
+> >  	if (vq->num_buffers + *nbuffers < 3)
+> >  		*nbuffers = 3 - vq->num_buffers;
+> > @@ -1886,12 +1903,12 @@ static int vpfe_buffer_prepare(struct vb2_buffer *vb)
+> >  	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+> >  	struct vpfe_device *vpfe = vb2_get_drv_priv(vb->vb2_queue);
+> >  
+> > -	vb2_set_plane_payload(vb, 0, vpfe->fmt.fmt.pix.sizeimage);
+> > +	vb2_set_plane_payload(vb, 0, vpfe->v_fmt.fmt.pix.sizeimage);
+> >  
+> >  	if (vb2_get_plane_payload(vb, 0) > vb2_plane_size(vb, 0))
+> >  		return -EINVAL;
+> >  
+> > -	vbuf->field = vpfe->fmt.fmt.pix.field;
+> > +	vbuf->field = vpfe->v_fmt.fmt.pix.field;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -2116,11 +2133,12 @@ vpfe_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
+> >  	s->r = vpfe->crop = r;
+> >  
+> >  	vpfe_ccdc_set_image_window(&vpfe->ccdc, &r, vpfe->bpp);
+> > -	vpfe->fmt.fmt.pix.width = r.width;
+> > -	vpfe->fmt.fmt.pix.height = r.height;
+> > -	vpfe->fmt.fmt.pix.bytesperline = vpfe_ccdc_get_line_length(&vpfe->ccdc);
+> > -	vpfe->fmt.fmt.pix.sizeimage = vpfe->fmt.fmt.pix.bytesperline *
+> > -						vpfe->fmt.fmt.pix.height;
+> > +	vpfe->v_fmt.fmt.pix.width = r.width;
+> > +	vpfe->v_fmt.fmt.pix.height = r.height;
+> > +	vpfe->v_fmt.fmt.pix.bytesperline =
+> > +		vpfe_ccdc_get_line_length(&vpfe->ccdc);
+> > +	vpfe->v_fmt.fmt.pix.sizeimage = vpfe->v_fmt.fmt.pix.bytesperline *
+> > +						vpfe->v_fmt.fmt.pix.height;
+> >  
+> >  	vpfe_dbg(1, vpfe, "cropped (%d,%d)/%dx%d of %dx%d\n",
+> >  		 r.left, r.top, r.width, r.height, cr.width, cr.height);
+> > @@ -2156,7 +2174,7 @@ static long vpfe_ioctl_default(struct file *file, void *priv,
+> >  			return ret;
+> >  		}
+> >  		ret = vpfe_get_ccdc_image_format(vpfe,
+> > -						 &vpfe->fmt);
+> > +						 &vpfe->v_fmt);
+> >  		if (ret < 0) {
+> >  			vpfe_dbg(2, vpfe,
+> >  				"Invalid image format at CCDC\n");
+> > @@ -2309,7 +2327,7 @@ static int vpfe_probe_complete(struct vpfe_device *vpfe)
+> >  	spin_lock_init(&vpfe->dma_queue_lock);
+> >  	mutex_init(&vpfe->lock);
+> >  
+> > -	vpfe->fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+> > +	vpfe->v_fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+> >  
+> >  	/* set first sub device as current one */
+> >  	vpfe->current_subdev = &vpfe->cfg->sub_devs[0];
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+> > index 6f25750f84e4..64a25bf720e4 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.h
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+> > @@ -280,7 +280,8 @@ struct vpfe_device {
+> >  	/* Pointer pointing to next v4l2_buffer */
+> >  	struct vpfe_cap_buffer *next_frm;
+> >  	/* Used to store pixel format */
+> > -	struct v4l2_format fmt;
+> > +	const struct vpfe_fmt *fmt;
+> > +	struct v4l2_format v_fmt;
+> >  	/* Used to store current bytes per pixel based on current format */
+> >  	unsigned int bpp;
+> >  	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
+> > 
+> 
