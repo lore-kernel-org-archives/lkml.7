@@ -2,160 +2,179 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6086BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE9CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2660A2075C
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRbddGfo"
+	by mail.kernel.org (Postfix) with ESMTP id 1A22520856
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568345518;
+	bh=xe/JQYqK2joRWmcoEKC69faO00pRfkUSxLsZFzljHx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MyxNql1AgkUxLPWpPBU14BOUHqY9H9wdLH55z8GratLrBX2v/4lPH08RyPn9x+AsQ
+	 D9sAFnwmgtMl0DK88U8vm/u+5AamU+qpjwcqWlWsU0Gd+uVELaE6CAI5dFwYUv7Ge4
+	 YGqHBeN4N5A8i/SgH2uc/gtbQFiq0kciACLdi3Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfIMD2u (ORCPT
+        id S1728036AbfIMDb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 23:28:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40290 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfIMD2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 23:28:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so14528590pgj.7;
-        Thu, 12 Sep 2019 20:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BfRk36jUxhPvrR7SuyOXhAxYDPZWPiFNoz8hjpc7xtc=;
-        b=jRbddGfongUF/lPGlR6S0KO6Dudfzh8jqNK6t1k9n1CxT3G/TaDAq0sWkKxdstUBmP
-         7mlfTNeUU+uRdySfFTLV8iAAOryFPtXSZG0m1PEDOBDmZBFZVTYdGyxP6Ewj46TKPM3Z
-         6CDG0ypLhw6SesryQ8FZYNzGB6gSyU/1uECS0OV/Jr2bT4NUdRO5L/OzsndEcMI2dQFn
-         Z2Q37XVB7k9y419aV95vWEVE3OVbTO3JtbWdIv8xWSqTnFTRCY/2kRUh8Tq0HGA575Vf
-         0+YtFfcnXuBcowsmcFTP95ETYxqBNPTk0TWF6ZXH92uj4iwe99rjp9I7F3+OnM4bsKj8
-         hxqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BfRk36jUxhPvrR7SuyOXhAxYDPZWPiFNoz8hjpc7xtc=;
-        b=t1pq5wYjzjXU/YcAyQP73/QwiXaRg/GuX22u5L1dK+qRsvCN8r807SWbrAiuKC5Tgx
-         tRhtyHJ28fXGgFyFFIzGAXAK++Aec4wo16LflYF/v+sT3jsVNzPf0rWIgVqZFbf2NV5V
-         ndP1bDGIcEGyDghkmbjog9bvpHL4361ulnJPXeqE9UbUwYzRjjLGKIGZTttrupBtD8li
-         Ej5SyFqmvUvbGgQbus1lTVvptTDx67yyQxTrW6bPSpkycH3ZCVObIdGpjfMlowKK/W5h
-         qWAY/mMOl5dKhbjBFEfUTFK5aDJQLFAJUCgNu26l8jmfLi/nwQM1AGUl/ZUHfJatXf7H
-         YpwA==
-X-Gm-Message-State: APjAAAWL/OX7QvNf20UFLGKNDGLFNjLe5NVtXHt1PfgfumrkOwfUr++P
-        1VsNTz400KBu5eaCT7gYUqGhr0jV
-X-Google-Smtp-Source: APXvYqz2pJWIyyYMIMiNiS9Yut9EPDbIjU9fuRAk+2YHilrEBGv5lCwEQ9Q+33ySpZe8bSx9xbrfPQ==
-X-Received: by 2002:aa7:8188:: with SMTP id g8mr12215751pfi.88.1568345328669;
-        Thu, 12 Sep 2019 20:28:48 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id r12sm30146006pgb.73.2019.09.12.20.28.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 20:28:48 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     b.spranger@linutronix.de, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: dsa: b53: Add support for port_egress_floods callback
-Date:   Thu, 12 Sep 2019 20:28:39 -0700
-Message-Id: <20190913032841.4302-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Sep 2019 23:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfIMDb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 23:31:56 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B7E62084D;
+        Fri, 13 Sep 2019 03:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568345515;
+        bh=xe/JQYqK2joRWmcoEKC69faO00pRfkUSxLsZFzljHx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oOgasMqDODc+/kPGQTMrlSa8enwJYrsd2Ov9O9jP0QnVdULOh56TqcyOuZ8hTfVaV
+         Uzjj1aeO59WeNJtEkBmwa9FzGw8T8qXW1sSlEHtScKu8WvdSpwfYfag2sgnjk9lcOI
+         io9N4+DGPlePxXUyAFnEvjFHLvdCBC0pRusMovM8=
+Date:   Fri, 13 Sep 2019 11:31:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+Cc:     linux-kernel@vger.kernel.org, Ilya Ledvich <ilya@compulab.co.il>,
+        Igor Grinberg <grinberg@compulab.co.il>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/12] ARM: dts: imx7d: cl-som-imx7 imx7d-sbc-imx7: move
+ USB
+Message-ID: <20190913033145.GG17142@dragon>
+References: <20190826153800.35400-1-git@andred.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190826153800.35400-1-git@andred.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for configuring the per-port egress flooding control for
-both Unicast and Multicast traffic.
+On Mon, Aug 26, 2019 at 04:37:49PM +0100, André Draszik wrote:
+> Whether and which USB port is enabled and how they
+> are powered is a function of the carrier board, not
+> of the SoM. Different carrier boards can have different
+> ports enabled / wired up, and power them differently;
+> so this should really move into the respective DTS.
+> 
+> Do so and update the USB power supply to reflect
+> the actual situation on the sbc-imx7 carrier board.
+> 
+> Signed-off-by: André Draszik <git@andred.net>
+> Cc: Ilya Ledvich <ilya@compulab.co.il>
+> Cc: Igor Grinberg <grinberg@compulab.co.il>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Beneditk,
+Ilya, Igor, can you have a look at the series?
 
-Do you mind re-testing, or confirming that this patch that I sent much
-earlier does work correctly for you? Thanks!
+Shawn
 
- drivers/net/dsa/b53/b53_common.c | 33 ++++++++++++++++++++++++++++++++
- drivers/net/dsa/b53/b53_priv.h   |  2 ++
- 2 files changed, 35 insertions(+)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 7d328a5f0161..ac2ec08a652b 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -342,6 +342,13 @@ static void b53_set_forwarding(struct b53_device *dev, int enable)
- 	b53_read8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, &mgmt);
- 	mgmt |= B53_MII_DUMB_FWDG_EN;
- 	b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
-+
-+	/* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
-+	 * frames should be flooed or not.
-+	 */
-+	b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
-+	mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN;
-+	b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
- }
- 
- static void b53_enable_vlan(struct b53_device *dev, bool enable,
-@@ -1753,6 +1760,31 @@ void b53_br_fast_age(struct dsa_switch *ds, int port)
- }
- EXPORT_SYMBOL(b53_br_fast_age);
- 
-+int b53_br_egress_floods(struct dsa_switch *ds, int port,
-+			 bool unicast, bool multicast)
-+{
-+	struct b53_device *dev = ds->priv;
-+	u16 uc, mc;
-+
-+	b53_read16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, &uc);
-+	if (unicast)
-+		uc |= BIT(port);
-+	else
-+		uc &= ~BIT(port);
-+	b53_write16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, uc);
-+
-+	b53_read16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, &mc);
-+	if (multicast)
-+		mc |= BIT(port);
-+	else
-+		mc &= ~BIT(port);
-+	b53_write16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, mc);
-+
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL(b53_br_egress_floods);
-+
- static bool b53_possible_cpu_port(struct dsa_switch *ds, int port)
- {
- 	/* Broadcom switches will accept enabling Broadcom tags on the
-@@ -1953,6 +1985,7 @@ static const struct dsa_switch_ops b53_switch_ops = {
- 	.port_bridge_leave	= b53_br_leave,
- 	.port_stp_state_set	= b53_br_set_stp_state,
- 	.port_fast_age		= b53_br_fast_age,
-+	.port_egress_floods	= b53_br_egress_floods,
- 	.port_vlan_filtering	= b53_vlan_filtering,
- 	.port_vlan_prepare	= b53_vlan_prepare,
- 	.port_vlan_add		= b53_vlan_add,
-diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
-index f25bc80c4ffc..a7dd8acc281b 100644
---- a/drivers/net/dsa/b53/b53_priv.h
-+++ b/drivers/net/dsa/b53/b53_priv.h
-@@ -319,6 +319,8 @@ int b53_br_join(struct dsa_switch *ds, int port, struct net_device *bridge);
- void b53_br_leave(struct dsa_switch *ds, int port, struct net_device *bridge);
- void b53_br_set_stp_state(struct dsa_switch *ds, int port, u8 state);
- void b53_br_fast_age(struct dsa_switch *ds, int port);
-+int b53_br_egress_floods(struct dsa_switch *ds, int port,
-+			 bool unicast, bool multicast);
- void b53_port_event(struct dsa_switch *ds, int port);
- void b53_phylink_validate(struct dsa_switch *ds, int port,
- 			  unsigned long *supported,
--- 
-2.17.1
-
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 24 ------------------------
+>  arch/arm/boot/dts/imx7d-sbc-imx7.dts    | 13 +++++++++++++
+>  2 files changed, 13 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> index 62d5e9a4a781..6f7e85cf0c28 100644
+> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> @@ -22,15 +22,6 @@
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
+>  	};
+> -
+> -	reg_usb_otg1_vbus: regulator-vbus {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "usb_otg1_vbus";
+> -		regulator-min-microvolt = <5000000>;
+> -		regulator-max-microvolt = <5000000>;
+> -		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+> -		enable-active-high;
+> -	};
+>  };
+>  
+>  &cpu0 {
+> @@ -193,13 +184,6 @@
+>  	status = "okay";
+>  };
+>  
+> -&usbotg1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_usbotg1>;
+> -	vbus-supply = <&reg_usb_otg1_vbus>;
+> -	status = "okay";
+> -};
+> -
+>  &usdhc3 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc3>;
+> @@ -278,11 +262,3 @@
+>  		>;
+>  	};
+>  };
+> -
+> -&iomuxc_lpsr {
+> -	pinctrl_usbotg1: usbotg1grp {
+> -		fsl,pins = <
+> -			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
+> -		>;
+> -	};
+> -};
+> diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+> index f8a868552707..aab646903de3 100644
+> --- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+> +++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+> @@ -15,6 +15,14 @@
+>  / {
+>  	model = "CompuLab SBC-iMX7";
+>  	compatible = "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
+> +
+> +	reg_usb_vbus: regulator-usb-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
+>  };
+>  
+>  &usdhc1 {
+> @@ -26,6 +34,11 @@
+>  	status = "okay";
+>  };
+>  
+> +&&usbotg1 {
+> +	vbus-supply = <&reg_usb_vbus>;
+> +	status = "okay";
+> +};
+> +
+>  &iomuxc {
+>  	pinctrl_usdhc1: usdhc1grp {
+>  		fsl,pins = <
+> -- 
+> 2.23.0.rc1
+> 
