@@ -2,115 +2,96 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4060CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029F9C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE04214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B5720830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Mwr57xLN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="egQWtmzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391069AbfIMPJe (ORCPT
+        id S2391123AbfIMPJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:09:34 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44256 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390046AbfIMPJe (ORCPT
+        Fri, 13 Sep 2019 11:09:43 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:48093 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390046AbfIMPJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:09:34 -0400
-Received: by mail-vs1-f65.google.com with SMTP id w195so18812272vsw.11;
-        Fri, 13 Sep 2019 08:09:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pIMiAKhzqydevxJ4SfxaOnAOQBbzxpXSTX/hNzVTWH8=;
-        b=DjzBNiaKjsMGHR07OIEmEen2+Lt/bBmp1Im7bvBL0Qyigc+KaPcUpSijaBk9qUvjPS
-         8xfSM5N0ecxBI+SLJedJHEnX6TEJ0j27vOUx8Jw7FCZk7SUcTjqva1YAQHwjSIUJhkG2
-         GEiQHAMjFoj/YGlkmia0w46DElvxbqcHNJpI1iZdYVhZIStFlgXRq8gJyNcoBXCNKZSH
-         0iexM3SpO7cNn/bBajlIeVTnbG+kjwHbLwFA2HedyLW3QL7/twvq7bHJc388NUIJRsTi
-         FDvnMsRl9dBxXBgGW4J2MjPU5mMBTH9gr7+90lAa5v5r2/0fagq2vKuVajogwmzeCInk
-         SO+g==
-X-Gm-Message-State: APjAAAUQzT4a0f/FCHNPJOjMVWMeOBcsgt2oTHBGpg9gScXdnqCVXaOR
-        q8Gv7DUwXT9t2pkCTa7Tl1dSVierkUbfOUOmwj4=
-X-Google-Smtp-Source: APXvYqylu2hrm9+jShjlZBaJJtsqTtMpCZ46oIHdTl6adXUbUxfPuEUiLtfCfDfh1ckXZtmG7LMM+KfUH5p8IZnGJJ4=
-X-Received: by 2002:a05:6102:195:: with SMTP id r21mr21052393vsq.210.1568387373173;
- Fri, 13 Sep 2019 08:09:33 -0700 (PDT)
+        Fri, 13 Sep 2019 11:09:42 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5BAE420E7;
+        Fri, 13 Sep 2019 11:09:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 13 Sep 2019 11:09:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=78Q8OlRfap8fz5xWN2Z89uJar03
+        qpqVETxGfaTCfDgc=; b=Mwr57xLNKNl5KVc9AAC4AXlZg7SFqmeWA9w5FAcuU7C
+        NO5np33AL2z8HZ+2M+ocGoN5yCEfw4ZfdeX3Wl2r5OPdouks+6s9Mzn++Gyn4T4P
+        6HdZ9vSZEaLF0ueq40ExW3oSixgOTspsk+Lebn6O57gZZJ7aoYqCq7aMSl7hYwX2
+        WPmDyFfYK4dtFMOiIM3Gy8Lk2UY4/hcCGALME2BpINbFKEpqV+NaR+X47qqYIa6x
+        YubAjnYSJY+Qi9CnW7jdEmzVN7IsKV+LxsGMCApf1XRYliesQld0fJcpOXkbmE6S
+        ZcTLrnScDlvpxGsTiYwDwS7ig9F7VwEG0U7NhkrK6Lg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=78Q8Ol
+        Rfap8fz5xWN2Z89uJar03qpqVETxGfaTCfDgc=; b=egQWtmzBrxtMs78VfqVbOf
+        Ks2/KL/qe7yk2+GFtdsZ9pjkWWDbRFFos4cvKCb6RLRN+NYC0cnqwuvdrEFvXzYY
+        GiES11wnhQ3/b/AVDEfUsfFl18KE7zSgQrZKNoyarrwQQ47P++eeMZFIsiB+9y/1
+        mDFP7d/owYmlmqhBgzhWxBorzNQ7V6Z/iWj90607rt6x184SBzyswtjvRdazDEkb
+        uC3JxMY0FbB7Tbz/Y28NMfwasjsS3sU+1lRN9gxq7CYbXAujncwX/AQjH3vqHAkU
+        rz3VRQG2+pDpaqAcF5B9kMkUGR0s87bjdwhD78p4edcNUVlp3y/eBSgZsXU4JR1g
+        ==
+X-ME-Sender: <xms:NLF7XT-36XisQUcNFLz0hEhw-swy3XGEK0Eni2Hu41m2G19LOJfLmA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrtdejgdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuphgrmhfkphdqohhuthculdehtddtmdenucfjughrpeffhffvuffkfhggtggujggfseht
+    tdertddtredvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtoh
+    hmqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedutdegrddufedvrdeg
+    hedrleelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+    enucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:NLF7XfSJ9Ooz9_csxLNvxttrNjFFi64zT0IPNylTo8TkzG0T-jQX3w>
+    <xmx:NLF7XaZ4S__HpxZrT9LO-Ar_UWJ86BCZhMs3l5kTf1Xp0Dx0j2XAww>
+    <xmx:NLF7XYTq9NrMOcdDErH17JIVx8CQYeIoEa7dQ1e1jwPJu7x5Yj5URg>
+    <xmx:NbF7XT3s0hH11zDnxyvyv2dNjYcIZgFhlvZ--rg3g808f2eccdLoqA>
+Received: from localhost (unknown [104.132.45.99])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8E6C78005A;
+        Fri, 13 Sep 2019 11:09:40 -0400 (EDT)
+Date:   Fri, 13 Sep 2019 16:09:39 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, workflows@vger.kernel.org
+Subject: Re: [Ksummit-discuss] New list for people to share maintainer
+ workflows
+Message-ID: <20190913150939.GA458191@kroah.com>
+References: <20190913073849.GA15965@mit.edu>
+ <29b46dfe-173b-7022-8676-f3c4000a8375@infradead.org>
 MIME-Version: 1.0
-References: <20190913130559.669563815@linuxfoundation.org> <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
- <20190913144627.GH1546@sasha-vm> <20190913145456.GA456842@kroah.com> <20190913150111.GI1546@sasha-vm>
-In-Reply-To: <20190913150111.GI1546@sasha-vm>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Fri, 13 Sep 2019 11:09:22 -0400
-Message-ID: <CAKb7Uvj31ZuxB6S4EH8WBRsa2mDScpZN=dRjHScZmN94ajD0EA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29b46dfe-173b-7022-8676-f3c4000a8375@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:01 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
-> >On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
-> >> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
-> >> > Hi Greg,
-> >> >
-> >> > This feels like it's missing a From: line.
-> >> >
-> >> > commit b513a18cf1d705bd04efd91c417e79e4938be093
-> >> > Author: Lyude Paul <lyude@redhat.com>
-> >> > Date:   Mon Jan 28 16:03:50 2019 -0500
-> >> >
-> >> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
-> >> >
-> >> > Is this an artifact of your notification-of-patches process and I
-> >> > never noticed before, or was the patch ingested incorrectly?
-> >>
-> >> It was always like this for patches that came through me. Greg's script
-> >> generates an explicit "From:" line in the patch, but I never saw the
-> >> value in that since git does the right thing by looking at the "From:"
-> >> line in the mail header.
-> >>
-> >> The right thing is being done in stable-rc and for the releases. For
-> >> your example here, this is how it looks like in the stable-rc tree:
-> >>
-> >> commit bdcc885be68289a37d0d063cd94390da81fd8178
-> >> Author:     Lyude Paul <lyude@redhat.com>
-> >> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
-> >> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> CommitDate: Fri Sep 13 14:05:29 2019 +0100
-> >>
-> >>    drm/nouveau: Don't WARN_ON VCPI allocation failures
-> >
-> >Yeah, we should fix your scripts to put the explicit From: line in here
-> >as we are dealing with patches in this format and it causes confusion at
-> >times (like now.)  It's not the first time and that's why I added those
-> >lines to the patches.
->
-> Heh, didn't think anyone cared about this scenario for the stable-rc
-> patches.
->
-> I'll go add it.
->
-> But... why do you actually care?
+On Fri, Sep 13, 2019 at 08:04:07AM -0700, Randy Dunlap wrote:
+> On 9/13/19 12:38 AM, Theodore Y. Ts'o wrote:
+> 
+> > Let's continue the discussion on workflows@vger.kernel.org.
+> 
+> Hi,
+> Will this be archived on lore.kernel.org?
 
-Just a hygiene thing. Everyone else sends patches the normal way, with
-accurate attribution. Why should stable be different?
-
-(I was surprised to see Greg contributing to nouveau when I first saw
-the patch. But then realized it was the stable ingestion
-notification.)
-
-  -ilia
+It is already there:
+	https://lore.kernel.org/workflows/
