@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A08C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49257C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB13A208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC94206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380572;
-	bh=2MotSDzYBMQnVbaO4Ad5yPeQ1EQWWXr5aIP3vatel6c=;
+	s=default; t=1568380577;
+	bh=Jca2Y4YgeNJeQz0dr97Q6CH5BvgAV0DjfudxgcwUv78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmAzNBx5/egGMg0OQOTaXPgjcH3oE+h333vKNfIn+/y65vy7TD55/xmo9pRovUc1g
-	 1Gp9PnuiUAy3giGnATnw0HeKwg5ndMMZhAlz6AtJEvOqsbaXV+grG+oROs25OMy7Uz
-	 AUKYnR09eW7OeEW7YOT2Rk+CS+3pSdbqw27Snk0c=
+	b=fmB0oUXqfaAei4r/fAVWTGAqIW+gKrHc7MzLyj92AvWBnAbCNKaVGue3eA9rOyTMI
+	 R8GhT4WUA/mddkmrXMaZNNnnjjPJmEknSQx5nN45O/RwLDtcQJuPPmBjMDU5NUzl2j
+	 AeJKVzbGyp+7gFzuQKXYNtBY0eVlTLANVpBCGS2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389813AbfIMNQM (ORCPT
+        id S2389824AbfIMNQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42786 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389787AbfIMNQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:10 -0400
+        id S2389787AbfIMNQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:13 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F40206A5;
-        Fri, 13 Sep 2019 13:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B6A0206A5;
+        Fri, 13 Sep 2019 13:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380569;
-        bh=2MotSDzYBMQnVbaO4Ad5yPeQ1EQWWXr5aIP3vatel6c=;
+        s=default; t=1568380572;
+        bh=Jca2Y4YgeNJeQz0dr97Q6CH5BvgAV0DjfudxgcwUv78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oC3NMZqRztwqB+6/DJVplgH+kemDq0lF16RPUS7eHsdoLRfRdpkA0aiGe0Gud1YJO
-         0Y/WsdeoRp5IK0v8+qrVCsx0V1pyrtyQ2MrEqwqPPD00Wdgiv8bMHR3wwwZUKXgY0V
-         8T2Jytg6IRgDt6zc3J99hVczmywUbs75Xub+KHug=
+        b=UYc87Fpb1I88410q9ibLyf4oOqr5JPk/05MSnikAJ6cMYGLmA7jTgbXT7N0yf9jBi
+         wbc6tgSc3pDyITw0QOh9/d2BOXG3LDPbFapUDd8BK4R4DfhqU+0mRHF5vwVpY246/8
+         05jxzFUe1yXcNDJTvA+CPG4Jywt+6bXbAX1c5ofE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/190] CIFS: Fix leaking locked VFS cache pages in writeback retry
-Date:   Fri, 13 Sep 2019 14:06:02 +0100
-Message-Id: <20190913130608.245039576@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Zabrocki <adamza@microsoft.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Subject: [PATCH 4.19 108/190] drm/i915: Handle vm_mmap error during I915_GEM_MMAP ioctl with WC set
+Date:   Fri, 13 Sep 2019 14:06:03 +0100
+Message-Id: <20190913130608.340127771@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,65 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 165df9a080b6863ae286fa01780c13d87cd81076 ]
+[ Upstream commit ebfb6977801da521d8d5d752d373a187e2a2b9b3 ]
 
-If we don't find a writable file handle when retrying writepages
-we break of the loop and do not unlock and put pages neither from
-wdata2 nor from the original wdata. Fix this by walking through
-all the remaining pages and cleanup them properly.
+Add err goto label and use it when VMA can't be established or changes
+underneath.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+v2:
+- Dropping Fixes: as it's indeed impossible to race an object to the
+  error address. (Chris)
+v3:
+- Use IS_ERR_VALUE (Chris)
+
+Reported-by: Adam Zabrocki <adamza@microsoft.com>
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: Adam Zabrocki <adamza@microsoft.com>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com> #v2
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190207085454.10598-2-joonas.lahtinen@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifssmb.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/i915/i915_gem.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-index a5cb7b2d1ac5d..86a54b809c484 100644
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2033,12 +2033,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 
- 		wdata2->cfile = find_writable_file(CIFS_I(inode), false);
- 		if (!wdata2->cfile) {
--			cifs_dbg(VFS, "No writable handles for inode\n");
-+			cifs_dbg(VFS, "No writable handle to retry writepages\n");
- 			rc = -EBADF;
--			break;
-+		} else {
-+			wdata2->pid = wdata2->cfile->pid;
-+			rc = server->ops->async_writev(wdata2,
-+						       cifs_writedata_release);
- 		}
--		wdata2->pid = wdata2->cfile->pid;
--		rc = server->ops->async_writev(wdata2, cifs_writedata_release);
- 
- 		for (j = 0; j < nr_pages; j++) {
- 			unlock_page(wdata2->pages[j]);
-@@ -2053,6 +2054,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 			kref_put(&wdata2->refcount, cifs_writedata_release);
- 			if (is_retryable_error(rc))
- 				continue;
-+			i += nr_pages;
- 			break;
- 		}
- 
-@@ -2060,6 +2062,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 		i += nr_pages;
- 	} while (i < wdata->nr_pages);
- 
-+	/* cleanup remaining pages from the original wdata */
-+	for (; i < wdata->nr_pages; i++) {
-+		SetPageError(wdata->pages[i]);
-+		end_page_writeback(wdata->pages[i]);
-+		put_page(wdata->pages[i]);
-+	}
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index e81abd468a15d..9634d3adb8d01 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -1881,6 +1881,9 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 	addr = vm_mmap(obj->base.filp, 0, args->size,
+ 		       PROT_READ | PROT_WRITE, MAP_SHARED,
+ 		       args->offset);
++	if (IS_ERR_VALUE(addr))
++		goto err;
 +
- 	if (rc != 0 && !is_retryable_error(rc))
- 		mapping_set_error(inode->i_mapping, rc);
- 	kref_put(&wdata->refcount, cifs_writedata_release);
+ 	if (args->flags & I915_MMAP_WC) {
+ 		struct mm_struct *mm = current->mm;
+ 		struct vm_area_struct *vma;
+@@ -1896,17 +1899,22 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 		else
+ 			addr = -ENOMEM;
+ 		up_write(&mm->mmap_sem);
++		if (IS_ERR_VALUE(addr))
++			goto err;
+ 
+ 		/* This may race, but that's ok, it only gets set */
+ 		WRITE_ONCE(obj->frontbuffer_ggtt_origin, ORIGIN_CPU);
+ 	}
+ 	i915_gem_object_put(obj);
+-	if (IS_ERR((void *)addr))
+-		return addr;
+ 
+ 	args->addr_ptr = (uint64_t) addr;
+ 
+ 	return 0;
++
++err:
++	i915_gem_object_put(obj);
++
++	return addr;
+ }
+ 
+ static unsigned int tile_row_pages(struct drm_i915_gem_object *obj)
 -- 
 2.20.1
 
