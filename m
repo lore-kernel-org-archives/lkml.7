@@ -2,141 +2,121 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BD0C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C217EC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D890E20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381626;
-	bh=jORffADQrPKKT9/36UIdxIvAdJ5omm4N1b2CQf7U4JQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdesSa3XnoqgVG0eF3YkH384UmdVvcnxANBltkasEDfHhTmi6hnH+HZLfV50rp3PW
-	 PnWtwYkQITu4YsbdkYYYeUzO0yU6V0bi/HrOVmWLdkrUwW2GRKFVBNYReOIbKqe2bC
-	 U1INff1mfgLuF918xNei0TO+Qnts1YutRrWCa4xM=
+	by mail.kernel.org (Postfix) with ESMTP id A386D20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391413AbfIMNdm (ORCPT
+        id S2391767AbfIMNdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388571AbfIMNJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:48 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05B720CC7;
-        Fri, 13 Sep 2019 13:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380187;
-        bh=jORffADQrPKKT9/36UIdxIvAdJ5omm4N1b2CQf7U4JQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UbAJjCm0SQRf/INI5nwBM57sgImd5iqI2qlaPL996FC7lBonhgJFBpyJu7BeG4FI
-         V28K0ALoi3Jkn/H/sOnQAqdcMKRrf/j0k0e2/zV7YQzfH3Dksa5BvxIRjuMugwqsum
-         AfC8FKu4xtRKrP1oHXOyODiJujA3Ahl+u8UdNqME=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 10/14] batman-adv: Only read OGM tvlv_len after buffer len check
-Date:   Fri, 13 Sep 2019 14:07:03 +0100
-Message-Id: <20190913130445.741374686@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
-References: <20190913130440.264749443@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 13 Sep 2019 09:33:51 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42511 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388524AbfIMNdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:33:49 -0400
+Received: by mail-vs1-f66.google.com with SMTP id m22so18586781vsl.9;
+        Fri, 13 Sep 2019 06:33:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hnl7OpEfza4YbA2qYO4VUD1uuEgWDd+IAdiDL6hY/pM=;
+        b=IofTxCS7lwNQAocatR0C7ZiQ6XGfKbtmTucn1ZRXz9tNVv1mdEnNImBFrovzT4sv0g
+         JIk9w4c6owtM08W0VQUgumkJPpb25IKrmez2gU77KTE1E0UKwLJTbThIMq12FqyEeL67
+         CPFtFtDQ7Rs55U8hE5dHgidXx1cfABRcAcExlMpmo6csXZ/gsCENd77uYMeoeGJJYWiC
+         UVh48cDhoNTxWrMncsXjNcPjlP0rB/dfFjHsc4xqQI9RcMe6c7VSpLvtQSJUtPw+UDvh
+         qgu7+CHxT/nHUWKlY095X7lIXyDvJ9xK1wp2icCIXIkcSzyBAm1GlX5B4G8sb0I7jWM2
+         CGfQ==
+X-Gm-Message-State: APjAAAXvvBtcso/Sz2hoQ9QxRACtG9Z3mKkZsM0daBHX+sqM+6zWffw8
+        pNH1nN+HGbBxHR+1XhTNcgZeiMYdJ9MJuFCe+DQ=
+X-Google-Smtp-Source: APXvYqzXCO+EpVFbPYPlwDYijbuWIyqt5+tfpfwugxLjt/Ev9WUQG2jABsTvE5FdPYOUoUJaDM+fpDyxEF5WEXd7iPA=
+X-Received: by 2002:a67:fd97:: with SMTP id k23mr20291160vsq.220.1568381627687;
+ Fri, 13 Sep 2019 06:33:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190913130559.669563815@linuxfoundation.org> <20190913130606.981926197@linuxfoundation.org>
+In-Reply-To: <20190913130606.981926197@linuxfoundation.org>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Fri, 13 Sep 2019 09:33:36 -0400
+Message-ID: <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation failures
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "# 3.9+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+Hi Greg,
 
-commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
+This feels like it's missing a From: line.
 
-Multiple batadv_ogm_packet can be stored in an skbuff. The functions
-batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
-batadv_iv_ogm_aggr_packet() to check if there is another additional
-batadv_ogm_packet in the skb or not before they continue processing the
-packet.
+commit b513a18cf1d705bd04efd91c417e79e4938be093
+Author: Lyude Paul <lyude@redhat.com>
+Date:   Mon Jan 28 16:03:50 2019 -0500
 
-The length for such an OGM is BATADV_OGM_HLEN +
-batadv_ogm_packet->tvlv_len. The check must first check that at least
-BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
+    drm/nouveau: Don't WARN_ON VCPI allocation failures
 
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Is this an artifact of your notification-of-patches process and I
+never noticed before, or was the patch ingested incorrectly?
 
----
- net/batman-adv/bat_iv_ogm.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Cheers,
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -450,17 +450,23 @@ static u8 batadv_hop_penalty(u8 tq, cons
-  * batadv_iv_ogm_aggr_packet - checks if there is another OGM attached
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm_packet: potential OGM in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
--				      __be16 tvlv_len)
-+static bool
-+batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
-+			  const struct batadv_ogm_packet *ogm_packet)
- {
- 	int next_buff_pos = 0;
- 
--	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm_packet);
-+	if (next_buff_pos > packet_len)
-+		return false;
-+
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm_packet->tvlv_len);
- 
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -488,7 +494,7 @@ static void batadv_iv_ogm_send_to_if(str
- 
- 	/* adjust all flags and log packets */
- 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
--					 batadv_ogm_packet->tvlv_len)) {
-+					 batadv_ogm_packet)) {
- 		/* we might have aggregated direct link packets with an
- 		 * ordinary base packet
- 		 */
-@@ -1841,7 +1847,7 @@ static int batadv_iv_ogm_receive(struct
- 
- 	/* unpack the aggregated packets and process them one by one */
- 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					 ogm_packet->tvlv_len)) {
-+					 ogm_packet)) {
- 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
- 
- 		ogm_offset += BATADV_OGM_HLEN;
+  -ilia
 
-
+On Fri, Sep 13, 2019 at 9:16 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> [ Upstream commit b513a18cf1d705bd04efd91c417e79e4938be093 ]
+>
+> This is much louder then we want. VCPI allocation failures are quite
+> normal, since they will happen if any part of the modesetting process is
+> interrupted by removing the DP MST topology in question. So just print a
+> debugging message on VCPI failures instead.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Fixes: f479c0ba4a17 ("drm/nouveau/kms/nv50: initial support for DP 1.2 multi-stream")
+> Cc: Ben Skeggs <bskeggs@redhat.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> Cc: <stable@vger.kernel.org> # v4.10+
+> Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/dispnv50/disp.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> index f889d41a281fa..5e01bfb69d7a3 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> @@ -759,7 +759,8 @@ nv50_msto_enable(struct drm_encoder *encoder)
+>
+>         slots = drm_dp_find_vcpi_slots(&mstm->mgr, mstc->pbn);
+>         r = drm_dp_mst_allocate_vcpi(&mstm->mgr, mstc->port, mstc->pbn, slots);
+> -       WARN_ON(!r);
+> +       if (!r)
+> +               DRM_DEBUG_KMS("Failed to allocate VCPI\n");
+>
+>         if (!mstm->links++)
+>                 nv50_outp_acquire(mstm->outp);
+> --
+> 2.20.1
+>
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
