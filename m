@@ -2,193 +2,174 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1099BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B752C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AD9208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEB320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387572AbfIMIil convert rfc822-to-8bit (ORCPT
+        id S2387586AbfIMImq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:38:41 -0400
-Received: from mail.savoirfairelinux.com ([208.88.110.44]:44378 "EHLO
-        mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387424AbfIMIil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:38:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.savoirfairelinux.com (Postfix) with ESMTP id 468379C01CF;
-        Fri, 13 Sep 2019 04:38:40 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0tdnGDu6uDPD; Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.savoirfairelinux.com (Postfix) with ESMTP id 5428B9C02B2;
-        Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
-        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1nWHepbN-k1n; Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-        by mail.savoirfairelinux.com (Postfix) with ESMTP id 13DF59C01CF;
-        Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-Date:   Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-From:   Gilles Doffe <gilles.doffe@savoirfairelinux.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        mark rutland <mark.rutland@arm.com>,
-        festevam <festevam@gmail.com>, s hauer <s.hauer@pengutronix.de>,
-        rennes <rennes@savoirfairelinux.com>,
-        robh+dt <robh+dt@kernel.org>, linux-imx <linux-imx@nxp.com>,
-        kernel <kernel@pengutronix.de>,
-        =?utf-8?Q?J=C3=A9rome?= Oufella 
-        <jerome.oufella@savoirfairelinux.com>,
-        shawnguo <shawnguo@kernel.org>
-Message-ID: <415531537.7768114.1568363919015.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
-References: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com> <20190722075341.e4ve45rneusiogtk@pengutronix.de> <978100557.7721358.1568282514403.JavaMail.zimbra@savoirfairelinux.com> <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
-Subject: Re: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
+        Fri, 13 Sep 2019 04:42:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:40170 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387499AbfIMImq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:42:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D181628;
+        Fri, 13 Sep 2019 01:42:44 -0700 (PDT)
+Received: from [10.162.41.125] (p8cg001049571a15.blr.arm.com [10.162.41.125])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21F43F59C;
+        Fri, 13 Sep 2019 01:42:34 -0700 (PDT)
+Subject: Re: [PATCH] mm/pgtable/debug: Fix test validating architecture page
+ table helpers
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
+ <527dd29d-45fa-4d83-1899-6cbf268dd749@arm.com>
+ <e2b42446-7f91-83f1-ac12-08dff75c4d35@c-s.fr>
+ <cb226b56-ff20-3136-7ffb-890657e56870@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <bdf7f152-d093-1691-4e96-77da7eb9e20a@arm.com>
+Date:   Fri, 13 Sep 2019 14:12:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <cb226b56-ff20-3136-7ffb-890657e56870@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC76 (Linux)/8.8.11_GA_3737)
-Thread-Topic: imx6qdl: add gpio expander pca9535
-Thread-Index: Zvv68XcE8nddO8z0uGME4oRHp/yuRA==
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
 
-Ack for all, v3 incoming.
 
-Thank you,
-Gilles
+On 09/13/2019 12:41 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 13/09/2019 à 09:03, Christophe Leroy a écrit :
+>>
+>>
+>> Le 13/09/2019 à 08:58, Anshuman Khandual a écrit :
+>>> On 09/13/2019 11:53 AM, Christophe Leroy wrote:
+>>>> Fix build failure on powerpc.
+>>>>
+>>>> Fix preemption imbalance.
+>>>>
+>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>> ---
+>>>>   mm/arch_pgtable_test.c | 3 +++
+>>>>   1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
+>>>> index 8b4a92756ad8..f2b3c9ec35fa 100644
+>>>> --- a/mm/arch_pgtable_test.c
+>>>> +++ b/mm/arch_pgtable_test.c
+>>>> @@ -24,6 +24,7 @@
+>>>>   #include <linux/swap.h>
+>>>>   #include <linux/swapops.h>
+>>>>   #include <linux/sched/mm.h>
+>>>> +#include <linux/highmem.h>
+>>>
+>>> This is okay.
+>>>
+>>>>   #include <asm/pgalloc.h>
+>>>>   #include <asm/pgtable.h>
+>>>> @@ -400,6 +401,8 @@ static int __init arch_pgtable_tests_init(void)
+>>>>       p4d_clear_tests(p4dp);
+>>>>       pgd_clear_tests(mm, pgdp);
+>>>> +    pte_unmap(ptep);
+>>>> +
+>>>
+>>> Now the preemption imbalance via pte_alloc_map() path i.e
+>>>
+>>> pte_alloc_map() -> pte_offset_map() -> kmap_atomic()
+>>>
+>>> Is not this very much powerpc 32 specific or this will be applicable
+>>> for all platform which uses kmap_XXX() to map high memory ?
+>>>
+>>
+>> See https://elixir.bootlin.com/linux/v5.3-rc8/source/include/linux/highmem.h#L91
+>>
+>> I think it applies at least to all arches using the generic implementation.
+>>
+>> Applies also to arm:
+>> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/arm/mm/highmem.c#L52
+>>
+>> Applies also to mips:
+>> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/mips/mm/highmem.c#L47
+>>
+>> Same on sparc:
+>> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/sparc/mm/highmem.c#L52
+>>
+>> Same on x86:
+>> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/x86/mm/highmem_32.c#L34
+>>
+>> I have not checked others, but I guess it is like that for all.
+>>
+> 
+> 
+> Seems like I answered too quickly. All kmap_atomic() do preempt_disable(), but not all pte_alloc_map() call kmap_atomic().
+> 
+> However, for instance ARM does:
+> 
+> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/arm/include/asm/pgtable.h#L200
+> 
+> And X86 as well:
+> 
+> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/x86/include/asm/pgtable_32.h#L51
+> 
+> Microblaze also:
+> 
+> https://elixir.bootlin.com/linux/v5.3-rc8/source/arch/microblaze/include/asm/pgtable.h#L495
 
------ Le 12 Sep 19, à 12:12, Marco Felsch m.felsch@pengutronix.de a écrit :
+All the above platforms checks out to be using k[un]map_atomic(). I am wondering whether
+any of the intermediate levels will have similar problems on any these 32 bit platforms
+or any other platforms which might be using generic k[un]map_atomic(). There can be many
+permutations here.
 
-> Hi Gilles,
-> 
-> On 19-09-12 06:01, Gilles Doffe wrote:
->> Hi Marco,
->> 
->> Thanks for your reply and sorry about the delay.
-> 
-> No worries ;)
-> 
->> ----- Le 22 Juil 19, à 9:53, Marco Felsch m.felsch@pengutronix.de a écrit :
->> 
->> > Hi Gilles,
->> > 
->> > can you adapt the patch title, I assumed that the base dtsi is adding a
->> > gpio-expander which makes no sense.
->> 
->> My first intent was to add the gpio-expander pca9535 into the imx6q-rex-pro.dts
->> and in a future imx6qp-rex-ultra.dts
->> However I noticed that the sgtl5000 was already in the dtsi.
->> It is maybe due to the fact that like the pca9535, the sgtl5000 is present on
->> the baseboard not on the SOM.
->> Thus I guess that baseboard stuff common to all rex SOM should be in
->> imx6qdl-rex.dtsi and not in the dts.
->> Does-it seem correct to you ?
-> 
-> Yes this is correct what Shawn and I mean is that you should adapt the
-> commit title. Shawn already give you an example.
-> 
->> > 
->> > On 19-07-19 12:46, Gilles DOFFE wrote:
->> >> The pca9535 gpio expander is present on the Rex baseboard, but missing
->> >> from the dtsi.
->> >> 
->> >> Add the new gpio controller and the associated interrupt line
->> >> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
->> >> 
->> >> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
->> >> ---
->> > 
->> > Having a changelog would be nice too.
->> > 
->> >>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
->> >>  1 file changed, 19 insertions(+)
->> >> 
->> >> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> b/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> index 97f1659144ea..b517efb22fcb 100644
->> >> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> @@ -136,6 +136,19 @@
->> >>  		compatible = "atmel,24c02";
->> >>  		reg = <0x57>;
->> >>  	};
->> >> +
->> >> +	pca9535: gpio8@27 {
->> >> +		compatible = "nxp,pca9535";
->> >> +		reg = <0x27>;
->> > 
->> > The i2c devices are orderd by their i2c-addresses starting from the
->> > lowest.
->> >
->> 
->> Ack.
->> 
->> >> +		gpio-controller;
->> >> +		#gpio-cells = <2>;
->> >> +		pinctrl-names = "default";
->> >> +		pinctrl-0 = <&pinctrl_pca9535>;
->> >> +		interrupt-parent = <&gpio6>;
->> >> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
->> >> +		interrupt-controller;
->> >> +		#interrupt-cells = <2>;
-> 
-> As you pointed out above this device isn't available on the
-> imx6dl-rex-basic? You should add: 'status = "disabled";' if this is the
-> case.
-> 
-> Regards,
->  Marco
-> 
->> >> +	};
->> >>  };
->> >>  
->> >>  &i2c3 {
->> >> @@ -237,6 +250,12 @@
->> >>  			>;
->> >>  		};
->> >>  
->> >> +		pinctrl_pca9535: pca9535 {
->> >> +			fsl,pins = <
->> >> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
->> > 
->> > The pinmux below don't use the leading zero's if you are the first I
->> > would drop that.
->> > 
->> > Regards,
->> >  Marco
->> >
->> 
->> Ack.
->> 
->> Regards,
->> Gilles
->> 
-> 
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	p4dp = p4d_alloc(mm, pgdp, vaddr);
+	pudp = pud_alloc(mm, p4dp, vaddr);
+	pmdp = pmd_alloc(mm, pudp, vaddr);
 
--- 
-Gilles DOFFE 
-Senior Product Engineering Consultant | Rennes, Fr 
-Bureau 
-[ tel:+33972468980 | (+33) 9 72 46 89 80 ] p. : 601 
-Cellulaire 
-[ tel:+33660025866 | (+33) 6 60 02 58 66 ]
+Otherwise pte_alloc_map()/pte_unmap() looks good enough which will atleast take care of
+a known failure.
