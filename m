@@ -3,74 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6579EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B03D2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568414806;
-	bh=AUQO8d9VJ4RK51BExwpPz05dLMQ/YQtJhgMZREkUBFk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RNJbBngDeoa+rmZiQv8hixHVnONfOwcs5OWw1ziK1BLdavxbFwU9YqVEQKs90KdnC
-	 t/aXLRjrNN9I29k0z5SsmiGKjDYCIiw7DjMbTCekqJPmnP5O2k2wXjwfjddD55oKqC
-	 AyQQH3sMqw6cyFH88drMSoiEXPdCUfsIV3w4HUXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 627AC2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:47:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ktdhGVN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404185AbfIMWqp (ORCPT
+        id S2404191AbfIMWrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404024AbfIMWqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:46:45 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C59B214DE
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 22:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568414804;
-        bh=AUQO8d9VJ4RK51BExwpPz05dLMQ/YQtJhgMZREkUBFk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BoNjEodSpg4W5JjE5PixENkat8hk/T/F8P5COcIWRKMgKmRjkf5lQ69wkRqSYKbLl
-         Y+fUQ0sW7u2XKQ3Qi69AlDyCbyxuno0guXJz0QlTre74OGxjKTKLN7SXUzC72WTRyk
-         JGAeVci2sX4Zc1O7TVRcxZ5D3x48lv/t+1zgVK7c=
-Received: by mail-wm1-f43.google.com with SMTP id v17so3784501wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:46:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAWixg1TzNpk27Qc17h7iD7q69+I/RCu3R0r5B/lkYmmZhNljFS0
-        0pw8k1RdNFVD27uIOfJl3yaFyCwOX3reRHrTqDi5OQ==
-X-Google-Smtp-Source: APXvYqzovU9CoIckvZrb5up1dANha9rMnGksogEuUHzcXG4fzddunxgVWmFjPMJL8L0HEijtct0cTWyd8+Ng4qXHuDc=
-X-Received: by 2002:a1c:7a05:: with SMTP id v5mr4810174wmc.173.1568414802878;
- Fri, 13 Sep 2019 15:46:42 -0700 (PDT)
+        Fri, 13 Sep 2019 18:47:49 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60888 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404024AbfIMWrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 18:47:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMdhCe030593;
+        Fri, 13 Sep 2019 22:47:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=XQBdn8URejM5X7vfjRpH4pKgGwioD1EvG7txGYNwdzQ=;
+ b=ktdhGVN4kSmZZ4OkBXcP3iPJPDM5ENuGCFxV8Xc2Emqc20HZVmRrx1nBZd94a83W+6MD
+ vY7s83bZ+IhoqIddCk3eF6P7iTrHDDe2aXE44d+NG6Shm8ItpEruOL0REaxrcui2Be0I
+ p+iUuTWNMHuzPN7bX1AhFUr2Z+1HSPvWTm7X4X0mG9k100f0/ZBTAchEg2Sy/PpuXxEo
+ ef6pCCcjMFfZqJcEBJV1e+RS4TaM+Oxi6rb6udaW9Kn+n2B7xaDoLvNPlEILTz95dQY3
+ RBXo3SwK3g5mVOrjDSU5hSgKUZp6VkFNqW10k5K9BaJ22VehjfyF2v08LxOMwLoZ8TLh bg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2uytd3q9a7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 22:47:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMdWxZ128809;
+        Fri, 13 Sep 2019 22:47:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2v0cwk5qgm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 22:47:42 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8DMlfxE008564;
+        Fri, 13 Sep 2019 22:47:41 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Sep 2019 15:47:40 -0700
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "jejb\@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen\@oracle.com" <martin.petersen@oracle.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] scsi: storvsc: Add the support of hibernation
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1568244905-66625-1-git-send-email-decui@microsoft.com>
+Date:   Fri, 13 Sep 2019 18:47:38 -0400
+In-Reply-To: <1568244905-66625-1-git-send-email-decui@microsoft.com> (Dexuan
+        Cui's message of "Wed, 11 Sep 2019 23:35:16 +0000")
+Message-ID: <yq1zhj7byph.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20190913210018.125266-1-samitolvanen@google.com> <20190913210018.125266-5-samitolvanen@google.com>
-In-Reply-To: <20190913210018.125266-5-samitolvanen@google.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 13 Sep 2019 15:46:31 -0700
-X-Gmail-Original-Message-ID: <CALCETrXVVB4xP2Vv-BsvELsViamjgi-ZccPhOEP2sMxBZ4dyBg@mail.gmail.com>
-Message-ID: <CALCETrXVVB4xP2Vv-BsvELsViamjgi-ZccPhOEP2sMxBZ4dyBg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] x86: fix function types in COND_SYSCALL
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=645
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909130222
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=711 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909130222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 2:00 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Define a weak function in COND_SYSCALL instead of a weak alias to
-> sys_ni_syscall, which has an incompatible type. This fixes indirect
-> call mismatches with Control-Flow Integrity (CFI) checking.
->
 
-Didn't you just fix the type of sys_ni_syscall?  What am I missing here?
+Dexuan,
+
+> When we're in storvsc_suspend(), we're sure the SCSI layer has
+> quiesced the scsi device by scsi_bus_suspend() -> ... ->
+> scsi_device_quiesce(), so the low level SCSI adapter driver only needs
+> to suspend/resume its own state.
+
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
