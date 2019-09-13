@@ -2,95 +2,69 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661E9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8160BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C006206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD5B206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbfIMNl1 (ORCPT
+        id S2390345AbfIMNm4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:41:27 -0400
-Received: from mail.ispras.ru ([83.149.199.45]:32892 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388927AbfIMNl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:41:27 -0400
-Received: from mail.ispras.ru (localhost [127.0.0.1])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 9EB1654008B;
-        Fri, 13 Sep 2019 16:41:24 +0300 (MSK)
+        Fri, 13 Sep 2019 09:42:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34450 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388473AbfIMNm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:42:56 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i8lqV-0000oE-Sw; Fri, 13 Sep 2019 15:42:43 +0200
+Date:   Fri, 13 Sep 2019 15:42:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sean V Kelley <sean.v.kelley@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [BUG RT] backtrace on v5.2.9-rt3
+Message-ID: <20190913134243.3zoliue6yqfzyatl@linutronix.de>
+References: <20190830120106.301bd9f3@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 13 Sep 2019 16:41:24 +0300
-From:   efremov <efremov@ispras.ru>
-To:     Denis Efremov <efremov@ispras.ru>
-Cc:     Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org,
-        Akinobu Mita <akinobu.mita@gmail.com>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <matthew@wil.cx>,
-        dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, Erdem Tumurov <erdemus@gmail.com>,
-        Vladimir Shelekhov <vshel@iis.nsk.su>
-Subject: Re: [PATCH v2] lib/memweight.c: open codes bitmap_weight()
-Organization: ISPRAS
-In-Reply-To: <85d9e45a-9631-a139-2d65-86a6753a35e6@ispras.ru>
-References: <20190821074200.2203-1-efremov@ispras.ru>
- <20190824100102.1167-1-efremov@ispras.ru>
- <20190825061158.GC28002@bombadil.infradead.org>
- <ba051566-0343-ea75-0484-8852f65a15da@ispras.ru>
- <20190826183956.GF15933@bombadil.infradead.org>
- <85d9e45a-9631-a139-2d65-86a6753a35e6@ispras.ru>
-Message-ID: <b9471f7165bf57e348729a09e07d7055@ispras.ru>
-X-Sender: efremov@ispras.ru
-User-Agent: Roundcube Webmail/1.1.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190830120106.301bd9f3@gandalf.local.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, no question, pointer alignment of course.
+On 2019-08-30 12:01:06 [-0400], Steven Rostedt wrote:
+> 
+> I'm triggering the following call splat on 5.2-rt.
+> 
+> [   63.099414] 006: BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
+> [   63.108423] 006: in_atomic(): 0, irqs_disabled(): 1, pid: 173, name: kworker/6:1
+…
+> [   63.141041] 006: Call Trace:
+> [   63.143916] 006:  dump_stack+0x5c/0x80
+> [   63.147654] 006:  ___might_sleep.cold.92+0x8d/0x9a
+> [   63.152423] 006:  rt_spin_lock+0x31/0x40
+> [   63.156332] 006:  intel_engine_breadcrumbs_irq+0x56/0x320 [i915]
+> [   63.162350] 006:  intel_engine_signal_breadcrumbs+0x11/0x20 [i915]
+> [   63.168540] 006:  i915_hangcheck_elapsed+0x199/0x420 [i915]
+…
+> [   63.309375] 006:  process_one_work+0x1e8/0x4c0
+…
+> Attached is the config and the full dmesg.
 
-Denis Efremov писал 2019-09-13 14:48:
-> Hi,
-> 
-> Sorry for reviving this conversation, but it looks to me like
-> this function could be reduced to a single bitmap_weight call:
-> 
-> static inline size_t memweight(const void *ptr, size_t bytes)
-> {
->         BUG_ON(bytes >= UINT_MAX / BITS_PER_BYTE);
->         return bitmap_weight(ptr, bytes * BITS_PER_BYTE);
-> }
-> 
-> Comparing to the current implementation
-> https://elixir.bootlin.com/linux/latest/source/lib/memweight.c#L11
-> this results in a signification simplification.
-> 
-> __bitmap_weight already count last bits with hweight_long as we
-> discussed earlier.
-> 
-> int __bitmap_weight(const unsigned long *bitmap, unsigned int bits)
-> {
-> 	...
-> 	if (bits % BITS_PER_LONG)
-> 		w += hweight_long(bitmap[k] & BITMAP_LAST_WORD_MASK(bits));
-> 	...
-> }
-> 
-> and __arch_hweight* functions use popcnt instruction.
-> 
-> I've briefly tested the equivalence of 2 implementations on x86_64 with
-> fuzzing here: 
-> https://gist.github.com/evdenis/95a8b9b8041e09368b31c3a9510491a5
-> 
-> What do you think making this function static inline and moving it
-> to include/linux/string.h? I could prepare a patch for it and add some 
-> tests for
-> memweight and bitmap_weight. Or maybe I miss something again?
-> 
-> Best regards,
-> Denis
+just for book keeping: Clark reported the same thing, posted patches and
+will try an alternative on Monday (as far as I'm been told). I will
+continue to reply in the other thread.
+
+Sebastian
