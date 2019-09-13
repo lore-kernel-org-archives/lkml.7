@@ -2,51 +2,51 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C951EC4CEC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760CC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAB4208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AD9206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380280;
-	bh=MTNL6nhSdOp7dGb8vTIunHyXGJuj/4o6vJnlfXBfLHk=;
+	s=default; t=1568380284;
+	bh=pwSlJlVAaArsZDQaRtxNND4APc/w3WH7PbZa6DaoKQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fla/DGtiH0JYB5+f6hu5AO3yQRp7HSu8HrguIiNY7QMwzlG8j4BzRzzMQF9+FKKsi
-	 YfRgzkmDeOK5jTTpUfVkq7g+yqvTP+hU3fSeVHnwsqz2lq36xPDIUbei7oStmwtTIr
-	 rYWmaZnRLwBa3Ka/xTZ1Fh3ap3R7XFWSPGaLjGxY=
+	b=cdtwEnx1rMic5ANZ1IPo87A35i+HzIH9XDbFedt02DZZrg4CvHabbkQLEroVbFubq
+	 0vrgNSVry7ck5p59ogtwaN/mJutFqojDlfhfVB6gPL6DoyuCwaw1I4bkpB/uI6yzV+
+	 6OtGnnINAE3y/TCtEDmSs5BkUAu1HvMFuu55xQvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388937AbfIMNLT (ORCPT
+        id S2388947AbfIMNLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388914AbfIMNLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:14 -0400
+        id S2388914AbfIMNLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:20 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7AB2208C2;
-        Fri, 13 Sep 2019 13:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9006621479;
+        Fri, 13 Sep 2019 13:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380274;
-        bh=MTNL6nhSdOp7dGb8vTIunHyXGJuj/4o6vJnlfXBfLHk=;
+        s=default; t=1568380280;
+        bh=pwSlJlVAaArsZDQaRtxNND4APc/w3WH7PbZa6DaoKQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwJKu1dfhzg+/9+lv04X03CFkcYTLZV6mCsbstso/D5OyWJznEW/yU3xpe+Kkgr7P
-         LlKha9CAPC7u4w2keN3w3wM7zphUnjO7nOnaKiF4O76nLC5MS9CWffvrzQDsbCcVQ8
-         SrhZp8Hy2lxN7W2n0sp2tpWA72yzyHMKRLn4j2sc=
+        b=B8G1AHH/W6LG1Op5wLsmYh3K9IVEiTKY45fUoQ9ZPYlKv1sIdwsgGwy+/rZW8vDur
+         CxJAUrZlNbilG9I7YYO770kH4REvXo/nznHHUY8sUIGUfxjeGsll3SfA0YJAqFMIfg
+         MEtE22T4MfW219O1oZShsY6tAaCHlgNLwqNS3BvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 004/190] ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL
-Date:   Fri, 13 Sep 2019 14:04:19 +0100
-Message-Id: <20190913130600.008000927@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 014/190] Blk-iolatency: warn on negative inflight IO counter
+Date:   Fri, 13 Sep 2019 14:04:29 +0100
+Message-Id: <20190913130600.727296818@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -59,79 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+[ Upstream commit 391f552af213985d3d324c60004475759a7030c5 ]
 
-commit 60083f9e94b2f28047d71ed778adf89357c1a8fb upstream.
+This is to catch any unexpected negative value of inflight IO counter.
 
-Original pin node values of ASUS UX431FL with ALC294:
-
-0x12 0xb7a60140
-0x13 0x40000000
-0x14 0x90170110
-0x15 0x411111f0
-0x16 0x411111f0
-0x17 0x90170111
-0x18 0x411111f0
-0x19 0x411111f0
-0x1a 0x411111f0
-0x1b 0x411111f0
-0x1d 0x4066852d
-0x1e 0x411111f0
-0x1f 0x411111f0
-0x21 0x04211020
-
-1. Has duplicated internal speakers (0x14 & 0x17) which makes the output
-   route become confused. So, the output volume cannot be changed by
-   setting.
-2. Misses the headset mic pin node.
-
-This patch disables the confusing speaker (NID 0x14) and enables the
-headset mic (NID 0x19).
-
-Link: https://lore.kernel.org/r/20190902100054.6941-1-jian-hong@endlessm.com
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ block/blk-iolatency.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5675,6 +5675,7 @@ enum {
- 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
- 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
- 	ALC299_FIXUP_PREDATOR_SPK,
-+	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
- };
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index f4f7c73fb8284..84ecdab41b691 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -560,6 +560,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 	u64 now = ktime_to_ns(ktime_get());
+ 	bool issue_as_root = bio_issue_as_root_blkg(bio);
+ 	bool enabled = false;
++	int inflight = 0;
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6703,6 +6704,16 @@ static const struct hda_fixup alc269_fix
- 			{ }
+ 	blkg = bio->bi_blkg;
+ 	if (!blkg)
+@@ -585,7 +586,8 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
  		}
- 	},
-+	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
-+			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
-+	},
- };
+ 		rqw = &iolat->rq_wait;
  
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6862,6 +6873,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
-+	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
+-		atomic_dec(&rqw->inflight);
++		inflight = atomic_dec_return(&rqw->inflight);
++		WARN_ON_ONCE(inflight < 0);
+ 		if (iolat->min_lat_nsec == 0)
+ 			goto next;
+ 		iolatency_record_time(iolat, &bio->bi_issue, now,
+-- 
+2.20.1
+
 
 
