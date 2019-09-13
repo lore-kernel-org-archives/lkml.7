@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42800C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9DDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAFF214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C8320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380369;
-	bh=Xs++mhuXmM6PCHfhoFnMqARTGYYms+RpHEFXyftpFBQ=;
+	s=default; t=1568380372;
+	bh=Apev0aYYQBSo5ry4GYQFHs9O4W7sPWZZ5PA3jAZ2FIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yA0ecTh25pL+nyqdh3u5u5Bnvc8XEYKw1sFvXJB9NU6P8pA/XDq69w//HSp+Tw1nK
-	 JZsOcr0NaIM7h8jTOJ/y9AKJUvhWWa1tB+tYZWjoATVOqIRTJ3n3j5PuFcgZcV0JZ7
-	 Q0CDQyI0/XuDsq7jdrI6U7LSOXFd1t0d1zjl9vOQ=
+	b=MZ0PqBSTj1QVi+wHd8xr4Hs8+12hq8PW/vG2o/O5t4IEFaVM2AvMI67BCN46MU/ix
+	 bx/O96iFYYkFTqFu8IZe8qUDoV+DNLM5pyYvERQfWQnPBYdGdJTnfLERxlh6bDHchB
+	 GP8KcZ2Vi5+P0v4F9vmb1E7ptFJ8GPFdW3M9HMqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389225AbfIMNMs (ORCPT
+        id S2389232AbfIMNMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38276 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbfIMNMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:46 -0400
+        id S2387856AbfIMNMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:49 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17912208C0;
-        Fri, 13 Sep 2019 13:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 005F9208C0;
+        Fri, 13 Sep 2019 13:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380365;
-        bh=Xs++mhuXmM6PCHfhoFnMqARTGYYms+RpHEFXyftpFBQ=;
+        s=default; t=1568380368;
+        bh=Apev0aYYQBSo5ry4GYQFHs9O4W7sPWZZ5PA3jAZ2FIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRjvlXP9aOqsXKZL6GAb3m3ssDHjIq7DrLo7ZCk/vILiDQZ+OwWMUgcJhqHPqz6vZ
-         FQncQp9NI6qrpqO02qbn5gZj7ROI37aXIEpolRQ2fvOUNhixhEVzosPh8jfC4pXjPG
-         aKBjcqXqXjcgSb24/belRgEhdrp0vaJ4nNBdYmpo=
+        b=djmdag46P9DyklkH1yKgpuW83Zykh1THmi+EKuvKVfGukplxYH5JKOWg0YNicLi9i
+         S0lKUt2DaTe9qesnSlm2/0TwKHFemdoLRpqpfZD8zX7gAgCeVEc7uveSW8fX3D3RM0
+         fp6TJOOYVTpWgNy8dCunDdVyueF4lcDUzwaAUSIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/190] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-Date:   Fri, 13 Sep 2019 14:04:38 +0100
-Message-Id: <20190913130601.473314043@linuxfoundation.org>
+Subject: [PATCH 4.19 024/190] riscv: remove unused variable in ftrace
+Date:   Fri, 13 Sep 2019 14:04:39 +0100
+Message-Id: <20190913130601.564607194@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,35 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
+[ Upstream commit 397182e0db56b8894a43631ce72de14d90a29834 ]
 
-The basepath may contain special characters, which would confuse the regex
-matcher.  ${var#prefix} does the right thing.
+Noticed while building kernel-4.20.0-0.rc5.git2.1.fc30 for
+Fedora 30/RISCV.
 
-Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
-Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[..]
+BUILDSTDERR: arch/riscv/kernel/ftrace.c: In function 'prepare_ftrace_return':
+BUILDSTDERR: arch/riscv/kernel/ftrace.c:135:6: warning: unused variable 'err' [-Wunused-variable]
+BUILDSTDERR:   int err;
+BUILDSTDERR:       ^~~
+[..]
+
+Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Fixes: e949b6db51dc1 ("riscv/function_graph: Simplify with function_graph_enter()")
+Reviewed-by: Olof Johansson <olof@lixom.net>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/ftrace.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index c4a9ddb174bc5..5aa75a0a1cede 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -78,7 +78,7 @@ parse_symbol() {
- 	fi
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index c433f6d3dd64f..a840b7d074f7d 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -132,7 +132,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
+ {
+ 	unsigned long return_hooker = (unsigned long)&return_to_handler;
+ 	unsigned long old;
+-	int err;
  
- 	# Strip out the base of the path
--	code=${code//^$basepath/""}
-+	code=${code#$basepath/}
- 
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
+ 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+ 		return;
 -- 
 2.20.1
 
