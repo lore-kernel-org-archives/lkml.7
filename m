@@ -2,195 +2,169 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F5BC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297C6C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D2F2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015C02084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568385391;
-	bh=d1XpjjTQOQkHx4YysW2TT+CYnntt3Dq1O4tgEnY32RQ=;
+	s=default; t=1568385394;
+	bh=3zjYxpRyWOU2aJl0/BX8zfhZYBnQaOrGEo+ncuFSURc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gmg6BeN6CgyEIKSip8EbBbcCD/fyCdTAfxVdQdtccK0fc+8WAonYuaXJOovAZejNH
-	 YHeyJyrbctXOMmbxOabQjI6TFTyd1s4G3RPNxa95ZdDbZ+pu9IDdFjImUrtJfsOLU7
-	 XaTCaDOru45hrZgvAI8i3kwUwB/eUVTXxzg4pmMQ=
+	b=NvgX+n8ieJCVDybzKDSWXyN9yTK4pnDdG92hKHokF0oUjij/B/BRcSJAvDHMpo6zW
+	 hUtI7YowN5ZbUzhhPPXsTCiBEdwC0iKWaGTcJFENlcr5bL8wc5pjHmvi6V3Pt94e8+
+	 9fu+LYpweAeeBLgevtAqqPHyjIK/n3wt4GWBQoSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfIMOga (ORCPT
+        id S2389626AbfIMOgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:36:30 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37278 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730866AbfIMOg3 (ORCPT
+        Fri, 13 Sep 2019 10:36:33 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45625 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbfIMOgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:36:29 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s28so29685626otd.4;
-        Fri, 13 Sep 2019 07:36:28 -0700 (PDT)
+        Fri, 13 Sep 2019 10:36:31 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o205so2778660oib.12;
+        Fri, 13 Sep 2019 07:36:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6mdxbSnWKNEAwVfvLxB2FfniJx8A4oxY0hM22xopaEM=;
-        b=SRdh1/SXprYgx6EGtc1mDfIlNaJ7wWNH5Nd11yJyopLIlEZkZfr6NmVrZsMiCSWNl2
-         BCfHSdayYALVh1nyU4scC+5qiLzVJESQXmi768vN7idtfbg3vCBaN6OwQBLEHv917iwf
-         WSCMBm8Xb33tfb2UkTybNMRBUet59Geoo+OcTZ9u3LPPxQZ/DQGNMKk5XH2J96GbJ2ZJ
-         eAWXbwiCGiKSvfT+OdOv9Q7A/8rslMh2OPoupV/pTZ2lGjr4W6V9ag4ZGtMZn72dSNTr
-         0LH3PkFhqmb/WNZGPfDK3OwL90lGhBQrkhXmoB34huctGhnrTbgRdg/lKWnIX1FS8jgK
-         qfrw==
-X-Gm-Message-State: APjAAAXS5wPkR/J3NUsNqbZBtyOuwNAEKGurfmI/BnZrVCh1ENrkvQCT
-        bk5Fx5YqVQ37WfZ8vx9Hiw==
-X-Google-Smtp-Source: APXvYqzn+6nvNXJy1guR0eNWhQFcmEFwvOR5OJ3M+fz3f5Pzd7rqZacnsC89vhMVWQUfRbYFCcPn+Q==
-X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr16025354ote.0.1568385388075;
-        Fri, 13 Sep 2019 07:36:28 -0700 (PDT)
+        bh=tdNsvXQrGgDSgKwJ0pKr0DdtL6lbinbXmEzdTSDl9+g=;
+        b=n1/bnfQAl+IjOAuiXqyKiwXhtgCmMfWJPPMjCQmsTiMrTCEoJDfZ31EPr+67AbzRZs
+         a95vGNhiVLHGD+dnIM5Y6ttjbc3nSBaVw7UcKL220MgFPo0vxBRgCSZFGJ7xk0YvPGqr
+         xde9SxdSnIO6nwXsV1DVm0jb7/0o/zCLMdnrZoFOoA0JUAYa3qvwZaoeeYOotZTFvfCj
+         eumjdgQllvGLfirFD0ugEyN3RJ1rxxOpy1JIJ67AncQ2/pfxr8n0VALM8VWUKTnT3Wm7
+         i6Ih5k8a04ZP/3IDH3iUP27zAxTxZk3j0lPaocIXqTjAyWY4bxZRsHgq8xP9u6TCLRVc
+         EhTw==
+X-Gm-Message-State: APjAAAW7TCtM6LbzS+oL44eTOzUMJtUcOYVQHNUUSeb4N69s6X19k3Zb
+        F580DOVBwnR2gLThSS7xEQ==
+X-Google-Smtp-Source: APXvYqyo4VuTwrRq+pKhI1VTnO6yPPsQd94kiSVqKzFSwGukRHVteAk9hqJYizq2K6SaO4AVS5j84Q==
+X-Received: by 2002:aca:4ccd:: with SMTP id z196mr3509393oia.46.1568385390520;
+        Fri, 13 Sep 2019 07:36:30 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v6sm913853oie.4.2019.09.13.07.36.27
+        by smtp.gmail.com with ESMTPSA id u26sm944370oic.9.2019.09.13.07.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 07:36:27 -0700 (PDT)
-Message-ID: <5d7ba96b.1c69fb81.edf8e.655e@mx.google.com>
-Date:   Fri, 13 Sep 2019 15:36:26 +0100
+        Fri, 13 Sep 2019 07:36:29 -0700 (PDT)
+Message-ID: <5d7ba96d.1c69fb81.59623.6c9f@mx.google.com>
+Date:   Fri, 13 Sep 2019 15:36:29 +0100
 From:   Rob Herring <robh@kernel.org>
-To:     Pragnesh Patel <pragnesh.patel@sifive.com>
-Cc:     palmer@sifive.com, paul.walmsley@sifive.com,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: dt-bindings: Convert spi-sifive binding to
- json-schema
-References: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Add binding document for xylon
+ logicvc-gpio
+References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+ <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
-X-Mutt-References: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
+In-Reply-To: <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
+X-Mutt-References: <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 12:32:51PM +0530, Pragnesh Patel wrote:
-> Convert the spi-sifive binding to DT schema format.
+On Tue, Sep 10, 2019 at 05:28:54PM +0200, Paul Kocialkowski wrote:
+> The Xylon LogiCVC display controller exports some GPIOs, which are
+> exposed as a dedicated driver.
 > 
-> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+> This introduces the associated device-tree bindings documentation.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > ---
->  .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
->  .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
->  2 files changed, 86 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
+>  .../bindings/gpio/xylon,logicvc-gpio.txt      | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
 
+Please consider using the new DT schema format.
 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
 > new file mode 100644
-> index 0000000..368f5d5
+> index 000000000000..4835659cb90b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
+> @@ -0,0 +1,48 @@
+> +Xylon LogiCVC GPIO controller
 > +
-> +title: SiFive SPI controller
+> +The Xylon LogiCVC is a display controller that contains a number of GPIO pins,
+> +meant to be used for controlling display-related signals.
 > +
-> +maintainers:
-> +  - Pragnesh Patel <pragnesh.patel@sifive.com>
-> +  - Paul Walmsley  <paul.walmsley@sifive.com>
-> +  - Palmer Dabbelt <palmer@sifive.com>
+> +In practice, the GPIOs can be used for any purpose they might be needed for.
 > +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
+> +The controller exposes GPIOs from the display and power control registers,
+> +which are mapped by the driver as follows:
+> +- GPIO[4:0] (display control) mapped to index 0-4
+> +- EN_BLIGHT (power control) mapped to index 5
+> +- EN_VDD (power control) mapped to index 6
+> +- EN_VEE (power control) mapped to index 7
+> +- V_EN (power control) mapped to index 8
 > +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,fu540-c000-spi
-> +      - const: sifive,spi0
+> +The driver was implemented and tested for version 3.02.a of the controller,
+> +but should be compatible with version 4 as well.
 > +
-> +    description:
-> +      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
-> +      Supported compatible strings are -
-> +      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
-> +      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
-> +      SPI v0 IP block with no chip integration tweaks.
-> +      Please refer to sifive-blocks-ip-versioning.txt for details
-> +
-> +      SPI RTL that corresponds to the IP block version numbers can be found here -
-> +      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +    description:
-> +      Physical base address and size of SPI registers map
-> +      A second (optional) range can indicate memory mapped flash
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +    description:
-> +      Must reference the frequency given to the controller
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
+> +Required properties:
+> +- compatible: Should contain "xylon,logicvc-3.02.a-gpio".
+> +- gpio-controller: Marks the device node as a gpio controller.
+> +- #gpio-cells: Should be 2. The first cell is the pin number and
+> +  the second cell is used to specify the gpio polarity:
+> +    0 = Active high,
+> +    1 = Active low.
 
-These 2 are covered by spi-controller.yaml, so you can drop them.
+No need to define these standard flags again here.
+
+> +- gpio,syscon-dev: Syscon phandle representing the logicvc instance.
+
+Don't need this. It's the parent.
 
 > +
-> +  sifive,fifo-depth:
-> +    description:
-> +      Depth of hardware queues; defaults to 8
-
-default: 8
-
-What are valid values?
-
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-
-Will need to be under 'allOf' with the above constraints.
-
+> +Example:
 > +
-> +  sifive,max-bits-per-word:
-> +    description:
-> +      Maximum bits per word; defaults to 8
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +	logicvc: logicvc@43c00000 {
+> +		compatible = "syscon", "simple-mfd";
 
-Same comments here.
+This device needs a device specific compatible. These 2 alone are not 
+desired.
 
+Please define everything that's in the chip as much as you can. 
+
+> +		reg = <0x43c00000 0x6000>;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 > +
-> +examples:
-> +  - |
-> +    spi: spi@10040000 {
-> +      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-> +      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
-> +      interrupt-parent = <&plic>;
-> +      interrupts = <51>;
-> +      clocks = <&tlclk>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      sifive,fifo-depth = <8>;
-> +      sifive,max-bits-per-word = <8>;
-> +    };
+> +		logicvc_gpio: display-gpio@40 {
+
+Use standard node names: gpio@40
+
+You may not even need a child node here. It depends on what other child 
+nodes you have and whether they have their own DT resources.
+
+> +			compatible = "xylon,logicvc-3.02.a-gpio";
+> +			reg = <0x40 0x40>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio,syscon-dev = <&logicvc>;
+> +		};
+> +	};
 > +
-> +...
+> +Note: the device-tree node should either be declared as a child of the logicvc
+> +syscon node or the syscon node should be precised with the gpio,syscon-dev
+> +property. Both are shown in the example above.
+
+Why? Just pick one and a child node is the preference.
+
 > -- 
-> 2.7.4
+> 2.23.0
 > 
 
