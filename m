@@ -2,144 +2,129 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53848C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87658C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3232920693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6187A20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fhUf3ysL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfIMCBR (ORCPT
+        id S1727311AbfIMCJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:01:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6776 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726262AbfIMCBR (ORCPT
+        Thu, 12 Sep 2019 22:09:16 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50890 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfIMCJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:01:17 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8D1ud3I117254;
-        Thu, 12 Sep 2019 22:00:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uywn4xv48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 22:00:50 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8D1vR0D124274;
-        Thu, 12 Sep 2019 22:00:49 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uywn4xv3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Sep 2019 22:00:49 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8D1sm19022449;
-        Fri, 13 Sep 2019 02:00:48 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 2uytdx37je-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Sep 2019 02:00:48 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8D20lSw46858692
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 02:00:47 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E896BE058;
-        Fri, 13 Sep 2019 02:00:47 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F809BE04F;
-        Fri, 13 Sep 2019 02:00:44 +0000 (GMT)
-Received: from [9.199.46.176] (unknown [9.199.46.176])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 13 Sep 2019 02:00:44 +0000 (GMT)
-Subject: Re: [PATCH 2/3] powperc/mm: read TLB Block Invalidate Characteristics
-To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190830120712.22971-1-ldufour@linux.ibm.com>
- <20190830120712.22971-3-ldufour@linux.ibm.com> <87impxshfk.fsf@linux.ibm.com>
- <468a53a6-a970-5526-8035-eef59dcf48ed@linux.ibm.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <97bafb53-6ae9-1d42-1816-ef81b845b80c@linux.ibm.com>
-Date:   Fri, 13 Sep 2019 07:30:42 +0530
+        Thu, 12 Sep 2019 22:09:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8D29AF2059679;
+        Thu, 12 Sep 2019 21:09:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568340550;
+        bh=3rFQ5YOQyJCcjWRaEXaDv0l6ekVp8tIORqYcBJwvCSw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fhUf3ysL0s9b7ekP7xEBsh8/9FWT7jKAt48LjdWbveQGDguhI297l+A+yY6LOzfV6
+         P5mbtVnjbxD0zkjLaV919bKrj10EBc4YogFL4wyLPwvcgqBqpJ7YO3VNpIKbgJAsTg
+         2bm3vOviig07JHQ5sVv9TnPvsMRwYcZF7zDY+w0o=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8D29AFd079295
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Sep 2019 21:09:10 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 12
+ Sep 2019 21:09:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 12 Sep 2019 21:09:08 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8D298TQ051406;
+        Thu, 12 Sep 2019 21:09:08 -0500
+Subject: Re: [PATCH v5 2/9] documention: leds: Add multicolor class
+ documentation
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190911180115.21035-1-dmurphy@ti.com>
+ <20190911180115.21035-3-dmurphy@ti.com> <20190912205551.GA13514@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <61ccb700-88df-03c0-3fb0-7f955d2b6cb2@ti.com>
+Date:   Thu, 12 Sep 2019 21:09:22 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <468a53a6-a970-5526-8035-eef59dcf48ed@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190912205551.GA13514@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=856 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909130019
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/13/19 12:56 AM, Laurent Dufour wrote:
-> Le 12/09/2019 à 16:44, Aneesh Kumar K.V a écrit :
->> Laurent Dufour <ldufour@linux.ibm.com> writes:
+Hello Pavel
 
->>> +
->>> +    idx = 2;
->>> +    while (idx < len) {
->>> +        unsigned int block_size = local_buffer[idx++];
->>> +        unsigned int npsize;
->>> +
->>> +        if (!block_size)
->>> +            break;
->>> +
->>> +        block_size = 1 << block_size;
->>> +        if (block_size != 8)
->>> +            /* We only support 8 bytes size TLB invalidate buffer */
->>> +            pr_warn("Unsupported H_BLOCK_REMOVE block size : %d\n",
->>> +                block_size);
->>
->> Should we skip setting block size if we find block_size != 8? Also can
->> we avoid doing that pr_warn in loop and only warn if we don't find
->> block_size 8 in the invalidate characteristics array?
-> 
-> My idea here is to fully read and process the data returned by the 
-> hcall, and to put the limitation to 8 when checking before calling 
-> H_BLOCK_REMOVE.
-> The warning is there because I want it to be displayed once at boot.
-> 
+Thanks for looking at this again
 
+On 9/12/19 3:55 PM, Pavel Machek wrote:
+> Hi!
+>
+>> +Directory Layout Example
+>> +========================
+>> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+>> +colors/:
+>> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
+>> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
+>> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
+>> +-rw-------    1 root     root          4096 Jun 28 20:21 color_mix
+>> +
+>> +colors/blue:
+>> +-rw-------    1 root     root          4096 Jun 28 20:21 intensity
+>> +-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
+>> +-r--------    1 root     root          4096 Jun 28 20:21 color_id
+> I don't really like the directories... A bit too much complexity, and
+> it will have a memory footprint, too.
 
-Can we have two block size reported for the same base page size/actual 
-page size combination? If so we will overwrite the hblk[actual_psize] ?
+The directories should be fine to have I am not seeing the complexity. 
+Is memory footprint really an issue? Maybe in the IoT space but this is 
+small and memory footprint should be able to handle this for IoT and 
+larger systems.
 
->>
->>> +
->>> +        for (npsize = local_buffer[idx++];  npsize > 0; npsize--)
->>> +            check_lp_set_hblk((unsigned int) local_buffer[idx++],
->>> +                      block_size);
->>> +    }
->>> +
->>> +    for (bpsize = 0; bpsize < MMU_PAGE_COUNT; bpsize++)
->>> +        for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
->>> +            if (mmu_psize_defs[bpsize].hblk[idx])
->>> +                pr_info("H_BLOCK_REMOVE supports base psize:%d 
->>> psize:%d block size:%d",
->>> +                    bpsize, idx,
->>> +                    mmu_psize_defs[bpsize].hblk[idx]);
->>> +
->>> +    return 0;
->>> +}
->>> +machine_arch_initcall(pseries, read_tlbbi_characteristics);
->>> +
->>>   /*
->>>    * Take a spinlock around flushes to avoid bouncing the hypervisor 
->>> tlbie
->>>    * lock.
+Having dedicated directories and files clears up issues for user space 
+to know about the parameters for each LED especially with the color_mix 
+file which I still am not a fan of, but conceded and implemented 
+anyway.� It also gives the user space flexibility to call the monochrome 
+LEDs specific intensity file.� The user space can either use the color 
+intensity file or the color_mix file it is a choice for them to make.
 
--aneesh
+This code was modeled off the LP50xx device which has individual LED 
+intensity controls as well as a overall brightness control. Since we 
+have no feedback from user space folks I feel we have to give some 
+options not very many but some.
+
+>
+> I'd expect max_intensity to be same for all the leds in
+> rgb:grouped_leds... Could we simply rely on max_brightness file?
+
+I went under the assumption that not all grouped LEDs would have the 
+same max_intensity.
+
+I don't have specific use cases but wanted this as an option.
+
+Dan
+
+> [If not, would one "max_intensity" file in rgb:grouped_leds be
+> enough?]
+>
+> Best regards,
+> 							Pavel
+> 							
