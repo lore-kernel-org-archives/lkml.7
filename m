@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E53FC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7631208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351EC20856
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 01:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfIMBOt (ORCPT
+        id S1728807AbfIMBO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 21:14:49 -0400
+        Thu, 12 Sep 2019 21:14:59 -0400
 Received: from mga12.intel.com ([192.55.52.136]:29376 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfIMBOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 21:14:49 -0400
+        id S1727518AbfIMBOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 21:14:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:48 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 18:14:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="197403719"
+   d="scan'208";a="197403712"
 Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:48 -0700
+  by orsmga002.jf.intel.com with ESMTP; 12 Sep 2019 18:14:46 -0700
 From:   Megha Dey <megha.dey@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-pci@vger.kernel.org, maz@kernel.org, bhelgaas@google.com,
@@ -38,9 +38,9 @@ Cc:     ashok.raj@intel.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
         Megha Dey <megha.dey@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: [RFC V1 7/7] ims: Add the set_desc callback
-Date:   Thu, 12 Sep 2019 18:32:08 -0700
-Message-Id: <1568338328-22458-8-git-send-email-megha.dey@linux.intel.com>
+Subject: [RFC V1 5/7] x86/ims: Introduce x86_ims_ops
+Date:   Thu, 12 Sep 2019 18:32:06 -0700
+Message-Id: <1568338328-22458-6-git-send-email-megha.dey@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
 References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
@@ -49,77 +49,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the set_desc callback to the ims domain ops.
-
-The set_desc callback is used to find a unique hwirq number from a given
-domain.
-
-Each mdev can have a maximum of 2048 IMS interrupts.
+This patch introduces an x86 specific indirect mechanism to setup the
+interrupt message storage. The IMS specific functions (setup, teardown,
+restore) become function pointers in an x86_ims_ops struct, that
+defaults to their implementations in ims.c and ims-msi.c.
 
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 ---
- arch/x86/kernel/apic/ims.c | 7 +++++++
- drivers/base/ims-msi.c     | 9 +++++++++
- include/linux/msi.h        | 1 +
- 3 files changed, 17 insertions(+)
+ arch/x86/include/asm/pci.h      |  4 ++++
+ arch/x86/include/asm/x86_init.h | 10 ++++++++++
+ arch/x86/kernel/apic/ims.c      | 18 ++++++++++++++++++
+ arch/x86/kernel/x86_init.c      | 23 +++++++++++++++++++++++
+ drivers/base/ims-msi.c          | 34 ++++++++++++++++++++++++++++++++++
+ include/linux/msi.h             |  6 ++++++
+ 6 files changed, 95 insertions(+)
 
-diff --git a/arch/x86/kernel/apic/ims.c b/arch/x86/kernel/apic/ims.c
-index a539666..7e36571 100644
---- a/arch/x86/kernel/apic/ims.c
-+++ b/arch/x86/kernel/apic/ims.c
-@@ -76,11 +76,18 @@ int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
- }
- EXPORT_SYMBOL_GPL(dev_ims_prepare);
- 
-+void dev_ims_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
-+{
-+	arg->msi_hwirq = dev_ims_calc_hwirq(desc);
-+}
-+EXPORT_SYMBOL_GPL(dev_ims_set_desc);
+diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+index e662f98..2ef513f 100644
+--- a/arch/x86/include/asm/pci.h
++++ b/arch/x86/include/asm/pci.h
+@@ -114,6 +114,10 @@ struct msi_desc;
+ int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+ void native_teardown_msi_irq(unsigned int irq);
+ void native_restore_msi_irqs(struct pci_dev *dev);
++#ifdef CONFIG_MSI_IMS
++int native_setup_ims_irqs(struct device *dev, int nvec);
++#endif
 +
- #ifdef CONFIG_IRQ_REMAP
- 
- static struct msi_domain_ops dev_ims_domain_ops = {
- 	.get_hwirq	= msi_get_hwirq,
- 	.msi_prepare	= dev_ims_prepare,
-+	.set_desc       = dev_ims_set_desc,
+ #else
+ #define native_setup_msi_irqs		NULL
+ #define native_teardown_msi_irq		NULL
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index ac09341..9c2cbbb 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -287,6 +287,15 @@ struct x86_msi_ops {
+ 	void (*restore_msi_irqs)(struct pci_dev *dev);
  };
  
- static struct irq_chip dev_ims_ir_controller = {
-diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-index 3e579c9..48f3d24 100644
---- a/drivers/base/ims-msi.c
-+++ b/drivers/base/ims-msi.c
-@@ -22,6 +22,15 @@ struct dev_ims_priv_data {
++struct device;
++
++struct x86_ims_ops {
++	int (*setup_ims_irqs)(struct device *dev, int nvec);
++	void (*teardown_ims_irq)(unsigned int irq);
++	void (*teardown_ims_irqs)(struct device *dev);
++	void (*restore_ims_irqs)(struct device *dev);
++};
++
+ struct x86_apic_ops {
+ 	unsigned int	(*io_apic_read)   (unsigned int apic, unsigned int reg);
+ 	void		(*restore)(void);
+@@ -297,6 +306,7 @@ extern struct x86_cpuinit_ops x86_cpuinit;
+ extern struct x86_platform_ops x86_platform;
+ extern struct x86_msi_ops x86_msi;
+ extern struct x86_apic_ops x86_apic_ops;
++extern struct x86_ims_ops x86_ims;
  
- static DEFINE_IDA(dev_ims_devid_ida);
+ extern void x86_early_init_platform_quirks(void);
+ extern void x86_init_noop(void);
+diff --git a/arch/x86/kernel/apic/ims.c b/arch/x86/kernel/apic/ims.c
+index d9808a5..a539666 100644
+--- a/arch/x86/kernel/apic/ims.c
++++ b/arch/x86/kernel/apic/ims.c
+@@ -9,6 +9,7 @@
+ #include <linux/irq.h>
+ #include <linux/mdev.h>
+ #include <linux/pci.h>
++#include <asm/irq_remapping.h>
  
-+irq_hw_number_t dev_ims_calc_hwirq(struct msi_desc *desc)
+ /*
+  * Determine if a dev is mdev or not. Return NULL if not mdev device.
+@@ -45,6 +46,23 @@ static struct pci_dev *ims_get_pci_dev(struct device *dev)
+ 	return pdev;
+ }
+ 
++int native_setup_ims_irqs(struct device *dev, int nvec)
 +{
-+	u32 devid;
++	struct irq_domain *domain;
++	struct irq_alloc_info info;
++	struct pci_dev *pdev = ims_get_pci_dev(dev);
 +
-+	devid = desc->dev_ims.priv->devid;
++	init_irq_alloc_info(&info, NULL);
++	info.type = X86_IRQ_ALLOC_TYPE_MSIX;
++	info.msi_dev = pdev;
 +
-+	return (devid << (32 - DEVIMS_ID_SHIFT)) | desc->dev_ims.ims_index;
++	domain = irq_remapping_get_ims_irq_domain(&info);
++	if (!domain)
++		return -ENOSYS;
++
++	return msi_domain_alloc_irqs(domain, dev, nvec);
 +}
 +
- u32 __dev_ims_desc_mask_irq(struct msi_desc *desc, u32 flag)
+ int dev_ims_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
  {
- 	u32 mask_bits = desc->dev_ims.masked;
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index 1bef687..3ce42d4 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -153,6 +153,29 @@ void arch_restore_msi_irqs(struct pci_dev *dev)
+ }
+ #endif
+ 
++#if defined(CONFIG_MSI_IMS)
++struct x86_ims_ops x86_ims __ro_after_init = {
++	.setup_ims_irqs		= native_setup_ims_irqs,
++	.teardown_ims_irqs	= dev_ims_teardown_irqs,
++	.restore_ims_irqs	= dev_ims_restore_irqs,
++};
++
++int arch_setup_ims_irqs(struct device *dev, int nvec)
++{
++	return x86_ims.setup_ims_irqs(dev, nvec);
++}
++
++void arch_teardown_ims_irqs(struct device *dev)
++{
++	x86_ims.teardown_ims_irqs(dev);
++}
++
++void arch_restore_ims_irqs(struct device *dev)
++{
++	x86_ims.restore_ims_irqs(dev);
++}
++#endif
++
+ struct x86_apic_ops x86_apic_ops __ro_after_init = {
+ 	.io_apic_read	= native_io_apic_read,
+ 	.restore	= native_restore_boot_irq_mode,
+diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+index 68dc10f..df28ee2 100644
+--- a/drivers/base/ims-msi.c
++++ b/drivers/base/ims-msi.c
+@@ -92,3 +92,37 @@ void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg)
+ 	__dev_write_ims_msg(desc, msg);
+ }
+ EXPORT_SYMBOL_GPL(dev_ims_write_msg);
++
++void dev_ims_teardown_irqs(struct device *dev)
++{
++	struct msi_desc *entry;
++
++	for_each_msi_entry(entry, dev)
++		if (entry->irq && entry->tag == IRQ_MSI_TAG_IMS)
++			arch_teardown_msi_irq(entry->irq);
++}
++
++static void dev_ims_restore_irq(struct device *dev, int irq)
++{
++	struct msi_desc *entry = NULL;
++	struct dev_ims_ops *ops;
++
++	for_each_msi_entry(entry, dev)
++		if (irq == entry->irq && entry->tag == IRQ_MSI_TAG_IMS)
++			break;
++
++	if (entry) {
++		ops = entry->dev_ims.priv->ims_ops;
++		if (ops && ops->irq_write_msi_msg)
++			ops->irq_write_msi_msg(entry, &entry->msg);
++	}
++}
++
++void dev_ims_restore_irqs(struct device *dev)
++{
++	struct msi_desc *entry;
++
++	for_each_msi_entry(entry, dev)
++		if (entry->tag == IRQ_MSI_TAG_IMS)
++			dev_ims_restore_irq(dev, entry->irq);
++}
 diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 4543bbf..fe4678e 100644
+index 246285a..37070bf 100644
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -237,6 +237,7 @@ void dev_ims_teardown_irqs(struct device *dev);
- void dev_ims_restore_irqs(struct device *dev);
- int dev_ims_alloc_irqs(struct device *dev, int nvec, struct dev_ims_ops *ops);
- void dev_ims_free_irqs(struct device *dev);
-+irq_hw_number_t dev_ims_calc_hwirq(struct msi_desc *desc);
+@@ -233,6 +233,8 @@ void pci_msi_unmask_irq(struct irq_data *data);
+ void dev_ims_unmask_irq(struct irq_data *data);
+ void dev_ims_mask_irq(struct irq_data *data);
+ void dev_ims_write_msg(struct irq_data *data, struct msi_msg *msg);
++void dev_ims_teardown_irqs(struct device *dev);
++void dev_ims_restore_irqs(struct device *dev);
  
  /*
   * The arch hooks to setup up msi irqs. Those functions are
+@@ -245,6 +247,10 @@ int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+ void arch_teardown_msi_irqs(struct pci_dev *dev);
+ void arch_restore_msi_irqs(struct pci_dev *dev);
+ 
++int arch_setup_ims_irqs(struct device *dev, int nvec);
++void arch_teardown_ims_irqs(struct device *dev);
++void arch_restore_ims_irqs(struct device *dev);
++
+ void default_teardown_msi_irqs(struct pci_dev *dev);
+ void default_restore_msi_irqs(struct pci_dev *dev);
+ 
 -- 
 2.7.4
 
