@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299A7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF29AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B08214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C363A206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380650;
-	bh=qmOB3n/qyuqx5APPgMjwIF0rFMVyzdqDDGzVByua/Y8=;
+	s=default; t=1568380652;
+	bh=LACLS8mAbs8RdCw/FHxfG8gGLWBBtPUvWehlsRM5SCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F/GxZWNRj13mx/0PKCK4cYEZzz9Bo0NtcmGc6E+cRTkev8k4awmPNQOAX0f/EC1ge
-	 GdEBwl6Az0afZ/voTTvKHjx6JHjMLUNQ9ad4vEzjs1Qn6GDfjmXy+xaymDfU0dvc9l
-	 6nK4/Oqt6JpoVgW2HnoDtR7utJT7HsaLPlRPKb20=
+	b=09IIhRJ3F9TFk5MWmIQE0bJF762En4Qz/j560+bAtQ/kV5yvzuN1q/D2OSAgLhf7d
+	 PukaBK6kC7aVh0FOw0WdlRiuGrh7JIWM8hh3yCj0s4OVrIGChjrw5N/V6pprpvcDdZ
+	 sF0fQBcrjlvEVgypM0ryLTjba0ozYxDTVR51jHNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389376AbfIMNR2 (ORCPT
+        id S2390070AbfIMNRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390033AbfIMNRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:17:18 -0400
+        id S2390041AbfIMNRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:24 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12891206BB;
-        Fri, 13 Sep 2019 13:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BBCC206BB;
+        Fri, 13 Sep 2019 13:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380637;
-        bh=qmOB3n/qyuqx5APPgMjwIF0rFMVyzdqDDGzVByua/Y8=;
+        s=default; t=1568380643;
+        bh=LACLS8mAbs8RdCw/FHxfG8gGLWBBtPUvWehlsRM5SCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUBnb1JEava3By1hM91X6G5Z4rCNQZkCP2voa/XAy1dP5ttCecn6JVZY35g73VIR4
-         cigfb00bku0C17lwLV+vZf8AFQB2tnactEpSQPJuOha+AqJOl6eKn49Rb7DHfiY+J1
-         vWOaYrv2y3pp5A/RbdkTEs+8C3mVoTtWabyKQU34=
+        b=yU+2xrIafZxnSUUxMiw9a6s35kqsTviz/J1Qc9vRNB+cxLKzbt95o4Hal69kdt0SW
+         piteZx3t8n1c3sGMz4J6Ci8bqMnMdZslbN4LY3WkLHb9B1HDOSvnJirHRBhk8S5Y+b
+         Q1VUIRf2BOXxh6VK9N1HFuxwT5sUjkTFE+bv6jtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, WANG Chao <chao.wang@ucloud.cn>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/190] cifs: smbd: take an array of reqeusts when sending upper layer data
-Date:   Fri, 13 Sep 2019 14:06:25 +0100
-Message-Id: <20190913130610.324318195@linuxfoundation.org>
+Subject: [PATCH 4.19 114/190] x86/kvm: move kvm_load/put_guest_xcr0 into atomic context
+Date:   Fri, 13 Sep 2019 14:06:09 +0100
+Message-Id: <20190913130608.893203401@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,176 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4739f2328661d070f93f9bcc8afb2a82706c826d ]
+[ Upstream commit 1811d979c71621aafc7b879477202d286f7e863b ]
 
-To support compounding, __smb_send_rqst() now sends an array of requests to
-the transport layer.
-Change smbd_send() to take an array of requests, and send them in as few
-packets as possible.
+guest xcr0 could leak into host when MCE happens in guest mode. Because
+do_machine_check() could schedule out at a few places.
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+For example:
+
+kvm_load_guest_xcr0
+...
+kvm_x86_ops->run(vcpu) {
+  vmx_vcpu_run
+    vmx_complete_atomic_exit
+      kvm_machine_check
+        do_machine_check
+          do_memory_failure
+            memory_failure
+              lock_page
+
+In this case, host_xcr0 is 0x2ff, guest vcpu xcr0 is 0xff. After schedule
+out, host cpu has guest xcr0 loaded (0xff).
+
+In __switch_to {
+     switch_fpu_finish
+       copy_kernel_to_fpregs
+         XRSTORS
+
+If any bit i in XSTATE_BV[i] == 1 and xcr0[i] == 0, XRSTORS will
+generate #GP (In this case, bit 9). Then ex_handler_fprestore kicks in
+and tries to reinitialize fpu by restoring init fpu state. Same story as
+last #GP, except we get DOUBLE FAULT this time.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: WANG Chao <chao.wang@ucloud.cn>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smbdirect.c | 55 +++++++++++++++++++++++----------------------
- fs/cifs/smbdirect.h |  5 +++--
- fs/cifs/transport.c |  2 +-
- 3 files changed, 32 insertions(+), 30 deletions(-)
+ arch/x86/kvm/svm.c |  2 ++
+ arch/x86/kvm/vmx.c |  4 ++++
+ arch/x86/kvm/x86.c | 10 ++++------
+ arch/x86/kvm/x86.h |  2 ++
+ 4 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index 5fdb9a509a97f..1959931e14c1e 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -2090,7 +2090,8 @@ int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
-  * rqst: the data to write
-  * return value: 0 if successfully write, otherwise error code
-  */
--int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
-+int smbd_send(struct TCP_Server_Info *server,
-+	int num_rqst, struct smb_rqst *rqst_array)
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 0f33f00aa4dfe..ac2cc2ed7a85f 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5622,6 +5622,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	svm->vmcb->save.cr2 = vcpu->arch.cr2;
+ 
+ 	clgi();
++	kvm_load_guest_xcr0(vcpu);
+ 
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+@@ -5769,6 +5770,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
+ 		kvm_before_interrupt(&svm->vcpu);
+ 
++	kvm_put_guest_xcr0(vcpu);
+ 	stgi();
+ 
+ 	/* Any pending NMI will happen here */
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 562f5dc4645b6..ee9ff20da3902 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -10756,6 +10756,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	if (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)
+ 		vmx_set_interrupt_shadow(vcpu, 0);
+ 
++	kvm_load_guest_xcr0(vcpu);
++
+ 	if (static_cpu_has(X86_FEATURE_PKU) &&
+ 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
+ 	    vcpu->arch.pkru != vmx->host_pkru)
+@@ -10971,6 +10973,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 			__write_pkru(vmx->host_pkru);
+ 	}
+ 
++	kvm_put_guest_xcr0(vcpu);
++
+ 	vmx->nested.nested_run_pending = 0;
+ 	vmx->idt_vectoring_info = 0;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 33b2e3e07f925..a846ed13ba53c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -713,7 +713,7 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw)
+ }
+ EXPORT_SYMBOL_GPL(kvm_lmsw);
+ 
+-static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
++void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
  {
- 	struct smbd_connection *info = server->smbd_conn;
- 	struct kvec vec;
-@@ -2102,6 +2103,8 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
- 		info->max_send_size - sizeof(struct smbd_data_transfer);
- 	struct kvec *iov;
- 	int rc;
-+	struct smb_rqst *rqst;
-+	int rqst_idx;
+ 	if (kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE) &&
+ 			!vcpu->guest_xcr0_loaded) {
+@@ -723,8 +723,9 @@ static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
+ 		vcpu->guest_xcr0_loaded = 1;
+ 	}
+ }
++EXPORT_SYMBOL_GPL(kvm_load_guest_xcr0);
  
- 	info->smbd_send_pending++;
- 	if (info->transport_status != SMBD_CONNECTED) {
-@@ -2109,47 +2112,41 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
- 		goto done;
+-static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
++void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
+ {
+ 	if (vcpu->guest_xcr0_loaded) {
+ 		if (vcpu->arch.xcr0 != host_xcr0)
+@@ -732,6 +733,7 @@ static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
+ 		vcpu->guest_xcr0_loaded = 0;
+ 	}
+ }
++EXPORT_SYMBOL_GPL(kvm_put_guest_xcr0);
+ 
+ static int __kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
+ {
+@@ -7649,8 +7651,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		goto cancel_injection;
  	}
  
--	/*
--	 * Skip the RFC1002 length defined in MS-SMB2 section 2.1
--	 * It is used only for TCP transport in the iov[0]
--	 * In future we may want to add a transport layer under protocol
--	 * layer so this will only be issued to TCP transport
--	 */
+-	kvm_load_guest_xcr0(vcpu);
 -
--	if (rqst->rq_iov[0].iov_len != 4) {
--		log_write(ERR, "expected the pdu length in 1st iov, but got %zu\n", rqst->rq_iov[0].iov_len);
--		return -EINVAL;
--	}
+ 	if (req_immediate_exit) {
+ 		kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 		kvm_x86_ops->request_immediate_exit(vcpu);
+@@ -7703,8 +7703,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
+ 	smp_wmb();
+ 
+-	kvm_put_guest_xcr0(vcpu);
 -
- 	/*
- 	 * Add in the page array if there is one. The caller needs to set
- 	 * rq_tailsz to PAGE_SIZE when the buffer has multiple pages and
- 	 * ends at page boundary
- 	 */
--	buflen = smb_rqst_len(server, rqst);
-+	remaining_data_length = 0;
-+	for (i = 0; i < num_rqst; i++)
-+		remaining_data_length += smb_rqst_len(server, &rqst_array[i]);
+ 	kvm_before_interrupt(vcpu);
+ 	kvm_x86_ops->handle_external_intr(vcpu);
+ 	kvm_after_interrupt(vcpu);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 1826ed9dd1c8f..8889e0c029a70 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -345,4 +345,6 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+ 	__this_cpu_write(current_vcpu, NULL);
+ }
  
--	if (buflen + sizeof(struct smbd_data_transfer) >
-+	if (remaining_data_length + sizeof(struct smbd_data_transfer) >
- 		info->max_fragmented_send_size) {
- 		log_write(ERR, "payload size %d > max size %d\n",
--			buflen, info->max_fragmented_send_size);
-+			remaining_data_length, info->max_fragmented_send_size);
- 		rc = -EINVAL;
- 		goto done;
- 	}
- 
--	iov = &rqst->rq_iov[1];
-+	rqst_idx = 0;
-+
-+next_rqst:
-+	rqst = &rqst_array[rqst_idx];
-+	iov = rqst->rq_iov;
- 
--	cifs_dbg(FYI, "Sending smb (RDMA): smb_len=%u\n", buflen);
--	for (i = 0; i < rqst->rq_nvec-1; i++)
-+	cifs_dbg(FYI, "Sending smb (RDMA): idx=%d smb_len=%lu\n",
-+		rqst_idx, smb_rqst_len(server, rqst));
-+	for (i = 0; i < rqst->rq_nvec; i++)
- 		dump_smb(iov[i].iov_base, iov[i].iov_len);
- 
--	remaining_data_length = buflen;
- 
--	log_write(INFO, "rqst->rq_nvec=%d rqst->rq_npages=%d rq_pagesz=%d "
--		"rq_tailsz=%d buflen=%d\n",
--		rqst->rq_nvec, rqst->rq_npages, rqst->rq_pagesz,
--		rqst->rq_tailsz, buflen);
-+	log_write(INFO, "rqst_idx=%d nvec=%d rqst->rq_npages=%d rq_pagesz=%d "
-+		"rq_tailsz=%d buflen=%lu\n",
-+		rqst_idx, rqst->rq_nvec, rqst->rq_npages, rqst->rq_pagesz,
-+		rqst->rq_tailsz, smb_rqst_len(server, rqst));
- 
--	start = i = iov[0].iov_len ? 0 : 1;
-+	start = i = 0;
- 	buflen = 0;
- 	while (true) {
- 		buflen += iov[i].iov_len;
-@@ -2197,14 +2194,14 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
- 						goto done;
- 				}
- 				i++;
--				if (i == rqst->rq_nvec-1)
-+				if (i == rqst->rq_nvec)
- 					break;
- 			}
- 			start = i;
- 			buflen = 0;
- 		} else {
- 			i++;
--			if (i == rqst->rq_nvec-1) {
-+			if (i == rqst->rq_nvec) {
- 				/* send out all remaining vecs */
- 				remaining_data_length -= buflen;
- 				log_write(INFO,
-@@ -2248,6 +2245,10 @@ int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst)
- 		}
- 	}
- 
-+	rqst_idx++;
-+	if (rqst_idx < num_rqst)
-+		goto next_rqst;
-+
- done:
- 	/*
- 	 * As an optimization, we don't wait for individual I/O to finish
-diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
-index a11096254f296..b5c240ff21919 100644
---- a/fs/cifs/smbdirect.h
-+++ b/fs/cifs/smbdirect.h
-@@ -292,7 +292,8 @@ void smbd_destroy(struct smbd_connection *info);
- 
- /* Interface for carrying upper layer I/O through send/recv */
- int smbd_recv(struct smbd_connection *info, struct msghdr *msg);
--int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst);
-+int smbd_send(struct TCP_Server_Info *server,
-+	int num_rqst, struct smb_rqst *rqst);
- 
- enum mr_state {
- 	MR_READY,
-@@ -332,7 +333,7 @@ static inline void *smbd_get_connection(
- static inline int smbd_reconnect(struct TCP_Server_Info *server) {return -1; }
- static inline void smbd_destroy(struct smbd_connection *info) {}
- static inline int smbd_recv(struct smbd_connection *info, struct msghdr *msg) {return -1; }
--static inline int smbd_send(struct TCP_Server_Info *server, struct smb_rqst *rqst) {return -1; }
-+static inline int smbd_send(struct TCP_Server_Info *server, int num_rqst, struct smb_rqst *rqst) {return -1; }
++void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
++void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
  #endif
- 
- #endif
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index f2938bd95c40e..fe77f41bff9f2 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -287,7 +287,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	__be32 rfc1002_marker;
- 
- 	if (cifs_rdma_enabled(server) && server->smbd_conn) {
--		rc = smbd_send(server, rqst);
-+		rc = smbd_send(server, num_rqst, rqst);
- 		goto smbd_done;
- 	}
- 	if (ssocket == NULL)
 -- 
 2.20.1
 
