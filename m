@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE433C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605BDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8722C206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F0A214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380510;
-	bh=nGYHI6LlHQJXqXhAx49Lr4q1RWH0aq7nAU5YsjvZ58Q=;
+	s=default; t=1568380515;
+	bh=SbjtpXFVL3W6WXlw+krsgMsn8WUkfGvBq0rbLKiQEhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wa6HwlEQVQKy3qNE2c/DZT29TJjPhKya+z4OwDcpZ8xeHtcT1MR/OfhreFCyr7cgX
-	 j0ZIaRy8VCI5zhL98DX3CFXxkUt0UZrAl4jwUhl8CrNaYiANtQm8gtkF5Y+Nav7r8L
-	 yCCK/A2TAahFxnKakf777Yj6PRQRrnPEM/HO5Aa8=
+	b=hv8VNbl2ow1+3J+VCSX06RpUt/xu9CCtzkPzdFTZJEeQloVeviPiPxGgMFia/igQL
+	 p1MvL6UaytOhVCGWWtRq+ebIoKZ3a+alGBECCZ2A8k1vShX0nVFdYUBbLzOpaPQQlv
+	 t8NNRZGrfeCVfCkg3Id/2z1fNf49RJXnHvG/nKxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389655AbfIMNPJ (ORCPT
+        id S2389661AbfIMNPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbfIMNPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:04 -0400
+        id S2389105AbfIMNPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:10 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1BA208C2;
-        Fri, 13 Sep 2019 13:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97FD4208C2;
+        Fri, 13 Sep 2019 13:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380504;
-        bh=nGYHI6LlHQJXqXhAx49Lr4q1RWH0aq7nAU5YsjvZ58Q=;
+        s=default; t=1568380510;
+        bh=SbjtpXFVL3W6WXlw+krsgMsn8WUkfGvBq0rbLKiQEhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWohwD+HO7TiGxweYrarb5WIzM0+mx09eUoISsqkNpBLygnKMZslJFyZBzJbn4UEd
-         2WD6vDsBu+2FaJytHcIXllMbN4bA6ya1CbnnpmfgmN9v4iL94Lnk9jNq76UNbygO4c
-         sTUk93X0u5Ma/CaB5xH5TVbydsc/04ak0Mus1U7Y=
+        b=tyEXKognn+uHSY+MZ8GlvvET+AkjZTdd8+TFp6UTiQestm+gWtirN8b2e1k32Xj5n
+         2PeGetmMrCt89wwmeqd5z3TKcPL6fmhEyF7COBK/bPDp792swR0d5eU2bTs6togXBs
+         7JeU0FgdfHfJX1pEE66Wuglxo8W4LddY3OY244ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/190] scsi: megaraid_sas: Fix combined reply queue mode detection
-Date:   Fri, 13 Sep 2019 14:05:24 +0100
-Message-Id: <20190913130605.179406535@linuxfoundation.org>
+Subject: [PATCH 4.19 088/190] iio: adc: exynos-adc: Add S5PV210 variant
+Date:   Fri, 13 Sep 2019 14:05:43 +0100
+Message-Id: <20190913130606.615365344@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,57 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e29c322133472628c6de85efb99ccd3b3df5571e ]
+[ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
 
-For Invader series, if FW supports more than 8 MSI-x vectors, driver needs
-to enable combined reply queue mode. For Ventura series, driver enables
-combined reply queue mode in case of more than 16 MSI-x vectors.
+S5PV210's ADC variant is almost the same as v1 except that it has 10
+channels and doesn't require the pmu register
 
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/iio/adc/exynos_adc.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 806ceabcabc3f..b6fc7c6337610 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5325,12 +5325,29 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 				instance->msix_vectors = (scratch_pad_2
- 					& MR_MAX_REPLY_QUEUES_OFFSET) + 1;
- 				fw_msix_count = instance->msix_vectors;
--			} else { /* Invader series supports more than 8 MSI-x vectors*/
-+			} else {
- 				instance->msix_vectors = ((scratch_pad_2
- 					& MR_MAX_REPLY_QUEUES_EXT_OFFSET)
- 					>> MR_MAX_REPLY_QUEUES_EXT_OFFSET_SHIFT) + 1;
--				if (instance->msix_vectors > 16)
--					instance->msix_combined = true;
-+
-+				/*
-+				 * For Invader series, > 8 MSI-x vectors
-+				 * supported by FW/HW implies combined
-+				 * reply queue mode is enabled.
-+				 * For Ventura series, > 16 MSI-x vectors
-+				 * supported by FW/HW implies combined
-+				 * reply queue mode is enabled.
-+				 */
-+				switch (instance->adapter_type) {
-+				case INVADER_SERIES:
-+					if (instance->msix_vectors > 8)
-+						instance->msix_combined = true;
-+					break;
-+				case VENTURA_SERIES:
-+					if (instance->msix_vectors > 16)
-+						instance->msix_combined = true;
-+					break;
-+				}
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index 4be29ed447559..41da522fc6735 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -115,6 +115,7 @@
+ #define MAX_ADC_V2_CHANNELS		10
+ #define MAX_ADC_V1_CHANNELS		8
+ #define MAX_EXYNOS3250_ADC_CHANNELS	2
++#define MAX_S5PV210_ADC_CHANNELS	10
  
- 				if (rdpq_enable)
- 					instance->is_rdpq = (scratch_pad_2 & MR_RDPQ_MODE_OFFSET) ?
+ /* Bit definitions common for ADC_V1 and ADC_V2 */
+ #define ADC_CON_EN_START	(1u << 0)
+@@ -282,6 +283,16 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
+ 	.start_conv	= exynos_adc_v1_start_conv,
+ };
+ 
++static const struct exynos_adc_data exynos_adc_s5pv210_data = {
++	.num_channels	= MAX_S5PV210_ADC_CHANNELS,
++	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
++
++	.init_hw	= exynos_adc_v1_init_hw,
++	.exit_hw	= exynos_adc_v1_exit_hw,
++	.clear_irq	= exynos_adc_v1_clear_irq,
++	.start_conv	= exynos_adc_v1_start_conv,
++};
++
+ static void exynos_adc_s3c2416_start_conv(struct exynos_adc *info,
+ 					  unsigned long addr)
+ {
+@@ -478,6 +489,9 @@ static const struct of_device_id exynos_adc_match[] = {
+ 	}, {
+ 		.compatible = "samsung,s3c6410-adc",
+ 		.data = &exynos_adc_s3c64xx_data,
++	}, {
++		.compatible = "samsung,s5pv210-adc",
++		.data = &exynos_adc_s5pv210_data,
+ 	}, {
+ 		.compatible = "samsung,exynos-adc-v1",
+ 		.data = &exynos_adc_v1_data,
 -- 
 2.20.1
 
