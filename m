@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF664C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76EE20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D12C208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380287;
-	bh=1GWIcfSbvQkpn/DmxhgFR20EInGany3sJzPVeHdYOAw=;
+	s=default; t=1568380292;
+	bh=1mChLguwNvmsTCWxCMHukNMunGzA705l+b8oIxjE6ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcLFiekvNNFWztYZo57VVJPpIY9n5EpU03VNUfYAkQG7/J0M+tW2wU6FLLvxrCWFM
-	 LF6H9Zij41jLP/KXVqqeMYDNXP7bWUJWer5Yxfg6FfuM2IQ4QLG6JrZ5ow0C6yzWf5
-	 jXbDzW3vDw9U+6g7XL8gCSapB8LQvgaQoThUzFZw=
+	b=cFoZUYgtggybWIcZuXD8sKfsH7KyNfG2xVX4QiBtngWe91/u8BtQ7q84lfHMsApJy
+	 vp3rbLpfJgNz7a3p9X8nRTY7ku8O3H0kU4brSmigjeF00hPtmJqHc/YMuSaYV77Bgv
+	 nobXyqfLKHN+HyVcbmYKzM31qWwScehogUwCqza4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388957AbfIMNL0 (ORCPT
+        id S2388982AbfIMNLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388914AbfIMNLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:23 -0400
+        id S2388969AbfIMNL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:29 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88CB6206BB;
-        Fri, 13 Sep 2019 13:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79BD9208C2;
+        Fri, 13 Sep 2019 13:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380283;
-        bh=1GWIcfSbvQkpn/DmxhgFR20EInGany3sJzPVeHdYOAw=;
+        s=default; t=1568380289;
+        bh=1mChLguwNvmsTCWxCMHukNMunGzA705l+b8oIxjE6ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vfV+gS/PGyD9PyvenCVFm6JjR4mhb5izkORLl567jzQc6gV7BlNeM1o014lnb98Gi
-         OU0nzSLv3iCGVG9kGS0Nzu/00keKH9TUynnzyAztcRCDLOJf37uDXdm6EIbRUTc04K
-         mvg7EC7lNrkzRCjcSfH5JwvbXfYCV2Caad6e2ybI=
+        b=HdAGFfjkQpv5XR90UrJaR0gOgqQmb5CgahLHhxwMS/zpx0CGuCzOk13qMBIq960mb
+         tRDFNEfBfbbHqVorxi/NStFnsfCYdVpTPgWf9A3FU19X6KzrNPlgjkmGWV/oCuldAd
+         thFZvJDjPVcL7RCHOOkm99KSZ2009PUq+gctul+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 4.19 015/190] blk-iolatency: fix STS_AGAIN handling
-Date:   Fri, 13 Sep 2019 14:04:30 +0100
-Message-Id: <20190913130600.799594210@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 017/190] timekeeping: Use proper ktime_add when adding nsecs in coarse offset
+Date:   Fri, 13 Sep 2019 14:04:32 +0100
+Message-Id: <20190913130600.943205156@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,121 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c9b3007feca018d3f7061f5d5a14cb00766ffe9b ]
+[ Upstream commit 0354c1a3cdf31f44b035cfad14d32282e815a572 ]
 
-The iolatency controller is based on rq_qos. It increments on
-rq_qos_throttle() and decrements on either rq_qos_cleanup() or
-rq_qos_done_bio(). a3fb01ba5af0 fixes the double accounting issue where
-blk_mq_make_request() may call both rq_qos_cleanup() and
-rq_qos_done_bio() on REQ_NO_WAIT. So checking STS_AGAIN prevents the
-double decrement.
+While this doesn't actually amount to a real difference, since the macro
+evaluates to the same thing, every place else operates on ktime_t using
+these functions, so let's not break the pattern.
 
-The above works upstream as the only way we can get STS_AGAIN is from
-blk_mq_get_request() failing. The STS_AGAIN handling isn't a real
-problem as bio_endio() skipping only happens on reserved tag allocation
-failures which can only be caused by driver bugs and already triggers
-WARN.
-
-However, the fix creates a not so great dependency on how STS_AGAIN can
-be propagated. Internally, we (Facebook) carry a patch that kills read
-ahead if a cgroup is io congested or a fatal signal is pending. This
-combined with chained bios progagate their bi_status to the parent is
-not already set can can cause the parent bio to not clean up properly
-even though it was successful. This consequently leaks the inflight
-counter and can hang all IOs under that blkg.
-
-To nip the adverse interaction early, this removes the rq_qos_cleanup()
-callback in iolatency in favor of cleaning up always on the
-rq_qos_done_bio() path.
-
-Fixes: a3fb01ba5af0 ("blk-iolatency: only account submitted bios")
-Debugged-by: Tejun Heo <tj@kernel.org>
-Debugged-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: e3ff9c3678b4 ("timekeeping: Repair ktime_get_coarse*() granularity")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lkml.kernel.org/r/20190621203249.3909-1-Jason@zx2c4.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iolatency.c | 51 ++++++++++++-------------------------------
- 1 file changed, 14 insertions(+), 37 deletions(-)
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 84ecdab41b691..0529e94a20f7f 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -566,10 +566,6 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg)
- 		return;
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 443edcddac8ab..c2708e1f0c69f 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -823,7 +823,7 @@ ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
  
--	/* We didn't actually submit this bio, don't account it. */
--	if (bio->bi_status == BLK_STS_AGAIN)
--		return;
--
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
-@@ -588,40 +584,22 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
  
- 		inflight = atomic_dec_return(&rqw->inflight);
- 		WARN_ON_ONCE(inflight < 0);
--		if (iolat->min_lat_nsec == 0)
--			goto next;
--		iolatency_record_time(iolat, &bio->bi_issue, now,
--				      issue_as_root);
--		window_start = atomic64_read(&iolat->window_start);
--		if (now > window_start &&
--		    (now - window_start) >= iolat->cur_win_nsec) {
--			if (atomic64_cmpxchg(&iolat->window_start,
--					window_start, now) == window_start)
--				iolatency_check_latencies(iolat, now);
-+		/*
-+		 * If bi_status is BLK_STS_AGAIN, the bio wasn't actually
-+		 * submitted, so do not account for it.
-+		 */
-+		if (iolat->min_lat_nsec && bio->bi_status != BLK_STS_AGAIN) {
-+			iolatency_record_time(iolat, &bio->bi_issue, now,
-+					      issue_as_root);
-+			window_start = atomic64_read(&iolat->window_start);
-+			if (now > window_start &&
-+			    (now - window_start) >= iolat->cur_win_nsec) {
-+				if (atomic64_cmpxchg(&iolat->window_start,
-+					     window_start, now) == window_start)
-+					iolatency_check_latencies(iolat, now);
-+			}
- 		}
--next:
--		wake_up(&rqw->wait);
--		blkg = blkg->parent;
--	}
--}
--
--static void blkcg_iolatency_cleanup(struct rq_qos *rqos, struct bio *bio)
--{
--	struct blkcg_gq *blkg;
--
--	blkg = bio->bi_blkg;
--	while (blkg && blkg->parent) {
--		struct rq_wait *rqw;
--		struct iolatency_grp *iolat;
--
--		iolat = blkg_to_lat(blkg);
--		if (!iolat)
--			goto next;
--
--		rqw = &iolat->rq_wait;
--		atomic_dec(&rqw->inflight);
- 		wake_up(&rqw->wait);
--next:
- 		blkg = blkg->parent;
- 	}
+-	return base + nsecs;
++	return ktime_add_ns(base, nsecs);
  }
-@@ -637,7 +615,6 @@ static void blkcg_iolatency_exit(struct rq_qos *rqos)
+ EXPORT_SYMBOL_GPL(ktime_get_coarse_with_offset);
  
- static struct rq_qos_ops blkcg_iolatency_ops = {
- 	.throttle = blkcg_iolatency_throttle,
--	.cleanup = blkcg_iolatency_cleanup,
- 	.done_bio = blkcg_iolatency_done_bio,
- 	.exit = blkcg_iolatency_exit,
- };
 -- 
 2.20.1
 
