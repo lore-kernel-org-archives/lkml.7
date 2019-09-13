@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8352EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B67C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE01208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809FD208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380404;
-	bh=w5RE/Un7t/yESkZsp1fzyJSoUfIn8yUmOCtBYjovge0=;
+	s=default; t=1568380408;
+	bh=lJB9KIomI+1Fk61KEPWZosRWpIMwyWCXx3FH6649FOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBdRsjZc4o3KHoAwgbW/2R8eQ+eyiVEt3RaCVygUetcVeJC8Lp6+ylrBpFhFzG3fS
-	 EC/TGpMje+oSlFrHvFoaW/58quFIcDeymZWXbZFb9IDS6tQoQsY/VxYg1Mx+Nq3S9s
-	 jWbo4ITzfjQWPSENJ699zIaxxoPeNWSf7xSxGHmE=
+	b=vFzPtAOp7Sz4ChYP58tF6pfPxeNb0NDWXVcgLbYGWb8nbC0AFpMNklKb6oVDlHVaC
+	 k0GAIrzlFbgvjsBGzP1bt09EIsNPNyCw4imBiKNa6ErdRV7pt5lbd3cmxm228Y576Q
+	 YP6CP/y+a0Jd0Mk1r1vyQsgFzWXCJT7im0gEO38k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389318AbfIMNNX (ORCPT
+        id S2389330AbfIMNN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389306AbfIMNNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:19 -0400
+        id S2389309AbfIMNNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:22 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBFEF208C0;
-        Fri, 13 Sep 2019 13:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09010208C0;
+        Fri, 13 Sep 2019 13:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380398;
-        bh=w5RE/Un7t/yESkZsp1fzyJSoUfIn8yUmOCtBYjovge0=;
+        s=default; t=1568380401;
+        bh=lJB9KIomI+1Fk61KEPWZosRWpIMwyWCXx3FH6649FOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7yRjRS9C9708bW+CkCmzD6dLMEtkcgeTwh6SoYp7oA2yQehvsnaXVWLUzcJhDnbH
-         XO4Oz6iMLek+PeDHTAbTfxu7flJET1z35DEfZn4EQkvSUVs+Nnr0wioJ8hMd0yHLVB
-         ot5SE9izfS7QMvJb2+Q1OhLVhO6fWLauXDvobm6I=
+        b=uaSWJE38w6jGyPepaSNJK+fAdVCcePRrk3PqSxUsl7ZxzeeJybGm+mqsZqPhweR/D
+         DTVdp0dpn8b5cl0LdOuPzsNxnsE6r9tIH14G53Q9ktoO7okfeNgYFFQcyyIj6XDRGX
+         fyLbf+BTOe+DGL1vW03Qnd6zkhpI/13z0Y6OJFRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>, Rex Zhu <Rex.Zhu@amd.com>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/190] drm/amd/pp: Fix truncated clock value when set watermark
-Date:   Fri, 13 Sep 2019 14:05:07 +0100
-Message-Id: <20190913130603.941108945@linuxfoundation.org>
+Subject: [PATCH 4.19 053/190] drm/amd/dm: Understand why attaching path/tile properties are needed
+Date:   Fri, 13 Sep 2019 14:05:08 +0100
+Message-Id: <20190913130604.014601048@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,84 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d454e9ffdb1ef5a51ebc147b5389c96048db683 ]
+[ Upstream commit 04ac4b0ed412f65230b456fcd9aa07e13befff89 ]
 
-the clk value should be tranferred to MHz first and
-then transfer to uint16. otherwise, the clock value
-will be truncated.
+Path property is used for userspace to know what MST connector goes to what actual DRM DisplayPort connector, the tiling property is for tiling configurations. Not sure what else there is to figure out.
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reported-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Rex Zhu <Rex.Zhu@amd.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Jerry (Fangzhi) Zuo <Jerry.Zuo@amd.com>
+Cc: Stable <stable@vger.kernel.org>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/powerplay/hwmgr/smu_helper.c  | 32 +++++++++----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-index a321c465b7dce..cede78cdf28db 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-@@ -669,20 +669,20 @@ int smu_set_watermarks_for_clocks_ranges(void *wt_table,
- 	for (i = 0; i < wm_with_clock_ranges->num_wm_dmif_sets; i++) {
- 		table->WatermarkRow[1][i].MinClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_dcfclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_dcfclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MaxClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_dcfclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_dcfclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MinUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MaxUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].WmSetting = (uint8_t)
- 				wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_set_id;
- 	}
-@@ -690,20 +690,20 @@ int smu_set_watermarks_for_clocks_ranges(void *wt_table,
- 	for (i = 0; i < wm_with_clock_ranges->num_wm_mcif_sets; i++) {
- 		table->WatermarkRow[0][i].MinClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_socclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_socclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MaxClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_socclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_socclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MinUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MaxUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].WmSetting = (uint8_t)
- 				wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_set_id;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 59445c83f0238..c85bea70d9652 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -377,9 +377,6 @@ dm_dp_add_mst_connector(struct drm_dp_mst_topology_mgr *mgr,
+ 	drm_connector_attach_encoder(&aconnector->base,
+ 				     &aconnector->mst_encoder->base);
+ 
+-	/*
+-	 * TODO: understand why this one is needed
+-	 */
+ 	drm_object_attach_property(
+ 		&connector->base,
+ 		dev->mode_config.path_property,
 -- 
 2.20.1
 
