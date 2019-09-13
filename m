@@ -2,318 +2,214 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EDBC4CECA
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10078C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612FE20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB26820830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 18:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hh/fwrS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbfIMSmp (ORCPT
+        id S2389819AbfIMSq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 14:42:45 -0400
-Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:45584 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387802AbfIMSmp (ORCPT
+        Fri, 13 Sep 2019 14:46:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33607 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388709AbfIMSq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 14:42:45 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 4ED4D801A6AF;
-        Fri, 13 Sep 2019 18:42:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crook21_174f32285e930
-X-Filterd-Recvd-Size: 10261
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 13 Sep 2019 18:42:40 +0000 (UTC)
-Message-ID: <78f67ee934f167b433517da81c6a0d3f35c4b123.camel@perches.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2 0/3] Maintainer Entry Profiles
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>
-Date:   Fri, 13 Sep 2019 11:42:38 -0700
-In-Reply-To: <CAL_JsqJju36BZPK6DJab28Ne-ORpEyPpxH0H4DuymxFMabpMRQ@mail.gmail.com>
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <yq1o8zqeqhb.fsf@oracle.com> <6fe45562-9493-25cf-afdb-6c0e702a49b4@acm.org>
-         <44c08faf43fa77fb271f8dbb579079fb09007716.camel@perches.com>
-         <74984dc0-d5e4-f272-34b9-9a78619d5a83@acm.org>
-         <4299c79e33f22e237e42515ea436f187d8beb32e.camel@perches.com>
-         <CAL_JsqJju36BZPK6DJab28Ne-ORpEyPpxH0H4DuymxFMabpMRQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 13 Sep 2019 14:46:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id m11so64798148ioo.0;
+        Fri, 13 Sep 2019 11:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lmfbL2z4vtd0VpWMSffUTIuSUrzLUyG+rIioXPWyrbU=;
+        b=Hh/fwrS9Vz2AMXYkNwffok9v+0LoV3kYjFIfU3ztvIY7jfzsxVexBCCuH3L7grIzD1
+         kETCshVfoivMis6vQUgQGtKU2NDzRfFR2FrniOC3fnqovMZX4Fb4JV89gQn/D6or5O1f
+         0rdwZagkwAjqSa7Tzy6ngX9qCYLrkQzmPysUHDEmEolIClOMFf6JVroTdNO4w5Giq9FJ
+         58eItxLZhOed7rGDGqmxYOndfjxAhNl4EnWyEGuHrdMW5Ht+lXpVtc4sdNoEtyHSWlQH
+         4x8dMaAxldn1rOK1LzE9kksupfB+Sb36vLaTzBc9xEG08pYwKECOJtYn92uukOV93mct
+         Ykmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lmfbL2z4vtd0VpWMSffUTIuSUrzLUyG+rIioXPWyrbU=;
+        b=NwubNkw9QTeE8ccDTkK7SbkdhZSOUAIGyXpRvJ90rpjNpzhTWrxEq/aiT7cI7V2ZIJ
+         gk9AXcWlHTVVPVm0oVlVqhYxY7yzzZfyu9oOUKtxDL/CkDvhFjippUsvvViZwbH8xwSb
+         8V9KNjumNSPzAWnp8tYXDa0Kd/gB5Tbo2erTV/55KFbROuChz4QQVN57Y628OcXwA4dQ
+         DrGyhA6eZv9dqlrKEb245aZGnDPcxGIZnXl8xYNQcWa+Sa1hxZk3tNJXls6ge02W76Pg
+         NGs3UvTOsHX59Gesd59DmkkfN6lRsnSEBWePJfWBtlI6FdvgSjXuHXHU+w35Rbp/5pod
+         f7/w==
+X-Gm-Message-State: APjAAAWtISumOTftVYAFyZGV0E7e1MqKNjicYSUupeA01Au6+7w5TNid
+        6P0oCUe9INReGUQnXzYdLlljLlRBKBgD5XHM4GQ=
+X-Google-Smtp-Source: APXvYqzjtkOMuV22EzyZSoPa9S6e+4Act4hSQeIz0woAi8ZBiGv01NF5q/CMpbHMdt67bo3+yRjvLd2jW71R3voJehs=
+X-Received: by 2002:a6b:cd81:: with SMTP id d123mr1526093iog.78.1568400413443;
+ Fri, 13 Sep 2019 11:46:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
+ <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
+ <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com> <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
+ <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com> <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
+ <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com> <CAHCN7x+_f_jrttUGyKHBOUyYjkOx0mJxba1Yb3tPm9ee7+21og@mail.gmail.com>
+ <CAHCN7xLODa114M77-rX9WHT+uJtsH3yOmbFG2KdEjZpTSECs2w@mail.gmail.com>
+ <D3AF2868-F9A4-4176-A851-5DCF029B65A9@goldelico.com> <81d6cd33-4930-6753-d5ed-678cb1d2038d@linaro.org>
+In-Reply-To: <81d6cd33-4930-6753-d5ed-678cb1d2038d@linaro.org>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 13 Sep 2019 13:46:41 -0500
+Message-ID: <CAHCN7xLcCO-QrYTm0jzS64P6o5t8cfudJfYELDSz-_OPV5JO5w@mail.gmail.com>
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
+        kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-13 at 15:26 +0100, Rob Herring wrote:
-> On Fri, Sep 13, 2019 at 3:12 PM Joe Perches <joe@perches.com> wrote:
-> > On Thu, 2019-09-12 at 13:01 -0700, Bart Van Assche wrote:
-> > 
-> > > Another argument in favor of W=1 is that the formatting of kernel-doc
-> > > headers is checked only if W=1 is passed to make.
-> > 
-> > Actually, but for the fact there are far too many
-> > to generally enable that warning right now,
-> > (an x86-64 defconfig has more than 1000)
-> > that sounds pretty reasonable to me.
+On Fri, Sep 13, 2019 at 12:18 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 13/09/2019 18:51, H. Nikolaus Schaller wrote:
+>
+> [ ... ]
+>
+> >> Good news (I think)
+> >>
+> >> With cooling-device =3D <&cpu 1 2> setup, I was able to ask the max
+> >> frequency and it returned 600MHz.
+> >>
+> >> # cat /sys/devices/virtual/thermal/thermal_zone0/temp
+> >> 58500
+> >> # cat /sys/devices/system/cpu/cpufreq/policy0/scaling_available_freque=
+ncies
+> >> 300000 600000 800000
+> >> # cat /sys/devices/system/cpu/cpufreq/policy0/scaling_m
+> >> scaling_max_freq  scaling_min_freq
+> >> # cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+> >> 600000
+> >
+> > looks good!
+> > But we have to understand what the <&cpu 1 2> exactly means...
+> >
+> > Hopefully someone reading your RFCv2 can answer...
+>
+Daniel,
 
-> It's in the 1000s on arm because W=1 turns on more checks in building
-> .dts files. There are lots of duplicates as most of the dts content is
-> as an include file (e.g. board dts includes soc dts).
+Thank you for replying.
 
-Yeah, dts[i] files in arm compilations are very noisy at W=1
-so moving those message types to W=2 seems sensible.
+> I may have missed the question :)
+>
+> These are the states allowed for the cooling device (the one you can see
+> in the /sys/class/thermal/cooling_device0/max_state. As the logic is
+> inverted for cpufreq, that can be confusing.
 
-$ { opt="ARCH=arm CROSS_COMPILE=arm-unknown-linux-gnueabi-" ; make $opt clean ; make $opt defconfig ; make $opt W=1 -j4 ; } > arm_make.log 2>&1
+I think that's what has be confused.
 
-$ grep -i -P 'dtsi?:.*warning' arm_make.log | wc -l
-69164
+>
+> If it was a fan with, let's say 5 speeds, you would use <&fan 0 5>, so
+> when the mitigation begins the cooling device state is 0 and then the
+> thermal governor increase the state until it sees a cooling effect.
+>
+> If <&fan 0 2> is set, the governor won't set a state above 2 even if the
+> temperature increases.
 
-Just fyi:  for an x86-64 defconfig with gcc 8.3
+I am not sure I know what you mean by 'state' in this context.
 
-$ { make clean ; make defconfig ; make -j4 W=1 ; } > make.log 2>&1
+>
+> When the cooling driver is able to return the number of states it
+> supports, it is safe to set the states to THERMAL_NO_LIMIT and let the
+> governor to find the balance point.
 
-There are ~300 W=1 for non kernel-doc -W<foo> warnings.
+If the cooling driver is using cpufreq, is the number of supported
+states equal to the number of operating points given to cpufreq?
 
-$ grep -i -P -oh '\[\-W[\w\-]+\]' make.log |sort | uniq -c | sort -rn
-    163 [-Wmissing-prototypes]
-     69 [-Wunused-but-set-variable]
-     16 [-Wempty-body]
-     10 [-Wtype-limits]
-      6 [-Woverride-init]
-      2 [-Wstringop-truncation]
-      2 [-Wcast-function-type]
-      1 [-Wunused-but-set-parameter]
+>
+> Now if the cooling device is cpufreq, the state order is inverted,
+> because the cooling effects happens when decreasing the OPP.
+>
+> If the boards support 7 OPPs, the state 0 is 7 - 0, so no mitigation, if
+> the state is 1, the cpufreq is throttle to the 6th OPP, 2 to the 5th OPP
+> etc.
 
-And there are ~1000 kernel-doc only messages in various files
+I am not sure how the state would be set to 2.
 
-$ grep -i 'function parameter' make.log | cut -f1 -d: | sort | uniq -c
-      6 arch/x86/events/intel/pt.c
-      2 arch/x86/kernel/apic/apic.c
-     10 arch/x86/kernel/cpu/mtrr/generic.c
-      5 arch/x86/kernel/crash_dump_64.c
-      1 arch/x86/kernel/i8259.c
-      3 arch/x86/kernel/smpboot.c
-      3 arch/x86/kernel/tsc.c
-      2 arch/x86/kernel/uprobes.c
-      1 arch/x86/lib/cmdline.c
-      1 arch/x86/lib/insn.c
-      2 arch/x86/lib/insn-eval.c
-      4 arch/x86/lib/msr.c
-      2 arch/x86/lib/usercopy_64.c
-      1 arch/x86/mm/pat.c
-     13 arch/x86/mm/pgtable.c
-      1 arch/x86/pci/i386.c
-      2 arch/x86/power/cpu.c
-      2 arch/x86/power/hibernate.c
-      8 certs/system_keyring.c
-      4 crypto/asymmetric_keys/asymmetric_type.c
-      3 crypto/asymmetric_keys/pkcs7_trust.c
-     16 crypto/jitterentropy.c
-      3 drivers/acpi/acpi_apd.c
-      3 drivers/acpi/bus.c
-      2 drivers/acpi/cppc_acpi.c
-      5 drivers/acpi/device_sysfs.c
-      2 drivers/acpi/dock.c
-      2 drivers/acpi/nvs.c
-      1 drivers/acpi/pci_root.c
-      5 drivers/acpi/property.c
-      4 drivers/acpi/sleep.c
-      7 drivers/acpi/utils.c
-      1 drivers/ata/libata-acpi.c
-      2 drivers/ata/libata-pmp.c
-      6 drivers/ata/libata-transport.c
-      4 drivers/ata/pata_amd.c
-      4 drivers/base/attribute_container.c
-      1 drivers/base/devcon.c
-      3 drivers/base/platform-msi.c
-      3 drivers/base/power/runtime.c
-      5 drivers/base/power/wakeup.c
-      2 drivers/char/agp/backend.c
-      3 drivers/char/agp/generic.c
-      2 drivers/clk/clk.c
-      1 drivers/clk/clk-fixed-factor.c
-      1 drivers/clk/clk-fixed-rate.c
-      3 drivers/connector/cn_proc.c
-     31 drivers/cpufreq/cpufreq.c
-      3 drivers/cpufreq/cpufreq_governor.c
-      7 drivers/cpufreq/freq_table.c
-      1 drivers/cpufreq/intel_pstate.c
-      6 drivers/cpuidle/sysfs.c
-      1 drivers/dma-buf/dma-buf.c
-      1 drivers/dma-buf/dma-fence-chain.c
-      6 drivers/dma/dmaengine.c
-      7 drivers/firewire/init_ohci1394_dma.c
-      2 drivers/firmware/efi/memmap.c
-      1 drivers/firmware/efi/vars.c
-     20 drivers/gpu/drm/drm_agpsupport.c
-      8 drivers/hid/hid-core.c
-      3 drivers/hid/hid-quirks.c
-      5 drivers/hid/usbhid/hid-pidff.c
-      3 drivers/input/mouse/synaptics.c
-      2 drivers/iommu/amd_iommu_init.c
-      2 drivers/iommu/dmar.c
-      1 drivers/iommu/intel-pasid.c
-      1 drivers/iommu/iommu.c
-      2 drivers/leds/led-class.c
-      2 drivers/mailbox/pcc.c
-      6 drivers/net/ethernet/intel/e1000/e1000_hw.c
-     21 drivers/net/ethernet/intel/e1000/e1000_main.c
-      1 drivers/net/ethernet/intel/e1000e/80003es2lan.c
-      6 drivers/net/ethernet/intel/e1000e/ich8lan.c
-     42 drivers/net/ethernet/intel/e1000e/netdev.c
-      3 drivers/net/ethernet/intel/e1000e/phy.c
-      2 drivers/net/ethernet/intel/e1000e/ptp.c
-      1 drivers/net/netconsole.c
-      3 drivers/net/phy/mdio-boardinfo.c
-      2 drivers/net/phy/mdio_device.c
-      2 drivers/pci/ats.c
-      3 drivers/pci/hotplug/acpi_pcihp.c
-      4 drivers/pci/pcie/aer.c
-      2 drivers/pci/pcie/pme.c
-      1 drivers/pci/setup-bus.c
-      1 drivers/pci/vc.c
-     22 drivers/pcmcia/cistpl.c
-     13 drivers/pcmcia/pcmcia_cis.c
-     13 drivers/pcmcia/pcmcia_resource.c
-     11 drivers/pcmcia/rsrc_nonstatic.c
-      1 drivers/pnp/system.c
-     11 drivers/rtc/interface.c
-      3 drivers/rtc/sysfs.c
-      2 drivers/thermal/step_wise.c
-      2 drivers/thermal/user_space.c
-      6 drivers/tty/n_tty.c
-      4 drivers/tty/pty.c
-      7 drivers/tty/tty_audit.c
-      7 drivers/tty/tty_baudrate.c
-     13 drivers/tty/tty_buffer.c
-     25 drivers/tty/tty_io.c
-      5 drivers/tty/tty_jobctrl.c
-      6 drivers/tty/tty_ldisc.c
-      6 drivers/tty/tty_port.c
-      5 drivers/tty/vt/consolemap.c
-      4 drivers/tty/vt/vt.c
-      3 drivers/tty/vt/vt_ioctl.c
-     12 drivers/usb/common/debug.c
-      1 drivers/usb/host/pci-quirks.c
-      1 drivers/usb/host/xhci.c
-      6 drivers/usb/host/xhci-mem.c
-      2 drivers/video/backlight/backlight.c
-      1 drivers/video/fbdev/core/fbmon.c
-      2 drivers/video/fbdev/core/fb_notify.c
-      7 fs/devpts/inode.c
-      4 fs/direct-io.c
-      3 fs/eventpoll.c
-      6 fs/fat/dir.c
-      3 fs/fat/misc.c
-      6 fs/fat/nfs.c
-      4 fs/fs_context.c
-      1 fs/fs_parser.c
-      2 fs/fs-writeback.c
-      5 fs/ioctl.c
-      1 fs/libfs.c
-      3 fs/namespace.c
-      2 fs/nfs_common/grace.c
-      2 fs/open.c
-      3 fs/posix_acl.c
-      1 fs/proc/proc_net.c
-      2 fs/proc/vmcore.c
-      2 fs/read_write.c
-      1 fs/super.c
-      5 fs/xattr.c
-      2 kernel/cgroup/cpuset.c
-      1 kernel/cpu.c
-      4 kernel/events/core.c
-      2 kernel/events/hw_breakpoint.c
-      5 kernel/fork.c
-     27 kernel/irq/irqdomain.c
-      3 kernel/irq/matrix.c
-      1 kernel/kprobes.c
-      5 kernel/locking/rtmutex.c
-      1 kernel/notifier.c
-      3 kernel/power/main.c
-      2 kernel/power/qos.c
-     51 kernel/power/snapshot.c
-      2 kernel/power/suspend.c
-     14 kernel/power/swap.c
-      1 kernel/reboot.c
-      4 kernel/seccomp.c
-      2 kernel/stacktrace.c
-      4 kernel/time/alarmtimer.c
-      1 kernel/time/clockevents.c
-      4 kernel/time/posix-cpu-timers.c
-      1 kernel/time/tick-broadcast.c
-      6 kernel/time/tick-oneshot.c
-      3 kernel/time/tick-sched.c
-      3 kernel/time/timeconv.c
-     23 kernel/time/timekeeping.c
-      9 kernel/trace/ring_buffer.c
-      8 kernel/trace/trace_events_filter.c
-      2 kernel/trace/trace_events_trigger.c
-      1 kernel/trace/trace_seq.c
-      1 lib/argv_split.c
-      1 lib/cpumask.c
-      5 lib/genalloc.c
-      4 lib/iov_iter.c
-      2 lib/nlattr.c
-      3 lib/percpu_counter.c
-      6 lib/radix-tree.c
-      2 lib/scatterlist.c
-      3 lib/win_minmax.c
-      1 mm/compaction.c
-      2 mm/oom_kill.c
-      1 mm/page_vma_mapped.c
-      2 mm/swap_state.c
-      1 mm/vmalloc.c
-      1 mm/vmscan.c
-      8 net/ipv4/cipso_ipv4.c
-      3 net/ipv4/ipmr.c
-      1 net/ipv4/tcp_input.c
-      5 net/ipv4/tcp_output.c
-      2 net/ipv4/tcp_timer.c
-      3 net/ipv4/udp.c
-      4 net/ipv6/calipso.c
-      1 net/ipv6/exthdrs.c
-      1 net/ipv6/ip6_output.c
-      3 net/ipv6/udp.c
-      1 net/mac80211/tx.c
-      5 net/netlabel/netlabel_calipso.c
-      2 net/netlabel/netlabel_domainhash.c
-      3 net/sched/ematch.c
-      1 net/socket.c
-      1 net/wireless/radiotap.c
-      4 net/wireless/reg.c
-      6 security/commoncap.c
-      1 security/lsm_audit.c
-     12 security/selinux/avc.c
-      7 security/selinux/netlabel.c
-      2 security/selinux/netport.c
-      4 security/selinux/ss/mls.c
-     34 security/selinux/ss/services.c
-      3 sound/hda/hdac_bus.c
-      1 sound/hda/hdac_component.c
-      2 sound/hda/hdac_controller.c
-     10 sound/hda/hdac_device.c
-      2 sound/hda/hdac_stream.c
-      1 sound/pci/hda/hda_codec.c
+>
+> Now the different combinations:
+>
+> <&cpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT> the governor will use the state
+> 0 to 7.
+>
+> <&cpu THERMAL_NO_LIMIT 2> the governor will use the state 0 to 2
 
+What would be the difference between  <&cpu THERMAL_NO_LIMIT 2>  and
+<&cpu 0 2> ?
+(if there is any)
 
+>
+> <&cpu 1 2> the governor will use the state 1 and 2. That means there is
+> always the cooling effect as the governor won't set it to zero thus
+> stopping the mitigation.
+
+For the purposes of the board in question, we have 4 operating points,
+300MHz, 600MHz, 800MHz and 1GHz.  Once the board reaches 90C, we need
+them to cease operation at 800MHz and 1GHz and only permit operation
+at 300MHz and 600MHz.  I am going under the assumption that the cpu
+index[0] would be for 300MHz, index[1] =3D 600MHz, etc.
+
+If I am interpreting your comment correctly, I should set <&cpu
+THERMAL_NO_LIMIT 2> which would allow it to either not cool and run up
+to 600MHz and not exceed, is that correct?
+
+>
+>
+> Does it clarify the DT spec?
+>
+
+I think your reply to my inquiry might.  If possible, it would be nice
+to get this documented into the bindings doc for others in the future.
+I can do it, but someone with a better understanding of the concept
+maybe more qualified.  I can totally understand why some may want to
+integrate this into their SoC device trees to slow the processor when
+hot.
+
+Thank you for taking the time to review this.  I appreciate it.
+
+adam
+
+>
+>
+>
+> > What happens with trip point 60000?
+> > (unfortunately one has to reboot in between or can you kexec between tw=
+o kernel/dtb versions?)
+> >
+> > BR,
+> > Nikolaus
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
