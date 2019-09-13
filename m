@@ -2,113 +2,211 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC814C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94155C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C492721734
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="W/qZJCLL"
+	by mail.kernel.org (Postfix) with ESMTP id 6587F20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568385370;
+	bh=yUH6OCGvHhyQTZpyfpuHu9LxH3S+yNq5VNeZI6f7go0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c3Wd5SWnwZxAvkI+KmQtfDmKM1ACDiieBcSZrz8yI0RoFh4Kt1gGjjQx9TCDatw6J
+	 8lOUneMDFUZVB/cmi7lNg7sPyKa7a1uPAu9EOzxeNb3oBmQewIv2czirtGNxu3737e
+	 m7ypJ1pf72X37cb2KhL8zAk/63b0SUzFqyOZrIgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389597AbfIMOfZ (ORCPT
+        id S1730582AbfIMOgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:35:25 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42914 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389174AbfIMOfN (ORCPT
+        Fri, 13 Sep 2019 10:36:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35004 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfIMOgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:35:13 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DEUoD2005823;
-        Fri, 13 Sep 2019 16:35:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=r9bCUxv8k2rqzfX0+tEylu2OZfX7xZ0K9dYIQm5sZ6w=;
- b=W/qZJCLLcfrZugV9YgOxipRn7Z6z7LMe8JKXGRv42C6trfe2sEpuY4founWUEy9r4q7o
- u3cNAJo5A4HZT7Oae/86PZNaDJ1ru2/U6KLD4Y2eH1whS6FRASMIIywHsJE0ia8qbJgs
- RC6nNp4oQvOEjDhiJrSCZT+XW5rXrb6XoiythsTWsEix1HZCC1ElozBy2HzaivVGu+S1
- 8J8+8zbUAEZyIzwxo852oju28gbsKMds+FU6wf2wZDY+mDqHQ2jLGWMsaW3URtMtHc6V
- FXpQsR+IgyLy7CI90gzwhCm2wDZhKLfX8zLBQJlJMZiMvLP92J78UgsdnazS9oZnYHb/ jg== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2uyte3wm11-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 13 Sep 2019 16:35:04 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BF8F74E;
-        Fri, 13 Sep 2019 14:34:59 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 79A072C86AE;
-        Fri, 13 Sep 2019 16:34:59 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep
- 2019 16:34:59 +0200
-Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 13 Sep 2019 16:34:59 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <alexandre.torgue@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <fabrice.gasnier@st.com>
-Subject: [PATCH 2/3] ARM: dts: stm32: add ADC pins used on stm32mp157a-dk1
-Date:   Fri, 13 Sep 2019 16:34:39 +0200
-Message-ID: <1568385280-2633-3-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568385280-2633-1-git-send-email-fabrice.gasnier@st.com>
-References: <1568385280-2633-1-git-send-email-fabrice.gasnier@st.com>
+        Fri, 13 Sep 2019 10:36:09 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t6so16445799otp.2;
+        Fri, 13 Sep 2019 07:36:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EhVYjm/YBm0igQafg8TH8nGG75SYappzyaYQWt33XPA=;
+        b=g6f4AWIbnXROw0N9q2CL4QeEc/7hW/RSjc/Y9BNQeNMy9mPVmxsEKomrsrb94QFDSg
+         NRWUwM8TCt46Hk5hMaP41+0fklHgBeekr6tc9QX8QcYmCpqrwc93PpJW2pK5JG4B/CHn
+         0LrPwv46chPV8prMnJKomUdNqD0TbUGyUAhddiXr9qnM0wNbXcw1usvOrXkmmlhYyEPo
+         KNGMhCc+m3biHbifCfLkpat/z26kUO9qbPoKVqh5saNi8YZ3rZb2JQGCZlWkeBX0UbIl
+         qU70/4y1llvhMVJrIWyHz9UKJ0A3YECN3RrdvPaKsIrTCL4dfqR+ucSXS5E5wJGz9n03
+         rgdg==
+X-Gm-Message-State: APjAAAXZPoQoOx8bhzY8WfiW2JYEInBqnKrsxP7EVpjiLASYLEBFM/8Q
+        sGHrliIqSh1OAgUfi0KDOiIlNlA=
+X-Google-Smtp-Source: APXvYqxFXbXgcv9cvlYNEsqbSyTU5GT2myXwn5HRX+RIDFQZX6Of/xSC0KyE0TaktDfaACiCpcljCA==
+X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7219205otq.147.1568385367903;
+        Fri, 13 Sep 2019 07:36:07 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 36sm10597332ott.66.2019.09.13.07.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 07:36:07 -0700 (PDT)
+Message-ID: <5d7ba957.1c69fb81.a8a33.834a@mx.google.com>
+Date:   Fri, 13 Sep 2019 15:36:06 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
+        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
+        maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 12/18] dt-bindings: mips: Add loongson cpus & boards
+References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+ <20190830043232.20191-7-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.1.232]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-13_07:2019-09-11,2019-09-13 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+X-Mutt-References: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define pins that can be used for ADC on stm32mp157a-dk1 board:
-- AIN connector has ADC input pins
-- USB Type-C CC1 & CC2 pins (e.g. in18, in19)
+On Fri, Aug 30, 2019 at 12:32:26PM +0800, Jiaxun Yang wrote:
+> Prepare for later dts.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
+>  .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+> new file mode 100644
+> index 000000000000..dc6dd5114d5e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson CPUs bindings
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +description: |+
+> +  The device tree allows to describe the layout of CPUs in a system through
+> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +  defining properties for every cpu.
+> +
+> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
+> +
+> +  https://www.devicetree.org/specifications/
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +    description: |
+> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
+> +
+> +  compatible:
+> +    enum:
+> +      - loongson,gs464
+> +      - loongson,gs464e
+> +      - loongson,gs264
+> +      - loongson,gs464v
+> +
+> +required:
+> +  - device_type
+> +  - reg
+> +  - compatible
+> +...
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> new file mode 100644
+> index 000000000000..aa6c42013d2c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson based Platforms Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Add a blank line here.
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index e4a0d51..eeb60d0 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -137,6 +137,22 @@
- 				status = "disabled";
- 			};
- 
-+			adc12_ain_pins_a: adc12-ain-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('C', 3, ANALOG)>, /* ADC1 in13 */
-+						 <STM32_PINMUX('F', 12, ANALOG)>, /* ADC1 in6 */
-+						 <STM32_PINMUX('F', 13, ANALOG)>, /* ADC2 in2 */
-+						 <STM32_PINMUX('F', 14, ANALOG)>; /* ADC2 in6 */
-+				};
-+			};
-+
-+			adc12_usb_cc_pins_a: adc12-usb-cc-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('A', 4, ANALOG)>, /* ADC12 in18 */
-+						 <STM32_PINMUX('A', 5, ANALOG)>; /* ADC12 in19 */
-+				};
-+			};
-+
- 			cec_pins_a: cec-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 15, AF4)>;
--- 
-2.7.4
+> +description: |
+> +  Devices with a Loongson CPU shall have the following properties.
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: Loongson 3A1000 + RS780E 1Way
+> +        items:
+> +          - const: loongson,ls3a1000-780e-1way
+
+This is a board or a chip? Normally we have a board compatible followed 
+by a SoC compatible.
+
+What's the difference between 1-way, 2-way, 4-way? Maybe there's another 
+way to describe that. 
+
+> +
+> +      - description: Loongson 3A1000 + RS780E 2Way
+> +        items:
+> +          - const: loongson,ls3a1000-780e-2way
+> +
+> +      - description: Loongson 3A1000 + RS780E 4Way
+> +        items:
+> +          - const: loongson,ls3a1000-780e-4way
+> +
+> +      - description: Loongson 3B1000/1500 + RS780E 1Way
+> +        items:
+> +          - const: loongson,ls3b-780e-1way
+> +
+> +      - description: Loongson 3B1000/1500 + RS780E 2Way
+> +        items:
+> +          - const: loongson,ls3b-780e-2way
+> +
+> +      - description: Loongson 3A2000 + RS780E 1Way
+> +        items:
+> +          - const: loongson,ls3a2000-780e-1way
+> +
+> +      - description: Loongson 3A2000 + RS780E 2Way
+> +        items:
+> +          - const: loongson,ls3a2000-780e-2way
+> +
+> +      - description: Loongson 3A2000 + RS780E 4Way
+> +        items:
+> +          - const: loongson,ls3a2000-780e-4way
+> +
+> +      - description: Loongson 3A3000 + RS780E 1Way
+> +        items:
+> +          - const: loongson,ls3a3000-780e-1way
+> +
+> +      - description: Loongson 3A3000 + RS780E 2Way
+> +        items:
+> +          - const: loongson,ls3a3000-780e-2way
+> +
+> +      - description: Loongson 3A3000 + RS780E 4Way
+> +        items:
+> +          - const: loongson,ls3a3000-780e-4way
+> +
+> +...
+> -- 
+> 2.22.0
+> 
 
