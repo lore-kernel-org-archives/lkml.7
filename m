@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040A2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BF2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0AC206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D7220717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380686;
-	bh=27MRX826Pi+M9axRz0cHbmgXj6AyIpoE/Xg4HHm+8WM=;
+	s=default; t=1568380690;
+	bh=S+I5g/s2MoEk2IMxrV43PfJlXGEod35XkM67UhGBAzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPJuHHD6bD8PCWq5l2EzJLTE/+Z9Xx62jBDauZvHtOKnUcAXE/0amBHholartmSLi
-	 p/j4E68ymOgM2jftuDLpbLxVTwbYPXH1yg8zfbFFaWw9Joj/tkwRNrpUy7pDjwr2L+
-	 TNXwgLlNGNPFlqnvh1uKOc7hQWZIbLwkUAtxpzTI=
+	b=pKL60T57xIJhbFGlk1pnvi27Wgnw3JB2ay5mKxySDg+RsgOo4udy4yifW9am9BXlg
+	 yLoCgDAl1xgZ7hrCC5FOAR20NiEY/OPdQqKxKjAtXvbHCYfPNsKfn8/pqcaUs7pyfp
+	 KBAhRPsl+LW+ky0N1eAobxyEvhtFNO5J9o9xvI3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbfIMNSF (ORCPT
+        id S2390165AbfIMNSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390142AbfIMNSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:02 -0400
+        id S2390142AbfIMNSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:06 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E14206BB;
-        Fri, 13 Sep 2019 13:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DCE206BB;
+        Fri, 13 Sep 2019 13:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380681;
-        bh=27MRX826Pi+M9axRz0cHbmgXj6AyIpoE/Xg4HHm+8WM=;
+        s=default; t=1568380685;
+        bh=S+I5g/s2MoEk2IMxrV43PfJlXGEod35XkM67UhGBAzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEF16Yh4Q2LaPccTSdZv5NXE27MH7DeXqKlAYDh99ol+l13P7kTNWs4gzDKwaGEvk
-         DBanhgle0LZFg69iMUFYer9TsyQHVs2NGm+J45Py3AMaph75jMc5XrxPJhfrv8n71R
-         /FHxrZbZrgFL+OfA23M8qKTe1pEg67ATSiismgaA=
+        b=vjKPT2TM9di+cNS3VUd/Fq4ZxUhKCVb/x/oH+FM6lff0p7YyZYL9nyLNxJszRHxt7
+         Vz9qzwY7eNap2YRGqmL9ycwfhvhOBSsaCM0mfew63roQvxsvlhBEcuqvcPzeAyjWFa
+         sLlJVRfd7AfYm2TllNgSfMLNmlygYdpmUXGgtZ3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/190] ARM: dts: qcom: ipq4019: Fix MSI IRQ type
-Date:   Fri, 13 Sep 2019 14:06:15 +0100
-Message-Id: <20190913130609.412047637@linuxfoundation.org>
+        stable@vger.kernel.org, David Bauer <mail@david-bauer.net>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 121/190] ARM: dts: qcom: ipq4019: enlarge PCIe BAR range
+Date:   Fri, 13 Sep 2019 14:06:16 +0100
+Message-Id: <20190913130609.497224824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,42 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 97131f85c08e024df49480ed499aae8fb754067f ]
+[ Upstream commit f3e35357cd460a8aeb48b8113dc4b761a7d5c828 ]
 
-The databook clearly states that the MSI IRQ (msi_ctrl_int) is a level
-triggered interrupt.
+David Bauer reported that the VDSL modem (attached via PCIe)
+on his AVM Fritz!Box 7530 was complaining about not having
+enough space in the BAR. A closer inspection of the old
+qcom-ipq40xx.dtsi pulled from the GL-iNet repository listed:
 
-The msi_ctrl_int will be high for as long as any MSI status bit is set,
-thus the IRQ type should be set to IRQ_TYPE_LEVEL_HIGH, causing the
-IRQ handler to keep getting called, as long as any MSI status bit is set.
+| qcom,pcie@80000 {
+|	compatible = "qcom,msm_pcie";
+|	reg = <0x80000 0x2000>,
+|	      <0x99000 0x800>,
+|	      <0x40000000 0xf1d>,
+|	      <0x40000f20 0xa8>,
+|	      <0x40100000 0x1000>,
+|	      <0x40200000 0x100000>,
+|	      <0x40300000 0xd00000>;
+|	reg-names = "parf", "phy", "dm_core", "elbi",
+|			"conf", "io", "bars";
 
-A git grep shows that ipq4019 is the only SoC using snps,dw-pcie that has
-configured this IRQ incorrectly.
+Matching the reg-names with the listed reg leads to
+<0xd00000> as the size for the "bars".
 
-Not having the correct IRQ type defined will cause us to lose interrupts,
-which in turn causes timeouts in the PCIe endpoint drivers.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Cc: stable@vger.kernel.org
+BugLink: https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg45212.html
+Reported-by: David Bauer <mail@david-bauer.net>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 2c3168d95a2d5..814ab7283228a 100644
+index 814ab7283228a..54d056b01bb51 100644
 --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
 +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -389,7 +389,7 @@
- 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
- 				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
+@@ -386,8 +386,8 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
  
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
+-				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
++			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000>,
++				 <0x82000000 0 0x40300000 0x40300000 0 0x00d00000>;
+ 
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
  			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
 -- 
 2.20.1
 
