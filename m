@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907A5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFC2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66249208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B406320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380269;
-	bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+	s=default; t=1568380271;
+	bh=vFb8oPaK1xgVyrzWYiq1+5cdaw7DxdgvLTnk6o4vJ1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0JiMlkyIh9wuDDamTgfwEK3S+yFJ7B8Rxhsw7IaDO+3WD5MnARUTa3GvT0YTjHRh6
-	 qK5KwT4bcQnZ7TsEmUF5loVFRXYETvnnJiF6HHpvpNK4OJ6EGpuo9HjX9/K3Y9DbQB
-	 hdUhN2M4Fu3w/u9Xbkba0m/rmHJhdHkOjZU29hrE=
+	b=yvm+KiEow5Lg2DkUQXe2iGBP7xLAeZ86IVBRb65EioeO9guOe5lgRkKrVg8BpoSwE
+	 fspbjgRpn19iAIH489azy6XwYGC3fpuPbF3GzMGegZqPCHPoAgVgfzD5Bcd8MibySa
+	 GeOZxs1d++7HNTp3+q7FTQxXBuiwGIrlHrenwzR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388899AbfIMNLH (ORCPT
+        id S2388912AbfIMNLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388155AbfIMNLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:11:05 -0400
+        id S2388155AbfIMNLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:11:08 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A6BF208C0;
-        Fri, 13 Sep 2019 13:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6290820CC7;
+        Fri, 13 Sep 2019 13:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380264;
-        bh=P7jsQZzraoazkhJaduXNW6gku7OXXwlFf3f1jFYb+9M=;
+        s=default; t=1568380268;
+        bh=vFb8oPaK1xgVyrzWYiq1+5cdaw7DxdgvLTnk6o4vJ1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ec0spOsnFul2XeL6gJq90BdIUPidOEtWmHX+5M4dgy8STaEG3IFvU17rIJKttaIuC
-         /oKN3Zf1ewSfzcCGjyx+AqZ1meu7G1MiSv24nsL2WT8p62A6zhgOuZ1/+L7cAJ8JJe
-         OMWmMBMHyYMeNGvMjQWJEs0y0ww8kgvg41jk2yPw=
+        b=H3/vBVauQEJbo1Ju0yuhjRyLMmbwg3hczvKaXRPr2lYmXJYW+sh/TEuNOE4+R7LAn
+         u64Erl2eYTGoIEoxanHy7vrMHsz6rWKtft2rI5PYH3qBfgkRZs7DCkc0A6kW+e2mt8
+         0VqR5xO3XX0dDYKKYXXHOp+au4HMMAAFC8n6/FUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 001/190] ALSA: hda - Fix potential endless loop at applying quirks
-Date:   Fri, 13 Sep 2019 14:04:16 +0100
-Message-Id: <20190913130559.784678558@linuxfoundation.org>
+Subject: [PATCH 4.19 002/190] ALSA: hda/realtek - Fix overridden device-specific initialization
+Date:   Fri, 13 Sep 2019 14:04:17 +0100
+Message-Id: <20190913130559.859089919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,41 +60,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 333f31436d3db19f4286f8862a00ea1d8d8420a1 upstream.
+commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
 
-Since the chained quirks via chained_before flag is applied before the
-depth check, it may lead to the endless recursive calls, when the
-chain were set up incorrectly.  Fix it by moving the depth check at
-the beginning of the loop.
+The recent change to shuffle the codec initialization procedure for
+Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
+later") caused the silent output on some machines.  This change was
+supposed to be safe, but it isn't actually; some devices have quirk
+setups to override the EAPD via COEF or BTL in the additional verb
+table, which is applied at the beginning of snd_hda_gen_init().  And
+this EAPD setup is again overridden in alc_auto_init_amp().
 
-Fixes: 1f57825077dc ("ALSA: hda - Add chained_before flag to the fixup entry")
+For recovering from the regression, tell snd_hda_gen_init() not to
+apply the verbs there by a new flag, then apply the verbs in
+alc_init().
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
+Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_auto_parser.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_generic.c   |    3 ++-
+ sound/pci/hda/hda_generic.h   |    1 +
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_auto_parser.c
-+++ b/sound/pci/hda/hda_auto_parser.c
-@@ -828,6 +828,8 @@ static void apply_fixup(struct hda_codec
- 	while (id >= 0) {
- 		const struct hda_fixup *fix = codec->fixup_list + id;
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -5991,7 +5991,8 @@ int snd_hda_gen_init(struct hda_codec *c
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
  
-+		if (++depth > 10)
-+			break;
- 		if (fix->chained_before)
- 			apply_fixup(codec, fix->chain_id, action, depth + 1);
+-	snd_hda_apply_verbs(codec);
++	if (!spec->skip_verbs)
++		snd_hda_apply_verbs(codec);
  
-@@ -867,8 +869,6 @@ static void apply_fixup(struct hda_codec
- 		}
- 		if (!fix->chained || fix->chained_before)
- 			break;
--		if (++depth > 10)
--			break;
- 		id = fix->chain_id;
- 	}
- }
+ 	init_multi_out(codec);
+ 	init_extra_out(codec);
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -247,6 +247,7 @@ struct hda_gen_spec {
+ 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
+ 	unsigned int have_aamix_ctl:1;
+ 	unsigned int hp_mic_jack_modes:1;
++	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
+ 
+ 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
+ 	u64 mute_bits;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -836,9 +836,11 @@ static int alc_init(struct hda_codec *co
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
+ 
++	spec->gen.skip_verbs = 1; /* applied in below */
+ 	snd_hda_gen_init(codec);
+ 	alc_fix_pll(codec);
+ 	alc_auto_init_amp(codec, spec->init_amp);
++	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
+ 
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
 
 
