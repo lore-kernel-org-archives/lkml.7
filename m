@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48826C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955B7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D1A206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFD5206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380132;
-	bh=qarEm0hUiGkoxrVW/LNQVYyGT6o/jny66w5VK6Nzozk=;
+	s=default; t=1568380135;
+	bh=5N/0yJj/nhkLQbwGS5Lg+IMvkme1kib95I/XYZhO2vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZjLRKrBphxU3G29VMbCv7rPrxXpsm5V2olH/rY26ydtoiBao61iqkXSrmFbZRMdJa
-	 mqQ9YD2ieSzJuUgUh8Ph4KOVdE/yw6s4TYbZnLbve781migr0uOQTc2leGrpQrAaEo
-	 AoRFIbyw2yPHn5H51N7edxLIq7qDT6VMYq48LogQ=
+	b=KtNzWs+PGStjOOcRwi1f2VRK0gla70Op7ps04LY4AE+fjoth3DV+zKd7iJOiD3GYh
+	 ZVaLzVZnZbDqMSJ89ZD+IwaveEYwuH+vWNVQUesg2I+/thnlwaS2PWWPJgfi+tGHPC
+	 XzJhM3578Or+McaAzR9GKHqrvdIAWn0A5GWD+T9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388351AbfIMNIv (ORCPT
+        id S2388376AbfIMNIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbfIMNIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:08:50 -0400
+        id S2388354AbfIMNIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:08:53 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72822206BB;
-        Fri, 13 Sep 2019 13:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC54206BB;
+        Fri, 13 Sep 2019 13:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380130;
-        bh=qarEm0hUiGkoxrVW/LNQVYyGT6o/jny66w5VK6Nzozk=;
+        s=default; t=1568380133;
+        bh=5N/0yJj/nhkLQbwGS5Lg+IMvkme1kib95I/XYZhO2vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZLAofI58pYZsJ+/pTR5knkGNc53GDAvTrxZ5Kt7pR/93L5OuXOBo/xioYiqb3Xi+c
-         gCMWoG/1y6yrLjpDMC9SQfPDHAKyY/BCCqkvOHxdERHiCx8NvpYoaViIgLCAyABDtS
-         iMpE6aLefmSgVCFJgEHe07MO+yeqsLrehy0c1WxE=
+        b=blHtXbkxBJAdNC5+1lZPO55qMdXl2mJugkfpelCMRv1vlpl47/rG/eaFxHnI86k+f
+         YoQvG1sTEWfvSFVi6rHjLi7m29BppeNIYtV9VSa8tzsnPIoizMF1w74WYOGjgjrEei
+         T4j1aP6DnAtU4zV3uk5YHMrIXwm8BkX5IZvRvlEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 5/9] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
-Date:   Fri, 13 Sep 2019 14:06:55 +0100
-Message-Id: <20190913130429.429077844@linuxfoundation.org>
+Subject: [PATCH 4.4 6/9] clk: s2mps11: Add used attribute to s2mps11_dt_match
+Date:   Fri, 13 Sep 2019 14:06:56 +0100
+Message-Id: <20190913130429.728754074@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
 References: <20190913130424.160808669@linuxfoundation.org>
@@ -62,35 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
+[ Upstream commit 9c940bbe2bb47e03ca5e937d30b6a50bf9c0e671 ]
 
-The basepath may contain special characters, which would confuse the regex
-matcher.  ${var#prefix} does the right thing.
+Clang warns after commit 8985167ecf57 ("clk: s2mps11: Fix matching when
+built as module and DT node contains compatible"):
 
-Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
-Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+drivers/clk/clk-s2mps11.c:242:34: warning: variable 's2mps11_dt_match'
+is not needed and will not be emitted [-Wunneeded-internal-declaration]
+static const struct of_device_id s2mps11_dt_match[] = {
+                                 ^
+1 warning generated.
+
+This warning happens when a variable is used in some construct that
+doesn't require a reference to that variable to be emitted in the symbol
+table; in this case, it's MODULE_DEVICE_TABLE, which only needs to hold
+the data of the variable, not the variable itself.
+
+$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_dt_match
+00000078 000003d4 R __mod_of__s2mps11_dt_match_device_table
+
+Normally, with device ID table variables, it means that the variable
+just needs to be tied to the device declaration at the bottom of the
+file, like s2mps11_clk_id:
+
+$ nm -S drivers/clk/clk-s2mps11.o | rg s2mps11_clk_id
+00000000 00000078 R __mod_platform__s2mps11_clk_id_device_table
+00000000 00000078 r s2mps11_clk_id
+
+However, because the comment above this deliberately doesn't want this
+variable added to .of_match_table, we need to mark s2mps11_dt_match as
+__used to silence this warning. This makes it clear to Clang that the
+variable is used for something, even if a reference to it isn't being
+emitted.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: 8985167ecf57 ("clk: s2mps11: Fix matching when built as module and DT node contains compatible")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh | 2 +-
+ drivers/clk/clk-s2mps11.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index ffc46c7c3afbb..4f5e76f76b9dc 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -64,7 +64,7 @@ parse_symbol() {
- 	fi
- 
- 	# Strip out the base of the path
--	code=${code//^$basepath/""}
-+	code=${code#$basepath/}
- 
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
+diff --git a/drivers/clk/clk-s2mps11.c b/drivers/clk/clk-s2mps11.c
+index 785864893f9a6..14af5c916c9ca 100644
+--- a/drivers/clk/clk-s2mps11.c
++++ b/drivers/clk/clk-s2mps11.c
+@@ -307,7 +307,7 @@ MODULE_DEVICE_TABLE(platform, s2mps11_clk_id);
+  * This requires of_device_id table.  In the same time this will not change the
+  * actual *device* matching so do not add .of_match_table.
+  */
+-static const struct of_device_id s2mps11_dt_match[] = {
++static const struct of_device_id s2mps11_dt_match[] __used = {
+ 	{
+ 		.compatible = "samsung,s2mps11-clk",
+ 		.data = (void *)S2MPS11X,
 -- 
 2.20.1
 
