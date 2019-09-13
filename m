@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B89AC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970B6C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33280206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7E0206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380998;
-	bh=2vm8YHevuXCo4kKWe+2+Yss5Zn0lCSFJs4a64fJVIAM=;
+	s=default; t=1568381003;
+	bh=1KYHGBqfweu0I1NPQIQ0A4U12D3zB+VEp+7ZzFnXOwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lPIZYbyqlgjlg3PbpJHBujzNDlzs1OR9YnvQbW5zk2264cXSr1HVCdncJSzeflKvg
-	 qoSo0XwRBxtZol7pVAnPBurlFkS9WcftoT4HiZO/5y+mM7UhMbqbLAjyLamKubwjlD
-	 ZuZCzFkoVefrO5BqWm5ye4Frecr1jKmPEoJiWdTI=
+	b=HnAE+Dk4dAHdYzyeHNJU/elq57PIXeIHE6VkTO8fqrIwW0Ke2a66D5ZccMyKzdWtT
+	 1FHpERgQUsCKchZZAAblsXVNaKVxCzchcSJ5QeaftKLhDN7RLcFYTVyv+xsIU8Bdm2
+	 USU3wmVXXiOFmZw2lQOJTy21afzQGMpJCiJiUWeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390504AbfIMNXR (ORCPT
+        id S2391086AbfIMNXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:23:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390232AbfIMNVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:35 -0400
+        id S2390808AbfIMNVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:24 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8ABE216F4;
-        Fri, 13 Sep 2019 13:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B03206BB;
+        Fri, 13 Sep 2019 13:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380895;
-        bh=2vm8YHevuXCo4kKWe+2+Yss5Zn0lCSFJs4a64fJVIAM=;
+        s=default; t=1568380883;
+        bh=1KYHGBqfweu0I1NPQIQ0A4U12D3zB+VEp+7ZzFnXOwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GNVcnDCYkJAgFNtml5l08spPDWjAcztFY05a9vlgcpB2OU8qsGG9piFvKJtF9AzUw
-         xwP1Y37RcDCFnOFrUFD1dpr9Suq8xH19KaPfN6WSncL3sFPwnGrNGEv8zUrmJhRnh/
-         c6Xo7JCm66UeFStFLVLWjpsuDjjaPCX542aOWdKI=
+        b=okc85UCwLXL2tuwj1SKLUME/nE9LosYJqZOt1xxaOwPhn/32qgfDNCkmVgZ946YtO
+         Oa6SXU6GgyAKGqr7B6PZT1xGORidUHWFQJDzMFvVXy/44K124M+f1PrdLUxkl2I6hX
+         TkFIhq/aS69/B6929ZPD4wOzmtOQNkCFz2IT/+SM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 13/37] powerpc/64e: Drop stale call to smp_processor_id() which hangs SMP startup
-Date:   Fri, 13 Sep 2019 14:07:18 +0100
-Message-Id: <20190913130515.860737471@linuxfoundation.org>
+        stable@vger.kernel.org, Liangyan <liangyan.peng@linux.alibaba.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ben Segall <bsegall@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.2 08/37] sched/fair: Dont assign runtime for throttled cfs_rq
+Date:   Fri, 13 Sep 2019 14:07:13 +0100
+Message-Id: <20190913130513.061588463@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -62,44 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Liangyan <liangyan.peng@linux.alibaba.com>
 
-commit b9ee5e04fd77898208c51b1395fa0b5e8536f9b6 upstream.
+commit 5e2d2cc2588bd3307ce3937acbc2ed03c830a861 upstream.
 
-Commit ebb9d30a6a74 ("powerpc/mm: any thread in one core can be the
-first to setup TLB1") removed the need to know the cpu_id in
-early_init_this_mmu(), but the call to smp_processor_id() which was
-marked __maybe_used remained.
+do_sched_cfs_period_timer() will refill cfs_b runtime and call
+distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
+will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
+attached to this cfs_b can't get runtime and will be throttled.
 
-Since commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
-thread_info cannot be reached before MMU is properly set up.
+We find that one throttled cfs_rq has non-negative
+cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+in snippet:
 
-Drop this stale call to smp_processor_id() which makes SMP hang when
-CONFIG_PREEMPT is set.
+  distribute_cfs_runtime() {
+    runtime = -cfs_rq->runtime_remaining + 1;
+  }
 
-Fixes: ebb9d30a6a74 ("powerpc/mm: any thread in one core can be the first to setup TLB1")
-Fixes: ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
-Cc: stable@vger.kernel.org # v5.1+
-Reported-by: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr
+The runtime here will change to a large number and consume all
+cfs_b->runtime in this cfs_b period.
+
+According to Ben Segall, the throttled cfs_rq can have
+account_cfs_rq_runtime called on it because it is throttled before
+idle_balance, and the idle_balance calls update_rq_clock to add time
+that is accounted to the task.
+
+This commit prevents cfs_rq to be assgined new runtime if it has been
+throttled until that distribute_cfs_runtime is called.
+
+Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: shanpeic@linux.alibaba.com
+Cc: stable@vger.kernel.org
+Cc: xlpang@linux.alibaba.com
+Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
+Link: https://lkml.kernel.org/r/20190826121633.6538-1-liangyan.peng@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/nohash/tlb.c |    1 -
- 1 file changed, 1 deletion(-)
+ kernel/sched/fair.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/powerpc/mm/nohash/tlb.c
-+++ b/arch/powerpc/mm/nohash/tlb.c
-@@ -630,7 +630,6 @@ static void early_init_this_mmu(void)
- #ifdef CONFIG_PPC_FSL_BOOK3E
- 	if (mmu_has_feature(MMU_FTR_TYPE_FSL_E)) {
- 		unsigned int num_cams;
--		int __maybe_unused cpu = smp_processor_id();
- 		bool map = true;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4449,6 +4449,8 @@ static void __account_cfs_rq_runtime(str
+ 	if (likely(cfs_rq->runtime_remaining > 0))
+ 		return;
  
- 		/* use a quarter of the TLBCAM for bolted linear map */
++	if (cfs_rq->throttled)
++		return;
+ 	/*
+ 	 * if we're unable to extend our runtime we resched so that the active
+ 	 * hierarchy can be throttled
+@@ -4652,6 +4654,9 @@ static u64 distribute_cfs_runtime(struct
+ 		if (!cfs_rq_throttled(cfs_rq))
+ 			goto next;
+ 
++		/* By the above check, this should never be true */
++		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
++
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+ 		if (runtime > remaining)
+ 			runtime = remaining;
 
 
