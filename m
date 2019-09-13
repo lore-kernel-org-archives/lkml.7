@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A548AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BC5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E047214DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1472D208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380537;
-	bh=8Ox/twdNfWzBqCkBllPrnqUO/zXdBQaBeO8Y1SruOrU=;
+	s=default; t=1568380542;
+	bh=ZsgX5z2lSOe2LRzc3NcDZczs7jYpydFb/XsB3NhNePk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUK3Bjq5BEFmyai52qpzc+mASkPsXM7R82xFUKnf9KHMwtn8lf1+BFU3QumIG8MWl
-	 AvtcTCxoegpqBPNRt8AWpwh9aV2R+U2KJ+/560g4GhDpMp4W42Go38t0+dbrVLYpYW
-	 FIxVKceuvneOD7K383+nQLzKc5/sZ/6xr7+0/gpU=
+	b=cUUIubbK0t55m4lTPVQUpfuNA4svJyeHWKHdSX0mWhiD++20T06EgTmeClpCNjfFZ
+	 A4pnLX4eVZatbSHShG6fjGtnlZ98GqSm9Y1MSbi4RkIChPovZr7m8le3500n1nDkx0
+	 J8+fgSex6uflEAYiwpn9iF/ysBs3lTJDAiE39UJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389140AbfIMNPg (ORCPT
+        id S2389169AbfIMNPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389705AbfIMNPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:31 -0400
+        id S2389717AbfIMNPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:35 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B50208C2;
-        Fri, 13 Sep 2019 13:15:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF5F208C2;
+        Fri, 13 Sep 2019 13:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380531;
-        bh=8Ox/twdNfWzBqCkBllPrnqUO/zXdBQaBeO8Y1SruOrU=;
+        s=default; t=1568380534;
+        bh=ZsgX5z2lSOe2LRzc3NcDZczs7jYpydFb/XsB3NhNePk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETjCqoimZmYlhnkrmu8Qgrnc1zjq0QOpzyqHf4uz/rIEa9jzDCu0I5jRFdJAlqvCX
-         k+hO2I8/iiu78J3GtESbWt/C+b2iepw28dQAdT6GmUBMY23SEkDrDx+epybBPgSaQ8
-         A3BL6BgbKCplGNil8DvBAalk/gM1jdQf9fXJT/qI=
+        b=GS22UJ1NtSv97f8AVseWHZYas9mRLnViHftFlMw1qciEbHHrCBPHhrIuRBiJj/6HK
+         bEwa36dAIqxx5QGUJcE4Y453eYbZEAmCDFh1iv03Cre+j8jOiEr2n6nSKymD8w8jcp
+         eHv4xWYmEhoSHZUuObIsP9MMmJOAQL7XkMkMyhM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/190] ARC: show_regs: lockdep: re-enable preemption
-Date:   Fri, 13 Sep 2019 14:05:31 +0100
-Message-Id: <20190913130605.618520939@linuxfoundation.org>
+Subject: [PATCH 4.19 067/190] btrfs: Remove extent_io_ops::fill_delalloc
+Date:   Fri, 13 Sep 2019 14:05:22 +0100
+Message-Id: <20190913130605.056342077@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -59,68 +61,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f731a8e89f8c78985707c626680f3e24c7a60772 ]
+[ Upstream commit 5eaad97af8aeff38debe7d3c69ec3a0d71f8350f ]
 
-signal handling core calls show_regs() with preemption disabled which
-on ARC takes mmap_sem for mm/vma access, causing lockdep splat.
+This callback is called only from writepage_delalloc which in turn is
+guaranteed to be called from the data page writeout path. In the end
+there is no reason to have the call to this function to be indrected via
+the extent_io_ops structure. This patch removes the callback definition,
+exports the function and calls it directly. No functional changes.
 
-| [ARCLinux]# ./segv-null-ptr
-| potentially unexpected fatal signal 11.
-| BUG: sleeping function called from invalid context at kernel/fork.c:1011
-| in_atomic(): 1, irqs_disabled(): 0, pid: 70, name: segv-null-ptr
-| no locks held by segv-null-ptr/70.
-| CPU: 0 PID: 70 Comm: segv-null-ptr Not tainted 4.18.0+ #69
-|
-| Stack Trace:
-|  arc_unwind_core+0xcc/0x100
-|  ___might_sleep+0x17a/0x190
-|  mmput+0x16/0xb8
-|  show_regs+0x52/0x310
-|  get_signal+0x5ee/0x610
-|  do_signal+0x2c/0x218
-|  resume_user_mode_begin+0x90/0xd8
-
-Workaround by re-enabling preemption temporarily.
-
-Note that the preemption disabling in core code around show_regs()
-was introduced by commit 3a9f84d354ce ("signals, debug: fix BUG: using
-smp_processor_id() in preemptible code in print_fatal_signal()")
-
-to silence a differnt lockdep seen on x86 bakc in 2009.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ rename to btrfs_run_delalloc_range ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/troubleshoot.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/ctree.h     |  3 +++
+ fs/btrfs/extent_io.c | 20 +++++++++-----------
+ fs/btrfs/extent_io.h |  5 -----
+ fs/btrfs/inode.c     | 15 +++++++--------
+ 4 files changed, 19 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
-index 5c6663321e873..215f515442e03 100644
---- a/arch/arc/kernel/troubleshoot.c
-+++ b/arch/arc/kernel/troubleshoot.c
-@@ -179,6 +179,12 @@ void show_regs(struct pt_regs *regs)
- 	struct task_struct *tsk = current;
- 	struct callee_regs *cregs;
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 82682da5a40dd..4644f9b629a53 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -3200,6 +3200,9 @@ int btrfs_prealloc_file_range_trans(struct inode *inode,
+ 				    struct btrfs_trans_handle *trans, int mode,
+ 				    u64 start, u64 num_bytes, u64 min_size,
+ 				    loff_t actual_len, u64 *alloc_hint);
++int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
++		u64 start, u64 end, int *page_started, unsigned long *nr_written,
++		struct writeback_control *wbc);
+ extern const struct dentry_operations btrfs_dentry_operations;
+ #ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+ void btrfs_test_inode_set_ops(struct inode *inode);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 90b0a6eff5350..cb598eb4f3bd1 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3199,7 +3199,7 @@ static void update_nr_written(struct writeback_control *wbc,
+ /*
+  * helper for __extent_writepage, doing all of the delayed allocation setup.
+  *
+- * This returns 1 if our fill_delalloc function did all the work required
++ * This returns 1 if btrfs_run_delalloc_range function did all the work required
+  * to write the page (copy into inline extent).  In this case the IO has
+  * been started and the page is already unlocked.
+  *
+@@ -3220,7 +3220,7 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
+ 	int ret;
+ 	int page_started = 0;
  
-+	/*
-+	 * generic code calls us with preemption disabled, but some calls
-+	 * here could sleep, so re-enable to avoid lockdep splat
-+	 */
-+	preempt_enable();
-+
- 	print_task_path_n_nm(tsk);
- 	show_regs_print_info(KERN_INFO);
+-	if (epd->extent_locked || !tree->ops || !tree->ops->fill_delalloc)
++	if (epd->extent_locked)
+ 		return 0;
  
-@@ -221,6 +227,8 @@ void show_regs(struct pt_regs *regs)
- 	cregs = (struct callee_regs *)current->thread.callee_reg;
- 	if (cregs)
- 		show_callee_regs(cregs);
-+
-+	preempt_disable();
+ 	while (delalloc_end < page_end) {
+@@ -3233,18 +3233,16 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
+ 			delalloc_start = delalloc_end + 1;
+ 			continue;
+ 		}
+-		ret = tree->ops->fill_delalloc(inode, page,
+-					       delalloc_start,
+-					       delalloc_end,
+-					       &page_started,
+-					       nr_written, wbc);
++		ret = btrfs_run_delalloc_range(inode, page, delalloc_start,
++				delalloc_end, &page_started, nr_written, wbc);
+ 		/* File system has been set read-only */
+ 		if (ret) {
+ 			SetPageError(page);
+-			/* fill_delalloc should be return < 0 for error
+-			 * but just in case, we use > 0 here meaning the
+-			 * IO is started, so we don't want to return > 0
+-			 * unless things are going well.
++			/*
++			 * btrfs_run_delalloc_range should return < 0 for error
++			 * but just in case, we use > 0 here meaning the IO is
++			 * started, so we don't want to return > 0 unless
++			 * things are going well.
+ 			 */
+ 			ret = ret < 0 ? ret : -EIO;
+ 			goto done;
+diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
+index b4d03e677e1d7..ed27becd963c5 100644
+--- a/fs/btrfs/extent_io.h
++++ b/fs/btrfs/extent_io.h
+@@ -106,11 +106,6 @@ struct extent_io_ops {
+ 	/*
+ 	 * Optional hooks, called if the pointer is not NULL
+ 	 */
+-	int (*fill_delalloc)(void *private_data, struct page *locked_page,
+-			     u64 start, u64 end, int *page_started,
+-			     unsigned long *nr_written,
+-			     struct writeback_control *wbc);
+-
+ 	int (*writepage_start_hook)(struct page *page, u64 start, u64 end);
+ 	void (*writepage_end_io_hook)(struct page *page, u64 start, u64 end,
+ 				      struct extent_state *state, int uptodate);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 355ff08e9d44e..bfacce295ef1e 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -110,8 +110,8 @@ static void __endio_write_update_ordered(struct inode *inode,
+  * extent_clear_unlock_delalloc() to clear both the bits EXTENT_DO_ACCOUNTING
+  * and EXTENT_DELALLOC simultaneously, because that causes the reserved metadata
+  * to be released, which we want to happen only when finishing the ordered
+- * extent (btrfs_finish_ordered_io()). Also note that the caller of the
+- * fill_delalloc() callback already does proper cleanup for the first page of
++ * extent (btrfs_finish_ordered_io()). Also note that the caller of
++ * btrfs_run_delalloc_range already does proper cleanup for the first page of
+  * the range, that is, it invokes the callback writepage_end_io_hook() for the
+  * range of the first page.
+  */
+@@ -1599,12 +1599,12 @@ static inline int need_force_cow(struct inode *inode, u64 start, u64 end)
  }
  
- void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
+ /*
+- * extent_io.c call back to do delayed allocation processing
++ * Function to process delayed allocation (create CoW) for ranges which are
++ * being touched for the first time.
+  */
+-static int run_delalloc_range(void *private_data, struct page *locked_page,
+-			      u64 start, u64 end, int *page_started,
+-			      unsigned long *nr_written,
+-			      struct writeback_control *wbc)
++int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
++		u64 start, u64 end, int *page_started, unsigned long *nr_written,
++		struct writeback_control *wbc)
+ {
+ 	struct inode *inode = private_data;
+ 	int ret;
+@@ -10598,7 +10598,6 @@ static const struct extent_io_ops btrfs_extent_io_ops = {
+ 	.readpage_io_failed_hook = btrfs_readpage_io_failed_hook,
+ 
+ 	/* optional callbacks */
+-	.fill_delalloc = run_delalloc_range,
+ 	.writepage_end_io_hook = btrfs_writepage_end_io_hook,
+ 	.writepage_start_hook = btrfs_writepage_start_hook,
+ 	.set_bit_hook = btrfs_set_bit_hook,
 -- 
 2.20.1
 
