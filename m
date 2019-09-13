@@ -2,113 +2,115 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D854AC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986E2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02FB20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568386876;
-	bh=d5LyY7lEBC5SV24eCUuLaBZ+kemQPetOKLdbtly1Mhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N0F+DOioEn4bzcWjsaXxJQHraozoK3LKgtPrasJJgwDBNWBdtzxxuNBU+xDARy7EF
-	 JSVONuIYMLbeLiEjP6fOP8LnMGq6fO4kHX9aq3r+qj6JaERvUD+hFORKd91iUpEtju
-	 2A97KJLdTQ/JSy4NCeSiefeoCOjfE/OJqX89S/Rw=
+	by mail.kernel.org (Postfix) with ESMTP id 72C302084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390319AbfIMPBQ (ORCPT
+        id S2390350AbfIMPB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 11:01:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38262 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388950AbfIMPBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:01:15 -0400
-Received: from localhost (195-23-252-136.net.novis.pt [195.23.252.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388170AbfIMPB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:01:27 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CB82054F;
-        Fri, 13 Sep 2019 15:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568386875;
-        bh=d5LyY7lEBC5SV24eCUuLaBZ+kemQPetOKLdbtly1Mhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SyzHJxtY+DiAeTBBFqnKKVdTlRNhYA5/YA+nAgMJgirE71hpMhWU6ebQ/kg8+vWpM
-         4cnlDLPdlrd6s0JsBhlc8hB6ZKcnhpr3l6Md54QBn7deDXGP8L5YjC99MPnOAPpXiM
-         ZPbSRFuUWlSg3Zt0um7QIQ1FX5UrdNqPdKqsjeoc=
-Date:   Fri, 13 Sep 2019 11:01:11 -0400
-From:   Sasha Levin <sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id A29C880F83
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:01:26 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id c1so13783980wrb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 08:01:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zuzwEhDdM8nFD/eqeUMdkZbahAvWuck1YuH/cdNiv9o=;
+        b=KEfypgKv2bd/Jj/UBCDyjNtAlNlsaxqJ2+d1eV+ivomiUbvBfLifI2I1jSf1EbChey
+         TeC2NfH+CUFmO3RZQ68UQjeHqC3stC4gtG38a6CnNklMyu1+XlV8kiWUuTv5//32MTUS
+         3j6v9VzAdA071pkgHA3xLWfm8+O+VsGJV7sENe3FmLt/FN7YcB/Ljy1tie1tBU+1Hhm8
+         W0QEkyZaEmVNCTJL2NwarEeiUtdKu5e8mlP1ep7DWF0ZSOdOF4pBbdg7g4Di0rQmTpoT
+         DaLw4vfkFRZ4+NXj/qhEhYpryhvbFfQhTfE5nAckPoMtuemqv2AJ52FF49Llsu3MFr4Q
+         uFVQ==
+X-Gm-Message-State: APjAAAU3LK9w8O10+mi+xIq9w7FtidI6n31EZ26OHcTXvOy0fxROuvw/
+        LGBJtwgdOJR5dGWbIHZcNezjEsJ+0u20tm8rh9tiQ+6egd7E0z8w/Yjv85pPFEXOrUOinO4kRHd
+        Ee/d+Ev0sRsd4lLcsR2WgiZ7Z
+X-Received: by 2002:a1c:c013:: with SMTP id q19mr3447782wmf.87.1568386884924;
+        Fri, 13 Sep 2019 08:01:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxVmkhicWbX9sM2V6LPnr+xLUUrZU9HvAJMzAOfyJJVoRtNarvooFR4sjG8yibYs2ccdb68wg==
+X-Received: by 2002:a1c:c013:: with SMTP id q19mr3447762wmf.87.1568386884662;
+        Fri, 13 Sep 2019 08:01:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c5d2:4bb2:a923:3a9a? ([2001:b07:6468:f312:c5d2:4bb2:a923:3a9a])
+        by smtp.gmail.com with ESMTPSA id y15sm1949532wmj.32.2019.09.13.08.01.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2019 08:01:24 -0700 (PDT)
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
- failures
-Message-ID: <20190913150111.GI1546@sasha-vm>
-References: <20190913130559.669563815@linuxfoundation.org>
- <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
- <20190913144627.GH1546@sasha-vm>
- <20190913145456.GA456842@kroah.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com,
+        joro@8bytes.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com,
+        rkrcmar@redhat.com, robh+dt@kernel.org,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com,
+        x86@kernel.org,
+        syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        USB list <linux-usb@vger.kernel.org>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+ <20190913044614.GA120223@kroah.com>
+ <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
+ <20190913130226.GB403359@kroah.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+Date:   Fri, 13 Sep 2019 17:01:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190913145456.GA456842@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190913130226.GB403359@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
->On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
->> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
->> > Hi Greg,
->> >
->> > This feels like it's missing a From: line.
->> >
->> > commit b513a18cf1d705bd04efd91c417e79e4938be093
->> > Author: Lyude Paul <lyude@redhat.com>
->> > Date:   Mon Jan 28 16:03:50 2019 -0500
->> >
->> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
->> >
->> > Is this an artifact of your notification-of-patches process and I
->> > never noticed before, or was the patch ingested incorrectly?
->>
->> It was always like this for patches that came through me. Greg's script
->> generates an explicit "From:" line in the patch, but I never saw the
->> value in that since git does the right thing by looking at the "From:"
->> line in the mail header.
->>
->> The right thing is being done in stable-rc and for the releases. For
->> your example here, this is how it looks like in the stable-rc tree:
->>
->> commit bdcc885be68289a37d0d063cd94390da81fd8178
->> Author:     Lyude Paul <lyude@redhat.com>
->> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
->> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> CommitDate: Fri Sep 13 14:05:29 2019 +0100
->>
->>    drm/nouveau: Don't WARN_ON VCPI allocation failures
->
->Yeah, we should fix your scripts to put the explicit From: line in here
->as we are dealing with patches in this format and it causes confusion at
->times (like now.)  It's not the first time and that's why I added those
->lines to the patches.
+On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+> not need this type of thing.  If we got it wrong, please let us know and
+> then yes, a fix like this would be most appreciated :)
 
-Heh, didn't think anyone cared about this scenario for the stable-rc
-patches.
+I still see
 
-I'll go add it.
+	/* some USB hosts just use PIO */
+	if (!hcd_uses_dma(hcd)) {
+		*dma = ~(dma_addr_t) 0;
+		return kmalloc(size, mem_flags);
+	}
 
-But... why do you actually care?
+in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+ I also see the same
 
---
-Thanks,
-Sasha
+	if (remap_pfn_range(vma, vma->vm_start,
+			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+			size, vma->vm_page_prot) < 0) {
+		...
+	}
+
+in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+branch, or just being dense.
+
+Paolo
