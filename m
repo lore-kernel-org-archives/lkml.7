@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22A3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF2FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99722171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BC1206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380704;
-	bh=hR2M/dFU7q9mS8Hanp2YcelqgRGYy0EO55qfTzIOR1Q=;
+	s=default; t=1568380710;
+	bh=XQ4AzhUxeDXOpARPpUKyidIwWVKS3TPFELNFLgstuSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JnK6pfvBf9c3UyWvPfYkAxkuqSPHTUVYdn2MU9a3WsItOXbNan/Kr490gLqIRSwA+
-	 e27DR0JRWchc0rxYGGK1vJqYyLZZWLf63XgYvxEM2wo3HlkF4hebznkNyqZ//g+4oL
-	 jys7N8cJtk/72fydEfSWOETZMnQ5gYd378BPZd8Y=
+	b=XVvFZc912xPWcusIRlWpkGsjkVaPlkYUa2pQ01VGzKo2t55EJ1cpEJZxCkfY39MlF
+	 x1fa29QcFy1QJ6gei1h5ApZtkxG14eeoiyWCEehuBYRbnd3ZuYKy97sU8Ns23mYbav
+	 WGIbyguyDLbu2NECzluCLKgYkaQXOji0Yld8qAOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389664AbfIMNSX (ORCPT
+        id S2390225AbfIMNS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45804 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390188AbfIMNSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:18 -0400
+        id S2390209AbfIMNS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:27 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14229206BB;
-        Fri, 13 Sep 2019 13:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1882214D8;
+        Fri, 13 Sep 2019 13:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380697;
-        bh=hR2M/dFU7q9mS8Hanp2YcelqgRGYy0EO55qfTzIOR1Q=;
+        s=default; t=1568380706;
+        bh=XQ4AzhUxeDXOpARPpUKyidIwWVKS3TPFELNFLgstuSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ku+fKwnOCJI7wOzYWrcC+I81buU+pUXqlKQkdNRSs6/gTmDQ9zxoNi3v9JldpNCip
-         T5rjqoqM+KO9JSsYIup75rADoQHITDuACo0nIfN1j9Y1GiTWmzT5b3X8+D4INEIAEJ
-         2sAkk1Oo9+/1KlycpOCYGBut+xc/5NKTh/e0jaso=
+        b=x8mERr8FNo0X+4cPQMoXAtLKD1mWdb/q/3GjScBJTj0DmmlzD/YTafbng1SKxQpTf
+         IvchUdEC+VHNPCNJ67K2J3GMp4N0NLshEeR6NgVorTdZgHkHJ4gvv2CC1tLk0M4fTz
+         XZZxY08YUapfJCl8si0Bx110DZRjZcW9sAqHnSnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/190] scsi: zfcp: fix request object use-after-free in send path causing wrong traces
-Date:   Fri, 13 Sep 2019 14:06:43 +0100
-Message-Id: <20190913130611.803597120@linuxfoundation.org>
+Subject: [PATCH 4.19 151/190] ceph: use ceph_evict_inode to cleanup inodes resource
+Date:   Fri, 13 Sep 2019 14:06:46 +0100
+Message-Id: <20190913130611.980843306@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,88 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 106d45f350c7cac876844dc685845cba4ffdb70b ]
+[ Upstream commit 87bc5b895d94a0f40fe170d4cf5771c8e8f85d15 ]
 
-When tracing instances where we open and close WKA ports, we also pass the
-request-ID of the respective FSF command.
+remove_session_caps() relies on __wait_on_freeing_inode(), to wait for
+freeing inode to remove its caps. But VFS wakes freeing inode waiters
+before calling destroy_inode().
 
-But after successfully sending the FSF command we must not use the
-request-object anymore, as this might result in an use-after-free (see
-"zfcp: fix request object use-after-free in send path causing seqno
-errors" ).
-
-To fix this add a new variable that caches the request-ID before sending
-the request. This won't change during the hand-off to the FCP channel,
-and so it's safe to trace this cached request-ID later, instead of using
-the request object.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Fixes: d27a7cb91960 ("zfcp: trace on request for open and close of WKA port")
-Cc: <stable@vger.kernel.org> #2.6.38+
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Link: https://tracker.ceph.com/issues/40102
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_fsf.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/ceph/inode.c | 7 +++++--
+ fs/ceph/super.c | 2 +-
+ fs/ceph/super.h | 2 +-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index 3c86e27f094de..aff073a5b52bf 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -1594,6 +1594,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
- 
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1616,6 +1617,8 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- 	hton24(req->qtcb->bottom.support.d_id, wka_port->d_id);
- 	req->data = wka_port;
- 
-+	req_id = req->req_id;
-+
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1623,7 +1626,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req_id);
- 	return retval;
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 11f19432a74c4..665a86f83f4b0 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -528,13 +528,16 @@ static void ceph_i_callback(struct rcu_head *head)
+ 	kmem_cache_free(ceph_inode_cachep, ci);
  }
  
-@@ -1649,6 +1652,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
+-void ceph_destroy_inode(struct inode *inode)
++void ceph_evict_inode(struct inode *inode)
  {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_inode_frag *frag;
+ 	struct rb_node *n;
  
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1671,6 +1675,8 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
- 	req->data = wka_port;
- 	req->qtcb->header.port_handle = wka_port->handle;
- 
-+	req_id = req->req_id;
+-	dout("destroy_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
++	dout("evict_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
 +
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1678,7 +1684,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req_id);
- 	return retval;
- }
++	truncate_inode_pages_final(&inode->i_data);
++	clear_inode(inode);
  
+ 	ceph_fscache_unregister_inode_cookie(ci);
+ 
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index c5cf46e43f2e7..02528e11bf331 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -827,9 +827,9 @@ static int ceph_remount(struct super_block *sb, int *flags, char *data)
+ 
+ static const struct super_operations ceph_super_ops = {
+ 	.alloc_inode	= ceph_alloc_inode,
+-	.destroy_inode	= ceph_destroy_inode,
+ 	.write_inode    = ceph_write_inode,
+ 	.drop_inode	= ceph_drop_inode,
++	.evict_inode	= ceph_evict_inode,
+ 	.sync_fs        = ceph_sync_fs,
+ 	.put_super	= ceph_put_super,
+ 	.remount_fs	= ceph_remount,
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 0180193097905..6e968e48e5e4b 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -854,7 +854,7 @@ static inline bool __ceph_have_pending_cap_snap(struct ceph_inode_info *ci)
+ extern const struct inode_operations ceph_file_iops;
+ 
+ extern struct inode *ceph_alloc_inode(struct super_block *sb);
+-extern void ceph_destroy_inode(struct inode *inode);
++extern void ceph_evict_inode(struct inode *inode);
+ extern int ceph_drop_inode(struct inode *inode);
+ 
+ extern struct inode *ceph_get_inode(struct super_block *sb,
 -- 
 2.20.1
 
