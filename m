@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9DDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C786BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C8320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE5A214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380372;
-	bh=Apev0aYYQBSo5ry4GYQFHs9O4W7sPWZZ5PA3jAZ2FIo=;
+	s=default; t=1568380375;
+	bh=wh/MLTV3QqwFulXPXlplMTyakqKCFqEjiQSNB6j8eRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZ0PqBSTj1QVi+wHd8xr4Hs8+12hq8PW/vG2o/O5t4IEFaVM2AvMI67BCN46MU/ix
-	 bx/O96iFYYkFTqFu8IZe8qUDoV+DNLM5pyYvERQfWQnPBYdGdJTnfLERxlh6bDHchB
-	 GP8KcZ2Vi5+P0v4F9vmb1E7ptFJ8GPFdW3M9HMqU=
+	b=BN4kRjlaAA0jvc6mLS5y0qiWiFw2qsEu+LGI1kRWrxypcosdgE6CaeTC40zysfV5G
+	 aFZ6uEwA/cjW1NH8XOEmQHBH7B74/jq/o0CJ+ITCPYWxT2rzjNekMpS2lCEAdC5mRM
+	 VqMfC744XoAn79Jbow5UOVrfhNoBP4M78fWCsH4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389232AbfIMNMv (ORCPT
+        id S2389239AbfIMNMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38334 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387856AbfIMNMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:49 -0400
+        id S2387856AbfIMNMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:52 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005F9208C0;
-        Fri, 13 Sep 2019 13:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3575214D8;
+        Fri, 13 Sep 2019 13:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380368;
-        bh=Apev0aYYQBSo5ry4GYQFHs9O4W7sPWZZ5PA3jAZ2FIo=;
+        s=default; t=1568380371;
+        bh=wh/MLTV3QqwFulXPXlplMTyakqKCFqEjiQSNB6j8eRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=djmdag46P9DyklkH1yKgpuW83Zykh1THmi+EKuvKVfGukplxYH5JKOWg0YNicLi9i
-         S0lKUt2DaTe9qesnSlm2/0TwKHFemdoLRpqpfZD8zX7gAgCeVEc7uveSW8fX3D3RM0
-         fp6TJOOYVTpWgNy8dCunDdVyueF4lcDUzwaAUSIw=
+        b=i7qrcjnhtgelb/pqTfHf7ljRa78vibuk3qPceH79E1/rX9ga3KbfsnNdm4JVOVc5z
+         bnGftsMvYncki9JZfRweiqdrzWR7b5gPIz44PUfvfARchA8CLbs8wq0jTKP5L6wCZx
+         oqAP4onpTfiN0Fk/M/gTVYOVggX1Exh/pUJzD4Mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/190] riscv: remove unused variable in ftrace
-Date:   Fri, 13 Sep 2019 14:04:39 +0100
-Message-Id: <20190913130601.564607194@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        James Smart <james.smart@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 025/190] nvme-fc: use separate work queue to avoid warning
+Date:   Fri, 13 Sep 2019 14:04:40 +0100
+Message-Id: <20190913130601.646522551@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,40 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 397182e0db56b8894a43631ce72de14d90a29834 ]
+[ Upstream commit 8730c1ddb69bdeeb10c1f613a4e15e95862b1981 ]
 
-Noticed while building kernel-4.20.0-0.rc5.git2.1.fc30 for
-Fedora 30/RISCV.
+When tearing down a controller the following warning is issued:
 
-[..]
-BUILDSTDERR: arch/riscv/kernel/ftrace.c: In function 'prepare_ftrace_return':
-BUILDSTDERR: arch/riscv/kernel/ftrace.c:135:6: warning: unused variable 'err' [-Wunused-variable]
-BUILDSTDERR:   int err;
-BUILDSTDERR:       ^~~
-[..]
+WARNING: CPU: 0 PID: 30681 at ../kernel/workqueue.c:2418 check_flush_dependency
 
-Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-Fixes: e949b6db51dc1 ("riscv/function_graph: Simplify with function_graph_enter()")
-Reviewed-by: Olof Johansson <olof@lixom.net>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+This happens as the err_work workqueue item is scheduled on the
+system workqueue (which has WQ_MEM_RECLAIM not set), but is flushed
+from a workqueue which has WQ_MEM_RECLAIM set.
+
+Fix this by providing an FC-NVMe specific workqueue.
+
+Fixes: 4cff280a5fcc ("nvme-fc: resolve io failures during connect")
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/ftrace.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/nvme/host/fc.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index c433f6d3dd64f..a840b7d074f7d 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -132,7 +132,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- {
- 	unsigned long return_hooker = (unsigned long)&return_to_handler;
- 	unsigned long old;
--	int err;
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 67dec8860bf3c..565bddcfd130d 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -206,7 +206,7 @@ static LIST_HEAD(nvme_fc_lport_list);
+ static DEFINE_IDA(nvme_fc_local_port_cnt);
+ static DEFINE_IDA(nvme_fc_ctrl_cnt);
  
- 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
- 		return;
+-
++static struct workqueue_struct *nvme_fc_wq;
+ 
+ /*
+  * These items are short-term. They will eventually be moved into
+@@ -2053,7 +2053,7 @@ nvme_fc_error_recovery(struct nvme_fc_ctrl *ctrl, char *errmsg)
+ 	 */
+ 	if (ctrl->ctrl.state == NVME_CTRL_CONNECTING) {
+ 		active = atomic_xchg(&ctrl->err_work_active, 1);
+-		if (!active && !schedule_work(&ctrl->err_work)) {
++		if (!active && !queue_work(nvme_fc_wq, &ctrl->err_work)) {
+ 			atomic_set(&ctrl->err_work_active, 0);
+ 			WARN_ON(1);
+ 		}
+@@ -3321,6 +3321,10 @@ static int __init nvme_fc_init_module(void)
+ {
+ 	int ret;
+ 
++	nvme_fc_wq = alloc_workqueue("nvme_fc_wq", WQ_MEM_RECLAIM, 0);
++	if (!nvme_fc_wq)
++		return -ENOMEM;
++
+ 	/*
+ 	 * NOTE:
+ 	 * It is expected that in the future the kernel will combine
+@@ -3338,7 +3342,8 @@ static int __init nvme_fc_init_module(void)
+ 	fc_class = class_create(THIS_MODULE, "fc");
+ 	if (IS_ERR(fc_class)) {
+ 		pr_err("couldn't register class fc\n");
+-		return PTR_ERR(fc_class);
++		ret = PTR_ERR(fc_class);
++		goto out_destroy_wq;
+ 	}
+ 
+ 	/*
+@@ -3362,6 +3367,9 @@ out_destroy_device:
+ 	device_destroy(fc_class, MKDEV(0, 0));
+ out_destroy_class:
+ 	class_destroy(fc_class);
++out_destroy_wq:
++	destroy_workqueue(nvme_fc_wq);
++
+ 	return ret;
+ }
+ 
+@@ -3378,6 +3386,7 @@ static void __exit nvme_fc_exit_module(void)
+ 
+ 	device_destroy(fc_class, MKDEV(0, 0));
+ 	class_destroy(fc_class);
++	destroy_workqueue(nvme_fc_wq);
+ }
+ 
+ module_init(nvme_fc_init_module);
 -- 
 2.20.1
 
