@@ -2,53 +2,60 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC68CC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8536C206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34ACD206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381032;
-	bh=RBHFNmoq0KwigmFolI7aqoLzBVjy9tx5BTawnJLct2Y=;
+	s=default; t=1568381035;
+	bh=w9rMOSJJjyio0AAEDtCnA2QRY8NZqeOX69wnXBT1yE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VHxkzynTCqaqKskpZxyrtXgCa75FMRyHHlpBsAHCsQR5fv5hI+DudN4J3DzK8mdpb
-	 0HnjeVj0dFolkMS5mEui4Jf+LIWCoLbBbTOi2jvGufvZ+qHB2SiPGrCdXAvQJ7btEP
-	 a7N9REyzXFs98u8iHIjQe6LnwB3OVAwyTOAir25U=
+	b=sqONdhV+y16Njbo+9Sj8/j6UeT42uw3zdy0BGwRE71bvAHp/0FfGekYAJbO6x2w8o
+	 QmVzTW0X+ts4Xq/QXgDUnjSsbLCD2sPU+Wegvb3euQDc9BR05qOXvzm3fmXRyzOmdm
+	 PB0irtf/AT/Gi3uFXWhpko1tCHJlP/Y9/nfNrjCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390572AbfIMNXv (ORCPT
+        id S2390619AbfIMNUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389729AbfIMNUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:46 -0400
+        id S2389469AbfIMNUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:38 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F9DB206BB;
-        Fri, 13 Sep 2019 13:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8421206BB;
+        Fri, 13 Sep 2019 13:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380846;
-        bh=RBHFNmoq0KwigmFolI7aqoLzBVjy9tx5BTawnJLct2Y=;
+        s=default; t=1568380836;
+        bh=w9rMOSJJjyio0AAEDtCnA2QRY8NZqeOX69wnXBT1yE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DeCbafoAabDdpgN0fmsaqN1EW6sVl4Uo8bqBrWqlkwzKJsF7+W8BvbCqgcyzoVD1H
-         wYNbQ9Pfx9EkkYEh7eRvqvdazmZAYu3CdyAdadUtedKQcNfcqjWpWLJr/qDnrCWmZ0
-         7sJsAkHu7TviEuVKUbaF+Jy70t4/6bBrFZMpSAcs=
+        b=jhGUfW7g8FCAKQGhwWOBEG7oWeUYLfkNQnJqAXlwRa40YjsbASLsdVcKTZGv6lyV+
+         kIUddXs5jqc9nziA8v/oGBJSekUUWjMSMRN+MHu8yCrhMjRO9fABk9t9VtemrdXCjl
+         MYVD9n0vSeXewtyzzq2eANUVAG7KwhuzLay9HpTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lidong Chen <lidongchen@tencent.com>,
-        ruippan <ruippan@tencent.com>, yongduan <yongduan@tencent.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: [PATCH 4.19 190/190] vhost: make sure log_num < in_num
-Date:   Fri, 13 Sep 2019 14:07:25 +0100
-Message-Id: <20190913130615.118340191@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Daniel Drake <drake@endlessm.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Karol Herbst <kherbst@redhat.com>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 186/190] PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
+Date:   Fri, 13 Sep 2019 14:07:21 +0100
+Message-Id: <20190913130614.757255328@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,54 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yongduan <yongduan@tencent.com>
+[ Upstream commit ad54567ad5d8e938ee6cf02e4f3867f18835ae6e ]
 
-commit 060423bfdee3f8bc6e2c1bac97de24d5415e2bc4 upstream.
+quirk_reset_lenovo_thinkpad_50_nvgpu() resets NVIDIA GPUs to work around
+an apparent BIOS defect.  It previously used pci_reset_function(), and
+the available method was a bus reset, which was fine because there was
+only one function on the bus.  After b516ea586d71 ("PCI: Enable NVIDIA
+HDA controllers"), there are now two functions (the HDA controller and
+the GPU itself) on the bus, so the reset fails.
 
-The code assumes log_num < in_num everywhere, and that is true as long as
-in_num is incremented by descriptor iov count, and log_num by 1. However
-this breaks if there's a zero sized descriptor.
+Use pci_reset_bus() explicitly instead of pci_reset_function() since it's
+OK to reset both devices.
 
-As a result, if a malicious guest creates a vring desc with desc.len = 0,
-it may cause the host kernel to crash by overflowing the log array. This
-bug can be triggered during the VM migration.
-
-There's no need to log when desc.len = 0, so just don't increment log_num
-in this case.
-
-Fixes: 3a4d5c94e959 ("vhost_net: a kernel-level virtio server")
-Cc: stable@vger.kernel.org
-Reviewed-by: Lidong Chen <lidongchen@tencent.com>
-Signed-off-by: ruippan <ruippan@tencent.com>
-Signed-off-by: yongduan <yongduan@tencent.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[bhelgaas: commit log, add e0547c81bfcf]
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Fixes: e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary")
+Link: https://lore.kernel.org/r/20190801220117.14952-1-lyude@redhat.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Ben Skeggs <bskeggs@redhat.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Aaron Plattner <aplattner@nvidia.com>
+Cc: Peter Wu <peter@lekensteyn.nl>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Maik Freudenberg <hhfeuer@gmx.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vhost.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2075,7 +2075,7 @@ static int get_indirect(struct vhost_vir
- 		/* If this is an input descriptor, increment that count. */
- 		if (access == VHOST_ACCESS_WO) {
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
- 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
- 				++*log_num;
-@@ -2218,7 +2218,7 @@ int vhost_get_vq_desc(struct vhost_virtq
- 			/* If this is an input descriptor,
- 			 * increment that count. */
- 			*in_num += ret;
--			if (unlikely(log)) {
-+			if (unlikely(log && ret)) {
- 				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
- 				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
- 				++*log_num;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 311f8a33e62ff..06be52912dcdb 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5162,7 +5162,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ 	 */
+ 	if (ioread32(map + 0x2240c) & 0x2) {
+ 		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+-		ret = pci_reset_function(pdev);
++		ret = pci_reset_bus(pdev);
+ 		if (ret < 0)
+ 			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
+ 	}
+-- 
+2.20.1
+
 
 
