@@ -2,131 +2,102 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF9CC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCAFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CC820693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568388400;
-	bh=DKPb89gNVWrEkc2nPeyAuBft6QGWxruAsXiGTHC2k3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=chADUB3uuEyf4xITEteFIDEw+JRCS1heTSFXT8KWD8OJ6Eohcrj8NBbAbSqLDk42/
-	 F3ZLCS48eu0lRPLLjQDckbF/scANc1i3+ioJCp27lXjbntSbirOW/0wSFkpOXih7n7
-	 dbX9tWuVhpPYLwt/eHiiHl2rU/34uAId6+ygRxgQ=
+	by mail.kernel.org (Postfix) with ESMTP id BAFFA20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 15:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391477AbfIMP0j (ORCPT
+        id S2388622AbfIMPc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 11:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51174 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 11:32:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:45788 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388231AbfIMP0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 11:26:39 -0400
-Received: from localhost (195-23-252-136.net.novis.pt [195.23.252.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CED520693;
-        Fri, 13 Sep 2019 15:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568388398;
-        bh=DKPb89gNVWrEkc2nPeyAuBft6QGWxruAsXiGTHC2k3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PwShTKtviHhe7lIiolEaRlj1ESSWSdo+v7cy/OKAZtmXBjo527ajt4jQwK0y1ZJzW
-         IBehPhMhu/14uOk9gIhFPv9u5APdEObhtfvM8txCfYfcvt5EeCWMQ4t1nk/enW5uVM
-         h3e5fLu+ZkpXC5tKbSu3Nhs0CFtaeuqc+05KQMNY=
-Date:   Fri, 13 Sep 2019 11:26:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "# 3.9+" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 092/190] drm/nouveau: Dont WARN_ON VCPI allocation
- failures
-Message-ID: <20190913152635.GK1546@sasha-vm>
-References: <20190913130559.669563815@linuxfoundation.org>
- <20190913130606.981926197@linuxfoundation.org>
- <CAKb7UviY0sjFUc6QqjU4eKxm2b-osKoJNO2CSP9HmQ5AdORgkw@mail.gmail.com>
- <20190913144627.GH1546@sasha-vm>
- <20190913145456.GA456842@kroah.com>
- <20190913150111.GI1546@sasha-vm>
- <CAKb7Uvj31ZuxB6S4EH8WBRsa2mDScpZN=dRjHScZmN94ajD0EA@mail.gmail.com>
+        id S1727452AbfIMPc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 11:32:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB2A21000;
+        Fri, 13 Sep 2019 08:32:55 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2CC43F67D;
+        Fri, 13 Sep 2019 08:32:50 -0700 (PDT)
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     mark.rutland@arm.com, x86@kernel.org, wanpengli@tencent.com,
+        kvm@vger.kernel.org, narmstrong@baylibre.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, hpa@zytor.com,
+        khilman@baylibre.com, joro@8bytes.org, rkrcmar@redhat.com,
+        mingo@redhat.com, Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>,
+        devicetree@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        robh+dt@kernel.org, bp@alien8.de,
+        linux-amlogic@lists.infradead.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, jmattson@google.com,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        carlo@caione.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+ <20190913044614.GA120223@kroah.com>
+ <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
+ <20190913130226.GB403359@kroah.com>
+ <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <462660f4-1537-cece-b55f-0ceba0269eb8@arm.com>
+Date:   Fri, 13 Sep 2019 16:32:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKb7Uvj31ZuxB6S4EH8WBRsa2mDScpZN=dRjHScZmN94ajD0EA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:09:22AM -0400, Ilia Mirkin wrote:
->On Fri, Sep 13, 2019 at 11:01 AM Sasha Levin <sashal@kernel.org> wrote:
->>
->> On Fri, Sep 13, 2019 at 03:54:56PM +0100, Greg Kroah-Hartman wrote:
->> >On Fri, Sep 13, 2019 at 10:46:27AM -0400, Sasha Levin wrote:
->> >> On Fri, Sep 13, 2019 at 09:33:36AM -0400, Ilia Mirkin wrote:
->> >> > Hi Greg,
->> >> >
->> >> > This feels like it's missing a From: line.
->> >> >
->> >> > commit b513a18cf1d705bd04efd91c417e79e4938be093
->> >> > Author: Lyude Paul <lyude@redhat.com>
->> >> > Date:   Mon Jan 28 16:03:50 2019 -0500
->> >> >
->> >> >    drm/nouveau: Don't WARN_ON VCPI allocation failures
->> >> >
->> >> > Is this an artifact of your notification-of-patches process and I
->> >> > never noticed before, or was the patch ingested incorrectly?
->> >>
->> >> It was always like this for patches that came through me. Greg's script
->> >> generates an explicit "From:" line in the patch, but I never saw the
->> >> value in that since git does the right thing by looking at the "From:"
->> >> line in the mail header.
->> >>
->> >> The right thing is being done in stable-rc and for the releases. For
->> >> your example here, this is how it looks like in the stable-rc tree:
->> >>
->> >> commit bdcc885be68289a37d0d063cd94390da81fd8178
->> >> Author:     Lyude Paul <lyude@redhat.com>
->> >> AuthorDate: Mon Jan 28 16:03:50 2019 -0500
->> >> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> >> CommitDate: Fri Sep 13 14:05:29 2019 +0100
->> >>
->> >>    drm/nouveau: Don't WARN_ON VCPI allocation failures
->> >
->> >Yeah, we should fix your scripts to put the explicit From: line in here
->> >as we are dealing with patches in this format and it causes confusion at
->> >times (like now.)  It's not the first time and that's why I added those
->> >lines to the patches.
->>
->> Heh, didn't think anyone cared about this scenario for the stable-rc
->> patches.
->>
->> I'll go add it.
->>
->> But... why do you actually care?
->
->Just a hygiene thing. Everyone else sends patches the normal way, with
->accurate attribution. Why should stable be different?
+On 13/09/2019 16:01, Paolo Bonzini wrote:
+> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+>> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+>> not need this type of thing.  If we got it wrong, please let us know and
+>> then yes, a fix like this would be most appreciated :)
+> 
+> I still see
+> 
+> 	/* some USB hosts just use PIO */
+> 	if (!hcd_uses_dma(hcd)) {
+> 		*dma = ~(dma_addr_t) 0;
+> 		return kmalloc(size, mem_flags);
+> 	}
+> 
+> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+>   I also see the same
+> 
+> 	if (remap_pfn_range(vma, vma->vm_start,
+> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+> 			size, vma->vm_page_prot) < 0) {
+> 		...
+> 	}
+> 
+> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+> branch, or just being dense.
 
-It shouldn't.
+Oh, that bit of usbdev_mmap() is already known to be pretty much totally 
+bogus for various reasons - there have been a few threads about it, of 
+which I think [1] is both the most recent and the most informative. 
+There was another patch[2], but that might have stalled (and might need 
+reworking with additional hcd_uses_dma() checks anyway).
 
-It's just a mismatch between our two somewhat seperate workflow.
+Robin.
 
-Technically it's Greg who needs to be adding that line since the patches
-I have in stable-queue correctly state the author, and it only goes
-wrong when they're being formatted into mails sent for the -rc cycles.
-
-But yes, thanks for pointing it out, I'll go add it in the scripts.
-
---
-Thanks,
-Sasha
+[1] 
+https://lore.kernel.org/linux-arm-kernel/20190808084636.GB15080@priv-mua.localdomain/
+[2] 
+https://lore.kernel.org/linux-usb/20190801220134.3295-1-gavinli@thegavinli.com/
