@@ -2,69 +2,95 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8160BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D611C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD5B206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6124206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUOYo1gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390345AbfIMNm4 convert rfc822-to-8bit (ORCPT
+        id S2391145AbfIMNoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:42:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34450 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388473AbfIMNm4 (ORCPT
+        Fri, 13 Sep 2019 09:44:00 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45488 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388331AbfIMNn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:42:56 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1i8lqV-0000oE-Sw; Fri, 13 Sep 2019 15:42:43 +0200
-Date:   Fri, 13 Sep 2019 15:42:43 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sean V Kelley <sean.v.kelley@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [BUG RT] backtrace on v5.2.9-rt3
-Message-ID: <20190913134243.3zoliue6yqfzyatl@linutronix.de>
-References: <20190830120106.301bd9f3@gandalf.local.home>
+        Fri, 13 Sep 2019 09:43:59 -0400
+Received: by mail-vs1-f65.google.com with SMTP id s3so18612488vsi.12;
+        Fri, 13 Sep 2019 06:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=RXJnZ+nPgE9agHywMSnWPQ7t9VoBgm2R0CEtC5otomY=;
+        b=CUOYo1guETjrYNQEhNyJG1uIGxnJ1ZmaQsuceauYUPtMTJiqGbiT/kWdtVH5EcwVkB
+         E4B4NaFUxLu/m+BmxEWXWZ7trw1d0IaJxvUrKqN+y9udk4PLYwSbSXaznaIeMOHlrjQG
+         n3ZDK5IhR3Yu0gdc1xMw3rqnkfdEcp/5e0F6zmiHz9pj724sVjzahRh/cSA0oMvQS61S
+         OsJOh/4CkzqZ63Klvrz6Nqw1IQaFyFqfNOQhj33sjtuyt6DTImJoEE1EZMw8jC9I8is6
+         WYYZZh8X1r42SENsaTQMDfXvGc0DBYfg86kkkHUJcpVAMwnMVWUtVKjNpDVaZVx/bHUB
+         gcLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=RXJnZ+nPgE9agHywMSnWPQ7t9VoBgm2R0CEtC5otomY=;
+        b=TxOB4ctLA2BjYN4fjIlHRq3PSMGGFU5WyOMhk7f2MqltkThH8u4mxRrLaonmEdzTRn
+         OXJdmoTeLc5QA/MwTdpKTFBkYLUiKs72CAilrgT8KO3OThilGKEK4eK3Ujo4V0ayMz+M
+         nkHcOaPsJZS/ysV2NbbqJwQ/7EItq9uaE57bSpY5VhJeKNfQiQ1AVaCU6u923p/7zHBz
+         YB/KY1AEAd/r9V4HP7mFxAoIjHmwSIzI6i+C4418FtiIqrxBXA4Narj27Bt9xamxIXW6
+         uk01PNgXwIj4cRguZ1V6QCJRjIyZQPffw3hICgXsfz33EJcMN5oMtYrjJSbyVHx92Rl4
+         rlZg==
+X-Gm-Message-State: APjAAAX902rIcGg46DbNM2y6D4G2g+cahcfMclSekCRhDHBHGSGL2SAm
+        UH1KcuPULfcwGjJ7AxUrkI7y3S3RG8IkWjOA5qwk
+X-Google-Smtp-Source: APXvYqw9PNt4u6KSrpSVrBXM2L7xr6JaasI+kZg3SKmYAITPc2ir9OYfofSEVx6LRX7xFiHf6Yn19MCoEVskqy8b7jM=
+X-Received: by 2002:a67:6187:: with SMTP id v129mr5104474vsb.230.1568382238685;
+ Fri, 13 Sep 2019 06:43:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190830120106.301bd9f3@gandalf.local.home>
-User-Agent: NeoMutt/20180716
+References: <20190724143733.17433-1-rsalvaterra@gmail.com>
+In-Reply-To: <20190724143733.17433-1-rsalvaterra@gmail.com>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Fri, 13 Sep 2019 14:43:47 +0100
+Message-ID: <CALjTZvYi+3VdYJ4Od4Epx08VTFg0TReo_-NkqYxFonR_-=GN6A@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: trivial: remove extraneous space from message
+To:     pablo@netfilter.org, davem@davemloft.net,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-30 12:01:06 [-0400], Steven Rostedt wrote:
-> 
-> I'm triggering the following call splat on 5.2-rt.
-> 
-> [   63.099414] 006: BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
-> [   63.108423] 006: in_atomic(): 0, irqs_disabled(): 1, pid: 173, name: kworker/6:1
-…
-> [   63.141041] 006: Call Trace:
-> [   63.143916] 006:  dump_stack+0x5c/0x80
-> [   63.147654] 006:  ___might_sleep.cold.92+0x8d/0x9a
-> [   63.152423] 006:  rt_spin_lock+0x31/0x40
-> [   63.156332] 006:  intel_engine_breadcrumbs_irq+0x56/0x320 [i915]
-> [   63.162350] 006:  intel_engine_signal_breadcrumbs+0x11/0x20 [i915]
-> [   63.168540] 006:  i915_hangcheck_elapsed+0x199/0x420 [i915]
-…
-> [   63.309375] 006:  process_one_work+0x1e8/0x4c0
-…
-> Attached is the config and the full dmesg.
+Friendly ping.
 
-just for book keeping: Clark reported the same thing, posted patches and
-will try an alternative on Monday (as far as I'm been told). I will
-continue to reply in the other thread.
-
-Sebastian
+On Wed, 24 Jul 2019 at 15:37, Rui Salvaterra <rsalvaterra@gmail.com> wrote:
+>
+> Pure ocd, but this one has been bugging me for a while.
+>
+> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+> ---
+>  net/netfilter/nf_conntrack_helper.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/netfilter/nf_conntrack_helper.c b/net/netfilter/nf_conntrack_helper.c
+> index 8d729e7c36ff..209123f35b4a 100644
+> --- a/net/netfilter/nf_conntrack_helper.c
+> +++ b/net/netfilter/nf_conntrack_helper.c
+> @@ -218,7 +218,7 @@ nf_ct_lookup_helper(struct nf_conn *ct, struct net *net)
+>                         return NULL;
+>                 pr_info("nf_conntrack: default automatic helper assignment "
+>                         "has been turned off for security reasons and CT-based "
+> -                       " firewall rule not found. Use the iptables CT target "
+> +                       "firewall rule not found. Use the iptables CT target "
+>                         "to attach helpers instead.\n");
+>                 net->ct.auto_assign_helper_warned = 1;
+>                 return NULL;
+> --
+> 2.22.0
+>
