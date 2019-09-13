@@ -2,107 +2,153 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6868BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0919C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C1B208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF69208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 19:50:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szixyBRl"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="b84tKznb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389592AbfIMTtH (ORCPT
+        id S2389592AbfIMTuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 15:49:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38816 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbfIMTtH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 15:49:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l11so33157990wrx.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 12:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3F1+Vd20qQHEAMcsaqDBeShk2k2fZrIc64DNNthuGjM=;
-        b=szixyBRl+Ziz3JuFg1c7zut06tg+5tBym303ch5PIVdtP3ToNDCecxq9r+lT6LRLKY
-         JNxu3pMX9VLQAhngWbDKzdMVqMdiIuZgRR7c4YyyK18s/Y0OJXdY5tB9LmCry5iHR24Q
-         d6KtnwaMQmk/Cs/PQVIU4WDlVduyqczq/vHFSSXiaJ0stkTD5ctl1dFQWqCeaZsm2HSb
-         mm89C2XzWCvmpFyEtpc8/uDhE1gnzisBmxhOMNmZ/9LCO0DdZBCSIiD2KYcXRz+9UH+N
-         lTeWQqUo1Ht/QGKF2EdfNtiolCMxdFXinquCv90bMrYrm50C4h+DIW/GxD169vdyE9RA
-         l40Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3F1+Vd20qQHEAMcsaqDBeShk2k2fZrIc64DNNthuGjM=;
-        b=W5n4yTWyVNtnQrU1Q3cQjZOlMwptrJEwBd4356Cs3jyMI+0/PoW7zxrRYTJVPsjebC
-         5X4dAOIZBL8XWR2ZZ6x8hML97syYl+viFF7nBZlogfXbGwYvYqjzI5VfDwj+5M1c3CKM
-         NYn6DrklUi209arugRLhcl25hKeU87+ycAmQPZFnB8lzkLbK40nK4/lCoDK5lSKXeRff
-         CMvMfAzJ4Jk8MWVjYxrmQ2ZjonhqrybE56Kq1nUlanwhRCUL8r6gmbVBpnE+QMatX/aF
-         fmf+sR9wArrfpXH/7diRNuTHtIzcLdWARUmtFGI2vkgWTLtaI2tk6nBw1dsYYzA+qS5o
-         QCoA==
-X-Gm-Message-State: APjAAAWDLGXLRCt+YB3AUnv+6g1eu6GrVeE2r/1KmkQ7Ra+/piwQohAc
-        tlZ7p4iu8SXdX5bs7V1v+zmpB29AxS/tI3taP2usVA==
-X-Google-Smtp-Source: APXvYqx8w1+GO1+fmabltVM+trq9DqeCKeWrLUAxVIW//lvPpzUqvWWtltEQb9WQQDrAT6HuUAOAOjUxrpjD0cbuyLs=
-X-Received: by 2002:a5d:638f:: with SMTP id p15mr4492201wru.169.1568404143136;
- Fri, 13 Sep 2019 12:49:03 -0700 (PDT)
+        Fri, 13 Sep 2019 15:50:55 -0400
+Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:46819
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729614AbfIMTuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 15:50:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UKC473r+BRCzDQ6WeIoWlufTQ8/ss0JYo+tO809ME0+6D+eNVlL1Jb83VQ8sfYjYsG4eJQhnpSo5Vean9ft0DxhRhxFgEiikJ3qm0ZKdXbsnErvqksngg0N2UqXFg7CQRMn9FfBNZC4XIdJmnzAj6qZxnvtVOyRjloaNoMe35RYJZ56mPRTQTQczaq9KSoImJJobq5hpSjpSIF+a/rLIM5FGPxi+6KKSaXhCYnzJdxywV/DdZi2d/TYm1nDNIszB8XtNhA5YuhEcleW+Vy0iVKb/xwNpC28ZDY7aYuMJTKNALP8bsA+hNJ+I+ZgLZ5HFKAM5QRD+3rO3jn1BQ+UsOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pO7dE0cbaEZsJ5xiah12EiX8QFktExTGmjSV5awP7Ng=;
+ b=VT4IC4+Jwuu0tbZWrcSpKgdzNQ31np8a4TdKT2by/fim1VU6TpgMlTB5zwRT0UgKw96o3DHJHdx78UP5H3WMbirbmHY0IkLEserC/lt+VmY8S9xUX+Revt9gj7k02TZu2GHBkJ0cPorzFWCxrIjumOfL2fxZx3NCZUkJGW8qYCzXhoecEeJ3bbDPm79X+rHgTof97Sw/vWggGsFXokICBT7/vINheDhggugUOk6WvSBG+zFnVKTEdE2G874SKnJvhtBeTlOwL09EDrwbXuWGnfEzFxTr98aG39sLCqwD66QivO5GURSEnnV/nOV5XX84Mz8nUx8YnUlFxvXiW70Zmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pO7dE0cbaEZsJ5xiah12EiX8QFktExTGmjSV5awP7Ng=;
+ b=b84tKznbxKnsTcO7sLul8D4i9HHQKW/+Fs/IXM+/oS2Cgosuxtmg9seJQtwIlN95je12ovaspN11v9QdeOZwb1xsw+oW98PletTUhMj8MCoTSU+c68hv7+XJO2ATgUpfjbDA01zu+vKqrmn1v+FMQZYYC7e9A9qj9dX2PVDLmwQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6574.eurprd05.prod.outlook.com (20.179.25.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Fri, 13 Sep 2019 19:50:50 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
+ 19:50:50 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Megha Dey <megha.dey@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "megha.dey@intel.com" <megha.dey@intel.com>,
+        "jacob.jun.pan@intel.com" <jacob.jun.pan@intel.com>
+Subject: Re: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Thread-Topic: [RFC V1 0/7] Add support for a new IMS interrupt mechanism
+Thread-Index: AQHVadCis80jNXQJ7ESbv2tE+P8b86cpe96A
+Date:   Fri, 13 Sep 2019 19:50:50 +0000
+Message-ID: <VI1PR05MB4141EAE19EE47DA20A75AE21CFB30@VI1PR05MB4141.eurprd05.prod.outlook.com>
+References: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+In-Reply-To: <1568338328-22458-1-git-send-email-megha.dey@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTXPR0101CA0064.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::41) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.167.223.10]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10c13d9d-3244-4ac1-9fd2-08d73883ad75
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6574;
+x-ms-traffictypediagnostic: VI1PR05MB6574:
+x-microsoft-antispam-prvs: <VI1PR05MB6574A412D433E70E5B18C9C1CFB30@VI1PR05MB6574.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(39830400003)(366004)(346002)(199004)(189003)(33656002)(256004)(52116002)(66066001)(66556008)(66476007)(66446008)(66946007)(64756008)(7696005)(76176011)(5660300002)(74316002)(52536014)(8936002)(6506007)(386003)(54906003)(446003)(11346002)(6116002)(486006)(3846002)(476003)(9686003)(55016002)(81156014)(478600001)(25786009)(81166006)(99286004)(2906002)(53936002)(86362001)(8676002)(6916009)(14444005)(4326008)(6246003)(26005)(316002)(71200400001)(7416002)(229853002)(305945005)(102836004)(7736002)(71190400001)(186003)(14454004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6574;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: li6kZpccTJ8Pxw4lnNhbNj3fEj2+exwWrmfAgsFsKQY7W/w+lwq2GNvaJoRQtIgzyA902SGi3JrSSpetdVcm9J7qrmolOJ1ILNqrwaLjRTE5+gmulB1W4lLTyNLvAfyg0eOJ3PbEfJ4sLExS12FFwwTwOiC1anVpKykfW3Czpz8++lnItikIpL2jZVFAv4tbOJtIqU584dx35Xi2XT4Q0GNKE+cZ+qrrKjxQUhQ1ku56X4MZBxZPMHk4BC3BZZu54ZpvsdQHvYfC8zM4ITDroc3jy9hq1XLt/2tlCX4cpvrGwxXwVUiEkdgtiY/lB+/k3ubiT5HEUNpHJWzRVUBG00p7HVngVqzw7Dr7T0867nn9WZocPCFryMIRgDkmxsv9aVlSwM6ahg6dOQJEQWHlAq8IQFTxDFsap/gZIUTccg4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4EFF5AE607A0DD409FA0740C7E8393F3@Mellanox365.onmicrosoft.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Sep 2019 20:48:39 +0100
-Message-ID: <CAKv+Gu_Bg-siUDodOu26GQO2L0xEJXxPZehPJtd0FRhD=-ubJw@mail.gmail.com>
-Subject: Re: [PATCH v5 05/10] x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10c13d9d-3244-4ac1-9fd2-08d73883ad75
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 19:50:50.0721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3eZnf7MHKvpvtNkRL2TW5Y3btaGLtlJvhBfAiRHiHeP8DNc6JVwLgxckMBewyvWLhdqm4ScXpYycE3DDGfbDmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 at 03:07, Dan Williams <dan.j.williams@intel.com> wrote:
->
-...
-> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-> index 4ac2de4dfa72..d7a6db03ea79 100644
-> --- a/drivers/firmware/efi/Makefile
-> +++ b/drivers/firmware/efi/Makefile
-> @@ -20,13 +20,16 @@ obj-$(CONFIG_UEFI_CPER)                     += cper.o
->  obj-$(CONFIG_EFI_RUNTIME_MAP)          += runtime-map.o
->  obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)     += runtime-wrappers.o
->  obj-$(CONFIG_EFI_STUB)                 += libstub/
-> -obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_mem.o
-> +obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_map.o
->  obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)   += efibc.o
->  obj-$(CONFIG_EFI_TEST)                 += test/
->  obj-$(CONFIG_EFI_DEV_PATH_PARSER)      += dev-path-parser.o
->  obj-$(CONFIG_APPLE_PROPERTIES)         += apple-properties.o
->  obj-$(CONFIG_EFI_RCI2_TABLE)           += rci2-table.o
->
-> +fake_map-y                             += fake_mem.o
-> +fake_map-$(CONFIG_X86)                 += x86-fake_mem.o
-> +
+On Thu, Sep 12, 2019 at 06:32:01PM -0700, Megha Dey wrote:
 
-Please use
+> This series is a basic patchset to get the ball rolling and receive some
+> inital comments. As per my discussion with Marc Zyngier and Thomas Gleixn=
+er
+> at the Linux Plumbers, I need to do the following:
+> 1. Since a device can support MSI-X and IMS simultaneously, ensure proper
+>    locking mechanism for the 'msi_list' in the device structure.
+> 2. Introduce dynamic allocation of IMS vectors perhaps by using a group I=
+D
+> 3. IMS support of a device needs to be discoverable. A bit in the vendor
+>    specific capability in the PCI config is to be added rather than getti=
+ng
+>    this information from each device driver.
 
-fake-mem-$(CONFIG_X86) := x86-fake_mem.o
-obj-$(CONFIG_EFI_FAKE_MEMMAP) += fake_mem.o $(fake-mem-y)
+Why #3? The point of this scheme is to delegate programming the
+addr/data pairs to the driver so it can be done in some
+device-specific way. There is no PCI standard behind this, and no
+change in PCI semantics.=20
 
-instead, and please use either - or _ in filenames, not both.
+I think it would be a tall ask to get a config space bit from PCI-SIG
+for something that has little to do with PCI.
+
+After seeing that we already have a platform device based version of
+this same idea (drivers/base/platform-msi.c), I think the task here is
+really just to extend and expand that approach to work generically for
+platform and PCI devices. Along the way tidying the arch interface so
+x86 and ARM's stuff to support that uses the same generic interfaces.
+
+ie it is re-organizing code and ideas already in Linux, not defining
+some new standard.
+
+I also think refering to this existing idea by some new IMS name is
+only confusing people what the goal is... Which is perhaps why #3 was
+suggested??
+
+Stated more clearly, I think all uses would be satisfied if
+platform_msi_domain_alloc_irqs() could be called for struct
+pci_device, could be called multiple times for the same struct
+pci_device, and co-existed with MSI and MSI-X on the same pci_device.
+
+Jason
