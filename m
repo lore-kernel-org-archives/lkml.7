@@ -2,212 +2,228 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DDEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16DBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E6120693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB45620692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 14:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6LinUjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388853AbfIMODj (ORCPT
+        id S2388738AbfIMOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 10:03:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:44254 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388084AbfIMODi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 10:03:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53F2A1000;
-        Fri, 13 Sep 2019 07:03:38 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF99F3F67D;
-        Fri, 13 Sep 2019 07:03:36 -0700 (PDT)
-Subject: Re: [PATCH 2/8] drm/shmem: switch shmem helper to
- &drm_gem_object_funcs.mmap
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Sean Paul <sean@poorly.run>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <20190913122908.784-1-kraxel@redhat.com>
- <20190913122908.784-3-kraxel@redhat.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <197fdced-cf4a-c59a-47fd-aa5dbf8e04a2@arm.com>
-Date:   Fri, 13 Sep 2019 15:03:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 10:06:02 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:42174 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388229AbfIMOGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 10:06:01 -0400
+Received: by mail-io1-f43.google.com with SMTP id n197so62789883iod.9;
+        Fri, 13 Sep 2019 07:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p+mughJxaYhP88ukBk7Ah6PvSL5JyfCszCFusxq/u0A=;
+        b=C6LinUjhYPgy9EPodYN2gtTGlAraHCxRYT5wrdQm/XxtVHk+zY3gVejMxyi3m5k5rc
+         VFDhXSerXi243OVIKHdtJIB2qB782AW+nqdrsiBgd+6qhu/6mI1CHaVOJL2Pr2MfGhXY
+         fL9eRuk8LFtCAlNFRD4p4iVA7JA4ozGla7tBrC5Gf6oSD6Z8QW7Lfchna8uztTrZuPck
+         6wOk1oA6Kq/NUqR35nZQTA269wDP9qTjyGLc5tfUVB4Ur6h0H/nnReXAnM/LsTJImHw5
+         mBGk44UL8G/rMFqr70thN8gvw0A3BlS6Lb2TkiGJ5CRxsOyEhRwyZnBK1oHY8Q869QM0
+         HFdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p+mughJxaYhP88ukBk7Ah6PvSL5JyfCszCFusxq/u0A=;
+        b=Vsg7Y1PFVeRKHjMhaZQ+BJNDYMhS26TeCVwH58oJW8S2gg6feK2xj5eCc5LcZF9tGD
+         d2V/xqwCa4pwYVSEb+Ee8zLzyjDPLjJtd+KEgpRDb1BOONQv3t3Cvn/qxR6k+tcuAuQb
+         mNE80q1YTTseBxdChn4HPecFcIpvyWnmql9nroG0lwPLZ4aYr2k8urr0Th4l+Zb8qbOI
+         L/awcwdWy1DgTGSZWjGkjpERlKTMAqF/eH9Og+R95aO+1sAwRqLFMfhPa5hhdvEZbQDP
+         8GiLGQJF6loKYTglYYGmkR0xELTcwBoU1W/6TigtV41JDYGsq97zjQYecMS2JWLPw/lv
+         PwTQ==
+X-Gm-Message-State: APjAAAXJjJbumuo3I1S/6X78IwSQUR01VwzXeqgUOJlAXDPymJYQ7wd9
+        NeiUgG0fW5gwrADmHvo0JzQz7vAVpdIgmgc7Xsg=
+X-Google-Smtp-Source: APXvYqwpQkcP2Xkp3mSXI6ATCVJUVQolqcrzb2AE4BX+QY5Whg+GyL4Wiqq3r2GEcSxm+CHcz3/r8Ctna+oFO8sp/zY=
+X-Received: by 2002:a6b:b78b:: with SMTP id h133mr4202iof.276.1568383560189;
+ Fri, 13 Sep 2019 07:06:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190913122908.784-3-kraxel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190912183037.18449-1-aford173@gmail.com> <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
+ <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com> <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com>
+In-Reply-To: <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 13 Sep 2019 09:05:48 -0500
+Message-ID: <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
+Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
+        kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/2019 13:29, Gerd Hoffmann wrote:
-> Switch gem shmem helper to the new mmap() workflow,
-> from &gem_driver.fops.mmap to &drm_gem_object_funcs.mmap.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/drm_gem_shmem_helper.h      |  6 ++----
->  drivers/gpu/drm/drm_gem_shmem_helper.c  | 26 ++++++++-----------------
->  drivers/gpu/drm/panfrost/panfrost_gem.c |  2 +-
->  drivers/gpu/drm/v3d/v3d_bo.c            |  2 +-
->  drivers/gpu/drm/virtio/virtgpu_object.c |  2 +-
->  5 files changed, 13 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-> index 01f514521687..d89f2116c8ab 100644
-> --- a/include/drm/drm_gem_shmem_helper.h
-> +++ b/include/drm/drm_gem_shmem_helper.h
-> @@ -111,7 +111,7 @@ struct drm_gem_shmem_object {
->  		.poll		= drm_poll,\
->  		.read		= drm_read,\
->  		.llseek		= noop_llseek,\
-> -		.mmap		= drm_gem_shmem_mmap, \
-> +		.mmap		= drm_gem_mmap, \
->  	}
->  
->  struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t size);
-> @@ -143,9 +143,7 @@ drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
->  int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
->  			      struct drm_mode_create_dumb *args);
->  
-> -int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma);
-> -
-> -extern const struct vm_operations_struct drm_gem_shmem_vm_ops;
-> +int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
->  
->  void drm_gem_shmem_print_info(struct drm_printer *p, unsigned int indent,
->  			      const struct drm_gem_object *obj);
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index f5918707672f..a104140154bb 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -32,7 +32,7 @@ static const struct drm_gem_object_funcs drm_gem_shmem_funcs = {
->  	.get_sg_table = drm_gem_shmem_get_sg_table,
->  	.vmap = drm_gem_shmem_vmap,
->  	.vunmap = drm_gem_shmem_vunmap,
-> -	.vm_ops = &drm_gem_shmem_vm_ops,
-> +	.mmap = drm_gem_shmem_mmap,
->  };
->  
->  /**
-> @@ -505,39 +505,30 @@ static void drm_gem_shmem_vm_close(struct vm_area_struct *vma)
->  	drm_gem_vm_close(vma);
->  }
->  
-> -const struct vm_operations_struct drm_gem_shmem_vm_ops = {
-> +static const struct vm_operations_struct drm_gem_shmem_vm_ops = {
->  	.fault = drm_gem_shmem_fault,
->  	.open = drm_gem_shmem_vm_open,
->  	.close = drm_gem_shmem_vm_close,
->  };
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_vm_ops);
->  
->  /**
->   * drm_gem_shmem_mmap - Memory-map a shmem GEM object
-> - * @filp: File object
-> + * @obj: gem object
->   * @vma: VMA for the area to be mapped
->   *
->   * This function implements an augmented version of the GEM DRM file mmap
->   * operation for shmem objects. Drivers which employ the shmem helpers should
-> - * use this function as their &file_operations.mmap handler in the DRM device file's
-> - * file_operations structure.
-> - *
-> - * Instead of directly referencing this function, drivers should use the
-> - * DEFINE_DRM_GEM_SHMEM_FOPS() macro.
-> + * use this function as their &drm_gem_object_funcs.mmap handler.
->   *
->   * Returns:
->   * 0 on success or a negative error code on failure.
->   */
-> -int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma)
-> +int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
->  {
->  	struct drm_gem_shmem_object *shmem;
->  	int ret;
->  
-> -	ret = drm_gem_mmap(filp, vma);
-> -	if (ret)
-> -		return ret;
-> -
-> -	shmem = to_drm_gem_shmem_obj(vma->vm_private_data);
-> +	shmem = to_drm_gem_shmem_obj(obj);
->  
->  	ret = drm_gem_shmem_get_pages(shmem);
->  	if (ret) {
-> @@ -545,9 +536,8 @@ int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma)
->  		return ret;
->  	}
->  
-> -	/* VM_PFNMAP was set by drm_gem_mmap() */
-> -	vma->vm_flags &= ~VM_PFNMAP;
-> -	vma->vm_flags |= VM_MIXEDMAP;
-> +	vma->vm_flags |= (VM_MIXEDMAP|VM_DONTEXPAND);
+On Fri, Sep 13, 2019 at 8:32 AM H. Nikolaus Schaller <hns@goldelico.com> wr=
+ote:
+>
+> Hi Adam,
+>
+> > Am 13.09.2019 um 13:07 schrieb Adam Ford <aford173@gmail.com>:
+>
+> >>> +     cpu_cooling_maps: cooling-maps {
+> >>> +             map0 {
+> >>> +                     trip =3D <&cpu_alert0>;
+> >>> +                     /* Only allow OPP50 and OPP100 */
+> >>> +                     cooling-device =3D <&cpu 0 1>;
+> >>
+> >> omap4-cpu-thermal.dtsi uses THERMAL_NO_LIMIT constants but I do not
+> >> understand their meaning (and how it relates to the opp list).
+> >
+> > I read through the documentation, but it wasn't completely clear to
+> > me. AFAICT, the numbers after &cpu represent the min and max index in
+> > the OPP table when the condition is hit.
+>
+> Ok. It seems to use "cooling state" for those and the first is minimum
+> and the last is maximum. Using THERMAL_NO_LIMIT (-1UL) means to have
+> no limits.
+>
+> Since here we use the &cpu node it is likely that the "cooling state"
+> is the same as the OPP index currently in use.
+>
+> I have looked through the .dts which use cpu_crit and the picture is
+> not unique...
+>
+> omap4           seems to only define it
+> am57xx          has two different grade dtsi files
+> dra7            overwrites critical temperature value
+> am57xx-beagle   defines a gpio to control a fan
 
-I'm finding this a bit hard to follow - but I think here we've lost
-VM_IO and VM_DONTDUMP which used to be set by drm_gem_mmap().
+Checkout rk3288-veyron-mickey.dts
 
-Also it looks like nothing is fiddling vma->vm_page_prot anymore.
+They have almost_warm, warm, almost_hot, hot, hotter, very_hot, and
+critical for trips, and they have as many corresponding cooling maps
+which appear to limit the CPU speeds, but their index references are
+still confusing to me.
 
-Steve
+For that device,
+Warm and no limit first, then 4:   coolling-device =3D <&cpu0 THERMAL_NO_LI=
+MIT 4>
+...
+very_hot uses a number then no limit: cooling-device =3D <&cpu0 8
+THERMAL_NO_LIMIT>
 
-> +	vma->vm_ops = &drm_gem_shmem_vm_ops;
->  
->  	/* Remove the fake offset */
->  	vma->vm_pgoff -= drm_vma_node_start(&shmem->base.vma_node);
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> index acb07fe06580..deca0c30bbd4 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> @@ -112,7 +112,7 @@ static const struct drm_gem_object_funcs panfrost_gem_funcs = {
->  	.get_sg_table = drm_gem_shmem_get_sg_table,
->  	.vmap = drm_gem_shmem_vmap,
->  	.vunmap = drm_gem_shmem_vunmap,
-> -	.vm_ops = &drm_gem_shmem_vm_ops,
-> +	.mmap = drm_gem_shmem_mmap,
->  };
->  
->  /**
-> diff --git a/drivers/gpu/drm/v3d/v3d_bo.c b/drivers/gpu/drm/v3d/v3d_bo.c
-> index a22b75a3a533..edd299ab53d8 100644
-> --- a/drivers/gpu/drm/v3d/v3d_bo.c
-> +++ b/drivers/gpu/drm/v3d/v3d_bo.c
-> @@ -58,7 +58,7 @@ static const struct drm_gem_object_funcs v3d_gem_funcs = {
->  	.get_sg_table = drm_gem_shmem_get_sg_table,
->  	.vmap = drm_gem_shmem_vmap,
->  	.vunmap = drm_gem_shmem_vunmap,
-> -	.vm_ops = &drm_gem_shmem_vm_ops,
-> +	.mmap = drm_gem_shmem_mmap,
->  };
->  
->  /* gem_create_object function for allocating a BO struct and doing
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 69a3d310ff70..017a9e0fc3bb 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -86,7 +86,7 @@ static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
->  	.get_sg_table = drm_gem_shmem_get_sg_table,
->  	.vmap = drm_gem_shmem_vmap,
->  	.vunmap = drm_gem_shmem_vunmap,
-> -	.vm_ops = &drm_gem_shmem_vm_ops,
-> +	.mmap = &drm_gem_shmem_mmap,
->  };
->  
->  struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
-> 
+This makes me wonder if the min and max are switched or the index
+values go backwards.
 
+>
+> The fan is only a map0 for the board_alert0 starting to do something at 4=
+0=C2=B0C
+> and above but there is nothing for the "critical" point.
+> But throttling is working on omap5...
+>
+> Could there be some automatic handling by the govenors for the "critical"
+> trip points? So that we do not need to define any cooling-maps for "criti=
+cal"?
+>
+> Even for the exynos54xx where the crical trip point is only defined.
+>
+
+
+
+> >>
+> >>> +             };
+> >>> +     };
+> >>
+> >> Seems to make sense when comparing to omap4-cpu-thermal.dtsi...
+> >>
+> >> Maybe we can add the trip points to omap3-cpu-thermal.dtsi
+> >> because they seem to be the same for all omap3 variants and
+> >> just have a SoC variant specific cooling map for omap36xx.dtsi.
+> >
+> > The OPP's for OMAP3530 show that OPP5 and OPP6 are capable of
+> > operating at 105C.  AM3517 is a little different also, so I didn't
+> > want to make a generic omap3 throttling table.  Since my goal was to
+> > try to remove the need for the turbo option from the newly supported
+> > 1GHz omap3630/3730, I was hoping to get this pushed first.  From
+> > there, we can tweak the 34xx.dtsi and 3517.dtsi for their respective
+> > thermal information.
+>
+> My observation is that all omap3 have
+> commercial range        0=C2=B0C .. 90=C2=B0C
+> extended                -40=C2=B0C .. 105=C2=B0C
+>
+> So there is no difference in defining these as trip points and
+> my proposal would be to have these in omap3.dtsi.
+
+I can do that.  I'll copy-paste the omap4 stuff using 90 and 105 as
+limits without any mapping.  I'll then keep the mapping in omap3630
+
+>
+> Only disabling OPPs differs. Which would make only the mapping
+> go to omap36xx.
+>
+> >
+> >>
+> >>> +};
+> >>> +
+> >>> /* OMAP3630 needs dss_96m_fck for VENC */
+> >>> &venc {
+> >>>      clocks =3D <&dss_tv_fck>, <&dss_96m_fck>;
+> >>> --
+> >>> 2.17.1
+> >>>
+> >>
+> >> The question is how we can test that. Heating up the omap36xx to 90=C2=
+=B0C
+> >> or even 105=C2=B0C isn't that easy like with omap5...
+> >>
+> >> Maybe we can modify the millicelsius values for testing purposes to
+> >> something in reachable range, e.g. 60=C2=B0C and 70=C2=B0C and watch w=
+hat happens?
+> >
+> > I have access to a thermal chamber at work, but the guy who knows how
+> > to use it is out for the rest of the week.  My plan was do as you
+> > suggested and change the milicelsius values, but I wanted to get some
+> > buy-in from TI people and/or Tony.  This also means enabling the omap3
+> > thermal stuff which clearly throws a message that it's inaccurate.
+>
+> Basically we need two different types of test:
+> 1. is the DTS setup correct so that the bandgap sensor is read and
+>    triggers correct actions
+> 2. is the bandgap sensor correct enough to that the data sheet limits
+>    are really met
+>
+> >  I don't know how much it's inaccurate, so we may have to make the 90C
+> > value lower to compensate.
+>
+> Hm. If the bandgap sensor is inaccurate, we should make sure it reports t=
+he
+> maximum value, just to be on the safe side. So that the real temperature
+> is guaranteed to be lower than what is reported.
+>
+> Then we can use the data sheet limits of 90=C2=B0C and 105=C2=B0C in the =
+trip point
+> table (which should not be tweaked for sensor inaccuracy).
+
+I can see not compensating if it reads high, but if the temp reads
+low, shouldn't compensate so we don't over temp the processor?
+
+adam
+>
+> BR,
+> Nikolaus
+>
