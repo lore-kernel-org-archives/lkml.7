@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3534EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B13C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B522206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0691206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381400;
-	bh=S6V1cmfw8HfzgKirGyyQ7ce3l/rqYCetLuamvel8DUs=;
+	s=default; t=1568381406;
+	bh=lnJVnALC+xXmKEp6Di4Baj2+s1u4pjqDGx/Y+jtrYPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j33ZVAOnqpjpkJ7VxjwD93aAyI36iktfXlmcC+RoeoYeclfKgKU7oQKo0iF2GquAM
-	 pMzAnJqKD+RCz67lunIp8W+Dj+bmQcJBYfdCMvzfhHtuePmkEcTAihs7KQRMsXDaqm
-	 u0ZU2CGGuVrpaed+SH7ofOcRjykxWAVjlpqgOB6s=
+	b=2ehiH2FlVpzE9HbthYZlAzJu6QWELbWIPaxrihYySf5aojwQI6EEKYs/pGJ8eHdte
+	 4Dw51m886K/Y83L6/Dk42A2+Hlc7f/djmX+MCtfaqYjG+RzaKab63XceZEsOgjvJ7x
+	 bpO5XToALueHG375nWBXyh8zeWW0xpEH4BYDcP30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbfIMN37 (ORCPT
+        id S2391663AbfIMNaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389649AbfIMNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:21 -0400
+        id S2389218AbfIMNR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:17:56 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C01A206A5;
-        Fri, 13 Sep 2019 13:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB4CF214AE;
+        Fri, 13 Sep 2019 13:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380700;
-        bh=S6V1cmfw8HfzgKirGyyQ7ce3l/rqYCetLuamvel8DUs=;
+        s=default; t=1568380675;
+        bh=lnJVnALC+xXmKEp6Di4Baj2+s1u4pjqDGx/Y+jtrYPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SnZYwaFqy2+qDPQV1Ys/QWobnBUr7qYwyaLi+yzIxh/3M6+A19Msu2shj983/7L/k
-         ND1TqaS3F6vNPbxcKfnkNgSAb4BwKL6Ui8kp4uiEHDE56Hfq80N+LwOy3rNlpbovV7
-         oeCNKX2ZRc2tFf5SFp2AQqmm1v8N05IkfDwVgAcQ=
+        b=AdWx7okdkVlhmVOSaW2tJtq3PH+jHu6hfhAsoSfiMdZFeecYd5vDYFR6Ui2iM40j5
+         n0T0IFoutS/rI0jqmBsK6EoS0U5nGAHbXKiGTxJ+VH0oAZkLbaTtvbLUtWRdNLv1pK
+         qR60GbBp6aHNYWTlvjI+LDNXgLKKTz1widk9fuWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <paulo@paulo.ac>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilove@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 149/190] cifs: Properly handle auto disabling of serverino option
-Date:   Fri, 13 Sep 2019 14:06:44 +0100
-Message-Id: <20190913130611.864977851@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 118/190] ext4: protect journal inodes blocks using block_validity
+Date:   Fri, 13 Sep 2019 14:06:13 +0100
+Message-Id: <20190913130609.260876778@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,73 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29fbeb7a908a60a5ae8c50fbe171cb8fdcef1980 ]
+[ Upstream commit 345c0dbf3a30872d9b204db96b5857cd00808cae ]
 
-Fix mount options comparison when serverino option is turned off later
-in cifs_autodisable_serverino() and thus avoiding mismatch of new cifs
-mounts.
+Add the blocks which belong to the journal inode to block_validity's
+system zone so attempts to deallocate or overwrite the journal due a
+corrupted file system where the journal blocks are also claimed by
+another inode.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (SUSE) <paulo@paulo.ac>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilove@microsoft.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifs_fs_sb.h | 5 +++++
- fs/cifs/connect.c    | 8 ++++++--
- fs/cifs/misc.c       | 1 +
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/ext4/block_validity.c | 48 ++++++++++++++++++++++++++++++++++++++++
+ fs/ext4/inode.c          |  4 ++++
+ 2 files changed, 52 insertions(+)
 
-diff --git a/fs/cifs/cifs_fs_sb.h b/fs/cifs/cifs_fs_sb.h
-index 9731d0d891e7e..aba2b48d4da1a 100644
---- a/fs/cifs/cifs_fs_sb.h
-+++ b/fs/cifs/cifs_fs_sb.h
-@@ -72,5 +72,10 @@ struct cifs_sb_info {
- 	struct delayed_work prune_tlinks;
- 	struct rcu_head rcu;
- 	char *prepath;
-+	/*
-+	 * Indicate whether serverino option was turned off later
-+	 * (cifs_autodisable_serverino) in order to match new mounts.
-+	 */
-+	bool mnt_cifs_serverino_autodisabled;
- };
- #endif				/* _CIFS_FS_SB_H */
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index c53a2e86ed544..208430bb66fc6 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3247,12 +3247,16 @@ compare_mount_options(struct super_block *sb, struct cifs_mnt_data *mnt_data)
- {
- 	struct cifs_sb_info *old = CIFS_SB(sb);
- 	struct cifs_sb_info *new = mnt_data->cifs_sb;
-+	unsigned int oldflags = old->mnt_cifs_flags & CIFS_MOUNT_MASK;
-+	unsigned int newflags = new->mnt_cifs_flags & CIFS_MOUNT_MASK;
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 913061c0de1b3..9409b1e11a22e 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
+ 	printk(KERN_CONT "\n");
+ }
  
- 	if ((sb->s_flags & CIFS_MS_MASK) != (mnt_data->flags & CIFS_MS_MASK))
- 		return 0;
- 
--	if ((old->mnt_cifs_flags & CIFS_MOUNT_MASK) !=
--	    (new->mnt_cifs_flags & CIFS_MOUNT_MASK))
-+	if (old->mnt_cifs_serverino_autodisabled)
-+		newflags &= ~CIFS_MOUNT_SERVER_INUM;
++static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
++{
++	struct inode *inode;
++	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct ext4_map_blocks map;
++	u32 i = 0, err = 0, num, n;
 +
-+	if (oldflags != newflags)
- 		return 0;
- 
- 	/*
-diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-index facc94e159a16..e45f8e321371c 100644
---- a/fs/cifs/misc.c
-+++ b/fs/cifs/misc.c
-@@ -523,6 +523,7 @@ cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
++	if ((ino < EXT4_ROOT_INO) ||
++	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
++		return -EINVAL;
++	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
++	if (IS_ERR(inode))
++		return PTR_ERR(inode);
++	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
++	while (i < num) {
++		map.m_lblk = i;
++		map.m_len = num - i;
++		n = ext4_map_blocks(NULL, inode, &map, 0);
++		if (n < 0) {
++			err = n;
++			break;
++		}
++		if (n == 0) {
++			i++;
++		} else {
++			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
++				ext4_error(sb, "blocks %llu-%llu from inode %u "
++					   "overlap system zone", map.m_pblk,
++					   map.m_pblk + map.m_len - 1, ino);
++				err = -EFSCORRUPTED;
++				break;
++			}
++			err = add_system_zone(sbi, map.m_pblk, n);
++			if (err < 0)
++				break;
++			i += n;
++		}
++	}
++	iput(inode);
++	return err;
++}
++
+ int ext4_setup_system_zone(struct super_block *sb)
  {
- 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) {
- 		cifs_sb->mnt_cifs_flags &= ~CIFS_MOUNT_SERVER_INUM;
-+		cifs_sb->mnt_cifs_serverino_autodisabled = true;
- 		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s. This server doesn't seem to support them properly. Hardlinks will not be recognized on this mount. Consider mounting with the \"noserverino\" option to silence this message.\n",
- 			 cifs_sb_master_tcon(cifs_sb)->treeName);
+ 	ext4_group_t ngroups = ext4_get_groups_count(sb);
+@@ -171,6 +213,12 @@ int ext4_setup_system_zone(struct super_block *sb)
+ 		if (ret)
+ 			return ret;
  	}
++	if (ext4_has_feature_journal(sb) && sbi->s_es->s_journal_inum) {
++		ret = ext4_protect_reserved_inode(sb,
++				le32_to_cpu(sbi->s_es->s_journal_inum));
++		if (ret)
++			return ret;
++	}
+ 
+ 	if (test_opt(sb, DEBUG))
+ 		debug_print_tree(sbi);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index e65559bf77281..cff6277f7a9ff 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -399,6 +399,10 @@ static int __check_block_validity(struct inode *inode, const char *func,
+ 				unsigned int line,
+ 				struct ext4_map_blocks *map)
+ {
++	if (ext4_has_feature_journal(inode->i_sb) &&
++	    (inode->i_ino ==
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++		return 0;
+ 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
+ 				   map->m_len)) {
+ 		ext4_error_inode(inode, func, line, map->m_pblk,
 -- 
 2.20.1
 
