@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605BDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E11C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F0A214AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35DF208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380515;
-	bh=SbjtpXFVL3W6WXlw+krsgMsn8WUkfGvBq0rbLKiQEhY=;
+	s=default; t=1568380519;
+	bh=hDXZxdUzWyqTKIdZ2791Z/I7MoEzBAlqJFqS5zPZdZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hv8VNbl2ow1+3J+VCSX06RpUt/xu9CCtzkPzdFTZJEeQloVeviPiPxGgMFia/igQL
-	 p1MvL6UaytOhVCGWWtRq+ebIoKZ3a+alGBECCZ2A8k1vShX0nVFdYUBbLzOpaPQQlv
-	 t8NNRZGrfeCVfCkg3Id/2z1fNf49RJXnHvG/nKxk=
+	b=J7A9JIizTqLoR8MYpOwRSpaMn7YpLyAwuqAEIfZv7IQwVrmsij7aBjpHw8mFN3PhN
+	 mGC5OfvVfa8OiLkFxasnRi+H0l7l9hwJSr4pCiSDHWwcc2vYh2ZLC685itSiWif9n8
+	 Vded1tsc3tRz+F6J2tNQ55hFAlI3rCMbnhc0Z2gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389661AbfIMNPN (ORCPT
+        id S2389671AbfIMNPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389105AbfIMNPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:10 -0400
+        id S2389117AbfIMNPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:14 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97FD4208C2;
-        Fri, 13 Sep 2019 13:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC2D206A5;
+        Fri, 13 Sep 2019 13:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380510;
-        bh=SbjtpXFVL3W6WXlw+krsgMsn8WUkfGvBq0rbLKiQEhY=;
+        s=default; t=1568380513;
+        bh=hDXZxdUzWyqTKIdZ2791Z/I7MoEzBAlqJFqS5zPZdZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyEXKognn+uHSY+MZ8GlvvET+AkjZTdd8+TFp6UTiQestm+gWtirN8b2e1k32Xj5n
-         2PeGetmMrCt89wwmeqd5z3TKcPL6fmhEyF7COBK/bPDp792swR0d5eU2bTs6togXBs
-         7JeU0FgdfHfJX1pEE66Wuglxo8W4LddY3OY244ww=
+        b=CmruDVPxxpu7K5G0xaxXK02uccXZn0naxHyjbCV/vye1HMGhuwsc6t5/H9bWYJOw9
+         if0vb/qXwfyOrc8IIsy6TCHfbcBGMaRjJ4bt3rNTXYw1qFaQ2MEUi/JqTwkTMA+xQ0
+         yA4OiLjPJcoD+zcijO1H107OE42sIUAbiwEkXPzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/190] iio: adc: exynos-adc: Add S5PV210 variant
-Date:   Fri, 13 Sep 2019 14:05:43 +0100
-Message-Id: <20190913130606.615365344@linuxfoundation.org>
+Subject: [PATCH 4.19 070/190] scsi: megaraid_sas: Add check for reset adapter bit
+Date:   Fri, 13 Sep 2019 14:05:25 +0100
+Message-Id: <20190913130605.240075835@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,58 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
+[ Upstream commit de93b40d98ead27ee2f7f7df93fdd4914a6c8d8d ]
 
-S5PV210's ADC variant is almost the same as v1 except that it has 10
-channels and doesn't require the pmu register
+For SAS3 and later controllers, FW sets the reset adapter bit indicating
+the driver to perform a controller reset.  Driver needs to check if this
+bit is set before doing a reset.  This reduces the driver probe failure
+time to 180seconds in case there is a faulty controller connected.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/exynos_adc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 33 +++++++++++++++--------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 4be29ed447559..41da522fc6735 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -115,6 +115,7 @@
- #define MAX_ADC_V2_CHANNELS		10
- #define MAX_ADC_V1_CHANNELS		8
- #define MAX_EXYNOS3250_ADC_CHANNELS	2
-+#define MAX_S5PV210_ADC_CHANNELS	10
- 
- /* Bit definitions common for ADC_V1 and ADC_V2 */
- #define ADC_CON_EN_START	(1u << 0)
-@@ -282,6 +283,16 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
- 	.start_conv	= exynos_adc_v1_start_conv,
- };
- 
-+static const struct exynos_adc_data exynos_adc_s5pv210_data = {
-+	.num_channels	= MAX_S5PV210_ADC_CHANNELS,
-+	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
-+
-+	.init_hw	= exynos_adc_v1_init_hw,
-+	.exit_hw	= exynos_adc_v1_exit_hw,
-+	.clear_irq	= exynos_adc_v1_clear_irq,
-+	.start_conv	= exynos_adc_v1_start_conv,
-+};
-+
- static void exynos_adc_s3c2416_start_conv(struct exynos_adc *info,
- 					  unsigned long addr)
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index b6fc7c6337610..749f10146f630 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5218,7 +5218,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
  {
-@@ -478,6 +489,9 @@ static const struct of_device_id exynos_adc_match[] = {
- 	}, {
- 		.compatible = "samsung,s3c6410-adc",
- 		.data = &exynos_adc_s3c64xx_data,
-+	}, {
-+		.compatible = "samsung,s5pv210-adc",
-+		.data = &exynos_adc_s5pv210_data,
- 	}, {
- 		.compatible = "samsung,exynos-adc-v1",
- 		.data = &exynos_adc_v1_data,
+ 	u32 max_sectors_1;
+ 	u32 max_sectors_2, tmp_sectors, msix_enable;
+-	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4;
++	u32 scratch_pad_2, scratch_pad_3, scratch_pad_4, status_reg;
+ 	resource_size_t base_addr;
+ 	struct megasas_register_set __iomem *reg_set;
+ 	struct megasas_ctrl_info *ctrl_info = NULL;
+@@ -5226,6 +5226,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 	int i, j, loop, fw_msix_count = 0;
+ 	struct IOV_111 *iovPtr;
+ 	struct fusion_context *fusion;
++	bool do_adp_reset = true;
+ 
+ 	fusion = instance->ctrl_context;
+ 
+@@ -5274,19 +5275,29 @@ static int megasas_init_fw(struct megasas_instance *instance)
+ 	}
+ 
+ 	if (megasas_transition_to_ready(instance, 0)) {
+-		atomic_set(&instance->fw_reset_no_pci_access, 1);
+-		instance->instancet->adp_reset
+-			(instance, instance->reg_set);
+-		atomic_set(&instance->fw_reset_no_pci_access, 0);
+-		dev_info(&instance->pdev->dev,
+-			"FW restarted successfully from %s!\n",
+-			__func__);
++		if (instance->adapter_type >= INVADER_SERIES) {
++			status_reg = instance->instancet->read_fw_status_reg(
++					instance->reg_set);
++			do_adp_reset = status_reg & MFI_RESET_ADAPTER;
++		}
+ 
+-		/*waitting for about 30 second before retry*/
+-		ssleep(30);
++		if (do_adp_reset) {
++			atomic_set(&instance->fw_reset_no_pci_access, 1);
++			instance->instancet->adp_reset
++				(instance, instance->reg_set);
++			atomic_set(&instance->fw_reset_no_pci_access, 0);
++			dev_info(&instance->pdev->dev,
++				 "FW restarted successfully from %s!\n",
++				 __func__);
++
++			/*waiting for about 30 second before retry*/
++			ssleep(30);
+ 
+-		if (megasas_transition_to_ready(instance, 0))
++			if (megasas_transition_to_ready(instance, 0))
++				goto fail_ready_state;
++		} else {
+ 			goto fail_ready_state;
++		}
+ 	}
+ 
+ 	megasas_init_ctrl_params(instance);
 -- 
 2.20.1
 
