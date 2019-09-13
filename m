@@ -2,152 +2,223 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0B5C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DF0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924B020830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XOYIJFsa"
+	by mail.kernel.org (Postfix) with ESMTP id 55AEB20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbfIMMSh (ORCPT
+        id S2388252AbfIMMSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:18:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37670 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388188AbfIMMSf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:18:35 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s28so29207751otd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 05:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A/c97/nFme+ivPwJjzTzfClgEa0OIy/3njro+D9o78o=;
-        b=XOYIJFsaopl13XxNMqGXKTMtqthGHFDixCdxfm/BRkbm8C7nqft8bOMYav+KkL38Qt
-         QBPmqIznV8C75U0erZcJeN+FS4ORrdfnOjlRb9HcFlpbAXpaDUwEMEFfgca6deU40mKQ
-         dAOsSZkAX1fiHcUyIlZI0MpYcLKZkJiURtJujVfDoxC7cHZxhUrtdZawEtZRorybqoKp
-         Du310WWUJuQYwvmI+m/z4o8nvQoTbQdB9+0Eb9svR+kK5/cpRBeRAWUoHJP1VOu6fTY3
-         9DYzNQKc+KVnxHkBABtxBwWcts/Vcw2KusB5j9MY08YSFdZXJcIUkmnHlOhvEmYtyq/g
-         +xmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A/c97/nFme+ivPwJjzTzfClgEa0OIy/3njro+D9o78o=;
-        b=mDYPQQiroHKponGX9B5rIPu6/WBsNkKRA7xWAkknb07Rpgow/15ZNDGkcDl2Iu6RGr
-         CASl3rkgGHdplHQ6K97SMAgP4vJ5xsyoq0MBEg7zCIjsiQxLG9Pa1alIXLMBhMZAHrAq
-         ZJPL5F/9mrwAia+NlOzXdT/RKGtLL3b+/UAtqY3geD3/xUwyyGckT9dPt/GIIcAGCCRn
-         aVmdHZFK8LlApyYjbc724Q2J8prKzAU74eerMQigOH53ps1ZEk21UkmYtt+eYbx5xRMB
-         M7Naow8RW//Ph4hdCRZr4iH/AgelX27WDJcOsioTIuVHMr5Kg+Njzl3pKxA+VbR0UKm4
-         +LvQ==
-X-Gm-Message-State: APjAAAXbDX4NCEKE/XHD+hb8oiqpRApfeV4oI+lzxMdzU0eANT8mGu4k
-        E13mNTA8AnIre7Mkz5jgTGAGMNBcGxqUthwgbqHnogC7mLs=
-X-Google-Smtp-Source: APXvYqyUP3UinjilPMLX5L/ce/vPrHjlyiR9Mzwouxkvl/+9B3J3lEInbbUjdvdAF29WZpR8yBBtHGAMbtEPFqknxsQ=
-X-Received: by 2002:a9d:2642:: with SMTP id a60mr8278939otb.247.1568377114876;
- Fri, 13 Sep 2019 05:18:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
- <20190913010937.7fc20d93@lwn.net> <20190913114849.GP20699@kadam>
-In-Reply-To: <20190913114849.GP20699@kadam>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 13 Sep 2019 05:18:22 -0700
-Message-ID: <CAPcyv4jPpxS4wxNO-e1pSHdQpKo5=V0YwD1CHqR61g8zmECKfw@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Dave Jiang <dave.jiang@intel.com>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 13 Sep 2019 08:18:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52228 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729637AbfIMMRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:17:51 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 33FDF309B68B;
+        Fri, 13 Sep 2019 12:17:50 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 091FE608AB;
+        Fri, 13 Sep 2019 12:17:50 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id DE83820D2C; Fri, 13 Sep 2019 08:17:48 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 13/26] nfs: get rid of mount_info ->fill_super()
+Date:   Fri, 13 Sep 2019 08:17:35 -0400
+Message-Id: <20190913121748.25391-14-smayhew@redhat.com>
+In-Reply-To: <20190913121748.25391-1-smayhew@redhat.com>
+References: <20190913121748.25391-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 13 Sep 2019 12:17:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 4:49 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Fri, Sep 13, 2019 at 01:09:37AM -0600, Jonathan Corbet wrote:
-> > On Wed, 11 Sep 2019 16:11:29 -0600
-> > Jens Axboe <axboe@kernel.dk> wrote:
-> >
-> > > On 9/11/19 12:43 PM, Dan Carpenter wrote:
-> > > >
-> > > > I kind of hate all this extra documentation because now everyone thinks
-> > > > they can invent new hoops to jump through.
-> > >
-> > > FWIW, I completely agree with Dan (Carpenter) here. I absolutely
-> > > dislike having these kinds of files, and with subsystems imposing weird
-> > > restrictions on style (like the quoted example, yuck).
-> > >
-> > > Additionally, it would seem saner to standardize rules around when
-> > > code is expected to hit the maintainers hands for kernel releases. Both
-> > > yours and Martins deals with that, there really shouldn't be the need
-> > > to have this specified in detail per sub-system.
-> >
-> > This sort of objection came up at the maintainers summit yesterday; the
-> > consensus was that, while we might not like subsystem-specific rules, they
-> > do currently exist and we're just documenting reality.  To paraphrase
-> > Phillip K. Dick, reality is that which, when you refuse to document it,
-> > doesn't go away.
->
-> There aren't that many subsystem rules.  The big exception is
-> networking, with the comment style and reverse Chrismas tree
-> declarations.  Also you have to label which git tree the patch applies
-> to like [net] or [net-next].
->
-> It used to be that infiniband used "sizeof foo" instead of sizeof(foo)
-> but now there is a new maintainer.
->
-> There is one subsystem which where the maintainer will capitalize your
-> patch prefix and complain.  There are others where they will silently
-> change it to lower case.  (Maybe that has changed in recent years).
->
-> There is one subsystem where the maintainer is super strict rules that
-> you can't use "I" or "we" in the commit message.  So you can't say "I
-> noticed a bug while reviewing", you have to say "The code has a bug".
->
-> Some maintainers have rules about what you can put in the declaration
-> block.  No kmalloc() in the declarations is a common rule.
-> "struct foo *p = kmalloc();".
->
-> Some people (I do) have strict rules for error handling, but most won't
-> complain unless the error handling has bugs.
->
-> The bpf people want you to put [bpf] or [bpf-next] in the subject.
-> Everyone just guesses, and uneducated guesses are worse than leaving it
-> blank, but that's just my opinion.
->
-> > So I'm expecting to take this kind of stuff into Documentation/.  My own
-> > personal hope is that it can maybe serve to shame some of these "local
-> > quirks" out of existence.  The evidence from this brief discussion suggests
-> > that this might indeed happen.
->
-> I don't think it's shaming, I think it's validating.  Everyone just
-> insists that since it's written in the Book of Rules then it's our fault
-> for not reading it.  It's like those EULA things where there is more
-> text than anyone can physically read in a life time.
->
-> And the documentation doesn't help.  For example, I knew people's rules
-> about capitalizing the subject but I'd just forget.  I say that if you
-> can't be bothered to add it to checkpatch then it means you don't really
-> care that strongly.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-True, can someone with better perl skills than me take a shot at a
-rule for checkpatch to catch the capitalization preference based on
-the subsystem being touched, or otherwise agree that if a maintainer
-has a changelog capitalization preference they just silently fix it up
-at application time and not waste time pointing out something so
-trivial? For example, I notice Linus likes "-" instead of "*" for
-bullet lists in changelogs he just fixes it up silently if I forget.
+The only possible values are nfs_fill_super and nfs_clone_super.  The
+latter is used only when crossing into a submount and it is almost
+identical to the former; the only differences are
+	* ->s_time_gran unconditionally set to 1 (even for v2 mounts).
+Regression dating back to 2012, actually.
+	* ->s_blocksize/->s_blocksize_bits set to that of parent.
+
+Rather than messing with the method, stash ->s_blocksize_bits in
+mount_info in submount case and after the (now unconditional)
+call of nfs_fill_super() override ->s_blocksize/->s_blocksize_bits
+if that has been set.
+
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/nfs/internal.h  |  4 +--
+ fs/nfs/namespace.c |  2 +-
+ fs/nfs/nfs4super.c |  1 -
+ fs/nfs/super.c     | 66 +++++++++++-----------------------------------
+ 4 files changed, 18 insertions(+), 55 deletions(-)
+
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 444d0fc2bcca..fa737e37f7c9 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -144,7 +144,7 @@ struct nfs_mount_request {
+ };
+ 
+ struct nfs_mount_info {
+-	void (*fill_super)(struct super_block *, struct nfs_mount_info *);
++	unsigned int inherited_bsize;
+ 	int (*set_security)(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ 	struct nfs_parsed_mount_data *parsed;
+ 	struct nfs_clone_mount *cloned;
+@@ -403,8 +403,6 @@ int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_mount_
+ int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, void *);
+ void nfs_kill_super(struct super_block *);
+-void nfs_fill_super(struct super_block *, struct nfs_mount_info *);
+-void nfs_clone_super(struct super_block *, struct nfs_mount_info *);
+ 
+ extern struct rpc_stat nfs_rpcstat;
+ 
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 970f92a860ed..7bc5b9b8f5ea 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -229,7 +229,7 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry, struct nfs_fh *fh,
+ 		.authflavor = authflavor,
+ 	};
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_clone_super,
++		.inherited_bsize = sb->s_blocksize_bits,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = &mountdata,
+ 		.mntfh = fh,
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index b6cf62125380..d387c3c3b600 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -224,7 +224,6 @@ static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type,
+ {
+ 	struct nfs_clone_mount *data = raw_data;
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_fill_super,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = data,
+ 		.nfs_mod = &nfs_v4,
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 157d340333c8..89751ce21110 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2339,29 +2339,9 @@ nfs_remount(struct super_block *sb, int *flags, char *raw_data)
+ EXPORT_SYMBOL_GPL(nfs_remount);
+ 
+ /*
+- * Initialise the common bits of the superblock
++ * Finish setting up an NFS superblock
+  */
+-static void nfs_initialise_sb(struct super_block *sb)
+-{
+-	struct nfs_server *server = NFS_SB(sb);
+-
+-	sb->s_magic = NFS_SUPER_MAGIC;
+-
+-	/* We probably want something more informative here */
+-	snprintf(sb->s_id, sizeof(sb->s_id),
+-		 "%u:%u", MAJOR(sb->s_dev), MINOR(sb->s_dev));
+-
+-	if (sb->s_blocksize == 0)
+-		sb->s_blocksize = nfs_block_bits(server->wsize,
+-						 &sb->s_blocksize_bits);
+-
+-	nfs_super_set_maxbytes(sb, server->maxfilesize);
+-}
+-
+-/*
+- * Finish setting up an NFS2/3 superblock
+- */
+-void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
++static void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
+ {
+ 	struct nfs_parsed_mount_data *data = mount_info->parsed;
+ 	struct nfs_server *server = NFS_SB(sb);
+@@ -2382,35 +2362,17 @@ void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
+ 		sb->s_export_op = &nfs_export_ops;
+ 	}
+ 
+- 	nfs_initialise_sb(sb);
+-}
+-EXPORT_SYMBOL_GPL(nfs_fill_super);
+-
+-/*
+- * Finish setting up a cloned NFS2/3/4 superblock
+- */
+-void nfs_clone_super(struct super_block *sb,
+-			    struct nfs_mount_info *mount_info)
+-{
+-	const struct super_block *old_sb = mount_info->cloned->sb;
+-	struct nfs_server *server = NFS_SB(sb);
++	sb->s_magic = NFS_SUPER_MAGIC;
+ 
+-	sb->s_blocksize_bits = old_sb->s_blocksize_bits;
+-	sb->s_blocksize = old_sb->s_blocksize;
+-	sb->s_maxbytes = old_sb->s_maxbytes;
+-	sb->s_xattr = old_sb->s_xattr;
+-	sb->s_op = old_sb->s_op;
+-	sb->s_time_gran = 1;
+-	sb->s_export_op = old_sb->s_export_op;
++	/* We probably want something more informative here */
++	snprintf(sb->s_id, sizeof(sb->s_id),
++		 "%u:%u", MAJOR(sb->s_dev), MINOR(sb->s_dev));
+ 
+-	if (server->nfs_client->rpc_ops->version != 2) {
+-		/* The VFS shouldn't apply the umask to mode bits. We will do
+-		 * so ourselves when necessary.
+-		 */
+-		sb->s_flags |= SB_POSIXACL;
+-	}
++	if (sb->s_blocksize == 0)
++		sb->s_blocksize = nfs_block_bits(server->wsize,
++						 &sb->s_blocksize_bits);
+ 
+- 	nfs_initialise_sb(sb);
++	nfs_super_set_maxbytes(sb, server->maxfilesize);
+ }
+ 
+ static int nfs_compare_mount_options(const struct super_block *s, const struct nfs_server *b, int flags)
+@@ -2676,8 +2638,13 @@ static struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
+ 	}
+ 
+ 	if (!s->s_root) {
++		unsigned bsize = mount_info->inherited_bsize;
+ 		/* initial superblock/root creation */
+-		mount_info->fill_super(s, mount_info);
++		nfs_fill_super(s, mount_info);
++		if (bsize) {
++			s->s_blocksize_bits = bsize;
++			s->s_blocksize = 1U << bsize;
++		}
+ 		nfs_get_cache_cookie(s, mount_info->parsed, mount_info->cloned);
+ 		if (!(server->flags & NFS_MOUNT_UNSHARED))
+ 			s->s_iflags |= SB_I_MULTIROOT;
+@@ -2712,7 +2679,6 @@ struct dentry *nfs_fs_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *raw_data)
+ {
+ 	struct nfs_mount_info mount_info = {
+-		.fill_super = nfs_fill_super,
+ 		.set_security = nfs_set_sb_security,
+ 	};
+ 	struct dentry *mntroot = ERR_PTR(-ENOMEM);
+-- 
+2.17.2
+
