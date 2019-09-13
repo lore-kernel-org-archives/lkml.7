@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19946C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B13C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC50205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9839E20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381540;
-	bh=Fh6x3TnZlVfMPvm9sMU6qVJ5Z+51Tl0SwVS2AF926hc=;
+	s=default; t=1568381543;
+	bh=sGSm+WEEazJKMqmflV8kB6JhIDapV9tpfMGzwrd4KZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8yV72jzsnf4eQnTalTF7V30Bumqp4iEy59clFoDiVE9ULET0XC10GPhoTHkmUWHq
-	 i4PixNmAFIrXBLUVjzkAtLYFc0KIN0N67R9418gUrzsR0kj96SjymMM1YJHfgMMiEs
-	 ywaAThxpZgyZmuWosnQdT0XwwLQvHr3nG5gleGc0=
+	b=XEbmTmlkJ6rRyGrYTrTfVWhHqopVLgMFqSEi7JCT7ehiCx62ILTOI5b+b6s3GqZjQ
+	 sTMXGFjOUIWbrwtXh2tIi7IYcDSmbgAjQbt7nXR/CSng3Z+xVwSHDpL5wpx9TtBslr
+	 GQIqoOU4KeeV62nKNCtdd2w/bzk5ytVpqCjRgXK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389287AbfIMNNM (ORCPT
+        id S2391737AbfIMNcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388221AbfIMNNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:13:10 -0400
+        id S2389286AbfIMNNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:13 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD8420CC7;
-        Fri, 13 Sep 2019 13:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E25E0208C0;
+        Fri, 13 Sep 2019 13:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380389;
-        bh=Fh6x3TnZlVfMPvm9sMU6qVJ5Z+51Tl0SwVS2AF926hc=;
+        s=default; t=1568380392;
+        bh=sGSm+WEEazJKMqmflV8kB6JhIDapV9tpfMGzwrd4KZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/kK3A4Tf6tdTKbwlHpPugkPuvI3P/XQr4wgGzZFSSw3dfQsaIjSAHPM1u9VX1+nc
-         dPaUHd2WpxYZCCWHcwJiHM+TKs45I0qIb5s1ZporvLvXuQJpyGXSUr33jY6wdoXLbM
-         QNNtNQmQTtznmnXEXGgCJpaQ1VnzGFSPHozwe3Qs=
+        b=dfJ5xvM0oRp2Qt0qmjr6yJIiJUpIipcEIE8uFU/l1DxnpDUH8v9GnguxUNVsr9baV
+         h5Oii9Gy0W8c4HOKNhc+6wZ6dfoC8mJUOZYwtLM2c0eWrqYeJPMV3PK5kmMO7kBS5+
+         H98vuTdNl7nLcGT45ciUq2wz2UQUsi0yj2yz8CSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/190] media: stm32-dcmi: fix irq = 0 case
-Date:   Fri, 13 Sep 2019 14:04:36 +0100
-Message-Id: <20190913130601.279234917@linuxfoundation.org>
+Subject: [PATCH 4.19 042/190] KVM: x86: hyperv: keep track of mismatched VP indexes
+Date:   Fri, 13 Sep 2019 14:04:57 +0100
+Message-Id: <20190913130603.107888371@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,35 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dbb9fcc8c2d8d4ea1104f51d4947a8a8199a2cb5 ]
+[ Upstream commit 87ee613d076351950b74383215437f841ebbeb75 ]
 
-Manage the irq = 0 case, where we shall return an error.
+In most common cases VP index of a vcpu matches its vcpu index. Userspace
+is, however, free to set any mapping it wishes and we need to account for
+that when we need to find a vCPU with a particular VP index. To keep search
+algorithms optimal in both cases introduce 'num_mismatched_vp_indexes'
+counter showing how many vCPUs with mismatching VP index we have. In case
+the counter is zero we can assume vp_index == vcpu_idx.
 
-Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
-
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |  3 +++
+ arch/x86/kvm/hyperv.c           | 26 +++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index d386822658922..1d9c028e52cba 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1681,7 +1681,7 @@ static int dcmi_probe(struct platform_device *pdev)
- 	if (irq <= 0) {
- 		if (irq != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "Could not get irq\n");
--		return irq;
-+		return irq ? irq : -ENXIO;
- 	}
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 3245b95ad2d97..b6417454a9d79 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -784,6 +784,9 @@ struct kvm_hv {
+ 	u64 hv_reenlightenment_control;
+ 	u64 hv_tsc_emulation_control;
+ 	u64 hv_tsc_emulation_status;
++
++	/* How many vCPUs have VP index != vCPU index */
++	atomic_t num_mismatched_vp_indexes;
+ };
  
- 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ enum kvm_irqchip_mode {
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 3f2775aac5545..2bb554b90b3c2 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1045,11 +1045,31 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
+ 	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
+ 
+ 	switch (msr) {
+-	case HV_X64_MSR_VP_INDEX:
+-		if (!host || (u32)data >= KVM_MAX_VCPUS)
++	case HV_X64_MSR_VP_INDEX: {
++		struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++		int vcpu_idx = kvm_vcpu_get_idx(vcpu);
++		u32 new_vp_index = (u32)data;
++
++		if (!host || new_vp_index >= KVM_MAX_VCPUS)
+ 			return 1;
+-		hv_vcpu->vp_index = (u32)data;
++
++		if (new_vp_index == hv_vcpu->vp_index)
++			return 0;
++
++		/*
++		 * The VP index is initialized to vcpu_index by
++		 * kvm_hv_vcpu_postcreate so they initially match.  Now the
++		 * VP index is changing, adjust num_mismatched_vp_indexes if
++		 * it now matches or no longer matches vcpu_idx.
++		 */
++		if (hv_vcpu->vp_index == vcpu_idx)
++			atomic_inc(&hv->num_mismatched_vp_indexes);
++		else if (new_vp_index == vcpu_idx)
++			atomic_dec(&hv->num_mismatched_vp_indexes);
++
++		hv_vcpu->vp_index = new_vp_index;
+ 		break;
++	}
+ 	case HV_X64_MSR_VP_ASSIST_PAGE: {
+ 		u64 gfn;
+ 		unsigned long addr;
 -- 
 2.20.1
 
