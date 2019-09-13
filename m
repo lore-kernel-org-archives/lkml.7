@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1781C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE260C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A10214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D6E208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380344;
-	bh=vGkcWfiiWQ1j7YnmnHuFuBBtdJCQ5N2mzF/sJmjPv2A=;
+	s=default; t=1568380348;
+	bh=M+v2Cj/tTTedh66FI140lfs8CvMvkDan5ezh2dq2XJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nGjbIwnRyWQbRqUd0c8wnPrMkjVsmafi93aw76pSoKVUaH+aXSqlQdrWqkLogHHe2
-	 ufKEzA9KfA5DPpriDfV5WszmtZRYPP75bBFqoiI7YnnJYeteMvf48gJjlXDcl9ANx2
-	 bKM09kY9rZAdZiQGB06zJNbN0PNiZ3XEPlL5xUoE=
+	b=BKVAkyaTO3s1JOToNUHVqP3ZeoHxeY0tKB4XUNEzrnG6fxVFSTHFRk+dm9QqeBSwX
+	 e9gNrwvmeOmd59o0sNtFzgcqoK2XLbLUmuOpOyWZ+YD1JrBkW2sKevWDdUve3LTqD/
+	 x7pHHPzx3WYWZFdqyR465kWD/+vrB4SqStwkbOTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbfIMNMX (ORCPT
+        id S2389158AbfIMNM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388518AbfIMNMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:20 -0400
+        id S2389142AbfIMNMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:25 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2CA20640;
-        Fri, 13 Sep 2019 13:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B650206BB;
+        Fri, 13 Sep 2019 13:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380338;
-        bh=vGkcWfiiWQ1j7YnmnHuFuBBtdJCQ5N2mzF/sJmjPv2A=;
+        s=default; t=1568380344;
+        bh=M+v2Cj/tTTedh66FI140lfs8CvMvkDan5ezh2dq2XJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgFyb9WNQwMXRCBiGqE1AYFS1rgRVVuVP1a4lPT8Zr2hNkKibwmiPUItQRB6n/LE4
-         gvfbXvArbiaz6GoIJ3nzAqCZ3Y0EsQ0F2uPZMF/RscTIYO4ULQf0Q7BPZ4k0x/RbX/
-         iOXIrf5Fs4gMZDljDMJOcsHgDDxE96J0Tpe5ea3A=
+        b=EfwPpAdGE/lSpDw/sB3PAueq1YVn66TsZsg1fsfLhQYb3wsp53em/0slNwVUGC/LJ
+         ffsYHwGm6uEEvzV3b/9ONZrBrVJcEOyW1W4pHm9NU4Yq5nJRkdlIfinaDuDIQxc88j
+         0pEOt304ES2N3H7RZle0278ArL+Wmd07YMfc2KzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        James Morris <jmorris@namei.org>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Stephan Mueller <smueller@chronox.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        James Morris <james.morris@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/190] media: cec: remove cec-edid.c
-Date:   Fri, 13 Sep 2019 14:04:47 +0100
-Message-Id: <20190913130602.206456160@linuxfoundation.org>
+Subject: [PATCH 4.19 034/190] keys: Fix the use of the C++ keyword "private" in uapi/linux/keyctl.h
+Date:   Fri, 13 Sep 2019 14:04:49 +0100
+Message-Id: <20190913130602.388568147@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,87 +67,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f94d463f1b7f83d465ed77521821583dbcdaa3c5 ]
+[ Upstream commit 2ecefa0a15fd0ef88b9cd5d15ceb813008136431 ]
 
-Move cec_get_edid_phys_addr() to cec-adap.c. It's not worth keeping
-a separate source for this.
+The keyctl_dh_params struct in uapi/linux/keyctl.h contains the symbol
+"private" which means that the header file will cause compilation failure
+if #included in to a C++ program.  Further, the patch that added the same
+struct to the keyutils package named the symbol "priv", not "private".
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: <stable@vger.kernel.org>      # for v4.17 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+The previous attempt to fix this (commit 8a2336e549d3) did so by simply
+renaming the kernel's copy of the field to dh_private, but this then breaks
+existing userspace and as such has been reverted (commit 8c0f9f5b309d).
+
+[And note, to those who think that wrapping the struct in extern "C" {}
+ will work: it won't; that only changes how symbol names are presented to
+ the assembler and linker.].
+
+Instead, insert an anonymous union around the "private" member and add a
+second member in there with the name "priv" to match the one in the
+keyutils package.  The "private" member is then wrapped in !__cplusplus
+cpp-conditionals to hide it from C++.
+
+Fixes: ddbb41148724 ("KEYS: Add KEYCTL_DH_COMPUTE command")
+Fixes: 8a2336e549d3 ("uapi/linux/keyctl.h: don't use C++ reserved keyword as a struct member name")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Randy Dunlap <rdunlap@infradead.org>
+cc: Lubomir Rintel <lkundrak@v3.sk>
+cc: James Morris <jmorris@namei.org>
+cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+cc: Stephan Mueller <smueller@chronox.de>
+cc: Andrew Morton <akpm@linux-foundation.org>
+cc: Linus Torvalds <torvalds@linux-foundation.org>
+cc: stable@vger.kernel.org
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/Makefile   |  2 +-
- drivers/media/cec/cec-adap.c | 13 +++++++++++++
- drivers/media/cec/cec-edid.c | 24 ------------------------
- 3 files changed, 14 insertions(+), 25 deletions(-)
- delete mode 100644 drivers/media/cec/cec-edid.c
+ include/uapi/linux/keyctl.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/cec/Makefile b/drivers/media/cec/Makefile
-index 29a2ab9e77c5d..ad8677d8c8967 100644
---- a/drivers/media/cec/Makefile
-+++ b/drivers/media/cec/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--cec-objs := cec-core.o cec-adap.o cec-api.o cec-edid.o
-+cec-objs := cec-core.o cec-adap.o cec-api.o
+diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
+index 7b8c9e19bad1c..0f3cb13db8e93 100644
+--- a/include/uapi/linux/keyctl.h
++++ b/include/uapi/linux/keyctl.h
+@@ -65,7 +65,12 @@
  
- ifeq ($(CONFIG_CEC_NOTIFIER),y)
-   cec-objs += cec-notifier.o
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index a7ea27d2aa8ef..4a15d53f659ec 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -62,6 +62,19 @@ static unsigned int cec_log_addr2dev(const struct cec_adapter *adap, u8 log_addr
- 	return adap->log_addrs.primary_device_type[i < 0 ? 0 : i];
- }
- 
-+u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
-+			   unsigned int *offset)
-+{
-+	unsigned int loc = cec_get_edid_spa_location(edid, size);
-+
-+	if (offset)
-+		*offset = loc;
-+	if (loc == 0)
-+		return CEC_PHYS_ADDR_INVALID;
-+	return (edid[loc] << 8) | edid[loc + 1];
-+}
-+EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
-+
- /*
-  * Queue a new event for this filehandle. If ts == 0, then set it
-  * to the current time.
-diff --git a/drivers/media/cec/cec-edid.c b/drivers/media/cec/cec-edid.c
-deleted file mode 100644
-index e2f54eec08294..0000000000000
---- a/drivers/media/cec/cec-edid.c
-+++ /dev/null
-@@ -1,24 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * cec-edid - HDMI Consumer Electronics Control EDID & CEC helper functions
-- *
-- * Copyright 2016 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
-- */
--
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
--#include <media/cec.h>
--
--u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
--			   unsigned int *offset)
--{
--	unsigned int loc = cec_get_edid_spa_location(edid, size);
--
--	if (offset)
--		*offset = loc;
--	if (loc == 0)
--		return CEC_PHYS_ADDR_INVALID;
--	return (edid[loc] << 8) | edid[loc + 1];
--}
--EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
+ /* keyctl structures */
+ struct keyctl_dh_params {
+-	__s32 private;
++	union {
++#ifndef __cplusplus
++		__s32 private;
++#endif
++		__s32 priv;
++	};
+ 	__s32 prime;
+ 	__s32 base;
+ };
 -- 
 2.20.1
 
