@@ -2,89 +2,167 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF07C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B4EC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E293520692
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1584920692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 23:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fwi70FRc"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Kgg6GBMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390584AbfIMXaB (ORCPT
+        id S2403857AbfIMXbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 19:30:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38697 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388993AbfIMXaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 19:30:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id b123so19727510vsb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 16:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6e1N1HadwMgefYTfoH4GPm+Nq2OuNTMxQu6eofVTHgI=;
-        b=Fwi70FRcAmJTv0Dh/UDj+Sx87sUmeJcTq2dFxFXtV/ubv6WAEyGjp5+mRE7NXkKWGu
-         0V/EXOlbzfKDlb3Jbso/vZoR1xMpw0egUxGpk+mN9ds9STbRNGXp45IoZOY74oVh/9ia
-         IKH3PKUGJwAbblp3VhAcHkrWyzPb9LareUXEvdwloOvHLq2r94aPPw+ajgGg8BQ7MOZD
-         Cz39+CjBTnBTqfeSXjUpBU7tMX0MHMdezkqfE19P5Xe+aDAwTgB0JQyOLfxx1NvtPWCD
-         8xO8k7n1VNwdLW96q53r45M4ixHyBdhb8Dc/60VQbkjHA+yDq92bQMDmBRXxUq9CPW/f
-         eNJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6e1N1HadwMgefYTfoH4GPm+Nq2OuNTMxQu6eofVTHgI=;
-        b=WYFcT0ONvq0rDGg/FzlzlLdjY7YNvwkH+CfmSA5PEmKsXuMdfJQuVv4HvxEMgaKPBf
-         /BKc5F5lBRm2c8Pyjt1c8ceufiJhHquAV6TLn9YTt3NHQogsK6oNrEgFlbCAr45kCRzR
-         mtUYMFMnzUTTytU/thA65aIv5xRXKyV5npWbLN4Yfzekq8dv9anF98kWeHzm20Z24705
-         teh8CjWXmyHn9oMwP79OAKDc3WaJeOsUz7oinF5AVNs2bnXYqbj7Z9Ya2V58QWsWbr7b
-         Or4yROHSxUZVahBOV7zSOVTfImWH0TgPWPZKnSaXGD+CMKwHTrsJD/yxb35G50MmVHmw
-         Kj8Q==
-X-Gm-Message-State: APjAAAW4ryJ+LtqvJ50flFxO4fF6rwTWrNyFuX8DIOMi629Wbr22pltn
-        i8iAzw2A3pJT8ToU4QnQw8oAd++oe90S0SK3SNCD8A==
-X-Google-Smtp-Source: APXvYqx9rjxVbBZZxcf7hpmGQwjsiOnMZvDaHUu8Ro3xlKLe6+44T4khXpb/tyE1fksUrJ8sC4v6WEI4xI4k+xsNoDY=
-X-Received: by 2002:a67:2606:: with SMTP id m6mr6031246vsm.5.1568417397917;
- Fri, 13 Sep 2019 16:29:57 -0700 (PDT)
+        Fri, 13 Sep 2019 19:31:46 -0400
+Received: from mail-eopbgr730131.outbound.protection.outlook.com ([40.107.73.131]:25566
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388993AbfIMXbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 19:31:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vsaz/xWagGolbbsnU1d/rXIuORXtcp1hfU2+BP5SvpgbSq1pBb096XFO8AIxbJw2sZW1xAZNlgfQv64zyLSmUkzx/qn9ORfRKGsZe6gCHF/yWJZpudTHTTERFFdHJquQ6lNSRFj2AuYIT1Rnr/aSCZOu/+pnvR7YgdtUx/HMbE71IJR+bclQsuV00ZlWu663nyGFGa2JcakdO7W7vMApbTVdQW0eghCmFCAp9hqDCFJQH3+vpDOy6kW8zxu5tzlvTTJb5xadRPQqlowaiU3GEeoXxkNe7x6+CX6vdd0/8ZDAcX6R5b0LfyvXpt2WM555ll/ESLH+u8czax3Znklb9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nn9Nb5DL5E93ZFXy8gh3o47z1kOizl8kYGnHaMonEKM=;
+ b=WKqJgKxcZ8ntAvuzpUz2bhRl7jehIiqlzMy1GnxkqB9y1mq9lyWyIx65oy2ADKWUpiXWVYizDNcXnbeQYIwCWM3+6ODd+BTtxMJhky/4jD6xasD6pt423NnoRBHz3NucdOy+/fBw8kmTpqxxciIVG8Mt52KIwN3yjxc9vh1BfihaDFEaZ6l4eaNj/gjnuNxslVVyPfctp5XlShoXgInEUhGXcLpB6+DqBRbACxk2Hqw0np88qTtr2DCoWDd8WwIBIHhjp2J/3IA2mRh0TjRvE15fDo1HVA3bnUWdFq2fHPcZUNRgkLuJ1kG/RcHy1Cr9cx/M1sDXemOXQLvanJHJ8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nn9Nb5DL5E93ZFXy8gh3o47z1kOizl8kYGnHaMonEKM=;
+ b=Kgg6GBMz8Rn2owwagdnzLlysoWqGUWT9+YMO80a04Iitu7iLYI66yA/jlZrzFPAzxnULoBTaElkESB8qgmmiidO/VfKhQkHmKajPqdUjOjs/uZp961/1sZjXgSG4+lLNZeiYibek0c6GYMrJzigAaryNf0+E3Lt/Ah+zIH/YUZI=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0172.namprd21.prod.outlook.com (10.173.173.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.5; Fri, 13 Sep 2019 23:31:42 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::7d6d:e809:21df:d028]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::7d6d:e809:21df:d028%9]) with mapi id 15.20.2284.008; Fri, 13 Sep 2019
+ 23:31:42 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVafjiL2AndauzGUaHnigxWapFw6cqQqIA
+Date:   Fri, 13 Sep 2019 23:31:42 +0000
+Message-ID: <DM5PR21MB013732C4B83792CB49AC27A6D7B30@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190913060209.3604-1-weh@microsoft.com>
+In-Reply-To: <20190913060209.3604-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-13T23:31:40.5080268Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=38c50c3f-ce84-47e3-add5-7a6a4daaa3ad;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 50a82dbb-92fd-4211-bbe4-08d738a288b7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0172;
+x-ms-traffictypediagnostic: DM5PR21MB0172:|DM5PR21MB0172:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB0172B3A4680F5AA14526E3CFD7B30@DM5PR21MB0172.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(39860400002)(376002)(396003)(199004)(189003)(110136005)(11346002)(52536014)(10290500003)(99286004)(478600001)(53936002)(76176011)(66946007)(1250700005)(316002)(66476007)(66066001)(55016002)(1511001)(66446008)(64756008)(186003)(446003)(6506007)(26005)(5660300002)(7416002)(102836004)(22452003)(9686003)(33656002)(2906002)(71190400001)(71200400001)(486006)(476003)(6246003)(3846002)(74316002)(2201001)(229853002)(6436002)(76116006)(66556008)(81156014)(7696005)(8990500004)(14454004)(8676002)(8936002)(81166006)(2501003)(7736002)(86362001)(256004)(10090500001)(14444005)(6116002)(305945005)(25786009)(6636002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0172;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sF8bEA0rHAexyMY8kT2efeLyVAFGgGc+pnJQO9q4KBausKX0+FyFfLUREPQBzPlThGQ/CtoUgrQZ0Zu6gqFqPp81eqiBPocLhmlV/HlHQaSIKRefWX7edxJFmHud1hDZoAKKcrETJ8K1lp68KM8BiK5+k3lGen2KYc6ScydrsVYp4zPJiGwAkBDM19O/AK0ZnNpk5RtD/SYagSAGsStDrKjhkKs9s6BrdaM3QqKhVFYINHK7A8lMY2Jqyt0yAFPZE75sj12NOqQq2ptTrUGWlODAE8ud+bofq0KVUQ69CnvuvWUpb9ampsD2b8aiWe7xEUiGOxLoNYFOgMLoxvUrI7laYegnWmvt3dcIghwPE8vwVI4GR7LliOxbFs9RoocrulgbFPOLraaI8REzrCUu9dmchDoZWg+sdVOOXUqqrMk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190913210018.125266-1-samitolvanen@google.com>
- <20190913210018.125266-3-samitolvanen@google.com> <CALCETrXve9j=fwaH1rNptKB8OPv_wM4QSPoGa2u9qvHFNE8u7A@mail.gmail.com>
-In-Reply-To: <CALCETrXve9j=fwaH1rNptKB8OPv_wM4QSPoGa2u9qvHFNE8u7A@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 13 Sep 2019 16:29:47 -0700
-Message-ID: <CABCJKudUJn_q6H2DNtZYS--QJtsgydex9752PwFTT9tH608nww@mail.gmail.com>
-Subject: Re: [PATCH 2/4] x86: use the correct function type for sys32_(rt_)sigreturn
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50a82dbb-92fd-4211-bbe4-08d738a288b7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 23:31:42.4455
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: H81D9WsE3f0OFmSpwmWTdCb+k9y88ko0+2JdBCykWFAij884RvEpnKPUZlqsmhPKtofJwbWTMPU7YhF2C+Q5XteQu2wwWjtFz/N29+aFpJY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 3:44 PM Andy Lutomirski <luto@kernel.org> wrote:
-> Shouldn't these be COMPAT_SYSCALL_DEFINE0?
+From: Wei Hu <weh@microsoft.com> Sent: Thursday, September 12, 2019 11:03 P=
+M
+>=20
+> Without deferred IO support, hyperv_fb driver informs the host to refresh
+> the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter ther=
+e
+> is screen update or not. This patch supports deferred IO for screens in
+> graphics mode and also enables the frame buffer on-demand refresh. The
+> highest refresh rate is still set at 20Hz.
+>=20
+> Currently Hyper-V only takes a physical address from guest as the startin=
+g
+> address of frame buffer. This implies the guest must allocate contiguous
+> physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+> accept address from MMIO region as frame buffer address. Due to these
+> limitations on Hyper-V host, we keep a shadow copy of frame buffer
+> in the guest. This means one more copy of the dirty rectangle inside
+> guest when doing the on-demand refresh. This can be optimized in the
+> future with help from host. For now the host performance gain from deferr=
+ed
+> IO outweighs the shadow copy impact in the guest.
+>=20
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>     v2: Incorporated review comments from Michael Kelley
+>     - Increased dirty rectangle by one row in deferred IO case when sendi=
+ng
+>     to Hyper-V.
+>     - Corrected the dirty rectangle size in the text mode.
+>     - Added more comments.
+>     - Other minor code cleanups.
+>=20
+>     v3: Incorporated more review comments
+>     - Removed a few unnecessary variable tests
+>=20
+>     v4: Incorporated test and review feedback from Dexuan Cui
+>     - Not disable interrupt while acquiring docopy_lock in
+>       hvfb_update_work(). This avoids significant bootup delay in
+>       large vCPU count VMs.
+>=20
+>     v5: Completely remove the unnecessary docopy_lock after discussing
+>     with Dexuan Cui.
+>=20
 
-Sure, that would work too.
-
-> I think you should pick this patch up and add it to your series:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/syscalls&id=07daeef08d26728c120ecbe57a55cb5714810b84
->
-> with the obvious type fixup, of course.  And then write a little patch
-> to use COMPAT_SYSCALL_DEFINE0 for rt_sigreturn and sigreturn.
-
-Thanks. I'll do that and send v2 next week once I get some more
-feedback on the other patches.
-
-Sami
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
