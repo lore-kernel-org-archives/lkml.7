@@ -2,851 +2,241 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE91C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7333C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B5420644
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798C420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 09:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="q9/ZXGwd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gCqAsImP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388050AbfIMJct (ORCPT
+        id S2388064AbfIMJdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 05:32:49 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:39554 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387770AbfIMJcp (ORCPT
+        Fri, 13 Sep 2019 05:33:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38183 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388052AbfIMJdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 05:32:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 45F933F744;
-        Fri, 13 Sep 2019 11:32:35 +0200 (CEST)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=q9/ZXGwd;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vvsHMmpKj9hi; Fri, 13 Sep 2019 11:32:30 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 624723F698;
-        Fri, 13 Sep 2019 11:32:29 +0200 (CEST)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 9D68B36034C;
-        Fri, 13 Sep 2019 11:32:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568367148; bh=2qkyA+pdkoRZgFPXl8EnRk2GmpHgyuB+iqmwOx3oaI0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9/ZXGwdEB6amG+IZFRaA+afp/bU//Q428145hjXEsBas0DAcgUlw0sOgnmrH9ihk
-         ikV+GvKIntxFTXzBiSyT9iWEoFMoOohQgoOHdFO0NfYAXuxyMlun+T4QLJWiiZEHsQ
-         2+l/nmwC3Hp02ldFgDq9H4BIctyIAoj+UuwsU5rc=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org
-Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: [RFC PATCH 7/7] drm/vmwgfx: Add surface dirty-tracking callbacks
-Date:   Fri, 13 Sep 2019 11:32:13 +0200
-Message-Id: <20190913093213.27254-8-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190913093213.27254-1-thomas_os@shipmail.org>
-References: <20190913093213.27254-1-thomas_os@shipmail.org>
+        Fri, 13 Sep 2019 05:33:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l11so31337389wrx.5
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 02:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=YWFP3fiiNLYjg5KjJkJ+a3OV517hoFU0pK03RFIpW6w=;
+        b=gCqAsImP3QV/jRpUp78X70WSTXJQi/V7ELSvPz73RKUCHgYp7clqnmXe5aMb1WE3WF
+         BhHJw6DNizcIemoU1Npdpt6mBaQ4KgActLaEh6iHNVHTEfXbEj7synOzvxUt2oLPcS4U
+         MmIg8CnTk63LRlYYi1AhYyFVbQH3OBFGGf/3/UoSe/WQlaKvqxgai7pJ8zp+N45VJjHR
+         hs+o66YyYZqE7+EmfYGF4kBzeRNepmy9w1m8jZHk1ZuxO+bRfspNI3pv1D33KxL0AqqS
+         auQadt4ZeBxwA0IiAe/NVOFU0aQx5sSqJ6YDk/7OCdakTwNDoSmMTWSc0iwZt57jaumf
+         Ly2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to;
+        bh=YWFP3fiiNLYjg5KjJkJ+a3OV517hoFU0pK03RFIpW6w=;
+        b=OCP0Fp57i++qEdBrqAMfZbp50H69/xs9PXcsCQYRq7QlBtTqXvOyU1omkHj0Qkm5r1
+         cseaIcXfoUfm2IFtWZVmHRFOvHjNQJUKGGKRmCiDLdXUPJLcdRgfv/OXEUSpJ8r7DKjm
+         3Rfic13uNSGvQZFUZbSnw2b0QJKmJWt+ffMrVBVt2U1h6JwGbtosPtnkJ2MWSJLobvsw
+         q+sDkPecfC/zsFWXdJN2SM7pKK6LG/yooSrImqYDrgsRuZpnfENqtGh1vdpEDI96d9rM
+         +gbv69eQufUWVgJCgsTKFvfohc9XloN5bGsrRRekqJ10gVwAiodcDEvTbpV2sI5xKGHo
+         pwGA==
+X-Gm-Message-State: APjAAAUS8vvAFUMroGBOYESpqpmzhIfBVuXzXQWHH1tPXw3BedNeYIXe
+        OPk5L5yLeKI7vT9sIiuj1b/cag==
+X-Google-Smtp-Source: APXvYqyTnY/BRnv5bnnwc3B97riovmka3Ma52ZQaQTgF3mOK8Nhr8fElod8xICY3ABgLgTy6zXeJkA==
+X-Received: by 2002:a5d:650d:: with SMTP id x13mr5675866wru.37.1568367184374;
+        Fri, 13 Sep 2019 02:33:04 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h8sm679528wmc.5.2019.09.13.02.33.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Sep 2019 02:33:03 -0700 (PDT)
+Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Cheng-yi Chiang <cychiang@chromium.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>
+References: <20190717083327.47646-1-cychiang@chromium.org>
+ <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
+ <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
+ <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
+ <7019a223-cc97-e1c6-907b-e6b3d626164f@baylibre.com>
+ <20190909135346.GG2036@sirena.org.uk>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <3fc94731-f66a-223d-995e-97ac67f9e882@baylibre.com>
+Date:   Fri, 13 Sep 2019 11:32:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190909135346.GG2036@sirena.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl
+Content-Type: multipart/mixed; boundary="rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY";
+ protected-headers="v1"
+From: Neil Armstrong <narmstrong@baylibre.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Cheng-yi Chiang <cychiang@chromium.org>,
+ Tzung-Bi Shih <tzungbi@google.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Liam Girdwood <lgirdwood@gmail.com>,
+ Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+ Russell King <rmk+kernel@armlinux.org.uk>,
+ Andrzej Hajda <a.hajda@samsung.com>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ Heiko Stuebner <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>,
+ Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+ ALSA development <alsa-devel@alsa-project.org>,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, Jernej Skrabec
+ <jernej.skrabec@siol.net>, Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <3fc94731-f66a-223d-995e-97ac67f9e882@baylibre.com>
+Subject: Re: [PATCH v5 0/5] Add HDMI jack support on RK3288
+References: <20190717083327.47646-1-cychiang@chromium.org>
+ <CA+Px+wX4gbntkd6y8NN8xwXpZLD4MH9rTeHcW9+Ndtw=3_mWBw@mail.gmail.com>
+ <CAFv8NwLiY+ro0L4c5vjSOGN8jA-Qr4zm2OWvVHkiuoa7_4e2Fg@mail.gmail.com>
+ <CAFv8NwJjG4mwfnYO=M3O9nZN48D6aY72nQuqEFpZL68dh5727w@mail.gmail.com>
+ <7019a223-cc97-e1c6-907b-e6b3d626164f@baylibre.com>
+ <20190909135346.GG2036@sirena.org.uk>
+In-Reply-To: <20190909135346.GG2036@sirena.org.uk>
 
-Add the callbacks necessary to implement emulated coherent memory for
-surfaces. Add a flag to the gb_surface_create ioctl to indicate that
-surface memory should be coherent.
-Also bump the drm minor version to signal the availability of coherent
-surfaces.
+--rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
----
- .../device_include/svga3d_surfacedefs.h       | 233 ++++++++++-
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h           |   4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_surface.c       | 395 +++++++++++++++++-
- include/uapi/drm/vmwgfx_drm.h                 |   4 +-
- 4 files changed, 629 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/drivers/gpu/drm/vmwgfx/device_include/svga3d_surfacedefs.h b/drivers/gpu/drm/vmwgfx/device_include/svga3d_surfacedefs.h
-index f2bfd3d80598..61414f105c67 100644
---- a/drivers/gpu/drm/vmwgfx/device_include/svga3d_surfacedefs.h
-+++ b/drivers/gpu/drm/vmwgfx/device_include/svga3d_surfacedefs.h
-@@ -1280,7 +1280,6 @@ svga3dsurface_get_pixel_offset(SVGA3dSurfaceFormat format,
- 	return offset;
- }
- 
--
- static inline u32
- svga3dsurface_get_image_offset(SVGA3dSurfaceFormat format,
- 			       surf_size_struct baseLevelSize,
-@@ -1375,4 +1374,236 @@ svga3dsurface_is_screen_target_format(SVGA3dSurfaceFormat format)
- 	return svga3dsurface_is_dx_screen_target_format(format);
- }
- 
-+/**
-+ * struct svga3dsurface_mip - Mimpmap level information
-+ * @bytes: Bytes required in the backing store of this mipmap level.
-+ * @img_stride: Byte stride per image.
-+ * @row_stride: Byte stride per block row.
-+ * @size: The size of the mipmap.
-+ */
-+struct svga3dsurface_mip {
-+	size_t bytes;
-+	size_t img_stride;
-+	size_t row_stride;
-+	struct drm_vmw_size size;
-+
-+};
-+
-+/**
-+ * struct svga3dsurface_cache - Cached surface information
-+ * @desc: Pointer to the surface descriptor
-+ * @mip: Array of mipmap level information. Valid size is @num_mip_levels.
-+ * @mip_chain_bytes: Bytes required in the backing store for the whole chain
-+ * of mip levels.
-+ * @sheet_bytes: Bytes required in the backing store for a sheet
-+ * representing a single sample.
-+ * @num_mip_levels: Valid size of the @mip array. Number of mipmap levels in
-+ * a chain.
-+ * @num_layers: Number of slices in an array texture or number of faces in
-+ * a cubemap texture.
-+ */
-+struct svga3dsurface_cache {
-+	const struct svga3d_surface_desc *desc;
-+	struct svga3dsurface_mip mip[DRM_VMW_MAX_MIP_LEVELS];
-+	size_t mip_chain_bytes;
-+	size_t sheet_bytes;
-+	u32 num_mip_levels;
-+	u32 num_layers;
-+};
-+
-+/**
-+ * struct svga3dsurface_loc - Surface location
-+ * @sub_resource: Surface subresource. Defined as layer * num_mip_levels +
-+ * mip_level.
-+ * @x: X coordinate.
-+ * @y: Y coordinate.
-+ * @z: Z coordinate.
-+ */
-+struct svga3dsurface_loc {
-+	u32 sub_resource;
-+	u32 x, y, z;
-+};
-+
-+/**
-+ * svga3dsurface_subres - Compute the subresource from layer and mipmap.
-+ * @cache: Surface layout data.
-+ * @mip_level: The mipmap level.
-+ * @layer: The surface layer (face or array slice).
-+ *
-+ * Return: The subresource.
-+ */
-+static inline u32 svga3dsurface_subres(const struct svga3dsurface_cache *cache,
-+				       u32 mip_level, u32 layer)
-+{
-+	return cache->num_mip_levels * layer + mip_level;
-+}
-+
-+/**
-+ * svga3dsurface_setup_cache - Build a surface cache entry
-+ * @size: The surface base level dimensions.
-+ * @format: The surface format.
-+ * @num_mip_levels: Number of mipmap levels.
-+ * @num_layers: Number of layers.
-+ * @cache: Pointer to a struct svga3dsurface_cach object to be filled in.
-+ *
-+ * Return: Zero on success, -EINVAL on invalid surface layout.
-+ */
-+static inline int svga3dsurface_setup_cache(const struct drm_vmw_size *size,
-+					    SVGA3dSurfaceFormat format,
-+					    u32 num_mip_levels,
-+					    u32 num_layers,
-+					    u32 num_samples,
-+					    struct svga3dsurface_cache *cache)
-+{
-+	const struct svga3d_surface_desc *desc;
-+	u32 i;
-+
-+	memset(cache, 0, sizeof(*cache));
-+	cache->desc = desc = svga3dsurface_get_desc(format);
-+	cache->num_mip_levels = num_mip_levels;
-+	cache->num_layers = num_layers;
-+	for (i = 0; i < cache->num_mip_levels; i++) {
-+		struct svga3dsurface_mip *mip = &cache->mip[i];
-+
-+		mip->size = svga3dsurface_get_mip_size(*size, i);
-+		mip->bytes = svga3dsurface_get_image_buffer_size
-+			(desc, &mip->size, 0);
-+		mip->row_stride =
-+			__KERNEL_DIV_ROUND_UP(mip->size.width,
-+					      desc->block_size.width) *
-+			desc->bytes_per_block * num_samples;
-+		if (!mip->row_stride)
-+			goto invalid_dim;
-+
-+		mip->img_stride =
-+			__KERNEL_DIV_ROUND_UP(mip->size.height,
-+					      desc->block_size.height) *
-+			mip->row_stride;
-+		if (!mip->img_stride)
-+			goto invalid_dim;
-+
-+		cache->mip_chain_bytes += mip->bytes;
-+	}
-+	cache->sheet_bytes = cache->mip_chain_bytes * num_layers;
-+	if (!cache->sheet_bytes)
-+		goto invalid_dim;
-+
-+	return 0;
-+
-+invalid_dim:
-+	VMW_DEBUG_USER("Invalid surface layout for dirty tracking.\n");
-+	return -EINVAL;
-+}
-+
-+/**
-+ * svga3dsurface_get_loc - Get a surface location from an offset into the
-+ * backing store
-+ * @cache: Surface layout data.
-+ * @loc: Pointer to a struct svga3dsurface_loc to be filled in.
-+ * @offset: Offset into the surface backing store.
-+ */
-+static inline void
-+svga3dsurface_get_loc(const struct svga3dsurface_cache *cache,
-+		      struct svga3dsurface_loc *loc,
-+		      size_t offset)
-+{
-+	const struct svga3dsurface_mip *mip = &cache->mip[0];
-+	const struct svga3d_surface_desc *desc = cache->desc;
-+	u32 layer;
-+	int i;
-+
-+	if (offset >= cache->sheet_bytes)
-+		offset %= cache->sheet_bytes;
-+
-+	layer = offset / cache->mip_chain_bytes;
-+	offset -= layer * cache->mip_chain_bytes;
-+	for (i = 0; i < cache->num_mip_levels; ++i, ++mip) {
-+		if (mip->bytes > offset)
-+			break;
-+		offset -= mip->bytes;
-+	}
-+
-+	loc->sub_resource = svga3dsurface_subres(cache, i, layer);
-+	loc->z = offset / mip->img_stride;
-+	offset -= loc->z * mip->img_stride;
-+	loc->z *= desc->block_size.depth;
-+	loc->y = offset / mip->row_stride;
-+	offset -= loc->y * mip->row_stride;
-+	loc->y *= desc->block_size.height;
-+	loc->x = offset / desc->bytes_per_block;
-+	loc->x *= desc->block_size.width;
-+}
-+
-+/**
-+ * svga3dsurface_inc_loc - Clamp increment a surface location with one block
-+ * size
-+ * in each dimension.
-+ * @loc: Pointer to a struct svga3dsurface_loc to be incremented.
-+ *
-+ * When computing the size of a range as size = end - start, the range does not
-+ * include the end element. However a location representing the last byte
-+ * of a touched region in the backing store *is* included in the range.
-+ * This function modifies such a location to match the end definition
-+ * given as start + size which is the one used in a SVGA3dBox.
-+ */
-+static inline void
-+svga3dsurface_inc_loc(const struct svga3dsurface_cache *cache,
-+		      struct svga3dsurface_loc *loc)
-+{
-+	const struct svga3d_surface_desc *desc = cache->desc;
-+	u32 mip = loc->sub_resource % cache->num_mip_levels;
-+	const struct drm_vmw_size *size = &cache->mip[mip].size;
-+
-+	loc->sub_resource++;
-+	loc->x += desc->block_size.width;
-+	if (loc->x > size->width)
-+		loc->x = size->width;
-+	loc->y += desc->block_size.height;
-+	if (loc->y > size->height)
-+		loc->y = size->height;
-+	loc->z += desc->block_size.depth;
-+	if (loc->z > size->depth)
-+		loc->z = size->depth;
-+}
-+
-+/**
-+ * svga3dsurface_min_loc - The start location in a subresource
-+ * @cache: Surface layout data.
-+ * @sub_resource: The subresource.
-+ * @loc: Pointer to a struct svga3dsurface_loc to be filled in.
-+ */
-+static inline void
-+svga3dsurface_min_loc(const struct svga3dsurface_cache *cache,
-+		      u32 sub_resource,
-+		      struct svga3dsurface_loc *loc)
-+{
-+	loc->sub_resource = sub_resource;
-+	loc->x = loc->y = loc->z = 0;
-+}
-+
-+/**
-+ * svga3dsurface_min_loc - The end location in a subresource
-+ * @cache: Surface layout data.
-+ * @sub_resource: The subresource.
-+ * @loc: Pointer to a struct svga3dsurface_loc to be filled in.
-+ *
-+ * Following the end definition given in svga3dsurface_inc_loc(),
-+ * Compute the end location of a surface subresource.
-+ */
-+static inline void
-+svga3dsurface_max_loc(const struct svga3dsurface_cache *cache,
-+		      u32 sub_resource,
-+		      struct svga3dsurface_loc *loc)
-+{
-+	const struct drm_vmw_size *size;
-+	u32 mip;
-+
-+	loc->sub_resource = sub_resource + 1;
-+	mip = sub_resource % cache->num_mip_levels;
-+	size = &cache->mip[mip].size;
-+	loc->x = size->width;
-+	loc->y = size->height;
-+	loc->z = size->depth;
-+}
-+
- #endif /* _SVGA3D_SURFACEDEFS_H_ */
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 3d68b75c7a3e..3034ea176ea3 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -56,9 +56,9 @@
- 
- 
- #define VMWGFX_DRIVER_NAME "vmwgfx"
--#define VMWGFX_DRIVER_DATE "20180704"
-+#define VMWGFX_DRIVER_DATE "20190328"
- #define VMWGFX_DRIVER_MAJOR 2
--#define VMWGFX_DRIVER_MINOR 15
-+#define VMWGFX_DRIVER_MINOR 16
- #define VMWGFX_DRIVER_PATCHLEVEL 0
- #define VMWGFX_FIFO_STATIC_SIZE (1024*1024)
- #define VMWGFX_MAX_RELOCATIONS 2048
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-index 29d8794f0421..876bada5b35e 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-@@ -68,6 +68,20 @@ struct vmw_surface_offset {
- 	uint32_t bo_offset;
- };
- 
-+/**
-+ * vmw_surface_dirty - Surface dirty-tracker
-+ * @cache: Cached layout information of the surface.
-+ * @size: Accounting size for the struct vmw_surface_dirty.
-+ * @num_subres: Number of subresources.
-+ * @boxes: Array of SVGA3dBoxes indicating dirty regions. One per subresource.
-+ */
-+struct vmw_surface_dirty {
-+	struct svga3dsurface_cache cache;
-+	size_t size;
-+	u32 num_subres;
-+	SVGA3dBox boxes[0];
-+};
-+
- static void vmw_user_surface_free(struct vmw_resource *res);
- static struct vmw_resource *
- vmw_user_surface_base_to_res(struct ttm_base_object *base);
-@@ -96,6 +110,13 @@ vmw_gb_surface_reference_internal(struct drm_device *dev,
- 				  struct drm_vmw_gb_surface_ref_ext_rep *rep,
- 				  struct drm_file *file_priv);
- 
-+static void vmw_surface_dirty_free(struct vmw_resource *res);
-+static int vmw_surface_dirty_alloc(struct vmw_resource *res);
-+static int vmw_surface_dirty_sync(struct vmw_resource *res);
-+static void vmw_surface_dirty_range_add(struct vmw_resource *res, size_t start,
-+					size_t end);
-+static int vmw_surface_clean(struct vmw_resource *res);
-+
- static const struct vmw_user_resource_conv user_surface_conv = {
- 	.object_type = VMW_RES_SURFACE,
- 	.base_obj_to_res = vmw_user_surface_base_to_res,
-@@ -133,7 +154,12 @@ static const struct vmw_res_func vmw_gb_surface_func = {
- 	.create = vmw_gb_surface_create,
- 	.destroy = vmw_gb_surface_destroy,
- 	.bind = vmw_gb_surface_bind,
--	.unbind = vmw_gb_surface_unbind
-+	.unbind = vmw_gb_surface_unbind,
-+	.dirty_alloc = vmw_surface_dirty_alloc,
-+	.dirty_free = vmw_surface_dirty_free,
-+	.dirty_sync = vmw_surface_dirty_sync,
-+	.dirty_range_add = vmw_surface_dirty_range_add,
-+	.clean = vmw_surface_clean,
- };
- 
- /**
-@@ -641,6 +667,7 @@ static void vmw_user_surface_free(struct vmw_resource *res)
- 	struct vmw_private *dev_priv = srf->res.dev_priv;
- 	uint32_t size = user_srf->size;
- 
-+	WARN_ON_ONCE(res->dirty);
- 	if (user_srf->master)
- 		drm_master_put(&user_srf->master);
- 	kfree(srf->offsets);
-@@ -1168,10 +1195,16 @@ static int vmw_gb_surface_bind(struct vmw_resource *res,
- 		cmd2->header.id = SVGA_3D_CMD_UPDATE_GB_SURFACE;
- 		cmd2->header.size = sizeof(cmd2->body);
- 		cmd2->body.sid = res->id;
--		res->backup_dirty = false;
- 	}
- 	vmw_fifo_commit(dev_priv, submit_size);
- 
-+	if (res->backup->dirty && res->backup_dirty) {
-+		/* We've just made a full upload. Cear dirty regions. */
-+		vmw_bo_dirty_clear_res(res);
-+	}
-+
-+	res->backup_dirty = false;
-+
- 	return 0;
- }
- 
-@@ -1636,7 +1669,8 @@ vmw_gb_surface_define_internal(struct drm_device *dev,
- 			}
- 		}
- 	} else if (req->base.drm_surface_flags &
--		   drm_vmw_surface_flag_create_buffer)
-+		   (drm_vmw_surface_flag_create_buffer |
-+		    drm_vmw_surface_flag_coherent))
- 		ret = vmw_user_bo_alloc(dev_priv, tfile,
- 					res->backup_size,
- 					req->base.drm_surface_flags &
-@@ -1650,6 +1684,26 @@ vmw_gb_surface_define_internal(struct drm_device *dev,
- 		goto out_unlock;
- 	}
- 
-+	if (req->base.drm_surface_flags & drm_vmw_surface_flag_coherent) {
-+		struct vmw_buffer_object *backup = res->backup;
-+
-+		ttm_bo_reserve(&backup->base, false, false, NULL);
-+		if (!res->func->dirty_alloc)
-+			ret = -EINVAL;
-+		if (!ret)
-+			ret = vmw_bo_dirty_add(backup);
-+		if (!ret) {
-+			res->coherent = true;
-+			ret = res->func->dirty_alloc(res);
-+		}
-+		ttm_bo_unreserve(&backup->base);
-+		if (ret) {
-+			vmw_resource_unreference(&res);
-+			goto out_unlock;
-+		}
-+
-+	}
-+
- 	tmp = vmw_resource_reference(res);
- 	ret = ttm_prime_object_init(tfile, res->backup_size, &user_srf->prime,
- 				    req->base.drm_surface_flags &
-@@ -1758,3 +1812,338 @@ vmw_gb_surface_reference_internal(struct drm_device *dev,
- 
- 	return ret;
- }
-+
-+/**
-+ * vmw_subres_dirty_add - Add a dirty region to a subresource
-+ * @dirty: The surfaces's dirty tracker.
-+ * @loc_start: The location corresponding to the start of the region.
-+ * @loc_end: The location corresponding to the end of the region.
-+ *
-+ * As we are assuming that @loc_start and @loc_end represent a sequential
-+ * range of backing store memory, if the region spans multiple lines then
-+ * regardless of the x coordinate, the full lines are dirtied.
-+ * Correspondingly if the region spans multiple z slices, then full rather
-+ * than partial z slices are dirtied.
-+ */
-+static void vmw_subres_dirty_add(struct vmw_surface_dirty *dirty,
-+				 const struct svga3dsurface_loc *loc_start,
-+				 const struct svga3dsurface_loc *loc_end)
-+{
-+	const struct svga3dsurface_cache *cache = &dirty->cache;
-+	SVGA3dBox *box = &dirty->boxes[loc_start->sub_resource];
-+	u32 mip = loc_start->sub_resource % cache->num_mip_levels;
-+	const struct drm_vmw_size *size = &cache->mip[mip].size;
-+	u32 box_c2 = box->z + box->d;
-+
-+	if (WARN_ON(loc_start->sub_resource >= dirty->num_subres))
-+		return;
-+
-+	if (box->d == 0 || box->z > loc_start->z)
-+		box->z = loc_start->z;
-+	if (box_c2 < loc_end->z)
-+		box->d = loc_end->z - box->z;
-+
-+	if (loc_start->z + 1 == loc_end->z) {
-+		box_c2 = box->y + box->h;
-+		if (box->h == 0 || box->y > loc_start->y)
-+			box->y = loc_start->y;
-+		if (box_c2 < loc_end->y)
-+			box->h = loc_end->y - box->y;
-+
-+		if (loc_start->y + 1 == loc_end->y) {
-+			box_c2 = box->x + box->w;
-+			if (box->w == 0 || box->x > loc_start->x)
-+				box->x = loc_start->x;
-+			if (box_c2 < loc_end->x)
-+				box->w = loc_end->x - box->x;
-+		} else {
-+			box->x = 0;
-+			box->w = size->width;
-+		}
-+	} else {
-+		box->y = 0;
-+		box->h = size->height;
-+		box->x = 0;
-+		box->w = size->width;
-+	}
-+}
-+
-+/**
-+ * vmw_subres_dirty_full - Mark a full subresource as dirty
-+ * @dirty: The surface's dirty tracker.
-+ * @subres: The subresource
-+ */
-+static void vmw_subres_dirty_full(struct vmw_surface_dirty *dirty, u32 subres)
-+{
-+	const struct svga3dsurface_cache *cache = &dirty->cache;
-+	u32 mip = subres % cache->num_mip_levels;
-+	const struct drm_vmw_size *size = &cache->mip[mip].size;
-+	SVGA3dBox *box = &dirty->boxes[subres];
-+
-+	box->x = 0;
-+	box->y = 0;
-+	box->z = 0;
-+	box->w = size->width;
-+	box->h = size->height;
-+	box->d = size->depth;
-+}
-+
-+/*
-+ * vmw_surface_tex_dirty_add_range - The dirty_add_range callback for texture
-+ * surfaces.
-+ */
-+static void vmw_surface_tex_dirty_range_add(struct vmw_resource *res,
-+					    size_t start, size_t end)
-+{
-+	struct vmw_surface_dirty *dirty =
-+		(struct vmw_surface_dirty *) res->dirty;
-+	size_t backup_end = res->backup_offset + res->backup_size;
-+	struct svga3dsurface_loc loc1, loc2;
-+	const struct svga3dsurface_cache *cache;
-+
-+	start = max_t(size_t, start, res->backup_offset) - res->backup_offset;
-+	end = min(end, backup_end) - res->backup_offset;
-+	cache = &dirty->cache;
-+	svga3dsurface_get_loc(cache, &loc1, start);
-+	svga3dsurface_get_loc(cache, &loc2, end - 1);
-+	svga3dsurface_inc_loc(cache, &loc2);
-+
-+	if (loc1.sub_resource + 1 == loc2.sub_resource) {
-+		/* Dirty range covers a single sub-resource */
-+		vmw_subres_dirty_add(dirty, &loc1, &loc2);
-+	} else {
-+		/* Dirty range covers multiple sub-resources */
-+		struct svga3dsurface_loc loc_min, loc_max;
-+		u32 sub_res = loc1.sub_resource;
-+
-+		svga3dsurface_max_loc(cache, loc1.sub_resource, &loc_max);
-+		vmw_subres_dirty_add(dirty, &loc1, &loc_max);
-+		svga3dsurface_min_loc(cache, loc2.sub_resource - 1, &loc_min);
-+		vmw_subres_dirty_add(dirty, &loc_min, &loc2);
-+		for (sub_res = loc1.sub_resource + 1;
-+		     sub_res < loc2.sub_resource - 1; ++sub_res)
-+			vmw_subres_dirty_full(dirty, sub_res);
-+	}
-+}
-+
-+/*
-+ * vmw_surface_tex_dirty_add_range - The dirty_add_range callback for buffer
-+ * surfaces.
-+ */
-+static void vmw_surface_buf_dirty_range_add(struct vmw_resource *res,
-+					    size_t start, size_t end)
-+{
-+	struct vmw_surface_dirty *dirty =
-+		(struct vmw_surface_dirty *) res->dirty;
-+	const struct svga3dsurface_cache *cache = &dirty->cache;
-+	size_t backup_end = res->backup_offset + cache->mip_chain_bytes;
-+	SVGA3dBox *box = &dirty->boxes[0];
-+	u32 box_c2;
-+
-+	box->h = box->d = 1;
-+	start = max_t(size_t, start, res->backup_offset) - res->backup_offset;
-+	end = min(end, backup_end) - res->backup_offset;
-+	box_c2 = box->x + box->w;
-+	if (box->w == 0 || box->x > start)
-+		box->x = start;
-+	if (box_c2 < end)
-+		box->w = end - box->x;
-+}
-+
-+/*
-+ * vmw_surface_tex_dirty_add_range - The dirty_add_range callback for surfaces
-+ */
-+static void vmw_surface_dirty_range_add(struct vmw_resource *res, size_t start,
-+					size_t end)
-+{
-+	struct vmw_surface *srf = vmw_res_to_srf(res);
-+
-+	if (WARN_ON(end <= res->backup_offset ||
-+		    start >= res->backup_offset + res->backup_size))
-+		return;
-+
-+	if (srf->format == SVGA3D_BUFFER)
-+		vmw_surface_buf_dirty_range_add(res, start, end);
-+	else
-+		vmw_surface_tex_dirty_range_add(res, start, end);
-+}
-+
-+/*
-+ * vmw_surface_dirty_sync - The surface's dirty_sync callback.
-+ */
-+static int vmw_surface_dirty_sync(struct vmw_resource *res)
-+{
-+	struct vmw_private *dev_priv = res->dev_priv;
-+	bool has_dx = 0;
-+	u32 i, num_dirty;
-+	struct vmw_surface_dirty *dirty =
-+		(struct vmw_surface_dirty *) res->dirty;
-+	size_t alloc_size;
-+	const struct svga3dsurface_cache *cache = &dirty->cache;
-+	struct {
-+		SVGA3dCmdHeader header;
-+		SVGA3dCmdDXUpdateSubResource body;
-+	} *cmd1;
-+	struct {
-+		SVGA3dCmdHeader header;
-+		SVGA3dCmdUpdateGBImage body;
-+	} *cmd2;
-+	void *cmd;
-+
-+	num_dirty = 0;
-+	for (i = 0; i < dirty->num_subres; ++i) {
-+		const SVGA3dBox *box = &dirty->boxes[i];
-+
-+		if (box->d)
-+			num_dirty++;
-+	}
-+
-+	if (!num_dirty)
-+		goto out;
-+
-+	alloc_size = num_dirty * ((has_dx) ? sizeof(*cmd1) : sizeof(*cmd2));
-+	cmd = VMW_FIFO_RESERVE(dev_priv, alloc_size);
-+	if (!cmd)
-+		return -ENOMEM;
-+
-+	cmd1 = cmd;
-+	cmd2 = cmd;
-+
-+	for (i = 0; i < dirty->num_subres; ++i) {
-+		const SVGA3dBox *box = &dirty->boxes[i];
-+
-+		if (!box->d)
-+			continue;
-+
-+		/*
-+		 * DX_UPDATE_SUBRESOURCE is aware of array surfaces.
-+		 * UPDATE_GB_IMAGE is not.
-+		 */
-+		if (has_dx) {
-+			cmd1->header.id = SVGA_3D_CMD_DX_UPDATE_SUBRESOURCE;
-+			cmd1->header.size = sizeof(cmd1->body);
-+			cmd1->body.sid = res->id;
-+			cmd1->body.subResource = i;
-+			cmd1->body.box = *box;
-+			cmd1++;
-+		} else {
-+			cmd2->header.id = SVGA_3D_CMD_UPDATE_GB_IMAGE;
-+			cmd2->header.size = sizeof(cmd2->body);
-+			cmd2->body.image.sid = res->id;
-+			cmd2->body.image.face = i / cache->num_mip_levels;
-+			cmd2->body.image.mipmap = i -
-+				(cache->num_mip_levels * cmd2->body.image.face);
-+			cmd2->body.box = *box;
-+			cmd2++;
-+		}
-+
-+	}
-+	vmw_fifo_commit(dev_priv, alloc_size);
-+ out:
-+	memset(&dirty->boxes[0], 0, sizeof(dirty->boxes[0]) *
-+	       dirty->num_subres);
-+
-+	return 0;
-+}
-+
-+/*
-+ * vmw_surface_dirty_alloc - The surface's dirty_alloc callback.
-+ */
-+static int vmw_surface_dirty_alloc(struct vmw_resource *res)
-+{
-+	struct vmw_surface *srf = vmw_res_to_srf(res);
-+	struct vmw_surface_dirty *dirty;
-+	u32 num_layers = 1;
-+	u32 num_mip;
-+	u32 num_subres;
-+	u32 num_samples;
-+	size_t dirty_size, acc_size;
-+	static struct ttm_operation_ctx ctx = {
-+		.interruptible = false,
-+		.no_wait_gpu = false
-+	};
-+	int ret;
-+
-+	if (srf->array_size)
-+		num_layers = srf->array_size;
-+	else if (srf->flags & SVGA3D_SURFACE_CUBEMAP)
-+		num_layers *= SVGA3D_MAX_SURFACE_FACES;
-+
-+	num_mip = srf->mip_levels[0];
-+	if (!num_mip)
-+		num_mip = 1;
-+
-+	num_subres = num_layers * num_mip;
-+	dirty_size = sizeof(*dirty) + num_subres * sizeof(dirty->boxes[0]);
-+	acc_size = ttm_round_pot(dirty_size);
-+	ret = ttm_mem_global_alloc(vmw_mem_glob(res->dev_priv),
-+				   acc_size, &ctx);
-+	if (ret) {
-+		VMW_DEBUG_USER("Out of graphics memory for surface "
-+			       "dirty tracker.\n");
-+		return ret;
-+	}
-+
-+	dirty = kvzalloc(dirty_size, GFP_KERNEL);
-+	if (!dirty) {
-+		ret = -ENOMEM;
-+		goto out_no_dirty;
-+	}
-+
-+	num_samples = max_t(u32, 1, srf->multisample_count);
-+	ret = svga3dsurface_setup_cache(&srf->base_size, srf->format, num_mip,
-+					num_layers, num_samples, &dirty->cache);
-+	if (ret)
-+		goto out_no_cache;
-+
-+	dirty->num_subres = num_subres;
-+	dirty->size = acc_size;
-+	res->dirty = (struct vmw_resource_dirty *) dirty;
-+
-+	return 0;
-+
-+out_no_cache:
-+	kvfree(dirty);
-+out_no_dirty:
-+	ttm_mem_global_free(vmw_mem_glob(res->dev_priv), acc_size);
-+	return ret;
-+}
-+
-+/*
-+ * vmw_surface_dirty_free - The surface's dirty_free callback
-+ */
-+static void vmw_surface_dirty_free(struct vmw_resource *res)
-+{
-+	struct vmw_surface_dirty *dirty =
-+		(struct vmw_surface_dirty *) res->dirty;
-+	size_t acc_size = dirty->size;
-+
-+	kvfree(dirty);
-+	ttm_mem_global_free(vmw_mem_glob(res->dev_priv), acc_size);
-+	res->dirty = NULL;
-+}
-+
-+/*
-+ * vmw_surface_clean - The surface's clean callback
-+ */
-+static int vmw_surface_clean(struct vmw_resource *res)
-+{
-+	struct vmw_private *dev_priv = res->dev_priv;
-+	size_t alloc_size;
-+	struct {
-+		SVGA3dCmdHeader header;
-+		SVGA3dCmdReadbackGBSurface body;
-+	} *cmd;
-+
-+	alloc_size = sizeof(*cmd);
-+	cmd = VMW_FIFO_RESERVE(dev_priv, alloc_size);
-+	if (!cmd)
-+		return -ENOMEM;
-+
-+	cmd->header.id = SVGA_3D_CMD_READBACK_GB_SURFACE;
-+	cmd->header.size = sizeof(cmd->body);
-+	cmd->body.sid = res->id;
-+	vmw_fifo_commit(dev_priv, alloc_size);
-+
-+	return 0;
-+}
-diff --git a/include/uapi/drm/vmwgfx_drm.h b/include/uapi/drm/vmwgfx_drm.h
-index 399f58317cff..02cab33f2f25 100644
---- a/include/uapi/drm/vmwgfx_drm.h
-+++ b/include/uapi/drm/vmwgfx_drm.h
-@@ -891,11 +891,13 @@ struct drm_vmw_shader_arg {
-  *                                      surface.
-  * @drm_vmw_surface_flag_create_buffer: Create a backup buffer if none is
-  *                                      given.
-+ * @drm_vmw_surface_flag_coherent:      Back surface with coherent memory.
-  */
- enum drm_vmw_surface_flags {
- 	drm_vmw_surface_flag_shareable = (1 << 0),
- 	drm_vmw_surface_flag_scanout = (1 << 1),
--	drm_vmw_surface_flag_create_buffer = (1 << 2)
-+	drm_vmw_surface_flag_create_buffer = (1 << 2),
-+	drm_vmw_surface_flag_coherent = (1 << 3),
- };
- 
- /**
--- 
-2.20.1
+On 09/09/2019 15:53, Mark Brown wrote:
+> On Mon, Sep 09, 2019 at 09:37:14AM +0200, Neil Armstrong wrote:
+>=20
+>> I'd like some review from ASoC people and other drm bridge reviewers,
+>> Jernej, Jonas & Andrzej.
+>=20
+>> Jonas could have some comments on the overall patchset.
+>=20
+> The ASoC bits look basically fine, I've gone ahead and applied
+> patch 1 as is since we're just before the merge window and that
+> way we reduce potential cross tree issues.  I know there's a lot
+> of discussion on the DRM side about how they want to handle
+> things with jacks, I'm not 100% sure what the latest thinking is
+> there.
+>=20
 
+Thanks Mark.
+
+
+Cheng-Yi can you resent this serie without the already applied
+first patch with Jernej, Jonas, and Jerome Brunet <jbrunet@baylibre.com> =
+CCed ?
+
+Thanks,
+Neil
+
+
+--rm5OjYgCDNiLh12bKFbv4tVbo1MJJOHLY--
+
+--UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEPVPGJshWBf4d9CyLd9zb2sjISdEFAl17YkkACgkQd9zb2sjI
+SdFL8xAAm/uVVOJY0VK0uVX/gv2nNJ+t90WPrW3BfoWCLRaSr1czldafQkylTwQl
+EOHl8NcYz5pttql0d1ZKh6uZSCTsMtWRb6Qwm14c3ptFaD9y1TI8X+R+zryTIgA5
+fuaLScVQ+kDpMwWYvZvVdWnu7/7Wdtj+uDNEooXlxeIvylxQzPYGQLcrdyZz54DZ
+vPl/scouuoKobHYXHw5AUs/ipsHUxcfD9wm+s4lrcIcE8FSjoVqbwZsonqDlHfOY
+lCykwi/sj2A567r0fL0Qipj4cqa5Zzvy955v0K5E1bHbTFs3I9kKsMsrLmYrpVB8
+pG+Tz31EKziArzadGNlxjjI6ViRQxwXAOPUfDZW7JFmWPD+aF2ZquQttp3GGlbwf
+9ndAcqd0yPqBaWwaPWAZJ/CbZiKPeDtAVcBtiR/pHYDUgMiDq88O3deynxUer4qw
+06IrtU9X8yn02vEh2L+6fLCG3NfMCUdyl4lRCmxSJ8K83pCOx1iMpcawEJq+xktX
+qvQVxXHrp1D5drRUA+87MDZmI5aQ/9HoYY+tIMTC21D7JFB/x2U6n0nFRyLi/muG
+gD0oD4cBhYhH+xJhKQeBmx+cA6xb90J4mfzFvpWvwDeGNsJJ+QaLGmdz9b50Aqd9
+XKP4tzxUvHbepIhN1NPCh1Xe2cU06KRt2S/ID9usnk2cnXoigUg=
+=JmCa
+-----END PGP SIGNATURE-----
+
+--UBRWlaGOHY0XEFVZVHxIrla091rV5aEyl--
