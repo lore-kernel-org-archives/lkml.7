@@ -2,243 +2,166 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE276C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B4EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA3E20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082FC21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yWIvAi71"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BFD10GXP";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AhKr7LpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403934AbfIMWPA (ORCPT
+        id S2403978AbfIMWPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:15:00 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35469 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390255AbfIMWPA (ORCPT
+        Fri, 13 Sep 2019 18:15:14 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:51031 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403947AbfIMWPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:15:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q22so23910486ljj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 15:14:58 -0700 (PDT)
+        Fri, 13 Sep 2019 18:15:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1568412911; x=1599948911;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=MG1P+wBKWo9wmYc6dAECd3FHMjDlfawVx0cq2A1BTik=;
+  b=BFD10GXPVSj0LSLgPRAfVfIUkhq/X3axkj9LgSX4uHwW0hahpxOBx+Uy
+   DZFamVN/3ZX+0JL7Z2tZRrQVlp+pyQZZIZ6h3seWHs88xQbIomAPsgSh4
+   2jGtellWKTZbO6v9Fx8kktr1/OFzI1kCoxc0IO4af6TveZze1lTh91Pfv
+   mP3csPrUOhu0SQdzuZIjP7st6GLCH7N23eXYan4aHyA5TIh77IbOmjZ6A
+   WhlCpN8UaO5EE2q6MtFyN4IDVf/tipTFlTHrLsNj9/41W0In9iXOY15zK
+   dwJpcDDaJ0u1q8kHico2St+BFeN09QiTA8oSZ4mb7Gg5Nvw0kvEzxaxmV
+   g==;
+IronPort-SDR: JwkE82/mk+HA++7V+dYuMiTGnHBti9nTUtFq7EPTlPaW0JrsiTu+NkMtdwJBCdY8E6BBav3Xjd
+ 0b0whhhd/7Ia8UJPN71MMejDXl0G6l+3Zv08redPKAIlsPvSnEOC0cl+Cf+xaTURQSJifoPofl
+ Shpkw58e2Xz8XZimhjDouxaBs//I2CbtuFhNN6F/U74G2T/1O6JMPeWbQfIbFUGzobduZUiVH+
+ O8GEHue7xDI1vLT7UhCNMg/1m+AIdpKC9/tgJddGn6LV5ZSrpKJxjhKJBiE2bXmyE+TaOV6xjX
+ yQI=
+X-IronPort-AV: E=Sophos;i="5.64,501,1559491200"; 
+   d="scan'208";a="122734184"
+Received: from mail-bn3nam01lp2057.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.57])
+  by ob1.hgst.iphmx.com with ESMTP; 14 Sep 2019 06:15:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IfM50pB5zpcI2fsiQLYmdzTZZHbtHDAwXYz76SLHiRs/npZ5T4aG01KXeT/1t+bev3nmYTwDmsdRSYHj38Ztf/OHVeIW+U8jEQOR0KfpMjbJt3NI9+BvDhZlP04sa6glDe00/R+sp31HHkKZbd5h7WiTV11tf3XFf84mkKY9v9UBAzbSHTzYiRC+3iiWHzLMqnC2IUypPEruYOdEipK1/fTk+uBUXLc8AapYG/OKv9wdxoOuSfzQ3/8q5ToHW+e6uNPQCTRoDIyTKsljIKjFudDXu+nAlFtC/6FVWh3EfWqAbfZn4t5U1ZPii1jj9mxODvzcryVdK72Op29mJRppjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sz3KTqsoPEwiEq6Eu2BNQEbzpfUgrHGRU9DjqbSeLWk=;
+ b=AoBJjUoRNyk2BbJ26hxB+LL67C7TtE9a3lyG4DioQ3gNJHdgAYldaK52Xx8x6efOh4c/ZAWq53btaU/ee+uBJEFtW8F+9JSQtVKqrl2lur26prrLoTAiF9C05Z+QGZhGoB+x92sJxD9Exzit7/2wKDeV/8r5gl7ILoTDCkl2MlvrdOrHUwRerH3NlO2ZJAvj2ie9dKhz9Z/dBafvAN5HE3jIVaAHRbN7A4ZraqtGbDor5y9hahbWFr7ZN/rmQsSL6WV1JzjVy97G36caA7ZkOkX6w0gLdkR7QbxFjzY+ELP/WyyQa+f2OA1wZNQV00kRYz5152g2JRoIELV0VtiLlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Aws4qLTU0wWFl3XhWF/GSUsHrXBVOSQQwQxzuiN2xN0=;
-        b=yWIvAi71EhlHzCIVwDfDDbPfCTzA3GqRJL4xVjp+4yE3LIJT4p9CeK76GSeSnFgn61
-         8ZxhkeHuWFqiKYjWJGaDOBOxfHgjQcvDCVbx3V9DbEuLBvZ2XI2FUMVmW04FvxOwVEZ5
-         aMg/9h9g9acJ0eSgOSpKg8+26ULeOyMbe6xYDa4+zXK1KotBl9WXbEkOYgaYMhhwHdQn
-         XAx7jn9seCLMHjGGywKuEPCGqoC8U8gG+wSXZWJgumcdffpaFX32soDlRa2lvh+VLjXQ
-         S8HLuTKqYa5hM7AMsI43M3KfqO2IJySOxGyjgfr2DTf8vuYsHCNSz/JeU24eIG67v/jx
-         T95g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Aws4qLTU0wWFl3XhWF/GSUsHrXBVOSQQwQxzuiN2xN0=;
-        b=pDb66o9cJqJg3gi4yMYAvQWqUyftvVywG+4Lg3mwWIr3sBS77Ju0Ush5QyL+sq8xcC
-         udsnSu4x2jzQcd1LUfM9pzehDGviHSPfyZ7R4UjPPjUyzXONEAcnJ4ySqTdXli/XuDQH
-         iaW2/hSHBsLdZbFfopOFT3c5wQ7UPwxT/GddBDEv9Gxfpdj2x6H/xFD8SQDQ1onqpJIr
-         nucwD1mTdTKYgFWWpIg5g4cwa40AOqjznWVxFVTaDlTeOwU3VglrEp7SGCPXvFQca6FT
-         Vh2yoQSDX3kHYxzv+Q5D8fgLAYB7UmCARk0B3T4EniKJdmOQEaVt2hPXO/bEaDWMjACH
-         e6PA==
-X-Gm-Message-State: APjAAAVgut9u7rosiBuJNa3Aj0ZAPkXFuoFTNYHzHkwTafCuORadULjV
-        hhDOI30zDgJEfiujWSdagQloeQ==
-X-Google-Smtp-Source: APXvYqwlnHCevB0S7cA0qpBG5jlZDBao84E1GD8LnJh21I2z6KDrBVlkh/b4zGUa95Y8PdeNBSN+Pg==
-X-Received: by 2002:a2e:3618:: with SMTP id d24mr30461361lja.179.1568412897370;
-        Fri, 13 Sep 2019 15:14:57 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id w13sm666947lfk.47.2019.09.13.15.14.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Sep 2019 15:14:56 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 01:14:54 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH bpf-next 07/11] samples: bpf: add makefile.prog for
- separate CC build
-Message-ID: <20190913221453.GD26724@khorivan>
-Mail-Followup-To: Yonghong Song <yhs@fb.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" <clang-built-linux@googlegroups.com>
-References: <20190910103830.20794-1-ivan.khoronzhuk@linaro.org>
- <20190910103830.20794-8-ivan.khoronzhuk@linaro.org>
- <1720c5a5-5c64-46a3-be2f-56b59614f82a@fb.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sz3KTqsoPEwiEq6Eu2BNQEbzpfUgrHGRU9DjqbSeLWk=;
+ b=AhKr7LpFkli3/+RBIpfo21YW6ycPEQZhOsNRx07cLL/cCDONiYFRJfA64Mh7q/prPSmEgjsDb6NDth/4kEl9FKGWgOwOTLDp145DA4Giw4Arg81o3CFUMg1ZZXA61qysr/4w9rdQjfzmEF7jSWCAntVmCAXvX+MhFOqrxQCfNQo=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
+ BYAPR04MB4294.namprd04.prod.outlook.com (52.135.204.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.20; Fri, 13 Sep 2019 22:15:07 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::6169:680:44fc:965d]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::6169:680:44fc:965d%6]) with mapi id 15.20.2263.018; Fri, 13 Sep 2019
+ 22:15:07 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     =?iso-8859-1?Q?Andr=E9_Almeida?= <andrealmeid@collabora.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "krisman@collabora.com" <krisman@collabora.com>
+Subject: Re: [PATCH v2 1/4] null_blk: do not fail the module load with zero
+ devices
+Thread-Topic: [PATCH v2 1/4] null_blk: do not fail the module load with zero
+ devices
+Thread-Index: AQHVan85AifiRz+yRUqzbl6jvX3qQA==
+Date:   Fri, 13 Sep 2019 22:15:07 +0000
+Message-ID: <BYAPR04MB5749CB3F25FC6F18C48C58F986B30@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20190913220300.422869-1-andrealmeid@collabora.com>
+ <20190913220300.422869-2-andrealmeid@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6bf5778f-d281-4ab6-6927-08d73897d60f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR04MB4294;
+x-ms-traffictypediagnostic: BYAPR04MB4294:
+x-microsoft-antispam-prvs: <BYAPR04MB42948DC98AA1404E422FB74886B30@BYAPR04MB4294.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(199004)(189003)(99286004)(478600001)(54906003)(110136005)(3846002)(229853002)(316002)(52536014)(9686003)(55016002)(7696005)(76176011)(86362001)(14454004)(6116002)(81166006)(81156014)(8936002)(5660300002)(4326008)(8676002)(33656002)(25786009)(71200400001)(71190400001)(53936002)(76116006)(476003)(6246003)(64756008)(2201001)(6436002)(66446008)(66066001)(2906002)(53546011)(14444005)(256004)(2501003)(102836004)(446003)(486006)(7736002)(66556008)(66946007)(66476007)(305945005)(6506007)(26005)(186003)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4294;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LmtYL3MEPdCeTiyKNFKQg/kJ0qT70zXISxnPU5t39CISLuJ+91j0Xw8+7awVg7w11pDP8oPU6LYohk7wMPMTvfQzG7QFj4O28BxyQufzvhnoyb6YZUQsCjk/5+BpfacjXERfkwhKpxsL47ysZlpxzscDDAU/rCKnb6wk7dAbKBG7UzgrTSBEAaVQqBH9r9B1Rlg4fErscTDxFJmGvLrP5yu/oG2ANm/EeAbYqDDq2sleyiKD8Z4fOBXkK5IYxBhIrw5560QJUjR99+mOtop7vK9wMo35c26iyz06F0e7IUYmQpgaW5MBGnLv6QIM/ff31O9xF4ebut4vGqfYujBfgwsD+SovmBO8efo0/sGTCTI36iUnf/8Er+lnln7o3n+uNeaz9qGuA3mTzazRjIFPgb4f2IXLBBQWgHe/m3ZAqCI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1720c5a5-5c64-46a3-be2f-56b59614f82a@fb.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf5778f-d281-4ab6-6927-08d73897d60f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 22:15:07.6167
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MSrzpxWctC6Cmazdd7JVGIxt+xPNunEk7FGq+H6E9D0R0EJpS/gwX5pdMj7XYu1sKmVaC9TENmDKOVilpDU1d0VVzsWVmsMXtKHO+jpEut4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 09:33:58PM +0000, Yonghong Song wrote:
->
->
->On 9/10/19 11:38 AM, Ivan Khoronzhuk wrote:
->> The makefile.prog is added only, will be used in sample/bpf/Makefile
->> later in order to switch cross-compiling on CC from HOSTCC.
->>
->> The HOSTCC is supposed to build binaries and tools running on the host
->> afterwards, in order to simplify build or so, like "fixdep" or else.
->> In case of cross compiling "fixdep" is executed on host when the rest
->> samples should run on target arch. In order to build binaries for
->> target arch with CC and tools running on host with HOSTCC, lets add
->> Makefile.prog for simplicity, having definition and routines similar
->> to ones, used in script/Makefile.host. This allows later add
->> cross-compilation to samples/bpf with minimum changes.
->
->So this is really Makefile.host or Makefile.user, right?
-It's cut and modified version of Makefile.host
-
->In BPF, 'prog' can refers to user prog or bpf prog.
->To avoid ambiguity, maybe Makefile.host?
-Makefile.target? as target = host not always.
-Makefile.user also looks ok, but doesn't contain target,
-maybe "targetuser", but bpf is also target...
-Initially I was thinking about Makefile.targetprog, but it looks too long.
-
->
->>
->> Makefile.prog contains only stuff needed for samples/bpf, potentially
->> can be reused and extended for other prog sets later and now needed
->
->What do you mean 'extended for other prog sets'? I am wondering whether
-Another kind of samples...with c++ for instance.
-
->we could just include 'scripts/Makefile.host'? How hard it is?
-It's bound to HOSTCC and it's environment. It is included by default and
-was used before this patchset, blocking cross complication.
-
->
->> only for unblocking tricky samples/bpf cross compilation.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>   samples/bpf/Makefile.prog | 77 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 77 insertions(+)
->>   create mode 100644 samples/bpf/Makefile.prog
->>
->> diff --git a/samples/bpf/Makefile.prog b/samples/bpf/Makefile.prog
->> new file mode 100644
->> index 000000000000..3781999b9193
->> --- /dev/null
->> +++ b/samples/bpf/Makefile.prog
->> @@ -0,0 +1,77 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# ==========================================================================
->> +# Building binaries on the host system
->> +# Binaries are not used during the compilation of the kernel, and intendent
->> +# to be build for target board, target board can be host ofc. Added to build
->> +# binaries to run not on host system.
->> +#
->> +# Only C is supported, but can be extended for C++.
->
->The above comment is not needed.
-will drop it.
-
->samples/bpf/ only have C now. I am wondering whether your below scripts
->can be simplified, e.g., removing cxxobjs.
-I think yes, will try
-
->
->> +#
->> +# Sample syntax (see Documentation/kbuild/makefiles.rst for reference)
->> +# progs-y := xsk_example
->> +# Will compile xdpsock_example.c and create an executable named xsk_example
->> +#
->> +# progs-y    := xdpsock
->> +# xdpsock-objs := xdpsock_1.o xdpsock_2.o
->> +# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
->> +# xdpsock, based on xdpsock_1.o and xdpsock_2.o
->> +#
->> +# Inherited from scripts/Makefile.host
->> +#
->> +__progs := $(sort $(progs-y))
->> +
->> +# C code
->> +# Executables compiled from a single .c file
->> +prog-csingle	:= $(foreach m,$(__progs), \
->> +			$(if $($(m)-objs)$($(m)-cxxobjs),,$(m)))
->> +
->> +# C executables linked based on several .o files
->> +prog-cmulti	:= $(foreach m,$(__progs),\
->> +		   $(if $($(m)-cxxobjs),,$(if $($(m)-objs),$(m))))
->> +
->> +# Object (.o) files compiled from .c files
->> +prog-cobjs	:= $(sort $(foreach m,$(__progs),$($(m)-objs)))
->> +
->> +prog-csingle	:= $(addprefix $(obj)/,$(prog-csingle))
->> +prog-cmulti	:= $(addprefix $(obj)/,$(prog-cmulti))
->> +prog-cobjs	:= $(addprefix $(obj)/,$(prog-cobjs))
->> +
->> +#####
->> +# Handle options to gcc. Support building with separate output directory
->> +
->> +_progc_flags   = $(PROGS_CFLAGS) \
->> +                 $(PROGCFLAGS_$(basetarget).o)
->> +
->> +# $(objtree)/$(obj) for including generated headers from checkin source files
->> +ifeq ($(KBUILD_EXTMOD),)
->> +ifdef building_out_of_srctree
->> +_progc_flags   += -I $(objtree)/$(obj)
->> +endif
->> +endif
->> +
->> +progc_flags    = -Wp,-MD,$(depfile) $(_progc_flags)
->> +
->> +# Create executable from a single .c file
->> +# prog-csingle -> Executable
->> +quiet_cmd_prog-csingle 	= CC  $@
->> +      cmd_prog-csingle	= $(CC) $(progc_flags) $(PROGS_LDFLAGS) -o $@ $< \
->> +		$(PROGS_LDLIBS) $(PROGLDLIBS_$(@F))
->> +$(prog-csingle): $(obj)/%: $(src)/%.c FORCE
->> +	$(call if_changed_dep,prog-csingle)
->> +
->> +# Link an executable based on list of .o files, all plain c
->> +# prog-cmulti -> executable
->> +quiet_cmd_prog-cmulti	= LD  $@
->> +      cmd_prog-cmulti	= $(CC) $(progc_flags) $(PROGS_LDFLAGS) -o $@ \
->> +			  $(addprefix $(obj)/,$($(@F)-objs)) \
->> +			  $(PROGS_LDLIBS) $(PROGLDLIBS_$(@F))
->> +$(prog-cmulti): $(prog-cobjs) FORCE
->> +	$(call if_changed,prog-cmulti)
->> +$(call multi_depend, $(prog-cmulti), , -objs)
->> +
->> +# Create .o file from a single .c file
->> +# prog-cobjs -> .o
->> +quiet_cmd_prog-cobjs	= CC  $@
->> +      cmd_prog-cobjs	= $(CC) $(progc_flags) -c -o $@ $<
->> +$(prog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
->> +	$(call if_changed_dep,prog-cobjs)
->>
-
--- 
-Regards,
-Ivan Khoronzhuk
+Looks good.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
+On 09/13/2019 03:04 PM, Andr=E9 Almeida wrote:=0A=
+> The module load should fail only if there is something wrong with the=0A=
+> configuration or if an error prevents it to work properly. The module=0A=
+> should be able to be loaded with (nr_device =3D=3D 0), since it will not=
+=0A=
+> trigger errors or be in malfunction state. Preventing loading with zero=
+=0A=
+> devices also breaks applications that configures this module using=0A=
+> configfs API. Remove the nr_device check to fix this.=0A=
+>=0A=
+> Signed-off-by: Andr=E9 Almeida <andrealmeid@collabora.com>=0A=
+> Fixes: f7c4ce890dd2 ("null_blk: validate the number of devices")=0A=
+> ---=0A=
+> Changes since v1:=0A=
+> - None=0A=
+> ---=0A=
+>   drivers/block/null_blk_main.c | 4 ----=0A=
+>   1 file changed, 4 deletions(-)=0A=
+>=0A=
+> diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.=
+c=0A=
+> index ab4b87677139..be32cb5ed339 100644=0A=
+> --- a/drivers/block/null_blk_main.c=0A=
+> +++ b/drivers/block/null_blk_main.c=0A=
+> @@ -1758,10 +1758,6 @@ static int __init null_init(void)=0A=
+>   		pr_err("null_blk: legacy IO path no longer available\n");=0A=
+>   		return -EINVAL;=0A=
+>   	}=0A=
+> -	if (!nr_devices) {=0A=
+> -		pr_err("null_blk: invalid number of devices\n");=0A=
+> -		return -EINVAL;=0A=
+> -	}=0A=
+>   	if (g_queue_mode =3D=3D NULL_Q_MQ && g_use_per_node_hctx) {=0A=
+>   		if (g_submit_queues !=3D nr_online_nodes) {=0A=
+>   			pr_warn("null_blk: submit_queues param is set to %u.\n",=0A=
+>=0A=
+=0A=
