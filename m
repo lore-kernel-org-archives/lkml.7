@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970B6C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E0C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7E0206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26AC20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381003;
-	bh=1KYHGBqfweu0I1NPQIQ0A4U12D3zB+VEp+7ZzFnXOwQ=;
+	s=default; t=1568381011;
+	bh=Zop4+s4luVAimXt+InNTc/XmzvttpS21f21hxI/OF6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnAE+Dk4dAHdYzyeHNJU/elq57PIXeIHE6VkTO8fqrIwW0Ke2a66D5ZccMyKzdWtT
-	 1FHpERgQUsCKchZZAAblsXVNaKVxCzchcSJ5QeaftKLhDN7RLcFYTVyv+xsIU8Bdm2
-	 USU3wmVXXiOFmZw2lQOJTy21afzQGMpJCiJiUWeQ=
+	b=DTYftpkVD39UxaQ3xJX4l8U9Q+DEFgeh2KGw2vFoFuBGI/FVjAmqA5l/cjZ3CzNfj
+	 5GVg8zpP7xlBSn9hf3c4b5jHcX0jqMv7032+VPBHA7OzYiFlHC+3D69fpuJw/JLyol
+	 dI+rlb4qfrx93IdR6ZppXu4hJOy0nhusvasBJJn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391086AbfIMNXW (ORCPT
+        id S2390767AbfIMNVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50980 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390808AbfIMNVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:21:24 -0400
+        id S2390755AbfIMNVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:10 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4B03206BB;
-        Fri, 13 Sep 2019 13:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C930214DA;
+        Fri, 13 Sep 2019 13:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380883;
-        bh=1KYHGBqfweu0I1NPQIQ0A4U12D3zB+VEp+7ZzFnXOwQ=;
+        s=default; t=1568380869;
+        bh=Zop4+s4luVAimXt+InNTc/XmzvttpS21f21hxI/OF6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=okc85UCwLXL2tuwj1SKLUME/nE9LosYJqZOt1xxaOwPhn/32qgfDNCkmVgZ946YtO
-         Oa6SXU6GgyAKGqr7B6PZT1xGORidUHWFQJDzMFvVXy/44K124M+f1PrdLUxkl2I6hX
-         TkFIhq/aS69/B6929ZPD4wOzmtOQNkCFz2IT/+SM=
+        b=Y2fiHs07SZOusPQUubc9hgC+uyrAEVNAa5nUkrZxwPB31IOAOSSMMxrIoNc3rqZ4T
+         ZepcUCWeKN4WD0VbNRK+VXQ88C0qNOg6ib3Kwo+y8inrh49df+W75k0Sbo1JzBhdeO
+         mDOIbXORkzRdef3+9wwP3svqmcU1/v6WYZmE4kZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liangyan <liangyan.peng@linux.alibaba.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ben Segall <bsegall@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.2 08/37] sched/fair: Dont assign runtime for throttled cfs_rq
-Date:   Fri, 13 Sep 2019 14:07:13 +0100
-Message-Id: <20190913130513.061588463@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 5.2 17/37] batman-adv: Only read OGM tvlv_len after buffer len check
+Date:   Fri, 13 Sep 2019 14:07:22 +0100
+Message-Id: <20190913130518.242128562@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 References: <20190913130510.727515099@linuxfoundation.org>
@@ -65,73 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liangyan <liangyan.peng@linux.alibaba.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 5e2d2cc2588bd3307ce3937acbc2ed03c830a861 upstream.
+commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
 
-do_sched_cfs_period_timer() will refill cfs_b runtime and call
-distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
-will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
-attached to this cfs_b can't get runtime and will be throttled.
+Multiple batadv_ogm_packet can be stored in an skbuff. The functions
+batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
+batadv_iv_ogm_aggr_packet() to check if there is another additional
+batadv_ogm_packet in the skb or not before they continue processing the
+packet.
 
-We find that one throttled cfs_rq has non-negative
-cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
-in snippet:
+The length for such an OGM is BATADV_OGM_HLEN +
+batadv_ogm_packet->tvlv_len. The check must first check that at least
+BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
 
-  distribute_cfs_runtime() {
-    runtime = -cfs_rq->runtime_remaining + 1;
-  }
-
-The runtime here will change to a large number and consume all
-cfs_b->runtime in this cfs_b period.
-
-According to Ben Segall, the throttled cfs_rq can have
-account_cfs_rq_runtime called on it because it is throttled before
-idle_balance, and the idle_balance calls update_rq_clock to add time
-that is accounted to the task.
-
-This commit prevents cfs_rq to be assgined new runtime if it has been
-throttled until that distribute_cfs_runtime is called.
-
-Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: shanpeic@linux.alibaba.com
-Cc: stable@vger.kernel.org
-Cc: xlpang@linux.alibaba.com
-Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
-Link: https://lkml.kernel.org/r/20190826121633.6538-1-liangyan.peng@linux.alibaba.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/batman-adv/bat_iv_ogm.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4449,6 +4449,8 @@ static void __account_cfs_rq_runtime(str
- 	if (likely(cfs_rq->runtime_remaining > 0))
- 		return;
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -277,17 +277,23 @@ static u8 batadv_hop_penalty(u8 tq, cons
+  * batadv_iv_ogm_aggr_packet() - checks if there is another OGM attached
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm_packet: potential OGM in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+-				      __be16 tvlv_len)
++static bool
++batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
++			  const struct batadv_ogm_packet *ogm_packet)
+ {
+ 	int next_buff_pos = 0;
  
-+	if (cfs_rq->throttled)
-+		return;
- 	/*
- 	 * if we're unable to extend our runtime we resched so that the active
- 	 * hierarchy can be throttled
-@@ -4652,6 +4654,9 @@ static u64 distribute_cfs_runtime(struct
- 		if (!cfs_rq_throttled(cfs_rq))
- 			goto next;
- 
-+		/* By the above check, this should never be true */
-+		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
+-	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm_packet);
++	if (next_buff_pos > packet_len)
++		return false;
 +
- 		runtime = -cfs_rq->runtime_remaining + 1;
- 		if (runtime > remaining)
- 			runtime = remaining;
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm_packet->tvlv_len);
+ 
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -315,7 +321,7 @@ static void batadv_iv_ogm_send_to_if(str
+ 
+ 	/* adjust all flags and log packets */
+ 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
+-					 batadv_ogm_packet->tvlv_len)) {
++					 batadv_ogm_packet)) {
+ 		/* we might have aggregated direct link packets with an
+ 		 * ordinary base packet
+ 		 */
+@@ -1704,7 +1710,7 @@ static int batadv_iv_ogm_receive(struct
+ 
+ 	/* unpack the aggregated packets and process them one by one */
+ 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					 ogm_packet->tvlv_len)) {
++					 ogm_packet)) {
+ 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM_HLEN;
 
 
