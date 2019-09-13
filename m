@@ -2,435 +2,194 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D0EC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39C4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B39206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq9PgN08"
+	by mail.kernel.org (Postfix) with ESMTP id 89A05206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387891AbfIMNC0 (ORCPT
+        id S2388120AbfIMNCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:02:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35427 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729766AbfIMNCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:02:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g7so32097049wrx.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 06:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3YNYrt5WoFrAjUZSuJ0u/eOg7ac9WF6SCTbOe5yeLGU=;
-        b=oq9PgN088WSthzlGyJB7dWu7laU3xmTSGgol/mZmPkh1KWMlUnYZh95Toy5osHboA2
-         53TXEh7PX/QuVRGKcQhlRuxUmnLgYviZUK3eTPPQkd1dRPY2KDhCY5yz3WSLI1lBq7Vj
-         oeQByW/7jDphEbT8sjiGgLpp1KWPog1BAqzU/KjVcgUGQ3gsjdrSTdJ5nEZu3gzwoRVA
-         sV2EHbCuFQAZRUqjizjKntCzJy94LcpEn46x6rBIPGhq6Ovs80BzkN/MYdqjEw8ntqVE
-         abB7CqhkHwM2w4vxuOVHio8AOEn0BgxwkA3clXD0D1K4T49vAchs23Q8r0/7a+5Mz/wZ
-         DPFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3YNYrt5WoFrAjUZSuJ0u/eOg7ac9WF6SCTbOe5yeLGU=;
-        b=fST8TOXns5g13eWg7ZQQgCwmAp1aC82qMxH+/75I1xscSN87h2L3s/q29WJkb/TSrz
-         yqpkZBOlFnrA+2gEz4xmR/ogbuS3VZbTu1z0nl4W6rLc9WIBK1uXWrGPVcGlp7J3Vkw7
-         hH3WadAYbVh7OnolqpaTNuOUXYHdxG+DHjGNS/Hjpie7JHOEIzIbzQo8sXRKngpYsnd7
-         c+uQlgG+327QvOboWwipwnIIbUmd22rskLBRadNFCErD7UY6kQ1u3FKPmmRjmNPX9Cax
-         OYerPdZEzGlrxPj2fSh+Nxz8OMppWQqcYpagoYll35azitp1YZOr96AevlJL9+JvP2JT
-         2v+A==
-X-Gm-Message-State: APjAAAWwfQ8TAwFC0ooSyPHMPCEKprukcHq/YBx7GCdAYDkKyHhku8iX
-        PiIiWhs680yYZagFsHwIWDYm2k9MN3XcpIa/fTDXow==
-X-Google-Smtp-Source: APXvYqyMlAGkGCKgm3RDHEMg8TrqVOtDC00zKSV8tfBPp/eanovTd5QUbctelzX5NRyhKr5YioNMB00eC77i6XPN4pc=
-X-Received: by 2002:a5d:66cb:: with SMTP id k11mr7001773wrw.174.1568379741796;
- Fri, 13 Sep 2019 06:02:21 -0700 (PDT)
+        Fri, 13 Sep 2019 09:02:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49806 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387896AbfIMNCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:02:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9BC84AF16;
+        Fri, 13 Sep 2019 13:02:29 +0000 (UTC)
+Subject: Re: [PATCH 5/8] drm/ttm: add drm_gem_ttm_mmap()
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-6-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <5a79a05f-5763-201a-86e8-bb298d4fe856@suse.de>
+Date:   Fri, 13 Sep 2019 15:02:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156712996407.1616117.11409311856083390862.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 13 Sep 2019 14:02:00 +0100
-Message-ID: <CAKv+Gu-UK75nCreZb=v7PQne4Ay25B7oRAeRg4AB1XopYXt3Cg@mail.gmail.com>
-Subject: Re: [PATCH v5 05/10] x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190913122908.784-6-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="r7A6mzK88xHtMrD6GleUoiZYdW0TXdMbH"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019 at 03:07, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Given that EFI_MEMORY_SP is platform BIOS policy descision for marking
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--r7A6mzK88xHtMrD6GleUoiZYdW0TXdMbH
+Content-Type: multipart/mixed; boundary="zxSGjltxhKEdh4LB9qpYhjbXfM4CinhIk";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ open list <linux-kernel@vger.kernel.org>
+Message-ID: <5a79a05f-5763-201a-86e8-bb298d4fe856@suse.de>
+Subject: Re: [PATCH 5/8] drm/ttm: add drm_gem_ttm_mmap()
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-6-kraxel@redhat.com>
+In-Reply-To: <20190913122908.784-6-kraxel@redhat.com>
 
-decision
+--zxSGjltxhKEdh4LB9qpYhjbXfM4CinhIk
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> memory ranges as "reserved for a specific purpose" there will inevitably
-> be scenarios where the BIOS omits the attribute in situations where it
-> is desired. Unlike other attributes if the OS wants to reserve this
-> memory from the kernel the reservation needs to happen early in init. So
-> early, in fact, that it needs to happen before e820__memblock_setup()
-> which is a pre-requisite for efi_fake_memmap() that wants to allocate
-> memory for the updated table.
->
-> Introduce an x86 specific efi_fake_memmap_early() that can search for
-> attempts to set EFI_MEMORY_SP via efi_fake_mem and update the e820 table
-> accordingly.
->
+Hi
 
-Is this early enough? The EFI stub runs before this, and allocates
-memory as well.
-
-> The KASLR code that scans the command line looking for user-directed
-> memory reservations also needs to be updated to consider
-> "efi_fake_mem=nn@ss:0x40000" requests.
->
-> Cc: <x86@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Am 13.09.19 um 14:29 schrieb Gerd Hoffmann:
+> Add helper function to mmap ttm bo's using &drm_gem_object_funcs.mmap()=
+=2E
+>=20
+> Note that with this code path access verification is done by
+> drm_gem_mmap() (which calls drm_vma_node_is_allowed(()).
+> The &ttm_bo_driver.verify_access() callback is is not used.
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > ---
->  arch/x86/boot/compressed/kaslr.c    |   46 ++++++++++++++++++++---
->  arch/x86/include/asm/efi.h          |    8 ++++
->  arch/x86/platform/efi/efi.c         |    2 +
->  drivers/firmware/efi/Makefile       |    5 ++-
->  drivers/firmware/efi/fake_mem.c     |   24 ++++++------
->  drivers/firmware/efi/fake_mem.h     |   10 +++++
->  drivers/firmware/efi/x86-fake_mem.c |   69 +++++++++++++++++++++++++++++++++++
->  7 files changed, 143 insertions(+), 21 deletions(-)
->  create mode 100644 drivers/firmware/efi/fake_mem.h
->  create mode 100644 drivers/firmware/efi/x86-fake_mem.c
->
-> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> index 093e84e28b7a..53ed3991f9a8 100644
-> --- a/arch/x86/boot/compressed/kaslr.c
-> +++ b/arch/x86/boot/compressed/kaslr.c
-> @@ -133,8 +133,14 @@ char *skip_spaces(const char *str)
->  #include "../../../../lib/ctype.c"
->  #include "../../../../lib/cmdline.c"
->
-> +enum parse_mode {
-> +       PARSE_MEMMAP,
-> +       PARSE_EFI,
-> +};
-> +
->  static int
-> -parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
-> +parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
-> +               enum parse_mode mode)
->  {
->         char *oldp;
->
-> @@ -157,8 +163,33 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
->                 *start = memparse(p + 1, &p);
->                 return 0;
->         case '@':
-> -               /* memmap=nn@ss specifies usable region, should be skipped */
-> -               *size = 0;
-> +               if (mode == PARSE_MEMMAP) {
-> +                       /*
-> +                        * memmap=nn@ss specifies usable region, should
-> +                        * be skipped
-> +                        */
-> +                       *size = 0;
-> +               } else {
-> +                       unsigned long long flags;
-> +
-> +                       /*
-> +                        * efi_fake_mem=nn@ss:attr the attr specifies
-> +                        * flags that might imply a soft-reservation.
-> +                        */
-> +                       *start = memparse(p + 1, &p);
-> +                       if (p && *p == ':') {
-> +                               p++;
-> +                               oldp = p;
-> +                               flags = simple_strtoull(p, &p, 0);
-> +                               if (p == oldp)
-> +                                       *size = 0;
-> +                               else if (flags & EFI_MEMORY_SP)
-> +                                       return 0;
-> +                               else
-> +                                       *size = 0;
-> +                       } else
-> +                               *size = 0;
-> +               }
->                 /* Fall through */
->         default:
->                 /*
-> @@ -173,7 +204,7 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
->         return -EINVAL;
+>  include/drm/drm_gem_ttm_helper.h     |  2 ++
+>  drivers/gpu/drm/drm_gem_ttm_helper.c | 19 +++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+>=20
+> diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm=
+_helper.h
+> index 6268f89c5a48..118cef76f84f 100644
+> --- a/include/drm/drm_gem_ttm_helper.h
+> +++ b/include/drm/drm_gem_ttm_helper.h
+> @@ -15,5 +15,7 @@
+> =20
+>  void drm_gem_ttm_print_info(struct drm_printer *p, unsigned int indent=
+,
+>  			    const struct drm_gem_object *gem);
+> +int drm_gem_ttm_mmap(struct drm_gem_object *gem,
+> +		     struct vm_area_struct *vma);
+> =20
+>  #endif
+> diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm=
+_gem_ttm_helper.c
+> index 9a4bafcf20df..34ce6cf78b35 100644
+> --- a/drivers/gpu/drm/drm_gem_ttm_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
+> @@ -52,5 +52,24 @@ void drm_gem_ttm_print_info(struct drm_printer *p, u=
+nsigned int indent,
 >  }
->
-> -static void mem_avoid_memmap(char *str)
-> +static void mem_avoid_memmap(enum parse_mode mode, char *str)
->  {
->         static int i;
->
-> @@ -188,7 +219,7 @@ static void mem_avoid_memmap(char *str)
->                 if (k)
->                         *k++ = 0;
->
-> -               rc = parse_memmap(str, &start, &size);
-> +               rc = parse_memmap(str, &start, &size, mode);
->                 if (rc < 0)
->                         break;
->                 str = k;
-> @@ -239,7 +270,6 @@ static void parse_gb_huge_pages(char *param, char *val)
->         }
->  }
->
-> -
->  static void handle_mem_options(void)
->  {
->         char *args = (char *)get_cmd_line_ptr();
-> @@ -272,7 +302,7 @@ static void handle_mem_options(void)
->                 }
->
->                 if (!strcmp(param, "memmap")) {
-> -                       mem_avoid_memmap(val);
-> +                       mem_avoid_memmap(PARSE_MEMMAP, val);
->                 } else if (strstr(param, "hugepages")) {
->                         parse_gb_huge_pages(param, val);
->                 } else if (!strcmp(param, "mem")) {
-> @@ -285,6 +315,8 @@ static void handle_mem_options(void)
->                                 goto out;
->
->                         mem_limit = mem_size;
-> +               } else if (!strcmp(param, "efi_fake_mem")) {
-> +                       mem_avoid_memmap(PARSE_EFI, val);
->                 }
->         }
->
-> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-> index 45f853bce869..d028e9acdf1c 100644
-> --- a/arch/x86/include/asm/efi.h
-> +++ b/arch/x86/include/asm/efi.h
-> @@ -263,4 +263,12 @@ static inline void efi_reserve_boot_services(void)
->  }
->  #endif /* CONFIG_EFI */
->
-> +#ifdef CONFIG_EFI_FAKE_MEMMAP
-> +extern void __init efi_fake_memmap_early(void);
-> +#else
-> +static inline void efi_fake_memmap_early(void)
+>  EXPORT_SYMBOL(drm_gem_ttm_print_info);
+> =20
+> +/**
+> + * drm_gem_ttm_mmap() - mmap &ttm_buffer_object
+> + * @gem: GEM object.
+> + * @vma: vm area.
+> + *
+> + * This function can be used as &drm_gem_object_funcs.mmap
+> + * callback.
+> + */
+> +int drm_gem_ttm_mmap(struct drm_gem_object *gem,
+> +		     struct vm_area_struct *vma)
 > +{
+> +	struct ttm_buffer_object *bo =3D drm_gem_ttm_of_gem(gem);
+> +
+> +	ttm_bo_get(bo);
+> +	ttm_bo_mmap_vma_setup(bo, vma);
+> +	return 0;
 > +}
-> +#endif
+
+This function looks like ttm_fbdev_mmap(). Can you use that instead?
+
+Best regards
+Thomas
+
+> +EXPORT_SYMBOL(drm_gem_ttm_mmap);
 > +
->  #endif /* _ASM_X86_EFI_H */
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 9cfb7f1cf25d..ac63e244ae55 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -259,6 +259,8 @@ int __init efi_memblock_x86_reserve_range(void)
->                 do_add_efi_memmap(ADD_EFI_SOFT_RESERVED);
->         }
->
-> +       efi_fake_memmap_early();
-> +
->         WARN(efi.memmap.desc_version != 1,
->              "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
->              efi.memmap.desc_version);
-> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-> index 4ac2de4dfa72..d7a6db03ea79 100644
-> --- a/drivers/firmware/efi/Makefile
-> +++ b/drivers/firmware/efi/Makefile
-> @@ -20,13 +20,16 @@ obj-$(CONFIG_UEFI_CPER)                     += cper.o
->  obj-$(CONFIG_EFI_RUNTIME_MAP)          += runtime-map.o
->  obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)     += runtime-wrappers.o
->  obj-$(CONFIG_EFI_STUB)                 += libstub/
-> -obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_mem.o
-> +obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_map.o
->  obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)   += efibc.o
->  obj-$(CONFIG_EFI_TEST)                 += test/
->  obj-$(CONFIG_EFI_DEV_PATH_PARSER)      += dev-path-parser.o
->  obj-$(CONFIG_APPLE_PROPERTIES)         += apple-properties.o
->  obj-$(CONFIG_EFI_RCI2_TABLE)           += rci2-table.o
->
-> +fake_map-y                             += fake_mem.o
-> +fake_map-$(CONFIG_X86)                 += x86-fake_mem.o
-> +
->  arm-obj-$(CONFIG_EFI)                  := arm-init.o arm-runtime.o
->  obj-$(CONFIG_ARM)                      += $(arm-obj-y)
->  obj-$(CONFIG_ARM64)                    += $(arm-obj-y)
-> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> index 526b45331d96..bb9fc70d0cfa 100644
-> --- a/drivers/firmware/efi/fake_mem.c
-> +++ b/drivers/firmware/efi/fake_mem.c
-> @@ -17,12 +17,10 @@
->  #include <linux/memblock.h>
->  #include <linux/types.h>
->  #include <linux/sort.h>
-> -#include <asm/efi.h>
-> +#include "fake_mem.h"
->
-> -#define EFI_MAX_FAKEMEM CONFIG_EFI_MAX_FAKE_MEM
-> -
-> -static struct efi_mem_range fake_mems[EFI_MAX_FAKEMEM];
-> -static int nr_fake_mem;
-> +struct efi_mem_range efi_fake_mems[EFI_MAX_FAKEMEM];
-> +int nr_fake_mem;
->
->  static int __init cmp_fake_mem(const void *x1, const void *x2)
->  {
-> @@ -50,7 +48,7 @@ void __init efi_fake_memmap(void)
->         /* count up the number of EFI memory descriptor */
->         for (i = 0; i < nr_fake_mem; i++) {
->                 for_each_efi_memory_desc(md) {
-> -                       struct range *r = &fake_mems[i].range;
-> +                       struct range *r = &efi_fake_mems[i].range;
->
->                         new_nr_map += efi_memmap_split_count(md, r);
->                 }
-> @@ -70,7 +68,7 @@ void __init efi_fake_memmap(void)
->         }
->
->         for (i = 0; i < nr_fake_mem; i++)
-> -               efi_memmap_insert(&efi.memmap, new_memmap, &fake_mems[i]);
-> +               efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
->
->         /* swap into new EFI memmap */
->         early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
-> @@ -104,22 +102,22 @@ static int __init setup_fake_mem(char *p)
->                 if (nr_fake_mem >= EFI_MAX_FAKEMEM)
->                         break;
->
-> -               fake_mems[nr_fake_mem].range.start = start;
-> -               fake_mems[nr_fake_mem].range.end = start + mem_size - 1;
-> -               fake_mems[nr_fake_mem].attribute = attribute;
-> +               efi_fake_mems[nr_fake_mem].range.start = start;
-> +               efi_fake_mems[nr_fake_mem].range.end = start + mem_size - 1;
-> +               efi_fake_mems[nr_fake_mem].attribute = attribute;
->                 nr_fake_mem++;
->
->                 if (*p == ',')
->                         p++;
->         }
->
-> -       sort(fake_mems, nr_fake_mem, sizeof(struct efi_mem_range),
-> +       sort(efi_fake_mems, nr_fake_mem, sizeof(struct efi_mem_range),
->              cmp_fake_mem, NULL);
->
->         for (i = 0; i < nr_fake_mem; i++)
->                 pr_info("efi_fake_mem: add attr=0x%016llx to [mem 0x%016llx-0x%016llx]",
-> -                       fake_mems[i].attribute, fake_mems[i].range.start,
-> -                       fake_mems[i].range.end);
-> +                       efi_fake_mems[i].attribute, efi_fake_mems[i].range.start,
-> +                       efi_fake_mems[i].range.end);
->
->         return *p == '\0' ? 0 : -EINVAL;
->  }
-> diff --git a/drivers/firmware/efi/fake_mem.h b/drivers/firmware/efi/fake_mem.h
-> new file mode 100644
-> index 000000000000..0390be13df96
-> --- /dev/null
-> +++ b/drivers/firmware/efi/fake_mem.h
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef __EFI_FAKE_MEM_H__
-> +#define __EFI_FAKE_MEM_H__
-> +#include <asm/efi.h>
-> +
-> +#define EFI_MAX_FAKEMEM CONFIG_EFI_MAX_FAKE_MEM
-> +
-> +extern struct efi_mem_range efi_fake_mems[EFI_MAX_FAKEMEM];
-> +extern int nr_fake_mem;
-> +#endif /* __EFI_FAKE_MEM_H__ */
-> diff --git a/drivers/firmware/efi/x86-fake_mem.c b/drivers/firmware/efi/x86-fake_mem.c
-> new file mode 100644
-> index 000000000000..8c369555dafe
-> --- /dev/null
-> +++ b/drivers/firmware/efi/x86-fake_mem.c
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2019 Intel Corporation. All rights reserved. */
-> +#include <linux/efi.h>
-> +#include <asm/e820/api.h>
-> +#include "fake_mem.h"
-> +
-> +void __init efi_fake_memmap_early(void)
-> +{
-> +       int i;
-> +
-> +       /*
-> +        * efi_fake_mem() can handle all possibilities if EFI_MEMORY_SP
-> +        * is ignored.
-> +        */
-> +       if (!efi_enabled(EFI_MEM_SOFT_RESERVE))
-> +               return;
-> +
-> +       if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
-> +               return;
-> +
-> +       /*
-> +        * Given that efi_fake_memmap() needs to perform memblock
-> +        * allocations it needs to run after e820__memblock_setup().
-> +        * However, if efi_fake_mem specifies EFI_MEMORY_SP for a given
-> +        * address range that potentially needs to mark the memory as
-> +        * reserved prior to e820__memblock_setup(). Update e820
-> +        * directly if EFI_MEMORY_SP is specified for an
-> +        * EFI_CONVENTIONAL_MEMORY descriptor.
-> +        */
-> +       for (i = 0; i < nr_fake_mem; i++) {
-> +               struct efi_mem_range *mem = &efi_fake_mems[i];
-> +               efi_memory_desc_t *md;
-> +               u64 m_start, m_end;
-> +
-> +               if ((mem->attribute & EFI_MEMORY_SP) == 0)
-> +                       continue;
-> +
-> +               m_start = mem->range.start;
-> +               m_end = mem->range.end;
-> +               for_each_efi_memory_desc(md) {
-> +                       u64 start, end;
-> +
-> +                       if (md->type != EFI_CONVENTIONAL_MEMORY)
-> +                               continue;
-> +
-> +                       start = md->phys_addr;
-> +                       end = md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
-> +
-> +                       if (m_start <= end && m_end >= start)
-> +                               /* fake range overlaps descriptor */;
-> +                       else
-> +                               continue;
-> +
-> +                       /*
-> +                        * Trim the boundary of the e820 update to the
-> +                        * descriptor in case the fake range overlaps
-> +                        * !EFI_CONVENTIONAL_MEMORY
-> +                        */
-> +                       start = max(start, m_start);
-> +                       end = min(end, m_end);
-> +
-> +                       if (end <= start)
-> +                               continue;
-> +                       e820__range_update(start, end - start + 1, E820_TYPE_RAM,
-> +                                       E820_TYPE_SOFT_RESERVED);
-> +                       e820__update_table(e820_table);
-> +               }
-> +       }
-> +}
->
+>  MODULE_DESCRIPTION("DRM gem ttm helpers");
+>  MODULE_LICENSE("GPL");
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--zxSGjltxhKEdh4LB9qpYhjbXfM4CinhIk--
+
+--r7A6mzK88xHtMrD6GleUoiZYdW0TXdMbH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl17k2EACgkQaA3BHVML
+eiMm6wf/bhqpBDkcEtT0pJM60Ozya8mBpHEpStnL2vPMCYWX8gqkygxhiaT0bjy1
+EHb3axf107liHAyP/Lu7CSkejUuLbsMndfSUINvHPyj39GkeKKExjK3I4+Blsank
+6UbPsWZqY9DSj6FVVrD+0bFweu7xSAJjxzLivfU5s0AfGi7cAssw+BC1TIljAkXM
+czMlf5EI2gz01r9tk8Ih2BJdh/CzvExIq+tGWbl9K73ggFPd3LeDy0lA5JmmhnJp
+iRhSwmD1qyChng+zF3cLV1vQXqeEQsBFktpNOw6SRPqWJJzna00znhDM4b34r9tc
+kMEU+Vu3Tn6Yhx+PP8o7YKuXPk40EQ==
+=F607
+-----END PGP SIGNATURE-----
+
+--r7A6mzK88xHtMrD6GleUoiZYdW0TXdMbH--
