@@ -2,127 +2,167 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D07C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265AE20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905C92089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 07:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568360136;
+	bh=NDw2seXvTKUKS4QDL1x4GHhhgUj9AoFeWn8UAqZu18E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nd32lVnRkQTpU+tRlOF0v7ZugkvhZx9nK5qODJoezr828xpk0zvIa26sWEw8v0nD1
+	 c8h0O92TmhW7MM57yhi65rf6obmOXhZsn1Uxnkqxyl/CMOsXc2GDxy2z09EXPr6lWu
+	 94Z84yqwIPetHi1jHBDx54qt+C6/cN/YaSbZS7ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfIMHel (ORCPT
+        id S1728720AbfIMHff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 03:34:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48708 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbfIMHek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:34:40 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C37FA88307;
-        Fri, 13 Sep 2019 07:34:39 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-134.ams2.redhat.com [10.36.116.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A568A10016EA;
-        Fri, 13 Sep 2019 07:34:35 +0000 (UTC)
-Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
- KVM_S390_INTERRUPT ioctl
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190912090050.20295-1-thuth@redhat.com>
- <6905df78-95f0-3d6d-aaae-910cd2d7a232@redhat.com>
- <253e67f6-0a41-13e8-4ca2-c651d5fcdb69@redhat.com>
- <f9d07b66-a048-6626-e209-9fe455a2bed3@de.ibm.com>
- <239c8d0f-40fb-264a-bc10-445931a3cd9a@redhat.com>
- <20190913092030.373a9254.cohuck@redhat.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <ed0cf9eb-e3dc-f8d5-1eea-9034e5c0498d@redhat.com>
-Date:   Fri, 13 Sep 2019 09:34:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 03:35:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35101 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728666AbfIMHff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 03:35:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n10so1600229wmj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 00:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e9KqrpRewRK330rqZdSd9xo5DsZMlUgKKAeLiHEs+aY=;
+        b=pqGi7MpXngval3it54/qIEijJxSYP4A+8HAPW4TGVPJklPx4eJngR2MJEZE+kQZZEb
+         DDQ6M4gXrLuz/ffUMjB1Om+ibgocGvasGqq/we4hQ2VOQ+o9UUxRIH+ZtFSm5YGt76kQ
+         2MPUe7XC5ywBHR85bfL+Hdx08VEbo5M0vNo4uOhYaXCfY0bs0xYJe+AUVF573M+kNOjS
+         QNp3Bz+ZJ+G7efbTateZD29OTcAMu7wBXcbnaxAf6y7W7QsCL3FL2nCx3996eMo5+DCt
+         AUyIyDha0KQeJR4xaWo0ZNPZPpE/CPcrGNgK+s+mJqeOueY2EWmgc9FGTnuDMelbY0Zb
+         h+OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e9KqrpRewRK330rqZdSd9xo5DsZMlUgKKAeLiHEs+aY=;
+        b=Rl1MN4Zr2VpJ7Ik/6yeh9E6jGDAsc5g8qHSiDz91nqA/KEaa0Pzs336M86RvQl4pZj
+         H6DL9iZWM08Zl5qcuvbVPGwXByaONtpvFhcFPtP92xiR9YGSztzXG/ZN8vzYJwVJtpK0
+         OF5+wQFsPRjG4Y6EHwTmvTQllihpVwm6gxITYhW54H5t5pMNl2GDEKgRn8jezOY3i79P
+         m0mEaPKVgu6XBZ94Ax+4ZzV3cGvy2tcTeXd9cZI2pJPYL+ujstn3scLMbaq4GSUknNel
+         Cnt3nUARDObXJdJbRGpkJhuuphLEzqm4rvj3HKREGFOFOPmWeAYQg5D//FYMkCWvFa3v
+         2rQw==
+X-Gm-Message-State: APjAAAWJJI6FfNWnektKmaCLUw1Mjici71BIwit9JTBdDH8xAkwfdX3s
+        yPjlrZN9nND7W/HgtNpGwyk=
+X-Google-Smtp-Source: APXvYqxeWxznf3qz8ENEIFhXeqAgpe2VTZMkW6p1fJeT3D0sKQpnbvDmjHsvJmfCWAkdgqJrNMa/1A==
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr2212033wmo.142.1568360133199;
+        Fri, 13 Sep 2019 00:35:33 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id j26sm51088014wrd.2.2019.09.13.00.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 00:35:32 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 09:35:30 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86-ml <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Improve memset
+Message-ID: <20190913073530.GA125477@gmail.com>
+References: <20190913072237.GA12381@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190913092030.373a9254.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 13 Sep 2019 07:34:39 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913072237.GA12381@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/2019 09.20, Cornelia Huck wrote:
-> On Thu, 12 Sep 2019 13:23:38 +0200
-> Thomas Huth <thuth@redhat.com> wrote:
+
+* Borislav Petkov <bp@alien8.de> wrote:
+
+> Hi,
 > 
->> Hmm, we already talked about deprecating support for pre-3.15 kernel
->> stuff in the past (see
->> https://wiki.qemu.org/ChangeLog/2.12#Future_incompatible_changes for
->> example),
+> since the merge window is closing in and y'all are on a conference, I
+> thought I should take another stab at it. It being something which Ingo,
+> Linus and Peter have suggested in the past at least once.
 > 
-> Btw: did we ever do that? I don't quite recall what code we were
-> talking about...
+> Instead of calling memset:
+> 
+> ffffffff8100cd8d:       e8 0e 15 7a 00          callq  ffffffff817ae2a0 <__memset>
+> 
+> and having a JMP inside it depending on the feature supported, let's simply
+> have the REP; STOSB directly in the code:
+> 
+> ...
+> ffffffff81000442:       4c 89 d7                mov    %r10,%rdi
+> ffffffff81000445:       b9 00 10 00 00          mov    $0x1000,%ecx
+> 
+> <---- new memset
+> ffffffff8100044a:       f3 aa                   rep stos %al,%es:(%rdi)
+> ffffffff8100044c:       90                      nop
+> ffffffff8100044d:       90                      nop
+> ffffffff8100044e:       90                      nop
+> <----
+> 
+> ffffffff8100044f:       4c 8d 84 24 98 00 00    lea    0x98(%rsp),%r8
+> ffffffff81000456:       00
+> ...
+> 
+> And since the majority of x86 boxes out there is Intel, they haz
+> X86_FEATURE_ERMS so they won't even need to alternative-patch those call
+> sites when booting.
+> 
+> In order to patch on machines which don't set X86_FEATURE_ERMS, I need
+> to do a "reversed" patching of sorts, i.e., patch when the x86 feature
+> flag is NOT set. See the below changes in alternative.c which basically
+> add a flags field to struct alt_instr and thus control the patching
+> behavior in apply_alternatives().
+> 
+> The result is this:
+> 
+> static __always_inline void *memset(void *dest, int c, size_t n)
+> {
+>         void *ret, *dummy;
+> 
+>         asm volatile(ALTERNATIVE_2_REVERSE("rep; stosb",
+>                                            "call memset_rep",  X86_FEATURE_ERMS,
+>                                            "call memset_orig", X86_FEATURE_REP_GOOD)
+>                 : "=&D" (ret), "=a" (dummy)
+>                 : "0" (dest), "a" (c), "c" (n)
+>                 /* clobbers used by memset_orig() and memset_rep_good() */
+>                 : "rsi", "rdx", "r8", "r9", "memory");
+> 
+>         return dest;
+> }
+> 
+> and so in the !ERMS case, we patch in a call to the memset_rep() version
+> which is the old variant in memset_64.S. There we need to do some reg
+> shuffling because I need to map the registers from where REP; STOSB
+> expects them to where the x86_64 ABI wants them. Not a big deal - a push
+> and two moves and a pop at the end.
+> 
+> If X86_FEATURE_REP_GOOD is not set either, we fallback to another call
+> to the original unrolled memset.
+> 
+> The rest of the diff is me trying to untangle memset()'s definitions
+> from the early code too because we include kernel proper headers there
+> and all kinds of crazy include hell ensues but that later.
+> 
+> Anyway, this is just a pre-alpha version to get people's thoughts and
+> see whether I'm in the right direction or you guys might have better
+> ideas.
 
-We never really did - but we also never fixed the issue: If you run the
-current QEMU on a kernel before 3.15, it refuses to work due to the
-missing in-kernel FLIC device:
+That looks exciting - I'm wondering what effects this has on code 
+footprint - for example defconfig vmlinux code size, and what the average 
+per call site footprint impact is?
 
-Initialization of device s390-flic-kvm failed: KVM is missing capability
-KVM_CAP_DEVICE_CTR
+If the footprint effect is acceptable, then I'd expect this to improve 
+performance, especially in hot loops.
 
-Since nobody really complained so far that running QEMU with KVM is
-still required on a kernel < 3.15, I think we could make this also
-"official" now and improve the error message a little bit, pointing the
-user to a kernel >= 3.15.
+Thanks,
 
- Thomas
+	Ingo
