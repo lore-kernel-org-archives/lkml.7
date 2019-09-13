@@ -2,110 +2,259 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D2CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2164BC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E8221479
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA172206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 21:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWwJ61Tx"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="F1FuNFCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfIMVFN (ORCPT
+        id S2388202AbfIMVLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 17:05:13 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:37263 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIMVFN (ORCPT
+        Fri, 13 Sep 2019 17:11:31 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50638 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730990AbfIMVLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 17:05:13 -0400
-Received: by mail-wm1-f48.google.com with SMTP id r195so4145102wme.2;
-        Fri, 13 Sep 2019 14:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2DisDR/cJhM64R78LUA1TAvaEYUe5ftHQT+Ynd0imlo=;
-        b=BWwJ61TxX2jZxRKjKsHdxAuRqSXMAKi+BP5djX6lCCI4CTx3viCbHzwg7gvLT9gg+V
-         zoP8AL7WvxuKN0W/7l+VlyNCMWUC2d9K+3Od3V/XUmnC8d6+7J7XbQx/WS9UWTtcxfoR
-         ozVGPUT1esSZiJWobCSapv6x38//BorJXk0qkg7WCowdeblf3Kvs+1SzodHmSKhcVbkY
-         3LdUtdOSmqUt4TOLtB/qEPhM9Kx+LL6MsXBD0TE1Xcv2iJeVIMwRbDQRPvdCyi0hx5gN
-         ysXTZQYaqCUR+pkU1z20wkCWmMxbH5CMTrtKhPyZOSqdAcDxdu082jLHAj5dAlJbv7P4
-         4HbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2DisDR/cJhM64R78LUA1TAvaEYUe5ftHQT+Ynd0imlo=;
-        b=Y4oEStd/3Bx6G9cuhaYEW659x+8JU0qkxn21pKlaU7QfIY8opNvSpqSEGJuMF4b4xa
-         owgLk3aQHVG9YtR+95S0q8BNC4hojkBYFvViYFxDcASAUL18JlAUmUVCwaXADYb3f3wh
-         lwkVCZqKxEMLRUQvGZ+TcOcSZ6cdhyyhIHubrLA5fat36ejw980WWWTeqOmh/ZaTG/VI
-         R3DyfcZ09it52ur5h2NzEvi0N5OL13zDNtHqIHLJUod3Au46hnXzrB4H6JVXUl92DEHW
-         O9Atr+dxLs0bUFqfKMtSzCluHoYtLf/czZZroczwmUmJEXDzexxKLlg6H1AemNJgqKV8
-         vcgg==
-X-Gm-Message-State: APjAAAVpeuS3WE3hjNa16US41qmJGW+zDDvbk5lYRrznG100GGd8c/H7
-        2YQPG24L7M8xFRHa2b8hwjVQ/XRgv8GtU4fGZeM=
-X-Google-Smtp-Source: APXvYqzhhFfWlU3Qj+SLVwzrpNt0iJ1xPnhsEhUTCLbHzdPUlu+CvxRWW4hZ7r1L+sNOPXRvDPP5AXJ5MV+Q/BQE7MM=
-X-Received: by 2002:a05:600c:2308:: with SMTP id 8mr5184148wmo.67.1568408711053;
- Fri, 13 Sep 2019 14:05:11 -0700 (PDT)
+        Fri, 13 Sep 2019 17:11:30 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DL8pla028943
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:11:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=ckiRBeicPGISv0gecyDnhwKZLNjOoRIvQ7vcF+njPfc=;
+ b=F1FuNFCYHQsZ0MEtHKjaCgbnU+tFS20zFSSpm/3SdCOOhuO08pvP8p8pZOms2DYV1rXp
+ Y9hNpwLV9snYv4c4NanJyGK1qZ0Z7ggFxYwQeMQKsbSsQ0TEVrcjaCEFYE2ByJrwaYOX
+ 82HY32ZPceaYviiEbXA4PF8t0byxtEYdcco= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2uytd6nwvw-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 14:11:29 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 13 Sep 2019 14:11:26 -0700
+Received: by devbig059.prn3.facebook.com (Postfix, from userid 4924)
+        id 9E4731741979; Fri, 13 Sep 2019 14:11:25 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Lucian Adrian Grijincu <lucian@fb.com>
+Smtp-Origin-Hostname: devbig059.prn3.facebook.com
+To:     Lucian Adrian Grijincu <lucian@fb.com>, <linux-mm@kvack.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn3c05
+Subject: [PATCH v3] mm: memory: fix /proc/meminfo reporting for MLOCK_ONFAULT
+Date:   Fri, 13 Sep 2019 14:11:19 -0700
+Message-ID: <20190913211119.416168-1-lucian@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <1567491305-18320-1-git-send-email-zhongjiang@huawei.com>
- <62b33279-9ca9-5970-5336-a8511ce54197@web.de> <5D70A196.3020106@huawei.com>
- <dd351754-cb3a-b19a-64e1-f2f583c2a23a@web.de> <5D70CB7A.8040307@huawei.com>
-In-Reply-To: <5D70CB7A.8040307@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 13 Sep 2019 17:04:59 -0400
-Message-ID: <CADnq5_MH5HnfihRTBRHnSWRzDj5nu_8w0TWf82-999nKCa4wDQ@mail.gmail.com>
-Subject: Re: drm/amdgpu: remove the redundant null check
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        kernel-janitors@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-13_10:2019-09-11,2019-09-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=2
+ clxscore=1015 mlxscore=0 mlxlogscore=688 spamscore=0 impostorscore=0
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1909130211
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 3:01 AM zhong jiang <zhongjiang@huawei.com> wrote:
->
-> On 2019/9/5 16:38, Markus Elfring wrote:
-> >>> Were any source code analysis tools involved for finding
-> >>> these update candidates?
-> >> With the help of Coccinelle. You can find out some example in scripts/=
-coccinelle/.
-> > Thanks for such background information.
-> > Was the script =E2=80=9Cifnullfree.cocci=E2=80=9D applied here?
-> Yep
-> > Will it be helpful to add attribution for such tools
-> > to any more descriptions in your patches?
-> Sometimes, I will add the description in my patches. Not always.
+As pages are faulted in MLOCK_ONFAULT correctly updates
+/proc/self/smaps, but doesn't update /proc/meminfo's Mlocked field.
 
-Applied with some minor tweaks to the commit message.
+- Before this /proc/meminfo fields didn't change as pages were faulted in:
 
-Thanks!
+= Start =
+/proc/meminfo
+Unevictable:       10128 kB
+Mlocked:           10132 kB
+= Creating testfile =
 
-Alex
+= after mlock2(MLOCK_ONFAULT) =
+/proc/meminfo
+Unevictable:       10128 kB
+Mlocked:           10132 kB
+/proc/self/smaps
+7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+Locked:                0 kB
 
->
-> Thanks,
-> zhong jiang
-> > Regards,
-> > Markus
-> >
-> > .
-> >
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+= after reading half of the file =
+/proc/meminfo
+Unevictable:       10128 kB
+Mlocked:           10132 kB
+/proc/self/smaps
+7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+Locked:           524288 kB
+
+= after reading the entire the file =
+/proc/meminfo
+Unevictable:       10128 kB
+Mlocked:           10132 kB
+/proc/self/smaps
+7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+Locked:          1048576 kB
+
+= after munmap =
+/proc/meminfo
+Unevictable:       10128 kB
+Mlocked:           10132 kB
+/proc/self/smaps
+
+- After: /proc/meminfo fields are properly updated as pages are touched:
+
+= Start =
+/proc/meminfo
+Unevictable:          60 kB
+Mlocked:              60 kB
+= Creating testfile =
+
+= after mlock2(MLOCK_ONFAULT) =
+/proc/meminfo
+Unevictable:          60 kB
+Mlocked:              60 kB
+/proc/self/smaps
+7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+Locked:                0 kB
+
+= after reading half of the file =
+/proc/meminfo
+Unevictable:      524220 kB
+Mlocked:          524220 kB
+/proc/self/smaps
+7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+Locked:           524288 kB
+
+= after reading the entire the file =
+/proc/meminfo
+Unevictable:     1048496 kB
+Mlocked:         1048508 kB
+/proc/self/smaps
+7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+Locked:          1048576 kB
+
+= after munmap =
+/proc/meminfo
+Unevictable:         176 kB
+Mlocked:              60 kB
+/proc/self/smaps
+
+Repro code.
+---
+
+int mlock2wrap(const void* addr, size_t len, int flags) {
+  return syscall(SYS_mlock2, addr, len, flags);
+}
+
+void smaps() {
+  char smapscmd[1000];
+  snprintf(
+      smapscmd,
+      sizeof(smapscmd) - 1,
+      "grep testfile -A 20 /proc/%d/smaps | grep -E '(testfile|Locked)'",
+      getpid());
+  printf("/proc/self/smaps\n");
+  fflush(stdout);
+  system(smapscmd);
+}
+
+void meminfo() {
+  const char* meminfocmd = "grep -E '(Mlocked|Unevictable)' /proc/meminfo";
+  printf("/proc/meminfo\n");
+  fflush(stdout);
+  system(meminfocmd);
+}
+
+  {                                                 \
+    int rc = (call);                                \
+    if (rc != 0) {                                  \
+      printf("error %d %s\n", rc, strerror(errno)); \
+      exit(1);                                      \
+    }                                               \
+  }
+int main(int argc, char* argv[]) {
+  printf("= Start =\n");
+  meminfo();
+
+  printf("= Creating testfile =\n");
+  size_t size = 1 << 30; // 1 GiB
+  int fd = open("testfile", O_CREAT | O_RDWR, 0666);
+  {
+    void* buf = malloc(size);
+    write(fd, buf, size);
+    free(buf);
+  }
+  int ret = 0;
+  void* addr = NULL;
+  addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
+  if (argc > 1) {
+    PCHECK(mlock2wrap(addr, size, MLOCK_ONFAULT));
+    printf("= after mlock2(MLOCK_ONFAULT) =\n");
+    meminfo();
+    smaps();
+
+    for (size_t i = 0; i < size / 2; i += 4096) {
+      ret += ((char*)addr)[i];
+    }
+    printf("= after reading half of the file =\n");
+    meminfo();
+    smaps();
+
+    for (size_t i = 0; i < size; i += 4096) {
+      ret += ((char*)addr)[i];
+    }
+    printf("= after reading the entire the file =\n");
+    meminfo();
+    smaps();
+
+  } else {
+    PCHECK(mlock(addr, size));
+    printf("= after mlock =\n");
+    meminfo();
+    smaps();
+  }
+
+  PCHECK(munmap(addr, size));
+  printf("= after munmap =\n");
+  meminfo();
+  smaps();
+
+  return ret;
+}
+
+---
+
+Signed-off-by: Lucian Adrian Grijincu <lucian@fb.com>
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ mm/memory.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index e0c232fe81d9..55da24f33bc4 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3311,6 +3311,8 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 	} else {
+ 		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+ 		page_add_file_rmap(page, false);
++		if (vma->vm_flags & VM_LOCKED && !PageTransCompound(page))
++			mlock_vma_page(page);
+ 	}
+ 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+ 
+-- 
+2.17.1
+
