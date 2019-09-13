@@ -2,100 +2,101 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D2BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763EAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033DF206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D24206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MnbV2qHM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FY+xJdkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391520AbfIMNo3 (ORCPT
+        id S2391727AbfIMNol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:44:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44306 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388489AbfIMNo2 (ORCPT
+        Fri, 13 Sep 2019 09:44:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60136 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388489AbfIMNol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:44:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DDiEI9169394;
-        Fri, 13 Sep 2019 13:44:19 GMT
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uytd3ms1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 13:44:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DDhv5b028851;
-        Fri, 13 Sep 2019 13:44:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2uytdwtpyd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 13:44:18 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8DDi3pL032480;
-        Fri, 13 Sep 2019 13:44:04 GMT
-Received: from zhuyj-Latitude-E6220.lan (/124.126.211.68)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Sep 2019 06:44:03 -0700
-From:   rain.1986.08.12@gmail.com
-To:     mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        rain.1986.08.12@gmail.com, netdev@vger.kernel.org
-Subject: [PATCH 1/1] MAINTAINERS: update FORCEDETH MAINTAINERS info
-Date:   Fri, 13 Sep 2019 21:43:45 +0800
-Message-Id: <20190913134345.28318-1-rain.1986.08.12@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=817
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909130136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9378 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1034
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=887 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909130136
+        Fri, 13 Sep 2019 09:44:41 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 17711607CA; Fri, 13 Sep 2019 13:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568382280;
+        bh=vyt/3hzOSaAAxezkzLOi1iLD8HN1GuNmP4hYAG0W1FA=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=MnbV2qHM+bSPAbTmHbg3nNzGX8DE/Q0+tzN/lE933ZItOchPc5uZcPQs5Mz7ATmks
+         JrDztRdcLFwTrmgQK95K4ty+XDlw8/PdsybhmbYwq5NZmwjbO1Dsv06Ix52pF5pcCW
+         dOWdsrKhFzbaOx8HqxpOI+dsAt1RgYMWDIxp4jwI=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8882A602C3;
+        Fri, 13 Sep 2019 13:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568382279;
+        bh=vyt/3hzOSaAAxezkzLOi1iLD8HN1GuNmP4hYAG0W1FA=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=FY+xJdkjqkV26JGjs6bIKRSpXRDCVa6SNEM0zTU+FtViblbDIbmbVNBhMGWqx9gLG
+         r2xJm5zysJeRssGkH0F33b204BuNk+MPyzcB2n2/YWMyfUFqauvNVJaP8XTJKME6nz
+         Bn5RqyFwn9Dq6FS4qDVz1y/o4J6Ri1rLAHgVbPmE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8882A602C3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: rtl8821ae: make array static const and remove
+ redundant assignment
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190905150022.3609-1-colin.king@canonical.com>
+References: <20190905150022.3609-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190913134440.17711607CA@smtp.codeaurora.org>
+Date:   Fri, 13 Sep 2019 13:44:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rain River <rain.1986.08.12@gmail.com>
+Colin King <colin.king@canonical.com> wrote:
 
-Many FORCEDETH NICs are used in our hosts. Several bugs are fixed and
-some features are developed for FORCEDETH NICs. And I have been
-reviewing patches for FORCEDETH NIC for several months. Mark me as the
-FORCEDETH NIC maintainer. I will send out the patches and maintain
-FORCEDETH NIC.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The array channel_all can be make static const rather than populating
+> it on the stack, this makes the code smaller.  Also, variable place
+> is being initialized with a value that is never read, so this assignment
+> is redundant and can be removed.
+> 
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>  118537	   9591	      0	 128128	  1f480	realtek/rtlwifi/rtl8821ae/phy.o
+> 
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>  118331	   9687	      0	 128018	  1f412	realtek/rtlwifi/rtl8821ae/phy.o
+> 
+> Saves 110 bytes, (gcc version 9.2.1, amd64)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Rain River <rain.1986.08.12@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e7a47b5210fd..0a28090df677 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -649,6 +649,12 @@ M:	Lino Sanfilippo <LinoSanfilippo@gmx.de>
- S:	Maintained
- F:	drivers/net/ethernet/alacritech/*
- 
-+FORCEDETH GIGABIT ETHERNET DRIVER
-+M:	Rain River <rain.1986.08.12@gmail.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/net/ethernet/nvidia/*
-+
- ALCATEL SPEEDTOUCH USB DRIVER
- M:	Duncan Sands <duncan.sands@free.fr>
- L:	linux-usb@vger.kernel.org
+569ce0a486fd rtlwifi: rtl8821ae: make array static const and remove redundant assignment
+
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11133295/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
