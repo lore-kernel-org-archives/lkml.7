@@ -2,151 +2,215 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EA3C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF03C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C09E20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381359;
-	bh=Tp8MXWBSE552OhJPfHXEWhrl96I1Fed4vFY+aEga0Oo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICON+9IlvG8VzCGDEUFYdGXvipdhDp2X/IPvrnOyYKoWf0fuADhCxx9qQKnm58wdZ
-	 Mf3UxeEY5of3Udh4GlQYKNiLgTes+qX1BAKc6IqJ/JnVN3AsdTT0QL/FCnv1iGB2Bx
-	 f04ojnzqpVsOIQZl7DWonJ7xYSgRe+rwEfrtTmJE=
+	by mail.kernel.org (Postfix) with ESMTP id 3C27F206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390485AbfIMNT7 (ORCPT
+        id S2391555AbfIMN3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390461AbfIMNTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:55 -0400
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E71B20CC7;
-        Fri, 13 Sep 2019 13:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380794;
-        bh=Tp8MXWBSE552OhJPfHXEWhrl96I1Fed4vFY+aEga0Oo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyLozP8SrFJADOOV8tzEMU3PvF0zgxd4HsNbbZqgenRw6hESOaMnavdETusYL6JSN
-         T3SpseUwEwA0CEh1LNIeiUqJ2QSTNSmU2od4gyQB9ZMLB/1qWS4RrhVv06T3k+CtwJ
-         1ZBWCpKVz2cPtj5CoER+tz1Nrztfcaq1j4ctzfUE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>, bhe@redhat.com,
-        dyoung@redhat.com, kexec@lists.infradead.org, mingo@redhat.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 162/190] resource: Include resource end in walk_*() interfaces
-Date:   Fri, 13 Sep 2019 14:06:57 +0100
-Message-Id: <20190913130612.849195474@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
-References: <20190913130559.669563815@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 13 Sep 2019 09:29:21 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33885 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390444AbfIMNT6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:58 -0400
+Received: from [IPv6:2001:420:44c1:2577:888a:538c:8dda:557b] ([IPv6:2001:420:44c1:2577:888a:538c:8dda:557b])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8lUOiWodCV17O8lURi2q7R; Fri, 13 Sep 2019 15:19:55 +0200
+Subject: Re: [Patch 12/13] media: am437x-vpfe: Remove per bus width static
+ data
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-13-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <add3cb62-1391-f8e3-15f3-f1345e18da47@xs4all.nl>
+Date:   Fri, 13 Sep 2019 15:19:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190909162743.30114-13-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDPD79xpkAXnqWG0IqlGd95oDOl6bT+t+OMAuRgFfzmSo+y5satYA0w6avFYMQClcPT72By7btbxBlcfIXJSYFPmzapLt0p05YQz0Ot3cIej0Rrjv4rD
+ TKGUjwt56ya8Kk68vFVAt6s0E8gulCm1cc+HpK1IMy8v+ScJy7+KSr7sSe9EneEp6fgS1+OyQ84o9VQBbAa+ePjkH2/hsogZjV+3lAtajqplQ7d6Zfk3drHT
+ Fb0mX1fXJmHUFDdc4fsSWJ1Ex4z7/OOTkLfNU70O3a3x+vnAe7yNOIxlzqQQZnuNUTb4KnPYY/bUrtZweAkj0NinkPrpt0O2Pj9yPiKbxdWq3wmYBueBtsYO
+ SuyWNIAajdqqtnl1BvkyjHMFrXIlbtnhaLlh0oXT71i5JixTJfK12uwvqfweIBHva2PL4usEX/Ij6hmDt1IVHFyRcEJCaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a98959fdbda1849a01b2150bb635ed559ec06700 ]
+On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> The bus related static data include in the vpfe_fmt
+> static table can be derived dynamically instead.
+> This simplify the table and it's use.
 
-find_next_iomem_res() finds an iomem resource that covers part of a range
-described by "start, end".  All callers expect that range to be inclusive,
-i.e., both start and end are included, but find_next_iomem_res() doesn't
-handle the end address correctly.
+simplify -> simplifies
+it's -> its
 
-If it finds an iomem resource that contains exactly the end address, it
-skips it, e.g., if "start, end" is [0x0-0x10000] and there happens to be an
-iomem resource [mem 0x10000-0x10000] (the single byte at 0x10000), we skip
-it:
+> 
+> We instead replace the per bus data info with just
+> the usual bit per pixel value for each supported
 
-  find_next_iomem_res(...)
-  {
-    start = 0x0;
-    end = 0x10000;
-    for (p = next_resource(...)) {
-      # p->start = 0x10000;
-      # p->end = 0x10000;
-      # we *should* return this resource, but this condition is false:
-      if ((p->end >= start) && (p->start < end))
-        break;
+bit -> bits
 
-Adjust find_next_iomem_res() so it allows a resource that includes the
-single byte at the end of the range.  This is a corner case that we
-probably don't see in practice.
+> pixel format.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/platform/am437x/am437x-vpfe.c | 56 ++++++---------------
+>  drivers/media/platform/am437x/am437x-vpfe.h | 16 +-----
+>  2 files changed, 16 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> index 9759ed398943..9855d4cb1d13 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> @@ -73,73 +73,43 @@ static struct vpfe_fmt formats[] = {
+>  	{
+>  		.fourcc		= V4L2_PIX_FMT_YUYV,
+>  		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_UYVY,
+>  		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_YVYU,
+>  		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_VYUY,
+>  		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+>  		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 2,
+> -		.s.width	= 8,
+> -		.s.bpp		= 1,
+> +		.bitsperpixel	= 8,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+>  		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 2,
+> -		.s.width	= 8,
+> -		.s.bpp		= 1,
+> +		.bitsperpixel	= 8,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+>  		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 2,
+> -		.s.width	= 8,
+> -		.s.bpp		= 1,
+> +		.bitsperpixel	= 8,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+>  		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+> -		.l.width	= 10,
+> -		.l.bpp		= 2,
+> -		.s.width	= 8,
+> -		.s.bpp		= 1,
+> +		.bitsperpixel	= 8,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_RGB565,
+>  		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	}, {
+>  		.fourcc		= V4L2_PIX_FMT_RGB565X,
+>  		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+> -		.l.width	= 10,
+> -		.l.bpp		= 4,
+> -		.s.width	= 8,
+> -		.s.bpp		= 2,
+> +		.bitsperpixel	= 16,
+>  	},
+>  };
+>  
+> @@ -184,9 +154,11 @@ static unsigned int __get_bytesperpixel(struct vpfe_device *vpfe,
+>  {
+>  	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
+>  	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+> -	u32 bpp;
+> +	u32 bpp, bus_width_bytes, clocksperpixel;
+>  
+> -	bpp = (bus_width == 10) ? fmt->l.bpp : fmt->s.bpp;
+> +	bus_width_bytes = ALIGN(bus_width, 8) >> 3;
+> +	clocksperpixel = DIV_ROUND_UP(fmt->bitsperpixel, bus_width);
+> +	bpp = clocksperpixel * bus_width_bytes;
+>  
+>  	return bpp;
+>  }
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+> index 0d10d2b4d7a2..2c9e89395bea 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.h
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.h
+> @@ -215,28 +215,16 @@ struct vpfe_ccdc {
+>  	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
+>  };
+>  
+> -/*
+> - * struct bus_format - VPFE bus format information
+> - * @width: Bits per pixel (when transferred over a bus)
+> - * @bpp: Bytes per pixel (when stored in memory)
+> - */
+> -struct bus_format {
+> -	unsigned int width;
+> -	unsigned int bpp;
+> -};
+> -
+>  /*
+>   * struct vpfe_fmt - VPFE media bus format information
+>   * @fourcc: V4L2 pixel format code
+>   * @code: V4L2 media bus format code
+> - * @l: 10 bit bus format info
+> - * @s: 8 bit bus format info
+> + * @bitsperpixel: Bits per pixel over the bus
+>   */
+>  struct vpfe_fmt {
+>  	u32 fourcc;
+>  	u32 code;
+> -	struct bus_format l;
+> -	struct bus_format s;
+> +	u32 bitsperpixel;
+>  };
+>  
+>  /*
+> 
 
-Fixes: 58c1b5b07907 ("[PATCH] memory hotadd fixes: find_next_system_ram catch range fix")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: H. Peter Anvin <hpa@zytor.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-CC: mingo@redhat.com
-CC: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/153805812254.1157.16736368485811773752.stgit@bhelgaas-glaptop.roam.corp.google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/resource.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Regards,
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 30e1bc68503b5..155ec873ea4d1 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -319,7 +319,7 @@ int release_resource(struct resource *old)
- EXPORT_SYMBOL(release_resource);
- 
- /*
-- * Finds the lowest iomem resource existing within [res->start.res->end).
-+ * Finds the lowest iomem resource existing within [res->start..res->end].
-  * The caller must specify res->start, res->end, res->flags, and optionally
-  * desc.  If found, returns 0, res is overwritten, if not found, returns -1.
-  * This function walks the whole tree and not just first level children until
-@@ -352,7 +352,7 @@ static int find_next_iomem_res(struct resource *res, unsigned long desc,
- 			p = NULL;
- 			break;
- 		}
--		if ((p->end >= start) && (p->start < end))
-+		if ((p->end >= start) && (p->start <= end))
- 			break;
- 	}
- 
--- 
-2.20.1
-
-
-
+	Hans
