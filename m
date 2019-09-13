@@ -2,74 +2,187 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3011C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB721C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14A42089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BA120830
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 12:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfIMMNF (ORCPT
+        id S2387620AbfIMMRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 08:13:05 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:46470 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729760AbfIMMNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 08:13:04 -0400
-X-IronPort-AV: E=Sophos;i="5.64,501,1559487600"; 
-   d="scan'208";a="26313271"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Sep 2019 21:13:03 +0900
-Received: from renesas-VirtualBox.ree.adwin.renesas.com (unknown [10.226.37.56])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 04D1D4001DDD;
-        Fri, 13 Sep 2019 21:13:01 +0900 (JST)
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH 3/3] spi: dw: Add compatible string for Renesas RZ/N1 SPI  Controller
-Date:   Fri, 13 Sep 2019 13:12:00 +0100
-Message-Id: <1568376720-7402-4-git-send-email-gareth.williams.jx@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
-References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
+        Fri, 13 Sep 2019 08:17:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56018 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728577AbfIMMRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 08:17:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7CC183C916;
+        Fri, 13 Sep 2019 12:17:49 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B98C5D717;
+        Fri, 13 Sep 2019 12:17:48 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 9D73620AB4; Fri, 13 Sep 2019 08:17:48 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 02/26] nfs: stash server into struct nfs_mount_info
+Date:   Fri, 13 Sep 2019 08:17:24 -0400
+Message-Id: <20190913121748.25391-3-smayhew@redhat.com>
+In-Reply-To: <20190913121748.25391-1-smayhew@redhat.com>
+References: <20190913121748.25391-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 13 Sep 2019 12:17:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Edworthy <phil.edworthy@renesas.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
-additional registers for software CS control and DMA. This patch does not
-address the changes required for DMA support, it simply adds the compatible
-string. The CS registers are not needed as Linux can use gpios for the CS
-signals.
-
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/spi/spi-dw-mmio.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/internal.h  |  3 ++-
+ fs/nfs/nfs4super.c | 10 ++++------
+ fs/nfs/super.c     | 19 ++++++++-----------
+ 3 files changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index edb3cf6..3640b01 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -225,6 +225,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
- 	{ .compatible = "mscc,ocelot-spi", .data = dw_spi_mscc_ocelot_init},
- 	{ .compatible = "mscc,jaguar2-spi", .data = dw_spi_mscc_jaguar2_init},
- 	{ .compatible = "amazon,alpine-dw-apb-ssi", .data = dw_spi_alpine_init},
-+	{ .compatible = "renesas,rzn1-spi", },
- 	{ /* end of table */}
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index a2346a2f8361..c132e683e1c9 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -150,6 +150,7 @@ struct nfs_mount_info {
+ 	int (*set_security)(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ 	struct nfs_parsed_mount_data *parsed;
+ 	struct nfs_clone_mount *cloned;
++	struct nfs_server *server;
+ 	struct nfs_fh *mntfh;
  };
- MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+ 
+@@ -405,7 +406,7 @@ struct dentry *nfs_try_mount(int, const char *, struct nfs_mount_info *,
+ 			struct nfs_subversion *);
+ int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+ int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nfs_mount_info *);
+-struct dentry *nfs_fs_mount_common(struct nfs_server *, int, const char *,
++struct dentry *nfs_fs_mount_common(int, const char *,
+ 				   struct nfs_mount_info *, struct nfs_subversion *);
+ struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, void *);
+ struct dentry * nfs_xdev_mount_common(struct file_system_type *, int,
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index baece9857bcf..4591d6618efa 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -109,13 +109,12 @@ nfs4_remote_mount(struct file_system_type *fs_type, int flags,
+ 		  const char *dev_name, void *info)
+ {
+ 	struct nfs_mount_info *mount_info = info;
+-	struct nfs_server *server;
+ 
+ 	mount_info->set_security = nfs_set_sb_security;
+ 
+ 	/* Get a volume representation */
+-	server = nfs4_create_server(mount_info, &nfs_v4);
+-	return nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4);
++	mount_info->server = nfs4_create_server(mount_info, &nfs_v4);
++	return nfs_fs_mount_common(flags, dev_name, mount_info, &nfs_v4);
+ }
+ 
+ static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type,
+@@ -260,7 +259,6 @@ nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = raw_data,
+ 	};
+-	struct nfs_server *server;
+ 	struct dentry *mntroot = ERR_PTR(-ENOMEM);
+ 
+ 	dprintk("--> nfs4_referral_get_sb()\n");
+@@ -270,8 +268,8 @@ nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
+ 		goto out;
+ 
+ 	/* create a new volume representation */
+-	server = nfs4_create_referral_server(mount_info.cloned, mount_info.mntfh);
+-	mntroot = nfs_fs_mount_common(server, flags, dev_name, &mount_info, &nfs_v4);
++	mount_info.server = nfs4_create_referral_server(mount_info.cloned, mount_info.mntfh);
++	mntroot = nfs_fs_mount_common(flags, dev_name, &mount_info, &nfs_v4);
+ out:
+ 	nfs_free_fhandle(mount_info.mntfh);
+ 	return mntroot;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 467d7a636f0b..10544ef8de57 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1896,14 +1896,12 @@ struct dentry *nfs_try_mount(int flags, const char *dev_name,
+ 			     struct nfs_mount_info *mount_info,
+ 			     struct nfs_subversion *nfs_mod)
+ {
+-	struct nfs_server *server;
+-
+ 	if (mount_info->parsed->need_mount)
+-		server = nfs_try_mount_request(mount_info, nfs_mod);
++		mount_info->server = nfs_try_mount_request(mount_info, nfs_mod);
+ 	else
+-		server = nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
++		mount_info->server = nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
+ 
+-	return nfs_fs_mount_common(server, flags, dev_name, mount_info, nfs_mod);
++	return nfs_fs_mount_common(flags, dev_name, mount_info, nfs_mod);
+ }
+ EXPORT_SYMBOL_GPL(nfs_try_mount);
+ 
+@@ -2624,20 +2622,21 @@ int nfs_clone_sb_security(struct super_block *s, struct dentry *mntroot,
+ }
+ EXPORT_SYMBOL_GPL(nfs_clone_sb_security);
+ 
+-struct dentry *nfs_fs_mount_common(struct nfs_server *server,
+-				   int flags, const char *dev_name,
++struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
+ 				   struct nfs_mount_info *mount_info,
+ 				   struct nfs_subversion *nfs_mod)
+ {
+ 	struct super_block *s;
+ 	struct dentry *mntroot = ERR_PTR(-ENOMEM);
+ 	int (*compare_super)(struct super_block *, void *) = nfs_compare_super;
++	struct nfs_server *server = mount_info->server;
+ 	struct nfs_sb_mountdata sb_mntdata = {
+ 		.mntflags = flags,
+ 		.server = server,
+ 	};
+ 	int error;
+ 
++	mount_info->server = NULL;
+ 	if (IS_ERR(server))
+ 		return ERR_CAST(server);
+ 
+@@ -2778,7 +2777,6 @@ nfs_xdev_mount(struct file_system_type *fs_type, int flags,
+ 		.set_security = nfs_clone_sb_security,
+ 		.cloned = data,
+ 	};
+-	struct nfs_server *server;
+ 	struct dentry *mntroot = ERR_PTR(-ENOMEM);
+ 	struct nfs_subversion *nfs_mod = NFS_SB(data->sb)->nfs_client->cl_nfs_mod;
+ 
+@@ -2787,10 +2785,9 @@ nfs_xdev_mount(struct file_system_type *fs_type, int flags,
+ 	mount_info.mntfh = mount_info.cloned->fh;
+ 
+ 	/* create a new volume representation */
+-	server = nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, data->fattr, data->authflavor);
++	mount_info.server = nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, data->fattr, data->authflavor);
+ 
+-	mntroot = nfs_fs_mount_common(server, flags,
+-				dev_name, &mount_info, nfs_mod);
++	mntroot = nfs_fs_mount_common(flags, dev_name, &mount_info, nfs_mod);
+ 
+ 	dprintk("<-- nfs_xdev_mount() = %ld\n",
+ 			IS_ERR(mntroot) ? PTR_ERR(mntroot) : 0L);
 -- 
-2.7.4
+2.17.2
 
