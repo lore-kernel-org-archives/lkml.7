@@ -2,133 +2,193 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4D2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1099BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D81720830
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AD9208C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 08:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387553AbfIMIht (ORCPT
+        id S2387572AbfIMIil convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 04:37:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49088 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbfIMIhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 04:37:48 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3449918C8931;
-        Fri, 13 Sep 2019 08:37:48 +0000 (UTC)
-Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0B441001944;
-        Fri, 13 Sep 2019 08:37:46 +0000 (UTC)
-Subject: Re: [PATCH 02/10] mm,madvise: call soft_offline_page() without
- MF_COUNT_INCREASED
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     Oscar Salvador <osalvador@suse.de>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190910103016.14290-3-osalvador@suse.de>
- <a2ec3629-3671-cdb4-70e8-2c7e327444e9@redhat.com>
- <20190912013759.GA4614@hori.linux.bs1.fc.nec.co.jp>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <2edff784-c5e7-ec1e-025d-45e4164e2a46@redhat.com>
-Date:   Fri, 13 Sep 2019 10:37:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 13 Sep 2019 04:38:41 -0400
+Received: from mail.savoirfairelinux.com ([208.88.110.44]:44378 "EHLO
+        mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387424AbfIMIil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 04:38:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 468379C01CF;
+        Fri, 13 Sep 2019 04:38:40 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0tdnGDu6uDPD; Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 5428B9C02B2;
+        Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 1nWHepbN-k1n; Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 13DF59C01CF;
+        Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
+Date:   Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
+From:   Gilles Doffe <gilles.doffe@savoirfairelinux.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        mark rutland <mark.rutland@arm.com>,
+        festevam <festevam@gmail.com>, s hauer <s.hauer@pengutronix.de>,
+        rennes <rennes@savoirfairelinux.com>,
+        robh+dt <robh+dt@kernel.org>, linux-imx <linux-imx@nxp.com>,
+        kernel <kernel@pengutronix.de>,
+        =?utf-8?Q?J=C3=A9rome?= Oufella 
+        <jerome.oufella@savoirfairelinux.com>,
+        shawnguo <shawnguo@kernel.org>
+Message-ID: <415531537.7768114.1568363919015.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
+References: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com> <20190722075341.e4ve45rneusiogtk@pengutronix.de> <978100557.7721358.1568282514403.JavaMail.zimbra@savoirfairelinux.com> <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
+Subject: Re: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
 MIME-Version: 1.0
-In-Reply-To: <20190912013759.GA4614@hori.linux.bs1.fc.nec.co.jp>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 13 Sep 2019 08:37:48 +0000 (UTC)
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC76 (Linux)/8.8.11_GA_3737)
+Thread-Topic: imx6qdl: add gpio expander pca9535
+Thread-Index: Zvv68XcE8nddO8z0uGME4oRHp/yuRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.09.19 03:37, Naoya Horiguchi wrote:
-> On Wed, Sep 11, 2019 at 12:27:22PM +0200, David Hildenbrand wrote:
->> On 10.09.19 12:30, Oscar Salvador wrote:
->>> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->>>
->>> Currently madvise_inject_error() pins the target via get_user_pages_fast.
->>> The call to get_user_pages_fast is only to get the respective page
->>> of a given address, but it is the job of the memory-poisoning handler
->>> to deal with races, so drop the refcount grabbed by get_user_pages_fast.
->>>
->>
->> Oh, and another question "it is the job of the memory-poisoning handler"
->> - is that already properly implemented? (newbee question ¯\_(ツ)_/¯)
-> 
-> The above description might be confusing, sorry. It's intended likes
-> 
->   The call to get_user_pages_fast is only to get the pointer to struct
->   page of a given address, pinning it is memory-poisoning handler's job,
->   so drop the refcount grabbed by get_user_pages_fast.
-> 
-> And pinning is done in get_hwpoison_page() for hard-offline and
-> get_any_page() for soft-offline.  For soft-offline case, the semantics of
-> refcount of poisoned pages is what this patchset tries to change/improve.
+Hi Marco,
 
-Thanks for the clarification!
+Ack for all, v3 incoming.
+
+Thank you,
+Gilles
+
+----- Le 12 Sep 19, à 12:12, Marco Felsch m.felsch@pengutronix.de a écrit :
+
+> Hi Gilles,
+> 
+> On 19-09-12 06:01, Gilles Doffe wrote:
+>> Hi Marco,
+>> 
+>> Thanks for your reply and sorry about the delay.
+> 
+> No worries ;)
+> 
+>> ----- Le 22 Juil 19, à 9:53, Marco Felsch m.felsch@pengutronix.de a écrit :
+>> 
+>> > Hi Gilles,
+>> > 
+>> > can you adapt the patch title, I assumed that the base dtsi is adding a
+>> > gpio-expander which makes no sense.
+>> 
+>> My first intent was to add the gpio-expander pca9535 into the imx6q-rex-pro.dts
+>> and in a future imx6qp-rex-ultra.dts
+>> However I noticed that the sgtl5000 was already in the dtsi.
+>> It is maybe due to the fact that like the pca9535, the sgtl5000 is present on
+>> the baseboard not on the SOM.
+>> Thus I guess that baseboard stuff common to all rex SOM should be in
+>> imx6qdl-rex.dtsi and not in the dts.
+>> Does-it seem correct to you ?
+> 
+> Yes this is correct what Shawn and I mean is that you should adapt the
+> commit title. Shawn already give you an example.
+> 
+>> > 
+>> > On 19-07-19 12:46, Gilles DOFFE wrote:
+>> >> The pca9535 gpio expander is present on the Rex baseboard, but missing
+>> >> from the dtsi.
+>> >> 
+>> >> Add the new gpio controller and the associated interrupt line
+>> >> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+>> >> 
+>> >> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+>> >> ---
+>> > 
+>> > Having a changelog would be nice too.
+>> > 
+>> >>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+>> >>  1 file changed, 19 insertions(+)
+>> >> 
+>> >> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> >> b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> >> index 97f1659144ea..b517efb22fcb 100644
+>> >> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> >> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> >> @@ -136,6 +136,19 @@
+>> >>  		compatible = "atmel,24c02";
+>> >>  		reg = <0x57>;
+>> >>  	};
+>> >> +
+>> >> +	pca9535: gpio8@27 {
+>> >> +		compatible = "nxp,pca9535";
+>> >> +		reg = <0x27>;
+>> > 
+>> > The i2c devices are orderd by their i2c-addresses starting from the
+>> > lowest.
+>> >
+>> 
+>> Ack.
+>> 
+>> >> +		gpio-controller;
+>> >> +		#gpio-cells = <2>;
+>> >> +		pinctrl-names = "default";
+>> >> +		pinctrl-0 = <&pinctrl_pca9535>;
+>> >> +		interrupt-parent = <&gpio6>;
+>> >> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+>> >> +		interrupt-controller;
+>> >> +		#interrupt-cells = <2>;
+> 
+> As you pointed out above this device isn't available on the
+> imx6dl-rex-basic? You should add: 'status = "disabled";' if this is the
+> case.
+> 
+> Regards,
+>  Marco
+> 
+>> >> +	};
+>> >>  };
+>> >>  
+>> >>  &i2c3 {
+>> >> @@ -237,6 +250,12 @@
+>> >>  			>;
+>> >>  		};
+>> >>  
+>> >> +		pinctrl_pca9535: pca9535 {
+>> >> +			fsl,pins = <
+>> >> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
+>> > 
+>> > The pinmux below don't use the leading zero's if you are the first I
+>> > would drop that.
+>> > 
+>> > Regards,
+>> >  Marco
+>> >
+>> 
+>> Ack.
+>> 
+>> Regards,
+>> Gilles
+>> 
+> 
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
 -- 
-
-Thanks,
-
-David / dhildenb
+Gilles DOFFE 
+Senior Product Engineering Consultant | Rennes, Fr 
+Bureau 
+[ tel:+33972468980 | (+33) 9 72 46 89 80 ] p. : 601 
+Cellulaire 
+[ tel:+33660025866 | (+33) 6 60 02 58 66 ]
