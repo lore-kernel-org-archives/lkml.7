@@ -2,52 +2,51 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237AC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DAF206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D54214DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380845;
-	bh=kN2w/kcq9mBzaqs9yTiVeTulm8bkDRJ/dgotKQjrnuU=;
+	s=default; t=1568380848;
+	bh=DblmG549wVAQ8f+DQ+6NFAFZ43lToghEswFLoPoYLW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qs6GadguMjzM9X6XZK0OCzTHHN2eHUYafMciY9FwSaREs03rLRwk8Y5IECWcgfSC5
-	 LqtMjdcXPeocwmuSSdJHUNOe29eC4JdGKF2pism2Jbvi58MQbEjysGJ4RuyOmHmQJI
-	 YuWQF2soXMNZfaWn1bM8cNC+NUH57X6l9iXauvoY=
+	b=lMvTKRR/Uw6LmyuSGokRyf2DTIgbGD7potIPIM3c+lwG11XsjHbBho5nRu96Vk9Dp
+	 r1QRYw+OKfDqf1lSU45OTXJDU5pYTrv2u/yqXf/9Dsdz8HYhSe0dB8jzbLal4paaGj
+	 jP7B7j5sK3u5U1w2Mkd1D1BesBeoWbzFKJleeQeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390076AbfIMNUo (ORCPT
+        id S2390640AbfIMNUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49786 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390608AbfIMNUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:40 -0400
+        id S2390628AbfIMNUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:44 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9253920717;
-        Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598A920717;
+        Fri, 13 Sep 2019 13:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380839;
-        bh=kN2w/kcq9mBzaqs9yTiVeTulm8bkDRJ/dgotKQjrnuU=;
+        s=default; t=1568380843;
+        bh=DblmG549wVAQ8f+DQ+6NFAFZ43lToghEswFLoPoYLW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6/A6XkRMvsyiF7wVOU5oL4Cfuudmz9RBU8GaNNUTxzFme++YRb4sODI7ty0NPQti
-         a69FTKu/Tzdj7ZKH7VO0e46Mmp6yttB/mknXYur14+tLS0/27ZgHKVjZMFrn/+a44A
-         MedaEP5cJx+up/IHI9seIZAnh3mGPiNozCVf1BKI=
+        b=f569mmAsQ3+/tgEmiO0U55IfaNJmyHsnErScwmQc2soKzfrZSB6kj+Byql/mLuSe+
+         ZdfPlIUYmdBzC/h0QAu75GwQbkDjaZHn4oC2a7SeGZjWmqqy0JHopqHPfGCKlzp7g4
+         6PIkDMIcjU/AMeieJcef1415CMfTfu098ExUDFII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 187/190] powerpc/tm: Remove msr_tm_active()
-Date:   Fri, 13 Sep 2019 14:07:22 +0100
-Message-Id: <20190913130614.853366270@linuxfoundation.org>
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 4.19 189/190] vhost: block speculation of translated descriptors
+Date:   Fri, 13 Sep 2019 14:07:24 +0100
+Message-Id: <20190913130615.029418672@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,120 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5c784c8414fba11b62e12439f11e109fb5751f38 ]
+From: Michael S. Tsirkin <mst@redhat.com>
 
-Currently msr_tm_active() is a wrapper around MSR_TM_ACTIVE() if
-CONFIG_PPC_TRANSACTIONAL_MEM is set, or it is just a function that
-returns false if CONFIG_PPC_TRANSACTIONAL_MEM is not set.
+commit a89db445fbd7f1f8457b03759aa7343fa530ef6b upstream.
 
-This function is not necessary, since MSR_TM_ACTIVE() just do the same and
-could be used, removing the dualism and simplifying the code.
+iovec addresses coming from vhost are assumed to be
+pre-validated, but in fact can be speculated to a value
+out of range.
 
-This patchset remove every instance of msr_tm_active() and replaced it
-by MSR_TM_ACTIVE().
+Userspace address are later validated with array_index_nospec so we can
+be sure kernel info does not leak through these addresses, but vhost
+must also not leak userspace info outside the allowed memory table to
+guests.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Following the defence in depth principle, make sure
+the address is not validated out of node range.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Cc: stable@vger.kernel.org
+Acked-by: Jason Wang <jasowang@redhat.com>
+Tested-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/include/asm/reg.h |  7 ++++++-
- arch/powerpc/kernel/process.c  | 21 +++++++++------------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ drivers/vhost/vhost.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index e5b314ed054e0..640a4d818772a 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -118,11 +118,16 @@
- #define MSR_TS_S	__MASK(MSR_TS_S_LG)	/*  Transaction Suspended */
- #define MSR_TS_T	__MASK(MSR_TS_T_LG)	/*  Transaction Transactional */
- #define MSR_TS_MASK	(MSR_TS_T | MSR_TS_S)   /* Transaction State bits */
--#define MSR_TM_ACTIVE(x) (((x) & MSR_TS_MASK) != 0) /* Transaction active? */
- #define MSR_TM_RESV(x) (((x) & MSR_TS_MASK) == MSR_TS_MASK) /* Reserved */
- #define MSR_TM_TRANSACTIONAL(x)	(((x) & MSR_TS_MASK) == MSR_TS_T)
- #define MSR_TM_SUSPENDED(x)	(((x) & MSR_TS_MASK) == MSR_TS_S)
- 
-+#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+#define MSR_TM_ACTIVE(x) (((x) & MSR_TS_MASK) != 0) /* Transaction active? */
-+#else
-+#define MSR_TM_ACTIVE(x) 0
-+#endif
-+
- #if defined(CONFIG_PPC_BOOK3S_64)
- #define MSR_64BIT	MSR_SF
- 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 967c044036718..49c6d474eb5ac 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -102,24 +102,18 @@ static void check_if_tm_restore_required(struct task_struct *tsk)
- 	}
- }
- 
--static inline bool msr_tm_active(unsigned long msr)
--{
--	return MSR_TM_ACTIVE(msr);
--}
--
- static bool tm_active_with_fp(struct task_struct *tsk)
- {
--	return msr_tm_active(tsk->thread.regs->msr) &&
-+	return MSR_TM_ACTIVE(tsk->thread.regs->msr) &&
- 		(tsk->thread.ckpt_regs.msr & MSR_FP);
- }
- 
- static bool tm_active_with_altivec(struct task_struct *tsk)
- {
--	return msr_tm_active(tsk->thread.regs->msr) &&
-+	return MSR_TM_ACTIVE(tsk->thread.regs->msr) &&
- 		(tsk->thread.ckpt_regs.msr & MSR_VEC);
- }
- #else
--static inline bool msr_tm_active(unsigned long msr) { return false; }
- static inline void check_if_tm_restore_required(struct task_struct *tsk) { }
- static inline bool tm_active_with_fp(struct task_struct *tsk) { return false; }
- static inline bool tm_active_with_altivec(struct task_struct *tsk) { return false; }
-@@ -247,7 +241,8 @@ void enable_kernel_fp(void)
- 		 * giveup as this would save  to the 'live' structure not the
- 		 * checkpointed structure.
- 		 */
--		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
-+		if (!MSR_TM_ACTIVE(cpumsr) &&
-+		     MSR_TM_ACTIVE(current->thread.regs->msr))
- 			return;
- 		__giveup_fpu(current);
- 	}
-@@ -311,7 +306,8 @@ void enable_kernel_altivec(void)
- 		 * giveup as this would save  to the 'live' structure not the
- 		 * checkpointed structure.
- 		 */
--		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
-+		if (!MSR_TM_ACTIVE(cpumsr) &&
-+		     MSR_TM_ACTIVE(current->thread.regs->msr))
- 			return;
- 		__giveup_altivec(current);
- 	}
-@@ -397,7 +393,8 @@ void enable_kernel_vsx(void)
- 		 * giveup as this would save  to the 'live' structure not the
- 		 * checkpointed structure.
- 		 */
--		if(!msr_tm_active(cpumsr) && msr_tm_active(current->thread.regs->msr))
-+		if (!MSR_TM_ACTIVE(cpumsr) &&
-+		     MSR_TM_ACTIVE(current->thread.regs->msr))
- 			return;
- 		__giveup_vsx(current);
- 	}
-@@ -531,7 +528,7 @@ void restore_math(struct pt_regs *regs)
- {
- 	unsigned long msr;
- 
--	if (!msr_tm_active(regs->msr) &&
-+	if (!MSR_TM_ACTIVE(regs->msr) &&
- 		!current->thread.load_fp && !loadvec(current->thread))
- 		return;
- 
--- 
-2.20.1
-
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1966,8 +1966,10 @@ static int translate_desc(struct vhost_v
+ 		_iov = iov + ret;
+ 		size = node->size - addr + node->start;
+ 		_iov->iov_len = min((u64)len - s, size);
+-		_iov->iov_base = (void __user *)(unsigned long)
+-			(node->userspace_addr + addr - node->start);
++		_iov->iov_base = (void __user *)
++			((unsigned long)node->userspace_addr +
++			 array_index_nospec((unsigned long)(addr - node->start),
++					    node->size));
+ 		s += size;
+ 		addr += size;
+ 		++ret;
 
 
