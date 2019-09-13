@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BF2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F76C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D7220717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4527E20717
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380690;
-	bh=S+I5g/s2MoEk2IMxrV43PfJlXGEod35XkM67UhGBAzk=;
+	s=default; t=1568380695;
+	bh=Mq16pXPlu4E1qSNNsJtz9KChW6TIknEWstPnqmQ7nJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKL60T57xIJhbFGlk1pnvi27Wgnw3JB2ay5mKxySDg+RsgOo4udy4yifW9am9BXlg
-	 yLoCgDAl1xgZ7hrCC5FOAR20NiEY/OPdQqKxKjAtXvbHCYfPNsKfn8/pqcaUs7pyfp
-	 KBAhRPsl+LW+ky0N1eAobxyEvhtFNO5J9o9xvI3I=
+	b=wIFJhhmVkh3sgwxr6rZFyMoK6CXM+JHN2OQB+g3uovx1ps139i/UahHSLY0mJIqIJ
+	 S0QylRh7Ct5IKgPcGT8WqUtOKalPp4feP0nx+k9Q2pWCjhLInPY7FTGlF0MgLhQe++
+	 O18Szy1dMVaOKneU9DaFNSm4uFMG+Fb5tmhcecJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390165AbfIMNSJ (ORCPT
+        id S2389634AbfIMNSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390142AbfIMNSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:18:06 -0400
+        id S2390159AbfIMNSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:18:09 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DCE206BB;
-        Fri, 13 Sep 2019 13:18:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA44206A5;
+        Fri, 13 Sep 2019 13:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380685;
-        bh=S+I5g/s2MoEk2IMxrV43PfJlXGEod35XkM67UhGBAzk=;
+        s=default; t=1568380688;
+        bh=Mq16pXPlu4E1qSNNsJtz9KChW6TIknEWstPnqmQ7nJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vjKPT2TM9di+cNS3VUd/Fq4ZxUhKCVb/x/oH+FM6lff0p7YyZYL9nyLNxJszRHxt7
-         Vz9qzwY7eNap2YRGqmL9ycwfhvhOBSsaCM0mfew63roQvxsvlhBEcuqvcPzeAyjWFa
-         sLlJVRfd7AfYm2TllNgSfMLNmlygYdpmUXGgtZ3w=
+        b=zvbsVjBLZL7CKYyB2SVhUy4m/f5hLvkKR6XAofLcoGE6n36do+wl/BcFqSzV8gopY
+         FK7SbGqJXomsYrIW+RYiwKPEmTs2tEtmRoTaKe8IxbjxbPGqixh3tas58cW2EdmX4G
+         LaoEbkdyOp/pyZx3giM1Gq8Ml2G6SbPWBjajISqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Bauer <mail@david-bauer.net>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/190] ARM: dts: qcom: ipq4019: enlarge PCIe BAR range
-Date:   Fri, 13 Sep 2019 14:06:16 +0100
-Message-Id: <20190913130609.497224824@linuxfoundation.org>
+        stable@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 112/190] IB/mlx5: Reset access mask when looping inside page fault handler
+Date:   Fri, 13 Sep 2019 14:06:07 +0100
+Message-Id: <20190913130608.701812612@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,53 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3e35357cd460a8aeb48b8113dc4b761a7d5c828 ]
+[ Upstream commit 1abe186ed8a6593069bc122da55fc684383fdc1c ]
 
-David Bauer reported that the VDSL modem (attached via PCIe)
-on his AVM Fritz!Box 7530 was complaining about not having
-enough space in the BAR. A closer inspection of the old
-qcom-ipq40xx.dtsi pulled from the GL-iNet repository listed:
+If page-fault handler spans multiple MRs then the access mask needs to
+be reset before each MR handling or otherwise write access will be
+granted to mapped pages instead of read-only.
 
-| qcom,pcie@80000 {
-|	compatible = "qcom,msm_pcie";
-|	reg = <0x80000 0x2000>,
-|	      <0x99000 0x800>,
-|	      <0x40000000 0xf1d>,
-|	      <0x40000f20 0xa8>,
-|	      <0x40100000 0x1000>,
-|	      <0x40200000 0x100000>,
-|	      <0x40300000 0xd00000>;
-|	reg-names = "parf", "phy", "dm_core", "elbi",
-|			"conf", "io", "bars";
-
-Matching the reg-names with the listed reg leads to
-<0xd00000> as the size for the "bars".
-
-Cc: stable@vger.kernel.org
-BugLink: https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg45212.html
-Reported-by: David Bauer <mail@david-bauer.net>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Andy Gross <agross@kernel.org>
+Cc: <stable@vger.kernel.org> # 3.19
+Fixes: 7bdf65d411c1 ("IB/mlx5: Handle page faults")
+Reported-by: Jerome Glisse <jglisse@redhat.com>
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/odp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 814ab7283228a..54d056b01bb51 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -386,8 +386,8 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 9e1cac8cb2609..453e5c4ac19f4 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -497,7 +497,7 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
+ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 			u64 io_virt, size_t bcnt, u32 *bytes_mapped)
+ {
+-	u64 access_mask = ODP_READ_ALLOWED_BIT;
++	u64 access_mask;
+ 	int npages = 0, page_shift, np;
+ 	u64 start_idx, page_mask;
+ 	struct ib_umem_odp *odp;
+@@ -522,6 +522,7 @@ next_mr:
+ 	page_shift = mr->umem->page_shift;
+ 	page_mask = ~(BIT(page_shift) - 1);
+ 	start_idx = (io_virt - (mr->mmkey.iova & page_mask)) >> page_shift;
++	access_mask = ODP_READ_ALLOWED_BIT;
  
--			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
--				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
-+			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000>,
-+				 <0x82000000 0 0x40300000 0x40300000 0 0x00d00000>;
- 
- 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
+ 	if (mr->umem->writable)
+ 		access_mask |= ODP_WRITE_ALLOWED_BIT;
 -- 
 2.20.1
 
