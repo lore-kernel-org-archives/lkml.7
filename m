@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0036C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12494C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6729208C0
+	by mail.kernel.org (Postfix) with ESMTP id E0CFE21479
 	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 05:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568353341;
-	bh=zLeU3SJpF4cwPfzjc1+r4U4dp9oGpkrefaSILL1XmLI=;
+	s=default; t=1568353342;
+	bh=Dad/2dB2E/wqoGQmAFEVO2Ay51FWG0yohYBc/M581sY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E0gN8Hj3I81o53hRL6ib68dfUYbGxqmkKtWShsR2ikVehiCU1vHnCNV4cZcOeKVKR
-	 tiTPXxC+ECSA+UXQYRFjR2BsINmdhSbp5ZZXZfCLZ9XE534wlDaoHcp6mJh1uantVM
-	 0EfNGUf3b7s2wL0ZiOrGKO2GisvXZ/hhP+fdJ4Us=
+	b=2payaKViouX7VOVN39A0T0endl0T3CbojpngyGYA2zjTOktDWz+NeLteZYtti181V
+	 fmrVnCDvmeNmmECfGELuztEBx3I4AkpApTU1CuiJogECYqeJfr9V7QKiQGBd1M573y
+	 m31eZriy5G0uhZqazxq5993eMFn1Btwfeku4jOVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfIMFmB (ORCPT
+        id S1727261AbfIMFmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 01:42:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40776 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfIMFmA (ORCPT
+        Fri, 13 Sep 2019 01:42:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40032 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfIMFmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 01:42:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so1271944wmc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:41:59 -0700 (PDT)
+        Fri, 13 Sep 2019 01:42:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l3so7992817wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Sep 2019 22:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ppV5KcUiF1CGYToYGdU0wfK/H3e+utN032f5iiPzYJI=;
-        b=f3szeRJXJ3wJoTpbV2bf+5DwUxTMNlZ1KtkL8aOHMBwt6sQRnv0Axno86oGWlQMOBS
-         za8ZxC5kq1+GdnSDV238IgFg3JY9vzwcahSgRPGHG6qf2p4IlzKIjjMl6BlJHwCrmlCF
-         NjdpDOPj+K4I88b5IDhidX4Cza7WOvTdeXMWehdqDHL9TE+zI5XuYOPCZpXEWbF+CzZ0
-         RvpMCS5taR8au6bzOGJQAOS/NA5W4EQTUdkM26zJ7T6DYqymkArOFNfP3aZgpy06n+yn
-         mQioWPJm/Wm4+6hJT2Nsu0/mFFlh1RMADuWS0/IYTRG9gRVt+KvumVwXNYUMBbFe8bD+
-         Wpvw==
+        bh=LSlNtFgitt14dDGHoASb+NTexJIytOoP8ixydWWFIH8=;
+        b=mC1t5L+2lz1Hw1YIv2BhKKIkjwR5PK0ME+T3ztDo6YWqH+2oZ05VaG0vCcdyBY5QU+
+         VeCxoxmLs4XcPdfzUIrxHjDJRv0PYdHUFYlG+l36yO3spe96pca/YBrF17ekuyhhe00N
+         9BNXPjzIpXbBigy+lqkQ3+gL0MB5bxzJh+vC3E+K/ENBv5qVFbb868OAiFKm6rxYTExf
+         L1Qnzz5XnrOCeWFjXUREeMxEC8AplbBezsaHiR7M4GUXACwhqss/Mo0bfn9JJcLHVCWK
+         rh+DbZtAALXcpp7Bv9jNJar955HILMxMuSox8VJPe/aIurBGBWFG/anyP/wh45iruqvc
+         JDOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ppV5KcUiF1CGYToYGdU0wfK/H3e+utN032f5iiPzYJI=;
-        b=H3CUGQfrpTBX91vpZtsCMudr8h1vlAxG32j3qh0mGvmux5RDx6nceBKEnKbJx6wuh2
-         5AtCbI3KOihaWtYcZyVH1RUo46kbs+7d4KWXiOR+0WRZ409NfJqgmeJNDTWRS+1w6VpA
-         qqY2IReiQXvcXMpVU4OXEC9p9l3ORIzdbb4GI8Po9TDNum1nS3u0YspLM5vRaP0iNaCk
-         9w6xML8hqLCYsXKwJfBeG3PJnB/3rXPJm+4NUU94SFaTI1OOXK4TpSzq97bbY3yrmrRf
-         0r+0lZxyZbAzGzIFN2UcKzw7M0cVlPYVcmfeGDbXu+XVc+YsRDGqyw8tpfEtp4//fAXq
-         PJzQ==
-X-Gm-Message-State: APjAAAWSXtPu67A/NlMKvE/hpOOhvbBoFQPPgAZZvbX80RYFbKRzJJ7r
-        2lAM9ocfs6nbh9V+K9lILLk=
-X-Google-Smtp-Source: APXvYqwbqS4T1d9NzD8JRMvOyeV+4zFbVtxUI/9498o6wGeH1bxIUEXZ6VLn6hv9JtUqzLd58veL/w==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr1661963wma.165.1568353318563;
-        Thu, 12 Sep 2019 22:41:58 -0700 (PDT)
+        bh=LSlNtFgitt14dDGHoASb+NTexJIytOoP8ixydWWFIH8=;
+        b=P6DW/KOJFj02x/iMN2Sk9QK41OBLGMTQjNkwFJGVTKGA0YV9FWss04HXanQT24OWuq
+         dzg6QUcUse57alTXc02I4z2PT+yuKTSZkrOCLf9LtzZDMAy24ZCgCWvbSf9jeesCh6Ot
+         8vtgKEOCQHC6oZ34bYC1ChB3y092klGdlEwkgbmnKIEDOfrYbYSdDoiGdnODych+N+mY
+         m7ba03lvqrmEkCApQ+HB3QHzgvXZr5asu4i9oxEQN6BOVRAONZGj19ardjZjX0ziVd01
+         5ZvEFG4Iy0BrhKi9qAQDykmd7MvktI71tw2IUa4qicanccqfsyDFSOckYunUF/ILHHkB
+         rYrQ==
+X-Gm-Message-State: APjAAAVc3DdwedxflQ12EBFrZ08aDmVlIXk3wuROXvGqMv+z/ArSTSQN
+        pA0wT1tgAcQTVPFxAo6n6D4=
+X-Google-Smtp-Source: APXvYqzcAJKt51S/9FTwPoHhARkpmDjREAn9SsJv+fA3xw4KzDExfEm46OhtSIpDObQiUYsoK8C7kw==
+X-Received: by 2002:adf:a357:: with SMTP id d23mr10178038wrb.18.1568353338557;
+        Thu, 12 Sep 2019 22:42:18 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id t6sm2097971wmf.8.2019.09.12.22.41.57
+        by smtp.gmail.com with ESMTPSA id s19sm40392869wrb.14.2019.09.12.22.42.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 22:41:57 -0700 (PDT)
-Date:   Fri, 13 Sep 2019 07:41:55 +0200
+        Thu, 12 Sep 2019 22:42:18 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 07:42:15 +0200
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
@@ -72,16 +72,16 @@ Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Nadav Amit <namit@vmware.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 5/6] x86: alternative.h: use asm_inline for all
- alternative variants
-Message-ID: <20190913054155.GA118828@gmail.com>
+Subject: Re: [PATCH v3 6/6] x86: bug.h: use asm_inline in _BUG_FLAGS
+ definitions
+Message-ID: <20190913054215.GB118828@gmail.com>
 References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
  <20190912221927.18641-1-linux@rasmusvillemoes.dk>
- <20190912221927.18641-6-linux@rasmusvillemoes.dk>
+ <20190912221927.18641-7-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912221927.18641-6-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190912221927.18641-7-linux@rasmusvillemoes.dk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -91,15 +91,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 * Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
 
-> Most, if not all, uses of the alternative* family just provide one or
-> two instructions in .text, but the string literal can be quite large,
-> causing gcc to overestimate the size of the generated code. That in
-> turn affects its decisions about inlining of the function containing
-> the alternative() asm statement.
+> This helps preventing a BUG* or WARN* in some static inline from
+> preventing that (or one of its callers) being inlined, so should allow
+> gcc to make better informed inlining decisions.
 > 
-> New enough versions of gcc allow one to overrule the estimated size by
-> using "asm inline" instead of just "asm". So replace asm by the helper
-> asm_inline, which for older gccs just expands to asm.
+> For example, with gcc 9.2, tcp_fastopen_no_cookie() vanishes from
+> net/ipv4/tcp_fastopen.o. It does not itself have any BUG or WARN, but
+> it calls dst_metric() which has a WARN_ON_ONCE - and despite that
+> WARN_ON_ONCE vanishing since the condition is compile-time false,
+> dst_metric() is apparently sufficiently "large" that when it gets
+> inlined into tcp_fastopen_no_cookie(), the latter becomes too large
+> for inlining.
+> 
+> Overall, if one asks size(1), .text decreases a little and .data
+> increases by about the same amount (x86-64 defconfig)
+> 
+> $ size vmlinux.{before,after}
+>    text    data     bss     dec     hex filename
+> 19709726        5202600 1630280 26542606        195020e vmlinux.before
+> 19709330        5203068 1630280 26542678        1950256 vmlinux.after
+> 
+> while bloat-o-meter says
+> 
+> add/remove: 10/28 grow/shrink: 103/51 up/down: 3669/-2854 (815)
+> ...
+> Total: Before=14783683, After=14784498, chg +0.01%
 > 
 > Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
