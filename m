@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5D0C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F59C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E4A20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D808214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380387;
-	bh=VB7Zdp1PbL+krmlgN8OW2KnVfoVMStM6wF5XK6l28+8=;
+	s=default; t=1568380389;
+	bh=wGnVJVECeZwwfGaCkjL9W2Zddl6CZD5KF6azrXZMvJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlqrWI0GdI/8d+7haCFI0lfUZFAbPmv1y6mbPwHGGDRGBMMQkxnWT/CR67CPvn+ad
-	 e9j3m9SxkNmNlNg0hvihNobdssZKhHy3CmuYyHd4SAZDX/h/4zO1xQUeGjSzAb+E9T
-	 vQ2cCyycr0xiQTY7qUylZcf6aNBe43o0xCYzCgqI=
+	b=jrNXiVlRjEJz7Je3RXQWfESSdGvTQ288y5/vieE82TdY+DPeYx5XW9YTVCkCay1MK
+	 dpRR1cegNt6sSm6g6LQrT6T8yELMVSXvXE09Xz7XJRDr79zXeRqtwXAMdN9Jh4Fha2
+	 kY4ykXzmr5e6M3Be2OsSrEyWRnUF0gCurNj7UpNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388685AbfIMNNG (ORCPT
+        id S2389275AbfIMNNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388194AbfIMNM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:58 -0400
+        id S2388645AbfIMNNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:13:04 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED87E206BB;
-        Fri, 13 Sep 2019 13:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE94C217D6;
+        Fri, 13 Sep 2019 13:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380377;
-        bh=VB7Zdp1PbL+krmlgN8OW2KnVfoVMStM6wF5XK6l28+8=;
+        s=default; t=1568380383;
+        bh=wGnVJVECeZwwfGaCkjL9W2Zddl6CZD5KF6azrXZMvJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WqDkN8iDNiotOnFQYR8KmbAURPbw84RPq4HRwNNB22aG+HNov0QT/9RkTmkRcSP71
-         YcJsQpzxmxNCCrDktXsJZmQed5atpvZsPbnfuj+tTpFAADkaUB4A6WG59ZLASzo7UR
-         llAKU+0pWL5OuuibkYAyD0iVWgudQXTmidnTkkIU=
+        b=sVzGM45oLZ+FtVS1NZmRkTUnlo1ny+TefQn9zGP48tUyKRCfD/K9Sdh1K38m2LADV
+         Nr9JFHyest3su8ACDOpHVZOVaUv0Liyn71x13odNmVLpDNVJ6Mnqbr4JuQCZW4cinU
+         ymq1eKaJ2Ci64uWbCb9PUzN1EzhIe9CWDTHLIK14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        YueHaibing <yuehaibing@huawei.com>, Jessica Yu <jeyu@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/190] remoteproc: qcom: q6v5: shore up resource probe handling
-Date:   Fri, 13 Sep 2019 14:04:42 +0100
-Message-Id: <20190913130601.804917211@linuxfoundation.org>
+Subject: [PATCH 4.19 029/190] kernel/module: Fix mem leak in module_add_modinfo_attrs
+Date:   Fri, 13 Sep 2019 14:04:44 +0100
+Message-Id: <20190913130601.966396917@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,106 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1e2517d126171a41f801738ffd19687836cd178a ]
+[ Upstream commit bc6f2a757d525e001268c3658bd88822e768f8db ]
 
-Commit d5269c4553a6 ("remoteproc: qcom: q6v5: Propagate EPROBE_DEFER")
-fixed up our probe code to handle -EPROBE_DEFER, but it ignored one of
-our interrupts, and it also didn't really handle all the other error
-codes you might get (e.g., with a bad DT definition). Handle those all
-explicitly.
+In module_add_modinfo_attrs if sysfs_create_file
+fails, we forget to free allocated modinfo_attrs
+and roll back the sysfs files.
 
-Fixes: d5269c4553a6 ("remoteproc: qcom: q6v5: Propagate EPROBE_DEFER")
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5.c | 44 +++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ kernel/module.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-index e9ab90c19304f..602af839421de 100644
---- a/drivers/remoteproc/qcom_q6v5.c
-+++ b/drivers/remoteproc/qcom_q6v5.c
-@@ -188,6 +188,14 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	init_completion(&q6v5->stop_done);
+diff --git a/kernel/module.c b/kernel/module.c
+index 2dec3d4a9b627..0d86fc73d63d1 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1694,6 +1694,8 @@ static int add_usage_links(struct module *mod)
+ 	return ret;
+ }
  
- 	q6v5->wdog_irq = platform_get_irq_byname(pdev, "wdog");
-+	if (q6v5->wdog_irq < 0) {
-+		if (q6v5->wdog_irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to retrieve wdog IRQ: %d\n",
-+				q6v5->wdog_irq);
-+		return q6v5->wdog_irq;
-+	}
++static void module_remove_modinfo_attrs(struct module *mod, int end);
 +
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->wdog_irq,
- 					NULL, q6v5_wdog_interrupt,
- 					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-@@ -198,8 +206,13 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
+ static int module_add_modinfo_attrs(struct module *mod)
+ {
+ 	struct module_attribute *attr;
+@@ -1708,24 +1710,34 @@ static int module_add_modinfo_attrs(struct module *mod)
+ 		return -ENOMEM;
+ 
+ 	temp_attr = mod->modinfo_attrs;
+-	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
++	for (i = 0; (attr = modinfo_attrs[i]); i++) {
+ 		if (!attr->test || attr->test(mod)) {
+ 			memcpy(temp_attr, attr, sizeof(*temp_attr));
+ 			sysfs_attr_init(&temp_attr->attr);
+ 			error = sysfs_create_file(&mod->mkobj.kobj,
+ 					&temp_attr->attr);
++			if (error)
++				goto error_out;
+ 			++temp_attr;
+ 		}
  	}
++
++	return 0;
++
++error_out:
++	if (i > 0)
++		module_remove_modinfo_attrs(mod, --i);
+ 	return error;
+ }
  
- 	q6v5->fatal_irq = platform_get_irq_byname(pdev, "fatal");
--	if (q6v5->fatal_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (q6v5->fatal_irq < 0) {
-+		if (q6v5->fatal_irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to retrieve fatal IRQ: %d\n",
-+				q6v5->fatal_irq);
-+		return q6v5->fatal_irq;
-+	}
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ 	struct module_attribute *attr;
+ 	int i;
  
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->fatal_irq,
- 					NULL, q6v5_fatal_interrupt,
-@@ -211,8 +224,13 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	}
+ 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
++		if (end >= 0 && i > end)
++			break;
+ 		/* pick a field to test for end of list */
+ 		if (!attr->attr.name)
+ 			break;
+@@ -1813,7 +1825,7 @@ static int mod_sysfs_setup(struct module *mod,
+ 	return 0;
  
- 	q6v5->ready_irq = platform_get_irq_byname(pdev, "ready");
--	if (q6v5->ready_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (q6v5->ready_irq < 0) {
-+		if (q6v5->ready_irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to retrieve ready IRQ: %d\n",
-+				q6v5->ready_irq);
-+		return q6v5->ready_irq;
-+	}
+ out_unreg_modinfo_attrs:
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ out_unreg_param:
+ 	module_param_sysfs_remove(mod);
+ out_unreg_holders:
+@@ -1849,7 +1861,7 @@ static void mod_sysfs_fini(struct module *mod)
+ {
+ }
  
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->ready_irq,
- 					NULL, q6v5_ready_interrupt,
-@@ -224,8 +242,13 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	}
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ }
  
- 	q6v5->handover_irq = platform_get_irq_byname(pdev, "handover");
--	if (q6v5->handover_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (q6v5->handover_irq < 0) {
-+		if (q6v5->handover_irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to retrieve handover IRQ: %d\n",
-+				q6v5->handover_irq);
-+		return q6v5->handover_irq;
-+	}
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->handover_irq,
- 					NULL, q6v5_handover_interrupt,
-@@ -238,8 +261,13 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	disable_irq(q6v5->handover_irq);
- 
- 	q6v5->stop_irq = platform_get_irq_byname(pdev, "stop-ack");
--	if (q6v5->stop_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (q6v5->stop_irq < 0) {
-+		if (q6v5->stop_irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to retrieve stop-ack IRQ: %d\n",
-+				q6v5->stop_irq);
-+		return q6v5->stop_irq;
-+	}
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->stop_irq,
- 					NULL, q6v5_stop_interrupt,
+@@ -1865,7 +1877,7 @@ static void init_param_lock(struct module *mod)
+ static void mod_sysfs_teardown(struct module *mod)
+ {
+ 	del_usage_links(mod);
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ 	module_param_sysfs_remove(mod);
+ 	kobject_put(mod->mkobj.drivers_dir);
+ 	kobject_put(mod->holders_dir);
 -- 
 2.20.1
 
