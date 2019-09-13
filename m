@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D706C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1993C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D332C20717
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D3B206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380833;
-	bh=qpbOWO+zrWgyAtT0LnYY1NoXF/KCnjnX6qTUJK2PId4=;
+	s=default; t=1568380838;
+	bh=VoqOr//yZFOicsBULwh4G3FSgIQORcRzufwM9JsAIrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ccxZ7BEqZrsHUSEdOWLYY4jvdmkw3HsoYf3sYImwLZnio8UQBH5/1HenbmPjr+5qS
-	 DJGFu/SZHE1CIHZfe17gcohG6JkabG4jHEJU+/nm36S4PnKDgj5/3ASFimdw2lnjOq
-	 XTZh4P+b4VjF7/i2hqtLBdzgvPbpq61XbXitf5nY=
+	b=WFH2OHOECOZBbZG/weoZV1ituhGo3MDZEvJ5ZkqQd8w076XG+9sr8RwP20ILpNnk9
+	 MCcj3oJ2HHjp7Ia6Sa3ypZT/KZLVIetjil4rLg8+sVpm8bft1kqECKaKI1S8at7jwZ
+	 d/SceVwJDcOl10icaj8sw8SBDyCJI0YtShcGy4RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390595AbfIMNUc (ORCPT
+        id S2390606AbfIMNUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390585AbfIMNU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:20:29 -0400
+        id S2389666AbfIMNUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:20:31 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C888C206A5;
-        Fri, 13 Sep 2019 13:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA0F3214D8;
+        Fri, 13 Sep 2019 13:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380827;
-        bh=qpbOWO+zrWgyAtT0LnYY1NoXF/KCnjnX6qTUJK2PId4=;
+        s=default; t=1568380830;
+        bh=VoqOr//yZFOicsBULwh4G3FSgIQORcRzufwM9JsAIrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyNf6fiNMtwuEnNDGi8Z2SANW7aIOPuN5hFzuD0YjyfUzX611B84Dbkvdgl292QHp
-         6o7ORojN9yv6qt26nqXN1TiP9TzWRjQhuXT8Xhk6bnziwpNgKZlMmrLVOp8izSkQDS
-         GAW0WUgGd4mfRkJo92EE79DFsU7QLs1ANUn6V5NU=
+        b=OYIuSF2hziHE7vZWwEOZbl/pMIJ6Z8ync+jbiNVGix9VDGn4xtFwMJ7PiP7APsD5c
+         OAqV/BqUh21v8t0KI+C/v3FXQ1ntCf5IQpd94L9b0BVWAa0CQk7wOWz31ci0G3SIPO
+         D+Gxnta0KsQvnAqoZaGlb5AN4Y9OPNTdlzXDCNTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/190] powerpc/mm: Limit rma_size to 1TB when running without HV mode
-Date:   Fri, 13 Sep 2019 14:07:04 +0100
-Message-Id: <20190913130613.327025482@linuxfoundation.org>
+Subject: [PATCH 4.19 160/190] RDMA/srp: Accept again source addresses that do not have a port number
+Date:   Fri, 13 Sep 2019 14:06:55 +0100
+Message-Id: <20190913130612.699690892@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -63,67 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit da0ef93310e67ae6902efded60b6724dab27a5d1 ]
+[ Upstream commit bcef5b7215681250c4bf8961dfe15e9e4fef97d0 ]
 
-The virtual real mode addressing (VRMA) mechanism is used when a
-partition is using HPT (Hash Page Table) translation and performs real
-mode accesses (MSR[IR|DR] = 0) in non-hypervisor mode. In this mode
-effective address bits 0:23 are treated as zero (i.e. the access is
-aliased to 0) and the access is performed using an implicit 1TB SLB
-entry.
+The function srp_parse_in() is used both for parsing source address
+specifications and for target address specifications. Target addresses
+must have a port number. Having to specify a port number for source
+addresses is inconvenient. Make sure that srp_parse_in() supports again
+parsing addresses with no port number.
 
-The size of the RMA (Real Memory Area) is communicated to the guest as
-the size of the first memory region in the device tree. And because of
-the mechanism described above can be expected to not exceed 1TB. In
-the event that the host erroneously represents the RMA as being larger
-than 1TB, guest accesses in real mode to memory addresses above 1TB
-will be aliased down to below 1TB. This means that a memory access
-performed in real mode may differ to one performed in virtual mode for
-the same memory address, which would likely have unintended
-consequences.
-
-To avoid this outcome have the guest explicitly limit the size of the
-RMA to the current maximum, which is 1TB. This means that even if the
-first memory block is larger than 1TB, only the first 1TB should be
-accessed in real mode.
-
-Fixes: c610d65c0ad0 ("powerpc/pseries: lift RTAS limit for hash")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710052018.14628-1-sjitindarsingh@gmail.com
+Cc: <stable@vger.kernel.org>
+Fixes: c62adb7def71 ("IB/srp: Fix IPv6 address parsing")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/infiniband/ulp/srp/ib_srp.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index f23a89d8e4ce6..29fd8940867e5 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -1859,11 +1859,20 @@ void hash__setup_initial_memory_limit(phys_addr_t first_memblock_base,
- 	 *
- 	 * For guests on platforms before POWER9, we clamp the it limit to 1G
- 	 * to avoid some funky things such as RTAS bugs etc...
-+	 *
-+	 * On POWER9 we limit to 1TB in case the host erroneously told us that
-+	 * the RMA was >1TB. Effective address bits 0:23 are treated as zero
-+	 * (meaning the access is aliased to zero i.e. addr = addr % 1TB)
-+	 * for virtual real mode addressing and so it doesn't make sense to
-+	 * have an area larger than 1TB as it can't be addressed.
- 	 */
- 	if (!early_cpu_has_feature(CPU_FTR_HVMODE)) {
- 		ppc64_rma_size = first_memblock_size;
- 		if (!early_cpu_has_feature(CPU_FTR_ARCH_300))
- 			ppc64_rma_size = min_t(u64, ppc64_rma_size, 0x40000000);
-+		else
-+			ppc64_rma_size = min_t(u64, ppc64_rma_size,
-+					       1UL << SID_SHIFT_1T);
- 
- 		/* Finally limit subsequent allocations */
- 		memblock_set_current_limit(ppc64_rma_size);
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index 9da30d88a615e..bc6a44a16445c 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -3404,13 +3404,14 @@ static const match_table_t srp_opt_tokens = {
+  * @net:	   [in]  Network namespace.
+  * @sa:		   [out] Address family, IP address and port number.
+  * @addr_port_str: [in]  IP address and port number.
++ * @has_port:	   [out] Whether or not @addr_port_str includes a port number.
+  *
+  * Parse the following address formats:
+  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
+  * - IPv6: \[<ipv6_address>\]:<port>, e.g. [1::2:3%4]:5.
+  */
+ static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
+-			const char *addr_port_str)
++			const char *addr_port_str, bool *has_port)
+ {
+ 	char *addr_end, *addr = kstrdup(addr_port_str, GFP_KERNEL);
+ 	char *port_str;
+@@ -3419,9 +3420,12 @@ static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	port_str = strrchr(addr, ':');
+-	if (!port_str)
+-		return -EINVAL;
+-	*port_str++ = '\0';
++	if (port_str && strchr(port_str, ']'))
++		port_str = NULL;
++	if (port_str)
++		*port_str++ = '\0';
++	if (has_port)
++		*has_port = port_str != NULL;
+ 	ret = inet_pton_with_scope(net, AF_INET, addr, port_str, sa);
+ 	if (ret && addr[0]) {
+ 		addr_end = addr + strlen(addr) - 1;
+@@ -3443,6 +3447,7 @@ static int srp_parse_options(struct net *net, const char *buf,
+ 	char *p;
+ 	substring_t args[MAX_OPT_ARGS];
+ 	unsigned long long ull;
++	bool has_port;
+ 	int opt_mask = 0;
+ 	int token;
+ 	int ret = -EINVAL;
+@@ -3541,7 +3546,8 @@ static int srp_parse_options(struct net *net, const char *buf,
+ 				ret = -ENOMEM;
+ 				goto out;
+ 			}
+-			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p);
++			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p,
++					   NULL);
+ 			if (ret < 0) {
+ 				pr_warn("bad source parameter '%s'\n", p);
+ 				kfree(p);
+@@ -3557,7 +3563,10 @@ static int srp_parse_options(struct net *net, const char *buf,
+ 				ret = -ENOMEM;
+ 				goto out;
+ 			}
+-			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p);
++			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p,
++					   &has_port);
++			if (!has_port)
++				ret = -EINVAL;
+ 			if (ret < 0) {
+ 				pr_warn("bad dest parameter '%s'\n", p);
+ 				kfree(p);
 -- 
 2.20.1
 
