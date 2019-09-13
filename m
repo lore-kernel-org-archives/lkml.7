@@ -2,120 +2,160 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C79C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906BCC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185B4206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y9dbMQc0"
+	by mail.kernel.org (Postfix) with ESMTP id 6A12920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568380988;
+	bh=gGAoRvVmfLKLryld/NWI3yrT14UDIS/O7HPmluM8Az8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aZqjXvmFolZIajRYfpW+zzgCrXgTMxiaxhTFzcDCSa/nZDI/9iwvHUveYk5Jh+CnU
+	 t7ASAk5f5hSr9V3KFnJ8cbvL8uY8fSrzshr1j13beDCTL+M2NtKW3KWOMd6IFl7SUu
+	 5ghnexGUQOAl83lkDN1GfDqtpEjMWGC4n6d700Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391082AbfIMNXD (ORCPT
+        id S2389966AbfIMNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:23:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55284 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390909AbfIMNXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:23:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8DDMxhg074712;
-        Fri, 13 Sep 2019 08:22:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568380980;
-        bh=vnhD3PZ0mNE2hDulxxExCWGhochou6IDX6JVjee4zZo=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=Y9dbMQc0aE9/gKp7o4aKT4yxFvuv2bv5RTsbZG6T4voAXupV97yHdiktLJMPeHnCS
-         u5W5jOcO2C3h8b44NbwSPPTu+dAkEvtzrFtoCCbfhtuWojinwtmbkehD+/w2QkIol1
-         6J1Sc7IRV3IiYzDV7D6vH0U90p69qO9Y4xOrAvpA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8DDMxnS116313
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Sep 2019 08:22:59 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 13
- Sep 2019 08:22:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 13 Sep 2019 08:22:59 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x8DDMxCB116905;
-        Fri, 13 Sep 2019 08:22:59 -0500
-Date:   Fri, 13 Sep 2019 08:25:04 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 02/13] media: am437x-vpfe: Fix missing first line
-Message-ID: <20190913132504.sh5fpb4hrv5wqorp@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-3-bparrot@ti.com>
- <018a5f55-a750-c86d-da82-2b7c586cb33e@xs4all.nl>
+        Fri, 13 Sep 2019 09:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390881AbfIMNVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:21:43 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B53A9214D8;
+        Fri, 13 Sep 2019 13:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380902;
+        bh=gGAoRvVmfLKLryld/NWI3yrT14UDIS/O7HPmluM8Az8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l6LKOAF17IhJXIUb8MyfROlNy6T6r9s37jXp3cWk8krQBEWU1wpDYeZucMJtOTRTn
+         J2g+DKJuETJvWWBT1hdSQ4O5J2wPY7vPUTOFh0W1KMhWLjOSEjFyMILWp0XDz4X18t
+         jAIDEj3rxPfFDHTPlEm6kabJKi3ng8QKOnJwqjQI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.2 23/37] IB/hfi1: Unreserve a flushed OPFN request
+Date:   Fri, 13 Sep 2019 14:07:28 +0100
+Message-Id: <20190913130519.901112989@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
+References: <20190913130510.727515099@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <018a5f55-a750-c86d-da82-2b7c586cb33e@xs4all.nl>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:00:08 +0200]:
-> On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> > Previous generation of this driver were hard coded to handle
-> > encoder/decoder were the first line never contains any data and
-> 
-> were -> where
-> 
-> > was therefore always skipped, however when dealing with actual
-> > camera sensor the first line is always present.
-> 
-> sensor -> sensors
+When an OPFN request is flushed, the request is completed without
+unreserving itself from the send queue. Subsequently, when a new
+request is post sent, the following warning will be triggered:
 
-I'll fix those.
+WARNING: CPU: 4 PID: 8130 at rdmavt/qp.c:1761 rvt_post_send+0x72a/0x880 [rdmavt]
+Call Trace:
+[<ffffffffbbb61e41>] dump_stack+0x19/0x1b
+[<ffffffffbb497688>] __warn+0xd8/0x100
+[<ffffffffbb4977cd>] warn_slowpath_null+0x1d/0x20
+[<ffffffffc01c941a>] rvt_post_send+0x72a/0x880 [rdmavt]
+[<ffffffffbb4dcabe>] ? account_entity_dequeue+0xae/0xd0
+[<ffffffffbb61d645>] ? __kmalloc+0x55/0x230
+[<ffffffffc04e1a4c>] ib_uverbs_post_send+0x37c/0x5d0 [ib_uverbs]
+[<ffffffffc04e5e36>] ? rdma_lookup_put_uobject+0x26/0x60 [ib_uverbs]
+[<ffffffffc04dbce6>] ib_uverbs_write+0x286/0x460 [ib_uverbs]
+[<ffffffffbb6f9457>] ? security_file_permission+0x27/0xa0
+[<ffffffffbb641650>] vfs_write+0xc0/0x1f0
+[<ffffffffbb64246f>] SyS_write+0x7f/0xf0
+[<ffffffffbbb74ddb>] system_call_fastpath+0x22/0x27
 
-Thanks
+This patch fixes the problem by moving rvt_qp_wqe_unreserve() into
+rvt_qp_complete_swqe() to simplify the code and make it less
+error-prone.
 
-Benoit
+Fixes: ca95f802ef51 ("IB/hfi1: Unreserve a reserved request when it is completed")
+Link: https://lore.kernel.org/r/20190715164528.74174.31364.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+---
+ drivers/infiniband/hw/hfi1/rc.c | 2 --
+ include/rdma/rdmavt_qp.h        | 9 ++++-----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/am437x/am437x-vpfe.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> > index ab959d61f9c9..0ecb75bf5abd 100644
-> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> > @@ -345,13 +345,9 @@ static void vpfe_ccdc_setwin(struct vpfe_ccdc *ccdc,
-> >  	if (frm_fmt == CCDC_FRMFMT_INTERLACED) {
-> >  		vert_nr_lines = (image_win->height >> 1) - 1;
-> >  		vert_start >>= 1;
-> > -		/* Since first line doesn't have any data */
-> > -		vert_start += 1;
-> >  		/* configure VDINT0 */
-> >  		val = (vert_start << VPFE_VDINT_VDINT0_SHIFT);
-> >  	} else {
-> > -		/* Since first line doesn't have any data */
-> > -		vert_start += 1;
-> >  		vert_nr_lines = image_win->height - 1;
-> >  		/*
-> >  		 * configure VDINT0 and VDINT1. VDINT1 will be at half
-> > 
-> 
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index 235bdbc706acc..5c0d90418e8c4 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -1835,7 +1835,6 @@ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah)
+ 		    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) <= 0)
+ 			break;
+ 		trdma_clean_swqe(qp, wqe);
+-		rvt_qp_wqe_unreserve(qp, wqe);
+ 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
+ 		rvt_qp_complete_swqe(qp,
+ 				     wqe,
+@@ -1882,7 +1881,6 @@ struct rvt_swqe *do_rc_completion(struct rvt_qp *qp,
+ 	if (cmp_psn(wqe->lpsn, qp->s_sending_psn) < 0 ||
+ 	    cmp_psn(qp->s_sending_psn, qp->s_sending_hpsn) > 0) {
+ 		trdma_clean_swqe(qp, wqe);
+-		rvt_qp_wqe_unreserve(qp, wqe);
+ 		trace_hfi1_qp_send_completion(qp, wqe, qp->s_last);
+ 		rvt_qp_complete_swqe(qp,
+ 				     wqe,
+diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
+index 84d0f36afc2f7..85544777587db 100644
+--- a/include/rdma/rdmavt_qp.h
++++ b/include/rdma/rdmavt_qp.h
+@@ -540,7 +540,7 @@ static inline void rvt_qp_wqe_reserve(
+ /**
+  * rvt_qp_wqe_unreserve - clean reserved operation
+  * @qp - the rvt qp
+- * @wqe - the send wqe
++ * @flags - send wqe flags
+  *
+  * This decrements the reserve use count.
+  *
+@@ -552,11 +552,9 @@ static inline void rvt_qp_wqe_reserve(
+  * the compiler does not juggle the order of the s_last
+  * ring index and the decrementing of s_reserved_used.
+  */
+-static inline void rvt_qp_wqe_unreserve(
+-	struct rvt_qp *qp,
+-	struct rvt_swqe *wqe)
++static inline void rvt_qp_wqe_unreserve(struct rvt_qp *qp, int flags)
+ {
+-	if (unlikely(wqe->wr.send_flags & RVT_SEND_RESERVE_USED)) {
++	if (unlikely(flags & RVT_SEND_RESERVE_USED)) {
+ 		atomic_dec(&qp->s_reserved_used);
+ 		/* insure no compiler re-order up to s_last change */
+ 		smp_mb__after_atomic();
+@@ -743,6 +741,7 @@ rvt_qp_complete_swqe(struct rvt_qp *qp,
+ 	u32 byte_len, last;
+ 	int flags = wqe->wr.send_flags;
+ 
++	rvt_qp_wqe_unreserve(qp, flags);
+ 	rvt_put_qp_swqe(qp, wqe);
+ 
+ 	need_completion =
+-- 
+2.20.1
+
+
+
