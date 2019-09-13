@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA24BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3DFC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9881E208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AD82168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380582;
-	bh=kQb2lO5SeC/552C3y6/UkLfJlBEviMXtrHmh+PN1ors=;
+	s=default; t=1568380584;
+	bh=A1OEtCB6vF6AkWgRcCleL1BEUoTuRzPNYoc/GZtwK1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CMuSQkuOKsx9ue4XtYbzQDC7i859T+Olz/dk3qUUl8C6moi1ui6404fVYJ9uTzNxs
-	 yRSxND6okm004wLZO9FdcSc2DqFpXFXRour8bwyYGGSzKTaMHMi9c2NtpAvcSMBBmA
-	 KKieTkCoXyka4d8KwhqT8C+HXRxrH6ZJkuvOeg20=
+	b=Bb4sKkbt8bJdI8sO/k6dCD3rzEmr+QWc9ZOZoBRIlYdr4M18vK0oBKboyOzQieMGT
+	 dAgWd8FC//DTtBAOfpj7sbRYyUE7ETj2oYOR731ZEbO+XA9Yx8QAiIuRyey70b3Znm
+	 zBtYGtm+w1N/tJHoYep6HJirtZmCeRBmh9Wy+JyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbfIMNQU (ORCPT
+        id S2389835AbfIMNQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388932AbfIMNQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 13 Sep 2019 09:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389825AbfIMNQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:16 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165F8206A5;
-        Fri, 13 Sep 2019 13:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0BF20717;
+        Fri, 13 Sep 2019 13:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380578;
-        bh=kQb2lO5SeC/552C3y6/UkLfJlBEviMXtrHmh+PN1ors=;
+        s=default; t=1568380575;
+        bh=A1OEtCB6vF6AkWgRcCleL1BEUoTuRzPNYoc/GZtwK1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Q9p+9piCSU+U0ian/02WO7q8Y7lNOxlKfKrDSPZa1j1n99SJXwzpFy65/cDsL1GD
-         O3D/1fLy3Z8odN8KtjCqNm0iS7IPkwiuPNZLznNGxGf5hrOmPrILP5SMKRgN6B25bh
-         oGw7PTPMX16gjTA+4RsoN7CZGv1fL2gWNxB2hTX4=
+        b=WDf3l8xot3JAKdYXkM0MDwS7Qc06XTJqXtHXcMQY2FoJkPvRyEitR09IQWrG7yqXe
+         6Qu0vAq7bQU+Nuy/ALwgXZhZK8O+GFE+oaVtxye3PuKL/C7Wozk2RysBOVu9zFyfbo
+         EKG0Kt6xnb7ElhJgv604klNRZfGcVv48c0LWY4iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Antonio Argenziano <antonio.argenziano@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/190] drm/i915: Sanity check mmap length against object size
-Date:   Fri, 13 Sep 2019 14:06:04 +0100
-Message-Id: <20190913130608.433465428@linuxfoundation.org>
+Subject: [PATCH 4.19 091/190] mt76: fix corrupted software generated tx CCMP PN
+Date:   Fri, 13 Sep 2019 14:05:46 +0100
+Message-Id: <20190913130606.900459859@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -64,77 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 000c4f90e3f0194eef218ff2c6a8fd8ca1de4313 ]
+[ Upstream commit 906d2d3f874a54183df5a609fda180adf0462428 ]
 
-We assumed that vm_mmap() would reject an attempt to mmap past the end of
-the filp (our object), but we were wrong.
+Since ccmp_pn is u8 *, the second half needs to start at array index 4
+instead of 0. Fixes a connection stall after a certain amount of traffic
 
-Applications that tried to use the mmap beyond the end of the object
-would be greeted by a SIGBUS. After this patch, those applications will
-be told about the error on creating the mmap, rather than at a random
-moment on later access.
-
-Reported-by: Antonio Argenziano <antonio.argenziano@intel.com>
-Testcase: igt/gem_mmap/bad-size
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Antonio Argenziano <antonio.argenziano@intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Fixes: 23405236460b9 ("mt76: fix transmission of encrypted management frames")
 Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190314075829.16838-1-chris@chris-wilson.co.uk
-(cherry picked from commit 794a11cb67201ad1bb61af510bb8460280feb3f3)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index 9634d3adb8d01..9372877100420 100644
---- a/drivers/gpu/drm/i915/i915_gem.c
-+++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -1874,8 +1874,13 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 	 * pages from.
- 	 */
- 	if (!obj->base.filp) {
--		i915_gem_object_put(obj);
--		return -ENXIO;
-+		addr = -ENXIO;
-+		goto err;
-+	}
-+
-+	if (range_overflows(args->offset, args->size, (u64)obj->base.size)) {
-+		addr = -EINVAL;
-+		goto err;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
+index 6542644bc3259..cec31f0c3017b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
+@@ -402,7 +402,7 @@ void mt76x2_mac_write_txwi(struct mt76x2_dev *dev, struct mt76x2_txwi *txwi,
+ 		ccmp_pn[6] = pn >> 32;
+ 		ccmp_pn[7] = pn >> 40;
+ 		txwi->iv = *((__le32 *)&ccmp_pn[0]);
+-		txwi->eiv = *((__le32 *)&ccmp_pn[1]);
++		txwi->eiv = *((__le32 *)&ccmp_pn[4]);
  	}
  
- 	addr = vm_mmap(obj->base.filp, 0, args->size,
-@@ -1889,8 +1894,8 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 		struct vm_area_struct *vma;
- 
- 		if (down_write_killable(&mm->mmap_sem)) {
--			i915_gem_object_put(obj);
--			return -EINTR;
-+			addr = -EINTR;
-+			goto err;
- 		}
- 		vma = find_vma(mm, addr);
- 		if (vma && __vma_matches(vma, obj->base.filp, addr, args->size))
-@@ -1908,12 +1913,10 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 	i915_gem_object_put(obj);
- 
- 	args->addr_ptr = (uint64_t) addr;
--
- 	return 0;
- 
- err:
- 	i915_gem_object_put(obj);
--
- 	return addr;
- }
- 
+ 	spin_lock_bh(&dev->mt76.lock);
 -- 
 2.20.1
 
