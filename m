@@ -2,50 +2,54 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF0FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F61C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18067208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6BD208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380157;
-	bh=TgW3QEobgITHxpQo0bHKSbnp5YfPFBsgG5ek//Jxuc4=;
+	s=default; t=1568380161;
+	bh=SJB/SZBZ512Lz00RrXmy++B4RO1M66TXhT5Mr0YbSBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2h8+ghxR4lQzbBrMcAsUdRBYDSDG/D7L1vWx1Lv/dd+TIrm1KR58mSLN13NelI+w5
-	 Vj1ufsRc6DWhEyvVooeR0eXh8jAvPHdtgLa5r5nK87V0pEuRbOcIh/Brl2Q2nREDaL
-	 wvGXX9qBrRvm0V2mk/KxhBJ/Xjgmgz9TQDLtfles=
+	b=ePqC2GH2GFKTh3q3RUHEC09sVE9K96nQXJBEp5WBxDGAdzRk8dfw0MVJ/VMh1UFyG
+	 FBWYuL4bsyeqNbkB9ljIW1XJpQoE8tYG2RMPnLvUI5y1JsvVj+pLXQsXZpbQGwMLu7
+	 6gmquffMNE0neKkC/HGLL2YIMFKTV9w4JdIiY0tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388470AbfIMNJQ (ORCPT
+        id S2388483AbfIMNJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388450AbfIMNJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:09:12 -0400
+        id S2388463AbfIMNJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:09:15 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AAD214DA;
-        Fri, 13 Sep 2019 13:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D6B208C0;
+        Fri, 13 Sep 2019 13:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380151;
-        bh=TgW3QEobgITHxpQo0bHKSbnp5YfPFBsgG5ek//Jxuc4=;
+        s=default; t=1568380154;
+        bh=SJB/SZBZ512Lz00RrXmy++B4RO1M66TXhT5Mr0YbSBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXfoW8rR4dZaFkhLE4522h+qesvX1Ij2CbI21WK8Lh52s0eKIUORct/HfNs+2lMEz
-         WV5D1MTgtFR39F3ihJbpEsUA9PY9kFud8YOvkhntG6MUawOkmJCYE2Xsfj8PJ8lFPr
-         ZHRgfPVChH4cpVQLQ2Cq4Vrs6DBsEF2Ryd0ZUwv8=
+        b=0KWx41ZYnN5jLrquE7zn4D8rku17SmQ8nxBoKPP+P85j/2LfPfsB91ofQJgL0994E
+         nrA4hqOCSRSFEYAMC7cMHnCTtzA9rOtZYbqdFId17FspSU7N/0eoLUqtGo+jG1+M6Z
+         RTcVuoLw3QpF1iJfpEiSnFszkNLJl72BbI59TkuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 02/14] ALSA: hda/realtek - Fix overridden device-specific initialization
-Date:   Fri, 13 Sep 2019 14:06:55 +0100
-Message-Id: <20190913130442.986600903@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 11/14] scripts/decode_stacktrace: match basepath using shell prefix operator, not regex
+Date:   Fri, 13 Sep 2019 14:07:04 +0100
+Message-Id: <20190913130446.021198073@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
 References: <20190913130440.264749443@linuxfoundation.org>
@@ -58,69 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit 31013836a71e07751a6827f9d2ad41ef502ddaff ]
 
-commit 89781d0806c2c4f29072d3f00cb2dd4274aabc3d upstream.
+The basepath may contain special characters, which would confuse the regex
+matcher.  ${var#prefix} does the right thing.
 
-The recent change to shuffle the codec initialization procedure for
-Realtek via commit 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on
-later") caused the silent output on some machines.  This change was
-supposed to be safe, but it isn't actually; some devices have quirk
-setups to override the EAPD via COEF or BTL in the additional verb
-table, which is applied at the beginning of snd_hda_gen_init().  And
-this EAPD setup is again overridden in alc_auto_init_amp().
-
-For recovering from the regression, tell snd_hda_gen_init() not to
-apply the verbs there by a new flag, then apply the verbs in
-alc_init().
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204727
-Fixes: 607ca3bd220f ("ALSA: hda/realtek - EAPD turn on later")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20190518055946.181563-1-drinkcat@chromium.org
+Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_generic.c   |    3 ++-
- sound/pci/hda/hda_generic.h   |    1 +
- sound/pci/hda/patch_realtek.c |    2 ++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -5807,7 +5807,8 @@ int snd_hda_gen_init(struct hda_codec *c
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 381acfc4c59dd..98cf6343afcd7 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -77,7 +77,7 @@ parse_symbol() {
+ 	fi
  
--	snd_hda_apply_verbs(codec);
-+	if (!spec->skip_verbs)
-+		snd_hda_apply_verbs(codec);
+ 	# Strip out the base of the path
+-	code=${code//^$basepath/""}
++	code=${code#$basepath/}
  
- 	init_multi_out(codec);
- 	init_extra_out(codec);
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -236,6 +236,7 @@ struct hda_gen_spec {
- 	unsigned int indep_hp_enabled:1; /* independent HP enabled */
- 	unsigned int have_aamix_ctl:1;
- 	unsigned int hp_mic_jack_modes:1;
-+	unsigned int skip_verbs:1; /* don't apply verbs at snd_hda_gen_init() */
- 
- 	/* additional mute flags (only effective with auto_mute_via_amp=1) */
- 	u64 mute_bits;
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -773,9 +773,11 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
- 
-+	spec->gen.skip_verbs = 1; /* applied in below */
- 	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
-+	snd_hda_apply_verbs(codec); /* apply verbs here after own init */
- 
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
+-- 
+2.20.1
+
 
 
