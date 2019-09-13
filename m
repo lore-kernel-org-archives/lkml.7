@@ -2,73 +2,96 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0477C4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FDC4CEC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0334206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF8420692
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DP53uxIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404077AbfIMW1P (ORCPT
+        id S2404101AbfIMW2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:27:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34348 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404021AbfIMW1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:27:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BDEA79704;
-        Fri, 13 Sep 2019 22:27:14 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-34.bss.redhat.com [10.20.1.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A86A60BF1;
-        Fri, 13 Sep 2019 22:27:13 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] drm/encoder: Fix possible_crtcs documentation
-Date:   Fri, 13 Sep 2019 18:27:02 -0400
-Message-Id: <20190913222704.8241-3-lyude@redhat.com>
-In-Reply-To: <20190913222704.8241-1-lyude@redhat.com>
-References: <20190913222704.8241-1-lyude@redhat.com>
+        Fri, 13 Sep 2019 18:28:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34631 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404009AbfIMW2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 18:28:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y135so2803982wmc.1;
+        Fri, 13 Sep 2019 15:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ngm7w4qbHtlMJdNCG88CXh8nP0Oze5VBvf7zLp4iqzY=;
+        b=DP53uxIj2f1aUHm3OCrqBEtN7gs1CRrFzj7FDpS9ztadgKHGf1V0+cNEfIR1pWgSIv
+         WriydTHFQd3nCbKCk5BzXZg0Pl64lTywRmw7MUrH7yjPBFOgP5IfCVB8bY6hzrqorysi
+         iM3J3cvizmdsOp5PZ6buV3ZNv5XbHa3Gn6UWg3xb5+Hx89VVezevfVNR8x+IT6ZwkXJo
+         oFUTmyCDHZwVxxyfFimyyOY9slE0QVL2DwM0LHp5C/oUtP14JvnEm5wqwK7G/XmbMCjh
+         bwVsDt1rr19lmsPtUzFUzVor1cf1zuL1MWHFjG+0hYuCZTz5vdfPvE3E6/x6kdOsB5ko
+         FlHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ngm7w4qbHtlMJdNCG88CXh8nP0Oze5VBvf7zLp4iqzY=;
+        b=TV2UfaSyngj4wrB0wQIjTD2gEaEGaR358+Nc5sron1iZuhFl2+v5jKkJm1tw3TK+il
+         JQH1JVtWh2MPZ8dHebE7m4GiH+uJ0JCbvIFTYxj+FwqfVb8PkuOBOrU6GxsMj6VHDT9W
+         StmSfziUIMLkCHoINcO6LLUT6E4XQUrnkhgQpaWW0d39obCqQNNj+4oYGmCsJP7L4SrE
+         HKwyPJtwigHmlqu+SAIWsoaOG8QF+OsibZX9q0kC8Vq6ru+Ic8dav5qrfJ1g2y5lkSrs
+         eKhBXaCeAvtigUkHVrazG1BmelA2N/x0pN0eq+A+0K9/NSdjMDjETpQ1OKY4hMHLG/7h
+         3c2g==
+X-Gm-Message-State: APjAAAXLSMmo6h73VVCTFlZe9L3kfmRVTRrm4+YlIXypUARAlHM/uHOo
+        CqRvjI7sidHFQVl/Hsr0CI/ww/qitss=
+X-Google-Smtp-Source: APXvYqyGGKLyDU/IaggmOU7bpeYlXV53GMECoqFoYK4Pb++AyM5ValDH+FRJ6oui69yNDKSEVsgsbQ==
+X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr5211248wmu.146.1568413696087;
+        Fri, 13 Sep 2019 15:28:16 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.151.137])
+        by smtp.gmail.com with ESMTPSA id d12sm3456107wme.33.2019.09.13.15.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 15:28:15 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [RFC PATCH 0/2] Optimise io_uring completion waiting
+Date:   Sat, 14 Sep 2019 01:28:00 +0300
+Message-Id: <cover.1568413210.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 13 Sep 2019 22:27:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to possible_clones, we don't actually use possible_crtcs until
-the driver is registered with userspace. So, fix the documentation to
-indicate this.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- include/drm/drm_encoder.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+There could be a lot of overhead within generic wait_event_*() used for
+waiting for large number of completions. The patchset removes much of
+it by using custom wait event (wait_threshold).
 
-diff --git a/include/drm/drm_encoder.h b/include/drm/drm_encoder.h
-index 81273b50b3f6..d65173d413b7 100644
---- a/include/drm/drm_encoder.h
-+++ b/include/drm/drm_encoder.h
-@@ -140,7 +140,7 @@ struct drm_encoder {
- 	 * @possible_crtcs: Bitmask of potential CRTC bindings, using
- 	 * drm_crtc_index() as the index into the bitfield. The driver must set
- 	 * the bits for all &drm_crtc objects this encoder can be connected to
--	 * before calling drm_encoder_init().
-+	 * before calling drm_dev_register().
- 	 *
- 	 * In reality almost every driver gets this wrong.
- 	 *
+Synthetic test showed ~40% performance boost. (see patch 2)
+
+Pavel Begunkov (2):
+  sched/wait: Add wait_threshold
+  io_uring: Optimise cq waiting with wait_threshold
+
+ fs/io_uring.c                  | 21 ++++++-----
+ include/linux/wait_threshold.h | 64 ++++++++++++++++++++++++++++++++++
+ kernel/sched/Makefile          |  2 +-
+ kernel/sched/wait_threshold.c  | 26 ++++++++++++++
+ 4 files changed, 103 insertions(+), 10 deletions(-)
+ create mode 100644 include/linux/wait_threshold.h
+ create mode 100644 kernel/sched/wait_threshold.c
+
 -- 
-2.21.0
+2.22.0
 
