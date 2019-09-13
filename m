@@ -2,112 +2,254 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3BCC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86344C49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AE0206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55655206BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568381568;
+	bh=dprHEE8vy79BjIOeg96HRcfIOGxfJAfVRYXf8QgEXJg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dUNC1zqnkRIGt4X0VpUiPHn8iKIob+7CJ4tmE2smXBdwDqolsoNniDE2K0ymCPUX2
+	 gKctljDECuq+rpYwWQO55HvY4ZwicYzmjteYTvdS8b7t/IXsoTlIiujExzclRqxeiM
+	 AfjqFC+pBXwi+CYAhAXeGIK6fihzsfc9HUgbbgN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391748AbfIMNco (ORCPT
+        id S2389146AbfIMNM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:32:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1052 "EHLO mga07.intel.com"
+        Fri, 13 Sep 2019 09:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389185AbfIMNMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 06:12:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,501,1559545200"; 
-   d="scan'208";a="215371241"
-Received: from ddungax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.38])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Sep 2019 06:12:35 -0700
-Date:   Fri, 13 Sep 2019 14:12:34 +0100
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Seunghun Han <kkamagui@gmail.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vanya Lazeev <ivan.lazeev@gmail.com>
-Subject: Re: [PATCH v2 2/2] tpm: tpm_crb: enhance resource mapping mechanism
- for supporting AMD's fTPM
-Message-ID: <20190913131234.GA7412@linux.intel.com>
-References: <20190909090906.28700-1-kkamagui@gmail.com>
- <20190909090906.28700-3-kkamagui@gmail.com>
- <20190910144215.GA30780@linux.intel.com>
- <20190910150342.GA1920@linux.intel.com>
- <CAHjaAcRf3fcJMp6AwVRTrVaABZVzSkhBwRcpKZogAS4SSDK3zg@mail.gmail.com>
+        id S2389130AbfIMNMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:23 -0400
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B74120640;
+        Fri, 13 Sep 2019 13:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568380342;
+        bh=dprHEE8vy79BjIOeg96HRcfIOGxfJAfVRYXf8QgEXJg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LgM/Eoy195TAtS8dy153HW1LKUmvByrZt5N3WJIx+CXzefJAZgkhC0P/f7ReXMqvb
+         D1kZW5oxalzd6QqO1GmvpgOkyf6OiR+SOWLyutxYV/qXZ58hHE5StsDpla6oEmDS9+
+         H9ZFmdf5EVVziWOwAu3lBU4W9fFovGgEnBcv4uRE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Giridhar Malavali <giridhar.malavali@cavium.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 033/190] scsi: qla2xxx: Move log messages before issuing command to firmware
+Date:   Fri, 13 Sep 2019 14:04:48 +0100
+Message-Id: <20190913130602.301974012@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
+References: <20190913130559.669563815@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHjaAcRf3fcJMp6AwVRTrVaABZVzSkhBwRcpKZogAS4SSDK3zg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:28:18AM +0900, Seunghun Han wrote:
-> > Matthew pointed out that having a hook in NVS driver is better solution
-> > because it is nil functionality if the TPM driver is loaded. We need
-> > functions to:
-> >
-> > 1. Request a region from the NVS driver (when tpm_crb loads)
-> > 2. Release a region back to the NVS Driver (when tpm_crb unloads).
-> >
-> > My proposal would unnecessarily duplicate code and also leave a
-> > side-effect when TPM is not used in the first place.
-> >
-> > I see this as the overally best solution. If you can come up with a
-> > patch for the NVS side and changes to CRB drivers to utilize the new
-> > hooks, then combined with Vanya's changes we have a sustainable solution
-> > for AMD fTPM.
-> 
-> It's a great solution. I will update this patch on your advice and
-> send it to you soon.
-> 
-> By the way, I have a question about your advice.
-> If we handle the NVS region with NVS driver, calling devm_ioremap()
-> function is fine like crb_ioremap_resource() function in this patch?
+[ Upstream commit 9fe278f44b4bc06cc61e33b2af65f87d507d13d0 ]
 
-No, you should reclaim the resource that conflicts and return it back
-when tpm_crb is unregistered (e.g. rmmod tpm_crb).
+There is a probability that the SRB structure might have been released by the
+time the debug log message dereferences it.  This patch moved the log messages
+before the command is issued to the firmware to prevent unknown behavior and
+kernel crash
 
-I would try something like enumerating iomem resources with
-walk_iomem_res_desc(). I would advice to peek at arch/x86/kernel/crash.c
-for an example how to use this for NVS regions
-(IORES_DESC_ACPI_NV_STORAGE).
+Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Giridhar Malavali <giridhar.malavali@cavium.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_gs.c   | 15 ++++++-----
+ drivers/scsi/qla2xxx/qla_init.c | 48 +++++++++++++++++----------------
+ 2 files changed, 33 insertions(+), 30 deletions(-)
 
-E.g. you could use a callback for it along the lines of:
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 1f1a05a90d3d7..fc08e46a93ca9 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3360,15 +3360,15 @@ int qla24xx_async_gpsc(scsi_qla_host_t *vha, fc_port_t *fcport)
+ 	sp->u.iocb_cmd.timeout = qla2x00_async_iocb_timeout;
+ 	sp->done = qla24xx_async_gpsc_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_disc, vha, 0x205e,
+ 	    "Async-%s %8phC hdl=%x loopid=%x portid=%02x%02x%02x.\n",
+ 	    sp->name, fcport->port_name, sp->handle,
+ 	    fcport->loop_id, fcport->d_id.b.domain,
+ 	    fcport->d_id.b.area, fcport->d_id.b.al_pa);
++
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -3729,13 +3729,14 @@ int qla24xx_async_gpnid(scsi_qla_host_t *vha, port_id_t *id)
+ 	sp->u.iocb_cmd.timeout = qla2x00_async_iocb_timeout;
+ 	sp->done = qla2x00_async_gpnid_sp_done;
+ 
++	ql_dbg(ql_dbg_disc, vha, 0x2067,
++	    "Async-%s hdl=%x ID %3phC.\n", sp->name,
++	    sp->handle, ct_req->req.port_id.port_id);
++
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS)
+ 		goto done_free_sp;
+ 
+-	ql_dbg(ql_dbg_disc, vha, 0x2067,
+-	    "Async-%s hdl=%x ID %3phC.\n", sp->name,
+-	    sp->handle, ct_req->req.port_id.port_id);
+ 	return rval;
+ 
+ done_free_sp:
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index ddce32fe0513a..39a8f4a671aaa 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -247,6 +247,12 @@ qla2x00_async_login(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 
+ 	}
+ 
++	ql_dbg(ql_dbg_disc, vha, 0x2072,
++	    "Async-login - %8phC hdl=%x, loopid=%x portid=%02x%02x%02x "
++		"retries=%d.\n", fcport->port_name, sp->handle, fcport->loop_id,
++	    fcport->d_id.b.domain, fcport->d_id.b.area, fcport->d_id.b.al_pa,
++	    fcport->login_retry);
++
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS) {
+ 		fcport->flags |= FCF_LOGIN_NEEDED;
+@@ -254,11 +260,6 @@ qla2x00_async_login(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 		goto done_free_sp;
+ 	}
+ 
+-	ql_dbg(ql_dbg_disc, vha, 0x2072,
+-	    "Async-login - %8phC hdl=%x, loopid=%x portid=%02x%02x%02x "
+-		"retries=%d.\n", fcport->port_name, sp->handle, fcport->loop_id,
+-	    fcport->d_id.b.domain, fcport->d_id.b.area, fcport->d_id.b.al_pa,
+-	    fcport->login_retry);
+ 	return rval;
+ 
+ done_free_sp:
+@@ -303,15 +304,16 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
+ 	qla2x00_init_timer(sp, qla2x00_get_async_timeout(vha) + 2);
+ 
+ 	sp->done = qla2x00_async_logout_sp_done;
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+ 
+ 	ql_dbg(ql_dbg_disc, vha, 0x2070,
+ 	    "Async-logout - hdl=%x loop-id=%x portid=%02x%02x%02x %8phC.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b.domain,
+ 		fcport->d_id.b.area, fcport->d_id.b.al_pa,
+ 		fcport->port_name);
++
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -489,13 +491,15 @@ qla2x00_async_adisc(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 	sp->done = qla2x00_async_adisc_sp_done;
+ 	if (data[1] & QLA_LOGIO_LOGIN_RETRIED)
+ 		lio->u.logio.flags |= SRB_LOGIN_RETRIED;
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+ 
+ 	ql_dbg(ql_dbg_disc, vha, 0x206f,
+ 	    "Async-adisc - hdl=%x loopid=%x portid=%06x %8phC.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b24, fcport->port_name);
++
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
++
+ 	return rval;
+ 
+ done_free_sp:
+@@ -1161,14 +1165,13 @@ int qla24xx_async_gpdb(struct scsi_qla_host *vha, fc_port_t *fcport, u8 opt)
+ 
+ 	sp->done = qla24xx_async_gpdb_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_disc, vha, 0x20dc,
+ 	    "Async-%s %8phC hndl %x opt %x\n",
+ 	    sp->name, fcport->port_name, sp->handle, opt);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -1698,15 +1701,14 @@ qla2x00_async_tm_cmd(fc_port_t *fcport, uint32_t flags, uint32_t lun,
+ 	tm_iocb->u.tmf.data = tag;
+ 	sp->done = qla2x00_tmf_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_taskm, vha, 0x802f,
+ 	    "Async-tmf hdl=%x loop-id=%x portid=%02x%02x%02x.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b.domain,
+ 	    fcport->d_id.b.area, fcport->d_id.b.al_pa);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	wait_for_completion(&tm_iocb->u.tmf.comp);
+ 
+ 	rval = tm_iocb->u.tmf.data;
+@@ -1790,14 +1792,14 @@ qla24xx_async_abort_cmd(srb_t *cmd_sp, bool wait)
+ 
+ 	sp->done = qla24xx_abort_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_async, vha, 0x507c,
+ 	    "Abort command issued - hdl=%x, target_id=%x\n",
+ 	    cmd_sp->handle, fcport->tgt_id);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
++
+ 	if (wait) {
+ 		wait_for_completion(&abt_iocb->u.abt.comp);
+ 		rval = abt_iocb->u.abt.comp_status == CS_COMPLETE ?
+-- 
+2.20.1
 
-static int crb_find_iomem_res_cb(struct resource *res, void *io_res_ptr)
-{
-	struct resource *io_res = io_res_ptr;
-
-	if (res->start == io_res->start && res->end == io_res->end) {
-		/*
-		 * Backup all resource data so that it can be inserted
-		 * later on with the flags it had etc.
-		 */
-		*io_res = *res;
-		return 1;
-	}
-
-	return 0;
-}
-
-Then you could __release_region() to unallocate the source. When tpm_crb
-is removed you can then allocate and insert a resource with data
-matching it had.
 
 
-/Jarkko
