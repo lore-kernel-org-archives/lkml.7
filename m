@@ -2,103 +2,85 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D975DC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627AC2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:47:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ktdhGVN4"
+	by mail.kernel.org (Postfix) with ESMTP id B23042089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 22:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404191AbfIMWrt (ORCPT
+        id S2404197AbfIMWuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 18:47:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60888 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404024AbfIMWrt (ORCPT
+        Fri, 13 Sep 2019 18:50:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46632 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404114AbfIMWuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 18:47:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMdhCe030593;
-        Fri, 13 Sep 2019 22:47:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=XQBdn8URejM5X7vfjRpH4pKgGwioD1EvG7txGYNwdzQ=;
- b=ktdhGVN4kSmZZ4OkBXcP3iPJPDM5ENuGCFxV8Xc2Emqc20HZVmRrx1nBZd94a83W+6MD
- vY7s83bZ+IhoqIddCk3eF6P7iTrHDDe2aXE44d+NG6Shm8ItpEruOL0REaxrcui2Be0I
- p+iUuTWNMHuzPN7bX1AhFUr2Z+1HSPvWTm7X4X0mG9k100f0/ZBTAchEg2Sy/PpuXxEo
- ef6pCCcjMFfZqJcEBJV1e+RS4TaM+Oxi6rb6udaW9Kn+n2B7xaDoLvNPlEILTz95dQY3
- RBXo3SwK3g5mVOrjDSU5hSgKUZp6VkFNqW10k5K9BaJ22VehjfyF2v08LxOMwLoZ8TLh bg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2uytd3q9a7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 22:47:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8DMdWxZ128809;
-        Fri, 13 Sep 2019 22:47:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2v0cwk5qgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 13 Sep 2019 22:47:42 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8DMlfxE008564;
-        Fri, 13 Sep 2019 22:47:41 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 13 Sep 2019 15:47:40 -0700
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        "jejb\@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen\@oracle.com" <martin.petersen@oracle.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] scsi: storvsc: Add the support of hibernation
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1568244905-66625-1-git-send-email-decui@microsoft.com>
-Date:   Fri, 13 Sep 2019 18:47:38 -0400
-In-Reply-To: <1568244905-66625-1-git-send-email-decui@microsoft.com> (Dexuan
-        Cui's message of "Wed, 11 Sep 2019 23:35:16 +0000")
-Message-ID: <yq1zhj7byph.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=645
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909130222
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=711 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909130222
+        Fri, 13 Sep 2019 18:50:17 -0400
+Received: from prsriva-Precision-Tower-5810.corp.microsoft.com (unknown [167.220.2.18])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E945020B7186;
+        Fri, 13 Sep 2019 15:50:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E945020B7186
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc:     arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
+        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
+        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
+        takahiro.akashi@linaro.org, james.morse@arm.org,
+        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com,
+        zohar@linux.ibm.com
+Subject: [RFC PATCH v1 0/1] Add support for arm64 to carry ima measurement log in kexec_file_load
+Date:   Fri, 13 Sep 2019 15:50:08 -0700
+Message-Id: <20190913225009.3406-1-prsriva@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for arm64 to carry ima measurement log
+to the next kexec'ed session triggered via kexec_file_load.
+- Top of Linux 5.3-rc6
 
-Dexuan,
+Currently during kexec the kernel file signatures are/can be validated
+prior to actual load, the information(PE/ima signature) is not carried
+to the next session. This lead to loss of information.
 
-> When we're in storvsc_suspend(), we're sure the SCSI layer has
-> quiesced the scsi device by scsi_bus_suspend() -> ... ->
-> scsi_device_quiesce(), so the low level SCSI adapter driver only needs
-> to suspend/resume its own state.
+Carrying forward the ima measurement log to the next kexec'ed session 
+allows a verifying party to get the entire runtime event log since the
+last full reboot, since that is when PCRs were last reset.
 
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Changelog:
+
+v1:
+  - add new fdt porperties to mark start and end for ima measurement
+    log.
+  - use fdt_* functions to add/remove fdt properties and memory
+    allocations.
+  - remove additional check for endian-ness as they are checked
+    in fdt_* functions.
+
+v0:
+  - Add support to carry ima measurement log in arm64, 
+   uses same code as powerpc.
+
+Prakhar Srivastava (1):
+  Add support for arm64 to carry ima measurement log in kexec_file_load
+
+ arch/arm64/Kconfig                     |   7 +
+ arch/arm64/include/asm/ima.h           |  29 ++++
+ arch/arm64/include/asm/kexec.h         |   5 +
+ arch/arm64/kernel/Makefile             |   3 +-
+ arch/arm64/kernel/ima_kexec.c          | 213 +++++++++++++++++++++++++
+ arch/arm64/kernel/machine_kexec_file.c |   6 +
+ 6 files changed, 262 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/include/asm/ima.h
+ create mode 100644 arch/arm64/kernel/ima_kexec.c
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
