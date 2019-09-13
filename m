@@ -5,223 +5,157 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92D8C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6086BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD0020856
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2660A2075C
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 03:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmgYQxJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRbddGfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfIMDWt (ORCPT
+        id S1727997AbfIMD2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 23:22:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42580 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfIMDWt (ORCPT
+        Thu, 12 Sep 2019 23:28:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40290 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfIMD2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 23:22:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w22so17198010pfi.9;
-        Thu, 12 Sep 2019 20:22:47 -0700 (PDT)
+        Thu, 12 Sep 2019 23:28:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so14528590pgj.7;
+        Thu, 12 Sep 2019 20:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qe2h9NfhcUmoPESIDtsAXWHsKPsyhEADzKG8omWLqSM=;
-        b=rmgYQxJ4cZAskQbfVPERybuMb0Dl9tUFzioHbDqTUtIEWrauDr0t5m1UgZTnf+SyKf
-         /iM4v1a6CukTZFa9dnGIMNKmuIFiK0cUlC3XxPwhjGxNv9BHQ1HR+LUBGuqmXi3MUwBx
-         M71xyAjYpdnCmS8/vCfac5bu91xvWlDhbYfjkoRiSVamtNz71B37w3qHvP/e5L20a9AG
-         n9Zw98X8RMPbe4PEXbJV6ZxP4O0uAz/SLE1JUCjxNLt1k43j3mG5l2K5Md2mISjSSjhV
-         i1jGrn29gEcdqGfW2GvlqHR48nIU+p0YbffPJW5X8E5+MhvY7uPuycGUbqS5clc71/T/
-         DsTw==
+        h=from:to:cc:subject:date:message-id;
+        bh=BfRk36jUxhPvrR7SuyOXhAxYDPZWPiFNoz8hjpc7xtc=;
+        b=jRbddGfongUF/lPGlR6S0KO6Dudfzh8jqNK6t1k9n1CxT3G/TaDAq0sWkKxdstUBmP
+         7mlfTNeUU+uRdySfFTLV8iAAOryFPtXSZG0m1PEDOBDmZBFZVTYdGyxP6Ewj46TKPM3Z
+         6CDG0ypLhw6SesryQ8FZYNzGB6gSyU/1uECS0OV/Jr2bT4NUdRO5L/OzsndEcMI2dQFn
+         Z2Q37XVB7k9y419aV95vWEVE3OVbTO3JtbWdIv8xWSqTnFTRCY/2kRUh8Tq0HGA575Vf
+         0+YtFfcnXuBcowsmcFTP95ETYxqBNPTk0TWF6ZXH92uj4iwe99rjp9I7F3+OnM4bsKj8
+         hxqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qe2h9NfhcUmoPESIDtsAXWHsKPsyhEADzKG8omWLqSM=;
-        b=YnPVlfnLxcvo/IjBE+28adLTGcmMvZ6jAHcPw4cEsN6oiTtHSrmvFwbgQV2+DSGakY
-         oHAvvwAHFWY1TcrdhsFYadHpIUHzsulsWt1ANNDSdIO2iQtncrkMFPUYRXRmBbv2mEfO
-         L7Zk1v24zohPMErVQ6kM0hb1IulDdF34+i5oKgmue5OlOcC871pCNHowE8gigA05DBgx
-         Fps7Icn5ggB025QfaCOyGEhlaGd9U2/B+/63H32h/WRrZbiO+wZKa9WyYRf4lu7I3ehn
-         m+CfT5Of5/xU+/3r6l5hep5ReT+iBBt/41l9uTZrsL2/5QWNeYkbWzBeCbvKtY7+FDQL
-         0DSA==
-X-Gm-Message-State: APjAAAVX7wL1YnBDjnmNrKhm2IRdTVeQncdGjc6Jk7HjEpMNz4xOJUkO
-        kS1AdqJGeEc7a5+LFYVot6Un8usvumY=
-X-Google-Smtp-Source: APXvYqwnCcBzoRXJqlbD5UgaqK1idemNl6UNFB40/cc29W2d/CmEtBZh8z6Ik+hdu8CCyUxb/W3Fnw==
-X-Received: by 2002:a63:c107:: with SMTP id w7mr40148025pgf.283.1568344966677;
-        Thu, 12 Sep 2019 20:22:46 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b2sm8060936pfd.81.2019.09.12.20.22.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BfRk36jUxhPvrR7SuyOXhAxYDPZWPiFNoz8hjpc7xtc=;
+        b=t1pq5wYjzjXU/YcAyQP73/QwiXaRg/GuX22u5L1dK+qRsvCN8r807SWbrAiuKC5Tgx
+         tRhtyHJ28fXGgFyFFIzGAXAK++Aec4wo16LflYF/v+sT3jsVNzPf0rWIgVqZFbf2NV5V
+         ndP1bDGIcEGyDghkmbjog9bvpHL4361ulnJPXeqE9UbUwYzRjjLGKIGZTttrupBtD8li
+         Ej5SyFqmvUvbGgQbus1lTVvptTDx67yyQxTrW6bPSpkycH3ZCVObIdGpjfMlowKK/W5h
+         qWAY/mMOl5dKhbjBFEfUTFK5aDJQLFAJUCgNu26l8jmfLi/nwQM1AGUl/ZUHfJatXf7H
+         YpwA==
+X-Gm-Message-State: APjAAAWL/OX7QvNf20UFLGKNDGLFNjLe5NVtXHt1PfgfumrkOwfUr++P
+        1VsNTz400KBu5eaCT7gYUqGhr0jV
+X-Google-Smtp-Source: APXvYqz2pJWIyyYMIMiNiS9Yut9EPDbIjU9fuRAk+2YHilrEBGv5lCwEQ9Q+33ySpZe8bSx9xbrfPQ==
+X-Received: by 2002:aa7:8188:: with SMTP id g8mr12215751pfi.88.1568345328669;
+        Thu, 12 Sep 2019 20:28:48 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id r12sm30146006pgb.73.2019.09.12.20.28.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2019 20:22:45 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 2/2] gpiolib: introduce fwnode_gpiod_get_index()
-Date:   Thu, 12 Sep 2019 20:22:39 -0700
-Message-Id: <20190913032240.50333-3-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
-In-Reply-To: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
-References: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 12 Sep 2019 20:28:48 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     b.spranger@linutronix.de, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: b53: Add support for port_egress_floods callback
+Date:   Thu, 12 Sep 2019 20:28:39 -0700
+Message-Id: <20190913032841.4302-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This introduces fwnode_gpiod_get_index() that iterates through common gpio
-suffixes when trying to locate a GPIO within a given firmware node.
+Add support for configuring the per-port egress flooding control for
+both Unicast and Multicast traffic.
 
-We also switch devm_fwnode_gpiod_get_index() to call
-fwnode_gpiod_get_index() instead of iterating through GPIO suffixes on
-its own.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
+Beneditk,
 
-Changes in v2:
-- rebased on top of Linus W devel branch
-- added Andy's Reviewed-by
+Do you mind re-testing, or confirming that this patch that I sent much
+earlier does work correctly for you? Thanks!
 
- drivers/gpio/gpiolib-devres.c | 16 +-----------
- drivers/gpio/gpiolib.c        | 48 +++++++++++++++++++++++++++++++++++
- include/linux/gpio/consumer.h | 13 ++++++++++
- 3 files changed, 62 insertions(+), 15 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 33 ++++++++++++++++++++++++++++++++
+ drivers/net/dsa/b53/b53_priv.h   |  2 ++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 9a0475c87f95..4421be09b960 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -205,29 +205,15 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      enum gpiod_flags flags,
- 					      const char *label)
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 7d328a5f0161..ac2ec08a652b 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -342,6 +342,13 @@ static void b53_set_forwarding(struct b53_device *dev, int enable)
+ 	b53_read8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, &mgmt);
+ 	mgmt |= B53_MII_DUMB_FWDG_EN;
+ 	b53_write8(dev, B53_CTRL_PAGE, B53_SWITCH_CTRL, mgmt);
++
++	/* Look at B53_UC_FWD_EN and B53_MC_FWD_EN to decide whether
++	 * frames should be flooed or not.
++	 */
++	b53_read8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, &mgmt);
++	mgmt |= B53_UC_FWD_EN | B53_MC_FWD_EN;
++	b53_write8(dev, B53_CTRL_PAGE, B53_IP_MULTICAST_CTRL, mgmt);
+ }
+ 
+ static void b53_enable_vlan(struct b53_device *dev, bool enable,
+@@ -1753,6 +1760,31 @@ void b53_br_fast_age(struct dsa_switch *ds, int port)
+ }
+ EXPORT_SYMBOL(b53_br_fast_age);
+ 
++int b53_br_egress_floods(struct dsa_switch *ds, int port,
++			 bool unicast, bool multicast)
++{
++	struct b53_device *dev = ds->priv;
++	u16 uc, mc;
++
++	b53_read16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, &uc);
++	if (unicast)
++		uc |= BIT(port);
++	else
++		uc &= ~BIT(port);
++	b53_write16(dev, B53_CTRL_PAGE, B53_UC_FWD_EN, uc);
++
++	b53_read16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, &mc);
++	if (multicast)
++		mc |= BIT(port);
++	else
++		mc &= ~BIT(port);
++	b53_write16(dev, B53_CTRL_PAGE, B53_MC_FWD_EN, mc);
++
++	return 0;
++
++}
++EXPORT_SYMBOL(b53_br_egress_floods);
++
+ static bool b53_possible_cpu_port(struct dsa_switch *ds, int port)
  {
--	char prop_name[32]; /* 32 is max size of property name */
- 	struct gpio_desc **dr;
- 	struct gpio_desc *desc;
--	unsigned int i;
- 
- 	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpio_desc *),
- 			  GFP_KERNEL);
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
- 
--	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
--		if (con_id)
--			snprintf(prop_name, sizeof(prop_name), "%s-%s",
--					    con_id, gpio_suffixes[i]);
--		else
--			snprintf(prop_name, sizeof(prop_name), "%s",
--					    gpio_suffixes[i]);
--
--		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
--					      label);
--		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
--			break;
--	}
-+	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
- 	if (IS_ERR(desc)) {
- 		devres_free(dr);
- 		return desc;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 158e327a1285..11a6f4777436 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4317,6 +4317,54 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
- 	return count;
- }
- 
-+/**
-+ * fwnode_gpiod_get_index - obtain a GPIO from firmware node
-+ * @fwnode:	handle of the firmware node
-+ * @con_id:	function within the GPIO consumer
-+ * @index:	index of the GPIO to obtain for the consumer
-+ * @flags:	GPIO initialization flags
-+ * @label:	label to attach to the requested GPIO
-+ *
-+ * This function can be used for drivers that get their configuration
-+ * from opaque firmware.
-+ *
-+ * The function properly finds the corresponding GPIO using whatever is the
-+ * underlying firmware interface and then makes sure that the GPIO
-+ * descriptor is requested before it is returned to the caller.
-+ *
-+ * Returns:
-+ * On successful request the GPIO pin is configured in accordance with
-+ * provided @flags.
-+ *
-+ * In case of error an ERR_PTR() is returned.
-+ */
-+struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
-+					 const char *con_id, int index,
-+					 enum gpiod_flags flags,
-+					 const char *label)
-+{
-+	struct gpio_desc *desc;
-+	char prop_name[32]; /* 32 is max size of property name */
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
-+		if (con_id)
-+			snprintf(prop_name, sizeof(prop_name), "%s-%s",
-+					    con_id, gpio_suffixes[i]);
-+		else
-+			snprintf(prop_name, sizeof(prop_name), "%s",
-+					    gpio_suffixes[i]);
-+
-+		desc = fwnode_get_named_gpiod(fwnode, prop_name, index, flags,
-+					      label);
-+		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
-+			break;
-+	}
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_gpiod_get_index);
-+
- /**
-  * gpiod_count - return the number of GPIOs associated with a device / function
-  *		or -ENOENT if no GPIO has been assigned to the requested function
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index dc0ddcd30515..5215fdba6b9a 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -176,6 +176,10 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 					 const char *propname, int index,
- 					 enum gpiod_flags dflags,
- 					 const char *label);
-+struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
-+					 const char *con_id, int index,
-+					 enum gpiod_flags flags,
-+					 const char *label);
- struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      struct fwnode_handle *child,
- 					      const char *con_id, int index,
-@@ -531,6 +535,15 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 	return ERR_PTR(-ENOSYS);
- }
- 
-+static inline
-+struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
-+					 const char *con_id, int index,
-+					 enum gpiod_flags flags,
-+					 const char *label)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
- static inline
- struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      struct fwnode_handle *fwnode,
+ 	/* Broadcom switches will accept enabling Broadcom tags on the
+@@ -1953,6 +1985,7 @@ static const struct dsa_switch_ops b53_switch_ops = {
+ 	.port_bridge_leave	= b53_br_leave,
+ 	.port_stp_state_set	= b53_br_set_stp_state,
+ 	.port_fast_age		= b53_br_fast_age,
++	.port_egress_floods	= b53_br_egress_floods,
+ 	.port_vlan_filtering	= b53_vlan_filtering,
+ 	.port_vlan_prepare	= b53_vlan_prepare,
+ 	.port_vlan_add		= b53_vlan_add,
+diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
+index f25bc80c4ffc..a7dd8acc281b 100644
+--- a/drivers/net/dsa/b53/b53_priv.h
++++ b/drivers/net/dsa/b53/b53_priv.h
+@@ -319,6 +319,8 @@ int b53_br_join(struct dsa_switch *ds, int port, struct net_device *bridge);
+ void b53_br_leave(struct dsa_switch *ds, int port, struct net_device *bridge);
+ void b53_br_set_stp_state(struct dsa_switch *ds, int port, u8 state);
+ void b53_br_fast_age(struct dsa_switch *ds, int port);
++int b53_br_egress_floods(struct dsa_switch *ds, int port,
++			 bool unicast, bool multicast);
+ void b53_port_event(struct dsa_switch *ds, int port);
+ void b53_phylink_validate(struct dsa_switch *ds, int port,
+ 			  unsigned long *supported,
 -- 
-2.23.0.237.gc6a4ce50a0-goog
+2.17.1
 
