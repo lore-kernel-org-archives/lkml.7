@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF881C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD26C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98718206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFE920640
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568381427;
-	bh=ao2KN6nkrJRRgCQMaG6wwvL0TDA2aYFqBntUtLWoWy4=;
+	s=default; t=1568381438;
+	bh=OIl8hDJHmPG/euD1Pv+vrHgA9uVk7K8XCYaL8CAUYHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tyuwy6lNWPYlXava6w23Z3WcK1lGu3rioxuAb5HrOFhr4bw1Bhm/N2t/BFOSh+R6e
-	 qU95noUoVVHUOAnJsCtYFwWdaMQmbKT8ZV+tcwzPCu+QdOrB7BkClvbtaP9heX7Ly9
-	 JHqdfErdN+0lPYocNVe4GlB/49eC8xuEnKOW78Bw=
+	b=f21dGxtzEv4iAhPVlOhk1VoXtgykKj9jVasbOXTMoUl3ORnsk78sR3xcwUTW9vaEk
+	 wBnRGPrto2JO6mh4i39gw7W4JGoPU0wX3jpl6Prn5TnWkdgeh2jOc5jV2iE7MNJjY1
+	 Z3fSlUUhC4iTuQ1D3E0dcLgRJ1HXzgCFo6jP8LEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389031AbfIMNQu (ORCPT
+        id S2391360AbfIMNah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43682 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389214AbfIMNQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:16:46 -0400
+        id S2388466AbfIMNQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:16:25 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E18F120717;
-        Fri, 13 Sep 2019 13:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD1E20CC7;
+        Fri, 13 Sep 2019 13:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380605;
-        bh=ao2KN6nkrJRRgCQMaG6wwvL0TDA2aYFqBntUtLWoWy4=;
+        s=default; t=1568380584;
+        bh=OIl8hDJHmPG/euD1Pv+vrHgA9uVk7K8XCYaL8CAUYHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AlLx+oaX9lAOvyxw4DWXHPoYFceMKcqIdVm4lmFiCz1gvUy4qUW49hfy0IBS8zj+
-         oQTurp6E9CEqq5Ongee7AK9XZaAnWXn/pzohxANiomxh+ha4HA4hh8yvJ1rt+fnLY8
-         zyCqdCOOo9293yN0Ajg2n6wUmfUTQtlntADc+NsA=
+        b=qJZiefrclkb63AV+R5ZxWHaMluiQEQtyhkd71m/96Q/+A/1oRnAhcr/pbXWEok2Xa
+         NlAa+o24V+i+Ytt7asEw/VvXtrJenRj3o8k7m59wiO/5IOEqXNuKDaxzFeQO9MqVii
+         d4kdjH70XUfF6gDVcDmNhKZYa1eWR/nj0eaTVbDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Saito <takeshi.saito.xv@renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Ley Foon Tan <ley.foon.tan@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/190] mmc: renesas_sdhi: Fix card initialization failure in high speed mode
-Date:   Fri, 13 Sep 2019 14:05:53 +0100
-Message-Id: <20190913130607.445320954@linuxfoundation.org>
+Subject: [PATCH 4.19 111/190] arm64: dts: stratix10: add the sysmgr-syscon property from the gmacs
+Date:   Fri, 13 Sep 2019 14:06:06 +0100
+Message-Id: <20190913130608.616982475@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -66,79 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d30ae056adb81e1d2b8b953efa74735a020b8e3b ]
+[ Upstream commit 8efd6365417a044db03009724ecc1a9521524913 ]
 
-This fixes card initialization failure in high speed mode.
+The gmac ethernet driver uses the "altr,sysmgr-syscon" property to
+configure phy settings for the gmac controller.
 
-If U-Boot uses SDR or HS200/400 mode before starting Linux and Linux
-DT does not enable SDR/HS200/HS400 mode, card initialization fails in
-high speed mode.
+Add the "altr,sysmgr-syscon" property to all gmac nodes.
 
-It is necessary to initialize SCC registers during card initialization
-phase. HW reset function is registered only for a port with either of
-SDR/HS200/HS400 properties in device tree. If SDR/HS200/HS400 properties
-are not present in device tree, SCC registers will not be reset. In SoC
-that support SCC registers, HW reset function should be registered
-regardless of the configuration of device tree.
+This patch fixes:
 
-Reproduction procedure:
-- Use U-Boot that support MMC HS200/400 mode.
-- Delete HS200/HS400 properties in device tree.
-  (Delete mmc-hs200-1_8v and mmc-hs400-1_8v)
-- MMC port works high speed mode and all commands fail.
+[    0.917530] socfpga-dwmac ff800000.ethernet: No sysmgr-syscon node found
+[    0.924209] socfpga-dwmac ff800000.ethernet: Unable to parse OF data
 
-Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_core.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
-index 45baf5d9120e3..61f0faddfd889 100644
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -636,6 +636,13 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 		host->ops.card_busy = renesas_sdhi_card_busy;
- 		host->ops.start_signal_voltage_switch =
- 			renesas_sdhi_start_signal_voltage_switch;
-+
-+		/* SDR and HS200/400 registers requires HW reset */
-+		if (of_data && of_data->scc_offset) {
-+			priv->scc_ctl = host->ctl + of_data->scc_offset;
-+			host->mmc->caps |= MMC_CAP_HW_RESET;
-+			host->hw_reset = renesas_sdhi_hw_reset;
-+		}
- 	}
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 5089aa64088fc..9a1ea8a464057 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -140,6 +140,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
+ 			status = "disabled";
+ 		};
  
- 	/* Orginally registers were 16 bit apart, could be 32 or 64 nowadays */
-@@ -693,8 +700,6 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 		const struct renesas_sdhi_scc *taps = of_data->taps;
- 		bool hit = false;
+@@ -156,6 +157,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
+ 			status = "disabled";
+ 		};
  
--		host->mmc->caps |= MMC_CAP_HW_RESET;
--
- 		for (i = 0; i < of_data->taps_num; i++) {
- 			if (taps[i].clk_rate == 0 ||
- 			    taps[i].clk_rate == host->mmc->f_max) {
-@@ -707,12 +712,10 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 		if (!hit)
- 			dev_warn(&host->pdev->dev, "Unknown clock rate for SDR104\n");
+@@ -172,6 +174,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x4c 0>;
+ 			status = "disabled";
+ 		};
  
--		priv->scc_ctl = host->ctl + of_data->scc_offset;
- 		host->init_tuning = renesas_sdhi_init_tuning;
- 		host->prepare_tuning = renesas_sdhi_prepare_tuning;
- 		host->select_tuning = renesas_sdhi_select_tuning;
- 		host->check_scc_error = renesas_sdhi_check_scc_error;
--		host->hw_reset = renesas_sdhi_hw_reset;
- 		host->prepare_hs400_tuning =
- 			renesas_sdhi_prepare_hs400_tuning;
- 		host->hs400_downgrade = renesas_sdhi_disable_scc;
 -- 
 2.20.1
 
