@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AF6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E602C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A621208C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C70206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380521;
-	bh=Rwe+DJHQQuxCWe7BLO66QXK4G6FkMsj4vn3etY4E/Y4=;
+	s=default; t=1568380527;
+	bh=Dt/SmXv7L/dLtW5+1RfHqJi7TyMKcJSyRZIGEnRlLFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jCh9eT2OufcqxWiNE7mbLb51UjB5Qu6rXr49iZGguziV2t66aGP1rOeMjtmjt0Dyb
-	 9R9Znh+rDpeHIQIvOuhTsCzQPXb7CWqonGUMM49K9V0L1nRLx8lNyAbUP5aSJI/a59
-	 mMQVht+UMhKQldtnIOf5CEKgDPAX4YV8AKYgExzs=
+	b=fnN1MCTwX+Br+uNSHUdg4ld33PbbdJq2aU9t/r1Fb3e66Jf0BJ2zTJDKH0qfkMy6H
+	 Y2tuqP03qCFNNBcWyGNhRBZmDD63CaG+0WHCJBDrqmoqibfZCQWS8mKdfNWEKLKD/X
+	 9myykZWt0je08hCJuX7nSVxy1fEqNcyFtyxx/N9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389681AbfIMNPU (ORCPT
+        id S2389694AbfIMNP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41476 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389665AbfIMNPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:15:17 -0400
+        id S2389665AbfIMNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:15:21 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B196A206A5;
-        Fri, 13 Sep 2019 13:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C334C206A5;
+        Fri, 13 Sep 2019 13:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380516;
-        bh=Rwe+DJHQQuxCWe7BLO66QXK4G6FkMsj4vn3etY4E/Y4=;
+        s=default; t=1568380519;
+        bh=Dt/SmXv7L/dLtW5+1RfHqJi7TyMKcJSyRZIGEnRlLFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tv0TP/y6WcgQ8sKI0GehH8Y+7EK9HOepaMr1kSLNGX481JTDq3G0dMDhf4dQpBeXB
-         ahnx/RRYiO1a8ZFFiH6dyaIc6HzClR4T9SL6ca2ZbQrrxL4VbQ6EsKSJD4FUmU5sfo
-         euQRQaSmLCsHlBu8LJDce4Sgm8gKdfVpf1KO2kpU=
+        b=MPcY008c7iwMRyu5q8nu8f+/ILnf9Dg34nZi0sWU2ZzOTJm+4yinkzP9j6Qy9NW0L
+         f+NzoNmybDT76VDMjUgCjDo9NFbVDDG6tt4vtVuK6Fnk15ZhQrMYzkW2kN8hAE7xcY
+         tiHX4ecBRvitycHSqSW3Bd4LMhXeqSxpEQpXLYpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/190] scsi: megaraid_sas: Use 63-bit DMA addressing
-Date:   Fri, 13 Sep 2019 14:05:26 +0100
-Message-Id: <20190913130605.302665299@linuxfoundation.org>
+Subject: [PATCH 4.19 072/190] powerpc/pkeys: Fix handling of pkey state across fork()
+Date:   Fri, 13 Sep 2019 14:05:27 +0100
+Message-Id: <20190913130605.367739894@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -61,84 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 894169db12463cea08d0e2a9e35f42b291340e5a ]
+[ Upstream commit 2cd4bd192ee94848695c1c052d87913260e10f36 ]
 
-Although MegaRAID controllers support 64-bit DMA addressing, as per
-hardware design, DMA address with all 64-bits set
-(0xFFFFFFFF-FFFFFFFF) results in a firmware fault.
+Protection key tracking information is not copied over to the
+mm_struct of the child during fork(). This can cause the child to
+erroneously allocate keys that were already allocated. Any allocated
+execute-only key is lost aswell.
 
-Driver will set 63-bit DMA mask to ensure the above address will not be
-used.
+Add code; called by dup_mmap(), to copy the pkey state from parent to
+child explicitly.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This problem was originally found by Dave Hansen on x86, which turns
+out to be a problem on powerpc aswell.
+
+Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
+Cc: stable@vger.kernel.org # v4.16+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/powerpc/include/asm/mmu_context.h | 15 +++++++++------
+ arch/powerpc/mm/pkeys.c                | 10 ++++++++++
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 749f10146f630..bc37666f998e6 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -6056,13 +6056,13 @@ static int megasas_io_attach(struct megasas_instance *instance)
-  * @instance:		Adapter soft state
-  * Description:
-  *
-- * For Ventura, driver/FW will operate in 64bit DMA addresses.
-+ * For Ventura, driver/FW will operate in 63bit DMA addresses.
-  *
-  * For invader-
-  *	By default, driver/FW will operate in 32bit DMA addresses
-  *	for consistent DMA mapping but if 32 bit consistent
-- *	DMA mask fails, driver will try with 64 bit consistent
-- *	mask provided FW is true 64bit DMA capable
-+ *	DMA mask fails, driver will try with 63 bit consistent
-+ *	mask provided FW is true 63bit DMA capable
-  *
-  * For older controllers(Thunderbolt and MFI based adapters)-
-  *	driver/FW will operate in 32 bit consistent DMA addresses.
-@@ -6075,15 +6075,15 @@ megasas_set_dma_mask(struct megasas_instance *instance)
- 	u32 scratch_pad_2;
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index b694d6af11508..ae953958c0f33 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -217,12 +217,6 @@ static inline void enter_lazy_tlb(struct mm_struct *mm,
+ #endif
+ }
  
- 	pdev = instance->pdev;
--	consistent_mask = (instance->adapter_type == VENTURA_SERIES) ?
--				DMA_BIT_MASK(64) : DMA_BIT_MASK(32);
-+	consistent_mask = (instance->adapter_type >= VENTURA_SERIES) ?
-+				DMA_BIT_MASK(63) : DMA_BIT_MASK(32);
+-static inline int arch_dup_mmap(struct mm_struct *oldmm,
+-				struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+ #ifndef CONFIG_PPC_BOOK3S_64
+ static inline void arch_exit_mmap(struct mm_struct *mm)
+ {
+@@ -247,6 +241,7 @@ static inline void arch_bprm_mm_init(struct mm_struct *mm,
+ #ifdef CONFIG_PPC_MEM_KEYS
+ bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
+ 			       bool execute, bool foreign);
++void arch_dup_pkeys(struct mm_struct *oldmm, struct mm_struct *mm);
+ #else /* CONFIG_PPC_MEM_KEYS */
+ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 		bool write, bool execute, bool foreign)
+@@ -259,6 +254,7 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ #define thread_pkey_regs_save(thread)
+ #define thread_pkey_regs_restore(new_thread, old_thread)
+ #define thread_pkey_regs_init(thread)
++#define arch_dup_pkeys(oldmm, mm)
  
- 	if (IS_DMA64) {
--		if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)) &&
-+		if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(63)) &&
- 		    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))
- 			goto fail_set_dma_mask;
+ static inline u64 pte_to_hpte_pkey_bits(u64 pteflags)
+ {
+@@ -267,5 +263,12 @@ static inline u64 pte_to_hpte_pkey_bits(u64 pteflags)
  
--		if ((*pdev->dev.dma_mask == DMA_BIT_MASK(64)) &&
-+		if ((*pdev->dev.dma_mask == DMA_BIT_MASK(63)) &&
- 		    (dma_set_coherent_mask(&pdev->dev, consistent_mask) &&
- 		     dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))) {
- 			/*
-@@ -6096,7 +6096,7 @@ megasas_set_dma_mask(struct megasas_instance *instance)
- 			if (!(scratch_pad_2 & MR_CAN_HANDLE_64_BIT_DMA_OFFSET))
- 				goto fail_set_dma_mask;
- 			else if (dma_set_mask_and_coherent(&pdev->dev,
--							   DMA_BIT_MASK(64)))
-+							   DMA_BIT_MASK(63)))
- 				goto fail_set_dma_mask;
- 		}
- 	} else if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))
-@@ -6108,8 +6108,8 @@ megasas_set_dma_mask(struct megasas_instance *instance)
- 		instance->consistent_mask_64bit = true;
+ #endif /* CONFIG_PPC_MEM_KEYS */
  
- 	dev_info(&pdev->dev, "%s bit DMA mask and %s bit consistent mask\n",
--		 ((*pdev->dev.dma_mask == DMA_BIT_MASK(64)) ? "64" : "32"),
--		 (instance->consistent_mask_64bit ? "64" : "32"));
-+		 ((*pdev->dev.dma_mask == DMA_BIT_MASK(64)) ? "63" : "32"),
-+		 (instance->consistent_mask_64bit ? "63" : "32"));
++static inline int arch_dup_mmap(struct mm_struct *oldmm,
++				struct mm_struct *mm)
++{
++	arch_dup_pkeys(oldmm, mm);
++	return 0;
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* __ASM_POWERPC_MMU_CONTEXT_H */
+diff --git a/arch/powerpc/mm/pkeys.c b/arch/powerpc/mm/pkeys.c
+index b271b283c785e..25a8dd9cd71db 100644
+--- a/arch/powerpc/mm/pkeys.c
++++ b/arch/powerpc/mm/pkeys.c
+@@ -414,3 +414,13 @@ bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
  
- 	return 0;
- 
+ 	return pkey_access_permitted(vma_pkey(vma), write, execute);
+ }
++
++void arch_dup_pkeys(struct mm_struct *oldmm, struct mm_struct *mm)
++{
++	if (static_branch_likely(&pkey_disabled))
++		return;
++
++	/* Duplicate the oldmm pkey state in mm: */
++	mm_pkey_allocation_map(mm) = mm_pkey_allocation_map(oldmm);
++	mm->context.execute_only_pkey = oldmm->context.execute_only_pkey;
++}
 -- 
 2.20.1
 
