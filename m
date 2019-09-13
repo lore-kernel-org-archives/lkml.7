@@ -2,31 +2,31 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57661C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284C8C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E602084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E582084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 02:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfIMCqw (ORCPT
+        id S1728324AbfIMCrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Sep 2019 22:46:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58611 "EHLO mga07.intel.com"
+        Thu, 12 Sep 2019 22:47:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58605 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727311AbfIMCqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:46:16 -0400
+        id S1726781AbfIMCqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Sep 2019 22:46:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Sep 2019 19:46:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="176159525"
+   d="scan'208";a="176159513"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga007.jf.intel.com with ESMTP; 12 Sep 2019 19:46:13 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +40,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         James Harvey <jamespharvey20@gmail.com>,
         Alex Willamson <alex.williamson@redhat.com>
-Subject: [PATCH 08/11] KVM: x86/mmu: Revert "Revert "KVM: MMU: reclaim the zapped-obsolete page first""
-Date:   Thu, 12 Sep 2019 19:46:09 -0700
-Message-Id: <20190913024612.28392-9-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/11] KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow page related tracepoints""
+Date:   Thu, 12 Sep 2019 19:46:05 -0700
+Message-Id: <20190913024612.28392-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
 References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
@@ -54,118 +54,57 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Now that the fast invalidate mechanism has been reintroduced, restore
-the performance tweaks for fast invalidation that existed prior to its
-removal.
+tracing of the generation number in shadow page tracepoints.
 
-Paraphrashing the original changelog:
-
-  Introduce a per-VM list to track obsolete shadow pages, i.e. pages
-  which have been deleted from the mmu cache but haven't yet been freed.
-  When page reclaiming is needed, zap/free the deleted pages first.
-
-This reverts commit 52d5dedc79bdcbac2976159a172069618cf31be5.
+This reverts commit b59c4830ca185ba0e9f9e046fb1cd10a4a92627a.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu.c              | 22 +++++++++++++++++-----
- arch/x86/kvm/x86.c              |  1 +
- 3 files changed, 19 insertions(+), 5 deletions(-)
+ arch/x86/kvm/mmutrace.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index ef378abac00f..6e4fa75351fd 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -862,6 +862,7 @@ struct kvm_arch {
- 	 * Hash table of struct kvm_mmu_page.
- 	 */
- 	struct list_head active_mmu_pages;
-+	struct list_head zapped_obsolete_pages;
- 	struct kvm_page_track_notifier_node mmu_sp_tracker;
- 	struct kvm_page_track_notifier_head track_notifier_head;
+diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
+index d8001b4bca05..e9832b5ec53c 100644
+--- a/arch/x86/kvm/mmutrace.h
++++ b/arch/x86/kvm/mmutrace.h
+@@ -8,16 +8,18 @@
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM kvmmmu
  
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 8c0648bbc7c1..84d916674529 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -5674,7 +5674,6 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
- static void kvm_zap_obsolete_pages(struct kvm *kvm)
- {
- 	struct kvm_mmu_page *sp, *node;
--	LIST_HEAD(invalid_list);
- 	int nr_zapped, batch = 0;
+-#define KVM_MMU_PAGE_FIELDS \
+-	__field(__u64, gfn) \
+-	__field(__u32, role) \
+-	__field(__u32, root_count) \
++#define KVM_MMU_PAGE_FIELDS			\
++	__field(unsigned long, mmu_valid_gen)	\
++	__field(__u64, gfn)			\
++	__field(__u32, role)			\
++	__field(__u32, root_count)		\
+ 	__field(bool, unsync)
  
- restart:
-@@ -5707,8 +5706,8 @@ static void kvm_zap_obsolete_pages(struct kvm *kvm)
- 			goto restart;
- 		}
+-#define KVM_MMU_PAGE_ASSIGN(sp)			     \
+-	__entry->gfn = sp->gfn;			     \
+-	__entry->role = sp->role.word;		     \
+-	__entry->root_count = sp->root_count;        \
++#define KVM_MMU_PAGE_ASSIGN(sp)				\
++	__entry->mmu_valid_gen = sp->mmu_valid_gen;	\
++	__entry->gfn = sp->gfn;				\
++	__entry->role = sp->role.word;			\
++	__entry->root_count = sp->root_count;		\
+ 	__entry->unsync = sp->unsync;
  
--		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list,
--					       &nr_zapped)) {
-+		if (__kvm_mmu_prepare_zap_page(kvm, sp,
-+				&kvm->arch.zapped_obsolete_pages, &nr_zapped)) {
- 			batch += nr_zapped;
- 			goto restart;
- 		}
-@@ -5719,7 +5718,7 @@ static void kvm_zap_obsolete_pages(struct kvm *kvm)
- 	 * KVM is not in the middle of a lockless shadow page table walk, which
- 	 * may reference the pages.
- 	 */
--	kvm_mmu_commit_zap_page(kvm, &invalid_list);
-+	kvm_mmu_commit_zap_page(kvm, &kvm->arch.zapped_obsolete_pages);
- }
- 
- /*
-@@ -5751,6 +5750,11 @@ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
- 	spin_unlock(&kvm->mmu_lock);
- }
- 
-+static bool kvm_has_zapped_obsolete_pages(struct kvm *kvm)
-+{
-+	return unlikely(!list_empty_careful(&kvm->arch.zapped_obsolete_pages));
-+}
-+
- static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
- 			struct kvm_memory_slot *slot,
- 			struct kvm_page_track_notifier_node *node)
-@@ -6021,16 +6025,24 @@ mmu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 		 * want to shrink a VM that only started to populate its MMU
- 		 * anyway.
- 		 */
--		if (!kvm->arch.n_used_mmu_pages)
-+		if (!kvm->arch.n_used_mmu_pages &&
-+		    !kvm_has_zapped_obsolete_pages(kvm))
- 			continue;
- 
- 		idx = srcu_read_lock(&kvm->srcu);
- 		spin_lock(&kvm->mmu_lock);
- 
-+		if (kvm_has_zapped_obsolete_pages(kvm)) {
-+			kvm_mmu_commit_zap_page(kvm,
-+			      &kvm->arch.zapped_obsolete_pages);
-+			goto unlock;
-+		}
-+
- 		if (prepare_zap_oldest_mmu_page(kvm, &invalid_list))
- 			freed++;
- 		kvm_mmu_commit_zap_page(kvm, &invalid_list);
- 
-+unlock:
- 		spin_unlock(&kvm->mmu_lock);
- 		srcu_read_unlock(&kvm->srcu, idx);
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b4cfd786d0b6..3d092b0f6bcb 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9306,6 +9306,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 
- 	INIT_HLIST_HEAD(&kvm->arch.mask_notifier_list);
- 	INIT_LIST_HEAD(&kvm->arch.active_mmu_pages);
-+	INIT_LIST_HEAD(&kvm->arch.zapped_obsolete_pages);
- 	INIT_LIST_HEAD(&kvm->arch.assigned_dev_head);
- 	atomic_set(&kvm->arch.noncoherent_dma_count, 0);
- 
+ #define KVM_MMU_PAGE_PRINTK() ({				        \
+@@ -29,8 +31,9 @@
+ 								        \
+ 	role.word = __entry->role;					\
+ 									\
+-	trace_seq_printf(p, "sp gfn %llx l%u %u-byte q%u%s %s%s"	\
++	trace_seq_printf(p, "sp gen %lx gfn %llx l%u %u-byte q%u%s %s%s"\
+ 			 " %snxe %sad root %u %s%c",			\
++			 __entry->mmu_valid_gen,			\
+ 			 __entry->gfn, role.level,			\
+ 			 role.gpte_is_8_bytes ? 8 : 4,			\
+ 			 role.quadrant,					\
 -- 
 2.22.0
 
