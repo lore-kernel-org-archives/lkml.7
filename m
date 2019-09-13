@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156EDC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E7CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DFC20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41576206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380782;
-	bh=nbvMh1RIRXXzZ6TclUPYbZSby/FBqYy/SvJruTPaJuk=;
+	s=default; t=1568380788;
+	bh=GeeGoXmgFglJsk6I7cGROrXWmwp5JSc3JSOtqYVHnTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWhyW5c5qOjpJNj/Q6X1EXMdJaAyBcrDbeS7YUhmtxRcEgXPKxJ6kv0PCTWzyuG8q
-	 0y9s+bHNSFti9azb1YDhao7F3H8+3BCcT01DjYzZOb0AIKpC5ytNB+qVKU9wAnWX9m
-	 VzBdZhpXhwrBMOWFSiq9qFiL8LsWO0BaU1KMP5ro=
+	b=jDe970fLiHKXoBhRkOlvFleKoF0XCxUUS64ix65Ya5aPgkDT9T1xpHFshzbzOI6n6
+	 U3yD+M678httduXZxfj0hegtQjTUUB5Gp7OX3Cy98ALZWZqEgt+wBokS7RGvgGW6qz
+	 Y9BVM9UE6sQULpPM2mF5EaovGgsjcCdUjXfLy90k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390430AbfIMNTm (ORCPT
+        id S2390437AbfIMNTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390422AbfIMNTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:19:39 -0400
+        id S2389523AbfIMNTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:19:46 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B5B20640;
-        Fri, 13 Sep 2019 13:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34190217D9;
+        Fri, 13 Sep 2019 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380778;
-        bh=nbvMh1RIRXXzZ6TclUPYbZSby/FBqYy/SvJruTPaJuk=;
+        s=default; t=1568380785;
+        bh=GeeGoXmgFglJsk6I7cGROrXWmwp5JSc3JSOtqYVHnTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QvrLUhoADIz19eq0r0qA1oDEFkJaWLWK4D3jtdIGf9KOwHv4JUVnFJJdqPz/XPlJc
-         sChdAtZlQD4A0GidJFWh2T0t1gGBhA62bmEKpETLhZsHyZImsycf7v5JphGZAaCJ0+
-         mxFV8X1Ij4Jfe1R5UbZea2C1Afo+H4LeKkR/jDWY=
+        b=IiTCl0ERJzu8oxUtMjYZvgJsRQwh8RvLSbMlr+gaPzLGQno5hZmqM68pzxitibvXn
+         /ndBxI7C1AWyKB3WrBFxdK5+wGh0WzrtDDHYhK9ybaTs5t2ksJXge6XH22Cp3Ei515
+         gyqDB5Cf/bzLYkYxkb6fejwj3/BoajbrbcrfyAws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/190] NFSv4: Fix delegation state recovery
-Date:   Fri, 13 Sep 2019 14:07:11 +0100
-Message-Id: <20190913130613.814058908@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 177/190] bcache: only clear BTREE_NODE_dirty bit when it is set
+Date:   Fri, 13 Sep 2019 14:07:12 +0100
+Message-Id: <20190913130613.907781026@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -60,117 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5eb8d18ca0e001c6055da2b7f30d8f6dca23a44f ]
+[ Upstream commit e5ec5f4765ada9c75fb3eee93a6e72f0e50599d5 ]
 
-Once we clear the NFS_DELEGATED_STATE flag, we're telling
-nfs_delegation_claim_opens() that we're done recovering all open state
-for that stateid, so we really need to ensure that we test for all
-open modes that are currently cached and recover them before exiting
-nfs4_open_delegation_recall().
+In bch_btree_cache_free() and btree_node_free(), BTREE_NODE_dirty is
+always set no matter btree node is dirty or not. The code looks like
+this,
+	if (btree_node_dirty(b))
+		btree_complete_write(b, btree_current_write(b));
+	clear_bit(BTREE_NODE_dirty, &b->flags);
 
-Fixes: 24311f884189d ("NFSv4: Recovery of recalled read delegations...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.3+
+Indeed if btree_node_dirty(b) returns false, it means BTREE_NODE_dirty
+bit is cleared, then it is unnecessary to clear the bit again.
+
+This patch only clears BTREE_NODE_dirty when btree_node_dirty(b) is
+true (the bit is set), to save a few CPU cycles.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c |  2 +-
- fs/nfs/delegation.h |  2 +-
- fs/nfs/nfs4proc.c   | 25 ++++++++++++-------------
- 3 files changed, 14 insertions(+), 15 deletions(-)
+ drivers/md/bcache/btree.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 75fe92eaa6818..1624618c2bc72 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -153,7 +153,7 @@ again:
- 		/* Block nfs4_proc_unlck */
- 		mutex_lock(&sp->so_delegreturn_mutex);
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
--		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
-+		err = nfs4_open_delegation_recall(ctx, state, stateid);
- 		if (!err)
- 			err = nfs_delegation_claim_locks(ctx, state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index bb1ef8c37af42..c95477823fa6b 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -61,7 +61,7 @@ void nfs_reap_expired_delegations(struct nfs_client *clp);
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 3f4211b5cd334..8c80833e73a9a 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -772,10 +772,10 @@ void bch_btree_cache_free(struct cache_set *c)
+ 	while (!list_empty(&c->btree_cache)) {
+ 		b = list_first_entry(&c->btree_cache, struct btree, list);
  
- /* NFSv4 delegation-related procedures */
- int nfs4_proc_delegreturn(struct inode *inode, struct rpc_cred *cred, const nfs4_stateid *stateid, int issync);
--int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid, fmode_t type);
-+int nfs4_open_delegation_recall(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid);
- int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state, const nfs4_stateid *stateid);
- bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_stateid *dst, struct rpc_cred **cred);
- bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 31ae3bd5d9d20..621e3cf90f4eb 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2113,12 +2113,10 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
- 		case -NFS4ERR_DEADSESSION:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			nfs4_schedule_session_recovery(server->nfs_client->cl_session, err);
- 			return -EAGAIN;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			/* Don't recall a delegation if it was lost */
- 			nfs4_schedule_lease_recovery(server->nfs_client);
- 			return -EAGAIN;
-@@ -2139,7 +2137,6 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 			return -EAGAIN;
- 		case -NFS4ERR_DELAY:
- 		case -NFS4ERR_GRACE:
--			set_bit(NFS_DELEGATED_STATE, &state->flags);
- 			ssleep(1);
- 			return -EAGAIN;
- 		case -ENOMEM:
-@@ -2155,8 +2152,7 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- }
- 
- int nfs4_open_delegation_recall(struct nfs_open_context *ctx,
--		struct nfs4_state *state, const nfs4_stateid *stateid,
--		fmode_t type)
-+		struct nfs4_state *state, const nfs4_stateid *stateid)
- {
- 	struct nfs_server *server = NFS_SERVER(state->inode);
- 	struct nfs4_opendata *opendata;
-@@ -2167,20 +2163,23 @@ int nfs4_open_delegation_recall(struct nfs_open_context *ctx,
- 	if (IS_ERR(opendata))
- 		return PTR_ERR(opendata);
- 	nfs4_stateid_copy(&opendata->o_arg.u.delegation, stateid);
--	nfs_state_clear_delegation(state);
--	switch (type & (FMODE_READ|FMODE_WRITE)) {
--	case FMODE_READ|FMODE_WRITE:
--	case FMODE_WRITE:
-+	if (!test_bit(NFS_O_RDWR_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_READ|FMODE_WRITE);
- 		if (err)
--			break;
-+			goto out;
-+	}
-+	if (!test_bit(NFS_O_WRONLY_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_WRITE);
- 		if (err)
--			break;
--		/* Fall through */
--	case FMODE_READ:
-+			goto out;
-+	}
-+	if (!test_bit(NFS_O_RDONLY_STATE, &state->flags)) {
- 		err = nfs4_open_recover_helper(opendata, FMODE_READ);
-+		if (err)
-+			goto out;
+-		if (btree_node_dirty(b))
++		if (btree_node_dirty(b)) {
+ 			btree_complete_write(b, btree_current_write(b));
+-		clear_bit(BTREE_NODE_dirty, &b->flags);
+-
++			clear_bit(BTREE_NODE_dirty, &b->flags);
++		}
+ 		mca_data_free(b);
  	}
-+	nfs_state_clear_delegation(state);
-+out:
- 	nfs4_opendata_put(opendata);
- 	return nfs4_handle_delegation_recall_error(server, state, stateid, NULL, err);
- }
+ 
+@@ -1063,9 +1063,10 @@ static void btree_node_free(struct btree *b)
+ 
+ 	mutex_lock(&b->write_lock);
+ 
+-	if (btree_node_dirty(b))
++	if (btree_node_dirty(b)) {
+ 		btree_complete_write(b, btree_current_write(b));
+-	clear_bit(BTREE_NODE_dirty, &b->flags);
++		clear_bit(BTREE_NODE_dirty, &b->flags);
++	}
+ 
+ 	mutex_unlock(&b->write_lock);
+ 
 -- 
 2.20.1
 
