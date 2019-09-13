@@ -2,235 +2,134 @@ Return-Path: <SRS0=WcLH=XI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A2EC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A181DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D43F2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VuiXn4gA"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF162084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 10:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387717AbfIMKxt (ORCPT
+        id S2387818AbfIMK4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 06:53:49 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:31695 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387424AbfIMKxs (ORCPT
+        Fri, 13 Sep 2019 06:56:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387424AbfIMK4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:53:48 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190913105344epoutp02480927a4156c2268a4308dd845b9d122~D_gv9tXp52903729037epoutp02Z
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 10:53:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190913105344epoutp02480927a4156c2268a4308dd845b9d122~D_gv9tXp52903729037epoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568372024;
-        bh=76g1YBKaFCioZ+UKiXiYnPhsoECHOq4HWCTPvC6iWf4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=VuiXn4gAwMcI+CfCnVXuJ5r+gs5XrZnyASMeut7feft1f8nZ/Cr3JxzukqHBd+g5F
-         DyZr8hAYBDsj+CwKHHHlyfziu84JH9DDKb4wHR9HUTkkeQk/O034n8FOQWxZwWC5Xr
-         YP8kLxcx+G9ANLH5vXD+3VhGFm+KkDNhuULRix7Q=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20190913105344epcas5p4116bd65bf16919188662f43b85f32d81~D_gvrgrzD1987819878epcas5p4q;
-        Fri, 13 Sep 2019 10:53:44 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.C1.04429.8357B7D5; Fri, 13 Sep 2019 19:53:44 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190913105343epcas5p432c6a1e1bee51a1a402d259c05eb1fad~D_gvLMtaT1981519815epcas5p40;
-        Fri, 13 Sep 2019 10:53:43 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190913105343epsmtrp1235804239e4286d5dbb7ba64a5418ef9~D_gvKjXsr1653716537epsmtrp1E;
-        Fri, 13 Sep 2019 10:53:43 +0000 (GMT)
-X-AuditID: b6c32a4a-655ff7000000114d-b1-5d7b75386126
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.E9.03638.7357B7D5; Fri, 13 Sep 2019 19:53:43 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190913105342epsmtip2fdd4665125d0075ffd7d2a4a19700f4c~D_gt-tPf92994629946epsmtip2q;
-        Fri, 13 Sep 2019 10:53:42 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Gustavo Pimentel'" <Gustavo.Pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Cc:     <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, "'Anvesh Salveru'" <anvesh.s@samsung.com>
-In-Reply-To: <DM6PR12MB4010B4CC5DD11D3607D157ABDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-Subject: RE: [PATCH 1/2] PCI: dwc: Add support to disable GEN3 equalization
-Date:   Fri, 13 Sep 2019 16:23:41 +0530
-Message-ID: <002701d56a21$82a4c880$87ee5980$@samsung.com>
+        Fri, 13 Sep 2019 06:56:25 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8DArT7K111587
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 06:56:23 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uytcjtmt5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 06:56:23 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Fri, 13 Sep 2019 11:56:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 13 Sep 2019 11:56:18 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8DAuHSe54657154
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 10:56:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AB1CA405F;
+        Fri, 13 Sep 2019 10:56:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB402A405B;
+        Fri, 13 Sep 2019 10:56:16 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.117.92])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Sep 2019 10:56:16 +0000 (GMT)
+Subject: Re: [PATCH 1/3] powerpc/mm: Initialize the HPTE encoding values
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        npiggin@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190830120712.22971-1-ldufour@linux.ibm.com>
+ <20190830120712.22971-2-ldufour@linux.ibm.com>
+ <527b1a15-e37f-0d76-b999-e22cf04f9f7e@linux.ibm.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Fri, 13 Sep 2019 12:56:16 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHkrftp/qePsooAO7EnIOhukMFsOwG9FaICAkQIfYem6t2S8A==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+e3uPiatbtPyqBE5KpiZZlncIntIf4yyDIOQVGzobRPdXJvT
-        1D8SM1Ex84Glw2euKbJS5spahqI1H6USKUmgZhhmBoLLfIXFdif53+ec8z18zxcOhYlacW8q
-        QZXCalSyJDHhxn/eI5EcZHSZMYfKTduYQWs9zhiyFYx1PI9kmn5VksxHaxXBDNb0EszPte/k
-        GVJqqjEh6Uv9OCmtM+ukRZZmJLV02pHUbt59mbjmdjKeTUpIZTWBp667KYr0T3F1qe+tpdUl
-        lIWMPgVIQAEdDLbFCbwAuVEi+hWCutIRHlcsILA1dyCu+I3A+LeV2FhpfdJEcIPXCCr6+kmu
-        mENQ2PLMqSLoQBharsEd7EGngb3kEVaAKAqjM8FsCXG0BXQMLBosTok7fQEGCktIB/PpfdBe
-        O8p3sJA+DrXvPiOOt0N/5bSzj9EHwFg/h3EH7YGVb0aXVSgsD5chTuMJs2/fOG8DeoYA09SY
-        a+EcNBavu9gdfvRaSI69YfZ+rouTYbmhFOOWcxCU9Vbj3OA0dI1U8bkwEmixBnJmW+He2jTP
-        0QZaCHm5Ik69H5Zm3rusdsHUncc8jqUwaS3HipGvflM0/aZo+k0R9P/N6hC/GXmxaq1SzmqP
-        qg+r2LQArUyp1ankAXHJSjNy/pHf+RfIOBTWjWgKibcIGf+MGBEuS9WmK7sRUJjYQ1h0MzNG
-        JIyXpWewmuRYjS6J1XYjH4ov9hSW4qPRIlouS2ETWVbNajamPErgnYWi9tbO55XdjU2U7Jg0
-        R0NHp3+2LTynvSP0yEp4m+efs4beiCh9AxGa1BjyJe7EFbXg6nrKeOAHTVfbXOvAanYEL3gx
-        ciJBof7a0xfWlJ9fMR/x8Fjhgi2SHhYobbezSGn4zoSu6h5earHdILcGVVzMvXHp04OxqElf
-        ZIhjvXLEfK1CFuSHabSyfxrPZN5DAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSvK55aXWswZJ5WhZndy1ktVjSlGGx
-        624Hu8WKLzPZLS7vmsNmcXbecTaLN79fsDuwe6yZt4bRY+esu+weCzaVevRtWcXosWX/Z0aP
-        z5vkAtiiuGxSUnMyy1KL9O0SuDL+rLIr2KxQsfbgEqYGxr1SXYycHBICJhIb1q5g62Lk4hAS
-        2M0ocWzrf3aIhIzE5NUrWCFsYYmV/56zQxS9ZJQ4+aMRrIhNQF/i3I95YEUiApUSV1a/Ygax
-        mQXqJe5OWw419TWjxMqll5lAEpwCsRJfl2wBaxAW8JY41TMRbBCLgKrE9vlXWUBsXgFLifmn
-        bzFC2IISJ2c+YYEYqi3R+7CVEcZetvA1M8R1ChI/ny6DOsJJ4sf5yVA14hIvjx5hn8AoPAvJ
-        qFlIRs1CMmoWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGCo0pLawfjiRPx
-        hxgFOBiVeHgfaFbFCrEmlhVX5h5ilOBgVhLh7SusjhXiTUmsrEotyo8vKs1JLT7EKM3BoiTO
-        K59/LFJIID2xJDU7NbUgtQgmy8TBKdXAKOATsP566P7EhgOH2/PncFb4sO9OC3ih//7z0muR
-        78KmTdmR/mR+/OET3+ZO1G76s6siw0HEcu3i0tbnleeai2PqmGN5Vk19ekP59u2fMx41+HFY
-        vd9r0XFwnfAFu7k6SyYw//btvZEeenx97J1J8TWN1/zDUiQnsKW1LeD4pFylNUP3056F05VY
-        ijMSDbWYi4oTAfrqjrCmAgAA
-X-CMS-MailID: 20190913105343epcas5p432c6a1e1bee51a1a402d259c05eb1fad
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f
-References: <CGME20190910122514epcas5p4f00c0f999333dd7707c0a353fd06b57f@epcas5p4.samsung.com>
-        <1568118302-10505-1-git-send-email-pankaj.dubey@samsung.com>
-        <DM6PR12MB4010B4CC5DD11D3607D157ABDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <527b1a15-e37f-0d76-b999-e22cf04f9f7e@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091310-0012-0000-0000-0000034AD1F3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091310-0013-0000-0000-0000218541AB
+Message-Id: <4ea08df8-1a32-cbeb-1f4c-83b28bf7fd11@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909130104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 12/09/2019 à 15:37, Aneesh Kumar K.V a écrit :
+> On 8/30/19 5:37 PM, Laurent Dufour wrote:
+>> Before reading the HPTE encoding values we initialize all of them to -1 (an
+>> invalid value) to later being able to detect the initialized ones.
+>>
+>> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+>> ---
+>>   arch/powerpc/mm/book3s64/hash_utils.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c 
+>> b/arch/powerpc/mm/book3s64/hash_utils.c
+>> index c3bfef08dcf8..2039bc315459 100644
+>> --- a/arch/powerpc/mm/book3s64/hash_utils.c
+>> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+>> @@ -408,7 +408,7 @@ static int __init htab_dt_scan_page_sizes(unsigned 
+>> long node,
+>>   {
+>>       const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+>>       const __be32 *prop;
+>> -    int size = 0;
+>> +    int size = 0, idx, base_idx;
+>>       /* We are scanning "cpu" nodes only */
+>>       if (type == NULL || strcmp(type, "cpu") != 0)
+>> @@ -418,6 +418,11 @@ static int __init htab_dt_scan_page_sizes(unsigned 
+>> long node,
+>>       if (!prop)
+>>           return 0;
+>> +    /* Set all the penc values to invalid */
+>> +    for (base_idx = 0; base_idx < MMU_PAGE_COUNT; base_idx++)
+>> +        for (idx = 0; idx < MMU_PAGE_COUNT; idx++)
+>> +            mmu_psize_defs[base_idx].penc[idx] = -1;
+>> +
+>>       pr_info("Page sizes from device-tree:\n");
+>>       size /= 4;
+>>       cur_cpu_spec->mmu_features &= ~(MMU_FTR_16M_PAGE);
+>> @@ -426,7 +431,6 @@ static int __init htab_dt_scan_page_sizes(unsigned 
+>> long node,
+>>           unsigned int slbenc = be32_to_cpu(prop[1]);
+>>           unsigned int lpnum = be32_to_cpu(prop[2]);
+>>           struct mmu_psize_def *def;
+>> -        int idx, base_idx;
+>>           size -= 3; prop += 3;
+>>           base_idx = get_idx_from_shift(base_shift);
+>>
+> 
+> We already do this in mmu_psize_set_default_penc() ?
 
-
-> -----Original Message-----
-> From: Gustavo Pimentel <Gustavo.Pimentel=40synopsys.com>
-> Sent: Thursday, September 12, 2019 7:52 PM
-> To: Pankaj Dubey <pankaj.dubey=40samsung.com>; linux-pci=40vger.kernel.or=
-g;
-> linux-kernel=40vger.kernel.org
-> Cc: jingoohan1=40gmail.com; Gustavo.Pimentel=40synopsys.com;
-> lorenzo.pieralisi=40arm.com; bhelgaas=40google.com; Anvesh Salveru
-> <anvesh.s=40samsung.com>
-> Subject: RE: =5BPATCH 1/2=5D PCI: dwc: Add support to disable GEN3 equali=
-zation
->=20
-> Hi,
->=20
-> On Tue, Sep 10, 2019 at 13:25:1, Pankaj Dubey <pankaj.dubey=40samsung.com=
->
-> wrote:
->=20
-> > From: Anvesh Salveru <anvesh.s=40samsung.com>
-> >
-> > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > to happen in GEN3 or high speed. In case equalization fails, link will
-> > fallback to GEN1.
-> >
-> > Designware controller has support for disabling GEN3 equalization if
-> > required. This patch enables the designware driver to disable the PCIe
-> > GEN3 equalization by writing into PCIE_PORT_GEN3_RELATED.
->=20
-> s/Designware/DesignWare
-> s/designware/DesignWare
->=20
-> >
-> > Platform drivers can disable equalization by setting the dwc_pci_quirk
-> > flag DWC_EQUALIZATION_DISABLE.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s=40samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c =7C 7 +++++++
-> > drivers/pci/controller/dwc/pcie-designware.h =7C 7 +++++++
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 7d25102..bf82091 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > =40=40 -466,4 +466,11 =40=40 void dw_pcie_setup(struct dw_pcie *pci)
-> >  		break;
-> >  	=7D
-> >  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > +
-> > +	val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > +
-> > +	if (pci->dwc_pci_quirk & DWC_EQUALIZATION_DISABLE)
-> > +		val =7C=3D PORT_LOGIC_GEN3_EQ_DISABLE;
-> > +
-> > +	dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> >  =7D
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > b/drivers/pci/controller/dwc/pcie-designware.h
-> > index ffed084..a1453c5 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > =40=40 -29,6 +29,9 =40=40
-> >  =23define LINK_WAIT_MAX_IATU_RETRIES	5
-> >  =23define LINK_WAIT_IATU			9
-> >
-> > +/* Parameters for PCIe Quirks */
-> > +=23define DWC_EQUALIZATION_DISABLE	0x1
-> > +
-> >  /* Synopsys-specific PCIe configuration registers */
-> >  =23define PCIE_PORT_LINK_CONTROL		0x710
-> >  =23define PORT_LINK_MODE_MASK		GENMASK(21, 16)
-> > =40=40 -60,6 +63,9 =40=40
-> >  =23define PCIE_MSI_INTR0_MASK		0x82C
-> >  =23define PCIE_MSI_INTR0_STATUS		0x830
-> >
-> > +=23define PCIE_PORT_GEN3_RELATED		0x890
-> > +=23define PORT_LOGIC_GEN3_EQ_DISABLE	BIT(16)
-> > +
-> >  =23define PCIE_ATU_VIEWPORT		0x900
-> >  =23define PCIE_ATU_REGION_INBOUND		BIT(31)
-> >  =23define PCIE_ATU_REGION_OUTBOUND	0
-> > =40=40 -244,6 +250,7 =40=40 struct dw_pcie =7B
-> >  	struct dw_pcie_ep	ep;
-> >  	const struct dw_pcie_ops *ops;
-> >  	unsigned int		version;
-> > +	unsigned int		dwc_pci_quirk;
->=20
-> I'd prefer called this variable just quirk, the prefix is redundant here.
->=20
-> >  =7D;
-> >
-> >  =23define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie=
-,
-> > pp)
-> > --
-> > 2.7.4
->=20
-> I understand your idea and I'm fine with it, but I just wonder if there i=
-sn't any
-> other typical way to do this kind of quirks... I'm not seeing a similar c=
-ase to this
-> although.
-
-Even we didn't see any existing approach to address this.
-
-> For me makes more sense to squash both patches (1 and 2), since we aim to=
- add
-> this quirk especially because it focuses is on this =22GEN3_RELATED=22
-> register in a logical patch.
->
-
-Done. Posted =5Bv2=5D where we squashed both the patches.
-v2: https://lkml.org/lkml/2019/9/13/171
-
-Thanks for review.
-=20
-> Regards,
-> Gustavo
+Correct, I missed that, then this patch is no more needed.
 
