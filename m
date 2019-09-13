@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE40DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4538EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B27208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD6920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Sep 2019 13:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568380325;
-	bh=muFnp+O5xw4TkSa8cy2W+Meg+Wxkm4S1o6ITTHEpZgU=;
+	s=default; t=1568380328;
+	bh=0k5O7VON44L9hsu/jY0q6sNazzv90kRRiAhdVStY9A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6QA5dxfxnlCFjABGmPGft/YMykwcoxoXSDUt/yhjhKReDiM40b2oYxeHMo9YXvv0
-	 FRr/VM4S8Bo50c/IlSz/9F2X5s5HBpb5U71LFzq6Dp0ZC0tJX0jkKkULRdqvSCkgMO
-	 HNn7gvoXIoE5tnUMguli8cs5sxPI5TRvHZGogroc=
+	b=atADO0yWmKEtAy5h1geEhGX08EkpcyAByfdE8yudMq/e7jXeYcfvkgBCFcZOZ3eII
+	 Q+mvqPc1UYUdpJJkavLeDZ1j3rwDmWYR+e4aXhh7t+iUKCe4v5Zl/mS8TJyLmb4c6K
+	 f3uifIvmZe+cnpeVFtUMeX32Nmw9K0JFQ1QCoJos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389100AbfIMNME (ORCPT
+        id S2389110AbfIMNMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 09:12:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
+        Fri, 13 Sep 2019 09:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbfIMNMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 09:12:02 -0400
+        id S2388457AbfIMNMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 09:12:05 -0400
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72FFD20640;
-        Fri, 13 Sep 2019 13:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C5D206BB;
+        Fri, 13 Sep 2019 13:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568380322;
-        bh=muFnp+O5xw4TkSa8cy2W+Meg+Wxkm4S1o6ITTHEpZgU=;
+        s=default; t=1568380324;
+        bh=0k5O7VON44L9hsu/jY0q6sNazzv90kRRiAhdVStY9A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSQ+xeE4sVQBUs0kROQRs/ALTABWaoH0kxgyMfGE2CXu8WfQU8/To84FC3yfiF3F1
-         sfVvz4QSzyEuRyPbbpl0mwKHlORAHboYdxv+SRz+VMHFnyWtfP241XkYbOOjyrOyW6
-         ST3fiJEchBzDOBph6aQa1er03eIKKOqxl0EaWyjw=
+        b=xam+o+rYURlrV5yyDxmfDMgCB9/CHe5+Xtfe7Hi2zAo4/YpE7FM+vG9KUBePu0KBu
+         57gv7yomNi+0/JRH6xi1wlXONPrRaApbbPP/wzS5QstJdOjVoZglymzgWEpsqEUtFR
+         IKNvvLFCmzlMm/ZyW4+HlCfcxP6jOrxgnbTckpJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.19 012/190] batman-adv: Only read OGM tvlv_len after buffer len check
-Date:   Fri, 13 Sep 2019 14:04:27 +0100
-Message-Id: <20190913130600.586225639@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Bazley <sambazley@fastmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 003/190] ALSA: hda/realtek - Add quirk for HP Pavilion 15
+Date:   Fri, 13 Sep 2019 14:04:18 +0100
+Message-Id: <20190913130559.930952833@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
 References: <20190913130559.669563815@linuxfoundation.org>
@@ -62,81 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Sam Bazley <sambazley@fastmail.com>
 
-commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
+commit d33cd42d86671bed870827aa399aeb9f1da74119 upstream.
 
-Multiple batadv_ogm_packet can be stored in an skbuff. The functions
-batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
-batadv_iv_ogm_aggr_packet() to check if there is another additional
-batadv_ogm_packet in the skb or not before they continue processing the
-packet.
+HP Pavilion 15 (AMD Ryzen-based model) with 103c:84e7 needs the same
+quirk like HP Envy/Spectre x360 for enabling the mute LED over Mic3 pin.
 
-The length for such an OGM is BATADV_OGM_HLEN +
-batadv_ogm_packet->tvlv_len. The check must first check that at least
-BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
+[ rearranged in the SSID number order by tiwai ]
 
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sam Bazley <sambazley@fastmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/bat_iv_ogm.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -463,17 +463,23 @@ static u8 batadv_hop_penalty(u8 tq, cons
-  * batadv_iv_ogm_aggr_packet() - checks if there is another OGM attached
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm_packet: potential OGM in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
--				      __be16 tvlv_len)
-+static bool
-+batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
-+			  const struct batadv_ogm_packet *ogm_packet)
- {
- 	int next_buff_pos = 0;
- 
--	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm_packet);
-+	if (next_buff_pos > packet_len)
-+		return false;
-+
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm_packet->tvlv_len);
- 
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -501,7 +507,7 @@ static void batadv_iv_ogm_send_to_if(str
- 
- 	/* adjust all flags and log packets */
- 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
--					 batadv_ogm_packet->tvlv_len)) {
-+					 batadv_ogm_packet)) {
- 		/* we might have aggregated direct link packets with an
- 		 * ordinary base packet
- 		 */
-@@ -1852,7 +1858,7 @@ static int batadv_iv_ogm_receive(struct
- 
- 	/* unpack the aggregated packets and process them one by one */
- 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					 ogm_packet->tvlv_len)) {
-+					 ogm_packet)) {
- 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
- 
- 		ogm_offset += BATADV_OGM_HLEN;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6845,6 +6845,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
++	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 
 
