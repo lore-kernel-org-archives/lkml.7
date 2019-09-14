@@ -2,165 +2,143 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D76C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9B4C4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E00206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382472081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568488788;
+	bh=ouScJnt26pzP69fgyglFbrcV+rBmS6ZulHjP8wEhBGA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aje83BlhFtw3lkE4pWeOUF8wP+fL+Opp91DQmJJPUJeEq+QdM/dZWIGks0cDjU+0A
+	 aoU5/7dZZpkdUrGdIpc7XZIJaLPFAGzhlBITlk/rYK2O5Pv0rP8u7Ckeqoo0xil1tz
+	 vKGX/4E1+XS/jQAF43gXHkMBTvzbcAp0WiHS9PP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfINTFk (ORCPT
+        id S1729019AbfINTTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 15:05:40 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:15024 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfINTFk (ORCPT
+        Sat, 14 Sep 2019 15:19:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45284 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728587AbfINTTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 15:05:40 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: NamCnpYy7SPDNIB3inySM76wPEFDkbfm16Jv9c2QJO7rqBr18skMfsFHvgdYGBvU/O7zLERuLf
- sMp/3dM2X6MFofMZCc49ldEjcBZKAJ9XLk5J1vftjusHp+vZcM+Wt5GWC+evLq6iyou2dyYAIP
- 2s+WfJvk6zxP6JLtyJSVfFCgvCIJgAfewFMp9x38PFg6qFOGq/e6rF7zUYWOnIcav5mAwHUb8m
- aW6QlCXClqr2pWjIzPSr5wrO10iAJts19F7p1YFXyIA9nU5nZGwZgTKtu/11LDhp78n1k4UNFh
- tgk=
-X-IronPort-AV: E=Sophos;i="5.64,505,1559545200"; 
-   d="scan'208";a="50488026"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2019 12:05:38 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 14 Sep 2019 12:05:29 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 14 Sep 2019 12:05:29 -0700
-Date:   Sat, 14 Sep 2019 21:05:28 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-CC:     <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: at91: Send bus clear command if SCL or SDA is down
-Message-ID: <20190914190528.wnxhcjo5s66qive6@sekiro>
-Mail-Followup-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, wsa@the-dreams.de
-References: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
+        Sat, 14 Sep 2019 15:19:45 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r134so24464081lff.12
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 12:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iPQUiN+MJCiURQJKXosBWd3fof3PGiz/eGjFjKhHooQ=;
+        b=WnL0j3pyjxPnM4hyGPIMKPvliWuoPrHkG3hgdyb3sUJcufozYIh7VZ+bBUf44lWAB4
+         pcl0tDtzPQqDxymM/g3YLvtkLjejtwFbg4lioNHR9dtkICNJTYZ6/F3XTY/AgKJG9z1d
+         EuP51x7okTZmjwEK/BHlvdQaggkLC8U+lNfw8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iPQUiN+MJCiURQJKXosBWd3fof3PGiz/eGjFjKhHooQ=;
+        b=frCIzyPqASPPuEm46yT1q8ZA08oyaLQPzXcbtu35Ex7C0nLr3AobKlF1WEEEBlMGxg
+         NiraQ7Nd4IilW+C0DZ5fVK2GutkY8swoJBh8NV6vrv7VlOBPxB6sJ4B/bWRxJRUzFoRi
+         Poybd8KpFJ4PKKgK7WCCTTgMIWqzo+LLQ6m7Nj2jRpZYUzN/fTpotE4uWKYhCIkxKvbP
+         1swNyzjM9o1Y0Xlmq1tQ7p0yrSRSFi81dvtQ0jMyiyKEh+0FtNANVplHP7SQ3yQevuPM
+         0MkdEjCoH1xebCsVmAG3QW+xIhjSD09899BAZ/gh0upby1ddSFjgwH70wyoCWo2hllAb
+         WA4g==
+X-Gm-Message-State: APjAAAU0HmQI8GDmI2hoq+1hwtm/xgBKSNqfbU0Zl8Td+BGuQXclSWvU
+        nQf/VNq4wrz90oa1Y5ogDdeqDp5jWAE=
+X-Google-Smtp-Source: APXvYqwyT029cVI3rOrNtCnl6xU+8i9CHVDkJkE6mAw9kmT6RRqW1yJPjhIuy89nkhVJ97CIx4wRAA==
+X-Received: by 2002:a19:6549:: with SMTP id c9mr32040639lfj.99.1568488781346;
+        Sat, 14 Sep 2019 12:19:41 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id m25sm7108110ljg.35.2019.09.14.12.19.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Sep 2019 12:19:40 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id a4so30092000ljk.8
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 12:19:39 -0700 (PDT)
+X-Received: by 2002:a2e:814d:: with SMTP id t13mr34140740ljg.72.1568488779341;
+ Sat, 14 Sep 2019 12:19:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
-User-Agent: NeoMutt/20180716
+References: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc> <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com> <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
+ <8c2a47cc-a519-ad94-5d9a-18bb03ba2fd7@gmail.com>
+In-Reply-To: <8c2a47cc-a519-ad94-5d9a-18bb03ba2fd7@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 14 Sep 2019 12:19:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whSbo=dBiqozLoa6TFmMgbeB8d9krXXvXBKtpRWkG0rMQ@mail.gmail.com>
+Message-ID: <CAHk-=whSbo=dBiqozLoa6TFmMgbeB8d9krXXvXBKtpRWkG0rMQ@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     "Alexander E. Patrakov" <patrakov@gmail.com>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:58:54PM +0300, Codrin Ciubotariu wrote:
-> After a transfer timeout, some faulty I2C slave devices might hold down
-> the SCL or the SDA pins. We can generate a bus clear command, hoping that
-> the slave might release the pins.
-> 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+On Sat, Sep 14, 2019 at 10:09 AM Alexander E. Patrakov
+<patrakov@gmail.com> wrote:
+>
+> > Which means that we're all kinds of screwed. The whole "we guarantee
+> > entropy" model is broken.
+>
+> I agree here. Given that you suggested "to just fill the buffer and
+> return 0" in the previous mail (well, I think you really meant "return
+> buflen", otherwise ENOENTROPY == 0 and your previous objection applies),
 
-I'll be off for three weeks so if there are minor changes, you can keep my
-ack.
+Right.
 
-Thanks
+The question remains when we should WARN_ON(), though.
 
-Ludovic
+For example, if somebody did save entropy between boots, we probably
+should accept that - at least in the sense of not warning when they
+then ask for randomness data back.
 
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 20 ++++++++++++++++++++
->  drivers/i2c/busses/i2c-at91.h        |  6 +++++-
->  2 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index a3fcc35ffd3b..5f544a16db96 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -599,6 +599,26 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
->  		at91_twi_write(dev, AT91_TWI_CR,
->  			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
->  	}
-> +
-> +	/*
-> +	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
-> +	 * we can send a bus clear command, hoping that the pins will be
-> +	 * released
-> +	 */
-> +	if (!(dev->transfer_status & AT91_TWI_SDA) ||
-> +	    !(dev->transfer_status & AT91_TWI_SCL)) {
-> +		dev_dbg(dev->dev,
-> +			"SDA/SCL are down; sending bus clear command\n");
-> +		if (dev->use_alt_cmd) {
-> +			unsigned int acr;
-> +
-> +			acr = at91_twi_read(dev, AT91_TWI_ACR);
-> +			acr &= ~AT91_TWI_ACR_DATAL_MASK;
-> +			at91_twi_write(dev, AT91_TWI_ACR, acr);
-> +		}
-> +		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
-> +	}
-> +
->  	return ret;
->  }
->  
-> diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-> index 499b506f6128..ffb870f3ffc6 100644
-> --- a/drivers/i2c/busses/i2c-at91.h
-> +++ b/drivers/i2c/busses/i2c-at91.h
-> @@ -36,6 +36,7 @@
->  #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
->  #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
->  #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
-> +#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
->  #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
->  #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
->  #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
-> @@ -69,6 +70,8 @@
->  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
->  #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
->  #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
-> +#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
-> +#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
->  
->  #define	AT91_TWI_INT_MASK \
->  	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
-> @@ -81,7 +84,8 @@
->  #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
->  
->  #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
-> -#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
-> +#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
-> +#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
->  #define	AT91_TWI_ACR_DIR	BIT(8)
->  
->  #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
-> -- 
-> 2.20.1
-> 
+And if the hardware does have a functioning rdrand, we probably should
+accept that too - simply because not accepting it and warning sounds a
+bit too annoying.
+
+But we definitely *should* have a warning for people who build
+embedded devices that we can't see any reasonable amount of possible
+entropy. Those have definitely happened, and it's a serious and real
+security issue.
+
+> let's do just that. As a bonus, it saves applications from the complex
+> dance with retrying via /dev/urandom and finally brings a reliable API
+> (modulo old and broken kernels) to get random numbers (well, as random
+> as possible right now) without needing a file descriptor.
+
+Yeah, well, the question in the end always is "what is reliable".
+
+Waiting has definitely not been reliable, and has only ever caused problems.
+
+Returning an error (or some status while still doing a best effort)
+would be reasonable, but I really do think that people will mis-use
+that. We just have too much of a history of people having the mindset
+that they can just fall back to something better - like waiting - and
+they are always wrong.
+
+Just returning random data is the right thing, but we do need to make
+sure that system developers see a warning if they do something
+obviously wrong (so that the embedded people without even a real-time
+clock to initialize any bits of entropy AT ALL won't think that they
+can generate a system key on their router).
+
+               Linus
