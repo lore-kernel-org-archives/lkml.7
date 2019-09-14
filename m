@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C291C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97F7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4FC2084F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA4B20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388127AbfINMex (ORCPT
+        id S2388207AbfINMf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 08:34:53 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:59728 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387893AbfINMew (ORCPT
+        Sat, 14 Sep 2019 08:35:29 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:40329 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387554AbfINMf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 08:34:52 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Sat, 14 Sep 2019 08:35:29 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i97GM-0006lm-4h; Sat, 14 Sep 2019 06:34:50 -0600
+        id 1i97Gx-0003qF-Ld; Sat, 14 Sep 2019 06:35:27 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i97GK-0004o0-QS; Sat, 14 Sep 2019 06:34:49 -0600
+        id 1i97Gr-00037n-B7; Sat, 14 Sep 2019 06:35:27 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>,
@@ -54,226 +54,124 @@ References: <20190830140805.GD13294@shell.armlinux.org.uk>
         <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
         <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
         <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
-Date:   Sat, 14 Sep 2019 07:34:30 -0500
+Date:   Sat, 14 Sep 2019 07:35:02 -0500
 In-Reply-To: <87muf7f4bf.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
         message of "Sat, 14 Sep 2019 07:30:28 -0500")
-Message-ID: <87lfurdpk9.fsf_-_@x220.int.ebiederm.org>
+Message-ID: <87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1i97GK-0004o0-QS;;;mid=<87lfurdpk9.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/19meGdp1WuXUewwChp0Hscbqg7ttGxF8=
+X-XM-SPF: eid=1i97Gr-00037n-B7;;;mid=<87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19fWCOXOBQIwNdP5hvvIwXngemgjOMnoBo=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 3/4] task: With a grace period after finish_task_switch, remove unnecessary code
+Subject: [PATCH v2 4/4] task: RCUify the assignment of rq->curr
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Remove work arounds that were written before there was a grace period
-after tasks left the runqueue in finish_task_switch.
+The current task on the runqueue is currently read with rcu_dereference().
 
-In particular now that there tasks exiting the runqueue exprience
-a rcu grace period none of the work performed by task_rcu_dereference
-excpet the rcu_dereference is necessary so replace task_rcu_dereference
-with rcu_dereference.
+To obtain ordinary rcu semantics for an rcu_dereference of rq->curr it needs
+to be paird with rcu_assign_pointer of rq->curr.  Which provides the
+memory barrier necessary to order assignments to the task_struct
+and the assignment to rq->curr.
 
-Remove the code in rcuwait_wait_event that checks to ensure the current
-task has not exited.  It is no longer necessary as it is guaranteed
-that any running task will experience a rcu grace period after it
-leaves the run queueue.
+Unfortunately the assignment of rq->curr in __schedule is a hot path,
+and it has already been show that additional barriers in that code
+will reduce the performance of the scheduler.  So I will attempt to
+describe below why you can effectively have ordinary rcu semantics
+without any additional barriers.
 
-Remove the comment in rcuwait_wake_up as it is no longer relevant.
+The assignment of rq->curr in init_idle is a slow path called once
+per cpu and that can use rcu_assign_pointer() without any concerns.
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Ref: 8f95c90ceb54 ("sched/wait, RCU: Introduce rcuwait machinery")
-Ref: 150593bf8693 ("sched/api: Introduce task_rcu_dereference() and try_get_task_struct()")
+As I write this there are effectively two users of rcu_dereference on
+rq->curr.  There is the membarrier code in kernel/sched/membarrier.c
+that only looks at "->mm" after the rcu_dereference.  Then there is
+task_numa_compare() in kernel/sched/fair.c.  My best reading of the
+code shows that task_numa_compare only access: "->flags",
+"->cpus_ptr", "->numa_group", "->numa_faults[]",
+"->total_numa_faults", and "->se.cfs_rq".
+
+The code in __schedule() essentially does:
+	rq_lock(...);
+	smp_mb__after_spinlock();
+
+	next = pick_next_task(...);
+	rq->curr = next;
+
+	context_switch(prev, next);
+
+At the start of the function the rq_lock/smp_mb__after_spinlock
+pair provides a full memory barrier.  Further there is a full memory barrier
+in context_switch().
+
+This means that any task that has already run and modified itself (the
+common case) has already seen two memory barriers before __schedule()
+runs and begins executing.  A task that modifies itself then sees a
+third full memory barrier pair with the rq_lock();
+
+For a brand new task that is enqueued with wake_up_new_task() there
+are the memory barriers present from the taking and release the
+pi_lock and the rq_lock as the processes is enqueued as well as the
+full memory barrier at the start of __schedule() assuming __schedule()
+happens on the same cpu.
+
+This means that by the time we reach the assignment of rq->curr
+except for values on the task struct modified in pick_next_task
+the code has the same guarantees as if it used rcu_assign_pointer.
+
+Reading through all of the implementations of pick_next_task it
+appears pick_next_task is limited to modifying the task_struct fields
+"->se", "->rt", "->dl".  These fields are the sched_entity structures
+of the varies schedulers.
+
+Further "->se.cfs_rq" is only changed in cgroup attach/move operations
+initialized by userspace.
+
+Unless I have missed something this means that in practice that the
+users of "rcu_dereerence(rq->curr)" get normal rcu semantics of
+rcu_dereference() for the fields the care about, despite the
+assignment of rq->curr in __schedule() ot using rcu_assign_pointer.
+
+Link: https://lore.kernel.org/r/20190903200603.GW2349@hirez.programming.kicks-ass.net
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- include/linux/rcuwait.h    | 20 +++---------
- include/linux/sched/task.h |  1 -
- kernel/exit.c              | 67 --------------------------------------
- kernel/sched/fair.c        |  2 +-
- kernel/sched/membarrier.c  |  4 +--
- 5 files changed, 7 insertions(+), 87 deletions(-)
+ kernel/sched/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
-index 563290fc194f..75c97e4bbc57 100644
---- a/include/linux/rcuwait.h
-+++ b/include/linux/rcuwait.h
-@@ -6,16 +6,11 @@
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 69015b7c28da..668262806942 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3857,7 +3857,11 @@ static void __sched notrace __schedule(bool preempt)
  
- /*
-  * rcuwait provides a way of blocking and waking up a single
-- * task in an rcu-safe manner; where it is forbidden to use
-- * after exit_notify(). task_struct is not properly rcu protected,
-- * unless dealing with rcu-aware lists, ie: find_task_by_*().
-+ * task in an rcu-safe manner.
-  *
-- * Alternatively we have task_rcu_dereference(), but the return
-- * semantics have different implications which would break the
-- * wakeup side. The only time @task is non-nil is when a user is
-- * blocked (or checking if it needs to) on a condition, and reset
-- * as soon as we know that the condition has succeeded and are
-- * awoken.
-+ * The only time @task is non-nil is when a user is blocked (or
-+ * checking if it needs to) on a condition, and reset as soon as we
-+ * know that the condition has succeeded and are awoken.
-  */
- struct rcuwait {
- 	struct task_struct __rcu *task;
-@@ -37,13 +32,6 @@ extern void rcuwait_wake_up(struct rcuwait *w);
-  */
- #define rcuwait_wait_event(w, condition)				\
- ({									\
--	/*								\
--	 * Complain if we are called after do_exit()/exit_notify(),     \
--	 * as we cannot rely on the rcu critical region for the		\
--	 * wakeup side.							\
--	 */                                                             \
--	WARN_ON(current->exit_state);                                   \
--									\
- 	rcu_assign_pointer((w)->task, current);				\
- 	for (;;) {							\
- 		/*							\
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 4c44c37236b2..8bd51af44bf8 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -115,7 +115,6 @@ static inline void put_task_struct(struct task_struct *t)
- 		__put_task_struct(t);
- }
+ 	if (likely(prev != next)) {
+ 		rq->nr_switches++;
+-		rq->curr = next;
++		/*
++		 * RCU users of rcu_dereference(rq->curr) may not see
++		 * changes to task_struct made by pick_next_task().
++		 */
++		RCU_INIT_POINTER(rq->curr, next);
+ 		/*
+ 		 * The membarrier system call requires each architecture
+ 		 * to have a full memory barrier after updating
+@@ -5863,7 +5867,8 @@ void init_idle(struct task_struct *idle, int cpu)
+ 	__set_task_cpu(idle, cpu);
+ 	rcu_read_unlock();
  
--struct task_struct *task_rcu_dereference(struct task_struct **ptask);
- void put_task_struct_rcu_user(struct task_struct *task);
- 
- #ifdef CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2e259286f4e7..f943773622fc 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -234,69 +234,6 @@ void release_task(struct task_struct *p)
- 		goto repeat;
- }
- 
--/*
-- * Note that if this function returns a valid task_struct pointer (!NULL)
-- * task->usage must remain >0 for the duration of the RCU critical section.
-- */
--struct task_struct *task_rcu_dereference(struct task_struct **ptask)
--{
--	struct sighand_struct *sighand;
--	struct task_struct *task;
--
--	/*
--	 * We need to verify that release_task() was not called and thus
--	 * delayed_put_task_struct() can't run and drop the last reference
--	 * before rcu_read_unlock(). We check task->sighand != NULL,
--	 * but we can read the already freed and reused memory.
--	 */
--retry:
--	task = rcu_dereference(*ptask);
--	if (!task)
--		return NULL;
--
--	probe_kernel_address(&task->sighand, sighand);
--
--	/*
--	 * Pairs with atomic_dec_and_test() in put_task_struct(). If this task
--	 * was already freed we can not miss the preceding update of this
--	 * pointer.
--	 */
--	smp_rmb();
--	if (unlikely(task != READ_ONCE(*ptask)))
--		goto retry;
--
--	/*
--	 * We've re-checked that "task == *ptask", now we have two different
--	 * cases:
--	 *
--	 * 1. This is actually the same task/task_struct. In this case
--	 *    sighand != NULL tells us it is still alive.
--	 *
--	 * 2. This is another task which got the same memory for task_struct.
--	 *    We can't know this of course, and we can not trust
--	 *    sighand != NULL.
--	 *
--	 *    In this case we actually return a random value, but this is
--	 *    correct.
--	 *
--	 *    If we return NULL - we can pretend that we actually noticed that
--	 *    *ptask was updated when the previous task has exited. Or pretend
--	 *    that probe_slab_address(&sighand) reads NULL.
--	 *
--	 *    If we return the new task (because sighand is not NULL for any
--	 *    reason) - this is fine too. This (new) task can't go away before
--	 *    another gp pass.
--	 *
--	 *    And note: We could even eliminate the false positive if re-read
--	 *    task->sighand once again to avoid the falsely NULL. But this case
--	 *    is very unlikely so we don't care.
--	 */
--	if (!sighand)
--		return NULL;
--
--	return task;
--}
--
- void rcuwait_wake_up(struct rcuwait *w)
- {
- 	struct task_struct *task;
-@@ -316,10 +253,6 @@ void rcuwait_wake_up(struct rcuwait *w)
- 	 */
- 	smp_mb(); /* (B) */
- 
--	/*
--	 * Avoid using task_rcu_dereference() magic as long as we are careful,
--	 * see comment in rcuwait_wait_event() regarding ->exit_state.
--	 */
- 	task = rcu_dereference(w->task);
- 	if (task)
- 		wake_up_process(task);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bc9cfeaac8bd..215c640e2a6b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1644,7 +1644,7 @@ static void task_numa_compare(struct task_numa_env *env,
- 		return;
- 
- 	rcu_read_lock();
--	cur = task_rcu_dereference(&dst_rq->curr);
-+	cur = rcu_dereference(dst_rq->curr);
- 	if (cur && ((cur->flags & PF_EXITING) || is_idle_task(cur)))
- 		cur = NULL;
- 
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index aa8d75804108..b14250a11608 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -71,7 +71,7 @@ static int membarrier_global_expedited(void)
- 			continue;
- 
- 		rcu_read_lock();
--		p = task_rcu_dereference(&cpu_rq(cpu)->curr);
-+		p = rcu_dereference(cpu_rq(cpu)->curr);
- 		if (p && p->mm && (atomic_read(&p->mm->membarrier_state) &
- 				   MEMBARRIER_STATE_GLOBAL_EXPEDITED)) {
- 			if (!fallback)
-@@ -150,7 +150,7 @@ static int membarrier_private_expedited(int flags)
- 		if (cpu == raw_smp_processor_id())
- 			continue;
- 		rcu_read_lock();
--		p = task_rcu_dereference(&cpu_rq(cpu)->curr);
-+		p = rcu_dereference(cpu_rq(cpu)->curr);
- 		if (p && p->mm == current->mm) {
- 			if (!fallback)
- 				__cpumask_set_cpu(cpu, tmpmask);
+-	rq->curr = rq->idle = idle;
++	rq->idle = idle;
++	rcu_assign_pointer(rq->curr, idle);
+ 	idle->on_rq = TASK_ON_RQ_QUEUED;
+ #ifdef CONFIG_SMP
+ 	idle->on_cpu = 1;
 -- 
 2.21.0.dirty
 
