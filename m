@@ -2,170 +2,124 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9030C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCBC4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8049B20830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F44E2081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSqVRzEP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swjgOi4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfINPCQ (ORCPT
+        id S1726521AbfINPOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 11:02:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38888 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfINPCP (ORCPT
+        Sat, 14 Sep 2019 11:14:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40146 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfINPOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 11:02:15 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so5642303wme.3;
-        Sat, 14 Sep 2019 08:02:13 -0700 (PDT)
+        Sat, 14 Sep 2019 11:14:55 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d17so6389294lfa.7
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 08:14:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mMOMMNUQ7rvMvo5/g+Bua3yjd+yLYQVgTyXgh4mnFag=;
-        b=NSqVRzEPdBFSL55/YmV+cg/jx7/aM55zhs0fNUsElm0Yh/yXmWtY2MKuiGx4ecspbr
-         9Cyek6GFoDpYdTi7+ROGCjFCwhQ/d9BqpqoNY1zbK0b3of853GCi1aXNM+902IfWUTby
-         TR9kwpVZHKUr/IcE6L8KZMjcyBvcDplet3YO3vaURYY2vBD51FCihNMakd6JQrZTB5b3
-         lcqH4eueux7ptiNGYdxDp/XZXQVrDrD1mFEw7/iu5E+VKwjqNxLbRpyJO7Ot+57Q7rAc
-         igWVmPEVZwF3y5sDWOiMFgTPEyapf6vJhv2oRkaI4OvwVY2UFZ9U1YlX2y6k7yf1dCzt
-         Tv6w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u2Jr691WU0i7md2pkpE4rxMCd/3y9PfDz8VipZrdHZ8=;
+        b=swjgOi4jIz5RzgB0fsz+9fWb28xGtSoVv7CP3TwcBmJLxCDBFlj8f54D/LN7jG3QzY
+         MlQKzJl3qyTjdZ9mbtp9Ofw3YJrZMt+PJd8VYZeF3Wj8eHTE8POJG4Lq1G1TBZS5NCYI
+         kAbRaF+0HlHPhcY+/34h2Q0W7ipiwDO2u9EPuUjuU7ARuQdEexY//QTAcDi8APeh1BN0
+         J09TE+SvO/NAqnEPrSuZzA+OLH9s1QqAGRuLSHjvdwS3qnzVyekcWfcVNF23uPSZs72R
+         pALO3FUcEARB18+wkfZRKhLeyhClMu1bfWQeAQd6dwi4zPwQd0dob0JaiM6N+WYVHDwK
+         kkeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mMOMMNUQ7rvMvo5/g+Bua3yjd+yLYQVgTyXgh4mnFag=;
-        b=gpJoqblENAIsiyqMz3l7btGvt/i612wIPQgsJ8nhPpKqu5XXXiToWpxp2EgsacQpjs
-         dAyT4ywk1mgd7QhFw2InLXgefILbEQruwzCOlwe9uQUrNMhmXcG8KdieUFI5mZjEkHF/
-         DYa9MN2toIhlKREa8ZJJA7UtkBfKW4uHhQECveTx5Z5pbA6bGSyyJ52+IVm+FcvQWgUx
-         aqyq2coBnHTpvttpm1LHo7gMM+GbBxd1sNKJKxHpd6nAc5fallL7FVC7DBgJcF+OZ0T6
-         JCPJxGL05h9uOksBhRAwc32xva6MpDjSFa58lRWJZ88invsjzBudqYuqHNStBKE3Nn4k
-         FQhQ==
-X-Gm-Message-State: APjAAAVmRYWI6rCUd1ePiBsrfQPy7e0/THOHioNJ/adjA2FiTkESM+9E
-        96eis8pgA8d8ZEJbcOfujO8=
-X-Google-Smtp-Source: APXvYqyd07s0MMmHJ9O5HTsIyshLJSqP0TwdoonPy5ZWKxr9qEsgi32Hw8iN8Usrw3MQEwDug0FYRg==
-X-Received: by 2002:a1c:f009:: with SMTP id a9mr7439138wmb.151.1568473332696;
-        Sat, 14 Sep 2019 08:02:12 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
-        by smtp.gmail.com with ESMTPSA id m62sm7833183wmm.35.2019.09.14.08.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 08:02:11 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 17:02:06 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190914150206.GA2270@darwi-home-pc>
-References: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
- <20190910173243.GA3992@darwi-home-pc>
- <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u2Jr691WU0i7md2pkpE4rxMCd/3y9PfDz8VipZrdHZ8=;
+        b=c2DU1MYyFaqPEJQeEdvlaidTN1wCtxv4xF3tF6l05fPqdiCpaJrurW0XoTqdN3YznN
+         j/tRo6BUTd9EhRluaXyWpcOxALr9WlnwVrXAWSYvLETTYVFTYTJQOn4z8BbOSbmDnAJR
+         1qEY+SlMtW7m1YoM8QRvpdMyZaZEeOCd5xr4vrQ8FG7rhx+MFIr4hZx4JvQqpLWm6OaA
+         DAkYwUMk2cehJkQH3k/O/2FytNl43YGNUyP22ytFAOnNQ/tt84wJTriXwlrEGCC0RQxI
+         sGSZPHP3q85cYGfs38MDXj4uUaRRJw15KpEmTgk1XtZSHDTkpdLCA/AaSRan707ExH3z
+         jrOw==
+X-Gm-Message-State: APjAAAVKWuS/wTq0M24ry6QFD9LjJmlXtJTM8bAWz2kPtoaCexZXUvSn
+        ZnlnctiT+GVAQ1qhw6iD/xQ=
+X-Google-Smtp-Source: APXvYqzZ3vRMZ5a9QHA5G/h1przDDlsilKdNII8W6MBk+gi7r87YY3ZTYSCJLUcFW5xs0+zhMS9QZw==
+X-Received: by 2002:a19:6008:: with SMTP id u8mr30927503lfb.12.1568474092982;
+        Sat, 14 Sep 2019 08:14:52 -0700 (PDT)
+Received: from [192.168.0.160] (pppoe.178-66-214-228.dynamic.avangarddsl.ru. [178.66.214.228])
+        by smtp.gmail.com with ESMTPSA id y22sm7763898lfb.75.2019.09.14.08.14.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Sep 2019 08:14:52 -0700 (PDT)
+Subject: Re: [PATCH] staging: r8188eu: replace rtw_malloc() with it's
+ definition
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        devel@driverdev.osuosl.org,
+        =?UTF-8?B?Um9iZXJ0IFfEmWPFgmF3c2tp?= <r.weclawski@gmail.com>,
+        =?UTF-8?Q?Florian_B=c3=bcstgens?= <flbue@gmx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>
+References: <20190908090026.2656-1-insafonov@gmail.com>
+ <20190910115932.GB15977@kadam>
+From:   Ivan Safonov <insafonov@gmail.com>
+Message-ID: <47674485-194b-0b09-81ed-5d855284ebd9@gmail.com>
+Date:   Sat, 14 Sep 2019 18:18:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190910115932.GB15977@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:34:45PM +0100, Linus Torvalds wrote:
-> On Thu, Sep 12, 2019 at 9:25 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >
-> > Hmm, one thought might be GRND_FAILSAFE, which will wait up to two
-> > minutes before returning "best efforts" randomness and issuing a huge
-> > massive warning if it is triggered?
+On 9/10/19 2:59 PM, Dan Carpenter wrote:
+> On Sun, Sep 08, 2019 at 12:00:26PM +0300, Ivan Safonov wrote >> rtw_malloc prevents the use of kmemdup/kzalloc and others.
+>>
+>> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+>> ---
+>>   drivers/staging/rtl8188eu/core/rtw_ap.c        |  4 ++--
+>>   drivers/staging/rtl8188eu/core/rtw_mlme_ext.c  |  2 +-
+>>   .../staging/rtl8188eu/include/osdep_service.h  |  3 ---
+>>   drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 18 +++++++++---------
+>>   drivers/staging/rtl8188eu/os_dep/mlme_linux.c  |  2 +-
+>>   .../staging/rtl8188eu/os_dep/osdep_service.c   |  7 +------
+>>   6 files changed, 14 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/staging/rtl8188eu/core/rtw_ap.c b/drivers/staging/rtl8188eu/core/rtw_ap.c
+>> index 51a5b71f8c25..c9c57379b7a2 100644
+>> --- a/drivers/staging/rtl8188eu/core/rtw_ap.c
+>> +++ b/drivers/staging/rtl8188eu/core/rtw_ap.c
+>> @@ -104,7 +104,7 @@ static void update_BCNTIM(struct adapter *padapter)
+>>   	}
+>>   
+>>   	if (remainder_ielen > 0) {
+>> -		pbackup_remainder_ie = rtw_malloc(remainder_ielen);
+>> +		pbackup_remainder_ie = kmalloc(remainder_ielen, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+>                                                                  ^^^^^^^^^^^^^
+> This stuff isn't right.  It really should be checking if spinlocks are
+> held or IRQs are disabled.  And the only way to do that is by auditing
+> the callers.
+I hope to make these changes later as separate independent patches.
+This patch do only one thing - remove rtw_malloc().
+
 > 
-> Yeah, based on (by now) _years_ of experience with people mis-using
-> "get me random numbers", I think the sense of a new flag needs to be
-> "yeah, I'm willing to wait for it".
->
-> Because most people just don't want to wait for it, and most people
-> don't think about it, and we need to make the default be for that
-> "don't think about it" crowd, with the people who ask for randomness
-> sources for a secure key having to very clearly and very explicitly
-> say "Yes, I understand that this can take minutes and can only be done
-> long after boot".
+> (The original rtw_malloc() implementation is buggy nonsense).
 > 
-> Even then people will screw that up because they copy code, or some
-> less than gifted rodent writes a library and decides "my library is so
-> important that I need that waiting sooper-sekrit-secure random
-> number", and then people use that broken library by mistake without
-> realizing that it's not going to be reliable at boot time.
+> regards,
+> dan carpenter
 > 
-> An alternative might be to make getrandom() just return an error
-> instead of waiting. Sure, fill the buffer with "as random as we can"
-> stuff, but then return -EINVAL because you called us too early.
->
 
-ACK, that's probably _the_ most sensible approach. Only caveat is
-the slight change in user-space API semantics though...
-
-For example, this breaks the just released systemd-random-seed(8)
-as it _explicitly_ requests blocking behvior from getrandom() here:
-
-    => src/random-seed/random-seed.c:
-    /*
-     * Let's make this whole job asynchronous, i.e. let's make
-     * ourselves a barrier for proper initialization of the
-     * random pool.
-     */
-     k = getrandom(buf, buf_size, GRND_NONBLOCK);
-     if (k < 0 && errno == EAGAIN && synchronous) {
-         log_notice("Kernel entropy pool is not initialized yet, "
-                    "waiting until it is.");
-                    
-         k = getrandom(buf, buf_size, 0); /* retry synchronously */
-     }
-     if (k < 0) {
-         log_debug_errno(errno, "Failed to read random data with "
-                         "getrandom(), falling back to "
-                         "/dev/urandom: %m");
-     } else if ((size_t) k < buf_size) {
-         log_debug("Short read from getrandom(), falling back to "
-	           "/dev/urandom: %m");
-     } else {
-         getrandom_worked = true;
-     }
-
-Nonetheless, a slightly broken systemd-random-seed, that was just
-released only 11 days ago (v243), is honestly much better than a
-*non-booting system*...
-
-I've sent an RFC patch at [1].
-
-To handle the systemd case, I'll add the discussed "yeah, I'm
-willing to wait for it" flag (GRND_BLOCK) in v2.
-
-If this whole approach is going to be merged, and the slight ABI
-breakage is to be tolerated (hmmmmm?), I wonder how will systemd
-random-seed handle the semantics change though without doing
-ugly kernel version checks..
-
-thanks,
-
-[1] https://lkml.kernel.org/r/20190914122500.GA1425@darwi-home-pc
-
---
-darwi
-http://darwish.chasingpointers.com
+Ivan Safonov.
