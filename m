@@ -2,171 +2,240 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA41C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870EDC49ED6
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 09:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B7B2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568450998;
-	bh=J9o3/Ce1+YLaWOJS+1y9FmaoiXDLsFcat/B4OJD07xQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y6N0QomgMeV6+v7xKnE2Io+499uJK1gwg/DYoxHCT7QboiIEs8v4LC0okV2l29i1p
-	 MzrQbRjyljpI9ivWTnzsi6qiuh2rb20jK2Bbo7jpF6b7Cr7LTozNPAOjJ6iyCQbHqU
-	 X4bCRxBKV3cKwdq88Pb6rVRcw9VWlk/D75AwLPcc=
+	by mail.kernel.org (Postfix) with ESMTP id 4ED362084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 09:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rhTPiUd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfINIt4 (ORCPT
+        id S1727726AbfINJUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 04:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfINIt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 04:49:56 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1529214AE
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 08:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568450995;
-        bh=J9o3/Ce1+YLaWOJS+1y9FmaoiXDLsFcat/B4OJD07xQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NvC0HAkbO+X0R/hUr5ElgQAkn9X+DlHgQCaI+WUT3QaLpkyww7ouKYCiu+gLQdPnN
-         Zt2iNLvAcaA/7M7mBWG5GC72IVnUlLTjmJnBCwL8Gs+y4/DomRNvqSFSk4OlGnDjoe
-         Dtl/nAegdQl/qfiWPrj/maTEs4oYOJwLv1kg+bio=
-Received: by mail-wr1-f54.google.com with SMTP id h7so33183776wrw.8
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 01:49:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAXL4ES9vmkPCU9QSCvU1NGXsCh9sXKGi7o0DZ/soVqn0XviDIAs
-        In0ILWQIl/OF8Mna9SUHYjC9QM29Y1XwUFpdrKY=
-X-Google-Smtp-Source: APXvYqxg6MtzWsHNFmLRbH0IHgwRMp+vQZNFO479wjLXexAnH2ZbcUXa06WI/GBB3zidLYAHo44uDXvnrwuUeLiSDAI=
-X-Received: by 2002:adf:fe0f:: with SMTP id n15mr5204507wrr.343.1568450992705;
- Sat, 14 Sep 2019 01:49:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190321163623.20219-12-julien.grall@arm.com> <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
- <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com>
- <20190619123939.GF7767@fuggles.cambridge.arm.com> <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
- <20190624104006.lvm32nahemaqklxc@willie-the-truck> <CAJF2gTSC1sGgmiTCgzKUTdPyUZ3LG4H7N8YbMyWr-E+eifGuYg@mail.gmail.com>
- <20190912140256.fwbutgmadpjbjnab@willie-the-truck> <CAJF2gTT2c45HRfATF+=zs-HNToFAKgq1inKRmJMV3uPYBo4iVg@mail.gmail.com>
- <CAJF2gTTsHCsSpf1ncVb=ZJS2d=r+AdDi2=5z-REVS=uUg9138A@mail.gmail.com>
-In-Reply-To: <CAJF2gTTsHCsSpf1ncVb=ZJS2d=r+AdDi2=5z-REVS=uUg9138A@mail.gmail.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 14 Sep 2019 16:49:40 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTKFwRN6vG3+fQK8BRFskeURjv-Ziv_qb7nc9MSKw0bLA@mail.gmail.com>
-Message-ID: <CAJF2gTTKFwRN6vG3+fQK8BRFskeURjv-Ziv_qb7nc9MSKw0bLA@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Will Deacon <will@kernel.org>
-Cc:     Will Deacon <will.deacon@arm.com>, julien.thierry@arm.com,
-        aou@eecs.berkeley.edu, james.morse@arm.com,
-        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Anup Patel <anup.Patel@wdc.com>,
+        Sat, 14 Sep 2019 05:20:49 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:14384 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfINJUt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 05:20:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568452842;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=4VDI1pj3pQDRgXox/SgYTetHaZq0Xwp2BgUeWSVVTAI=;
+        b=rhTPiUd5fat2JUokjzG/xUHZqx3icGaIKCtm+Fhgpyo2NqNsL5UhLp38tN7ctWMSPK
+        +WwYYyOaaZbo3zkQ4Rk9sGYP2tOFtY3YxOgu7vJkvEvaBe/2XtQ3WYy26Q6MzxjZsZRc
+        bqCKfRYt4OoOKnojzL//NOCNn/1o5OY/M1ojh0MemlnAcTwwBZsiepNaRg2Nz/CMnqyk
+        LbUvbyxbli2DOqSjj9/pMoJ4XCKqHnnoHHMuIbkaWlBXcnPZZh0yVKbHxsqC0p95xvJO
+        Uacy/bH4yYZv1VXMebmVwqmsGmwJaHJb7W77duNHAq57xXUVrYTJgzPTk62Yy82dFtWf
+        T6hA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PhwDWtpw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8E9KUKCS
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sat, 14 Sep 2019 11:20:30 +0200 (CEST)
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190913153714.30980-1-aford173@gmail.com>
+Date:   Sat, 14 Sep 2019 11:20:29 +0200
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>, gary@garyguo.net,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        christoffer.dall@arm.com, linux-riscv@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Grazvydas Ignotas <notasas@gmail.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com>
+References: <20190913153714.30980-1-aford173@gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is the presentation, any comments is welcome.
 
-https://docs.google.com/presentation/d/1sc295JznVAfDIPieAqzjcyUkcHnNFQsK8FF=
-qdoCY854/edit?usp=3Dsharing
+> Am 13.09.2019 um 17:37 schrieb Adam Ford <aford173@gmail.com>:
+>=20
+> The OMAP3530, AM3517 and DM3730 all show thresholds of 90C and 105C
+> depending on commercial or industrial temperature ratings.  This
+> patch expands the thermal information to the limits of 90 and 105
+> for alert and critical.
+>=20
+> For boards who never use industrial temperatures, these can be
+> changed on their respective device trees with something like:
+>=20
+> &cpu_alert0 {
+> 	temperature =3D <85000>; /* millicelsius */
+> };
+>=20
+> &cpu_crit {
+> 	temperature =3D <90000>; /* millicelsius */
+> };
+>=20
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V2:  Change the CPU reference to &cpu instead of &cpu0
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi =
+b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> index 235ecfd61e2d..dfbd0cb0b00b 100644
+> --- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> +++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> @@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
+>=20
+> 			/* sensor       ID */
+> 	thermal-sensors =3D <&bandgap     0>;
+> +
+> +	cpu_trips: trips {
+> +		cpu_alert0: cpu_alert {
+> +			temperature =3D <90000>; /* millicelsius */
+> +			hysteresis =3D <2000>; /* millicelsius */
+> +			type =3D "passive";
+> +		};
+> +		cpu_crit: cpu_crit {
+> +			temperature =3D <105000>; /* millicelsius */
+> +			hysteresis =3D <2000>; /* millicelsius */
+> +			type =3D "critical";
+> +		};
+> +	};
+> +
+> +	cpu_cooling_maps: cooling-maps {
+> +		map0 {
+> +			trip =3D <&cpu_alert0>;
+> +			cooling-device =3D
+> +				<&cpu THERMAL_NO_LIMIT =
+THERMAL_NO_LIMIT>;
+> +		};
+> +	};
+> };
+> --=20
+> 2.17.1
+>=20
 
-On Fri, Sep 13, 2019 at 3:13 PM Guo Ren <guoren@kernel.org> wrote:
->
-> Another idea is seperate remote TLB invalidate into two instructions:
->
->  - sfence.vma.b.asyc
->  - sfence.vma.b.barrier // wait all async TLB invalidate operations finis=
-hed for all harts.
->
-> (I remember who mentioned me separate them into two instructions after se=
-ssion. Anup? Is the idea right ?)
->
-> Actually, I never consider asyc TLB invalidate before, because current ou=
-r light iommu did not need it.
->
-> Thx all people attend the session :) Let's continue the talk.
->
->
-> Guo Ren <guoren@kernel.org> =E4=BA=8E 2019=E5=B9=B49=E6=9C=8812=E6=97=A5=
-=E5=91=A8=E5=9B=9B 22:59=E5=86=99=E9=81=93=EF=BC=9A
->>
->> Thx Will for reply.
->>
->> On Thu, Sep 12, 2019 at 3:03 PM Will Deacon <will@kernel.org> wrote:
->> >
->> > On Sun, Sep 08, 2019 at 07:52:55AM +0800, Guo Ren wrote:
->> > > On Mon, Jun 24, 2019 at 6:40 PM Will Deacon <will@kernel.org> wrote:
->> > > > > I'll keep my system use the same ASID for SMP + IOMMU :P
->> > > >
->> > > > You will want a separate allocator for that:
->> > > >
->> > > > https://lkml.kernel.org/r/20190610184714.6786-2-jean-philippe.bruc=
-ker@arm.com
->> > >
->> > > Yes, it is hard to maintain ASID between IOMMU and CPUMMU or differe=
-nt
->> > > system, because it's difficult to synchronize the IO_ASID when the C=
-PU
->> > > ASID is rollover.
->> > > But we could still use hardware broadcast TLB invalidation instructi=
-on
->> > > to uniformly manage the ASID and IO_ASID, or OTHER_ASID in our IOMMU=
-.
->> >
->> > That's probably a bad idea, because you'll likely stall execution on t=
-he
->> > CPU until the IOTLB has completed invalidation. In the case of ATS, I =
-think
->> > an endpoint ATC is permitted to take over a minute to respond. In real=
-ity, I
->> > suspect the worst you'll ever see would be in the msec range, but that=
-'s
->> > still an unacceptable period of time to hold a CPU.
->> Just as I've said in the session that IOTLB invalidate delay is
->> another topic, My main proposal is to introduce stage1.pgd and
->> stage2.pgd as address space identifiers between different TLB systems
->> based on vmid, asid. My last part of sildes will show you how to
->> translate stage1/2.pgd to as/vmid in PCI ATS system and the method
->> could work with SMMU-v3 and intel Vt-d. (It's regret for me there is
->> no time to show you the whole slides.)
->>
->> In our light IOMMU implementation, there's no IOTLB invalidate delay
->> problem. Becasue IOMMU is very close to CPU MMU and interconnect's
->> delay is the same with SMP CPUs MMU (no PCI, VM supported).
->>
->> To solve the problem, we could define a async mode in sfence.vma.b to
->> slove the problem and finished with per_cpu_irq/exception.
->>
->> --
->> Best Regards
->>  Guo Ren
->>
->> ML: https://lore.kernel.org/linux-csky/
+Here is my test log (GTA04A5 with DM3730CBP100).
+"high-load" script is driving the NEON to full power
+and would report calculation errors.
 
+There is no noise visible in the bandgap sensor data
+induced by power supply fluctuations (log shows system
+voltage while charging).
 
+root@letux:~# ./high-load -n2
+100% load stress test for 1 cores running ./neon_loop2
+Sat Sep 14 09:05:50 UTC 2019 65=C2=B0 4111mV 1000MHz
+Sat Sep 14 09:05:50 UTC 2019 67=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:05:52 UTC 2019 68=C2=B0 4000mV 1000MHz
+Sat Sep 14 09:05:53 UTC 2019 68=C2=B0 4000mV 1000MHz
+Sat Sep 14 09:05:55 UTC 2019 72=C2=B0 3976mV 1000MHz
+Sat Sep 14 09:05:56 UTC 2019 72=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:05:57 UTC 2019 72=C2=B0 3900mV 1000MHz
+Sat Sep 14 09:05:59 UTC 2019 73=C2=B0 4029mV 1000MHz
+Sat Sep 14 09:06:00 UTC 2019 73=C2=B0 3988mV 1000MHz
+Sat Sep 14 09:06:01 UTC 2019 73=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:03 UTC 2019 73=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:04 UTC 2019 73=C2=B0 4117mV 1000MHz
+Sat Sep 14 09:06:06 UTC 2019 73=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:07 UTC 2019 75=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:08 UTC 2019 75=C2=B0 3970mV 1000MHz
+Sat Sep 14 09:06:09 UTC 2019 75=C2=B0 4046mV 1000MHz
+Sat Sep 14 09:06:11 UTC 2019 75=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:12 UTC 2019 75=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:14 UTC 2019 75=C2=B0 3970mV 1000MHz
+Sat Sep 14 09:06:15 UTC 2019 75=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:16 UTC 2019 77=C2=B0 4017mV 1000MHz
+Sat Sep 14 09:06:18 UTC 2019 77=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:19 UTC 2019 77=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:20 UTC 2019 77=C2=B0 3988mV 1000MHz
+Sat Sep 14 09:06:22 UTC 2019 77=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:23 UTC 2019 77=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:24 UTC 2019 78=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:26 UTC 2019 78=C2=B0 4105mV 1000MHz
+Sat Sep 14 09:06:27 UTC 2019 78=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:28 UTC 2019 78=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:30 UTC 2019 78=C2=B0 4123mV 1000MHz
+...
+Sat Sep 14 09:09:57 UTC 2019 88=C2=B0 4082mV 1000MHz
+Sat Sep 14 09:09:59 UTC 2019 88=C2=B0 4164mV 1000MHz
+Sat Sep 14 09:10:00 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:01 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:03 UTC 2019 88=C2=B0 4082mV 1000MHz
+Sat Sep 14 09:10:04 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:06 UTC 2019 88=C2=B0 4146mV 1000MHz
+Sat Sep 14 09:10:07 UTC 2019 88=C2=B0 4041mV 1000MHz
+Sat Sep 14 09:10:08 UTC 2019 88=C2=B0 4035mV 1000MHz
+Sat Sep 14 09:10:10 UTC 2019 88=C2=B0 4052mV 1000MHz
+Sat Sep 14 09:10:11 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:12 UTC 2019 88=C2=B0 4152mV 1000MHz
+Sat Sep 14 09:10:14 UTC 2019 88=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:15 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:17 UTC 2019 88=C2=B0 4170mV 1000MHz
+Sat Sep 14 09:10:18 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:19 UTC 2019 88=C2=B0 4187mV 1000MHz
+Sat Sep 14 09:10:21 UTC 2019 88=C2=B0 4093mV 1000MHz
+Sat Sep 14 09:10:22 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:23 UTC 2019 90=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:25 UTC 2019 88=C2=B0 4123mV 800MHz
+Sat Sep 14 09:10:26 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:28 UTC 2019 90=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:29 UTC 2019 88=C2=B0 4076mV 1000MHz
+Sat Sep 14 09:10:30 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:32 UTC 2019 88=C2=B0 4117mV 1000MHz
+Sat Sep 14 09:10:33 UTC 2019 88=C2=B0 4105mV 800MHz
+Sat Sep 14 09:10:34 UTC 2019 88=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:36 UTC 2019 88=C2=B0 4076mV 1000MHz
+Sat Sep 14 09:10:37 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:39 UTC 2019 88=C2=B0 4017mV 1000MHz
+Sat Sep 14 09:10:40 UTC 2019 88=C2=B0 4093mV 1000MHz
+Sat Sep 14 09:10:41 UTC 2019 88=C2=B0 4058mV 800MHz
+Sat Sep 14 09:10:42 UTC 2019 88=C2=B0 4035mV 1000MHz
+Sat Sep 14 09:10:44 UTC 2019 90=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:45 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:47 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:48 UTC 2019 88=C2=B0 4029mV 1000MHz
+Sat Sep 14 09:10:50 UTC 2019 90=C2=B0 4046mV 1000MHz
+^Ckill 4680
+root@letux:~# cpufreq-info=20
+cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
+Report errors and bugs to cpufreq@vger.kernel.org, please.
+analyzing CPU 0:
+  driver: cpufreq-dt
+  CPUs which run at the same hardware frequency: 0
+  CPUs which need to have their frequency coordinated by software: 0
+  maximum transition latency: 300 us.
+  hardware limits: 300 MHz - 1000 MHz
+  available frequency steps: 300 MHz, 600 MHz, 800 MHz, 1000 MHz
+  available cpufreq governors: conservative, userspace, powersave, =
+ondemand, performance
+  current policy: frequency should be within 300 MHz and 1000 MHz.
+                  The governor "ondemand" may decide which speed to use
+                  within this range.
+  current CPU frequency is 600 MHz (asserted by call to hardware).
+  cpufreq stats: 300 MHz:22.81%, 600 MHz:2.50%, 800 MHz:2.10%, 1000 =
+MHz:72.59%  (1563)
+root@letux:~#=20
 
---=20
-Best Regards
- Guo Ren
+So OPP is reduced if bandgap sensor reports >=3D 90=C2=B0C
+which almost immediately makes the temperature
+go down.
 
-ML: https://lore.kernel.org/linux-csky/
+No operational hickups were observed.
+
+Surface temperature of the PoP chip did rise to
+approx. 53=C2=B0C during this test.
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with =
+dm3730cbp100
+
