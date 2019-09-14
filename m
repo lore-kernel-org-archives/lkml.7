@@ -2,107 +2,136 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37235C49ED7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAB3C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D06820692
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C06208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbAiEctD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rt4uWEX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390758AbfINAD3 (ORCPT
+        id S2390769AbfINAIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 20:03:29 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46520 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387762AbfINAD2 (ORCPT
+        Fri, 13 Sep 2019 20:08:01 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:44751 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388667AbfINAIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 20:03:28 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i8so28368521edn.13
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 17:03:28 -0700 (PDT)
+        Fri, 13 Sep 2019 20:08:00 -0400
+Received: by mail-qk1-f201.google.com with SMTP id x77so34831857qka.11
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 17:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t8cGpHubjB6DkvBW1Qn9d5gYfqgedzw/xNrPjvFY/Nw=;
-        b=gbAiEctD/TNFuOmjaeF2iGU//aIQDkU6BSjDfxc02v/fm2ehA5B8CbS4asenQun9RX
-         /ozWunb+vjjtTL1srFBAGUp+m5abZ0wT/iuSAXN9NnQIcw0TqNChAepSHoTF7wkF1Aae
-         YiaB37IvY9Js8F2ISO9pT052SCwmIQKuoOR7gma3wtCuLjNHgLv9D7YMF/7WwkE7L5lb
-         8qtJGbdBQ4vTzmZkkri9qvHZsIJgUBzv1GWZtQ2VuM5Z29S3XBSI1loZysTzjxxoQoT0
-         dQw72nFnOFggxX0BGaQHtk9LnFtcTGh0nup+eaDMWiac4rks5dZ6M3CXExkgKMYyaJq9
-         ZRqQ==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=lp1ovS/BiJIimm2KkXbVRdqzH3DGx1lv+fcqWa50ZBQ=;
+        b=Rt4uWEX1WC7qsSkLnMn+ja/K/Z3LuRUh6r6DRsPyhmXDfrHb/YriCW9u2abhjk3VxE
+         bxtxaY2Tp7jiu+zQxe96ddm2u+q4E64QCoBM3NhEhMdMZ55Jr7T3N+faJlXo8PveLQp8
+         kgcQNWh4O+jcf95NBm8xdqd/NVgkWSn4vxVpwIEqVHINNAMIScoyEFUs+9THwDEPC9D0
+         C7h35JMQcp+Xb8IXk1bDu2CcML0EFrI+65MLL8ju5FQTuReB/suY9v5BcpjwMdq+iahb
+         5A5DXIbsceoB3nj8e8SXZqwdXH/d57EzYDAYurm8Ataj6pN05YrcFH624rF1ek2xNINK
+         u9Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t8cGpHubjB6DkvBW1Qn9d5gYfqgedzw/xNrPjvFY/Nw=;
-        b=mMURMEUMxZsXopOUkH9afhduNVr6Qt7hnce4CrzMm5+pQy9TLdEkl0x2/Ci9e+AVZ1
-         wEhRiX0FAtJmRYLi0VlJcI7XOw0RNAtRxIi7STYPz+y25BZDw88MCkzQacYGoqCMC2wv
-         JOhgX9JkpktDTlsnHR1Cgd7Vb2ptO9KcvDaro0KGkaQE8TrK1X3XLexvUS6buAyR4gB1
-         wzTfBsIAbDlgFO5BsnqJQMLbDABglz4kmLhlt7vg3zWT1qB5708vH+fwJHTHEcqakh0x
-         96dBPHzuHoG6j9fRbBHYiWixodtHN1xzlb28bEX8Q1mvmJc8oKDipN/G1FCCta9NNi7J
-         hfxg==
-X-Gm-Message-State: APjAAAXCywq/EeLpVjYgNpWZYK1oKu2T+oqdey4XTXE6++sjuzsGfjd0
-        LM7dUFvA5pyyuMrzvZtokoc=
-X-Google-Smtp-Source: APXvYqzNgIBraeg58W85oixzqOodw+0h+nOJqf7BvwSamF7jVThsLD9U0Rhc2kikkmamuckBAdl6hQ==
-X-Received: by 2002:a17:906:235a:: with SMTP id m26mr42419198eja.297.1568419407776;
-        Fri, 13 Sep 2019 17:03:27 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id q10sm5563765edw.26.2019.09.13.17.03.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Sep 2019 17:03:27 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 00:03:26 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        willy@infradead.org, will@kernel.org, peterz@infradead.org
-Subject: Re: [PATCH] mm: remove redundant assignment of entry
-Message-ID: <20190914000326.h4ruqmyvo3yisf52@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190708082740.21111-1-richardw.yang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708082740.21111-1-richardw.yang@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=lp1ovS/BiJIimm2KkXbVRdqzH3DGx1lv+fcqWa50ZBQ=;
+        b=F+Hk7ek0yeH3AhOftqURgiogp0xf/upYuGVgY5arL7l5s3HbvCkoIOrqYd+z5N1UWZ
+         D0thg45He2Un4PyJMeC4q7XODS4ZWVsvhAmZbDPr/LvWQYNKiZu3D+yCfVfHqUmvULcz
+         QorN+3myuORdYnxLA6M6tfSKUem5e5P+dmSA5I2ikmL/xh2z4rL/XpLJBeAv8BZjKN0Z
+         kKYZgVhU+7nxbrFYziBg7hXL+FvA9LLCxS4CTzX4MBO8v+Dke+DycBDmo+TDEjuWepso
+         YmEHhZkFnpc0QEu03exKTivieQdQa6GEsd3W5um0aD2zyHEN4R+Q/aXjf7KxRB/GdT8z
+         FDRA==
+X-Gm-Message-State: APjAAAVZDe86jFPoRI91K1F0HOrXFUtm+6Ojl6gl83k6qjXrp1ISX/zy
+        z4XdyG47C91N8ul0Qlv8Hd6py0FZHWQ=
+X-Google-Smtp-Source: APXvYqwKncMAj8DEWm2CqFKi79/Wj4WIkkjQ3ekD9OmGLxgKFlWGWM7Vgnh3PbbPWsDEl1d9IrDcRnTxLF0=
+X-Received: by 2002:a0c:f8ce:: with SMTP id h14mr22188070qvo.2.1568419677790;
+ Fri, 13 Sep 2019 17:07:57 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 18:07:42 -0600
+In-Reply-To: <20190912023111.219636-1-yuzhao@google.com>
+Message-Id: <20190914000743.182739-1-yuzhao@google.com>
+Mime-Version: 1.0
+References: <20190912023111.219636-1-yuzhao@google.com>
+X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
+Subject: [PATCH v3 1/2] mm: clean up validate_slab()
+From:   Yu Zhao <yuzhao@google.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 04:27:40PM +0800, Wei Yang wrote:
->Since ptent will not be changed after previous assignment of entry, it
->is not necessary to do the assignment again.
->
+The function doesn't need to return any value, and the check can be
+done in one pass.
 
-Sounds this one is lost in the time line :-)
+There is a behavior change: before the patch, we stop at the first
+invalid free object; after the patch, we stop at the first invalid
+object, free or in use. This shouldn't matter because the original
+behavior isn't intended anyway.
 
->Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->---
-> mm/memory.c | 1 -
-> 1 file changed, 1 deletion(-)
->
->diff --git a/mm/memory.c b/mm/memory.c
->index ddf20bd0c317..d108bb979a08 100644
->--- a/mm/memory.c
->+++ b/mm/memory.c
->@@ -1127,7 +1127,6 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
-> 		if (unlikely(details))
-> 			continue;
-> 
->-		entry = pte_to_swp_entry(ptent);
-> 		if (!non_swap_entry(entry))
-> 			rss[MM_SWAPENTS]--;
-> 		else if (is_migration_entry(entry)) {
->-- 
->2.17.1
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+---
+ mm/slub.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
+diff --git a/mm/slub.c b/mm/slub.c
+index 8834563cdb4b..445ef8b2aec0 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4384,31 +4384,26 @@ static int count_total(struct page *page)
+ #endif
+ 
+ #ifdef CONFIG_SLUB_DEBUG
+-static int validate_slab(struct kmem_cache *s, struct page *page,
++static void validate_slab(struct kmem_cache *s, struct page *page,
+ 						unsigned long *map)
+ {
+ 	void *p;
+ 	void *addr = page_address(page);
+ 
+-	if (!check_slab(s, page) ||
+-			!on_freelist(s, page, NULL))
+-		return 0;
++	if (!check_slab(s, page) || !on_freelist(s, page, NULL))
++		return;
+ 
+ 	/* Now we know that a valid freelist exists */
+ 	bitmap_zero(map, page->objects);
+ 
+ 	get_map(s, page, map);
+ 	for_each_object(p, s, addr, page->objects) {
+-		if (test_bit(slab_index(p, s, addr), map))
+-			if (!check_object(s, page, p, SLUB_RED_INACTIVE))
+-				return 0;
+-	}
++		u8 val = test_bit(slab_index(p, s, addr), map) ?
++			 SLUB_RED_INACTIVE : SLUB_RED_ACTIVE;
+ 
+-	for_each_object(p, s, addr, page->objects)
+-		if (!test_bit(slab_index(p, s, addr), map))
+-			if (!check_object(s, page, p, SLUB_RED_ACTIVE))
+-				return 0;
+-	return 1;
++		if (!check_object(s, page, p, val))
++			break;
++	}
+ }
+ 
+ static void validate_slab_slab(struct kmem_cache *s, struct page *page,
 -- 
-Wei Yang
-Help you, Help me
+2.23.0.237.gc6a4ce50a0-goog
+
