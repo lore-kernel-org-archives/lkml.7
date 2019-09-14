@@ -2,377 +2,97 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF4C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BBFC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EA52089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C013620717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWDftd+Y"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MgUN1SvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbfINRYY (ORCPT
+        id S1730642AbfINR2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 13:24:24 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36620 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfINRYY (ORCPT
+        Sat, 14 Sep 2019 13:28:51 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38575 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfINR2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 13:24:24 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f2so23281751edw.3;
-        Sat, 14 Sep 2019 10:24:20 -0700 (PDT)
+        Sat, 14 Sep 2019 13:28:50 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 7so5206580oip.5;
+        Sat, 14 Sep 2019 10:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uDU/jUOs9/dlBx87qV1GT/UJJGErBJ44iUk7lwzgTq8=;
-        b=aWDftd+YAJRmgwczJtC8D0xrDP3aovGLTIypiOZWbG0PggHrnHrflEboplQgv6Zff/
-         KOQ3XDlaxJ4a3/oyk0splgdN5DGPzGU/TUqMyFhIsKWiJoLze46WcPWuPW70sF2adGf3
-         Wpx0oTBvC0Sd6t5iyjrvdsGzl7pxj0PbBbqUSyqvTYorXT2zfkD9pUTDY1kZoQjW+jNa
-         FBGeiGHQJNoOFNfHQl+/8d9VU+xD+h0iepSyCNpxJ0dpS4E3PZ3FDEzdVOuaK5llNvpq
-         khFaYIaULeG91r1iBYqCQ6v8bKbFWS+g0kzPiKpT65LAd85UQ9g99vA1dnw49fP9C5GN
-         RRaw==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mA5mzxsxWnYShGZnGYHnIbq5CGiyFdSMEe2+j4i+v6M=;
+        b=MgUN1SvM7yJm/8hPixwOVkO4Z5JXQs1ePB8BdjNQ9TnYTyLE7jeREeQ2oxDSoLE/Sj
+         YtsTrQ59ePZpJyj/tDDvYwqDNgVLVPwpojBYibvc3+6YpzYvwo0OuMd6CGCc/0raWziV
+         ICiYwQMfHk+9W+a6B5nvz3fwsHFpfpkjHAyxXGlqcfM5vfifm+0p5D01zHucaR12Akcr
+         CDi3/DjNX3u3wekkM0L7ZtNzKRdjj0vphCE2RHFDyvSdbrZHKAuvVE5fAcZY4spJ3jYO
+         0hybFDEoenEbsm1/On+Kq2bAOwBY41fXRCBRUuI0on4CA3x1UurrDfCXRz7dPUKJpmxy
+         Ixmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uDU/jUOs9/dlBx87qV1GT/UJJGErBJ44iUk7lwzgTq8=;
-        b=bvMi7XPbOji4OE/C6i3zmnVNSn8Pt43RtgpK89EUjRdX/0zUmu8mOelleGr6PifJ4p
-         Aar+jyLGN46gxbHMgERFf3PEgbjDUiXiZBK1FAR0QSeI87RZ7Hu9KCgWJsw2bB12MkXX
-         jRv+q8uORi88YjBVi+8X4TbNtyOVJ+EA8+Jqo5VU3ePNJdL0S/EUa8qZOdQELg629Ocb
-         6b8yMU43Tb0NOAXG0fnrtrmloFmtW+yN8PQ9Q3GvJoleViTlkuE0335iqlKebR41AR7X
-         96UEXKPS0GymGOpyDAY4MrA2j0AZ/q/nuXhsibTAVw0egoXrXWJJkpFAt2EFCN5JSHjP
-         afVQ==
-X-Gm-Message-State: APjAAAWrgjdt2wlTzEky5LuSZ1eY/ZNnOajSczPfF1JpkHraBVBAMq//
-        XXceUBOgcxly9mwtrB925Ls=
-X-Google-Smtp-Source: APXvYqwEaZSCZVt71KxpovtHer6jC4x7c6xWxQPFp6wSMYqpwN0B2cXNP/pQHSJD9Ln/iVHdRwZllA==
-X-Received: by 2002:a50:9384:: with SMTP id o4mr8337217eda.8.1568481860109;
-        Sat, 14 Sep 2019 10:24:20 -0700 (PDT)
-Received: from hv-1.home ([188.187.106.181])
-        by smtp.gmail.com with ESMTPSA id h6sm5216186ede.35.2019.09.14.10.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 10:24:19 -0700 (PDT)
-From:   ivan.lazeev@gmail.com
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ivan Lazeev <ivan.lazeev@gmail.com>
-Subject: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Date:   Sat, 14 Sep 2019 20:17:44 +0300
-Message-Id: <20190914171743.22786-1-ivan.lazeev@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mA5mzxsxWnYShGZnGYHnIbq5CGiyFdSMEe2+j4i+v6M=;
+        b=PSvPZFMe2cNkisKXUyl6clH1coVnJke/XnlqRS6x4zYTF/Whf0KjXdu/g3cFg9FUKs
+         U5B1wg5aSkIL+/2tnlBglFcbvjPq3BgPOSKOvi+lJWY3iaY8ULUDNvrjLiLGckM8o1T2
+         8ybBA4VGL4Ed4a5y5FslatygAUS15CkocxSOcRquI+DXUqJlywBqwENqB1ZgYpbBsTXI
+         V1z0BXTvP0P2yZq+XOhNoEm/OPxwTI3lGc6KUZrSpOvn8lh1FiOBnsO4UvVovvRB/hf6
+         clRZl7mkbpsBdIcNnA//Bv9y7QN1gcfnedZrd0QyNh4NCp6Aep5x4/fJoaMe5AooPT0u
+         CbXQ==
+X-Gm-Message-State: APjAAAV6SdFZ+wVr9or7gPmNrfO4TJEVvUaKP1esnc6BbbuTGOVbkg9E
+        MagWBS6wJvli7FXEgCRYXR9sizGJ4Gzj6xBj8Qg=
+X-Google-Smtp-Source: APXvYqyVRQJX+2iGdouQY/84grVpTaJtdKUwyl2adY9/dPWR24A4Xhdw1if4wm/5/CFwY5bCokeMy6dwm9vC0eBwrkw=
+X-Received: by 2002:aca:84e:: with SMTP id 75mr8360168oii.140.1568482129617;
+ Sat, 14 Sep 2019 10:28:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 14 Sep 2019 19:28:38 +0200
+Message-ID: <CAFBinCAcZLLtG2pYQ76wE5BjeA1fnARzb0o7aWFBNpQabLBjDw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Lazeev <ivan.lazeev@gmail.com>
+Hi Jianxin,
 
-Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
+On Thu, Sep 12, 2019 at 10:20 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+>
+> A1 is an application processor designed for smart audio and IoT applications,
+> with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+> there is no Cortex-M3 AO CPU in it.
+it will be interesting to see which devices will use this SoC
 
-cmd/rsp buffers are expected to be in the same ACPI region.
-For Zen+ CPUs BIOS's might report two different regions, some of
-them also report region sizes inconsistent with values from TPM
-registers.
-
-Memory configuration on ASRock x470 ITX:
-
-db0a0000-dc59efff : Reserved
-	dc57e000-dc57efff : MSFT0101:00
-	dc582000-dc582fff : MSFT0101:00
-
-Work around the issue by storing ACPI regions declared for the
-device in a list of struct crb_resource. Each entry holds a
-copy of the correcponding ACPI resourse (iores field) and a pointer
-to a possibly allocated with devm_ioremap_resource memory region
-(iobase field). This data was previously held for a single resource
-in struct crb_priv (iobase field) and local variable io_res in
-crb_map_io function. The list is used to find corresponding
-region for each buffer with crb_containing_resource, make
-the buffer size consistent with it's length and map it at most
-once, storing the pointer to allocated resource in iobase field
-of the entry.
-
-Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
----
-
-Changes in v3:
-	- make crb_containing_resource search for address only,
-	  because buffer sizes aren't trusted anyway
-	- improve commit message
-
-Changes in v4:
-	- rename struct crb_resource fields (style change)
-	- improve commit message
-
-I believe that storing the data in a in list of
-struct crb_resource makes tracking of the resource allocation
-state explicit, aiding clarity.
-Whilst everything that worked before seems not to be broken,
-there is a possibility of allocating with crb_map_resource a resource
-that is not from ACPI table, and state of such resource is not
-tracked in the current solution. It might be good to track allocation
-of all resources, not just ones declared by ACPI, for complete
-correctness. However, as I see it now, it will complicate the
-code a bit more. Do you think the change should be made, or
-such situation is completely hypothetical?
-
- drivers/char/tpm/tpm_crb.c | 137 +++++++++++++++++++++++++++----------
- 1 file changed, 101 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-index e59f1f91d7f3..b301f7fc4a73 100644
---- a/drivers/char/tpm/tpm_crb.c
-+++ b/drivers/char/tpm/tpm_crb.c
-@@ -91,7 +91,6 @@ enum crb_status {
- struct crb_priv {
- 	u32 sm;
- 	const char *hid;
--	void __iomem *iobase;
- 	struct crb_regs_head __iomem *regs_h;
- 	struct crb_regs_tail __iomem *regs_t;
- 	u8 __iomem *cmd;
-@@ -108,6 +107,12 @@ struct tpm2_crb_smc {
- 	u32 smc_func_id;
- };
- 
-+struct crb_resource {
-+	struct resource iores;
-+	void __iomem *iobase;
-+	struct list_head list;
-+};
-+
- static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
- 				unsigned long timeout)
- {
-@@ -432,23 +437,57 @@ static const struct tpm_class_ops tpm_crb = {
- 	.req_complete_val = CRB_DRV_STS_COMPLETE,
- };
- 
-+static void crb_free_resource_list(struct list_head *resources)
-+{
-+	struct crb_resource *cres, *tmp;
-+
-+	list_for_each_entry_safe(cres, tmp, resources, list)
-+		kfree(cres);
-+}
-+
-+static inline bool crb_resource_contains(const struct resource *io_res,
-+					 u64 address)
-+{
-+	return address >= io_res->start && address <= io_res->end;
-+}
-+
-+static struct crb_resource *crb_containing_resource(
-+		const struct list_head *resources, u64 start)
-+{
-+	struct crb_resource *cres;
-+
-+	list_for_each_entry(cres, resources, list) {
-+		if (crb_resource_contains(&cres->iores, start))
-+			return cres;
-+	}
-+
-+	return NULL;
-+}
-+
- static int crb_check_resource(struct acpi_resource *ares, void *data)
- {
--	struct resource *io_res = data;
-+	struct list_head *list = data;
-+	struct crb_resource *cres;
- 	struct resource_win win;
- 	struct resource *res = &(win.res);
- 
- 	if (acpi_dev_resource_memory(ares, res) ||
- 	    acpi_dev_resource_address_space(ares, &win)) {
--		*io_res = *res;
--		io_res->name = NULL;
-+		cres = kzalloc(sizeof(*cres), GFP_KERNEL);
-+		if (!cres)
-+			return -ENOMEM;
-+
-+		cres->iores = *res;
-+		cres->iores.name = NULL;
-+
-+		list_add_tail(&cres->list, list);
- 	}
- 
- 	return 1;
- }
- 
--static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
--				 struct resource *io_res, u64 start, u32 size)
-+static void __iomem *crb_map_res(struct device *dev, struct crb_resource *cres,
-+				 u64 start, u32 size)
- {
- 	struct resource new_res = {
- 		.start	= start,
-@@ -460,10 +499,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
- 	if (start != new_res.start)
- 		return (void __iomem *) ERR_PTR(-EINVAL);
- 
--	if (!resource_contains(io_res, &new_res))
-+	if (!cres)
- 		return devm_ioremap_resource(dev, &new_res);
- 
--	return priv->iobase + (new_res.start - io_res->start);
-+	if (!cres->iobase) {
-+		cres->iobase = devm_ioremap_resource(dev, &cres->iores);
-+		if (IS_ERR(cres->iobase))
-+			return cres->iobase;
-+	}
-+
-+	return cres->iobase + (new_res.start - cres->iores.start);
- }
- 
- /*
-@@ -490,9 +535,9 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
- static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 		      struct acpi_table_tpm2 *buf)
- {
--	struct list_head resources;
--	struct resource io_res;
-+	struct list_head acpi_resources, crb_resources;
- 	struct device *dev = &device->dev;
-+	struct crb_resource *cres;
- 	u32 pa_high, pa_low;
- 	u64 cmd_pa;
- 	u32 cmd_size;
-@@ -501,21 +546,34 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	u32 rsp_size;
- 	int ret;
- 
--	INIT_LIST_HEAD(&resources);
--	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
--				     &io_res);
-+	INIT_LIST_HEAD(&acpi_resources);
-+	INIT_LIST_HEAD(&crb_resources);
-+	ret = acpi_dev_get_resources(device, &acpi_resources,
-+				     crb_check_resource, &crb_resources);
- 	if (ret < 0)
--		return ret;
--	acpi_dev_free_resource_list(&resources);
-+		goto out_free_crb_resources;
- 
--	if (resource_type(&io_res) != IORESOURCE_MEM) {
-+	acpi_dev_free_resource_list(&acpi_resources);
-+
-+	if (list_empty(&crb_resources)) {
- 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto out_free_crb_resources;
- 	}
- 
--	priv->iobase = devm_ioremap_resource(dev, &io_res);
--	if (IS_ERR(priv->iobase))
--		return PTR_ERR(priv->iobase);
-+	cres = crb_containing_resource(&crb_resources, buf->control_address);
-+
-+	if (cres &&
-+	    !crb_resource_contains(&cres->iores, buf->control_address +
-+	    sizeof(struct crb_regs_tail) - 1))
-+		cres = NULL;
-+
-+	priv->regs_t = crb_map_res(dev, cres, buf->control_address,
-+				   sizeof(struct crb_regs_tail));
-+	if (IS_ERR(priv->regs_t)) {
-+		ret = PTR_ERR(priv->regs_t);
-+		goto out_free_crb_resources;
-+	}
- 
- 	/* The ACPI IO region starts at the head area and continues to include
- 	 * the control area, as one nice sane region except for some older
-@@ -523,23 +581,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	 */
- 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
- 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
--		if (buf->control_address == io_res.start +
-+		if (cres &&
-+		    buf->control_address == cres->iores.start +
- 		    sizeof(*priv->regs_h))
--			priv->regs_h = priv->iobase;
-+			priv->regs_h = cres->iobase;
- 		else
- 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
- 	}
- 
- 	ret = __crb_request_locality(dev, priv, 0);
- 	if (ret)
--		return ret;
--
--	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
--				   sizeof(struct crb_regs_tail));
--	if (IS_ERR(priv->regs_t)) {
--		ret = PTR_ERR(priv->regs_t);
--		goto out_relinquish_locality;
--	}
-+		goto out_free_crb_resources;
- 
- 	/*
- 	 * PTT HW bug w/a: wake up the device to access
-@@ -552,13 +604,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
- 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
- 	cmd_pa = ((u64)pa_high << 32) | pa_low;
--	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
--				      ioread32(&priv->regs_t->ctrl_cmd_size));
-+	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
-+
-+	cres = crb_containing_resource(&crb_resources, cmd_pa);
-+	if (cres)
-+		cmd_size = crb_fixup_cmd_size(dev, &cres->iores,
-+					      cmd_pa, cmd_size);
- 
- 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
- 		pa_high, pa_low, cmd_size);
- 
--	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
-+	priv->cmd = crb_map_res(dev, cres, cmd_pa, cmd_size);
- 	if (IS_ERR(priv->cmd)) {
- 		ret = PTR_ERR(priv->cmd);
- 		goto out;
-@@ -566,11 +622,16 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 
- 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
- 	rsp_pa = le64_to_cpu(__rsp_pa);
--	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
--				      ioread32(&priv->regs_t->ctrl_rsp_size));
-+	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
-+
-+	cres = crb_containing_resource(&crb_resources, rsp_pa);
-+
-+	if (cres)
-+		rsp_size = crb_fixup_cmd_size(dev, &cres->iores,
-+					      rsp_pa, rsp_size);
- 
- 	if (cmd_pa != rsp_pa) {
--		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
-+		priv->rsp = crb_map_res(dev, cres, rsp_pa, rsp_size);
- 		ret = PTR_ERR_OR_ZERO(priv->rsp);
- 		goto out;
- 	}
-@@ -596,6 +657,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 
- 	__crb_relinquish_locality(dev, priv, 0);
- 
-+out_free_crb_resources:
-+
-+	crb_free_resource_list(&crb_resources);
-+
- 	return ret;
- }
- 
--- 
-2.20.1
-
+[...]
+> Jianxin Pan (4):
+>   soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+>   dt-bindings: arm: amlogic: add A1 bindings
+>   dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+>   arm64: dts: add support for A1 based Amlogic AD401
+for the whole series:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
