@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738BBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ECAC4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4BA20828
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F4920828
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbfINTqB (ORCPT
+        id S1731466AbfINTqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 15:46:01 -0400
+        Sat, 14 Sep 2019 15:46:08 -0400
 Received: from mga12.intel.com ([192.55.52.136]:27815 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbfINTpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 15:45:52 -0400
+        id S1728618AbfINTpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 15:45:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 12:45:51 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 12:45:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,506,1559545200"; 
-   d="scan'208";a="201286937"
+   d="scan'208";a="201286921"
 Received: from spandruv-mobl.amr.corp.intel.com ([10.251.128.136])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Sep 2019 12:45:51 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 14 Sep 2019 12:45:50 -0700
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         prarit@redhat.com, darcari@redhat.com,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 5/5] tools/power/x86/intel-speed-select: Extend core-power command set
-Date:   Sat, 14 Sep 2019 12:45:47 -0700
-Message-Id: <20190914194547.24271-6-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 2/5] tools/power/x86/intel-speed-select: Allow online/offline based on tdp
+Date:   Sat, 14 Sep 2019 12:45:44 -0700
+Message-Id: <20190914194547.24271-3-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
 References: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
@@ -45,173 +45,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add additional command to get the clos enable and priority type. The
-current info option is actually dumping per clos QOS config, so name
-the command appropriately to get-config.
+Using enable core mask, do online offline CPUs. There is a new option
+--online|-o for set-config-level.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 38 ++++++++++++++++++-
- .../power/x86/intel-speed-select/isst-core.c  | 25 ++++++++++++
- .../x86/intel-speed-select/isst-display.c     | 28 ++++++++++++++
- tools/power/x86/intel-speed-select/isst.h     |  5 +++
- 4 files changed, 95 insertions(+), 1 deletion(-)
+ .../x86/intel-speed-select/isst-config.c      | 60 +++++++++++++++++--
+ tools/power/x86/intel-speed-select/isst.h     |  2 +
+ 2 files changed, 58 insertions(+), 4 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 889396d676cb..6a54e165672d 100644
+index 83ac72902b36..e505aaf2beef 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1133,6 +1133,40 @@ static void dump_clos_config(void)
- 	isst_ctdp_display_information_end(outf);
+@@ -38,6 +38,7 @@ static int fact_avx = 0xFF;
+ static unsigned long long fact_trl;
+ static int out_format_json;
+ static int cmd_help;
++static int force_online_offline;
+ 
+ /* clos related */
+ static int current_clos = -1;
+@@ -138,14 +139,14 @@ int out_format_is_json(void)
+ int get_physical_package_id(int cpu)
+ {
+ 	return parse_int_file(
+-		1, "/sys/devices/system/cpu/cpu%d/topology/physical_package_id",
++		0, "/sys/devices/system/cpu/cpu%d/topology/physical_package_id",
+ 		cpu);
  }
  
-+static void get_clos_info_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
-+				  void *arg4)
+ int get_physical_core_id(int cpu)
+ {
+ 	return parse_int_file(
+-		1, "/sys/devices/system/cpu/cpu%d/topology/core_id", cpu);
++		0, "/sys/devices/system/cpu/cpu%d/topology/core_id", cpu);
+ }
+ 
+ int get_physical_die_id(int cpu)
+@@ -165,6 +166,26 @@ int get_topo_max_cpus(void)
+ 	return topo_max_cpus;
+ }
+ 
++static void set_cpu_online_offline(int cpu, int state)
 +{
-+	int enable, ret, prio_type;
++	char buffer[128];
++	int fd;
 +
-+	ret = isst_clos_get_clos_information(cpu, &enable, &prio_type);
-+	if (ret)
-+		perror("isst_clos_get_info");
++	snprintf(buffer, sizeof(buffer),
++		 "/sys/devices/system/cpu/cpu%d/online", cpu);
++
++	fd = open(buffer, O_WRONLY);
++	if (fd < 0)
++		err(-1, "%s open failed", buffer);
++
++	if (state)
++		write(fd, "1\n", 2);
 +	else
-+		isst_clos_display_clos_information(cpu, outf, enable, prio_type);
++		write(fd, "0\n", 2);
++
++	close(fd);
 +}
 +
-+static void dump_clos_info(void)
-+{
-+	if (cmd_help) {
-+		fprintf(stderr,
-+			"Print Intel Speed Select Technology core power information\n");
-+		fprintf(stderr, "\tSpecify targeted cpu id with [--cpu|-c]\n");
-+		exit(0);
+ #define MAX_PACKAGE_COUNT 8
+ #define MAX_DIE_PER_PACKAGE 2
+ static void for_each_online_package_in_set(void (*callback)(int, void *, void *,
+@@ -736,9 +757,34 @@ static void set_tdp_level_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	ret = isst_set_tdp_level(cpu, tdp_level);
+ 	if (ret)
+ 		perror("set_tdp_level_for_cpu");
+-	else
++	else {
+ 		isst_display_result(cpu, outf, "perf-profile", "set_tdp_level",
+ 				    ret);
++		if (force_online_offline) {
++			struct isst_pkg_ctdp_level_info ctdp_level;
++			int pkg_id = get_physical_package_id(cpu);
++			int die_id = get_physical_die_id(cpu);
++
++			fprintf(stderr, "Option is set to online/offline\n");
++			ctdp_level.core_cpumask_size =
++				alloc_cpu_set(&ctdp_level.core_cpumask);
++			isst_get_coremask_info(cpu, tdp_level, &ctdp_level);
++			if (ctdp_level.cpu_count) {
++				int i, max_cpus = get_topo_max_cpus();
++				for (i = 0; i < max_cpus; ++i) {
++					if (pkg_id != get_physical_package_id(i) || die_id != get_physical_die_id(i))
++						continue;
++					if (CPU_ISSET_S(i, ctdp_level.core_cpumask_size, ctdp_level.core_cpumask)) {
++						fprintf(stderr, "online cpu %d\n", i);
++						set_cpu_online_offline(i, 1);
++					} else {
++						fprintf(stderr, "offline cpu %d\n", i);
++						set_cpu_online_offline(i, 0);
++					}
++				}
++			}
++		}
 +	}
-+
-+	if (!max_target_cpus) {
+ }
+ 
+ static void set_tdp_level(void)
+@@ -747,6 +793,8 @@ static void set_tdp_level(void)
+ 		fprintf(stderr, "Set Config TDP level\n");
+ 		fprintf(stderr,
+ 			"\t Arguments: -l|--level : Specify tdp level\n");
 +		fprintf(stderr,
-+			"Invalid target cpu. Specify with [-c|--cpu]\n");
-+		exit(0);
-+	}
-+
-+	isst_ctdp_display_information_start(outf);
-+	for_each_online_target_cpu_in_set(get_clos_info_for_cpu, NULL,
-+					  NULL, NULL, NULL);
-+	isst_ctdp_display_information_end(outf);
-+
-+}
-+
- static void set_clos_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 				    void *arg4)
- {
-@@ -1286,10 +1320,11 @@ static struct process_cmd_struct isst_cmds[] = {
- 	{ "turbo-freq", "info", dump_fact_config },
- 	{ "turbo-freq", "enable", set_fact_enable },
- 	{ "turbo-freq", "disable", set_fact_disable },
--	{ "core-power", "info", dump_clos_config },
-+	{ "core-power", "info", dump_clos_info },
- 	{ "core-power", "enable", set_clos_enable },
- 	{ "core-power", "disable", set_clos_disable },
- 	{ "core-power", "config", set_clos_config },
-+	{ "core-power", "get-config", dump_clos_config },
- 	{ "core-power", "assoc", set_clos_assoc },
- 	{ "core-power", "get-assoc", get_clos_assoc },
- 	{ NULL, NULL, NULL }
-@@ -1491,6 +1526,7 @@ static void core_power_help(void)
- 	printf("\tenable\n");
- 	printf("\tdisable\n");
- 	printf("\tconfig\n");
-+	printf("\tget-config\n");
- 	printf("\tassoc\n");
- 	printf("\tget-assoc\n");
- }
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index 0bf341ad9697..6dee5332c9d3 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -619,6 +619,31 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
- 	return 0;
- }
++			"\t Optional Arguments: -o | online : online/offline for the tdp level\n");
+ 		exit(0);
+ 	}
  
-+int isst_clos_get_clos_information(int cpu, int *enable, int *type)
-+{
-+	unsigned int resp;
-+	int ret;
-+
-+	ret = isst_send_mbox_command(cpu, CONFIG_CLOS, CLOS_PM_QOS_CONFIG, 0, 0,
-+				     &resp);
-+	if (ret)
-+		return ret;
-+
-+	debug_printf("cpu:%d CLOS_PM_QOS_CONFIG resp:%x\n", cpu, resp);
-+
-+	if (resp & BIT(1))
-+		*enable = 1;
-+	else
-+		*enable = 0;
-+
-+	if (resp & BIT(2))
-+		*type = 1;
-+	else
-+		*type = 0;
-+
-+	return 0;
-+}
-+
- int isst_pm_qos_config(int cpu, int enable_clos, int priority_type)
- {
- 	unsigned int req, resp;
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index bd7aaf27e4de..2e6e5fcdbd7c 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -503,6 +503,34 @@ void isst_clos_display_information(int cpu, FILE *outf, int clos,
- 	format_and_print(outf, 1, NULL, NULL);
- }
+@@ -1319,6 +1367,7 @@ static void parse_cmd_args(int argc, int start, char **argv)
+ 	static struct option long_options[] = {
+ 		{ "bucket", required_argument, 0, 'b' },
+ 		{ "level", required_argument, 0, 'l' },
++		{ "online", required_argument, 0, 'o' },
+ 		{ "trl-type", required_argument, 0, 'r' },
+ 		{ "trl", required_argument, 0, 't' },
+ 		{ "help", no_argument, 0, 'h' },
+@@ -1335,7 +1384,7 @@ static void parse_cmd_args(int argc, int start, char **argv)
+ 	option_index = start;
  
-+void isst_clos_display_clos_information(int cpu, FILE *outf,
-+					int clos_enable, int type)
-+{
-+	char header[256];
-+	char value[256];
-+
-+	snprintf(header, sizeof(header), "package-%d",
-+		 get_physical_package_id(cpu));
-+	format_and_print(outf, 1, header, NULL);
-+	snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
-+	format_and_print(outf, 2, header, NULL);
-+	snprintf(header, sizeof(header), "cpu-%d", cpu);
-+	format_and_print(outf, 3, header, NULL);
-+
-+	snprintf(header, sizeof(header), "core-power");
-+	format_and_print(outf, 4, header, NULL);
-+
-+	snprintf(header, sizeof(header), "enable-status");
-+	snprintf(value, sizeof(value), "%d", clos_enable);
-+	format_and_print(outf, 5, header, value);
-+
-+	snprintf(header, sizeof(header), "priority-type");
-+	snprintf(value, sizeof(value), "%d", type);
-+	format_and_print(outf, 5, header, value);
-+
-+	format_and_print(outf, 1, NULL, NULL);
-+}
-+
- void isst_clos_display_assoc_information(int cpu, FILE *outf, int clos)
- {
- 	char header[256];
+ 	optind = start + 1;
+-	while ((opt = getopt_long(argc, argv, "b:l:t:c:d:e:n:m:p:w:h",
++	while ((opt = getopt_long(argc, argv, "b:l:t:c:d:e:n:m:p:w:ho",
+ 				  long_options, &option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'b':
+@@ -1347,6 +1396,9 @@ static void parse_cmd_args(int argc, int start, char **argv)
+ 		case 'l':
+ 			tdp_level = atoi(optarg);
+ 			break;
++		case 'o':
++			force_online_offline = 1;
++			break;
+ 		case 't':
+ 			sscanf(optarg, "0x%llx", &fact_trl);
+ 			break;
 diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index 48655d0dee2d..09e16a41b57c 100644
+index 2f7f62765eb6..668f914d077f 100644
 --- a/tools/power/x86/intel-speed-select/isst.h
 +++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -231,4 +231,9 @@ extern int isst_write_reg(int reg, unsigned int val);
+@@ -187,6 +187,8 @@ extern int isst_send_msr_command(unsigned int cpu, unsigned int command,
+ 				 int write, unsigned long long *req_resp);
  
- extern void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
- 				int result);
-+
-+extern int isst_clos_get_clos_information(int cpu, int *enable, int *type);
-+extern void isst_clos_display_clos_information(int cpu, FILE *outf,
-+					       int clos_enable, int type);
-+
- #endif
+ extern int isst_get_ctdp_levels(int cpu, struct isst_pkg_ctdp *pkg_dev);
++extern int isst_get_coremask_info(int cpu, int config_index,
++			   struct isst_pkg_ctdp_level_info *ctdp_level);
+ extern int isst_get_process_ctdp(int cpu, int tdp_level,
+ 				 struct isst_pkg_ctdp *pkg_dev);
+ extern void isst_get_process_ctdp_complete(int cpu,
 -- 
 2.17.2
 
