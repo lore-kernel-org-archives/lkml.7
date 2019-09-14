@@ -2,286 +2,132 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4689FC49ED6
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3B6C49ED6
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1472220717
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEB420717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="D99ocGeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfINGPu (ORCPT
+        id S1726545AbfINGZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 02:15:50 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50174 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfINGPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 02:15:50 -0400
-Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8E6FSFL004117;
-        Sat, 14 Sep 2019 15:15:28 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp);
- Sat, 14 Sep 2019 15:15:28 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8E6FMFa004086
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 14 Sep 2019 15:15:28 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH (resend)] mm,oom: Defer dump_tasks() output.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <1567159493-5232-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <7de2310d-afbd-e616-e83a-d75103b986c6@i-love.sakura.ne.jp>
- <20190909113627.GJ27159@dhcp22.suse.cz>
- <579a27d2-52fb-207e-9278-fc20a2154394@i-love.sakura.ne.jp>
- <20190909130435.GO27159@dhcp22.suse.cz>
- <5bbcd93f-aa42-6c62-897a-d7b94aacdb87@i-love.sakura.ne.jp>
-Message-ID: <57be50b2-a97a-e559-e4bd-10d923895f83@i-love.sakura.ne.jp>
-Date:   Sat, 14 Sep 2019 15:15:22 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 14 Sep 2019 02:25:04 -0400
+Received: from mout.web.de ([212.227.15.3]:57855 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbfINGZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 02:25:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568442286;
+        bh=iYJH6TTzLjHF96psQwp66Ddq9KYnshTlAY+QaU6iTl0=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=D99ocGeIQ/HwB/beUCG08U0SnwP4W5ieFhJ0rbA0X2higkBMG2wFldlKvs2YP659L
+         HnyRpdg5vP4eIXUy/1nvgkyOidz1uXZalbf46lwJk/RzQXLEHb+4KUay1V0WlufL/h
+         pD8V23a4NMkeUBmHJScS8aDFJDpVc3nmw2efww28=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.59.51]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MWeGR-1hcyZC3YT5-00Xqiu; Sat, 14
+ Sep 2019 08:24:45 +0200
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        Bob Copeland <me@bobcopeland.com>
+Cc:     linux-karma-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20190913171134.GA10301@SD>
+Subject: Re: omfs: make use of kmemdup
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4fd20946-b991-0c0f-975e-ef79b433912b@web.de>
+Date:   Sat, 14 Sep 2019 08:24:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <5bbcd93f-aa42-6c62-897a-d7b94aacdb87@i-love.sakura.ne.jp>
+In-Reply-To: <20190913171134.GA10301@SD>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:o82TtcJ74WSm9Qvs9vwddyV/R3gnUP3kWuV7E6q3IW6KBiwMo7n
+ PLLS0z9jWtb1pmq/wGSttQAKJkUaeVXLT/GafmwzdVBvdADZ/3HVHvlyjowCJHji0OfHRl0
+ om37iFA1XSWIw+5w3wRT8ijrc3Ve389UR/7Qm7BzzpPIT3a5a211l9kOp1Hm1wC1hHGUraC
+ E+veJB84M9NGYC8lwBFAw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7JEQxfGtMAU=:5WFtQ47YX18bFGC++7DCMB
+ M1CGNR6kDCnNNWJPMDbx6Nc3d4rb1ct+riwC8YkbQ1va4p61WQT0S/29fXl98p3Sg4eF0hGtp
+ tsTknxPA/EhgLwNSn0SKVEnoPyjK/eK3YoKEwjZEyZBAPN/oXtiflekbQis8MGBlW31u0M5zn
+ ZX1KlIPjIiNr/pYGORECFm0UqOxZEaeMgEzcCY+dKbrqV4lS/VLkqtScHF+9SjYTIY83uyhTe
+ je0ZyHjqIt4iw3GsoVNyiyNgcZUkhgjRkQY+fN3gWLbDobAIfLjquxQBMZ5/rbF4DusduPvVT
+ 4XtNY/B6MXjwDOIzAwPynMWOgfFoNkOiMaIteQFjjdJaGqQDccIclgFYfROP4mlvKimhXU9Ew
+ TTHRHTOJLhSxuJKhlEBjkG0Ss4j3sP7AHhY6xpifWBdWdfIJf4EtmC+lUPLyH2XelNxQ6LZY3
+ cLujOZAwpGHWBcN+AHYce4fgpxHiK/6onQu0igFj7YUEr6+Y4nVnpxjerp0UgLv+bdwPxGEyX
+ JlAiWM7PYcexKuRHLWjM9+mb3TYurmkjbRQArONtmoLd3FRejz82IuXpGfPQcF/taS3mxEGak
+ Jif9u/ySifoATpGaaHGUsrBI3lwbjUKEv6aeaeggcNM8jeYnw6AaTe/t0PBtJZlj6IP8VMmQ3
+ Flb8zymQ4SIWCWYURV/7sI5zo8y3edMJ4UCokl27gRBIzwCorTlPxVToUpqGNhQ6pQVbw9HEU
+ HLd/DeoEMQRMQTkrJrWyZFdyAr6xNeW705kwKgO2Bm5PztRfaQBLmGXFoSvwHmJBCuNsm75aU
+ yzYoIAtle4WzoGEQDwD2xEki3qQ0NbRlXXOJl6SBvgyxSUeiZeZW7GlsLHGoFvBuDwT9gVAbD
+ wWRyOGdBuWA6dKiLKfr0vNEclfOSVepPPXrU+ZLefzxGOmDdHYdODrXgFgS9PQoqkMxUHlzDS
+ MpV1Ke7lQI5P3EljmHJ4t5P0TXYik7fUSTPgXSwEjW/biDSLtURseaiN+LINkWXBgZXuTPqCu
+ aUNtNt3CJ47Ien3g+ScC8EnxmorDRwa3kSv7uo1VcwGcir8P2G7p29WkVx5YDeGIBki6JLB+D
+ kIMsaZTM3TR8evYmPkVNKbMntbxwfjOHCWEuTq3NsFcKUaBrLp2hpcz6mF0+PrGuCEQjOYi7k
+ O0PMPBvLrCHQkNx25u6AxkIaC5JB+iZv6fs0SZRA0F5BXIkBrxFYrseYxcmkIjuFrGXiStoZB
+ E7i/CiZstcf91WYOhlqWH1+iSMXVtVx8ZbkagxPTvag1rxsLKjd0yk2gqv8I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/10 20:00, Tetsuo Handa wrote:
-> On 2019/09/09 22:04, Michal Hocko wrote:
->> On Mon 09-09-19 21:40:24, Tetsuo Handa wrote:
->>> On 2019/09/09 20:36, Michal Hocko wrote:
->>>> This is not an improvement. It detaches the oom report and tasks_dump
->>>> for an arbitrary amount of time because the worder context might be
->>>> stalled for an arbitrary time. Even long after the oom is resolved.
->>>
->>> A new worker thread is created if all existing worker threads are busy
->>> because this patch solves OOM situation quickly when a new worker thread
->>> cannot be created due to OOM situation.
->>>
->>> Also, if a worker thread cannot run due to CPU starvation, the same thing
->>> applies to dump_tasks(). In other words, dump_tasks() cannot complete due
->>> to CPU starvation, which results in more costly and serious consequences.
->>> Being able to send SIGKILL and reclaim memory as soon as possible is
->>> an improvement.
->>
->> There might be zillion workers waiting to make a forward progress and
->> you cannot expect any timing here. Just remember your own experiments
->> with xfs and low memory conditions.
-> 
-> Even if there were zillion workers waiting to make a forward progress, the
-> worker for processing dump_tasks() output can make a forward progress. That's
-> how workqueue works. (If you still don't trust workqueue, I can update my patch
-> to use a kernel thread.) And if there were zillion workers waiting to make a
-> forward progress, completing the OOM killer quickly will be more important than
-> keep blocking zillion workers waiting for the OOM killer to solve OOM situation.
-> Preempting a thread calling out_of_memory() by zillion workers is a nightmare. ;-)
-> 
->>
->>>> Not to mention that 1:1 (oom to tasks) information dumping is
->>>> fundamentally broken. Any task might be on an oom list of different
->>>> OOM contexts in different oom scopes (think of OOM happening in disjunct
->>>> NUMA sets).
->>>
->>> I can't understand what you are talking about. This patch just defers
->>> printk() from /proc/sys/vm/oom_dump_tasks != 0. Please look at the patch
->>> carefully. If you are saying that it is bad that OOM victim candidates for
->>> OOM domain B, C, D ... cannot be printed if printing of OOM victim candidates
->>> for OOM domain A has not finished, I can update this patch to print them.
->>
->> You would have to track each ongoing oom context separately.
-> 
-> I can update my patch to track each OOM context separately. But
-> 
->>                                                              And not
->> only those from different oom scopes because as a matter of fact a new
->> OOM might trigger before the previous dump_tasks managed to be handled.
-> 
-> please be aware that we are already dropping OOM messages from different scopes
-> due to __ratelimit(&oom_rs). The difference is, given that __ratelimit(&oom_rs)
-> can work, nothing but which OOM messages will be dropped when cluster of OOM
-> events from multiple different scopes happened.
-> 
-> And "OOM events from multiple different scopes can trivially happen" is a
-> violation for commit dc56401fc9f25e8f ("mm: oom_kill: simplify OOM killer
-> locking") saying
-> 
->     However, the OOM killer is a fairly cold error path, there is really no
->     reason to optimize for highly performant and concurrent OOM kills.
-> 
-> where we will need "per an OOM scope locking mechanism" in order to avoid
-> deferring OOM killer event in current thread's OOM scope due to processing
-> OOM killer events in other threads' OOM scopes.
-> 
+> Replace call to kmalloc followed by memcpy with a direct call
+> to kmemdup to achieve same functionality.
 
-Here is a delta patch.
+I suggest to take another look at a similar patch.
 
-From d34ef26275635d14c746ed46e5478c1dc0319ca2 Mon Sep 17 00:00:00 2001
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date: Sat, 14 Sep 2019 15:11:02 +0900
-Subject: [PATCH] mm,oom: Don't suppress dump_tasks() output from different OOM
- scopes.
+fs/omfs: make use of kmemdup
+https://lore.kernel.org/r/20190721112326.GA5927@hari-Inspiron-1545/
+https://lore.kernel.org/patchwork/patch/1102482/
+https://lkml.org/lkml/2019/7/21/40
 
-Michal Hocko is complaining that "mm,oom: Defer dump_tasks() output."
-needlessly suppresses concurrent OOM killer invocations from different
-OOM scopes. This patch changes dump_tasks() not to suppress such output.
-
----
- kernel/fork.c |  1 +
- mm/oom_kill.c | 64 ++++++++++++++++++++++++++++++++++++++---------------------
- 2 files changed, 42 insertions(+), 23 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index f601168..c86a126d 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1854,6 +1854,7 @@ static __latent_entropy struct task_struct *copy_process(
- 	p = dup_task_struct(current, node);
- 	if (!p)
- 		goto fork_out;
-+	INIT_LIST_HEAD(&p->oom_task_info.list);
- 
- 	/*
- 	 * This _must_ happen before we call free_task(), i.e. before we jump
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index db62f50..7f57cea 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -379,6 +379,7 @@ static void select_bad_process(struct oom_control *oc)
- 
- static unsigned int oom_killer_seq; /* Serialized by oom_lock. */
- static LIST_HEAD(oom_candidate_list); /* Serialized by oom_lock. */
-+static LIST_HEAD(oom_tmp_candidate_list); /* Serialized by oom_lock. */
- 
- static int add_candidate_task(struct task_struct *p, void *arg)
- {
-@@ -395,8 +396,13 @@ static int add_candidate_task(struct task_struct *p, void *arg)
- 	p = find_lock_task_mm(p);
- 	if (!p)
- 		return 0;
--	get_task_struct(p);
- 	oti = &p->oom_task_info;
-+	/* p might be still waiting for dump_candidate_tasks(). */
-+	if (!list_empty(&oti->list)) {
-+		task_unlock(p);
-+		return 1;
-+	}
-+	get_task_struct(p);
- 	mm = p->mm;
- 	oti->seq = oom_killer_seq;
- 	memcpy(oti->comm, p->comm, sizeof(oti->comm));
-@@ -409,14 +415,14 @@ static int add_candidate_task(struct task_struct *p, void *arg)
- 	oti->swapents = get_mm_counter(mm, MM_SWAPENTS);
- 	oti->score_adj = p->signal->oom_score_adj;
- 	task_unlock(p);
--	list_add_tail(&oti->list, &oom_candidate_list);
-+	list_add_tail(&oti->list, &oom_tmp_candidate_list);
- 	return 0;
- }
- 
- static void dump_candidate_tasks(struct work_struct *work)
- {
- 	bool first = true;
--	unsigned int seq;
-+	unsigned int seq = 0;
- 	struct oom_task_info *oti;
- 
- 	if (work) /* Serialize only if asynchronous. */
-@@ -424,7 +430,10 @@ static void dump_candidate_tasks(struct work_struct *work)
- 	while (!list_empty(&oom_candidate_list)) {
- 		oti = list_first_entry(&oom_candidate_list,
- 				       struct oom_task_info, list);
--		seq = oti->seq;
-+		if (seq != oti->seq) {
-+			seq = oti->seq;
-+			first = true;
-+		}
- 		if (first) {
- 			pr_info("OOM[%u]: Tasks state (memory values in pages):\n",
- 				seq);
-@@ -436,7 +445,7 @@ static void dump_candidate_tasks(struct work_struct *work)
- 			seq, oti->pid, oti->uid, oti->tgid, oti->total_vm,
- 			oti->mm_rss, oti->pgtables_bytes, oti->swapents,
- 			oti->score_adj, oti->comm);
--		list_del(&oti->list);
-+		list_del_init(&oti->list);
- 		if (work)
- 			mutex_unlock(&oom_lock);
- 		put_task_struct(container_of(oti, struct task_struct,
-@@ -464,32 +473,41 @@ static void dump_candidate_tasks(struct work_struct *work)
- static void dump_tasks(struct oom_control *oc)
- {
- 	struct task_struct *p;
-+	int ret = 0;
- 
- 	/*
--	 * Suppress as long as there is any OOM victim candidate from past
--	 * rounds of OOM killer invocations. We could change this to suppress
--	 * only if there is an OOM victim candidate in the same OOM domain if
--	 * we want to see OOM victim candidates from different OOM domains.
--	 * But since dump_header() is already ratelimited, I don't know whether
--	 * it makes difference to suppress OOM victim candidates from different
--	 * OOM domains...
-+	 * Suppress if OOM victim candidates in the same OOM scope from past
-+	 * OOM killer invocations are still waiting for dump_candidate_tasks(),
-+	 * for it is possible that the OOM reaper or exit_mmap() sets
-+	 * MMF_OOM_SKIP before dump_candidate_tasks() completes. Otherwise,
-+	 * call dump_candidate_tasks() after SIGKILL is sent to OOM victims and
-+	 * the OOM reaper started reclaiming.
- 	 */
--	if (!list_empty(&oom_candidate_list))
--		return;
- 	if (is_memcg_oom(oc))
--		mem_cgroup_scan_tasks(oc->memcg, add_candidate_task, oc);
-+		ret = mem_cgroup_scan_tasks(oc->memcg, add_candidate_task, oc);
- 	else {
- 		rcu_read_lock();
--		for_each_process(p)
--			add_candidate_task(p, oc);
-+		for_each_process(p) {
-+			ret = add_candidate_task(p, oc);
-+			if (ret)
-+				break;
-+		}
- 		rcu_read_unlock();
- 	}
--	/*
--	 * Report OOM victim candidates after SIGKILL is sent to OOM victims
--	 * and the OOM reaper started reclaiming.
--	 */
--	if (!list_empty(&oom_candidate_list))
--		queue_work(system_long_wq, &oom_dump_candidates_work);
-+	if (ret) {
-+		while (!list_empty(&oom_tmp_candidate_list)) {
-+			struct oom_task_info *oti =
-+				list_first_entry(&oom_tmp_candidate_list,
-+						 struct oom_task_info, list);
-+
-+			list_del_init(&oti->list);
-+			put_task_struct(container_of(oti, struct task_struct,
-+						     oom_task_info));
-+		}
-+		return;
-+	}
-+	list_splice_tail_init(&oom_tmp_candidate_list, &oom_candidate_list);
-+	queue_work(system_unbound_wq, &oom_dump_candidates_work);
- }
- 
- static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
--- 
-1.8.3.1
+Regards,
+Markus
