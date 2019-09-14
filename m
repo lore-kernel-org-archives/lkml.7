@@ -2,190 +2,212 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F3C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B772C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3FF20693
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61BF20693
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njD6j8MR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbfINMSf (ORCPT
+        id S1730579AbfINMZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 08:18:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43196 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730262AbfINMSf (ORCPT
+        Sat, 14 Sep 2019 08:25:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33800 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730438AbfINMZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 08:18:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a2so715363pfo.10
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 05:18:33 -0700 (PDT)
+        Sat, 14 Sep 2019 08:25:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y135so3731674wmc.1;
+        Sat, 14 Sep 2019 05:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fmVqgGwWD104zixL+b9UTNpYfn08VL/GzWBh1q3vkxU=;
+        b=njD6j8MRfJCvOD8IaYmxhuhYhto9Z+pjBKA7d8UWEvA06OU8fyOqParzbf1upS6spw
+         7CybUU6ytIeUPQEr0ybHLEuBrcskXJPgSJftTb0BYHVfFbzQtspoDp4H5/dFY4aLRT5g
+         OYCBfnHFKsLIePeNLuFJ4k9LWFzwpNA8gYDiJAqBB2bVgWT70kOKXfVVya1pQ6sbt4pk
+         UNCKj9ZSee0YPYdOptCPZ/vd4/liJ+numH6pYd47sZCby7/6FPz6JEC1ffuN4ZuS47+m
+         NnDLiy9Cfd3y8fT2UayhVA/+aFtw225YSEyvyWemWHNjicMiqdm687JgYXbvobPI9qWo
+         fJsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=eG246burL7Epz04lN/Agoxuxu8FKEZNpqBGb+bGHtZM=;
-        b=Q9VH0IZi+TupEPl2+tmSbQMuECM/zQcJ9oxrtGfk3q6u1IwJbUrPMfbrhpAi/9zivz
-         pUt6Hr2H4QB66GEgquG4PjEaWsDJGb0gXOE001uvwOlr5oBx/pn8PnYm061QcUZCX3z7
-         D442MQp9XYEOGRt2A2OaR9eL5l3RnweaUVWOyqBQ0ItfW9zKisbwT00HhJcy5OD4YQ58
-         am0ljv9NfDdYDsOVBkokGhQB4a0DHHutrfFU06H6RUvvjHB6dqIjnXo1MzeRLXjsKYET
-         41dABkw/PEdku5gDRBACiSD03NTSNm9mBU8lCx58T4uaSRe+wHqJ1/ZFvGscG6/hYfxZ
-         dC+A==
-X-Gm-Message-State: APjAAAX5zpe+AATqEHY0rmgLYzEghdoZzarECYFu2WXmE2ezonTB+msf
-        HNe/XEQZpClKuxv7paSMAD5rLQ==
-X-Google-Smtp-Source: APXvYqzVgQrhKkG6g0lvhiBLe+qqPUOeknf2nbS5nMorxrOX2tNnSXyV1t7CeZmF/cqojo4WNJoebg==
-X-Received: by 2002:a63:355:: with SMTP id 82mr16568722pgd.81.1568463512195;
-        Sat, 14 Sep 2019 05:18:32 -0700 (PDT)
-Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
-        by smtp.gmail.com with ESMTPSA id m12sm2344408pff.66.2019.09.14.05.18.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fmVqgGwWD104zixL+b9UTNpYfn08VL/GzWBh1q3vkxU=;
+        b=phxpvS9JxkjfShOaqJiS1e1f23Dw96pK/P/oBhVqUmultfb+5oNKdd4fWmTyVWEO+k
+         vQFFlsj+IeQRyozBAK9OSVgEpdxgy+fFqTT2hUjY8ISsgTipfk0M2DAeojP8mnd7EEZ/
+         2n1sLnt4KVq9g2QwP7833aKxAQDHsU/8bdPTLnkgNHYYrIQFZ9vLlGgFTNyxfpVBVHB/
+         7eZyqfYRtH30vwe6QRDOw8cvvRs0kli/sKsHRDgTVqzQ2S7VD4c9AJ8v9PFZbDGO9jV5
+         VEyPa/ZUPRyViyILzIngw9aaV4fGGZd0hTP1MuI9DEJwV69f96HDlkyTpGA+u9hAZUb7
+         8Syw==
+X-Gm-Message-State: APjAAAXPLFiJ0z/WRDHU4lurT34/EbmVhI5xRXz4hzxjoJ7SbfqVD34c
+        1IlaOJggYqNKdTUZE+hmTpE=
+X-Google-Smtp-Source: APXvYqyaua4dfsp8t2MuvGLJ5trj0tBgTGML6kk+L1HU+962XTdkyK/kCB25ncqNPN3wn4MyVisGPg==
+X-Received: by 2002:a1c:cbcc:: with SMTP id b195mr7686638wmg.80.1568463909367;
+        Sat, 14 Sep 2019 05:25:09 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id a205sm11775370wmd.44.2019.09.14.05.25.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 05:18:30 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 05:18:30 -0700 (PDT)
-X-Google-Original-Date: Sat, 14 Sep 2019 05:18:21 PDT (-0700)
-Subject:     Re: [PATCH] riscv: modify the Image header to improve compatibility with the ARM64 header
-In-Reply-To: <alpine.DEB.2.21.9999.1909132005200.24255@viisi.sifive.com>
-CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Atish Patra <Atish.Patra@wdc.com>, merker@debian.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Message-ID: <mhng-755b14c4-8f35-4079-a7ff-e421fd1b02bc@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Sat, 14 Sep 2019 05:25:08 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 14:25:00 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [PATCH RFC] random: getrandom(2): don't block on non-initialized
+ entropy pool
+Message-ID: <20190914122500.GA1425@darwi-home-pc>
+References: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc>
+ <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 20:08:14 PDT (-0700), Paul Walmsley wrote:
->
-> Part of the intention during the definition of the RISC-V kernel image
-> header was to lay the groundwork for a future merge with the ARM64
-> image header.  One error during my original review was not noticing
-> that the RISC-V header's "magic" field was at a different size and
-> position than the ARM64's "magic" field.  If the existing ARM64 Image
-> header parsing code were to attempt to parse an existing RISC-V kernel
-> image header format, it would see a magic number 0.  This is
-> undesirable, since it's our intention to align as closely as possible
-> with the ARM64 header format.  Another problem was that the original
-> "res3" field was not being initialized correctly to zero.
->
-> Address these issues by creating a 32-bit "magic2" field in the RISC-V
-> header which matches the ARM64 "magic" field.  RISC-V binaries will
-> store "RSC\x05" in this field.  The intention is that the use of the
-> existing 64-bit "magic" field in the RISC-V header will be deprecated
-> over time.  Increment the minor version number of the file format to
-> indicate this change, and update the documentation accordingly.  Fix
-> the assembler directives in head.S to ensure that reserved fields are
-> properly zero-initialized.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Reported-by: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Atish Patra <atish.patra@wdc.com>
-> Cc: Karsten Merker <merker@debian.org>
-> ---
-> Will try to get this merged before v5.3, to minimize the delta with the
-> ARM64 header in the final release.
->
->  Documentation/riscv/boot-image-header.txt | 13 +++++++------
->  arch/riscv/include/asm/image.h            | 12 ++++++------
->  arch/riscv/kernel/head.S                  |  4 ++--
->  3 files changed, 15 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
-> index 1b73fea23b39..14b1492f689b 100644
-> --- a/Documentation/riscv/boot-image-header.txt
-> +++ b/Documentation/riscv/boot-image-header.txt
-> @@ -18,7 +18,7 @@ The following 64-byte header is present in decompressed Linux kernel image.
->  	u32 res1  = 0;		  /* Reserved */
->  	u64 res2  = 0;    	  /* Reserved */
->  	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
-> -	u32 res3;		  /* Reserved for additional RISC-V specific header */
-> +	u32 magic2 = 0x56534905;  /* Magic number 2, little endian, "RSC\x05" */
->  	u32 res4;		  /* Reserved for PE COFF offset */
->
->  This header format is compliant with PE/COFF header and largely inspired from
-> @@ -37,13 +37,14 @@ Notes:
->  	Bits 16:31 - Major version
->
->    This preserves compatibility across newer and older version of the header.
-> -  The current version is defined as 0.1.
-> +  The current version is defined as 0.2.
->
-> -- res3 is reserved for offset to any other additional fields. This makes the
-> -  header extendible in future. One example would be to accommodate ISA
-> -  extension for RISC-V in future. For current version, it is set to be zero.
-> +- The "magic" field is deprecated as of version 0.2.  In a future
-> +  release, it may be removed.  This originally should have matched up
-> +  with the ARM64 header "magic" field, but unfortunately does not.
-> +  The "magic2" field replaces it, matching up with the ARM64 header.
->
-> -- In current header, the flag field has only one field.
-> +- In current header, the flags field has only one field.
->  	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
->
->  - Image size is mandatory for boot loader to load kernel image. Booting will
-> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> index ef28e106f247..344db5244547 100644
-> --- a/arch/riscv/include/asm/image.h
-> +++ b/arch/riscv/include/asm/image.h
-> @@ -3,7 +3,8 @@
->  #ifndef __ASM_IMAGE_H
->  #define __ASM_IMAGE_H
->
-> -#define RISCV_IMAGE_MAGIC	"RISCV"
-> +#define RISCV_IMAGE_MAGIC	"RISCV\0\0\0"
-> +#define RISCV_IMAGE_MAGIC2	"RSC\x05"
->
->  #define RISCV_IMAGE_FLAG_BE_SHIFT	0
->  #define RISCV_IMAGE_FLAG_BE_MASK	0x1
-> @@ -23,7 +24,7 @@
->  #define __HEAD_FLAGS		(__HEAD_FLAG(BE))
->
->  #define RISCV_HEADER_VERSION_MAJOR 0
-> -#define RISCV_HEADER_VERSION_MINOR 1
-> +#define RISCV_HEADER_VERSION_MINOR 2
->
->  #define RISCV_HEADER_VERSION (RISCV_HEADER_VERSION_MAJOR << 16 | \
->  			      RISCV_HEADER_VERSION_MINOR)
-> @@ -39,9 +40,8 @@
->   * @version:		version
->   * @res1:		reserved
->   * @res2:		reserved
-> - * @magic:		Magic number
-> - * @res3:		reserved (will be used for additional RISC-V specific
-> - *			header)
-> + * @magic:		Magic number (RISC-V specific; deprecated)
-> + * @magic2:		Magic number 2 (to match the ARM64 'magic' field pos)
->   * @res4:		reserved (will be used for PE COFF offset)
->   *
->   * The intention is for this header format to be shared between multiple
-> @@ -58,7 +58,7 @@ struct riscv_image_header {
->  	u32 res1;
->  	u64 res2;
->  	u64 magic;
-> -	u32 res3;
-> +	u32 magic2;
->  	u32 res4;
->  };
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 0f1ba17e476f..52eec0c1bf30 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -39,9 +39,9 @@ ENTRY(_start)
->  	.word RISCV_HEADER_VERSION
->  	.word 0
->  	.dword 0
-> -	.asciz RISCV_IMAGE_MAGIC
-> -	.word 0
-> +	.ascii RISCV_IMAGE_MAGIC
->  	.balign 4
-> +	.ascii RISCV_IMAGE_MAGIC2
->  	.word 0
->
->  .global _start_kernel
+getrandom() has been created as a new and more secure interface for
+pseudorandom data requests.  Unlike /dev/urandom, it unconditionally
+blocks until the entropy pool has been properly initialized.
 
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+While getrandom() has no guaranteed upper bound for its waiting time,
+user-space has been abusing it by issuing the syscall, from shared
+libraries no less, during the main system boot sequence.
+
+Thus, on certain setups where there is no hwrng (embedded), or the
+hwrng is not trusted by some users (intel RDRAND), or sometimes it's
+just broken (amd RDRAND), the system boot can be *reliably* blocked.
+
+The issue is further exaggerated by recent file-system optimizations,
+e.g. b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), which
+merges directory lookup code inode table IO, and thus minimizes the
+number of disk interrupts and entropy during boot. After that commit,
+a blocked boot can be reliably reproduced on a Thinkpad E480 laptop
+with standard ArchLinux user-space.
+
+Thus, don't trust user-space on calling getrandom() from the right
+context. Just never block, and return -EINVAL if entropy is not yet
+available.
+
+Link: https://lkml.kernel.org/r/CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com
+Link: https://lkml.kernel.org/r/20190912034421.GA2085@darwi-home-pc
+Link: https://lkml.kernel.org/r/20190911173624.GI2740@mit.edu
+Link: https://lkml.kernel.org/r/20180514003034.GI14763@thunk.org
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
+---
+
+Notes:
+    This feels very risky at the very end of -rc8, so only sending
+    this as an RFC. The system of course reliably boots with this,
+    and the log, as expected, powerfully warns all callers:
+
+    $ dmesg | grep random
+    [0.236472] random: get_random_bytes called from start_kernel+0x30f/0x4d7 with crng_init=0
+    [0.680263] random: fast init done
+    [2.500346] random: lvm: uninitialized urandom read (4 bytes read)
+    [2.595125] random: systemd-random-: invalid getrandom request (512 bytes): crng not ready
+    [2.595126] random: systemd-random-: uninitialized urandom read (512 bytes read)
+    [3.427699] random: dbus-daemon: uninitialized urandom read (12 bytes read)
+    [3.979425] urandom_read: 1 callbacks suppressed
+    [3.979426] random: polkitd: uninitialized urandom read (8 bytes read)
+    [3.979726] random: polkitd: uninitialized urandom read (8 bytes read)
+    [3.979752] random: polkitd: uninitialized urandom read (8 bytes read)
+    [4.473398] random: gnome-session-b: invalid getrandom request (16 bytes): crng not ready
+    [4.473404] random: gnome-session-b: invalid getrandom request (16 bytes): crng not ready
+    [4.473409] random: gnome-session-b: invalid getrandom request (16 bytes): crng not ready
+    [5.265636] random: crng init done
+    [5.265649] random: 3 urandom warning(s) missed due to ratelimiting
+    [5.265652] random: 1 getrandom warning(s) missed due to ratelimiting
+
+ drivers/char/random.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 4a50ee2c230d..309dc5ddf370 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -511,6 +511,8 @@ static struct ratelimit_state unseeded_warning =
+ 	RATELIMIT_STATE_INIT("warn_unseeded_randomness", HZ, 3);
+ static struct ratelimit_state urandom_warning =
+ 	RATELIMIT_STATE_INIT("warn_urandom_randomness", HZ, 3);
++static struct ratelimit_state getrandom_warning =
++	RATELIMIT_STATE_INIT("warn_getrandom_notavail", HZ, 3);
+
+ static int ratelimit_disable __read_mostly;
+
+@@ -1053,6 +1055,12 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
+ 				  urandom_warning.missed);
+ 			urandom_warning.missed = 0;
+ 		}
++		if (getrandom_warning.missed) {
++			pr_notice("random: %d getrandom warning(s) missed "
++				  "due to ratelimiting\n",
++				  getrandom_warning.missed);
++			getrandom_warning.missed = 0;
++		}
+ 	}
+ }
+
+@@ -1915,6 +1923,7 @@ int __init rand_initialize(void)
+ 	crng_global_init_time = jiffies;
+ 	if (ratelimit_disable) {
+ 		urandom_warning.interval = 0;
++		getrandom_warning.interval = 0;
+ 		unseeded_warning.interval = 0;
+ 	}
+ 	return 0;
+@@ -2138,8 +2147,6 @@ const struct file_operations urandom_fops = {
+ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ 		unsigned int, flags)
+ {
+-	int ret;
+-
+ 	if (flags & ~(GRND_NONBLOCK|GRND_RANDOM))
+ 		return -EINVAL;
+
+@@ -2152,9 +2159,13 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ 	if (!crng_ready()) {
+ 		if (flags & GRND_NONBLOCK)
+ 			return -EAGAIN;
+-		ret = wait_for_random_bytes();
+-		if (unlikely(ret))
+-			return ret;
++
++		if (__ratelimit(&getrandom_warning))
++			pr_notice("random: %s: invalid getrandom request "
++				  "(%zd bytes): crng not ready",
++				  current->comm, count);
++
++		return -EINVAL;
+ 	}
+ 	return urandom_read(NULL, buf, count, NULL);
+ }
+--
+2.23.0
