@@ -2,155 +2,160 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5CCC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0612C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88784208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tA7nWU3l"
+	by mail.kernel.org (Postfix) with ESMTP id 871A5206A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568457682;
+	bh=9/H5bRCdNvvCpmNx4Gw/GSYF6iabQyLsISVeNmZqhYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0DTPdbv8o2K32NRBrUNKUmSIV/4rz4jt9gHyF1Tdijm+jcOC2PvMhG3GFxY4sDoNI
+	 wHuGDccCLHbhSkn2mtWlJkXmhQhdwk4P6gOxOESNnuieJOo2k4HX3o5N4uguMndn1W
+	 c76Z+LqrvWYP7qwaJ82GnlWajkHkk9XZuCHT0wKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbfINKeK (ORCPT
+        id S1729693AbfINKlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 06:34:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36899 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfINKeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 06:34:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s28so31700871otd.4;
-        Sat, 14 Sep 2019 03:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mbl+TqU1RDnoByFgw6YTBN5hIBAakcwGG9n4xIXKC+c=;
-        b=tA7nWU3lXGqX+JpHOfUpDNhRLNRrl/cI6sGJCiUggydaE/S6ZkSqxtdt5kCmPqZMES
-         NWDPdSvDHfUXDYew5WaGZAB7Xgmkvnjd29YNbEyR9axnVffmmchZ/BHsojl/H3Z12TG0
-         XQvksO1xLsz334htc8qviaKaTmeepDRWOkuGIiE8lhwG1q6MjoN7H+GFt3auQark5aoz
-         Gxpd1aPzqrGpBi+7VoQM0claaW8LeONmt+9gOZPgpQVmF+gXQGodcLz1yp6XUaomdFOb
-         U2o12BGdODfqkuSAdRt+IiKwrWjhCc65AhAeHwkHalTA4/yEUKN3tn3mm2tUaqmL2+Pz
-         IwMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mbl+TqU1RDnoByFgw6YTBN5hIBAakcwGG9n4xIXKC+c=;
-        b=M5e+//XNlm8GKV+74TZtb7+2uPv5TgUVwnR0vbZR8WqtKGr3fQfdOb+264ukHCDoLc
-         aqBTHyy3Nq84L5xSp8Zmn4wljPasctCxpI85Zj8J7X2jUP4RmiMB6JHDdVJkhRPkUzOX
-         rAhLYGSzCRvpNRKBkW74EYW3gUOfZkPy+VkLRCGeg5dRvVU7AxYKbQLgIG4/rnLipiRA
-         cW4OjVsI90yHI8NCq6bH8oIAhzJnRzXIS4LDrPJ+xT09lsDJNf/He+PVKDkAz87+3s89
-         3pXW29eBWwRPFK92GkbgzkjGb7kCFdR6oe86nxTK4LYI5ihExfcwWQLIBHFrl+C2FGsB
-         RkBA==
-X-Gm-Message-State: APjAAAVRzUy9aJ/2xnQg9Gd/ouCAk/cXlEVxRPHTsct9/hElUk88G6Zq
-        KmVMmdsOHpT9J8ykZpmNq9bA8C0491HA49p6pLI=
-X-Google-Smtp-Source: APXvYqz11IoWGhoGXKjzb8F+hvckBLKA4ujj2NSQtgA3h1sXWfq74cy0DnzK69Jz9K7i6UWYYo405yTRzItDeF6LSFo=
-X-Received: by 2002:a9d:744c:: with SMTP id p12mr38958898otk.198.1568457249060;
- Sat, 14 Sep 2019 03:34:09 -0700 (PDT)
+        Sat, 14 Sep 2019 06:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728546AbfINKlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 06:41:21 -0400
+Received: from rapoport-lnx (unknown [87.71.71.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CC6020578;
+        Sat, 14 Sep 2019 10:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568457680;
+        bh=9/H5bRCdNvvCpmNx4Gw/GSYF6iabQyLsISVeNmZqhYY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DL2w9gzAtsYQCurwg49AR0XlEL4OkIkKwNhLxkytBAiB4d3dhFaM6kPwIHruHNRTl
+         fwefz2CqhmNiSJzh/AyXpCV0yCK76A0KYpsOBP+0NnCfQwVtAQ76ZXe//5JBsilmfh
+         v/PXVgRP5YdVgokXhwmpvHVAmC0BIOwizkZ+q4V4=
+Date:   Sat, 14 Sep 2019 11:41:13 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+Message-ID: <20190914104112.GA12045@rapoport-lnx>
+References: <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
+ <20190905154747.GB3650@rapoport-lnx>
+ <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
+ <20190906130223.GA17704@rapoport-lnx>
+ <20190909182242.c1ef9717d14b20212ef75954@suse.de>
+ <20190910113243.GA19207@rapoport-lnx>
+ <20190911160939.19f776535770d12ff51a2af7@suse.de>
+ <20190912105831.GA10677@rapoport-lnx>
+ <20190912155539.6151b0811e858455be4c8d86@suse.de>
+ <20190912140912.GA13137@alpha.franken.de>
 MIME-Version: 1.0
-References: <20190912130007.4469-1-bparrot@ti.com> <20190912130007.4469-5-bparrot@ti.com>
-In-Reply-To: <20190912130007.4469-5-bparrot@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 14 Sep 2019 11:33:42 +0100
-Message-ID: <CA+V-a8stmX2WmJEQRvvdOfHiFNgmEbtPTWtn+Fuq2h8SW4N3Hw@mail.gmail.com>
-Subject: Re: [Patch 4/6] media: i2c: ov2659: Add optional powerdown gpio handling
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912140912.GA13137@alpha.franken.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+Hi Thomas,
 
-On Thu, Sep 12, 2019 at 1:58 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> On some board it is possible that the sensor 'powerdown'
-> pin might be controlled with a gpio instead of being
-> tied to always powered.
->
-> This patch add support to specify an optional gpio
-> which will be set at probe time and remained on.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/i2c/Kconfig  |  2 +-
->  drivers/media/i2c/ov2659.c | 13 +++++++++++++
->  2 files changed, 14 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 7eee1812bba3..315c1d8bdb7b 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -634,7 +634,7 @@ config VIDEO_OV2640
->  config VIDEO_OV2659
->         tristate "OmniVision OV2659 sensor support"
->         depends on VIDEO_V4L2 && I2C
-> -       depends on MEDIA_CAMERA_SUPPORT
-> +       depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
->         select V4L2_FWNODE
->         help
->           This is a Video4Linux2 sensor driver for the OmniVision
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> index efbe6dc720e2..c64f73bef336 100644
-> --- a/drivers/media/i2c/ov2659.c
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -32,6 +32,8 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_graph.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
->  #include <linux/videodev2.h>
-> @@ -232,6 +234,8 @@ struct ov2659 {
->         struct sensor_register *format_ctrl_regs;
->         struct ov2659_pll_ctrl pll;
->         int streaming;
-> +       /* used to control the sensor powerdownN pin */
-> +       struct gpio_desc *pwrdn_gpio;
->  };
->
->  static const struct sensor_register ov2659_init_regs[] = {
-> @@ -1391,6 +1395,7 @@ static int ov2659_probe(struct i2c_client *client)
->         struct v4l2_subdev *sd;
->         struct ov2659 *ov2659;
->         struct clk *clk;
-> +       struct gpio_desc *gpio;
+On Thu, Sep 12, 2019 at 04:09:12PM +0200, Thomas Bogendoerfer wrote:
+> On Thu, Sep 12, 2019 at 03:55:39PM +0200, Thomas Bogendoerfer wrote:
+> > - reserved[0xd]	[0x000000035bff8000-0x000000035bffffff], 0x0000000000008000 bytes flags: 0x0
+> > 
+> > I have no idea which reservation this is, but it's not from one of the
+> > node data.
+> 
+> that's sparsemem's mem_section. And 
+> 
+>  free_bootmem_with_active_regions(node, end_pfn);
 
-you don't need the local var here you can just assign it directly to pwrdn_gpio.
+It seems that the call to free_bootmem_with_active_regions() should have
+been removed along with bootmem and it's not needed now.
 
->         int ret;
->
->         if (!pdata) {
-> @@ -1414,6 +1419,14 @@ static int ov2659_probe(struct i2c_client *client)
->             ov2659->xvclk_frequency > 27000000)
->                 return -EINVAL;
->
-> +       /* Optional gpio don't fail if not present */
-> +       gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> +                                      GPIOD_OUT_HIGH);
-> +       if (IS_ERR(gpio))
-> +               return PTR_ERR(gpio);
-> +
-> +       ov2659->pwrdn_gpio = gpio;
-> +
-apart from assigning it you don't actually use it.
+Can you please test the below version of the patch?
 
-you will also have to read the reset gpio pin and implement
-ov2659_set_power() and
-call it in appropriate places/ s_power ?
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d50fafd..e4b02b5 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -669,6 +669,7 @@ config SGI_IP22
+ config SGI_IP27
+ 	bool "SGI IP27 (Origin200/2000)"
+ 	select ARCH_HAS_PHYS_TO_DMA
++	select ARCH_SPARSEMEM_ENABLE
+ 	select FW_ARC
+ 	select FW_ARC64
+ 	select BOOT_ELF64
+@@ -2633,18 +2634,9 @@ config ARCH_FLATMEM_ENABLE
+ 	def_bool y
+ 	depends on !NUMA && !CPU_LOONGSON2
+ 
+-config ARCH_DISCONTIGMEM_ENABLE
+-	bool
+-	default y if SGI_IP27
+-	help
+-	  Say Y to support efficient handling of discontiguous physical memory,
+-	  for architectures which are either NUMA (Non-Uniform Memory Access)
+-	  or have huge holes in the physical address space for other reasons.
+-	  See <file:Documentation/vm/numa.rst> for more.
+-
+ config ARCH_SPARSEMEM_ENABLE
+ 	bool
+-	select SPARSEMEM_STATIC
++	select SPARSEMEM_STATIC if !SGI_IP27
+ 
+ config NUMA
+ 	bool "NUMA Support"
+diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
+index fb077a9..9db8692 100644
+--- a/arch/mips/sgi-ip27/ip27-memory.c
++++ b/arch/mips/sgi-ip27/ip27-memory.c
+@@ -406,12 +406,8 @@ static void __init node_mem_init(cnodeid_t node)
+ 	slot_freepfn += PFN_UP(sizeof(struct pglist_data) +
+ 			       sizeof(struct hub_data));
+ 
+-	free_bootmem_with_active_regions(node, end_pfn);
+-
+ 	memblock_reserve(slot_firstpfn << PAGE_SHIFT,
+ 			 ((slot_freepfn - slot_firstpfn) << PAGE_SHIFT));
+-
+-	sparse_memory_present_with_active_regions(node);
+ }
+ 
+ /*
+@@ -444,6 +440,8 @@ void __init prom_meminit(void)
+ 		}
+ 		__node_data[node] = &null_node;
+ 	}
++
++	memblocks_present();
+ }
+ 
+ void __init prom_free_prom_memory(void)
+ 
+> on the last node will free this reserved memory, when memory
+> is added node by node. This explains it.
+> 
+> So when resending the patch add my
+> 
+> Tested-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
 
-Cheers,
---Prabhakar Lad
+-- 
+Sincerely yours,
+Mike.
