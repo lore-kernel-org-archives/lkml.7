@@ -2,118 +2,140 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C729C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0A4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 01:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7045E20693
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 00:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B468208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 01:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390905AbfINAvF (ORCPT
+        id S1730641AbfINBEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 20:51:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51748 "EHLO mga05.intel.com"
+        Fri, 13 Sep 2019 21:04:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24801 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388072AbfINAvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 20:51:05 -0400
+        id S1725747AbfINBEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 21:04:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 17:51:04 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Sep 2019 18:04:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="190482519"
-Received: from aayang-mobl1.amr.corp.intel.com (HELO [10.251.29.131]) ([10.251.29.131])
-  by orsmga006.jf.intel.com with ESMTP; 13 Sep 2019 17:51:02 -0700
-Subject: Re: [PATCH v22 00/24] Intel SGX foundations
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
-Date:   Fri, 13 Sep 2019 13:38:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="386585070"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Sep 2019 18:04:00 -0700
+Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 13 Sep 2019 18:04:00 -0700
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.221]) by
+ ORSMSX114.amr.corp.intel.com ([169.254.8.225]) with mapi id 14.03.0439.000;
+ Fri, 13 Sep 2019 18:03:59 -0700
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Lyude Paul <lyude@redhat.com>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "Tang, Feng" <feng.tang@intel.com>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] igb/igc: Don't warn on fatal read failures when the
+ device is removed
+Thread-Topic: [PATCH] igb/igc: Don't warn on fatal read failures when the
+ device is removed
+Thread-Index: AQHVaphKjuHnK0NY0keIdDYW5WflHg==
+Date:   Sat, 14 Sep 2019 01:03:59 +0000
+Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B971184D0@ORSMSX103.amr.corp.intel.com>
+References: <20190822183318.27634-1-lyude@redhat.com>
+In-Reply-To: <20190822183318.27634-1-lyude@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/19 7:26 AM, Jarkko Sakkinen wrote:
-> Not having LSM hooks does not cause any risk to other parts of the
-> kernel as the device can still be controlled by using DAC permissions.
-> The hooks just provide more granularity than DAC in access decisions.
-
-Could we translate the security-speak to english, please? :)
-
-Is this it:
-
-	LSMs can (try to) enforce things like "all executable code must
-	be verified".  The implementation in these patches has the
-	potential to subvert policies like that since it has its own
-	unique mechanisms for loading and mapping executable code.  This
-	will be fixed by future LSM enhancements on top of this set.
-	For now, permissions on the SGX device file should be used to
-	prevent untrusted users from using SGX to subvert LSM policies.
-
-?
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDE0OjMzIC0wNDAwLCBMeXVkZSBQYXVsIHdyb3RlOgo+IEZh
+dGFsIHJlYWQgZXJyb3JzIGFyZSB3b3J0aCB3YXJuaW5nIGFib3V0LCB1bmxlc3Mgb2YgY291cnNl
+IHRoZSBkZXZpY2UKPiB3YXMganVzdCB1bnBsdWdnZWQgZnJvbSB0aGUgbWFjaGluZSAtIHNvbWV0
+aGluZyB0aGF0J3MgYSByYXRoZXIgbm9ybWFsCj4gb2NjdXJlbmNlIHdoZW4gdGhlIGlnYi9pZ2Mg
+YWRhcHRlciBpcyBsb2NhdGVkIG9uIGEgVGh1bmRlcmJvbHQgZG9jay4gU28sCj4gbGV0J3Mgb25s
+eSBXQVJOKCkgaWYgdGhlcmUncyBhIGZhdGFsIHJlYWQgZXJyb3Igd2hpbGUgdGhlIGRldmljZSBp
+cwo+IHN0aWxsIHByZXNlbnQuCj4gCj4gVGhpcyBmaXhlcyB0aGUgZm9sbG93aW5nIFdBUk4gc3Bs
+YXQgdGhhdCdzIGJlZW4gYXBwZWFyaW5nIHdoZW5ldmVyIEkKPiB1bnBsdWcgbXkgQ2FsZGlnaXQg
+VFMzIFRodW5kZXJib2x0IGRvY2sgZnJvbSBteSBsYXB0b3A6Cj4gCj4gICBpZ2IgMDAwMDowOTow
+MC4wIGVucDlzMDogUENJZSBsaW5rIGxvc3QKPiAgIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0t
+LS0tLS0tLS0tLQo+ICAgaWdiOiBGYWlsZWQgdG8gcmVhZCByZWcgMHgxOCEKPiAgIFdBUk5JTkc6
+IENQVTogNyBQSUQ6IDUxNiBhdAo+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaWdiL2ln
+Yl9tYWluLmM6NzU2IGlnYl9yZDMyKzB4NTcvMHg2YSBbaWdiXQo+ICAgTW9kdWxlcyBsaW5rZWQg
+aW46IGlnYiBkY2EgdGh1bmRlcmJvbHQgZnVzZSB2ZmF0IGZhdCBlbGFuX2kyYyBtZWlfd2R0Cj4g
+ICBtZWlfaGRjcCBpOTE1IHdtaV9ibW9mIGludGVsX3dtaV90aHVuZGVyYm9sdCBpVENPX3dkdAo+
+ICAgaVRDT192ZW5kb3Jfc3VwcG9ydCB4ODZfcGtnX3RlbXBfdGhlcm1hbCBpbnRlbF9wb3dlcmNs
+YW1wIGpveWRldgo+ICAgY29yZXRlbXAgY3JjdDEwZGlmX3BjbG11bCBjcmMzMl9wY2xtdWwgaTJj
+X2FsZ29fYml0IGdoYXNoX2NsbXVsbmlfaW50ZWwKPiAgIGludGVsX2NzdGF0ZSBkcm1fa21zX2hl
+bHBlciBpbnRlbF91bmNvcmUgc3lzY29weWFyZWEgc3lzZmlsbHJlY3QKPiAgIHN5c2ltZ2JsdCBm
+Yl9zeXNfZm9wcyBpbnRlbF9yYXBsX3BlcmYgaW50ZWxfeGhjaV91c2Jfcm9sZV9zd2l0Y2ggbWVp
+X21lCj4gICBkcm0gcm9sZXMgaWRtYTY0IGkyY19pODAxIHVjc2lfYWNwaSB0eXBlY191Y3NpIG1l
+aSBpbnRlbF9scHNzX3BjaQo+ICAgcHJvY2Vzc29yX3RoZXJtYWxfZGV2aWNlIHR5cGVjIGludGVs
+X3BjaF90aGVybWFsIGludGVsX3NvY19kdHNfaW9zZgo+ICAgaW50ZWxfbHBzcyBpbnQzNDAzX3Ro
+ZXJtYWwgdGhpbmtwYWRfYWNwaSB3bWkgaW50MzQweF90aGVybWFsX3pvbmUKPiAgIGxlZHRyaWdf
+YXVkaW8gaW50MzQwMF90aGVybWFsIGFjcGlfdGhlcm1hbF9yZWwgYWNwaV9wYWQgdmlkZW8KPiAg
+IHBjY19jcHVmcmVxIGlwX3RhYmxlcyBzZXJpb19yYXcgbnZtZSBudm1lX2NvcmUgY3JjMzJjX2lu
+dGVsIHVhcwo+ICAgdXNiX3N0b3JhZ2UgZTEwMDBlIGkyY19kZXYKPiAgIENQVTogNyBQSUQ6IDUx
+NiBDb21tOiBrd29ya2VyL3UxNjozIE5vdCB0YWludGVkIDUuMi4wLXJjMUx5dWRlLVRlc3QrICMx
+NAo+ICAgSGFyZHdhcmUgbmFtZTogTEVOT1ZPIDIwTDhTMk44MDAvMjBMOFMyTjgwMCwgQklPUyBO
+MjJFVDM1VyAoMS4xMiApIDA0LzA5LzIwMTgKPiAgIFdvcmtxdWV1ZToga2FjcGlfaG90cGx1ZyBh
+Y3BpX2hvdHBsdWdfd29ya19mbgo+ICAgUklQOiAwMDEwOmlnYl9yZDMyKzB4NTcvMHg2YSBbaWdi
+XQo+ICAgQ29kZTogODcgYjggZmMgZmYgZmYgNDggYzcgNDcgMDggMDAgMDAgMDAgMDAgNDggYzcg
+YzYgMzMgNDIgOWIgYzAgNGMgODkKPiAgIGM3IGU4IDQ3IDQ1IGNkIGRjIDg5IGVlIDQ4IGM3IGM3
+IDQzIDQyIDliIGMwIGU4IGMxIDk0IDcxIGRjIDwwZj4gMGIgZWIKPiAgIDA4IDhiIDAwIGZmIGMw
+IDc1IGIwIGViIGM4IDQ0IDg5IGUwIDVkIDQxIDVjIGMzIDBmIDFmIDQ0Cj4gICBSU1A6IDAwMTg6
+ZmZmZmJhNTgwMWNmN2M0OCBFRkxBR1M6IDAwMDEwMjg2Cj4gICBSQVg6IDAwMDAwMDAwMDAwMDAw
+MDAgUkJYOiBmZmZmOWU3OTU2NjA4ODQwIFJDWDogMDAwMDAwMDAwMDAwMDAwNwo+ICAgUkRYOiAw
+MDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZmJhNTgwMWNmN2IyNCBSREk6IGZmZmY5ZTc5NWUzZDZh
+MDAKPiAgIFJCUDogMDAwMDAwMDAwMDAwMDAxOCBSMDg6IDAwMDAwMDAwOWRlYzRhMDEgUjA5OiBm
+ZmZmZmZmZjllNjEwMThmCj4gICBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiBmZmZmYmE1ODAx
+Y2Y3YWU1IFIxMjogMDAwMDAwMDBmZmZmZmZmZgo+ICAgUjEzOiBmZmZmOWU3OTU2NjA4ODQwIFIx
+NDogZmZmZjllNzk1YTZmMTBiMCBSMTU6IDAwMDAwMDAwMDAwMDAwMDAKPiAgIEZTOiAgMDAwMDAw
+MDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOWU3OTVlM2MwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAw
+MDAwMDAwMDAKPiAgIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAw
+NTAwMzMKPiAgIENSMjogMDAwMDU2NDMxN2JjNDA4OCBDUjM6IDAwMDAwMDAxMGUwMGEwMDYgQ1I0
+OiAwMDAwMDAwMDAwMzYwNmUwCj4gICBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAw
+MDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMAo+ICAgRFIzOiAwMDAwMDAwMDAwMDAwMDAw
+IERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDAKPiAgIENhbGwgVHJh
+Y2U6Cj4gICAgaWdiX3JlbGVhc2VfaHdfY29udHJvbCsweDFhLzB4MzAgW2lnYl0KPiAgICBpZ2Jf
+cmVtb3ZlKzB4YzUvMHgxNGIgW2lnYl0KPiAgICBwY2lfZGV2aWNlX3JlbW92ZSsweDNiLzB4OTMK
+PiAgICBkZXZpY2VfcmVsZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHhkNy8weDE3ZQo+ICAgIHBjaV9z
+dG9wX2J1c19kZXZpY2UrMHgzNi8weDc1Cj4gICAgcGNpX3N0b3BfYnVzX2RldmljZSsweDY2LzB4
+NzUKPiAgICBwY2lfc3RvcF9idXNfZGV2aWNlKzB4NjYvMHg3NQo+ICAgIHBjaV9zdG9wX2FuZF9y
+ZW1vdmVfYnVzX2RldmljZSsweGYvMHgxOQo+ICAgIHRyaW1fc3RhbGVfZGV2aWNlcysweGM1LzB4
+MTNhCj4gICAgPyBfX3BtX3J1bnRpbWVfcmVzdW1lKzB4NmUvMHg3Ygo+ICAgIHRyaW1fc3RhbGVf
+ZGV2aWNlcysweDEwMy8weDEzYQo+ICAgID8gX19wbV9ydW50aW1lX3Jlc3VtZSsweDZlLzB4N2IK
+PiAgICB0cmltX3N0YWxlX2RldmljZXMrMHgxMDMvMHgxM2EKPiAgICBhY3BpcGhwX2NoZWNrX2Jy
+aWRnZSsweGQ4LzB4ZjUKPiAgICBhY3BpcGhwX2hvdHBsdWdfbm90aWZ5KzB4ZjcvMHgxNGIKPiAg
+ICA/IGFjcGlwaHBfY2hlY2tfYnJpZGdlKzB4ZjUvMHhmNQo+ICAgIGFjcGlfZGV2aWNlX2hvdHBs
+dWcrMHgzNTcvMHgzYjUKPiAgICBhY3BpX2hvdHBsdWdfd29ya19mbisweDFhLzB4MjMKPiAgICBw
+cm9jZXNzX29uZV93b3JrKzB4MWE3LzB4Mjk2Cj4gICAgd29ya2VyX3RocmVhZCsweDFhOC8weDI0
+Ywo+ICAgID8gcHJvY2Vzc19zY2hlZHVsZWRfd29ya3MrMHgyYy8weDJjCj4gICAga3RocmVhZCsw
+eGU5LzB4ZWUKPiAgICA/IGt0aHJlYWRfZGVzdHJveV93b3JrZXIrMHg0MS8weDQxCj4gICAgcmV0
+X2Zyb21fZm9yaysweDM1LzB4NDAKPiAgIC0tLVsgZW5kIHRyYWNlIDI1MmJmMTAzNTJjNjNkMjIg
+XS0tLQo+IAo+IFNpZ25lZC1vZmYtYnk6IEx5dWRlIFBhdWwgPGx5dWRlQHJlZGhhdC5jb20+Cj4g
+Rml4ZXM6IDQ3ZTE2NjkyYjI2YiAoImlnYi9pZ2M6IHdhcm4gd2hlbiBmYXRhbCByZWFkIGZhaWx1
+cmUgaGFwcGVucyIpCj4gQ2M6IEZlbmcgVGFuZyA8ZmVuZy50YW5nQGludGVsLmNvbT4KPiBDYzog
+U2FzaGEgTmVmdGluIDxzYXNoYS5uZWZ0aW5AaW50ZWwuY29tPgo+IENjOiBKZWZmIEtpcnNoZXIg
+PGplZmZyZXkudC5raXJzaGVyQGludGVsLmNvbT4KPiBDYzogaW50ZWwtd2lyZWQtbGFuQGxpc3Rz
+Lm9zdW9zbC5vcmcKPiAtLS0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaWdiL2lnYl9t
+YWluLmMgfCAzICsrLQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9pZ2MvaWdjX21haW4u
+YyB8IDMgKystCj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9u
+cygtKQo+IAoKVGVzdGVkLWJ5OiBBYXJvbiBCcm93biA8YWFyb24uZi5icm93bkBpbnRlbC5jb20+
+Cg==
