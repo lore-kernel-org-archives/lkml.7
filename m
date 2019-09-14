@@ -2,148 +2,89 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494B2C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7181C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1393320830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="OrM9XPiI"
+	by mail.kernel.org (Postfix) with ESMTP id A61EE2084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbfINOVc (ORCPT
+        id S2389436AbfINOfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 10:21:32 -0400
-Received: from mail.efficios.com ([167.114.142.138]:55114 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387786AbfINOVc (ORCPT
+        Sat, 14 Sep 2019 10:35:47 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:58968 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388491AbfINOfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 10:21:32 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5ADDB2B9B77;
-        Sat, 14 Sep 2019 10:21:30 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id cVHedDvBx6U9; Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A942C2B9B73;
-        Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A942C2B9B73
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1568470889;
-        bh=M10BlrTXAj0G5y7uqqZ+tCLOJeUIc+aRdoN/am4d8Qs=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=OrM9XPiIjv9+zo4an4UrG/+X9Ag8E8VsyGp9CSouhtbLgQHQW1q7RLxo2SzHPtUsB
-         soLryC4pEL0QcFbWbUOekyDq1723FMIAjRpx3mHjDtlCYAo0BAlR7uNPHtaxST/BXc
-         MbqYnsqaNRG0VOWwuAFAudaN6ntE/sNMq7rjrDe98AsXNaSwyiq/U24TRTww60ik2s
-         vzdUrsQCuYuzvoF2S4LRxtgphBO34e1Vz3tW7L6tp8axudzkOnLZLDDRVWe/Bnw603
-         RxEbD/XB4OWilZUjwXNJ0mCQ443ugi0gnon4+XT/qiSTYIOVj4VDpd06+nxHDqAvVk
-         1ElusDH4V3glg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 4BJ5TKhxbPjp; Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 8FD772B9B69;
-        Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
-Date:   Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Neel Natu <neelnatu@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Message-ID: <819646407.3304.1568470889470.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190913151220.3105-2-mathieu.desnoyers@efficios.com>
-References: <20190913151220.3105-1-mathieu.desnoyers@efficios.com> <20190913151220.3105-2-mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH for 5.3 2/3] rseq: Fix: Unregister rseq for CLONE_SETTLS
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Sat, 14 Sep 2019 10:35:47 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1i992n-0001qp-1p; Sat, 14 Sep 2019 09:28:57 -0500
+Message-ID: <65f56bfd05152d744b032e7df9c34b5d9ef2bfb5.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com
+Cc:     wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
+        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
+        thunder.leizhen@huawei.com, fanchengyang@huawei.com,
+        yebin10@huawei.com
+Date:   Sat, 14 Sep 2019 09:28:55 -0500
+In-Reply-To: <e02c727a-5505-80d3-9ba2-9fbb9c8253fe@huawei.com>
+References: <20190809100800.5426-1-yanaijie@huawei.com>
+         <a39b81562bcdeda7ffe0c2c29a60ff08c77047a6.camel@buserror.net>
+         <e02c727a-5505-80d3-9ba2-9fbb9c8253fe@huawei.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
-Thread-Topic: rseq: Fix: Unregister rseq for CLONE_SETTLS
-Thread-Index: o9eZqvAOKmXphmxsJKc8X5whD/BREg==
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, fanchengyang@huawei.com, yebin10@huawei.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is an ongoing discussion on the choice of flag we want to care
-about here. Therefore, please don't pull this patch until we reach an
-agreement.
+On Tue, 2019-09-10 at 13:34 +0800, Jason Yan wrote:
+> Hi Scott,
+> 
+> On 2019/8/28 12:05, Scott Wood wrote:
+> > On Fri, 2019-08-09 at 18:07 +0800, Jason Yan wrote:
+> > > This series implements KASLR for powerpc/fsl_booke/32, as a security
+> > > feature that deters exploit attempts relying on knowledge of the
+> > > location
+> > > of kernel internals.
+> > > 
+> > > Since CONFIG_RELOCATABLE has already supported, what we need to do is
+> > > map or copy kernel to a proper place and relocate.
+> > 
+> > Have you tested this with a kernel that was loaded at a non-zero
+> > address?  I
+> > tried loading a kernel at 0x04000000 (by changing the address in the
+> > uImage,
+> > and setting bootm_low to 04000000 in U-Boot), and it works without
+> > CONFIG_RANDOMIZE and fails with.
+> > 
+> 
+> How did you change the load address of the uImage, by changing the
+> kernel config CONFIG_PHYSICAL_START or the "-a/-e" parameter of mkimage?
+> I tried both, but it did not work with or without CONFIG_RANDOMIZE.
 
-Thanks,
+With mkimage.  Did you set bootm_low in U-Boot as described above?  Was
+CONFIG_RELOCATABLE set in the non-CONFIG_RANDOMIZE kernel?
 
-Mathieu
+-Scott
 
------ On Sep 13, 2019, at 11:12 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-> It has been reported by Google that rseq is not behaving properly
-> with respect to clone when CLONE_VM is used without CLONE_THREAD.
-> It keeps the prior thread's rseq TLS registered when the TLS of the
-> thread has moved, so the kernel deals with the wrong TLS.
-> 
-> The approach of clearing the per task-struct rseq registration
-> on clone with CLONE_THREAD flag is incomplete. It does not cover
-> the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
-> 
-> Looking more closely at each of the clone flags:
-> 
-> - CLONE_THREAD,
-> - CLONE_VM,
-> - CLONE_SETTLS.
-> 
-> It appears that the flag we really want to track is CLONE_SETTLS, which
-> moves the location of the TLS for the child, making the rseq
-> registration point to the wrong TLS.
-> 
-> Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "H . Peter Anvin" <hpa@zytor.com>
-> Cc: Paul Turner <pjt@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: linux-api@vger.kernel.org
-> Cc: <stable@vger.kernel.org>
-> ---
-> include/linux/sched.h | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 9f51932bd543..76bf55b5cccf 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1919,11 +1919,11 @@ static inline void rseq_migrate(struct task_struct *t)
-> 
-> /*
->  * If parent process has a registered restartable sequences area, the
-> - * child inherits. Only applies when forking a process, not a thread.
-> + * child inherits. Unregister rseq for a clone with CLONE_SETTLS set.
->  */
-> static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
-> {
-> -	if (clone_flags & CLONE_THREAD) {
-> +	if (clone_flags & CLONE_SETTLS) {
-> 		t->rseq = NULL;
-> 		t->rseq_sig = 0;
-> 		t->rseq_event_mask = 0;
-> --
-> 2.17.1
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
