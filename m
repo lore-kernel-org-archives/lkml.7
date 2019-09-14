@@ -2,106 +2,119 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB5C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E014C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A565A20717
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB148206A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:32:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjH2DXWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfINKWJ convert rfc822-to-8bit (ORCPT
+        id S1729170AbfINKc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 06:22:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48768 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726313AbfINKWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 06:22:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CD0AAB012;
-        Sat, 14 Sep 2019 10:22:06 +0000 (UTC)
-Date:   Sat, 14 Sep 2019 12:22:02 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Michael Neuling <mikey@neuling.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Diana Craciun <diana.craciun@nxp.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Allison Randal <allison@lohutok.net>,
-        Breno Leitao <leitao@debian.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v7 5/6] powerpc/64: Make COMPAT user-selectable disabled
- on littleendian by default.
-Message-ID: <20190914122202.307707c0@naga>
-In-Reply-To: <87h85us0xy.fsf@mpe.ellerman.id.au>
-References: <cover.1567198491.git.msuchanek@suse.de>
-        <c7c88e88408588fa6fcf858a5ae503b5e2f4ec0b.1567198492.git.msuchanek@suse.de>
-        <87ftlftpy7.fsf@mpe.ellerman.id.au>
-        <20190902114239.32bd81f4@naga>
-        <87h85us0xy.fsf@mpe.ellerman.id.au>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Sat, 14 Sep 2019 06:32:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40398 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbfINKc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 06:32:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x127so19634155pfb.7
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 03:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kMiRV74Zi6buasstnWsWMf+sxpVUSgy2RNkWLC1ySAE=;
+        b=tjH2DXWIPJzMfUSGBjiZfSkXXIQTgolVoS+0vo/XQEAfCNjqjf6Ju8suZBkH+2eZcm
+         7PWa+s9Ziw7iONfCgiBlZaGaBnERRJnMteqG5mBl8NwxxufyGe9xiXzmUaI+JG5Rskua
+         6bzzgC0J2PTRKoZW+XhwVav3w6zqFQ/ye/ZNPBV524Nh/LvhvFtT/yValIv0RFO27HOG
+         6xzrqysvdx1qTftOdUsEPyfoHkkvX4uqrr2IwPLlvWm7JR6JSl8XFVgvI1ejH/mJhv84
+         k1ckzRHy0D2ftLqI72m4xT6x/zmPZkrXZ4AfByNmX13FnboFM7AAcpzDH0FssB8IjNhz
+         msUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kMiRV74Zi6buasstnWsWMf+sxpVUSgy2RNkWLC1ySAE=;
+        b=Ex1IQGU5rvHyU/5bGaIDns1a/kksoHyOu7keT2TM5U3YGqgbQcwtBmrarjPZ/vB3VZ
+         O1Qq8KSD4yrECWiUiAcDKLpV7TZFkBn/o4tvHphqHK7syx4oApIsm4By9g8fBBh31zfw
+         KBuSsiRV/df7K5Iaf/xL6qNgvnmG/C4AOct7xz+yrFR/NnNqZBbeXSr6xYB9efNpiDkC
+         SuDBBnnJIIUlxu7dZIX529kUBQWDNMZUvP1DUzVZGY1mzraRiMckX9SaPvUvc7wijcVq
+         5GO1Op7If/BSmPZWMMSGuqsJDc53l7zlVGTa+Gb26DZMQwTtvQ4ZsQ1wPhbNpzJp2RNT
+         Q72w==
+X-Gm-Message-State: APjAAAWGlLx/74KsYjqf/288lmYMaLtQakBHVjstgyJjyKyQxyEKGR1p
+        HG54Sr7BZiDodhLXUaYO+DpdCUnKKDc2Zw==
+X-Google-Smtp-Source: APXvYqwA3Q6JIegT9xwctFSiqW7xDEHwxnKE9YSfS9H7X9l/pgoGIaberQJDu83cH8oI5fk7OozS4w==
+X-Received: by 2002:a63:487:: with SMTP id 129mr20664438pge.14.1568457145610;
+        Sat, 14 Sep 2019 03:32:25 -0700 (PDT)
+Received: from localhost.localdomain ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id z2sm2345536pfq.58.2019.09.14.03.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 03:32:24 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] mm, tracing: print symbol name for call_site
+Date:   Sat, 14 Sep 2019 18:32:15 +0800
+Message-Id: <20190914103215.23301-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Sep 2019 10:00:57 +1000
-Michael Ellerman <mpe@ellerman.id.au> wrote:
+To improve the readability of raw slab trace points, print the call_site ip
+using '%pS'. Then we can grep events with function names.
 
-> Michal Suchánek <msuchanek@suse.de> writes:
-> > On Mon, 02 Sep 2019 12:03:12 +1000
-> > Michael Ellerman <mpe@ellerman.id.au> wrote:
-> >  
-> >> Michal Suchanek <msuchanek@suse.de> writes:  
-> >> > On bigendian ppc64 it is common to have 32bit legacy binaries but much
-> >> > less so on littleendian.    
-> >> 
-> >> I think the toolchain people will tell you that there is no 32-bit
-> >> little endian ABI defined at all, if anything works it's by accident.  
-> >
-> > I have seen a piece of software that workarounds code issues on 64bit
-> > by always compiling 32bit code. So it does work in some way.  
-> 
-> What software is that?
+[002] ....   808.188897: kmem_cache_free: call_site=putname+0x47/0x50 ptr=00000000cef40c80
+[002] ....   808.188898: kfree: call_site=security_cred_free+0x42/0x50 ptr=0000000062400820
+[002] ....   808.188904: kmem_cache_free: call_site=put_cred_rcu+0x88/0xa0 ptr=0000000058d74ef8
+[002] ....   808.188913: kmem_cache_alloc: call_site=prepare_creds+0x26/0x100 ptr=0000000058d74ef8 bytes_req=168 bytes_alloc=576 gfp_flags=GFP_KERNEL
+[002] ....   808.188917: kmalloc: call_site=security_prepare_creds+0x77/0xa0 ptr=0000000062400820 bytes_req=8 bytes_alloc=336 gfp_flags=GFP_KERNEL|__GFP_ZERO
+[002] ....   808.188920: kmem_cache_alloc: call_site=getname_flags+0x4f/0x1e0 ptr=00000000cef40c80 bytes_req=4096 bytes_alloc=4480 gfp_flags=GFP_KERNEL
+[002] ....   808.188925: kmem_cache_free: call_site=putname+0x47/0x50 ptr=00000000cef40c80
+[002] ....   808.188926: kfree: call_site=security_cred_free+0x42/0x50 ptr=0000000062400820
+[002] ....   808.188931: kmem_cache_free: call_site=put_cred_rcu+0x88/0xa0 ptr=0000000058d74ef8
 
-The only one I have seen is stockfish (v9)
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ include/trace/events/kmem.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> 
-> > Also it has been pointed out that you can still switch to BE even with
-> > the 'fast-switch' removed.  
-> 
-> Yes we have a proper syscall for endian switching, sys_switch_endian(),
-> which is definitely supported.
-> 
-> But that *only* switches the endian-ness of the process, it does nothing
-> to the syscall layer. So any process that switches to the other endian
-> must endian flip syscall arguments (that aren't in registers), or flip
-> back to the native endian before calling syscalls.
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index eb57e3037deb..69e8bb8963db 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -35,8 +35,8 @@ DECLARE_EVENT_CLASS(kmem_alloc,
+ 		__entry->gfp_flags	= gfp_flags;
+ 	),
+ 
+-	TP_printk("call_site=%lx ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s",
+-		__entry->call_site,
++	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s",
++		(void *)__entry->call_site,
+ 		__entry->ptr,
+ 		__entry->bytes_req,
+ 		__entry->bytes_alloc,
+@@ -131,7 +131,8 @@ DECLARE_EVENT_CLASS(kmem_free,
+ 		__entry->ptr		= ptr;
+ 	),
+ 
+-	TP_printk("call_site=%lx ptr=%p", __entry->call_site, __entry->ptr)
++	TP_printk("call_site=%pS ptr=%p",
++		  (void *)__entry->call_site, __entry->ptr)
+ );
+ 
+ DEFINE_EVENT(kmem_free, kfree,
+-- 
+2.20.1
 
-In other words just installing a chroot of binaries built for the other
-endian won't work. You need something like qemu to do the syscall
-translation or run full VM with a kernel that has the swapped endian
-syscall ABI.
-
-Thanks
-
-Michal
