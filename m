@@ -2,67 +2,42 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD65AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D851EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 22:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0C120854
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9063F20692
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 22:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBHFcDUV"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="luZPH5cb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfINVaj (ORCPT
+        id S1727267AbfINWDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 17:30:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50444 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfINVai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 17:30:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 5so266018wmg.0;
-        Sat, 14 Sep 2019 14:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JczHJPwUxUzfOEXYUhaXp6IF33XabnHLSQIw2Wsc7cs=;
-        b=rBHFcDUVTF6LyVbsOVorK0zcjJtIn3M8QWjapCf7afTdmcA/UVamzLy8YUxJ/M6djK
-         z4jMHb06Jsq4mhHqMNZygdi7GYudRtABrXCcBudAiUzcyVKGcFJUmvL7cnswZVB9pv9G
-         cMdj769mPjA1kpaL6BoIyCmSCtZ0pD7mYms68IWw/xm2UgmTZUTGo3n/udnA+kcRRYW+
-         LvgTVdumRbcJT58FyPuBybyypznDxm8mfUvV6927HQrT+mcwScSwCcJoMpDyGMFCQPjs
-         xHNtSBlI0AiBFHX+EVbuBXDtGFCe+TP/lubL7QAXCLz48fASvwII8+8XESxr7l8VfQm5
-         MYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=JczHJPwUxUzfOEXYUhaXp6IF33XabnHLSQIw2Wsc7cs=;
-        b=Ty+daNWtCayOGAE3s5BL2JECY9AccilQiBIxwinuk66pa4WbeTCJ/XcqgRILxnrOuB
-         iZ18oCvnawhj5Ihc7+VhBG+Ls9IbJLIZUAoCJdz0XnJEGFRBnpuLo1WymDPDRBGUAg/O
-         oyJpglisVL1fz7pN86oUkLwjx0Md22ibpIMSGk3vWQj3N5rb3ba6MuR/xjvuw4LzaZ+4
-         M2tgkjlzxNzBHqiJmP+FyHNXQBYKSi3YZopgUkGOwN7+nGYIIkthbM8kPpM/lZoh+vFo
-         MAcI6mmSFYAiIwvmqfKYar4uN4j7zNCXcJPLsCGYr7DwkGh6ez5F9kkJxjkHB4T6sccR
-         p6aw==
-X-Gm-Message-State: APjAAAUBgv4SdkHaevjFyDw21bmRZvMoqrI/Q0rFKFHg3PBSkDdBoFRE
-        +XWiNvy7Fz6tvy3eNlbN5Rc=
-X-Google-Smtp-Source: APXvYqyoI9Bd7zagG6mqoF/9LiGGwkJQTi/MZwR+3veRaOYS7SFkGAa6sdRzwsnDPSV8HNp/DlKglg==
-X-Received: by 2002:a1c:1b14:: with SMTP id b20mr7780590wmb.122.1568496635033;
-        Sat, 14 Sep 2019 14:30:35 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id s10sm14403728wmf.48.2019.09.14.14.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 14:30:34 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Move ATS declarations to linux/pci-ats.h
-Date:   Sat, 14 Sep 2019 23:30:32 +0200
-Message-Id: <20190914213032.22314-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 14 Sep 2019 18:03:46 -0400
+Received: from vps.xff.cz ([195.181.215.36]:39094 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbfINWDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 18:03:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1568498623; bh=AbF8sfpZSp7CQ29ALLr+Qijb3QvQtsAkWUYeZO6ZrI4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=luZPH5cbHdQzGY7dGzdNhefpNh4xvQff5b2ivGTwUg50FEmlO3DPSdzZyjKG5sQH6
+         OsGBLW4rs++1WWZ5OgfYyDtJY4WwvnCxn80aJKfYNuRypkVKD11Bq9bqv7HbcbrV2l
+         j/AO/ge5Y+fwQGOTeUyRCpu2voV2dad0VbsvxZUg=
+From:   megous@megous.com
+To:     Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ondrej Jirman <megous@megous.com>
+Subject: [PATCH] drm: sun8i-ui/vi: Fix layer zpos change/atomic modesetting
+Date:   Sun, 15 Sep 2019 00:03:37 +0200
+Message-Id: <20190914220337.646719-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,170 +45,376 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move ATS function prototypes from include/linux/pci.h
-to include/linux/pci-ats.h as the ATS, PRI, and PASID
-interfaces are related, and are used only by the IOMMU
-drivers.  This effecively reverts the change done in
-commit ff9bee895c4d ("PCI: Move ATS declarations to
-linux/pci.h so they're all together").
+From: Ondrej Jirman <megous@megous.com>
 
-Also, remove surplus forward declaration of struct pci_ats
-from include/linux/pci.h, as it is no longer needed, since
-the struct pci_ats has been embedded directly into struct
-pci_dev in the commit d544d75ac96a ("PCI: Embed ATS info
-directly into struct pci_dev").
+There are various issues that this re-work of sun8i_[uv]i_layer_enable
+function fixes:
 
-No functional changes intended.
+- Make sure that we re-initialize zpos on reset
+- Minimize register updates by doing them only when state changes
+- Fix issue where DE pipe might get disabled even if it is no longer
+  used by the layer that's currently calling sun8i_ui_layer_enable
+- .atomic_disable callback is not really needed because .atomic_update
+  can do the disable too, so drop the duplicate code
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
-Related:
-  https://lore.kernel.org/r/20190902211100.GH7013@google.com
-  https://lore.kernel.org/r/20190724233848.73327-9-skunberg.kelsey@gmail.com
+ drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 112 ++++++++++++++++---------
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 112 ++++++++++++++++---------
+ 2 files changed, 142 insertions(+), 82 deletions(-)
 
- include/linux/pci-ats.h | 76 +++++++++++++++--------------------------
- include/linux/pci.h     | 14 --------
- 2 files changed, 28 insertions(+), 62 deletions(-)
-
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index 1ebb88e7c184..a2001673d445 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -4,74 +4,54 @@
+diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+index dd2a1c851939..b88e8ac5ad1c 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+@@ -24,10 +24,11 @@
+ #include "sun8i_ui_scaler.h"
  
- #include <linux/pci.h>
+ static void sun8i_ui_layer_enable(struct sun8i_mixer *mixer, int channel,
+-				  int overlay, bool enable, unsigned int zpos,
+-				  unsigned int old_zpos)
++				  int overlay, bool was_enabled, bool enable,
++				  unsigned int zpos, unsigned int old_zpos)
+ {
+ 	u32 val, bld_base, ch_base;
++	unsigned int old_pipe_ch;
  
--#ifdef CONFIG_PCI_PRI
-+#ifdef CONFIG_PCI_ATS
-+/* Address Translation Service */
-+int pci_enable_ats(struct pci_dev *dev, int ps);
-+void pci_disable_ats(struct pci_dev *dev);
-+int pci_ats_queue_depth(struct pci_dev *dev);
-+int pci_ats_page_aligned(struct pci_dev *dev);
-+#else /* CONFIG_PCI_ATS */
-+static inline int pci_enable_ats(struct pci_dev *d, int ps)
-+{ return -ENODEV; }
-+static inline void pci_disable_ats(struct pci_dev *d) { }
-+static inline int pci_ats_queue_depth(struct pci_dev *d)
-+{ return -ENODEV; }
-+static inline int pci_ats_page_aligned(struct pci_dev *dev)
-+{ return 0; }
-+#endif /* CONFIG_PCI_ATS */
+ 	bld_base = sun8i_blender_base(mixer);
+ 	ch_base = sun8i_channel_base(mixer, channel);
+@@ -35,28 +36,57 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer *mixer, int channel,
+ 	DRM_DEBUG_DRIVER("%sabling channel %d overlay %d\n",
+ 			 enable ? "En" : "Dis", channel, overlay);
  
-+#ifdef CONFIG_PCI_PRI
- int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- void pci_restore_pri_state(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
--
- #else /* CONFIG_PCI_PRI */
--
- static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
--{
--	return -ENODEV;
--}
--
--static inline void pci_disable_pri(struct pci_dev *pdev)
--{
--}
--
--static inline void pci_restore_pri_state(struct pci_dev *pdev)
--{
--}
--
-+{ return -ENODEV; }
-+static inline void pci_disable_pri(struct pci_dev *pdev) { }
-+static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
- static inline int pci_reset_pri(struct pci_dev *pdev)
--{
--	return -ENODEV;
--}
--
-+{ return -ENODEV; }
- #endif /* CONFIG_PCI_PRI */
+-	if (enable)
+-		val = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN;
+-	else
+-		val = 0;
++	if (!was_enabled != !enable) {
++		val = enable ? SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN : 0;
  
- #ifdef CONFIG_PCI_PASID
+-	regmap_update_bits(mixer->engine.regs,
+-			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, overlay),
+-			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN, val);
 -
- int pci_enable_pasid(struct pci_dev *pdev, int features);
- void pci_disable_pasid(struct pci_dev *pdev);
- void pci_restore_pasid_state(struct pci_dev *pdev);
- int pci_pasid_features(struct pci_dev *pdev);
- int pci_max_pasids(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
--
--#else  /* CONFIG_PCI_PASID */
--
-+#else /* CONFIG_PCI_PASID */
- static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
--{
--	return -EINVAL;
--}
--
--static inline void pci_disable_pasid(struct pci_dev *pdev)
--{
--}
--
--static inline void pci_restore_pasid_state(struct pci_dev *pdev)
--{
--}
--
-+{ return -EINVAL; }
-+static inline void pci_disable_pasid(struct pci_dev *pdev) { }
-+static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
- static inline int pci_pasid_features(struct pci_dev *pdev)
--{
--	return -EINVAL;
--}
--
-+{ return -EINVAL; }
- static inline int pci_max_pasids(struct pci_dev *pdev)
--{
--	return -EINVAL;
--}
--
-+{ return -EINVAL; }
- static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
--{
--	return 0;
--}
-+{ return 0; }
- #endif /* CONFIG_PCI_PASID */
+-	if (!enable || zpos != old_zpos) {
+ 		regmap_update_bits(mixer->engine.regs,
+-				   SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
+-				   SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
+-				   0);
++				   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, overlay),
++				   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN, val);
++	}
  
+-		regmap_update_bits(mixer->engine.regs,
++	/*
++	 * If this layer was enabled and is being disabled or if it is
++	 * enabled and just changing zpos, clear the old route, if it is
++	 * still configured to this layer in HW.
++	 */
++	if ((was_enabled && !enable) || (enable && zpos != old_zpos)) {
++		/* get channel the pipe for old_zpos is routed to from the HW */
++		regmap_read(mixer->engine.regs,
+ 				   SUN8I_MIXER_BLEND_ROUTE(bld_base),
+-				   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
+-				   0);
++				   &old_pipe_ch);
++		old_pipe_ch &= SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos);
++		old_pipe_ch >>= SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(old_zpos);
++
++		/*
++		 * Check that pipe for old_zpos is still routed to our layer,
++		 * and clear/disable it if it is.
++		 */
++
++		if (old_pipe_ch == channel) {
++			DRM_DEBUG_DRIVER("chan=%d en=%d->%d zpos=%d->%d\n",
++			       channel, was_enabled, enable, old_zpos, zpos);
++
++			DRM_DEBUG_DRIVER("  disable pipe %d\n", old_zpos);
++
++			regmap_update_bits(mixer->engine.regs,
++					   SUN8I_MIXER_BLEND_ROUTE(bld_base),
++					   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
++					   0);
++
++			regmap_update_bits(mixer->engine.regs,
++					   SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
++					   SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
++					   0);
++		}
+ 	}
+ 
+-	if (enable) {
++	/*
++	 * If enabling this layer or changin zpos, set route to this layer.
++	 */
++	if ((enable && !was_enabled) || (enable && zpos != old_zpos)) {
++		DRM_DEBUG_DRIVER("chan=%d en=%d->%d zpos=%d->%d\n",
++		       channel, was_enabled, enable, old_zpos, zpos);
++
+ 		val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
+ 
+ 		regmap_update_bits(mixer->engine.regs,
+@@ -69,6 +99,8 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer *mixer, int channel,
+ 				   SUN8I_MIXER_BLEND_ROUTE(bld_base),
+ 				   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
+ 				   val);
++
++		DRM_DEBUG_DRIVER("  enable pipe %d <- ch %d\n", zpos, channel);
+ 	}
+ }
+ 
+@@ -261,45 +293,43 @@ static int sun8i_ui_layer_atomic_check(struct drm_plane *plane,
+ 						   true, true);
+ }
+ 
+-static void sun8i_ui_layer_atomic_disable(struct drm_plane *plane,
+-					  struct drm_plane_state *old_state)
++static void sun8i_ui_layer_atomic_update(struct drm_plane *plane,
++					 struct drm_plane_state *old_state)
+ {
+ 	struct sun8i_ui_layer *layer = plane_to_sun8i_ui_layer(plane);
++	unsigned int zpos = plane->state->normalized_zpos;
+ 	unsigned int old_zpos = old_state->normalized_zpos;
+ 	struct sun8i_mixer *mixer = layer->mixer;
++	bool was_enabled = old_state->crtc && old_state->visible;
++	bool enable = plane->state->crtc && plane->state->visible;
+ 
+-	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay, false, 0,
+-			      old_zpos);
++	if (enable) {
++		sun8i_ui_layer_update_coord(mixer, layer->channel,
++					    layer->overlay, plane, zpos);
++		sun8i_ui_layer_update_formats(mixer, layer->channel,
++					      layer->overlay, plane);
++		sun8i_ui_layer_update_buffer(mixer, layer->channel,
++					     layer->overlay, plane);
++	}
++
++	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay,
++			      was_enabled, enable, zpos, old_zpos);
+ }
+ 
+-static void sun8i_ui_layer_atomic_update(struct drm_plane *plane,
+-					 struct drm_plane_state *old_state)
++void sun8i_ui_layer_plane_reset(struct drm_plane *plane)
+ {
+ 	struct sun8i_ui_layer *layer = plane_to_sun8i_ui_layer(plane);
+-	unsigned int zpos = plane->state->normalized_zpos;
+-	unsigned int old_zpos = old_state->normalized_zpos;
+-	struct sun8i_mixer *mixer = layer->mixer;
+ 
+-	if (!plane->state->visible) {
+-		sun8i_ui_layer_enable(mixer, layer->channel,
+-				      layer->overlay, false, 0, old_zpos);
++	drm_atomic_helper_plane_reset(plane);
++	if (!plane->state)
+ 		return;
+-	}
+ 
+-	sun8i_ui_layer_update_coord(mixer, layer->channel,
+-				    layer->overlay, plane, zpos);
+-	sun8i_ui_layer_update_formats(mixer, layer->channel,
+-				      layer->overlay, plane);
+-	sun8i_ui_layer_update_buffer(mixer, layer->channel,
+-				     layer->overlay, plane);
+-	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay,
+-			      true, zpos, old_zpos);
++	plane->state->zpos = layer->channel;
+ }
+ 
+ static struct drm_plane_helper_funcs sun8i_ui_layer_helper_funcs = {
+ 	.prepare_fb	= drm_gem_fb_prepare_fb,
+ 	.atomic_check	= sun8i_ui_layer_atomic_check,
+-	.atomic_disable	= sun8i_ui_layer_atomic_disable,
+ 	.atomic_update	= sun8i_ui_layer_atomic_update,
+ };
+ 
+@@ -308,7 +338,7 @@ static const struct drm_plane_funcs sun8i_ui_layer_funcs = {
+ 	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
+ 	.destroy		= drm_plane_cleanup,
+ 	.disable_plane		= drm_atomic_helper_disable_plane,
+-	.reset			= drm_atomic_helper_plane_reset,
++	.reset			= sun8i_ui_layer_plane_reset,
+ 	.update_plane		= drm_atomic_helper_update_plane,
+ };
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+index bd0e6a52d1d8..675ebcdac00b 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+@@ -18,10 +18,11 @@
+ #include "sun8i_vi_scaler.h"
+ 
+ static void sun8i_vi_layer_enable(struct sun8i_mixer *mixer, int channel,
+-				  int overlay, bool enable, unsigned int zpos,
+-				  unsigned int old_zpos)
++				  int overlay, bool was_enabled, bool enable,
++				  unsigned int zpos, unsigned int old_zpos)
+ {
+ 	u32 val, bld_base, ch_base;
++	unsigned int old_pipe_ch;
+ 
+ 	bld_base = sun8i_blender_base(mixer);
+ 	ch_base = sun8i_channel_base(mixer, channel);
+@@ -29,28 +30,57 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer *mixer, int channel,
+ 	DRM_DEBUG_DRIVER("%sabling VI channel %d overlay %d\n",
+ 			 enable ? "En" : "Dis", channel, overlay);
+ 
+-	if (enable)
+-		val = SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN;
+-	else
+-		val = 0;
 -
--#endif /* LINUX_PCI_ATS_H*/
-+#endif /* LINUX_PCI_ATS_H */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 56767f50ad96..5f2ae580bd19 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -284,7 +284,6 @@ struct irq_affinity;
- struct pcie_link_state;
- struct pci_vpd;
- struct pci_sriov;
--struct pci_ats;
- struct pci_p2pdma;
+-	regmap_update_bits(mixer->engine.regs,
+-			   SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base, overlay),
+-			   SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN, val);
++	if (!was_enabled != !enable) {
++		val = enable ? SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN : 0;
  
- /* The pci_dev structure describes PCI devices */
-@@ -1764,19 +1763,6 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
- static inline bool pci_ats_disabled(void) { return true; }
- #endif /* CONFIG_PCI */
+-	if (!enable || zpos != old_zpos) {
+ 		regmap_update_bits(mixer->engine.regs,
+-				   SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
+-				   SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
+-				   0);
++				   SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base, overlay),
++				   SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN, val);
++	}
  
--#ifdef CONFIG_PCI_ATS
--/* Address Translation Service */
--int pci_enable_ats(struct pci_dev *dev, int ps);
--void pci_disable_ats(struct pci_dev *dev);
--int pci_ats_queue_depth(struct pci_dev *dev);
--int pci_ats_page_aligned(struct pci_dev *dev);
--#else
--static inline int pci_enable_ats(struct pci_dev *d, int ps) { return -ENODEV; }
--static inline void pci_disable_ats(struct pci_dev *d) { }
--static inline int pci_ats_queue_depth(struct pci_dev *d) { return -ENODEV; }
--static inline int pci_ats_page_aligned(struct pci_dev *dev) { return 0; }
--#endif
--
- /* Include architecture-dependent settings and functions */
+-		regmap_update_bits(mixer->engine.regs,
++	/*
++	 * If this layer was enabled and is being disabled or if it is
++	 * enabled and just changing zpos, clear the old route, if it is
++	 * still configured to this layer in HW.
++	 */
++	if ((was_enabled && !enable) || (enable && zpos != old_zpos)) {
++		/* get channel the pipe for old_zpos is routed to from the HW */
++		regmap_read(mixer->engine.regs,
+ 				   SUN8I_MIXER_BLEND_ROUTE(bld_base),
+-				   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
+-				   0);
++				   &old_pipe_ch);
++		old_pipe_ch &= SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos);
++		old_pipe_ch >>= SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(old_zpos);
++
++		/*
++		 * Check that pipe for old_zpos is still routed to our layer,
++		 * and clear/disable it if it is.
++		 */
++
++		if (old_pipe_ch == channel) {
++			DRM_DEBUG_DRIVER("chan=%d en=%d->%d zpos=%d->%d\n",
++			       channel, was_enabled, enable, old_zpos, zpos);
++
++			DRM_DEBUG_DRIVER("  disable pipe %d\n", old_zpos);
++
++			regmap_update_bits(mixer->engine.regs,
++					   SUN8I_MIXER_BLEND_ROUTE(bld_base),
++					   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
++					   0);
++
++			regmap_update_bits(mixer->engine.regs,
++					   SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
++					   SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
++					   0);
++		}
+ 	}
  
- #include <asm/pci.h>
+-	if (enable) {
++	/*
++	 * If enabling this layer or changin zpos, set route to this layer.
++	 */
++	if ((enable && !was_enabled) || (enable && zpos != old_zpos)) {
++		DRM_DEBUG_DRIVER("chan=%d en=%d->%d zpos=%d->%d\n",
++		       channel, was_enabled, enable, old_zpos, zpos);
++
+ 		val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
+ 
+ 		regmap_update_bits(mixer->engine.regs,
+@@ -63,6 +93,8 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer *mixer, int channel,
+ 				   SUN8I_MIXER_BLEND_ROUTE(bld_base),
+ 				   SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
+ 				   val);
++
++		DRM_DEBUG_DRIVER("  enable pipe %d <- ch %d\n", zpos, channel);
+ 	}
+ }
+ 
+@@ -345,45 +377,43 @@ static int sun8i_vi_layer_atomic_check(struct drm_plane *plane,
+ 						   true, true);
+ }
+ 
+-static void sun8i_vi_layer_atomic_disable(struct drm_plane *plane,
+-					  struct drm_plane_state *old_state)
++static void sun8i_vi_layer_atomic_update(struct drm_plane *plane,
++					 struct drm_plane_state *old_state)
+ {
+ 	struct sun8i_vi_layer *layer = plane_to_sun8i_vi_layer(plane);
++	unsigned int zpos = plane->state->normalized_zpos;
+ 	unsigned int old_zpos = old_state->normalized_zpos;
+ 	struct sun8i_mixer *mixer = layer->mixer;
++	bool was_enabled = old_state->crtc && old_state->visible;
++	bool enable = plane->state->crtc && plane->state->visible;
+ 
+-	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay, false, 0,
+-			      old_zpos);
++	if (enable) {
++		sun8i_vi_layer_update_coord(mixer, layer->channel,
++					    layer->overlay, plane, zpos);
++		sun8i_vi_layer_update_formats(mixer, layer->channel,
++					      layer->overlay, plane);
++		sun8i_vi_layer_update_buffer(mixer, layer->channel,
++					     layer->overlay, plane);
++	}
++
++	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay,
++			      was_enabled, enable, zpos, old_zpos);
+ }
+ 
+-static void sun8i_vi_layer_atomic_update(struct drm_plane *plane,
+-					 struct drm_plane_state *old_state)
++void sun8i_vi_layer_plane_reset(struct drm_plane *plane)
+ {
+ 	struct sun8i_vi_layer *layer = plane_to_sun8i_vi_layer(plane);
+-	unsigned int zpos = plane->state->normalized_zpos;
+-	unsigned int old_zpos = old_state->normalized_zpos;
+-	struct sun8i_mixer *mixer = layer->mixer;
+ 
+-	if (!plane->state->visible) {
+-		sun8i_vi_layer_enable(mixer, layer->channel,
+-				      layer->overlay, false, 0, old_zpos);
++	drm_atomic_helper_plane_reset(plane);
++	if (!plane->state)
+ 		return;
+-	}
+ 
+-	sun8i_vi_layer_update_coord(mixer, layer->channel,
+-				    layer->overlay, plane, zpos);
+-	sun8i_vi_layer_update_formats(mixer, layer->channel,
+-				      layer->overlay, plane);
+-	sun8i_vi_layer_update_buffer(mixer, layer->channel,
+-				     layer->overlay, plane);
+-	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay,
+-			      true, zpos, old_zpos);
++	plane->state->zpos = layer->channel;
+ }
+ 
+ static struct drm_plane_helper_funcs sun8i_vi_layer_helper_funcs = {
+ 	.prepare_fb	= drm_gem_fb_prepare_fb,
+ 	.atomic_check	= sun8i_vi_layer_atomic_check,
+-	.atomic_disable	= sun8i_vi_layer_atomic_disable,
+ 	.atomic_update	= sun8i_vi_layer_atomic_update,
+ };
+ 
+@@ -392,7 +422,7 @@ static const struct drm_plane_funcs sun8i_vi_layer_funcs = {
+ 	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
+ 	.destroy		= drm_plane_cleanup,
+ 	.disable_plane		= drm_atomic_helper_disable_plane,
+-	.reset			= drm_atomic_helper_plane_reset,
++	.reset			= sun8i_vi_layer_plane_reset,
+ 	.update_plane		= drm_atomic_helper_update_plane,
+ };
+ 
 -- 
 2.23.0
 
