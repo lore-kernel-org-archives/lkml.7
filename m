@@ -2,123 +2,71 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9C3C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C1EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB3720830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p+1sJx9v"
+	by mail.kernel.org (Postfix) with ESMTP id 77BC720830
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbfINMqT (ORCPT
+        id S2388418AbfINMxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 08:46:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43330 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388285AbfINMqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 08:46:18 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2001:8a0:6be4:9301:a728:6099:33:a27c])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 07AD323F;
-        Sat, 14 Sep 2019 14:46:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568465177;
-        bh=kP78qeVzxj8IgqFihuf0gbCi+PoKLewsjvH2ZG/JaEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p+1sJx9vO3i4y/tnABWlnx2LuFyam31NQADCy3rw4LGD2HyhiaISPCODgCw/jVv3/
-         JnoeDYNjBVkLtNNjOA773d5/sWy9Fia1qeTMcFMMq78oDbu5NT0S9oBGLClVVHmIM5
-         e57qnUVC9i+eZEFMWh9gc/VtiSZ1/6qS5178VEps=
-Date:   Sat, 14 Sep 2019 15:46:09 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] media: uvcvideo: Fix a typo in UVC_METATADA_BUF_SIZE
-Message-ID: <20190914124609.GE4734@pendragon.ideasonboard.com>
-References: <20190724045612.29870-1-christophe.jaillet@wanadoo.fr>
+        Sat, 14 Sep 2019 08:53:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44514 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387462AbfINMxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 08:53:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 05:53:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="361078798"
+Received: from krusocki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.34])
+  by orsmga005.jf.intel.com with ESMTP; 14 Sep 2019 05:53:42 -0700
+Date:   Sat, 14 Sep 2019 13:53:41 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Add a git and a maintainer entry to keyring
+ subsystems
+Message-ID: <20190914125341.GB9560@linux.intel.com>
+References: <20190910143228.30305-1-jarkko.sakkinen@linux.intel.com>
+ <11580.1568387033@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724045612.29870-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <11580.1568387033@warthog.procyon.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
-
-Thank you for the patch.
-
-On Wed, Jul 24, 2019 at 06:56:12AM +0200, Christophe JAILLET wrote:
-> It is likely that it should be UVC_METADATA_BUF_SIZE instead.
-> Fix it and use it.
+On Fri, Sep 13, 2019 at 04:03:53PM +0100, David Howells wrote:
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Oops indeed. Applied to my tree for v5.5.
-
-> ---
->  drivers/media/usb/uvc/uvc_metadata.c | 4 ++--
->  drivers/media/usb/uvc/uvc_queue.c    | 2 +-
->  drivers/media/usb/uvc/uvcvideo.h     | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
+> > Subject: [PATCH] MAINTAINERS: Add a git and a maintainer entry to keyring subsystems
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> index 99bb71b47117..b6279ad7ac84 100644
-> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> @@ -51,7 +51,7 @@ static int uvc_meta_v4l2_get_format(struct file *file, void *fh,
->  	memset(fmt, 0, sizeof(*fmt));
->  
->  	fmt->dataformat = stream->meta.format;
-> -	fmt->buffersize = UVC_METATADA_BUF_SIZE;
-> +	fmt->buffersize = UVC_METADATA_BUF_SIZE;
->  
->  	return 0;
->  }
-> @@ -72,7 +72,7 @@ static int uvc_meta_v4l2_try_format(struct file *file, void *fh,
->  
->  	fmt->dataformat = fmeta == dev->info->meta_format
->  			? fmeta : V4L2_META_FMT_UVC;
-> -	fmt->buffersize = UVC_METATADA_BUF_SIZE;
-> +	fmt->buffersize = UVC_METADATA_BUF_SIZE;
->  
->  	return 0;
->  }
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index da72577c2998..cd60c6c1749e 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -79,7 +79,7 @@ static int uvc_queue_setup(struct vb2_queue *vq,
->  
->  	switch (vq->type) {
->  	case V4L2_BUF_TYPE_META_CAPTURE:
-> -		size = UVC_METATADA_BUF_SIZE;
-> +		size = UVC_METADATA_BUF_SIZE;
->  		break;
->  
->  	default:
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index c7c1baa90dea..f773dc5d802c 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -491,7 +491,7 @@ struct uvc_stats_stream {
->  	unsigned int max_sof;		/* Maximum STC.SOF value */
->  };
->  
-> -#define UVC_METATADA_BUF_SIZE 1024
-> +#define UVC_METADATA_BUF_SIZE 1024
->  
->  /**
->   * struct uvc_copy_op: Context structure to schedule asynchronous memcpy
+> I would recommend splitting the patch in two and putting something like:
+> 
+> 	keys: Add Jarkko Sakkinen as co-maintainer
+> 
+> as the subject of the keyrings maintainership one.
 
--- 
-Regards,
+Thanks, I'll refine accordingly.
 
-Laurent Pinchart
+/Jarkko
