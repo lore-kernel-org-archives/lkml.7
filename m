@@ -2,167 +2,110 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA41C49ED6
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0063C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E852081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9744E20830
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SbUR5RPO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDoMKQfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfINIeT (ORCPT
+        id S1727551AbfINIjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 04:34:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50929 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbfINIeS (ORCPT
+        Sat, 14 Sep 2019 04:39:25 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33684 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfINIjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 04:34:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c10so4970902wmc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 01:34:16 -0700 (PDT)
+        Sat, 14 Sep 2019 04:39:24 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so16571937pgn.0;
+        Sat, 14 Sep 2019 01:39:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XR6myC8ho3Zej/eH269mFAfC2Y8Rr1vm2wEQ0SW3QIM=;
-        b=SbUR5RPOuUNyQeNzfYfeB6OeQLcLvmimHMbQ0lfCgI9OkPbhxzuW48hZRnG0VMKekZ
-         NoZASYUY0uodnwMYgczuvv8Tae/KJ5HdAtwKSk/FNJTCgbaMZ0qAF+pC8cQR+mO/yImw
-         QSIfR22Q7QzuliXF3Ek2+SSJRhF1Y2R8U3Ff0=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MFBj5Xpt4eX33W4LGNmdyfPk2/8Ey1tboMZgwQx+h30=;
+        b=aDoMKQflAcyUyhsvqbZu2m7kB2fXM7OYswWp9+0YVx4fAqxvk052jB3dhIL1Ujy4Qa
+         ovyeja0MDqKjXd9MNKU+Q5fD04uFAjP5XTAsdjImiXaWgx60knHqGtsjNj4NhvyAKoPh
+         m0QWVGIPnMkhOAzgV2K4Gv4b5b6Xn23hrpZgNvMzLtrS8ZVFG6GPm9xTwcmQRTCYO8uy
+         XhJrb9CFytfdmnfuAH98x918EPtIVWrcK0k4O2bB5Fc6jlukTm103WKSEygg8gyPRMHE
+         vZ7rkPn863XWORMAL7t/pQmkDZA4ywGWTIbwdH6vp/pnTSaixKwR5BdOGbQ0isl14eLx
+         LObw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XR6myC8ho3Zej/eH269mFAfC2Y8Rr1vm2wEQ0SW3QIM=;
-        b=O6jDgbLp3KZ3McWKy2oonz1xihXkVWJniGNpNUFPr4/L94csGcVIJltOstdfYFoZB4
-         8pC1cQ1fn1lHxNdgMOE0nUNPGk++KHtroSesq7/iclDX2ZsJDW3d00M2J6/6GPLlEq4w
-         Q8BDiQ+12nrj+ik3xItzI5oGUlXoTFtgGVkISDWbopjNYLGG1mngiQ8VQIuylvyBOcQa
-         z3/UiMdFMhf8RZwG27mq40Lirq2BQqu0mHOSyJP3oO8c8kr5GKjp8XNekxAQFEoIL3+X
-         BO/4y4jGTqyBgSzFH2RNxhO2Fg0MgDn2NVk+266kFo0zoHLe1Qtmpa6y3fJYG6j0t3GT
-         Ev3A==
-X-Gm-Message-State: APjAAAWoAEzsZreRiS3bP58NI4ND0A19+7ojB2rUjz/UvFb5or2XyjQB
-        W1M4OCRhBPz2/zk7NPBsvwDXEpk0g2pQkrA5JZMvDw==
-X-Google-Smtp-Source: APXvYqyFGOghYBtS/OOI3emUQG5Xe6OdZI24dVnaEB1q2J6IBDsVyIBIPl1/zYZxsBLy5kLeU4e51R7yO0A8vLtaNrI=
-X-Received: by 2002:a05:600c:2049:: with SMTP id p9mr5975406wmg.30.1568450055796;
- Sat, 14 Sep 2019 01:34:15 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MFBj5Xpt4eX33W4LGNmdyfPk2/8Ey1tboMZgwQx+h30=;
+        b=bXvcgX2VUlK5T9PiuzznMkIYYbqefSU9xyHSqwtnytbs6hFmnlBJEMCEYqO57S0KAg
+         rFFJwhaP/sygY351aG6QzUewwDNecinNCxRGFg4wrmloPBBvoiixb8dkeEhrXF3GFFmX
+         4KMK7T4hCbWUDDAYWsW8OT/Id91JEx8vejwZJX8yrWLm4AfC4MRSaQ/Z74iMoRXJdUEk
+         r2Yqbn1YTh3G/aIEQP4oS0/GJUtF5NOJVuky1cO/97LinDOcTM/QSjZ0DVYK2cXvTttR
+         +0UhqMp6ZGZMmhu0uvfwtuYSZnydFG64ukjcj8EHNb0OXNcFAAfRFPNBtbEJz/QnE46K
+         D0TQ==
+X-Gm-Message-State: APjAAAV/mgX0b1KjFq0/lqvrTTnaMdWI9ZllQ73+kNvuZpyay0Cnrfcq
+        pa3htbPM6le5XVQApuOPGEQOVM6K
+X-Google-Smtp-Source: APXvYqyPhp+EV1suabAlDOxqi/WA0A9DHYdQqTBrc4KmHBgQigdEbpx57Iq3wBerYu0q09i7JIkl4A==
+X-Received: by 2002:a65:64c4:: with SMTP id t4mr43929079pgv.298.1568450363993;
+        Sat, 14 Sep 2019 01:39:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k4sm4210996pjl.9.2019.09.14.01.39.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Sep 2019 01:39:23 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <20190913130440.264749443@linuxfoundation.org>
+ <aefa6832-073e-493c-8576-5b2f06e714fb@roeck-us.net>
+ <20190914083126.GA523517@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <e2e978d3-38a0-a845-53f9-3634b14b43bf@roeck-us.net>
+Date:   Sat, 14 Sep 2019 01:39:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190912022740.161798-1-yuhsuan@chromium.org> <f2d9e339-ef96-8bb4-7360-422d317a470f@linux.intel.com>
- <CAGvk5PpCOG0Jii_vksrewZ_Dfmc+OVM9C6pkCYLY=n+ac-wVaA@mail.gmail.com> <bd442561-8fd9-0814-66c6-e08a21bb1a97@linux.intel.com>
-In-Reply-To: <bd442561-8fd9-0814-66c6-e08a21bb1a97@linux.intel.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Sat, 14 Sep 2019 16:34:04 +0800
-Message-ID: <CAGvk5Ppg-dnfO-hHWps+MeWEYhqZmehEUXNn3MvL5VJwKmM5JQ@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add
- dmic format constraint
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190914083126.GA523517@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> =E6=96=BC
-2019=E5=B9=B49=E6=9C=8814=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=881:2=
-8=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> please don't top-post on public mailing lists, thanks.
->
-> On 9/13/19 9:45 AM, Yu-Hsuan Hsu wrote:
-> > Thanks for the review! If I'm not mistaken, the microphone is attached
-> > to external codec(rt5514) instead of PCH on Kabylake platform. So there
-> > should be a TDM between DMICs and PCH. We can see in the
-> > kabylake_ssp0_hw_params function, there are some operations about
-> > setting tdm slot_width to 16 bits. Therefore, I think it only supports
-> > S16_LE format for DMICs. Is it correct?
->
-> Ah yes, ok. we have other machine drivers where dmic refers to the PCH
-> attached case, thanks for the precision.
->
-> I am still not clear on the problem, you are adding this constraint to a
-> front-end, so in theory the copier element in the firmware should take
-> care of converting from 16-bits recorded on the TDM link to the 24 bits
-> used by the application. Is this not the case? is this patch based on an
-> actual error and if yes can you share more information to help check
-> where the problem happens, topology maybe?
+On 9/14/19 1:31 AM, Greg Kroah-Hartman wrote:
+> On Sat, Sep 14, 2019 at 01:28:39AM -0700, Guenter Roeck wrote:
+>> On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.9.193 release.
+>>> There are 14 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+>>> Anything received after that time might be too late.
+>>>
+>>
+>> Is it really only me seeing this ?
+>>
+>> drivers/vhost/vhost.c: In function 'translate_desc':
+>> include/linux/compiler.h:549:38: error: call to '__compiletime_assert_1879' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
+>>
+>> i386:allyesconfig, mips:allmodconfig and others, everywhere including
+>> mainline. Culprit is commit a89db445fbd7f1 ("vhost: block speculation
+>> of translated descriptors").
+> 
+> Nope, I just got another report of this on 5.2.y.  Problem is also in
+> Linus's tree :(
+> 
 
-If we use 24 bits format on that device to record, the audio samples
-it returns are still in 16 bits. So the rate we measured is only the
-half of the expected rate. It's a real problem. Apart from the rate,
-the audio samples are also wrong if we still decode them with 24 bits
-format. Therefore, the better fix is to add a constraint to remove
-24bits support.
+Sending a fix in a minute. I'll copy you and Linus.
 
-By the way, we found this issue by "ALSA conformance test", which is a
-new tool to verify audio drivers.
-(https://chromium.googlesource.com/chromiumos/platform/audiotest/+/master/a=
-lsa_conformance_test.md)
-
->
-> >
-> > Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com
-> > <mailto:pierre-louis.bossart@linux.intel.com>> =E6=96=BC 2019=E5=B9=B49=
-=E6=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B
-> > =E5=8D=889:02=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> >     On 9/11/19 9:27 PM, Yu-Hsuan Hsu wrote:
-> >      > 24 bits recording from DMIC is not supported for KBL platform be=
-cause
-> >      > the TDM slot between PCH and codec is 16 bits only. We should ad=
-d a
-> >      > constraint to remove that unsupported format.
-> >
-> >     Humm, when you use DMICs they are directly connected to the PCH wit=
-h a
-> >     standard 1-bit PDM. There is no notion of TDM or slot.
-> >
-> >     It could very well be that the firmware/topology only support 16 bi=
-t (I
-> >     vaguely recall another case where 24 bits was added), but the
-> >     description in the commit message would need to be modified to make=
- the
-> >     reason for this change clearer.
-> >
-> >      >
-> >      > Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org
-> >     <mailto:yuhsuan@chromium.org>>
-> >      > ---
-> >      >   sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
-> >      >   1 file changed, 3 insertions(+)
-> >      >
-> >      > diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> >     b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> >      > index 74dda8784f1a01..67b276a65a8d2d 100644
-> >      > --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> >      > +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> >      > @@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct
-> >     snd_pcm_substream *substream)
-> >      >       snd_pcm_hw_constraint_list(runtime, 0,
-> >     SNDRV_PCM_HW_PARAM_CHANNELS,
-> >      >                       dmic_constraints);
-> >      >
-> >      > +     runtime->hw.formats =3D SNDRV_PCM_FMTBIT_S16_LE;
-> >      > +     snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
-> >      > +
-> >      >       return snd_pcm_hw_constraint_list(substream->runtime, 0,
-> >      >                       SNDRV_PCM_HW_PARAM_RATE, &constraints_rate=
-s);
-> >      >   }
-> >      >
-> >
->
+Guenter
