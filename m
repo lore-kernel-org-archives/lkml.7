@@ -2,52 +2,49 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722C0C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AABC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5450C2081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AAC20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfINRJj (ORCPT
+        id S1730312AbfINRTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 13:09:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:46516 "EHLO mga11.intel.com"
+        Sat, 14 Sep 2019 13:19:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40948 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfINRJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 13:09:38 -0400
+        id S1728338AbfINRTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 13:19:54 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 10:09:37 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 10:19:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="188186220"
+X-IronPort-AV: E=Sophos;i="5.64,489,1559545200"; 
+   d="scan'208";a="361116939"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 14 Sep 2019 10:09:34 -0700
+  by orsmga005.jf.intel.com with ESMTP; 14 Sep 2019 10:19:51 -0700
 Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i9BYD-0005Gw-HZ; Sat, 14 Sep 2019 20:09:33 +0300
-Date:   Sat, 14 Sep 2019 20:09:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: mdio: switch to using gpiod_get_optional()
-Message-ID: <20190914170933.GV2680@smile.fi.intel.com>
-References: <20190913225547.GA106494@dtor-ws>
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1i9BiA-0005ON-SK; Sat, 14 Sep 2019 20:19:50 +0300
+Date:   Sat, 14 Sep 2019 20:19:50 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        prarit@redhat.com, darcari@redhat.com
+Subject: Re: [PATCH 0/5] tools/power/x86/intel-speed-select: New command and
+Message-ID: <20190914171950.GW2680@smile.fi.intel.com>
+References: <20190914070513.19807-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190913225547.GA106494@dtor-ws>
+In-Reply-To: <20190914070513.19807-1-srinivas.pandruvada@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,77 +52,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 03:55:47PM -0700, Dmitry Torokhov wrote:
-> The MDIO device reset line is optional and now that gpiod_get_optional()
-> returns proper value when GPIO support is compiled out, there is no
-> reason to use fwnode_get_named_gpiod() that I plan to hide away.
-> 
-> Let's switch to using more standard gpiod_get_optional() and
-> gpiod_set_consumer_name() to keep the nice "PHY reset" label.
-> 
-> Also there is no reason to only try to fetch the reset GPIO when we have
-> OF node, gpiolib can fetch GPIO data from firmwares as well.
-> 
+On Sat, Sep 14, 2019 at 12:05:08AM -0700, Srinivas Pandruvada wrote:
+> This series contains some minor fixes, when firmware mask is including
+> invalid CPU in the perf-profile mask. Also add some commands to
+> better manage core-power feature.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hmm... 150+ LOCs doesn't count to me as minor fixes.
+So, are you considering this a material for v5.4?
 
-But see comment below.
 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+> Srinivas Pandruvada (4):
+>   tools/power/x86/intel-speed-select: Allow online/offline based on tdp
+>   tools/power/x86/intel-speed-select: Format get-assoc information
+>   tools/power/x86/intel-speed-select: Fix some debug prints
+>   tools/power/x86/intel-speed-select: Extend core-power command set
 > 
-> Note this is an update to a patch titled "[PATCH 05/11] net: mdio:
-> switch to using fwnode_gpiod_get_index()" that no longer uses the new
-> proposed API and instead works with already existing ones.
+> Youquan Song (1):
+>   tools/power/x86/intel-speed-select: Fix high priority core mask over
+>     count
 > 
->  drivers/net/phy/mdio_bus.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> index ce940871331e..2e29ab841b4d 100644
-> --- a/drivers/net/phy/mdio_bus.c
-> +++ b/drivers/net/phy/mdio_bus.c
-> @@ -42,21 +42,17 @@
->  
->  static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
->  {
-> -	struct gpio_desc *gpiod = NULL;
-> +	int error;
->  
->  	/* Deassert the optional reset signal */
-> -	if (mdiodev->dev.of_node)
-> -		gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
-> -					       "reset-gpios", 0, GPIOD_OUT_LOW,
-> -					       "PHY reset");
-> -	if (IS_ERR(gpiod)) {
-> -		if (PTR_ERR(gpiod) == -ENOENT || PTR_ERR(gpiod) == -ENOSYS)
-> -			gpiod = NULL;
-> -		else
-> -			return PTR_ERR(gpiod);
-> -	}
-> -
-> -	mdiodev->reset_gpio = gpiod;
-> +	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
-> +						 "reset", GPIOD_OUT_LOW);
-> +	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
-> +	if (error)
-> +		return error;
-> +
-
-> +	if (mdiodev->reset_gpio)
-
-This is redundant check.
-
-> +		gpiod_set_consumer_name(mdiodev->reset_gpio, "PHY reset");
-
->  	return 0;
->  }
-> -- 
-> 2.23.0.237.gc6a4ce50a0-goog
-> 
+>  .../x86/intel-speed-select/isst-config.c      | 108 ++++++++++++++++--
+>  .../power/x86/intel-speed-select/isst-core.c  |  25 ++++
+>  .../x86/intel-speed-select/isst-display.c     |  51 +++++++++
+>  tools/power/x86/intel-speed-select/isst.h     |   9 +-
+>  4 files changed, 182 insertions(+), 11 deletions(-)
 > 
 > -- 
-> Dmitry
+> 2.17.2
+> 
 
 -- 
 With Best Regards,
