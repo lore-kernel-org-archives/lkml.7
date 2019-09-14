@@ -2,101 +2,116 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004C3C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DD0C4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0249206A4
+	by mail.kernel.org (Postfix) with ESMTP id E7C5B20830
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568487615;
-	bh=37IvijjFuupsgBwgNMJ+CIwvfr2qauanGY8JlDbpl6A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0qXRKGHQUyk7F+1b+N4mcTE7kkRZZjFPRKhDNG6UlKlg+SahVaUSWzlPiXCWQJgAq
-	 Oxj2KGbR6MHhBJQpy6QW2n6W+rx8ph24izkXLy5lffn9WACSaLIf3DWqgWhgMsGCNL
-	 7MuUv3Eyns0rKpEt1a8xPGD3PjnH0uiKgkDRscs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfINS6Q (ORCPT
+        id S1727555AbfINTAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 14:58:16 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:35948 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfINS6Q (ORCPT
+        Sat, 14 Sep 2019 15:00:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38733 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfINTAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 14:58:16 -0400
-Received: by mail-lf1-f49.google.com with SMTP id x80so24490467lff.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 11:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h9T2Df0KjH101ElzcVxUw1FxV6D3+L4nI+Law0dbRy4=;
-        b=MOyVrEu6UmGVN4sTwsa/UWQEkUMczcxFBYYr8mVpBJvuuAF63Fm4OBytPLXkB7TXBC
-         F4pS1BG12Z1TXOJj44TYpOfOGhZqXDHyM4cwTKft9zb8wq8Rx6seNb516HVcRyIl0Lru
-         p3u7T22+Ubj/c8y0owXwgT+aZAvgt9Fr4pLeE=
+        Sat, 14 Sep 2019 15:00:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w10so3618037plq.5
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 12:00:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h9T2Df0KjH101ElzcVxUw1FxV6D3+L4nI+Law0dbRy4=;
-        b=G6tO1GDut7EWI+N3Ry7ZGAXwHxokXR6WvJWeUdkFGxxQ4IvnLcjL7upxjNlM7nnSOP
-         wPdOOHuEPthiUNkjVxYCyGd0JIYxoj+G7aLUXB9600QR5uqtr1ViBwFDhrBungIlhOva
-         ldgumqI7Xq/lSckAmWPdV/M20LEtRZwigDDcEhEeJb0udL8XDznZjWtCizKRaZ15FVgW
-         cZK1oP7MKgpPPaEV7dyhqddRXiYZ24KhT5AB0TWTuWqP+idZrw1MtM7BSmnqAZ7n8xmB
-         nfWDvWHKyTsm8wTQxrzfC0cw/rsUPmXlossW5NXGfYcrMznT28FItLvczZHSOdPJtWRt
-         9L7g==
-X-Gm-Message-State: APjAAAWk+Ib3vQymO+DCfVhuONyku3aRYEeLEloAnt3MywOVhY+3FYlf
-        dTVXUTlzPZXm8lgQJ88PUOQiaGWuAiY=
-X-Google-Smtp-Source: APXvYqzYvyn0frdWRMeuG4sPmJfGL4nAb/Z4Xq5+ZraRD5ZlUp+6JuqPv9oD+Xi9S/4da0g/qNlV+w==
-X-Received: by 2002:a05:6512:4dd:: with SMTP id w29mr13135117lfq.2.1568487494014;
-        Sat, 14 Sep 2019 11:58:14 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id z7sm2362275ljc.9.2019.09.14.11.58.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Sep 2019 11:58:12 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id u28so3685332lfc.5
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 11:58:12 -0700 (PDT)
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr34936394lfp.61.1568487491890;
- Sat, 14 Sep 2019 11:58:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPM=9tws0GHMQd0Byunw3XJXq2vqsbbkoR-rqOxfL3f+Rptscw@mail.gmail.com>
-In-Reply-To: <CAPM=9tws0GHMQd0Byunw3XJXq2vqsbbkoR-rqOxfL3f+Rptscw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 14 Sep 2019 11:57:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wja+f_PCuibu+NqkTD_YL1AY2x4wgX6EwQ3oxCyMTw_9w@mail.gmail.com>
-Message-ID: <CAHk-=wja+f_PCuibu+NqkTD_YL1AY2x4wgX6EwQ3oxCyMTw_9w@mail.gmail.com>
-Subject: Re: drm fixes for 5.3-rc9
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=OFiiJYwXSRXINvUze1d4KfmURKJMOMB0TZAHUxFChKg=;
+        b=qSoaRn0uaGeslazp6ByoAbL402HQmXJOO19f1Pmu4g27CQkrYBiRhqmYTyewjKuTh1
+         9aDMOP1kMB7hb9hNLbV7+6uBLDkThdJxnGUMMqgfabk4doh/gwI7s2NTk2hZfeMH7b+z
+         bMHYJUKRJKjd01GzSxF55XMQcw/L9oVU4WiDCA1toqD0VclGQDIBsgKveB9Jo9BDSRQy
+         8TZvGH1Z1dfrAtbMOdmOU4hI7iNurQpk5AW+FIgn1oLfvB1QxyRD5nBmeyBi8mOH5gZs
+         isyhUqJGctRSM22xY60FArcb91kg1zATnw2+HAS4OfQLOW2ApI0vrMxrFHwzJyJDjCfG
+         yfCg==
+X-Gm-Message-State: APjAAAXnxcFsSHa4gNfTTJOhccZAx7HOzptrvUpu5rVCuVs881sv13ky
+        InGcY6QqBgPgmSd+Ejr+DYrA6g==
+X-Google-Smtp-Source: APXvYqwCAZIGEJCOA0b/9T/YR7nXDut4D/Hkv2inKbJ3jCXen5H++uow94dW28QTx1kGUiJX/cXH7Q==
+X-Received: by 2002:a17:902:8488:: with SMTP id c8mr52750200plo.164.1568487613263;
+        Sat, 14 Sep 2019 12:00:13 -0700 (PDT)
+Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
+        by smtp.gmail.com with ESMTPSA id u24sm41073974pgk.31.2019.09.14.12.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 12:00:12 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 12:00:12 -0700 (PDT)
+X-Google-Original-Date: Sat, 14 Sep 2019 11:50:32 PDT (-0700)
+Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <529ec882-734f-17ae-e4cb-3aeb563ad1d5@bluespec.com>
+CC:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Darius Rad <darius@bluespec.com>
+Message-ID: <mhng-c06cc89b-42d9-4f95-b090-2db96628d5fb@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 8:56 AM Dave Airlie <airlied@gmail.com> wrote:
+On Thu, 12 Sep 2019 14:40:34 PDT (-0700), Darius Rad wrote:
+> As per the existing comment, irq_mask and irq_unmask do not need
+> to do anything for the PLIC.  However, the functions must exist
+> (the pointers cannot be NULL) as they are not optional, based on
+> the documentation (Documentation/core-api/genericirq.rst) as well
+> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
 >
-> Hey Linus,
+> Signed-off-by: Darius Rad <darius@bluespec.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 >
-> From the maintainer summit, just some last minute fixes for final,
-> details in the tag.
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index cf755964f2f8..52d5169f924f 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>  }
+>
+> +/*
+> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> + * by reading claim and "unmasked" when writing it back.
+> + */
+> +static void plic_irq_mask(struct irq_data *d) { }
+> +static void plic_irq_unmask(struct irq_data *d) { }
+> +
+>  #ifdef CONFIG_SMP
+>  static int plic_set_affinity(struct irq_data *d,
+>  			     const struct cpumask *mask_val, bool force)
+> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+>
+>  static struct irq_chip plic_chip = {
+>  	.name		= "SiFive PLIC",
+> -	/*
+> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> -	 * by reading claim and "unmasked" when writing it back.
+> -	 */
+>  	.irq_enable	= plic_irq_enable,
+>  	.irq_disable	= plic_irq_disable,
+> +	.irq_mask	= plic_irq_mask,
+> +	.irq_unmask	= plic_irq_unmask,
+>  #ifdef CONFIG_SMP
+>  	.irq_set_affinity = plic_set_affinity,
+>  #endif
 
-So because my mailbox was more unruly than normal (because of same
-maintainer summit travel), I almost missed this email entirely.
+I can't find any other drivers in irqchip with empty irq_mask/irq_unmask.  I'm 
+not well versed in irqchip stuff, so I'll leave it up to the irqchip 
+maintainers to comment on if this is the right way to do this.  Either way, I'm 
+assuming it'll go in through some the irqchip tree so
 
-Why? Because you don't have the normal "git pull" anywhere in the
-email, so it doesn't trigger my search for important emails.
+Acked-by: Palmer Dabbelt <palmer@sifive.com>
 
-There's a "git" in the email body, but there's not a "pull" anywhere.
-Could you add either a "please pull" or something to the email body -
-or to make things _really_ obvious, add the "[GIT PULL]" prefix to the
-subject line? Or anything, really, to whatever script or workflow you
-use to generate these?
-
-             Linus
+just to make sure I don't get in the way if it is the right way to do it :).
