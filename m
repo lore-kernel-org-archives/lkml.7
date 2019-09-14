@@ -2,124 +2,249 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCBC4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50818C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F44E2081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1992D2081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swjgOi4j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fx0GkzaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfINPOz (ORCPT
+        id S1726574AbfINPPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 11:14:55 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40146 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfINPOz (ORCPT
+        Sat, 14 Sep 2019 11:15:44 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34563 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfINPPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 11:14:55 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d17so6389294lfa.7
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 08:14:53 -0700 (PDT)
+        Sat, 14 Sep 2019 11:15:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y135so3945045wmc.1;
+        Sat, 14 Sep 2019 08:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u2Jr691WU0i7md2pkpE4rxMCd/3y9PfDz8VipZrdHZ8=;
-        b=swjgOi4jIz5RzgB0fsz+9fWb28xGtSoVv7CP3TwcBmJLxCDBFlj8f54D/LN7jG3QzY
-         MlQKzJl3qyTjdZ9mbtp9Ofw3YJrZMt+PJd8VYZeF3Wj8eHTE8POJG4Lq1G1TBZS5NCYI
-         kAbRaF+0HlHPhcY+/34h2Q0W7ipiwDO2u9EPuUjuU7ARuQdEexY//QTAcDi8APeh1BN0
-         J09TE+SvO/NAqnEPrSuZzA+OLH9s1QqAGRuLSHjvdwS3qnzVyekcWfcVNF23uPSZs72R
-         pALO3FUcEARB18+wkfZRKhLeyhClMu1bfWQeAQd6dwi4zPwQd0dob0JaiM6N+WYVHDwK
-         kkeQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=56i1dw2IFKA0m3KPsvbGrN2MqjawgjK7hsJiomQRjLM=;
+        b=fx0GkzaHcNap9wpsvnxtNoDahrmyg2WBo52Hoz4gLBOtCpmYJPZ8S4T5xDS20HhWM1
+         /Rz7MCid3PJcK+LoxpVkJHfUvVtb2bDEPE+L4KGnn8iTvfIDAyyLXtyu1QESbYaY4J0p
+         CaCFYyEYTTa7x93D2rSoJTYKndgHLSYrpUqUg9MZVrInt9Fazdj7lB0Zm3PNKOUosiwK
+         5KWJ2FNNJIPDJLOJu6mz5nu6pJ7em1GLa/czEXdnvhvhJZhsiInuh/ITUuU9G9fEiyVu
+         XipiXOH/Melgy0IERkxEFg/8tvx7fGyDoigAjLaGcqoc9unqtgsq0oYNm/Wh0YGy+Ccj
+         maXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u2Jr691WU0i7md2pkpE4rxMCd/3y9PfDz8VipZrdHZ8=;
-        b=c2DU1MYyFaqPEJQeEdvlaidTN1wCtxv4xF3tF6l05fPqdiCpaJrurW0XoTqdN3YznN
-         j/tRo6BUTd9EhRluaXyWpcOxALr9WlnwVrXAWSYvLETTYVFTYTJQOn4z8BbOSbmDnAJR
-         1qEY+SlMtW7m1YoM8QRvpdMyZaZEeOCd5xr4vrQ8FG7rhx+MFIr4hZx4JvQqpLWm6OaA
-         DAkYwUMk2cehJkQH3k/O/2FytNl43YGNUyP22ytFAOnNQ/tt84wJTriXwlrEGCC0RQxI
-         sGSZPHP3q85cYGfs38MDXj4uUaRRJw15KpEmTgk1XtZSHDTkpdLCA/AaSRan707ExH3z
-         jrOw==
-X-Gm-Message-State: APjAAAVKWuS/wTq0M24ry6QFD9LjJmlXtJTM8bAWz2kPtoaCexZXUvSn
-        ZnlnctiT+GVAQ1qhw6iD/xQ=
-X-Google-Smtp-Source: APXvYqzZ3vRMZ5a9QHA5G/h1przDDlsilKdNII8W6MBk+gi7r87YY3ZTYSCJLUcFW5xs0+zhMS9QZw==
-X-Received: by 2002:a19:6008:: with SMTP id u8mr30927503lfb.12.1568474092982;
-        Sat, 14 Sep 2019 08:14:52 -0700 (PDT)
-Received: from [192.168.0.160] (pppoe.178-66-214-228.dynamic.avangarddsl.ru. [178.66.214.228])
-        by smtp.gmail.com with ESMTPSA id y22sm7763898lfb.75.2019.09.14.08.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Sep 2019 08:14:52 -0700 (PDT)
-Subject: Re: [PATCH] staging: r8188eu: replace rtw_malloc() with it's
- definition
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        devel@driverdev.osuosl.org,
-        =?UTF-8?B?Um9iZXJ0IFfEmWPFgmF3c2tp?= <r.weclawski@gmail.com>,
-        =?UTF-8?Q?Florian_B=c3=bcstgens?= <flbue@gmx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>
-References: <20190908090026.2656-1-insafonov@gmail.com>
- <20190910115932.GB15977@kadam>
-From:   Ivan Safonov <insafonov@gmail.com>
-Message-ID: <47674485-194b-0b09-81ed-5d855284ebd9@gmail.com>
-Date:   Sat, 14 Sep 2019 18:18:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=56i1dw2IFKA0m3KPsvbGrN2MqjawgjK7hsJiomQRjLM=;
+        b=GLazlxXWM0IzH0e3dYVPlCQw5RgBpTZt+7tsMykkZRyL9SdhR7GpfvGmbKEvdeVxxR
+         YnCV7PA2gaJ5aPbzaEaoHwA02SEozBDsQHSAqQwzKYRypTjOl6OAqdVL/vFDFQgeEoHs
+         d9USOq/B3PbbGDTi6aluGubDvwQ7vIvhOAuzTwz0vGjxHxWYY4IfEFxYGYl4oTMan/cd
+         RaEyxv97Le17NHryCd8wtZOnbxeuh/LxDCAoARzU9IRfafY4aYbXGLH7iAD2L9HAniWO
+         vVEH0niCIIUYNQiKgFBTUHX2NnaK9Re/mXS8fn/qLQGXC+62XHBdj/xN6WfHH3DHNdG5
+         +2Aw==
+X-Gm-Message-State: APjAAAWD/ltMdq1twbnxq7lUmQ/UtFdo9drP3JFgK5aGd3OiALj05R0f
+        +QvnbkNv4OT1uKXy4NTyVt1TBG4=
+X-Google-Smtp-Source: APXvYqx1jiUIyK23899gSvBmkVHz0rLfScMJMI4nT5rwSElM54Ih25cmJ+yk5G0mFsUDuE+OgwNeDw==
+X-Received: by 2002:a1c:5451:: with SMTP id p17mr7607716wmi.103.1568474140756;
+        Sat, 14 Sep 2019 08:15:40 -0700 (PDT)
+Received: from avx2 ([46.53.250.254])
+        by smtp.gmail.com with ESMTPSA id i9sm7229634wmf.14.2019.09.14.08.15.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Sep 2019 08:15:39 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 18:15:37 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, x86@vger.kernel.org,
+        linux@rasmusvillemoes.dk, torvalds@linux-foundation.org
+Subject: Re: [PATCH] x86_64: new and improved memset()
+Message-ID: <20190914151537.GA12068@avx2>
+References: <20190914103345.GA5856@avx2>
+ <20190914113717.GA28054@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190910115932.GB15977@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190914113717.GA28054@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 2:59 PM, Dan Carpenter wrote:
-> On Sun, Sep 08, 2019 at 12:00:26PM +0300, Ivan Safonov wrote >> rtw_malloc prevents the use of kmemdup/kzalloc and others.
->>
->> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
->> ---
->>   drivers/staging/rtl8188eu/core/rtw_ap.c        |  4 ++--
->>   drivers/staging/rtl8188eu/core/rtw_mlme_ext.c  |  2 +-
->>   .../staging/rtl8188eu/include/osdep_service.h  |  3 ---
->>   drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 18 +++++++++---------
->>   drivers/staging/rtl8188eu/os_dep/mlme_linux.c  |  2 +-
->>   .../staging/rtl8188eu/os_dep/osdep_service.c   |  7 +------
->>   6 files changed, 14 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/staging/rtl8188eu/core/rtw_ap.c b/drivers/staging/rtl8188eu/core/rtw_ap.c
->> index 51a5b71f8c25..c9c57379b7a2 100644
->> --- a/drivers/staging/rtl8188eu/core/rtw_ap.c
->> +++ b/drivers/staging/rtl8188eu/core/rtw_ap.c
->> @@ -104,7 +104,7 @@ static void update_BCNTIM(struct adapter *padapter)
->>   	}
->>   
->>   	if (remainder_ielen > 0) {
->> -		pbackup_remainder_ie = rtw_malloc(remainder_ielen);
->> +		pbackup_remainder_ie = kmalloc(remainder_ielen, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
->                                                                  ^^^^^^^^^^^^^
-> This stuff isn't right.  It really should be checking if spinlocks are
-> held or IRQs are disabled.  And the only way to do that is by auditing
-> the callers.
-I hope to make these changes later as separate independent patches.
-This patch do only one thing - remove rtw_malloc().
+On Sat, Sep 14, 2019 at 01:37:17PM +0200, Borislav Petkov wrote:
+> On Sat, Sep 14, 2019 at 01:33:45PM +0300, Alexey Dobriyan wrote:
+> > --- a/arch/x86/include/asm/string_64.h
+> > +++ b/arch/x86/include/asm/string_64.h
+> > @@ -15,7 +15,111 @@ extern void *memcpy(void *to, const void *from, size_t len);
+> >  extern void *__memcpy(void *to, const void *from, size_t len);
+> >  
+> >  #define __HAVE_ARCH_MEMSET
+> > +#if defined(_ARCH_X86_BOOT) || defined(CONFIG_FORTIFY_SOURCE)
+> >  void *memset(void *s, int c, size_t n);
+> > +#else
+> > +#include <asm/alternative.h>
+> > +#include <asm/cpufeatures.h>
+> > +
+> > +/* Internal, do not use. */
+> > +static __always_inline void memset0(void *s, size_t n)
+> > +{
+> > +	/* Internal, do not use. */
+> > +	void _memset0_mov(void);
+> > +	void _memset0_rep_stosq(void);
+> > +	void memset0_mov(void);
+> > +	void memset0_rep_stosq(void);
+> > +	void memset0_rep_stosb(void);
+> > +
+> > +	if (__builtin_constant_p(n) && n == 0) {
+> > +	} else if (__builtin_constant_p(n) && n == 1) {
+> > +		*(uint8_t *)s = 0;
+> > +	} else if (__builtin_constant_p(n) && n == 2) {
+> > +		*(uint16_t *)s = 0;
+> > +	} else if (__builtin_constant_p(n) && n == 4) {
+> > +		*(uint32_t *)s = 0;
+> > +	} else if (__builtin_constant_p(n) && n == 6) {
+> > +		*(uint32_t *)s = 0;
+> > +		*(uint16_t *)(s + 4) = 0;
+> > +	} else if (__builtin_constant_p(n) && n == 8) {
+> > +		*(uint64_t *)s = 0;
+> > +	} else if (__builtin_constant_p(n) && (n & 7) == 0) {
+> > +		alternative_call_2(
+> > +			_memset0_mov,
+> > +			_memset0_rep_stosq, X86_FEATURE_REP_GOOD,
+> > +			memset0_rep_stosb, X86_FEATURE_ERMS,
+> > +			ASM_OUTPUT2("=D" (s), "=c" (n)),
+> > +			"D" (s), "c" (n)
+> > +			: "rax", "cc", "memory"
+> > +		);
+> > +	} else {
+> > +		alternative_call_2(
+> > +			memset0_mov,
+> > +			memset0_rep_stosq, X86_FEATURE_REP_GOOD,
+> > +			memset0_rep_stosb, X86_FEATURE_ERMS,
+> > +			ASM_OUTPUT2("=D" (s), "=c" (n)),
+> > +			"D" (s), "c" (n)
+> > +			: "rax", "rsi", "cc", "memory"
+> > +		);
+> > +	}
+> > +}
+> > +
+> > +/* Internal, do not use. */
+> > +static __always_inline void memsetx(void *s, int c, size_t n)
+> > +{
+> > +	/* Internal, do not use. */
+> > +	void _memsetx_mov(void);
+> > +	void _memsetx_rep_stosq(void);
+> > +	void memsetx_mov(void);
+> > +	void memsetx_rep_stosq(void);
+> > +	void memsetx_rep_stosb(void);
+> > +
+> > +	const uint64_t ccc = (uint8_t)c * 0x0101010101010101ULL;
+> > +
+> > +	if (__builtin_constant_p(n) && n == 0) {
+> > +	} else if (__builtin_constant_p(n) && n == 1) {
+> > +		*(uint8_t *)s = ccc;
+> > +	} else if (__builtin_constant_p(n) && n == 2) {
+> > +		*(uint16_t *)s = ccc;
+> > +	} else if (__builtin_constant_p(n) && n == 4) {
+> > +		*(uint32_t *)s = ccc;
+> > +	} else if (__builtin_constant_p(n) && n == 8) {
+> > +		*(uint64_t *)s = ccc;
+> > +	} else if (__builtin_constant_p(n) && (n & 7) == 0) {
+> > +		alternative_call_2(
+> > +			_memsetx_mov,
+> > +			_memsetx_rep_stosq, X86_FEATURE_REP_GOOD,
+> > +			memsetx_rep_stosb, X86_FEATURE_ERMS,
+> > +			ASM_OUTPUT2("=D" (s), "=c" (n)),
+> > +			"D" (s), "c" (n), "a" (ccc)
+> > +			: "cc", "memory"
+> > +		);
+> > +	} else {
+> > +		alternative_call_2(
+> > +			memsetx_mov,
+> > +			memsetx_rep_stosq, X86_FEATURE_REP_GOOD,
+> > +			memsetx_rep_stosb, X86_FEATURE_ERMS,
+> > +			ASM_OUTPUT2("=D" (s), "=c" (n)),
+> > +			"D" (s), "c" (n), "a" (ccc)
+> > +			: "rsi", "cc", "memory"
+> > +		);
+> > +	}
+> > +}
+> > +
+> > +static __always_inline void *memset(void *s, int c, size_t n)
+> > +{
+> > +	if (__builtin_constant_p(c)) {
+> > +		if (c == 0) {
+> > +			memset0(s, n);
+> > +		} else {
+> > +			memsetx(s, c, n);
+> > +		}
+> > +		return s;
+> > +	} else {
+> > +		return __builtin_memset(s, c, n);
+> > +	}
+> > +}
+> 
+> I'm willing to take something like that only when such complexity is
+> justified by numbers. I.e., I'm much more inclined to capping it under
+> 32 and 64 byte sizes and keeping it simple.
 
-> 
-> (The original rtw_malloc() implementation is buggy nonsense).
-> 
-> regards,
-> dan carpenter
-> 
+OK. Those small lengths were indeed annoying.
 
-Ivan Safonov.
+> > +ENTRY(_memset0_mov)
+> > +	xor	eax, eax
+> > +.globl _memsetx_mov
+> > +_memsetx_mov:
+> > +	add	rcx, rdi
+> > +	cmp	rdi, rcx
+> > +	je	1f
+> > +2:
+> > +	mov	[rdi], rax
+> > +	add	rdi, 8
+> > +	cmp	rdi, rcx
+> > +	jne	2b
+> > +1:
+> > +	ret
+> > +ENDPROC(_memset0_mov)
+> > +ENDPROC(_memsetx_mov)
+> > +EXPORT_SYMBOL(_memset0_mov)
+> > +EXPORT_SYMBOL(_memsetx_mov)
+> > +
+> > +ENTRY(memset0_mov)
+> > +	xor	eax, eax
+> > +.globl memsetx_mov
+> > +memsetx_mov:
+> > +	lea	rsi, [rdi + rcx]
+> > +	cmp	rdi, rsi
+> > +	je	1f
+> > +2:
+> > +	mov	[rdi], al
+> > +	add	rdi, 1
+> > +	cmp	rdi, rsi
+> > +	jne	2b
+> > +1:
+> > +	ret
+> 
+> Say what now? Intel syntax? You must be joking...
+
+It is the best thing in the x86 assembler universe.
+
+> > +ENDPROC(memset0_mov)
+> > +ENDPROC(memsetx_mov)
+> > +EXPORT_SYMBOL(memset0_mov)
+> > +EXPORT_SYMBOL(memsetx_mov)
+> 
+> Too many exported symbols.
+
+Those are technical exports. memset() remains the only developer-visible
+interface.
+
+> Again, I'll much more prefer a cleaner,
+> smaller solution than one where readability suffers greatly at the
+> expense of *maybe* getting a bit better performance.
+
+Readability is red herring, I for one find AT&T syntax unreadable.
