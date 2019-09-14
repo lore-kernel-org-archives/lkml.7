@@ -2,192 +2,113 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD80C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D7FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D6D206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8605820828
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfINTgm (ORCPT
+        id S1731290AbfINTit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 15:36:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:17163 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbfINTgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 15:36:41 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: keNpXfLXUMoDMxEwDXkh1mbph9oViuJ4JrpXrJ1xCqVup2vET7FDtb/AgXnpGSP8bhWt3hK3ED
- M2ecOs3Uzbx/jrAqI0h1XFbDiPrHDVi8jLp9RRSbdUNcbC7kgoF5pTk5/7Rn1v81U5Y5pPPJGw
- 4VrpogipfA5ZH0fLogMBvjEhSyttU5D5yM0YDXpik8iBIcZjBJ/QkWKiT6eQUu/I0uYCaDVJsB
- QDupPgUqYtqi8/8L9NJRY2wtZzdem1JzD05xhgGXzZWgO8+O8CZ9yp5WBa1pumUaMXN77ZBc4Z
- 29E=
-X-IronPort-AV: E=Sophos;i="5.64,506,1559545200"; 
-   d="scan'208";a="49099072"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2019 12:36:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 14 Sep 2019 12:36:41 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 14 Sep 2019 12:36:40 -0700
-Date:   Sat, 14 Sep 2019 21:36:40 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: at91-pio4: implement .get_multiple and
- .set_multiple
-Message-ID: <20190914193640.rukypixp6t54fwfc@sekiro>
-Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+        Sat, 14 Sep 2019 15:38:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56318 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729470AbfINTis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 15:38:48 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E25B85546
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 19:38:47 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id z4so35948674qts.0
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 12:38:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KIGHcmUUN4jMJWs2R7tAQdbVbc2v6AIe7xkdq87Pa2A=;
+        b=YPPTPu40vZMDwR9P0OCNyPs8Dm2T4mBLqwSsh4GWNR3Y65RJy3SBUdBaL4bS7jk/5E
+         4u/a1HHp44qjX/8/ZCxZX6UvHGAR5GDLJECJzJXKQCI6xkalRor4w7kR5m+QJ1pbMj3K
+         B9ZYXLWthg/swlX6R4Hk60DdbCGrWbQ+wAYbV1BHA4BeUbo4Di5bsyMskMmycQStn2qv
+         xoLN0UySsELxdWSOUJLNKw5/lVqAcB0UPdi7zMzudWid74MObh5GHwSIhF5dDt/e3ZBt
+         d2rgf+LwlOdHXjcbLGjN6CgBZdR3ZQyhqyNZWJw3AOeBOOcYpVubjkUYyzlyIVl+RgBm
+         aswA==
+X-Gm-Message-State: APjAAAWxyexTsDdDytHeUWDin6QtRvNPjOw0WAdQLYpKSM3vjXScaPW+
+        hagIUnpKWXR+fBtzdTqDvtxO+W17RqQKOGlJy9tq/w1KGEMbZkdDcHfgO/VInKCC/bZCzir4uJC
+        qiq5ImgpnFWoIeqDP8pcTLcOT
+X-Received: by 2002:a05:620a:c:: with SMTP id j12mr49368897qki.127.1568489926544;
+        Sat, 14 Sep 2019 12:38:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw7wOJHQxLUm66la0qX4SPSRkPiO4NywNevPf0TnyLpnxGz/aWmk5UQ6mtqxs1zvRBm/WQW7Q==
+X-Received: by 2002:a05:620a:c:: with SMTP id j12mr49368877qki.127.1568489926312;
+        Sat, 14 Sep 2019 12:38:46 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id 60sm15837153qta.77.2019.09.14.12.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 12:38:45 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 15:38:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] vhost: Fix compile time error
+Message-ID: <20190914153325-mutt-send-email-mst@kernel.org>
+References: <1568450697-16775-1-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1568450697-16775-1-git-send-email-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:13:04PM +0200, Alexandre Belloni wrote:
+On Sat, Sep 14, 2019 at 01:44:57AM -0700, Guenter Roeck wrote:
+> Building vhost on 32-bit targets results in the following error.
 > 
-> Implement .get_multiple and .set_multiple to allow reading or setting
-> multiple pins simultaneously. Pins in the same bank will all be switched at
-> the same time, improving synchronization and performances.
+> drivers/vhost/vhost.c: In function 'translate_desc':
+> include/linux/compiler.h:549:38: error:
+> 	call to '__compiletime_assert_1879' declared with attribute error:
+> 	BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Fixes: a89db445fbd7 ("vhost: block speculation of translated descriptors")
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-Thanks for this improvement. You can keep my ack for v3 as the changes
-should be the commit message only. I'll be off for three weeks.
-
-Regards
-
-Ludovic
 
 > ---
->  drivers/pinctrl/pinctrl-at91-pio4.c | 60 +++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+>  drivers/vhost/vhost.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-> index d6de4d360cd4..488a302a60d4 100644
-> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
-> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-> @@ -328,6 +328,35 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
->  	return !!(reg & BIT(pin->line));
->  }
->  
-> +static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				   unsigned long *bits)
-> +{
-> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-> +	unsigned int bank;
-> +
-> +	bitmap_zero(bits, atmel_pioctrl->npins);
-> +
-> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-> +		unsigned int word = bank;
-> +		unsigned int offset = 0;
-> +		unsigned int reg;
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-> +		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
-> +#endif
-> +		if (!mask[word])
-> +			continue;
-> +
-> +		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
-> +		bits[word] |= mask[word] & (reg << offset);
-> +
-> +		pr_err("ABE: %d %08x\n", bank, bits[word]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
->  				       int value)
->  {
-> @@ -358,11 +387,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
->  			 BIT(pin->line));
->  }
->  
-> +static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +				    unsigned long *bits)
-> +{
-> +	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-> +	unsigned int bank;
-> +
-> +	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-> +		unsigned int bitmask;
-> +		unsigned int word = bank;
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-> +#endif
-> +		if (!mask[word])
-> +			continue;
-> +
-> +		bitmask = mask[word] & bits[word];
-> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
-> +
-> +		bitmask = mask[word] & ~bits[word];
-> +		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
-> +
-> +#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-> +		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-> +		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-> +#endif
-> +	}
-> +}
-> +
->  static struct gpio_chip atmel_gpio_chip = {
->  	.direction_input        = atmel_gpio_direction_input,
->  	.get                    = atmel_gpio_get,
-> +	.get_multiple           = atmel_gpio_get_multiple,
->  	.direction_output       = atmel_gpio_direction_output,
->  	.set                    = atmel_gpio_set,
-> +	.set_multiple           = atmel_gpio_set_multiple,
->  	.to_irq                 = atmel_gpio_to_irq,
->  	.base                   = 0,
->  };
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index acabf20b069e..102a0c877007 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -2074,7 +2074,7 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+>  		_iov->iov_base = (void __user *)
+>  			((unsigned long)node->userspace_addr +
+>  			 array_index_nospec((unsigned long)(addr - node->start),
+> -					    node->size));
+> +					    (unsigned long)node->size));
+
+Unfortunately this does not fix the case where size is actually 64 bit,
+e.g. a single node with VA 0, size 2^32 is how
+you cover the whole virtual address space.
+
+this is not how qemu uses it, but it's valid.
+
+I think it's best to just revert the patch for now.
+
+>  		s += size;
+>  		addr += size;
+>  		++ret;
 > -- 
-> 2.21.0
-> 
-> 
+> 2.7.4
