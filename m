@@ -2,26 +2,27 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E621C4CEC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59931C4CECA
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164B1206CD
+	by mail.kernel.org (Postfix) with ESMTP id 33B1920828
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfINVDE (ORCPT
+        id S1726678AbfINVDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 17:03:04 -0400
-Received: from muru.com ([72.249.23.125]:32870 "EHLO muru.com"
+        Sat, 14 Sep 2019 17:03:06 -0400
+Received: from muru.com ([72.249.23.125]:32890 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfINVDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 17:03:04 -0400
+        id S1725904AbfINVDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 17:03:05 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 14B338105;
-        Sat, 14 Sep 2019 21:03:33 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id C3171813A;
+        Sat, 14 Sep 2019 21:03:35 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     Matt Mackall <mpm@selenic.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -29,13 +30,15 @@ To:     Matt Mackall <mpm@selenic.com>,
 Cc:     linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
         Adam Ford <aford173@gmail.com>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
         Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org
-Subject: [PATCHv2 0/7] Non-urgent fixes and improvments for omap3-rom-rng
-Date:   Sat, 14 Sep 2019 14:02:53 -0700
-Message-Id: <20190914210300.15836-1-tony@atomide.com>
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 1/7] ARM: OMAP2+: Check omap3-rom-rng for GP device instead of HS device
+Date:   Sat, 14 Sep 2019 14:02:54 -0700
+Message-Id: <20190914210300.15836-2-tony@atomide.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190914210300.15836-1-tony@atomide.com>
+References: <20190914210300.15836-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,43 +47,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+In general we should check for GP device instead of HS device unless
+the other options such as EMU are also checked. Otherwise omap3-rom-rng
+won't probe on few of the old n900 macro boards still in service in
+automated build and boot test systems.
 
-Here are fixes and improvments for omap3-rom-rng that's been broken for
-a while.
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/mach-omap2/pdata-quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The first four patches get it working, and then the last two patches add
-support for runtime PM.
-
-I did not add Sebastian's acks from v1 set as many of the patches
-changed. Please review again :)
-
-Regards,
-
-Tony
-
-Changes since v1:
-- Use clk_prepare_enable() as pointed out by Sebastian
-- Simplify runtime PM changes patch
-- Add a new patch for devm changes as suggested by Sebastian
-
-
-Tony Lindgren (7):
-  ARM: OMAP2+: Check omap3-rom-rng for GP device instead of HS device
-  hwrng: omap3-rom - Fix missing clock by probing with device tree
-  hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not
-    idled
-  hwrng: omap3-rom - Initialize default quality to get data
-  hwrng: omap3-rom - Update to use standard driver data
-  hwrng: omap3-rom - Use runtime PM instead of custom functions
-  hwrng: omap3-rom - Use devm hwrng and runtime PM
-
- .../devicetree/bindings/rng/omap3_rom_rng.txt |  27 +++
- arch/arm/boot/dts/omap3-n900.dts              |   6 +
- arch/arm/mach-omap2/pdata-quirks.c            |  14 +-
- drivers/char/hw_random/omap3-rom-rng.c        | 168 +++++++++++-------
- 4 files changed, 139 insertions(+), 76 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -276,7 +276,7 @@ static void __init nokia_n900_legacy_init(void)
+ 	mmc_pdata[0].name = "external";
+ 	mmc_pdata[1].name = "internal";
+ 
+-	if (omap_type() == OMAP2_DEVICE_TYPE_SEC) {
++	if (omap_type() != OMAP2_DEVICE_TYPE_GP) {
+ 		if (IS_ENABLED(CONFIG_ARM_ERRATA_430973)) {
+ 			pr_info("RX-51: Enabling ARM errata 430973 workaround\n");
+ 			/* set IBE to 1 */
 -- 
 2.23.0
