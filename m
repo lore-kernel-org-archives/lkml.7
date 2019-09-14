@@ -2,72 +2,148 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F366C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494B2C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD1E2081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1393320830
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nyPTJsIq"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="OrM9XPiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389368AbfINOSC (ORCPT
+        id S2389386AbfINOVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 10:18:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45904 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389316AbfINOSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 10:18:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1Z1jO0nsHRh4rObU5dMZe/5cCeCRCh92lPqbmxPuZnc=; b=nyPTJsIqcIONf/ruvBFUNjyy+y
-        jxrYxl/AyHlYC0E9bpP6RypaIpEZpRZduJLth2Nq5osk3lIRSh2LIyy/5zUJMwIWyfhBHSfzJdPCk
-        UlUR+434o+OJnOcK+j8IwjgspMHyho0EkdRUYghxgmzaa6lDxSOHXhKKEv4e5j1lN3V8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i98s4-0007Qf-RV; Sat, 14 Sep 2019 16:17:52 +0200
-Date:   Sat, 14 Sep 2019 16:17:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH net-next v8 2/3] net: phy: add support for clause 37
- auto-negotiation
-Message-ID: <20190914141752.GC27922@lunn.ch>
-References: <20190909204906.2191290-1-taoren@fb.com>
+        Sat, 14 Sep 2019 10:21:32 -0400
+Received: from mail.efficios.com ([167.114.142.138]:55114 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387786AbfINOVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 10:21:32 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5ADDB2B9B77;
+        Sat, 14 Sep 2019 10:21:30 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id cVHedDvBx6U9; Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A942C2B9B73;
+        Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A942C2B9B73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568470889;
+        bh=M10BlrTXAj0G5y7uqqZ+tCLOJeUIc+aRdoN/am4d8Qs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=OrM9XPiIjv9+zo4an4UrG/+X9Ag8E8VsyGp9CSouhtbLgQHQW1q7RLxo2SzHPtUsB
+         soLryC4pEL0QcFbWbUOekyDq1723FMIAjRpx3mHjDtlCYAo0BAlR7uNPHtaxST/BXc
+         MbqYnsqaNRG0VOWwuAFAudaN6ntE/sNMq7rjrDe98AsXNaSwyiq/U24TRTww60ik2s
+         vzdUrsQCuYuzvoF2S4LRxtgphBO34e1Vz3tW7L6tp8axudzkOnLZLDDRVWe/Bnw603
+         RxEbD/XB4OWilZUjwXNJ0mCQ443ugi0gnon4+XT/qiSTYIOVj4VDpd06+nxHDqAvVk
+         1ElusDH4V3glg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 4BJ5TKhxbPjp; Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 8FD772B9B69;
+        Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
+Date:   Sat, 14 Sep 2019 10:21:29 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Neel Natu <neelnatu@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Message-ID: <819646407.3304.1568470889470.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190913151220.3105-2-mathieu.desnoyers@efficios.com>
+References: <20190913151220.3105-1-mathieu.desnoyers@efficios.com> <20190913151220.3105-2-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH for 5.3 2/3] rseq: Fix: Unregister rseq for CLONE_SETTLS
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190909204906.2191290-1-taoren@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: rseq: Fix: Unregister rseq for CLONE_SETTLS
+Thread-Index: o9eZqvAOKmXphmxsJKc8X5whD/BREg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 01:49:06PM -0700, Tao Ren wrote:
-> From: Heiner Kallweit <hkallweit1@gmail.com>
-> 
-> This patch adds support for clause 37 1000Base-X auto-negotiation.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> Signed-off-by: Tao Ren <taoren@fb.com>
-> Tested-by: René van Dorst <opensource@vdorst.com>
+There is an ongoing discussion on the choice of flag we want to care
+about here. Therefore, please don't pull this patch until we reach an
+agreement.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Thanks,
 
-    Andrew
+Mathieu
+
+----- On Sep 13, 2019, at 11:12 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> It has been reported by Google that rseq is not behaving properly
+> with respect to clone when CLONE_VM is used without CLONE_THREAD.
+> It keeps the prior thread's rseq TLS registered when the TLS of the
+> thread has moved, so the kernel deals with the wrong TLS.
+> 
+> The approach of clearing the per task-struct rseq registration
+> on clone with CLONE_THREAD flag is incomplete. It does not cover
+> the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+> 
+> Looking more closely at each of the clone flags:
+> 
+> - CLONE_THREAD,
+> - CLONE_VM,
+> - CLONE_SETTLS.
+> 
+> It appears that the flag we really want to track is CLONE_SETTLS, which
+> moves the location of the TLS for the child, making the rseq
+> registration point to the wrong TLS.
+> 
+> Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "H . Peter Anvin" <hpa@zytor.com>
+> Cc: Paul Turner <pjt@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: linux-api@vger.kernel.org
+> Cc: <stable@vger.kernel.org>
+> ---
+> include/linux/sched.h | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 9f51932bd543..76bf55b5cccf 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1919,11 +1919,11 @@ static inline void rseq_migrate(struct task_struct *t)
+> 
+> /*
+>  * If parent process has a registered restartable sequences area, the
+> - * child inherits. Only applies when forking a process, not a thread.
+> + * child inherits. Unregister rseq for a clone with CLONE_SETTLS set.
+>  */
+> static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+> {
+> -	if (clone_flags & CLONE_THREAD) {
+> +	if (clone_flags & CLONE_SETTLS) {
+> 		t->rseq = NULL;
+> 		t->rseq_sig = 0;
+> 		t->rseq_event_mask = 0;
+> --
+> 2.17.1
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
