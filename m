@@ -2,177 +2,164 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08A6C49ED6
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8871FC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B0620692
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED0A2089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 08:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568448524;
+	bh=XneftSq4r8FsDIABRdbMyQuUcgxfolt9wszU1cxTwrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O+DoNFGYPXKZ/vKrdU0Begagj9xFiJmREjxpGkxPFbgirbKFqYHMViwAuitsFFUT5
+	 09VcEXUOgLZr1qBPen+C11vB4m61seHYt2eU9A9UzbYbpEovBljzejCFOHicTh0bo5
+	 amA/TO3ljjOCcMAO0r4Nx9JTVXicIS+W0rieKgwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfINIFg (ORCPT
+        id S1727450AbfINIIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 04:05:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20291 "EHLO mga17.intel.com"
+        Sat, 14 Sep 2019 04:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfINIFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 04:05:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 01:05:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="188088940"
-Received: from dli2-mobl2.ccr.corp.intel.com (HELO wfg-t570.sh.intel.com) ([10.254.208.241])
-  by orsmga003.jf.intel.com with ESMTP; 14 Sep 2019 01:05:34 -0700
-Received: from wfg by wfg-t570.sh.intel.com with local (Exim 4.89)
-        (envelope-from <fengguang.wu@intel.com>)
-        id 1i933l-0003Si-47; Sat, 14 Sep 2019 16:05:33 +0800
-Date:   Sat, 14 Sep 2019 16:05:33 +0800
-From:   Fengguang Wu <fengguang.wu@intel.com>
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for vm-scalability] usemem: Add new option -Z|--read-again
-Message-ID: <20190914080533.GA12862@wfg-t540p.sh.intel.com>
-References: <1568430438-31372-1-git-send-email-teawaterz@linux.alibaba.com>
+        id S1727171AbfINIIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 04:08:43 -0400
+Received: from localhost (unknown [84.241.204.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F89D20692;
+        Sat, 14 Sep 2019 08:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568448522;
+        bh=XneftSq4r8FsDIABRdbMyQuUcgxfolt9wszU1cxTwrk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S4n0qcTkKSEctugVIlNcglPeZA5zGOE794fhpYCoUIdTHDBaMglCy8K7mnTA4csSE
+         BcSctTGUmqUY7hMfpaeoXRnrdozjFxO5ZZ3dtfEzbwyZJjYCMnDMS3temWAKiVvYa+
+         WQQTLimwmolqZmNSFrjIkO06DOktumnxZMdGVx8A=
+Date:   Sat, 14 Sep 2019 09:08:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH 5.2 36/37] vhost: block speculation of translated
+ descriptors
+Message-ID: <20190914080836.GB522114@kroah.com>
+References: <20190913130510.727515099@linuxfoundation.org>
+ <20190913130522.155505270@linuxfoundation.org>
+ <20190914025411.3016e3d9@mir>
+ <20190914055050.GA489003@kroah.com>
+ <20190914091548.230a63de@mir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568430438-31372-1-git-send-email-teawaterz@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190914091548.230a63de@mir>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied, thanks Teawater!
+On Sat, Sep 14, 2019 at 09:15:48AM +0200, Stefan Lippers-Hollmann wrote:
+> Hi
+> 
+> On 2019-09-14, Greg Kroah-Hartman wrote:
+> > On Sat, Sep 14, 2019 at 02:54:11AM +0200, Stefan Lippers-Hollmann wrote:
+> > > On 2019-09-13, Greg Kroah-Hartman wrote:
+> > > > From: Michael S. Tsirkin <mst@redhat.com>
+> > > >
+> > > > commit a89db445fbd7f1f8457b03759aa7343fa530ef6b upstream.
+> > > >
+> > > > iovec addresses coming from vhost are assumed to be
+> > > > pre-validated, but in fact can be speculated to a value
+> > > > out of range.
+> > > >
+> > > > Userspace address are later validated with array_index_nospec so we can
+> > > > be sure kernel info does not leak through these addresses, but vhost
+> > > > must also not leak userspace info outside the allowed memory table to
+> > > > guests.
+> > > >
+> > > > Following the defence in depth principle, make sure
+> > > > the address is not validated out of node range.
+> [...]
+> > Do you have the same problem with Linus's tree right now?
+> 
+> Actually, yes I do (I had not tested i386 for 5.3~ within the last ~2
+> weeks, only amd64). Very similar kernel config, same compiler versions
+> but built in a slightly different environment (built directly on the bare
+> iron, in a amd64 multilib userspace, rather than a pure-i386 chroot on an
+> amd64 kernel).
+> 
+> $ git describe
+> v5.3-rc8-36-ga7f89616b737
+> 
+> $ LANG= make ARCH=x86 -j1 bzImage modules
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   CHK     include/generated/compile.h
+>   CHK     kernel/kheaders_data.tar.xz
+>   CC [M]  drivers/vhost/vhost.o
+> In file included from ./include/linux/export.h:45,
+>                  from ./include/linux/linkage.h:7,
+>                  from ./include/linux/kernel.h:8,
+>                  from ./include/linux/list.h:9,
+>                  from ./include/linux/wait.h:7,
+>                  from ./include/linux/eventfd.h:13,
+>                  from drivers/vhost/vhost.c:13:
+> drivers/vhost/vhost.c: In function 'translate_desc':
+> ./include/linux/compiler.h:350:38: error: call to '__compiletime_assert_2076' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
+>   350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>       |                                      ^
+> ./include/linux/compiler.h:331:4: note: in definition of macro '__compiletime_assert'
+>   331 |    prefix ## suffix();    \
+>       |    ^~~~~~
+> ./include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
+>   350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>       |  ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>       |                                     ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+>    50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>       |  ^~~~~~~~~~~~~~~~
+> ./include/linux/nospec.h:56:2: note: in expansion of macro 'BUILD_BUG_ON'
+>    56 |  BUILD_BUG_ON(sizeof(_s) > sizeof(long));   \
+>       |  ^~~~~~~~~~~~
+> drivers/vhost/vhost.c:2076:5: note: in expansion of macro 'array_index_nospec'
+>  2076 |     array_index_nospec((unsigned long)(addr - node->start),
+>       |     ^~~~~~~~~~~~~~~~~~
+> make[2]: *** [scripts/Makefile.build:281: drivers/vhost/vhost.o] Error 1
+> make[1]: *** [scripts/Makefile.build:497: drivers/vhost] Error 2
+> make: *** [Makefile:1083: drivers] Error 2
+> 
+> $ git revert a89db445fbd7f1f8457b03759aa7343fa530ef6b
+> 
+> $ LANG= make ARCH=x86 -j16 bzImage modules
+>   CALL    scripts/atomic/check-atomics.sh
+>   CALL    scripts/checksyscalls.sh
+>   CHK     include/generated/compile.h
+>   CHK     kernel/kheaders_data.tar.xz
+>   Building modules, stage 2.
+> Kernel: arch/x86/boot/bzImage is ready  (#1)
+>   MODPOST 3464 modules
+> 
+> $ echo $?
+> 0
+> 
+> $ find . -name vhost\\.ko
+> ./drivers/vhost/vhost.ko
+> 
+> I've attached the affected kernel config for v5.3~/ i386.
 
-On Sat, Sep 14, 2019 at 11:07:18AM +0800, Hui Zhu wrote:
->usemem will read memory again after access the memory with this option.
->It can help test the speed that load page from swap to memory.
->
->Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
->---
-> usemem.c | 46 ++++++++++++++++++++++++++++++++++++++++------
-> 1 file changed, 40 insertions(+), 6 deletions(-)
->
->diff --git a/usemem.c b/usemem.c
->index 264d52a..2d31946 100644
->--- a/usemem.c
->+++ b/usemem.c
->@@ -94,6 +94,7 @@ int opt_sync_rw = 0;
-> int opt_sync_free = 0;
-> int opt_bind_interval = 0;
-> unsigned long opt_delay = 0;
->+int opt_read_again = 0;
-> int nr_task;
-> int nr_thread;
-> int nr_cpu;
->@@ -151,6 +152,7 @@ void usage(int ok)
-> 	"    -e|--delay          delay for each page in ns\n"
-> 	"    -O|--anonymous      mmap with MAP_ANONYMOUS\n"
-> 	"    -U|--hugetlb        allocate hugetlbfs page\n"
->+	"    -Z|--read-again     read memory again after access the memory\n"
-> 	"    -h|--help           show this message\n"
-> 	,		ourname);
->
->@@ -188,6 +190,7 @@ static const struct option opts[] = {
-> 	{ "sync-rw"	, 0, NULL, 'y' },
-> 	{ "delay"	, 1, NULL, 'e' },
-> 	{ "hugetlb"	, 0, NULL, 'U' },
->+	{ "read-again"	, 0, NULL, 'Z' },
-> 	{ "help"	, 0, NULL, 'h' },
-> 	{ NULL		, 0, NULL, 0 }
-> };
->@@ -616,7 +619,7 @@ unsigned long do_unit(unsigned long bytes, struct drand48_data *rand_data,
-> 	return rw_bytes;
-> }
->
->-static void output_statistics(unsigned long unit_bytes)
->+static void output_statistics(unsigned long unit_bytes, const char *intro)
-> {
-> 	struct timeval stop;
-> 	char buf[1024];
->@@ -629,8 +632,8 @@ static void output_statistics(unsigned long unit_bytes)
-> 		(stop.tv_usec - start_time.tv_usec);
-> 	throughput = ((unit_bytes * 1000000ULL) >> 10) / delta_us;
-> 	len = snprintf(buf, sizeof(buf),
->-			"%lu bytes / %lu usecs = %lu KB/s\n",
->-			unit_bytes, delta_us, throughput);
->+			"%s%lu bytes / %lu usecs = %lu KB/s\n",
->+			intro, unit_bytes, delta_us, throughput);
-> 	fflush(stdout);
-> 	write(1, buf, len);
-> }
->@@ -690,7 +693,34 @@ long do_units(void)
-> 	} while (bytes);
->
-> 	if (!opt_write_signal_read && unit_bytes)
->-		output_statistics(unit_bytes);
->+		output_statistics(unit_bytes, "");
->+
->+	if (opt_read_again && unit_bytes) {
->+		unsigned long rw_bytes = 0;
->+
->+		gettimeofday(&start_time, NULL);
->+		for (i = 0; i < nptr; i++) {
->+			int rep;
->+
->+			for (rep = 0; rep < reps; rep++) {
->+				if (rep > 0 && !quiet) {
->+					printf(".");
->+					fflush(stdout);
->+				}
->+
->+				rw_bytes += do_rw_once(ptrs[i], lens[i], &rand_data, 1, &rep, reps);
->+
->+				if (msync_mode) {
->+					if ((msync(ptrs[i], lens[i], msync_mode)) == -1) {
->+						fprintf(stderr, "msync failed with error %s \n", strerror(errno));
->+						exit(1);
->+					}
->+				}
->+			}
->+		}
->+
->+		output_statistics(rw_bytes, "read again ");
->+	}
->
-> 	if (opt_write_signal_read) {
-> 		struct sigaction act;
->@@ -731,7 +761,7 @@ long do_units(void)
-> 		sigsuspend(&set);
-> 		gettimeofday(&start_time, NULL);
-> 		unit_bytes = do_rw_once(buffer, opt_bytes, &rand_data, 1, NULL, 0);
->-		output_statistics(unit_bytes);
->+		output_statistics(unit_bytes, "");
-> 	}
->
-> 	if (opt_sync_free)
->@@ -879,7 +909,7 @@ int main(int argc, char *argv[])
-> 	pagesize = getpagesize();
->
-> 	while ((c = getopt_long(argc, argv,
->-				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUh", opts, NULL)) != -1)
->+				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh", opts, NULL)) != -1)
-> 		{
-> 		switch (c) {
-> 		case 'a':
->@@ -1005,6 +1035,10 @@ int main(int argc, char *argv[])
-> 			map_hugetlb = MAP_HUGETLB | MAP_HUGE_2MB;
-> 			break;
->
->+		case 'Z':
->+			opt_read_again = 1;
->+			break;
->+
-> 		default:
-> 			usage(1);
-> 		}
->-- 
->2.7.4
->
+Ok, good, we will be "bug compatible" at the very least now :)
+
+When this gets fixed in Linus's tree we can backport the fix here as
+well.  The number of users of that compiler version/configuration is
+probably pretty low at the moment to want to hold off on this fix.
+
+thanks,
+
+greg k-h
