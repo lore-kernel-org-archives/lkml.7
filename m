@@ -2,287 +2,190 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAFAC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 11:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8656620717
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 11:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouOXyIwR"
+	by mail.kernel.org (Postfix) with ESMTP id 3C3FF20693
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 12:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbfINL4v (ORCPT
+        id S1730365AbfINMSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 07:56:51 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34829 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729885AbfINL4u (ORCPT
+        Sat, 14 Sep 2019 08:18:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43196 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730262AbfINMSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 07:56:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y21so1115450wmi.0
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 04:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qQpCdDZTLmJVj8QmOn08OiO8kq3v3BOagLcGV6hpUg0=;
-        b=ouOXyIwRLq94CyfPzMD7mQ4g9bU5gl4sgrwuUctXnXwIq+k6joclsol/8qcmn5m1WY
-         p2DDxEVw9nXt08XZzu2Qcn3upCxN6KKV05Xs6XcoDCnpCAe5m8zOFhHFNIx0lmkBTSRG
-         CueyPh/CITZi3PupmSq7ZPewi+Vvo26UIskjAwQb7nXzvGvEeITX0aTG48LoxKGZXUvy
-         heAhs5r99oZgMT917Y42ynEA5J8VMN0j5qGRLdpln8KzjjDphPvxi+7RFwM56LoSNGxs
-         J+ZrH0SE8MWxqLPKg7a7EgR2OmCg3RiBnc9tGu2o/f7pVvgHubp60UefqQWQIEcuArno
-         forw==
+        Sat, 14 Sep 2019 08:18:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a2so715363pfo.10
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 05:18:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qQpCdDZTLmJVj8QmOn08OiO8kq3v3BOagLcGV6hpUg0=;
-        b=qiHlxI+C5aMjcOZUrQ75941J8scQmGrJ7FgQrRAVxEIbJCkr9Q1SfrB2fi0CkaiL7R
-         EWRPuF9akW1xOI88JZKSnd3+vK0W0kG/a7mpWFdBRqUvfLcPkt8f6iOypC83YDq/URcH
-         yuN47sFDkcAcCv160UAQYo+b5YYdT4MI0tx8wgQYvS6WxGbVehtoj+sYRfeAvBolXSvW
-         I1kgzQ8B430hh2okYFsTrGVoY6Gxd4+ZolMj0nzgGDmP6G7k0lDizk5xoFfdRYG9sZPj
-         dV0T/LmoOuhemWTiuLSOcmt8bjQkAg9EQDTc0ND/Vda0nTquzOjasvm8iFPyC1xXNuLe
-         wspQ==
-X-Gm-Message-State: APjAAAXx6+dYuWYTl5mz4WEuIIuokLfl+sSNs19mwbZXoe+IuojK3u1/
-        tQCCAFaVpX7+vxvYTpKhVT8=
-X-Google-Smtp-Source: APXvYqzTMant0Z4zMA8ZBil0vmoz3PDqpks9wIq6Opv1wKkUCSoxVNsMDY/WSu5P9S8eMsy9jj7gQQ==
-X-Received: by 2002:a7b:c758:: with SMTP id w24mr5165165wmk.148.1568462207717;
-        Sat, 14 Sep 2019 04:56:47 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id e20sm63466269wrc.34.2019.09.14.04.56.46
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=eG246burL7Epz04lN/Agoxuxu8FKEZNpqBGb+bGHtZM=;
+        b=Q9VH0IZi+TupEPl2+tmSbQMuECM/zQcJ9oxrtGfk3q6u1IwJbUrPMfbrhpAi/9zivz
+         pUt6Hr2H4QB66GEgquG4PjEaWsDJGb0gXOE001uvwOlr5oBx/pn8PnYm061QcUZCX3z7
+         D442MQp9XYEOGRt2A2OaR9eL5l3RnweaUVWOyqBQ0ItfW9zKisbwT00HhJcy5OD4YQ58
+         am0ljv9NfDdYDsOVBkokGhQB4a0DHHutrfFU06H6RUvvjHB6dqIjnXo1MzeRLXjsKYET
+         41dABkw/PEdku5gDRBACiSD03NTSNm9mBU8lCx58T4uaSRe+wHqJ1/ZFvGscG6/hYfxZ
+         dC+A==
+X-Gm-Message-State: APjAAAX5zpe+AATqEHY0rmgLYzEghdoZzarECYFu2WXmE2ezonTB+msf
+        HNe/XEQZpClKuxv7paSMAD5rLQ==
+X-Google-Smtp-Source: APXvYqzVgQrhKkG6g0lvhiBLe+qqPUOeknf2nbS5nMorxrOX2tNnSXyV1t7CeZmF/cqojo4WNJoebg==
+X-Received: by 2002:a63:355:: with SMTP id 82mr16568722pgd.81.1568463512195;
+        Sat, 14 Sep 2019 05:18:32 -0700 (PDT)
+Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
+        by smtp.gmail.com with ESMTPSA id m12sm2344408pff.66.2019.09.14.05.18.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 04:56:47 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: remove return statements from void functions
-Date:   Sat, 14 Sep 2019 13:56:34 +0200
-Message-Id: <20190914115634.67874-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+        Sat, 14 Sep 2019 05:18:30 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 05:18:30 -0700 (PDT)
+X-Google-Original-Date: Sat, 14 Sep 2019 05:18:21 PDT (-0700)
+Subject:     Re: [PATCH] riscv: modify the Image header to improve compatibility with the ARM64 header
+In-Reply-To: <alpine.DEB.2.21.9999.1909132005200.24255@viisi.sifive.com>
+CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Atish Patra <Atish.Patra@wdc.com>, merker@debian.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <mhng-755b14c4-8f35-4079-a7ff-e421fd1b02bc@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary return statements from void functions reported by
-checkpatch.
+On Fri, 13 Sep 2019 20:08:14 PDT (-0700), Paul Walmsley wrote:
+>
+> Part of the intention during the definition of the RISC-V kernel image
+> header was to lay the groundwork for a future merge with the ARM64
+> image header.  One error during my original review was not noticing
+> that the RISC-V header's "magic" field was at a different size and
+> position than the ARM64's "magic" field.  If the existing ARM64 Image
+> header parsing code were to attempt to parse an existing RISC-V kernel
+> image header format, it would see a magic number 0.  This is
+> undesirable, since it's our intention to align as closely as possible
+> with the ARM64 header format.  Another problem was that the original
+> "res3" field was not being initialized correctly to zero.
+>
+> Address these issues by creating a 32-bit "magic2" field in the RISC-V
+> header which matches the ARM64 "magic" field.  RISC-V binaries will
+> store "RSC\x05" in this field.  The intention is that the use of the
+> existing 64-bit "magic" field in the RISC-V header will be deprecated
+> over time.  Increment the minor version number of the file format to
+> indicate this change, and update the documentation accordingly.  Fix
+> the assembler directives in head.S to ensure that reserved fields are
+> properly zero-initialized.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Reported-by: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Atish Patra <atish.patra@wdc.com>
+> Cc: Karsten Merker <merker@debian.org>
+> ---
+> Will try to get this merged before v5.3, to minimize the delta with the
+> ARM64 header in the final release.
+>
+>  Documentation/riscv/boot-image-header.txt | 13 +++++++------
+>  arch/riscv/include/asm/image.h            | 12 ++++++------
+>  arch/riscv/kernel/head.S                  |  4 ++--
+>  3 files changed, 15 insertions(+), 14 deletions(-)
+>
+> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
+> index 1b73fea23b39..14b1492f689b 100644
+> --- a/Documentation/riscv/boot-image-header.txt
+> +++ b/Documentation/riscv/boot-image-header.txt
+> @@ -18,7 +18,7 @@ The following 64-byte header is present in decompressed Linux kernel image.
+>  	u32 res1  = 0;		  /* Reserved */
+>  	u64 res2  = 0;    	  /* Reserved */
+>  	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
+> -	u32 res3;		  /* Reserved for additional RISC-V specific header */
+> +	u32 magic2 = 0x56534905;  /* Magic number 2, little endian, "RSC\x05" */
+>  	u32 res4;		  /* Reserved for PE COFF offset */
+>
+>  This header format is compliant with PE/COFF header and largely inspired from
+> @@ -37,13 +37,14 @@ Notes:
+>  	Bits 16:31 - Major version
+>
+>    This preserves compatibility across newer and older version of the header.
+> -  The current version is defined as 0.1.
+> +  The current version is defined as 0.2.
+>
+> -- res3 is reserved for offset to any other additional fields. This makes the
+> -  header extendible in future. One example would be to accommodate ISA
+> -  extension for RISC-V in future. For current version, it is set to be zero.
+> +- The "magic" field is deprecated as of version 0.2.  In a future
+> +  release, it may be removed.  This originally should have matched up
+> +  with the ARM64 header "magic" field, but unfortunately does not.
+> +  The "magic2" field replaces it, matching up with the ARM64 header.
+>
+> -- In current header, the flag field has only one field.
+> +- In current header, the flags field has only one field.
+>  	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
+>
+>  - Image size is mandatory for boot loader to load kernel image. Booting will
+> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+> index ef28e106f247..344db5244547 100644
+> --- a/arch/riscv/include/asm/image.h
+> +++ b/arch/riscv/include/asm/image.h
+> @@ -3,7 +3,8 @@
+>  #ifndef __ASM_IMAGE_H
+>  #define __ASM_IMAGE_H
+>
+> -#define RISCV_IMAGE_MAGIC	"RISCV"
+> +#define RISCV_IMAGE_MAGIC	"RISCV\0\0\0"
+> +#define RISCV_IMAGE_MAGIC2	"RSC\x05"
+>
+>  #define RISCV_IMAGE_FLAG_BE_SHIFT	0
+>  #define RISCV_IMAGE_FLAG_BE_MASK	0x1
+> @@ -23,7 +24,7 @@
+>  #define __HEAD_FLAGS		(__HEAD_FLAG(BE))
+>
+>  #define RISCV_HEADER_VERSION_MAJOR 0
+> -#define RISCV_HEADER_VERSION_MINOR 1
+> +#define RISCV_HEADER_VERSION_MINOR 2
+>
+>  #define RISCV_HEADER_VERSION (RISCV_HEADER_VERSION_MAJOR << 16 | \
+>  			      RISCV_HEADER_VERSION_MINOR)
+> @@ -39,9 +40,8 @@
+>   * @version:		version
+>   * @res1:		reserved
+>   * @res2:		reserved
+> - * @magic:		Magic number
+> - * @res3:		reserved (will be used for additional RISC-V specific
+> - *			header)
+> + * @magic:		Magic number (RISC-V specific; deprecated)
+> + * @magic2:		Magic number 2 (to match the ARM64 'magic' field pos)
+>   * @res4:		reserved (will be used for PE COFF offset)
+>   *
+>   * The intention is for this header format to be shared between multiple
+> @@ -58,7 +58,7 @@ struct riscv_image_header {
+>  	u32 res1;
+>  	u64 res2;
+>  	u64 magic;
+> -	u32 res3;
+> +	u32 magic2;
+>  	u32 res4;
+>  };
+>  #endif /* __ASSEMBLY__ */
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 0f1ba17e476f..52eec0c1bf30 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -39,9 +39,9 @@ ENTRY(_start)
+>  	.word RISCV_HEADER_VERSION
+>  	.word 0
+>  	.dword 0
+> -	.asciz RISCV_IMAGE_MAGIC
+> -	.word 0
+> +	.ascii RISCV_IMAGE_MAGIC
+>  	.balign 4
+> +	.ascii RISCV_IMAGE_MAGIC2
+>  	.word 0
+>
+>  .global _start_kernel
 
-WARNING: void function return statements are not generally useful
-
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_mlme.c         |  5 -----
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c     | 10 ----------
- drivers/staging/rtl8723bs/core/rtw_pwrctrl.c      |  1 -
- drivers/staging/rtl8723bs/core/rtw_security.c     |  1 -
- drivers/staging/rtl8723bs/core/rtw_wlan_util.c    |  2 --
- drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c    |  2 --
- drivers/staging/rtl8723bs/hal/odm_DIG.c           |  1 -
- drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c |  1 -
- drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c    |  2 --
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c |  1 -
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c      |  1 -
- 11 files changed, 27 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 34adf5789c98..4000125054c3 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -329,7 +329,6 @@ void rtw_generate_random_ibss(u8 *pibss)
- 	pibss[3] = (u8)(curtime & 0xff) ;/* p[0]; */
- 	pibss[4] = (u8)((curtime>>8) & 0xff) ;/* p[1]; */
- 	pibss[5] = (u8)((curtime>>16) & 0xff) ;/* p[2]; */
--	return;
- }
- 
- u8 *rtw_get_capability_from_ie(u8 *ie)
-@@ -832,8 +831,6 @@ void rtw_survey_event_callback(struct adapter	*adapter, u8 *pbuf)
- exit:
- 
- 	spin_unlock_bh(&pmlmepriv->lock);
--
--	return;
- }
- 
- 
-@@ -1840,8 +1837,6 @@ void rtw_mlme_reset_auto_scan_int(struct adapter *adapter)
- 			mlme->auto_scan_int_ms = mlme->roam_scan_int_ms;
- 	} else
- 		mlme->auto_scan_int_ms = 0; /* disabled */
--
--	return;
- }
- 
- static void rtw_auto_scan_handler(struct adapter *padapter)
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 2128886c9924..4f812cd19b31 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -3086,8 +3086,6 @@ void issue_auth(struct adapter *padapter, struct sta_info *psta, unsigned short
- 	rtw_wep_encrypt(padapter, (u8 *)pmgntframe);
- 	DBG_871X("%s\n", __func__);
- 	dump_mgntframe(padapter, pmgntframe);
--
--	return;
- }
- 
- 
-@@ -3405,8 +3403,6 @@ void issue_assocreq(struct adapter *padapter)
- 		rtw_buf_update(&pmlmepriv->assoc_req, &pmlmepriv->assoc_req_len, (u8 *)pwlanhdr, pattrib->pktlen);
- 	else
- 		rtw_buf_free(&pmlmepriv->assoc_req, &pmlmepriv->assoc_req_len);
--
--	return;
- }
- 
- /* when wait_ack is ture, this function shoule be called at process context */
-@@ -5260,8 +5256,6 @@ void report_del_sta_event(struct adapter *padapter, unsigned char *MacAddr, unsi
- 	DBG_871X("report_del_sta_event: delete STA, mac_id =%d\n", mac_id);
- 
- 	rtw_enqueue_cmd(pcmdpriv, pcmd_obj);
--
--	return;
- }
- 
- void report_add_sta_event(struct adapter *padapter, unsigned char *MacAddr, int cam_idx)
-@@ -5306,8 +5300,6 @@ void report_add_sta_event(struct adapter *padapter, unsigned char *MacAddr, int
- 	DBG_871X("report_add_sta_event: add STA\n");
- 
- 	rtw_enqueue_cmd(pcmdpriv, pcmd_obj);
--
--	return;
- }
- 
- /****************************************************************************
-@@ -5869,8 +5861,6 @@ void link_timer_hdl(struct timer_list *t)
- 		issue_assocreq(padapter);
- 		set_link_timer(pmlmeext, REASSOC_TO);
- 	}
--
--	return;
- }
- 
- void addba_timer_hdl(struct timer_list *t)
-diff --git a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-index 4075de07e0a9..30137f0bd984 100644
---- a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-@@ -190,7 +190,6 @@ void rtw_ps_processor(struct adapter *padapter)
- 	}
- exit:
- 	pwrpriv->ps_processing = false;
--	return;
- }
- 
- static void pwr_state_check_handler(struct timer_list *t)
-diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
-index 57cfe06d7d73..5ffaf9bfa6e8 100644
---- a/drivers/staging/rtl8723bs/core/rtw_security.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_security.c
-@@ -309,7 +309,6 @@ void rtw_wep_decrypt(struct adapter  *padapter, u8 *precvframe)
- 
- 		WEP_SW_DEC_CNT_INC(psecuritypriv, prxattrib->ra);
- 	}
--	return;
- }
- 
- /* 3		=====TKIP related ===== */
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index ea3ea2a6b314..5ab98f3e722e 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -1170,8 +1170,6 @@ void HT_info_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- 
- 	pmlmeinfo->HT_info_enable = 1;
- 	memcpy(&(pmlmeinfo->HT_info), pIE->data, pIE->Length);
--
--	return;
- }
- 
- void HTOnAssocRsp(struct adapter *padapter)
-diff --git a/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c b/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-index 3239d37087c8..1ca9063a269f 100644
---- a/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-+++ b/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-@@ -402,8 +402,6 @@ static void GetDeltaSwingTable_8723B(
- 		*TemperatureUP_B   = (u8 *)DeltaSwingTableIdx_2GA_P_8188E;
- 		*TemperatureDOWN_B = (u8 *)DeltaSwingTableIdx_2GA_N_8188E;
- 	}
--
--	return;
- }
- 
- 
-diff --git a/drivers/staging/rtl8723bs/hal/odm_DIG.c b/drivers/staging/rtl8723bs/hal/odm_DIG.c
-index 70d98c58ca97..40fe43c62c45 100644
---- a/drivers/staging/rtl8723bs/hal/odm_DIG.c
-+++ b/drivers/staging/rtl8723bs/hal/odm_DIG.c
-@@ -1074,7 +1074,6 @@ void odm_FAThresholdCheck(
- 		dm_FA_thres[1] = 4000;
- 		dm_FA_thres[2] = 5000;
- 	}
--	return;
- }
- 
- u8 odm_ForbiddenIGICheck(void *pDM_VOID, u8 DIG_Dynamic_MIN, u8 CurrentIGI)
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-index faeaf24fa833..87535a4c2e14 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-@@ -3773,7 +3773,6 @@ void C2HPacketHandler_8723B(struct adapter *padapter, u8 *pbuffer, u16 length)
- 
- 	process_c2h_event(padapter, &C2hEvent, tmpBuf);
- 	/* c2h_handler_8723b(padapter,&C2hEvent); */
--	return;
- }
- 
- void SetHwReg8723B(struct adapter *padapter, u8 variable, u8 *val)
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-index 0f3301091258..e8577c084bbd 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-@@ -179,8 +179,6 @@ static void rtl8723bs_c2h_packet_handler(struct adapter *padapter,
- 		kfree(tmp);
- 
- 	/* DBG_871X("-%s res(%d)\n", __func__, res); */
--
--	return;
- }
- 
- static inline union recv_frame *try_alloc_recvframe(struct recv_priv *precvpriv,
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index f819abb756dc..67d56f3c0717 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -1422,7 +1422,6 @@ void rtw_cfg80211_unlink_bss(struct adapter *padapter, struct wlan_network *pnet
- 		DBG_8192C("%s(): cfg80211_unlink %s!! () ", __func__, select_network.Ssid.Ssid);
- 		cfg80211_put_bss(padapter->rtw_wdev->wiphy, bss);
- 	}
--	return;
- }
- 
- void rtw_cfg80211_surveydone_event_callback(struct adapter *padapter)
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-index d3784c44f6d0..12f683e2e0e2 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -281,7 +281,6 @@ static void sdio_dvobj_deinit(struct sdio_func *func)
- 		sdio_deinit(dvobj);
- 		devobj_deinit(dvobj);
- 	}
--	return;
- }
- 
- void rtw_set_hal_ops(struct adapter *padapter)
--- 
-2.23.0
-
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
