@@ -2,85 +2,66 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE13C49ED6
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3F2C49ED6
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2D42081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41AB2081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfINHGA (ORCPT
+        id S1727156AbfINHIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 03:06:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2408 "EHLO mga18.intel.com"
+        Sat, 14 Sep 2019 03:08:15 -0400
+Received: from ms.lwn.net ([45.79.88.28]:35526 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfINHFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 03:05:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 00:05:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,503,1559545200"; 
-   d="scan'208";a="210615626"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.251.128.120])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Sep 2019 00:05:34 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        prarit@redhat.com, darcari@redhat.com,
-        Youquan Song <youquan.song@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/5] tools/power/x86/intel-speed-select: Fix high priority core mask over count
-Date:   Sat, 14 Sep 2019 00:05:09 -0700
-Message-Id: <20190914070513.19807-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190914070513.19807-1-srinivas.pandruvada@linux.intel.com>
-References: <20190914070513.19807-1-srinivas.pandruvada@linux.intel.com>
+        id S1726622AbfINHIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 03:08:15 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id AF5172CC;
+        Sat, 14 Sep 2019 07:08:12 +0000 (UTC)
+Date:   Sat, 14 Sep 2019 01:08:08 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk,
+        kernel@collabora.com, krisman@collabora.com
+Subject: Re: [PATCH 4/4] coding-style: add explanation about pr_fmt macro
+Message-ID: <20190914010808.7003db2e@lwn.net>
+In-Reply-To: <125475bd-ca6d-5d2a-712d-9cb37a4b8164@acm.org>
+References: <20190913185746.337429-1-andrealmeid@collabora.com>
+        <20190913185746.337429-5-andrealmeid@collabora.com>
+        <125475bd-ca6d-5d2a-712d-9cb37a4b8164@acm.org>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youquan Song <youquan.song@intel.com>
+On Fri, 13 Sep 2019 13:22:18 -0700
+Bart Van Assche <bvanassche@acm.org> wrote:
 
-If the CPU package has the less logical CPU than topo_max_cpus, but un-present
-CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
+> On 9/13/19 11:57 AM, André Almeida wrote:
+> > The pr_fmt macro is useful to format log messages printed by pr_XXXX()
+> > functions. Add text to explain the purpose of it, how to use and an
+> > example.
+> > 
+> > Signed-off-by: André Almeida <andrealmeid@collabora.com>  
+> 
+> Since Jonathan Corbet is documentation maintainer, shouldn't he be Cc'ed 
+> explicitly for documentation patches? See also the MAINTAINERS file.
 
-Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
-package, but it count to 27 logic CPUs.
+...and indeed I was CC'd on the patch - and your response :)
 
-./intel-speed-select base-freq info -l 0 | grep mask
-        high-priority-cpu-mask:7f000179,f000179f
+Thanks,
 
-With the fix patch:
-./intel-speed-select base-freq info -l 0
-        high-priority-cpu-mask:00000179,f000179f
-
-Signed-off-by: Youquan Song <youquan.song@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- tools/power/x86/intel-speed-select/isst-config.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 59753b3917bb..83ac72902b36 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
- 			int j;
- 
- 			for (j = 0; j < topo_max_cpus; ++j) {
-+				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
-+					continue;
-+
- 				if (cpu_map[j].pkg_id == pkg_id &&
- 				    cpu_map[j].die_id == die_id &&
- 				    cpu_map[j].punit_cpu_core == i) {
--- 
-2.17.2
-
+jon
