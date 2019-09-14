@@ -2,105 +2,177 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0605AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 01:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278F5C4CEC5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 02:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D720D208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 01:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FF420717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 02:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568428225;
+	bh=SmCg3dZf3LJ6WJN5//nawR5IgYMlBzdTkJhmOH6UDe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2cqynI90p/PGRCHoHCDaQP3PlsydQ82fYapDr+OjRml9SUyVqGABjQ2R/n1WxuJ8F
+	 4GQjxHziG+cbR6IRwkMfn/qFKdUFzZn0FgPOYMRybbUDXqEXfSgEHGOjyCs+0gAoXV
+	 QhC/cxv6Knc6mrcYcunmQmnICx4Be4+tm/ICff3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388817AbfINBhA (ORCPT
+        id S2389553AbfINCaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 21:37:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47716 "EHLO mx1.redhat.com"
+        Fri, 13 Sep 2019 22:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbfINBhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 21:37:00 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725747AbfINCaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 13 Sep 2019 22:30:14 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AB9A688304;
-        Sat, 14 Sep 2019 01:36:59 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-120-30.rdu2.redhat.com [10.10.120.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 088EF5D6B0;
-        Sat, 14 Sep 2019 01:36:53 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH glibc 2.31 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v12)
-References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
-        <20190807142726.2579-2-mathieu.desnoyers@efficios.com>
-        <8736h2sn8y.fsf@oldenburg2.str.redhat.com>
-        <7db64714-3dc5-b322-1edc-736b08ee7d63@redhat.com>
-        <1137395748.2754.1568390288746.JavaMail.zimbra@efficios.com>
-Date:   Fri, 13 Sep 2019 21:36:51 -0400
-In-Reply-To: <1137395748.2754.1568390288746.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 13 Sep 2019 11:58:08 -0400
-        (EDT)")
-Message-ID: <87ef0j4q18.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FD720717;
+        Sat, 14 Sep 2019 02:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568428213;
+        bh=SmCg3dZf3LJ6WJN5//nawR5IgYMlBzdTkJhmOH6UDe0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1Xhco409vITvYR9NuYdOO+zjmi3muTEfUi9ctzCj55lTpeK7zpJ3ZtME23rrIS34Z
+         gPi7JunWRp5q1mfc85VM25m8eZyarwNIn7RjKresSf375POU6ISQWEjvcC138ezy/q
+         CXDAuUNnfkmt/SK5R4O52p5SEW0k92/6q270cgKQ=
+Date:   Sat, 14 Sep 2019 10:30:06 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan @ agner . ch" <stefan@agner.ch>,
+        "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v5 00/13] Common patches from downstream development
+Message-ID: <20190914023004.GA3425@dragon>
+References: <20190827131806.6816-1-philippe.schenker@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sat, 14 Sep 2019 01:37:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827131806.6816-1-philippe.schenker@toradex.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Tue, Aug 27, 2019 at 01:18:16PM +0000, Philippe Schenker wrote:
+> 
+> This patchset holds some common changes that were never upstreamed.
+> With latest downstream kernel upgrade, I took the aproach to select
+> mainline devicetrees and atomically add missing stuff for downstream.
+> 
+> These patches I send here are separated out with changes that also
+> have a benefit for mainline.
+> 
+> --------------------- Update version 4 and later -----------------------
+> Patches that got pulled in an earlier patchset version got dropped in
+> this patchset.
+> ------------------------------------------------------------------------
+> 
+> Philippe
+> 
+> Changes in v5:
+> - changed legacy gpio-key,wakeup to wakeup-source
+> - Add note in commit message about disabled status
+> - Added Olek's reviewed-by
+> - change group name
+> - Add pinmux to iomuxc
+> - Adjusted commit message
+> - Switched to consistent naming: pinctrl_xxx: xxxgrp
+> - Added Olek's Reviewed-by
+> - Added Olek's Reviewed-by
+> - Added Olek's Reviewed-by
+> - Added Olek's Reviewd-by
+> - Added Olek's Reviewed-by
+> - Add Olek's Reviewed-by
+> - Added note to commit message about disabled status
+> - Add Olek's Reviewed-by
+> 
+> Changes in v4:
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Add Marcel Ziswiler's Ack
+> - Move can nodes to module deviceteree include imx6ull-colibri.dtsi
+> - Add Marcel Ziswiler's Ack
+> 
+> Changes in v3:
+> - Add new commit message from Stefan's proposal on ML
+> - Fix commit message
+> - Fix commit title to "...imx6-apalis:..."
+> 
+> Changes in v2:
+> - Deleted touchrevolution downstream stuff
+> - Use generic node name
+> - Better comment
+> - Changed commit title to '...imx6qdl-apalis:...'
+> - Deleted touchrevolution downstream stuff
+> - Use generic node name
+> - Put a better comment in there
+> - Commit title
+> - Removed f0710a
+> that is downstream only
+> - Changed to generic node name
+> - Better comment
+> 
+> Max Krummenacher (2):
+>   ARM: dts: imx6ull-colibri: reduce v_batt current in power off
+>   ARM: dts: imx6ull: improve can templates
+> 
+> Philippe Schenker (9):
+>   ARM: dts: imx7-colibri: Add touch controllers
+>   ARM: dts: imx6qdl-colibri: Add missing pin declaration in iomuxc
+>   ARM: dts: imx6qdl-apalis: Add sleep state to can interfaces
+>   ARM: dts: imx6-apalis: Add touchscreens used on Toradex eval boards
+>   ARM: dts: imx6-colibri: Add missing pinmuxing to Toradex eval board
+>   ARM: dts: imx6ull-colibri: Add sleep mode to fec
+>   ARM: dts: imx6ull-colibri: Add watchdog
+>   ARM: dts: imx6ull-colibri: Add general wakeup key used on Colibri
+>   ARM: dts: imx6ull-colibri: Add touchscreen used with Eval Board
 
-> I'm unsure whether there are changes I need to do in my rseq patchset, or
-> if this is a separate issue that will be fixed separately before glibc 2.31
-> is out, which would then update the rseq bits accordingly ?
+Applied all, but except this one which uses base64
+Content-Transfer-Encoding.
 
-Someone else (perhaps me) has to fix __libc_multiple_libcs.  Then you
-can use it instead/in addition to the rtld_active check (depending on
-the semantics we agree upon for __libc_multiple_libcs).
+Shawn
 
-Fixing __libc_multiple_libcs may also address the early initialization
-issue because for that to be always correct, we need to run the
-initialization code before ELF constructors.
-
->>> I'm less convinced that we actually need this.  I don't think we have
->>> ever done anything like that before, and I don't think it's necessary.
->>> Any secondary rseq library just needs to note if it could perform
->>> registration, and if it failed to do so, do not perform unregistration
->>> in a pthread destructor callback.
->
-> If that secondary rseq library happens to try to perform registration within
-> its library constructor (before glibc has performed the __rseq_abi TLS
-> registration), we end up in a situation where the secondary library takes
-> ownership of rseq, even though libc would require ownership. This is a
-> scenario we want to avoid.
-
-We can avoid that if we run the glibc initialization before user code
-(except IFUNC resolvers).  glibc itself doesn't have to do the
-initialization from an ELF constructor.
-
-> Making sure libc reserves ownership through __rseq_handled (which is
-> a non-TLS variable that can be accessed early in the program lifetime)
-> protects against this.
-
-If that's it's only purpose, I don't think it's necessary.  If the
-kernel can fail the second registration attempt, that would be all the
-information the alternative rseq implementation needs (plus the matter
-of destruction).
-
-Thanks,
-Florian
+> 
+> Stefan Agner (2):
+>   ARM: dts: imx7-colibri: add GPIO wakeup key
+>   ARM: dts: imx7-colibri: fix 1.8V/UHS support
+> 
+>  arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 39 +++++++++++
+>  arch/arm/boot/dts/imx6q-apalis-eval.dts       | 13 ++++
+>  arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 13 ++++
+>  arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 13 ++++
+>  arch/arm/boot/dts/imx6qdl-apalis.dtsi         | 27 ++++++--
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi        | 17 +++++
+>  .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 38 +++++++++++
+>  .../arm/boot/dts/imx6ull-colibri-nonwifi.dtsi |  2 +-
+>  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi   |  2 +-
+>  arch/arm/boot/dts/imx6ull-colibri.dtsi        | 64 +++++++++++++++++--
+>  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi   | 38 +++++++++++
+>  arch/arm/boot/dts/imx7-colibri.dtsi           | 30 ++++++++-
+>  12 files changed, 280 insertions(+), 16 deletions(-)
+> 
+> -- 
+> 2.23.0
+> 
