@@ -2,116 +2,165 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DD0C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D76C4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C5B20830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E00206CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 19:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfINTAO (ORCPT
+        id S1727975AbfINTFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 15:00:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38733 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfINTAO (ORCPT
+        Sat, 14 Sep 2019 15:05:40 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:15024 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfINTFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 15:00:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w10so3618037plq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 12:00:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=OFiiJYwXSRXINvUze1d4KfmURKJMOMB0TZAHUxFChKg=;
-        b=qSoaRn0uaGeslazp6ByoAbL402HQmXJOO19f1Pmu4g27CQkrYBiRhqmYTyewjKuTh1
-         9aDMOP1kMB7hb9hNLbV7+6uBLDkThdJxnGUMMqgfabk4doh/gwI7s2NTk2hZfeMH7b+z
-         bMHYJUKRJKjd01GzSxF55XMQcw/L9oVU4WiDCA1toqD0VclGQDIBsgKveB9Jo9BDSRQy
-         8TZvGH1Z1dfrAtbMOdmOU4hI7iNurQpk5AW+FIgn1oLfvB1QxyRD5nBmeyBi8mOH5gZs
-         isyhUqJGctRSM22xY60FArcb91kg1zATnw2+HAS4OfQLOW2ApI0vrMxrFHwzJyJDjCfG
-         yfCg==
-X-Gm-Message-State: APjAAAXnxcFsSHa4gNfTTJOhccZAx7HOzptrvUpu5rVCuVs881sv13ky
-        InGcY6QqBgPgmSd+Ejr+DYrA6g==
-X-Google-Smtp-Source: APXvYqwCAZIGEJCOA0b/9T/YR7nXDut4D/Hkv2inKbJ3jCXen5H++uow94dW28QTx1kGUiJX/cXH7Q==
-X-Received: by 2002:a17:902:8488:: with SMTP id c8mr52750200plo.164.1568487613263;
-        Sat, 14 Sep 2019 12:00:13 -0700 (PDT)
-Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
-        by smtp.gmail.com with ESMTPSA id u24sm41073974pgk.31.2019.09.14.12.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 12:00:12 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 12:00:12 -0700 (PDT)
-X-Google-Original-Date: Sat, 14 Sep 2019 11:50:32 PDT (-0700)
-Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-In-Reply-To: <529ec882-734f-17ae-e4cb-3aeb563ad1d5@bluespec.com>
-CC:     linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Darius Rad <darius@bluespec.com>
-Message-ID: <mhng-c06cc89b-42d9-4f95-b090-2db96628d5fb@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Sat, 14 Sep 2019 15:05:40 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: NamCnpYy7SPDNIB3inySM76wPEFDkbfm16Jv9c2QJO7rqBr18skMfsFHvgdYGBvU/O7zLERuLf
+ sMp/3dM2X6MFofMZCc49ldEjcBZKAJ9XLk5J1vftjusHp+vZcM+Wt5GWC+evLq6iyou2dyYAIP
+ 2s+WfJvk6zxP6JLtyJSVfFCgvCIJgAfewFMp9x38PFg6qFOGq/e6rF7zUYWOnIcav5mAwHUb8m
+ aW6QlCXClqr2pWjIzPSr5wrO10iAJts19F7p1YFXyIA9nU5nZGwZgTKtu/11LDhp78n1k4UNFh
+ tgk=
+X-IronPort-AV: E=Sophos;i="5.64,505,1559545200"; 
+   d="scan'208";a="50488026"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2019 12:05:38 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 14 Sep 2019 12:05:29 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 14 Sep 2019 12:05:29 -0700
+Date:   Sat, 14 Sep 2019 21:05:28 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+CC:     <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: at91: Send bus clear command if SCL or SDA is down
+Message-ID: <20190914190528.wnxhcjo5s66qive6@sekiro>
+Mail-Followup-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, wsa@the-dreams.de
+References: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190911095854.5141-1-codrin.ciubotariu@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 14:40:34 PDT (-0700), Darius Rad wrote:
-> As per the existing comment, irq_mask and irq_unmask do not need
-> to do anything for the PLIC.  However, the functions must exist
-> (the pointers cannot be NULL) as they are not optional, based on
-> the documentation (Documentation/core-api/genericirq.rst) as well
-> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
->
-> Signed-off-by: Darius Rad <darius@bluespec.com>
+On Wed, Sep 11, 2019 at 12:58:54PM +0300, Codrin Ciubotariu wrote:
+> After a transfer timeout, some faulty I2C slave devices might hold down
+> the SCL or the SDA pins. We can generate a bus clear command, hoping that
+> the slave might release the pins.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+I'll be off for three weeks so if there are minor changes, you can keep my
+ack.
+
+Thanks
+
+Ludovic
+
 > ---
->  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index cf755964f2f8..52d5169f924f 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
->  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->  }
->
-> +/*
-> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-> + * by reading claim and "unmasked" when writing it back.
-> + */
-> +static void plic_irq_mask(struct irq_data *d) { }
-> +static void plic_irq_unmask(struct irq_data *d) { }
+>  drivers/i2c/busses/i2c-at91-master.c | 20 ++++++++++++++++++++
+>  drivers/i2c/busses/i2c-at91.h        |  6 +++++-
+>  2 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> index a3fcc35ffd3b..5f544a16db96 100644
+> --- a/drivers/i2c/busses/i2c-at91-master.c
+> +++ b/drivers/i2c/busses/i2c-at91-master.c
+> @@ -599,6 +599,26 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+>  		at91_twi_write(dev, AT91_TWI_CR,
+>  			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
+>  	}
 > +
->  #ifdef CONFIG_SMP
->  static int plic_set_affinity(struct irq_data *d,
->  			     const struct cpumask *mask_val, bool force)
-> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
->
->  static struct irq_chip plic_chip = {
->  	.name		= "SiFive PLIC",
-> -	/*
-> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-> -	 * by reading claim and "unmasked" when writing it back.
-> -	 */
->  	.irq_enable	= plic_irq_enable,
->  	.irq_disable	= plic_irq_disable,
-> +	.irq_mask	= plic_irq_mask,
-> +	.irq_unmask	= plic_irq_unmask,
->  #ifdef CONFIG_SMP
->  	.irq_set_affinity = plic_set_affinity,
->  #endif
-
-I can't find any other drivers in irqchip with empty irq_mask/irq_unmask.  I'm 
-not well versed in irqchip stuff, so I'll leave it up to the irqchip 
-maintainers to comment on if this is the right way to do this.  Either way, I'm 
-assuming it'll go in through some the irqchip tree so
-
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
-
-just to make sure I don't get in the way if it is the right way to do it :).
+> +	/*
+> +	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
+> +	 * we can send a bus clear command, hoping that the pins will be
+> +	 * released
+> +	 */
+> +	if (!(dev->transfer_status & AT91_TWI_SDA) ||
+> +	    !(dev->transfer_status & AT91_TWI_SCL)) {
+> +		dev_dbg(dev->dev,
+> +			"SDA/SCL are down; sending bus clear command\n");
+> +		if (dev->use_alt_cmd) {
+> +			unsigned int acr;
+> +
+> +			acr = at91_twi_read(dev, AT91_TWI_ACR);
+> +			acr &= ~AT91_TWI_ACR_DATAL_MASK;
+> +			at91_twi_write(dev, AT91_TWI_ACR, acr);
+> +		}
+> +		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
+> index 499b506f6128..ffb870f3ffc6 100644
+> --- a/drivers/i2c/busses/i2c-at91.h
+> +++ b/drivers/i2c/busses/i2c-at91.h
+> @@ -36,6 +36,7 @@
+>  #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
+>  #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
+>  #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
+> +#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
+>  #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
+>  #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
+>  #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
+> @@ -69,6 +70,8 @@
+>  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+>  #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
+>  #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
+> +#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
+> +#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
+>  
+>  #define	AT91_TWI_INT_MASK \
+>  	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
+> @@ -81,7 +84,8 @@
+>  #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
+>  
+>  #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
+> -#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
+> +#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
+> +#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
+>  #define	AT91_TWI_ACR_DIR	BIT(8)
+>  
+>  #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
+> -- 
+> 2.20.1
+> 
