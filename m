@@ -2,74 +2,113 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C417AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA48C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8162084F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76DD2084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568466344;
+	bh=gU4CO6duH0AH0YKj1jI15GcCTMmQHOV1AnE0wHF0lbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zPK9GEvguzpgQqCh5f63rz8eRd+XnQdrONAoU3FFix0fw8uxBUQlXyhdcU5cLP4+Q
+	 BgWINiY5Ie2XuvOfTUQqv+9yscR404zqKALlJmfQlTzGOiWQMF8zHnBjF9ypKxWnJ7
+	 AtjcqPyjwIAqFXcXAIwv5shrUmgNv4kiRW2Akh5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388613AbfINNEs (ORCPT
+        id S2388709AbfINNFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 09:04:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:18258 "EHLO mga06.intel.com"
+        Sat, 14 Sep 2019 09:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388575AbfINNEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 09:04:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 06:04:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="188149021"
-Received: from krusocki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.34])
-  by orsmga003.jf.intel.com with ESMTP; 14 Sep 2019 06:04:42 -0700
-Date:   Sat, 14 Sep 2019 14:04:41 +0100
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     zohar@linux.ibm.com, jsnitsel@redhat.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Subject: Re: [PATCH v4] KEYS: trusted: correctly initialize digests and fix
- locking issue
-Message-ID: <20190914130441.GE9560@linux.intel.com>
-References: <20190913185136.780-1-roberto.sassu@huawei.com>
+        id S2388575AbfINNFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 09:05:43 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4DB2206A4;
+        Sat, 14 Sep 2019 13:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568466342;
+        bh=gU4CO6duH0AH0YKj1jI15GcCTMmQHOV1AnE0wHF0lbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lsxJAW04dWcvUE0tzwucaUjD5aoqdG4PqgTbESOsIaaQBBk7k6373iozOifsrjsVL
+         heLPLCjCzXjXa270ZhP+OP+6LGJZ2Nq6F95cBNHU3uA2IrtzjLPvKHfdysEM+HMcGM
+         YPLyJ2AmpSCohiG7Ft7g0A95DppKBJ/mYJXuTEs8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3C6603C0CA2; Sat, 14 Sep 2019 15:05:40 +0200 (CEST)
+Date:   Sat, 14 Sep 2019 15:05:40 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/6] Non-urgent fixes and improvments for omap3-rom-rng
+Message-ID: <20190914130540.jvtxaame7pat7jph@earth.universe>
+References: <20190913220922.29501-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mdog2bpqvzul6dqe"
 Content-Disposition: inline
-In-Reply-To: <20190913185136.780-1-roberto.sassu@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190913220922.29501-1-tony@atomide.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 08:51:36PM +0200, Roberto Sassu wrote:
-> Commit 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to
-> tpm_pcr_extend()") modifies tpm_pcr_extend() to accept a digest for each
-> PCR bank. After modification, tpm_pcr_extend() expects that digests are
-> passed in the same order as the algorithms set in chip->allocated_banks.
-> 
-> This patch fixes two issues introduced in the last iterations of the patch
-> set: missing initialization of the TPM algorithm ID in the tpm_digest
-> structures passed to tpm_pcr_extend() by the trusted key module, and
-> unreleased locks in the TPM driver due to returning from tpm_pcr_extend()
-> without calling tpm_put_ops().
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Fixes: 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()")
 
-Reviewed-by:  <jarkko.sakkinen@linux.intel.com>
+--mdog2bpqvzul6dqe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I picked up this patch to my tree.
+Hi,
 
-/Jarkko
+On Fri, Sep 13, 2019 at 03:09:16PM -0700, Tony Lindgren wrote:
+> Here are fixes and improvments for omap3-rom-rng that's been broken for
+> a while.
+>=20
+> The first four patches get it working, and then the last two patches add
+> support for runtime PM.
+
+Nice cleanups, the series is
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+Assuming you use clk_prepare_enable() in the runtime PM handler, I
+suggest to add another patch and go all the way to managed resources:
+devm_add_action() can be used for disabling runtime PM and
+devm_hwrng_register() can be used to register the hwrng device.
+
+-- Sebastian
+
+--mdog2bpqvzul6dqe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl185ZkACgkQ2O7X88g7
++ppqNA/+JmsrHxkgYD+ip05tbafR/Z7vXD250VZkgq+1vhiP5xn3FfwHTGHmNB02
+WSnGZFh1i5i1XleRfA/2ITvoaqT3EhCx89DZPqrg1GYiUR/Ol3HhIh8axTOs331G
+KIFbTI3ZGH3pVqS7N77Egf4vGqmv/rUUnMZjm8b6flGVpLL4WvqPpGvs8Yglxdmq
+j+EntLH/jD+vm1MdaTgTLL7DchwgCW0uonukbfMKZqan8p7S9akqhvxmIo+G9OdV
+Ok19HmlUf/Mplg959p6HjaE0ycZ/6j2r7PZQrnYlzIyt6jyvbusIZPawOW7LSkWE
+0TU6c00OHJwDN0dM5oL23AZM9I3kR5HF4Dd9Cfk1VaWnFpEumOrP1sjp0Czb2ZgL
+bVtlqfkhu+LDF052Sb544DbYICaRj6OB4LICDM6IEkPiwLgquK2vu0BmAIXmUMNV
+wEmQW+u2fIqDxUez15RSpgnToI35NFXj8XotFdyDtMpuNqM6hsV6wadMEE/j83l/
+8BJ0+RR4ftudQWdFTDDmyPPnbADAnRLjb4RF1HJWd94u1PrX88q5CHag1gPE+Jq+
+XpUIZDjezBO9srd3UWteMBFGdpKTdxMQsfhxav/a11vMe+RAXcyKzzGg6rvCSx+X
+YMnq5CJdagSR1nmSFEJuv3lENUgBXxniwRX7EFbxsOE46kV2IXc=
+=lttE
+-----END PGP SIGNATURE-----
+
+--mdog2bpqvzul6dqe--
