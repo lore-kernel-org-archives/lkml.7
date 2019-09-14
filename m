@@ -2,232 +2,156 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEF5C4CEC8
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631ADC4CEC5
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11E62067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312CE2084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpuTZYFJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtYGqEBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbfINE24 (ORCPT
+        id S1726130AbfINE5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 00:28:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45171 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfINE24 (ORCPT
+        Sat, 14 Sep 2019 00:57:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42682 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfINE5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 00:28:56 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q64so18428690ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 21:28:54 -0700 (PDT)
+        Sat, 14 Sep 2019 00:57:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so3102801pls.9
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 21:57:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6fqgx63VOqDYCNdvOw0tw59tN2HQTbk3mErF+HxzwU8=;
-        b=VpuTZYFJzG6MbOAORz/s1yxi3NnDLYSris0eK+rofPmTPPQTg52hT/M6oE7ZIMOlNO
-         H8w5rT0DPq5FftFCrFjvYiWUbDfV4jDqvGY0NMh3ow9zk2q75tYVpioUdf/YNta+Q1d4
-         p6ka+Ieop3hDxjqB9RrTuhGO03FpD/7Oy2SqIK/r78Xi6cinUNpZK1lmrPbS0SWl/JJa
-         TXkNsn5Jt1dB8q+YYwRJNDINOdlmZUFwqFbQrfrmCW6tGRhPHZg0Wy44kl34mjRtUiJQ
-         2CnvD1m8X6FSdh8mqGd79+A/Px8ikpMr0xNRTIu1xW6f2E/rGEwQVKtSwYnY2vzVCywc
-         RoIg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
+        b=jtYGqEBWfPnvYYkUJ4rTSGo5nxzlwAtfWjmrPKJcrgNiowDrdgk8C1UCVY8Gr26Ajg
+         gf//G8gkGX77zQi+bpNSjz8V0QZ4wVgIru5SEthDVAhaYGaX4Jb0PzdeIL1tEWFaq2z1
+         A+KSBoamuAPpHKMo5qCXavT1C+Sst0c8kbmw+QmGmEk8uFdK354EEpbYPs5wy+jdAhdl
+         pU2Npk61osNGbx18SnHdMNSdkxjJU1gw9yV7QUn8/PimaOKwPya1CJkd4G3zb7gaZiQD
+         w9MfShEVRzL//O3HB0rRLsOV4nxt3DJY5j3H6RwJStljvBh8h8G1rOVvBkY5zlTrokFt
+         O53w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6fqgx63VOqDYCNdvOw0tw59tN2HQTbk3mErF+HxzwU8=;
-        b=IF90BPGWmzTTVdyPggy2q8vFwm/4td6U4uhipflw6/U2n6+SNRvWT9YY5hRppHidL1
-         ZovrXNN2Ril/W/BRxmyUC9B3kHwuUhUmpDBb9I1bu+IE8OYeCAG7RSH6Lvq4CHSwLTOZ
-         goQUAqp0cPs4ErAUVeRTaJ3bQDI4k8f6YzlY39zkf2lVJJ/BVP2yrDg9yZCI5vPjf1kb
-         c+bLyY0u/aeYEkyGM1G5EcpRObiEY5o2342OotZlx4AilA9eRBylBCjlfTIz1dr2VTWZ
-         sa043Rn5gF51QedRsvKEAY6p95n+/uph67rpWsq3GewQHc1ThWY5izVRNCoZMWO/Ii8K
-         D7VA==
-X-Gm-Message-State: APjAAAWJ0eJ6sN1rdGfJmQObLFTj9Y0cu8e9HdpJb6AOKdKtMDJ8+UPt
-        +kPwvhI3Lhy0szkDrkJUoDKv5eR7FcYglKkQyGaO2A==
-X-Google-Smtp-Source: APXvYqxrtkzpc4NinDTqSSBWPcIIn2YwZLFpA9GSCrkT+j3zh43YT4NaLVb72vbrHk+mkhdKQvQOCRNnuCHCw2oZFpQ=
-X-Received: by 2002:a2e:a17a:: with SMTP id u26mr31856397ljl.137.1568435333893;
- Fri, 13 Sep 2019 21:28:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
+        b=L59attIuFm6XfMhpl4sl6gUFuWN9tUiYSZ1FbwAwgTqY2YhhDIrJmVxWWR2CNJsg3l
+         32VLYmfGuw0RevVPubKARApjwKs+Vbk2sWp/xsSEtiq2AhtmjgE1pGM1Y+ZQVBy6XODn
+         fwsRMQpD1/GxyanJVNQ3UZ7fHHQsHmX6heUldID2fTA0neuGJOhQJJgpeB1CdnIXCmGY
+         8OvCV1TToDmRGgyf+9EbJmu/QckQZGCNuGP5zyI9dmvb7G25eLHL3vN/36uPKqha//6d
+         Ry0Rr30urdgx5gk0ZdyRQViJ/7R1EuXLsDYyDK+XgGgOJBdsKjnbZa6GRIL7SvL/RYTG
+         LtUA==
+X-Gm-Message-State: APjAAAXwY1RYpkb4pHn93+ptG4SfEPCW/myzolQNk9wBko6fg8F/Zslj
+        FuKkp2lLxa8xM4Fpw4Q5V6w=
+X-Google-Smtp-Source: APXvYqwGqs+Am5nbTA0K7R4+WDqaFr+KuXxSZruY6kirchYRbgyJGZcMW0zAJEhhINeeWyLfBrUmLA==
+X-Received: by 2002:a17:902:20c9:: with SMTP id v9mr51336181plg.293.1568437021853;
+        Fri, 13 Sep 2019 21:57:01 -0700 (PDT)
+Received: from localhost.localdomain ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id b14sm3468108pjo.13.2019.09.13.21.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 21:57:01 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] x86/nmi: remove the irqwork for long nmi handler duration warning
+Date:   Sat, 14 Sep 2019 12:56:46 +0800
+Message-Id: <20190914045646.24387-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190913130424.160808669@linuxfoundation.org>
-In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 14 Sep 2019 00:28:42 -0400
-Message-ID: <CA+G9fYsj_eTiMSmj-Dsw16hOG9o7DHDbkwuo8V-AToAj1=2_zA@mail.gmail.com>
-Subject: Re: [PATCH 4.4 0/9] 4.4.193-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 at 09:08, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.193 release.
-> There are 9 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.193-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+First, printk is NMI context safe now since the safe printk has been
+implemented. The safe printk will help us to do such work in its irqwork.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Second, the NMI irqwork actually does not work if a NMI handler causes
+watchdog timeout panic. The NMI irqwork have no chance to run in such
+case, while the safe printk will flush its per-cpu buffer before panic.
 
-Summary
-------------------------------------------------------------------------
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ arch/x86/include/asm/nmi.h |  1 -
+ arch/x86/kernel/nmi.c      | 20 +++++++++-----------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
 
-kernel: 4.4.193-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 0a1ee44c69166b2750a62fdb079320a396dff30c
-git describe: v4.4.192-10-g0a1ee44c6916
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.192-10-g0a1ee44c6916
+diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+index 75ded1d13d98..9d5d949e662e 100644
+--- a/arch/x86/include/asm/nmi.h
++++ b/arch/x86/include/asm/nmi.h
+@@ -41,7 +41,6 @@ struct nmiaction {
+ 	struct list_head	list;
+ 	nmi_handler_t		handler;
+ 	u64			max_duration;
+-	struct irq_work		irq_work;
+ 	unsigned long		flags;
+ 	const char		*name;
+ };
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 4df7705022b9..0fa51f80ad73 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
+ }
+ fs_initcall(nmi_warning_debugfs);
+ 
+-static void nmi_max_handler(struct irq_work *w)
++static void nmi_check_duration(struct nmiaction *action, u64 duration)
+ {
+-	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
+ 	int remainder_ns, decimal_msecs;
+-	u64 whole_msecs = READ_ONCE(a->max_duration);
++	u64 whole_msecs = READ_ONCE(action->max_duration);
++
++	if (duration < nmi_longest_ns || duration < action->max_duration)
++		return;
++
++	action->max_duration = duration;
+ 
+ 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
+ 	decimal_msecs = remainder_ns / 1000;
+ 
+ 	printk_ratelimited(KERN_INFO
+ 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+-		a->handler, whole_msecs, decimal_msecs);
++		action->handler, whole_msecs, decimal_msecs);
+ }
+ 
+ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+ 		delta = sched_clock() - delta;
+ 		trace_nmi_handler(a->handler, (int)delta, thishandled);
+ 
+-		if (delta < nmi_longest_ns || delta < a->max_duration)
+-			continue;
+-
+-		a->max_duration = delta;
+-		irq_work_queue(&a->irq_work);
++		nmi_check_duration(a, delta);
+ 	}
+ 
+ 	rcu_read_unlock();
+@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+ 	if (!action->handler)
+ 		return -EINVAL;
+ 
+-	init_irq_work(&action->irq_work, nmi_max_handler);
+-
+ 	raw_spin_lock_irqsave(&desc->lock, flags);
+ 
+ 	/*
+-- 
+2.20.1
 
-
-No regressions (compared to build v4.4.192)
-
-No fixes (compared to build v4.4.192)
-
-Ran 20018 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-pty-tests
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* prep-tmp-disk
-* ssuite
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.193-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.193-rc1-hikey-20190913-557
-git commit: e289b20abbc0882c0710519376b654c0df71b784
-git describe: 4.4.193-rc1-hikey-20190913-557
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.193-rc1-hikey-20190913-557
-
-
-No regressions (compared to build 4.4.193-rc1-hikey-20190913-556)
-
-
-No fixes (compared to build 4.4.193-rc1-hikey-20190913-556)
-
-Ran 1536 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
