@@ -2,121 +2,148 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D5BC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340BEC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9778620717
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0910120644
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHVrhAIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfINPcm (ORCPT
+        id S1727068AbfINPni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 11:32:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54013 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfINPcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 11:32:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 08:32:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,505,1559545200"; 
-   d="scan'208";a="215747858"
-Received: from mataylo1-mobl2.amr.corp.intel.com (HELO [10.254.92.190]) ([10.254.92.190])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Sep 2019 08:32:39 -0700
-Subject: Re: [PATCH v22 00/24] Intel SGX foundations
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
- <20190914134136.GG9560@linux.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
-Date:   Sat, 14 Sep 2019 08:32:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 14 Sep 2019 11:43:38 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37669 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfINPnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 11:43:37 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i1so29547110edv.4
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 08:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7hV0MZv/AgzA3SV2umv+bCKTqcvOG8PODShBqrdIfPQ=;
+        b=HHVrhAInl82Mt5UsRke9ItQ0hbKadb+zGyYFA2p7t//I6afWDUISogJqVeDIgX70rN
+         2JoXv5bkW2gTazwZ1tl6AsjMz4JNQmxPdneG27ankkEszRU4ngNGrzqEUqK7Tk5sGjem
+         2k/2tf6Dg4eGCmrhx+CppejtiKG7Fi1RJqduFWOBFVLUf1ddwq2BjdOI6PZLY2LP+9My
+         pcwqa0fmyhOpE0rpLHtsO0tGxQPDVrhA+UrJBKv/2+KhuZtsRy9y8sjnvSIn1/bENLuG
+         HLQNLxPKdGPzuZ0DPN2dS1GESs5GBmzd9YDfBLDRBuc3wquzW7iv+3HRrGfZfp+5RL47
+         F0tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7hV0MZv/AgzA3SV2umv+bCKTqcvOG8PODShBqrdIfPQ=;
+        b=l9aVj6S3nHodlNmmmEehG6I5a4VvyyWIPqG6C17szYMBVUZhp3f2TUcco5kDML1c7S
+         S/hYUTxRaifrDCRE2lHQp0S7TAIh3U1zZ+LqDqclMHqg3/BB9xDsybvO/ur0YQAfGHcG
+         CoYkc6J2DbJWvEbF7AZTFYOJ/t3OEcnqpF5zlJ7HWEL7UENHrk2Mc/eZDAjqSaYbCtG/
+         Ci7rFEY4CCn1wtBY5HspAhSL8XW+b7gHd/mivCAC4aT9eVkcUB1y+Foe+7FJ9Sj9d0qN
+         Hnz144oucEoH29Oejb9Qr79YRzojnihKWCDZppAuLK+Yj6u2nkhO1GP1WBRZsmrNxJbC
+         wadA==
+X-Gm-Message-State: APjAAAWbotdCSXxQ6hJAgtxa7X+3WAX+cn0hB3Nr0Jm3yf+HUlOexjYj
+        ybljRhighFGmP2TVAkblOyWwqY4kWCrGFPnJRcc=
+X-Google-Smtp-Source: APXvYqznWW+0BxbJIAZP+1jswzi3dJcuHQKsaGdvPEqC2+VRjJW+e/KQnSnQZLZAE+WOXWyylHlrTrrhBE6G1kOrBB0=
+X-Received: by 2002:a17:906:2451:: with SMTP id a17mr35125242ejb.164.1568475814084;
+ Sat, 14 Sep 2019 08:43:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190914134136.GG9560@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190829060550.62095-1-john.stultz@linaro.org>
+ <CGME20190829173938epcas3p1276089cb3d6f9813840d1bb6cac8b1da@epcas3p1.samsung.com>
+ <CAF6AEGvborwLmjfC6_vgZ-ZbfvF3HEFFyb_NHSLRoYWF35bw+g@mail.gmail.com>
+ <ebdf3ff5-5a9b-718d-2832-f326138a5b2d@samsung.com> <CAF6AEGtkvRpXSoddjmxer2U6LxnV_SAe+jwE2Ct8B8dDpFy2mA@mail.gmail.com>
+ <b925e340-4b6a-fbda-3d8d-5c27204d2814@samsung.com> <CALAqxLU5Ov+__b5gxnuMxQP1RLjndXkB4jAiGgmb-OMdaKePug@mail.gmail.com>
+ <9d31af23-8a65-d8e8-b73d-b2eb815fcd6f@samsung.com> <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
+In-Reply-To: <CALAqxLVP=x9+p9scGyfgFUMN2di+ngOz9-fWW=A1YCM4aN7JRA@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 14 Sep 2019 08:43:23 -0700
+Message-ID: <CAF6AEGsaE9M_kyRxm5en1vxs=GQLcaaJsdREfR1kdegz8dHFcA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] drm: kirin: Fix dsi probe/attach logic
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Matt Redfearn <matt.redfearn@thinci.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/14/19 6:41 AM, Jarkko Sakkinen wrote:
-> 
-> The proposed LSM hooks give the granularity to make yes/no decision
-> based on the
-> 
-> * The origin of the source of the source for the enclave.
-> * The requested permissions for the added or mapped peage.
-> 
-> The hooks to do these checks are provided for mmap() and EADD
-> operations.
-> 
-> With just file permissions you can still limit mmap() by having a
-> privileged process to build the enclaves and pass the file descriptor
-> to the enclave user who can mmap() the enclave within the constraints
-> set by the enclave pages (their permissions refine the roof that you
-> can mmap() any memory range within an enclave).
+On Wed, Sep 11, 2019 at 7:39 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Sep 4, 2019 at 3:26 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> > On 03.09.2019 18:18, John Stultz wrote:
+> > > On Mon, Sep 2, 2019 at 6:22 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> > >> On 30.08.2019 19:00, Rob Clark wrote:
+> > >>> On Thu, Aug 29, 2019 at 11:52 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> > >>>> Of course it seems you have different opinion what is the right thing in
+> > >>>> this case, so if you convince us that your approach is better one can
+> > >>>> revert the patch.
+> > >>> I guess my strongest / most immediate opinion is to not break other
+> > >>> existing adv75xx bridge users.
+> > >>
+> > >> It is pity that breakage happened, and next time we should be more
+> > >> strict about testing other platforms, before patch acceptance.
+> > >>
+> > >> But reverting it now will break also platform which depend on it.
+> > > I'm really of no opinion of which approach is better here, but I will
+> > > say that when a patch breaks previously working boards, that's a
+> > > regression and justifying that some other board is now enabled that
+> > > would be broken by the revert (of a patch that is not yet upstream)
+> > > isn't really a strong argument.
+> > >
+> > > I'm happy to work with folks to try to fixup the kirin driver if this
+> > > patch really is the right approach, but we need someone to do the same
+> > > for the db410c, and I don't think its fair to just dump that work onto
+> > > folks under the threat of the board breaking.
+> >
+> >
+> > These drivers should be fixed anyway - assumption that
+> > drm_bridge/drm_panel will be registered before the bus it is attached to
+> > is just incorrect.
+> >
+> > So instead of reverting, fixing and then re-applying the patch I have
+> > gently proposed shorter path. If you prefer long path we can try to go
+> > this way.
+> >
+> > Matt, is the pure revert OK for you or is it possible to prepare some
+> > workaround allowing cooperation with both approaches?
+>
+> Rob/Andrzej: What's the call here?
+>
+> Should I resubmit the kirin fix for the adv7511 regression here?
+> Or do we revert the adv7511 patch? I believe db410c still needs a fix.
+>
+> I'd just like to keep the HiKey board from breaking, so let me know so
+> I can get the fix submitted if needed.
+>
 
-The LSM hooks are presumably fixing a problem that these patches
-introduce.  What's that problem?
+Does the kirin fix break things if the adv7511 patch is reverted?  If
+not, I'd submit it anyways.
+
+Hopefully by next weekend I'll be finished with my move and unpacked
+enough to be able to setup db410c + monitor to start working on fixing
+db410c.  So perhaps one option would be to wait a week, and see if I
+can come up with something small enough to land as a post-merge-window
+fix, with the fallback being to revert and try again next merge
+window?
+
+BR,
+-R
