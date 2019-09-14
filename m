@@ -2,153 +2,216 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E15C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E01FC4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC71206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171B6206CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 21:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvZan/wT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNcBXYAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfINVIr (ORCPT
+        id S1727052AbfINVLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 17:08:47 -0400
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:36810 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfINVIr (ORCPT
+        Sat, 14 Sep 2019 17:11:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43514 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfINVLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 17:08:47 -0400
-Received: by mail-oi1-f176.google.com with SMTP id k20so5436151oih.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 14:08:46 -0700 (PDT)
+        Sat, 14 Sep 2019 17:11:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q17so30512217wrx.10;
+        Sat, 14 Sep 2019 14:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jMW5QQfqB3GgO3Rwut+y8ooMRK6oMNFBtSgXBDuvbgY=;
-        b=HvZan/wTdVlLNfNBct/c1zeuudQeshyJ69LVka0uJo6QZJZo61cdvd+XXNRN0uAfcd
-         mNzatB28Ta5FEYbS5cfOJzsSDH5QkOqZN4x+d1vF6pcackIOVqwSvfheY2l+MUlNueE0
-         lf7pi3eDjXxGYy9rATo0prNP0WfwnDS27R/Ode++EuNQ3wgXCZs0L5t2GetmQmWVa05z
-         8hPCTxflzywUPju7Uf5g4+PZtS+rzmSL+dgiNENDhkTEd5xIZtzLPfvewT4Q2i8Bn3mr
-         1b+qVHom0OkoHtSK7Y5ZxhaA5JvsACyQ2uu5alvI/SIf2NNKBq6GlFfA7ZqB4RIuf6yf
-         Cr9w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LlOdOy3KWJQjxCTVMfOJ3x8EX8EsEr3SCTQpuq4qJzg=;
+        b=TNcBXYAiK8SQp8X281WxYJXrhrd835Ub5tRKqX8LO4STVnw2hSExbTgcyyPNsbubCx
+         7MK8a4qIA5cTLZ45VcJH53zqbQMtUeMLfBP9I/o2PWed5KUhStlAz9a1aBcYpU2mxPyp
+         cMFCTuWj8rbWZ9KW9mihXdiHgMrusSZKETjBnAbr9t6p9BVcK+kaMgaW/u/BrGcMwTF0
+         WLA6gRhOuutTNC/ui9RYjT69n56k3jcXVvRXLvFd/g9nBFWB34XUxMdV2DizGVJQt+he
+         taXWPSjMKxGEJ8WcBhujmkYK3XJ9GOWcCYXSXDRsxWXadqesyojeplctg2G9rxD+WJdp
+         cRkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jMW5QQfqB3GgO3Rwut+y8ooMRK6oMNFBtSgXBDuvbgY=;
-        b=OZeiQewhJDy1IWCABXh/jat2O2NmT2xOh4QjXM3/upr16w7KCGZJQ58n7ryLAZjD/+
-         lGTczLyAzeD6tW+wC1kzHn10ZuTkWnTmpvAfsYuL4sbxPHCWWt6pObs4Q/6PQBSLdtW4
-         Y+0Bcq0wto3Rzgf7cKbAtdzZMlOwl7DuAIJJMuIDRjKBaAknFL3T+UhRoD/lE6dWY30p
-         lr+H98p9EN5VGAbfJUR3H1SpmYTbLuk460474l7HPrxY6USTx0Dz81viMe8KXz5FzlRZ
-         /Quh0pEY3BQShE4lSoKcj7vX+VlNRzFaL06ssbTHUEQLITaoEY9asiQwL7MWUnKnjHlY
-         ezZA==
-X-Gm-Message-State: APjAAAXrqXi4UQYFivWvRLXinJIT3VIRISM5yiA1lQbUoVaGUExAmNKh
-        u5Y2Fl0FPlF9pW5mEPdXHCSwELUtIneyYyCvxis=
-X-Google-Smtp-Source: APXvYqzfdOCMLTAlz0b2bARRrW5zytkIb1s5zlrSoVgDJNzlQtpbzvMiBem0XyrOtygyCcs/mxPD4cgAbfUaj5V97r0=
-X-Received: by 2002:aca:7509:: with SMTP id q9mr8093677oic.111.1568495326122;
- Sat, 14 Sep 2019 14:08:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LlOdOy3KWJQjxCTVMfOJ3x8EX8EsEr3SCTQpuq4qJzg=;
+        b=ozPk+jv5OPefz8SEfe6l9iRiVBfXphBrO6i0Pkvs43X+FBTm+kQRlOTmsldg12KfAG
+         rgJE0wFlJ0XcHss/6oieRPrM79wKKxoU1FmhPd+rJeoTzu7R1JbZ6kZrxHicierzgufX
+         GfY7f0Pl9JK1eh8/VCN+ckK/3MnoyKmxHyS8LqKN8mLaRI5xioRMJQz4cm039dFC1yqf
+         +rT+j+CrtjK83X5OBOKhczTfQmwuSJezLBhGM05l7Kd4VtgPKoq5MQx/C+21HBwcSIfb
+         ZKSLoH+P0Awk1huWJtGlDKNQyIJ1Dl5yvaOjEa0fiAXpuG2vHafjWNtPLj+w1PbQkCr5
+         RgJQ==
+X-Gm-Message-State: APjAAAUu3I9r5a6tCmdUvcximMoisGmBIk/NZqi6ZgQAqt8DfzVa+15c
+        PpDdZ7r1NxfXMSVhQTRXDDI=
+X-Google-Smtp-Source: APXvYqxtXKumRSjSnxsEyDa+c9BMeql5KCk0JiFcU5AJ9nRfQCXT3ns3uaM2BJouTcP0bkHsuF6lAA==
+X-Received: by 2002:a05:6000:10f:: with SMTP id o15mr6046218wrx.92.1568495493586;
+        Sat, 14 Sep 2019 14:11:33 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id b144sm7007661wmb.3.2019.09.14.14.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 14:11:32 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 23:11:26 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190914211126.GA4355@darwi-home-pc>
+References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190707065710.GA5560@kroah.com> <20190712083819.GA8862@kroah.com>
- <20190712092319.wmke4i7zqzr26tly@function> <20190713004623.GA9159@gregn.net>
- <20190725035352.GA7717@gregn.net> <875znqhia0.fsf@cmbmachine.messageid.invalid>
- <m3sgqucs1x.wl-covici@ccs.covici.com> <CAOtcWM0qynSjnF6TtY_s7a51B7JweDb7jwdxStEmPvB9tJFU4Q@mail.gmail.com>
- <20190821222209.GA4577@gregn.net> <CAOtcWM0Jzo+wew-uiOmde+eZXEWZ310L8wXscWjJv5OXqXJe6Q@mail.gmail.com>
- <20190909025429.GA4144@gregn.net>
-In-Reply-To: <20190909025429.GA4144@gregn.net>
-From:   Okash Khawaja <okash.khawaja@gmail.com>
-Date:   Sat, 14 Sep 2019 22:08:35 +0100
-Message-ID: <CAOtcWM0P=w-iBZzwekVrSpp7t2WO9RA5WP956zgDrNKvzA+4ZA@mail.gmail.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of speakup
-To:     Gregory Nowak <greg@gregn.net>
-Cc:     "Speakup is a screen review system for Linux." 
-        <speakup@linux-speakup.org>, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org, John Covici <covici@ccs.covici.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 3:55 AM Gregory Nowak <greg@gregn.net> wrote:
+Hi,
+
+On Sat, Sep 14, 2019 at 09:30:19AM -0700, Linus Torvalds wrote:
+> On Sat, Sep 14, 2019 at 8:02 AM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
+> >
+> > On Thu, Sep 12, 2019 at 12:34:45PM +0100, Linus Torvalds wrote:
+> > >
+> > > An alternative might be to make getrandom() just return an error
+> > > instead of waiting. Sure, fill the buffer with "as random as we can"
+> > > stuff, but then return -EINVAL because you called us too early.
+> >
+> > ACK, that's probably _the_ most sensible approach. Only caveat is
+> > the slight change in user-space API semantics though...
+> >
+> > For example, this breaks the just released systemd-random-seed(8)
+> > as it _explicitly_ requests blocking behvior from getrandom() here:
+> >
+> 
+> Actually, I would argue that the "don't ever block, instead fill
+> buffer and return error instead" fixes this broken case.
+> 
+> >     => src/random-seed/random-seed.c:
+> >     /*
+> >      * Let's make this whole job asynchronous, i.e. let's make
+> >      * ourselves a barrier for proper initialization of the
+> >      * random pool.
+> >      */
+> >      k = getrandom(buf, buf_size, GRND_NONBLOCK);
+> >      if (k < 0 && errno == EAGAIN && synchronous) {
+> >          log_notice("Kernel entropy pool is not initialized yet, "
+> >                     "waiting until it is.");
+> >
+> >          k = getrandom(buf, buf_size, 0); /* retry synchronously */
+> >      }
+> 
+> Yeah, the above is yet another example of completely broken garbage.
+> 
+> You can't just wait and block at boot. That is simply 100%
+> unacceptable, and always has been, exactly because that may
+> potentially mean waiting forever since you didn't do anything that
+> actually is likely to add any entropy.
 >
-> On Sun, Sep 08, 2019 at 10:43:02AM +0100, Okash Khawaja wrote:
-> > Sorry, I have only now got round to working on this. It's not complete
-> > yet but I have assimilated the feedback and converted subjective
-> > phrases, like "I think..." into objective statements or put them in
-> > TODO: so that someone else may verify. I have attached it to this
-> > email.
+
+ACK, the systemd commit which introduced that code also does:
+
+   => 26ded5570994 (random-seed: rework systemd-random-seed.service..)
+    [...]
+    --- a/units/systemd-random-seed.service.in
+    +++ b/units/systemd-random-seed.service.in
+    @@ -22,4 +22,9 @@ Type=oneshot
+    RemainAfterExit=yes
+    ExecStart=@rootlibexecdir@/systemd-random-seed load
+    ExecStop=@rootlibexecdir@/systemd-random-seed save
+   -TimeoutSec=30s
+   +
+   +# This service waits until the kernel's entropy pool is
+   +# initialized, and may be used as ordering barrier for service
+   +# that require an initialized entropy pool. Since initialization
+   +# can take a while on entropy-starved systems, let's increase the
+   +# time-out substantially here.
+   +TimeoutSec=10min
+
+This 10min wait thing is really broken... it's basically "forever".
+
+> >      if (k < 0) {
+> >          log_debug_errno(errno, "Failed to read random data with "
+> >                          "getrandom(), falling back to "
+> >                          "/dev/urandom: %m");
+> 
+> At least it gets a log message.
+> 
+> So I think the right thing to do is to just make getrandom() return
+> -EINVAL, and refuse to block.
+> 
+> As mentioned, this has already historically been a huge issue on
+> embedded devices, and with disks turnign not just to NVMe but to
+> actual polling nvdimm/xpoint/flash, the amount of true "entropy"
+> randomness we can give at boot is very questionable.
 >
-> I think bleeps needs a TODO, since we don't know what values it accepts, or
-> what difference those values make. Also, to keep things uniform, we
-> should replace my "don't know" for trigger_time with a TODO. Looks
-> good to me otherwise. Thanks.
 
-Great thanks. I have updated.
+ACK.
 
-I have two questions:
+Moreover, and as a result of all that, distributions are now officially
+*duct-taping* the problem:
 
-1. Is it okay for these descriptions to go inside
-Documentation/ABI/stable? They have been around since 2.6 (2010). Or
-would we prefer Documentation/ABI/testing/?
-2. We are still missing descriptions for i18n/ directory. I have added
-filenames below. can someone can add description please:
+    https://www.debian.org/releases/buster/amd64/release-notes/ch-information.en.html#entropy-starvation
 
-What:           /sys/accessibility/speakup/i18n/announcements
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
+    5.1.4. Daemons fail to start or system appears to hang during boot
+  
+    Due to systemd needing entropy during boot and the kernel treating
+    such calls as blocking when available entropy is low, the system
+    may hang for minutes to hours until the randomness subsystem is
+    sufficiently initialized (random: crng init done).
 
-What:           /sys/accessibility/speakup/i18n/chartab
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
+"the system may hang for minuts to hours"...
 
-What:           /sys/accessibility/speakup/i18n/ctl_keys
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
+> We can (and will) continue to do a best-effort thing (including very
+> much using rdread and friends), but the whole "wait for entropy"
+> simply *must* stop.
+> 
+> > I've sent an RFC patch at [1].
+> >
+> > [1] https://lkml.kernel.org/r/20190914122500.GA1425@darwi-home-pc
+> 
+> Looks reasonable to me. Except I'd just make it simpler and make it a
+> big WARN_ON_ONCE(), which is a lot harder to miss than pr_notice().
+> Make it clear that it is a *bug* if user space thinks it should wait
+> at boot time.
+> 
+> Also, we might even want to just fill the buffer and return 0 at that
+> point, to make sure that even more broken user space doesn't then try
+> to sleep manually and turn it into a "I'll wait myself" loop.
+>
 
-What:           /sys/accessibility/speakup/i18n/function_names
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
+ACK, I'll send an RFC v2, returning buflen, and so on..
 
-What:           /sys/accessibility/speakup/i18n/states
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
-What:           /sys/accessibility/speakup/i18n/characters
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
-What:           /sys/accessibility/speakup/i18n/colors
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
-What:           /sys/accessibility/speakup/i18n/formatted
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
-What:           /sys/accessibility/speakup/i18n/key_names
-KernelVersion:  2.6
-Contact:        speakup@linux-speakup.org
-Description:
-                TODO
+/me will enjoy the popcorn from all the to-be-reported WARN_ON()s
+on distribution mailing lists ;-)
 
-Thanks,
-Okash
+>                  Linus
+
+thanks,
+
+-- 
+darwi
+http://darwish.chasingpointers.com
