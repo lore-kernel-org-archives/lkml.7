@@ -2,162 +2,203 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB5C49ED7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26FEC4CEC8
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 03:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A0320678
+	by mail.kernel.org (Postfix) with ESMTP id C96382089F
 	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 03:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="IHM9Uf18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfINDHn (ORCPT
+        id S2390553AbfINDIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 13 Sep 2019 23:07:43 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:57564 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728720AbfINDHm (ORCPT
+        Fri, 13 Sep 2019 23:08:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54199 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728720AbfINDIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 13 Sep 2019 23:07:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TcH.5Hj_1568430451;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TcH.5Hj_1568430451)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 14 Sep 2019 11:07:36 +0800
-From:   Hui Zhu <teawaterz@linux.alibaba.com>
-To:     fengguang.wu@intel.com, linux-kernel@vger.kernel.org
-Cc:     Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [PATCH for vm-scalability] usemem: Add new option -Z|--read-again
-Date:   Sat, 14 Sep 2019 11:07:18 +0800
-Message-Id: <1568430438-31372-1-git-send-email-teawaterz@linux.alibaba.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 13 Sep 2019 23:08:19 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q18so4540027wmq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 20:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=StncRQt0nDIHqdXIRXxEVWMfNs5X3Bj29Wh8Q5LIJYw=;
+        b=IHM9Uf18MOWfsHuu7Rd2xT6UOKffI5Y6pEZI/wwZtUCVmPxZ7m6p1/tg/WgBRlmWZL
+         6vgWbu2s1aifvPQ62veRv7JqbULXyFIpcjCClivffjPnWVRBPAmDL9hd5T+GOi9HrzOK
+         u+0ULTtGdAjjOgJEpUd9WpbnfDTqvfQ59hUPKV7Nv6RQyfdxMF07NdVkT2LsBgjfj1OZ
+         m7qcAhGLtnXTbbbIpqouOo3bnKxCjU7CPEiMEzhG8oxsNV2T4MVnFwk2DR1BzXpqL5ST
+         GpymCt2ZNUkMcMiFhxrvm+AQa1yRnK4kXBTae6U6vdCvvVMYkNvm5asULLP894y9dLxt
+         trUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=StncRQt0nDIHqdXIRXxEVWMfNs5X3Bj29Wh8Q5LIJYw=;
+        b=ntQhEt49UQSxuigKEfuqOOr/v8RClne1bd0g5QlesV2tC+7bR7GaHB3rd7QZTN0rqM
+         Hv3m2y67mb7AZLwp1DC1nfBzNlLTYqhgwt0GgBQS6d3HXDGdC5DkiSAFOxL3/yb7tpqP
+         bJxcjP1JDboPK5dLQDy8DKmGG5tM+QoGrAGiqZun7H4FQtCrgBrXoPvg9F+fAksMsbAI
+         aAmare/Z66M20BzKZtymORHiFQgP6b0trynIp5MCwDpFCQZFuvs6L5Zt5PJVMVW+9/9u
+         OG5zh+pGH1/P2+h3q/tQW0OT0LkRCC6WOW8rktdo3vVa6XKO9qablDc/c4sVnKjQG+0w
+         hBiA==
+X-Gm-Message-State: APjAAAWL6/xzhKIPr8GrnF5hoO07BL2d3kbzk+TwwfoVCf7eWNjcUfVc
+        bhJo31aTXyPHttCr8+Z1mTsJB0Zcbbc=
+X-Google-Smtp-Source: APXvYqwyGPyPxvw7qS+Vgvo7f+0pfCgg/YnjuoHwAbhNoFfM8tNVwJUL/04XDltm9yB6O9ta2Y3hlA==
+X-Received: by 2002:a7b:ce8f:: with SMTP id q15mr5500034wmj.106.1568430496196;
+        Fri, 13 Sep 2019 20:08:16 -0700 (PDT)
+Received: from localhost (193-126-247-196.net.novis.pt. [193.126.247.196])
+        by smtp.gmail.com with ESMTPSA id z1sm3884961wmf.20.2019.09.13.20.08.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2019 20:08:15 -0700 (PDT)
+Date:   Fri, 13 Sep 2019 20:08:14 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org, palmer@sifive.com,
+        atish.patra@wdc.com, merker@debian.org
+Subject: [PATCH] riscv: modify the Image header to improve compatibility with
+ the ARM64 header
+Message-ID: <alpine.DEB.2.21.9999.1909132005200.24255@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usemem will read memory again after access the memory with this option.
-It can help test the speed that load page from swap to memory.
 
-Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+Part of the intention during the definition of the RISC-V kernel image
+header was to lay the groundwork for a future merge with the ARM64
+image header.  One error during my original review was not noticing
+that the RISC-V header's "magic" field was at a different size and
+position than the ARM64's "magic" field.  If the existing ARM64 Image
+header parsing code were to attempt to parse an existing RISC-V kernel
+image header format, it would see a magic number 0.  This is
+undesirable, since it's our intention to align as closely as possible
+with the ARM64 header format.  Another problem was that the original
+"res3" field was not being initialized correctly to zero.
+
+Address these issues by creating a 32-bit "magic2" field in the RISC-V
+header which matches the ARM64 "magic" field.  RISC-V binaries will
+store "RSC\x05" in this field.  The intention is that the use of the
+existing 64-bit "magic" field in the RISC-V header will be deprecated
+over time.  Increment the minor version number of the file format to
+indicate this change, and update the documentation accordingly.  Fix
+the assembler directives in head.S to ensure that reserved fields are
+properly zero-initialized.
+
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Reported-by: Palmer Dabbelt <palmer@sifive.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Karsten Merker <merker@debian.org>
 ---
- usemem.c | 46 ++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 6 deletions(-)
+Will try to get this merged before v5.3, to minimize the delta with the 
+ARM64 header in the final release.
 
-diff --git a/usemem.c b/usemem.c
-index 264d52a..2d31946 100644
---- a/usemem.c
-+++ b/usemem.c
-@@ -94,6 +94,7 @@ int opt_sync_rw = 0;
- int opt_sync_free = 0;
- int opt_bind_interval = 0;
- unsigned long opt_delay = 0;
-+int opt_read_again = 0;
- int nr_task;
- int nr_thread;
- int nr_cpu;
-@@ -151,6 +152,7 @@ void usage(int ok)
- 	"    -e|--delay          delay for each page in ns\n"
- 	"    -O|--anonymous      mmap with MAP_ANONYMOUS\n"
- 	"    -U|--hugetlb        allocate hugetlbfs page\n"
-+	"    -Z|--read-again     read memory again after access the memory\n"
- 	"    -h|--help           show this message\n"
- 	,		ourname);
+ Documentation/riscv/boot-image-header.txt | 13 +++++++------
+ arch/riscv/include/asm/image.h            | 12 ++++++------
+ arch/riscv/kernel/head.S                  |  4 ++--
+ 3 files changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
+index 1b73fea23b39..14b1492f689b 100644
+--- a/Documentation/riscv/boot-image-header.txt
++++ b/Documentation/riscv/boot-image-header.txt
+@@ -18,7 +18,7 @@ The following 64-byte header is present in decompressed Linux kernel image.
+ 	u32 res1  = 0;		  /* Reserved */
+ 	u64 res2  = 0;    	  /* Reserved */
+ 	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
+-	u32 res3;		  /* Reserved for additional RISC-V specific header */
++	u32 magic2 = 0x56534905;  /* Magic number 2, little endian, "RSC\x05" */
+ 	u32 res4;		  /* Reserved for PE COFF offset */
  
-@@ -188,6 +190,7 @@ static const struct option opts[] = {
- 	{ "sync-rw"	, 0, NULL, 'y' },
- 	{ "delay"	, 1, NULL, 'e' },
- 	{ "hugetlb"	, 0, NULL, 'U' },
-+	{ "read-again"	, 0, NULL, 'Z' },
- 	{ "help"	, 0, NULL, 'h' },
- 	{ NULL		, 0, NULL, 0 }
+ This header format is compliant with PE/COFF header and largely inspired from
+@@ -37,13 +37,14 @@ Notes:
+ 	Bits 16:31 - Major version
+ 
+   This preserves compatibility across newer and older version of the header.
+-  The current version is defined as 0.1.
++  The current version is defined as 0.2.
+ 
+-- res3 is reserved for offset to any other additional fields. This makes the
+-  header extendible in future. One example would be to accommodate ISA
+-  extension for RISC-V in future. For current version, it is set to be zero.
++- The "magic" field is deprecated as of version 0.2.  In a future
++  release, it may be removed.  This originally should have matched up
++  with the ARM64 header "magic" field, but unfortunately does not.
++  The "magic2" field replaces it, matching up with the ARM64 header.
+ 
+-- In current header, the flag field has only one field.
++- In current header, the flags field has only one field.
+ 	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
+ 
+ - Image size is mandatory for boot loader to load kernel image. Booting will
+diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+index ef28e106f247..344db5244547 100644
+--- a/arch/riscv/include/asm/image.h
++++ b/arch/riscv/include/asm/image.h
+@@ -3,7 +3,8 @@
+ #ifndef __ASM_IMAGE_H
+ #define __ASM_IMAGE_H
+ 
+-#define RISCV_IMAGE_MAGIC	"RISCV"
++#define RISCV_IMAGE_MAGIC	"RISCV\0\0\0"
++#define RISCV_IMAGE_MAGIC2	"RSC\x05"
+ 
+ #define RISCV_IMAGE_FLAG_BE_SHIFT	0
+ #define RISCV_IMAGE_FLAG_BE_MASK	0x1
+@@ -23,7 +24,7 @@
+ #define __HEAD_FLAGS		(__HEAD_FLAG(BE))
+ 
+ #define RISCV_HEADER_VERSION_MAJOR 0
+-#define RISCV_HEADER_VERSION_MINOR 1
++#define RISCV_HEADER_VERSION_MINOR 2
+ 
+ #define RISCV_HEADER_VERSION (RISCV_HEADER_VERSION_MAJOR << 16 | \
+ 			      RISCV_HEADER_VERSION_MINOR)
+@@ -39,9 +40,8 @@
+  * @version:		version
+  * @res1:		reserved
+  * @res2:		reserved
+- * @magic:		Magic number
+- * @res3:		reserved (will be used for additional RISC-V specific
+- *			header)
++ * @magic:		Magic number (RISC-V specific; deprecated)
++ * @magic2:		Magic number 2 (to match the ARM64 'magic' field pos)
+  * @res4:		reserved (will be used for PE COFF offset)
+  *
+  * The intention is for this header format to be shared between multiple
+@@ -58,7 +58,7 @@ struct riscv_image_header {
+ 	u32 res1;
+ 	u64 res2;
+ 	u64 magic;
+-	u32 res3;
++	u32 magic2;
+ 	u32 res4;
  };
-@@ -616,7 +619,7 @@ unsigned long do_unit(unsigned long bytes, struct drand48_data *rand_data,
- 	return rw_bytes;
- }
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 0f1ba17e476f..52eec0c1bf30 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -39,9 +39,9 @@ ENTRY(_start)
+ 	.word RISCV_HEADER_VERSION
+ 	.word 0
+ 	.dword 0
+-	.asciz RISCV_IMAGE_MAGIC
+-	.word 0
++	.ascii RISCV_IMAGE_MAGIC
+ 	.balign 4
++	.ascii RISCV_IMAGE_MAGIC2
+ 	.word 0
  
--static void output_statistics(unsigned long unit_bytes)
-+static void output_statistics(unsigned long unit_bytes, const char *intro)
- {
- 	struct timeval stop;
- 	char buf[1024];
-@@ -629,8 +632,8 @@ static void output_statistics(unsigned long unit_bytes)
- 		(stop.tv_usec - start_time.tv_usec);
- 	throughput = ((unit_bytes * 1000000ULL) >> 10) / delta_us;
- 	len = snprintf(buf, sizeof(buf),
--			"%lu bytes / %lu usecs = %lu KB/s\n",
--			unit_bytes, delta_us, throughput);
-+			"%s%lu bytes / %lu usecs = %lu KB/s\n",
-+			intro, unit_bytes, delta_us, throughput);
- 	fflush(stdout);
- 	write(1, buf, len);
- }
-@@ -690,7 +693,34 @@ long do_units(void)
- 	} while (bytes);
- 
- 	if (!opt_write_signal_read && unit_bytes)
--		output_statistics(unit_bytes);
-+		output_statistics(unit_bytes, "");
-+
-+	if (opt_read_again && unit_bytes) {
-+		unsigned long rw_bytes = 0;
-+
-+		gettimeofday(&start_time, NULL);
-+		for (i = 0; i < nptr; i++) {
-+			int rep;
-+
-+			for (rep = 0; rep < reps; rep++) {
-+				if (rep > 0 && !quiet) {
-+					printf(".");
-+					fflush(stdout);
-+				}
-+
-+				rw_bytes += do_rw_once(ptrs[i], lens[i], &rand_data, 1, &rep, reps);
-+
-+				if (msync_mode) {
-+					if ((msync(ptrs[i], lens[i], msync_mode)) == -1) {
-+						fprintf(stderr, "msync failed with error %s \n", strerror(errno));
-+						exit(1);
-+					}
-+				}
-+			}
-+		}
-+
-+		output_statistics(rw_bytes, "read again ");
-+	}
- 
- 	if (opt_write_signal_read) {
- 		struct sigaction act;
-@@ -731,7 +761,7 @@ long do_units(void)
- 		sigsuspend(&set);
- 		gettimeofday(&start_time, NULL);
- 		unit_bytes = do_rw_once(buffer, opt_bytes, &rand_data, 1, NULL, 0);
--		output_statistics(unit_bytes);
-+		output_statistics(unit_bytes, "");
- 	}
- 
- 	if (opt_sync_free)
-@@ -879,7 +909,7 @@ int main(int argc, char *argv[])
- 	pagesize = getpagesize();
- 
- 	while ((c = getopt_long(argc, argv,
--				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUh", opts, NULL)) != -1)
-+				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh", opts, NULL)) != -1)
- 		{
- 		switch (c) {
- 		case 'a':
-@@ -1005,6 +1035,10 @@ int main(int argc, char *argv[])
- 			map_hugetlb = MAP_HUGETLB | MAP_HUGE_2MB;
- 			break;
- 
-+		case 'Z':
-+			opt_read_again = 1;
-+			break;
-+
- 		default:
- 			usage(1);
- 		}
+ .global _start_kernel
 -- 
-2.7.4
+2.23.0
 
