@@ -2,53 +2,101 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B85AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55894C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8446206A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEB920692
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr/af5E7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388899AbfINNJf (ORCPT
+        id S1729885AbfINNkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 09:09:35 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56356 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388789AbfINNJe (ORCPT
+        Sat, 14 Sep 2019 09:40:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36607 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbfINNkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 09:09:34 -0400
-Received: from localhost (93-63-141-166.ip28.fastwebnet.it [93.63.141.166])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 45E7515286011;
-        Sat, 14 Sep 2019 06:09:33 -0700 (PDT)
-Date:   Sat, 14 Sep 2019 14:08:43 +0100 (WEST)
-Message-Id: <20190914.140843.945413345284987204.davem@davemloft.net>
-To:     kvalo@codeaurora.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers-next 2019-09-14
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <87r24jchgv.fsf@kamboji.qca.qualcomm.com>
-References: <87r24jchgv.fsf@kamboji.qca.qualcomm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 14 Sep 2019 06:09:34 -0700 (PDT)
+        Sat, 14 Sep 2019 09:40:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so19832270pfr.3;
+        Sat, 14 Sep 2019 06:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UGd0Nsf8r1SfWs/Ru1bBbfL8JHhL34BqVq++qP9ktxo=;
+        b=gr/af5E7uh/eclxKy3/AKgBeqQlB+53jhLBMucilUiHjS1JUk00+CEHijqFKWuHjvG
+         M2uwYHq2JyEVYYzUrpAGp5FvpcIGL3Gy4w3stGtsVEhu66pSfKeU5JR8avuE/qJA6Tv2
+         2EmZtq8H4HrvhxAV54U4J+K7FK68Q5UNsr6pXKZTlfQz2BDqFJLJQat9+ohrKeIK+Ci4
+         oU0ijH4lPXb05FPq6NHcUOt2DamTTODNSnv4W9zvrJgzEa86nxd6nqAjr9fqgc6p47ST
+         Mu05OFXb+qLgGAj2oOvkFRJ7qKIfwDSRaAxhdKSXMWizl5zmH9VllUGroPLu1scnSPj/
+         J2DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UGd0Nsf8r1SfWs/Ru1bBbfL8JHhL34BqVq++qP9ktxo=;
+        b=fpk27kYDBCRVWAv3MFTMzymoKcmoRJUn2tFnahJAic5MS8C6BKYat+pTX3203lFU+L
+         stZ0xTAmWLzhZKAppSU9yCzEEbsKvshPsUVht9uOoUB8L1zBVCtOYF8QwIRMdJ4wdyR6
+         pB8GwOr1AIQNNJYVRdzfJaxNK7MIQxHFpq9Cx3MpegRaUUOsMyuuoYt3oDeTkzeyxqoW
+         EX0i6qNEO6ViGzuNAcocFinMQhqrHVzUfBNi3G4O6cPa1Jnan6n9mpxl3HeQ59PDDLvz
+         sxAwYIg9tOmd/WoWJvdVo8/69PK/U2B1XeSnSICpajc9sOBhLvKpoQ0w+07tZrUp3qQj
+         HKBA==
+X-Gm-Message-State: APjAAAXwJd9BbEe/yGVEoGEUmstp9E5Hzq1ASI/3rLyM4BHjac56O2xF
+        qv/i3/ZongY16TgxsqbfmGE=
+X-Google-Smtp-Source: APXvYqzPBdEMLarV6HxcOp/P3+qDK4rs/ZTQxq3kCZlCdJc64XysdI4AUcwdx8zzGLH6WkwHmLlQng==
+X-Received: by 2002:a63:5a0a:: with SMTP id o10mr48642930pgb.282.1568468419959;
+        Sat, 14 Sep 2019 06:40:19 -0700 (PDT)
+Received: from localhost.localdomain ([211.34.238.221])
+        by smtp.gmail.com with ESMTPSA id h70sm26992902pgc.36.2019.09.14.06.40.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 06:40:19 -0700 (PDT)
+From:   Park Ju Hyung <qkrwngud825@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        valdis.kletnieks@vt.edu
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to 
+Date:   Sat, 14 Sep 2019 22:39:51 +0900
+Message-Id: <20190914133951.16501-1-qkrwngud825@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalle Valo <kvalo@codeaurora.org>
-Date: Sat, 14 Sep 2019 13:14:40 +0300
+Hi.
 
-> here's a pull request to net-next tree for v5.4, more info below. Please
-> let me know if there are any problems.
+I just noticed that this exfat-staging drivers are based on the old 
+Samsung's 1.x exFAT drivers.
 
-Pulled, thanks Kalle.
+I've been working to get the newer Samsung's driver(now named "sdFAT") 
+to fit better for general Linux users, and I believe it can provide a 
+better base for the community to work on(and hopefully complies better 
+to the mainline coding standard).
+
+GitHub link
+https://github.com/arter97/exfat-linux
+
+I also included some rudimentary benchmark results.
+
+I encourage mainline developers to explore this driver base and see if 
+it's worth to switch, since it's the early days of exfat-staging.
+
+To others watching this thread:
+It's more than likely that you can start using exFAT reliably right 
+away by following the link above. It's tested on all major LTS kernels 
+ranging from 3.4 to 4.19 and the ones Canonical uses for Ubuntu: 3.4, 
+3.10, 3.18, 4.1, 4.4, 4.9, 4.14, 4.19 and 4.15, 5.0, 5.2, and 5.3-rc.
+
+Thanks.
