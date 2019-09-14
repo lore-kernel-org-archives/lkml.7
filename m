@@ -2,215 +2,81 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B525C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055A4C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F520830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t38f0Ixa"
+	by mail.kernel.org (Postfix) with ESMTP id CBBAB2089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfINNrg (ORCPT
+        id S1730917AbfINNuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 09:47:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41932 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbfINNrg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 09:47:36 -0400
-Received: by mail-io1-f65.google.com with SMTP id r26so68718303ioh.8;
-        Sat, 14 Sep 2019 06:47:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5c+7toLvMTmRgmguxP1GEOcN8tq63Ii62NDiuk379RA=;
-        b=t38f0IxagpfezKSWCERSYqTbsX0x2HA/RBWwIdXA5/avDR6wd5S5L4euBNBYg/cw/e
-         F+VCjXJiRYZGG9vqwXaHZcAMdF2uQUYyoEKzDBfgeihzXO5d5Y87dfFsyH89mQl85irU
-         ow7lg9M2UcLzVJctrrocZAfv09EWNkBg5VsTjuqSescLGv5HuDVZto92mwin/S08n3J8
-         yK1RaxrYOm26R6B8QN2kw6XpKgFBvpKWybU2oMgno7Xa5+bVUg9/2jEsc136SfqtlPix
-         ybD+l01Ttcc2ChhF038xUjCzb9lcoXcO8ag5V/hwqvLXkSOKE9xGbhTFQt0Vq0EUo2EC
-         xF2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5c+7toLvMTmRgmguxP1GEOcN8tq63Ii62NDiuk379RA=;
-        b=I1ZTVt0xNqhH3A0z9NAZmSKKDpmgUUzYNCxuPnOKmWbcbH3dWN0Gtrf/6ul51g/Qg/
-         efEQFPblMtRkqVGtGyu4WHsK7ZfaaGjhPHqaAv4kbjHsAGdfx2txfsXZa/XlOXphWwPx
-         MziG2t67omAe/D09Tg0QHcVxlDi1u4uGlFc4F9McBSJtJJhftUNaw6ER42XjSKdPbjU5
-         9Jv1QqCLzlUgRzppscsNgkF8tGKPnJsPHspy8oiSenPbmHxUYI92awr7u/LIwLbdSi0/
-         XBYrPleU4irFBuBUkc82yTSSuyEFHFtpxJRjSDPciiQ7UOdBf8HsQvQDjMXeuq7bcJHZ
-         9Z7g==
-X-Gm-Message-State: APjAAAW1cwVBhxxNMorRs+JmixCM4/hPcjWNVXy5QTwcRsNRvLn1RN0W
-        6/09oZHljhW15ajVDkotc0QTB8pJJ98E2N/1/vA=
-X-Google-Smtp-Source: APXvYqwUse6tFuqhH0U4m98RAEPjXI9vDzBPZjzhFMFp+HTD3Raqj6PYbwedbk/NyALcNXsEokeqZLTv64GdQwfzlzc=
-X-Received: by 2002:a6b:b213:: with SMTP id b19mr5724302iof.58.1568468854433;
- Sat, 14 Sep 2019 06:47:34 -0700 (PDT)
+        Sat, 14 Sep 2019 09:50:24 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54261 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728533AbfINNuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 09:50:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 06:50:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="197877355"
+Received: from krusocki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.34])
+  by orsmga002.jf.intel.com with ESMTP; 14 Sep 2019 06:50:19 -0700
+Date:   Sat, 14 Sep 2019 14:50:18 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
+        Denis Kenzior <denkenz@gmail.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [RESEND PATCH] MAINTAINERS: keys: Update path to trusted.h
+Message-ID: <20190914135018.GA12579@linux.intel.com>
+References: <20190815215712.tho3fdfk43rs45ej@linux.intel.com>
+ <20190815221200.3465-1-efremov@linux.com>
+ <20190816185823.kjuxqfegpsywulkn@linux.intel.com>
+ <b1a3742e-4d35-ebf6-2127-bc857c09997d@linux.com>
 MIME-Version: 1.0
-References: <20190913153714.30980-1-aford173@gmail.com> <20190913153714.30980-2-aford173@gmail.com>
- <40FEEAC9-8F19-466F-83C3-C8F0142D44B7@goldelico.com>
-In-Reply-To: <40FEEAC9-8F19-466F-83C3-C8F0142D44B7@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 14 Sep 2019 08:47:23 -0500
-Message-ID: <CAHCN7xLVFP23Rt5tpTwN+LGmJr3vC0_v7pfGVdDYj=PSHFGvgA@mail.gmail.com>
-Subject: Re: [RFC v2 2/2] ARM: omap3: Consolidate thermal references to common omap3
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1a3742e-4d35-ebf6-2127-bc857c09997d@linux.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 4:25 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
->
-> > Am 13.09.2019 um 17:37 schrieb Adam Ford <aford173@gmail.com>:
-> >
-> > Because the omap34xx, omap36xx and am3517 SoC's have the same
-> > thermal junction limits, there is no need to duplicate the entry
-> > multiple times.
-> >
-> > This patch removes the thermal references from omap36xx and
-> > omap34xx and pushes it into the common omap3.dtsi file with
-> > the added benefit of enabling the thermal info on the AM3517.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
+On Tue, Sep 10, 2019 at 02:50:39PM +0300, Denis Efremov wrote:
+> Hi,
+> 
+> On 8/16/19 9:58 PM, Jarkko Sakkinen wrote:
+> > On Fri, Aug 16, 2019 at 01:12:00AM +0300, Denis Efremov wrote:
+> >> Update MAINTAINERS record to reflect that trusted.h
+> >> was moved to a different directory in commit 22447981fc05
+> >> ("KEYS: Move trusted.h to include/keys [ver #2]").
+> >>
+> >> Cc: Denis Kenzior <denkenz@gmail.com>
+> >> Cc: James Bottomley <jejb@linux.ibm.com>
+> >> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> >> Cc: linux-integrity@vger.kernel.org
+> >> Signed-off-by: Denis Efremov <efremov@linux.com>
+> > 
+> > Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > /Jarkko
+> > 
+> 
+> Could someone take this fix through his tree?
 
-Disregard this patch.  I'll drop it based on Nikolaus' comments below.
+I picked this up now to the tpmdd tree.
 
-> > ---
-> > V2:   Add node name for cpu and add cooling-cells entry
-> >
-> > diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> > index 4043ecb38016..84704eb3b604 100644
-> > --- a/arch/arm/boot/dts/omap3.dtsi
-> > +++ b/arch/arm/boot/dts/omap3.dtsi
-> > @@ -32,7 +32,7 @@
-> >               #address-cells = <1>;
-> >               #size-cells = <0>;
-> >
-> > -             cpu@0 {
-> > +             cpu: cpu@0 {
-> >                       compatible = "arm,cortex-a8";
-> >                       device_type = "cpu";
-> >                       reg = <0x0>;
-> > @@ -41,9 +41,14 @@
-> >                       clock-names = "cpu";
-> >
-> >                       clock-latency = <300000>; /* From omap-cpufreq driver */
-> > +                     #cooling-cells = <2>;
-> >               };
-> >       };
->
-> Looks ok.
->
-> >
-> > +     thermal_zones: thermal-zones {
-> > +             #include "omap3-cpu-thermal.dtsi"
-> > +     };
-> > +
->
-> I have observed one compile issue: we also include this indirectly by am3517.dtsi
-> and the included code refers to <&bandgap 0> but there is no bandgap definition in am3517.dtsi
->
-> Therefore I studied the am35x TRM (SPRUGR0C) and compared to the am/dm37x TRM (SPRUGN4M).
->
-> But I can't find a bandgap temperature sensor with ADC like it is described in
-> "13.4.6 Band Gap Voltage and Temperature Sensor" for the am/dm37x. Only
-> "BANDGAP Logic" exists in both and both have the CM_FCLKEN3_CORE but with
-> different meaning of bit 0.
-
-I didn't read the technical details, I just read there was a bandgap
-logic, so I assumed it existed.
-
->
-> There is also no description of an CONTROL_TEMP_SENSOR (0x48002524) register for am35x.
-> (note: the register is also documented for omap3530).
-
-Thanks for looking into this.
-
->
-> So this might mean that the am35x does not have this feature unless TI simply
-> did not document it because the chip is specified for a single OPP only where it
-> make no sense to monitor the temperature.
->
-> We can find out only by looking at 0x48002524 if there is an undocumented
-> bandgap converter.
-
-I will try to read this register when I have some time, but I have to
-watch Chelsea FC play in 15 minutes.  ;-)
-
->
-> Which means we probably can't make thermal throttling work for it. And even
-> if the bandgap sensor exists we are lacking an value -> celsius table.
-
-I think it's probably best to abandon this patch, per my comment based
-on all your comments.
-
->
->
-> >       pmu@54000000 {
-> >               compatible = "arm,cortex-a8-pmu";
-> >               reg = <0x54000000 0x800000>;
-> > diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-> > index f572a477f74c..b80378d6e5c1 100644
-> > --- a/arch/arm/boot/dts/omap34xx.dtsi
-> > +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> > @@ -101,10 +101,6 @@
-> >                       };
-> >               };
-> >       };
-> > -
-> > -     thermal_zones: thermal-zones {
-> > -             #include "omap3-cpu-thermal.dtsi"
-> > -     };
-> > };
-> >
-> > &ssi {
-> > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> > index 6fb23ada1f64..ff2dca63a04e 100644
-> > --- a/arch/arm/boot/dts/omap36xx.dtsi
-> > +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> > @@ -140,10 +140,6 @@
-> >                       };
-> >               };
-> >       };
-> > -
-> > -     thermal_zones: thermal-zones {
-> > -             #include "omap3-cpu-thermal.dtsi"
-> > -     };
-> > };
->
-> So if we have to exclude the am3517 we can not apply the rearrangement part
-> of this patch.
->
-> I'd suggest to move the cpu: cpu@0 and #cooling-cells into 1/2 (also to make it
-> compile stand-alone). And have the consolidation separately - if we can fix the
-> am3517 bandgap sensor issue.
-
-I'll drop this, and leave everything in the omap3-cpu-thermal file and
-let omap34xx and omap36xx point to them as we do now.
-
->
-> >
-> > /* OMAP3630 needs dss_96m_fck for VENC */
-> > --
-> > 2.17.1
-> >
->
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with dm3730cbp100
->
+/Jarkko
