@@ -2,302 +2,204 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E963C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 09:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06125C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0B620693
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 09:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0519206A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pXrIGRZV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEBXrn0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfINJxy (ORCPT
+        id S1728145AbfINKLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 05:53:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36897 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbfINJxx (ORCPT
+        Sat, 14 Sep 2019 06:11:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36435 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfINKLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 05:53:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r195so5158956wme.2
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 02:53:51 -0700 (PDT)
+        Sat, 14 Sep 2019 06:11:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t3so5201739wmj.1;
+        Sat, 14 Sep 2019 03:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pNp4HRnH8LauXw36MlEHyntC6rJWJRXDy9OYuB0DD6A=;
-        b=pXrIGRZVCQXP/pZJ2SCbWHN71Lj/izr55YPO6ML8ydoxl0chUeMS9yWh/g+POxzoFq
-         dviapQmRrAHXfozcl8/JMCnv4DNGYc0dxuJ0LThqV7kciyxElH/94rhUwCDNW61UcnBa
-         gJ7xQQTwcvNHt2yMfHtGuiQngwPoYWnxZtJmW0avd1v5nRjYtq1CO9S/DxrSOyU8NQ5N
-         aTDokYyc6VicwlWu37guun6NrU9mpydcxcNVp67g60gsbPr3OaNBnPxXPA4wNeL1aLe7
-         XwqrhQT59LDDXgFVs8kE757Qi40cCc0zlsOzQCgC1XEPS9UGcImZl6kbbVkavL5qG1So
-         nZPQ==
+        d=gmail.com; s=20161025;
+        h=to:references:from:openpgp:autocrypt:subject:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=AntpfjJb+6RUr00R7hxLMBZcAFur0UaZMcMfYGGosJg=;
+        b=fEBXrn0A8uxynm4/Owsy0em31/hBNct9IJh630YO1GzJZlIuh6x5kGiPeAJJErsCzi
+         3NGXnFLjG3NwjprVywqHEbKQw5DYDLvm3gDqxI8CQEb2s+70J0uAK37FTIe3Y4QcPMAX
+         PKFIrlAcG19GczDetW+yZTQKFiWxEWl/DtlupcN7p9p4wnX5SYvWOvjvAf8v0QnW/vUu
+         cUsNuG+QMYDN0NqPTnJGWE6Ftfp+SddL03o+J/M4Zcpcl3QCcq7mS7SvktfwWJs94o2E
+         XtTlmeCK3tG88DkNFMm2C+u8s9fGWP9eXthwwlefg1FUxoUPeyK083tQAF2/Fzm0l0Bs
+         2imQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pNp4HRnH8LauXw36MlEHyntC6rJWJRXDy9OYuB0DD6A=;
-        b=Ao36484BIlU+K0Ih1RMGGvSEpGRpL8kzqtzUF3kLtSQcGXMa8nJWLFjzaI19FAyH5U
-         S9AiDAJu33gd4wxtdsp7c42gDHDsXDaN7pH2m1jF5katfPMRN8Ap+EFDk5Y5ACHxoVaF
-         P1+M7oMRt0QVc+63lxz7ssYnv/K4x/Ss3zuh8/55s3x/a4dFdMawGjeuf41+bkATk4WG
-         33Bp1fAx6iZT6OJLgEC0/PiNYl3YZ2JAr+kPJwYuQupzxbHBuTQ38s9+QZTqSUiyKmwa
-         wR3O3HUHbNwRCo9L4jv+7thiOjPILQZZoaoJvtqw2QRlgG1xt6GJYTE2kK3OBhC92y7L
-         ss4Q==
-X-Gm-Message-State: APjAAAV5GH8zmKc6mYcjrRXNMm68rFDY5u1uDtgpS75u5oYwl4hvVWTa
-        4e7oJPh5ZT6gjFcXBI6o8YEDFw==
-X-Google-Smtp-Source: APXvYqysEKRXnto253Lar5weIIvCNBZo/zO3EjaRdSEEi21VxQpnnpafcNJt0LN9C/Y2LOX/8oNDWg==
-X-Received: by 2002:a1c:ed03:: with SMTP id l3mr6796311wmh.29.1568454830326;
-        Sat, 14 Sep 2019 02:53:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:1071:7577:6038:b6fe? ([2a01:e34:ed2f:f020:1071:7577:6038:b6fe])
-        by smtp.googlemail.com with ESMTPSA id z1sm55541572wre.40.2019.09.14.02.53.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Sep 2019 02:53:49 -0700 (PDT)
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Andr=c3=a9_Roth?= <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>,
-        kernel@pyra-handheld.com
-References: <20190912183037.18449-1-aford173@gmail.com>
- <D4F7E03C-1880-45AC-8F7C-6C8A336E2A01@goldelico.com>
- <CAHCN7xK100mR=fNns3qdDKpOyWsTWXgDnnngQfQ_j8cB_SFfuA@mail.gmail.com>
- <98751DAF-B3F7-4638-97BE-1D067B24EF18@goldelico.com>
- <CAHCN7xL-CmwmXP3PLdwAHiC-9tMjrpY4k7ZhxQ9WoXY6yUz8BA@mail.gmail.com>
- <ABCE2ACA-D19A-42D2-9606-C60F1A5CBCCB@goldelico.com>
- <CAHCN7xKfeh-cqJVfbW_km27cgee2MEBdPM3edACRi0fCaohxvw@mail.gmail.com>
- <7C9393BD-B23B-41A6-BF96-E53CD707AAC7@goldelico.com>
- <CAHCN7x+_f_jrttUGyKHBOUyYjkOx0mJxba1Yb3tPm9ee7+21og@mail.gmail.com>
- <CAHCN7xLODa114M77-rX9WHT+uJtsH3yOmbFG2KdEjZpTSECs2w@mail.gmail.com>
- <D3AF2868-F9A4-4176-A851-5DCF029B65A9@goldelico.com>
- <81d6cd33-4930-6753-d5ed-678cb1d2038d@linaro.org>
- <CAHCN7xLcCO-QrYTm0jzS64P6o5t8cfudJfYELDSz-_OPV5JO5w@mail.gmail.com>
- <7ebe4c56-1b89-d90d-eeb4-25adaa58dd17@linaro.org>
- <42A53316-100E-4899-9D77-CD9F5129179E@goldelico.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+        h=x-gm-message-state:to:references:from:openpgp:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=AntpfjJb+6RUr00R7hxLMBZcAFur0UaZMcMfYGGosJg=;
+        b=bVkk7K6umGScynxc0ysrlDyyKhHaHFRGOQOZLyvpdUiR5QzOtsF+1dvHXgc7pPKn7C
+         DfjUvtNWBMwLWldazwpdVvYGoltqld3voDauamOwOOfVD1gNg4WyoftaM9h6nj8JMMNr
+         QBwsUQs8algXZKW2F/6vcjVTcPsdbF0l3/FUwTDw48pWpBpdHOJ9DLJsSnPKVlIR1B8B
+         M5FQ7l9tlyfJBmJVzgb6yvu60jFdTvlWRmylZUKsHJ0QHAip4cpdgTBIHQGdidDsIOMt
+         ooTbczLpGOhQDKqL6HbuzdhFcMNs6wJRdLFX1b73rkyNAYHc2Yp6LPs0CCyFua1m3Lqo
+         RZZw==
+X-Gm-Message-State: APjAAAV+KitdejpIiVIGZ0W2eKwatb1EbW53sEEiIEtSkztAHyhg7uzs
+        3j4ZOlTZ3Fqv8Yj42S/hR6+Lc3efj0U=
+X-Google-Smtp-Source: APXvYqwfXkgi7kf823flEHp0OEqzX1EcoG+bb6AFPMWB7SZyp6PnzsMCxpmbjk3WQdCSZNIJrrMZiw==
+X-Received: by 2002:a1c:7902:: with SMTP id l2mr6665209wme.55.1568455878951;
+        Sat, 14 Sep 2019 03:11:18 -0700 (PDT)
+Received: from [192.168.43.11] ([109.126.145.74])
+        by smtp.gmail.com with ESMTPSA id e30sm58062825wra.48.2019.09.14.03.11.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Sep 2019 03:11:18 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1568413210.git.asml.silence@gmail.com>
+ <af5ba045-2ea8-b213-3625-354c10334540@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
- CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
- zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
- ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
- 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
- YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
- Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
- Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
- heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
- A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
- fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
- mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
- Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
- QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
- uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
- KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
- VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
- Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
- c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
- WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
- xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
- RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
- Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
- F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
- 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
- 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
- /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
- zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
- BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
- EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
- cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
- IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
- 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
- BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
- LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
- a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
- tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
- qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
- iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
- adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
- CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
- 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
-Message-ID: <c9bb9c0b-0327-4fc6-afd9-56f016b9a3b3@linaro.org>
-Date:   Sat, 14 Sep 2019 11:53:47 +0200
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [RFC PATCH 0/2] Optimise io_uring completion waiting
+Message-ID: <cb105638-2394-5eef-216f-9c6ff918ee59@gmail.com>
+Date:   Sat, 14 Sep 2019 13:11:08 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <42A53316-100E-4899-9D77-CD9F5129179E@goldelico.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <af5ba045-2ea8-b213-3625-354c10334540@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="1UpWvQKmHjh63s1q2D5QaIWPw37539xMm"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--1UpWvQKmHjh63s1q2D5QaIWPw37539xMm
+Content-Type: multipart/mixed; boundary="n83DNlQnNXXTEpVorGmAy12v3UslHPoME";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <cb105638-2394-5eef-216f-9c6ff918ee59@gmail.com>
+Subject: Re: [RFC PATCH 0/2] Optimise io_uring completion waiting
+References: <cover.1568413210.git.asml.silence@gmail.com>
+ <af5ba045-2ea8-b213-3625-354c10334540@kernel.dk>
+In-Reply-To: <af5ba045-2ea8-b213-3625-354c10334540@kernel.dk>
+
+--n83DNlQnNXXTEpVorGmAy12v3UslHPoME
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+It solves much of the problem, though still have overhead on traversing
+a wait queue + indirect calls for checking.
+
+I've been thinking to either
+1. create n wait queues and bucketing waiter. E.g. log2(min_events)
+bucketing  would remove at least half of such calls for arbitary
+min_events and all if min_events is pow2.
+
+2. or dig deeper and add custom wake_up with perhaps sorted wait_queue.
+As I see it, it's pretty bulky and over-engineered, but maybe somebody
+knows an easier way?
+
+Anyway, I don't have performance numbers for that, so don't know if this
+would be justified.
 
 
-Hi Nikolauss,
-
-On 13/
-09/2019 22:34, H. Nikolaus Schaller wrote:
-
-[ ... ]
-
->> The governor continues to read the temperature and see the temperature
->> decrease, it does nothing.
-> 
-> Ah, I think our misunderstanding is that the govenor "enables" and
-> "disables" a set of OPPs. Rather it goes down or up in the list if
-> above or below a trip point.
-
-Right.
-
->> The governor continues to read the temperature, see the temperature
->> decreases and is below 75°C, it decrease the state (state=>1), the OPP
->> change to 2.36GHz.
+On 14/09/2019 03:31, Jens Axboe wrote:
+> On 9/13/19 4:28 PM, Pavel Begunkov (Silence) wrote:
+>> From: Pavel Begunkov <asml.silence@gmail.com>
 >>
->> The temperature then increases, etc ...
+>> There could be a lot of overhead within generic wait_event_*() used fo=
+r
+>> waiting for large number of completions. The patchset removes much of
+>> it by using custom wait event (wait_threshold).
 >>
->> Actually the governors do more than that but it is for the example.
->>
->> So it is a bad idea to set boundaries for the cooling device state as
->> that may prevent the governor to take the right decision for the cooling
->> effect. Imagine in the example above, we set the max state to 1 for the
->> cooling device, that would mean the governor won't be able to stop the
->> temperature increasing, thus ending up to a hard reboot.
-> 
-> Well, the data sheet only requires that the high speed OPPs are only
-> used below 90°C. If I understand correctly if we set the trip point to
-> 90°C it will simply go down through the full list of OPPs. This will
-> clearly avoid the high speed OPPs (and potentially some low-speed
-> ones, but that does not harm).
+>> Synthetic test showed ~40% performance boost. (see patch 2)
+>=20
+> Nifty, from an io_uring perspective, I like this a lot.
+>=20
+> The core changes needed to support it look fine as well. I'll await
+> Peter/Ingo's comments on it.
+>=20
 
-Yes, right.
-
-> So our approach "how to make it disable these two OPPs" seems to be
-> wrong. Rather, we have to think "make sure the temperature
-> stays below 90°C".
-
-Your approach is not wrong, it proves there is a limitation in the
-thermal/cpufreq framework.
-
-There is the 'turbo mode' [1] which describes exactly what you want but
-I'm not sure it is fully implemented.
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/opp/opp.txt#n138
-
-> And is it true that we do not have to define mapping for the "critical"
-> trip points?
-
-Right, you don't have to, it is optional. But the critical trip point
-will make your system to shutdown in case something is going wrong, for
-example an external heating source, like the sun or whatever. It is good
-to set a high temperature to force the shutdown .
-Usually it is below the hardware reset temperature.
+--=20
+Yours sincerely,
+Pavel Begunkov
 
 
->>>> Now the different combinations:
->>>>
->>>> <&cpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT> the governor will use the state
->>>> 0 to 7.
->>>>
->>>> <&cpu THERMAL_NO_LIMIT 2> the governor will use the state 0 to 2
->>>
->>> What would be the difference between  <&cpu THERMAL_NO_LIMIT 2>  and
->>> <&cpu 0 2> ?
->>> (if there is any)
->>
->> There is no difference.
->>
->>
->>>> <&cpu 1 2> the governor will use the state 1 and 2. That means there is
->>>> always the cooling effect as the governor won't set it to zero thus
->>>> stopping the mitigation.
->>>
->>> For the purposes of the board in question, we have 4 operating points,
->>> 300MHz, 600MHz, 800MHz and 1GHz.  Once the board reaches 90C, we need
->>> them to cease operation at 800MHz and 1GHz and only permit operation
->>> at 300MHz and 600MHz.  I am going under the assumption that the cpu
->>> index[0] would be for 300MHz, index[1] = 600MHz, etc.
->>>
->>> If I am interpreting your comment correctly, I should set <&cpu
->>> THERMAL_NO_LIMIT 2> which would allow it to either not cool and run up
->>> to 600MHz and not exceed, is that correct?
->>
->> Nope, it will mean the cooling device can only reduce to 800MHz and to
->> 600MHz to mitigate.
->>
->> Actually the thermal framework neither the kernel are designed to handle
->> this case. They assume the OPPs are stable whatever the thermal situation.
->>
->> That is the reason why I think it is a very interesting use case because
->> it introduces a temperature constraint in addition to a duration for a
->> certain OPP. IMO, that could be an extension of the turbo-mode.
->>
->> With what we have now, I doubt it is feasible.
->>
->> The best we can do is preventing to reach the 90°C, so we remove the OPP
->> temperature constraint. I suppose 85°C is a safe temperature to stick on.
->>
->> And in order to let the governor have free hand.
->>
->> <&cpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>
->>
->> I don't think that will have a significant impact on performances
->> compared to be able to run at a higher temperature with less OPPs.
->>
->>
->>>> Does it clarify the DT spec?
->>>>
->>>
->>> I think your reply to my inquiry might.  If possible, it would be nice
->>> to get this documented into the bindings doc for others in the future.
->>> I can do it, but someone with a better understanding of the concept
->>> maybe more qualified.  I can totally understand why some may want to
->>> integrate this into their SoC device trees to slow the processor when
->>> hot.
->>>
->>> Thank you for taking the time to review this.  I appreciate it.
->>>
->>> adam
-> 
-> BR,
-> Nikolaus
-> 
+--n83DNlQnNXXTEpVorGmAy12v3UslHPoME--
 
+--1UpWvQKmHjh63s1q2D5QaIWPw37539xMm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+-----BEGIN PGP SIGNATURE-----
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl18vMEACgkQWt5b1Glr
++6XnSw/7BNkPkh3Nd7JZKz/MxlxlDO9WJViWrafCx0DwriU7WUd3uE1u0cEda+hJ
+lv/biGOrIkhsFFBlnx7e//XdiliS6U9oYRE/2tuyts+bTKnbRvjKHApRFQO8fguO
+jBHbfUcXVANMq6O3CgeTzPOstPeXvU0va9Ey69AuWQQy1k7bZpn/8PJdTp7vn8l5
+aSfX3m/lobS5BG43jh0eThhghjHwwZdj4dybcP2Mzp2yuwzbxkERHIhR0jWN4Tt9
+Ngk43SYx8MHaS3X0incND2QR7ZaU0K58ztUf33U+umzV8kLRImiRX2nJu31wHv5g
+p9GbcUft6YBI6f5oO9Vh6VbxvCYoMenFkhEovf4aunxlDBLMUKFOuF6kfVg4E/oE
+tskpU2pn88USu0Yzc9ROOilOgBUhruVxToJCErgeQQFRzkI5+xlfAQ6HXmefDWhH
+ioUOmG5EFxXj8w+Pqjof13U/KczxANlmNGYNUPz2TEiwDyEpC4MpjzAsgZI65lkW
+l0Mv2GnE9sh7qv3gz+2QJhSH4nD0QYMHvHQVAVZ+N6Fq6Bg6fOkzfdLfI6BQT3OV
+XrOq8XBGKUK/8hG1r3+eMSGEMlkGg3zviov/Z83WznhvgEgc+yYOBtUrkHle0Iue
+Jws/PwXpSCl1FpXMPudATZghBG65zM8F1nSHajLlt7qBuzz1Ibg=
+=jlm/
+-----END PGP SIGNATURE-----
 
+--1UpWvQKmHjh63s1q2D5QaIWPw37539xMm--
