@@ -2,89 +2,106 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8963C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB5C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E92B20830
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A565A20717
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 10:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbfINKR6 (ORCPT
+        id S1728803AbfINKWJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 06:17:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41430 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726313AbfINKR6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 06:17:58 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8EAHLKv090666
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 06:17:57 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v0u11bvf8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 06:17:56 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Sat, 14 Sep 2019 11:17:55 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 14 Sep 2019 11:17:52 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8EAHpfv48365728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 14 Sep 2019 10:17:51 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E90D0AE04D;
-        Sat, 14 Sep 2019 10:17:50 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF556AE045;
-        Sat, 14 Sep 2019 10:17:50 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 14 Sep 2019 10:17:50 +0000 (GMT)
-Date:   Sat, 14 Sep 2019 12:17:49 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: remove pointless drivers-y in drivers/s390/Makefile
-References: <20190912052354.24829-1-yamada.masahiro@socionext.com>
+        Sat, 14 Sep 2019 06:22:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48768 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbfINKWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 06:22:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CD0AAB012;
+        Sat, 14 Sep 2019 10:22:06 +0000 (UTC)
+Date:   Sat, 14 Sep 2019 12:22:02 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Michael Neuling <mikey@neuling.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Allison Randal <allison@lohutok.net>,
+        Breno Leitao <leitao@debian.org>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v7 5/6] powerpc/64: Make COMPAT user-selectable disabled
+ on littleendian by default.
+Message-ID: <20190914122202.307707c0@naga>
+In-Reply-To: <87h85us0xy.fsf@mpe.ellerman.id.au>
+References: <cover.1567198491.git.msuchanek@suse.de>
+        <c7c88e88408588fa6fcf858a5ae503b5e2f4ec0b.1567198492.git.msuchanek@suse.de>
+        <87ftlftpy7.fsf@mpe.ellerman.id.au>
+        <20190902114239.32bd81f4@naga>
+        <87h85us0xy.fsf@mpe.ellerman.id.au>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912052354.24829-1-yamada.masahiro@socionext.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19091410-0008-0000-0000-000003159E96
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091410-0009-0000-0000-00004A3413CB
-Message-Id: <20190914101749.GA4059@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-14_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=740 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909140107
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 02:23:54PM +0900, Masahiro Yamada wrote:
-> This is unused.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  drivers/s390/Makefile | 3 ---
->  1 file changed, 3 deletions(-)
+On Tue, 03 Sep 2019 10:00:57 +1000
+Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-Applied, thanks.
+> Michal Suchánek <msuchanek@suse.de> writes:
+> > On Mon, 02 Sep 2019 12:03:12 +1000
+> > Michael Ellerman <mpe@ellerman.id.au> wrote:
+> >  
+> >> Michal Suchanek <msuchanek@suse.de> writes:  
+> >> > On bigendian ppc64 it is common to have 32bit legacy binaries but much
+> >> > less so on littleendian.    
+> >> 
+> >> I think the toolchain people will tell you that there is no 32-bit
+> >> little endian ABI defined at all, if anything works it's by accident.  
+> >
+> > I have seen a piece of software that workarounds code issues on 64bit
+> > by always compiling 32bit code. So it does work in some way.  
+> 
+> What software is that?
 
+The only one I have seen is stockfish (v9)
+
+> 
+> > Also it has been pointed out that you can still switch to BE even with
+> > the 'fast-switch' removed.  
+> 
+> Yes we have a proper syscall for endian switching, sys_switch_endian(),
+> which is definitely supported.
+> 
+> But that *only* switches the endian-ness of the process, it does nothing
+> to the syscall layer. So any process that switches to the other endian
+> must endian flip syscall arguments (that aren't in registers), or flip
+> back to the native endian before calling syscalls.
+
+In other words just installing a chroot of binaries built for the other
+endian won't work. You need something like qemu to do the syscall
+translation or run full VM with a kernel that has the swapped endian
+syscall ABI.
+
+Thanks
+
+Michal
