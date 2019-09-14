@@ -2,88 +2,168 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A95C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C94C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B33A2067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE572067D
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 17:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0+bxTToa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="oR/DGMfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfINRcx (ORCPT
+        id S1731008AbfINRk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 13:32:53 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36762 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfINRcx (ORCPT
+        Sat, 14 Sep 2019 13:40:56 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:32884 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfINRkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 13:32:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m29so690192pgc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 10:32:52 -0700 (PDT)
+        Sat, 14 Sep 2019 13:40:55 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e18so977020oii.0;
+        Sat, 14 Sep 2019 10:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=O8OpIv/h9Xoj81JoOw7IpoqYu7lWdSRFtiFxO69rTAM=;
-        b=0+bxTToacLejfNCVGMh6jt8FMYCKv1JjLTMESP6mI6B/UH3COowPwnU0ICpZb1ukWk
-         4vZ1TxRfpmGAO3GBmiop27eE9B8cU/0shzMBpyQ9ttFvnEYWSxBaQmrB9Y8hbtKpEtDf
-         rHaz5HewXCaXyFFyqeh07pZlphnDMay+V3U29gfv4c0cBAeJiZ5ljvaG3TNV9JahHo5F
-         ZsSRriNWhgc9CKeOmFcp76uCZ/bWD5IWwi9l04F9m60NnIENgIIkpsquNpOg/2DvF2QU
-         +hk2ZOjmgM+p93hqSdqnE11DCP66QlQqoQFpGTaxi9AZvQbE2dmhPwOvV/Z1CuSpzIUN
-         Ad8w==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ScwrZFTGOc+kbhhZsRu5GL1IOvADxSoY4roa9r4rvrc=;
+        b=oR/DGMfb/9sZrS1uWjRRtNMdrY5WzzoMndCtZaKV+gw+KnCyNqnAKD24aJKKHJdhxu
+         i7amzSzK25ME7g67a28AVFajVTK1cxb+fmXDMU3GS565nM7NXjVzmCa0GD3MOJ6wO5Pp
+         sgODIbPNcyMnunPtbLm0F3kOFWFeMMfYJp/Jlt/maGebgXr3vcTwhEgPwASNRV+50Pjg
+         N620uvQjpgRfC54Yg71xZ7CQbDchDgFgsYw186toIk3YCFIMqHkiTH4G8cDjv1uhtv6k
+         6CgYOUzRHIF14PfBznVGZmQpHsEl3KPgCzFYkK98WoRPBqoSUhB8ZvFYFQK2WLEceNUq
+         m55g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O8OpIv/h9Xoj81JoOw7IpoqYu7lWdSRFtiFxO69rTAM=;
-        b=gRZGYO7lsoaTWyR4dD9GCOJVgkh4IwINEVpBCPQoYiKpagF/fkmMfJ8KXVrrBvYFTU
-         PEgqdorgYCMWyGiehhuB228OgJIHzOIHY7W6SFFR5Itej45eQTTLNgwTkG65MLSog238
-         iGvi9nJqlsTsoSnwCq+79X7TVN5/J+XafKNPQaE8z0qNZb11Qp1464VRtNPmwDO1WaEX
-         jpO+9JKIe64QjkkrWjjzcgnhFGmnZx2omO0z9JGSpGObBPhzUiprbjV5bA38u6tlgvR7
-         Y2xPJUGcYCrGo5D68cofQnW50jkD50mon05siAbN3AwBpKPFQWhKTX8fAfoPRzQV4ozO
-         DUoQ==
-X-Gm-Message-State: APjAAAVNIpl2BT6gGEzKxSvLDNthqsrOXQvsFkJILhgJQuIQqMeknq88
-        j7QoGw45RzaFbxB5ivAQaZxwlBBdzhdvKA==
-X-Google-Smtp-Source: APXvYqxVH9CGSAYvtAb4IJznoBr8AbX407SzOpfcLVfY73UfY/mHxNKqtD1kh2XkGfONmU5PawRyaA==
-X-Received: by 2002:a17:90a:a403:: with SMTP id y3mr11363720pjp.118.1568482371871;
-        Sat, 14 Sep 2019 10:32:51 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:ac0e:af6d:e28f:9b10? ([2605:e000:100e:83a1:ac0e:af6d:e28f:9b10])
-        by smtp.gmail.com with ESMTPSA id r12sm35993995pgb.73.2019.09.14.10.32.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Sep 2019 10:32:50 -0700 (PDT)
-Subject: Re: [PATCH] bfq: Fix bfq linkage error
-To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <9afc7a2cd013344290096d9dfe9355bcb57b3bbd.1568482098.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <333de59c-d4ca-3bc2-fffa-35d60bd14126@kernel.dk>
-Date:   Sat, 14 Sep 2019 11:32:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ScwrZFTGOc+kbhhZsRu5GL1IOvADxSoY4roa9r4rvrc=;
+        b=YpbNn5SYuRII7pb2GVHhMbl5jBkY/CH3zzMb32c/RXAzIv4Q47QR+2Rif3GUNdBoP1
+         MUKHdMknyz8/qQgE9Dk0ZIXelpqEDjoR2n4cNEz2IZLT612B5PRp73cp2jdelFWGolvU
+         RAffO0MjI5NsK8UNAzCrx9MEyUZGEZs1/GHWAZZVXxdwCA2z6ZohxS3aA1NzpD8E03nd
+         ujY91JMT8WR+EdHgB7E2FaKzfO0gCKSsmXFQmDqan/ckvCqg8wb8pTt7YiX9Ln7PvH/n
+         5F7vLVLi+o+5Ps3gs7h+0zRuPqKftFV3hQ2Bkzwg8AgQNolnXStOnL/OnBHRKmj4aJMB
+         tIyw==
+X-Gm-Message-State: APjAAAWDXpKySxZuloJsmJT3hJnxM4V6AUyn803H2q2O8FORr6pWVpxd
+        IkDc0JPfGxk34t45S0D5d1AwWsTR8xqbpJw4yHM=
+X-Google-Smtp-Source: APXvYqxzDSV60TGVXBUNUlUYl4UV7zv7qNNLwQJ0PfQSVLqrKQObbcGram3Yy+w0QN7EAUgIusf4gu4nw3EU9eIuIxE=
+X-Received: by 2002:aca:4d08:: with SMTP id a8mr8328954oib.39.1568482854580;
+ Sat, 14 Sep 2019 10:40:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9afc7a2cd013344290096d9dfe9355bcb57b3bbd.1568482098.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1567780354-59472-1-git-send-email-christianshewitt@gmail.com> <1567780354-59472-4-git-send-email-christianshewitt@gmail.com>
+In-Reply-To: <1567780354-59472-4-git-send-email-christianshewitt@gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 14 Sep 2019 19:40:42 +0200
+Message-ID: <CAFBinCANaKMHRuwaFwubZcDjZaGYcLcVuHjJsakR0uJkmZxRMw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 3/3] arm64: dts: meson-g12b-ugoos-am6: add
+ initial device-tree
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Oleg Ivanov <balbes-150@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/14/19 11:31 AM, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
-> 
-> Since commit 795fe54c2a828099e ("bfq: Add per-device weight"), bfq uses
-> blkg_conf_prep() and blkg_conf_finish(), which are not exported. So, it
-> causes linkage error if bfq compiled as a module.
+Hi Christian,
 
-Thanks, I'll apply and add the Fixes tag.
+my nit-picks below
 
--- 
-Jens Axboe
+On Fri, Sep 6, 2019 at 4:34 PM Christian Hewitt
+<christianshewitt@gmail.com> wrote:
+[...]
+> +       spdif_dit: audio-codec-1 {
+> +               #sound-dai-cells = <0>;
+> +               compatible = "linux,spdif-dit";
+> +               status = "okay";
+> +               sound-name-prefix = "DIT";
+> +       };
+please move it below sdio_pwrseq (or at least somewhere below the memory node)
 
+[...]
+> +       vcc_3v3: regulator-vcc_3v3 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "VCC_3V3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               vin-supply = <&vddao_3v3>;
+> +               regulator-always-on;
+> +               /* FIXME: actually controlled by VDDCPU_B_EN */
+can we add the enable GPIO here now that we know how to describe the
+VDDCPU_B regulator?
+
+[...]
+> +       usb1_pow: regulator-usb1_pow {
+for consistency with the regulators above: regulator-usb1-pow
+
+[...]
+> +       usb_pwr_en: regulator-usb_pwr_en {
+for consistency with the regulators above: regulator-usb-pwr-en
+
+[...]
+> +       vddao_1v8: regulator-vddao_1v8 {
+for consistency with the regulators above: regulator-vddao-1v8
+
+[...
+> +       vddao_3v3: regulator-vddao_3v3 {
+for consistency with the regulators above: regulator-vddao-3v3
+
+[...]
+> +&cpu0 {
+> +       cpu-supply = <&vddcpu_b>;
+> +       operating-points-v2 = <&cpu_opp_table_0>;
+> +       clocks = <&clkc CLKID_CPU_CLK>;
+> +       clock-latency = <50000>;
+> +};
+> +
+> +&cpu1 {
+> +       cpu-supply = <&vddcpu_b>;
+> +       operating-points-v2 = <&cpu_opp_table_0>;
+> +       clocks = <&clkc CLKID_CPU_CLK>;
+> +       clock-latency = <50000>;
+> +};
+> +
+> +&cpu100 {
+> +       cpu-supply = <&vddcpu_a>;
+> +       operating-points-v2 = <&cpub_opp_table_1>;
+> +       clocks = <&clkc CLKID_CPUB_CLK>;
+> +       clock-latency = <50000>;
+> +};
+> +
+> +&cpu101 {
+> +       cpu-supply = <&vddcpu_a>;
+> +       operating-points-v2 = <&cpub_opp_table_1>;
+> +       clocks = <&clkc CLKID_CPUB_CLK>;
+> +       clock-latency = <50000>;
+> +};
+> +
+> +&cpu102 {
+> +       cpu-supply = <&vddcpu_a>;
+> +       operating-points-v2 = <&cpub_opp_table_1>;
+> +       clocks = <&clkc CLKID_CPUB_CLK>;
+> +       clock-latency = <50000>;
+> +};
+> +
+> +&cpu103 {
+> +       cpu-supply = <&vddcpu_a>;
+> +       operating-points-v2 = <&cpub_opp_table_1>;
+> +       clocks = <&clkc CLKID_CPUB_CLK>;
+> +       clock-latency = <50000>;
+> +};
+(not limited to this patch: there's a lot of redundancy with the CPU
+nodes across the G12B .dts)
+
+[...]
+> +&sd_emmc_a {
+all nodes starting here should use alphabetical sorting
+
+
+Martin
