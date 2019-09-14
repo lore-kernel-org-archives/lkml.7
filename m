@@ -2,147 +2,66 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1B8C49ED6
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65DAC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3722C20692
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 06:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79A32081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 07:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfINGm3 convert rfc822-to-8bit (ORCPT
+        id S1726976AbfINHFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 02:42:29 -0400
-Received: from mailoutvs41.siol.net ([185.57.226.232]:44870 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726462AbfINGm2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 02:42:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 2B7D6520C71;
-        Sat, 14 Sep 2019 08:42:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0F_nRnEQ3SM1; Sat, 14 Sep 2019 08:42:23 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id AF25E52132C;
-        Sat, 14 Sep 2019 08:42:23 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 2E97D520C71;
-        Sat, 14 Sep 2019 08:42:23 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date:   Sat, 14 Sep 2019 08:42:22 +0200
-Message-ID: <3227980.eWD6USAIP4@jernej-laptop>
-In-Reply-To: <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 14 Sep 2019 03:05:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2408 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726826AbfINHFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 03:05:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 00:05:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,503,1559545200"; 
+   d="scan'208";a="210615622"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.128.120])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Sep 2019 00:05:33 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        prarit@redhat.com, darcari@redhat.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/5] tools/power/x86/intel-speed-select: New command and
+Date:   Sat, 14 Sep 2019 00:05:08 -0700
+Message-Id: <20190914070513.19807-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+This series contains some minor fixes, when firmware mask is including
+invalid CPU in the perf-profile mask. Also add some commands to
+better manage core-power feature.
 
-Dne četrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napisal(a):
-> Hi,
-> 
-> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
-> > +	dev->regmap = devm_regmap_init_mmio(dev->dev, dev->base,
-> > +					    
-&deinterlace_regmap_config);
-> > +	if (IS_ERR(dev->regmap)) {
-> > +		dev_err(dev->dev, "Couldn't create deinterlace 
-regmap\n");
-> > +
-> > +		return PTR_ERR(dev->regmap);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(dev->bus_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
-> > +
-> > +		return ret;
-> > +	}
-> 
-> Do you need to keep the bus clock enabled all the time? Usually, for
-> the SoCs that have a reset line, you only need it to read / write to
-> the registers, not to have the controller actually running.
-> 
-> If you don't, then regmap_init_mmio_clk will take care of that for
-> you.
-> 
-> > +	clk_set_rate(dev->mod_clk, 300000000);
-> > +
-> > +	ret = clk_prepare_enable(dev->mod_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
-> > +
-> > +		goto err_bus_clk;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(dev->ram_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
-> > +
-> > +		goto err_mod_clk;
-> > +	}
-> > +
-> > +	ret = reset_control_reset(dev->rstc);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to apply reset\n");
-> > +
-> > +		goto err_ram_clk;
-> > +	}
-> 
-> This could be moved to a runtime_pm hook, with get_sync called in the
-> open. That way you won't leave the device powered on if it's unused.
+Srinivas Pandruvada (4):
+  tools/power/x86/intel-speed-select: Allow online/offline based on tdp
+  tools/power/x86/intel-speed-select: Format get-assoc information
+  tools/power/x86/intel-speed-select: Fix some debug prints
+  tools/power/x86/intel-speed-select: Extend core-power command set
 
-Currently I'm looking at sun4i_csi.c as an example of runtime ops, but it 
-seems a bit wrong to have suspend and resume function marked with 
-__maybe_unused because they are the only functions which enable needed clocks.
-If CONFIG_PM is not enabled, then this driver simply won't work, because 
-clocks will never get enabled. I guess I can implement runtime pm ops in the 
-same way and add additional handling when CONFIG_PM is not enabled, right?
+Youquan Song (1):
+  tools/power/x86/intel-speed-select: Fix high priority core mask over
+    count
 
-BTW, which callback is get_sync? I don't see it in dev_pm_ops. I suppose I 
-need only runtime_suspend and runtime_resume.
+ .../x86/intel-speed-select/isst-config.c      | 108 ++++++++++++++++--
+ .../power/x86/intel-speed-select/isst-core.c  |  25 ++++
+ .../x86/intel-speed-select/isst-display.c     |  51 +++++++++
+ tools/power/x86/intel-speed-select/isst.h     |   9 +-
+ 4 files changed, 182 insertions(+), 11 deletions(-)
 
-Off topic: sun6i_csi.c includes linux/pm_runtime.h but it doesn't have any kind 
-of power management as far as I can see.
-
-Best regards,
-Jernej
-
-> 
-> > +struct deinterlace_dev {
-> > +	struct v4l2_device	v4l2_dev;
-> > +	struct video_device	vfd;
-> > +	struct device		*dev;
-> > +	struct v4l2_m2m_dev	*m2m_dev;
-> > +
-> > +	/* Device file mutex */
-> > +	struct mutex		dev_mutex;
-> > +
-> > +	void __iomem		*base;
-> > +	struct regmap		*regmap;
-> 
-> Do you need to store the base address in that structure if you're
-> using the regmap?
-> 
-> Maxime
-
-
-
+-- 
+2.17.2
 
