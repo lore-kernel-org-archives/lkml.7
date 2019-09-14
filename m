@@ -2,101 +2,94 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55894C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68853C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEB920692
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:40:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr/af5E7"
+	by mail.kernel.org (Postfix) with ESMTP id 40FBA20692
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 13:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfINNkV (ORCPT
+        id S1730735AbfINNlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 09:40:21 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36607 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbfINNkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 09:40:20 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so19832270pfr.3;
-        Sat, 14 Sep 2019 06:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UGd0Nsf8r1SfWs/Ru1bBbfL8JHhL34BqVq++qP9ktxo=;
-        b=gr/af5E7uh/eclxKy3/AKgBeqQlB+53jhLBMucilUiHjS1JUk00+CEHijqFKWuHjvG
-         M2uwYHq2JyEVYYzUrpAGp5FvpcIGL3Gy4w3stGtsVEhu66pSfKeU5JR8avuE/qJA6Tv2
-         2EmZtq8H4HrvhxAV54U4J+K7FK68Q5UNsr6pXKZTlfQz2BDqFJLJQat9+ohrKeIK+Ci4
-         oU0ijH4lPXb05FPq6NHcUOt2DamTTODNSnv4W9zvrJgzEa86nxd6nqAjr9fqgc6p47ST
-         Mu05OFXb+qLgGAj2oOvkFRJ7qKIfwDSRaAxhdKSXMWizl5zmH9VllUGroPLu1scnSPj/
-         J2DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UGd0Nsf8r1SfWs/Ru1bBbfL8JHhL34BqVq++qP9ktxo=;
-        b=fpk27kYDBCRVWAv3MFTMzymoKcmoRJUn2tFnahJAic5MS8C6BKYat+pTX3203lFU+L
-         stZ0xTAmWLzhZKAppSU9yCzEEbsKvshPsUVht9uOoUB8L1zBVCtOYF8QwIRMdJ4wdyR6
-         pB8GwOr1AIQNNJYVRdzfJaxNK7MIQxHFpq9Cx3MpegRaUUOsMyuuoYt3oDeTkzeyxqoW
-         EX0i6qNEO6ViGzuNAcocFinMQhqrHVzUfBNi3G4O6cPa1Jnan6n9mpxl3HeQ59PDDLvz
-         sxAwYIg9tOmd/WoWJvdVo8/69PK/U2B1XeSnSICpajc9sOBhLvKpoQ0w+07tZrUp3qQj
-         HKBA==
-X-Gm-Message-State: APjAAAXwJd9BbEe/yGVEoGEUmstp9E5Hzq1ASI/3rLyM4BHjac56O2xF
-        qv/i3/ZongY16TgxsqbfmGE=
-X-Google-Smtp-Source: APXvYqzPBdEMLarV6HxcOp/P3+qDK4rs/ZTQxq3kCZlCdJc64XysdI4AUcwdx8zzGLH6WkwHmLlQng==
-X-Received: by 2002:a63:5a0a:: with SMTP id o10mr48642930pgb.282.1568468419959;
-        Sat, 14 Sep 2019 06:40:19 -0700 (PDT)
-Received: from localhost.localdomain ([211.34.238.221])
-        by smtp.gmail.com with ESMTPSA id h70sm26992902pgc.36.2019.09.14.06.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 06:40:19 -0700 (PDT)
-From:   Park Ju Hyung <qkrwngud825@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        valdis.kletnieks@vt.edu
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to 
-Date:   Sat, 14 Sep 2019 22:39:51 +0900
-Message-Id: <20190914133951.16501-1-qkrwngud825@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190828160817.6250-1-gregkh@linuxfoundation.org>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+        Sat, 14 Sep 2019 09:41:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45613 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728741AbfINNlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 09:41:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Sep 2019 06:41:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,505,1559545200"; 
+   d="scan'208";a="201241955"
+Received: from krusocki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.34])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Sep 2019 06:41:38 -0700
+Date:   Sat, 14 Sep 2019 14:41:36 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 00/24] Intel SGX foundations
+Message-ID: <20190914134136.GG9560@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Fri, Sep 13, 2019 at 01:38:18PM -0700, Dave Hansen wrote:
+> On 9/3/19 7:26 AM, Jarkko Sakkinen wrote:
+> > Not having LSM hooks does not cause any risk to other parts of the
+> > kernel as the device can still be controlled by using DAC permissions.
+> > The hooks just provide more granularity than DAC in access decisions.
+> 
+> Could we translate the security-speak to english, please? :)
+> 
+> Is this it:
+> 
+> 	LSMs can (try to) enforce things like "all executable code must
+> 	be verified".  The implementation in these patches has the
+> 	potential to subvert policies like that since it has its own
+> 	unique mechanisms for loading and mapping executable code.  This
+> 	will be fixed by future LSM enhancements on top of this set.
+> 	For now, permissions on the SGX device file should be used to
+> 	prevent untrusted users from using SGX to subvert LSM policies.
 
-I just noticed that this exfat-staging drivers are based on the old 
-Samsung's 1.x exFAT drivers.
+I'm not sure what "security-speak" is but lets try plain English and
+see where we get from there.
 
-I've been working to get the newer Samsung's driver(now named "sdFAT") 
-to fit better for general Linux users, and I believe it can provide a 
-better base for the community to work on(and hopefully complies better 
-to the mainline coding standard).
+The proposed LSM hooks give the granularity to make yes/no decision
+based on the
 
-GitHub link
-https://github.com/arter97/exfat-linux
+* The origin of the source of the source for the enclave.
+* The requested permissions for the added or mapped peage.
 
-I also included some rudimentary benchmark results.
+The hooks to do these checks are provided for mmap() and EADD
+operations.
 
-I encourage mainline developers to explore this driver base and see if 
-it's worth to switch, since it's the early days of exfat-staging.
+With just file permissions you can still limit mmap() by having a
+privileged process to build the enclaves and pass the file descriptor
+to the enclave user who can mmap() the enclave within the constraints
+set by the enclave pages (their permissions refine the roof that you
+can mmap() any memory range within an enclave).
 
-To others watching this thread:
-It's more than likely that you can start using exFAT reliably right 
-away by following the link above. It's tested on all major LTS kernels 
-ranging from 3.4 to 4.19 and the ones Canonical uses for Ubuntu: 3.4, 
-3.10, 3.18, 4.1, 4.4, 4.9, 4.14, 4.19 and 4.15, 5.0, 5.2, and 5.3-rc.
-
-Thanks.
+/Jarkko
