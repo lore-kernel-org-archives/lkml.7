@@ -2,281 +2,170 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3AEC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9030C4CECA
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C2E20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 14:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8049B20830
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 15:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="F3g5BAhJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSqVRzEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389540AbfINOiv (ORCPT
+        id S1726173AbfINPCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 10:38:51 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:24462 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388491AbfINOiu (ORCPT
+        Sat, 14 Sep 2019 11:02:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38888 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfINPCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 10:38:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568471925;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=5qKZ/c4uSWTY5fdiOP9AiNfCi22I2WJ1moqjJcQYbAg=;
-        b=F3g5BAhJWMkwrZTiehcpGD+/y+UnlE7vkCUkP5wAAcuSyuRlR4j7qii7Ove7gciWAq
-        Ca4IeE9qUOuXv8ix71YmsGdZz93G/f3ppjxn/t2ToSqP+e9+QiycVsLB+B5taw6DkcHI
-        snnA/WsvL+uu0aEByeZKpaYKw9oTDEQm2R5Yx3V9OmRjDLdUlK9DzK9dfVUlOpvcju5S
-        r/C4rCe3M9qwhAatSj3BYxj1bGvS02DTihppxcSOHd0qDJCN6mzBj+lcqA/pY/6jQ6uH
-        vSdAaWmsk8JF76Ya0NEJWQOQLsvrN3xj+dfqxjim/dOSCzPBCjCp9s1VUtQK0Oou/MO4
-        rqjw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PhwDWtpw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
-        with ESMTPSA id u036f9v8EEcVKhU
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 14 Sep 2019 16:38:31 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com>
-Date:   Sat, 14 Sep 2019 16:38:30 +0200
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grazvydas Ignotas <notasas@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com>
-References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com> <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 14 Sep 2019 11:02:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so5642303wme.3;
+        Sat, 14 Sep 2019 08:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mMOMMNUQ7rvMvo5/g+Bua3yjd+yLYQVgTyXgh4mnFag=;
+        b=NSqVRzEPdBFSL55/YmV+cg/jx7/aM55zhs0fNUsElm0Yh/yXmWtY2MKuiGx4ecspbr
+         9Cyek6GFoDpYdTi7+ROGCjFCwhQ/d9BqpqoNY1zbK0b3of853GCi1aXNM+902IfWUTby
+         TR9kwpVZHKUr/IcE6L8KZMjcyBvcDplet3YO3vaURYY2vBD51FCihNMakd6JQrZTB5b3
+         lcqH4eueux7ptiNGYdxDp/XZXQVrDrD1mFEw7/iu5E+VKwjqNxLbRpyJO7Ot+57Q7rAc
+         igWVmPEVZwF3y5sDWOiMFgTPEyapf6vJhv2oRkaI4OvwVY2UFZ9U1YlX2y6k7yf1dCzt
+         Tv6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mMOMMNUQ7rvMvo5/g+Bua3yjd+yLYQVgTyXgh4mnFag=;
+        b=gpJoqblENAIsiyqMz3l7btGvt/i612wIPQgsJ8nhPpKqu5XXXiToWpxp2EgsacQpjs
+         dAyT4ywk1mgd7QhFw2InLXgefILbEQruwzCOlwe9uQUrNMhmXcG8KdieUFI5mZjEkHF/
+         DYa9MN2toIhlKREa8ZJJA7UtkBfKW4uHhQECveTx5Z5pbA6bGSyyJ52+IVm+FcvQWgUx
+         aqyq2coBnHTpvttpm1LHo7gMM+GbBxd1sNKJKxHpd6nAc5fallL7FVC7DBgJcF+OZ0T6
+         JCPJxGL05h9uOksBhRAwc32xva6MpDjSFa58lRWJZ88invsjzBudqYuqHNStBKE3Nn4k
+         FQhQ==
+X-Gm-Message-State: APjAAAVmRYWI6rCUd1ePiBsrfQPy7e0/THOHioNJ/adjA2FiTkESM+9E
+        96eis8pgA8d8ZEJbcOfujO8=
+X-Google-Smtp-Source: APXvYqyd07s0MMmHJ9O5HTsIyshLJSqP0TwdoonPy5ZWKxr9qEsgi32Hw8iN8Usrw3MQEwDug0FYRg==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr7439138wmb.151.1568473332696;
+        Sat, 14 Sep 2019 08:02:12 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id m62sm7833183wmm.35.2019.09.14.08.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 08:02:11 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 17:02:06 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190914150206.GA2270@darwi-home-pc>
+References: <CAHk-=wimE=Rw4s8MHKpsgc-ZsdoTp-_CAs7fkm9scn87ZbkMFg@mail.gmail.com>
+ <20190910173243.GA3992@darwi-home-pc>
+ <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 12, 2019 at 12:34:45PM +0100, Linus Torvalds wrote:
+> On Thu, Sep 12, 2019 at 9:25 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >
+> > Hmm, one thought might be GRND_FAILSAFE, which will wait up to two
+> > minutes before returning "best efforts" randomness and issuing a huge
+> > massive warning if it is triggered?
+> 
+> Yeah, based on (by now) _years_ of experience with people mis-using
+> "get me random numbers", I think the sense of a new flag needs to be
+> "yeah, I'm willing to wait for it".
+>
+> Because most people just don't want to wait for it, and most people
+> don't think about it, and we need to make the default be for that
+> "don't think about it" crowd, with the people who ask for randomness
+> sources for a secure key having to very clearly and very explicitly
+> say "Yes, I understand that this can take minutes and can only be done
+> long after boot".
+> 
+> Even then people will screw that up because they copy code, or some
+> less than gifted rodent writes a library and decides "my library is so
+> important that I need that waiting sooper-sekrit-secure random
+> number", and then people use that broken library by mistake without
+> realizing that it's not going to be reliable at boot time.
+> 
+> An alternative might be to make getrandom() just return an error
+> instead of waiting. Sure, fill the buffer with "as random as we can"
+> stuff, but then return -EINVAL because you called us too early.
+>
 
-> Am 14.09.2019 um 15:42 schrieb Adam Ford <aford173@gmail.com>:
->=20
-> On Sat, Sep 14, 2019 at 4:20 AM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->>=20
->>> Am 13.09.2019 um 17:37 schrieb Adam Ford <aford173@gmail.com>:
->>>=20
->>> The OMAP3530, AM3517 and DM3730 all show thresholds of 90C and 105C
->>> depending on commercial or industrial temperature ratings.  This
->>> patch expands the thermal information to the limits of 90 and 105
->>> for alert and critical.
->>>=20
->>> For boards who never use industrial temperatures, these can be
->>> changed on their respective device trees with something like:
->>>=20
->>> &cpu_alert0 {
->>>      temperature =3D <85000>; /* millicelsius */
->>> };
->>>=20
->>> &cpu_crit {
->>>      temperature =3D <90000>; /* millicelsius */
->>> };
->>>=20
->>> Signed-off-by: Adam Ford <aford173@gmail.com>
->>> ---
->>> V2:  Change the CPU reference to &cpu instead of &cpu0
->>>=20
->>> diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi =
-b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
->>> index 235ecfd61e2d..dfbd0cb0b00b 100644
->>> --- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
->>> +++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
->>> @@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
->>>=20
->>>                      /* sensor       ID */
->>>      thermal-sensors =3D <&bandgap     0>;
->>> +
->>> +     cpu_trips: trips {
->>> +             cpu_alert0: cpu_alert {
->>> +                     temperature =3D <90000>; /* millicelsius */
->>> +                     hysteresis =3D <2000>; /* millicelsius */
->>> +                     type =3D "passive";
->>> +             };
->>> +             cpu_crit: cpu_crit {
->>> +                     temperature =3D <105000>; /* millicelsius */
->>> +                     hysteresis =3D <2000>; /* millicelsius */
->>> +                     type =3D "critical";
->>> +             };
->>> +     };
->>> +
->>> +     cpu_cooling_maps: cooling-maps {
->>> +             map0 {
->>> +                     trip =3D <&cpu_alert0>;
->>> +                     cooling-device =3D
->>> +                             <&cpu THERMAL_NO_LIMIT =
-THERMAL_NO_LIMIT>;
->>> +             };
->>> +     };
->>> };
->>> --
->>> 2.17.1
->>>=20
->>=20
->> Here is my test log (GTA04A5 with DM3730CBP100).
->> "high-load" script is driving the NEON to full power
->> and would report calculation errors.
->>=20
->> There is no noise visible in the bandgap sensor data
->> induced by power supply fluctuations (log shows system
->> voltage while charging).
->>=20
->=20
-> Great data!
->=20
->> root@letux:~# ./high-load -n2
->> 100% load stress test for 1 cores running ./neon_loop2
->> Sat Sep 14 09:05:50 UTC 2019 65=C2=B0 4111mV 1000MHz
->> Sat Sep 14 09:05:50 UTC 2019 67=C2=B0 4005mV 1000MHz
->> Sat Sep 14 09:05:52 UTC 2019 68=C2=B0 4000mV 1000MHz
->> Sat Sep 14 09:05:53 UTC 2019 68=C2=B0 4000mV 1000MHz
->> Sat Sep 14 09:05:55 UTC 2019 72=C2=B0 3976mV 1000MHz
->> Sat Sep 14 09:05:56 UTC 2019 72=C2=B0 4023mV 1000MHz
->> Sat Sep 14 09:05:57 UTC 2019 72=C2=B0 3900mV 1000MHz
->> Sat Sep 14 09:05:59 UTC 2019 73=C2=B0 4029mV 1000MHz
->> Sat Sep 14 09:06:00 UTC 2019 73=C2=B0 3988mV 1000MHz
->> Sat Sep 14 09:06:01 UTC 2019 73=C2=B0 4005mV 1000MHz
->> Sat Sep 14 09:06:03 UTC 2019 73=C2=B0 4011mV 1000MHz
->> Sat Sep 14 09:06:04 UTC 2019 73=C2=B0 4117mV 1000MHz
->> Sat Sep 14 09:06:06 UTC 2019 73=C2=B0 4005mV 1000MHz
->> Sat Sep 14 09:06:07 UTC 2019 75=C2=B0 3994mV 1000MHz
->> Sat Sep 14 09:06:08 UTC 2019 75=C2=B0 3970mV 1000MHz
->> Sat Sep 14 09:06:09 UTC 2019 75=C2=B0 4046mV 1000MHz
->> Sat Sep 14 09:06:11 UTC 2019 75=C2=B0 4005mV 1000MHz
->> Sat Sep 14 09:06:12 UTC 2019 75=C2=B0 4023mV 1000MHz
->> Sat Sep 14 09:06:14 UTC 2019 75=C2=B0 3970mV 1000MHz
->> Sat Sep 14 09:06:15 UTC 2019 75=C2=B0 4011mV 1000MHz
->> Sat Sep 14 09:06:16 UTC 2019 77=C2=B0 4017mV 1000MHz
->> Sat Sep 14 09:06:18 UTC 2019 77=C2=B0 3994mV 1000MHz
->> Sat Sep 14 09:06:19 UTC 2019 77=C2=B0 3994mV 1000MHz
->> Sat Sep 14 09:06:20 UTC 2019 77=C2=B0 3988mV 1000MHz
->> Sat Sep 14 09:06:22 UTC 2019 77=C2=B0 4023mV 1000MHz
->> Sat Sep 14 09:06:23 UTC 2019 77=C2=B0 4023mV 1000MHz
->> Sat Sep 14 09:06:24 UTC 2019 78=C2=B0 4005mV 1000MHz
->> Sat Sep 14 09:06:26 UTC 2019 78=C2=B0 4105mV 1000MHz
->> Sat Sep 14 09:06:27 UTC 2019 78=C2=B0 4011mV 1000MHz
->> Sat Sep 14 09:06:28 UTC 2019 78=C2=B0 3994mV 1000MHz
->> Sat Sep 14 09:06:30 UTC 2019 78=C2=B0 4123mV 1000MHz
->> ...
->> Sat Sep 14 09:09:57 UTC 2019 88=C2=B0 4082mV 1000MHz
->> Sat Sep 14 09:09:59 UTC 2019 88=C2=B0 4164mV 1000MHz
->> Sat Sep 14 09:10:00 UTC 2019 88=C2=B0 4058mV 1000MHz
->> Sat Sep 14 09:10:01 UTC 2019 88=C2=B0 4058mV 1000MHz
->> Sat Sep 14 09:10:03 UTC 2019 88=C2=B0 4082mV 1000MHz
->> Sat Sep 14 09:10:04 UTC 2019 88=C2=B0 4058mV 1000MHz
->> Sat Sep 14 09:10:06 UTC 2019 88=C2=B0 4146mV 1000MHz
->> Sat Sep 14 09:10:07 UTC 2019 88=C2=B0 4041mV 1000MHz
->> Sat Sep 14 09:10:08 UTC 2019 88=C2=B0 4035mV 1000MHz
->> Sat Sep 14 09:10:10 UTC 2019 88=C2=B0 4052mV 1000MHz
->> Sat Sep 14 09:10:11 UTC 2019 88=C2=B0 4087mV 1000MHz
->> Sat Sep 14 09:10:12 UTC 2019 88=C2=B0 4152mV 1000MHz
->> Sat Sep 14 09:10:14 UTC 2019 88=C2=B0 4070mV 1000MHz
->> Sat Sep 14 09:10:15 UTC 2019 88=C2=B0 4064mV 1000MHz
->> Sat Sep 14 09:10:17 UTC 2019 88=C2=B0 4170mV 1000MHz
->> Sat Sep 14 09:10:18 UTC 2019 88=C2=B0 4058mV 1000MHz
->> Sat Sep 14 09:10:19 UTC 2019 88=C2=B0 4187mV 1000MHz
->> Sat Sep 14 09:10:21 UTC 2019 88=C2=B0 4093mV 1000MHz
->> Sat Sep 14 09:10:22 UTC 2019 88=C2=B0 4087mV 1000MHz
->> Sat Sep 14 09:10:23 UTC 2019 90=C2=B0 4070mV 1000MHz
->=20
-> Should we be a little more conservative?  Without knowing the
-> accuracy, i believe we do not want to run at 800 or 1GHz at 90C, so if
-> we made this value 89 instead of 90, we would throttle a little more
-> conservatively.
+ACK, that's probably _the_ most sensible approach. Only caveat is
+the slight change in user-space API semantics though...
 
-Well, the OMAP5 also defines exactly 100=C2=B0C in the device tree.
+For example, this breaks the just released systemd-random-seed(8)
+as it _explicitly_ requests blocking behvior from getrandom() here:
 
-I would assume that the badgap sensor accuracy is so that it
-never reports less than the real temperature. So if we
-throttle at reported 90=C2=B0 TJ is likely lower.
+    => src/random-seed/random-seed.c:
+    /*
+     * Let's make this whole job asynchronous, i.e. let's make
+     * ourselves a barrier for proper initialization of the
+     * random pool.
+     */
+     k = getrandom(buf, buf_size, GRND_NONBLOCK);
+     if (k < 0 && errno == EAGAIN && synchronous) {
+         log_notice("Kernel entropy pool is not initialized yet, "
+                    "waiting until it is.");
+                    
+         k = getrandom(buf, buf_size, 0); /* retry synchronously */
+     }
+     if (k < 0) {
+         log_debug_errno(errno, "Failed to read random data with "
+                         "getrandom(), falling back to "
+                         "/dev/urandom: %m");
+     } else if ((size_t) k < buf_size) {
+         log_debug("Short read from getrandom(), falling back to "
+	           "/dev/urandom: %m");
+     } else {
+         getrandom_worked = true;
+     }
 
->> Sat Sep 14 09:10:25 UTC 2019 88=C2=B0 4123mV 800MHz
->> Sat Sep 14 09:10:26 UTC 2019 88=C2=B0 4064mV 1000MHz
->> Sat Sep 14 09:10:28 UTC 2019 90=C2=B0 4058mV 1000MHz
->=20
-> Again here, I interpret the data sheet correctly, we're technically =
-out of spec
+Nonetheless, a slightly broken systemd-random-seed, that was just
+released only 11 days ago (v243), is honestly much better than a
+*non-booting system*...
 
-I read the data sheet as if 90=C2=B0C at OPP1G is still within spec.
-91 would be obviously outside (if bandgap sensor is precise).
+I've sent an RFC patch at [1].
 
->=20
->> Sat Sep 14 09:10:29 UTC 2019 88=C2=B0 4076mV 1000MHz
->> Sat Sep 14 09:10:30 UTC 2019 88=C2=B0 4064mV 1000MHz
->> Sat Sep 14 09:10:32 UTC 2019 88=C2=B0 4117mV 1000MHz
->> Sat Sep 14 09:10:33 UTC 2019 88=C2=B0 4105mV 800MHz
->> Sat Sep 14 09:10:34 UTC 2019 88=C2=B0 4070mV 1000MHz
->> Sat Sep 14 09:10:36 UTC 2019 88=C2=B0 4076mV 1000MHz
->> Sat Sep 14 09:10:37 UTC 2019 88=C2=B0 4087mV 1000MHz
->> Sat Sep 14 09:10:39 UTC 2019 88=C2=B0 4017mV 1000MHz
->> Sat Sep 14 09:10:40 UTC 2019 88=C2=B0 4093mV 1000MHz
->> Sat Sep 14 09:10:41 UTC 2019 88=C2=B0 4058mV 800MHz
->> Sat Sep 14 09:10:42 UTC 2019 88=C2=B0 4035mV 1000MHz
->> Sat Sep 14 09:10:44 UTC 2019 90=C2=B0 4058mV 1000MHz
->> Sat Sep 14 09:10:45 UTC 2019 88=C2=B0 4064mV 1000MHz
->> Sat Sep 14 09:10:47 UTC 2019 88=C2=B0 4064mV 1000MHz
->> Sat Sep 14 09:10:48 UTC 2019 88=C2=B0 4029mV 1000MHz
->> Sat Sep 14 09:10:50 UTC 2019 90=C2=B0 4046mV 1000MHz
->> ^Ckill 4680
->> root@letux:~# cpufreq-info
->> cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
->> Report errors and bugs to cpufreq@vger.kernel.org, please.
->> analyzing CPU 0:
->>  driver: cpufreq-dt
->>  CPUs which run at the same hardware frequency: 0
->>  CPUs which need to have their frequency coordinated by software: 0
->>  maximum transition latency: 300 us.
->>  hardware limits: 300 MHz - 1000 MHz
->>  available frequency steps: 300 MHz, 600 MHz, 800 MHz, 1000 MHz
->>  available cpufreq governors: conservative, userspace, powersave, =
-ondemand, performance
->>  current policy: frequency should be within 300 MHz and 1000 MHz.
->>                  The governor "ondemand" may decide which speed to =
-use
->>                  within this range.
->>  current CPU frequency is 600 MHz (asserted by call to hardware).
->>  cpufreq stats: 300 MHz:22.81%, 600 MHz:2.50%, 800 MHz:2.10%, 1000 =
-MHz:72.59%  (1563)
->> root@letux:~#
->>=20
->> So OPP is reduced if bandgap sensor reports >=3D 90=C2=B0C
->> which almost immediately makes the temperature
->> go down.
->>=20
->> No operational hickups were observed.
->>=20
->> Surface temperature of the PoP chip did rise to
->> approx. 53=C2=B0C during this test.
->>=20
->> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with =
-dm3730cbp100
->>=20
+To handle the systemd case, I'll add the discussed "yeah, I'm
+willing to wait for it" flag (GRND_BLOCK) in v2.
 
-BTW: this patch (set) is even independent of my 1GHz OPP patches.
-Should also work with OPP-v1 definitions so that maintainers can
-decide which one to apply first.
+If this whole approach is going to be merged, and the slight ABI
+breakage is to be tolerated (hmmmmm?), I wonder how will systemd
+random-seed handle the semantics change though without doing
+ugly kernel version checks..
 
-It is just more difficult to reach TJ of 90=C2=B0C without 1GHz.
+thanks,
 
-BR,
-Nikolaus
+[1] https://lkml.kernel.org/r/20190914122500.GA1425@darwi-home-pc
 
+--
+darwi
+http://darwish.chasingpointers.com
