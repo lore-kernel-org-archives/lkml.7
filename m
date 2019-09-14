@@ -2,156 +2,143 @@ Return-Path: <SRS0=tewG=XJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631ADC4CEC5
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131F9C4CEC8
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 05:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312CE2084F
-	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 04:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtYGqEBW"
+	by mail.kernel.org (Postfix) with ESMTP id DD2B720692
+	for <linux-kernel@archiver.kernel.org>; Sat, 14 Sep 2019 05:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568440256;
+	bh=gDz5GcBMkefNQSnH9m842qIEB3JN0kGNiMfmU1mmtFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fpcfzcqbxI8+y8Yp6pSGp2kx81+Wjvuzv5ldBB2d3JhSKA3lS3Ii8x2kGOTBytwGw
+	 dEjUbo9RwkXbNBNNAPdaMPf+90kq8HPAHyG9dTgeely2ZDJqFBq6WmfxqJNsOC5myc
+	 REck/zVdSgVJhp0ArnRzYui1wVWZSlcxNFsVYlGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfINE5C (ORCPT
+        id S1726351AbfINFu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 00:57:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42682 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfINE5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 00:57:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so3102801pls.9
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Sep 2019 21:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
-        b=jtYGqEBWfPnvYYkUJ4rTSGo5nxzlwAtfWjmrPKJcrgNiowDrdgk8C1UCVY8Gr26Ajg
-         gf//G8gkGX77zQi+bpNSjz8V0QZ4wVgIru5SEthDVAhaYGaX4Jb0PzdeIL1tEWFaq2z1
-         A+KSBoamuAPpHKMo5qCXavT1C+Sst0c8kbmw+QmGmEk8uFdK354EEpbYPs5wy+jdAhdl
-         pU2Npk61osNGbx18SnHdMNSdkxjJU1gw9yV7QUn8/PimaOKwPya1CJkd4G3zb7gaZiQD
-         w9MfShEVRzL//O3HB0rRLsOV4nxt3DJY5j3H6RwJStljvBh8h8G1rOVvBkY5zlTrokFt
-         O53w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
-        b=L59attIuFm6XfMhpl4sl6gUFuWN9tUiYSZ1FbwAwgTqY2YhhDIrJmVxWWR2CNJsg3l
-         32VLYmfGuw0RevVPubKARApjwKs+Vbk2sWp/xsSEtiq2AhtmjgE1pGM1Y+ZQVBy6XODn
-         fwsRMQpD1/GxyanJVNQ3UZ7fHHQsHmX6heUldID2fTA0neuGJOhQJJgpeB1CdnIXCmGY
-         8OvCV1TToDmRGgyf+9EbJmu/QckQZGCNuGP5zyI9dmvb7G25eLHL3vN/36uPKqha//6d
-         Ry0Rr30urdgx5gk0ZdyRQViJ/7R1EuXLsDYyDK+XgGgOJBdsKjnbZa6GRIL7SvL/RYTG
-         LtUA==
-X-Gm-Message-State: APjAAAXwY1RYpkb4pHn93+ptG4SfEPCW/myzolQNk9wBko6fg8F/Zslj
-        FuKkp2lLxa8xM4Fpw4Q5V6w=
-X-Google-Smtp-Source: APXvYqwGqs+Am5nbTA0K7R4+WDqaFr+KuXxSZruY6kirchYRbgyJGZcMW0zAJEhhINeeWyLfBrUmLA==
-X-Received: by 2002:a17:902:20c9:: with SMTP id v9mr51336181plg.293.1568437021853;
-        Fri, 13 Sep 2019 21:57:01 -0700 (PDT)
-Received: from localhost.localdomain ([149.28.153.17])
-        by smtp.gmail.com with ESMTPSA id b14sm3468108pjo.13.2019.09.13.21.56.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 21:57:01 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] x86/nmi: remove the irqwork for long nmi handler duration warning
-Date:   Sat, 14 Sep 2019 12:56:46 +0800
-Message-Id: <20190914045646.24387-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 14 Sep 2019 01:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfINFu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 14 Sep 2019 01:50:56 -0400
+Received: from localhost (unknown [149.255.125.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C49B20692;
+        Sat, 14 Sep 2019 05:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568440253;
+        bh=gDz5GcBMkefNQSnH9m842qIEB3JN0kGNiMfmU1mmtFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ken7HgcBY6/mJ12GILUKKYsz8MeJ+9OocufJ1QvOJm22jSd6mxAy6PTtnk7cMhEhD
+         FyY06d/6gBE/P/gRkMjaGtsPUbW3tbwCd0OcBDQrtL5qrhflm7+0b3a4u7Y3fhEgWe
+         67Ba1OuPEXK7n9BGeBBKsYuFc81gaNGbfAtlxSQo=
+Date:   Sat, 14 Sep 2019 06:50:50 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH 5.2 36/37] vhost: block speculation of translated
+ descriptors
+Message-ID: <20190914055050.GA489003@kroah.com>
+References: <20190913130510.727515099@linuxfoundation.org>
+ <20190913130522.155505270@linuxfoundation.org>
+ <20190914025411.3016e3d9@mir>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190914025411.3016e3d9@mir>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, printk is NMI context safe now since the safe printk has been
-implemented. The safe printk will help us to do such work in its irqwork.
+On Sat, Sep 14, 2019 at 02:54:11AM +0200, Stefan Lippers-Hollmann wrote:
+> Hi
+> 
+> On 2019-09-13, Greg Kroah-Hartman wrote:
+> > From: Michael S. Tsirkin <mst@redhat.com>
+> >
+> > commit a89db445fbd7f1f8457b03759aa7343fa530ef6b upstream.
+> >
+> > iovec addresses coming from vhost are assumed to be
+> > pre-validated, but in fact can be speculated to a value
+> > out of range.
+> >
+> > Userspace address are later validated with array_index_nospec so we can
+> > be sure kernel info does not leak through these addresses, but vhost
+> > must also not leak userspace info outside the allowed memory table to
+> > guests.
+> >
+> > Following the defence in depth principle, make sure
+> > the address is not validated out of node range.
+> [...]
+> 
+> This fails to compile as part of 5.2.15-rc1 on i386 (amd64 is fine), using
+> gcc 9.2.1. Reverting just this patch results in a successful build again.
+> 
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -1965,8 +1965,10 @@ static int translate_desc(struct vhost_v
+> >  		_iov = iov + ret;
+> >  		size = node->size - addr + node->start;
+> >  		_iov->iov_len = min((u64)len - s, size);
+> > -		_iov->iov_base = (void __user *)(unsigned long)
+> > -			(node->userspace_addr + addr - node->start);
+> > +		_iov->iov_base = (void __user *)
+> > +			((unsigned long)node->userspace_addr +
+> > +			 array_index_nospec((unsigned long)(addr - node->start),
+> > +					    node->size));
+> >  		s += size;
+> >  		addr += size;
+> >  		++ret;
+> >
+> >
+> 
+>   CC [M]  drivers/vhost/vhost.o
+> In file included from /build/linux-5.2/include/linux/export.h:45,
+>                  from /build/linux-5.2/include/linux/linkage.h:7,
+>                  from /build/linux-5.2/include/linux/kernel.h:8,
+>                  from /build/linux-5.2/include/linux/list.h:9,
+>                  from /build/linux-5.2/include/linux/wait.h:7,
+>                  from /build/linux-5.2/include/linux/eventfd.h:13,
+>                  from /build/linux-5.2/drivers/vhost/vhost.c:13:
+> /build/linux-5.2/drivers/vhost/vhost.c: In function 'translate_desc':
+> /build/linux-5.2/include/linux/compiler.h:345:38: error: call to '__compiletime_assert_1970' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
+>   345 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>       |                                      ^
+> /build/linux-5.2/include/linux/compiler.h:326:4: note: in definition of macro '__compiletime_assert'
+>   326 |    prefix ## suffix();    \
+>       |    ^~~~~~
+> /build/linux-5.2/include/linux/compiler.h:345:2: note: in expansion of macro '_compiletime_assert'
+>   345 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>       |  ^~~~~~~~~~~~~~~~~~~
+> /build/linux-5.2/include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>       |                                     ^~~~~~~~~~~~~~~~~~
+> /build/linux-5.2/include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+>    50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>       |  ^~~~~~~~~~~~~~~~
+> /build/linux-5.2/include/linux/nospec.h:56:2: note: in expansion of macro 'BUILD_BUG_ON'
+>    56 |  BUILD_BUG_ON(sizeof(_s) > sizeof(long));   \
+>       |  ^~~~~~~~~~~~
+> /build/linux-5.2/drivers/vhost/vhost.c:1970:5: note: in expansion of macro 'array_index_nospec'
+>  1970 |     array_index_nospec((unsigned long)(addr - node->start),
+>       |     ^~~~~~~~~~~~~~~~~~
+> make[3]: *** [/build/linux-5.2/scripts/Makefile.build:285: drivers/vhost/vhost.o] Error 1
+> make[2]: *** [/build/linux-5.2/scripts/Makefile.build:489: drivers/vhost] Error 2
+> make[1]: *** [/build/linux-5.2/Makefile:1072: drivers] Error 2
+> make: *** [/build/linux-5.2/Makefile:179: sub-make] Error 2
 
-Second, the NMI irqwork actually does not work if a NMI handler causes
-watchdog timeout panic. The NMI irqwork have no chance to run in such
-case, while the safe printk will flush its per-cpu buffer before panic.
+Do you have the same problem with Linus's tree right now?
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- arch/x86/include/asm/nmi.h |  1 -
- arch/x86/kernel/nmi.c      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
+thanks,
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98..9d5d949e662e 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -41,7 +41,6 @@ struct nmiaction {
- 	struct list_head	list;
- 	nmi_handler_t		handler;
- 	u64			max_duration;
--	struct irq_work		irq_work;
- 	unsigned long		flags;
- 	const char		*name;
- };
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 4df7705022b9..0fa51f80ad73 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
- }
- fs_initcall(nmi_warning_debugfs);
- 
--static void nmi_max_handler(struct irq_work *w)
-+static void nmi_check_duration(struct nmiaction *action, u64 duration)
- {
--	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
- 	int remainder_ns, decimal_msecs;
--	u64 whole_msecs = READ_ONCE(a->max_duration);
-+	u64 whole_msecs = READ_ONCE(action->max_duration);
-+
-+	if (duration < nmi_longest_ns || duration < action->max_duration)
-+		return;
-+
-+	action->max_duration = duration;
- 
- 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		a->handler, whole_msecs, decimal_msecs);
-+		action->handler, whole_msecs, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
-@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		delta = sched_clock() - delta;
- 		trace_nmi_handler(a->handler, (int)delta, thishandled);
- 
--		if (delta < nmi_longest_ns || delta < a->max_duration)
--			continue;
--
--		a->max_duration = delta;
--		irq_work_queue(&a->irq_work);
-+		nmi_check_duration(a, delta);
- 	}
- 
- 	rcu_read_unlock();
-@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	if (!action->handler)
- 		return -EINVAL;
- 
--	init_irq_work(&action->irq_work, nmi_max_handler);
--
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
- 	/*
--- 
-2.20.1
-
+greg k-h
