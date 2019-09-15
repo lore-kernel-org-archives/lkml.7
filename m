@@ -2,83 +2,115 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B144C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CD9C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD342077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lV0ChBn5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lV0ChBn5"
+	by mail.kernel.org (Postfix) with ESMTP id 2FE732077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfIOKcz (ORCPT
+        id S1728791AbfIOKkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 06:32:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38432 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfIOKcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 06:32:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C58CD60A50; Sun, 15 Sep 2019 10:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568543573;
-        bh=gs/ND/F6K7DLw8cSGbuUu5/eaiv+V+mcgfHLpbSPP1A=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=lV0ChBn56UVenYq8S6XyEFeKwtz/kPmn5TvPMFd5Ip+pVlyq1WeZKMi3xVQVz8mNK
-         wnaBF72PP6ArKzGw/5oydeSvBNTipyeHoU2fnSTtpJ88hyqLZJetpQOFg9j/1GJRiT
-         h8Zozps60lwqQsrzR+8MQkK5AvJx/AVfEVt0oup0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22A7C602F8;
-        Sun, 15 Sep 2019 10:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568543573;
-        bh=gs/ND/F6K7DLw8cSGbuUu5/eaiv+V+mcgfHLpbSPP1A=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=lV0ChBn56UVenYq8S6XyEFeKwtz/kPmn5TvPMFd5Ip+pVlyq1WeZKMi3xVQVz8mNK
-         wnaBF72PP6ArKzGw/5oydeSvBNTipyeHoU2fnSTtpJ88hyqLZJetpQOFg9j/1GJRiT
-         h8Zozps60lwqQsrzR+8MQkK5AvJx/AVfEVt0oup0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22A7C602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers-next 2019-09-14
-References: <87r24jchgv.fsf@kamboji.qca.qualcomm.com>
-        <20190914.140843.945413345284987204.davem@davemloft.net>
-Date:   Sun, 15 Sep 2019 13:32:49 +0300
-In-Reply-To: <20190914.140843.945413345284987204.davem@davemloft.net> (David
-        Miller's message of "Sat, 14 Sep 2019 14:08:43 +0100 (WEST)")
-Message-ID: <87muf5df3i.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Sun, 15 Sep 2019 06:40:51 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45192 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725613AbfIOKkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 06:40:51 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FAeRui021844;
+        Sun, 15 Sep 2019 12:40:27 +0200
+Date:   Sun, 15 Sep 2019 12:40:27 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
+ is uninitialized
+Message-ID: <20190915104027.GG20811@1wt.eu>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <20190915081747.GA1058@darwi-home-pc>
+ <20190915085907.GC29771@gardel-login>
+ <20190915093057.GF20811@1wt.eu>
+ <20190915100201.GA2663@darwi-home-pc>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915100201.GA2663@darwi-home-pc>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller <davem@davemloft.net> writes:
+On Sun, Sep 15, 2019 at 12:02:01PM +0200, Ahmed S. Darwish wrote:
+> On Sun, Sep 15, 2019 at 11:30:57AM +0200, Willy Tarreau wrote:
+> > On Sun, Sep 15, 2019 at 10:59:07AM +0200, Lennart Poettering wrote:
+> > > We live in a world where people run HTTPS, SSH, and all that stuff in
+> > > the initrd already. It's where SSH host keys are generated, and plenty
+> > > session keys.
+> > 
+> > It is exactly the type of crap that create this situation : making
+> > people developing such scripts believe that any random source was OK
+> > to generate these, and as such forcing urandom to produce crypto-solid
+> > randoms!
+> 
+> Willy, let's tone it down please... the thread is already getting a
+> bit toxic.
 
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Date: Sat, 14 Sep 2019 13:14:40 +0300
->
->> here's a pull request to net-next tree for v5.4, more info below. Please
->> let me know if there are any problems.
->
-> Pulled, thanks Kalle.
+I don't see what's wrong in my tone above, I'm sorry if it can be
+perceived as such. My point was that things such as creating lifetime
+keys while there's no entropy is the wrong thing to do and what
+progressively led to this situation.
 
-Thanks for pulling this but I don't see it in net-next, maybe you forgot
-to push? Nothing important, just making sure it didn't get lost.
+> > > If Linux lets all that stuff run with awful entropy then
+> > > you pretend things where secure while they actually aren't. It's much
+> > > better to fail loudly in that case, I am sure.
+> > 
+> > This is precisely what this change permits : fail instead of block
+> > by default, and let applications decide based on the use case.
+> >
+> 
+> Unfortunately, not exactly.
+> 
+> Linus didn't want getrandom to return an error code / "to fail" in
+> that case, but to silently return CRNG-uninitialized /dev/urandom
+> data, to avoid user-space even working around the error code through
+> busy-loops.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+But with this EINVAL you have the information that it only filled
+the buffer with whatever it could, right ? At least that was the
+last point I manage to catch in the discussion. Otherwise if it's
+totally silent, I fear that it will reintroduce the problem in a
+different form (i.e. libc will say "our randoms are not reliable
+anymore, let us work around this and produce blocking, solid randoms
+again to help all our users").
+
+> I understand the rationale behind that, of course, and this is what
+> I've done so far in the V3 RFC.
+> 
+> Nonetheless, this _will_, for example, make systemd-random-seed(8)
+> save week seeds under /var/lib/systemd/random-seed, since the kernel
+> didn't inform it about such weakness at all..
+
+Then I am confused because I understood that the goal was to return
+EINVAL or anything equivalent in which case the userspace knows what
+it has to deal with :-/
+
+Regards,
+Willy
