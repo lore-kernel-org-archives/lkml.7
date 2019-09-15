@@ -2,159 +2,313 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406E4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A13520692
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568509872;
-	bh=0rMq0+O+H8uw0JAuBxNy9jHmTptW9ydJZUdY72wNdiM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jwdhCwa3EE8JjXCOw3hkTHeIV4lc47ylkFKpAhA8pEObPDjz0hFjACi/thaZIr4cV
-	 pSPH9+zfV+iMw9V1J6a9sR0dnimcPwrmewVrmHUOASRCSNlnoip+7RN3Ip52CVD+xn
-	 /2c7ntdDZ7Uz0meWlUzYpqt5JMu2aTUKNazrjm6E=
+	by mail.kernel.org (Postfix) with ESMTP id F1CE92084F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fpye/1uO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfIOBLL (ORCPT
+        id S1727182AbfIOBkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 21:11:11 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40319 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfIOBLL (ORCPT
+        Sat, 14 Sep 2019 21:40:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45130 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfIOBkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 21:11:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d17so6895357lfa.7
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 18:11:08 -0700 (PDT)
+        Sat, 14 Sep 2019 21:40:14 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h33so1304055edh.12
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 18:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3jaz+3rRqlSOpgo+I/TmiFB0JMhsAKNvHZJnxSa0w8w=;
-        b=aclPG/A9P+tr2kYHdAmA46ZRYIp9V55HAtxJ94L+Dt6Hj6i2u7wbW0zA9HKOGWcbp0
-         khpbUTOnGoyzVQkbyCgpLizTCdiIEBX01ILPyiV+YNXpsSVoexwBTdIg7DG4f+S8g98p
-         9YZ7Nu65nCfjMaunYW2V+DXGGHfxAuvV9aKm0=
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6+RN58I3uX4e+kxMi088PxHU4GRRAfQ1h2bRXfJjpgg=;
+        b=fpye/1uOdA27CI+WiVSAHY2FFj0ygzyL96vbWVl2S0f00HcwfRnuO9dwtmh4CWpGmh
+         bn3/omY1ogZSmhi4eBKZTcohOx8sxu+ykLP8fnFJLIUewNLErExGvR3+kDs7yXubDKHS
+         6OUFmTvFK8vyYZU2AaDF+x2URUFpcweSxpwrA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3jaz+3rRqlSOpgo+I/TmiFB0JMhsAKNvHZJnxSa0w8w=;
-        b=WYHqgExNfbgPV3lldYPj/alPHL+wyjuk1CpI9AQc7xSQ3ST1juurgGnFkCt99Aa3QT
-         /ap0u7svLG/H/XE54r77W26jnMi4RmsxrGKQwDGzf42eEbCPQL0pEGZ9Bhi5QIR8NeO/
-         npU/3rHp3hIF0+iVeyrZZLTyyg54IgIHAAlSdoJv8nu4QrVwi7Jj0uXwP/xdtRWGD3pp
-         oATegVu9gt1tmEb66N8AKVDu8KKHj/ZitVtgqI4ZBrGmjuTrGH+Yf9xd7YloWX6ktdnW
-         ec1/ZUesvX5Dg3+mlS5AqfKCXpWgEkN/Con2W48lew+0j3dLNnUUV+3PnxHFJD5b5GVO
-         dfzg==
-X-Gm-Message-State: APjAAAU9Ijt/sogE4YXf9eRDvIpUgH18Z/WLwFNgMqz0Nc2TiHlj1254
-        hZmd4N+BohjVaGM1NAFMHSpOCMs+eF8=
-X-Google-Smtp-Source: APXvYqwiQWCayH0snGmPVGQ+sH3EuP64ImSY8hDO09fj7mezYyiCmHAr2a9MYY7fN7DZiSO/hymiAw==
-X-Received: by 2002:ac2:5ec1:: with SMTP id d1mr33838456lfq.83.1568509867192;
-        Sat, 14 Sep 2019 18:11:07 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id l16sm867450lja.34.2019.09.14.18.11.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Sep 2019 18:11:04 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id h2so23953001ljk.1
-        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 18:11:04 -0700 (PDT)
-X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr26091372ljo.180.1568509863854;
- Sat, 14 Sep 2019 18:11:03 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6+RN58I3uX4e+kxMi088PxHU4GRRAfQ1h2bRXfJjpgg=;
+        b=aZ/+V2oJ/6wi/A37tuouH4GQTVwj8RpRU1nh7AbqWyg071d8ijYhwYDTH7kcqwta7W
+         hT9+3D90qXzdpzg4x9/pbJ+isamMvClZoXvkFB408jVYC1Asi3f8yUp4G7ns7ACkPliM
+         NbiaxjQuLb//eKo4DUEulgzO7ZFSrEk2m/10q3L0lC9r7Sr3cJWQ/DqOPzklHrSPJwWg
+         ZMAHOpjq/v+0nfnBwsrflwmlntEmPjBoPSN0iry2jciNuphJlHTUuSkTFSlWTfk+7QYv
+         S8BE7aHBsx9pVVw2YlH1yRA4eSRwaw6YNkB+krTMk4dmM44BwTxIz/0Xj8Ma/yA9wQsx
+         LJrg==
+X-Gm-Message-State: APjAAAUJNs+McMnLzk1qfGnDx6puIXgQSXayzKv++0MCaV8aoH9GtGQO
+        go/YPqAjDI1mEsBwO9gszPjitQ==
+X-Google-Smtp-Source: APXvYqyhZyZG0Zk5f8gVKMuZRujiMstXJrPgbNBawziA4crFGm086w3dnaUv3BJXoER6Ghim5DuCMg==
+X-Received: by 2002:a17:907:423e:: with SMTP id oi22mr34778743ejb.311.1568511611420;
+        Sat, 14 Sep 2019 18:40:11 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id 60sm6175120edg.10.2019.09.14.18.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 18:40:10 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Sun, 15 Sep 2019 03:40:08 +0200
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [RFC v1 14/14] krsi: Pin arg pages only when needed
+Message-ID: <20190915014008.GA19558@chromium.org>
+References: <20190910115527.5235-1-kpsingh@chromium.org>
+ <20190910115527.5235-15-kpsingh@chromium.org>
+ <d9b7b968-c3a7-48a4-2eb0-85d5ac9dd196@fb.com>
 MIME-Version: 1.0
-References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190914211126.GA4355@darwi-home-pc> <20190914222432.GC19710@mit.edu>
- <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com> <20190915010037.GE19710@mit.edu>
-In-Reply-To: <20190915010037.GE19710@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 14 Sep 2019 18:10:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjGTV0e_P73V0B3cPVrfeoSZcV6CjQMgj-+yL-s38DKaw@mail.gmail.com>
-Message-ID: <CAHk-=wjGTV0e_P73V0B3cPVrfeoSZcV6CjQMgj-+yL-s38DKaw@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d9b7b968-c3a7-48a4-2eb0-85d5ac9dd196@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 6:00 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> That makes me even more worried.  It's probably going to be OK for
-> modern x86 systems, since "best we can do" will include RDRAND
-> (whether or not it's trusted).  But on systems without something like
-> RDRAND --- e.g., ARM --- the "best we can do" could potentially be
-> Really Bad.  Again, look back at the Mining Your P's and Q's paper
-> from factorable.net.
+On 15-Sep 00:33, Yonghong Song wrote:
+> 
+> 
+> On 9/10/19 12:55 PM, KP Singh wrote:
+> > From: KP Singh <kpsingh@google.com>
+> > 
+> > Adds a callback which is called when a new program is attached
+> > to a hook. The callback registered by the process_exection hook
+> > checks if a program that has calls to a helper that requires pages to
+> > be pinned (eg. krsi_get_env_var).
+> > 
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >   include/linux/krsi.h              |  1 +
+> >   security/krsi/include/hooks.h     |  5 ++-
+> >   security/krsi/include/krsi_init.h |  7 ++++
+> >   security/krsi/krsi.c              | 62 ++++++++++++++++++++++++++++---
+> >   security/krsi/ops.c               | 10 ++++-
+> >   5 files changed, 77 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/include/linux/krsi.h b/include/linux/krsi.h
+> > index c7d1790d0c1f..e443d0309764 100644
+> > --- a/include/linux/krsi.h
+> > +++ b/include/linux/krsi.h
+> > @@ -7,6 +7,7 @@
+> >   
+> >   #ifdef CONFIG_SECURITY_KRSI
+> >   int krsi_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+> > +extern const struct bpf_func_proto krsi_get_env_var_proto;
+> >   #else
+> >   static inline int krsi_prog_attach(const union bpf_attr *attr,
+> >   				   struct bpf_prog *prog)
+> > diff --git a/security/krsi/include/hooks.h b/security/krsi/include/hooks.h
+> > index e070c452b5de..38293125ff99 100644
+> > --- a/security/krsi/include/hooks.h
+> > +++ b/security/krsi/include/hooks.h
+> > @@ -8,7 +8,7 @@
+> >    *
+> >    * Format:
+> >    *
+> > - *   KRSI_HOOK_INIT(TYPE, NAME, LSM_HOOK, KRSI_HOOK_FN)
+> > + *   KRSI_HOOK_INIT(TYPE, NAME, LSM_HOOK, KRSI_HOOK_FN, CALLBACK)
+> >    *
+> >    * KRSI adds one layer of indirection between the name of the hook and the name
+> >    * it exposes to the userspace in Security FS to prevent the userspace from
+> > @@ -18,4 +18,5 @@
+> >   KRSI_HOOK_INIT(PROCESS_EXECUTION,
+> >   	       process_execution,
+> >   	       bprm_check_security,
+> > -	       krsi_process_execution)
+> > +	       krsi_process_execution,
+> > +	       krsi_process_execution_cb)
+> > diff --git a/security/krsi/include/krsi_init.h b/security/krsi/include/krsi_init.h
+> > index 6152847c3b08..99801d5b273a 100644
+> > --- a/security/krsi/include/krsi_init.h
+> > +++ b/security/krsi/include/krsi_init.h
+> > @@ -31,6 +31,8 @@ struct krsi_ctx {
+> >   	};
+> >   };
+> >   
+> > +typedef int (*krsi_prog_attach_t) (struct bpf_prog_array *);
+> > +
+> >   /*
+> >    * The LSM creates one file per hook.
+> >    *
+> > @@ -61,6 +63,11 @@ struct krsi_hook {
+> >   	 * The eBPF programs that are attached to this hook.
+> >   	 */
+> >   	struct bpf_prog_array __rcu	*progs;
+> > +	/*
+> > +	 * The attach callback is called before a new program is attached
+> > +	 * to the hook and is passed the updated bpf_prog_array as an argument.
+> > +	 */
+> > +	krsi_prog_attach_t attach_callback;
+> >   };
+> >   
+> >   extern struct krsi_hook krsi_hooks_list[];
+> > diff --git a/security/krsi/krsi.c b/security/krsi/krsi.c
+> > index 00a7150c1b22..a4443d7aa150 100644
+> > --- a/security/krsi/krsi.c
+> > +++ b/security/krsi/krsi.c
+> > @@ -5,15 +5,65 @@
+> >   #include <linux/bpf.h>
+> >   #include <linux/binfmts.h>
+> >   #include <linux/highmem.h>
+> > +#include <linux/krsi.h>
+> >   #include <linux/mm.h>
+> >   
+> >   #include "krsi_init.h"
+> >   
+> > +/*
+> > + * need_arg_pages is only updated in bprm_check_security_cb
+> > + * when a mutex on krsi_hook for bprm_check_security is already
+> > + * held. need_arg_pages avoids pinning pages when no program
+> > + * that needs them is attached to the hook.
+> > + */
+> > +static bool need_arg_pages;
+> > +
+> > +/*
+> > + * Checks if the instruction is a BPF_CALL to an eBPF helper located
+> > + * at the given address.
+> > + */
+> > +static inline bool bpf_is_call_to_func(struct bpf_insn *insn,
+> > +				       void *func_addr)
+> > +{
+> > +	u8 opcode = BPF_OP(insn->code);
+> > +
+> > +	if (opcode != BPF_CALL)
+> > +		return false;
+> > +
+> > +	if (insn->src_reg == BPF_PSEUDO_CALL)
+> > +		return false;
+> > +
+> > +	/*
+> > +	 * The BPF verifier updates the value of insn->imm from the
+> > +	 * enum bpf_func_id to the offset of the address of helper
+> > +	 * from the __bpf_call_base.
+> > +	 */
+> > +	return __bpf_call_base + insn->imm == func_addr;
+> 
+> In how many cases, krsi program does not have krsi_get_env_var() helper?
 
-Yes. And they had that problem *because* the blocking interface was
-useless, and they didn't use it, and *because* nobody warned them
-about it.
+It depends, if the user does not choose to use log environment
+variables or use the the value as a part of their MAC policy, the
+pinning of the pages is not needed.
 
-In other words, the whole disaster was exactly because blocking is
-wrong, and because blocking to get "secure" data is unacceptable.
+Also, the pinning is needed since eBPF helpers cannot run a non-atomic
+context. It would not be needed if "sleepable eBPF" becomes a thing.
 
-And the random people DIDN'T LEARN A SINGLE LESSON from that thing.
+- KP
 
-Seriously. getrandom() introduced the same broken model as /dev/random
-had - and that then caused people to use /dev/urandom instead.
-
-And now it has shown itself to be broken _again_.
-
-And you still argue against the only sane model. Scream loudly that
-you're doing something wrong so that people can fix their broken
-garbage, but don't let people block, which is _also_ broken garbage.
-
-Seriously. Blocking is wrong. Blocking has _always_ been wrong. It was
-why /dev/random was useless, and it is now why the new getrandom()
-system call is showing itself useless.
-
-> We could return 0 for success, and yet "the best we
-> can do" could be really terrible.
-
-Yes. Which is why we should warn.
-
-But we can't *block*. Because that just breaks people. Like shown in
-this whole discussion.
-
-Why is warning different? Because hopefully it tells the only person
-who can *do* something about it - the original maintainer or developer
-of the user space tools - that they are doing something wrong and need
-to fix their broken model.
-
-Blocking doesn't do that. Blocking only makes the system unusable. And
-yes, some security people think "unusable == secure", but honestly,
-those security people shouldn't do system design. They are the worst
-kind of "technically correct" incompetent.
-
-> > > For 5.3, can we please consider my proposal in [1]?
-> > It may be the safest thing to do, but at that point we might as well
-> > just revert the ext4 change entirely. I'd rather do that, than have
-> > random filesystems start making random decisions based on crazy user
-> > space behavior.
->
-> All we're doing is omitting the plug;
-
-Yes. Which we'll do by reverting that change. I agree that it's the
-safe thing to do for 5.3.
-
-We are not adding crazy workarounds for "getrandom()" bugs in some
-low-level filesystem.
-
-Either we fix getrandom() or we revert the change. We don't do some
-mis-designed "let's work around bugs in getrandom() in the ext4
-filesystem with ad-hoc behavioral changes".
-
-              Linus
+> 
+> > +}
+> > +
+> > +static int krsi_process_execution_cb(struct bpf_prog_array *array)
+> > +{
+> > +	struct bpf_prog_array_item *item = array->items;
+> > +	struct bpf_prog *p;
+> > +	const struct bpf_func_proto *proto = &krsi_get_env_var_proto;
+> > +	int i;
+> > +
+> > +	while ((p = READ_ONCE(item->prog))) {
+> > +		for (i = 0; i < p->len; i++) {
+> > +			if (bpf_is_call_to_func(&p->insnsi[i], proto->func))
+> > +				need_arg_pages = true;
+> > +		}
+> > +		item++;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >   struct krsi_hook krsi_hooks_list[] = {
+> > -	#define KRSI_HOOK_INIT(TYPE, NAME, H, I) \
+> > +	#define KRSI_HOOK_INIT(TYPE, NAME, H, I, CB) \
+> >   		[TYPE] = { \
+> >   			.h_type = TYPE, \
+> >   			.name = #NAME, \
+> > +			.attach_callback = CB, \
+> >   		},
+> >   	#include "hooks.h"
+> >   	#undef KRSI_HOOK_INIT
+> > @@ -75,9 +125,11 @@ static int krsi_process_execution(struct linux_binprm *bprm)
+> >   		.bprm = bprm,
+> >   	};
+> >   
+> > -	ret = pin_arg_pages(&ctx.bprm_ctx);
+> > -	if (ret < 0)
+> > -		goto out_arg_pages;
+> > +	if (READ_ONCE(need_arg_pages)) {
+> > +		ret = pin_arg_pages(&ctx.bprm_ctx);
+> > +		if (ret < 0)
+> > +			goto out_arg_pages;
+> > +	}
+> >   
+> >   	ret = krsi_run_progs(PROCESS_EXECUTION, &ctx);
+> >   	kfree(ctx.bprm_ctx.arg_pages);
+> > @@ -87,7 +139,7 @@ static int krsi_process_execution(struct linux_binprm *bprm)
+> >   }
+> >   
+> >   static struct security_hook_list krsi_hooks[] __lsm_ro_after_init = {
+> > -	#define KRSI_HOOK_INIT(T, N, HOOK, IMPL) LSM_HOOK_INIT(HOOK, IMPL),
+> > +	#define KRSI_HOOK_INIT(T, N, HOOK, IMPL, CB) LSM_HOOK_INIT(HOOK, IMPL),
+> >   	#include "hooks.h"
+> >   	#undef KRSI_HOOK_INIT
+> >   };
+> > diff --git a/security/krsi/ops.c b/security/krsi/ops.c
+> > index 1db94dfaac15..2de682371eff 100644
+> > --- a/security/krsi/ops.c
+> > +++ b/security/krsi/ops.c
+> > @@ -139,6 +139,14 @@ int krsi_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> >   		goto unlock;
+> >   	}
+> >   
+> > +	if (h->attach_callback) {
+> > +		ret = h->attach_callback(new_array);
+> > +		if (ret < 0) {
+> > +			bpf_prog_array_free(new_array);
+> > +			goto unlock;
+> > +		}
+> > +	}
+> > +
+> >   	rcu_assign_pointer(h->progs, new_array);
+> >   	bpf_prog_array_free(old_array);
+> >   
+> > @@ -278,7 +286,7 @@ BPF_CALL_5(krsi_get_env_var, struct krsi_ctx *, ctx, char *, name, u32, n_size,
+> >   	return get_env_var(ctx, name, dest, n_size, size);
+> >   }
+> >   
+> > -static const struct bpf_func_proto krsi_get_env_var_proto = {
+> > +const struct bpf_func_proto krsi_get_env_var_proto = {
+> >   	.func = krsi_get_env_var,
+> >   	.gpl_only = true,
+> >   	.ret_type = RET_INTEGER,
+> > 
