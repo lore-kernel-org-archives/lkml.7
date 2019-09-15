@@ -2,248 +2,84 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C64C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76071C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA2E214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D052168B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568554935;
+	bh=UDUepZNdoMSBE3UjwJY92HZjrX6wace2q6zswCwfVss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DCbkPcsWuBeLx9JDUm/XB0zRHC8Jvh9OnyDA6AlUvri1w2NnXx5tAjbFDGAExZVTS
+	 1FcqmOumCy7Q45b37SjM/8ODRPQo7rcj1bAQ8hEo3Kr3DukZjbwO756AqQDfnFwKMB
+	 rTXZOwpI7V93AoPm6xQbIUayNn8XUhgp2ZLTcH0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbfIONjV (ORCPT
+        id S1730316AbfIONmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:39:21 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:58530 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfIONjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:39:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id B1D829E79B4;
-        Sun, 15 Sep 2019 14:39:18 +0100 (BST)
-Date:   Sun, 15 Sep 2019 14:39:17 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [RFC 1/4] counter: Simplify the count_read and count_write
- callbacks
-Message-ID: <20190915143917.61385369@archlinux>
-In-Reply-To: <20190915055759.408690-2-vilhelm.gray@gmail.com>
-References: <20190915055759.408690-1-vilhelm.gray@gmail.com>
-        <20190915055759.408690-2-vilhelm.gray@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Sep 2019 09:42:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfIONmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 09:42:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB7B214C6;
+        Sun, 15 Sep 2019 13:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568554934;
+        bh=UDUepZNdoMSBE3UjwJY92HZjrX6wace2q6zswCwfVss=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wol0sZc4OytvsYb5tM9Rz7QDBb3YMGasuwDUDUjf/72oa8ah/gT2CJAVsfqsDcfYy
+         8lAJki0gyW4MJIAQxqeS0wx5G/cDnWtb0ItdL4QC4svSAjQg4MIfqrXjJoHTRRjm7P
+         x3ltWPDfJ/Ww6cNviQ391UoSby8NurG4x/qMzegk=
+Date:   Sun, 15 Sep 2019 15:42:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 0/9] 4.4.193-stable review
+Message-ID: <20190915134210.GC552389@kroah.com>
+References: <20190913130424.160808669@linuxfoundation.org>
+ <32171a50-9fa8-5233-3a34-4f1e751b54a9@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32171a50-9fa8-5233-3a34-4f1e751b54a9@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Sep 2019 14:57:56 +0900
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
-
-> The count_read and count_write callbacks are simplified to pass val as
-> unsigned long rather than as an opaque data structure. The opaque
-> counter_count_read_value and counter_count_write_value structures,
-> counter_count_value_type enum, and relevant counter_count_read_value_set
-> and counter_count_write_value_get functions, are removed as they are no
-> longer used.
+On Sat, Sep 14, 2019 at 06:55:34AM -0700, Guenter Roeck wrote:
+> On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.193 release.
+> > There are 9 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> Build results:
+> 	total: 170 pass: 170 fail: 0
+> Qemu test results:
+> 	total: 324 pass: 324 fail: 0
 
-Seems like a sensible bit of excessive abstraction removal to me.  I'm not
-totally sure why these got so complex in the first place though.
+Yeah this one worked!
 
-Can you recall the reason as it might help to judge why we no longer
-think the same?
+I've done a -rc2 for all of the other trees, hopefully that resolves all
+of the issues you found in them.
 
-Thanks,
+thanks,
 
-Jonathan
-> ---
->  drivers/counter/counter.c | 66 +++++----------------------------------
->  include/linux/counter.h   | 43 +++----------------------
->  2 files changed, 12 insertions(+), 97 deletions(-)
-> 
-> diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
-> index 106bc7180cd8..1d08f1437b1b 100644
-> --- a/drivers/counter/counter.c
-> +++ b/drivers/counter/counter.c
-> @@ -246,60 +246,6 @@ void counter_signal_read_value_set(struct counter_signal_read_value *const val,
->  }
->  EXPORT_SYMBOL_GPL(counter_signal_read_value_set);
->  
-> -/**
-> - * counter_count_read_value_set - set counter_count_read_value data
-> - * @val:	counter_count_read_value structure to set
-> - * @type:	property Count data represents
-> - * @data:	Count data
-> - *
-> - * This function sets an opaque counter_count_read_value structure with the
-> - * provided Count data.
-> - */
-> -void counter_count_read_value_set(struct counter_count_read_value *const val,
-> -				  const enum counter_count_value_type type,
-> -				  void *const data)
-> -{
-> -	switch (type) {
-> -	case COUNTER_COUNT_POSITION:
-> -		val->len = sprintf(val->buf, "%lu\n", *(unsigned long *)data);
-> -		break;
-> -	default:
-> -		val->len = 0;
-> -	}
-> -}
-> -EXPORT_SYMBOL_GPL(counter_count_read_value_set);
-> -
-> -/**
-> - * counter_count_write_value_get - get counter_count_write_value data
-> - * @data:	Count data
-> - * @type:	property Count data represents
-> - * @val:	counter_count_write_value structure containing data
-> - *
-> - * This function extracts Count data from the provided opaque
-> - * counter_count_write_value structure and stores it at the address provided by
-> - * @data.
-> - *
-> - * RETURNS:
-> - * 0 on success, negative error number on failure.
-> - */
-> -int counter_count_write_value_get(void *const data,
-> -				  const enum counter_count_value_type type,
-> -				  const struct counter_count_write_value *const val)
-> -{
-> -	int err;
-> -
-> -	switch (type) {
-> -	case COUNTER_COUNT_POSITION:
-> -		err = kstrtoul(val->buf, 0, data);
-> -		if (err)
-> -			return err;
-> -		break;
-> -	}
-> -
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(counter_count_write_value_get);
-> -
->  struct counter_attr_parm {
->  	struct counter_device_attr_group *group;
->  	const char *prefix;
-> @@ -788,13 +734,13 @@ static ssize_t counter_count_show(struct device *dev,
->  	const struct counter_count_unit *const component = devattr->component;
->  	struct counter_count *const count = component->count;
->  	int err;
-> -	struct counter_count_read_value val = { .buf = buf };
-> +	unsigned long val;
->  
->  	err = counter->ops->count_read(counter, count, &val);
->  	if (err)
->  		return err;
->  
-> -	return val.len;
-> +	return sprintf(buf, "%lu\n", val);
->  }
->  
->  static ssize_t counter_count_store(struct device *dev,
-> @@ -806,9 +752,13 @@ static ssize_t counter_count_store(struct device *dev,
->  	const struct counter_count_unit *const component = devattr->component;
->  	struct counter_count *const count = component->count;
->  	int err;
-> -	struct counter_count_write_value val = { .buf = buf };
-> +	unsigned long val;
-> +
-> +	err = kstrtoul(buf, 0, &val);
-> +	if (err)
-> +		return err;
->  
-> -	err = counter->ops->count_write(counter, count, &val);
-> +	err = counter->ops->count_write(counter, count, val);
->  	if (err)
->  		return err;
->  
-> diff --git a/include/linux/counter.h b/include/linux/counter.h
-> index a061cdcdef7c..7e40796598a6 100644
-> --- a/include/linux/counter.h
-> +++ b/include/linux/counter.h
-> @@ -300,24 +300,6 @@ struct counter_signal_read_value {
->  	size_t len;
->  };
->  
-> -/**
-> - * struct counter_count_read_value - Opaque Count read value
-> - * @buf:	string representation of Count read value
-> - * @len:	length of string in @buf
-> - */
-> -struct counter_count_read_value {
-> -	char *buf;
-> -	size_t len;
-> -};
-> -
-> -/**
-> - * struct counter_count_write_value - Opaque Count write value
-> - * @buf:	string representation of Count write value
-> - */
-> -struct counter_count_write_value {
-> -	const char *buf;
-> -};
-> -
->  /**
->   * struct counter_ops - Callbacks from driver
->   * @signal_read:	optional read callback for Signal attribute. The read
-> @@ -328,15 +310,10 @@ struct counter_count_write_value {
->   *			signal_read callback.
->   * @count_read:		optional read callback for Count attribute. The read
->   *			value of the respective Count should be passed back via
-> - *			the val parameter. val points to an opaque type which
-> - *			should be set only by calling the
-> - *			counter_count_read_value_set function from within the
-> - *			count_read callback.
-> + *			the val parameter.
->   * @count_write:	optional write callback for Count attribute. The write
->   *			value for the respective Count is passed in via the val
-> - *			parameter. val points to an opaque type which should be
-> - *			accessed only by calling the
-> - *			counter_count_write_value_get function.
-> + *			parameter.
->   * @function_get:	function to get the current count function mode. Returns
->   *			0 on success and negative error code on error. The index
->   *			of the respective Count's returned function mode should
-> @@ -357,11 +334,9 @@ struct counter_ops {
->  			   struct counter_signal *signal,
->  			   struct counter_signal_read_value *val);
->  	int (*count_read)(struct counter_device *counter,
-> -			  struct counter_count *count,
-> -			  struct counter_count_read_value *val);
-> +			  struct counter_count *count, unsigned long *val);
->  	int (*count_write)(struct counter_device *counter,
-> -			   struct counter_count *count,
-> -			   struct counter_count_write_value *val);
-> +			   struct counter_count *count, unsigned long val);
->  	int (*function_get)(struct counter_device *counter,
->  			    struct counter_count *count, size_t *function);
->  	int (*function_set)(struct counter_device *counter,
-> @@ -486,19 +461,9 @@ enum counter_signal_value_type {
->  	COUNTER_SIGNAL_LEVEL = 0
->  };
->  
-> -enum counter_count_value_type {
-> -	COUNTER_COUNT_POSITION = 0,
-> -};
-> -
->  void counter_signal_read_value_set(struct counter_signal_read_value *const val,
->  				   const enum counter_signal_value_type type,
->  				   void *const data);
-> -void counter_count_read_value_set(struct counter_count_read_value *const val,
-> -				  const enum counter_count_value_type type,
-> -				  void *const data);
-> -int counter_count_write_value_get(void *const data,
-> -				  const enum counter_count_value_type type,
-> -				  const struct counter_count_write_value *const val);
->  
->  int counter_register(struct counter_device *const counter);
->  void counter_unregister(struct counter_device *const counter);
-
+greg k-h
