@@ -6,255 +6,154 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52395C4CECB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE9C4CECB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310BD21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124D42077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfIOFXL (ORCPT
+        id S1726309AbfIOFtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 01:23:11 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:40855 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725827AbfIOFXL (ORCPT
+        Sun, 15 Sep 2019 01:49:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6284 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726276AbfIOFtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 01:23:11 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8F5MgUi028405
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Sep 2019 01:22:43 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 416C0420811; Sun, 15 Sep 2019 01:22:42 -0400 (EDT)
-Date:   Sun, 15 Sep 2019 01:22:42 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190915052242.GG19710@mit.edu>
-References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+        Sun, 15 Sep 2019 01:49:23 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8F5lKfl092685
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 01:49:22 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v1dhst9jh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 01:49:22 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 15 Sep 2019 06:49:19 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 15 Sep 2019 06:49:09 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8F5n7JN51511398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 15 Sep 2019 05:49:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B14452051;
+        Sun, 15 Sep 2019 05:49:07 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.160])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id BB4A55204F;
+        Sun, 15 Sep 2019 05:49:03 +0000 (GMT)
+Date:   Sun, 15 Sep 2019 08:49:02 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
+        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
+        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
+        rafael@kernel.org, mhocko@kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v3 7/8] mips: numa: make node_to_cpumask_map()
+ NUMA_NO_NODE aware for mips
+References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
+ <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19091505-0012-0000-0000-0000034BBE09
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091505-0013-0000-0000-0000218630DE
+Message-Id: <20190915054901.GC11429@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909150063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-getrandom() has been created as a new and more secure interface for
-pseudorandom data requests.  Unlike /dev/urandom, it unconditionally
-blocks until the entropy pool has been properly initialized.
+Hi,
 
-While getrandom() has no guaranteed upper bound for its waiting time,
-user-space has been abusing it by issuing the syscall, from shared
-libraries no less, during the main system boot sequence.
+On Thu, Sep 12, 2019 at 06:15:33PM +0800, Yunsheng Lin wrote:
+> When passing the return value of dev_to_node() to cpumask_of_node()
+> without checking the node id if the node id is NUMA_NO_NODE, there is
+> global-out-of-bounds detected by KASAN.
+> 
+> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> which also means all cpus should be usable. So the cpumask_of_node()
+> should always return all cpus online when user passes the node id
+> as NUMA_NO_NODE, just like similar semantic that page allocator handles
+> NUMA_NO_NODE.
+> 
+> But we cannot really copy the page allocator logic. Simply because the
+> page allocator doesn't enforce the near node affinity. It just picks it
+> up as a preferred node but then it is free to fallback to any other numa
+> node. This is not the case here and node_to_cpumask_map will only restrict
+> to the particular node's cpus which would have really non deterministic
+> behavior depending on where the code is executed. So in fact we really
+> want to return cpu_online_mask for NUMA_NO_NODE.
+> 
+> Since this arch was already NUMA_NO_NODE aware, this patch only changes
+> it to return cpu_online_mask and use NUMA_NO_NODE instead of "-1".
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1125789/
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> ---
+> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+>     for NUMA_NO_NODE case, and change the commit log to better justify
+>     the change.
+> ---
+>  arch/mips/include/asm/mach-ip27/topology.h | 4 ++--
 
-Thus, on certain setups where there is no hwrng (embedded), or the
-hwrng is not trusted by some users (intel RDRAND), or sometimes it's
-just broken (amd RDRAND), the system boot can be *reliably* blocked.
+Nit: the subject says "mips:", but this patch only touches sgi-ip27 and
+loongson is updated as a separate patch. I don't see why both patches
+cannot be merged. Moreover, the whole set can be made as a single patch,
+IMHO.
 
-The issue is further exaggerated by recent file-system optimizations,
-e.g. b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), which
-merges directory lookup code inode table IO, and thus minimizes the
-number of disk interrupts and entropy during boot. After that commit,
-a blocked boot can be reliably reproduced on a Thinkpad E480 laptop
-with standard ArchLinux user-space.
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+> index 965f079..04505e6 100644
+> --- a/arch/mips/include/asm/mach-ip27/topology.h
+> +++ b/arch/mips/include/asm/mach-ip27/topology.h
+> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
+>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+>  
+>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+> -#define cpumask_of_node(node)	((node) == -1 ?				\
+> -				 cpu_all_mask :				\
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+>  				 &hub_data(node)->h_cpus)
+>  struct pci_bus;
+>  extern int pcibus_to_node(struct pci_bus *);
+> -- 
+> 2.8.1
+> 
 
-Thus, add an optional configuration option which stops getrandom(2)
-from blocking, but instead returns "best efforts" randomness, which
-might not be random or secure at all.  This can be controlled via
-random.getrandom_block boot command line option, and the
-CONFIG_RANDOM_BLOCK can be used to set the default to be blocking.
-Since according to the Great Penguin, only incompetent system
-designers would value "security" ahead of "usability", the default is
-to be non-blocking.
-
-In addition, modify getrandom(2) to complain loudly with a kernel
-warning when some userspace process is erroneously calling
-getrandom(2) too early during the boot process.
-
-Link: https://lkml.kernel.org/r/CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com
-Link: https://lkml.kernel.org/r/20190912034421.GA2085@darwi-home-pc
-Link: https://lkml.kernel.org/r/20190911173624.GI2740@mit.edu
-Link: https://lkml.kernel.org/r/20180514003034.GI14763@thunk.org
-
-[ Modified by tytso@mit.edu to make the change of getrandom(2) to be
-  non-blocking to be optional. ]
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
----
-
-Here's my take on the patch.  I really very strongly believe that the
-idea of making getrandom(2) non-blocking and to blindly assume that we
-can load up the buffer with "best efforts" randomness to be a
-terrible, terrible idea that is going to cause major security problems
-that we will potentially regret very badly.  Linus Torvalds believes I
-am an incompetent systems designer.
-
-So let's do it both ways, and push the decision on the distributor
-and/or product manufacturer
-
- drivers/char/Kconfig  | 33 +++++++++++++++++++++++++++++++--
- drivers/char/random.c | 34 +++++++++++++++++++++++++++++-----
- 2 files changed, 60 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index 3e866885a405..337baeca5ebc 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -557,8 +557,6 @@ config ADI
- 	  and SSM (Silicon Secured Memory).  Intended consumers of this
- 	  driver include crash and makedumpfile.
- 
--endmenu
--
- config RANDOM_TRUST_CPU
- 	bool "Trust the CPU manufacturer to initialize Linux's CRNG"
- 	depends on X86 || S390 || PPC
-@@ -573,3 +571,34 @@ config RANDOM_TRUST_CPU
- 	has not installed a hidden back door to compromise the CPU's
- 	random number generation facilities. This can also be configured
- 	at boot with "random.trust_cpu=on/off".
-+
-+config RANDOM_BLOCK
-+	bool "Block if getrandom is called before CRNG is initialized"
-+	help
-+	  Say Y here if you want userspace programs which call
-+	  getrandom(2) before the Cryptographic Random Number
-+	  Generator (CRNG) is initialized to block until
-+	  secure random numbers are available.
-+
-+	  Say N if you believe usability is more important than
-+	  security, so if getrandom(2) is called before the CRNG is
-+	  initialized, it should not block, but instead return "best
-+	  effort" randomness which might not be very secure or random
-+	  at all; but at least the system boot will not be delayed by
-+	  minutes or hours.
-+
-+	  This can also be controlled at boot with
-+	  "random.getrandom_block=on/off".
-+
-+	  Ideally, systems would be configured with hardware random
-+	  number generators, and/or configured to trust CPU-provided
-+	  RNG's.  In addition, userspace should generate cryptographic
-+	  keys only as late as possible, when they are needed, instead
-+	  of during early boot.  (For non-cryptographic use cases,
-+	  such as dictionary seeds or MIT Magic Cookies, other
-+	  mechanisms such as /dev/urandom or random(3) may be more
-+	  appropropriate.)  This config option controls what the
-+	  kernel should do as a fallback when the non-ideal case
-+	  presents itself.
-+
-+endmenu
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5d5ea4ce1442..243fb4a4535f 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -511,6 +511,8 @@ static struct ratelimit_state unseeded_warning =
- 	RATELIMIT_STATE_INIT("warn_unseeded_randomness", HZ, 3);
- static struct ratelimit_state urandom_warning =
- 	RATELIMIT_STATE_INIT("warn_urandom_randomness", HZ, 3);
-+static struct ratelimit_state getrandom_warning =
-+	RATELIMIT_STATE_INIT("warn_getrandom_randomness", HZ, 3);
- 
- static int ratelimit_disable __read_mostly;
- 
-@@ -854,12 +856,19 @@ static void invalidate_batched_entropy(void);
- static void numa_crng_init(void);
- 
- static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
-+static bool getrandom_block __ro_after_init = IS_ENABLED(CONFIG_RANDOM_BLOCK);
- static int __init parse_trust_cpu(char *arg)
- {
- 	return kstrtobool(arg, &trust_cpu);
- }
- early_param("random.trust_cpu", parse_trust_cpu);
- 
-+static int __init parse_block(char *arg)
-+{
-+	return kstrtobool(arg, &getrandom_block);
-+}
-+early_param("random.getrandom_block", parse_block);
-+
- static void crng_initialize(struct crng_state *crng)
- {
- 	int		i;
-@@ -1045,6 +1054,12 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
- 				  urandom_warning.missed);
- 			urandom_warning.missed = 0;
- 		}
-+		if (getrandom_warning.missed) {
-+			pr_notice("random: %d getrandom warning(s) missed "
-+				  "due to ratelimiting\n",
-+				  getrandom_warning.missed);
-+			getrandom_warning.missed = 0;
-+		}
- 	}
- }
- 
-@@ -1900,6 +1915,7 @@ int __init rand_initialize(void)
- 	crng_global_init_time = jiffies;
- 	if (ratelimit_disable) {
- 		urandom_warning.interval = 0;
-+		getrandom_warning.interval = 0;
- 		unseeded_warning.interval = 0;
- 	}
- 	return 0;
-@@ -1969,8 +1985,8 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 	if (!crng_ready() && maxwarn > 0) {
- 		maxwarn--;
- 		if (__ratelimit(&urandom_warning))
--			printk(KERN_NOTICE "random: %s: uninitialized "
--			       "urandom read (%zd bytes read)\n",
-+			pr_err("random: %s: CRNG uninitialized "
-+			       "(%zd bytes read)\n",
- 			       current->comm, nbytes);
- 		spin_lock_irqsave(&primary_crng.lock, flags);
- 		crng_init_cnt = 0;
-@@ -2135,9 +2151,17 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
- 	if (!crng_ready()) {
- 		if (flags & GRND_NONBLOCK)
- 			return -EAGAIN;
--		ret = wait_for_random_bytes();
--		if (unlikely(ret))
--			return ret;
-+		WARN_ON_ONCE(1);
-+		if (getrandom_block) {
-+			if (__ratelimit(&getrandom_warning))
-+				pr_err("random: %s: getrandom blocking for CRNG initialization\n",
-+				       current->comm);
-+			ret = wait_for_random_bytes();
-+			if (unlikely(ret))
-+				return ret;
-+		} else if (__ratelimit(&getrandom_warning))
-+			pr_err("random: %s: getrandom called too early\n",
-+			       current->comm);
- 	}
- 	return urandom_read(NULL, buf, count, NULL);
- }
 -- 
-2.23.0
+Sincerely yours,
+Mike.
 
