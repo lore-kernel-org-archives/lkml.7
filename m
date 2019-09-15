@@ -2,110 +2,65 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7FC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D75C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725F52077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568546569;
-	bh=MLNdbiyNi4ENt8epqRqPv1TaTkDoJ6cWtnWJe1UOPYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YQvZ4iWgm36Vkc1gPZalUaiyvbRwc//aJzxuYpIkTQrSkpsf4HPQomt//bxlOhrhU
-	 FIrLww1sCn8f6ySz8GnOCqK8dW0XbUo4zfqEaAn5NB5OU0HZmXgDQ6MiOBrahvcswT
-	 8gE0Fc/KRy/Pt3s/329rwRNIa1NF2ACprW5GeLBw=
+	by mail.kernel.org (Postfix) with ESMTP id 9D0872054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbfIOLWr (ORCPT
+        id S1730359AbfIOLiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 07:22:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52308 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfIOLWr (ORCPT
+        Sun, 15 Sep 2019 07:38:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37372 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfIOLiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 07:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=56zqmhsjMtRUCKlYk+SxAg1yHp75qE9+3DpNLXrWEng=; b=GwwMVLsYAnn9ukgLmEPf4qaVg
-        3Ef8kV/O+KpJO9xdKRnuJbcykqI0MrPfnu/xYpuOJHjqp6YkPLpOdOHonwxFfp5R62ePkGl/9bSop
-        Ir365pCVsf7kel/p/RQG+fUBqRXijq5D58uu9CWUIzqnBHnt4GmxvZ82yIWL2r4u+Y1GI=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9Sc8-0007S4-1e; Sun, 15 Sep 2019 11:22:44 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 02C602740137; Sun, 15 Sep 2019 12:22:42 +0100 (BST)
-Date:   Sun, 15 Sep 2019 12:22:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] spi: dw: Add compatible string for Renesas RZ/N1 SPI
- Controller
-Message-ID: <20190915112242.GA43855@sirena.co.uk>
-References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
- <1568376720-7402-4-git-send-email-gareth.williams.jx@renesas.com>
- <CAHp75VeJY44oqYPhb-E8U1Uz5tKEJ1wZfmsGYEDttLzypHEAHA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeJY44oqYPhb-E8U1Uz5tKEJ1wZfmsGYEDttLzypHEAHA@mail.gmail.com>
-X-Cookie: Exercise caution in your daily affairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 15 Sep 2019 07:38:09 -0400
+Received: from localhost (93-63-141-166.ip28.fastwebnet.it [93.63.141.166])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3C140153C1B7C;
+        Sun, 15 Sep 2019 04:38:07 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 12:38:02 +0100 (WEST)
+Message-Id: <20190915.123802.763880169246602189.davem@davemloft.net>
+To:     kvalo@codeaurora.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: pull-request: wireless-drivers-next 2019-09-14
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <87muf5df3i.fsf@kamboji.qca.qualcomm.com>
+References: <87r24jchgv.fsf@kamboji.qca.qualcomm.com>
+        <20190914.140843.945413345284987204.davem@davemloft.net>
+        <87muf5df3i.fsf@kamboji.qca.qualcomm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 15 Sep 2019 04:38:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Kalle Valo <kvalo@codeaurora.org>
+Date: Sun, 15 Sep 2019 13:32:49 +0300
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> David Miller <davem@davemloft.net> writes:
+> 
+>> From: Kalle Valo <kvalo@codeaurora.org>
+>> Date: Sat, 14 Sep 2019 13:14:40 +0300
+>>
+>>> here's a pull request to net-next tree for v5.4, more info below. Please
+>>> let me know if there are any problems.
+>>
+>> Pulled, thanks Kalle.
+> 
+> Thanks for pulling this but I don't see it in net-next, maybe you forgot
+> to push? Nothing important, just making sure it didn't get lost.
 
-On Sun, Sep 15, 2019 at 02:00:33PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 13, 2019 at 3:14 PM Gareth Williams
-
-> > The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
-> > additional registers for software CS control and DMA. This patch does not
-> > address the changes required for DMA support, it simply adds the compatible
-> > string. The CS registers are not needed as Linux can use gpios for the CS
-> > signals.
-
-> > +       { .compatible = "renesas,rzn1-spi", },
-
-> Can't you simple use in DT something like
->   compatible = "renesas,rzn1-spi", "snps,dw-apb-ssi"
-> ?
-
-Yes, you can and should do that but it's still nice to list the
-compatibles explicitly in the driver in case someone leaves out the
-fallback compatible for whatever reason - if both the driver and the DT
-list things then there's a bit more robustness.
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+HwIACgkQJNaLcl1U
-h9AfuQf5AVfP2aLgb/wagBnPhqQNepUFArGUV9VrZqyKZbaEveqGp42TXTaWp4Z4
-F5vjPMGkBHfhHJoKWyJZiFnNaimOHVvH2MxsVxdxckvF5MDWShZO7xtKHGAqkwmv
-JGXJRWaSkVPW1WQ7rYXLLTqXYyhIYASbl1YNjymHxgw/aEr9Zn2XoxihmgeiLANg
-K990BsukJHIcY7n15boVvb15IqTiB2W51exwDyTHw5SMQ4zEt8IXexDn8meqZKzs
-x4qQeZKni+Y0Lykk9c6+Y7Sixf+P8XUjVaVW1jCjBWkmB9ebBnb6o4oSzhlHP4SC
-F8eS11Hqa8IvR+5S+AZLRgDTXVBYCQ==
-=BDOI
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+I feel asleep while the build test was running, it should be there now :-)
