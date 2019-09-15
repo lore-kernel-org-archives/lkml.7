@@ -2,158 +2,128 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42C7C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8BC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA59E20830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtyDwWHe"
+	by mail.kernel.org (Postfix) with ESMTP id E02E020830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfIOHcr (ORCPT
+        id S1726321AbfIOHmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 03:32:47 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34144 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfIOHcq (ORCPT
+        Sun, 15 Sep 2019 03:42:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725788AbfIOHmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 03:32:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so17546662pgc.1;
-        Sun, 15 Sep 2019 00:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=epiWAfrrjHwKJt0b7IMtr8i9SbnEcdcq2Ym8PuAYz04=;
-        b=QtyDwWHemh4cRk7EU4ZwvpL1HMwqx2nSdOePw1BNvFwHm0++GYgWCO69MOU5SAKKDm
-         bKw7HlAcNKeeEef1wKUPYaoqxyyGhnUEnrX76doUT1E9IVXloFaZ5hCd8yamr+EFN5sm
-         Qzlmxo7+hTrXuKITqoZuvRdpEeZn1nzaypHV7OdEL5a1O1G1pVVS8cErf1GaFIZinCFt
-         qHt1+Hfyw3JpHB28dugHsdi6DRiIFHED+53aUfUVtD7k35ST9XD6p9FxKcc3djaGw4VK
-         kVPj0oGNypP+oTC1Ps0drCM284c1u6ZwNTvUe/F2F7aWLOvfL5VR5LWWXjKdgbbMF+Ue
-         W3aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=epiWAfrrjHwKJt0b7IMtr8i9SbnEcdcq2Ym8PuAYz04=;
-        b=ZAmaUnjIN/cPfO0AROWVAxN2ATsJil9qC3fAYnJcLGZvcsK0LbCYow4G61M0Av/ZZC
-         SjuvRbRH0ImfEZ8zyR4pqnfRmjk5rQ5QIN7LQD4Yx4JrQg3TshX03UkgYX+fXmCek6iv
-         fEjBTMIW6IyGtB1sR2OQz1z1qOxZOVj9djWmNr59I1bP3bNYtulQEfIS9HRBOv6h9mkR
-         J4yi1ytYxRau76KaVCBCOEOcdJIWgNL413DgB2HPwwo1iF8eQMKPPL8fLK1vf0qSWl+0
-         03v3qJmuIcfb8Z4oj58WGgR/CeGoQ39Qaz0LNw+T5yLrdGHc9b4amlLH2xAqr+eUrVvf
-         a8IA==
-X-Gm-Message-State: APjAAAWCjwDwQ8dcWEj6JMAgI66iJ1BYl7bU7IC+AG4v4HpHVtvC30KL
-        gVEFVQOT9gzlN8EPI0bNwrk=
-X-Google-Smtp-Source: APXvYqxKE6UOnyayAFP+Ed+EdafQY4inmPdkuc4MpFTdLnndQPUnn3o556ROa4qcANt3ls98+BqUww==
-X-Received: by 2002:a63:5652:: with SMTP id g18mr19651857pgm.393.1568532765954;
-        Sun, 15 Sep 2019 00:32:45 -0700 (PDT)
-Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
-        by smtp.gmail.com with ESMTPSA id b6sm27961404pgq.26.2019.09.15.00.32.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:32:45 -0700 (PDT)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     satendrasingh.thakur@hcl.com,
-        Satendra Singh Thakur <sst2005@gmail.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] probe/dma/owl: removed redundant code from owl dma controller's probe function
-Date:   Sun, 15 Sep 2019 13:02:36 +0530
-Message-Id: <20190915073237.24176-1-sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190915072644.23329-1-sst2005@gmail.com>
-References: <20190915072644.23329-1-sst2005@gmail.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 15 Sep 2019 03:42:38 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8F7fm4h086513;
+        Sun, 15 Sep 2019 03:42:23 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v1djsv393-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 15 Sep 2019 03:42:23 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8F7g1Fj086898;
+        Sun, 15 Sep 2019 03:42:22 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v1djsv38v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 15 Sep 2019 03:42:22 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8F7dopM016623;
+        Sun, 15 Sep 2019 07:42:22 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 2v0t3cqm1p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 15 Sep 2019 07:42:22 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8F7gLdc42008958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 15 Sep 2019 07:42:21 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6678112062;
+        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F466112061;
+        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.81.174])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 8E54F2E2D63; Sun, 15 Sep 2019 13:12:17 +0530 (IST)
+Date:   Sun, 15 Sep 2019 13:12:17 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamaleshb@in.ibm.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
+ cede_offline
+Message-ID: <20190915074217.GA943@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
+ <87impxr0am.fsf@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87impxr0am.fsf@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909150084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. In order to remove duplicate code, following functions:
-platform_get_resource
-devm_kzalloc
-devm_ioremap_resource
-devm_clk_get
-platform_get_irq
-are replaced with a macro devm_platform_probe_helper.
+Hello Nathan,
 
-2. This patch depends on the file include/linux/probe-helper.h
-which is pushed in previous patch [01/09].
+On Thu, Sep 12, 2019 at 10:39:45AM -0500, Nathan Lynch wrote:
+> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+> > The patchset also defines a new sysfs attribute
+> > "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
+> > to allow userspace programs to change the state into which the
+> > offlined CPU need to be put to at runtime.
+> 
+> A boolean sysfs interface will become awkward if we need to add another
+> mode in the future.
+> 
+> What do you think about naming the attribute something like
+> 'offline_mode', with the possible values 'extended-cede' and
+> 'rtas-stopped'?
 
-Signed-off-by: Satendra Singh Thakur <satendrasingh.thakur@hcl.com>
-Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
----
- drivers/dma/owl-dma.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+We can do that. However, IMHO in the longer term, on PSeries guests,
+we should have only one offline state - rtas-stopped.  The reason for
+this being, that on Linux, SMT switch is brought into effect through
+the CPU Hotplug interface. The only state in which the SMT switch will
+recognized by the hypervisors such as PHYP is rtas-stopped.
 
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index 90bbcef99ef8..03e692fc25a1 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -23,6 +23,7 @@
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
- #include <linux/slab.h>
-+#include <linux/probe-helper.h>
- #include "virt-dma.h"
- 
- #define OWL_DMA_FRAME_MAX_LENGTH		0xfffff
-@@ -1045,20 +1046,15 @@ static int owl_dma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct owl_dma *od;
--	struct resource *res;
- 	int ret, i, nr_channels, nr_requests;
--
--	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
--	if (!od)
--		return -ENOMEM;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -EINVAL;
--
--	od->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(od->base))
--		return PTR_ERR(od->base);
-+	/*
-+	 * This macro internally combines following functions:
-+	 * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+	 * devm_clk_get, platform_get_irq
-+	 */
-+	ret = devm_platform_probe_helper(pdev, od, NULL);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = of_property_read_u32(np, "dma-channels", &nr_channels);
- 	if (ret) {
-@@ -1105,18 +1101,11 @@ static int owl_dma_probe(struct platform_device *pdev)
- 
- 	INIT_LIST_HEAD(&od->dma.channels);
- 
--	od->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(od->clk)) {
--		dev_err(&pdev->dev, "unable to get clock\n");
--		return PTR_ERR(od->clk);
--	}
--
- 	/*
- 	 * Eventhough the DMA controller is capable of generating 4
- 	 * IRQ's for DMA priority feature, we only use 1 IRQ for
- 	 * simplification.
- 	 */
--	od->irq = platform_get_irq(pdev, 0);
- 	ret = devm_request_irq(&pdev->dev, od->irq, owl_dma_interrupt, 0,
- 			       dev_name(&pdev->dev), od);
- 	if (ret) {
--- 
-2.17.1
+All other states (such as extended-cede) should in the long-term be
+exposed via the cpuidle interface.
 
+With this in mind, I made the sysfs interface boolean to mirror the
+current "cede_offline" commandline parameter. Eventually when we have
+only one offline-state, we can deprecate the commandline parameter as
+well as the sysfs interface.
+
+Thoughts?
+
+--
+Thanks and Regards
+gautham.
