@@ -2,89 +2,258 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4BEC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0F1C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BDF21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E8421479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xA4HUn2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfIOSdH (ORCPT
+        id S1726502AbfIOSep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 14:33:07 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45394 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfIOSdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 14:33:07 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FIWecx023178;
-        Sun, 15 Sep 2019 20:32:40 +0200
-Date:   Sun, 15 Sep 2019 20:32:40 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190915183240.GA23155@1wt.eu>
-References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+        Sun, 15 Sep 2019 14:34:45 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40646 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbfIOSep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 14:34:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jsDc63G0j/DkI+K6Lr0zDi+b74Pxegfq3m7vm6p44LA=; b=xA4HUn2SQlkYKILPTZtzL/ftU
+        rvURYZewVLDafUKNvmdl3dqENKfLhvyt8Jn9ZivvyZeYd97KlrD0f7+BsDzoQpltyv7kPx7wH1skW
+        8XXj7NxRGa/lfH1P5wEL+Zsm5Tynd44hWyEMaL6zkGGPwIItBNi7S3AZRFTs1exQ/KZ8C3nSr9d6g
+        FQI1bybExS4bl3IB1i3Go91FxQhKvcK8eSTZ3QiIl4q394PI8Bex+Be2iR9Yu6IdHpcG+5AuaThs3
+        Y/1mtNvEsMZfOcmZ0zhwHdLvtUzp61iZ6Yb8Gl7PRszGbH9muB3gGr+cq8K/D+UQV5S9fb1W8RjWM
+        npVhifUEg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60632)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i9ZLv-0007hn-AA; Sun, 15 Sep 2019 19:34:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i9ZLl-0007zu-3k; Sun, 15 Sep 2019 19:34:17 +0100
+Date:   Sun, 15 Sep 2019 19:34:17 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     kstewart@linuxfoundation.org, gustavo@embeddedor.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>, linux-mm@kvack.org,
+        sakari.ailus@linux.intel.com, bhelgaas@google.com,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm: fix page faults in do_alignment
+Message-ID: <20190915183416.GF25745@shell.armlinux.org.uk>
+References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
+ <20190830133522.GZ13294@shell.armlinux.org.uk>
+ <87d0gmwi73.fsf@x220.int.ebiederm.org>
+ <20190830203052.GG13294@shell.armlinux.org.uk>
+ <87y2zav01z.fsf@x220.int.ebiederm.org>
+ <20190830222906.GH13294@shell.armlinux.org.uk>
+ <87mufmioqv.fsf@x220.int.ebiederm.org>
+ <20190906151759.GM13294@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20190906151759.GM13294@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 10:32:15AM -0700, Linus Torvalds wrote:
->  * We will block for at most 15 seconds at a time, and if called
->  * sequentially will decrease the blocking amount so that we'll
->  * block for at most 30s total - and if people continue to ask
->  * for blocking, at that point we'll just return whatever random
->  * state we have acquired.
+On Fri, Sep 06, 2019 at 04:17:59PM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Sep 02, 2019 at 12:36:56PM -0500, Eric W. Biederman wrote:
+> > Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+> > 
+> > > On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
+> > >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+> > >> 
+> > >> > On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
+> > >> >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+> > >> >> 
+> > >> >> > On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
+> > >> >> >> The function do_alignment can handle misaligned address for user and
+> > >> >> >> kernel space. If it is a userspace access, do_alignment may fail on
+> > >> >> >> a low-memory situation, because page faults are disabled in
+> > >> >> >> probe_kernel_address.
+> > >> >> >> 
+> > >> >> >> Fix this by using __copy_from_user stead of probe_kernel_address.
+> > >> >> >> 
+> > >> >> >> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
+> > >> >> >> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> > >> >> >
+> > >> >> > NAK.
+> > >> >> >
+> > >> >> > The "scheduling while atomic warning in alignment handling code" is
+> > >> >> > caused by fixing up the page fault while trying to handle the
+> > >> >> > mis-alignment fault generated from an instruction in atomic context.
+> > >> >> >
+> > >> >> > Your patch re-introduces that bug.
+> > >> >> 
+> > >> >> And the patch that fixed scheduling while atomic apparently introduced a
+> > >> >> regression.  Admittedly a regression that took 6 years to track down but
+> > >> >> still.
+> > >> >
+> > >> > Right, and given the number of years, we are trading one regression for
+> > >> > a different regression.  If we revert to the original code where we
+> > >> > fix up, we will end up with people complaining about a "new" regression
+> > >> > caused by reverting the previous fix.  Follow this policy and we just
+> > >> > end up constantly reverting the previous revert.
+> > >> >
+> > >> > The window is very small - the page in question will have had to have
+> > >> > instructions read from it immediately prior to the handler being entered,
+> > >> > and would have had to be made "old" before subsequently being unmapped.
+> > >> 
+> > >> > Rather than excessively complicating the code and making it even more
+> > >> > inefficient (as in your patch), we could instead retry executing the
+> > >> > instruction when we discover that the page is unavailable, which should
+> > >> > cause the page to be paged back in.
+> > >> 
+> > >> My patch does not introduce any inefficiencies.  It onlys moves the
+> > >> check for user_mode up a bit.  My patch did duplicate the code.
+> > >> 
+> > >> > If the page really is unavailable, the prefetch abort should cause a
+> > >> > SEGV to be raised, otherwise the re-execution should replace the page.
+> > >> >
+> > >> > The danger to that approach is we page it back in, and it gets paged
+> > >> > back out before we're able to read the instruction indefinitely.
+> > >> 
+> > >> I would think either a little code duplication or a function that looks
+> > >> at user_mode(regs) and picks the appropriate kind of copy to do would be
+> > >> the best way to go.  Because what needs to happen in the two cases for
+> > >> reading the instruction are almost completely different.
+> > >
+> > > That is what I mean.  I'd prefer to avoid that with the large chunk of
+> > > code.  How about instead adding a local replacement for
+> > > probe_kernel_address() that just sorts out the reading, rather than
+> > > duplicating all the code to deal with thumb fixup.
+> > 
+> > So something like this should be fine?
+> > 
+> > Jing Xiangfeng can you test this please?  I think this fixes your issue
+> > but I don't currently have an arm development box where I could test this.
+> 
+> Sorry, only just got around to this again.  What I came up with is this:
 
-I think that the exponential decay will either not be used or
-be totally used, so in practice you'll always end up with 0 or
-30s depending on the entropy situation, because I really do not
-see any valid reason for entropy to suddenly start to appear
-after 15s if it didn't prior to this. As such I do think that
-a single timeout should be enough.
+I've heard nothing, so I've done nothing...
 
-In addition, since you're leaving the door open to bikeshed around
-the timeout valeue, I'd say that while 30s is usually not huge in a
-desktop system's life, it actually is a lot in network environments
-when it delays a switchover. It can cause other timeouts to occur
-and leave quite a long embarrassing black out. I'd guess that a max
-total wait time of 2-3s should be OK though since application timeouts
-rarely are lower due to TCP generally starting to retransmit at 3s.
-And even in 3s we're supposed to see quite some interrupts or it's
-unlikely that much more will happen between 3 and 30s.
+> 8<===
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+> Subject: [PATCH] ARM: mm: fix alignment
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  arch/arm/mm/alignment.c | 44 ++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 36 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+> index 6067fa4de22b..529f54d94709 100644
+> --- a/arch/arm/mm/alignment.c
+> +++ b/arch/arm/mm/alignment.c
+> @@ -765,6 +765,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
+>  	return NULL;
+>  }
+>  
+> +static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
+> +{
+> +	u32 instr = 0;
+> +	int fault;
+> +
+> +	if (user_mode(regs))
+> +		fault = get_user(instr, ip);
+> +	else
+> +		fault = probe_kernel_address(ip, instr);
+> +
+> +	*inst = __mem_to_opcode_arm(instr);
+> +
+> +	return fault;
+> +}
+> +
+> +static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
+> +{
+> +	u16 instr = 0;
+> +	int fault;
+> +
+> +	if (user_mode(regs))
+> +		fault = get_user(instr, ip);
+> +	else
+> +		fault = probe_kernel_address(ip, instr);
+> +
+> +	*inst = __mem_to_opcode_thumb16(instr);
+> +
+> +	return fault;
+> +}
+> +
+>  static int
+>  do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  {
+> @@ -772,10 +802,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  	unsigned long instr = 0, instrptr;
+>  	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
+>  	unsigned int type;
+> -	unsigned int fault;
+>  	u16 tinstr = 0;
+>  	int isize = 4;
+>  	int thumb2_32b = 0;
+> +	int fault;
+>  
+>  	if (interrupts_enabled(regs))
+>  		local_irq_enable();
+> @@ -784,15 +814,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  
+>  	if (thumb_mode(regs)) {
+>  		u16 *ptr = (u16 *)(instrptr & ~1);
+> -		fault = probe_kernel_address(ptr, tinstr);
+> -		tinstr = __mem_to_opcode_thumb16(tinstr);
+> +
+> +		fault = alignment_get_thumb(regs, ptr, &tinstr);
+>  		if (!fault) {
+>  			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
+>  			    IS_T32(tinstr)) {
+>  				/* Thumb-2 32-bit */
+> -				u16 tinst2 = 0;
+> -				fault = probe_kernel_address(ptr + 1, tinst2);
+> -				tinst2 = __mem_to_opcode_thumb16(tinst2);
+> +				u16 tinst2;
+> +				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
+>  				instr = __opcode_thumb32_compose(tinstr, tinst2);
+>  				thumb2_32b = 1;
+>  			} else {
+> @@ -801,8 +830,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  			}
+>  		}
+>  	} else {
+> -		fault = probe_kernel_address((void *)instrptr, instr);
+> -		instr = __mem_to_opcode_arm(instr);
+> +		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
+>  	}
+>  
+>  	if (fault) {
+> -- 
+> 2.7.4
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-If the setting had to be made user-changeable then it could make
-sense to let it be overridden on the kernel's command line though
-I don't think that it should be necessary with a low enough value.
-
-Thanks,
-Willy
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
