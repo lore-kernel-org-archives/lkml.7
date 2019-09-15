@@ -2,147 +2,218 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A860CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A2EC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7641F214DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jrUraqf0"
+	by mail.kernel.org (Postfix) with ESMTP id C09AB214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568559555;
+	bh=eUQAxrahCh1DmNEfUt4p7VrcE9y8mI9Wncke58vJ3XU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SP/4W/6cDPqrqbZjCseYsgtPZqzxYB9rg+V9tljUBWg28GnHb2GZtA2wNKZ5RCGW2
+	 OpCVc4Y64AqLLgqvI3Yf6rsoc2fHojs8g9PtnhOIow1LGbuTaubOb9A0+VgHXHBSFr
+	 TXa8O3Mv4gC83b9tHm4CUM3OBSJTjirki493AxKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbfIOO7B (ORCPT
+        id S1731796AbfIOO7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 10:59:01 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38382 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfIOO7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 10:59:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T41zXqwFTZnFv5jJR7KFp66Sn49JT2O0ng3vIKC9TcM=; b=jrUraqf0BunV/bVTalwUfGsXl
-        kQN3xs2aAa4h3ASgd5vPy4H9TqN0u4LkJD7be6oTxYi7FHmBXvzxVNO8tuS7XegMnK458PkR57bCS
-        oKl26FkLNQTwUHL6UaNFWL9PNPQvmEIEzj7dQUvillQflEVPPzvebPUi7UjEG1WTW49laJEfjZ0oN
-        iDRmfmbNvvNPw65dblbxRAwApS3ln7KCJeF3PTKvwVgpqBZOg+ONJre5AZzY8Q1Nqyd/7HHefXAFl
-        zGkufuh+fR/7WgKO4mjErl31rw1c5GVJ9vza6nnm26tryeIc97eV+x1A9QZaEMPduVhakP79Ztcr0
-        Xl7MeFkbg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39856)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i9VzI-0006t2-Fj; Sun, 15 Sep 2019 15:58:56 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i9VzA-0007rp-Gw; Sun, 15 Sep 2019 15:58:44 +0100
-Date:   Sun, 15 Sep 2019 15:58:44 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        tinywrkb <tinywrkb@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190915145844.GE25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190915140639.GC25745@shell.armlinux.org.uk>
- <20190915141552.GD25745@shell.armlinux.org.uk>
- <20190915144252.GA17261@lunn.ch>
+        Sun, 15 Sep 2019 10:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbfIOO7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 10:59:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 996F520650;
+        Sun, 15 Sep 2019 14:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568559550;
+        bh=eUQAxrahCh1DmNEfUt4p7VrcE9y8mI9Wncke58vJ3XU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0XVEvftYsEuJbZl5S656bIcIZ+CZNp9Iv+mumjmeZOfRJaNJ1hmsK5Kmlk8NeM+NM
+         PMZJ6enCcKDHQgYGUGbQh4tYwDs//574VuUsfG2TU007BWB140uCwgI+Pq4kP2lW0l
+         j1TJXKNXAkfUF3JcdQvFw4fUQxql7fYj6zMuY3tg=
+Date:   Sun, 15 Sep 2019 15:59:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, peterz@infradead.org
+Subject: Re: [RFC][PATCH] pipe: Convert ring to head/tail
+Message-ID: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
+References: <25289.1568379639@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190915144252.GA17261@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <25289.1568379639@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 04:42:52PM +0200, Andrew Lunn wrote:
-> > > OF: fdt: Machine model: SolidRun HummingBoard Solo/DualLite
-> > > ...
-> > > # ethtool eth0
-> > > Settings for eth0:
-> > >         Supported ports: [ TP MII ]
-> > >         Supported link modes:   10baseT/Half 10baseT/Full
-> > >                                 100baseT/Half 100baseT/Full
-> > >                                 1000baseT/Full
-> > >         Supported pause frame use: Symmetric
-> > >         Supports auto-negotiation: Yes
-> > >         Supported FEC modes: Not reported
-> > >         Advertised link modes:  10baseT/Half 10baseT/Full
-> > >                                 100baseT/Half 100baseT/Full
-> > >                                 1000baseT/Full
-> > >         Advertised pause frame use: Symmetric
-> > >         Advertised auto-negotiation: Yes
-> > >         Advertised FEC modes: Not reported
-> > >         Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > >                                              100baseT/Half 100baseT/Full
-> > >                                              1000baseT/Full
-> > >         Link partner advertised pause frame use: Symmetric
-> > >         Link partner advertised auto-negotiation: Yes
-> > >         Link partner advertised FEC modes: Not reported
-> > >         Speed: 1000Mb/s
-> > >         Duplex: Full
-> > >         Port: MII
-> > >         PHYAD: 0
-> > >         Transceiver: internal
-> > >         Auto-negotiation: on
-> > >         Supports Wake-on: d
-> > >         Wake-on: d
-> > >         Link detected: yes
+Hi David, [+Peter]
+
+I have a few drive-by comments on the ordering side of things. See below.
+
+On Fri, Sep 13, 2019 at 02:00:39PM +0100, David Howells wrote:
+> Convert pipes to use head and tail pointers for the buffer ring rather than
+> pointer and length as the latter requires two atomic ops to update (or a
+> combined op) whereas the former only requires one.
 > 
-> > Note that the FEC does *not* support 1000baseT/Half.
+>  (1) The head pointer is the point at which production occurs and points to
+>      the slot in which the next buffer will be placed.  This is equivalent
+>      to pipe->curbuf + pipe->nrbufs.
 > 
-> Hi Russell
+>      The head pointer belongs to the write-side.
 > 
-> fec_main.c has code to mask it out. And it is not listed in the modes
-> you have above. So as you say, this all looks to be working.
+>  (2) The tail pointer is the point at which consumption occurs.  It points
+>      to the next slot to be consumed.  This is equivalent to pipe->curbuf.
 > 
-> I'm wondering if there is an older variant of the hardware with
-> 100Mbps magnetics, and the boot loader is setting something in the
-> PHY? It could be we are now stomping over that?
+>      The tail pointer belongs to the read-side.
+> 
+>  (3) head and tail are allowed to run to UINT_MAX and wrap naturally.  They
+>      are only masked off when the array is being accessed, e.g.:
+> 
+>         pipe->bufs[head & mask]
+> 
+>      This means that it is not necessary to have a dead slot in the ring as
+>      head == tail isn't ambiguous.
+> 
+>  (4) The ring is empty if head == tail.
+> 
+>  (5) The occupancy of the ring is head - tail.
+> 
+>  (6) The amount of space in the ring is (tail + pipe->buffers) - head.
+> 
+>  (7) The ring is full if head == (tail + pipe->buffers) or
+>      head - tail == pipe->buffers.
+> 
+> Barriers are also inserted, wrapped in inline functions:
+> 
+>  (1) unsigned int tail = pipe_get_tail_for_write(pipe);
+> 
+>      Read the tail pointer from the write-side.  This acts as a barrier to
+>      order the tail read before the data in the ring is overwritten.  It
+>      also prevents the compiler from re-reading the pointer.
+> 
+>  (2) unsigned int head = pipe_get_head_for_read(pipe);
+> 
+>      Read the head pointer from the read-side.  This acts as a barrier to
+>      order the head read before the data read.  It also prevents the
+>      compiler from re-reading the pointer.
+> 
+>  (3) pipe_post_read_barrier(pipe, unsigned int tail);
+> 
+>      Update the tail pointer from the read-side.  This acts as a barrier to
+>      order the pointer update after the data read.  The consumed data slot
+>      must not be touched after this function.
+> 
+>  (4) pipe_post_write_barrier(pipe, unsigned int head);
+> 
+>      Update the head pointer from the write-side.  This acts as a barrier
+>      to order the pointer update after the data write.  The produced data
+>      slot should not normally be touched after this function[*].
+> 
+>      [*] Unless pipe->mutex is held.
+> ---
+>  fs/fuse/dev.c             |   23 ++-
+>  fs/pipe.c                 |  154 ++++++++++++++++----------
+>  fs/splice.c               |  161 +++++++++++++++++----------
+>  include/linux/pipe_fs_i.h |   76 ++++++++++++-
+>  include/linux/uio.h       |    4 
+>  lib/iov_iter.c            |  268 ++++++++++++++++++++++++++--------------------
+>  6 files changed, 438 insertions(+), 248 deletions(-)
 
-Not according to Rabeeh, the SolidRun CTO:
+[...]
 
-< rabeeh> all i.MX6 based machines from SolidRun are 1Gbps phys
-< rabeeh> i thought that we fixed that information, documentation wise;
-          but seems not
+> diff --git a/fs/pipe.c b/fs/pipe.c
+> index 8a2ab2f974bd..aa410ee0f423 100644
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -43,10 +43,10 @@ unsigned long pipe_user_pages_hard;
+>  unsigned long pipe_user_pages_soft = PIPE_DEF_BUFFERS * INR_OPEN_CUR;
+>  
+>  /*
+> - * We use a start+len construction, which provides full use of the 
+> + * We use a start+len construction, which provides full use of the
+>   * allocated memory.
+>   * -- Florian Coosmann (FGC)
+> - * 
+> + *
+>   * Reads with count = 0 should always return 0.
+>   * -- Julian Bradfield 1999-06-07.
+>   *
+> @@ -285,10 +285,15 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+>  	ret = 0;
+>  	__pipe_lock(pipe);
+>  	for (;;) {
+> -		int bufs = pipe->nrbufs;
+> -		if (bufs) {
+> -			int curbuf = pipe->curbuf;
+> -			struct pipe_buffer *buf = pipe->bufs + curbuf;
+> +		/* Barrier: head belongs to the write side, so order reading
+> +		 * the data after reading the head pointer.
+> +		 */
+> +		unsigned int head = READ_ONCE(pipe->head);
 
-Even the Carrier1 board that pre-dates Hummingboards had the AR8035
-with 1G magnetics.
+Hmm, I don't understand this. Since READ_ONCE() doesn't imply a barrier,
+how are you enforcing the read-read ordering in the CPU?
 
-The schematics I have for the Cubox-i state that the RJ45 jack (which
-contains the magnetics) is to be "Gigabit".
+> @@ -104,6 +104,76 @@ struct pipe_buf_operations {
+>  	bool (*get)(struct pipe_inode_info *, struct pipe_buffer *);
+>  };
+>  
+> +/**
+> + * pipe_get_tail_for_write - Get pipe buffer tail pointer for write-side use
+> + * @pipe: The pipe in question
+> + *
+> + * Get the tail pointer for use in the write-side code.  This may need to
+> + * insert a barrier against the reader to order reading the tail pointer
+> + * against the reader reading the buffer.
 
-There was a 10/100M option for the microsom, which is selected by where
-a resistor pack is fitted, having the effect of configuring the AR8035
-differently.  I seem to recall the 10/100M option in the early days was
-to use a different Atheros PHY.
+What is the purpose of saying "This may need to insert a barrier"? Can this
+function be overridden or something?
 
-However, I'm not aware of 10/100M option making it into production, and
-Rabeeh's comment (who was involved in the design) confirms that.
+> + */
+> +static inline unsigned int pipe_get_tail_for_write(struct pipe_inode_info *pipe)
+> +{
+> +	return READ_ONCE(pipe->tail);
+> +}
+> +
+> +/**
+> + * pipe_post_read_barrier - Set pipe buffer tail pointer in the read-side
+> + * @pipe: The pipe in question
+> + * @tail: The new tail pointer
+> + *
+> + * Update the tail pointer in the read-side code.  This inserts a barrier
+> + * against the writer such that the data write is ordered before the tail
+> + * pointer update.
+> + */
+> +static inline void pipe_post_read_barrier(struct pipe_inode_info *pipe,
+> +					  unsigned int tail)
+> +{
+> +	smp_store_release(&pipe->tail, tail);
+> +}
+> +
+> +/**
+> + * pipe_get_head_for_read - Get pipe buffer head pointer for read-side use
+> + * @pipe: The pipe in question
+> + *
+> + * Get the head pointer for use in the read-side code.  This inserts a barrier
+> + * against the reader such that the head pointer is read before the data it
+> + * points to.
+> + */
+> +static inline unsigned int pipe_get_head_for_read(struct pipe_inode_info *pipe)
+> +{
+> +	return READ_ONCE(pipe->head);
+> +}
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Saying that "This inserts a barrier" feels misleading, because READ_ONCE()
+doesn't do that.
+
+Will
