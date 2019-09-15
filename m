@@ -2,254 +2,117 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DDDC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B2DC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262F5214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568568758;
-	bh=XGWIjewTbbEQGV/Hr703WPtEGI7ZOCRmBTJmzeiH2B0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oB1QBR6b+kLg7bkmXaOTPiY09LidWsCvzLogw9uYgu1uj66tXqQlBG/WstXJgFyT2
-	 n2/m8IyjD5YufSVKs8vclbccN92jpJGEx5cPaGY/+SVqEUoLynk3UQ27qLIOv84l9B
-	 zMHjGk2UoF49CatxuK9ISqzh2FaEH42RdZUggFbw=
+	by mail.kernel.org (Postfix) with ESMTP id B4FD5216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AuCxOItx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfIORch (ORCPT
+        id S1727802AbfIOReq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:32:37 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33465 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfIORcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:32:36 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so31611704ljd.0
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IMvYCEPcbJQk6uvHg/uZleqaQ0GLtqeaowrky7QhAac=;
-        b=SQ3SJZHA20v7FW42MRvShirFBRekszCXF96ECgcq+9WaPqiijSKYutTTfwgdrr6FsE
-         wFZs2V4Wn+lNeUF5+rv38fAB/zZTGSYQr0Q3p8oQcrmREZW6K1bUACKBxqUIj8LLs5mC
-         nBxcb+jXtvmMgfVNdNQ0XXUEAVg7FT0LXsw2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IMvYCEPcbJQk6uvHg/uZleqaQ0GLtqeaowrky7QhAac=;
-        b=CPzO2Nng3AVBJVatx5f2wgkUTVpU9lfvDIKZRwH5ix5cNrkFvVvrqGguVAeg/GuVZM
-         p9b6kIvCDJjpWTBU5bapIB3LZXoucx7qhFFAuTr0Ho7HnE8G01v8uP0+hB/TjKXEh9Zo
-         ohKDiLBJnE70S9x1VC+QC6EveahYQCL5hbPbDltMWRgZDJpmnmbpwif2tODiE7iYCoI2
-         rNJp5hbPIu+AN9cGFGQZAqdALviPZnLz2JwB0MI9/wtrMUMlF7hy4L0LcUB8lKDbHnMq
-         hmE8thdM5mgLgg9pml+i/3yUJ3tXruHZJN35gdMbX5TLzh6zIqPDvtRf1pvLS6t+FSLo
-         U/Iw==
-X-Gm-Message-State: APjAAAUh/tvRT8DhO9zMKza9tV8T4TB2a/jrFY6ln8VayTA1bPXI8uYT
-        o165zr6R0iz7maD947Kr4RSfKQyRyvk=
-X-Google-Smtp-Source: APXvYqx6rgpK9iyBq/va4thzPoMOHii4/HZIpou6Cqw2GK3F04keh54OEy/6+kQC8vv9bC2sI7FkAQ==
-X-Received: by 2002:a2e:9a88:: with SMTP id p8mr3775124lji.86.1568568753186;
-        Sun, 15 Sep 2019 10:32:33 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id y204sm3143410lfa.64.2019.09.15.10.32.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2019 10:32:32 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id u26so7912450lfg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:32:31 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr11144104lfn.52.1568568751509;
- Sun, 15 Sep 2019 10:32:31 -0700 (PDT)
+        Sun, 15 Sep 2019 13:34:46 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:45134 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727140AbfIORep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 13:34:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RH3Ef5d/v7AONt/7OCwGtfOGl/ZPOxk/BNLO7+WUrvc=; b=AuCxOItxAXXy3fGbF9/x8IzmSv
+        tGCuMHC05jD9iNfKoMUQAl2DaePaOtKeIV2WoW4pKb9DOiNSCpZGbLl6lEiZPYmbJ53XsWH/0niWw
+        /PlR7DJNY3//d+JYjmNl5bFRFeDib33HA0PqO6TzET64gY137rJbQ53i/585fHhMSLK4=;
+Received: from p200300ccff4ebd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff4e:bd00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1i9YPu-0006G5-NN; Sun, 15 Sep 2019 19:34:31 +0200
+Date:   Sun, 15 Sep 2019 19:34:29 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>, lee.jones@linaro.org,
+        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, dmurphy@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
+ pin
+Message-ID: <20190915193429.5feef312@aktux>
+In-Reply-To: <20190915165204.GA4857@bug>
+References: <20190908203704.30147-1-andreas@kemnade.info>
+        <20190908203704.30147-2-andreas@kemnade.info>
+        <20190909105729.w5552rtop7rhghy2@holly.lan>
+        <20190909221349.46ca5a1f@aktux>
+        <20190910102156.vmprsjebmlphkv34@holly.lan>
+        <20190910210648.3594912d@kemnade.info>
+        <20190915165204.GA4857@bug>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
-In-Reply-To: <20190915052242.GG19710@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 15 Sep 2019 10:32:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
-Message-ID: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Content-Type: multipart/mixed; boundary="0000000000003d7eca05929adfe4"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003d7eca05929adfe4
-Content-Type: text/plain; charset="UTF-8"
+Hi,
 
-[ Added Lennart, who was active in the other thread ]
+On Sun, 15 Sep 2019 18:52:04 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
-On Sat, Sep 14, 2019 at 10:22 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> Thus, add an optional configuration option which stops getrandom(2)
-> from blocking, but instead returns "best efforts" randomness, which
-> might not be random or secure at all.
+> Hi!
+> 
+> > > > > Is this needed?
+> > > > > 
+> > > > > This is a remove path, not a power management path, and we have no idea
+> > > > > what the original status of the pin was anyway?
+> > > > >     
+> > > > 
+> > > > Looking at Ishdn on page 5 of the datasheet, switching it off everytime
+> > > > possible seems not needed. We would need to call chip_init() everytime
+> > > > we enable the gpio or live with default values.
+> > > > Therefore I did decide to not put it into any power management path.
+> > > > But switching it on and not switching it off feels so unbalanced.     
+> > > 
+> > > Either the power consumed by the controller when strings aren't lit up
+> > > matters, in which case the driver should implement proper power
+> > > management or it doesn't matter and changing the pin state isn't needed.
+> > > 
+> > > I'm happy with either of the above but this looks like a third way,
+> > > where eager users could hack in a bit of extra power management by
+> > > forcing drivers to unbind. 
+> > >   
+> > I think I will take the simple way. I am quite sure that the power
+> > consumption with HWEN on and leds off does not matter. If someone
+> > later comes up and finds out that I misread the datasheet, things
+> > are prepared to be improved.  
+> 
+> Dunno.. if the power consumption does not matter, why does the chip have the enable
+> pin in the first place, and why do we bother supporting it? We could hardcode the
+> pin to enabled as well..
 
-So I hate having a config option for something like this.
+Well, I agree having the pin and no power saving seems not to make
+sense. Two points here: I think it is a good idea to properly describe
+the hardware in the devicetree. What to do with that information is
+another thing.
+A problem is that at the moment I cannot easily measure consumption
+of the chip. Hmm, even testing a solution which disables the pin while
+the chip is not in use, is not so easy.
+But wait...
+I could use a wrong gpio but one that I can easily monitor to check if
+the pin is toggled. And set the real pin to high by some other means.
+And then use the real gpio to check if timings are correct (waiting
+enough after enabling the chip, e.g.
 
-How about this attached patch instead? It only changes the waiting
-logic, and I'll quote the comment in full, because I think that
-explains not only the rationale, it explains every part of the patch
-(and is most of the patch anyway):
-
- * We refuse to wait very long for a blocking getrandom().
- *
- * The crng may not be ready during boot, but if you ask for
- * blocking random numbers very early, there is no guarantee
- * that you'll ever get any timely entropy.
- *
- * If you are sure you need entropy and that you can generate
- * it, you need to ask for non-blocking random state, and then
- * if that fails you must actively _do_something_ that causes
- * enough system activity, perhaps asking the user to type
- * something on the keyboard.
- *
- * Just asking for blocking random numbers is completely and
- * fundamentally wrong, and the kernel will not play that game.
- *
- * We will block for at most 15 seconds at a time, and if called
- * sequentially will decrease the blocking amount so that we'll
- * block for at most 30s total - and if people continue to ask
- * for blocking, at that point we'll just return whatever random
- * state we have acquired.
- *
- * This will also complain loudly if the timeout happens, to let
- * the distribution or system admin know about the problem.
- *
- * The process that gets the -EAGAIN will hopefully also log the
- * error, to raise awareness that there may be use of random
- * numbers without sufficient entropy.
-
-Hmm? No strange behavior. No odd config variables. A bounded total
-boot-time wait of 30s (which is a completely random number, but I
-claimed it as the "big red button" time).
-
-And if you only do it once and fall back to something else it will
-only wait for 15s, and you'll have your error value so that you can
-log it properly.
-
-Yes, a single boot-time wait of 15s at boot is still "darn annoying",
-but it likely
-
- (a) isn't so long that people consider it a boot failure and give up
-(but hopefully annoying enough that they'll report it)
-
- (b) long enough that *if* the thing that is waiting is not actually
-blocking the boot sequence, the non-blocked part of the boot sequence
-should have time to do sufficient IO to get better randomness.
-
-So (a) is the "the system is still usable" part. While (b) is the
-"give it a chance, and even if it fails and you fall back on urandom
-or whatever, you'll actually be getting good randomness even if we
-can't perhaps _guarantee_ entropy".
-
-Also, if you have some user that wants to do the old-timey ssh-keygen
-thing with user input etc, we now have a documented way to do that:
-just do the nonblocking thing, and then make really really sure that
-you actually have something that generates more entropy if that
-nonblocking thing returns EAGAIN. But it's also very clear that at
-that point the program that wants this entropy guarantee has to _work_
-for it.
-
-Because just being lazy and say "block" without any entropy will
-return EAGAIN for a (continually decreasing) while, but then at some
-point stop and say "you're broken", and just give you the urandom
-data.
-
-Because if you really do nothing at all, and there is no activity
-what-so-ever for 15s because you blocked the boot, then I claim that
-it's better to return an error than to wait forever. And if you ignore
-the error and just retry, eventually we'll do the fallback for you.
-
-Of course, if you have something like rdrand, and told us you trust
-it, none of this matters at all, since we'll have initialized the pool
-long before.
-
-So this is unconditional, but it's basically "unconditionally somewhat
-flexibly reasonable". It should only ever trigger for the case where
-the boot sequence was fundamentally broken. And it will complain
-loudly (both at a kernel level, and hopefully at a systemd journal
-level too) if it ever triggers.
-
-And hey, if some distro wants to then revert this because they feel
-uncomfortable with this, that's now _their_ problem, not the problem
-of the upstream kernel. The upstream kernel tries to do something that
-I think is arguably fairly reasonable in all situations.
-
-                 Linus
-
---0000000000003d7eca05929adfe4
-Content-Type: application/x-patch; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k0l8lgqd0>
-X-Attachment-Id: f_k0l8lgqd0
-
-IGRyaXZlcnMvY2hhci9yYW5kb20uYyB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKyks
-IDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL3JhbmRvbS5jIGIvZHJp
-dmVycy9jaGFyL3JhbmRvbS5jCmluZGV4IDVkNWVhNGNlMTQ0Mi4uMGQ3ZGM4NmUwZjYwIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2NoYXIvcmFuZG9tLmMKKysrIGIvZHJpdmVycy9jaGFyL3JhbmRvbS5j
-CkBAIC0yMTE4LDYgKzIxMTgsNTUgQEAgY29uc3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyB1cmFu
-ZG9tX2ZvcHMgPSB7CiAJLmxsc2VlayA9IG5vb3BfbGxzZWVrLAogfTsKIAorLyoKKyAqIFdlIHJl
-ZnVzZSB0byB3YWl0IHZlcnkgbG9uZyBmb3IgYSBibG9ja2luZyBnZXRyYW5kb20oKS4KKyAqCisg
-KiBUaGUgY3JuZyBtYXkgbm90IGJlIHJlYWR5IGR1cmluZyBib290LCBidXQgaWYgeW91IGFzayBm
-b3IKKyAqIGJsb2NraW5nIHJhbmRvbSBudW1iZXJzIHZlcnkgZWFybHksIHRoZXJlIGlzIG5vIGd1
-YXJhbnRlZQorICogdGhhdCB5b3UnbGwgZXZlciBnZXQgYW55IHRpbWVseSBlbnRyb3B5LgorICoK
-KyAqIElmIHlvdSBhcmUgc3VyZSB5b3UgbmVlZCBlbnRyb3B5IGFuZCB0aGF0IHlvdSBjYW4gZ2Vu
-ZXJhdGUKKyAqIGl0LCB5b3UgbmVlZCB0byBhc2sgZm9yIG5vbi1ibG9ja2luZyByYW5kb20gc3Rh
-dGUsIGFuZCB0aGVuCisgKiBpZiB0aGF0IGZhaWxzIHlvdSBtdXN0IGFjdGl2ZWx5IF9kb19zb21l
-dGhpbmdfIHRoYXQgY2F1c2VzCisgKiBlbm91Z2ggc3lzdGVtIGFjdGl2aXR5LCBwZXJoYXBzIGFz
-a2luZyB0aGUgdXNlciB0byB0eXBlCisgKiBzb21ldGhpbmcgb24gdGhlIGtleWJvYXJkLgorICoK
-KyAqIEp1c3QgYXNraW5nIGZvciBibG9ja2luZyByYW5kb20gbnVtYmVycyBpcyBjb21wbGV0ZWx5
-IGFuZAorICogZnVuZGFtZW50YWxseSB3cm9uZywgYW5kIHRoZSBrZXJuZWwgd2lsbCBub3QgcGxh
-eSB0aGF0IGdhbWUuCisgKgorICogV2Ugd2lsbCBibG9jayBmb3IgYXQgbW9zdCAxNSBzZWNvbmRz
-IGF0IGEgdGltZSwgYW5kIGlmIGNhbGxlZAorICogc2VxdWVudGlhbGx5IHdpbGwgZGVjcmVhc2Ug
-dGhlIGJsb2NraW5nIGFtb3VudCBzbyB0aGF0IHdlJ2xsCisgKiBibG9jayBmb3IgYXQgbW9zdCAz
-MHMgdG90YWwgLSBhbmQgaWYgcGVvcGxlIGNvbnRpbnVlIHRvIGFzaworICogZm9yIGJsb2NraW5n
-LCBhdCB0aGF0IHBvaW50IHdlJ2xsIGp1c3QgcmV0dXJuIHdoYXRldmVyIHJhbmRvbQorICogc3Rh
-dGUgd2UgaGF2ZSBhY3F1aXJlZC4KKyAqCisgKiBUaGlzIHdpbGwgYWxzbyBjb21wbGFpbiBsb3Vk
-bHkgaWYgdGhlIHRpbWVvdXQgaGFwcGVucywgdG8gbGV0CisgKiB0aGUgZGlzdHJpYnV0aW9uIG9y
-IHN5c3RlbSBhZG1pbiBrbm93IGFib3V0IHRoZSBwcm9ibGVtLgorICoKKyAqIFRoZSBwcm9jZXNz
-IHRoYXQgZ2V0cyB0aGUgLUVBR0FJTiB3aWxsIGhvcGVmdWxseSBhbHNvIGxvZyB0aGUKKyAqIGVy
-cm9yLCB0byByYWlzZSBhd2FyZW5lc3MgdGhhdCB0aGVyZSBtYXkgYmUgdXNlIG9mIHJhbmRvbQor
-ICogbnVtYmVycyB3aXRob3V0IHN1ZmZpY2llbnQgZW50cm9weS4KKyAqLworc3RhdGljIGludCBn
-ZXRyYW5kb21fd2FpdCh2b2lkKQoreworCXN0YXRpYyB1bnNpZ25lZCBpbnQgZ2V0cmFuZG9tX3Rp
-bWVvdXQgPSAxNSpIWjsKKwl1bnNpZ25lZCBpbnQgdGltZW91dCA9IFJFQURfT05DRShnZXRyYW5k
-b21fdGltZW91dCk7CisJaW50IHJldDsKKworCS8qICJBdCBzb21lIHBvaW50IHlvdSBqdXN0IGhh
-dmUgdG8gZ2l2ZSB1cCBvbiBicm9rZW4gYm9vdCBzY3JpcHRzIiAqLworCWlmICghdGltZW91dCkK
-KwkJcmV0dXJuIDA7CisKKwlyZXQgPSB3YWl0X2V2ZW50X2ludGVycnVwdGlibGVfdGltZW91dChj
-cm5nX2luaXRfd2FpdCwgY3JuZ19yZWFkeSgpLCB0aW1lb3V0KTsKKwkvKiBTdWNjZXNzICg+MCkg
-b3IgaW50ZXJydXB0ZWQgKDwwKT8gKi8KKwlpZiAobGlrZWx5KHJldCkpCisJCXJldHVybiByZXQg
-PiAwID8gMCA6IHJldDsKKworCVdSSVRFX09OQ0UoZ2V0cmFuZG9tX3RpbWVvdXQsIHRpbWVvdXQg
-Pj4gMSk7CisJV0FSTl9PTkNFKDEsICJnZXRyYW5kb20oKSB0aW1lZCBvdXQgd2l0aCBubyBlbnRy
-b3B5Iik7CisJcmV0dXJuIC1FQUdBSU47Cit9CisKIFNZU0NBTExfREVGSU5FMyhnZXRyYW5kb20s
-IGNoYXIgX191c2VyICosIGJ1Ziwgc2l6ZV90LCBjb3VudCwKIAkJdW5zaWduZWQgaW50LCBmbGFn
-cykKIHsKQEAgLTIxMzIsMTEgKzIxODEsMTEgQEAgU1lTQ0FMTF9ERUZJTkUzKGdldHJhbmRvbSwg
-Y2hhciBfX3VzZXIgKiwgYnVmLCBzaXplX3QsIGNvdW50LAogCWlmIChmbGFncyAmIEdSTkRfUkFO
-RE9NKQogCQlyZXR1cm4gX3JhbmRvbV9yZWFkKGZsYWdzICYgR1JORF9OT05CTE9DSywgYnVmLCBj
-b3VudCk7CiAKLQlpZiAoIWNybmdfcmVhZHkoKSkgeworCWlmICh1bmxpa2VseSghY3JuZ19yZWFk
-eSgpKSkgewogCQlpZiAoZmxhZ3MgJiBHUk5EX05PTkJMT0NLKQogCQkJcmV0dXJuIC1FQUdBSU47
-Ci0JCXJldCA9IHdhaXRfZm9yX3JhbmRvbV9ieXRlcygpOwotCQlpZiAodW5saWtlbHkocmV0KSkK
-KwkJcmV0ID0gZ2V0cmFuZG9tX3dhaXQoKTsKKwkJaWYgKHJldCkKIAkJCXJldHVybiByZXQ7CiAJ
-fQogCXJldHVybiB1cmFuZG9tX3JlYWQoTlVMTCwgYnVmLCBjb3VudCwgTlVMTCk7Cg==
---0000000000003d7eca05929adfe4--
+Regards,
+Andreas
