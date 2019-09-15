@@ -2,260 +2,261 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A8C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1382EC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AE9214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD0B214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfIOR3I (ORCPT
+        id S1727406AbfIORbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:29:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46864 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIOR3H (ORCPT
+        Sun, 15 Sep 2019 13:31:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37626 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIORbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:29:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id t11so5698647ioc.13
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:29:07 -0700 (PDT)
+        Sun, 15 Sep 2019 13:31:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y5so18417384pfo.4
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:31:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=a9cFkhOCt6eMc+RXi53o5AjIyN62uEvim+sZkVasi3s=;
-        b=YK6ETDChaIGwqezMzRBvV9ky8yzWJH3uUd32MV8Szdf035Z859bps3EIOuksBqxid2
-         FhjYtGol58voKxvBSHSc0mS/uTrlT8z2WHmClUsjDtBmWcL8Qe2n3vHWimpJr8SF62JY
-         IBbVVyC91Y/gw9G6ZqITFaeWbz5xwQETudSOlXvbnsTsmVW01v3ZgpikdBS8pgPshgo6
-         2AUpqDPOzU0Jz32etYxUozIjB/YjxJxKrBflgc60tC2OwEcECCCfeDahgUtbILgebk6j
-         U1JZWu7AfWZTLxrJb+GGdch302Z3FSgHw+ROYJx6TElXNKBgSvX2zDTJOO2fTpfoJgyE
-         3ZXg==
-X-Gm-Message-State: APjAAAUC03wxpTsyE4NDfya1RtSQrRcZg7mecelcS0NzAO4+k0roPQry
-        5ILXv2GiHy2IhF0bkDkKXRbpyGm4fBJikmard/9H0nUc6BIj
-X-Google-Smtp-Source: APXvYqx4AjMp5lKHZMWzhEk800ZeqfA8B04AO+X41xeiKZ8nBtsH0CeD5z/Bo6RNa3o7JaBT7Br9Th1kqs33mKraBg8xB5+IEGn9
-MIME-Version: 1.0
-X-Received: by 2002:a6b:1682:: with SMTP id 124mr10910899iow.99.1568568546420;
- Sun, 15 Sep 2019 10:29:06 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 10:29:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000003fcf305929ad36a@google.com>
-Subject: INFO: rcu detected stall in call_timer_fn (2)
-From:   syzbot <syzbot+f33388c0f89e31abe109@syzkaller.appspotmail.com>
-To:     bp@alien8.de, cai@lca.pw, drake@endlessm.com, hpa@zytor.com,
-        jacob.jun.pan@linux.intel.com, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, mingo@redhat.com, puwen@hygon.cn,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=7jPP6uykt4djIujvVe4JcrX0jlYqFug5SZAhTUjC5fU=;
+        b=tSWnir8REfrbz8owEt4o08WRWadX/sBcdtFmT2lwUaqNdOi9eEJvkMuS5xVSKVfcKg
+         U5WHLONyflrXoRAofJvIdDQcoOLLAv98/kzlMwIl8njbe08ms9Tl8GoKzpxqJ4PsCD+W
+         mzDn5/B+Rh7GTd1OFVvM4opz8cwSsKnvCN2TGggw3XHGeIyV/X/avTBsG0mhBryNcKkN
+         QE5g+EsnOqriTuq+fpCJDOQgBSX0ZsDEgWikMxY1RW3s0UT/a2bKT5AplEWMe7SOrEwe
+         TTDwWjnHGY+1MoOoNA67O4SEGcwpqtcvQPFg/fTvMthVYSS9QjSlzKsCvfQoRRMX3D/9
+         VhqA==
+X-Gm-Message-State: APjAAAU8GckDAoC8KFqpj4Dk+rcKKvYAqvWIz9fT9g/wnfWqbwG2qfRU
+        vj96cHTWffL0Lk1f52f9sA+jNQ==
+X-Google-Smtp-Source: APXvYqxq4EUBJIPAKXGYmJQK33mno/KylCwPXwHyaZL5QhyHScTMRF7BDzUNvZe0BZ0iCjoNHBkFrg==
+X-Received: by 2002:a63:1521:: with SMTP id v33mr9263997pgl.9.1568568694021;
+        Sun, 15 Sep 2019 10:31:34 -0700 (PDT)
+Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
+        by smtp.gmail.com with ESMTPSA id s24sm28979930pgm.3.2019.09.15.10.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 10:31:33 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 10:31:33 -0700 (PDT)
+X-Google-Original-Date: Sun, 15 Sep 2019 10:18:16 PDT (-0700)
+Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <8636gxskmj.wl-maz@kernel.org>
+CC:     Darius Rad <darius@bluespec.com>, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     maz@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        David Johnson <davidj@sifive.com>
+Message-ID: <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
+> On Thu, 12 Sep 2019 22:40:34 +0100,
+> Darius Rad <darius@bluespec.com> wrote:
+>
+> Hi Darius,
+>
+>> 
+>> As per the existing comment, irq_mask and irq_unmask do not need
+>> to do anything for the PLIC.  However, the functions must exist
+>> (the pointers cannot be NULL) as they are not optional, based on
+>> the documentation (Documentation/core-api/genericirq.rst) as well
+>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
+>> 
+>> Signed-off-by: Darius Rad <darius@bluespec.com>
+>> ---
+>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+>>  1 file changed, 9 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+>> index cf755964f2f8..52d5169f924f 100644
+>> --- a/drivers/irqchip/irq-sifive-plic.c
+>> +++ b/drivers/irqchip/irq-sifive-plic.c
+>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>>  }
+>>  
+>> +/*
+>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> + * by reading claim and "unmasked" when writing it back.
+>> + */
+>> +static void plic_irq_mask(struct irq_data *d) { }
+>> +static void plic_irq_unmask(struct irq_data *d) { }
+>
+> This outlines a bigger issue. If your irqchip doesn't require
+> mask/unmask, you're probably not using the right interrupt
+> flow. Looking at the code, I see you're using handle_simple_irq, which
+> is almost universally wrong.
+>
+> As per the description above, these interrupts should be using the
+> fasteoi flow, which is designed for this exact behaviour (the
+> interrupt controller knows which interrupt is in flight and doesn't
+> require SW to do anything bar signalling the EOI).
+>
+> Another thing is that mask/unmask tends to be a requirement, while
+> enable/disable tends to be optional. There is no hard line here, but
+> the expectations are that:
+>
+> (a) A disabled line can drop interrupts
+> (b) A masked line cannot drop interrupts
+>
+> Depending what the PLIC architecture mandates, you'll need to
+> implement one and/or the other. Having just (a) is indicative of a HW
+> bug, and I'm not assuming that this is the case. (b) only is pretty
+> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+> only.
+>
+>> +
+>>  #ifdef CONFIG_SMP
+>>  static int plic_set_affinity(struct irq_data *d,
+>>  			     const struct cpumask *mask_val, bool force)
+>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+>>  
+>>  static struct irq_chip plic_chip = {
+>>  	.name		= "SiFive PLIC",
+>> -	/*
+>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> -	 * by reading claim and "unmasked" when writing it back.
+>> -	 */
+>>  	.irq_enable	= plic_irq_enable,
+>>  	.irq_disable	= plic_irq_disable,
+>> +	.irq_mask	= plic_irq_mask,
+>> +	.irq_unmask	= plic_irq_unmask,
+>>  #ifdef CONFIG_SMP
+>>  	.irq_set_affinity = plic_set_affinity,
+>>  #endif
+>
+> Can you give the following patch a go? It brings the irq flow in line
+> with what the HW can do. It is of course fully untested (not even
+> compile tested...).
+>
+> Thanks,
+>
+> 	M.
+>
+> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Sun, 15 Sep 2019 15:17:45 +0100
+> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+>
+> The SiFive PLIC interrupt controller seems to have all the HW
+> features to support the fasteoi flow, but the driver seems to be
+> stuck in a distant past. Bring it into the 21st century.
 
-syzbot found the following crash on:
+Thanks.  We'd gotten these comments during the review process but nobody had 
+gotten the time to actually fix the issues.
 
-HEAD commit:    3120b9a6 Merge tag 'ipc-fixes' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b5c7fa600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=861a6f31647968de
-dashboard link: https://syzkaller.appspot.com/bug?extid=f33388c0f89e31abe109
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109a5185600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b81af1600000
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index cf755964f2f8..8fea384d392b 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+>  	}
+>  }
+>  
+> -static void plic_irq_enable(struct irq_data *d)
+> +static void plic_irq_mask(struct irq_data *d)
+>  {
+>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+>  					   cpu_online_mask);
+> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+>  }
+>  
+> -static void plic_irq_disable(struct irq_data *d)
+> +static void plic_irq_unmask(struct irq_data *d)
+>  {
+>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>  }
+> @@ -125,10 +125,8 @@ static int plic_set_affinity(struct irq_data *d,
+>  	if (cpu >= nr_cpu_ids)
+>  		return -EINVAL;
+>  
+> -	if (!irqd_irq_disabled(d)) {
+> -		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+> -		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+> -	}
+> +	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+> +	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+>  
+>  	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>  
+> @@ -136,14 +134,18 @@ static int plic_set_affinity(struct irq_data *d,
+>  }
+>  #endif
+>  
+> +static void plic_irq_eoi(struct irq_data *d)
+> +{
+> +	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
+> +
+> +	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
+> +}
+> +
+>  static struct irq_chip plic_chip = {
+>  	.name		= "SiFive PLIC",
+> -	/*
+> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> -	 * by reading claim and "unmasked" when writing it back.
+> -	 */
+> -	.irq_enable	= plic_irq_enable,
+> -	.irq_disable	= plic_irq_disable,
+> +	.irq_mask	= plic_irq_mask,
+> +	.irq_unmask	= plic_irq_unmask,
+> +	.irq_eoi	= plic_irq_eoi,
+>  #ifdef CONFIG_SMP
+>  	.irq_set_affinity = plic_set_affinity,
+>  #endif
+> @@ -152,7 +154,7 @@ static struct irq_chip plic_chip = {
+>  static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+>  			      irq_hw_number_t hwirq)
+>  {
+> -	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
+> +	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
+>  	irq_set_chip_data(irq, NULL);
+>  	irq_set_noprobe(irq);
+>  	return 0;
+> @@ -188,7 +190,6 @@ static void plic_handle_irq(struct pt_regs *regs)
+>  					hwirq);
+>  		else
+>  			generic_handle_irq(irq);
+> -		writel(hwirq, claim);
+>  	}
+>  	csr_set(sie, SIE_SEIE);
+>  }
+> -- 
+> 2.20.1
+>
+>
+> -- 
+> Jazz is not dead, it just smells funny.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=107909a5600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=127909a5600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=147909a5600000
+We should test them on the hardware, but I don't have any with me right now.  
+David's probably in the best spot to do this, as he's got a setup that does all 
+the weird interrupt sources (ie, PCIe).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f33388c0f89e31abe109@syzkaller.appspotmail.com
+David: do you mind testing this?  I've put the patch here:
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-...!: (10499 ticks this GP) idle=f02/1/0x4000000000000002  
-softirq=28069/28069 fqs=0
-	(t=10501 jiffies g=43153 q=3)
-rcu: rcu_preempt kthread starved for 10502 jiffies! g43153 f0x0  
-RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     R  running task    29392    10      2 0x80004000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
-  rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 23362 Comm: syz-executor241 Not tainted 5.3.0-rc8+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:arch_static_branch arch/x86/include/asm/jump_label.h:34 [inline]
-RIP: 0010:static_key_false include/linux/jump_label.h:200 [inline]
-RIP: 0010:native_write_msr+0xb/0x30 arch/x86/include/asm/msr.h:164
-Code: c3 0f 21 f0 c3 0f 0b 0f 1f 84 00 00 00 00 00 0f 0b 0f 1f 40 00 66 2e  
-0f 1f 84 00 00 00 00 00 89 f9 89 f0 0f 30 0f 1f 44 00 00 <c3> 55 48 c1 e2  
-20 89 f6 48 89 e5 48 09 d6 31 d2 e8 90 24 1f 02 5d
-RSP: 0018:ffff8880ae809ac8 EFLAGS: 00000046
-RAX: 000000000000003e RBX: 0000000000000838 RCX: 0000000000000838
-RDX: 0000000000000000 RSI: 000000000000003e RDI: 0000000000000838
-RBP: ffff8880ae809ae0 R08: ffff888095c62500 R09: fffffbfff134afb0
-R10: fffffbfff134afaf R11: ffffffff89a57d7f R12: ffff8880ae820180
-R13: 000000000000003e R14: 0000000000000000 R15: 0000000000000000
-FS:  00007fc6756a4700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000096b61000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  <IRQ>
-  apic_write arch/x86/include/asm/apic.h:398 [inline]
-  lapic_next_event+0x51/0x80 arch/x86/kernel/apic/apic.c:468
-  clockevents_program_event+0x25c/0x370 kernel/time/clockevents.c:334
-  tick_program_event+0xb4/0x130 kernel/time/tick-oneshot.c:44
-  hrtimer_interrupt+0x369/0x770 kernel/time/hrtimer.c:1522
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1106 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1131
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-RIP: 0010:__preempt_count_dec_and_test arch/x86/include/asm/preempt.h:94  
-[inline]
-RIP: 0010:rcu_read_unlock_sched_notrace include/linux/rcupdate.h:730  
-[inline]
-RIP: 0010:trace_timer_expire_entry include/trace/events/timer.h:90 [inline]
-RIP: 0010:call_timer_fn+0x607/0x780 kernel/time/timer.c:1321
-Code: 28 10 00 44 0f b6 35 7d 3a 3f 08 31 ff 44 89 f6 e8 5e 29 10 00 45 84  
-f6 0f 84 de 00 00 00 e8 10 28 10 00 65 ff 0d 21 b1 9f 7e <41> 0f 94 c6 31  
-ff 44 89 f6 e8 3b 29 10 00 45 84 f6 0f 84 7d fb ff
-RSP: 0018:ffff8880ae809d10 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: ffff888095c62500 RBX: ffff88805ed1a800 RCX: ffffffff81624cb6
-RDX: 0000000000000100 RSI: ffffffff81624ce0 RDI: 0000000000000005
-RBP: ffff8880ae809dd8 R08: ffff888095c62500 R09: fffffbfff134afb0
-R10: fffffbfff134afaf R11: ffffffff89a57d7f R12: 0000000000000101
-R13: ffff8880ae809db0 R14: 0000000000000000 R15: dffffc0000000000
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1133
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:check_kcov_mode kernel/kcov.c:70 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x20/0x50 kernel/kcov.c:102
-Code: ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 65 48 8b 04 25 40 fe 01 00  
-65 8b 15 04 89 8f 7e 81 e2 00 01 1f 00 48 8b 75 08 75 2b <8b> 90 f0 12 00  
-00 83 fa 02 75 20 48 8b 88 f8 12 00 00 8b 80 f4 12
-RSP: 0018:ffff88805fa87948 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: ffff888095c62500 RBX: ffff88805fa87a98 RCX: ffffffff8166d913
-RDX: 0000000000000000 RSI: ffffffff8166d91d RDI: 0000000000000004
-RBP: ffff88805fa87948 R08: ffff888095c62500 R09: ffffed100bf50f19
-R10: ffffed100bf50f18 R11: 0000000000000003 R12: 0000000000000001
-R13: ffffed100bf50f53 R14: 0000000000000000 R15: 0000000000000000
-  futex_wait_setup+0x2ad/0x390 kernel/futex.c:2700
-  futex_wait+0x1fc/0x5e0 kernel/futex.c:2730
-  do_futex+0x175/0x1dc0 kernel/futex.c:3646
-  __do_sys_futex kernel/futex.c:3707 [inline]
-  __se_sys_futex kernel/futex.c:3675 [inline]
-  __x64_sys_futex+0x3f7/0x590 kernel/futex.c:3675
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44cd49
-Code: e8 0c d4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b cb fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc6756a3cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: ffffffffffffffda RBX: 00000000006dec68 RCX: 000000000044cd49
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dec68
-RBP: 00000000006dec60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dec6c
-R13: 00007fffc43033df R14: 00007fc6756a49c0 R15: 000000000000002d
-NMI backtrace for cpu 1
-CPU: 1 PID: 23361 Comm: syz-executor241 Not tainted 5.3.0-rc8+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2736 [inline]
-  rcu_sched_clock_irq.cold+0x4dd/0xc13 kernel/rcu/tree.c:2183
-  update_process_times+0x32/0x80 kernel/time/timer.c:1639
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
-  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1106 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1131
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:check_memory_region_inline mm/kasan/generic.c:176 [inline]
-RIP: 0010:check_memory_region+0x9/0x1a0 mm/kasan/generic.c:192
-Code: 00 55 48 89 f2 be f8 00 00 00 48 89 e5 e8 0f bd 8f 05 5d c3 0f 1f 00  
-66 2e 0f 1f 84 00 00 00 00 00 48 85 f6 0f 84 34 01 00 00 <48> b8 ff ff ff  
-ff ff 7f ff ff 55 0f b6 d2 48 39 c7 48 89 e5 41 55
-RSP: 0018:ffff888064fbf960 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffffc90000c72388 RCX: ffffffff81595bd7
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffc90000c72388
-RBP: ffff888064fbf968 R08: 1ffff9200018e471 R09: fffff5200018e472
-R10: fffff5200018e471 R11: ffffc90000c7238b R12: 0000000000000001
-R13: 0000000000000003 R14: fffff5200018e471 R15: 0000000000000001
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  virt_spin_lock arch/x86/include/asm/qspinlock.h:83 [inline]
-  native_queued_spin_lock_slowpath+0xb7/0x9f0 kernel/locking/qspinlock.c:325
-  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:654 [inline]
-  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
-  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
-  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
-  __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
-  _raw_spin_lock+0x37/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  futex_wake+0x1dc/0x4d0 kernel/futex.c:1618
-  do_futex+0x358/0x1dc0 kernel/futex.c:3651
-  __do_sys_futex kernel/futex.c:3707 [inline]
-  __se_sys_futex kernel/futex.c:3675 [inline]
-  __x64_sys_futex+0x3f7/0x590 kernel/futex.c:3675
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44cd49
-Code: e8 0c d4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b cb fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffc4303458 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: ffffffffffffffda RBX: 00007fffc43034f0 RCX: 000000000044cd49
-RDX: 000000000044cd49 RSI: 0000000000000081 RDI: 00000000006dec68
-RBP: 00007fffc4303490 R08: 00007fff00000015 R09: 00007fff00000015
-R10: 00007fff00000015 R11: 0000000000000246 R12: 00000000000ff0e0
-R13: 00000000006dec60 R14: 00000000006dec6c R15: 000000000000002d
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
+    -b plic-fasteoi
