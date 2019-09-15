@@ -2,129 +2,118 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CFDC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD6CC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6235220873
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0040A21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtivAAM7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5JDHkXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfIOHN3 (ORCPT
+        id S1727531AbfIOH1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 03:13:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36634 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfIOHN3 (ORCPT
+        Sun, 15 Sep 2019 03:27:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37043 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfIOH1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 03:13:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f19so15105649plr.3;
-        Sun, 15 Sep 2019 00:13:27 -0700 (PDT)
+        Sun, 15 Sep 2019 03:27:18 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so35179307wro.4;
+        Sun, 15 Sep 2019 00:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=9RsUkl6MEN71BO//b46KRM887milBSbG2u+IqiX1rgM=;
-        b=NtivAAM77GDp12fbYDh716oc0G9uYsGGnDGcKfDhDvYThgJ/8sfdOvaqtV/croIwHr
-         /r+TKQW6PvyWCNK+z6shvTcxM0BJnOIQ4+SadvG/jn9vBuN32skVTgsd6jQ2I6khu+/v
-         U18L5eJ1pqnqYpimgRGOAA5L3ciY1GflwlaHE5Z2Mw/4qQ9tuZ4SlqQN58C6noEJwOy/
-         zFhsPmpe0Inp3cZmeP9uN9BygF2Zw3hoLZq5PX1zSWfbX4JOCZg+ZNH8CakevgcHR71Q
-         BLOd+BEk+Ok6pq6LHMckAc4r31AizMBvy65zk95uDwaFf01+PzFt0Rz9KoddNnRMSovt
-         Hupw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1aCBRCt6dPgfb+9wTTAqzCnn4saTlIOx+pRnOlimELM=;
+        b=p5JDHkXgMkVRdsCVo83bSLHJmo4Uo4OApsBhA5xesxywsxp0QzHoRH/TVIfJhZtrwx
+         1xGcfn9y+lP20fHBlvgnw3WkojUx3YMLXicytjfTbK4ca+HNFnch/CZfx/rCPFhE/YYb
+         asX7MMJc+ULN1vSnOzQS5090zbw1tFI6yxbSXqVAeR9J3AGjVrpFWJ4xZiYYSW2dO9DJ
+         rrQukuAwK+9qDg2/H6P8JefbAb/4mLcblYCks/wZtUeWdyfIuKdmSOIW8Q2No/fo08d0
+         wJGiCTXzZEME7so1JsqqHp65K9WwPpDBA+jqnW12+hNKgb7YcDoDFJcIPxOgCirGUjy0
+         NI2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=9RsUkl6MEN71BO//b46KRM887milBSbG2u+IqiX1rgM=;
-        b=qWN34QmReFLiHBiCb8X0BfEiCxSw4o8CzlvWcJhh3NzolwYqJgUzkm6EEK4sBKhbPG
-         LkiD03i29wBwe2bEiMSV5LgS9o/Jvf3ejZthsTwubI95MIHCybtkIdsP4gyQMurqy+mt
-         wQbmQiu0u1LvrAIH58ubz/D/rG6DiLnMB94EgPwYQZWY040J63YANzczpknfXxvp5E9O
-         7OlX8KO1TFo6Szewwj/+PKWYIFL1nqNGm20/o2qVR37dNT0irlM5O57XuNa10d6KRCYm
-         4OEWhBtZAm0mubweM1tGdHNZwDnum33+mMW7H8BdHE2Q+JucmjTFx6GMo4MaPGsP+e25
-         tteg==
-X-Gm-Message-State: APjAAAW2FK3ub8ZGEDsxI+p2x8emzReUhcWJNSrgOixQUpSSbKCKoI9Y
-        p7h3leliBdzhYG77KAOhs+k=
-X-Google-Smtp-Source: APXvYqx75/bX6ZgLs/5GYKN91lU9aCoHIZOyWt9XH5ENUcWqcGQC61YP9nuIxCK/uDC1YZS4VL1NOA==
-X-Received: by 2002:a17:902:7586:: with SMTP id j6mr57986217pll.8.1568531606466;
-        Sun, 15 Sep 2019 00:13:26 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id k5sm28129193pgo.45.2019.09.15.00.13.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1aCBRCt6dPgfb+9wTTAqzCnn4saTlIOx+pRnOlimELM=;
+        b=XciOqriQr0td3d23oTlYTtpaKAWgl9VU2sM9zxMLMsQv/81pHqrSKTYAfwz3+ru5tq
+         QBzv9z06s4JlrI/wgzxnlWXLdr4vzGeSGku4DTYDPN7qqenTd4ZcevQaiEsL58o1UiQQ
+         9DoSlroVeDD5vAjSbmWSsermUH8optnjSKf0VwkPsaaWWQdc7KrHX0eigdGpDmphjcIA
+         dtkfmM0qJ2qKvic8KGRugqngQh6LpDlFMFEPbTOeJpK4aC9C4B/VyAjHMpfy0T+OhgYn
+         QIE8/erDY0DwZJjcFAyXTFd+wTFX6KEmyd4SEqJtQ3p/z8HCtyrbdOOsFLKVA1jr0Gbb
+         Fjvw==
+X-Gm-Message-State: APjAAAVqGZX6pBgS6afib2eeYaIixD2Y0SZGKbkBwGpRO2uth99Lbvtp
+        Rbef3QArLslPb562oO9oXiw=
+X-Google-Smtp-Source: APXvYqzHqvmZApQdOXGk7nsmMB3ZaPZIn/qNVv/npX47PFm/F1pqpDTe3QDeqywyy/dXkxVWmtzXCA==
+X-Received: by 2002:adf:f1c3:: with SMTP id z3mr7931391wro.147.1568532436020;
+        Sun, 15 Sep 2019 00:27:16 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id d193sm12446753wmd.0.2019.09.15.00.27.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:13:26 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 00:13:23 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/tegra: switch to using devm_gpiod_get_optional
-Message-ID: <20190915071323.GA36596@dtor-ws>
+        Sun, 15 Sep 2019 00:27:15 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 09:27:05 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190915072705.GA12869@darwi-home-pc>
+References: <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190915065142.GA29681@gardel-login>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We do not really need to use API that fetches GPIO data from an
-arbitrary device tree node, as we are dealing with device tree node
-assigned to the device structure. We can easily switch to
-devm_gpiod_get_optional() plus gpiod_set_consumer_name() and clean up
-the code.
+On Sun, Sep 15, 2019 at 08:51:42AM +0200, Lennart Poettering wrote:
+> On Sa, 14.09.19 09:30, Linus Torvalds (torvalds@linux-foundation.org) wrote:
+[...]
+> 
+> And please don't break /dev/urandom again. The above code is the ony
+> way I see how we can make /dev/urandom-derived swap encryption safe,
+> and the only way I can see how we can sanely write a valid random seed
+> to disk after boot.
+>
 
-Note this is part of efforts to get rid of [devm_]gpiod_get_from_of_node
-in drivers so that gpiolib can be cleaned up.
+Any hope in making systemd-random-seed(8) credit that "random seed
+from previous boot" file, through RNDADDENTROPY, *by default*?
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/gpu/drm/tegra/output.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+Because of course this makes the problem reliably go away on my system
+too (as discussed in the original bug report, but you were not CCed).
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index bdcaa4c7168c..b4248125b844 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -121,19 +121,15 @@ int tegra_output_probe(struct tegra_output *output)
- 		of_node_put(ddc);
- 	}
- 
--	output->hpd_gpio = devm_gpiod_get_from_of_node(output->dev,
--						       output->of_node,
--						       "nvidia,hpd-gpio", 0,
--						       GPIOD_IN,
--						       "HDMI hotplug detect");
--	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
--
--		output->hpd_gpio = NULL;
--	}
-+	output->hpd_gpio = devm_gpiod_get_optional(output->dev,
-+						   "nvidia,hpd", GPIOD_IN);
-+	if (IS_ERR(output->hpd_gpio))
-+		return PTR_ERR(output->hpd_gpio);
- 
- 	if (output->hpd_gpio) {
-+		gpiod_set_consumer_name(output->hpd_gpio,
-+					"HDMI hotplug detect");
-+
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--- 
-2.23.0.237.gc6a4ce50a0-goog
+I know that by v243, just released 12 days ago, this can be optionally
+done through SYSTEMD_RANDOM_SEED_CREDIT=1. I wonder though if it can
+ever be done by default, just like what the BSDs does... This would
+solve a big part of the current problem.
 
+> Lennart
+
+thanks,
 
 -- 
-Dmitry
+darwi
+http://darwish.chasingpointers.com
