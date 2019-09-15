@@ -2,180 +2,121 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F05CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A6C214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:28:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSVz3DpQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0CAC320830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568565018;
+	bh=kmkdn52wRaAnXvKHQYx3MjH7SvbGMHnwCzy9AkiFvYo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0vwuU1kO9GJBE3WCi7lJJF5anQ1VRSLtn8cgJJgAhl6dWNpiPDJ+Uxj+hy3EO5lE6
+	 c+JQKT+0WdwzeIpVKQ206YkCGfW/mZ7fCxdnDB6OiShPUNDdYyXvBGTnmdpUeC/HFP
+	 RrhQQf85uiQRv994nKLcQHfa95ubAk05wsukzlWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbfIOQ21 (ORCPT
+        id S2388201AbfIOQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 12:28:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40079 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfIOQ21 (ORCPT
+        Sun, 15 Sep 2019 12:30:17 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36773 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388025AbfIOQaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 12:28:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l3so13736989wru.7;
-        Sun, 15 Sep 2019 09:28:24 -0700 (PDT)
+        Sun, 15 Sep 2019 12:30:16 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x80so25596774lff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zVTQTaZrP482aumjM0F4bwC+lm4rn+38bGxai8EcPuk=;
-        b=bSVz3DpQm9NTEwH2l1b+4NGm+ff3jn+jQ2DD9gzGh/Sl3IRzbWQRAPLdUVJYQfv2wh
-         E1fZ1dvffc+2m/kYBhGILOKC1OiP1KEIWkL3eh3+dSUGoB0mqqGswXvP6HsfUnwZkVe9
-         jsUsxm0FNWtA3mQGDNpmrZn423XDzC8pqzM346nvFDKtCL+d9lWnPeARH8HjqgWHLtPg
-         Vfwj2G3yw7GnZawVQLqTUDf07DV1SvueogpmQkvGn2N/BJrnc0sYU2zsT3cm9IGMCYeV
-         h9zUMR+/ScLfeuNxa3GoMn2QsoGaugm6MnAh3eMSBRVBi2nWFpXFd3AW8zdurfdspV0M
-         Y2ng==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8eXQR5cNa/rEvZ1aNPUIkNm/QbpDwPCy01MJ9nMVGXA=;
+        b=X93ojoRt0fwRn6t2yZfaMbViKKNJwHwvJGGsbpHUO+NgdcUiIJ/BjYUURdYoYJHliC
+         Ea5JW2CXXXcZaG4w3q6JGmNcVoRVTe4q5vshFp31k1mqZi2rff9M4H1EHgQGiLBz2Wrn
+         g31xHYn3n5K+fcb4Uzc1ryw8ed/gXBjoQetbk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zVTQTaZrP482aumjM0F4bwC+lm4rn+38bGxai8EcPuk=;
-        b=N3EipLrohrT3R0tIIFi6Njzp/YjVbqkDWalxqj6lVVf8yeMoEYJ3mZsmHoLZyUMloU
-         3Jede6NEt/NKjUKjnTInZLM3pN0ZZue+bnBg6Ifix4yeKtBmeWDh79ozd/S77uICFOr6
-         APD4TrzE3g0sV8rTpKNMQJWCpe4xpyH6XcwCSGkyy2Fv95+YRuHfHeg6LVd61vBB3J2D
-         roOwfCBqnIlrb/dvlkUzSmml2P0vwVlIPywCPFzx2kidffNwhMnR8mq8jJ9bDey5Erwi
-         7Mu0npXa5wXKGdkqKrwJ6UxngqMqMphwDNzsuR8UzhkQeZ3nVUUC5M57XRU8R2wNQVnu
-         tS0A==
-X-Gm-Message-State: APjAAAUSH2Nim9UaJsaspnrs38YiSql8xYDAhuDqtzt3pshPSxpr1kNB
-        nhhNzf19kNE/dBy+TbQo5hntdVTZ
-X-Google-Smtp-Source: APXvYqxNuTRsY9Wo8qp3U5wsxMAO2beWzz4VaAnjMNK7yf4XZqcJG0ZTYLNZVXiSUS2HxIb52wnedA==
-X-Received: by 2002:adf:df81:: with SMTP id z1mr11194984wrl.295.1568564903654;
-        Sun, 15 Sep 2019 09:28:23 -0700 (PDT)
-Received: from [192.168.1.19] (ckk130.neoplus.adsl.tpnet.pl. [83.31.86.130])
-        by smtp.gmail.com with ESMTPSA id e20sm73793563wrc.34.2019.09.15.09.28.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Sep 2019 09:28:22 -0700 (PDT)
-Subject: Re: [PATCH v5 9/9] leds: Update the lp55xx to use the multi color
- framework
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-10-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1cf766f4-ca88-9114-6e73-a4c5e7460b7f@gmail.com>
-Date:   Sun, 15 Sep 2019 18:28:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8eXQR5cNa/rEvZ1aNPUIkNm/QbpDwPCy01MJ9nMVGXA=;
+        b=tc6w6dkAbHJoUcbcxVQZjCzScApDvDEvbG51l5/5a5+Pg6pzLDDLG8ZGe2fSBibNGU
+         pjx401uk8O37A8bEKdFhcGLwUDaS4sLwq6GqmJHLnHdHNWSOYQiF0/Ro/OGLmYZL8imK
+         fdOjnnPZitEFbgUSSaViv/jgUEy1KwYfjQ+OTElTijsXYhqW03WrqkaS4/YRk9N5UgP3
+         H4zX2ofZHnrpiv6tqf8XWaDtCfnCszVae256mqu8KVkkv8X1Hcz3bEk2Myt9DkWwzWa5
+         MWMF4NnC4uDL5uPOIpirFII2RXY2ZJrrX7oYU7MLrQdWYsD8R++yBmFfguNuz0vu3wgf
+         xJYw==
+X-Gm-Message-State: APjAAAWHNnwvphE7nzqY6P3t7tOTiWy9KkJPmRjMH98sUOr0OK6dFdQM
+        kYRwlz4Qql2MKEvbfJEqPcM0ccxnW7A=
+X-Google-Smtp-Source: APXvYqzgmbJfDkoZ+sfTDVxb4C0lYk7nUP4QY6VQd7+8GAWGsJjFB6vVTtcwnkO4APzDrKySAFBrPQ==
+X-Received: by 2002:a19:da01:: with SMTP id r1mr37376914lfg.150.1568565014341;
+        Sun, 15 Sep 2019 09:30:14 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id f21sm5569704lfm.90.2019.09.15.09.30.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Sep 2019 09:30:12 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id w6so25602869lfl.2
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:30:11 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr36503149lfp.134.1568565011303;
+ Sun, 15 Sep 2019 09:30:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190911180115.21035-10-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
+In-Reply-To: <20190915065142.GA29681@gardel-login>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 15 Sep 2019 09:29:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+Message-ID: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Sat, Sep 14, 2019 at 11:51 PM Lennart Poettering
+<mzxreary@0pointer.de> wrote:
+>
+> Oh man. Just spend 5min to understand the situation, before claiming
+> this was garbage or that was garbage. The code above does not block
+> boot.
 
-On 9/11/19 8:01 PM, Dan Murphy wrote:
-> Update the lp5523 to use the multi color framework.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/leds-lp5523.c                |  13 +++
->  drivers/leds/leds-lp55xx-common.c         | 131 ++++++++++++++++++----
->  drivers/leds/leds-lp55xx-common.h         |   9 ++
->  include/linux/platform_data/leds-lp55xx.h |   6 +
->  modules.builtin.modinfo                   | Bin 0 -> 43550 bytes
->  5 files changed, 137 insertions(+), 22 deletions(-)
->  create mode 100644 modules.builtin.modinfo
-> 
-> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-> index d0b931a136b9..8b2cdb98fed6 100644
-> --- a/drivers/leds/leds-lp5523.c
-> +++ b/drivers/leds/leds-lp5523.c
-> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct device *dev,
->  	return ret;
->  }
-[...]
->  struct lp55xx_predef_pattern {
+Yes it does. You clearly didn't read the thread.
 
-Below file seems to have been added to the index by mistake.
+> It blocks startup of services that explicit order themselves
+> after the code above. There's only a few services that should do that,
+> and the main system boots up just fine without waiting for this.
 
-> diff --git a/modules.builtin.modinfo b/modules.builtin.modinfo
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e528d8f57796621b6cfef52ad0da44551a482481
-> GIT binary patch
-> literal 43550
-> zcmcJ2?Q+|=(x(2ta}}twKjNIV<j*)6t(~$X+ldo9*0G$-%sF+IMNyQ*NF)`K@<-~u
-> zoV|v<f%nGt=>|YGNXqfd?pCE75g*+RpaC?x8;w!ycl>2BO|zrh@WId3MUofUG7gi1
-> zeg~})3e2M*O!DyPegBfbM`0dh(V~db<mme9q^|~l3~tY^)aliUI=#90dUn&gPqW$g
-> zWw;DG3qOmC$3=KF3Wv*yH%_x4^s>wg7R&B1P3KKT7wLVNdEs~*1raD&TW%EP{%{_8
-[...]
+That's a nice theory, but it doesn't actually match reality.
 
--- 
-Best regards,
-Jacek Anaszewski
+There are clearly broken setups that use this for things that it
+really shouldn't be used for. Asking for true randomness at boot
+before there is any indication that randomness exists, and then just
+blocking with no further action that could actually _generate_ said
+randomness.
+
+If your description was true that the system would come up and be
+usable while the blocked thread is waiting for that to happen, things
+would be fine.
+
+But that simply isn't the case.
+
+                  Linus
