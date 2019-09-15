@@ -2,88 +2,113 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DE4C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E945C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAE5214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211B5216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVlqUskF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfIOQwR (ORCPT
+        id S1726480AbfIOQwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 12:52:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54669 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfIOQwQ (ORCPT
+        Sun, 15 Sep 2019 12:52:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33264 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfIOQw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 12:52:16 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 4AC6381DD1; Sun, 15 Sep 2019 18:51:59 +0200 (CEST)
-Date:   Sun, 15 Sep 2019 18:52:04 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>, lee.jones@linaro.org,
-        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
- pin
-Message-ID: <20190915165204.GA4857@bug>
-References: <20190908203704.30147-1-andreas@kemnade.info>
- <20190908203704.30147-2-andreas@kemnade.info>
- <20190909105729.w5552rtop7rhghy2@holly.lan>
- <20190909221349.46ca5a1f@aktux>
- <20190910102156.vmprsjebmlphkv34@holly.lan>
- <20190910210648.3594912d@kemnade.info>
+        Sun, 15 Sep 2019 12:52:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so21122232pfl.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X86RdWoaDKqJbFDIoXti2bda7+kkyeUkiLhSN5JzlKU=;
+        b=UVlqUskFF6lnSRhNIDONapUfjNYD1Nk3plqN/bZfrOxvI8jXvH2brUc3nFqa8l6/m2
+         bzJoXmb99FvFIz8wmkMhFV8OrapnQW+3rgFRcQi84Q0rv0sEXDlzjG35LkxFo4BzBimx
+         E/DEAi8w4LF2wNQ9W3KGhbSNq5T9370tn/2S3iEdZ31+bKcaRwRryklJJW1LxakGJwP2
+         hmryWpIP5WkJwKDqp2xJL8DpIbGmxZLsRXNr1cJQReJNW2y3Wzy84f0UJnpanyBiaQKz
+         HkHjvIcUU5OcKS+Dn6CCbRB2JjmXiiti8WZT7vWc8yYfL/iWgQMPtA78P41UWqUpkpGY
+         eHqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X86RdWoaDKqJbFDIoXti2bda7+kkyeUkiLhSN5JzlKU=;
+        b=KAhcYDBoHnH5QxAsw94bbRa7hh93Ym3AFL++sAwZkPPZygzZLwhcfPg3lkXASHMAtT
+         RZn1AZVTACrQ5OdBylS1nurIzLAiPlRfO0Yk/DbwL8Cq9X8axDuqzKfnTz4dE8xZNdSC
+         nzGKWpWCdV09F3LqWtIzUQEJ8Fsf28NcgwC56lu+9p0DhQCOazSk7iTRI8Il0XfMkC5e
+         0W+IukWWcO4nHNpSyJEnSQO1C2/iorKyn+2eUpwtazJRt73DOPSpJ3zI32LG8/rINsQh
+         tm9rXV4IETM68Ucw5ZThOlzPt5zKgnk6YhUbMoLc67VTbcRcEvp1XEdc2Qwql1H81rNF
+         piyA==
+X-Gm-Message-State: APjAAAWm/IBpv9uYPhsdItslY6hEFsgm9LKrvjLbs0ZdYZVwJmcin7Og
+        g3BosH2KMZACUpHllBjWyGE=
+X-Google-Smtp-Source: APXvYqyQaiQnRW16hsy9jw0my3XuKFz+xcp5uJlbcjwUKSbH+CeKDB0TSECOfjFQc1MEbcv3mxb3aw==
+X-Received: by 2002:a62:5f83:: with SMTP id t125mr67798974pfb.125.1568566349157;
+        Sun, 15 Sep 2019 09:52:29 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id a4sm4383259pgq.6.2019.09.15.09.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 09:52:28 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, guro@fb.com,
+        Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v4 3/7] mm, slab_common: Use enum kmalloc_cache_type to iterate over kmalloc caches
+Date:   Mon, 16 Sep 2019 00:51:13 +0800
+Message-Id: <20190915165121.7237-5-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190915165121.7237-1-lpf.vector@gmail.com>
+References: <20190915165121.7237-1-lpf.vector@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910210648.3594912d@kemnade.info>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+The type of local variable *type* of new_kmalloc_cache() should
+be enum kmalloc_cache_type instead of int, so correct it.
 
-> > > > Is this needed?
-> > > > 
-> > > > This is a remove path, not a power management path, and we have no idea
-> > > > what the original status of the pin was anyway?
-> > > >   
-> > > 
-> > > Looking at Ishdn on page 5 of the datasheet, switching it off everytime
-> > > possible seems not needed. We would need to call chip_init() everytime
-> > > we enable the gpio or live with default values.
-> > > Therefore I did decide to not put it into any power management path.
-> > > But switching it on and not switching it off feels so unbalanced.   
-> > 
-> > Either the power consumed by the controller when strings aren't lit up
-> > matters, in which case the driver should implement proper power
-> > management or it doesn't matter and changing the pin state isn't needed.
-> > 
-> > I'm happy with either of the above but this looks like a third way,
-> > where eager users could hack in a bit of extra power management by
-> > forcing drivers to unbind. 
-> > 
-> I think I will take the simple way. I am quite sure that the power
-> consumption with HWEN on and leds off does not matter. If someone
-> later comes up and finds out that I misread the datasheet, things
-> are prepared to be improved.
+Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Roman Gushchin <guro@fb.com>
+---
+ mm/slab_common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Dunno.. if the power consumption does not matter, why does the chip have the enable
-pin in the first place, and why do we bother supporting it? We could hardcode the
-pin to enabled as well..
-									Pavel
-
-
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 8b542cfcc4f2..af45b5278fdc 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1192,7 +1192,7 @@ void __init setup_kmalloc_cache_index_table(void)
+ }
+ 
+ static void __init
+-new_kmalloc_cache(int idx, int type, slab_flags_t flags)
++new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
+ {
+ 	if (type == KMALLOC_RECLAIM)
+ 		flags |= SLAB_RECLAIM_ACCOUNT;
+@@ -1210,7 +1210,8 @@ new_kmalloc_cache(int idx, int type, slab_flags_t flags)
+  */
+ void __init create_kmalloc_caches(slab_flags_t flags)
+ {
+-	int i, type;
++	int i;
++	enum kmalloc_cache_type type;
+ 
+ 	for (type = KMALLOC_NORMAL; type <= KMALLOC_RECLAIM; type++) {
+ 		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.21.0
+
