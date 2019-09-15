@@ -2,187 +2,107 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33A5C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C64C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914CC214DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568556556;
-	bh=rmNKWNk/aXvpVA0xUaI9iWM2hf/hp6RjrNoDZVj/K74=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=PC2kVIw+HyePIyFt8OiCLIUxY/ORjZYPkWmGzOiDm/lHtZGemZ0DZWtnMpvCVtyR+
-	 dhttcffkP7FZLqR3dUOLMbdw87TrYczLQCh8Rgeb1vx+97I2yehDyOodQ7/EYH8jQF
-	 yBTNp2ePoGkv+RvNoKsOG0vKKQr5G+fHp4CU3yaU=
+	by mail.kernel.org (Postfix) with ESMTP id 8795A214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbfIOOJP (ORCPT
+        id S1731635AbfIOOOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 10:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfIOOJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 10:09:15 -0400
-Received: from paulmck-ThinkPad-P72 (96-84-246-146-static.hfc.comcastbusiness.net [96.84.246.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2003214D9;
-        Sun, 15 Sep 2019 14:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568556553;
-        bh=rmNKWNk/aXvpVA0xUaI9iWM2hf/hp6RjrNoDZVj/K74=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=TBZWLPqnS/yaAw+qJQMjb9WMQD0SJFfDDS7DWzm5GQSc2nnA2Ewn3YG/u/mPCyzl8
-         nhcL5f20JvInF34QIpSarjucakVhlg6SAp1JrxOSNg4demnsj6oGFZbQXQ3a1Lf+nG
-         GbsgUXLSC4FscM6vEO9o0qRqxrycLZx2pNHt7pHM=
-Date:   Sun, 15 Sep 2019 07:09:11 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Sun, 15 Sep 2019 10:14:24 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:53701 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726024AbfIOOOY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 10:14:24 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0TcNDfjk_1568556842;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TcNDfjk_1568556842)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 15 Sep 2019 22:14:08 +0800
+Date:   Sun, 15 Sep 2019 22:14:02 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 2/4] task: Ensure tasks are available for a grace
- period after leaving the runqueue
-Message-ID: <20190915140911.GA17248@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20190830160957.GC2634@redhat.com>
- <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org>
- <20190902134003.GA14770@redhat.com>
- <87tv9uiq9r.fsf@x220.int.ebiederm.org>
- <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
- <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
- <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
- <87r24jdpl5.fsf_-_@x220.int.ebiederm.org>
- <20190915140752.GJ30224@paulmck-ThinkPad-P72>
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190915141402.GA1349@aaronlu>
+References: <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
+ <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
+ <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+ <20190912120400.GA16200@aaronlu>
+ <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190915140752.GJ30224@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 07:07:52AM -0700, Paul E. McKenney wrote:
-> On Sat, Sep 14, 2019 at 07:33:58AM -0500, Eric W. Biederman wrote:
-> > 
-> > In the ordinary case today the rcu grace period for a task_struct is
-> > triggered when another process wait's for it's zombine and causes the
+On Fri, Sep 13, 2019 at 07:12:52AM +0800, Aubrey Li wrote:
+> On Thu, Sep 12, 2019 at 8:04 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
+> >
+> > On Wed, Sep 11, 2019 at 09:19:02AM -0700, Tim Chen wrote:
+> > > On 9/11/19 7:02 AM, Aaron Lu wrote:
+> > > I think Julien's result show that my patches did not do as well as
+> > > your patches for fairness. Aubrey did some other testing with the same
+> > > conclusion.  So I think keeping the forced idle time balanced is not
+> > > enough for maintaining fairness.
+> >
+> > Well, I have done following tests:
+> > 1 Julien's test script: https://paste.debian.net/plainh/834cf45c
+> > 2 start two tagged will-it-scale/page_fault1, see how each performs;
+> > 3 Aubrey's mysql test: https://github.com/aubreyli/coresched_bench.git
+> >
+> > They all show your patchset performs equally well...And consider what
+> > the patch does, I think they are really doing the same thing in
+> > different ways.
+> 
+> It looks like we are not on the same page, if you don't mind, can both of
+> you rebase your patchset onto v5.3-rc8 and provide a public branch so I
+> can fetch and test it at least by my benchmark?
 
-Oh, and "waits for its", just to hit the grammar en passant...  ;-)
+I'm using the following branch as base which is v5.1.5 based:
+https://github.com/digitalocean/linux-coresched coresched-v3-v5.1.5-test
 
-							Thanx, Paul
+And I have pushed Tim's branch to:
+https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-tim
 
-> > kernel to call release_task().  As the waiting task has to receive a
-> > signal and then act upon it before this happens, typically this will
-> > occur after the original task as been removed from the runqueue.
-> > 
-> > Unfortunaty in some cases such as self reaping tasks it can be shown
-> > that release_task() will be called starting the grace period for
-> > task_struct long before the task leaves the runqueue.
-> > 
-> > Therefore use put_task_struct_rcu_user in finish_task_switch to
-> > guarantee that the there is a rcu lifetime after the task
-> > leaves the runqueue.
-> > 
-> > Besides the change in the start of the rcu grace period for the
-> > task_struct this change may cause perf_event_delayed_put and
-> > trace_sched_process_free.  The function perf_event_delayed_put boils
-> > down to just a WARN_ON for cases that I assume never show happen.  So
-> > I don't see any problem with delaying it.
-> > 
-> > The function trace_sched_process_free is a trace point and thus
-> > visible to user space.  Occassionally userspace has the strangest
-> > dependencies so this has a miniscule chance of causing a regression.
-> > This change only changes the timing of when the tracepoint is called.
-> > The change in timing arguably gives userspace a more accurate picture
-> > of what is going on.  So I don't expect there to be a regression.
-> > 
-> > In the case where a task self reaps we are pretty much guaranteed that
-> > the rcu grace period is delayed.  So we should get quite a bit of
-> > coverage in of this worst case for the change in a normal threaded
-> > workload.  So I expect any issues to turn up quickly or not at all.
-> > 
-> > I have lightly tested this change and everything appears to work
-> > fine.
-> > 
-> > Inspired-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Inspired-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> > ---
-> >  kernel/fork.c       | 11 +++++++----
-> >  kernel/sched/core.c |  2 +-
-> >  2 files changed, 8 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 9f04741d5c70..7a74ade4e7d6 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -900,10 +900,13 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
-> >  	if (orig->cpus_ptr == &orig->cpus_mask)
-> >  		tsk->cpus_ptr = &tsk->cpus_mask;
-> >  
-> > -	/* One for the user space visible state that goes away when reaped. */
-> > -	refcount_set(&tsk->rcu_users, 1);
-> > -	/* One for the rcu users, and one for the scheduler */
-> > -	refcount_set(&tsk->usage, 2);
-> > +	/*
-> > +	 * One for the user space visible state that goes away when reaped.
-> > +	 * One for the scheduler.
-> > +	 */
-> > +	refcount_set(&tsk->rcu_users, 2);
-> 
-> OK, this would allow us to add a later decrement-and-test of
-> ->rcu_users ...
-> 
-> > +	/* One for the rcu users */
-> > +	refcount_set(&tsk->usage, 1);
-> >  #ifdef CONFIG_BLK_DEV_IO_TRACE
-> >  	tsk->btrace_seq = 0;
-> >  #endif
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 2b037f195473..69015b7c28da 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3135,7 +3135,7 @@ static struct rq *finish_task_switch(struct task_struct *prev)
-> >  		/* Task is done with its stack. */
-> >  		put_task_stack(prev);
-> >  
-> > -		put_task_struct(prev);
-> > +		put_task_struct_rcu_user(prev);
-> 
-> ... which is here.  And this looks to be invoked from the __schedule()
-> called from do_task_dead() at the very end of do_exit().
-> 
-> This looks plausible, but still requires that it no longer be possible to
-> enter an RCU read-side critical section that might increment ->rcu_users
-> after this point in time.  This might be enforced by a grace period
-> between the time that the task was removed from its lists and the current
-> time (seems unlikely, though, in that case why bother with call_rcu()?) or
-> by some other synchronization.
-> 
-> On to the next patch!
-> 
-> 							Thanx, Paul
-> 
-> >  	}
-> >  
-> >  	tick_nohz_task_switch();
-> > -- 
-> > 2.21.0.dirty
-> > 
+Mine:
+https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-core_vruntime
+
+The two branches both have two patches I have sent previouslly:
+https://lore.kernel.org/lkml/20190810141556.GA73644@aaronlu/
+Although it has some potential performance loss as pointed out by
+Vineeth, I haven't got time to rework it yet.
