@@ -2,158 +2,100 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C73C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D31C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B2D21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AC120830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfIOGv6 (ORCPT
+        id S1727226AbfIOGx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 02:51:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2221 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726259AbfIOGv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 02:51:57 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C85FAA6B321785F3ED94;
-        Sun, 15 Sep 2019 14:51:52 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sun, 15 Sep 2019
- 14:51:50 +0800
-Subject: Re: [PATCH v3 7/8] mips: numa: make node_to_cpumask_map()
- NUMA_NO_NODE aware for mips
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <anshuman.khandual@arm.com>,
-        <tglx@linutronix.de>, <cai@lca.pw>, <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
- <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
- <20190915054901.GC11429@linux.ibm.com>
- <938be3af-ece4-7f5f-34d6-f949ee2a3d32@huawei.com>
- <20190915064647.GD11429@linux.ibm.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <67673e73-168b-976f-83e2-11edc7e412ee@huawei.com>
-Date:   Sun, 15 Sep 2019 14:51:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Sun, 15 Sep 2019 02:53:59 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45069 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfIOGx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 02:53:59 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8F6rdfG021602;
+        Sun, 15 Sep 2019 08:53:39 +0200
+Date:   Sun, 15 Sep 2019 08:53:39 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190915065338.GB20811@1wt.eu>
+References: <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190914211126.GA4355@darwi-home-pc>
+ <20190914222432.GC19710@mit.edu>
+ <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
+ <20190915010037.GE19710@mit.edu>
+ <CAHk-=wjGTV0e_P73V0B3cPVrfeoSZcV6CjQMgj-+yL-s38DKaw@mail.gmail.com>
+ <20190915020521.GF19710@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20190915064647.GD11429@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915020521.GF19710@mit.edu>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/15 14:46, Mike Rapoport wrote:
-> On Sun, Sep 15, 2019 at 02:13:51PM +0800, Yunsheng Lin wrote:
->> On 2019/9/15 13:49, Mike Rapoport wrote:
->>> Hi,
->>>
->>> On Thu, Sep 12, 2019 at 06:15:33PM +0800, Yunsheng Lin wrote:
->>>> When passing the return value of dev_to_node() to cpumask_of_node()
->>>> without checking the node id if the node id is NUMA_NO_NODE, there is
->>>> global-out-of-bounds detected by KASAN.
->>>>
->>>> From the discussion [1], NUMA_NO_NODE really means no node affinity,
->>>> which also means all cpus should be usable. So the cpumask_of_node()
->>>> should always return all cpus online when user passes the node id
->>>> as NUMA_NO_NODE, just like similar semantic that page allocator handles
->>>> NUMA_NO_NODE.
->>>>
->>>> But we cannot really copy the page allocator logic. Simply because the
->>>> page allocator doesn't enforce the near node affinity. It just picks it
->>>> up as a preferred node but then it is free to fallback to any other numa
->>>> node. This is not the case here and node_to_cpumask_map will only restrict
->>>> to the particular node's cpus which would have really non deterministic
->>>> behavior depending on where the code is executed. So in fact we really
->>>> want to return cpu_online_mask for NUMA_NO_NODE.
->>>>
->>>> Since this arch was already NUMA_NO_NODE aware, this patch only changes
->>>> it to return cpu_online_mask and use NUMA_NO_NODE instead of "-1".
->>>>
->>>> [1] https://lore.kernel.org/patchwork/patch/1125789/
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>> Suggested-by: Michal Hocko <mhocko@kernel.org>
->>>> ---
->>>> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
->>>>     for NUMA_NO_NODE case, and change the commit log to better justify
->>>>     the change.
->>>> ---
->>>>  arch/mips/include/asm/mach-ip27/topology.h | 4 ++--
->>>
->>> Nit: the subject says "mips:", but this patch only touches sgi-ip27 and
->>> loongson is updated as a separate patch. I don't see why both patches
->>> cannot be merged. Moreover, the whole set can be made as a single patch,
->>> IMHO.
->>
->> Thanks for reviewing.
->>
->> As this patchset touches a few files, which may has different maintainer.
->> I am not sure if a separate patch for different arch will make the merging
->> process easy, or a single patch will make the merging process easy?
-> 
-> The set makes the same logical change to several definitions of
-> cpumask_of_node(). It's appropriate to have all these changes in a single
-> patch.
+On Sat, Sep 14, 2019 at 10:05:21PM -0400, Theodore Y. Ts'o wrote:
+> You basically want to turn getrandom into /dev/urandom.  And that's
+> how we got into the mess where 10% of the publically accessible ssh
+> keys could be guessed.
 
-Ok, thanks.
-Will have all these changes in a single patch.
+Not exactly. This was an *API* issue that created this situation. The
+fact that you had a single random() call in the libc, either mapped
+to /dev/urandom or to /dev/random. By then many of us were used to rely
+on one or the other and finding systems where /dev/random was a symlink
+to /dev/urandom to avoid blocking was extremely common. In fact it was
+caused by the exact same situation: we try to enforce good random for
+everyone, it cannot work all the time and breaks programs which do not
+need such randoms, so the user breaks the trust on randomness by
+configuring the system so that randoms work all the time for the most
+common programs. And that's how you end up with SSH trusting a broken
+random generator without knowing it was misconfigured.
 
+Your getrandom() API does have the ability to fix this. In my opinion
+the best way to proceed is to consider that all those who don't care
+about randomness quality never block and that those who care can be
+sure they will either get good randoms or will know about it. Ideally
+calling getrandom() without any flag should be equivalent to what you
+have with /dev/urandom and be good enough to put a UUID on a file
+system. And calling it with "SECURE" or something like this will be
+the indication that it will not betray you and will only return good
+randoms (which is what GRND_RANDOM does in my opinion).
 
->  
->> It can be made as a single patch if a single patch will make the merging
->> process easy.
->>
->>>
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
->>>> index 965f079..04505e6 100644
->>>> --- a/arch/mips/include/asm/mach-ip27/topology.h
->>>> +++ b/arch/mips/include/asm/mach-ip27/topology.h
->>>> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
->>>>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
->>>>  
->>>>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
->>>> -#define cpumask_of_node(node)	((node) == -1 ?				\
->>>> -				 cpu_all_mask :				\
->>>> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->>>> +				 cpu_online_mask :			\
->>>>  				 &hub_data(node)->h_cpus)
->>>>  struct pci_bus;
->>>>  extern int pcibus_to_node(struct pci_bus *);
->>>> -- 
->>>> 2.8.1
->>>>
->>>
->>
-> 
+The huge difference between getrandom() and /dev/*random here is that
+each application can decide what type of random to use without relying
+on what system-wide breakage was applied just for the sake of fixing
+another simple application. This could even help OpenSSL use two different
+calls for RAND_bytes() and RAND_pseudo_bytes(), instead of using the
+same call and blocking.
 
+Last but not least, I think we need to educate developers regarding
+random number consumption, asking "if you could produce only 16 bytes
+of random in your whole system's lifetime, where would you use them?".
+Entropy is extremely precious and yet the most poorly used resource. I
+almost wouldn't mind seeing GRND_RANDOM requiring a special capability
+since it does have a system-wide impact!
+
+Regards,
+Willy
