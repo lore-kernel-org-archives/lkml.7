@@ -2,256 +2,119 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76EAC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5855EC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4347214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35313214DE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbfIONrE (ORCPT
+        id S1731570AbfIONrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:47:04 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:58596 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbfIONrD (ORCPT
+        Sun, 15 Sep 2019 09:47:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37576 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730694AbfIONrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:47:03 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 923D69E772F;
-        Sun, 15 Sep 2019 14:47:01 +0100 (BST)
-Date:   Sun, 15 Sep 2019 14:47:00 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [RFC 1/4] counter: Simplify the count_read and count_write
- callbacks
-Message-ID: <20190915144700.0f7a361d@archlinux>
-In-Reply-To: <20190915143917.61385369@archlinux>
-References: <20190915055759.408690-1-vilhelm.gray@gmail.com>
-        <20190915055759.408690-2-vilhelm.gray@gmail.com>
-        <20190915143917.61385369@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Sep 2019 09:47:45 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i9UsC-0004QS-Ez; Sun, 15 Sep 2019 15:47:28 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: printk meeting at LPC
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+        <20190905121101.60c78422@oasis.local.home>
+        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+        <87k1acz5rx.fsf@linutronix.de>
+        <CAKMK7uHXTGKSyXgUOucNr4HSrcnBxVkkoqA=VzF4-=sZSq1MKw@mail.gmail.com>
+Date:   Sun, 15 Sep 2019 15:47:26 +0200
+In-Reply-To: <CAKMK7uHXTGKSyXgUOucNr4HSrcnBxVkkoqA=VzF4-=sZSq1MKw@mail.gmail.com>
+        (Daniel Vetter's message of "Fri, 13 Sep 2019 16:48:48 +0200")
+Message-ID: <87d0g18ydt.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Sep 2019 14:39:17 +0100
-Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
+On 2019-09-13, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+>> 2. A kernel thread will be created for each registered console, each
+>> responsible for being the sole printers to their respective
+>> consoles. With this, console printing is _fully_ decoupled from
+>> printk() callers.
+>
+> Is the plan to split the console_lock up into a per-console thing? Or
+> postponed for later on?
 
-> On Sun, 15 Sep 2019 14:57:56 +0900
-> William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
-> 
-> > The count_read and count_write callbacks are simplified to pass val as
-> > unsigned long rather than as an opaque data structure. The opaque
-> > counter_count_read_value and counter_count_write_value structures,
-> > counter_count_value_type enum, and relevant counter_count_read_value_set
-> > and counter_count_write_value_get functions, are removed as they are no
-> > longer used.
-> > 
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>  
-> 
-> Seems like a sensible bit of excessive abstraction removal to me.  I'm not
-> totally sure why these got so complex in the first place though.
-Ah. I should have read the cover letter rather than just diving in the code :)
-All explained there I see.
+AFAICT, the only purpose for a console_lock would be to synchronize
+between the console printing kthread and some other component that wants
+to write to that same device. So a per-console console_lock should be
+the proper solution. However, I will look into the details. My main
+concerns about this are the suspend/resume logic and the code sitting
+behind /dev/console. I will share details once I've sorted it all out.
 
-> 
-> Can you recall the reason as it might help to judge why we no longer
-> think the same?
-> 
-> Thanks,
-> 
-> Jonathan
-> > ---
-> >  drivers/counter/counter.c | 66 +++++----------------------------------
-> >  include/linux/counter.h   | 43 +++----------------------
-> >  2 files changed, 12 insertions(+), 97 deletions(-)
-> > 
-> > diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
-> > index 106bc7180cd8..1d08f1437b1b 100644
-> > --- a/drivers/counter/counter.c
-> > +++ b/drivers/counter/counter.c
-> > @@ -246,60 +246,6 @@ void counter_signal_read_value_set(struct counter_signal_read_value *const val,
-> >  }
-> >  EXPORT_SYMBOL_GPL(counter_signal_read_value_set);
-> >  
-> > -/**
-> > - * counter_count_read_value_set - set counter_count_read_value data
-> > - * @val:	counter_count_read_value structure to set
-> > - * @type:	property Count data represents
-> > - * @data:	Count data
-> > - *
-> > - * This function sets an opaque counter_count_read_value structure with the
-> > - * provided Count data.
-> > - */
-> > -void counter_count_read_value_set(struct counter_count_read_value *const val,
-> > -				  const enum counter_count_value_type type,
-> > -				  void *const data)
-> > -{
-> > -	switch (type) {
-> > -	case COUNTER_COUNT_POSITION:
-> > -		val->len = sprintf(val->buf, "%lu\n", *(unsigned long *)data);
-> > -		break;
-> > -	default:
-> > -		val->len = 0;
-> > -	}
-> > -}
-> > -EXPORT_SYMBOL_GPL(counter_count_read_value_set);
-> > -
-> > -/**
-> > - * counter_count_write_value_get - get counter_count_write_value data
-> > - * @data:	Count data
-> > - * @type:	property Count data represents
-> > - * @val:	counter_count_write_value structure containing data
-> > - *
-> > - * This function extracts Count data from the provided opaque
-> > - * counter_count_write_value structure and stores it at the address provided by
-> > - * @data.
-> > - *
-> > - * RETURNS:
-> > - * 0 on success, negative error number on failure.
-> > - */
-> > -int counter_count_write_value_get(void *const data,
-> > -				  const enum counter_count_value_type type,
-> > -				  const struct counter_count_write_value *const val)
-> > -{
-> > -	int err;
-> > -
-> > -	switch (type) {
-> > -	case COUNTER_COUNT_POSITION:
-> > -		err = kstrtoul(val->buf, 0, data);
-> > -		if (err)
-> > -			return err;
-> > -		break;
-> > -	}
-> > -
-> > -	return 0;
-> > -}
-> > -EXPORT_SYMBOL_GPL(counter_count_write_value_get);
-> > -
-> >  struct counter_attr_parm {
-> >  	struct counter_device_attr_group *group;
-> >  	const char *prefix;
-> > @@ -788,13 +734,13 @@ static ssize_t counter_count_show(struct device *dev,
-> >  	const struct counter_count_unit *const component = devattr->component;
-> >  	struct counter_count *const count = component->count;
-> >  	int err;
-> > -	struct counter_count_read_value val = { .buf = buf };
-> > +	unsigned long val;
-> >  
-> >  	err = counter->ops->count_read(counter, count, &val);
-> >  	if (err)
-> >  		return err;
-> >  
-> > -	return val.len;
-> > +	return sprintf(buf, "%lu\n", val);
-> >  }
-> >  
-> >  static ssize_t counter_count_store(struct device *dev,
-> > @@ -806,9 +752,13 @@ static ssize_t counter_count_store(struct device *dev,
-> >  	const struct counter_count_unit *const component = devattr->component;
-> >  	struct counter_count *const count = component->count;
-> >  	int err;
-> > -	struct counter_count_write_value val = { .buf = buf };
-> > +	unsigned long val;
-> > +
-> > +	err = kstrtoul(buf, 0, &val);
-> > +	if (err)
-> > +		return err;
-> >  
-> > -	err = counter->ops->count_write(counter, count, &val);
-> > +	err = counter->ops->count_write(counter, count, val);
-> >  	if (err)
-> >  		return err;
-> >  
-> > diff --git a/include/linux/counter.h b/include/linux/counter.h
-> > index a061cdcdef7c..7e40796598a6 100644
-> > --- a/include/linux/counter.h
-> > +++ b/include/linux/counter.h
-> > @@ -300,24 +300,6 @@ struct counter_signal_read_value {
-> >  	size_t len;
-> >  };
-> >  
-> > -/**
-> > - * struct counter_count_read_value - Opaque Count read value
-> > - * @buf:	string representation of Count read value
-> > - * @len:	length of string in @buf
-> > - */
-> > -struct counter_count_read_value {
-> > -	char *buf;
-> > -	size_t len;
-> > -};
-> > -
-> > -/**
-> > - * struct counter_count_write_value - Opaque Count write value
-> > - * @buf:	string representation of Count write value
-> > - */
-> > -struct counter_count_write_value {
-> > -	const char *buf;
-> > -};
-> > -
-> >  /**
-> >   * struct counter_ops - Callbacks from driver
-> >   * @signal_read:	optional read callback for Signal attribute. The read
-> > @@ -328,15 +310,10 @@ struct counter_count_write_value {
-> >   *			signal_read callback.
-> >   * @count_read:		optional read callback for Count attribute. The read
-> >   *			value of the respective Count should be passed back via
-> > - *			the val parameter. val points to an opaque type which
-> > - *			should be set only by calling the
-> > - *			counter_count_read_value_set function from within the
-> > - *			count_read callback.
-> > + *			the val parameter.
-> >   * @count_write:	optional write callback for Count attribute. The write
-> >   *			value for the respective Count is passed in via the val
-> > - *			parameter. val points to an opaque type which should be
-> > - *			accessed only by calling the
-> > - *			counter_count_write_value_get function.
-> > + *			parameter.
-> >   * @function_get:	function to get the current count function mode. Returns
-> >   *			0 on success and negative error code on error. The index
-> >   *			of the respective Count's returned function mode should
-> > @@ -357,11 +334,9 @@ struct counter_ops {
-> >  			   struct counter_signal *signal,
-> >  			   struct counter_signal_read_value *val);
-> >  	int (*count_read)(struct counter_device *counter,
-> > -			  struct counter_count *count,
-> > -			  struct counter_count_read_value *val);
-> > +			  struct counter_count *count, unsigned long *val);
-> >  	int (*count_write)(struct counter_device *counter,
-> > -			   struct counter_count *count,
-> > -			   struct counter_count_write_value *val);
-> > +			   struct counter_count *count, unsigned long val);
-> >  	int (*function_get)(struct counter_device *counter,
-> >  			    struct counter_count *count, size_t *function);
-> >  	int (*function_set)(struct counter_device *counter,
-> > @@ -486,19 +461,9 @@ enum counter_signal_value_type {
-> >  	COUNTER_SIGNAL_LEVEL = 0
-> >  };
-> >  
-> > -enum counter_count_value_type {
-> > -	COUNTER_COUNT_POSITION = 0,
-> > -};
-> > -
-> >  void counter_signal_read_value_set(struct counter_signal_read_value *const val,
-> >  				   const enum counter_signal_value_type type,
-> >  				   void *const data);
-> > -void counter_count_read_value_set(struct counter_count_read_value *const val,
-> > -				  const enum counter_count_value_type type,
-> > -				  void *const data);
-> > -int counter_count_write_value_get(void *const data,
-> > -				  const enum counter_count_value_type type,
-> > -				  const struct counter_count_write_value *const val);
-> >  
-> >  int counter_register(struct counter_device *const counter);
-> >  void counter_unregister(struct counter_device *const counter);  
-> 
+>> 6. A new may-sleep function pr_flush() will be made available to wait
+>> for all previously printk'd messages to be output on all consoles
+>> before proceeding. For example:
+>>
+>>     pr_cont("Running test ABC... ");
+>>     pr_flush();
+>>
+>>     do_test();
+>>
+>>     pr_cont("PASSED\n");
+>>     pr_flush();
+>
+> Just crossed my mind: Could/should we lockdep-annotate pr_flush (take
+> a lockdep map in there that we also take around the calls down into
+> console drivers in each of the console printing kthreads or something
+> like that)? Just to avoid too many surprises when people call pr_flush
+> from within gpu drivers and wonder why it doesn't work so well.
 
+Why would it not work so well? Basically the task calling pr_flush()
+will monitor the lockless iterators of the various consoles until _all_
+have hit/passed the latest sequence number from the time of the call.
+
+> Although with this nice plan we'll take the modeset paths fully out of
+> the printk paths (even for normal outputs) I hope, so should be a lot
+> more reasonable.
+
+You will be running in your own preemptible kthread, so any paths you
+take should be safe.
+
+> From gpu perspective this all sounds extremely good and first
+> realistic plan that might lead us to an actually working bsod on
+> linux.
+
+Are you planning on basing the bsod stuff on write_atomic() (which is
+used after entering an emergency state) or on the kmsg_dump facility? I
+would expect kmsg_dump might be more appropriate, unless there are
+concerns that the machine will die before getting that far (i.e. there
+is a lot that happens between when an OOPS begins and when kmsg_dumpers
+are invoked).
+
+John Ogness
